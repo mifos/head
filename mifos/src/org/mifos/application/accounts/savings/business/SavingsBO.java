@@ -21,12 +21,11 @@ import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
-import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -381,7 +380,7 @@ public class SavingsBO extends AccountBO {
 			(new SavingsPersistence()).createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
-		} catch (IDGenerationException e) {
+		} catch (AccountException e) {
 			throw new AccountException(e);
 		}
 		logger.info("In SavingsBO::save(), Successfully saved , accountId: "

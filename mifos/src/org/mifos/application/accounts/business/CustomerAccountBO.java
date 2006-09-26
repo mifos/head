@@ -49,10 +49,9 @@ import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
-import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -694,7 +693,7 @@ public class CustomerAccountBO extends AccountBO {
 				throw new CustomerException(
 						AccountExceptionConstants.IDGenerationException);
 			}
-		} catch (IDGenerationException e) {
+		} catch (AccountException e) {
 			throw new CustomerException(e);
 		}
 	}

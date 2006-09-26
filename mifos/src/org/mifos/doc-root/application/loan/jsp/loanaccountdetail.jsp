@@ -566,11 +566,5 @@
 			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
 	</html-el:form>
-		<html-el:form action="LoanStatusAction.do?method=search">
-			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
-			<html-el:hidden property="accountTypeId" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />
-			<html-el:hidden property="accountName" value="${sessionScope.BusinessKey.loanOffering.prdOfferingName}" />
-			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>
-		</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -50,10 +50,6 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
-
-	function ViewDetails(){
-		closedaccsearchactionform.submit();
-	}
   function photopopup(custId , custName){
 
    window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
@@ -622,11 +618,6 @@
 							<a href="custHistoricalDataAction.do?method=get&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>"><mifos:mifoslabel
 								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							</a> <br>
-							<%--<html-el:link
-								href="closedaccsearchaction.do?method=search&searchNode(search_name)=ChangeLogDetails&input=ViewClientLog&customerId=${BusinessKey.customerId}&entityTypeId=1&createdDate=${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.createdDate)}&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="client.ChangeLogLink"
-									bundle="ClientUIResources"></mifos:mifoslabel>
-							</html-el:link><br>--%>
 							</span> </td>
 						</tr>
 					</table>
@@ -762,27 +753,7 @@
 			</table>
 			<br>
 			<mifos:SecurityParam property="Client" />
-		</html-el:form>
-		<html-el:hidden property="globalAccountNum"
-			value="${BusinessKey.customerAccount.globalAccountNum}" />
-		<html-el:form action="closedaccsearchaction.do?method=search">
-			<html-el:hidden property="searchNode(search_name)"
-				value="ClientChargesDetails" />
-			<html-el:hidden property="prdOfferingName"
-				value="${BusinessKey.displayName}" />
-			<html-el:hidden property="globalAccountNum"
-				value="${BusinessKey.customerAccount.globalAccountNum}" />
-			<html-el:hidden property="accountId"
-				value="${BusinessKey.customerAccount.accountId}" />
-			<html-el:hidden property="accountType"
-				value="${BusinessKey.customerAccount.accountType.accountTypeId}" />
-			<html-el:hidden property="input" value="ViewClientCharges" />
-			<html-el:hidden property="customerId"
-				value="${BusinessKey.customerId}" />
-			<html-el:hidden property="statusId"
-				value="${BusinessKey.customerStatus.id}" />
-				<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" />
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<html-el:hidden property="globalAccountNum" value="${BusinessKey.customerAccount.globalAccountNum}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

@@ -52,8 +52,6 @@ import java.util.Set;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
-import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
@@ -61,6 +59,7 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.FeeInstallment;
@@ -769,7 +768,7 @@ public class AccountBO extends BusinessObject {
 	}
 
 	protected final String generateId(String officeGlobalNum)
-			throws IDGenerationException {
+			throws AccountException {
 		StringBuilder systemId = new StringBuilder();
 		systemId.append(officeGlobalNum);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -785,7 +784,7 @@ public class AccountBO extends BusinessObject {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).error(
 					"There was some error retieving the running number", true,
 					null, se);
-			throw new IDGenerationException(
+			throw new AccountException(
 					AccountExceptionConstants.IDGenerationException, se);
 		}
 		return systemId.toString();

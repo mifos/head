@@ -41,7 +41,6 @@ package org.mifos.application.personnel.business.handlers;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.dao.ClosedAccSearchDAO;
 import org.mifos.application.configuration.util.helpers.PathConstants;
 import org.mifos.application.customer.dao.SearchDAO;
 import org.mifos.application.customer.exceptions.AssociatedObjectStaleException;
@@ -296,18 +295,18 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 	 * @throws SystemException
 	 */
 	public void getUserChangeLog(Context context)throws ApplicationException,SystemException{
-		try{
+		/*try{
 			logger.debug("in method getUserChangeLog() of Personnel Module");
 			Personnel personnel = (Personnel)context.getValueObject();
-			List changeLogList= new ClosedAccSearchDAO().getClientChangeLog(new Integer(personnel.getPersonnelId()),PersonnelConstants.PERSONNEL_ENTITY_TYPE);
-			context.addAttribute(new PersonnelHelper().getResultObject(PersonnelConstants.USER_CHANGE_LOG_LIST,changeLogList));
+			//List changeLogList= new ClosedAccSearchDAO().getClientChangeLog(new Integer(personnel.getPersonnelId()),PersonnelConstants.PERSONNEL_ENTITY_TYPE);
+			//context.addAttribute(new PersonnelHelper().getResultObject(PersonnelConstants.USER_CHANGE_LOG_LIST,changeLogList));
 		}catch(SystemException se){
 			throw se;
 		}catch(ApplicationException ae){
 			throw new PersonnelException(PersonnelConstants.USER_CHANGE_LOG_ERROR,ae);
 		}catch(Exception e ){
 			throw new PersonnelException(PersonnelConstants.USER_CHANGE_LOG_ERROR,e);
-		}
+		}*/
 	}
 	/**
 	 * This is the helper method that returns the office of passed in office id

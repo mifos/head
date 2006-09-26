@@ -4,12 +4,11 @@ import java.sql.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.accounts.util.helpers.ClosedAccSearchConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -141,11 +140,11 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		assertEquals("Size of closed loan accounts should be 1", 1,
 				((List<AccountBO>) SessionUtils.getAttribute(
-						ClosedAccSearchConstants.CLOSEDLOANACCOUNTSLIST,
+						AccountConstants.CLOSEDLOANACCOUNTSLIST,
 						request.getSession())).size());
 		assertEquals("Size of closed savings accounts should be 1", 1,
 				((List<AccountBO>) SessionUtils.getAttribute(
-						ClosedAccSearchConstants.CLOSEDSAVINGSACCOUNTSLIST,
+						AccountConstants.CLOSEDSAVINGSACCOUNTSLIST,
 						request.getSession())).size());
 	}
 	
@@ -165,7 +164,7 @@ public class TestCustomerAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		assertEquals("Size of closed savings accounts should be 1", 1,
 				((List<AccountBO>) SessionUtils.getAttribute(
-						ClosedAccSearchConstants.CLOSEDSAVINGSACCOUNTSLIST,
+						AccountConstants.CLOSEDSAVINGSACCOUNTSLIST,
 						request.getSession())).size());
 	}
 

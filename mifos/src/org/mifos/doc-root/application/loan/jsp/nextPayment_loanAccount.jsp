@@ -18,7 +18,7 @@
 						form.submit();
 					}
 	</script>
-		<html-el:form method="post" action="/loanAction.do">			
+		<html-el:form method="post" action="/loanAccountAction.do">			
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -219,7 +219,6 @@
 					</td>
 				</tr>
 			</table>
-			</td>
 			<mifos:SecurityParam property="Loan" />
 			<html-el:hidden property="accountId" value="${param.accountId}"/>
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>			

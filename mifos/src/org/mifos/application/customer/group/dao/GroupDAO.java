@@ -53,7 +53,6 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
@@ -239,7 +238,7 @@ public class GroupDAO extends DAO {
 		//set customer to account
 		customerAccount.setCustomer(groupVO);
 		
-		customerAccount.setGlobalAccountNum(IDGenerator.generateIdForCustomerAccount(groupVO.getOffice().getGlobalOfficeNum()));
+		//customerAccount.setGlobalAccountNum(IDGenerator.generateIdForCustomerAccount(groupVO.getOffice().getGlobalOfficeNum()));
 		customerAccount.setCreatedBy(loggedInUserId);
 		customerAccount.setCreatedDate(new CustomerHelper().getCurrentDate());
 		if (groupVO.getCustomerAccount() != null 

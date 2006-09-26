@@ -38,58 +38,23 @@
 
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
-import java.util.Iterator;
 import java.util.Locale;
-import java.util.Set;
 
-import org.mifos.application.fund.util.valueobjects.Fund;
-import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.struts.tags.DateHelper;
 
 /**
- * This class has got helper functions which could be called from jsp as part of jsp2.0 specifications.
+ * This class has got helper functions which could be called from jsp as part of
+ * jsp2.0 specifications.
  */
 public class LoanUIHelperFn {
 
-	/**
-	 * 
-	 */
 	public LoanUIHelperFn() {
 		super();
-		
-	}
-	
-	/**
-	 * It returns a comma seperated string of sources of fund which it takes from the collection passed to it.  
-	 * @param object
-	 * @return
-	 */
-	public static String getSourcesOfFund(Object object) {
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Inside UI helper function getSourcesOfFund");
-		StringBuilder stringBuilder=new StringBuilder();
-		if(object !=null) {
-			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Iterating over the sources of fund object");
-			Set fundSet=(Set)object;
-			for(Iterator<LoanOfferingFundEntity> iter=fundSet.iterator();iter.hasNext();) {
-				Fund fund = iter.next().getFund();
-				if(null != fund){
-					String fundName = fund.getFundName();
-					MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("The fund name is " + fundName);
-					stringBuilder.append(fundName);
-					stringBuilder.append(iter.hasNext()?",":"");
-				}
-				
-				
-			}
-		}
-		return stringBuilder.toString();
-	}
-	
-	public static String getCurrrentDate(Locale locale){
-		return DateHelper.getCurrentDate(locale);
+
 	}
 
+	public static String getCurrrentDate(Locale locale) {
+		return DateHelper.getCurrentDate(locale);
+	}
 
 }

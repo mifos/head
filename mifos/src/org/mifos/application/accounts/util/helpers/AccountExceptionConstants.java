@@ -1,6 +1,6 @@
 /**
 
- * LoanUpdationException.java    version: xxx
+ * AccountExceptionConstants.java    version: xxx
 
  
 
@@ -36,47 +36,15 @@
 
  */
 
-package org.mifos.application.accounts.loan.exceptions;
-
-import org.mifos.framework.exceptions.ApplicationException;
+package org.mifos.application.accounts.util.helpers;
 
 /**
- * This exception is thrown whenever there is an hibernate exception while 
- * updating the loan account.
+ * This interface stores keys for accounts related exceptions.
  */
-public class LoanUpdationException extends ApplicationException {
-
-	public LoanUpdationException(Object[] values) {
-		super(values);
-		
-	}
-
-	public LoanUpdationException(String key, Object[] values) {
-		super(key, values);
-		
-	}
-
-	public LoanUpdationException(String key, Throwable cause) {
-		super(key, cause);
-		
-	}
-
-	public LoanUpdationException(String key) {
-		super(key);
-		
-	}
-
-	public LoanUpdationException(Throwable cause) {
-		super(cause);
-		
-	}
-
-	/**
-	 * 
-	 */
-	public LoanUpdationException() {
-		super();
-		
-	}
-
+public interface AccountExceptionConstants {
+	public final String IDGenerationException = "exception.accounts.ApplicationException.IDGenerationException";
+	public final String FINDBYGLOBALACCNTEXCEPTION = "exception.accounts.ApplicationException.FindByGlobalAccntException";
+	public final String ZEROAMNTADJUSTMENT = "exception.accounts.ApplicationException.ZeroAmntAdjustmnet";
+	public final String CANNOTADJUST = "exception.accounts.ApplicationException.CannotAdjust";
+	public final String CREATEEXCEPTION = "exception.accounts.create";
 }

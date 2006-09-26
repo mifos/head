@@ -48,11 +48,6 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<script language="javascript">
-	function ViewDetails(){
-		closedaccsearchactionform.submit();
-	}
-</script>
 		<html-el:form action="groupCustAction.do">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set
@@ -623,11 +618,7 @@
 								href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Group.viewhistoricaldata"
 								bundle="GroupUIResources"></mifos:mifoslabel> </a> <br>
-							<%--	<html-el:link
-								href="closedaccsearchaction.do?method=search&searchNode(search_name)=ChangeLogDetails&input=ViewGroupChangelog&customerId=${BusinessKey.customerId}&entityTypeId=12&createdDate=${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,requestScope.GroupVO.createdDate)}">
-								<mifos:mifoslabel name="Group.viewchangelog"
-									bundle="GroupUIResources"></mifos:mifoslabel>
-							</html-el:link> --%></span></td>
+							</span></td>
 						</tr>
 					</table>
 
@@ -771,25 +762,6 @@
 				value="${requestScope.GroupVO.versionNo}" />
 			<html-el:hidden property="displayName"
 				value="${BusinessKey.displayName}" />
-		</html-el:form>
-		<html-el:form action="closedaccsearchaction.do?method=search">
-			<html-el:hidden property="searchNode(search_name)"
-				value="ClientChargesDetails" />
-			<html-el:hidden property="prdOfferingName"
-				value="${BusinessKey.displayName}" />
-			<html-el:hidden property="globalAccountNum"
-				value="${BusinessKey.customerAccount.globalAccountNum}" />
-			<html-el:hidden property="accountId"
-				value="${BusinessKey.customerAccount.accountId}" />
-			<html-el:hidden property="accountType"
-				value="${BusinessKey.customerAccount.accountType.accountTypeId}" />
-			<html-el:hidden property="customerId"
-				value="${BusinessKey.customerId}" />
-			<html-el:hidden property="input" value="ViewGroupCharges" />
-			<html-el:hidden property="statusId"
-				value="${BusinessKey.customerStatus.id}" />
-			<html-el:hidden property="globalCustNum"
-				value="${BusinessKey.globalCustNum}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

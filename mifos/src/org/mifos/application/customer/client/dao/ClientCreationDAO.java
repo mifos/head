@@ -55,7 +55,6 @@ import org.hibernate.Transaction;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
@@ -170,7 +169,7 @@ public class ClientCreationDAO extends DAO {
 				Short.valueOf(AccountStates.CUSTOMERACCOUNT_ACTIVE));
 		vo.getCustomerAccount().setCustomer(vo);
 		// TODO change this strategy
-		vo.getCustomerAccount().setGlobalAccountNum(IDGenerator.generateIdForCustomerAccount(new OfficeDAO().getOffice(vo.getOffice().getOfficeId()).getGlobalOfficeNum()));
+		//vo.getCustomerAccount().setGlobalAccountNum(IDGenerator.generateIdForCustomerAccount(new OfficeDAO().getOffice(vo.getOffice().getOfficeId()).getGlobalOfficeNum()));
 		vo.getCustomerAccount()
 				.setCreatedBy(context.getUserContext().getId());
 		vo.getCustomerAccount().setCreatedDate(

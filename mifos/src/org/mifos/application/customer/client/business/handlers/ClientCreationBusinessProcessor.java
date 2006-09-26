@@ -46,7 +46,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.dao.ClosedAccSearchDAO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
@@ -386,7 +385,7 @@ public class ClientCreationBusinessProcessor extends MifosBusinessProcessor {
 		context.addAttribute(customerHelper.getResultObject(CustomerConstants.CURRENT_CUSTOMER_STATUS,  customerHelper.getStatusName(localeId,client.getStatusId(),CustomerConstants.CLIENT_LEVEL_ID)));
 		context.addAttribute(customerHelper.getResultObject(GroupConstants.NOTES, customerHelper.getLatestNotes(GroupConstants.NOTES_COUNT,client.getCustomerId())));
 		context.addBusinessResults(GroupConstants.LINK_VALUES,getLinkValues(client));
-		context.addBusinessResults(CustomerConstants.TOTAL_FEE_DUE,new ClosedAccSearchDAO().getTotalClientFeeChargesDue(client.getCustomerAccount().getAccountId()));
+		//context.addBusinessResults(CustomerConstants.TOTAL_FEE_DUE,new ClosedAccSearchDAO().getTotalClientFeeChargesDue(client.getCustomerAccount().getAccountId()));
 		CustomerBusinessService custBizService = (CustomerBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
 		context.addBusinessResults("loanCycleCounter", custBizService.fetchLoanCycleCounter(client.getCustomerId()));
 		logger.debug("after fetching loan cycle counter for client with id = " + client.getCustomerId() );

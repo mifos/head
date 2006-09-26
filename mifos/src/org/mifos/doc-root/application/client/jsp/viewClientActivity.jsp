@@ -59,9 +59,6 @@
 			customerAccountActionForm.action="customerAccountAction.do?method=load";
 			customerAccountActionForm.submit();
 		}
-		function ViewDetails(){
-			closedaccsearchactionform.submit();
-	}
 </script>
 
         <table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -135,18 +132,6 @@
     		</table>
         </tr>
       </table> 
-      	<html-el:form  action="closedaccsearchaction.do?method=search">
-			<html-el:hidden property="searchNode(search_name)" value="ClientChargesDetails"/>  
-			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
-			<html-el:hidden property="accountId" value="${param.accountId}" />
-			<html-el:hidden property="accountType" value="${param.accountType}" /> 
-			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}"/>
-			<html-el:hidden property="headingInput" value="ViewClientCharges"/>
-			<html-el:hidden property="searchInput" value="ClientChargesDetails"/>
-			<mifos:SecurityParam property="Client" />
-			<html-el:hidden property="statusId" value="${param.statusId}"/>
-			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
-		</html-el:form>
 		<html:form action="customerAccountAction.do">
         	<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}" /> 
      	</html:form>

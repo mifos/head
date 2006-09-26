@@ -24,7 +24,6 @@ import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -3674,7 +3673,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testRegenerateFutureInstallments() throws HibernateException,
-			IDGenerationException, SystemException, ApplicationException {
+			 SystemException, ApplicationException {
 		savings = getSavingAccount();
 		TestObjectFactory.flushandCloseSession();
 		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
@@ -3717,7 +3716,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testRegenerateFutureInstallmentsWithCancelState()
-			throws HibernateException, IDGenerationException, SystemException,
+			throws HibernateException,  SystemException,
 			ApplicationException {
 		savings = getSavingAccount();
 		TestObjectFactory.flushandCloseSession();
@@ -3771,7 +3770,7 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 	}
 
-	private SavingsBO getSavingAccount() throws IDGenerationException,
+	private SavingsBO getSavingAccount() throws 
 			SchedulerException, SystemException, ApplicationException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

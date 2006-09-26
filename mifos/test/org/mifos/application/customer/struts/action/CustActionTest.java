@@ -4,13 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.accounts.util.helpers.ClosedAccSearchConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -111,8 +110,8 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.getAllClosedAccounts.toString());
 		
-		assertEquals("Size of closed savings accounts should be 1 for group",1,((List<AccountBO>)SessionUtils.getAttribute(ClosedAccSearchConstants.CLOSEDSAVINGSACCOUNTSLIST,request)).size());
-		assertEquals("Size of closed loan accounts should be 1 for group",1,((List<AccountBO>)SessionUtils.getAttribute(ClosedAccSearchConstants.CLOSEDLOANACCOUNTSLIST,request)).size());
+		assertEquals("Size of closed savings accounts should be 1 for group",1,((List<AccountBO>)SessionUtils.getAttribute(AccountConstants.CLOSEDSAVINGSACCOUNTSLIST,request)).size());
+		assertEquals("Size of closed loan accounts should be 1 for group",1,((List<AccountBO>)SessionUtils.getAttribute(AccountConstants.CLOSEDLOANACCOUNTSLIST,request)).size());
 	}
 
 	public void testGetBackToGroupDetailsPage() throws Exception {

@@ -45,7 +45,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.dao.ClosedAccSearchDAO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.configuration.business.ConfigurationIntf;
@@ -343,7 +342,7 @@ public class CenterBusinessProcessor extends MifosBusinessProcessor {
 			context.addAttribute(this.getResultObject(GroupConstants.CUSTOMER_POSITIONS, customerHelper.loadCustomerPositions(centerVO,localeId,(List)(context.getSearchResultBasedOnName(CenterConstants.POSITIONS).getValue()))));
 			context.addAttribute(this.getResultObject(GroupConstants.NOTES, customerHelper.getLatestNotes(GroupConstants.NOTES_COUNT,((Center)context.getValueObject()).getCustomerId())));
 			context.addBusinessResults(CustomerConstants.LINK_VALUES,getLinkValues(centerVO));
-			context.addBusinessResults(CustomerConstants.TOTAL_FEE_DUE,new ClosedAccSearchDAO().getTotalClientFeeChargesDue(centerVO.getCustomerAccount().getAccountId()));
+			//context.addBusinessResults(CustomerConstants.TOTAL_FEE_DUE,new ClosedAccSearchDAO().getTotalClientFeeChargesDue(centerVO.getCustomerAccount().getAccountId()));
 			
 			//TO display Loan nad Savings Accounts of a client
 			List<SavingsBO> savingsAcounts = customerUtilDAO.getActiveSavingsAccountsForCustomer(centerVO.getCustomerId(),localeId);

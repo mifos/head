@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
+import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.struts.actionforms.CustomerApplyAdjustmentActionForm;

@@ -52,7 +52,6 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.IDGenerator;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.configuration.business.ConfigurationIntf;
@@ -274,7 +273,7 @@ public class CenterDAO extends DAO {
 					Short.valueOf(AccountStates.CUSTOMERACCOUNT_ACTIVE));
 			center.getCustomerAccount().setCustomer(center);
 			// TODO change this strategy
-			center.getCustomerAccount().setGlobalAccountNum(IDGenerator.generateIdForCustomerAccount(new OfficeDAO().getOffice(center.getOffice().getOfficeId()).getGlobalOfficeNum()));
+			//center.getCustomerAccount().setGlobalAccountNum(IDGenerator.generateIdForCustomerAccount(new OfficeDAO().getOffice(center.getOffice().getOfficeId()).getGlobalOfficeNum()));
 			center.getCustomerAccount()
 					.setCreatedBy(center.getPersonnel().getPersonnelId());
 			center.getCustomerAccount().setCreatedDate(

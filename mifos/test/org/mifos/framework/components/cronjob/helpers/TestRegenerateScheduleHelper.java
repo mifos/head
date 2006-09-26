@@ -10,13 +10,9 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountCustomFieldEntity;
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.exceptions.IDGenerationException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -222,7 +218,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 	}
 	
-	public void testExecuteWithSavingsAccount() throws HibernateException, IDGenerationException, SystemException, ApplicationException{
+	public void testExecuteWithSavingsAccount() throws HibernateException,  SystemException, ApplicationException{
 		savings= getSavingAccount();
 		TestObjectFactory.flushandCloseSession();
 		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
@@ -300,7 +296,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 	}
 	
 	
-	private SavingsBO getSavingAccount() throws IDGenerationException, SchedulerException, SystemException, ApplicationException{
+	private SavingsBO getSavingAccount() throws  SchedulerException, SystemException, ApplicationException{
 		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2,2,4);
 		meeting.setMeetingStartDate(Calendar.getInstance());
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(new Short("1"));

@@ -51,8 +51,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFlagMapping;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.accounts.util.helpers.ClosedAccSearchConstants;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
@@ -127,10 +127,10 @@ public class CustAction extends BaseAction {
 			setLocaleIdForToRetrieveMasterDataName(loanBO, request);
 		}
 		SessionUtils.setAttribute(
-				ClosedAccSearchConstants.CLOSEDLOANACCOUNTSLIST,
+				AccountConstants.CLOSEDLOANACCOUNTSLIST,
 				loanAccountsList, request);
 		SessionUtils.setAttribute(
-				ClosedAccSearchConstants.CLOSEDSAVINGSACCOUNTSLIST,
+				AccountConstants.CLOSEDSAVINGSACCOUNTSLIST,
 				savingsAccountList, request);
 		return mapping.findForward(ActionForwards.getAllClosedAccounts
 				.toString());

@@ -6,12 +6,12 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
-import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.persistence.MasterPersistence;

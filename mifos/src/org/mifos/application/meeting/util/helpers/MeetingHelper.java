@@ -4,13 +4,9 @@
 package org.mifos.application.meeting.util.helpers;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.meeting.util.valueobjects.MeetingDetails;

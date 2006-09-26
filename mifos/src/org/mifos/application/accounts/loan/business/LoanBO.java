@@ -62,16 +62,15 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.exceptions.AccountExceptionConstants;
-import org.mifos.application.accounts.exceptions.IDGenerationException;
-import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanPaymentTypes;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -945,7 +944,7 @@ public class LoanBO extends AccountBO {
 		} catch (PersistenceException e) {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION, e);
-		} catch (IDGenerationException e) {
+		} catch (AccountException e) {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION, e);
 

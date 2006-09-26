@@ -14,10 +14,6 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
-	function ViewDetails(){
-		closedaccsearchactionform.submit();
-	}
-
   function GoToEditPage(){
 	centerActionForm.action="centerAction.do?method=manage";
 	centerActionForm.submit();
@@ -456,13 +452,6 @@
 									</c:if>
 								</c:forEach>
 							</c:forEach> <br>
-							<%--
-							<html-el:link
-								href="closedaccsearchaction.do?method=search&searchNode(search_name)=ChangeLogDetails&input=ViewCenterChangelog&customerId=${BusinessKey.customerId}&entityTypeId=20&createdDate=${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.createdDate)}">
-								<mifos:mifoslabel name="center.ChangeLogLink"
-									bundle="CenterUIResources"></mifos:mifoslabel>
-							</html-el:link> </span></td>
-							--%>
 
 						</tr>
 					</table>
@@ -580,24 +569,6 @@
 				</tr>
 			</table>
 			<mifos:SecurityParam property="Center" />
-		</html-el:form>
-		<html-el:form action="closedaccsearchaction.do?method=search">
-			<html-el:hidden property="searchNode(search_name)"
-				value="ClientChargesDetails" />
-			<html-el:hidden property="prdOfferingName"
-				value="${BusinessKey.displayName}" />
-			<html-el:hidden property="globalAccountNum"
-				value="${BusinessKey.customerAccount.globalAccountNum}" />
-			<html-el:hidden property="accountId"
-				value="${BusinessKey.customerAccount.accountId}" />
-			<html-el:hidden property="accountType"
-				value="${BusinessKey.customerAccount.accountType.accountTypeId}" />
-			<html-el:hidden property="input" value="ViewCenterCharges" />
-			<html-el:hidden property="customerId"
-				value="${BusinessKey.customerId}" />
-			<html-el:hidden property="statusId" value="${statusID}" />
-			<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" />
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
