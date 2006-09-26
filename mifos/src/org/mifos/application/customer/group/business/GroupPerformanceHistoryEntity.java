@@ -1,8 +1,12 @@
 package org.mifos.application.customer.group.business;
 
+import java.util.List;
+
+import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.framework.util.helpers.Money;
 
 public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
@@ -22,9 +26,6 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	private Money portfolioAtRisk;
 
 	private GroupBO group;
-
-	protected GroupPerformanceHistoryEntity() {
-	}
 
 	public GroupPerformanceHistoryEntity(GroupBO group) {
 		super();
@@ -50,6 +51,9 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.clientCount = clientCount;
 	}
 
+	protected GroupPerformanceHistoryEntity() {
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -66,23 +70,8 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.avgLoanForMember = avgLoanForMember;
 	}
 
-	public Money getAvgLoanAmountForMember() throws PersistenceException,
-			ServiceException {
-		if (getGroup() != null)
-			return getGroup().getAverageLoanAmount();
-		return new Money();
-	}
-
 	public Integer getClientCount() {
 		return clientCount;
-	}
-
-	public Integer getActiveClientCount() throws PersistenceException,
-			ServiceException {
-		if (getGroup() != null)
-			return getGroup().getActiveOnHoldChildrenOfGroup();
-
-		return 0;
 	}
 
 	public void setClientCount(Integer clientCount) {
@@ -105,30 +94,16 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
 	}
 
-	public Money getTotalOutStandingLoanAmount() throws PersistenceException,
-			ServiceException {
-		if (getGroup() != null)
-			return getGroup().getTotalOutStandingLoanAmount();
-		return new Money();
-	}
-
 	public Money getPortfolioAtRisk() {
 		return portfolioAtRisk;
 	}
 
-	public void setPortfolioAtRisk(Money portfolioAtRisk) {
+	private void setPortfolioAtRisk(Money portfolioAtRisk) {
 		this.portfolioAtRisk = portfolioAtRisk;
 	}
 
 	private Money getTotalSavings() {
 		return totalSavings;
-	}
-
-	public Money getTotalSavingsAmount() throws PersistenceException,
-			ServiceException {
-		if (getGroup() != null)
-			return getGroup().getTotalSavingsBalance();
-		return new Money();
 	}
 
 	private void setTotalSavings(Money totalSavings) {
@@ -141,5 +116,69 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	public void setGroup(GroupBO group) {
 		this.group = group;
+	}
+
+	public Money getAvgLoanAmountForMember() throws CustomerException {
+		Money amountForActiveAccount = new Money();
+		Integer countOfActiveLoans = 0;
+		List<CustomerBO> clients = getChildren();
+		if (clients != null) {
+			for (CustomerBO client : clients) {
+				amountForActiveAccount = amountForActiveAccount.add(client
+						.getOutstandingLoanAmount());
+				countOfActiveLoans += client.getActiveLoanCounts();
+			}
+		}
+		if (countOfActiveLoans.intValue() > 0)
+			return new Money(String.valueOf(amountForActiveAccount
+					.getAmountDoubleValue()
+					/ countOfActiveLoans.intValue()));
+		return new Money();
+	}
+
+	public Integer getActiveClientCount() throws CustomerException {
+		List<CustomerBO> clients = getChildren();
+		if (clients != null) {
+			return Integer.valueOf(clients.size());
+		}
+		return Integer.valueOf(0);
+	}
+
+	public Money getTotalOutStandingLoanAmount() throws CustomerException {
+		Money amount = group.getOutstandingLoanAmount();
+		List<CustomerBO> clients = getChildren();
+		if (clients != null) {
+			for (CustomerBO client : clients) {
+				amount = amount.add(client.getOutstandingLoanAmount());
+			}
+		}
+		return amount;
+	}
+
+	public Money getTotalSavingsAmount() throws CustomerException {
+		Money amount = group.getSavingsBalance();
+		List<CustomerBO> clients = getChildren();
+		if (clients != null) {
+			for (CustomerBO client : clients) {
+				amount = amount.add(client.getSavingsBalance());
+			}
+		}
+		return amount;
+	}
+	
+	public void generatePortfolioAtRisk() throws CustomerException {
+		Money amount = group.getBalanceForAccountsAtRisk();
+		List<CustomerBO> clients = getChildren();
+		if (clients != null) {
+			for (CustomerBO client : clients) {
+				amount = amount.add(client.getBalanceForAccountsAtRisk());
+			}
+		}
+		if (getTotalOutStandingLoanAmount().getAmountDoubleValue() != 0.0)
+			setPortfolioAtRisk(new Money(String.valueOf(amount.getAmountDoubleValue()/getTotalOutStandingLoanAmount().getAmountDoubleValue())));
+	}
+	
+	private List<CustomerBO> getChildren() throws CustomerException {
+		return group.getChildren(CustomerLevel.CLIENT,ChildrenStateType.ACTIVE_AND_ONHOLD);
 	}
 }

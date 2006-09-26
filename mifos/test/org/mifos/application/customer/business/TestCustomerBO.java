@@ -87,17 +87,13 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		GroupPerformanceHistoryEntity groupPerformanceHistory = group
 				.getPerformanceHistory();
-		groupPerformanceHistory.setClientCount(Integer.valueOf("1"));
 		groupPerformanceHistory.setLastGroupLoanAmount(new Money("100"));
-		groupPerformanceHistory.setPortfolioAtRisk(new Money("100"));
 		TestObjectFactory.updateObject(group);
 		HibernateUtil.closeSession();
 		group = (GroupBO) customerPersistence.getBySystemId(group
 				.getGlobalCustNum(), group.getCustomerLevel().getId());
 		assertEquals(group.getCustomerId(), group.getPerformanceHistory()
 				.getGroup().getCustomerId());
-		assertEquals(Integer.valueOf("1"), group.getPerformanceHistory()
-				.getClientCount());
 		assertEquals(new Money("100"), group.getPerformanceHistory()
 				.getLastGroupLoanAmount());
 		HibernateUtil.closeSession();

@@ -1,8 +1,18 @@
 package org.mifos.application.accounts.loan.business;
 
 import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class LoanPerformanceHistoryEntity extends PersistentObject {
 
@@ -25,15 +35,6 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 		this.loan = loan;
 		this.noOfPayments = 0;
 	}
-
-	public Integer getDaysInArrears() {
-		return loan.getDaysInArrears();
-	}
-
-	public Integer getTotalNoOfMissedPayments() {
-		return loan.getMissedPaymentCount();
-		
-	}
 	
 	public Date getLoanMaturityDate() {
 		return loanMaturityDate;
@@ -49,5 +50,87 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 
 	public void setNoOfPayments(Integer noOfPayments) {
 		this.noOfPayments = noOfPayments;
+	}
+	
+	public Integer getDaysInArrears() {
+		if (loan.getAccountState().getId().equals(
+				AccountStates.LOANACC_ACTIVEINGOODSTANDING)
+				|| loan.getAccountState().getId().equals(
+						AccountStates.LOANACC_OBLIGATIONSMET)
+				|| loan.getAccountState().getId().equals(
+						AccountStates.LOANACC_WRITTENOFF)
+				|| loan.getAccountState().getId().equals(
+						AccountStates.LOANACC_RESCHEDULED)
+				|| loan.getAccountState().getId().equals(
+						AccountStates.LOANACC_BADSTANDING)) {
+			if (!loan.getDetailsOfInstallmentsInArrears().isEmpty()) {
+				AccountActionDateEntity accountActionDateEntity = loan.getDetailsOfInstallmentsInArrears()
+						.get(loan.getDetailsOfInstallmentsInArrears().size() - 1);
+				Calendar actionDate = new GregorianCalendar();
+				actionDate.setTime(accountActionDateEntity.getActionDate());
+				long diffInTermsOfDay = (Calendar.getInstance()
+						.getTimeInMillis() - actionDate.getTimeInMillis())
+						/ (24 * 60 * 60 * 1000);
+				return Integer.valueOf(new Long(diffInTermsOfDay).toString());
+			}
+		}
+		return 0;
+	}
+	
+	public Integer getTotalNoOfMissedPayments() {
+		int noOfMissedPayments = 0;
+		if (loan.getAccountState().getId().equals(
+				AccountStates.LOANACC_ACTIVEINGOODSTANDING)
+				|| loan.getAccountState().getId().equals(
+						AccountStates.LOANACC_OBLIGATIONSMET)
+				|| loan.getAccountState().getId().equals(
+						AccountStates.LOANACC_WRITTENOFF)
+				|| loan.getAccountState().getId().equals(
+						AccountStates.LOANACC_RESCHEDULED)
+				|| loan.getAccountState().getId().equals(
+						AccountStates.LOANACC_BADSTANDING)) {
+			List<AccountActionDateEntity> accountActionDateList = loan.getDetailsOfInstallmentsInArrears();
+			if (!accountActionDateList.isEmpty())
+				noOfMissedPayments = +accountActionDateList.size();
+			noOfMissedPayments = noOfMissedPayments
+					+ getNoOfBackDatedPayments();
+		}
+		return noOfMissedPayments;
+	}
+	
+	private Integer getNoOfBackDatedPayments() {
+		int noOfMissedPayments = 0;
+		for (AccountPaymentEntity accountPaymentEntity : loan.getAccountPayments()) {
+			Set<AccountTrxnEntity> accountTrxnEntityList = accountPaymentEntity
+					.getAccountTrxns();
+			for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntityList) {
+				if (accountTrxnEntity.getAccountActionEntity().getId().equals(
+						AccountConstants.ACTION_LOAN_REPAYMENT)
+						&& DateUtils
+								.getDateWithoutTimeStamp(
+										accountTrxnEntity.getActionDate()
+												.getTime())
+								.compareTo(
+										DateUtils
+												.getDateWithoutTimeStamp(accountTrxnEntity
+														.getDueDate().getTime())) > 0) {
+					noOfMissedPayments++;
+				}
+				if (accountTrxnEntity.getAccountActionEntity().getId().equals(
+						AccountConstants.ACTION_LOAN_ADJUSTMENT)
+						&& DateUtils
+								.getDateWithoutTimeStamp(
+										accountTrxnEntity.getRelatedTrxn()
+												.getActionDate().getTime())
+								.compareTo(
+										DateUtils
+												.getDateWithoutTimeStamp(accountTrxnEntity
+														.getRelatedTrxn()
+														.getDueDate().getTime())) > 0) {
+					noOfMissedPayments--;
+				}
+			}
+		}
+		return noOfMissedPayments;
 	}
 }

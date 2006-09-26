@@ -71,9 +71,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.Money;
 
 /**
  * This class denotes the Group (row in customer table) object and all
@@ -162,88 +160,6 @@ public class GroupBO extends CustomerBO {
 			throw new CustomerException(
 					CustomerConstants.CREATE_FAILED_EXCEPTION, pe);
 		}
-	}
-
-	public void generatePortfolioAtRisk() throws PersistenceException,
-			ServiceException {
-		Money amount = getBalanceForAccountsAtRisk();
-		List<CustomerBO> clients = new CustomerPersistence()
-				.getAllChildrenForParent(getSearchId(), getOffice()
-						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null) {
-			for (CustomerBO client : clients) {
-				amount = amount.add(client.getBalanceForAccountsAtRisk());
-			}
-		}
-		if (getPerformanceHistory() != null
-				&& getPerformanceHistory().getTotalOutStandingLoanAmount()
-						.getAmountDoubleValue() != 0.0)
-			getPerformanceHistory().setPortfolioAtRisk(
-					new Money(String.valueOf(amount.getAmountDoubleValue()
-							/ getPerformanceHistory()
-									.getTotalOutStandingLoanAmount()
-									.getAmountDoubleValue())));
-		new CustomerPersistence().createOrUpdate(this);
-	}
-
-	public Money getTotalOutStandingLoanAmount() throws PersistenceException,
-			ServiceException {
-		Money amount = getOutstandingLoanAmount();
-		List<CustomerBO> clients = new CustomerPersistence()
-				.getAllChildrenForParent(getSearchId(), getOffice()
-						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null) {
-			for (CustomerBO client : clients) {
-				amount = amount.add(client.getOutstandingLoanAmount());
-			}
-		}
-		return amount;
-	}
-
-	public Money getAverageLoanAmount() throws PersistenceException,
-			ServiceException {
-		Money amountForActiveAccount = new Money();
-		Integer countOfActiveLoans = 0;
-		List<CustomerBO> clients = new CustomerPersistence()
-				.getAllChildrenForParent(getSearchId(), getOffice()
-						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null) {
-			for (CustomerBO client : clients) {
-				amountForActiveAccount = amountForActiveAccount.add(client
-						.getOutstandingLoanAmount());
-				countOfActiveLoans += client.getActiveLoanCounts();
-			}
-		}
-		if (countOfActiveLoans.intValue() > 0)
-			return new Money(String.valueOf(amountForActiveAccount
-					.getAmountDoubleValue()
-					/ countOfActiveLoans.intValue()));
-		return new Money();
-	}
-
-	public Money getTotalSavingsBalance() throws PersistenceException,
-			ServiceException {
-		Money amount = getSavingsBalance();
-		List<CustomerBO> clients = new CustomerPersistence()
-				.getAllChildrenForParent(getSearchId(), getOffice()
-						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null) {
-			for (CustomerBO client : clients) {
-				amount = amount.add(client.getSavingsBalance());
-			}
-		}
-		return amount;
-	}
-
-	public Integer getActiveOnHoldChildrenOfGroup()
-			throws PersistenceException, ServiceException {
-		List<CustomerBO> clients = new CustomerPersistence()
-				.getAllChildrenForParent(getSearchId(), getOffice()
-						.getOfficeId(), CustomerConstants.GROUP_LEVEL_ID);
-		if (clients != null) {
-			return Integer.valueOf(clients.size());
-		}
-		return Integer.valueOf(0);
 	}
 
 	public void update(UserContext userContext, String displayName,

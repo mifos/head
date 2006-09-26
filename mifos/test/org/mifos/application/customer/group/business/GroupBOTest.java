@@ -426,7 +426,7 @@ public class GroupBOTest extends MifosTestCase {
 				changeFirstInstallmentDate(account, 31);
 			}
 		}
-		group.generatePortfolioAtRisk();
+		group.getPerformanceHistory().generatePortfolioAtRisk();
 		assertEquals(new Money("1.0"), ((GroupBO) group)
 				.getPerformanceHistory().getPortfolioAtRisk());
 		TestObjectFactory.flushandCloseSession();
@@ -447,8 +447,7 @@ public class GroupBOTest extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(new Money("600.0"), ((GroupBO) group)
-				.getTotalOutStandingLoanAmount());
+		assertEquals(new Money("600.0"), ((GroupBO) group).getPerformanceHistory().getTotalOutStandingLoanAmount());
 		assertEquals(new Money("600.0"), ((GroupBO) group)
 				.getPerformanceHistory().getTotalOutStandingLoanAmount());
 		TestObjectFactory.flushandCloseSession();
@@ -469,8 +468,7 @@ public class GroupBOTest extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(new Money("300.0"), ((GroupBO) group)
-				.getAverageLoanAmount());
+		assertEquals(new Money("300.0"), ((GroupBO) group).getPerformanceHistory().getAvgLoanAmountForMember());
 		assertEquals(new Money("300.0"), ((GroupBO) group)
 				.getPerformanceHistory().getAvgLoanAmountForMember());
 		TestObjectFactory.flushandCloseSession();
@@ -508,8 +506,7 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(new Money("2000.0"), savings2.getSavingsBalance());
 		assertEquals(new Money("2000.0"), ((ClientBO) client)
 				.getSavingsBalance());
-		assertEquals(new Money("3000.0"), ((GroupBO) group)
-				.getTotalSavingsBalance());
+		assertEquals(new Money("3000.0"), ((GroupBO) group).getPerformanceHistory().getTotalSavingsAmount());
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -542,8 +539,7 @@ public class GroupBOTest extends MifosTestCase {
 		client2 = TestObjectFactory.createClient("client3",
 				ClientConstants.STATUS_CANCELLED, "1.4.1.3", group, new Date(
 						System.currentTimeMillis()));
-		assertEquals(Integer.valueOf("2"), ((GroupBO) group)
-				.getActiveOnHoldChildrenOfGroup());
+		assertEquals(Integer.valueOf("2"), ((GroupBO) group).getPerformanceHistory().getActiveClientCount());
 	}
 
 	public void testUpdateBranchFailure_OfficeNULL() throws Exception {

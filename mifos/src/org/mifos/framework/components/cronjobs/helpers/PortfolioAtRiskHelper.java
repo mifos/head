@@ -19,7 +19,8 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 				for(Integer customerId :  customerIds){
 					try{
 						GroupBO group = (GroupBO)new CustomerPersistence().getCustomer(customerId);
-						group.generatePortfolioAtRisk();
+						group.getPerformanceHistory().generatePortfolioAtRisk();
+						group.update();
 						HibernateUtil.commitTransaction();
 					}			
 					catch(Exception e){

@@ -935,57 +935,11 @@ public class LoanBO extends AccountBO {
 				loanSummary.getPrincipalPaid());
 	}
 
-	public Integer getDaysInArrears() {
-		if (getAccountState().getId().equals(
-				AccountStates.LOANACC_ACTIVEINGOODSTANDING)
-				|| getAccountState().getId().equals(
-						AccountStates.LOANACC_OBLIGATIONSMET)
-				|| getAccountState().getId().equals(
-						AccountStates.LOANACC_WRITTENOFF)
-				|| getAccountState().getId().equals(
-						AccountStates.LOANACC_RESCHEDULED)
-				|| getAccountState().getId().equals(
-						AccountStates.LOANACC_BADSTANDING)) {
-			if (!getDetailsOfInstallmentsInArrears().isEmpty()) {
-				AccountActionDateEntity accountActionDateEntity = getDetailsOfInstallmentsInArrears()
-						.get(getDetailsOfInstallmentsInArrears().size() - 1);
-				Calendar actionDate = new GregorianCalendar();
-				actionDate.setTime(accountActionDateEntity.getActionDate());
-				long diffInTermsOfDay = (Calendar.getInstance()
-						.getTimeInMillis() - actionDate.getTimeInMillis())
-						/ (24 * 60 * 60 * 1000);
-				return Integer.valueOf(new Long(diffInTermsOfDay).toString());
-			}
-		}
-		return 0;
-	}
-
 	public Boolean isAccountActive() {
 		return (getAccountState().getId().equals(
 				AccountStates.LOANACC_ACTIVEINGOODSTANDING) || getAccountState()
 				.getId().equals(AccountStates.LOANACC_BADSTANDING)) ? true
 				: false;
-	}
-
-	public Integer getMissedPaymentCount() {
-		int noOfMissedPayments = 0;
-		if (getAccountState().getId().equals(
-				AccountStates.LOANACC_ACTIVEINGOODSTANDING)
-				|| getAccountState().getId().equals(
-						AccountStates.LOANACC_OBLIGATIONSMET)
-				|| getAccountState().getId().equals(
-						AccountStates.LOANACC_WRITTENOFF)
-				|| getAccountState().getId().equals(
-						AccountStates.LOANACC_RESCHEDULED)
-				|| getAccountState().getId().equals(
-						AccountStates.LOANACC_BADSTANDING)) {
-			List<AccountActionDateEntity> accountActionDateList = getDetailsOfInstallmentsInArrears();
-			if (!accountActionDateList.isEmpty())
-				noOfMissedPayments = +accountActionDateList.size();
-			noOfMissedPayments = noOfMissedPayments
-					+ getNoOfBackDatedPayments();
-		}
-		return noOfMissedPayments;
 	}
 
 	public void save() throws AccountException {
@@ -2089,42 +2043,6 @@ public class LoanBO extends AccountBO {
 			this.gracePeriodType = loanOffering.getGracePeriodType();
 			this.gracePeriodDuration = gracePeriodDuration;
 		}
-	}
-
-	private Integer getNoOfBackDatedPayments() {
-		int noOfMissedPayments = 0;
-		for (AccountPaymentEntity accountPaymentEntity : getAccountPayments()) {
-			Set<AccountTrxnEntity> accountTrxnEntityList = accountPaymentEntity
-					.getAccountTrxns();
-			for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntityList) {
-				if (accountTrxnEntity.getAccountActionEntity().getId().equals(
-						AccountConstants.ACTION_LOAN_REPAYMENT)
-						&& DateUtils
-								.getDateWithoutTimeStamp(
-										accountTrxnEntity.getActionDate()
-												.getTime())
-								.compareTo(
-										DateUtils
-												.getDateWithoutTimeStamp(accountTrxnEntity
-														.getDueDate().getTime())) > 0) {
-					noOfMissedPayments++;
-				}
-				if (accountTrxnEntity.getAccountActionEntity().getId().equals(
-						AccountConstants.ACTION_LOAN_ADJUSTMENT)
-						&& DateUtils
-								.getDateWithoutTimeStamp(
-										accountTrxnEntity.getRelatedTrxn()
-												.getActionDate().getTime())
-								.compareTo(
-										DateUtils
-												.getDateWithoutTimeStamp(accountTrxnEntity
-														.getRelatedTrxn()
-														.getDueDate().getTime())) > 0) {
-					noOfMissedPayments--;
-				}
-			}
-		}
-		return noOfMissedPayments;
 	}
 
 	private void updateCustomerHistoryOnLastInstlPayment(Money totalAmount) {

@@ -1587,8 +1587,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 
-		assertEquals(Integer.valueOf("2"), ((LoanBO) accountBO)
-				.getMissedPaymentCount());
+		assertEquals(Integer.valueOf("2"), ((LoanBO) accountBO).getPerformanceHistory().getTotalNoOfMissedPayments());
 	}
 
 	public void testGetTotalRepayAmountForCustomerPerfHistory()
@@ -3811,8 +3810,8 @@ public class TestLoanBO extends MifosTestCase {
 		loan.setDisbursementDate(disbursementDate);
 		accountBO = saveAndFetch(loan);
 		loan = (LoanBO) accountBO;
-		assertEquals(Integer.valueOf("0"),loan.getMissedPaymentCount());
-		assertEquals(Integer.valueOf("0"),loan.getDaysInArrears());
+		assertEquals(Integer.valueOf("0"),loan.getPerformanceHistory().getTotalNoOfMissedPayments());
+		assertEquals(Integer.valueOf("0"),loan.getPerformanceHistory().getDaysInArrears());
 		assertEquals(Integer.valueOf("0"),loan.getPerformanceHistory().getNoOfPayments());
 	}
 

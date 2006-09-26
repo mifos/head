@@ -1,5 +1,8 @@
 package org.mifos.application.customer.client.business;
 
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
 import org.mifos.framework.util.helpers.Money;
 
@@ -49,12 +52,6 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return delinquentPortfolio;
 	}
 
-	public Money getDelinquentPortfolioAmount() {
-		if (getClient() != null)
-			return getClient().getDelinquentPortfolioAmount();
-		return new Money();
-	}
-
 	private void setDelinquentPortfolio(Money delinquentPortfolio) {
 		this.delinquentPortfolio = delinquentPortfolio;
 	}
@@ -88,9 +85,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	}
 
 	public Money getTotalSavingsAmount() {
-		if (getClient() != null)
-			return getClient().getSavingsBalance();
-		return new Money();
+		return getClient().getSavingsBalance();
 	}
 
 	private void setTotalSavings(Money totalSavings) {
@@ -99,5 +94,26 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	public ClientBO getClient() {
 		return client;
+	}
+	
+	public Money getDelinquentPortfolioAmount() {
+		Money amountOverDue = new Money();
+		Money totalOutStandingAmount = new Money();
+		for (AccountBO accountBO : client.getAccounts()) {
+			if (accountBO.getAccountType().getAccountTypeId().equals(
+					AccountTypes.LOANACCOUNT.getValue())
+					&& ((LoanBO) accountBO).isAccountActive()) {
+				amountOverDue = amountOverDue.add(((LoanBO) accountBO)
+						.getTotalPrincipalAmountInArrears());
+				totalOutStandingAmount = totalOutStandingAmount
+						.add(((LoanBO) accountBO).getLoanSummary()
+								.getOriginalPrincipal());
+			}
+		}
+		if (totalOutStandingAmount.getAmountDoubleValue() != 0.0)
+			return new Money(String.valueOf(amountOverDue
+					.getAmountDoubleValue()
+					/ totalOutStandingAmount.getAmountDoubleValue()));
+		return new Money();
 	}
 }
