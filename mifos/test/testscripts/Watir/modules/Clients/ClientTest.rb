@@ -367,25 +367,35 @@ class ClientCreateEdit<TestClass
   #Checking the next link functionality in search group page
   
   def check_next_link_in_search_group_page()
-     begin
+    begin
       $ie.link(:text,"Clients & Accounts").click
       $ie.link(:text,@@createclientlabel).click
       $ie.text_field(:name,"searchNode(searchString)").set("%")        
       $ie.button(:value,"Proceed").click
+      dbquery("select count(*) from customer where customer_level_id=2")
+      @@count=dbresult[0]
+      if @@count.to_i>10
       $ie.link(:text,"Next").click
-      assert($ie.contains_text("Results 11"))
-      $logger.log_results("Next Button","Should Work","Working","Passed")
-    rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Next Button","Should Work","Working","Failed")
+      begin
+        assert($ie.contains_text("Results 11"))
+        $logger.log_results("Next Button","Should Work","Working","Passed")
+      rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Next Button","Should Work","Working","Failed")
+      end
+      end
     end
   end
   def check_previous_link_in_search_group_page()
      begin
+      if @@count.to_i>10
       $ie.link(:text,"Previous").click
-      assert($ie.contains_text("Results 1"))
-      $logger.log_results("Previous Button","Should Work","Working","Passed")
-    rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Previous Button","Should Work","Working","Failed")
+      begin
+        assert($ie.contains_text("Results 1"))
+        $logger.log_results("Previous Button","Should Work","Working","Passed")
+      rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Previous Button","Should Work","Working","Failed")
+      end
+      end
     end
   end
   def select_group()

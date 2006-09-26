@@ -406,10 +406,10 @@ class Check_List_Test_Cases < TestClass
  # To delete all checklist(As there is no option for it in User interface)
   def delete_all_checklist()
     begin    
-      dbquery("delete from prd_checklist")
-      dbquery("delete from customer_checklist")    
-      dbquery("delete from checklist_detail")
-      dbquery("delete from checklist")      
+      $dbh.real_query("delete from prd_checklist")
+      $dbh.real_query("delete from customer_checklist")    
+      $dbh.real_query("delete from checklist_detail")
+      $dbh.real_query("delete from checklist")      
     end
   end
  

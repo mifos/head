@@ -1208,7 +1208,7 @@ class LoanProduct_Test_Cases < TestClass
       LoanProduct_Creation_Conformation()
       
     rescue =>excp
-      quit_on_error(excp)          
+     quit_on_error(excp)          
     end
   end
   
