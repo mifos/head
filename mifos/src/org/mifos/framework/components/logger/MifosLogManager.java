@@ -96,46 +96,53 @@ public class MifosLogManager {
 	 * 							 If it is null then the logger is created using the name
 	 * @return An instance of the MifosLogger
 	 */
-	public static MifosLogger getLoggerHelper(String name, String resourceBundleName){
+	public static MifosLogger getLoggerHelper(String name,
+			String resourceBundleName) {
 
-			MifosLogger logger=null;
-			//checks to see if the logger repository already contains an instance of the logger.
-			//If it does that instance is returned
-			if(loggerRepository.containsKey(name)) {
-				logger=loggerRepository.get(name);
-			}
-			//Since the logger repository doesnt contain an instance, a new instance is created and put into the logger repository
-			else{
-				//taking care of the scenario: two users creating the same instance of a logger and trying to push into
-				//the repository. To avoid this the repository is synchronised allowing only one person to push the
-				//instance in. For the second user a check on the availability is done again
-				synchronized (loggerRepository) {
-					if(loggerRepository.containsKey(name) ) {
-						logger=loggerRepository.get(name);
+		MifosLogger logger = null;
+		// checks to see if the logger repository already contains an instance
+		// of the logger.
+		// If it does that instance is returned
+		if (loggerRepository.containsKey(name)) {
+			logger = loggerRepository.get(name);
+		}
+		// Since the logger repository doesnt contain an instance, a new
+		// instance is created and put into the logger repository
+		else {
+			// taking care of the scenario: two users creating the same instance
+			// of a logger and trying to push into
+			// the repository. To avoid this the repository is synchronised
+			// allowing only one person to push the
+			// instance in. For the second user a check on the availability is
+			// done again
+			synchronized (loggerRepository) {
+				if (loggerRepository.containsKey(name)) {
+					logger = loggerRepository.get(name);
+				} else {
+					if (resourceBundleName != null) {
+						try {
+							logger = new Log4jLogger(name,
+									getResourceBundle(resourceBundleName));
+						} catch (ResourceBundleNotFoundException rbnfe) {
+							rbnfe.printStackTrace();
+						}
+					} else {
+						logger = new Log4jLogger(name);
 					}
-					else{
-						if(resourceBundleName!=null)
-							try {
-								logger = new Log4jLogger(name , getResourceBundle(resourceBundleName));
-							} catch (ResourceBundleNotFoundException rbnfe) {
-								rbnfe.printStackTrace();
-							}
-						else
-							logger = new Log4jLogger(name);
-					loggerRepository.put(name,logger);
-
-					}
+					loggerRepository.put(name, logger);
 				}
-
 			}
+		}
 
-			return logger;
-		}//end-method getLoggerHelper
+		return logger;
+	}
 
 
 	/**
 	 * Obtains the Resource bundle for a particular MFI Locale
-	 * @param resourceBundleName The name of the resource bundle
+	 * 
+	 * @param resourceBundleName
+	 *            The name of the resource bundle
 	 * @return The resouce bundle for the locale
 	 * @throws ResourceBundleNotFoundException
 	 */

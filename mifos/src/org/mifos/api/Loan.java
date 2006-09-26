@@ -14,11 +14,14 @@ public class Loan {
 	
 	Loan() throws ServiceException {
 		if (loanBusinessService == null) {
-			loanBusinessService = (LoanBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Loan);
+			loanBusinessService = (LoanBusinessService) 
+				ServiceFactory.getInstance()
+					.getBusinessService(BusinessServiceName.Loan);
 		}
 	}
 	
-	public static Loan getLoan(Integer id) throws Exception { // We may want to check exceptions in this one...
+	public static Loan getLoan(Integer id) throws Exception { 
+		// We may want to check exceptions in this one...
 		Loan result = new Loan();
 		result.bo = loanBusinessService.getAccount(id);
 		return result;
