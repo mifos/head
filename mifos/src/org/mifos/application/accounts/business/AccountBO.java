@@ -49,8 +49,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
@@ -67,19 +65,16 @@ import org.mifos.application.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.accounts.util.valueobjects.AccountFees;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
-import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -88,9 +83,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -987,31 +980,6 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-	protected AccountFees getAccountFees(Integer accountFeeId) {
-		AccountFees accountFees = new AccountFees();
-		Session session = null;
-		try {
-			session = HibernateUtil.getSession();
-			accountFees = (AccountFees) session.get(AccountFees.class,
-					accountFeeId);
-			Fees fees = accountFees.getFees();
-			initializeMeetings(fees);
-			if (null != fees) {
-				fees.getFeeFrequency().getFeeFrequencyId();
-			}
-		} catch (HibernateProcessException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				HibernateUtil.closeSession(session);
-			} catch (HibernateProcessException e) {
-				e.printStackTrace();
-			}
-		}
-		Hibernate.initialize(accountFees);
-		return accountFees;
-	}
-
 	protected Short getLastInstallmentId() {
 		Short LastInstallmentId = null;
 		for (AccountActionDateEntity date : this.getAccountActionDates()) {
@@ -1143,15 +1111,6 @@ public class AccountBO extends BusinessObject {
 				.getAccountPayment().getPaymentId(), String
 				.valueOf(removeSign(accountTrxn.getAmount())), accountTrxn
 				.getCustomer().getDisplayName(), getUserContext().getName());
-	}
-
-	private void initializeMeetings(Fees fees) {
-		if (fees.getFeeFrequency().getFeeFrequencyTypeId().equals(
-				FeeFrequencyType.PERIODIC.getValue())) {
-			Meeting meeting = fees.getFeeFrequency().getFeeMeetingFrequency();
-			meeting.getMeetingType().getMeetingPurpose();
-		}
-
 	}
 
 	private void addAccountCustomField(AccountCustomFieldEntity customField) {

@@ -420,24 +420,6 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 
-	private Set<AccountFees> getAccountFeesSet() {
-		Set<AccountFees> accountFeesSet = new HashSet<AccountFees>();
-		for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-			addFee(accountFeesEntity, accountFeesSet);
-		}
-		return accountFeesSet;
-	}
-
-	private void addFee(AccountFeesEntity accountFeesEntity,
-			Set<AccountFees> accountFeesSet) {
-		if (accountFeesEntity.getFeeStatus() == null
-				|| accountFeesEntity.getFeeStatus().equals(
-						AccountConstants.ACTIVE_FEES))
-			accountFeesSet.add(getAccountFees(accountFeesEntity
-					.getAccountFeeId()));
-
-	}
-
 	public void generateMeetingsForNextYear() throws AccountException {
 		Short lastInstallmentId = getLastInstallmentId();
 		MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
@@ -528,14 +510,14 @@ public class CustomerAccountBO extends AccountBO {
 					throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
 				applyMiscCharge(feeId, chargeAmount, dueInstallments.get(0));
 			} else {
-				dueInstallments = getDueInstallments();
+				dueInstallments = getTotalDueInstallments();
 				if(dueInstallments.isEmpty()) 
 					throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
 				FeeBO fee = new FeePersistence().getFee(feeId);
 				if (fee.getFeeFrequency().getFeePayment() != null) {
 					applyOneTimeFee(fee, chargeAmount, dueInstallments.get(0));
 				} else {
-					applyPeriodicFee(fee,chargeAmount,getDueInstallments());
+					applyPeriodicFee(fee,chargeAmount,dueInstallments);
 				}
 			}
 		}

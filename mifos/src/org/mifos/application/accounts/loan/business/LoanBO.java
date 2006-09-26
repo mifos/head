@@ -526,24 +526,20 @@ public class LoanBO extends AccountBO {
 
 	@Override
 	public void applyCharge(Short feeId, Double charge) throws AccountException {
-		List<AccountActionDateEntity> dueInstallments = null;
+		List<AccountActionDateEntity> dueInstallments = getTotalDueInstallments();
+		if (dueInstallments.isEmpty())
+			throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
 		if (feeId.equals(Short.valueOf(AccountConstants.MISC_FEES))
 				|| feeId.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
-			dueInstallments = getTotalDueInstallments();
-			if (dueInstallments.isEmpty())
-				throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
 			applyMiscCharge(feeId, new Money(String.valueOf(charge)),
 					dueInstallments.get(0));
 			applyRounding();
 		} else {
-			dueInstallments = getDueInstallments();
-			if (dueInstallments.isEmpty())
-				throw new AccountException(AccountConstants.NOMOREINSTALLMENTS);
 			FeeBO fee = new FeePersistence().getFee(feeId);
 			if (fee.getFeeFrequency().getFeePayment() != null) {
 				applyOneTimeFee(fee, charge, dueInstallments.get(0));
 			} else {
-				applyPeriodicFee(fee, charge, getDueInstallments());
+				applyPeriodicFee(fee, charge, dueInstallments);
 			}
 			applyRounding();
 		}
@@ -1839,13 +1835,38 @@ public class LoanBO extends AccountBO {
 					lastAppliedDate = loanScheduleEntity.getActionDate();
 					totalFeeAmountApplied = totalFeeAmountApplied
 							.add(feeInstallment.getAccountFee());
-					AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
+					/*AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
 							loanScheduleEntity, feeInstallment
 									.getAccountFeesEntity().getFees(),
 							feeInstallment.getAccountFeesEntity(),
 							feeInstallment.getAccountFee());
 					loanScheduleEntity
-							.addAccountFeesAction(accountFeesActionDetailEntity);
+							.addAccountFeesAction(accountFeesActionDetailEntity);*/
+					if (feeInstallment.getAccountFeesEntity().getFees()
+							.isPeriodic()
+							&& loanScheduleEntity
+									.isFeeAlreadyAttatched(feeInstallment
+											.getAccountFeesEntity().getFees()
+											.getFeeId())) {
+						LoanFeeScheduleEntity loanFeeScheduleEntity = (LoanFeeScheduleEntity) loanScheduleEntity
+								.getAccountFeesAction(feeInstallment
+										.getAccountFeesEntity().getFees()
+										.getFeeId());
+						loanFeeScheduleEntity
+								.setFeeAmount(loanFeeScheduleEntity
+										.getFeeAmount().add(
+												feeInstallment.getAccountFee()));
+					} else {
+						AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
+								loanScheduleEntity, feeInstallment
+										.getAccountFeesEntity().getFees(),
+								feeInstallment.getAccountFeesEntity(),
+								feeInstallment.getAccountFee());
+						loanScheduleEntity
+								.addAccountFeesAction(accountFeesActionDetailEntity);
+					}
+					
+					
 					accountFeesEntity = feeInstallment.getAccountFeesEntity();
 				}
 		}

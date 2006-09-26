@@ -20,6 +20,7 @@ import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.valueobjects.CustomerFeesActionDetail;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
@@ -730,8 +731,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getAccountActionDates()) {
 			CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
 			if (customerScheduleEntity.getInstallmentId().equals(
-					Short.valueOf("2"))) {
-				assertEquals(1, customerScheduleEntity
+					Short.valueOf("1"))) {
+				assertEquals(2, customerScheduleEntity
 						.getAccountFeesActionDetails().size());
 				amount = amount.add(new Money("200"));
 				lastAppliedDate = customerScheduleEntity.getActionDate();
@@ -843,15 +844,15 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						.getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		Date lastAppliedDate = null;
-		Money amount = new Money();
+		Money amount = new Money("20");
+	
 		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
 				.getAccountActionDates()) {
 			CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
 			if (customerScheduleEntity.getInstallmentId().equals(
-					Short.valueOf("2"))) {
-				assertEquals(1, customerScheduleEntity
+					Short.valueOf("1"))) {
+				assertEquals(2, customerScheduleEntity
 						.getAccountFeesActionDetails().size());
-				amount = amount.add(new Money("20"));
 				lastAppliedDate = customerScheduleEntity.getActionDate();
 			}
 		}

@@ -97,7 +97,7 @@
 
 
 	<!-- program mapping files -->
-	<mapping resource="org/mifos/application/program/util/valueobjects/Program.hbm.xml" />
+
 	<mapping resource="org/mifos/framework/security/util/ActivityRoles.hbm.xml" />
 	<mapping resource="org/mifos/framework/security/util/officeSearch.hbm.xml" />
 <mapping resource="org/mifos/framework/security/util/PersonalRoles.hbm.xml" />

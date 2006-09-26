@@ -403,6 +403,17 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		}
 		return null;
 	}
+	
+	public AccountFeesActionDetailEntity getAccountFeesAction(
+			Short feeId) {
+		for (AccountFeesActionDetailEntity accountFeesAction : getAccountFeesActionDetails()) {
+			if (accountFeesAction.getFee().getFeeId().equals(
+					feeId)) {
+				return accountFeesAction;
+			}
+		}
+		return null;
+	}
 
 	public Money waivePenaltyCharges() {
 		Money chargeWaived = new Money();
@@ -429,6 +440,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	
 	public boolean isPrincipalZero(){
 		return principal.getAmountDoubleValue() == 0.0 ;
+	}
+	
+	public boolean isFeeAlreadyAttatched(Short feeId){
+		for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : this.getAccountFeesActionDetails()){
+			if(accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId))
+				return true;
+		}
+		return false;
 	}
 
 }

@@ -41,10 +41,6 @@
 
       import org.mifos.framework.util.valueobjects.ValueObject;
 
-	  import org.mifos.application.program.util.valueobjects.Program;
-
-	  import org.mifos.application.master.util.valueobjects.Position;
-
 /**
 * A class that represents a row in the customer position table.
 */
