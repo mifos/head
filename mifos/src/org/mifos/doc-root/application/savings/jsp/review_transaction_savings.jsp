@@ -100,25 +100,28 @@
 		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
 			      </td>
 			  </tr>
-              <tr>
-                	<td align="right" class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
-	              	  <mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/></td>
-	                <td class="fontnormal">
-		              <c:choose>
-			              <c:when test="${sessionScope.BusinessKey.customer.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
-				              <mifos:mifoslabel name="Savings.nonSpecified" />
-			              </c:when>
-			              <c:otherwise>
-				              <c:forEach var="client" items="${sessionScope.clientList}">
-				                	<c:if test="${client.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
-				                		<c:out value ="${client.displayName}"/>
-				                	</c:if>
-				              </c:forEach>
-			              </c:otherwise>
-		              </c:choose>
-	              </td>
-	            </tr>
-              
+			  <c:set var="customerLevel" value="${sessionScope.BusinessKey.customer.customerLevel.id}" />
+			  <c:if test="${customerLevel==CustomerLevel.CENTER.value or (customerLevel==CustomerLevel.GROUP.value and 
+				  				sessionScope.BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
+	              <tr>
+	                	<td align="right" class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
+		              	  <mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/></td>
+		                <td class="fontnormal">
+			              <c:choose>
+				              <c:when test="${sessionScope.BusinessKey.customer.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
+					              <mifos:mifoslabel name="Savings.nonSpecified" />
+				              </c:when>
+				              <c:otherwise>
+					              <c:forEach var="client" items="${sessionScope.clientList}">
+					                	<c:if test="${client.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
+					                		<c:out value ="${client.displayName}"/>
+					                	</c:if>
+					              </c:forEach>
+				              </c:otherwise>
+			              </c:choose>
+		              </td>
+		            </tr>
+              </c:if>
               <tr>
                 <td align="right" class="fontnormalbold">
                 	<mifos:mifoslabel name="Savings.dateOfTrxn"  isColonRequired="Yes"/> 
