@@ -89,10 +89,12 @@
 								name="Center.LoanOff" ></mifos:mifoslabel>
 							<c:out value="${BusinessKey.personnel.displayName}" /></span><br>
 							<br>
-							<!-- List of groups under the center --> <mifos:mifoslabel
+							<!-- List of groups under the center -->
+							<span class="fontnormalBold"> <mifos:mifoslabel
 								name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel
 								name="Center.s"  /> <mifos:mifoslabel
 								name="Center.Assigned"  />
+								</span>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<c:if test="${statusID != CustomerConstants.CENTER_INACTIVE_STATE}">
 								<span class="fontnormal"> <a

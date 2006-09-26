@@ -1,6 +1,6 @@
 package org.mifos.application.accounts.business;
 
-import java.sql.Date;
+import java.util.Date;
 
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
@@ -22,11 +22,11 @@ public class CustomerActivityEntity extends PersistentObject {
 	}
 
 	public CustomerActivityEntity(PersonnelBO personnel, String description,
-			Money amount) {
+			Money amount,Date trxnDate) {
 		this.personnel = personnel;
 		this.amount = amount;
 		this.description = description;
-		this.createdDate = new Date(System.currentTimeMillis());
+		this.createdDate = trxnDate;
 	}
 	
 	public CustomerActivityEntity(CustomerAccountBO customerAccount,PersonnelBO personnel, Money amount,

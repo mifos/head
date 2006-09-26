@@ -170,15 +170,32 @@
 	                  </c:otherwise>
 											</c:choose> <c:out value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}" /> <c:choose>
 												<c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
-	                    (<customtags:lookUpValue id="${sessionScope.BusinessKey.recommendedAmntUnit.id}" searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
-													</customtags:lookUpValue>)
+	                    ( <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" 
+											var="item">
+							<c:if test="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id == item.id}">
+							    <c:out value="${item.name}"></c:out>
+							</c:if>				
+											
+					</c:forEach> )
 	                    </c:when>
 												<c:otherwise>
-													<customtags:lookUpValue id="${sessionScope.BusinessKey.recommendedAmntUnit.id}" searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
-													</customtags:lookUpValue>
+													 <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" 
+											var="item">
+							<c:if test="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id == item.id}">
+							    <c:out value="${item.name}"></c:out>
+							</c:if>				
+											
+					</c:forEach> 
 												</c:otherwise>
-											</c:choose> <br> <br> <mifos:mifoslabel name="Savings.typeOfDeposits" />: <customtags:lookUpValue id="${sessionScope.BusinessKey.savingsOffering.savingsType.id}" searchResultName="SavingsType" mapToSeperateMasterTable="true">
-											</customtags:lookUpValue> </span>
+											</c:choose> <br> <br> <mifos:mifoslabel name="Savings.typeOfDeposits" />:<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsType')}" 
+											var="item">
+							<c:if test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == item.id}">
+							    <c:out value="${item.name}"></c:out>
+							</c:if>				
+											
+					</c:forEach>   
+
+											 </span>
 										<br>
 										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" />:
 										<c:out value="${sessionScope.BusinessKey.savingsOffering.maxAmntWithdrawl}" />

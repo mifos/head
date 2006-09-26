@@ -61,8 +61,8 @@
 				<tr>
 					<td class="bluetablehead05">
 						<span class="fontnormal8pt"><html-el:link href="javascript:cancel()">
-								<mifos:mifoslabel name="office.labelLinkAdmin" bundle="OfficeResources"></mifos:mifoslabel>
-							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel name="office.labelViewOfficeHierarchy" bundle="OfficeResources"></mifos:mifoslabel></span>
+								<mifos:mifoslabel name="Office.labelLinkAdmin" ></mifos:mifoslabel>
+							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel name="Office.labelViewOfficeHierarchy" /></span>
 					</td>
 				</tr>
 			</table>
@@ -72,30 +72,33 @@
 						<table width="98%" border="0" cellspacing="0" cellpadding="3">
 							<tr>
 								<td width="35%" class="headingorange">
-									<mifos:mifoslabel name="office.labelViewOfficeHierarchy" bundle="OfficeResources"></mifos:mifoslabel>
+									<mifos:mifoslabel name="Office.labelViewOfficeHierarchy"/>
 								</td>
 							</tr>
 							<tr>
 								<td class="fontnormal">
-									<mifos:mifoslabel name="office.labelMaxMinLevel" bundle="OfficeResources"></mifos:mifoslabel>
+									<mifos:mifoslabel name="Office.labelMaxMinLevel"/>
 								</td>
 							</tr>
-							<tr>
-								<td colspan="2" class="fontnormal">
-									<font class="fontnormalRedBold"><html-el:errors bundle="OfficeResources" /> </font>
+							<tr >
 
-								</td>
+								<logic:messagesPresent>
+								<td>
+								<font class="fontnormalRedBold"><br><html-el:errors
+									bundle="OfficeUIResources" /></font>
+									</td>
+								</logic:messagesPresent>
 							</tr>
 						</table>
 						<br>
 						<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="2" class="fontnormal">
-									<mifos:mifoslabel name="office.labelCheckLevelIncluded" bundle="OfficeResources"></mifos:mifoslabel>
+									<mifos:mifoslabel name="Office.labelCheckLevelIncluded" />
 									<br>
 									<br>
-									<span class="fontnormalbold"><mifos:mifoslabel name="office.labelNote" bundle="OfficeResources"></mifos:mifoslabel></span>
-									<mifos:mifoslabel name="office.labelNoteInstruction" bundle="OfficeResources"></mifos:mifoslabel>
+									<span class="fontnormalbold"><mifos:mifoslabel name="Office.labelNote" /></span>
+									<mifos:mifoslabel name="Office.labelNoteInstruction" />
 								</td>
 							</tr>
 							<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'officelevels')}" var="ol">
@@ -138,7 +141,7 @@
 									<html-el:submit property="submitBtn" styleClass="buttn" style="width:70px;"></html-el:submit>
 									&nbsp;
 									<html-el:button onclick="cancel()" property="cancelButton" value="Cancel" styleClass="cancelbuttn" style="width:70px">
-										<mifos:mifoslabel name="office.button.cancel" bundle="OfficeResources"></mifos:mifoslabel>
+										<mifos:mifoslabel name="Office.button.cancel" />
 									</html-el:button>
 								</td>
 							</tr>

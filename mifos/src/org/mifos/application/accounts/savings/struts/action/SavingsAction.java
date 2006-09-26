@@ -70,7 +70,10 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
+import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.business.service.BusinessService;
@@ -163,12 +166,7 @@ public class SavingsAction extends AccountAppAction {
 		SessionUtils
 				.setAttribute(
 						MasterConstants.INTEREST_CAL_TYPES,
-						masterDataService
-								.getMasterData(
-										MasterConstants.INTEREST_CAL_TYPES,
-										uc.getLocaleId(),
-										"org.mifos.application.master.util.valueobjects.InterestCalcType",
-										"interestCalculationTypeID"), request);
+						masterDataService.retrieveMasterEntities(InterestCalcTypeEntity.class,uc.getLocaleId()), request);
 		loadMasterDataPartail(uc, request);
 
 	}
@@ -180,20 +178,14 @@ public class SavingsAction extends AccountAppAction {
 				.setAttribute(
 						MasterConstants.SAVINGS_TYPE,
 						masterDataService
-								.getMasterData(
-										MasterConstants.SAVINGS_TYPE,
-										uc.getLocaleId(),
-										"org.mifos.application.master.util.valueobjects.SavingsType",
-										"savingsTypeId"), request);
+								.retrieveMasterEntities(SavingsTypeEntity.class,									
+										uc.getLocaleId()), request);
 		SessionUtils
 				.setAttribute(
 						MasterConstants.RECOMMENDED_AMOUNT_UNIT,
 						masterDataService
-								.getMasterData(
-										MasterConstants.RECOMMENDED_AMOUNT_UNIT,
-										uc.getLocaleId(),
-										"org.mifos.application.master.util.valueobjects.RecommendedAmntUnit",
-										"recommendedAmntUnitId"), request);
+								.retrieveMasterEntities(RecommendedAmntUnitEntity.class,
+										uc.getLocaleId()), request);
 		SessionUtils.setAttribute(SavingsConstants.CUSTOM_FIELDS,
 				savingsService.retrieveCustomFieldsDefinition(), request);
 

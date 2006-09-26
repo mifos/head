@@ -99,6 +99,11 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						customerAccount.getAccountId(), transactionDate).size(),
 				0);
 		assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
+		
+		for (CustomerActivityEntity activity : customerAccount.getCustomerActivitDetails()) {
+			
+			assertEquals(transactionDate, activity.getCreatedDate());
+		}
 
 	}
 

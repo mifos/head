@@ -204,8 +204,7 @@ public class CustomerAccountBO extends AccountBO {
 			accountPayment.addAcountTrxn(accountTrxn);
 		}
 		addCustomerActivity(new CustomerActivityEntity(paymentData
-				.getPersonnel(), "Payment rcvd.", paymentData
-				.getTotalAmount()));
+				.getPersonnel(), "Payment rcvd.", paymentData.getTotalAmount(),paymentData.getTransactionDate()));
 		return accountPayment;
 	}
 
@@ -355,7 +354,7 @@ public class CustomerAccountBO extends AccountBO {
 			personnel = new PersonnelPersistence()
 					.getPersonnel(personnelId);
 		}
-		return new CustomerActivityEntity(personnel, description, amount);
+		return new CustomerActivityEntity(personnel, description, amount,new Date(System.currentTimeMillis()));
 		}
 		catch (PersistenceException e) {
 			throw new AccountException(e);

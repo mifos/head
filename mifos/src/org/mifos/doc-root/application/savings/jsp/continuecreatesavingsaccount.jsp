@@ -164,10 +164,13 @@
                   <td align="right"><mifos:mifoslabel name="Savings.typeOfDeposits"/>:</td>
                   <td valign="top">
                   
-                  <c:set var="SavingsType" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsType')}" scope="session"></c:set>
-                  	  <customtags:lookUpValue	id="${savingsOffering.savingsType.id}"
-						searchResultName="SavingsType" mapToSeperateMasterTable="true">
-					  </customtags:lookUpValue>
+							 <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsType')}" 
+											var="item">
+							<c:if test="${savingsOffering.savingsType.id == item.id}">
+							    <c:out value="${item.name}"></c:out>
+							</c:if>				
+											
+					</c:forEach>   
                   </td>
                 </tr>
                 <tr class="fontnormal">
@@ -182,10 +185,14 @@
                   <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}"/>
                   <mifos:mifoslabel name="Savings.rateCalculation"/>:                  </td>
                   <td valign="top">
-                  <c:set var="IntCalTypes" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalTypes')}" scope="session"></c:set>
-	                  <customtags:lookUpValue	id="${savingsOffering.interestCalcType.id}"
-						searchResultName="IntCalTypes" mapToSeperateMasterTable="true">
-					  </customtags:lookUpValue>
+                  
+					 <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'IntCalTypes')}" 
+											var="IntCalTypes">
+							<c:if test="${savingsOffering.interestCalcType.id == IntCalTypes.id}">
+							    <c:out value="${IntCalTypes.name}"></c:out>
+							</c:if>				
+											
+					</c:forEach> 
 				  </td>
                 </tr>
                 <tr class="fontnormal">
@@ -261,18 +268,28 @@
                   <td width="65%" valign="top">                  
                   	<mifos:mifosdecimalinput name="savingsActionForm" property="recommendedAmount"	
 		                  />
-		                   <c:set var="RecommendedAmtUnit" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" scope="session"></c:set>
+		                   
 	                  <c:choose>
 	                    <c:when test="${client.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    
-	                    (<customtags:lookUpValue	id="${savingsOffering.recommendedAmntUnit.id}"
-							searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
-						  </customtags:lookUpValue>)
+	                    (
+						   <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" 
+											var="item">
+							<c:if test="${savingsOffering.recommendedAmntUnit.id == item.id}">
+							    <c:out value="${item.name}"></c:out>
+							</c:if>				
+											
+					</c:forEach>   
+						  )
 	                    </c:when>
 	                    <c:otherwise>
-	                      <customtags:lookUpValue	id="${savingsOffering.recommendedAmntUnit.id}"
-							searchResultName="RecommendedAmtUnit" mapToSeperateMasterTable="true">
-						  </customtags:lookUpValue>
+	                     <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" 
+											var="item">
+							<c:if test="${savingsOffering.recommendedAmntUnit.id == item.id}">
+							    <c:out value="${item.name}"></c:out>
+							</c:if>				
+											
+					</c:forEach> 
 	                    </c:otherwise>
                     </c:choose>
                     </td>
