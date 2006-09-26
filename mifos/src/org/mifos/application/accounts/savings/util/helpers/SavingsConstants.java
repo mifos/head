@@ -95,7 +95,9 @@ public class SavingsConstants {
 	public static final short SAVINGS_VOLUNTARY = 2;
 
 	public static final short SAVINGS_ALL = 3;
-
+	
+	public static final short POSTING_DAY = 31;
+	
 	// Savings AdjustmentTypes
 	public static final String SAVINGS_ADJUSTMENT_TYPE = "savingsAdjustmentType";
 

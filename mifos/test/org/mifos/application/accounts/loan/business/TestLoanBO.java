@@ -54,10 +54,6 @@ import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.logger.TestLogger;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -68,7 +64,6 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.MoneyTest;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanBO extends MifosTestCase {
@@ -81,10 +76,11 @@ public class TestLoanBO extends MifosTestCase {
 	private CustomerBO client = null;
 
 	private AccountPersistence accountPersistence = null;
-
+	private UserContext userContext;
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		userContext = TestObjectFactory.getContext();
 		accountPersistence = new AccountPersistence();
 	}
 
@@ -354,11 +350,11 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("1"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(userContext,periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
+		feeViewList.add(new FeeView(userContext,upfrontFee));
 
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -477,11 +473,11 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("1"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(userContext,periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
+		feeViewList.add(new FeeView(userContext,upfrontFee));
 
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -1391,8 +1387,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getFeeOutstanding());
 	}
 
-	public void testRegenerateFutureInstallments() throws AccountException,
-			SchedulerException {
+	public void testRegenerateFutureInstallments() throws Exception {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
@@ -1405,8 +1400,7 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
-		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<java.util.Date> meetingDates = scheduler.getAllDates(accountBO
+		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
@@ -1432,8 +1426,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testRegenerateFutureInstallmentsWithCancelState()
-			throws SchedulerException, HibernateException, ServiceException,
-			PersistenceException, AccountException {
+			throws Exception {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
@@ -1456,8 +1449,7 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
-		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<java.util.Date> meetingDates = scheduler.getAllDates(accountBO
+		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountStates.LOANACC_CANCEL);
@@ -2658,15 +2650,15 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(userContext,periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
+		feeViewList.add(new FeeView(userContext,upfrontFee));
 		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
 				"Disbursment Fee", FeeCategory.LOAN, "30",
 				FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
+		feeViewList.add(new FeeView(userContext,disbursementFee));
 
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -2791,15 +2783,15 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(userContext,periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
+		feeViewList.add(new FeeView(userContext,upfrontFee));
 		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
 				"Disbursment Fee", FeeCategory.LOAN, "30",
 				FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
+		feeViewList.add(new FeeView(userContext,disbursementFee));
 
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -2941,15 +2933,15 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(userContext,periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
+		feeViewList.add(new FeeView(userContext,upfrontFee));
 		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
 				"Disbursment Fee", FeeCategory.LOAN, "30",
 				FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
+		feeViewList.add(new FeeView(userContext,disbursementFee));
 
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -3091,15 +3083,15 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(userContext,periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
+		feeViewList.add(new FeeView(userContext,upfrontFee));
 		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
 				"Disbursment Fee", FeeCategory.LOAN, "30",
 				FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
+		feeViewList.add(new FeeView(userContext,disbursementFee));
 
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -3242,15 +3234,15 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("3"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(userContext,periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
+		feeViewList.add(new FeeView(userContext,upfrontFee));
 		FeeBO disbursementFee = TestObjectFactory.createOneTimeAmountFee(
 				"Disbursment Fee", FeeCategory.LOAN, "30",
 				FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
+		feeViewList.add(new FeeView(userContext,disbursementFee));
 
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -3406,19 +3398,19 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
+		feeViewList.add(new FeeView(userContext,upfrontFee));
 		FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee(
 				"Disbursment Fee", FeeCategory.LOAN, Double.valueOf("30"),
 				FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
+		feeViewList.add(new FeeView(userContext,disbursementFee));
 		FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee(
 				"First Repayment Fee", FeeCategory.LOAN, Double.valueOf("40"),
 				FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
-		feeViewList.add(new FeeView(firstRepaymentFee));
+		feeViewList.add(new FeeView(userContext,firstRepaymentFee));
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.MONTHLY, Short.valueOf("1"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(userContext,periodicFee));
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
@@ -3553,19 +3545,19 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		feeViewList.add(new FeeView(upfrontFee));
+		feeViewList.add(new FeeView(userContext,upfrontFee));
 		FeeBO disbursementFee = TestObjectFactory.createOneTimeRateFee(
 				"Disbursment Fee", FeeCategory.LOAN, Double.valueOf("30"),
 				FeeFormula.AMOUNT_AND_INTEREST, FeePayment.TIME_OF_DISBURSMENT);
-		feeViewList.add(new FeeView(disbursementFee));
+		feeViewList.add(new FeeView(userContext,disbursementFee));
 		FeeBO firstRepaymentFee = TestObjectFactory.createOneTimeRateFee(
 				"First Repayment Fee", FeeCategory.LOAN, Double.valueOf("40"),
 				FeeFormula.INTEREST, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
-		feeViewList.add(new FeeView(firstRepaymentFee));
+		feeViewList.add(new FeeView(userContext,firstRepaymentFee));
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100",
 				RecurrenceType.MONTHLY, Short.valueOf("1"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(userContext,periodicFee));
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
@@ -3862,7 +3854,7 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
 				Short.valueOf("1"));
-		feeViewList.add(new FeeView(periodicFee));
+		feeViewList.add(new FeeView(TestObjectFactory.getContext(), periodicFee));
 
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
@@ -4003,8 +3995,8 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee",
 				FeeCategory.LOAN, "10.0", RecurrenceType.WEEKLY, (short) 1);
 		List<FeeView> feeViews = new ArrayList<FeeView>();
-		FeeView feeView1 = new FeeView(fee1);
-		FeeView feeView2 = new FeeView(fee3);
+		FeeView feeView1 = new FeeView(userContext,fee1);
+		FeeView feeView2 = new FeeView(userContext,fee3);
 		feeViews.add(feeView1);
 		feeViews.add(feeView2);
 		HibernateUtil.commitTransaction();

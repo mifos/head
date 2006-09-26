@@ -33,6 +33,16 @@
       &lt;c:out value="${fn:getClientPosition(object,object)}">
     </example>
   </function>
-  
+  <function>
+    <description>
+     This returns the string representing meeting schedule
+    </description>
+    <name>getMeetingSchedule</name>
+  <function-class>org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFn</function-class>
+    <function-signature>java.lang.String getMeetingSchedule(java.lang.Object,java.lang.Object)</function-signature>
+    <example>
+      &lt;c:out value="${fn:getMeetingSchedule(object,object)}">
+    </example>
+  </function>
    
   </taglib>

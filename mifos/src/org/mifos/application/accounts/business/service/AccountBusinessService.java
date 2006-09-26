@@ -31,6 +31,7 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -125,14 +126,14 @@ public class AccountBusinessService extends BusinessService {
 				applicableChargeList = getLoanApplicableCharges(
 						new AccountPersistence().getAllAppllicableFees(
 								accountId, FeeCategory.LOAN.getValue()),
-						userContext.getLocaleId(), (LoanBO) account);
+						userContext, (LoanBO) account);
 			else if (account.getAccountType().getAccountTypeId().equals(
 					AccountTypes.CUSTOMERACCOUNT.getValue()))
 				applicableChargeList = getCustomerApplicableCharges(
 						new AccountPersistence().getAllAppllicableFees(
 								accountId, getCategoryType(account
 										.getCustomer())), userContext
-								.getLocaleId(), ((CustomerAccountBO) account)
+								, ((CustomerAccountBO) account)
 								.getCustomer().getCustomerMeeting()
 								.getMeeting().getMeetingDetails()
 								.getRecurrenceType().getRecurrenceId());
@@ -157,17 +158,17 @@ public class AccountBusinessService extends BusinessService {
 	}
 
 	private List<ApplicableCharge> getCustomerApplicableCharges(
-			List<FeeBO> feeList, Short locale, Short accountMeetingRecurrance) {
+			List<FeeBO> feeList, UserContext userContext, Short accountMeetingRecurrance) {
 		List<ApplicableCharge> applicableChargeList = new ArrayList<ApplicableCharge>();
 		if (feeList != null && !feeList.isEmpty()) {
 			filterBasedOnRecurranceType(feeList, accountMeetingRecurrance);
-			populaleApplicableCharge(applicableChargeList, feeList, locale);
+			populaleApplicableCharge(applicableChargeList, feeList, userContext);
 		}
 		return applicableChargeList;
 	}
 
 	private List<ApplicableCharge> getLoanApplicableCharges(
-			List<FeeBO> feeList, Short locale, LoanBO loanBO) {
+			List<FeeBO> feeList, UserContext userContext, LoanBO loanBO) {
 		List<ApplicableCharge> applicableChargeList = new ArrayList<ApplicableCharge>();
 		if (feeList != null && !feeList.isEmpty()) {
 			Short accountMeetingRecurrance = loanBO.getCustomer()
@@ -176,14 +177,14 @@ public class AccountBusinessService extends BusinessService {
 			filterBasedOnRecurranceType(feeList, accountMeetingRecurrance);
 			filterDisbursmentFee(feeList, loanBO);
 			filterTimeOfFirstRepaymentFee(feeList, loanBO);
-			populaleApplicableCharge(applicableChargeList, feeList, locale);
+			populaleApplicableCharge(applicableChargeList, feeList, userContext);
 		}
 		return applicableChargeList;
 	}
 
 	private void populaleApplicableCharge(
 			List<ApplicableCharge> applicableChargeList, List<FeeBO> feeList,
-			Short locale) {
+			UserContext userContext) {
 		for (FeeBO fee : feeList) {
 			ApplicableCharge applicableCharge = new ApplicableCharge();
 			applicableCharge.setFeeId(fee.getFeeId().toString());
@@ -193,18 +194,17 @@ public class AccountBusinessService extends BusinessService {
 				applicableCharge.setAmountOrRate(((RateFeeBO) fee).getRate()
 						.toString());
 				applicableCharge.setFormula(((RateFeeBO) fee).getFeeFormula()
-						.getFormulaString(locale));
+						.getFormulaString(userContext.getLocaleId()));
 			} else {
 				applicableCharge.setAmountOrRate(((AmountFeeBO) fee)
 						.getFeeAmount().getAmount().toString());
 			}
 			MeetingBO meeting = fee.getFeeFrequency().getFeeMeetingFrequency();
 			if (meeting != null) {
-				applicableCharge.setPeriodicity(meeting
-						.getSimpleMeetingSchedule());
+				applicableCharge.setPeriodicity(new MeetingHelper().getDetailMessageWithFrequency(meeting, userContext));
 			} else {
 				applicableCharge.setPaymentType(fee.getFeeFrequency()
-						.getFeePayment().getName(locale));
+						.getFeePayment().getName(userContext.getLocaleId()));
 			}
 			applicableChargeList.add(applicableCharge);
 		}

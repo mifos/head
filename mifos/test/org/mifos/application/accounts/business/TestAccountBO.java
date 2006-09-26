@@ -65,10 +65,7 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
@@ -76,7 +73,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountBO extends TestAccount {
@@ -409,8 +405,7 @@ public class TestAccountBO extends TestAccount {
 				accountBO.getAccountId());
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<java.util.Date> meetingDates = scheduler.getAllDates(accountBO
+		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
 		meetingDates.remove(0);
 		TestObjectFactory.updateObject(center);

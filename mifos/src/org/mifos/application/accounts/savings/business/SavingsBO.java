@@ -59,9 +59,6 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -480,8 +477,6 @@ public class SavingsBO extends AccountBO {
 						getActivationDate(), getLastIntPostDate(),
 						getMeeting(getSavingsOffering().getFreqOfPostIntcalc()
 								.getMeeting())));
-			} catch (SchedulerException e) {
-				throw new AccountException(e);
 			} catch (ProductDefinitionException e) {
 				throw new AccountException(e);
 			} catch (MeetingException me) {
@@ -521,8 +516,8 @@ public class SavingsBO extends AccountBO {
 		try {
 			setNextIntCalcDate(helper.getNextScheduleDate(getActivationDate(),
 					getLastIntCalcDate(), getTimePerForInstcalc()));
-		} catch (SchedulerException e) {
-			throw new AccountException(e);
+		} catch (MeetingException me) {
+			throw new AccountException(me);
 		}
 		try {
 			(new SavingsPersistence()).createOrUpdate(this);
@@ -924,12 +919,10 @@ public class SavingsBO extends AccountBO {
 
 	private void generateDepositAccountActions(CustomerBO customer,
 			MeetingBO meeting) throws AccountException {
-		SchedulerIntf scheduler;
 		List<Date> depositDates = null;
 		try {
-			scheduler = SchedulerHelper.getScheduler(meeting);
-			depositDates = scheduler.getAllDates();
-		} catch (SchedulerException e) {
+			depositDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
+		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}
 
@@ -948,13 +941,11 @@ public class SavingsBO extends AccountBO {
 	private void generateDepositAccountActions(CustomerBO customer,
 			MeetingBO meeting, Short installmentId, Date endDate)
 			throws AccountException {
-		SchedulerIntf scheduler;
 		List<Date> depositDates;
 		try {
-			scheduler = SchedulerHelper.getScheduler(meeting);
-			depositDates = scheduler.getAllDates(endDate);
-		} catch (SchedulerException e) {
-			throw new AccountException(e);
+			depositDates = meeting.getAllDates(endDate);
+		} catch (MeetingException me) {
+			throw new AccountException(me);
 		}
 		if (skipFirstInstallment(depositDates.get(0)))
 			depositDates.remove(0);
@@ -1181,8 +1172,6 @@ public class SavingsBO extends AccountBO {
 			this.setNextIntPostDate(helper.getNextScheduleDate(
 					getActivationDate(), null, getMeeting(getSavingsOffering()
 							.getFreqOfPostIntcalc().getMeeting())));
-		} catch (SchedulerException e) {
-			throw new AccountException(e);
 		} catch (ProductDefinitionException e) {
 			throw new AccountException(e);
 		} catch (MeetingException me) {
@@ -1307,8 +1296,8 @@ public class SavingsBO extends AccountBO {
 			try {
 				fromDate = helper.getPrevScheduleDate(getActivationDate(),
 						fromDate, timePerForInstcalc);
-			} catch (SchedulerException e) {
-				throw new AccountException(e);
+			} catch (MeetingException me) {
+				throw new AccountException(me);
 			}
 			if (fromDate != null)
 				fromDate = new Timestamp(fromDate.getTime());
@@ -1335,8 +1324,8 @@ public class SavingsBO extends AccountBO {
 					// //////////Removed if for adjustedTrxn!=null
 					fromDate = toDate;
 				}
-			} catch (SchedulerException e) {
-				throw new AccountException(e);
+			} catch (MeetingException me) {
+				throw new AccountException(me);
 			}
 		}
 		return oldInterest;
@@ -1997,14 +1986,15 @@ public class SavingsBO extends AccountBO {
 				AccountStates.SAVINGS_ACC_CANCEL)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.SAVINGS_ACC_CLOSED)) {
-			SchedulerIntf scheduler;
+//			SchedulerIntf scheduler;
 			List<Date> meetingDates = null;
 			try {
-				scheduler = SchedulerHelper.getScheduler(getCustomer()
-						.getCustomerMeeting().getMeeting());
-				meetingDates = scheduler.getAllDates();
-			} catch (SchedulerException e) {
-				throw new AccountException(e);
+//				scheduler = SchedulerHelper.getScheduler(getCustomer()
+//						.getCustomerMeeting().getMeeting());
+				meetingDates = getCustomer()
+								.getCustomerMeeting().getMeeting().getAllDates(DateUtils.getLastDayOfCurrentYear());
+			} catch (MeetingException me) {
+				throw new AccountException(me);
 			}
 			meetingDates.remove(0);
 			deleteFutureInstallments();
@@ -2133,8 +2123,6 @@ public class SavingsBO extends AccountBO {
 			calendar.setTimeInMillis(installment.getActionDate().getTime());
 			depositSchedule.setMeetingStartDate(calendar);
 
-			// depositSchedule.setMeetingEndDate(DateUtils
-			// .getLastDayOfNextYear(Calendar.getInstance()));
 			Date endDate = DateUtils.getLastDayOfNextYear(
 					Calendar.getInstance()).getTime();
 			if (customerBO.getCustomerLevel().getId().equals(

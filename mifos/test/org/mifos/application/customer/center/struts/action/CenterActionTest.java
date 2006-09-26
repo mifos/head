@@ -765,7 +765,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 				.createPeriodicAmountFee("PeriodicAmountFee",
 						FeeCategory.CENTER, "200", frequency, Short
 								.valueOf("2"));
-		fees.add(new FeeView(fee1));
+		fees.add(new FeeView(TestObjectFactory.getContext(),fee1));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		return fees;

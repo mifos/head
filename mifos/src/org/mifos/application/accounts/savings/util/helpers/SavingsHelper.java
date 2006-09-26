@@ -54,15 +54,10 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.scheduler.MonthData;
-import org.mifos.framework.components.scheduler.ScheduleDataIntf;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerFactory;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsHelper {
@@ -91,19 +86,28 @@ public class SavingsHelper {
 
 	public Date getNextScheduleDate(Date accountActivationDate,
 			Date currentScheduleDate, MeetingBO meeting)
-			throws SchedulerException {
-		SchedulerIntf scheduler = getScheduler(meeting);
-		return (currentScheduleDate == null) ? getFirstDate(scheduler,
-				accountActivationDate) : scheduler
+			throws MeetingException {
+		Date oldMeetingStartDate = meeting.getStartDate();
+		Short oldDayNumber = meeting.getMeetingDetails().getDayNumber();
+		setDetailsForMeeting(meeting);
+		Date scheduleDate = (currentScheduleDate == null) ? getFirstDate(meeting,
+				accountActivationDate) : meeting
 				.getNextScheduleDateAfterRecurrence(currentScheduleDate);
-	}
-
+		meeting.setStartDate(oldMeetingStartDate);
+		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(oldDayNumber);
+		return scheduleDate;
+	}	
+	
 	public Date getPrevScheduleDate(Date accountActivationDate,
 			Date currentScheduleDate, MeetingBO meeting)
-			throws SchedulerException {
-		SchedulerIntf scheduler = getScheduler(meeting);
-		Date prevScheduleDate = scheduler
+			throws MeetingException {
+		Date oldMeetingStartDate = meeting.getStartDate();
+		Short oldDayNumber = meeting.getMeetingDetails().getDayNumber();
+		setDetailsForMeeting(meeting);
+		Date prevScheduleDate = meeting
 				.getPrevScheduleDateAfterRecurrence(currentScheduleDate);
+		meeting.setStartDate(oldMeetingStartDate);
+		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(oldDayNumber);
 		return (prevScheduleDate != null && getDate(accountActivationDate)
 				.compareTo(prevScheduleDate) > 0) ? null : prevScheduleDate;
 	}
@@ -112,38 +116,27 @@ public class SavingsHelper {
 		return new Date(date.getTime());
 	}
 
-	private Date getFirstDate(SchedulerIntf scheduler,
-			Date accountActivationDate) throws SchedulerException {
+	private Date getFirstDate(MeetingBO meeting,
+			Date accountActivationDate) throws MeetingException {
 		Date date = null;
-		for (date = scheduler
+		for (date = meeting
 				.getNextScheduleDateAfterRecurrence(getFiscalStartDate()); date
-				.compareTo(accountActivationDate) <= 0; date = scheduler
+				.compareTo(accountActivationDate) <= 0; date = meeting
 				.getNextScheduleDateAfterRecurrence(date))
 			;
 		return date;
 	}
 
-	private SchedulerIntf getScheduler(MeetingBO meeting)
-			throws SchedulerException {
-		Calendar cal = getCalendar();
-		cal.setTime(getFiscalStartDate());
-		meeting.setMeetingStartDate(cal);
-		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType()
-				.getRecurrenceId();
-		ScheduleDataIntf scheduleData;
-		scheduleData = SchedulerFactory.getScheduleData(recurrenceId);
-		SchedulerIntf scheduler = SchedulerHelper.getScheduler(scheduleData, meeting);
-		if (scheduleData instanceof MonthData) {
-			if (meeting.getMeetingType().getMeetingTypeId().equals(
-					MeetingConstants.INTEREST_POST_FREQ))
-				scheduleData.setDayNumber(31);
-			else if (meeting.getMeetingType().getMeetingTypeId().equals(
-					MeetingConstants.INTEREST_CALC_FREQ))
-				scheduleData.setDayNumber(getFiscalStartDayNumber());
+	private void setDetailsForMeeting(MeetingBO meeting){
+		meeting.setStartDate(getFiscalStartDate());
+		if(meeting.isMonthly()){
+			if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingType.SAVINGSTIMEPERFORINTCALC.getValue()))
+				meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(Short.valueOf(new Integer(getFiscalStartDayNumber()).toString()));
+			else if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingType.SAVINGSFRQINTPOSTACC.getValue()))
+				meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(SavingsConstants.POSTING_DAY);
 		}
-		return scheduler;
 	}
-
+	
 	public int calculateDays(Date fromDate, Date toDate) {
 		long y = 1000 * 60 * 60 * 24;
 		long x = (getMFITime(toDate) / y) - (getMFITime(fromDate) / y);

@@ -4,11 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -18,9 +16,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.helpers.PortfolioAtRiskHelper;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -57,7 +52,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 	}
 
 
-	public void testExecute() throws SchedulerException, HibernateException, ServiceException, PersistenceException{
+	public void testExecute() throws Exception{
 		createInitialObject();
 		TestObjectFactory.flushandCloseSession();
 		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());

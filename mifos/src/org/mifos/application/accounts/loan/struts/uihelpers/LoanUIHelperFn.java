@@ -40,6 +40,9 @@ package org.mifos.application.accounts.loan.struts.uihelpers;
 
 import java.util.Locale;
 
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 
 /**
@@ -57,4 +60,7 @@ public class LoanUIHelperFn {
 		return DateHelper.getCurrentDate(locale);
 	}
 
+	public static String getMeetingRecurrence(Object meeting,	Object userContext) {
+		return  meeting!=null ? new MeetingHelper().getMessageWithFrequency((MeetingBO)meeting, (UserContext)userContext):null;
+	}
 }

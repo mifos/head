@@ -698,7 +698,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 					FeeBO fee = getFeeFromList(fees, selectedFee);
 					if (fee != null) {
 						isFrequencyMatchingOfferingFrequency(fee, errors);
-						feeViews.add(new FeeView(fee));
+						feeViews.add(new FeeView(getUserContext(request),fee));
 
 					}
 				}

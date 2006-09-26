@@ -38,7 +38,10 @@
 
 package org.mifos.framework.util.helpers;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * This class has got utility functions for string which would be required
@@ -84,4 +87,13 @@ public class StringUtils {
 		return "".equals(stringToBeChecked.trim());
 	}
 
+	public static String getMessageWithSubstitution(String bundleName, Locale userLocale, String key, Object[] args){
+		ResourceBundle resourceBundle = ResourceBundle.getBundle(bundleName, userLocale);
+		String label = resourceBundle.getString(key);
+		if(args!=null){
+			MessageFormat formatter = new MessageFormat (label);
+			label = formatter.format(args);
+		}
+		return label;
+	}
 }

@@ -102,7 +102,6 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -115,10 +114,6 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -1123,16 +1118,16 @@ public class LoanBO extends AccountBO {
 						AccountStates.LOANACC_WRITTENOFF)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.LOANACC_CANCEL)) {
-			SchedulerIntf scheduler;
+			
 			List<Date> meetingDates = null;
 			try {
-				scheduler = SchedulerHelper.getScheduler(getCustomer()
-						.getCustomerMeeting().getMeeting());
-				meetingDates = scheduler
+				
+				meetingDates = getCustomer()
+					.getCustomerMeeting().getMeeting()
 						.getAllDates(getApplicableIdsForFutureInstallments()
 								.size() + 1);
-			} catch (SchedulerException e) {
-				throw new AccountException(e);
+			} catch (MeetingException me) {
+				throw new AccountException(me);
 			}
 			meetingDates.remove(0);
 			int count = 0;
@@ -1400,13 +1395,12 @@ public class LoanBO extends AccountBO {
 		int interestDays = getInterestDays();
 		int daysInWeek = getDaysInWeek();
 		int daysInMonth = getDaysInMonth();
-		String durationType = MeetingHelper.getReccurence(this
-				.getLoanMeeting().getMeetingDetails().getRecurrenceType()
-				.getRecurrenceId());
+		
+		Short recurrenceType =  this.getLoanMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId();
 		int duration = getNoOfInstallments()
 				* this.getLoanMeeting().getMeetingDetails().getRecurAfter();
 		if (interestDays == AccountConstants.INTEREST_DAYS_360) {
-			if (durationType.equals(AccountConstants.WEEK_INSTALLMENT)) {
+			if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
 				double totalWeekDays = duration * daysInWeek;
 				double durationInYears = totalWeekDays
 						/ AccountConstants.INTEREST_DAYS_360;
@@ -1415,7 +1409,7 @@ public class LoanBO extends AccountBO {
 								"Get total week days.."
 										+ totalWeekDays);
 				return durationInYears;
-			} else if (durationType.equals(AccountConstants.MONTH_INSTALLMENT)) {
+			} else if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
 				double totalMonthDays = duration * daysInMonth;
 				double durationInYears = totalMonthDays
 						/ AccountConstants.INTEREST_DAYS_360;
@@ -1428,7 +1422,7 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(
 					AccountConstants.NOT_SUPPORTED_DURATION_TYPE);
 		} else if (interestDays == AccountConstants.INTEREST_DAYS_365) {
-			if (durationType.equals(AccountConstants.WEEK_INSTALLMENT)) {
+			if (recurrenceType.equals(RecurrenceType.WEEKLY.getValue())) {
 				MifosLogManager
 						.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
@@ -1437,7 +1431,7 @@ public class LoanBO extends AccountBO {
 				double durationInYears = totalWeekDays
 						/ AccountConstants.INTEREST_DAYS_365;
 				return durationInYears;
-			} else if (durationType.equals(AccountConstants.MONTH_INSTALLMENT)) {
+			} else if (recurrenceType.equals(RecurrenceType.MONTHLY.getValue())) {
 				MifosLogManager
 						.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
@@ -1718,14 +1712,11 @@ public class LoanBO extends AccountBO {
 	private Boolean isDisbursementDateValid() throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"IsDisbursementDateValid invoked ");
-		SchedulerIntf scheduler;
 		Boolean isValid = false;
 		try {
-			scheduler = MeetingHelper.getSchedulerObject(this.getCustomer().getCustomerMeeting()
-							.getMeeting(), true);
-			isValid = scheduler.isValidScheduleDate(disbursementDate);
-		} catch (ApplicationException e) {
-			e.printStackTrace();
+			isValid = this.getCustomer().getCustomerMeeting()
+				.getMeeting().isValidMeetingDate(disbursementDate, DateUtils.getLastDayOfCurrentYear());
+		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}
 		return isValid;

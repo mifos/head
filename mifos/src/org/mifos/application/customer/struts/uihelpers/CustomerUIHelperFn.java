@@ -46,8 +46,11 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.customer.util.valueobjects.CustomerPositionDisplay;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.security.util.UserContext;
 
 /**
  * This class has got helper functions which could be called from jsp as part of
@@ -166,4 +169,8 @@ public class CustomerUIHelperFn {
 		else
 			return stringBuilder.toString();
 	}
+	
+	public static String getMeetingSchedule(Object meeting,	Object userContext) {
+			return  meeting!=null ? new MeetingHelper().getMessage((MeetingBO)meeting, (UserContext)userContext):null;
+	}	
 }

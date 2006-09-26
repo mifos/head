@@ -151,8 +151,12 @@ public class MasterPersistence extends Persistence {
 					"from " + clazz.getName()
 							+ " masterEntity where masterEntity.id = "
 							+ entityId).list();
-			if (masterEntity != null && masterEntity.size() > 0)
-				return masterEntity.get(0);
+			if (masterEntity != null && masterEntity.size() > 0){
+				MasterDataEntity masterDataEntity =  masterEntity.get(0);
+				masterDataEntity.setLocaleId(localeId);
+				Hibernate.initialize(masterDataEntity.getNames());
+				return masterDataEntity;
+			}
 			throw new PersistenceException("errors.entityNotFound");
 		} catch (Exception he) {
 			throw new PersistenceException(he);

@@ -29,12 +29,9 @@ import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -59,6 +56,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
+		userContext=TestObjectFactory.getContext();
 		super.setUp();
 	}
 
@@ -459,8 +457,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
-		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
 		meetingDates.remove(0);
 		center.getCustomerAccount()
 				.regenerateFutureInstallments(
@@ -494,8 +491,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getCustomerId());
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		
+		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
 		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -575,8 +572,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
 		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
 				.getInstance()));
-		List<java.util.Date> meetingDates = MeetingHelper
-				.getSchedulerObject(meetingBO).getAllDates();
+		List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfNextYear(Calendar.getInstance()).getTime());
 
 		Date date = center.getCustomerAccount().getAccountActionDate(
 				(short) (lastInstallmentId + 1)).getActionDate();
@@ -895,11 +891,11 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("1"));
-		feeView.add(new FeeView(periodicFee));
+		feeView.add(new FeeView(userContext, periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee(
 				"Upfront Fee", FeeCategory.ALLCUSTOMERS, "30",
 				FeePayment.UPFRONT);
-		feeView.add(new FeeView(upfrontFee));
+		feeView.add(new FeeView(userContext,upfrontFee));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()), feeView);
@@ -957,11 +953,11 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("1"));
-		feeView.add(new FeeView(periodicFee));
+		feeView.add(new FeeView(userContext, periodicFee));
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee(
 				"Upfront Fee", FeeCategory.ALLCUSTOMERS, "30",
 				FeePayment.UPFRONT);
-		feeView.add(new FeeView(upfrontFee));
+		feeView.add(new FeeView(userContext,upfrontFee));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()), feeView);

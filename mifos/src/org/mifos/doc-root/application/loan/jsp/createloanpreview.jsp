@@ -330,7 +330,7 @@
 																	:
 																	<c:choose>
 																		<c:when test="${feesSet.fees.periodic}">
-																			<c:out value="${feesSet.fees.feeFrequency.feeMeetingFrequency.shortMeetingSchedule}" />
+																			<c:out value="${loanfn:getMeetingRecurrence(feesSet.fees.feeFrequency.feeMeetingFrequency,sessionScope.UserContext)}" />
 																		</c:when>
 																		<c:otherwise>
 																			<mifos:mifoslabel name="loan.periodicityTypeFlat" />

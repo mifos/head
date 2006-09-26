@@ -46,7 +46,7 @@
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <tiles:insert definition=".withoutmenu">
 <tiles:put name="body" type="string">
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
@@ -181,7 +181,7 @@ function goToEditPage(){
                 <td class="fontnormal">
                 <span class="fontnormalbold">
 					<mifos:mifoslabel name="Center.MeetingSchedule" bundle="CenterUIResources"></mifos:mifoslabel>
-                    <span class="fontnormal"><c:out value="${centerMeeting.meetingSchedule}"/><br></span>
+                    <span class="fontnormal"><c:out value="${customerfn:getMeetingSchedule(centerMeeting,UserContext)}"/><br></span>
                  </td>
                  </tr>
 

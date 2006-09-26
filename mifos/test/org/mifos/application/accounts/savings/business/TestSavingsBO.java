@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -48,7 +47,6 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -62,11 +60,7 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -3672,8 +3666,8 @@ public class TestSavingsBO extends MifosTestCase {
 		center = group.getParentCustomer();
 	}
 
-	public void testRegenerateFutureInstallments() throws HibernateException,
-			 SystemException, ApplicationException {
+
+	public void testRegenerateFutureInstallments() throws Exception {
 		savings = getSavingAccount();
 		TestObjectFactory.flushandCloseSession();
 		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
@@ -3686,8 +3680,8 @@ public class TestSavingsBO extends MifosTestCase {
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
-		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		
+		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
 		meetingDates.remove(0);
 		savings.regenerateFutureInstallments((short) (accountActionDateEntity
 				.getInstallmentId().intValue() + 1));
@@ -3715,9 +3709,8 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 	}
 
-	public void testRegenerateFutureInstallmentsWithCancelState()
-			throws HibernateException,  SystemException,
-			ApplicationException {
+	public void testRegenerateFutureInstallmentsWithCancelState()throws Exception {
+
 		savings = getSavingAccount();
 		TestObjectFactory.flushandCloseSession();
 		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
@@ -3740,8 +3733,7 @@ public class TestSavingsBO extends MifosTestCase {
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
-		SchedulerIntf scheduler = SchedulerHelper.getScheduler(meeting);
-		List<java.util.Date> meetingDates = scheduler.getAllDates();
+		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
 		meetingDates.remove(0);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountStates.SAVINGS_ACC_CANCEL);
@@ -3770,8 +3762,8 @@ public class TestSavingsBO extends MifosTestCase {
 		}
 	}
 
-	private SavingsBO getSavingAccount() throws 
-			SchedulerException, SystemException, ApplicationException {
+
+	private SavingsBO getSavingAccount() throws Exception			 {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
@@ -4049,8 +4041,7 @@ public class TestSavingsBO extends MifosTestCase {
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
 		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
 				.getInstance()));
-		List<Date> meetingDates = MeetingHelper.getSchedulerObject(
-				meetingBO).getAllDates();
+		List<Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfNextYear(Calendar.getInstance()).getTime());
 		Date FirstSavingInstallmetDate = savingsBO.getAccountActionDate(
 				Short.valueOf(installmetId.shortValue())).getActionDate();
 		Calendar calendar2 = Calendar.getInstance();

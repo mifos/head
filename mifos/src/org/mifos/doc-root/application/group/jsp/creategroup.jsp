@@ -43,6 +43,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 
@@ -222,7 +223,7 @@
 														<mifos:mifoslabel name="Group.meetingschedule" bundle="GroupUIResources"/>
 													</span> 
 													<span class="fontnormal"> 
-														<c:out value="${sessionScope.groupCustActionForm.parentCustomer.customerMeeting.meeting.meetingSchedule}" /> <br> 
+														<c:out value="${customerfn:getMeetingSchedule(sessionScope.groupCustActionForm.parentCustomer.customerMeeting.meeting, sessionScope.UserContext)}" /> <br> 
 													</span> 
 													<span class="fontnormalbold"> 
 														<mifos:mifoslabel name="Group.locationofthemeeting" bundle="GroupUIResources"/> 

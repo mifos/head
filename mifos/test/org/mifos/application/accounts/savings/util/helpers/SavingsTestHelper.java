@@ -26,10 +26,6 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.scheduler.ScheduleDataIntf;
-import org.mifos.framework.components.scheduler.SchedulerFactory;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -223,14 +219,6 @@ public class SavingsTestHelper {
 		cal.setTime(df.parse("01/01/2006"));
 		meeting.setMeetingStartDate(cal);
 		return meeting;
-	}
-
-	public SchedulerIntf getScheduler(MeetingBO meeting) throws Exception {
-		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType()
-				.getRecurrenceId();
-		ScheduleDataIntf scheduleData = SchedulerFactory
-				.getScheduleData(recurrenceId);
-		return SchedulerHelper.getScheduler(scheduleData, meeting);
 	}
 
 	public MeetingBO getMeeting(RecurrenceType recurrenceType, Short dayNumber,

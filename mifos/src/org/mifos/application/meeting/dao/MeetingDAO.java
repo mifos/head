@@ -67,7 +67,6 @@ import org.mifos.framework.components.audit.util.helpers.LogValueMap;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.dao.helpers.MasterDataRetriever;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -158,11 +157,11 @@ public class MeetingDAO extends DAO {
 	 *            meeting object
 	 * @return
 	 */
-	ScheduleDataIntf getMeetingSchedule(Meeting meeting) {
+	/*ScheduleDataIntf getMeetingSchedule(Meeting meeting) {
 		// TODO remove later
 		return null;
 
-	}
+	}*/
 
 	/**
 	 * This function load the master data for the week day list

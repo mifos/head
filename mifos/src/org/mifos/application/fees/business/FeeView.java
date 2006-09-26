@@ -2,9 +2,11 @@ package org.mifos.application.fees.business;
 
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.View;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -21,7 +23,7 @@ public class FeeView extends View{
 	
 	public FeeView(){}
 	
-	public FeeView(FeeBO fee){
+	public FeeView(UserContext userContext, FeeBO fee){
 		this.feeId = fee.getFeeId().toString();
 		this.feeName = fee.getFeeName();
 		if(fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
@@ -35,7 +37,7 @@ public class FeeView extends View{
 		this.periodic = fee.isPeriodic();
 		if(fee.isPeriodic()){
 			MeetingBO feeMeeting = fee.getFeeFrequency().getFeeMeetingFrequency(); 
-			this.feeSchedule = feeMeeting.getShortMeetingSchedule();
+			this.feeSchedule = new MeetingHelper().getMessageWithFrequency(feeMeeting,userContext);
 			if(feeMeeting.isMonthly())
 				this.frequencyType = RecurrenceType.MONTHLY;
 			else if(feeMeeting.isWeekly())
@@ -43,23 +45,6 @@ public class FeeView extends View{
 			else
 				this.frequencyType = RecurrenceType.DAILY;
 		}
-		this.feeRemoved = YesNoFlag.NO.getValue();
-	}
-	
-	public FeeView(FeeBO fee,Short localeId){
-		this.feeId = fee.getFeeId().toString();
-		this.feeName = fee.getFeeName();
-		if(fee.getFeeType().equals(RateAmountFlag.AMOUNT)) {
-			this.amount = ((AmountFeeBO)fee).getFeeAmount().toString();
-			this.feeFormula = "";
-		}
-		else { 
-			this.amount = ((RateFeeBO)fee).getRate().toString();
-			this.feeFormula = ((RateFeeBO)fee).getFeeFormula().getFormulaString(localeId);
-		}
-		this.periodic = fee.isPeriodic();
-		if(fee.isPeriodic())
-			this.feeSchedule = fee.getFeeFrequency().getFeeMeetingFrequency().getShortMeetingSchedule();
 		this.feeRemoved = YesNoFlag.NO.getValue();
 	}
 	

@@ -80,16 +80,12 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.valueobjects.Meeting;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -406,14 +402,12 @@ public class CustomerAccountBO extends AccountBO {
 						GroupConstants.CANCELLED)
 				&& !this.getCustomer().getCustomerStatus().getId().equals(
 						GroupConstants.CLOSED)) {
-			SchedulerIntf scheduler;
+
 			List<Date> meetingDates=null;
 			try {
-				scheduler = SchedulerHelper
-						.getScheduler(getCustomer().getCustomerMeeting()
-								.getMeeting());
-			    meetingDates = scheduler.getAllDates();
-			} catch (SchedulerException e) {
+			    meetingDates = getCustomer().getCustomerMeeting()
+								.getMeeting().getAllDates(DateUtils.getLastDayOfCurrentYear());
+			} catch (MeetingException e) {
 				throw new AccountException(e);
 			}
 			meetingDates.remove(0);
@@ -449,13 +443,20 @@ public class CustomerAccountBO extends AccountBO {
 		MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
 		Calendar meetingStartDate = meeting.getMeetingStartDate();
 		meeting.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar.getInstance()));
-		List<InstallmentDate> installmentDates = getInstallmentDates(getCustomer().getCustomerMeeting().getMeeting(),(short)0,(short)0);
+
+		List<Date> installmentDates = null;
+		try{
+			installmentDates  = meeting.getAllDates(DateUtils.getLastDayOfNextYear(Calendar.getInstance()).getTime());
+		}catch(MeetingException me){
+			throw new AccountException(me);
+		}
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Fee installment obtained ");
-		for(InstallmentDate installmentDate : installmentDates)
-		{
+		int count = 1;
+		for(Date installmentDate : installmentDates){
 			CustomerScheduleEntity customerScheduleEntity=new CustomerScheduleEntity(this,getCustomer(),
-					Short.valueOf(String.valueOf(installmentDate.getInstallmentId()+lastInstallmentId)),new java.sql.Date(installmentDate.getInstallmentDueDate().getTime()),
+					Short.valueOf(String.valueOf(count+lastInstallmentId)),new java.sql.Date(installmentDate.getTime()),
 					PaymentStatus.UNPAID); 
+			count++;
 			addAccountActionDate(customerScheduleEntity);
 		}
 		meeting.setMeetingStartDate(meetingStartDate);

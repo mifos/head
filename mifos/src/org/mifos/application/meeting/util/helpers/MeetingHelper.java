@@ -13,12 +13,8 @@ import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
 import org.mifos.application.meeting.util.valueobjects.MeetingRecurrence;
 import org.mifos.application.meeting.util.valueobjects.MeetingType;
 import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
-import org.mifos.framework.components.scheduler.Constants;
-import org.mifos.framework.components.scheduler.ScheduleDataIntf;
-import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerFactory;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class MeetingHelper {
 
@@ -67,7 +63,7 @@ public class MeetingHelper {
 		return meeting;
 	}
 	
-	public static SchedulerIntf getSchedulerObject(MeetingBO meeting)
+	/*public static SchedulerIntf getSchedulerObject(MeetingBO meeting)
 			throws SchedulerException {
 		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType()
 				.getRecurrenceId();
@@ -79,28 +75,28 @@ public class MeetingHelper {
 		} catch (SchedulerException scheduleException) {
 			throw scheduleException;
 		}
-	}
+	}*/
 	
 
-	public static SchedulerIntf getSchedulerObject(MeetingBO meeting,
-			boolean holidayWeekOffRequired) throws SchedulerException {
-		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType()
-				.getRecurrenceId();
-		try {
+//	public static SchedulerIntf getSchedulerObject(MeetingBO meeting,
+//			boolean holidayWeekOffRequired) throws SchedulerException {
+//		Short recurrenceId = meeting.getMeetingDetails().getRecurrenceType()
+//				.getRecurrenceId();
+//		try {
+//
+//			ScheduleDataIntf scheduleData;
+//
+//			scheduleData = SchedulerFactory
+//					.getScheduleData(getReccurence(recurrenceId));
+//
+//			return getScheduler(scheduleData, meeting, holidayWeekOffRequired);
+//		} catch (SchedulerException scheduleException) {
+//			throw scheduleException;
+//		}
+//
+//	}
 
-			ScheduleDataIntf scheduleData;
-
-			scheduleData = SchedulerFactory
-					.getScheduleData(getReccurence(recurrenceId));
-
-			return getScheduler(scheduleData, meeting, holidayWeekOffRequired);
-		} catch (SchedulerException scheduleException) {
-			throw scheduleException;
-		}
-
-	}
-
-	public static String getReccurence(Short recurrenceId) {
+	/*public static String getReccurence(Short recurrenceId) {
 		if (recurrenceId.intValue() == 1)
 			return Constants.WEEK;
 
@@ -112,9 +108,9 @@ public class MeetingHelper {
 
 		return "";
 
-	}
+	}*/
 
-	private static SchedulerIntf getScheduler(ScheduleDataIntf scheduleData,
+	/*private static SchedulerIntf getScheduler(ScheduleDataIntf scheduleData,
 			MeetingBO meeting, boolean holidayWeekOffRequired)
 			throws SchedulerException {
 
@@ -175,7 +171,7 @@ public class MeetingHelper {
 
 		return scheduler;
 
-	}
+	}*/
 
 	private static List getWeekOffList() {
 		// need to get this from configuration
@@ -191,13 +187,13 @@ public class MeetingHelper {
 
 	}
 
-	private static int getHolidayConfig() {
+	/*private static int getHolidayConfig() {
 		// need to get this from configuration
 		return Constants.NEXT_SCH_DATE;
 
-	}
+	}*/
 	
-	private static SchedulerIntf getScheduler(ScheduleDataIntf scheduleData,
+	/*private static SchedulerIntf getScheduler(ScheduleDataIntf scheduleData,
 			MeetingBO meeting) throws SchedulerException {
 		SchedulerIntf scheduler;
 		ScheduleInputsIntf scheduleInputs;
@@ -239,6 +235,62 @@ public class MeetingHelper {
 		scheduler.setScheduleInputs(scheduleInputs);
 		return scheduler;
 	}
-
-
+*/
+	public String getMessage(MeetingBO meeting, UserContext userContext){
+		String key = null;
+		Object []args = new Object[3];
+		initializeLocale(meeting, userContext.getLocaleId());
+		if(meeting.isWeekly()){
+			key = MeetingConstants.WEEK_SCHEDULE;
+			args[0]=meeting.getMeetingDetails().getRecurAfter();
+			args[1]=meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().getName();
+		}
+		else if(meeting.isMonthlyOnDate()){
+			key = MeetingConstants.MONTH_DAY_SCHEDULE;
+			args[0]=meeting.getMeetingDetails().getDayNumber();
+			args[1]=meeting.getMeetingDetails().getRecurAfter();
+		}
+		else{ 
+			key = MeetingConstants.MONTH_SCHEDULE;
+			args[0]=meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays().getName();
+			args[1]=meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().getName();
+			args[2]=meeting.getMeetingDetails().getRecurAfter();
+		}
+		return StringUtils.getMessageWithSubstitution(MeetingConstants.MEETING_RESOURCE, userContext.getPereferedLocale(), key, args);
+	}
+	
+	public String getMessageWithFrequency(MeetingBO meeting, UserContext userContext){
+		String key = null;
+		Object []args = new Object[1];
+		initializeLocale(meeting, userContext.getLocaleId());
+		if(meeting.isWeekly())
+			key = MeetingConstants.WEEK_FREQUENCY;		
+		else if(meeting.isMonthly())
+			key = MeetingConstants.MONTH_FREQUENCY;
+		args[0]=meeting.getMeetingDetails().getRecurAfter();
+		
+		return StringUtils.getMessageWithSubstitution(MeetingConstants.MEETING_RESOURCE, userContext.getPereferedLocale(), key, args);
+	}
+	
+	public String getDetailMessageWithFrequency(MeetingBO meeting, UserContext userContext){
+		String key = null;
+		Object []args = new Object[1];
+		initializeLocale(meeting, userContext.getLocaleId());
+		if(meeting.isWeekly())
+			key = MeetingConstants.WEEK_SCHEDULE_SHORT;		
+		else if(meeting.isMonthly())
+			key = MeetingConstants.MONTH_SCHEDULE_SHORT;
+		args[0]=meeting.getMeetingDetails().getRecurAfter();
+		
+		return StringUtils.getMessageWithSubstitution(MeetingConstants.MEETING_RESOURCE, userContext.getPereferedLocale(), key, args);
+	}
+	
+	private void initializeLocale(MeetingBO meeting, Short localeId){
+		if(meeting.isWeekly())
+			meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().setLocaleId(localeId);
+		else if(meeting.isMonthly() && !meeting.isMonthlyOnDate()){
+			meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().setLocaleId(localeId);
+			meeting.getMeetingDetails().getMeetingRecurrence().getRankOfDays().setLocaleId(localeId);
+		}
+	}
 }

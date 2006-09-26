@@ -33,18 +33,13 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.scheduler.Constants;
-import org.mifos.framework.components.scheduler.ScheduleDataIntf;
-import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerFactory;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -192,24 +187,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	private static java.util.Date getMeetingDates(MeetingBO meeting) {
 		List<java.util.Date> dates = new ArrayList<java.util.Date>();
-		ScheduleDataIntf scheduleData;
-		SchedulerIntf scheduler;
-		ScheduleInputsIntf scheduleInputs;
-		scheduler = SchedulerFactory.getScheduler();
 		try {
-			scheduleData = SchedulerFactory.getScheduleData(Constants.WEEK);
-			scheduleInputs = SchedulerFactory.getScheduleInputs();
-			scheduleInputs
-					.setStartDate(meeting.getMeetingStartDate().getTime());
-			scheduleData.setRecurAfter(1);
-
-			scheduleData.setWeekDay(meeting.getMeetingDetails()
-					.getMeetingRecurrence().getWeekDayValue().getValue());
-			scheduleInputs.setScheduleData(scheduleData);
-			scheduler.setScheduleInputs(scheduleInputs);
-			dates = scheduler.getAllDates(new java.util.Date(System
+			dates = meeting.getAllDates(new java.util.Date(System
 					.currentTimeMillis()));
-		} catch (SchedulerException e) {
+		} catch (MeetingException e) {
 			e.printStackTrace();
 		}
 		return dates.get(dates.size() - 1);

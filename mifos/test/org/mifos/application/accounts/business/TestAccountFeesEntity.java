@@ -14,7 +14,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -67,7 +66,7 @@ public class TestAccountFeesEntity extends MifosTestCase {
 	}
 	
 	
-	public void testGetApplicableDatesCount() throws ApplicationException, SchedulerException{
+	public void testGetApplicableDatesCount() throws Exception{
 		accountPersistence = new AccountPersistence();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
         center=TestObjectFactory.createCenter("Center",Short.valueOf("13"),"1.1",meeting,new Date(System.currentTimeMillis()));

@@ -48,9 +48,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -174,7 +172,6 @@ public class AccountFeesEntity extends PersistentObject {
 
 	public Integer getApplicableDatesCount(Date date) throws AccountException  {
 		Integer applicableDatesCount = 0 ;
-		SchedulerIntf schedulerIntf;
 		if (getLastAppliedDate() != null) {
 			MeetingBO meetingBO = getAccount().getCustomer()
 					.getCustomerMeeting().getMeeting();
@@ -188,8 +185,7 @@ public class AccountFeesEntity extends PersistentObject {
 							.getMeetingDetails().getRecurAfter());
 			List<Date> applDates =null;
 			try {
-				schedulerIntf = MeetingHelper.getSchedulerObject(meetingBO);
-				applDates = schedulerIntf.getAllDates(date);
+				applDates = meetingBO.getAllDates(date);
 			} catch (ApplicationException e) {
 				throw new AccountException(e);
 			}

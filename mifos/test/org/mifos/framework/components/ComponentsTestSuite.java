@@ -4,7 +4,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.framework.MifosTestSuite;
-import org.mifos.framework.components.scheduler.TestScheduler;
 import org.mifos.framework.components.taggenerator.TestTagGenerator;
 
 public class ComponentsTestSuite extends MifosTestSuite{
@@ -12,11 +11,9 @@ public class ComponentsTestSuite extends MifosTestSuite{
 		super();
 	}
 
-	public static Test suite()throws Exception
-	{
+	public static Test suite()throws Exception	{
 		TestSuite testSuite = new ComponentsTestSuite();
 		testSuite.addTestSuite(TestTagGenerator.class);
-		testSuite.addTestSuite(TestScheduler.class);
 		return testSuite;
 	}
 }

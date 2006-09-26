@@ -9,7 +9,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -346,7 +346,7 @@
 							<span class="fontnormalRed"> <mifos:mifoslabel
 								name="Center.MeetingsSubHeading" />:&nbsp;
 							<c:out
-								value="${BusinessKey.customerMeeting.meeting.meetingSchedule}" /></span><span
+								value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,UserContext)}" /></span><span
 								class="fontnormal"><br>
 							<span class="fontnormal"><c:out
 								value="${BusinessKey.customerMeeting.meeting.meetingPlace}" /></span>

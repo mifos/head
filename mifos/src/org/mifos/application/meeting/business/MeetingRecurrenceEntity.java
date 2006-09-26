@@ -37,11 +37,13 @@
  */
 package org.mifos.application.meeting.business;
 
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.exceptions.PersistenceException;
 
 /**
  * This class encapsulate the MeetingRecurrence details
@@ -71,8 +73,12 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 		if(dayNumber!=null)
 			this.dayNumber = dayNumber;
 		else{
-			this.weekDay = new WeekDaysEntity(weekDay);
-			this.rankOfDays = new RankOfDaysEntity(rank);	
+			try{
+				this.weekDay = (WeekDaysEntity)new MasterPersistence().retrieveMasterEntity(weekDay.getValue(), WeekDaysEntity.class, null);
+				this.rankOfDays = (RankOfDaysEntity) new MasterPersistence().retrieveMasterEntity(rank.getValue(),RankOfDaysEntity.class,null);
+			}catch(PersistenceException pe){
+				throw new MeetingException(pe);
+			}
 		}
 		this.meetingDetails = meetingDetails;
 		this.detailsId = null;
@@ -80,7 +86,11 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 	
 	public MeetingRecurrenceEntity(WeekDay weekDay, MeetingDetailsEntity meetingDetails)throws MeetingException {
 		validateWeekDay(weekDay);
-		this.weekDay = new WeekDaysEntity(weekDay);
+		try {
+			this.weekDay = (WeekDaysEntity)new MasterPersistence().retrieveMasterEntity(weekDay.getValue(), WeekDaysEntity.class, null);
+		} catch (PersistenceException pe) {
+			throw new MeetingException(pe);
+		}
 		this.meetingDetails = meetingDetails;
 		this.detailsId = null;
 	}

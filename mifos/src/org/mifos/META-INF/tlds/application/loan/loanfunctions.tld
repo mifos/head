@@ -35,6 +35,18 @@
     </example>
   </function> 
     
+    <function>
+    <description>
+     This returns the string representing meeting frequency
+    </description>
+    <name>getMeetingRecurrence</name>
+  <function-class>org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
+    <function-signature>java.lang.String getMeetingRecurrence(java.lang.Object,java.lang.Object)</function-signature>
+    <example>
+      &lt;c:out value="${fn:getMeetingRecurrence(object,object)}">
+    </example>
+  </function>
+  
 	<tag>
 		<name>getRepaymentTable</name>
 		<tagclass>org.mifos.application.accounts.loan.struts.uihelpers.LoanRepaymentTableTag</tagclass>

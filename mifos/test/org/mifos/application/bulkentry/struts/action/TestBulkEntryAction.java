@@ -70,6 +70,7 @@ import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -80,11 +81,6 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.scheduler.ScheduleDataIntf;
-import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerFactory;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
@@ -741,24 +737,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	private static java.util.Date getMeetingDates(MeetingBO meeting) {
 		List<java.util.Date> dates = new ArrayList<java.util.Date>();
-		ScheduleDataIntf scheduleData;
-		SchedulerIntf scheduler;
-		ScheduleInputsIntf scheduleInputs;
-		scheduler = SchedulerFactory.getScheduler();
 		try {
-			scheduleData = SchedulerFactory
-					.getScheduleData(org.mifos.framework.components.scheduler.Constants.WEEK);
-			scheduleInputs = SchedulerFactory.getScheduleInputs();
-			scheduleInputs
-					.setStartDate(meeting.getMeetingStartDate().getTime());
-			scheduleData.setRecurAfter(1);
-			scheduleData.setWeekDay(meeting.getMeetingDetails()
-					.getMeetingRecurrence().getWeekDayValue().getValue());
-			scheduleInputs.setScheduleData(scheduleData);
-			scheduler.setScheduleInputs(scheduleInputs);
-			dates = scheduler.getAllDates(new java.util.Date(System
+			dates = meeting.getAllDates(new java.util.Date(System
 					.currentTimeMillis()));
-		} catch (SchedulerException e) {
+		} catch (MeetingException e) {
 			e.printStackTrace();
 		}
 		return dates.get(dates.size() - 1);

@@ -61,6 +61,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -523,15 +524,15 @@ public class LoanAccountAction extends AccountAppAction {
 		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.FeesService);
-		Short localeId = getUserContext(request).getLocaleId();
+		UserContext userContext = getUserContext(request);
 		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
 		List<FeeView> additionalFees = new ArrayList<FeeView>();
 		List<FeeView> defaultFees = new ArrayList<FeeView>();
 		for (FeeBO fee : fees) {
 			if (loanOffering.isFeePresent(fee))
-				defaultFees.add(new FeeView(fee, localeId));
+				defaultFees.add(new FeeView(userContext, fee));
 			else
-				additionalFees.add(new FeeView(fee, localeId));
+				additionalFees.add(new FeeView(userContext,fee));
 		}
 		actionForm.setDefaultFees(defaultFees);
 		SessionUtils.setAttribute(LoanConstants.ADDITIONAL_FEES_LIST,

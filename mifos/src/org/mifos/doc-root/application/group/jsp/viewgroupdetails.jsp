@@ -45,6 +45,7 @@
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -565,7 +566,7 @@
 												class="fontnormalRed"><br>
 											<mifos:mifoslabel name="Group.meetings"
 												bundle="GroupUIResources" />&nbsp; <c:out
-												value="${BusinessKey.customerMeeting.meeting.meetingSchedule}" /><br>
+												value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,sessionScope.UserContext)}" /><br>
 											</span> <span class="fontnormal"> <c:if
 												test="${BusinessKey.customerMeeting.meeting.meetingPlace!=null && !empty BusinessKey.customerMeeting.meeting.meetingPlace}">
 												<c:out
@@ -591,7 +592,7 @@
 											<span class="fontnormalRed"><br>
 											<mifos:mifoslabel name="Group.meetings"
 												bundle="GroupUIResources" /> <c:out
-												value="${BusinessKey.customerMeeting.meeting.meetingSchedule}" />
+												value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,sessionScope.UserContext)}" />
 											</span> <br>
 											<span class="fontnormal"> <c:out
 												value="${BusinessKey.customerMeeting.meeting.meetingPlace}" />

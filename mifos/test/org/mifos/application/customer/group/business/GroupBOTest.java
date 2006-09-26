@@ -963,8 +963,8 @@ public class GroupBOTest extends MifosTestCase {
 		AmountFeeBO fee2 = (AmountFeeBO) TestObjectFactory
 				.createOneTimeAmountFee("OneTimeAmountFee",
 						FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
-		fees.add(new FeeView(fee1));
-		fees.add(new FeeView(fee2));
+		fees.add(new FeeView(TestObjectFactory.getContext(),fee1));
+		fees.add(new FeeView(TestObjectFactory.getContext(),fee2));
 		HibernateUtil.commitTransaction();
 		return fees;
 	}

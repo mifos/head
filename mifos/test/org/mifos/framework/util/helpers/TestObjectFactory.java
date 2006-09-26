@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,7 +50,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
@@ -72,7 +70,6 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -158,12 +155,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.scheduler.Constants;
-import org.mifos.framework.components.scheduler.ScheduleDataIntf;
-import org.mifos.framework.components.scheduler.ScheduleInputsIntf;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerFactory;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -218,79 +209,13 @@ public class TestObjectFactory {
 		return (PersonnelBO)addObject(testObjectPersistence.getPersonnel(personnelId));
 	}
 
-	/**
-	 * This is just a helper method which returns a new cust account object to
-	 * be used else where . The method does not persist it.
-	 */
-	/*public static CustomerAccountBO getCustAccountsHelper(Short createdBy,
-			CustomerBO customer, Date startDate) {
-		CustomerAccountBO custAccount = new CustomerAccountBO();
-
-		custAccount.setAccountState(new AccountStateEntity(
-				AccountStates.CUSTOMERACCOUNT_ACTIVE));
-
-		AccountTypes accountType = new AccountTypes();
-		accountType.setAccountTypeId(Short
-				.valueOf(AccountTypes.CUSTOMERACCOUNT));
-		custAccount.setAccountType(accountType);
-
-		OfficeBO office = customer.getOffice();
-		custAccount.setOffice(office);
-		custAccount.setCustomer(customer);
-		PersonnelBO personnel = customer.getPersonnel();
-		custAccount.setPersonnel(personnel);
-
-		custAccount.setCreatedBy(createdBy);
-		custAccount
-				.setCreatedDate(new java.sql.Date(System.currentTimeMillis()));
-		MifosCurrency currency = testObjectPersistence.getCurrency();
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity();
-		accountPeriodicFee.setAccount(custAccount);
-		accountPeriodicFee.setAccountFeeAmount(new Money(currency, "100.0"));
-		accountPeriodicFee.setFeeAmount(new Money(currency, "100.0"));
-		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
-				FeeCategory.ALLCUSTOMERS, "100", MeetingFrequency.WEEKLY, Short
-						.valueOf("1"));
-		accountPeriodicFee.setFees(maintanenceFee);
-		custAccount.addAccountFees(accountPeriodicFee);
-
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(startDate);
-		customer.getCustomerMeeting().getMeeting()
-				.setMeetingStartDate(calendar);
-		List<Date> meetingDates = getMeetingDates(customer.getCustomerMeeting()
-				.getMeeting(), 3);
-
-		short i = 0;
-		for (Date date : meetingDates) {
-			CustomerScheduleEntity actionDate = new CustomerScheduleEntity(
-					custAccount, customer, ++i, new java.sql.Date(date
-							.getTime()), PaymentStatus.UNPAID);
-			actionDate.setMiscFee(new Money(currency, "0.0"));
-			actionDate.setMiscFeePaid(new Money(currency, "0.0"));
-			actionDate.setMiscPenalty(new Money(currency, "0.0"));
-			actionDate.setMiscPenaltyPaid(new Money(currency, "0.0"));
-			custAccount.addAccountActionDate(actionDate);
-			AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
-					actionDate, i, maintanenceFee, accountPeriodicFee,
-					new Money(currency, "100.0"));
-			accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
-			actionDate.addAccountFeesAction(accountFeesaction);
-		}
-
-		return custAccount;
-	}*/
-
 	public static CenterBO createCenter(String customerName, Short statusId,
 			String searchId, MeetingBO meeting, Date startDate) {
 		CenterBO center = null;
 		try {
 			Short officeId = new Short("3");
 			Short personnel = new Short("1");		
-//			if(meeting!=null)
-//				meeting.setMeetingStartDate(new GregorianCalendar());
 			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  null, null, officeId, meeting, personnel);
-			//center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
 			center.save();
 			HibernateUtil.commitTransaction();
 			//TODO: throw Exception
@@ -310,10 +235,7 @@ public class TestObjectFactory {
 	public static CenterBO createCenter(String customerName, MeetingBO meeting, Short officeId, Short personnelId) {
 		CenterBO center = null;
 		try {
-//			if(meeting!=null)
-//				meeting.setMeetingStartDate(new GregorianCalendar());
 			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  null, null, officeId, meeting, personnelId);
-			//center.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), center, startDate));
 			center.save();
 			HibernateUtil.commitTransaction();
 			//TODO: throw Exception
@@ -330,8 +252,6 @@ public class TestObjectFactory {
 		try {
 			Short officeId = new Short("3");
 			Short personnel = new Short("1");		
-//			if(meeting!=null)
-//				meeting.setMeetingStartDate(new GregorianCalendar());
 			center = new CenterBO(getUserContext(), customerName, null, null, fees,  null, null, officeId, meeting, personnel);
 			center.save();
 			HibernateUtil.commitTransaction();
@@ -347,7 +267,7 @@ public class TestObjectFactory {
 		List<FeeView> fees = new ArrayList<FeeView>();		
 		AmountFeeBO maintanenceFee = (AmountFeeBO)createPeriodicAmountFee("Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",RecurrenceType.WEEKLY,
 				Short.valueOf("1"));
-		FeeView fee = new FeeView(maintanenceFee);
+		FeeView fee = new FeeView(getContext(),maintanenceFee);
 		fees.add(fee);
 		return fees;
 	}
@@ -388,9 +308,6 @@ public class TestObjectFactory {
 			Short formedById, CustomerBO parentCustomer){
 		GroupBO group = null;
 		try {
-//			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
-//					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
-//				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
 			group = new GroupBO(getUserContext(), customerName, customerStatus, externalId, trained, trainedDate, address, customFields, fees, formedById, parentCustomer);
 			group.save();
 			HibernateUtil.commitTransaction();
@@ -406,8 +323,6 @@ public class TestObjectFactory {
 			CustomerStatus customerStatus, Short officeId, MeetingBO meeting,
 			Short loanOfficerId){
 		Short formedBy = new Short("1");
-//		if(meeting!=null)
-//			meeting.setMeetingStartDate(new GregorianCalendar());
 		return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, null, getFees(), formedBy, officeId, meeting, loanOfficerId);
 	}
 	
@@ -436,23 +351,11 @@ public class TestObjectFactory {
 		try {
 			Short office = new Short("3");
 			Short personnel = new Short("1");	
-//			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
-//					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
-//				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder("testClientName"),customerName,"middle",customerName,"secondLast");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
 			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, parentCustomer, null,
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
-		//	client.addCustomerAccount(getCustAccountsHelper(personnel.getPersonnelId(), client, startDate));
-			//to be removed later
-			//client.setSearchId(searchId);
-			/*Name name = new Name();
-			name.setFirstName(customerName);
-			name.setLastName(customerName);
-
-			ClientNameDetailEntity customerNameDetail = new ClientNameDetailEntity(client,null,null,null,null,name);
-			client.addNameDetailSet(customerNameDetail);*/
 			client.save();
 			HibernateUtil.commitTransaction();
 			// TODO: throw Exception
@@ -486,9 +389,6 @@ public class TestObjectFactory {
 		ClientBO client = null;
 		Short personnel = new Short("1");	
 		try {
-//			if(parentCustomer!=null && parentCustomer.getCustomerMeeting()!=null 
-//					&& parentCustomer.getCustomerMeeting().getMeeting()!=null)
-//				parentCustomer.getCustomerMeeting().getMeeting().setMeetingStartDate(new GregorianCalendar());
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(customerName+customerName),customerName,"",customerName,"");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
@@ -649,8 +549,6 @@ public class TestObjectFactory {
 			LoanOfferingBO loanOfering) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(startDate);
-//		customer.getCustomerMeeting().getMeeting()
-//				.setMeetingStartDate(calendar);
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
 		List<Date> meetingDates = getMeetingDates(meeting, 6);
@@ -868,85 +766,25 @@ public class TestObjectFactory {
 
 	private static List<Date> getMeetingDates(MeetingBO meeting, int occurrences) {
 		List<Date> dates = new ArrayList<Date>();
-		ScheduleDataIntf scheduleData;
-		SchedulerIntf scheduler;
 		try {
-			scheduleData = SchedulerFactory
-					.getScheduleData(getReccurence(meeting.getMeetingDetails()
-							.getRecurrenceType().getRecurrenceId()));
-			scheduler = getScheduler(scheduleData, meeting);
-			dates = scheduler.getAllDates(occurrences);
-		} catch (SchedulerException e) {
-			e.printStackTrace();
+			dates = meeting.getAllDates(occurrences);
+		} catch (MeetingException me) {
+			me.printStackTrace();
 		}
 		return dates;
 	}
 
 	public static List<Date> getAllMeetingDates(MeetingBO meeting) {
 		List<Date> dates = new ArrayList<Date>();
-		ScheduleDataIntf scheduleData;
-		SchedulerIntf scheduler;
 		try {
-			scheduleData = SchedulerFactory
-					.getScheduleData(getReccurence(meeting.getMeetingDetails()
-							.getRecurrenceType().getRecurrenceId()));
-			scheduler = getScheduler(scheduleData, meeting);
-			dates = scheduler.getAllDates();
-		} catch (SchedulerException e) {
+			dates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
+		} catch (MeetingException e) {
 			e.printStackTrace();
 		}
 		return dates;
 	}
 
-	private static String getReccurence(Short recurrenceId) {
-		if (recurrenceId.intValue() == 1)
-			return Constants.WEEK;
-		if (recurrenceId.intValue() == 2)
-			return Constants.MONTH;
-		if (recurrenceId.intValue() == 3)
-			return Constants.MONTH;
-		return "";
-	}
 
-	private static SchedulerIntf getScheduler(ScheduleDataIntf scheduleData,
-			MeetingBO meeting) {
-		SchedulerIntf scheduler;
-		ScheduleInputsIntf scheduleInputs;
-		scheduler = SchedulerFactory.getScheduler();
-		try {
-			scheduleInputs = SchedulerFactory.getScheduleInputs();
-			scheduleInputs
-					.setStartDate(meeting.getMeetingStartDate().getTime());
-			scheduleData.setRecurAfter(meeting.getMeetingDetails()
-					.getRecurAfter().intValue());
-			if (scheduleData.getClass().getName().equals(
-					"org.mifos.framework.components.scheduler.WeekData")) {
-				scheduleData.setWeekDay(meeting.getMeetingDetails()
-						.getMeetingRecurrence().getWeekDayValue().getValue()
-						.intValue());
-			} else if (scheduleData.getClass().getName().equals(
-					"org.mifos.framework.components.scheduler.MonthData")) {
-				if (meeting.getMeetingDetails().getMeetingRecurrence()
-						.getDayNumber() != null)
-					scheduleData.setDayNumber(meeting.getMeetingDetails()
-							.getMeetingRecurrence().getDayNumber().intValue());
-				else {
-					scheduleData.setWeekDay(meeting.getMeetingDetails()
-							.getMeetingRecurrence().getWeekDayValue().getValue()
-							.intValue());
-
-					scheduleData.setWeekRank(meeting.getMeetingDetails()
-							.getMeetingRecurrence().getRankOfDays()
-							.getId().intValue());
-				}
-			}
-			scheduleInputs.setScheduleData(scheduleData);
-			scheduler.setScheduleInputs(scheduleInputs);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return scheduler;
-	}
 
 	public static FeeBO createPeriodicAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt,
@@ -1050,9 +888,6 @@ public class TestObjectFactory {
 		Calendar cal = new GregorianCalendar();
 		WeekDaysEntity weekDays = new WeekDaysEntity(WeekDay.getWeekDay(Short.valueOf(Integer.toString(cal
 				.get(Calendar.DAY_OF_WEEK)))));		
-		
-//		weekDays.setId(Short.valueOf(Integer.toString(cal
-//				.get(Calendar.DAY_OF_WEEK))));
 		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDays);
 		return meeting;
 	}
@@ -1561,8 +1396,6 @@ public class TestObjectFactory {
 			LoanOfferingBO loanOfering, int disbursalType) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(startDate);
-//		customer.getCustomerMeeting().getMeeting()
-//				.setMeetingStartDate(calendar);
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
 		List<Date> meetingDates = getMeetingDates(meeting, 6);

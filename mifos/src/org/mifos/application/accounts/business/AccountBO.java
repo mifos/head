@@ -78,12 +78,8 @@ import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
-import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
-import org.mifos.application.meeting.util.valueobjects.MeetingRecurrence;
-import org.mifos.application.meeting.util.valueobjects.MeetingType;
-import org.mifos.application.meeting.util.valueobjects.RecurrenceType;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -92,9 +88,6 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.scheduler.SchedulerException;
-import org.mifos.framework.components.scheduler.SchedulerIntf;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -839,16 +832,24 @@ public class AccountBO extends BusinessObject {
 	protected final List<InstallmentDate> getInstallmentDates(
 			MeetingBO meeting, Short noOfInstallments, Short installmentToSkip)
 			throws AccountException {
-		SchedulerIntf scheduler;
-		try {
-			scheduler = MeetingHelper.getSchedulerObject(meeting, true);
-		} catch (SchedulerException e) {
-			throw new AccountException(e);
-		}
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating intallment dates");
-		List<InstallmentDate> installmentDates = getInstallmentDates(scheduler,
-				noOfInstallments, installmentToSkip);
+		List<Date> dueDates = null;
+		try {
+			if (!noOfInstallments.equals(Short.valueOf("0")))
+				dueDates = meeting.getAllDates(noOfInstallments
+						+ installmentToSkip);
+			else
+				dueDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());			
+		} catch (MeetingException e) {
+			throw new AccountException(e);
+		}
+		int installmentId = 1;
+		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
+		for (Date date : dueDates)
+			installmentDates.add(new InstallmentDate(new Short(Integer
+					.toString(installmentId++)), date));
+
 		removeInstallmentsNeedNotPay(installmentToSkip, installmentDates);
 		return installmentDates;
 	}
@@ -883,13 +884,11 @@ public class AccountBO extends BusinessObject {
 		repaymentFrequency.setMeetingStartDate(feeStartDate);
 		Date repaymentEndDate = (installmentDates
 				.get(installmentDates.size() - 1)).getInstallmentDueDate();
-		SchedulerIntf scheduler;
+		
 		List<Date> feeDueDates = null;
 		try {
-			scheduler = MeetingHelper.getSchedulerObject(
-					repaymentFrequency, false);
-			feeDueDates = scheduler.getAllDates(repaymentEndDate);
-		} catch (ApplicationException e) {
+			feeDueDates = repaymentFrequency.getAllDates(repaymentEndDate);
+		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}
 		repaymentFrequency.setMeetingStartDate(meetingStartDate);
@@ -1066,7 +1065,7 @@ public class AccountBO extends BusinessObject {
 	}
 
 	protected List<InstallmentDate> getInstallmentDates(
-			SchedulerIntf scheduler, Integer installmentSkipToStartRepayment)
+			MeetingBO Meeting, Integer installmentSkipToStartRepayment)
 			throws AccountException {
 		return null;
 	}
@@ -1192,31 +1191,6 @@ public class AccountBO extends BusinessObject {
 				"OneTime fee applicable installment id "
 						+ installmentId);
 		return buildFeeInstallment(installmentId, accountFeeAmount, accountFee);
-	}
-
-	private List<InstallmentDate> getInstallmentDates(SchedulerIntf scheduler,
-			Short noOfInstallments, Short installmentSkipToStartRepayment)
-			throws AccountException {
-		MifosLogManager
-				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
-				.debug(
-						"Generating installmentDates..");
-		List<Date> dueDates = null;
-		try {
-			if (!noOfInstallments.equals(Short.valueOf("0")))
-				dueDates = scheduler.getAllDates(noOfInstallments
-						+ installmentSkipToStartRepayment);
-			else
-				dueDates = scheduler.getAllDates();
-		} catch (SchedulerException e) {
-			throw new AccountException(e);
-		}
-		int installmentId = 1;
-		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
-		for (Date date : dueDates)
-			installmentDates.add(new InstallmentDate(new Short(Integer
-					.toString(installmentId++)), date));
-		return installmentDates;
 	}
 
 	private void removeInstallmentsNeedNotPay(

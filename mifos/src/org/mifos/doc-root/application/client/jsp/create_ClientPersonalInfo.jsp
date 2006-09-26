@@ -46,6 +46,7 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 
 <!-- Tile  definitions -->
 <tiles:insert definition=".withoutmenu">
@@ -303,7 +304,7 @@
 											<span class="fontnormalbold"><mifos:mifoslabel
 												name="client.MeetingSchedule" bundle="ClientUIResources"></mifos:mifoslabel></span>
 											<span class="fontnormal"> <c:out
-												value="${sessionScope.clientCustActionForm.parentGroup.customerMeeting.meeting.meetingSchedule}" />
+												value="${customerfn:getMeetingSchedule(sessionScope.clientCustActionForm.parentGroup.customerMeeting.meeting,UserContext)}" />
 											<br>
 											</span> <span class="fontnormalbold"><mifos:mifoslabel
 												name="client.LocationOfMeeting" bundle="ClientUIResources"></mifos:mifoslabel></span>

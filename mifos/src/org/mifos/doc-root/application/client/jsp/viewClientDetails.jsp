@@ -45,7 +45,7 @@
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <!-- Tils definition for the header and menu -->
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -383,7 +383,7 @@
 									<span class="fontnormalRed"> <mifos:mifoslabel
 										name="client.MeetingsHeading" bundle="ClientUIResources" />:&nbsp;
 									<c:out
-										value="${BusinessKey.customerMeeting.meeting.meetingSchedule}" />
+										value="${customerfn:getMeetingSchedule(BusinessKey.customerMeeting.meeting,UserContext)}" />
 									<br>
 									</span> <span class="fontnormal"> <c:if
 										test="${BusinessKey.customerMeeting.meeting.meetingPlace!=null && !empty BusinessKey.customerMeeting.meeting.meetingPlace}">

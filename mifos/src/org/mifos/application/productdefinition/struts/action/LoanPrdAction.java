@@ -248,7 +248,7 @@ public class LoanPrdAction extends BaseAction {
 		List<FeeView> feeSelected = new ArrayList<FeeView>();
 		for (PrdOfferingFeesEntity prdOfferingFees : loanOffering
 				.getPrdOfferingFees()) {
-			feeSelected.add(new FeeView(prdOfferingFees.getFees()));
+			feeSelected.add(new FeeView(getUserContext(request),prdOfferingFees.getFees()));
 		}
 		loadSelectedFeesAndFunds(feeSelected, fundsSelected, request);
 		loadStatusList(request);
@@ -414,7 +414,7 @@ public class LoanPrdAction extends BaseAction {
 		SessionUtils.setAttribute(ProductDefinitionConstants.SRCFUNDSLIST,
 				service.getSourcesOfFund(), request);
 		SessionUtils.setAttribute(ProductDefinitionConstants.LOANFEESLIST,
-				getFeeViewList(fees), request);
+				getFeeViewList(getUserContext(request),fees), request);
 		SessionUtils.setAttribute(
 				ProductDefinitionConstants.LOANPRICIPALGLCODELIST, getGLCodes(
 						FinancialActionConstants.PRINCIPALPOSTING,
@@ -528,13 +528,13 @@ public class LoanPrdAction extends BaseAction {
 		return null;
 	}
 
-	private List<FeeView> getFeeViewList(List<FeeBO> fees) {
+	private List<FeeView> getFeeViewList(UserContext userContext, List<FeeBO> fees) {
 		prdDefLogger
 				.debug("start getFeeViewList method of Loan Product Action ");
 		List<FeeView> feeViews = new ArrayList<FeeView>();
 		if (fees != null && fees.size() > 0) {
 			for (FeeBO fee : fees) {
-				feeViews.add(new FeeView(fee));
+				feeViews.add(new FeeView(userContext, fee));
 			}
 		}
 		prdDefLogger

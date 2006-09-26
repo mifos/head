@@ -376,7 +376,7 @@
 										<span class="fontnormal"> <c:out
 										value="${feesSet.accountFeeAmount}" />&nbsp;( <mifos:mifoslabel
 										name="loan.periodicityTypeRate" /> <c:out
-										value="${feesSet.fees.feeFrequency.feeMeetingFrequency.shortMeetingSchedule}" />)
+										value="${loanfn:getMeetingRecurrence(feesSet.fees.feeFrequency.feeMeetingFrequency,sessionScope.UserContext)}" />)
 									<html-el:link
 										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&accountId=${sessionScope.BusinessKey.accountId}&recordOfficeId=${sessionScope.BusinessKey.office.officeId}&recordLoanOfficerId=${sessionScope.BusinessKey.personnel.personnelId}&createdDate=${sessionScope.BusinessKey.createdDate}"> 
 														<mifos:mifoslabel name="loan.remove" />

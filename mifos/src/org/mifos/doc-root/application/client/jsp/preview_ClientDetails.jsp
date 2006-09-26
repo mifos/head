@@ -44,7 +44,7 @@
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-
+<%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -430,7 +430,7 @@
 									<c:choose>
 										<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
 											<span class="fontnormal"><c:out
-												value="${sessionScope.clientCustActionForm.parentGroup.customerMeeting.meeting.meetingSchedule}" />
+												value="${customerfn:getMeetingSchedule(sessionScope.clientCustActionForm.parentGroup.customerMeeting.meeting,sessionScope.UserContext)}" />
 											</span>
 											<br>
 											<span class="fontnormalbold"><mifos:mifoslabel
@@ -442,7 +442,7 @@
 										<c:otherwise>
 										<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerMeeting')}" var="clientMeeting" />
 											<span class="fontnormal"><c:out
-												value="${clientMeeting.meetingSchedule}" />
+												value="${customerfn:getMeetingSchedule(clientMeeting,sessionScope.UserContext)}" />
 											</span>
 											<br>
 											<span class="fontnormalbold"><mifos:mifoslabel

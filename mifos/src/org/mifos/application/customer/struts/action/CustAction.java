@@ -222,9 +222,9 @@ public class CustAction extends BaseAction {
 		List<FeeView> defaultFees = new ArrayList<FeeView>();
 		for (FeeBO fee : fees) {
 			if (fee.isCustomerDefaultFee())
-				defaultFees.add(new FeeView(fee));
+				defaultFees.add(new FeeView(getUserContext(request),fee));
 			else
-				additionalFees.add(new FeeView(fee));
+				additionalFees.add(new FeeView(getUserContext(request),fee));
 		}
 		actionForm.setDefaultFees(defaultFees);
 		SessionUtils.setAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
