@@ -83,7 +83,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerSearchInput;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.valueobjects.Office;

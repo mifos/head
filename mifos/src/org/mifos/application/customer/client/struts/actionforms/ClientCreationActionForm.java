@@ -76,7 +76,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;

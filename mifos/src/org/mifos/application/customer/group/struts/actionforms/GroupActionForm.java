@@ -68,7 +68,7 @@ import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.framework.exceptions.ApplicationException;

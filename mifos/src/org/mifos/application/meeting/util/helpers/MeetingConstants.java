@@ -35,7 +35,7 @@
  *
 
  */
-package org.mifos.application.meeting.util.resources;
+package org.mifos.application.meeting.util.helpers;
 
 /**
  * This class contains all the constants related to the meeting module

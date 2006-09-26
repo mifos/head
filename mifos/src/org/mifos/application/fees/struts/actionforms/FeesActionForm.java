@@ -520,18 +520,18 @@ public class FeesActionForm extends MifosActionForm {
 	public Meeting getMeeting() {
 
 		Meeting meeting = null;
-		if (Short.valueOf(frequency).equals(RecurrenceType.WEEKLY.getValue())) {
-			meeting = MeetingHelper.geMeeting(frequency, recurWeekDay,
-					MeetingType.FEEMEETING.getValue());
-			meeting.setMeetingPlace("");
-			recurMonthDay = "";
-		} else if (Short.valueOf(frequency).equals(
-				RecurrenceType.MONTHLY.getValue())) {
-			meeting = MeetingHelper.geMeeting(frequency, recurMonthDay,
-					MeetingType.FEEMEETING.getValue());
-			meeting.setMeetingPlace("");
-			recurWeekDay = "";
-		}
+//		if (Short.valueOf(frequency).equals(RecurrenceType.WEEKLY.getValue())) {
+//			meeting = MeetingHelper.geMeeting(frequency, recurWeekDay,
+//					MeetingType.FEEMEETING.getValue());
+//			meeting.setMeetingPlace("");
+//			recurMonthDay = "";
+//		} else if (Short.valueOf(frequency).equals(
+//				RecurrenceType.MONTHLY.getValue())) {
+//			meeting = MeetingHelper.geMeeting(frequency, recurMonthDay,
+//					MeetingType.FEEMEETING.getValue());
+//			meeting.setMeetingPlace("");
+//			recurWeekDay = "";
+//		}
 		return meeting;
 	}
 

@@ -47,7 +47,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;

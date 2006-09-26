@@ -39,9 +39,9 @@ package org.mifos.application.meeting.business;
 
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.exceptions.PersistenceException;
 

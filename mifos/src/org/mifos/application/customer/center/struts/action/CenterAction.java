@@ -84,7 +84,7 @@ import org.mifos.application.customer.util.valueobjects.CustomerPosition;
 import org.mifos.application.fees.util.valueobjects.FeeMaster;
 import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.meeting.util.resources.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.personnel.util.valueobjects.PersonnelMaster;
