@@ -784,5 +784,5 @@ groupobject=GroupCreateEdit.new
     groupobject.edit_center_membership_select_center(groupobject.Edit_gname)
     rowid+=$maxcol
     end
-#   groupobject.mifos_logout()
+   groupobject.mifos_logout()
 end
