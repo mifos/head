@@ -206,6 +206,7 @@
 			<html-el:hidden property="input" value="${param.input}" />
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
+			<html-el:hidden property="accountType" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />
 		</html-el:form>
 		<html-el:form action="customerAccountAction.do?method=load">
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />

@@ -91,29 +91,25 @@ public class AccountStatusAction extends BaseAction {
 			throws Exception {
 		cleanUp(form, request);
 
-		try {
-			masterService = (MasterDataService) ServiceFactory.getInstance()
-					.getBusinessService(BusinessServiceName.MasterDataService);
+		masterService = (MasterDataService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.MasterDataService);
 
-			UserContext userContext = getUserContext(request);
-			List<OfficeView> activeBranches = masterService
-					.getActiveBranches(userContext.getBranchId());
+		UserContext userContext = getUserContext(request);
+		List<OfficeView> activeBranches = masterService
+				.getActiveBranches(userContext.getBranchId());
 
-			SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
-					activeBranches, request.getSession());
+		SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
+				activeBranches, request.getSession());
 
-			if (activeBranches.size() == 1) {
-				List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
-						userContext, activeBranches.get(0).getOfficeId());
-				SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
-						loanOfficers, request.getSession());
-			} else {
-				SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
-						new ArrayList<PersonnelView>(), request.getSession());
-			}
-		} catch (Exception e) {
+		if (activeBranches.size() == 1) {
+			List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
+					userContext, activeBranches.get(0).getOfficeId());
+			SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
+					loanOfficers, request.getSession());
+		} else {
+			SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
+					new ArrayList<PersonnelView>(), request.getSession());
 		}
-
 		return mapping.findForward(ActionForwards.changeAccountStatus_success
 				.toString());
 	}
@@ -125,14 +121,10 @@ public class AccountStatusAction extends BaseAction {
 
 		List<LoanBO> searchResults;
 
-		try {
-			searchResults = getSearchResults(accountStatusActionForm
-					.getOfficeId(), accountStatusActionForm.getPersonnelId(),
-					accountStatusActionForm.getType(), accountStatusActionForm
-							.getCurrentStatus());
-		} catch (ServiceException e) {
-			throw new AccountException(e);
-		}
+		searchResults = getSearchResults(accountStatusActionForm.getOfficeId(),
+				accountStatusActionForm.getPersonnelId(),
+				accountStatusActionForm.getType(), accountStatusActionForm
+						.getCurrentStatus());
 		for (LoanBO loanBO : searchResults)
 			loanBO.getAccountState().setLocaleId(
 					getUserContext(request).getLocaleId());
