@@ -3,7 +3,7 @@ require 'mysql'
 require 'test/unit'
 require 'watir'
 include Watir
-require 'modules/loans/FeePeriodic'
+require 'modules/Loans/FeePeriodic'
 
 class FeeP 
 loansobject=FeePeriodic.new
