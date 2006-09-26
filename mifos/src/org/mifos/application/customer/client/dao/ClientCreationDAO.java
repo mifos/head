@@ -234,7 +234,7 @@ public class ClientCreationDAO extends DAO {
 			String gCustNum=IdGenerator.generateSystemIdForCustomer(vo.getOffice().getGlobalOfficeNum(),vo.getCustomerId());
 			vo.setGlobalCustNum(gCustNum);
 			
-			new CustomerHelper().saveMeetingDetails(vo,session, context.getUserContext());
+			//new CustomerHelper().saveMeetingDetails(vo,session, context.getUserContext());
 			//update client
 			session.update(vo);
 			session.flush();

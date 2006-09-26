@@ -79,6 +79,7 @@ import org.mifos.application.fees.util.valueobjects.Fees;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.meeting.util.valueobjects.MeetingDetails;
 import org.mifos.application.meeting.util.valueobjects.MeetingRecurrence;
@@ -92,10 +93,6 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -845,53 +842,16 @@ public class AccountBO extends BusinessObject {
 			throws AccountException {
 		SchedulerIntf scheduler;
 		try {
-			scheduler = RepaymentScheduleHelper.getSchedulerObject(
-					convertMeeting(meeting), true);
-		} catch (RepaymentScheduleException e) {
+			scheduler = MeetingHelper.getSchedulerObject(meeting, true);
+		} catch (SchedulerException e) {
 			throw new AccountException(e);
 		}
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"RepamentSchedular:getInstallmentDates , installments input  ");
+				"Generating intallment dates");
 		List<InstallmentDate> installmentDates = getInstallmentDates(scheduler,
 				noOfInstallments, installmentToSkip);
 		removeInstallmentsNeedNotPay(installmentToSkip, installmentDates);
 		return installmentDates;
-	}
-
-	protected final Meeting convertMeeting(MeetingBO meeting) {
-		Meeting meetingToReturn = new Meeting();
-		meetingToReturn.setMeetingStartDate(meeting.getMeetingStartDate());
-		meetingToReturn.setMeetingPlace("");
-		MeetingType meetingType = new MeetingType();
-		meetingType.setMeetingTypeId(meeting.getMeetingType()
-				.getMeetingTypeId());
-		meetingToReturn.setMeetingType(meetingType);
-
-		MeetingRecurrence meetingRecToReturn = new MeetingRecurrence();
-		meetingRecToReturn.setDayNumber(meeting.getMeetingDetails()
-				.getMeetingRecurrence().getDayNumber());
-		if (meeting.getMeetingDetails().getWeekRank() != null) {
-			meetingRecToReturn.setRankOfDays(meeting.getMeetingDetails().getWeekRank().getValue());
-		}
-		if (meeting.getMeetingDetails().getWeekDay() != null) {
-			meetingRecToReturn.setWeekDay(meeting.getMeetingDetails().getWeekDay().getValue());
-		}
-
-		MeetingDetails meetingDetailsToReturn = new MeetingDetails();
-		meetingDetailsToReturn.setMeetingRecurrence(meetingRecToReturn);
-		meetingDetailsToReturn.setRecurAfter(meeting.getMeetingDetails()
-				.getRecurAfter());
-
-		RecurrenceType recurrenceType = new RecurrenceType();
-		recurrenceType.setRecurrenceId(meeting.getMeetingDetails()
-				.getRecurrenceType().getRecurrenceId());
-
-		meetingDetailsToReturn.setRecurrenceType(recurrenceType);
-
-		meetingToReturn.setMeetingDetails(meetingDetailsToReturn);
-
-		return meetingToReturn;
-
 	}
 
 	protected final List<FeeInstallment> getFeeInstallment(
@@ -916,23 +876,25 @@ public class AccountBO extends BusinessObject {
 			List<InstallmentDate> installmentDates) throws AccountException {
 		MeetingBO repaymentFrequency = getCustomer().getCustomerMeeting()
 				.getMeeting();
-		Meeting newFeeMeetingFrequency = MeetingScheduleHelper.mergeFrequency(
-				convertMeeting(repaymentFrequency),
-				convertMeeting(feeMeetingFrequency));
+		Short recurAfter=repaymentFrequency.getMeetingDetails().getRecurAfter();
+		Calendar meetingStartDate = repaymentFrequency.getMeetingStartDate();
+		repaymentFrequency.getMeetingDetails().setRecurAfter(feeMeetingFrequency.getMeetingDetails().getRecurAfter());
 		Calendar feeStartDate = new GregorianCalendar();
 		feeStartDate.setTime((installmentDates.get(0)).getInstallmentDueDate());
-		newFeeMeetingFrequency.setMeetingStartDate(feeStartDate);
+		repaymentFrequency.setMeetingStartDate(feeStartDate);
 		Date repaymentEndDate = (installmentDates
 				.get(installmentDates.size() - 1)).getInstallmentDueDate();
 		SchedulerIntf scheduler;
 		List<Date> feeDueDates = null;
 		try {
-			scheduler = MeetingScheduleHelper.getSchedulerObject(
-					newFeeMeetingFrequency, false);
+			scheduler = MeetingHelper.getSchedulerObject(
+					repaymentFrequency, false);
 			feeDueDates = scheduler.getAllDates(repaymentEndDate);
 		} catch (ApplicationException e) {
 			throw new AccountException(e);
 		}
+		repaymentFrequency.setMeetingStartDate(meetingStartDate);
+		repaymentFrequency.getMeetingDetails().setRecurAfter(recurAfter);
 		return feeDueDates;
 	}
 
@@ -1110,14 +1072,6 @@ public class AccountBO extends BusinessObject {
 		return null;
 	}
 
-	protected void setLoanInput(RepaymentScheduleInputsIfc inputs,
-			Date feeStartDate) {
-	}
-
-	protected void setCustomerInput(RepaymentScheduleInputsIfc inputs,
-			Date feeStartDate) {
-	}
-
 	protected List<FeeInstallment> handlePeriodic(
 			AccountFeesEntity accountFees,
 			List<InstallmentDate> installmentDates) throws AccountException {
@@ -1231,12 +1185,12 @@ public class AccountBO extends BusinessObject {
 		Money accountFeeAmount = accountFee.getAccountFeeAmount();
 		Date feeDate = installmentDates.get(0).getInstallmentDueDate();
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"FeeInstallmentGenerator:handleOneTime fee start date "
+				"Handling OneTime fee"
 						+ feeDate);
 		Short installmentId = getMatchingInstallmentId(installmentDates,
 				feeDate);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"FeeInstallmentGenerator:handleOneTime applicable installment id "
+				"OneTime fee applicable installment id "
 						+ installmentId);
 		return buildFeeInstallment(installmentId, accountFeeAmount, accountFee);
 	}
@@ -1247,7 +1201,7 @@ public class AccountBO extends BusinessObject {
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
-						"InstallmentGenerator:getInstallmentDates no of installments..");
+						"Generating installmentDates..");
 		List<Date> dueDates = null;
 		try {
 			if (!noOfInstallments.equals(Short.valueOf("0")))

@@ -52,7 +52,6 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
-import org.mifos.application.accounts.util.valueobjects.AccountFeesActionDetail;
 import org.mifos.application.accounts.util.valueobjects.CustomerAccount;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
@@ -84,12 +83,6 @@ import org.mifos.application.personnel.dao.PersonnelDAO;
 import org.mifos.application.personnel.util.valueobjects.Personnel;
 import org.mifos.application.personnel.util.valueobjects.PersonnelMaster;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleConstansts;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
 import org.mifos.framework.dao.helpers.MasterDataRetriever;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -600,7 +593,7 @@ public class CustomerHelper {
 		return isValueNull;
 	}
 
-	public void saveMeetingDetails(Customer customer,Session session, UserContext userContext) throws ApplicationException,SystemException {
+	/*public void saveMeetingDetails(Customer customer,Session session, UserContext userContext) throws ApplicationException,SystemException {
 		Meeting meeting =null ;
 		Set<AccountFees> accountFeesSet=new HashSet();
 		CustomerMeeting customerMeeting =null;
@@ -685,9 +678,9 @@ public class CustomerHelper {
 				throw new CustomerException(CustomerConstants.CREATE_FAILED_EXCEPTION ,hpe,new Object[]{labelConfig.getLabel(messageArgumentKey,userContext.getPereferedLocale())});
 			}
 		}
-		}
+		}*/
 
-		public void attachMeetingDetails(Customer customer,Session session,CustomerMeeting customerMeeting) throws ApplicationException,SystemException {
+		/*public void attachMeetingDetails(Customer customer,Session session,CustomerMeeting customerMeeting) throws ApplicationException,SystemException {
 
 			//Customer customer = (Customer)context.getValueObject();
 			Meeting meeting =null ;
@@ -700,38 +693,7 @@ public class CustomerHelper {
 				try {
 					//session = HibernateUtil.getSession();
 					//trxn = session.beginTransaction();
-				/*	Customer vo = (Customer)session.get(Customer.class,customer.getCustomerId());
-
-					if(vo.getCustomerAccounts()!=null){
-						Iterator accountsIterator  = vo.getCustomerAccounts().iterator();
-						while(accountsIterator.hasNext()){
-							Account account = (Account)accountsIterator.next();
-							if(account.getAccountTypeId().shortValue()== new Short(AccountTypes.CUSTOMERACCOUNT).shortValue()){
-								vo.setCustomerAccount((CustomerAccount)account);
-								break;
-							}
-						}
-					}
-					CustomerAccount customerAccount=vo.getCustomerAccount();
-
-					Set<AccountFees> accountFeesSet=null;
-					if(null != customerAccount) {
-					accountFeesSet=customerAccount.getAccountFeesSet();
-					// System.out.println("In Account Fees-----@@@@^^^^^^^^^&&&&&&&&&&**************" +
-							"**********#################!!!!!!!!!!------"+accountFeesSet.size());
-					for(AccountFees accountFees:accountFeesSet) {
-						Fees fees=(Fees)session.get(Fees.class,accountFees.getFees().getFeeId());
-						FeeFrequency feeFrequency=fees.getFeeFrequency();
-						if(null !=feeFrequency) {
-							feeFrequency.getFeeFrequencyId();
-							feeFrequency.getFeeFrequencyTypeId();
-						 }
-
-						accountFees.setFeeAmount(accountFees.getAccountFeeAmount());
-						accountFees.getFees().setRateFlatFalg(fees.getRateFlatFalg());
-						accountFees.getFees().setFeeFrequency(feeFrequency);
-					 }
-				}*/
+				
 				//get the repayment schedule input object which would be passed to repayment schedule generator
 				RepaymentScheduleInputsIfc repaymntScheduleInputs = RepaymentScheduleFactory.getRepaymentScheduleInputs();
 				RepaymentScheduleIfc repaymentScheduler = RepaymentScheduleFactory.getRepaymentScheduler();
@@ -765,7 +727,7 @@ public class CustomerHelper {
 				}
 			}
 
-	}
+	}*/
 		/**
 		 * This method returns true if there is any accountFee with null or zero amnt.
 		 * it checks if the fees id is not null , then amount should not be null.

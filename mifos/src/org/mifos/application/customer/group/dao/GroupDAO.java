@@ -190,7 +190,7 @@ public class GroupDAO extends DAO {
 		String gCustNum=IdGenerator.generateSystemIdForCustomer(groupVO.getOffice().getGlobalOfficeNum(),groupVO.getCustomerId());
 		groupVO.setGlobalCustNum(gCustNum);
 		
-		helper.saveMeetingDetails(groupVO,session, context.getUserContext());
+		//helper.saveMeetingDetails(groupVO,session, context.getUserContext());
 		//update group
 		session.update(groupVO);
 		
@@ -552,8 +552,8 @@ public class GroupDAO extends DAO {
 			oldCustomer.setStatusId(newStatus);
 			
 			CustomerHelper helper=helper=new CustomerHelper();
-			if(!Configuration.getInstance().getCustomerConfig(oldCustomer.getOffice().getOfficeId()).isCenterHierarchyExists() && groupVO.getStatusId().shortValue()==GroupConstants.ACTIVE && oldCustomer.getCustomerActivationDate()==null)
-					helper.saveMeetingDetails(oldCustomer,session, context.getUserContext());
+			/*if(!Configuration.getInstance().getCustomerConfig(oldCustomer.getOffice().getOfficeId()).isCenterHierarchyExists() && groupVO.getStatusId().shortValue()==GroupConstants.ACTIVE && oldCustomer.getCustomerActivationDate()==null)
+					helper.saveMeetingDetails(oldCustomer,session, context.getUserContext());*/
 			
 			
 			//check if group is being active for the first time

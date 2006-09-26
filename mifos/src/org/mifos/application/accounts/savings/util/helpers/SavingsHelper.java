@@ -57,7 +57,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.interestcalculator.InterestInputs;
 import org.mifos.framework.components.scheduler.MonthData;
 import org.mifos.framework.components.scheduler.ScheduleDataIntf;
 import org.mifos.framework.components.scheduler.SchedulerException;
@@ -169,16 +168,6 @@ public class SavingsHelper {
 		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal
 				.get(Calendar.DATE), 0, 0, 0);
 		return cal.getTime();
-	}
-
-	public InterestInputs createInterestInputs(Money principal,
-			double interestRate, int duration, String durationType) {
-		InterestInputs interestInputs = new InterestInputs();
-		interestInputs.setPrincipal(principal);
-		interestInputs.setDuration(duration);
-		interestInputs.setDurationType(durationType);
-		interestInputs.setInterestRate(interestRate);
-		return interestInputs;
 	}
 
 	public AccountActionDateEntity createActionDateObject(AccountBO account,

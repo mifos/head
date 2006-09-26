@@ -87,12 +87,6 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleConstansts;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
@@ -453,35 +447,20 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	public void generateMeetingsForNextYear() throws AccountException {
-
-		RepaymentScheduleInputsIfc repaymntScheduleInputs = RepaymentScheduleFactory
-				.getRepaymentScheduleInputs();
-		RepaymentScheduleIfc repaymentScheduler = RepaymentScheduleFactory
-				.getRepaymentScheduler();
-
-		MeetingBO meetingBO = getCustomer().getCustomerMeeting().getMeeting();
-		Meeting meeting = convertMeeting(meetingBO);
-		meeting.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
-				.getInstance()));
-		repaymntScheduleInputs.setMeeting(meeting);
-		repaymntScheduleInputs
-				.setMeetingToConsider(RepaymentScheduleConstansts.MEETING_CUSTOMER);
-		repaymntScheduleInputs.setRepaymentFrequency(meeting);
-
-		repaymntScheduleInputs.setAccountFee(getAccountFeesSet());
-		RepaymentSchedule repaymentSchedule=null;
-		try {
-			repaymentScheduler.setRepaymentScheduleInputs(repaymntScheduleInputs);
-			repaymentSchedule = repaymentScheduler
-			.getRepaymentSchedule();
-		} catch (ApplicationException e) {
-			throw new AccountException(e);
+		Short lastInstallmentId = getLastInstallmentId();
+		MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
+		Calendar meetingStartDate = meeting.getMeetingStartDate();
+		meeting.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar.getInstance()));
+		List<InstallmentDate> installmentDates = getInstallmentDates(getCustomer().getCustomerMeeting().getMeeting(),(short)0,(short)0);
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("Fee installment obtained ");
+		for(InstallmentDate installmentDate : installmentDates)
+		{
+			CustomerScheduleEntity customerScheduleEntity=new CustomerScheduleEntity(this,getCustomer(),
+					Short.valueOf(String.valueOf(installmentDate.getInstallmentId()+lastInstallmentId)),new java.sql.Date(installmentDate.getInstallmentDueDate().getTime()),
+					PaymentStatus.UNPAID); 
+			addAccountActionDate(customerScheduleEntity);
 		}
-		Set<AccountActionDateEntity> installments = RepaymentScheduleHelper
-				.getActionDateEntity(repaymentSchedule, "customer", this,
-						getCustomer(), getLastInstallmentId());
-		getAccountActionDates().addAll(installments);
-
+		meeting.setMeetingStartDate(meetingStartDate);
 	}
 
 	/* Need to remove while refactoring */
@@ -663,13 +642,6 @@ public class CustomerAccountBO extends AccountBO {
 		return totalFeeAmountApplied;
 	}
 
-	@Override
-	protected void setCustomerInput(RepaymentScheduleInputsIfc inputs,Date feeStartDate){
-		inputs.setRepaymentFrequency(getCustomer().getCustomerMeeting().getMeeting());
-		inputs.setMeetingToConsider(RepaymentScheduleConstansts.MEETING_CUSTOMER);
-	} 
-	
-	
 	private boolean isCustomerValid() {
 		if (getCustomer().getCustomerStatus().getId().equals(
 				CustomerConstants.CENTER_ACTIVE_STATE)

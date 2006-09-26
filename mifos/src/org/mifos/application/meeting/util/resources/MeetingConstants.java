@@ -147,4 +147,7 @@ public interface MeetingConstants {
 	public final String ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER="errors.Meeting.specifyWeekDayAndRecurAfter";
 	public final String ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER="errors.Meeting.specifyDayNumAndRecurAfter";
 	public final String ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY="errors.Meeting.specifyMonthlyMeetingOnWeekDay";
+	
+	public static final String NOT_SUPPORTED_FREQUENCY_TYPE="errors.not_supported_frequencytype";
+	
 }

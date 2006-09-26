@@ -54,7 +54,7 @@ import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
+import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
@@ -68,6 +68,7 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.MoneyTest;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanBO extends MifosTestCase {
@@ -675,8 +676,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testDisbursalLoanNoFeeOrInterestAtDisbursal()
-			throws AccountException, SystemException,
-			RepaymentScheduleException, FinancialException {
+			throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 3);
 
@@ -712,8 +712,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testDisbursalLoanWithInterestDeductedAtDisbursal()
-			throws AccountException, SystemException,
-			RepaymentScheduleException, FinancialException {
+			throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 2);
 		int statusChangeHistorySize = accountBO.getAccountStatusChangeHistory()
@@ -1522,9 +1521,7 @@ public class TestLoanBO extends MifosTestCase {
 						loan.getLoanSummary().getPrincipalPaid()));
 	}
 
-	public void testIsAccountActive() throws AccountException, SystemException,
-			NumberFormatException, RepaymentScheduleException,
-			FinancialException {
+	public void testIsAccountActive() throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 3);
 		assertFalse(((LoanBO) accountBO).isAccountActive());
@@ -1663,8 +1660,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testDisbursalLoanForCustomerPerfHistory()
-			throws AccountException, SystemException,
-			RepaymentScheduleException, FinancialException {
+			throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccountWithPerformanceHistory(Short.valueOf("3"),
 				startDate, 3);
@@ -1752,8 +1748,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getNoOfPayments().intValue());
 	}
 
-	public void testDisbursalLoanForGroupPerfHistory() throws AccountException,
-			SystemException, RepaymentScheduleException, FinancialException {
+	public void testDisbursalLoanForGroupPerfHistory() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccountWithGroupPerformanceHistory(Short
 				.valueOf("3"), startDate, 3);
@@ -3847,7 +3842,95 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(new Money(), nextInstallment.getTotalFeeDue());
 
 	}
+	
+	
+	public void testRemoveFeeForPartiallyPaidFeesAccount() throws Exception {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 2, 4, 1));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
+				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
 
+		List<FeeView> feeViewList = new ArrayList<FeeView>();
+		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
+				Short.valueOf("1"));
+		feeViewList.add(new FeeView(periodicFee));
+
+		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+				loanOffering, group,
+				AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				false, 1.2, (short) 0, new Fund(), feeViewList);
+		new TestObjectPersistence().persist(accountBO);
+		assertEquals(6, accountBO.getAccountActionDates().size());
+		HibernateUtil.closeSession();
+
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		
+		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+				null, new Money("60"), accountBO.getCustomer(), accountBO
+						.getPersonnel(), "432423", (short) 1, new Date(System
+						.currentTimeMillis()), new Date(System
+						.currentTimeMillis())));
+		HibernateUtil.commitTransaction();
+
+		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+			accountBO.removeFees(accountFeesEntity.getFees().getFeeId(), Short
+					.valueOf("1"));
+		}
+		HibernateUtil.commitTransaction();
+		
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+			if (loanScheduleEntity.getInstallmentId()
+					.equals(Short.valueOf("1"))) {
+				assertEquals(1, loanScheduleEntity
+						.getAccountFeesActionDetails().size());
+				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
+						.getAccountFeesActionDetails()) {
+					LoanFeeScheduleEntity loanFeeScheduleEntity = (LoanFeeScheduleEntity) accountFeesActionDetailEntity;
+					assertEquals("Periodic Fee", loanFeeScheduleEntity.getFee()
+							.getFeeName());
+					assertEquals(new Money("60"), loanFeeScheduleEntity
+							.getFeeAmount());
+					assertEquals(new Money("60"), loanFeeScheduleEntity
+							.getFeeAmountPaid());
+				}
+			} else
+				assertEquals(0, loanScheduleEntity
+						.getAccountFeesActionDetails().size());
+		}
+		
+		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
+			assertEquals(AccountConstants.INACTIVE_FEES,accountFeesEntity.getFeeStatus());
+			assertNull(accountFeesEntity.getLastAppliedDate());
+		}
+		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+				.getLoanSummary();
+		assertEquals(new Money("60"),loanSummaryEntity.getFeesPaid());
+		assertEquals(new Money("60"),loanSummaryEntity.getOriginalFees());
+		assertEquals(new Money(),loanSummaryEntity.getFeesDue());
+		for (LoanActivityEntity loanActivityEntity : ((LoanBO) accountBO)
+				.getLoanActivityDetails()) {
+			if(loanActivityEntity.getComments().equalsIgnoreCase("Periodic Fee removed")){
+				assertEquals(loanSummaryEntity.getFeesDue(), loanActivityEntity
+						.getFeeOutstanding());
+				assertEquals(new Money("1040"),loanActivityEntity.getFee());
+				break;
+			}
+		}
+	}
+	
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments, Double interestRate)

@@ -161,4 +161,5 @@ public interface LoanConstants {
 	public static final String PROPOSEDDISBDATE ="proposedDisbDate";
 	
 	public static final String NOSEARCHRESULTS ="errors.nosearchresults";
+	
 }

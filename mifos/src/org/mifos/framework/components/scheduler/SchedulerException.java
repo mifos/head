@@ -7,7 +7,7 @@ import org.mifos.framework.exceptions.ApplicationException;
  */
 public class SchedulerException extends ApplicationException
 {
-	SchedulerException(String key)
+	public SchedulerException(String key)
 	{
 		super(key);
 	}

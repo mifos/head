@@ -123,8 +123,8 @@ public class EditClientStatusDAO extends DAO {
 			//sets the old client with the new status id  and updates the client
 			client.setStatusId(newStatus);
 			CustomerHelper helper=new CustomerHelper();
-			if(client.getParentCustomer()==null && client.getStatusId().shortValue()==CustomerConstants.CLIENT_APPROVED && client.getCustomerActivationDate()==null)
-				helper.saveMeetingDetails(client,session, context.getUserContext());
+			/*if(client.getParentCustomer()==null && client.getStatusId().shortValue()==CustomerConstants.CLIENT_APPROVED && client.getCustomerActivationDate()==null)
+				helper.saveMeetingDetails(client,session, context.getUserContext());*/
 			
 			if(client.getStatusId() == CustomerConstants.CLIENT_APPROVED && client.getCustomerActivationDate()==null){
 				CustomerUtilDAO.applyFees(client,session);

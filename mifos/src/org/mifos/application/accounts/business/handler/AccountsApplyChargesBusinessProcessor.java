@@ -60,6 +60,7 @@ import org.mifos.application.accounts.loan.util.valueobjects.LoanSummary;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.FeeInstallment;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
@@ -86,13 +87,6 @@ import org.mifos.framework.business.util.helpers.HeaderObject;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.repaymentschedule.FeeInstallment;
-import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleConstansts;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleFactory;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleIfc;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.dao.helpers.DataTypeConstants;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -143,9 +137,9 @@ public class AccountsApplyChargesBusinessProcessor extends
 	 * 
 	 * @see org.mifos.framework.business.handlers.MifosBusinessProcessor#create(org.mifos.framework.util.valueobjects.Context)
 	 */
-	@Override
+	
 	// TODO needs refactored to segrate loan and customer fee handling.
-	public void create(Context context) throws SystemException,
+	/*public void create(Context context) throws SystemException,
 			ApplicationException {
 		try {
 			AccountsApplyCharges aac = (AccountsApplyCharges) context
@@ -422,7 +416,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 					}
 				}
 
-				/* save the loan summary also */
+				
 				LoanSummary loanSummary = null;
 				LoanActivity loanActivity = null;
 				if (account instanceof Loan) {
@@ -471,9 +465,9 @@ public class AccountsApplyChargesBusinessProcessor extends
 					AccountConstants.UNEXPECTEDERROR);
 		}
 
-	}
+	}*/
 
-	public RepaymentSchedule getFeeInstallment(Set acSet, Account account,
+	/*public RepaymentSchedule getFeeInstallment(Set acSet, Account account,
 			Date feeStartDate) {
 		RepaymentScheduleInputsIfc inputs = null;
 		RepaymentScheduleIfc repaymentScheduler = null;
@@ -546,16 +540,16 @@ public class AccountsApplyChargesBusinessProcessor extends
 				: false);
 		/*inputs.setIsPrincipalInLastPayment(loan.getLoanOffering()
 				.getPrinDueLastInstFlag().equals(Short.valueOf("1")) ? true
-				: false);*/
+				: false);
 		inputs.setRepaymentFrequency(meeting);
 		inputs.setNoOfInstallments(loan.getNoOfInstallments());
 		inputs.setPrincipal(loan.getLoanAmount());
 		inputs.setInterestRate(loan.getInterestRateAmount());
 		inputs.setGraceType(loan.getGracePeriodTypeId());
 		inputs.setGracePeriod(loan.getGracePeriodDuration());
-	}
+	}*/
 
-	private void setCustomerInput(Account account,
+	/*private void setCustomerInput(Account account,
 			RepaymentScheduleInputsIfc inputs) throws ApplicationException {
 		Meeting meeting = null;
 
@@ -579,7 +573,7 @@ public class AccountsApplyChargesBusinessProcessor extends
 		inputs
 				.setMeetingToConsider(RepaymentScheduleConstansts.MEETING_CUSTOMER);
 
-	}
+	}*/
 
 	/*
 	 * (non-Javadoc)

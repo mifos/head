@@ -58,7 +58,7 @@
 					<span class="fontnormal"><mifos:mifoslabel name="admin.welcometomifos" /></span></td>
 				</tr>
 				<tr width="100%">
-					<td align="left" valign="top"><font class="fontnormalRedBold"><html-el:errors
+					<td align="left" valign="top" colspan="2"><font class="fontnormalRedBold"><html-el:errors
 						bundle="adminUIResources" /> </font></td>
 				</tr>
 

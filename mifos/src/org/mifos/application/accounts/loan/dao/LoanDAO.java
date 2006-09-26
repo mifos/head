@@ -11,18 +11,13 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.StaleObjectStateException;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.dao.AccountsDAO;
-import org.mifos.application.accounts.loan.exceptions.LoanExceptionConstants;
-import org.mifos.application.accounts.loan.exceptions.LoanUpdationException;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.valueobjects.Loan;
-import org.mifos.application.accounts.loan.util.valueobjects.LoanPerformanceHistory;
 import org.mifos.application.accounts.loan.util.valueobjects.RecentAccountActivity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.accounts.util.valueobjects.AccountActionDate;
 import org.mifos.application.accounts.util.valueobjects.AccountFees;
@@ -30,10 +25,8 @@ import org.mifos.application.accounts.util.valueobjects.AccountFlagDetail;
 import org.mifos.application.accounts.util.valueobjects.AccountPayment;
 import org.mifos.application.accounts.util.valueobjects.AccountStatusChangeHistory;
 import org.mifos.application.accounts.util.valueobjects.AccountTrxn;
-import org.mifos.application.customer.client.util.valueobjects.ClientPerformanceHistory;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
-import org.mifos.application.customer.util.valueobjects.CustomerMaster;
 import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
@@ -49,16 +42,11 @@ import org.mifos.framework.components.audit.util.helpers.LogInfo;
 import org.mifos.framework.components.audit.util.helpers.LogValueMap;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.repaymentschedule.RepaymentSchedule;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleHelper;
 import org.mifos.framework.dao.helpers.DataTypeConstants;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ConcurrencyException;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
@@ -465,7 +453,7 @@ public class LoanDAO extends AccountsDAO {
 	 * @param context
 	 * @throws HibernateProcessException
 	 */
-	public void create(org.mifos.framework.util.valueobjects.Context context)
+	/*public void create(org.mifos.framework.util.valueobjects.Context context)
 			throws ApplicationException, SystemException {
 		Transaction tx = null;
 		Session session = null;
@@ -527,6 +515,7 @@ public class LoanDAO extends AccountsDAO {
 		}
 
 	}
+	*/
 
 	/**
 	 * This method creates a new account fee set based on the account fee set
@@ -610,7 +599,7 @@ public class LoanDAO extends AccountsDAO {
 	 *            instance of Context
 	 * @throws HibernateProcessException
 	 */
-	public void update(Context context) throws SystemException,
+	/*public void update(Context context) throws SystemException,
 			ApplicationException {
 		Loan loan = (Loan) context.getValueObject();
 		// RepaymentSchedule repaymentSchedule =
@@ -660,7 +649,7 @@ public class LoanDAO extends AccountsDAO {
 		} finally {
 			HibernateUtil.closeSession(session);
 		}
-	}
+	}*/
 
 	/**
 	 * This is an intermediate method that first deletes the records from the
@@ -672,7 +661,7 @@ public class LoanDAO extends AccountsDAO {
 	 * @param loan
 	 * @param repaymentSchedule
 	 */
-	public void updateAccountDateAndFeesDetails(Session session,
+	/*public void updateAccountDateAndFeesDetails(Session session,
 			Context context, Loan loan) {
 		HashMap queryParameters = new HashMap();
 		if (loan.getAccountStateId() == AccountStates.LOANACC_APPROVED
@@ -729,7 +718,7 @@ public class LoanDAO extends AccountsDAO {
 		session.flush();
 		session.saveOrUpdate(loan);
 		// loan.setAccountActionDateSet(accntActionDateSet);
-	}
+	}*/
 
 	/*
 	 * This method returns the set of account fees which are active.

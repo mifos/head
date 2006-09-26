@@ -41,7 +41,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -163,9 +162,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 						LoanConstants.NOTES, request.getSession())).size());
 	}
 
-	public void testGetWithPayment() throws AccountException, SystemException,
-			NumberFormatException, RepaymentScheduleException,
-			FinancialException {
+	public void testGetWithPayment() throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
 		disburseLoan(startDate);
@@ -855,9 +852,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.updateObject(accountBO);
 	}
 
-	private void disburseLoan(Date startDate) throws NumberFormatException,
-			AccountException, RepaymentScheduleException, FinancialException,
-			SystemException {
+	private void disburseLoan(Date startDate) throws Exception {
 		((LoanBO) accountBO).disburseLoan("1234", startDate,
 				Short.valueOf("1"), accountBO.getPersonnel(), startDate, Short
 						.valueOf("1"));

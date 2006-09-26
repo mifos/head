@@ -57,7 +57,6 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -861,14 +860,14 @@ public class SavingsBO extends AccountBO {
 			throws AccountException {
 		int days = helper.calculateDays(fromDate, toDate);
 		return getInterest(principal, interestRate, days,
-				InterestCalculatorConstants.DAYS);
+				SavingsConstants.DAYS);
 	}
 
 	private Money getInterest(Money principal, double interestRate,
 			int duration, String durationType) {
 		double intRate = interestRate;
-		if (durationType.equals(InterestCalculatorConstants.DAYS)) {
-			intRate = (intRate / (InterestCalculatorConstants.INTEREST_DAYS))
+		if (durationType.equals(SavingsConstants.DAYS)) {
+			intRate = (intRate / (AccountConstants.INTEREST_DAYS))
 					* duration;
 		} else {
 			intRate = (intRate / 12) * duration;

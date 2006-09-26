@@ -29,10 +29,10 @@ import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -570,7 +570,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
 		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
 				.getInstance()));
-		List<java.util.Date> meetingDates = MeetingScheduleHelper
+		List<java.util.Date> meetingDates = MeetingHelper
 				.getSchedulerObject(meetingBO).getAllDates();
 
 		Date date = center.getCustomerAccount().getAccountActionDate(

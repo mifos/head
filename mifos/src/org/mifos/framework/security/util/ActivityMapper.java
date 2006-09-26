@@ -624,7 +624,7 @@ public class ActivityMapper {
 		activityMap.put("/loanproductaction-cancelCreate", SecurityConstants.VIEW);
 		activityMap.put("/loanproductaction-validate", SecurityConstants.VIEW);
 		activityMap.put("/loanproductaction-create",SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
-		activityMap.put("/loanproductaction-viewAllLoanProducts",SecurityConstants.EDIT_LOAN_PRODUCT);
+		activityMap.put("/loanproductaction-viewAllLoanProducts", SecurityConstants.VIEW);
 		activityMap.put("/loanproductaction-get", SecurityConstants.VIEW);
 		activityMap.put("/loanproductaction-editPreview", SecurityConstants.VIEW);
 		activityMap.put("/loanproductaction-editPrevious", SecurityConstants.VIEW);

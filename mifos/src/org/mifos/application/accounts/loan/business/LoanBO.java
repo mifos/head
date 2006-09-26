@@ -103,6 +103,7 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -113,14 +114,8 @@ import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.interestcalculator.InterestCalculatorConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.repaymentschedule.GraceException;
-import org.mifos.framework.components.repaymentschedule.GraceInputs;
-import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleConstansts;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleInputsIfc;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
@@ -975,22 +970,6 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	protected void setLoanInput(RepaymentScheduleInputsIfc inputs,
-			Date feeStartDate) {
-		inputs.setDisbursementDate(getDisbursementDate());
-		inputs
-				.setIsInterestDedecutedAtDisburesement(isInterestDeductedAtDisbursement());
-		inputs.setIsPrincipalInLastPayment(getLoanOffering()
-				.isPrinDueLastInst());
-		inputs.setRepaymentFrequency(getLoanMeeting());
-		inputs.setNoOfInstallments(getNoOfInstallments());
-		inputs.setPrincipal(getLoanAmount());
-		inputs.setInterestRate(getInterestRate());
-		inputs.setGraceType(getGracePeriodType().getId());
-		inputs.setGracePeriod(getGracePeriodDuration());
-	}
-
-	@Override
 	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {
 		if (getPerformanceHistory() != null) {
 			getPerformanceHistory().setNoOfPayments(
@@ -1194,20 +1173,17 @@ public class LoanBO extends AccountBO {
 
 	private Money getAccountFeeAmount(AccountFeesEntity accountFees,
 			Money loanInterest) {
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"FeeInstallmentGenerator:getAccountFeeAmount rate flat flag..");
-
 		Money accountFeeAmount = new Money();
 		Double feeAmount = accountFees.getFeeAmount();
 
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"FeeInstallmentGenerator:getAccountFeeAmount feeAmount.."
+				"Fee amount..."
 						+ feeAmount);
 
 		if (accountFees.getFees().getFeeType().equals(RateAmountFlag.AMOUNT)) {
 			accountFeeAmount = new Money(feeAmount.toString());
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-					"FeeInstallmentGenerator:getAccountFeeAmount feeAmount Flat.."
+					"AccountFeeAmount for amount fee.."
 							+ feeAmount);
 		} else if (accountFees.getFees().getFeeType().equals(
 				RateAmountFlag.RATE)) {
@@ -1216,7 +1192,7 @@ public class LoanBO extends AccountBO {
 			accountFeeAmount = new Money(getRateBasedOnFormula(feeAmount,
 					rateFeeBO.getFeeFormula(), loanInterest));
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-					"FeeInstallmentGenerator:getAccountFeeAmount feeAmount Formula.."
+					"AccountFeeAmount for Formula fee.."
 							+ feeAmount);
 		}
 		return accountFeeAmount;
@@ -1235,7 +1211,7 @@ public class LoanBO extends AccountBO {
 		while (feeDatesIterator.hasNext()) {
 			Date feeDate = feeDatesIterator.next();
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-					"FeeInstallmentGenerator:handlePeriodic date considered after removal.."
+					"Handling periodic fee.."
 							+ feeDate);
 			Short installmentId = getMatchingInstallmentId(installmentDates,
 					feeDate);
@@ -1343,21 +1319,21 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(
 					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"RepamentSchedular:getRepaymentSchedule invoked ");
+				"Generating meeting schedule... ");
 		List<InstallmentDate> installmentDates = getInstallmentDates(
 				getLoanMeeting(), noOfInstallments,
 				getInstallmentSkipToStartRepayment());
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
-						"RepamentSchedular:getRepaymentSchedule , installment dates obtained ");
+						"Obtained intallments dates");
 		Money loanInterest = getLoanInterest(installmentDates.get(
 				installmentDates.size() - 1).getInstallmentDueDate());
 		List<EMIInstallment> EMIInstallments = generateEMI(loanInterest);
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
-						"RepamentSchedular:getRepaymentSchedule , emi installment  obtained ");
+						"Emi installment  obtained ");
 		validateSize(installmentDates, EMIInstallments);
 		List<FeeInstallment> feeInstallment = new ArrayList<FeeInstallment>();
 		if (getAccountFees().size() != 0) {
@@ -1367,13 +1343,13 @@ public class LoanBO extends AccountBO {
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
-						"RepamentSchedular:getRepaymentSchedule , fee installment obtained ");
+						"Fee installment obtained ");
 		generateRepaymentSchedule(installmentDates, EMIInstallments,
 				feeInstallment);
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
-						"RepamentSchedular:getRepaymentSchedule , repayment schedule generated  ");
+						"Meeting schedule generated  ");
 		applyRounding();
 	}
 
@@ -1409,13 +1385,13 @@ public class LoanBO extends AccountBO {
 		Money interestRateM = new Money(Double.toString(interestRate));
 		Money durationInYearsM = new Money(Double.toString(durationInYears));
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"FlatInterestCalculator:getInterest duration in years..."
+				"Get interest duration in years..."
 						+ durationInYears);
 		Money interest = getLoanAmount().multiply(
 				interestRateM.multiply(durationInYearsM)).divide(
 				new Money(Double.toString(100)));
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"FlatInterestCalculator:getInterest interest accumulated..."
+				"Get interest accumulated..."
 						+ interest);
 		return interest;
 	}
@@ -1425,28 +1401,28 @@ public class LoanBO extends AccountBO {
 		int interestDays = getInterestDays();
 		int daysInWeek = getDaysInWeek();
 		int daysInMonth = getDaysInMonth();
-		String durationType = MeetingScheduleHelper.getReccurence(this
+		String durationType = MeetingHelper.getReccurence(this
 				.getLoanMeeting().getMeetingDetails().getRecurrenceType()
 				.getRecurrenceId());
 		int duration = getNoOfInstallments()
 				* this.getLoanMeeting().getMeetingDetails().getRecurAfter();
-		if (interestDays == InterestCalculatorConstants.INTEREST_DAYS_360) {
+		if (interestDays == AccountConstants.INTEREST_DAYS_360) {
 			if (durationType.equals(AccountConstants.WEEK_INSTALLMENT)) {
 				double totalWeekDays = duration * daysInWeek;
 				double durationInYears = totalWeekDays
-						/ InterestCalculatorConstants.INTEREST_DAYS_360;
+						/ AccountConstants.INTEREST_DAYS_360;
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
-								"FlatInterestCalculator:getTotalDurationInYears total week days.."
+								"Get total week days.."
 										+ totalWeekDays);
 				return durationInYears;
 			} else if (durationType.equals(AccountConstants.MONTH_INSTALLMENT)) {
 				double totalMonthDays = duration * daysInMonth;
 				double durationInYears = totalMonthDays
-						/ InterestCalculatorConstants.INTEREST_DAYS_360;
+						/ AccountConstants.INTEREST_DAYS_360;
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
-								"FlatInterestCalculator:getTotalDurationInYears total month days.."
+								"Get total month days.."
 										+ totalMonthDays);
 				return durationInYears;
 			}
@@ -1457,16 +1433,16 @@ public class LoanBO extends AccountBO {
 				MifosLogManager
 						.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
-								"FlatInterestCalculator:getTotalDurationInYears in interest week 365 days");
+								"Get interest week 365 days");
 				double totalWeekDays = duration * daysInWeek;
 				double durationInYears = totalWeekDays
-						/ InterestCalculatorConstants.INTEREST_DAYS_365;
+						/ AccountConstants.INTEREST_DAYS_365;
 				return durationInYears;
 			} else if (durationType.equals(AccountConstants.MONTH_INSTALLMENT)) {
 				MifosLogManager
 						.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
-								"FlatInterestCalculator:getTotalDurationInYears in interest month 365 days");
+								"Get interest month 365 days");
 
 				// will have to consider inc/dec time in some countries
 				Long installmentStartTime = getDisbursementDate().getTime();
@@ -1476,17 +1452,17 @@ public class LoanBO extends AccountBO {
 				MifosLogManager
 						.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
-								"FlatInterestCalculator:getTotalDurationInYears start date..");
+								"Get start date..");
 				MifosLogManager
 						.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
-								"FlatInterestCalculator:getTotalDurationInYears end date..");
+								"Get end date..");
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
-								"FlatInterestCalculator:getTotalDurationInYears diff in days..."
+								"Get diff in days..."
 										+ daysDiff);
 				double durationInYears = daysDiff
-						/ InterestCalculatorConstants.INTEREST_DAYS_365;
+						/ AccountConstants.INTEREST_DAYS_365;
 				return durationInYears;
 			}
 			throw new AccountException(
@@ -1558,10 +1534,10 @@ public class LoanBO extends AccountBO {
 	private void validateSize(List installmentDates, List EMIInstallments)
 			throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"RepamentSchedular:validateSize : installment size  "
+				"Validating installment size  "
 						+ installmentDates.size());
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"RepamentSchedular:validateSize : emi installment size  "
+				"Validating emi installment size  "
 						+ EMIInstallments.size());
 		if (installmentDates.size() != EMIInstallments.size())
 			throw new AccountException(AccountConstants.DATES_MISMATCH);
@@ -1742,13 +1718,12 @@ public class LoanBO extends AccountBO {
 
 	private Boolean isDisbursementDateValid() throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"RepamentSchedular:isDisbursementDateValid invoked ");
+				"IsDisbursementDateValid invoked ");
 		SchedulerIntf scheduler;
 		Boolean isValid = false;
 		try {
-			scheduler = MeetingScheduleHelper.getSchedulerObject(
-					convertMeeting(this.getCustomer().getCustomerMeeting()
-							.getMeeting()), true);
+			scheduler = MeetingHelper.getSchedulerObject(this.getCustomer().getCustomerMeeting()
+							.getMeeting(), true);
 			isValid = scheduler.isValidScheduleDate(disbursementDate);
 		} catch (ApplicationException e) {
 			e.printStackTrace();
@@ -2516,25 +2491,5 @@ public class LoanBO extends AccountBO {
 
 	}
 	
-	public int getGracePeriod(GraceInputs graceInputs) throws GraceException
-	{
-		int graceType = graceInputs.getGraceType();
-		int gracePeriod = graceInputs.getGracePeriod();
-
-		MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).debug("GracePeriodHandler:getGracePeriod graceType "+graceType);
-		MifosLogManager.getLogger(LoggerConstants.REPAYMENTSCHEDULAR).debug("GracePeriodHandler:getGracePeriod gracePeriod "+gracePeriod);
-
-		if(graceType == RepaymentScheduleConstansts.GRACE_NONE)
-			return 0;
-
-		if(graceType == RepaymentScheduleConstansts.GRACE_ALLREPAYMENTS )
-				return gracePeriod;
-
-	    if(graceType == RepaymentScheduleConstansts.GRACE_PRINCIPAL)
-	    		return 0;
-
-	    throw new GraceException(RepaymentScheduleConstansts.NOT_SUPPORTED_GRACE_TYPE);
-
-	}
-
+	
 }

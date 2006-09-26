@@ -367,16 +367,29 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
 				.getAccountFeesActionDetails();
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
-			if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId)) {
+			if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId)
+					&& (accountFeesActionDetailEntity.getFeeAmountPaid() == null || accountFeesActionDetailEntity
+							.getFeeAmountPaid().getAmountDoubleValue() == 0.0)) {
 				objectToRemove = accountFeesActionDetailEntity;
+				feeAmount = objectToRemove.getFeeAmount();
+				break;
+			} else if (accountFeesActionDetailEntity.getFee().getFeeId()
+					.equals(feeId)
+					&& accountFeesActionDetailEntity.getFeeAmountPaid() != null
+					&& accountFeesActionDetailEntity.getFeeAmountPaid()
+							.getAmountDoubleValue() > 0.0) {
+				feeAmount = accountFeesActionDetailEntity.getFeeAmount()
+						.subtract(
+								accountFeesActionDetailEntity
+										.getFeeAmountPaid());
+				accountFeesActionDetailEntity
+						.setFeeAmount(accountFeesActionDetailEntity
+								.getFeeAmountPaid());
 				break;
 			}
 		}
-		if (objectToRemove != null) {
-			feeAmount = objectToRemove.getFeeAmount();
+		if (objectToRemove != null)
 			this.removeAccountFeesActionDetailEntity(objectToRemove);
-		}
-
 		return feeAmount;
 	}
 

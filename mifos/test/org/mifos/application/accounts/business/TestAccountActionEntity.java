@@ -1,19 +1,9 @@
 package org.mifos.application.accounts.business;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.mifos.framework.MifosTestCase;
-
 import org.hibernate.Session;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.components.repaymentschedule.RepaymentScheduleException;
-import org.mifos.framework.components.scheduler.SchedulerException;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

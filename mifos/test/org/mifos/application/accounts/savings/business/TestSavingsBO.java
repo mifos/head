@@ -49,6 +49,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.meeting.util.resources.MeetingConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -62,7 +63,6 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.repaymentschedule.MeetingScheduleHelper;
 import org.mifos.framework.components.scheduler.SchedulerException;
 import org.mifos.framework.components.scheduler.SchedulerIntf;
 import org.mifos.framework.components.scheduler.helpers.SchedulerHelper;
@@ -4050,7 +4050,7 @@ public class TestSavingsBO extends MifosTestCase {
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
 		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
 				.getInstance()));
-		List<Date> meetingDates = MeetingScheduleHelper.getSchedulerObject(
+		List<Date> meetingDates = MeetingHelper.getSchedulerObject(
 				meetingBO).getAllDates();
 		Date FirstSavingInstallmetDate = savingsBO.getAccountActionDate(
 				Short.valueOf(installmetId.shortValue())).getActionDate();
