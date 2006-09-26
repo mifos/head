@@ -15,11 +15,13 @@ class FeePeriodic < TestClass
     #Connecting to database
 	def data_connection()
 		name_login=$validname
-		dbquery("select account.account_id,global_account_num,account.office_id,loan_account.no_of_installments,customer.loan_officer_id ,recurrence_detail.meeting_id from customer , account, loan_account,fee_frequency,recurrence_detail where customer.customer_id = account.customer_id and account.account_id=loan_account.account_id and fee_frequency.frequency_meeting_id=recurrence_detail.meeting_id  and customer.customer_level_id<3 and account.account_type_id=1 and  account.account_state_id <12  order by 1 desc limit 1")
+		#dbquery("select account.account_id,global_account_num,account.office_id,loan_account.no_of_installments,customer.loan_officer_id ,recurrence_detail.meeting_id ,recurrence_detail.recurrence_id from customer , account, loan_account,fee_frequency,recurrence_detail where customer.customer_id = account.customer_id and account.account_id=loan_account.account_id and fee_frequency.frequency_meeting_id=recurrence_detail.meeting_id  and customer.customer_level_id<3 and account.account_type_id=1 and  account.account_state_id <11  order by 1 desc limit 1")
+		dbquery("select c.account_id,c.global_account_num,d.recurrence_id from recurrence_detail d ,(select b.account_id,b.global_account_num,a.meeting_id from loan_account a,account b where a.account_id=b.account_id and b.account_state_id < 11 and b.account_type_id=1) c where c.meeting_id=d.meeting_id order by 1 desc limit 1")
 		@@account_id=dbresult[0]		
 		@@global_account_num=dbresult[1]					
-		dbquery("select fee_name from fees,fee_frequency,account_fees where fees.fee_id=fee_frequency.fee_id and fee_frequency.fee_frequencytype_id=1 and fees.status=1 and fees.category_id=5 and account_fees.fee_id=fees.fee_id and account_fees.fee_status is not null and account_fees.account_id="+@@account_id)
-		@@fee_name=dbresult[0]
+		@@recurrence_id=dbresult[2]
+#		dbquery("select fee_name from fees,fee_frequency,account_fees where fees.fee_id=fee_frequency.fee_id and fee_frequency.fee_frequencytype_id=1 and fees.status=1 and fees.category_id=5 and account_fees.fee_id=fees.fee_id and account_fees.fee_status is not null and account_fees.account_id="+@@account_id)
+#		@@fee_name=dbresult[0]
 	end 
 	
 	#Loging into Mifos
@@ -76,10 +78,24 @@ class FeePeriodic < TestClass
 	  add_fee_man
 	  loan_account_add_fee_test_cancel
 	  $ie.link(:text,"Apply charges").click
-	  dbquery("select Fee_Name, f1.fee_id from Fees f1, fee_frequency f2 where f1.Fee_Id = f2.Fee_Id and f2.Fee_FrequencyType_Id = 1 and f2.Fee_Id not in (select Fee_Id from account_fees where Account_id =" + @@account_id + " and Fee_Status <> 2) order by 1 desc")
-	  @@fee_id = dbresult[1]	  
+	  dbquery("select c.fee_id,d.recurrence_id,c.fee_name,d.recur_after from recurrence_detail d,(select a.fee_id,a.fee_name,b.frequency_meeting_id from fees a,fee_frequency b where a.fee_id=b.fee_id and a.category_id=5 and a.status=1 and b.fee_frequencytype_id=1 ) c where c.frequency_meeting_id=d.meeting_id and d.recurrence_id="+@@recurrence_id+" and  c.fee_id not in (select Fee_Id from account_fees where Account_id ="+@@account_id+" and Fee_Status <> 2 ) order by 1 desc")
+	  @@fee_id = dbresult[0]	  
+	  @@feesname=dbresult[2]
+	  @@recur_after=dbresult[3]
+	  if(@@recurrence_id.to_i==2)
+	     @@recur_type="month(s)"
+	  elsif(@@recurrence_id.to_i==1)
+	     @@recur_type="week(s)"
+	  end
 	  $ie.select_list(:name,"chargeType").select_value(@@fee_id)	
-	  $ie.button(:value,"Submit").click	  	         
+	  $ie.button(:value,"Submit").click
+	  dbquery("select account_fee_amnt from account_fees where fee_id="+@@fee_id)
+	  @@fee_amnt=dbresult[0]
+	 # puts @@feesname+": "+@@fee_amnt.to_f.to_s+" ( Recur every "+@@recur_after+" "+recur_type+"" )"
+	  assert($ie.contains_text(@@feesname+": "+@@fee_amnt.to_f.to_s+" ( Recur every "+@@recur_after+" "+@@recur_type+" )"))
+	  $logger.log_results("Fees "+@@feesname.to_s+" appears under recurring account fees","NA","NA","passed")
+	  rescue Test::Unit::AssertionFailedError=>e
+	  $logger.log_results("Fees "+@@feesname.to_s+" does not appear under recurring account fees","NA","NA","failed")
      end
 	end	
     #testing the cancel button functionality
@@ -104,11 +120,22 @@ class FeePeriodic < TestClass
 	  @@office_id = dbresult[0]
 	  @@personnel_id = dbresult[1]
 	  @@created_date = dbresult[2]
-	  $ie.goto($test_site + "/accountAppAction.do?method=removeFees&feeId=" + @@fee_id + "&accountId=" + @@account_id + "&recordOfficeId=" + @@office_id +"&recordLoanOfficerId=" +@@personnel_id +"&createdDate="+ @@created_date)
-	  assert($ie.contsins_text(@@loan_fee_name))						
-	  $logger.log_results("Fee Remove","remove","removed","Failed")
-	  rescue =>e
-	  $logger.log_results("Fee Remove","remove","removed","Passed")
+	  #$ie.goto($test_site + "/accountAppAction.do?method=removeFees&feeId=" + @@fee_id + "&accountId=" + @@account_id + "&recordOfficeId=" + @@office_id +"&recordLoanOfficerId=" +@@personnel_id +"&createdDate="+ @@created_date)
+	  #assert($ie.contsins_text(@@loan_fee_name))						
+	  #$logger.log_results("Fee Remove","remove","removed","Failed")
+	  #rescue =>e
+	  #$logger.log_results("Fee Remove","remove","removed","Passed")
+	  $ie.link(:text,"Clients & Accounts").click
+	  $ie.text_field(:name,"searchNode(searchString)").set(@@global_account_num)
+	  $ie.button(:value,'Search').click
+	  @@loan_account="Account # " + @@global_account_num
+	  $ie.link(:text, @@loan_account).click
+	  #$ie.goto($test_site + "/accountAppAction.do?method=removeFees&feeId=" + @@fee_id + "&accountId=" + @@account_id + "&recordOfficeId=" + @@office_id +"&recordLoanOfficerId=" +@@personnel_id +"&createdDate="+ @@created_date+"%2000:00:00.0")        
+      $ie.link(:text,"Remove").click
+      assert(!$ie.contains_text(@@feesname+": "+@@fee_amnt+" ( Recur every "+@@recur_after+" "+@@recur_type+" )"))
+ 	  $logger.log_results("Fees "+@@feesname.to_s+" does not appears under recurring account fees","NA","NA","passed")
+	  rescue Test::Unit::AssertionFailedError=>e
+	  $logger.log_results("Fees "+@@feesname.to_s+" appears under recurring account fees","NA","NA","failed")     
      end
 	end	
 	
