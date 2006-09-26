@@ -62,6 +62,7 @@ import org.mifos.application.productdefinition.util.helpers.ProductDefinitionCon
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -1031,7 +1032,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	public void testViewAllLoanProducts() {
+	public void testViewAllLoanProducts() throws PageExpiredException {
 		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
 		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Offering1",
 				"LOA1");
@@ -1042,9 +1043,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.viewAllLoanProducts_success.toString());
-
-		List<LoanOfferingBO> loanOfferings = (List<LoanOfferingBO>) request
-				.getAttribute(ProductDefinitionConstants.LOANPRODUCTLIST);
+		
+		List<LoanOfferingBO> loanOfferings = (List<LoanOfferingBO>) SessionUtils
+				.getAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,request);
 		assertNotNull(loanOfferings);
 		assertEquals(2, loanOfferings.size());
 		for (LoanOfferingBO loanOfferingBO : loanOfferings) {

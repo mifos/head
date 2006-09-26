@@ -3931,6 +3931,25 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 	
+	public void testPartialPaymentForPrincipalGrace() throws Exception {
+		accountBO = getLoanAccount();
+		((LoanScheduleEntity)accountBO.getAccountActionDate((short)1)).setPrincipal(new Money());
+		accountBO = saveAndFetch(accountBO);
+		assertEquals(new Money("112.0"), ((LoanBO) accountBO)
+				.getTotalPaymentDue());
+		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
+				null, new Money("100"), accountBO.getCustomer(), accountBO
+						.getPersonnel(), "432423", (short) 1, new Date(System
+						.currentTimeMillis()), new Date(System
+						.currentTimeMillis())));
+		accountBO = saveAndFetch(accountBO);
+		assertEquals(new Money("12"), ((LoanBO) accountBO).getTotalPaymentDue());
+		assertEquals(Integer.valueOf(0), ((LoanBO) accountBO)
+				.getPerformanceHistory().getNoOfPayments());
+		assertEquals(PaymentStatus.UNPAID.getValue(), ((LoanBO) accountBO)
+				.getAccountActionDate((short) 1).getPaymentStatus());
+	}
+	
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments, Double interestRate)

@@ -46,6 +46,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -81,7 +82,7 @@
 									</html-el:link><br> <br> </span><span class="fontnormalbold"><br> </span> <span class="fontnormalbold"> </span> <font class="fontnormalRedBold"><html:errors bundle="ProductDefUIResources" /> </font>
 
 								<table width="90%" border="0" cellspacing="0" cellpadding="0">
-									<c:forEach items="${requestScope.LoanProductList}" var="LoanProduct">
+									<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanProductList')}" var="LoanProduct">
 										<tr class="fontnormal">
 											<td width="1%">
 												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">

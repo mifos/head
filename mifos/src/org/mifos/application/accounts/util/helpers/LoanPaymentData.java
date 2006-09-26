@@ -140,6 +140,11 @@ public class LoanPaymentData extends AccountPaymentData {
 			Money total) {
 		super(accountActionDate);
 		LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+		if (total.getAmountDoubleValue() >= loanScheduleEntity
+				.getTotalDueWithFees().getAmountDoubleValue())
+			setPaymentStatus(PaymentStatus.PAID.getValue());
+		else
+			setPaymentStatus(PaymentStatus.UNPAID.getValue());
 		setMiscPenaltyPaid(getLowest(total, loanScheduleEntity
 				.getMiscPenaltyDue()));
 		total = total.subtract(getMiscPenaltyPaid());
@@ -170,11 +175,6 @@ public class LoanPaymentData extends AccountPaymentData {
 		total = total.subtract(getInterestPaid());
 
 		setPrincipalPaid(getLowest(total, loanScheduleEntity.getPrincipalDue()));
-		if (total.getAmountDoubleValue() >= loanScheduleEntity
-				.getPrincipalDue().getAmountDoubleValue())
-			setPaymentStatus(PaymentStatus.PAID.getValue());
-		else
-			setPaymentStatus(PaymentStatus.UNPAID.getValue());
 	}
 
 	public Money getAmountPaidWithFeeForInstallment() {

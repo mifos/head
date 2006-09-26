@@ -375,11 +375,11 @@ public class LoanPrdAction extends BaseAction {
 			HttpServletResponse response) throws Exception {
 		prdDefLogger
 				.debug("start viewAllLoanProducts method of Loan Product Action");
-		request.setAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,
+		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,
 				((LoanPrdBusinessService) ServiceFactory.getInstance()
 						.getBusinessService(BusinessServiceName.LoanProduct))
 						.getAllLoanOfferings(getUserContext(request)
-								.getLocaleId()));
+								.getLocaleId()),request);
 		return mapping.findForward(ActionForwards.viewAllLoanProducts_success
 				.toString());
 	}

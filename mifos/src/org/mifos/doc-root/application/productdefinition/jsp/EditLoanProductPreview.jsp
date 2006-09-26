@@ -327,7 +327,7 @@
 									:
 									<br>
 									<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
-									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes'}">
+									: <span class="fontnormal"> <c:forEach var="glCode" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestGLCodes')}">
 											<c:if test="${glCode.glcodeId == sessionScope.loanproductactionform.interestGLCode}">
 												<c:out value="${glCode.glcode}" />
 											</c:if>
