@@ -46,6 +46,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
  */
 public class CustomerLevelEntity extends MasterDataEntity {
 
+	// Set/gotten via .hbm.xml file
 	private CustomerLevelEntity parentCustomerLevel;
 
 	public CustomerLevelEntity(CustomerLevel customerLevel) {

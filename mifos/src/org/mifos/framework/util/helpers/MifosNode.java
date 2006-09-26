@@ -55,10 +55,6 @@ public class MifosNode {
 	public MifosNode(){
 	}
 	
-	/**
-	 * @param name
-	 * @param value
-	 */
 	public MifosNode(Map nodes){
 		this.nodes = nodes;
 	}
@@ -86,9 +82,9 @@ public class MifosNode {
 	}
 	
 	/**
-	 * It returns the value for the key specified.It compares the key using to lower case which makes the comparison case-insensitive.
-	 * @param key
-	 * @return
+	 * It returns the value for the key specified.
+	 * It compares the key using to lower case which 
+	 * makes the comparison case-insensitive.
 	 */
 	public String getElement(String key){
 		String value =null;

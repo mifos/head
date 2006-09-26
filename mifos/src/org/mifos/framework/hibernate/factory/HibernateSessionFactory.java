@@ -48,7 +48,7 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 public class HibernateSessionFactory
 {
 
-    private static  SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
     /**
 	 * The call to setconfiguration , builds the hibernate session factory from

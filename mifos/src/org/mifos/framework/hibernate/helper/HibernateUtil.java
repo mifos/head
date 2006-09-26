@@ -47,21 +47,14 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor; 
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
 
-
-
 public class HibernateUtil {
 
-	/**
-	 *
-	 */
 	private static final SessionFactory sessionFactory;
 	
 	private static final ThreadLocal<SessionHolder> threadLocal = new ThreadLocal<SessionHolder>();
 
-
 	static {
 		try {
-
 			sessionFactory = HibernateSessionFactory.getSessionFactory();
 		} catch (Throwable ex) {
 			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("Initial SessionFactory creation failed.", false, null, ex);
@@ -71,20 +64,15 @@ public class HibernateUtil {
 	}
 
 	/**
-	 * Method returns a hibernate session object which it obtains from SessionFactory.
-	 * @return Session
-	 * @throws HibernateProcessException
+	 * Method returns a hibernate session object 
+	 * which it obtains from SessionFactory.
 	 */
 	public static Session getSession() throws HibernateProcessException
 	{
 		try
 		{
-
-				return sessionFactory.openSession();
-
-
-
-		}catch(HibernateException e){
+			return sessionFactory.openSession();
+		} catch (HibernateException e) {
 			throw new HibernateProcessException(HibernateConstants.FAILED_OPENINGSESSION,e);
 		}
 	}
@@ -115,26 +103,16 @@ public class HibernateUtil {
 
 	/**
 	 * Method that returns the hibernate session factory
-	 * @param Session
-	 * @throws HibernateProcessException
 	 */
-
 	public static SessionFactory getSessionFactory()
 	{
-
 		return sessionFactory;
 	}
 
-	
-	
 	/** 
-	   *  
 	   *   Method returns a hibernate session object which it obtains from SessionFactory.  
 	   *   It also registers the interceptor with the session and puts the interceptor in the 
 	   *   threadLocal variable so that a reference to interceptor can be obtained later.
-	   *   @return Session
-	   *   @throws HibernateProcessException
-	   *  
 	   */
 	public static Session getSessionWithInterceptor(LogInfo info) throws HibernateProcessException
 	{  

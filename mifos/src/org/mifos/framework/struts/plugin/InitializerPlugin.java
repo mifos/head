@@ -161,8 +161,6 @@ public class InitializerPlugin implements PlugIn {
 	/**
 	 * Initializes Hibernate by making it read the hibernate.cfg file and also
 	 * setting the same with hibernate session factory.
-	 * 
-	 * @throws AppNotConfiguredException
 	 */
 	private void initializeHibernate(String hibernatePropertiesPath)
 			throws AppNotConfiguredException {
@@ -174,9 +172,9 @@ public class InitializerPlugin implements PlugIn {
 			} catch (URISyntaxException e) {
 			}
 			HibernateStartUp.initialize(hibernatePropertiesPath);
-		} catch (HibernateStartUpException hsue) {
-			hsue.printStackTrace();
-			throw new AppNotConfiguredException(hsue);
+		} catch (HibernateStartUpException e) {
+			e.printStackTrace();
+			throw new AppNotConfiguredException(e);
 		}
 	}
 
@@ -185,16 +183,13 @@ public class InitializerPlugin implements PlugIn {
 	 * dsn passed as servlet config and initializes the <code>DAO</code> with
 	 * the datasource.
 	 * 
-	 * @param servlet
-	 * @param config
 	 * @throws AppNotConfiguredException -
 	 *             when it fails to read initialization.xml or fails to
 	 *             initialize the <code>DAO</code> with the datasource
 	 */
 	private void initializeApplication(ActionServlet servlet,
 			ModuleConfig config) throws AppNotConfiguredException {
-		InitializationReader initReader = new InitializationReader();
-		MifosNode node, anotherNode = null;
+		MifosNode node;
 		Delegator delegator = null;
 		String businessProcessorImplementation = null;
 
@@ -263,10 +258,9 @@ public class InitializerPlugin implements PlugIn {
 	private MifosNode getNode(String filePath, String nodeName)
 			throws XMLReaderException, URISyntaxException {
 		InitializationReader initReader = new InitializationReader();
-		MifosNode node = null;
-		node = (MifosNode) initReader.getElement(new File(ResourceLoader
-				.getURI(filePath)), nodeName);
-		return node;
+		return initReader.getElement(
+			new File(ResourceLoader.getURI(filePath)),
+			nodeName);
 	}
 
 	/**
