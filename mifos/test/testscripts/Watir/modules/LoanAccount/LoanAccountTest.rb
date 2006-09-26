@@ -35,7 +35,7 @@ class LoanAccountTest
   loanobject.check_Interest_Calculation_Rule_For_Early_or_Late_Payments
   loanobject.check_Proposed_or_actual_disbursement_date
   loanobject.check_all_mandatory
-  loanobject.mandatory_with_prodname
+  #loanobject.mandatory_with_prodname
   loanobject.mandatory_with_prodname_no_of_installments
   loanobject.mandatory_with_prodname_no_of_installments_interest_rate
   loanobject.mandatory_excxept_disbursaldate
@@ -56,7 +56,8 @@ class LoanAccountTest
   if type_success==0 then
   loanobject.view_client_details_link_click
   loanobject.edit_account_status
-  loanobject.view_change_log
+  #commented this as this link does not exist currently
+  #loanobject.view_change_log 
   loanobject.view_repayment_schedules
   loanobject.view_account_activity
   loanobject.edit_loan_account_data
@@ -65,4 +66,5 @@ class LoanAccountTest
   loanobject.click_savings_account_link
   end
  end
+ loanobject.mifos_logout()
 end
