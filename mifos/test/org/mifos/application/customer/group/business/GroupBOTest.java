@@ -36,6 +36,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.CustomFieldType;
@@ -565,6 +566,22 @@ public class GroupBOTest extends MifosTestCase {
 		}
 	}
 
+	public void testUpdateBranchFailure_OfficeInactive() throws Exception {
+		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
+		officeBO = createOffice();
+		officeBO.update(officeBO.getOfficeName(), officeBO.getShortName(), OfficeStatus.INACTIVE, officeBO.getOfficeLevel(), officeBO.getParentOffice(), null, null);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		try {
+			group.transferToBranch(officeBO);
+			assertTrue(false);
+		} catch (CustomerException ce) {
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE, ce
+					.getKey());
+		}
+	}
+	
 	public void testUpdateBranchFailure_DuplicateGroupName() throws Exception {
 		group = createGroupUnderBranch(CustomerStatus.GROUP_ACTIVE);
 		officeBO = createOffice();
@@ -653,6 +670,21 @@ public class GroupBOTest extends MifosTestCase {
 		}
 	}
 
+	public void testUpdateCenterFailure_TransferInInactiveCenter() throws Exception {
+		createInitialObjects();
+		center1 = createCenter("newCenter");
+		center1.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(), null, "changeStatus");
+		HibernateUtil.commitTransaction();
+		try {
+			group.transferToCenter(center1);
+			assertTrue(false);
+		} catch (CustomerException ce) {
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, ce
+					.getKey());
+		}
+	}
+	
 	public void testUpdateCenterFailure_GroupHasActiveAccount()
 			throws Exception {
 		createInitialObjects();

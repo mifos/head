@@ -249,6 +249,8 @@ public interface CustomerConstants {
 	public static final String ERRORS_SPECIFY_FEE_AMOUNT="errors.Customer.specifyFeeAmount";
 	public static final String ERRORS_FEE_FREQUENCY_MISMATCH="errors.Customer.feeFrequencyMismatch";
 	public static final String ERRORS_SAME_BRANCH_TRANSFER="errors.Customer.sameBranchTransfer";
+	public static final String ERRORS_TRANSFER_IN_INACTIVE_OFFICE="errors.Customer.officeInactive";
+	public static final String ERRORS_INTRANSFER_PARENT_INACTIVE="errors.Customer.parentInactive";
 	public static final String ERRORS_SAME_PARENT_TRANSFER="errors.Customer.sameParentTransferException";
 	public static final String ERRORS_HAS_ACTIVE_ACCOUNT="errors.Customer.hasActiveAccount";
 	public static final String ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT="errors.Customer.clientHasActiveAccount";

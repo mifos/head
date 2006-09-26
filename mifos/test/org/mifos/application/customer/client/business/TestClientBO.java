@@ -36,6 +36,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -424,6 +425,32 @@ public class TestClientBO extends MifosTestCase {
 		}
 	}
 	
+	public void testUpdateGroupFailure_GroupCancelled()throws Exception{
+		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
+		group1.changeStatus(CustomerStatus.GROUP_CANCELLED.getValue(),Short.valueOf("11"), "Status Changed");
+		HibernateUtil.commitTransaction();
+		try{
+			client.transferToGroup(group1);
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE,ce.getKey());
+		}
+	}
+	
+	public void testUpdateGroupFailure_GroupClosed()throws Exception{
+		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
+		group1.changeStatus(CustomerStatus.GROUP_CLOSED.getValue(),Short.valueOf("16"), "Status Changed");
+		HibernateUtil.commitTransaction();
+		try{
+			client.transferToGroup(group1);
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE,ce.getKey());
+		}
+	}
+	
 	public void testUpdateGroupFailure_GroupStatusLower()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);		
 		try{
@@ -556,6 +583,20 @@ public class TestClientBO extends MifosTestCase {
 		}catch(CustomerException ce){
 			assertTrue(true);
 			assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER,ce.getKey());
+		}
+	}
+	
+	public void testUpdateBranchFailure_OfficeInactive()throws Exception{
+		createObjectsForClientTransfer();
+		office.update(office.getOfficeName(), office.getShortName(), OfficeStatus.INACTIVE, office.getOfficeLevel(), office.getParentOffice(), null, null);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		try{
+			client.transferToBranch(office);
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE,ce.getKey());
 		}
 	}
 	

@@ -1211,7 +1211,8 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.addAccountPayment(payment);
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		savings.changeStatus(AccountState.SAVINGS_ACC_INACTIVE.getValue(), null, "status changed");
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -1227,6 +1228,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
+		assertEquals(AccountState.SAVINGS_ACC_APPROVED.getValue(), savings.getAccountState().getId());
 		assertEquals(Integer.valueOf(2).intValue(), savings
 				.getAccountPayments().size());
 		assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns()
@@ -1268,7 +1270,8 @@ public class TestSavingsBO extends MifosTestCase {
 		savings.addAccountPayment(payment);
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
-		HibernateUtil.getSessionTL().flush();
+		savings.changeStatus(AccountState.SAVINGS_ACC_INACTIVE.getValue(), null, "changedInactive");
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -1284,6 +1287,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
+		assertEquals(AccountState.SAVINGS_ACC_APPROVED.getValue(), savings.getAccountState().getId());
 		assertEquals(Integer.valueOf(2).intValue(), savings
 				.getAccountPayments().size());
 		assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns()

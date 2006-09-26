@@ -1211,6 +1211,14 @@ public class SavingsBO extends AccountBO {
 		AccountPaymentEntity newPayment = createAdjustmentPayment(
 				amountAdjustedTo, adjustmentComment);
 		adjustInterest(oldInterest, trxnDate, newPayment);
+		if (this.getAccountState().getId().equals(AccountState.SAVINGS_ACC_INACTIVE.getValue())){
+			try {
+				this.setAccountState((new SavingsPersistence())
+								.getAccountStatusObject(AccountState.SAVINGS_ACC_APPROVED.getValue()));
+			} catch (PersistenceException pe) {
+				throw new AccountException(pe);
+			}
+		}
 		this.update();
 	}
 

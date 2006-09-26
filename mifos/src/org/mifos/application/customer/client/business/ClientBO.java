@@ -485,6 +485,9 @@ public class ClientBO extends CustomerBO {
 		
 		if(isSameBranch(officeToTransfer))
 			throw new CustomerException(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER);
+		
+		if(!officeToTransfer.isActive())
+			throw new CustomerException(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE);
 	}
 	
 	private boolean isSameGroup(GroupBO group){
@@ -513,6 +516,9 @@ public class ClientBO extends CustomerBO {
 				new CustomerException(ce);
 			}	
 		}
+		if(groupStatus.equals(CustomerStatus.GROUP_CANCELLED) || groupStatus.equals(CustomerStatus.GROUP_CLOSED))
+			throw new CustomerException(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE);
+				
 	}
 	
 	private void generateSearchId() throws CustomerException{
