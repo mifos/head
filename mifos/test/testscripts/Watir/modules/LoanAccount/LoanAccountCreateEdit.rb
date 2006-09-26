@@ -24,7 +24,7 @@ class LoanAccountCreateEdit<TestClass
     $ie.link(:text,"Clients & Accounts").click
     assert($ie.contains_text("Create Loan Account"))
     $logger.log_results("Link Check Create Loan Account","Should display","displaying","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Link Create Loan Account","Should display","Not displaying","Failed")
     end
   end
@@ -33,7 +33,7 @@ class LoanAccountCreateEdit<TestClass
     $ie.link(:text,"Create Loan Account").click
     assert($ie.contains_text($loan_select_client))
         $logger.log_results("Link Click Create Loan Account","Should work","working","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Link Click Create Loan Account","Should work","not working","Failed")
     end
   end
@@ -85,7 +85,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.button(:value,"Cancel").click
       assert($ie.contains_text("Create Loan Account"))
       $logger.log_results("Cancel button working properly","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Cancel button not working","N/A","N/A","Failed")      
     end
    end
@@ -96,7 +96,7 @@ class LoanAccountCreateEdit<TestClass
     $ie.button(:value,"Search").click
     assert($ie.contains_text(@@display_name))
     $logger.log_results("Search displayed the resule","N/A","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Search Not displayed the resule","N/A","N/A","Failed")
     end
    end
@@ -106,7 +106,7 @@ class LoanAccountCreateEdit<TestClass
     $ie.link(:text,client_data).click
     assert($ie.contains_text($loan_select_loan_prd))
     $logger.log_results("Selection of client","Success","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Selection of client","Failed","N/A","Failed")
     end
    end
@@ -115,7 +115,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.button(:value,"Cancel").click
       assert($ie.contains_text("Create Loan Account"))
       $logger.log_results("Cancel button working properly","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Cancel button not working","N/A","N/A","Failed")
     end
    end
@@ -127,7 +127,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.button(:value,"Continue").click
       assert($ie.contains_text($loan_enter_loan_data))
       $logger.log_results("Page redirected to Enter Loan Data page","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page is not redirected to Enter Loan Data page","N/A","N/A","Failed")
     end
    end
@@ -135,7 +135,7 @@ class LoanAccountCreateEdit<TestClass
     begin
     assert($ie.contains_text("Proposed/actual disbursement date"))
     $logger.log_results("Lable Proposed/actual disbursement date","Displaying","Should not display","Failed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Lable Proposed/actual disbursement date","Not Displaying","Should not display","Passed")
     end
    end
@@ -143,32 +143,33 @@ class LoanAccountCreateEdit<TestClass
    begin
     assert($ie.contains_text("Interest Calculation Rule For Early/Late Payments"))
     $logger.log_results("Lable Interest Calculation Rule For Early/Late Payments","Displaying","Should not display","Failed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Lable Interest Calculation Rule For Early/Late Payments","Not Displaying","Should not display","Passed")
    end
    end
    
    def check_all_mandatory()
     begin
-      $ie.select_list(:name,"prdOfferingId").select_value("")
+      #$ie.select_list(:name,"prdOfferingId").select_value("")
       $ie.text_field(:name,"loanAmount").set("")
-      $ie.text_field(:name,"interestRateAmount").set("")
+      $ie.text_field(:name,"interestRate").set("")
       $ie.text_field(:name,"noOfInstallments").set("")
       $ie.text_field(:name,"disbursementDateDD").set("")
       $ie.text_field(:name,"disbursementDateMM").set("")
       $ie.text_field(:name,"disbursementDateYY").set("")
       $ie.button(:value,"Continue").click
-      assert($ie.contains_text($loan_loan_instance))and assert($ie.contains_text($loan_no_of_installments))and //
-      assert($ie.contains_text($loan_interest_rate)) and assert($ie.contains_text($loan_grace_priod_duration))and//
+      #assert($ie.contains_text($loan_loan_instance))and
+      assert($ie.contains_text($loan_no_of_installments))and \
+      assert($ie.contains_text($loan_interest_rate)) and assert($ie.contains_text($loan_grace_priod_duration))and \
       assert($ie.contains_text($loan_disbursal_date)) and assert($ie.contains_text($loan_ammount))
       $logger.log_results("All Mandatory Checks","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("All Mandatory Checks","N/A","N/A","Failed")
     end
    end
    def mandatory_with_prodname()
     begin
-    $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
+    #$ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
     $ie.text_field(:name,"loanAmount").set("")
     $ie.text_field(:name,"interestRateAmount").set("")
     $ie.text_field(:name,"noOfInstallments").set("")
@@ -180,7 +181,7 @@ class LoanAccountCreateEdit<TestClass
     assert($ie.contains_text($loan_interest_rate)) and assert($ie.contains_text($loan_grace_priod_duration))and//
     assert($ie.contains_text($loan_disbursal_date)) and assert($ie.contains_text($loan_ammount))
     $logger.log_results("Mandatory Check with Loan Instance","N/A","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Mandatory Check with Loan Instance","N/A","N/A","Failed") 
     end
    end
@@ -196,7 +197,7 @@ class LoanAccountCreateEdit<TestClass
     assert($ie.contains_text($loan_interest_rate)) and assert($ie.contains_text($loan_grace_priod_duration))and//
     assert($ie.contains_text($loan_disbursal_date)) and assert($ie.contains_text($loan_ammount))
     $logger.log_results("Mandatory Check with Loan Instance and no of installments","N/A","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Mandatory Check with Loan Instance and no of installments","N/A","N/A","Failed") 
     end
    end
@@ -204,20 +205,20 @@ class LoanAccountCreateEdit<TestClass
     begin
     $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
     $ie.text_field(:name,"noOfInstallments").set(@@default_no_installments)
-    $ie.text_field(:name,"interestRateAmount").set(@@default_interest_rate)
+    $ie.text_field(:name,"interestRate").set(@@default_interest_rate)
     $ie.button(:value,"Continue").click
     assert($ie.contains_text($loan_disbursal_date)) and assert($ie.contains_text($loan_ammount))
     $logger.log_results("Mandatory Check with Loan Instance,Interest Rate and no of installments","N/A","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Mandatory Check with Loan Instance,Interest Rate and no of installments","N/A","N/A","Failed") 
     end
    end
    def mandatory_excxept_disbursaldate()
     begin
-    $ie.select_list(:name,"prdOfferingId").select_value("")
+    #$ie.select_list(:name,"prdOfferingId").select_value("")
     $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
     $ie.text_field(:name,"noOfInstallments").set(@@default_no_installments)
-    $ie.text_field(:name,"interestRateAmount").set(@@default_interest_rate)
+    $ie.text_field(:name,"interestRate").set(@@default_interest_rate)
     $ie.text_field(:name,"loanAmount").set(@@max_loan_amount)
     $ie.text_field(:name,"disbursementDateDD").set("")
     $ie.text_field(:name,"disbursementDateMM").set("")
@@ -225,13 +226,13 @@ class LoanAccountCreateEdit<TestClass
     $ie.button(:value,"Continue").click
     assert($ie.contains_text($loan_disbursal_date))
     $logger.log_results("Mandatory Check with Loan Instance,Interest Rate and no of installments","N/A","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Mandatory Check with Loan Instance,Interest Rate and no of installments","N/A","N/A","Failed") 
     end
    end
    def validate_no_of_installments_greater()
       begin
-      $ie.select_list(:name,"prdOfferingId").select_value("")
+      #$ie.select_list(:name,"prdOfferingId").select_value("")
       $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
       dbquery("select max_no_installments from loan_offering where prd_offering_id="+@@product_id)
       max_no_installments=dbresult[0]
@@ -242,7 +243,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.button(:value,"Continue").click
       assert($ie.contains_text($loan_valid_installmets))
       $logger.log_results("Checking Greater Installmensts","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Not Checking Greater Installmensts","N/A","N/A","Failed")
       end
    end
@@ -255,13 +256,13 @@ class LoanAccountCreateEdit<TestClass
       $ie.button(:value,"Continue").click
       assert($ie.contains_text($loan_valid_installmets))
       $logger.log_results("Checking Lesser Installmensts","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Not Checking Lesser Installmensts","N/A","N/A","Failed")
       end
    end
    def validate_ammount_greater()
       begin
-      $ie.select_list(:name,"prdOfferingId").select_value("")
+      #$ie.select_list(:name,"prdOfferingId").select_value("")
       $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
       dbquery("select max_loan_amnt from loan_offering where prd_offering_id="+@@product_id)
       max_loan_amnt=dbresult[0]
@@ -272,7 +273,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.button(:value,"Continue").click
       assert($ie.contains_text($loan_valid_ammount))
       $logger.log_results("Checking Greater amount","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Not Checking Greater amount","N/A","N/A","Failed")
       end
    end
@@ -282,7 +283,7 @@ class LoanAccountCreateEdit<TestClass
     $ie.button(:value,"Continue").click
     assert($ie.contains_text($loan_valid_ammount))
     $logger.log_results("Checking Zero amount","N/A","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Not Checking Zero amount","N/A","N/A","Failed")
     end
    end
@@ -300,13 +301,13 @@ class LoanAccountCreateEdit<TestClass
     puts "Ammount value"+value
     assert($ie.contains_text(value))
     $logger.log_results("Checking Decimals in amount","N/A","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Not Checking Decimals in amount","N/A","N/A","Failed")
    end
   end
     def validate_ammount_lesser()
       begin
-      $ie.select_list(:name,"prdOfferingId").select_value("")
+      #$ie.select_list(:name,"prdOfferingId").select_value("")
       $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
       dbquery("select min_loan_amount from loan_offering where prd_offering_id="+@@product_id)
       min_loan_amnt=dbresult[0]
@@ -317,7 +318,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.button(:value,"Continue").click
       assert($ie.contains_text($loan_valid_ammount))
       $logger.log_results("Checking lesser amount","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Not Checking Lesser amount","N/A","N/A","Failed")
       end
    end
@@ -326,11 +327,11 @@ class LoanAccountCreateEdit<TestClass
       dbquery("select max_interest_rate from loan_offering where prd_offering_id="+@@product_id)
       max_interest_rate=dbresult[0]
       interest=max_interest_rate.to_i+1
-      $ie.text_field(:name,"interestRateAmount").set(interest.to_s)
+      $ie.text_field(:name,"interestRate").set(interest.to_s)
       $ie.button(:value,"Continue").click
       assert($ie.contains_text($loan_valid_interest))
       $logger.log_results("Checking greater interest","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Not Checking greater interest","N/A","N/A","Failed")
       end
    end
@@ -339,11 +340,11 @@ class LoanAccountCreateEdit<TestClass
       dbquery("select min_interest_rate from loan_offering where prd_offering_id="+@@product_id)
       min_interest_rate=dbresult[0]
       interest=min_interest_rate.to_i-1
-      $ie.text_field(:name,"interestRateAmount").set(interest.to_s)
+      $ie.text_field(:name,"interestRate").set(interest.to_s)
       $ie.button(:value,"Continue").click
       assert($ie.contains_text($loan_valid_interest))
       $logger.log_results("Checking lesser interest","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Not Checking lesser interest","N/A","N/A","Failed")
       end
    end
@@ -375,10 +376,18 @@ class LoanAccountCreateEdit<TestClass
   end
   def click_continue()
     begin
+      $ie.link(:text,"Clients & Accounts").click
+      $ie.link(:text,"Create Loan Account").click
+      $ie.text_field(:name,"searchNode(searchString)").set(@@display_name)
+      $ie.button(:value,"Search").click
+      client_data=@@display_name+":ID"+@@global_account_num
+      $ie.link(:text,client_data).click
+      $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
+      $ie.button(:value,"Continue").click     
       $ie.button(:value,"Continue").click
       assert($ie.contains_text($loan_installments_review))
       $logger.log_results("Page Redirected to Loan account Review page","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page Not Redirected to Loan account Review page","N/A","N/A","Failed")
     end
   end
@@ -387,7 +396,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.button(:value,"Preview").click
       assert($ie.contains_text($loan_account_preview))
       $logger.log_results("Page redirect to review loan account","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page not redirect to review loan account","N/A","N/A","Failed")
     end
   end
@@ -399,7 +408,7 @@ class LoanAccountCreateEdit<TestClass
     fee_select_one_by_one
     click_continue()
     click_preview()
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Page not redirect to Create loan account","N/A","N/A","Failed")
     end
   end
@@ -408,7 +417,7 @@ class LoanAccountCreateEdit<TestClass
     $ie.button(:value,status).click
     assert($ie.contains_text($loan_create_success))
     $logger.log_results("Loan account Creation Success","N/A","N/A","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Loan account Creation Success","N/A","N/A","Failed")
     end
   end
@@ -416,7 +425,7 @@ class LoanAccountCreateEdit<TestClass
     begin
     assert($ie.contains_text("View Loan account details now"))
     $logger.log_results("Link View loan account details now","Should Exist","Existed","Passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Link View loan account details now","Should Exist","Not Existed","failed")
     end
   end
@@ -424,7 +433,7 @@ class LoanAccountCreateEdit<TestClass
     begin
       assert($ie.contains_text("Open a new Margin Money account"))
       $logger.log_results("Link Open a new savings account","Should Exist","Existed","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Link Open a new savings account","Should Exist","Not Existed","Failed")
     end
   end 
@@ -434,7 +443,7 @@ class LoanAccountCreateEdit<TestClass
       assert($ie.contains_text($savings_select_mmaccount))
       $logger.log_results("Link Open a new savings account","Should work","Working","passed")
       $ie.button(:value,"Cancel").click
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Link Open a new savings account","Should work","not Working","Failed")
     end
   end
@@ -443,7 +452,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.link(:text,"View Loan account details now").click
       assert($ie.contains_text("Account summary"))and assert($ie.contains_text("Transactions"))
       $logger.log_results("Page entered in to account details page","N/A","N/A","Passed")
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page entered in to account details page","N/A","N/A","Failed")
     end
   end
@@ -462,13 +471,13 @@ class LoanAccountCreateEdit<TestClass
     begin
       $ie.link(:text,"Edit account status").click
       $ie.radio(:name,"newStatusId","2").set
-      $ie.text_field(:name,"notes.comment").set("aaaa")
-      $ie.button(:value,"Preview")
+      $ie.text_field(:name,"notes").set("aaaa")
+      $ie.button(:value,"Preview").click
       $ie.button(:value,"Submit").click
       assert($ie.contains_text("Performance history "))
       view_status_history_pending()
       $logger.log_results("Status changed to Pending","NA","NA","passed") 
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to pending","NA","NA","failed") 
     end
   end
@@ -476,13 +485,13 @@ class LoanAccountCreateEdit<TestClass
     begin
       $ie.link(:text,"Edit account status").click
       $ie.radio(:name,"newStatusId","3").set
-      $ie.text_field(:name,"notes.comment").set("aaaa")
-      $ie.button(:value,"Preview")
+      $ie.text_field(:name,"notes").set("aaaa")
+      $ie.button(:value,"Preview").click
       $ie.button(:value,"Submit").click
       assert($ie.contains_text("Performance history "))
       view_status_history_active()
       $logger.log_results("Status changed to Active","NA","NA","passed") 
-      rescue=>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Active","NA","NA","failed") 
     end
   end
@@ -491,7 +500,8 @@ class LoanAccountCreateEdit<TestClass
     $ie.link(:text,"View status history" ).click
     assert($ie.contains_text("Status"))and assert($ie.contains_text("Application Pending Approval")) and assert($ie.contains_text("Partial Application"))
     $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed")    
-    rescue=>e
+    $ie.button(:value,"Return to account details").click
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
   end
   end
@@ -500,7 +510,8 @@ class LoanAccountCreateEdit<TestClass
     $ie.link(:text,"View status history").click
     assert($ie.contains_text("Status"))and assert($ie.contains_text("Application Pending Approval")) and assert($ie.contains_text("Application Approved"))
     $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed")    
-    rescue=>e
+    $ie.button(:value,"Return to account details").click
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
   end
   end
@@ -510,7 +521,7 @@ class LoanAccountCreateEdit<TestClass
     assert($ie.contains_text("Change Log"))
     $logger.log_results("View Change Log link is working","N/A","N/A","Passed")
     $ie.button(:value,"Return to account details").click    
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("View Change Log link is not working","N/A","N/A","Failed")        
     end
   end
@@ -520,7 +531,7 @@ class LoanAccountCreateEdit<TestClass
     assert($ie.contains_text(" Repayment Schedule as of"))
     $logger.log_results("View repayment schedule link workin","N/A","N/A","Passed")
     $ie.button(:value,"Return to account details").click 
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("View repayment schedule link not workin","N/A","N/A","Failed")    
     end
   end
@@ -530,24 +541,24 @@ class LoanAccountCreateEdit<TestClass
     assert($ie.contains_text("Account statement as of "))
     $logger.log_results("View all account activity link workin","N/A","N/A","Passed")
     $ie.button(:value,"Return to account details").click 
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("View all account activity link not workin","N/A","N/A","Failed")    
     end
   end
   def edit_loan_account_data()
     begin
-    $ie.link(:value,"Edit account information").click 
-    $ie.select_list(:name,"businessActivityId").select_value(233)
-    $ie.select_list(:name,"collateralTypeId").select_value(2)
+    $ie.link(:text,"Edit account information").click 
+    $ie.select_list(:name,"businessActivityId").select_value("233")
+    $ie.select_list(:name,"collateralTypeId").select_value("2")
     $ie.text_field(:name,"collateralNote").set("aaaaa")
-    $ie.select_list(:name,"businessActivityId").select_value(443)
-    $ie.buttton(:value,"Preview").click
-    assert_on_page("Purpose of Loan: 0001-Cow Purchase")
-    assert_on_page("Account Owner: "+@@display_name)
+    $ie.select_list(:name,"businessActivityId").select_value("231")
+    $ie.button(:value,"Preview").click
+    assert_on_page("Purpose of Loan:  0001-Cow Purchase")
+    assert_on_page("Account Owner:  "+@@display_name)
     assert($ie.contains_text($loan_preview_from_view))
     $logger.log_results("Page redirected to preview","N/A","N/A","Passed")
     $ie.button(:value,"Submit").click
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Page redirected to preview","N/A","N/A","Failed")
     end
   end
@@ -566,7 +577,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.link(:text,search_name).click
     assert($ie.contains_text("Performance History"))
       $logger.log_results("Account Details page","Open","opened","passed")
-    rescue=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Account Details page","Open","not opened","failed")
     
   end
@@ -579,7 +590,7 @@ class LoanAccountCreateEdit<TestClass
   assert($ie.contains_text("Preview Loan account information"))
   $logger.log_results("Can able to select purpose of loan","N/A","N/A","Passed")
   $ie.button(:value,"Submit").click
-  rescue=>e
+  rescue Test::Unit::AssertionFailedError=>e
   $logger.log_results("Can able to select purpose of loan","N/A","N/A","Failed")
   end
   end
