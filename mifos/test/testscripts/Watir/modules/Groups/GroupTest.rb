@@ -698,35 +698,32 @@ class GroupCreateEdit < TestClass
     @@button_submit=@@groupprop['button.submit']
     @@performance_history=@@groupprop['Group.performancehistory']
   
-    dbquery("select customer_id,global_cust_num,display_name,status_id from customer where customer_level_id=2 and status_id in (7,8) and branch_id="+@@office_id+"")
-    groupid=dbresult[0]    
-    global_acct_num=dbresult[1]   
-    groupname=dbresult[2]  
-    groupstatus= dbresult[3]  
+     groupsarr= $dbh.real_query("select customer_id,global_cust_num,display_name,status_id from customer where customer_level_id=2 and status_id in (7,8) and branch_id="+@@office_id+" limit 2")
+      dbresult1=groupsarr.fetch_row.to_a
+      row1=groupsarr.num_rows
+      rowc=0
+      $ie.link(:text,"Clients & Accounts").click
+    while (rowc < row1) do
+        global_acct_num=dbresult1[1]
+        groupstatus=dbresult1[3]
+        groupname=dbresult1[2]
+      $ie.link(:text,"Clients & Accounts").click
+      $ie.text_field(:name,"searchNode(searchString)").set(global_acct_num)
+      $ie.button(:value,"Search").click
+      search_name=groupname+": ID "+global_acct_num
+      $ie.link(:text,search_name).click
 
-    $ie.link(:text,"Clients & Accounts").click
-    $ie.text_field(:name,"searchNode(searchString)").set(global_acct_num)
-    $ie.button(:value,"Search").click
-    search_name=groupname+": ID "+global_acct_num
-    $ie.link(:text,search_name).click
-  
-    i=0
-    while (i<2) do
- 
-    if(groupstatus.to_i==7)
-        change_status_pending()
-        change_status_active()
-    elsif(groupstatus.to_i==8)
-      change_status_active()
-    end  
-
-    i+=1
+        if(groupstatus.to_i==7)
+          change_status_pending()
+          change_status_active()
+        elsif(groupstatus.to_i==8)
+          change_status_active()
+        end  
+    dbresult1=groupsarr.fetch_row.to_a
+    rowc+=1
     end
-   
-    
+   end
   end
-  
-end
 
 class GroupTest
 groupobject=GroupCreateEdit.new
@@ -734,7 +731,6 @@ groupobject=GroupCreateEdit.new
   groupobject.group_login
   groupobject.database_connection
   groupobject.properties_load
- # groupobject.Activate_Group
   groupobject.geting_lables_from_proprtis
   groupobject.check_group
   groupobject.check_for_create_new_group_link
@@ -784,5 +780,6 @@ groupobject=GroupCreateEdit.new
     groupobject.edit_center_membership_select_center(groupobject.Edit_gname)
     rowid+=$maxcol
     end
+groupobject.Activate_Group
    groupobject.mifos_logout()
 end
