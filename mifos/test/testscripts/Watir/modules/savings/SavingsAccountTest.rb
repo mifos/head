@@ -25,9 +25,10 @@ class SavingsAccountCreateEdit < TestClass
           @@office_id=dbresult[0]
           display_name=dbresult[1]
       end     
-		dbquery("select display_name,customer_id from customer where customer_level_id="+typeid+" and status_id="+activeid+" and branch_id="+@@office_id)
+		dbquery("select display_name,customer_id,global_cust_num from customer where customer_level_id="+typeid+" and status_id="+activeid+" and branch_id="+@@office_id)
 		@@client_name=dbresult[0]
 		@@cust_id=dbresult[1]
+		@@global_cust_num=dbresult[2]
 		dbquery("select prd_offering_id,prd_offering_name from prd_offering where prd_applicable_master_id="+typeid+" and prd_category_id=2 and offering_status_id=2")
 		@@prod_name=dbresult[1]
 		@@prod_id=dbresult[0]
@@ -102,14 +103,14 @@ class SavingsAccountCreateEdit < TestClass
       @@savingsaccount_label=@@menuprop['label.create']+" "+@@lookup_savings+" "+@@savingsprop['Savings.account']
       @@savingsaccount_link=@@menuprop['label.create']+" "+@@lookup_savings+" "+@@menuprop['label.account']
       @@mandatory_without_client=@@accountprop['errors.nosearchstring']
-      @@savings_select_client=@@savingsaccount_link+" - "+@@savingsprop['Savings.Select']+" "+@@lookup_name_client
+      @@savings_select_client=@@savingsaccount_link+" - "+@@accountprop['accounts.SelectACustomer']
       @@button_search=@@accountprop['accounts.search']
       @@savings_select_mmaccount=@@savingsaccount_label+" - "+@@savingsprop['Savings.Enter']+" "+@@lookup_savings+" "+@@savingsprop['Savings.accountInformation']
       @@mandatory_without_product=string_replace_message(@@savingsprop['errors.mandatoryselect'],"{0}",@@savingsprop['Savings.productInstance'])
       @@button_continue=@@accountprop['accounts.continue']
       @@button_preview=@@accountprop['accounts.preview']
       @@button_submit=@@accountprop['accounts.submit']
-      @@edit_savings_button=@@savingsprop['Savings.Edit']+@@lookup_savings+@@savingsprop['Savings.accountInformation']
+      @@edit_savings_button=@@savingsprop['Savings.Edit']+" "+@@lookup_savings+" "+@@savingsprop['Savings.accountInformation']
       @@savings_success=@@savingsprop['Savings.successfullyCreated']+" "+@@lookup_savings
       @@edit_account_status=@@accountprop['loanedit_acc_status']
       @@view_savings_details_now=@@savingsprop['Savings.View']+" "+@@lookup_savings+" "+@@savingsprop['Savings.account']+" "+@@savingsprop['Savings.detailsNow']
@@ -122,6 +123,7 @@ class SavingsAccountCreateEdit < TestClass
       @@close_account=@@savingsprop['Savings.closeAccount']
       @@view_deposit_dew_details=@@savingsprop['Savings.viewDepositDueDetails']
       @@deposit_dew_details=@@savingsprop['Savings.depositduedetails']
+      @@savings_account_close_msg=@@savingsprop['Savings.reviewDetails']+" "+@@savingsprop['Savings.clickSubmitIfSatisfied']+" "+@@savingsprop['Savings.clickCancelToReturn']+" "+@@savingsprop['Savings.detailsWithOutClosing']
     end
 	#checking for Clients & Accounts link whether it exists or not
 	def check_savings_account_creation_link_exist()
@@ -129,7 +131,7 @@ class SavingsAccountCreateEdit < TestClass
 		$ie.link(:text,"Clients & Accounts").click
 		assert($ie.contains_text(@@savingsaccount_link))
 		$logger.log_results("Link Check","Create Margin Money Account","Existed","passed")
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Link Check","Create Margin Money Account","Not existed","failed")
 		end
 	end
@@ -139,7 +141,7 @@ class SavingsAccountCreateEdit < TestClass
 		$ie.link(:text,@@savingsaccount_link).click
 		assert($ie.contains_text(@@savings_select_client))
 		$logger.log_results("Create Margin Money Account - Select client","should exist","existed","passed")
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Create Margin Money Account - Select client","should exist","Not existed","failed")
 		end
 	end	
@@ -149,7 +151,7 @@ class SavingsAccountCreateEdit < TestClass
 		$ie.button(:value,@@button_search).click
 		assert($ie.contains_text(@@mandatory_without_client))
 		$logger.log_results("Mandatory Check when no client selected","N/A","N/A","Passed")
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Mandatory Check when no client selected","N/A","N/A","Failed")
 		end
 	end
@@ -159,10 +161,11 @@ class SavingsAccountCreateEdit < TestClass
 		data_connection(typeid,activeid)
 		$ie.text_field(:name,"searchNode(searchString)").set(@@client_name)
 		$ie.button(:value,@@button_search).click
-		$ie.goto($test_site+"/savingsAction.do?method=getPrdOfferings&customerId="+@@cust_id)
+		#$ie.goto($test_site+"/savingsAction.do?method=getPrdOfferings&customerId="+@@cust_id)
+		$ie.link(:text,@@client_name+":ID"+@@global_cust_num).click
 		assert($ie.contains_text(@@savings_select_mmaccount))
 		$logger.log_results("Create Margin Money Account - Enter Margin Money account information","should exist","existed","passed")
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Create Margin Money Account - Enter Margin Money account information","should exist","Not existed","failed")
 		end
 	end
@@ -172,7 +175,7 @@ class SavingsAccountCreateEdit < TestClass
 		$ie.button(:value,@@button_continue).click
 		assert($ie.contains_text(@@mandatory_without_product))
 		$logger.log_results("Mandatory Check when no product selected","N/A","N/A","Passed")
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Mandatory Check when no product selected","N/A","N/A","Failed")
 		end
 	end
@@ -183,7 +186,7 @@ class SavingsAccountCreateEdit < TestClass
 		$ie.button(:value,@@button_continue).click
 		assert($ie.contains_text(@@savings_select_mmaccount))
 		$logger.log_results("Page Should redirect to  Enter Margin Money account information","N/A","redirected","passed")
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Page Should redirect to  Enter Margin Money account information","N/A","not redirected","Failed")
 		end
 	end
@@ -195,7 +198,7 @@ class SavingsAccountCreateEdit < TestClass
 	   $ie.button(:value,@@button_preview).click
 	   assert($ie.contains_text(@@mandatory_without_product))
 	   $logger.log_results("Mandatory check with out Margin Money instance","should display error","displaying","Passed")
-	   rescue=>e
+	   rescue  Test::Unit::AssertionFailedError=>e
 	   $logger.log_results("Mandatory check with out Margin Money instance","should display error","Not displaying","Failed")
 	 end
 	end
@@ -206,22 +209,22 @@ class SavingsAccountCreateEdit < TestClass
 	   $ie.select_list(:name,"selectedPrdOfferingId").select_value(@@prod_id)
 	   $ie.text_field(:name,"customField[0].fieldValue").set(validationammount)
 	   $ie.button(:value,@@button_preview).click
-	   assert($ie.conatins_text(validationammount))
-	   $logger.log_results("Validation Cheking","Should done properly","Checking","Failed")
-	   rescue=>e
-	   $logger.log_results("Validation Cheking","Should done properly","Checking","Passed")
+	   assert($ie.contains_text(validationammount))
+	   $logger.log_results("Validation Cheking","Should done properly","Checking","passed")
+	   rescue  Test::Unit::AssertionFailedError=>e
+	   $logger.log_results("Validation Cheking","Should done properly","Checking","failed")
 	 end
 	end
 	#checking the ammount in the preview page 
 	#whether it is showing the ammount which you enter in the previous page
 	def click_preview_from_savings_creation_page(ammount)
 		begin
-		$ie.button(:value,@@edit_savings_button).click
+		$ie.button(:name,"editButton").click
 		$ie.text_field(:name,"recommendedAmount").set(ammount)
 		$ie.button(:value,@@button_preview).click
 		assert($ie.contains_text(@@prod_name))
 		$logger.log_results(@@prod_name,"text","exists","passed")
-		rescue => e
+		rescue Test::Unit::AssertionFailedError=>e
 		$logger.log_results(@@prod_name,"text","exists","failed")
 		end
 	end
@@ -229,11 +232,11 @@ class SavingsAccountCreateEdit < TestClass
 	def edit_from_preview_page(cammount)
 		begin
 		@@c_ammount=cammount
-		$ie.button(:value,@@edit_savings_button).click
+		$ie.button(:name,"editButton").click
 		$ie.text_field(:name,"recommendedAmount").set(cammount)
 		$ie.button(:value,@@button_preview).click
 		$logger.log_results(cammount,"data","exists","passed")
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results(cammount,"data","exists","passed")
 		end
 	end
@@ -243,7 +246,7 @@ class SavingsAccountCreateEdit < TestClass
 		$ie.button(:value,status).click
 		assert($ie.contains_text(@@savings_success))
 		$logger.log_results("Margin Money Account","Creation","successfull","passed")
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Margin Money Account","Creation","successfull","failed")
 		end
 	end
@@ -269,7 +272,7 @@ class SavingsAccountCreateEdit < TestClass
 		@@status_id=dbresult[1]
 		assert($ie.contains_text(@@account_id))
 		$logger.log_results("View Margin Money Account Details Now","Link","working","passed")
-		rescue=>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("View Margin Money Account Details Now","Link","working","failed")
 		end
 	end
@@ -298,12 +301,12 @@ class SavingsAccountCreateEdit < TestClass
 		begin
 		$ie.link(:text,@@edit_account_status).click
 		$ie.radio(:name,"newStatusId","18").set
-		$ie.text_field(:name,"accountNotes.comment").set("aaaaa")
+		$ie.text_field(:name,"notes").set("aaaaa")
 		$ie.button(:value,@@button_preview).click
 		assert($ie.contains_text(@@lookup_inactive))
 		$logger.log_results("Status Change","preview","page loaded","passed")
 		$ie.button(:value,@@button_submit).click
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Status Change","preview","page loaded","failed")
 		end
 	end
@@ -312,7 +315,7 @@ class SavingsAccountCreateEdit < TestClass
 		begin
 		$ie.link(:text,@@edit_account_status).click
 		$ie.radio(:name,"newStatusId","16").set
-		$ie.text_field(:name,"accountNotes.comment").set("aaaaa")
+		$ie.text_field(:name,"notes").set("aaaaa")
 		$ie.button(:value,@@button_preview).click
 		assert($ie.contains_text(@@lookup_active))
 		$logger.log_results("Status Change","preview","page loaded","passed")
@@ -321,7 +324,7 @@ class SavingsAccountCreateEdit < TestClass
 		check_view_deposit_due_details_link_functionality
 		check_view_status_history_link_functionality_active
 		check_close_account_link_exist
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Status Change","preview","page loaded","failed")
 		end
 	end
@@ -330,13 +333,13 @@ class SavingsAccountCreateEdit < TestClass
 	   begin
 	     $ie.link(:text,@@edit_account_status).click
 		$ie.radio(:name,"newStatusId","14").set
-		$ie.text_field(:name,"accountNotes.comment").set("aaaaa")
+		$ie.text_field(:name,"notes").set("aaaaa")
 		$ie.button(:value,@@button_preview).click
 		assert($ie.contains_text(@@status_pending_name))
 		$logger.log_results("Status Change","preview","page loaded","passed")
 		$ie.button(:value,@@button_submit).click
 		check_view_status_history_link_functionality_pending
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("Status Change","preview","page loaded","failed")
 	   end
 	end
@@ -347,7 +350,7 @@ class SavingsAccountCreateEdit < TestClass
 		assert($ie.contains_text(@@account_statement_as_of))
 		$logger.log_results("View Account Activity","page","loaded","passed")
 		$ie.button(:value,@@button_return).click
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("View Account Activity","page","loaded","failed")
 		end
 	end
@@ -359,7 +362,7 @@ class SavingsAccountCreateEdit < TestClass
 		assert($ie.contains_text(check_text))
 		$logger.log_results("View transaction history","page","loaded","passed")
 		$ie.button(:value,@@button_return).click
-		rescue =>e
+		rescue  Test::Unit::AssertionFailedError=>e
 		$logger.log_results("View transaction history","page","loaded","failed")
 		end
 	end
@@ -372,7 +375,7 @@ class SavingsAccountCreateEdit < TestClass
         assert($ie.contains_text(nammount))
         $logger.log_results("Edit","ammountfrom","details page","passed")
         $ie.button(:value,@@button_submit).click
-        rescue =>e
+        rescue  Test::Unit::AssertionFailedError=>e
         $logger.log_results("Edit","ammountfrom","details page","passed")
 	 end
 	end
@@ -381,7 +384,7 @@ class SavingsAccountCreateEdit < TestClass
 	  begin
 	   assert($ie.contains_text(@@view_status_history))
 	   $logger.log_results("View status history","Link Should Exist","Existed","passed")
-	   rescue=>e
+	   rescue  Test::Unit::AssertionFailedError=>e
 	   $logger.log_results("View status history","Link Should Exist","Not Existed","Failed")
 	  end
 	end
@@ -392,7 +395,7 @@ class SavingsAccountCreateEdit < TestClass
 	   assert($ie.contains_text(@@status_partial_name))and assert($ie.cotains_text(@@status_pending_name))
 	   $logger.log_results("View Status History is displaying proper data","N/A","N/A","Passed")    
 	   $ie.button(:value,@@button_return).click
-	   rescue=>e
+	   rescue  Test::Unit::AssertionFailedError=>e
 	   $logger.log_results("View Status History  is displaying proper data","N/A","N/A","Failed")    
 	   $ie.button(:value,@@button_return).click
 	  end 
@@ -404,7 +407,7 @@ class SavingsAccountCreateEdit < TestClass
 	   assert($ie.contains_text(@@status_pending_name))and assert($ie.cotains_text(@@lookup_active))
 	   $logger.log_results("View Status History  is displaying proper data","N/A","N/A","Passed")    
 	   $ie.button(:value,@@button_return).click
-	   rescue=>e
+	   rescue  Test::Unit::AssertionFailedError=>e
 	   $logger.log_results("View Status History  is displaying proper data","N/A","N/A","Failed")    
 	   $ie.button(:value,@@button_return).click
 	  end 
@@ -413,7 +416,7 @@ class SavingsAccountCreateEdit < TestClass
 	def check_close_account_link_exist
 	   assert($ie.contains_text(@@close_account))
 	   check_close_account_link_functionality
-	   rescue =>e
+	   rescue  Test::Unit::AssertionFailedError=>e
 	   $logger.log_results("Close account","link","not existed","Failed")
 	end
 	# changing status to close
@@ -421,13 +424,13 @@ class SavingsAccountCreateEdit < TestClass
 	 begin
 	  $ie.link(:text,@@close_account).click
       $ie.select_list(:name,"paymentTypeId").select_value("1")
-      #$ie.select_list(:name,"customerId").select_value(member)
+      $ie.select_list(:name,"customerId").select("Non-specified")
       $ie.text_field(:name,"notes").set("aaaaa")
       $ie.button(@@button_preview).click
-      assert($ie.contains_text("Review"))
+      assert($ie.contains_text(@@savings_account_close_msg))
       $logger.log_results("Account","close","status","Passed")
       $ie.button(:value,@@button_submit).click
-      rescue =>e
+      rescue  Test::Unit::AssertionFailedError=>e
       $logger.log_results("Account","close","status","Failed")
      end
 	end
@@ -436,7 +439,7 @@ class SavingsAccountCreateEdit < TestClass
 	 begin
 	   assert($ie.contains_text(@@view_deposit_dew_details))
 	   $logger.log_results(@@view_deposit_dew_details,"should exist","existed","Passed")
-	   rescue=>e
+	   rescue  Test::Unit::AssertionFailedError=>e
 	   $logger.log_results(@@view_deposit_dew_details,"should exist","not existed","Failed")
 	 end
 	end   
@@ -447,7 +450,7 @@ class SavingsAccountCreateEdit < TestClass
        assert($ie.contains_text(@@deposit_dew_details))
 	   $logger.log_results(@@view_deposit_dew_details,"should work","Working","Passed")
 	   $ie.button(:value,@@button_return).click
-       rescue=>e
+       rescue  Test::Unit::AssertionFailedError=>e
        $logger.log_results(@@view_deposit_dew_details,"should work","not Working","Failed")	   
        $ie.button(:value,@@button_return).click
 	 end
@@ -457,7 +460,7 @@ end
 
 class SavingsAccountTest 
 	savingsobj=SavingsAccountCreateEdit.new
-	filename=File.join(File.dirname($PROGRAM_NAME),"data/testdata.xls")
+	filename=File.expand_path( File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
 	savingsobj.open(filename,1)
 	rowid=-1
 	colid=1
