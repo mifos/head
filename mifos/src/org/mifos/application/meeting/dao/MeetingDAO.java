@@ -48,7 +48,6 @@ import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.center.util.valueobjects.Center;
 import org.mifos.application.customer.client.util.valueobjects.Client;
-import org.mifos.application.customer.dao.CustomerUtilDAO;
 import org.mifos.application.customer.group.util.valueobjects.Group;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
@@ -494,12 +493,12 @@ public class MeetingDAO extends DAO {
 			meetingLogger.info("Creating the  meeting at location"+meeting.getMeetingPlace());
 			session.save(meeting);
 			
-			List<Customer> childList = new CustomerUtilDAO().getChildListForParent(customer.getSearchId(),customer.getOffice().getOfficeId(),session);
+			/*List<Customer> childList = new CustomerUtilDAO().getChildListForParent(customer.getSearchId(),customer.getOffice().getOfficeId(),session);
 			createMeetingForCustomer(customer, meeting, session);
 			
 			for(Customer cust:childList){
 				createMeetingForCustomer(cust,meeting,session);
-			}
+			}*/
 			transaction.commit();
 		} catch (HibernateProcessException e) {
 			transaction.rollback();

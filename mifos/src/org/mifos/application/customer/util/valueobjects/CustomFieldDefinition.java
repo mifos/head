@@ -43,7 +43,6 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
-import org.mifos.application.customer.dao.CustomerUtilDAO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.util.valueobjects.LookUpEntity;
 import org.mifos.framework.exceptions.SystemException;
@@ -226,14 +225,7 @@ public class CustomFieldDefinition extends ValueObject{
 	}
 	
 	public static String convertDateToDbformat(Short fieldId , String fieldValue , Locale locale)throws SystemException {
-		if(CustomerUtilDAO.getFieldType(fieldId.shortValue()) == CustomerConstants.DATE_FIELD_TYPE 
-				&&! ValidateMethods.isNullOrBlank(fieldValue)){
-				SimpleDateFormat sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT, locale);
-				String userfmt = DateHelper.convertToCurrentDateFormat(((SimpleDateFormat) sdf).toPattern());
-				fieldValue = DateHelper.convertUserToDbFmt(fieldValue , userfmt);
-				
-		}
-		return fieldValue;
+		return null;
 	}
 	public boolean isMandatory(){
 		return mandatoryFlag.shortValue()==Constants.YES;

@@ -43,7 +43,6 @@ import java.util.List;
 
 import org.mifos.application.configuration.util.helpers.PathConstants;
 import org.mifos.application.customer.dao.SearchDAO;
-import org.mifos.application.customer.exceptions.AssociatedObjectStaleException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.master.util.valueobjects.LookUpMaster;
@@ -374,7 +373,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 			if(!getPersonnelDAO().isBranchActive(((Personnel)context.getValueObject()).getOffice().getOfficeId())){
 				Object values[]=new Object[1];
 				values[0]=personnel.getOffice().getOfficeId();
-				throw new AssociatedObjectStaleException(PersonnelConstants.INACTIVE_BRANCH,values);
+				throw new ApplicationException(PersonnelConstants.INACTIVE_BRANCH,values);
 			}
 			//fill data for create in valueobject
 			fillDataForCreate(context);
@@ -873,7 +872,7 @@ public class PersonnelBusinessProcessor extends MifosBusinessProcessor {
 		if(!isBranchActive(oldPersonnel.getPersonnelStatus(),personnel.getPersonnelStatus(),personnel.getOffice().getOfficeId())){
 			Object values[]=new Object[1];
 			values[0]=personnel.getOffice().getOfficeId();
-			throw new AssociatedObjectStaleException(PersonnelConstants.INACTIVE_BRANCH,values);
+			throw new ApplicationException(PersonnelConstants.INACTIVE_BRANCH,values);
 		}
 				
 	}

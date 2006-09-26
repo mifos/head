@@ -60,8 +60,6 @@ import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.center.util.valueobjects.Center;
 import org.mifos.application.customer.client.util.valueobjects.Client;
-import org.mifos.application.customer.dao.CustomerNoteDAO;
-import org.mifos.application.customer.dao.CustomerUtilDAO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.group.util.valueobjects.Group;
@@ -70,7 +68,6 @@ import org.mifos.application.customer.util.valueobjects.CustomerAddressDetail;
 import org.mifos.application.customer.util.valueobjects.CustomerHierarchy;
 import org.mifos.application.customer.util.valueobjects.CustomerMeeting;
 import org.mifos.application.customer.util.valueobjects.CustomerMovement;
-import org.mifos.application.customer.util.valueobjects.CustomerNote;
 import org.mifos.application.customer.util.valueobjects.CustomerPosition;
 import org.mifos.application.customer.util.valueobjects.CustomerPositionDisplay;
 import org.mifos.application.fees.util.valueobjects.FeeFrequency;
@@ -378,18 +375,7 @@ public class CustomerHelper {
 
 	
 	
-	/**
-	 * This method returns List given number of notes for a given customer
-	 * @param count number of notes to be returned
-	 * @return customerId for which notes has to be retrieved
-	 * @throws ApplicationException
-	 * @throws SystemException
-	 */
-	public List<CustomerNote> getLatestNotes(int count, Integer customerId)throws ApplicationException,SystemException{
-		CustomerNoteDAO notesDAO = new CustomerNoteDAO();
-		return notesDAO.getLatestNotesByCount(count, customerId);
-	}
-
+	
 	/**
 	 * This method is used to retrieve MasterDataRetriver instance
 	 * @return instance of MasterDataRetriever
@@ -517,19 +503,7 @@ public class CustomerHelper {
 		int age = DateHelper.DateDiffInYears(date);
 		return age;
 	}
-	/**
-	 * Generates the ID  for the client using ID Generator.
-	 * @return
-	 * @throws SystemException
-	 * @throws ApplicationException
-	 */
-	public String generateSystemId(Short officeId , String officeGlobalNum)throws SystemException,ApplicationException{
-		int maxCustomerId = 0;
-		maxCustomerId = new CustomerUtilDAO().getMaxCustomerId(officeId);
-		String systemId = IdGenerator.generateSystemId(officeGlobalNum , maxCustomerId);
-		return systemId;
-	}
-
+	
 	/**
 	 * This is the helper method to check for extra date validations needed at the time of create preview
 	 * @param personnelStatus

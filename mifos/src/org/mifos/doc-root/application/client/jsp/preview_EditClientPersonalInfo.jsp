@@ -235,7 +235,7 @@
 						</tr>
 						<tr id="Client.Handicapped">
 							<td class="fontnormalbold">
-								<mifos:mifoslabel name="${ConfigurationConstants.HANDICAPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
+								<mifos:mifoslabel name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
 								<span class="fontnormal">
 									<c:forEach var="handicapped" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'handicappedEntity')}">
 										<c:if test = "${handicapped.id == sessionScope.clientCustActionForm.clientDetailView.handicapped}">

@@ -39,7 +39,6 @@
 package org.mifos.application.fund.business.handlers;
 
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.dao.CustomerUtilDAO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.fund.dao.FundDAO;
 import org.mifos.application.fund.exception.FundException;
@@ -98,7 +97,6 @@ public class FundBusinessProcessor extends MifosBusinessProcessor {
 	 */
 	public void createInitial(Context context)throws SystemException,ApplicationException{
 		FundDAO fundDAO = null;
-		CustomerUtilDAO customerUtilDAO = new CustomerUtilDAO(); 
 		boolean fundNameExists = false;
 		
 		try{
@@ -134,7 +132,6 @@ public class FundBusinessProcessor extends MifosBusinessProcessor {
 	 */
 	public void updateInitial(Context context)throws SystemException,ApplicationException{
 		FundDAO fundDAO = null;
-		CustomerUtilDAO customerUtilDAO = new CustomerUtilDAO(); 
 		boolean fundNameExists = false;
 		
 		try{
