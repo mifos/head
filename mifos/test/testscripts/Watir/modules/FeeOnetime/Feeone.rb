@@ -18,20 +18,21 @@ class FeeOnetime < TestClass
 		@@fee_type=feetype
 		dbquery("select personnel_id from personnel where login_name="+"'"+name_login+"'")
 		@@personnel_id=dbresult[0]
-		dbquery("select account_id,global_account_num from account where account_type_id=1 and account_state_id < 5 and personnel_id="+@@personnel_id)
+		#dbquery("select account_id,global_account_num from account where account_type_id=1 and account_state_id < 5 and personnel_id="+@@personnel_id)
+         dbquery("select account_id,global_account_num from account where account_type_id=1 and account_state_id < 5")
 		@@account_num=dbresult[0]
 		@@global_account_num=dbresult[1]
 		dbquery("SELECT fees.fee_name,fees.rate_or_amount,fees.fee_id FROM fees,fee_frequency where fee_frequency.fee_id=fees.fee_id and fee_frequency.fee_frequencytype_id=2  and fee_frequency.frequency_payment_id ="+@@fee_type+" and fees.status=1 and fees.category_id=5")
 		@@fee_name=dbresult[0]
 		@@fee_ammount=dbresult[1]
 		@@fee_id=dbresult[2]
-		dbquery("SELECT A1.PRINCIPAL, A1.INTEREST, A1.PENALTY, A1.MISC_FEES, (SELECT SUM(A3.AMOUNT) FROM loanaccount_fees_action_detail A3, ACCOUNT_FEES A2 WHERE (A2.ACCOUNT_FEE_ID = A3.ACCOUNT_FEE_ID) AND A2.ACCOUNT_ID ="+@@account_num+" AND INSTALLMENT_ID = 1)'FEES' FROM loan_schedule A1 WHERE (A1.INSTALLMENT_ID = 1) AND (A1.ACCOUNT_ID ="+@@account_num+")")
+		dbquery("SELECT A1.PRINCIPAL, A1.INTEREST, A1.PENALTY, A1.MISC_FEES, (SELECT SUM(A3.AMOUNT) FROM loan_fee_schedule A3, ACCOUNT_FEES A2 WHERE (A2.ACCOUNT_FEE_ID = A3.ACCOUNT_FEE_ID) AND A2.ACCOUNT_ID ="+@@account_num+" AND INSTALLMENT_ID = 1)'FEES' FROM loan_schedule A1 WHERE (A1.INSTALLMENT_ID = 1) AND (A1.ACCOUNT_ID ="+@@account_num+")")
 		@@principal=dbresult[0]
 		@@interest=dbresult[1]
 		@@penalty=dbresult[2]
 		@@misc_fee=dbresult[3]
 		@@fee_added=dbresult[4]
-		@@total_ammount=Float(@@principal) +Float(@@interest) +Float(@@penalty) + Float(@@misc_fee) +Float(@@fee_added)
+		@@total_ammount=Float(@@principal.to_f) +Float(@@interest.to_f) +Float(@@penalty.to_f) + Float(@@misc_fee.to_f) +Float(@@fee_added.to_f)
   end 
   
   def read_fee_values(rowid,sheetid)
@@ -54,7 +55,7 @@ class FeeOnetime < TestClass
       $ie.button(:value,"Search").click
       assert($ie.contains_text("Please specify the Name, System ID or Account Number to be searched for in the application"))
       $logger.log_results("Mandatory Error","Text","Display","Passed")
-      rescue =>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Mandatory Error","Text","Display","Failed")       
     end
   end
@@ -62,12 +63,12 @@ class FeeOnetime < TestClass
   def search_account()
     begin
       
-      puts "Global"+ @@global_account_num
+      #puts "Global"+ @@global_account_num
       $ie.text_field(:name,"searchNode(searchString)").set(@@global_account_num)
       $ie.button(:value,"Search").click
       assert($ie.contains_text(@@global_account_num))
       $logger.log_results("Searching","Account","Display","Passed")
-      rescue =>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Searching","Account","Display","Failed")
     end
   end
@@ -78,7 +79,7 @@ class FeeOnetime < TestClass
     $ie.link(:text,@@Account_Num).click
     assert($ie.contains_text(@@global_account_num))
     $logger.log_results("Loan Account page","Open","opening","Passed")
-    rescue =>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Loan Account page","Open","opening","Failed")
     end
   end
@@ -87,7 +88,7 @@ class FeeOnetime < TestClass
     begin
     assert($ie.contains_text("Apply charges"))
     $logger.log_results("Apply charges Link","Enabled","Enabled","Passed")
-    rescue =>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Apply charges Link","Enabled","Enabled","Failed")
     end
   end
@@ -98,7 +99,7 @@ class FeeOnetime < TestClass
     check_text=@@global_account_num+"  -  Apply charges"
     assert($ie.contains_text(check_text))
     $logger.log_results("Text",check_text,check_text,"Passed")
-    rescue =>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Text",check_text,"Not Matching","Failed")
     end
   end
@@ -108,7 +109,7 @@ class FeeOnetime < TestClass
       $ie.button("Submit").click
       assert($ie.contains_text("Please enter the value for charge type"))
       $logger.log_results("Mandatory Check","Check","Checked","Passed")
-      rescue =>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Mandatory Check","Check","Checked","Failed")
     end
   end
@@ -118,7 +119,7 @@ class FeeOnetime < TestClass
       $ie.button("Cancel").click
       assert($ie.contains_text("Performance history"))
       $logger.log_results("Cancel Button","Details page","Details page","Passed")
-      rescue =>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Cancel Button","Details page","Details page","Failed")
     end
   end
@@ -130,13 +131,13 @@ class FeeOnetime < TestClass
       $ie.button("Submit").click
       assert($ie.contains_text("Performance history"))
       $logger.log_results("Fee","add","added","Passed")
-      rescue =>e
+      rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Fee","add","added","Failed")
     end
   end
   # getting data from database
   def get_data()
-    dbquery("SELECT A1.PRINCIPAL, A1.INTEREST, A1.PENALTY, A1.MISC_FEES, (SELECT SUM(A3.AMOUNT) FROM ACCOUNT_FEES_ACTION_DETAIL A3, ACCOUNT_FEES A2 WHERE (A2.ACCOUNT_FEE_ID = A3.ACCOUNT_FEE_ID) AND A2.ACCOUNT_ID ="+@@account_num+" AND INSTALLMENT_ID = 1)'FEES' FROM ACCOUNT_ACTIONS_DATE A1 WHERE (A1.INSTALLMENT_ID = 1) AND (A1.ACCOUNT_ID ="+@@account_num+")")
+    dbquery("SELECT A1.PRINCIPAL, A1.INTEREST, A1.PENALTY, A1.MISC_FEES, (SELECT SUM(A3.AMOUNT) FROM loan_fee_schedule A3, ACCOUNT_FEES A2 WHERE (A2.ACCOUNT_FEE_ID = A3.ACCOUNT_FEE_ID) AND A2.ACCOUNT_ID ="+@@account_num+" AND INSTALLMENT_ID = 1)'FEES' FROM loan_schedule A1 WHERE (A1.INSTALLMENT_ID = 1) AND (A1.ACCOUNT_ID ="+@@account_num+")")
     n_principal=dbresult[0]
 	n_interest=dbresult[1]
 	n_penalty=dbresult[2]
@@ -177,7 +178,7 @@ class Feeone
   feeobj=FeeOnetime.new
   feeobj.fee_login
   feeobj.man_search_account
-  filename=File.join(File.dirname($PROGRAM_NAME),"data/testdata.xls")
+  filename=File.expand_path(File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
   feeobj.open(filename,1)
   rowid=-1
   while(rowid<$maxrow*$maxcol-1)
@@ -191,6 +192,8 @@ class Feeone
     feeobj.click_cancel
     feeobj.add_fee
     feeobj.db_check
+    rowid+=$maxcol
   end
-  $ie.link(:text,"Logout").click
+ # $ie.link(:text,"Logout").click
+   feeobj.mifos_logout()
 end
