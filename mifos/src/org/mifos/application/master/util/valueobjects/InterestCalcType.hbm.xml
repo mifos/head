@@ -14,5 +14,4 @@
  
         <property name="lookUpId" column="INTEREST_CALCULATION_LOOKUP_ID"  />
     </class>
-        <query name="product.getintcalctypes"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(ict.interestCalculationTypeID,lookupvalue.lookUpValue) from org.mifos.application.master.util.valueobjects.InterestCalcType ict,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where ict.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>
 </hibernate-mapping>

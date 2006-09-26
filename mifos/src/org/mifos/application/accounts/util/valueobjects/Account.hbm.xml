@@ -72,8 +72,6 @@
 			 <column name="LOAN_AMOUNT" />
 			</property>
 			
-			<many-to-one name="loanOffering" column="PRD_OFFERING_ID" class="org.mifos.application.productdefinition.util.valueobjects.LoanOffering" unique="true" lazy="true" cascade="none" insert="true" update="false"/>
-			
 			<one-to-one name="loanSummary" class="org.mifos.application.accounts.loan.util.valueobjects.LoanSummary" cascade="all" lazy="true"/>
 			
 			<set name="loanPenaltySet"  cascade="all" inverse="true" table="LOAN_PENALTY">
@@ -99,42 +97,10 @@
 			</set>
 		</joined-subclass>
     </class>
-    <!-- This query returns the applicable prd offerings for a customer id
-         the logic is : - if the customer does not have a meeting return all prd offerings valid for that customer level
-         else get only the applicable prd offerings where the recurrence id of the customer matches with that of the prd offering.-->
-    <query name="accounts.applicableproductofferings">								  
-		<![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.PrdOfferingMaster(prdOffering.prdOfferingId,prdOffering.prdOfferingName,prdOffering.globalPrdOfferingNum,prdOffering.prdOfferingMeeting.meeting.MeetingDetails.recurAfter) 
-						from org.mifos.application.productdefinition.util.valueobjects.PrdOffering prdOffering,
-						Customer customer left join fetch customer.customerMeeting as customerMeeting 
-						left join fetch customerMeeting.meeting as meeting
-						left join fetch meeting.MeetingDetails as meetingDetails
-						left join meetingDetails.recurrenceType as recurrenceType
-						where prdOffering.prdType.productTypeID = :prdTypeID
-						and prdOffering.prdStatus = :prdStatus
-						and customer.customerId = :customerId
-						and (prdOffering.prdApplicableMaster.prdApplicableMasterId = :prdApplicableMaster1	
-							or	prdOffering.prdApplicableMaster.prdApplicableMasterId = :prdApplicableMaster2	)
-						and (prdOffering.prdOfferingMeeting.meeting.MeetingDetails.recurrenceType.recurrenceId = recurrenceType.recurrenceId or customerMeeting.customer is null)				
-						order by prdOffering.prdOfferingName
-		]]>
-	</query>
-	
-	
+    	
 	<!-- The following query is to  obtain the max account id in the system-->
 	<query name="accounts.maxaccountid">
 		<![CDATA[select max(account.accountId)	from Account account 	]]>
-	</query>
-	
-	<!--Get the fees applicable to loan products-->
-	<query name="accounts.loanFees">
-		<![CDATA[select new org.mifos.application.fees.util.valueobjects.FeeMaster(fees.feeId,fees.feeName,fees.rateOrAmount,fees.globalFeeNum,fees.versionNo,fees.feeFrequency.feeFrequencyTypeId) 
-					from org.mifos.application.fees.util.valueobjects.Fees as fees 
-					where fees.feeId not in 
-						(select prdOfferingFees.fees.feeId 
-							from org.mifos.application.productdefinition.util.valueobjects.PrdOfferingFees prdOfferingFees 
-							where prdOfferingFees.loanOffering.prdOfferingId = :prdOfferingId)
-					and fees.categoryId = :categoryId
-					and fees.status	= 1]]>
 	</query>
 	
 	<!--Finds by global account num-->

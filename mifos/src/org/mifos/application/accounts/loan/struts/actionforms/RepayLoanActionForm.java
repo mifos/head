@@ -3,20 +3,12 @@
  */
 package org.mifos.application.accounts.loan.struts.actionforms;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.productdefinition.util.valueobjects.PaymentType;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 
 public class RepayLoanActionForm extends ValidatorActionForm {

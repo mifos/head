@@ -62,7 +62,6 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.util.valueobjects.AccountState;
 import org.mifos.application.master.util.valueobjects.FlagMaster;
 import org.mifos.application.master.util.valueobjects.StatusMaster;
-import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
 import org.mifos.framework.dao.DAO;
 import org.mifos.framework.dao.helpers.MasterDataRetriever;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -431,11 +430,11 @@ public class EditLoanStatusDAO extends DAO{
 		   	try{
 		   		session = HibernateUtil.getSession();
 		   		Loan loan=(Loan)session.get(Loan.class,accountId);
-		   		LoanOffering loanOffering=loan.getLoanOffering();
+		   		/*LoanOffering loanOffering=loan.getLoanOffering();
 		   		if(loan.getLoanAmount().getAmountDoubleValue()<loanOffering.getMinLoanAmount().getAmountDoubleValue() || loan.getLoanAmount().getAmountDoubleValue()>loanOffering.getMaxLoanAmount().getAmountDoubleValue()
 		   				|| (double)loan.getInterestRateAmount() < (double)loanOffering.getMinInterestRate() || (double)loan.getInterestRateAmount() > (double)loanOffering.getMaxInterestRate()
 		   				|| (short)loan.getNoOfInstallments()<(short)loanOffering.getMinNoInstallments() || (short)loan.getNoOfInstallments()>(short)loanOffering.getMaxNoInstallments())
-		   			return true;
+		   			return true;*/
 		   		}finally{
 		   		HibernateUtil.closeSession(session);
 		   	}

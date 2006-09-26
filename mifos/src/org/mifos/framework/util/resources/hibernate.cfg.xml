@@ -24,13 +24,7 @@
 	<mapping resource="org/mifos/application/master/util/valueobjects/SavingsType.hbm.xml" />
 	<mapping resource="org/mifos/application/master/util/valueobjects/RecommendedAmntUnit.hbm.xml" />
 	<mapping resource="org/mifos/application/master/util/valueobjects/InterestCalcType.hbm.xml" />
-	<mapping resource="org/mifos/application/master/util/valueobjects/YesNoMaster.hbm.xml" />
 	<mapping resource="org/mifos/application/master/util/valueobjects/SpouseFatherLookup.hbm.xml" />
-	<mapping resource="org/mifos/application/master/util/valueobjects/InterestTypes.hbm.xml" />
-	<mapping resource="org/mifos/application/master/util/valueobjects/InterestCalcRule.hbm.xml" />
-	<mapping resource="org/mifos/application/master/util/valueobjects/PrdCategoryStatus.hbm.xml" />
-	<mapping resource="org/mifos/application/master/util/valueobjects/PrdApplicableMaster.hbm.xml" />
-
 	<mapping resource="org/mifos/application/master/util/valueobjects/GLCode.hbm.xml" />
 	<!-- personnel mapping files-->
 
@@ -116,21 +110,7 @@
 
 	<!-- Product Definition -->
 	<mapping resource="org/mifos/application/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
-	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdCategory.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdType.hbm.xml" />
-
-	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/GracePeriodType.hbm.xml" />
-
-	<mapping resource="org/mifos/application/penalty/util/valueobjects/Penalty.hbm.xml" />
-	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdOffering.hbm.xml" />
-	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdStatus.hbm.xml" />
-
-	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdState.hbm.xml" />
-
-	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/LoanOfferingFund.hbm.xml" />
-	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdOfferingFees.hbm.xml" />
-	<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdOfferingMeeting.hbm.xml" />
-
 
 	<mapping resource="org/mifos/application/meeting/util/valueobjects/Meeting.hbm.xml" />
 	<mapping resource="org/mifos/application/meeting/util/valueobjects/MeetingDetails.hbm.xml" />

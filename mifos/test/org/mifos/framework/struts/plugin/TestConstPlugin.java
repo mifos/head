@@ -23,7 +23,7 @@ public class TestConstPlugin extends MifosMockStrutsTestCase{
 	 *This method performs an action to load Plugins defined in struts-config.xml.
 	 */
 	public void testMasterConstants() throws Exception{
-		setRequestPathInfo("/mifosproddefaction.do");
+		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method","load");
 		addRequestParameter("recordOfficeId","0");
 		addRequestParameter("recordLoanOfficerId","0");
@@ -35,7 +35,7 @@ public class TestConstPlugin extends MifosMockStrutsTestCase{
 	}
 	
 	public void testIfAllConstantFilesAreLoaded(){
-		setRequestPathInfo("/mifosproddefaction.do");
+		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method","load");
 		addRequestParameter("recordOfficeId","0");
 		addRequestParameter("recordLoanOfficerId","0");

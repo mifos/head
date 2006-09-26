@@ -165,7 +165,7 @@ public class AuditConfigurtion {
 	
 	private void fetchMasterData(String entityName,Short localeId) throws SystemException, ApplicationException{
 		
-		MasterDataRetriever masterDataRetriever=null;
+		/*MasterDataRetriever masterDataRetriever=null;
 		SearchResults obj=null;
 		EntityMaster entityMaster =null;
 		List<LookUpMaster> lookUpMasterData=null;
@@ -175,14 +175,14 @@ public class AuditConfigurtion {
 			lookUpMasterData=entityMaster.getLookUpMaster();
 			for(LookUpMaster lookUpMaster:lookUpMasterData) {
 				addToValueMap(lookUpMaster.getLookUpId().toString(),lookUpMaster.getLookUpValue());
-			}
+			}*/
     }
 	
 	
 		
 	private Map fetchMasterData(String entityName,Short localeId,String classPath,String pkColumn){
 		valueMap=new HashMap<String,String>();
-		MasterDataRetriever masterDataRetriever=null;
+		/*MasterDataRetriever masterDataRetriever=null;
 		SearchResults obj=null;
 		EntityMaster entityMaster =null;
 		List<LookUpMaster> lookUpMasterData=null;
@@ -197,7 +197,7 @@ public class AuditConfigurtion {
 			}
 		}catch(Exception e){
 			e.printStackTrace(); 
-		}
+		}*/
 		return valueMap; 
 	}
 	

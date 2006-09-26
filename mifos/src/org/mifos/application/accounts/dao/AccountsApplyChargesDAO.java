@@ -230,7 +230,7 @@ public class AccountsApplyChargesDAO extends DAO {
 
 			if (account instanceof Loan) {
 				Loan loan = (Loan) account;
-				loan.getLoanOffering().getPrinDueLastInstFlag();
+				/*loan.getLoanOffering().getPrinDueLastInstFlag();*/
 				Meeting meeting = loan.getLoanMeeting();
 				loan.getLoanSummary();
 				if (null != meeting) {

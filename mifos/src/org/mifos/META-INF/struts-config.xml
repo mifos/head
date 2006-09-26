@@ -20,25 +20,16 @@
 		<form-bean name="groupTransferActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupTransferActionForm"></form-bean>
 		<!-- Login Form -->
 		<form-bean name="loginActionForm" type="org.mifos.application.login.struts.actionforms.LoginActionForm"></form-bean>
-		<form-bean name="mifoslogoutform" type="org.mifos.application.login.struts.actionforms.MifosLogoutActionForm"></form-bean>
-		<!-- Product Category -->
-		<form-bean name="mifosproddefactionform" type="org.mifos.application.productdefinition.struts.actionforms.ProductCategoryActionForm"></form-bean>
 		<!-- Product Configuration -->
 		<form-bean name="prdconfigurationactionform" type="org.mifos.application.productdefinition.struts.actionforms.PrdConfigurationActionForm"></form-bean>
 		<!-- Loan Product -->
-		<form-bean name="loanprdactionform" type="org.mifos.application.productdefinition.struts.actionforms.LoanProductActionForm"></form-bean>
 		<form-bean name="loanproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm"></form-bean>
 		<!-- Disburse loan-->
 		<form-bean name="loanDisbursmentActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm"></form-bean>
 		<!-- Repay Loan -->
 		<form-bean name="repayLoanActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.RepayLoanActionForm"></form-bean>
 		<!-- Savings Product -->
-		<form-bean name="savingsprdactionform" type="org.mifos.application.productdefinition.struts.actionforms.SavingsProductActionForm"></form-bean>
 		<form-bean name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm"></form-bean>
-		<!-- Payment Types -->
-		<form-bean name="mifospmttypesactionform" type="org.mifos.application.productdefinition.struts.actionforms.PmntTypesActionForm"></form-bean>
-		<!-- Process Flow -->
-		<form-bean name="mifosprocessflowactionform" type="org.mifos.application.productdefinition.struts.actionforms.AccountProcessFlowActionForm"></form-bean>
 		<!-- Personnel Notes Action Form -->
 		<form-bean name="personnelNotesActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelNotesActionForm"></form-bean>
 		<form-bean name="personnelNoteActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelNoteActionForm"></form-bean>
@@ -539,23 +530,6 @@
 			<forward name="updateSettings_success" path="/yourSettings.do?method=get"></forward>
 		</action>
 		<!-- Product Category -->
-		<action path="/mifosproddefaction" name="mifosproddefactionform" type="org.mifos.application.productdefinition.struts.action.ProductCategoryAction" input="/mifosproddefaction.do?method=validate" parameter="method" validate="true" scope="session">
-			<forward name="cancel_admin" path="/AdminAction.do?method=load"></forward>
-			<forward name="cancel_details" path="/pages/application/productdefinition/jsp/ProductDetails.jsp"></forward>
-			<forward name="previous_admin" path="/pages/application/productdefinition/jsp/CreateCategory.jsp"></forward>
-			<forward name="previous_details" path="/pages/application/productdefinition/jsp/EditProductCategory.jsp"></forward>
-			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateCategory.jsp"></forward>
-			<forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateCategory.jsp"></forward>
-			<forward name="create_preview" path="/pages/application/productdefinition/jsp/CreateCategoryPreview.jsp"></forward>
-			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateCategoryConfirm.jsp"></forward>
-			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateCategoryPreview.jsp"></forward>
-			<forward name="get_success" path="/pages/application/productdefinition/jsp/ProductDetails.jsp"></forward>
-			<forward name="manage_success" path="/pages/application/productdefinition/jsp/EditProductCategory.jsp"></forward>
-			<forward name="manage_preview" path="/pages/application/productdefinition/jsp/ProductDetailsPreview.jsp"></forward>
-			<forward name="update_success" path="/pages/application/productdefinition/jsp/ProductDetails.jsp"></forward>
-			<forward name="update_failure" path="/pages/application/productdefinition/jsp/ProductDetailsPreview.jsp"></forward>
-			<forward name="search_success" path="/pages/application/productdefinition/jsp/viewEditProductCategories.jsp"></forward>
-		</action>
 		<!-- Product Configuration -->
 		<action path="/prdconfigurationaction" name="prdconfigurationactionform" type="org.mifos.application.productdefinition.struts.action.PrdConfigurationAction" input="/prdconfigurationaction.do?method=validate" parameter="method" validate="true"
 			scope="request">
@@ -567,24 +541,6 @@
 			<forward name="search_failure" path="/pages/application/productdefinition/jsp/editLatenessDefn.jsp"></forward>
 		</action>
 		<!-- Loan Product -->
-		<action path="/loanprdaction" name="loanprdactionform" type="org.mifos.application.productdefinition.struts.action.LoanProductAction" input="/loanprdaction.do?method=validate" parameter="method" validate="true" scope="session">
-			<forward name="cancel_admin" path="/AdminAction.do?method=load"></forward>
-			<forward name="cancel_details" path="/pages/application/productdefinition/jsp/LoanProductDetails.jsp"></forward>
-			<forward name="previous_admin" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
-			<forward name="previous_details" path="/pages/application/productdefinition/jsp/EditLoanProduct.jsp"></forward>
-			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
-			<forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
-			<forward name="create_preview" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
-			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateLoanProductConfirmation.jsp"></forward>
-			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
-			<forward name="get_success" path="/pages/application/productdefinition/jsp/LoanProductDetails.jsp"></forward>
-			<forward name="manage_success" path="/pages/application/productdefinition/jsp/EditLoanProduct.jsp"></forward>
-			<forward name="manage_preview" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
-			<forward name="update_success" path="/pages/application/productdefinition/jsp/LoanProductDetails.jsp"></forward>
-			<forward name="update_failure" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
-			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewEditLoanProduct.jsp"></forward>
-			<forward name="search_log_success" path="/pages/application/productdefinition/jsp/viewloanchangelog.jsp"></forward>
-		</action>
 		<action path="/loanproductaction" name="loanproductactionform" type="org.mifos.application.productdefinition.struts.action.LoanPrdAction" input="/loanproductaction.do?method=validate" parameter="method" validate="true" scope="session">
 			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
 			<forward name="preview_success" path="/pages/application/productdefinition/jsp/CreateLoanProductPreview.jsp"></forward>
@@ -611,25 +567,6 @@
 			<forward name="viewAllLoanProducts_failure" path="/AdminAction.do?method=load"></forward>
 		</action>
 		<!-- Savings Product -->
-		<action path="/savingsprdaction" name="savingsprdactionform" type="org.mifos.application.productdefinition.struts.action.SavingsProductAction" input="/savingsprdaction.do?method=validate" parameter="method" validate="true" scope="session">
-			<forward name="cancel_admin" path="/AdminAction.do?method=load"></forward>
-			<forward name="cancel_details" path="/pages/application/productdefinition/jsp/SavingsProductDetails.jsp"></forward>
-			<forward name="previous_admin" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"></forward>
-			<forward name="previous_details" path="/pages/application/productdefinition/jsp/EditSavingsProduct.jsp"></forward>
-			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"></forward>
-			<forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"></forward>
-			<forward name="create_preview" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
-			<forward name="create_success" path="/pages/application/productdefinition/jsp/CreateSavingsProductConfirmation.jsp"></forward>
-			<forward name="create_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
-			<forward name="get_success" path="/pages/application/productdefinition/jsp/SavingsProductDetails.jsp"></forward>
-			<forward name="manage_success" path="/pages/application/productdefinition/jsp/EditSavingsProduct.jsp"></forward>
-			<forward name="manage_preview" path="/pages/application/productdefinition/jsp/EditSavingsProductPreview.jsp"></forward>
-			<!--  <forward name="update_success" path="/pages/application/productdefinition/jsp/SavingsProductDetails.jsp"></forward>-->
-			<forward name="update_success" path="/savingsproductaction.do?method=get"></forward>
-			<forward name="update_failure" path="/pages/application/productdefinition/jsp/EditSavingsProductPreview.jsp"></forward>
-			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewEditSavingsProduct.jsp"></forward>
-			<forward name="search_log_success" path="/pages/application/productdefinition/jsp/viewsavingschangelog.jsp"></forward>
-		</action>
 		<action path="/savingsproductaction" name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.action.SavingsPrdAction" input="/savingsproductaction.do?method=validate" parameter="method" validate="true" scope="session">
 			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"></forward>
 			<forward name="preview_success" path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"></forward>
@@ -650,19 +587,6 @@
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/View_AllSavingsProduct.jsp"></forward>
 			<forward name="failure" path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"></forward>
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/View_AllSavingsProduct.jsp"></forward>
-		</action>
-		<!-- Payment Types -->
-		<action path="/mifospmttypesaction" name="mifospmttypesactionform" type="org.mifos.application.productdefinition.struts.action.PmtTypesAction" input="/mifospmttypesaction.do?method=validate" parameter="method" validate="true" scope="request">
-			<forward name="cancel_success" path="/AdminAction.do?method=load"></forward>
-			<forward name="update_success" path="/AdminAction.do?method=load"></forward>
-			<forward name="load_success" path="/pages/application/productdefinition/jsp/editAcceptedPaymentTypes.jsp"></forward>
-		</action>
-		<!-- Process Flow -->
-		<action path="/mifosprocessflowaction" name="mifosprocessflowactionform" type="org.mifos.application.productdefinition.struts.action.AccountProcessFlowAction" input="/mifosprocessflowaction.do?method=validate" parameter="method" validate="true"
-			scope="request">
-			<forward name="cancel_success" path="/AdminAction.do?method=load"></forward>
-			<forward name="update_success" path="/AdminAction.do?method=load"></forward>
-			<forward name="load_success" path="/pages/application/productdefinition/jsp/editChecklists.jsp"></forward>
 		</action>
 		<!-- role action -->
 		<action path="/manageRolesAndPermission" type="org.mifos.application.rolesandpermission.struts.action.RolesandPermissionAction" name="rolesandPermissionActionForm" parameter="method" input="/manageRolesAndPermission.do?method=validate"

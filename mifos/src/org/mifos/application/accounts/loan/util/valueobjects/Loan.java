@@ -14,7 +14,6 @@ import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.util.valueobjects.Currency;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
-import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
 import org.mifos.framework.util.helpers.Money;
 
 public class Loan extends Account{
@@ -115,7 +114,7 @@ public class Loan extends Account{
 	private Short selectedPrdOfferingId;
 	
 	/** The value of the prdOffering association. */
-    private LoanOffering loanOffering;
+   // private LoanOffering loanOffering;
 
 	
 	private Set<WaiveOffHistory> waiveOffHistorySet;
@@ -126,9 +125,9 @@ public class Loan extends Account{
 	/**
 	 * @param prdOffering The prdOffering to set.
 	 */
-	public void setLoanOffering(LoanOffering loanOffering) {
+	/*public void setLoanOffering(LoanOffering loanOffering) {
 		this.loanOffering = loanOffering;
-	}
+	}*/
 	/**
 	 * @return Returns the account}.
 	 */
@@ -333,10 +332,10 @@ public class Loan extends Account{
 	 * and not just prdOffering so I need to have that object type in the jsp.
 	 * @see org.mifos.application.accounts.util.valueobjects.Account#getPrdOffering()
 	 */
-	public LoanOffering getLoanOffering(){
+	/*public LoanOffering getLoanOffering(){
 		return loanOffering;
 	}
-
+*/
 	/**
 	 * @return Returns the collateralNote}.
 	 */

@@ -14,5 +14,4 @@
  
         <property name="lookUpId" column="LOOKUP_ID"/>
     </class>
-    <query name="product.getsavingstypes"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(st.savingsTypeId,lookupvalue.lookUpValue) from org.mifos.application.master.util.valueobjects.SavingsType st,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where st.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>
 </hibernate-mapping>

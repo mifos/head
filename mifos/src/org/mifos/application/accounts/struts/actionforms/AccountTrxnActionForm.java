@@ -38,18 +38,10 @@
 
 package org.mifos.application.accounts.struts.actionforms;
 
-import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.accounts.util.valueobjects.AccountTrxn;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.application.productdefinition.util.valueobjects.PaymentType;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -57,7 +49,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.MifosActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceConstants;
 
 public class AccountTrxnActionForm extends MifosActionForm{
 
@@ -70,13 +61,13 @@ public class AccountTrxnActionForm extends MifosActionForm{
 
 
 	public  AccountTrxnActionForm() {
-		this.paymentType=new PaymentType();
+		//this.paymentType=new PaymentType();
 	}
 
 	private String paymentId;
 	private String accountId;
 	private String accountType;
-	private PaymentType paymentType;
+	//private PaymentType paymentType;
 	private String amount;
 	private String receiptNumber;
 	private String voucherNumber;
@@ -248,16 +239,16 @@ public class AccountTrxnActionForm extends MifosActionForm{
 	/**
 	 * @return Returns the paymentType.
 	 */
-	public PaymentType getPaymentType() {
+	/*public PaymentType getPaymentType() {
 		return paymentType;
 	}
 
-	/**
+	*//**
 	 * @param paymentType The paymentType to set.
-	 */
+	 *//*
 	public void setPaymentType(PaymentType paymentType) {
 		this.paymentType = paymentType;
-	}
+	}*/
 
 	/**
 	 * @return Returns the receiptNumber.
@@ -291,7 +282,7 @@ public class AccountTrxnActionForm extends MifosActionForm{
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug("inside AccountTrxnActionForm with reset method : ");
 		if(request.getParameter(MethodNameConstants.METHOD) !=null && request.getParameter(MethodNameConstants.METHOD).equals(MethodNameConstants.LOAD)) {
 			accountId=null;
-			paymentType=new PaymentType();
+			//paymentType=new PaymentType();
 			amount=null;
 			receiptNumber=null;
 			voucherNumber=null;

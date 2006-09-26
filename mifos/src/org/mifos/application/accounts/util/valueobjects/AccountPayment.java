@@ -43,7 +43,6 @@ import java.util.Set;
 
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.util.valueobjects.Currency;
-import org.mifos.application.productdefinition.util.valueobjects.PaymentType;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
@@ -54,7 +53,7 @@ public class AccountPayment extends ValueObject{
 	private Integer accountId;
 	private short accountType;
 	private Currency currency;
-	private PaymentType paymentType;
+	//private PaymentType paymentType;
 	private Money amount;
 	private String receiptNumber;
 	private String voucherNumber;
@@ -126,12 +125,12 @@ public class AccountPayment extends ValueObject{
 	public void setPaymentId(Integer paymentId) {
 		this.paymentId = paymentId;
 	}
-	public PaymentType getPaymentType() {
+/*	public PaymentType getPaymentType() {
 		return paymentType;
 	}
 	public void setPaymentType(PaymentType paymentType) {
 		this.paymentType = paymentType;
-	}
+	}*/
 	public String getReceiptNumber() {
 		return receiptNumber;
 	}

@@ -86,8 +86,8 @@ public class ClosedAccSearchDAO extends DAO {
 					.getNamedQuery(NamedQueryConstants.VIEWALLCLIENTCLOSEDACCOUNTS);
 			query.setInteger(ClosedAccSearchConstants.CUSTOMERID, customerId);
 			List<Loan> accountList = query.list();
-			for (Loan loan : accountList)
-				loan.getLoanOffering().getPrdOfferingName();
+			/*for (Loan loan : accountList)
+				loan.getLoanOffering().getPrdOfferingName();*/
 			return accountList;
 		} catch (HibernateProcessException hbe) {
 			throw new SystemException();

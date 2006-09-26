@@ -43,14 +43,7 @@ import org.mifos.application.master.util.valueobjects.FeeFormulaMaster;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
-import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
-import org.mifos.application.productdefinition.util.valueobjects.LoanOfferingFund;
-import org.mifos.application.productdefinition.util.valueobjects.PrdOffering;
-import org.mifos.application.productdefinition.util.valueobjects.PrdOfferingFees;
-import org.mifos.application.productdefinition.util.valueobjects.PrdOfferingMaster;
-import org.mifos.application.productdefinition.util.valueobjects.PrdOfferingMeeting;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.LogInfo;
 import org.mifos.framework.components.audit.util.helpers.LogValueMap;
@@ -81,7 +74,7 @@ public class LoanDAO extends AccountsDAO {
 	 * @param prdOffering
 	 * @param session
 	 */
-	public void initializePrdOffering(PrdOffering prdOffering, Session session)
+	/*public void initializePrdOffering(PrdOffering prdOffering, Session session)
 			throws SystemException {
 		LoanOffering loanOffering = (LoanOffering) prdOffering;
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -144,7 +137,7 @@ public class LoanDAO extends AccountsDAO {
 		prdOfferingMeeting.getMeeting().getMeetingDetails().getRecurrenceType()
 				.getRecurrenceName();
 
-	}
+	}*/
 
 	/**
 	 * This method gets the applicable product offerings.
@@ -171,7 +164,7 @@ public class LoanDAO extends AccountsDAO {
 		queryParameters.put(new String("prdApplicableMaster2"),
 				PrdApplicableMaster.ALLCUSTOMERS.getValue());
 		queryParameters.put("customerId", customer.getCustomerId());
-		List<PrdOfferingMaster> prdOfferingMasterList = executeNamedQuery(
+		/*List<PrdOfferingMaster> prdOfferingMasterList = executeNamedQuery(
 				NamedQueryConstants.APPLICABLEPRODUCTOFFERINGS, queryParameters);
 		List<PrdOfferingMaster> applicablePrdOfferingMasterList = new ArrayList<PrdOfferingMaster>();
 		for (PrdOfferingMaster prdOfferingMaster : prdOfferingMasterList) {
@@ -179,6 +172,7 @@ public class LoanDAO extends AccountsDAO {
 				applicablePrdOfferingMasterList.add(prdOfferingMaster);
 		}
 		applicableLoanPrdOfferings.setValue(applicablePrdOfferingMasterList);
+		*/
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"above query executed successfully ");
 		applicableLoanPrdOfferings
@@ -277,13 +271,13 @@ public class LoanDAO extends AccountsDAO {
 				loan = (Loan) queryResult.get(0);
 				// initializing the things that would be needed on the jsp from
 				// loan offering.
-				LoanOffering loanOffering = (LoanOffering) getEntity(
+				/*LoanOffering loanOffering = (LoanOffering) getEntity(
 						"org.mifos.application.productdefinition.util.valueobjects.LoanOffering",
 						loan.getLoanOffering().getPrdOfferingId(),
 						DataTypeConstants.Short, session);
-				initializePrdOffering(loanOffering, session);
+				initializePrdOffering(loanOffering, session);*/
 				// setting the loan offering in the loan object.
-				loan.setLoanOffering(loanOffering);
+				//loan.setLoanOffering(loanOffering);
 				initializeAccount(loan, session);
 			}
 

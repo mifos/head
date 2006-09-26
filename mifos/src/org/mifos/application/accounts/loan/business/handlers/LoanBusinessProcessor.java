@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.accounts.business.handler.AccountsBusinessProcessor;
 import org.mifos.application.accounts.dao.AccountNotesDAO;
@@ -46,12 +45,8 @@ import org.mifos.application.master.util.valueobjects.AccountState;
 import org.mifos.application.master.util.valueobjects.Currency;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.application.office.util.valueobjects.Office;
-import org.mifos.application.productdefinition.dao.LoanProductDAO;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
-import org.mifos.application.productdefinition.util.valueobjects.LoanOffering;
-import org.mifos.application.productdefinition.util.valueobjects.PrdOffering;
 import org.mifos.framework.business.util.helpers.HeaderObject;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -71,7 +66,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.tags.DateHelper;
-import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.valueobjects.Context;
 import org.mifos.framework.util.valueobjects.SearchResults;
@@ -87,11 +81,12 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 	 * is a common method which could be used by all account types hence this
 	 * method is in the base class.
 	 */
-	private LoanOffering getLoanOffering(Short prdOfferingId)
+	/*private LoanOffering getLoanOffering(Short prdOfferingId)
 			throws SystemException {
+		LoanOffering loanOffering = null;
 		LoanProductDAO loanProductDAO = (LoanProductDAO) 
 			getDAO(ProductDefinitionConstants.GETPATHLOANPRODUCT);
-		LoanOffering loanOffering = null;
+		
 		Session session = null;
 		try {
 			session = HibernateUtil.getSession();
@@ -105,7 +100,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 			HibernateUtil.closeSession(session);
 		}
 		return loanOffering;
-	}
+	}*/
 
 	/**
 	 * This method loads the master data required for the page to display and
@@ -124,13 +119,13 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// this sets the initialized loanPrdOffering object in the loan
 		// valueobject so that it could
 		// retrieve and display the required fields in the UI.
-		loan.setLoanOffering(getLoanOffering(loan.getSelectedPrdOfferingId()));
+		//loan.setLoanOffering(getLoanOffering(loan.getSelectedPrdOfferingId()));
 		// also setting the same in the context as business result because we
 		// need some info on preview page
 		// this would be the info that is inherited from prdOffering and which
 		// the user can not change.
-		context.addBusinessResults(AccountConstants.SELECTEDPRDOFFERING, loan
-				.getLoanOffering());
+	/*	context.addBusinessResults(AccountConstants.SELECTEDPRDOFFERING, loan
+				.getLoanOffering());*/
 		// gets the business activities
 		context.addAttribute(getMasterData(MasterConstants.LOAN_PURPOSES,
 				context.getUserContext().getLocaleId(),
@@ -173,9 +168,9 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// gets the applicable fees apart from the ones already in prd Offering
 		// selected by the user.
 		LoanDAO loanDAO = (LoanDAO) getDAO(PathConstants.LOANACCOUNTSPATH);
-		context.addAttribute(new SearchResults(LoanConstants.APPLICALEFEES,
+		/*context.addAttribute(new SearchResults(LoanConstants.APPLICALEFEES,
 				loanDAO.getApplicableFees(loan.getLoanOffering()
-						.getPrdOfferingId())));
+						.getPrdOfferingId())));*/
 
 		// gets the potential disbursement date.
 		CustomerMaster customerMaster = (CustomerMaster) context
@@ -202,13 +197,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 	 * @param prdOffering
 	 * @param session
 	 */
-	protected void initializePrdOffering(PrdOffering prdOffering,
-			Session session) throws SystemException {
-
-		LoanDAO loanDAO = (LoanDAO) getDAO(PathConstants.LOANACCOUNTSPATH);
-		loanDAO.initializePrdOffering(prdOffering, session);
-	}
-
+	
 	/**
 	 * It generates the system id for the loan account using IDGenerator.
 	 * 
@@ -276,8 +265,8 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"branch id  is " + customerMaster.getOfficeId());
 		// setting the interest type id same as that is present for prdOffering
-		loan.setInterestTypeId(loan.getLoanOffering().getInterestTypes()
-				.getInterestTypeId());
+		/*loan.setInterestTypeId(loan.getLoanOffering().getInterestTypes()
+				.getInterestTypeId());*/
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Interest type is " + loan.getInterestTypeId());
 
@@ -290,8 +279,8 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 				&& 1 == loan.getIntrestAtDisbursement()) {
 			loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
 		} else {
-			loan.setGracePeriodTypeId(loan.getLoanOffering()
-					.getGracePeriodType().getGracePeriodTypeId());
+			/*loan.setGracePeriodTypeId(loan.getLoanOffering()
+					.getGracePeriodType().getGracePeriodTypeId());*/
 		}
 
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
@@ -299,7 +288,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 
 		// set the grace period for penalty to be the same as that for product
 		// offering.
-		loan.setGracePeriodPenalty(loan.getLoanOffering().getPenaltyGrace());
+		/*loan.setGracePeriodPenalty(loan.getLoanOffering().getPenaltyGrace());*/
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"grace period type is " + loan.getGracePeriodPenalty());
 
@@ -369,7 +358,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 
 		// get the penalty from prdOffering and add it to the set of loan.
 		LoanPenalty loanPenalty = new LoanPenalty();
-		if (loan.getLoanOffering().getPenalty() != null) {
+		/*if (loan.getLoanOffering().getPenalty() != null) {
 			loanPenalty.setPenaltyId(loan.getLoanOffering().getPenalty()
 					.getPenaltyID());
 			loanPenalty.setPenaltyType(loan.getLoanOffering().getPenalty()
@@ -382,7 +371,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 
 		} else
 			loan.setLoanPenaltySet(null);
-		// this could be zero if the user does not select anything in the ui.
+*/		// this could be zero if the user does not select anything in the ui.
 		if (0 == loan.getBusinessActivityId()) {
 			loan.setBusinessActivityId(null);
 		}
@@ -442,10 +431,10 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 			if (null != loan.getIntrestAtDisbursement()
 					&& 1 == loan.getIntrestAtDisbursement()) {
 				loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
-			} else {
+			}/* else {
 				loan.setGracePeriodTypeId(loan.getLoanOffering()
 						.getGracePeriodType().getGracePeriodTypeId());
-			}
+			}*/
 
 			// setting in context if pending approval state is possible or not
 			// because it is an optional state.
@@ -458,10 +447,10 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 			if (null != loan.getIntrestAtDisbursement()
 					&& 1 == loan.getIntrestAtDisbursement()) {
 				loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
-			} else {
+			} /*else {
 				loan.setGracePeriodTypeId(loan.getLoanOffering()
 						.getGracePeriodType().getGracePeriodTypeId());
-			}
+			}*/
 
 			// Checking the disbursment date based on accountState.
 			if (!isDisbursmentDateValid(loan.getAccountId(), loan
@@ -612,8 +601,8 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// this sets the prdOffering object in the context business result. So
 		// that it could be
 		// used on the update and other related pages.
-		context.addBusinessResults(AccountConstants.SELECTEDPRDOFFERING,
-				((Loan) context.getValueObject()).getLoanOffering());
+		/*context.addBusinessResults(AccountConstants.SELECTEDPRDOFFERING,
+				((Loan) context.getValueObject()).getLoanOffering());*/
 		// sets the recent account activity in the attributes.
 
 		context.addAttribute(new SearchResults(AccountConstants.NOTES,
@@ -688,19 +677,19 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 
 		Meeting loanMeeting = null;
 		if (type.equals("transient")) {
-			Meeting prdOfferingMeeting = loan.getLoanOffering()
-					.getPrdOfferingMeeting().getMeeting();
+		/*	Meeting prdOfferingMeeting = loan.getLoanOffering()
+					.getPrdOfferingMeeting().getMeeting();*/
 			// check if the prodOffering meeting is a multiple of customer
 			// meeting else
 			// throw an exception specifying that recurrence is not compatible
 			if (null != customerMeeting) {
 
-				if (0 != (prdOfferingMeeting.getMeetingDetails()
+				/*if (0 != (prdOfferingMeeting.getMeetingDetails()
 						.getRecurAfter().shortValue())
 						% meeting.getMeetingDetails().getRecurAfter()
 								.shortValue()) {
 					throw new RepaymentScheduleException(
-							LoanExceptionConstants.INCOMPATIBLERECCURENCE);
+							LoanExceptionConstants.INCOMPATIBLERECCURENCE);*/
 				}
 			}
 			// also iterate over the accountFeesSet to check if the recurrence
@@ -710,12 +699,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 				if (null != accountFees.getFees().getFeeFrequency()
 						&& 2 != accountFees.getFees().getFeeFrequency()
 								.getFeeFrequencyTypeId().shortValue()
-						&& (accountFees.getFees().getFeeFrequency()
-								.getFeeMeetingFrequency().getMeetingDetails()
-								.getRecurrenceType().getRecurrenceId()
-								.intValue() != prdOfferingMeeting
-								.getMeetingDetails().getRecurrenceType()
-								.getRecurrenceId().intValue())) {
+						) {
 					throw new RepaymentScheduleException(
 							LoanExceptionConstants.INCOMPATIBLEFEERECCURENCE,
 							new Object[] { accountFees.getFees().getFeeName() });
@@ -724,7 +708,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 
 			// merge the customer and prd offering meetings to create a new
 			// meeting object.
-			if (null != customerMeeting) {
+			/*if (null != customerMeeting) {
 				loanMeeting = MeetingScheduleHelper.mergeFrequency(meeting,
 						prdOfferingMeeting);
 			} else {
@@ -732,7 +716,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 						prdOfferingMeeting, loan.getDisbursementDate());
 			}
 
-		} else
+		} else*/
 			loanMeeting = loan.getLoanMeeting();
 
 		// this methods prepares the input object for the repayment schedule
@@ -862,10 +846,10 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		if (null != loan.getIntrestAtDisbursement()
 				&& 1 == loan.getIntrestAtDisbursement()) {
 			loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
-		} else {
+		} /*else {
 			loan.setGracePeriodTypeId(loan.getLoanOffering()
 					.getGracePeriodType().getGracePeriodTypeId());
-		}
+		}*/
 
 		// Checking the disbursment date based on accountState.
 		if (!isDisbursmentDateValid(loan.getAccountId(),
@@ -902,11 +886,11 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		repaymntScheduleInputs.setIsInterestDedecutedAtDisburesement(loan
 				.getIntrestAtDisbursement().equals(Short.valueOf("1")) ? true
 				: false);
-		if (type.equals("transient"))
-			repaymntScheduleInputs.setIsPrincipalInLastPayment(loan
+		if (type.equals("transient")) {
+			/*repaymntScheduleInputs.setIsPrincipalInLastPayment(loan
 					.getLoanOffering().getPrinDueLastInstFlag().equals(
-							Short.valueOf("1")) ? true : false);
-		else
+							Short.valueOf("1")) ? true : false);*/
+		}else
 			repaymntScheduleInputs.setIsPrincipalInLastPayment(false);
 		repaymntScheduleInputs.setPrincipal(loan.getLoanAmount());
 		repaymntScheduleInputs.setInterestRate(loan.getInterestRateAmount());
@@ -952,10 +936,10 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		if (null != loan.getIntrestAtDisbursement()
 				&& 1 == loan.getIntrestAtDisbursement()) {
 			loan.setGracePeriodTypeId(GraceTypeConstants.NONE.getValue());
-		} else {
+		} /*else {
 			loan.setGracePeriodTypeId(loan.getLoanOffering()
 					.getGracePeriodType().getGracePeriodTypeId());
-		}
+		}*/
 
 		loan.setUpdatedBy(context.getUserContext().getId());
 
@@ -997,7 +981,7 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// setting currency to null because it should not try to save currency.
 		loan.setCurrency(null);
 		loan.setCustomer(null);
-		loan.setLoanOffering(null);
+		//loan.setLoanOffering(null);
 		loan.setLoanPenaltySet(null);
 		loan.setAccountFeesSet(null);
 		loan.setFund(null);
@@ -1005,8 +989,8 @@ public class LoanBusinessProcessor extends AccountsBusinessProcessor {
 		// this is being set here because this association was set to null
 		// as we don't wan't this to get updated.
 		loan.setAccountFeesSet(accountFeesSet);
-		loan.setLoanOffering((LoanOffering) context
-				.getBusinessResults(AccountConstants.SELECTEDPRDOFFERING));
+		/*loan.setLoanOffering((LoanOffering) context
+				.getBusinessResults(AccountConstants.SELECTEDPRDOFFERING));*/
 	}
 
 	/**

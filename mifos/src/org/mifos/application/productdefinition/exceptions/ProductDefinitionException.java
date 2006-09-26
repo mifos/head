@@ -62,9 +62,6 @@ public class ProductDefinitionException extends ApplicationException {
 	public ProductDefinitionException(String key, Throwable cause) {
 		super(key, cause);
 	}
-	
-	/**
-	 * serial version UID for serialization.
-	 */
+
 	private static final long serialVersionUID = 6223987933034497348L;
 }

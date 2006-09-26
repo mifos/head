@@ -367,15 +367,7 @@
         <query name="Customer.idsearch_withoutoffice">
 	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.levelId, off.officeId,off.officeName,per.displayName,per.personnelId,c.statusId,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  from org.mifos.application.customer.util.valueobjects.Customer as c left join c.parentCustomer as pa left join pa.parentCustomer as papa left join c.office as off  left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING ]]>
         </query>
-        
-        <query name="Customer.fetchLoanCounters">
-	        	   <![CDATA[select lo.loanOffering.prdOfferingName from org.mifos.application.accounts.loan.util.valueobjects.Loan as lo where lo.customer.customerId=:customerId and lo.loanOffering.loanCounterFlag=1 and lo.accountStateId in (3,4,5,6,9) order by lo.loanOffering.prdOfferingName asc]]>
-        </query>
-        
-         <!-- <query name="updateChildPersonnel">
-	        	   <![CDATA[update Customer customer set customer.personnel.personnelId=:PERSONNEL_ID where customer.customerId=:CUSTOMER_ID]]>
-        </query>  -->
-        
+       
         <query name="numberOfMeetingsAttended">
 	        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (1,4) and customerAttendance.id in (select max(custAttendance.id) from org.mifos.application.customer.client.business.ClientAttendanceBO custAttendance where custAttendance.customer.customerId=:CUSTOMERID group by custAttendance.meetingDate )]]>
         </query>

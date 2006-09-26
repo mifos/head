@@ -23,8 +23,6 @@
 		 <column name="AMOUNT" />
 		</property>
      
-        <many-to-one name="paymentType" column="PAYMENT_TYPE_ID" class="org.mifos.application.productdefinition.util.valueobjects.PaymentType"  cascade="none" update="false" insert="true"/>  
-        
         <set name="accountTrxn" cascade="all" inverse="true" table="ACCOUNT_TRXN">
 			<key column="PAYMENT_ID"  />			
 			<one-to-many class="org.mifos.application.accounts.util.valueobjects.AccountTrxn"/>

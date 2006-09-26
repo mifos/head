@@ -14,5 +14,4 @@
  
         <property name="lookUpId" column="LOOKUP_ID" />
     </class>
-        <query name="product.getrecamtunits"><![CDATA[select new org.mifos.application.productdefinition.util.valueobjects.MasterObject(rau.recommendedAmntUnitId,lookupvalue.lookUpValue) from org.mifos.application.master.util.valueobjects.RecommendedAmntUnit rau,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue where rau.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId]]></query>
 </hibernate-mapping>

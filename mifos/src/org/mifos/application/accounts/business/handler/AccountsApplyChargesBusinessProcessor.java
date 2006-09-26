@@ -544,9 +544,9 @@ public class AccountsApplyChargesBusinessProcessor extends
 				.getIntrestAtDisbursement().equals(
 						LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT) ? true
 				: false);
-		inputs.setIsPrincipalInLastPayment(loan.getLoanOffering()
+		/*inputs.setIsPrincipalInLastPayment(loan.getLoanOffering()
 				.getPrinDueLastInstFlag().equals(Short.valueOf("1")) ? true
-				: false);
+				: false);*/
 		inputs.setRepaymentFrequency(meeting);
 		inputs.setNoOfInstallments(loan.getNoOfInstallments());
 		inputs.setPrincipal(loan.getLoanAmount());
@@ -724,11 +724,11 @@ public class AccountsApplyChargesBusinessProcessor extends
 				.getIntrestAtDisbursement().equals(
 						LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT) ? true
 				: false;
-		Boolean isPrincipalDueInLastInstallment = loan.getLoanOffering()
+		/*Boolean isPrincipalDueInLastInstallment = loan.getLoanOffering()
 				.getPrinDueLastInstFlag().equals(Short.valueOf("1")) ? true
-				: false;
-		LoanHelpers.roundAccountActionsDate(isInterestDeductedAtDisbursment,
-				isPrincipalDueInLastInstallment, accountActionDateList);
+				: false;*/
+		/*LoanHelpers.roundAccountActionsDate(isInterestDeductedAtDisbursment,
+				isPrincipalDueInLastInstallment, accountActionDateList);*/
 	}
 	
 	private CustomerActivityEntity updateCustomerDetails(Account account,List<AccountActionDate> accountActionDateList,Fees fee,Double amount,Short personnelId,AccountFees accountFees) throws PersistenceException {
