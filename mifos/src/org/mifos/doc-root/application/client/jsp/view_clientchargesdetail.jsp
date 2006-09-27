@@ -55,8 +55,8 @@
 	<tiles:put name="body" type="string">
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
-				</span>/<span class="fontnormal8ptbold"> <mifos:mifoslabel
+				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink /> / 
+				</span><span class="fontnormal8ptbold"> <mifos:mifoslabel
 					name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
 					name="client.clientcharges" bundle="ClientUIResources" /></span></td>
 			</tr>

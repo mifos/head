@@ -18,6 +18,7 @@
 				<form-bean name="custHistoricalDataActionForm" type="org.mifos.application.customer.struts.actionforms.CustHistoricalDataActionForm"></form-bean>
 				<form-bean name="customerNotesActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm" />
 				<form-bean name="custApplyAdjustmentActionForm"	type="org.mifos.application.customer.struts.actionforms.CustomerApplyAdjustmentActionForm" />
+				<form-bean name="customerAccountActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerAccountActionForm"></form-bean>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException"
@@ -126,6 +127,15 @@
 			<forward name="previewHistoricalData_success" path="/pages/application/customer/jsp/cust_previewhistoricaldata.jsp" />
 			<forward name="previousHistoricalData_success" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
 			<forward name="updateHistoricalData_success" path="/custHistoricalDataAction.do?method=getHistoricalData" />
+		</action>
+		<action path="/customerAccountAction" 
+				type="org.mifos.application.customer.struts.action.CustomerAccountAction" 
+				name="customerAccountActionForm"
+				parameter="method" 
+				scope="session">
+			<forward name="client_detail_page" path="/pages/application/client/jsp/view_clientchargesdetail.jsp" />
+			<forward name="group_detail_page" path="/pages/application/group/jsp/view_groupchargesdetail.jsp" />
+			<forward name="center_detail_page" path="/pages/application/center/jsp/view_centerchargesdetail.jsp" />
 		</action>
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
