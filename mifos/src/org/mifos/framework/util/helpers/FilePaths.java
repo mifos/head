@@ -44,14 +44,24 @@ package org.mifos.framework.util.helpers;
  * from this file.
  */
 public interface FilePaths {
-	public String INITIALIZATIONFILE = "org/mifos/framework/util/resources/Initialization.xml"; 
-	public String DEPENDENCYFILE = "org/mifos/framework/util/resources/Dependency.xml";
-	public String LOGFILE = "org/mifos/framework/util/resources/loggerresources/loggerconfiguration.xml";
-	public static final String MENUPATH="org/mifos/framework/util/resources/menuresources/menu.xml";
-	public static final String MENUSCHEMA="org/mifos/framework/util/resources/menuresources/menu.xsd";
-	public String JAXBPACKAGEPATH = "org.mifos.framework.util.jaxb.";
-	public String HIBERNATEPROPERTIES = "org/mifos/framework/util/resources/hibernate.properties";
-	public String HIBERNATECFGFILE = "org/mifos/framework/util/resources/hibernate.cfg.xml";
-	public String CUSTOMTABLETAGXSD = "org/mifos/framework/util/resources/customTableTag/tabletag.xsd";	
-	public String CONFIGURABLEMIFOSDBPROPERTIESFILE = "deploymifosDB.properties";
+	public static final String INITIALIZATIONFILE = 
+		"org/mifos/framework/util/resources/Initialization.xml"; 
+	public static final String DEPENDENCYFILE = 
+		"org/mifos/framework/util/resources/Dependency.xml";
+	public static final String LOGFILE = 
+		"org/mifos/framework/util/resources/loggerresources/loggerconfiguration.xml";
+	public static final String MENUPATH =
+		"org/mifos/framework/util/resources/menuresources/menu.xml";
+	public static final String MENUSCHEMA =
+		"org/mifos/framework/util/resources/menuresources/menu.xsd";
+	public static final String JAXBPACKAGEPATH = 
+		"org.mifos.framework.util.jaxb.";
+	public static final String HIBERNATEPROPERTIES = 
+		"org/mifos/framework/util/resources/hibernate.properties";
+	public static final String HIBERNATECFGFILE = 
+		"org/mifos/framework/util/resources/hibernate.cfg.xml";
+	public static final String CUSTOMTABLETAGXSD = 
+		"org/mifos/framework/util/resources/customTableTag/tabletag.xsd";	
+	public static final String CONFIGURABLEMIFOSDBPROPERTIESFILE = 
+		"deploymifosDB.properties";
 }

@@ -7,33 +7,32 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.HibernateStartUp;
+import org.mifos.framework.util.helpers.FilePaths;
 
 
 public class MifosService {
 	//private String propertiesFile = "mifos.properties";
-	private String hibernateProperties = "hibernate.properties";
-    private String log4jConfig = "log4j.xml";
-    
+
+	// This filename is also in Initialization.xml
+	private String hibernateProperties = "conf/hibernate.properties";
+
     MifosService() {
     }
     
     public void setPropertiesFile(String f) {
     	//this.propertiesFile = f;
     	
-    	// TODO Add code here to set hibernateProperties and log4jConfig from the properties file
+    	// TODO Add code here to set hibernateProperties 
+    	// from the properties file
     }
     
     public void setHibernateProperties(String f) {
     	this.hibernateProperties = f;
     }
     
-    public void setLog4jConfig(String f) {
-    	this.log4jConfig = f;
-    }
-    
     void init() throws LoggerConfigurationException, HibernateStartUpException, 
     AppNotConfiguredException {
-	    MifosLogManager.configure(log4jConfig);
+	    MifosLogManager.configure(FilePaths.LOGFILE);
 	    MifosLogger logger = MifosLogManager.getLogger("org.mifos.logger");
 	    logger.info("Logger initialized", false, null);
 	    

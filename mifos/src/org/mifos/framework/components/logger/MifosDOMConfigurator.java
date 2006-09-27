@@ -30,16 +30,17 @@ import org.apache.log4j.xml.DOMConfigurator;
 /**	
  *  Class contains functions to configure the logger by reading the configuration files
  */
-public class  MifosDOMConfigurator extends DOMConfigurator{
+public class MifosDOMConfigurator extends DOMConfigurator {
 	/**
 	 * Function to configure the logger from the configuration file
 	 * @param filename The configuration file for the logger
 	 * @param repository 
 	 */
+	@Override
 	public void doConfigure(String filename, LoggerRepository repository) {
 	   super.doConfigure(filename, repository);
-	   
-	}//end-method doConfigure
+	}
+
 	/**
 	 * Function to configure logger from configuration file.<!--> If the configuration file is changed while 
 	 * the application is running then the logger will reflect the changes
@@ -50,7 +51,5 @@ public class  MifosDOMConfigurator extends DOMConfigurator{
 		MifosXMLWatchdog xdog = new MifosXMLWatchdog(configFilename);
 	    xdog.setDelay(delay);
 	    xdog.start();
-  }//end-method configureAndWatch
-}//~
-
-
+	}
+}

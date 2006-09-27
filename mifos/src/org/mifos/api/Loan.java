@@ -8,23 +8,26 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 
 
 public class Loan {
-	protected static LoanBusinessService loanBusinessService = null;
 	
-	private LoanBO bo = null;
+	private final LoanBO bo;
 	
-	Loan() throws ServiceException {
-		if (loanBusinessService == null) {
-			loanBusinessService = (LoanBusinessService) 
-				ServiceFactory.getInstance()
-					.getBusinessService(BusinessServiceName.Loan);
-		}
+	Loan(LoanBO businessObject) throws ServiceException {
+		bo = businessObject;
+	}
+
+	private static LoanBusinessService getBusinessService() {
+		return (LoanBusinessService) 
+			ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Loan);
 	}
 	
 	public static Loan getLoan(Integer id) throws Exception { 
 		// We may want to check exceptions in this one...
-		Loan result = new Loan();
-		result.bo = loanBusinessService.getAccount(id);
-		return result;
+		LoanBO loanBo = getBusinessService().getAccount(id);
+		if (loanBo == null) {
+			throw new Exception("Loan " + id + " not found");
+		}
+		return new Loan(loanBo);
 	}
 	
 	public Integer getId() {

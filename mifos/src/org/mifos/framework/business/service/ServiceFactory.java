@@ -3,7 +3,6 @@ package org.mifos.framework.business.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.ServiceUnavailableException;
 import org.mifos.framework.persistence.service.PersistenceService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
