@@ -20,7 +20,6 @@
 	<mapping resource="org/mifos/application/master/util/valueobjects/AccountType.hbm.xml" />
 	<mapping resource="org/mifos/application/master/util/valueobjects/Currency.hbm.xml" />
 	<mapping resource="org/mifos/application/master/util/valueobjects/CollateralType.hbm.xml" />
-	<mapping resource="org/mifos/application/fund/util/valueobjects/Fund.hbm.xml" />
 	<mapping resource="org/mifos/application/master/util/valueobjects/SavingsType.hbm.xml" />
 	<mapping resource="org/mifos/application/master/util/valueobjects/RecommendedAmntUnit.hbm.xml" />
 	<mapping resource="org/mifos/application/master/util/valueobjects/InterestCalcType.hbm.xml" />

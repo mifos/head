@@ -124,7 +124,7 @@
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td><html-el:link
-								action="/fundAction.do?method=getAllFunds&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								action="/fundAction.do?method=viewAllFunds&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.viewfunds" /></html-el:link>
 							| <html-el:link
 								action="/fundAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">

@@ -1,7 +1,7 @@
 <!--
 /**
 
-* ViewFunds.jsp    version: 1.0
+* viewallfund.jsp    version: 1.0
 
 
 
@@ -42,18 +42,16 @@
 <%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
-<script language="JavaScript" src="pages/application/fund/js/fundValidator.js"	type="text/javascript">
-</script>
 <html-el:form action="/fundAction.do">
-<html-el:hidden property="method" value=""/>
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
 	          <span class="fontnormal8pt">
-	          	 <html-el:link action="AdminAction.do?method=load">
+	          	 <html-el:link action="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 					<mifos:mifoslabel name="funds.admin" bundle="fundUIResources"/>	
 				</html-el:link> /
 	          </span><span class="fontnormal8ptbold">
@@ -81,16 +79,16 @@
                		 <mifos:mifoslabel name="funds.fund_name" bundle="fundUIResources"/>
                 </td>
                 <td width="44%" class="drawtablerowboldnoline">
-               		 <mifos:mifoslabel name="funds.fund_glcode" bundle="fundUIResources"/>
+               		 <mifos:mifoslabel name="funds.fundcode" bundle="fundUIResources"/>
                 </td>
                 <td width="23%" class="drawtablerowboldnoline">&nbsp;</td>
               </tr>  
-              <c:forEach var="fundItem" items="${requestScope.allFunds}" >
+              <c:forEach var="fundItem" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'fundList')}" >
 	              <tr>
 	                <td width="33%" class="drawtablerow">${fundItem.fundName}</td>
-	                <td width="44%" class="drawtablerow">${fundItem.glCode.glCodeValue}</td>
+	                <td width="44%" class="drawtablerow">${fundItem.fundCode.fundCodeValue}</td>
 	                <td width="23%" align="right" class="drawtablerow">
-		               	<html-el:link action="/fundAction.do?method=manage&fundId=${fundItem.fundId}">
+		               	<html-el:link action="/fundAction.do?method=manage&fundCodeId=${fundItem.fundId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 		               		<mifos:mifoslabel name="funds.edit" bundle="fundUIResources"/>                		
 		               	</html-el:link>
 	                </td>

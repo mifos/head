@@ -130,6 +130,7 @@ public class FundAction extends BaseAction {
 	public ActionForward viewAllFunds(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		SessionUtils.setAttribute(FundConstants.FUNDLIST, getFunds(),request);
 		return mapping.findForward(ActionForwards.viewAllFunds_success.toString());
 	}
 	
@@ -137,6 +138,11 @@ public class FundAction extends BaseAction {
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		logger.debug("start manage method of Fund Action");
+		FundActionForm fundActionForm = (FundActionForm) form;
+		Short fundId = getShortValue(fundActionForm.getFundCodeId());
+		FundBO fundBO = getFund(fundId);
+		setFormAttributes(fundActionForm,fundBO.getFundName(),fundBO.getFundCode().getFundCodeValue());
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
@@ -169,6 +175,11 @@ public class FundAction extends BaseAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		logger.debug("start update method of Fund Action");
+		FundActionForm fundActionForm = (FundActionForm) form;
+		Short fundId = getShortValue(fundActionForm.getFundCodeId());
+		FundBO fundBO = getFund(fundId);
+		fundBO.update(fundActionForm.getFundName());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
@@ -193,6 +204,19 @@ public class FundAction extends BaseAction {
 	
 	private List<FundCodeEntity> getFundCodes() throws Exception{
 		return getFundBizService().getFundCodes();
+	}
+	
+	private List<FundBO> getFunds() throws Exception{
+		return getFundBizService().getSourcesOfFund();
+	}
+	
+	private FundBO getFund(Short fundId) throws Exception{
+		return getFundBizService().getFund(fundId);
+	}
+	
+	private void setFormAttributes(FundActionForm actionForm, String fundName, String fundCodeValue) {
+		actionForm.setFundName(fundName);
+		actionForm.setFundCode(fundCodeValue);
 	}
 	
 	private FundCodeEntity getFundCode(String fundCode, HttpServletRequest request)throws Exception{

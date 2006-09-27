@@ -213,13 +213,6 @@
 		<dao>org.mifos.application.accounts.dao.AccountTrxnDAO</dao>
 	</dependency>
 	
-	<!--Funds-->	
-	<dependency type="funds">
-		<valueobject>org.mifos.application.fund.util.valueobjects.Fund</valueobject>
-		<businessprocessor>org.mifos.application.fund.business.handlers.FundBusinessProcessor</businessprocessor>
-		<dao>org.mifos.application.fund.dao.FundDAO</dao>
-	</dependency>
-	
 	<!--Loan Disbursal-->	
 	<dependency type="loanDisbursment">
 		<valueobject>org.mifos.application.accounts.loan.util.valueobjects.LoanDisbursment</valueobject>

@@ -86,20 +86,14 @@ public class FundActionForm extends BaseActionForm {
 		logger.debug("validate method of Fund Action form method called :" + method);
 		if (method != null && method.equals(Methods.preview.toString())) {
 			validateForPreview(request, errors);
+		}else if (method != null && method.equals(Methods.previewManage.toString())) {
+			validateForPreviewManage(request, errors);
 		}
 		if (method != null && !method.equals(Methods.validate.toString())) {
 			request.setAttribute(ProductDefinitionConstants.METHODCALLED, method);
 		}
 		logger.debug("validate method of Fund Action form called and error size:" + errors.size());
 		return errors;
-	}
-
-	public void clear() {
-		logger.debug("start clear method of Fund Action form method :" + fundCodeId);
-		this.fundCode = null;
-		this.fundCodeId = null;
-		this.fundName = null;
-		logger.debug("clear method of Fund Action form method called :"	+ fundCodeId);
 	}
 
 	private void validateForPreview(HttpServletRequest request,
@@ -109,6 +103,14 @@ public class FundActionForm extends BaseActionForm {
 			addError(errors, "fundName", FundConstants.ERROR_MANDATORY, FundConstants.FUNDNAME);
 		if (StringUtils.isNullOrEmpty(getFundCode()))
 			addError(errors, "fundCode", FundConstants.ERROR_SELECT, FundConstants.FUND_CODE);
+		logger.debug("validateForPreview method of Fund Action form method called :" + fundName);
+	}
+	
+	private void validateForPreviewManage(HttpServletRequest request,
+			ActionErrors errors) {
+		logger.debug("start validateForPreviewManage method of Fund Action form method :"	+ fundName);
+		if (StringUtils.isNullOrEmpty(getFundName()))
+			addError(errors, "fundName", FundConstants.ERROR_MANDATORY, FundConstants.FUNDNAME);
 		logger.debug("validateForPreview method of Fund Action form method called :" + fundName);
 	}
 }

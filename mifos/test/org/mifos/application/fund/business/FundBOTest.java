@@ -10,6 +10,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class FundBOTest extends MifosTestCase {
 	
 	private FundBO fundBO;
+	private FundBO fund;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -19,6 +20,7 @@ public class FundBOTest extends MifosTestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(fundBO);
+		TestObjectFactory.cleanUp(fund);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -64,6 +66,60 @@ public class FundBOTest extends MifosTestCase {
 		
 		fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class,fundBO.getFundId());
 		assertEquals("Fund-1", fundBO.getFundName());
+		assertNotNull(fundBO.getFundCode());
+		assertEquals(fundCodeEntity.getFundCodeValue(),fundBO.getFundCode().getFundCodeValue());
+	}
+	
+	public void testUpdateFundForNullFundName() throws Exception{
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		fundBO = createFund(fundCodeEntity,"Fund-1");
+		HibernateUtil.closeSession();
+		
+		fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class,fundBO.getFundId());
+		assertEquals("Fund-1", fundBO.getFundName());
+		assertNotNull(fundBO.getFundCode());
+		assertEquals(fundCodeEntity.getFundCodeValue(),fundBO.getFundCode().getFundCodeValue());
+		try{
+			fundBO.update("");
+			assertTrue(false);
+		}catch(FundException fe) {
+			assertTrue(true);
+			assertEquals(FundConstants.INVALID_FUND_NAME,fe.getKey());
+		}
+	}
+	
+	public void testUpdateFundForDuplicateFundName() throws Exception{
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		fundBO = createFund(fundCodeEntity,"Fund-1");
+		fund = createFund(fundCodeEntity,"Fund-2");
+		HibernateUtil.closeSession();
+		
+		fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class,fundBO.getFundId());
+		assertEquals("Fund-1", fundBO.getFundName());
+		assertNotNull(fundBO.getFundCode());
+		assertEquals(fundCodeEntity.getFundCodeValue(),fundBO.getFundCode().getFundCodeValue());
+		try{
+			fundBO.update(fund.getFundName());
+			assertTrue(false);
+		}catch(FundException fe) {
+			assertTrue(true);
+			assertEquals(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION,fe.getKey());
+		}
+		
+	}
+	
+	public void testUpdateFund() throws Exception{
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		fundBO = createFund(fundCodeEntity,"Fund-1");
+		HibernateUtil.closeSession();
+		
+		fundBO = (FundBO) TestObjectFactory.getObject(FundBO.class,fundBO.getFundId());
+		assertEquals("Fund-1", fundBO.getFundName());
+		assertNotNull(fundBO.getFundCode());
+		assertEquals(fundCodeEntity.getFundCodeValue(),fundBO.getFundCode().getFundCodeValue());
+		fundBO.update("Fund-2");
+		HibernateUtil.commitTransaction();
+		assertEquals("Fund-2", fundBO.getFundName());
 		assertNotNull(fundBO.getFundCode());
 		assertEquals(fundCodeEntity.getFundCodeValue(),fundBO.getFundCode().getFundCodeValue());
 	}

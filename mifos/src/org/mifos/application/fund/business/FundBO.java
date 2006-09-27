@@ -97,7 +97,21 @@ public class FundBO extends BusinessObject {
 		} catch (PersistenceException e) {
 			throw new FundException(e);
 		}
-		logger.debug("creating the saving offering Done : " + getFundName());
+		logger.debug("creating the fund Done : " + getFundName());
+	}
+	
+	public void update(String fundName) throws FundException {
+		logger.debug("updating the fund ");
+		validateFundName(fundName);
+		if(!this.fundName.equals(fundName))
+			validateDuplicateFundName(fundName);
+		this.fundName = fundName;
+		try {
+			new FundPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new FundException(e);
+		}
+		logger.debug("updation of the sfund Done : " + getFundName());
 	}
 
 	private void validate(FundCodeEntity fundCode, String fundName)

@@ -41,4 +41,22 @@ public class FundPersistenceTest extends MifosTestCase {
 		List<FundCodeEntity> funds = new FundPersistence().getFundCodes();
 		assertEquals(5,funds.size());
 	}
+	
+	public void testGetSourcesOfFund() throws Exception {
+		List<FundBO> funds = new FundPersistence().getSourcesOfFund();
+		assertNotNull(funds);
+		assertEquals(5, funds.size());
+	}
+	
+	public void testGetFundById() throws Exception {
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
+		HibernateUtil.closeSession();
+
+		fund = new FundPersistence().getFund(fund.getFundId());
+		assertNotNull(fund);
+		assertEquals("Fund1", fund.getFundName());
+		assertEquals(1, fund.getFundCode().getFundCodeId().intValue());
+		TestObjectFactory.removeObject(fund);
+	}
 }

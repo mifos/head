@@ -30,9 +30,17 @@ public class FundPersistence extends Persistence {
 		return (List<FundCodeEntity>)executeNamedQuery(NamedQueryConstants.GET_FUND_CODES,null);
 	}
 	
+	public List<FundBO> getSourcesOfFund() throws PersistenceException {
+		return executeNamedQuery(NamedQueryConstants.PRDSRCFUNDS, null);
+	}
+	
 	public FundBO getFund(String fundName) throws PersistenceException{
 		Map<String,Object> queryParameters=new HashMap<String,Object>();
 		queryParameters.put(FundConstants.FUND_NAME,fundName);
 		return (FundBO)execUniqueResultNamedQuery(NamedQueryConstants.GET_FUND_FOR_GIVEN_NAME,queryParameters);
+	}
+	
+	public FundBO getFund(Short fundId)	throws PersistenceException {
+		return (FundBO) getPersistentObject(FundBO.class,fundId);
 	}
 }

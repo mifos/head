@@ -1,7 +1,7 @@
 <!--
 /**
 
-* EditFunds.jsp    version: 1.0
+* editfundpreview.jsp    version: 1.0
 
 
 
@@ -43,26 +43,32 @@
 <%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
-<script language="JavaScript" src="pages/application/fund/js/fundValidator.js"	type="text/javascript">
+<script language="javascript">
+	function fnCreateCancel(){
+		fundActionForm.action="fundAction.do?method=cancelManage";
+		fundActionForm.submit();
+  	}
+  	function fnPrevious(){
+		fundActionForm.action="fundAction.do?method=previousManage";
+		fundActionForm.submit();
+	}
 </script>
 <html-el:form action="/fundAction.do?method=update">
-<html-el:hidden property="method" value=""/>
-<html-el:hidden property="input" value="manage"/>
-
    <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
         <span class="fontnormal8pt">
-		       <html-el:link action="AdminAction.do?method=load">
+		       <html-el:link action="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 					<mifos:mifoslabel name="funds.admin" bundle="fundUIResources"/>	
 				</html-el:link> / 
-       			 <html-el:link action="/fundAction.do?method=getAllFunds">
+       			 <html-el:link action="/fundAction.do?method=viewAllFunds&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="funds.viewfunds" bundle="fundUIResources"/> 
 				</html-el:link>/ 
 			</span>
-			<span class="fontnormal8ptbold"><c:out value="${requestScope.fundVO.fundName}"/></span>
+			<span class="fontnormal8ptbold"><c:out value="${sessionScope.fundActionForm.fundName}"/></span>
 			</td>
       </tr>
     </table>
@@ -70,7 +76,7 @@
           <tr>
             <td width="70%" align="left" valign="top" class="paddingL15T15"><table width="93%" border="0" cellpadding="3" cellspacing="0">
               <tr>
-                <td class="headingorange"><span class="heading"><c:out value="${requestScope.fundVO.fundName}"/> - </span>
+                <td class="headingorange"><span class="heading"><c:out value="${sessionScope.fundActionForm.fundName}"/> - </span>
                 <mifos:mifoslabel name="funds.preview_fundInfo" bundle="fundUIResources"/>                
                 </td>
               </tr>
@@ -98,12 +104,12 @@
                   <span class="fontnormalbold">                
                   <mifos:mifoslabel name="funds.fund_name" bundle="fundUIResources"/>:
                   </span>                
-                  <c:out value="${requestScope.fundVO.fundName}"/> 
+                  <c:out value="${sessionScope.fundActionForm.fundName}"/> 
                   <br>
                   <span class="fontnormalbold"> 
-                  <mifos:mifoslabel name="funds.fund_glcode" bundle="fundUIResources"/>:                
+                  <mifos:mifoslabel name="funds.fund_name" bundle="fundUIResources"/>:                
                   </span>
-				  <c:out value="${requestScope.fundVO.glCode.glCodeValue}"/>
+				  <c:out value="${sessionScope.fundActionForm.fundCode}"/>
 				  <br>
 			      <br>
 			      <span class="fontnormal"></span>
@@ -123,20 +129,18 @@
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                  <html-el:submit style="width:65px;"	property="button" styleClass="buttn" onclick="javascript:fnOnEdit(this.form);">
+                  <html-el:submit style="width:65px;" property="button" styleClass="buttn">
 							<mifos:mifoslabel name="funds.submit" bundle="fundUIResources"/>
 				</html-el:submit>&nbsp;
-				<html-el:cancel style="width:65px;"	styleClass="cancelbuttn" onclick="javascript:fnEditCancel(this.form);">
-							<mifos:mifoslabel name="funds.cancel" bundle="fundUIResources"/>
-				</html-el:cancel> 
+				<html-el:button property="calcelButton" style="width:65px;"	styleClass="cancelbuttn" onclick="javascript:fnCreateCancel();">
+							<mifos:mifoslabel name="funds.cancel"  bundle="fundUIResources"/>
+				</html-el:button> 
                   </td>
                 </tr>
               </table>              <br></td>
           </tr>
         </table>        
-      <br>
-  
- 
+      <br><html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>

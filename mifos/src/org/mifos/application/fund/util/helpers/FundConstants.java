@@ -52,6 +52,7 @@ public interface FundConstants {
 	public static final String FUND_EDIT_PAGE = "previousEdit_success";
 	public static final String DUPLICATE_FUNDNAME_EXCEPTION = "errors.DuplicateFundNameException";
 	public static final String ALL_FUNDLIST = "allFunds";
+	public static final String FUNDLIST = "fundList";
 	public static final String MANDATORY = "errors.mandatory";
 	public static final String GLCODE = "GL code";
 	public static final String METHOD_GET_ALL_FUNDS = "getAllFunds";
