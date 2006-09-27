@@ -40,7 +40,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -507,8 +507,8 @@ public class LoanAccountAction extends AccountAppAction {
 								LoanConstants.PROPOSEDDISBDATE).toString()));
 	}
 
-	private List<Fund> getFunds(LoanOfferingBO loanOffering) {
-		List<Fund> funds = new ArrayList<Fund>();
+	private List<FundBO> getFunds(LoanOfferingBO loanOffering) {
+		List<FundBO> funds = new ArrayList<FundBO>();
 		if (loanOffering.getLoanOfferingFunds() != null
 				&& loanOffering.getLoanOfferingFunds().size() > 0)
 			for (LoanOfferingFundEntity loanOfferingFund : loanOffering
@@ -558,10 +558,10 @@ public class LoanAccountAction extends AccountAppAction {
 		return "";
 	}
 
-	private Fund getFund(HttpSession session, Short fundId) {
-		List<Fund> funds = (List<Fund>) session
+	private FundBO getFund(HttpSession session, Short fundId) {
+		List<FundBO> funds = (List<FundBO>) session
 				.getAttribute(LoanConstants.LOANFUNDS);
-		for (Fund fund : funds) {
+		for (FundBO fund : funds) {
 			if (fund.getFundId().equals(fundId))
 				return fund;
 		}

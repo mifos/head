@@ -303,7 +303,8 @@
 	<mapping resource="org/mifos/application/rolesandpermission/business/ActivityEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/rolesandpermission/business/RoleActivityEntity.hbm.xml" />
  	<mapping resource="org/mifos/application/rolesandpermission/business/RoleBO.hbm.xml" />
-
+	<mapping resource="org/mifos/application/fund/business/FundBO.hbm.xml" />
+ 	<mapping resource="org/mifos/application/master/business/FundCodeEntity.hbm.xml" />
 </session-factory>
 
 </hibernate-configuration>  

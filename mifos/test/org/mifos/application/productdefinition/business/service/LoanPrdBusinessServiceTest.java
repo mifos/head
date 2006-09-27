@@ -3,7 +3,7 @@ package org.mifos.application.productdefinition.business.service;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
@@ -75,7 +75,7 @@ public class LoanPrdBusinessServiceTest extends MifosTestCase {
 	}
 
 	public void testGetSourcesOfFund() throws ServiceException {
-		List<Fund> funds = new LoanPrdBusinessService().getSourcesOfFund();
+		List<FundBO> funds = new LoanPrdBusinessService().getSourcesOfFund();
 		assertNotNull(funds);
 	}
 

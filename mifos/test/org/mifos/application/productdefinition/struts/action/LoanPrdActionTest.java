@@ -50,7 +50,7 @@ import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -156,7 +156,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				((List<GLCodeEntity>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANINTERESTGLCODELIST,
 						request)).size());
-		assertNotNull((List<Fund>) SessionUtils.getAttribute(
+		assertNotNull((List<FundBO>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.SRCFUNDSLIST, request));
 		assertNotNull((List<FeeView>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.LOANFEESLIST, request));
@@ -164,12 +164,12 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				ProductDefinitionConstants.LOANPRDFEE, request));
 		assertNotNull((List<FeeView>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request));
-		assertNotNull((List<Fund>) SessionUtils.getAttribute(
+		assertNotNull((List<FundBO>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, request));
 		assertEquals(0, ((List<FeeView>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request))
 				.size());
-		assertEquals(0, ((List<Fund>) SessionUtils.getAttribute(
+		assertEquals(0, ((List<FundBO>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, request))
 				.size());
 	}
@@ -684,7 +684,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				((List<GLCodeEntity>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANINTERESTGLCODELIST,
 						request)).size());
-		assertNotNull((List<Fund>) SessionUtils.getAttribute(
+		assertNotNull((List<FundBO>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.SRCFUNDSLIST, request));
 		assertNotNull((List<FeeView>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.LOANFEESLIST, request));
@@ -692,7 +692,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				ProductDefinitionConstants.LOANPRDFEE, request));
 		assertNotNull((List<FeeView>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request));
-		assertNotNull((List<Fund>) SessionUtils.getAttribute(
+		assertNotNull((List<FundBO>) SessionUtils.getAttribute(
 				ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, request));
 		assertEquals("The size of applicable status list", 2,
 				((List<PrdStatusEntity>) SessionUtils.getAttribute(
@@ -775,7 +775,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 						ProductDefinitionConstants.LOANPRDFEESELECTEDLIST,
 						request)).size());
 		assertEquals(loanOffering.getLoanOfferingFunds().size(),
-				((List<Fund>) SessionUtils.getAttribute(
+				((List<FundBO>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST,
 						request)).size());
 

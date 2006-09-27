@@ -95,7 +95,7 @@ import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -151,7 +151,7 @@ public class LoanBO extends AccountBO {
 
 	private Double interestRate;
 
-	private Fund fund;
+	private FundBO fund;
 
 	private Integer businessActivityId;
 
@@ -177,7 +177,7 @@ public class LoanBO extends AccountBO {
 			CustomerBO customer, AccountState accountState, Money loanAmount,
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interesRate,
-			Short gracePeriodDuration, Fund fund, List<FeeView> feeViews)
+			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews)
 			throws AccountException {
 		super(userContext, customer, AccountTypes.LOANACCOUNT, accountState);
 		validate(loanOffering, loanAmount, noOfinstallments, disbursementDate,
@@ -245,11 +245,11 @@ public class LoanBO extends AccountBO {
 		this.disbursementDate = disbursementDate;
 	}
 
-	public Fund getFund() {
+	public FundBO getFund() {
 		return fund;
 	}
 
-	public void setFund(Fund fund) {
+	public void setFund(FundBO fund) {
 		this.fund = fund;
 	}
 
@@ -1980,7 +1980,7 @@ public class LoanBO extends AccountBO {
 
 	private void validate(LoanOfferingBO loanOffering, Money loanAmount,
 			Short noOfinstallments, Date disbursementDate, Double interestRate,
-			Short gracePeriodDuration, Fund fund, CustomerBO customer)
+			Short gracePeriodDuration, FundBO fund, CustomerBO customer)
 			throws AccountException {
 		if (loanOffering == null || loanAmount == null
 				|| noOfinstallments == null || disbursementDate == null

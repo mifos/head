@@ -55,7 +55,7 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -111,7 +111,7 @@ public class LoanPrdAction extends BaseAction {
 				ProductDefinitionConstants.LOANPRODUCTACTIONFORM, null);
 		loadMasterData(request);
 		loadSelectedFeesAndFunds(new ArrayList<FeeView>(),
-				new ArrayList<Fund>(), request);
+				new ArrayList<FundBO>(), request);
 		prdDefLogger.debug("Load method of loan Product Action called");
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -198,7 +198,7 @@ public class LoanPrdAction extends BaseAction {
 						.isLoanCounterValue(), loanPrdActionForm
 						.isIntDedAtDisbValue(), loanPrdActionForm
 						.isPrinDueLastInstValue(), getFundsFromList(
-						(List<Fund>) SessionUtils.getAttribute(
+						(List<FundBO>) SessionUtils.getAttribute(
 								ProductDefinitionConstants.SRCFUNDSLIST,
 								request), loanPrdActionForm
 								.getLoanOfferingFunds()),
@@ -240,7 +240,7 @@ public class LoanPrdAction extends BaseAction {
 						BusinessServiceName.LoanProduct))
 				.getLoanOffering(prdOfferingId);
 		loadMasterData(request);
-		List<Fund> fundsSelected = new ArrayList<Fund>();
+		List<FundBO> fundsSelected = new ArrayList<FundBO>();
 		for (LoanOfferingFundEntity loanOfferingFund : loanOffering
 				.getLoanOfferingFunds()) {
 			fundsSelected.add(loanOfferingFund.getFund());
@@ -333,7 +333,7 @@ public class LoanPrdAction extends BaseAction {
 						.isLoanCounterValue(), loanPrdActionForm
 						.isIntDedAtDisbValue(), loanPrdActionForm
 						.isPrinDueLastInstValue(), getFundsFromList(
-						(List<Fund>) SessionUtils.getAttribute(
+						(List<FundBO>) SessionUtils.getAttribute(
 								ProductDefinitionConstants.SRCFUNDSLIST,
 								request), loanPrdActionForm
 								.getLoanOfferingFunds()),
@@ -430,7 +430,7 @@ public class LoanPrdAction extends BaseAction {
 	}
 
 	private void loadSelectedFeesAndFunds(List<FeeView> feesSelected,
-			List<Fund> fundsSelected, HttpServletRequest request)
+			List<FundBO> fundsSelected, HttpServletRequest request)
 			throws Exception {
 		prdDefLogger
 				.debug("start loadSelectedFeesAndFunds method of Loan Product Action ");
@@ -502,14 +502,14 @@ public class LoanPrdAction extends BaseAction {
 		return null;
 	}
 
-	private List<Fund> getFundsFromList(List<Fund> funds, String[] fundsSelected) {
+	private List<FundBO> getFundsFromList(List<FundBO> funds, String[] fundsSelected) {
 		prdDefLogger
 				.debug("start getFundsFromList method of Loan Product Action ");
-		List<Fund> fundList = new ArrayList<Fund>();
+		List<FundBO> fundList = new ArrayList<FundBO>();
 		if (fundsSelected != null && fundsSelected.length > 0 && funds != null
 				&& funds.size() > 0) {
 			for (String fundSelected : fundsSelected) {
-				Fund fund = getFundFromList(funds, fundSelected);
+				FundBO fund = getFundFromList(funds, fundSelected);
 				if (fund != null)
 					fundList.add(fund);
 			}
@@ -519,10 +519,10 @@ public class LoanPrdAction extends BaseAction {
 		return fundList;
 	}
 
-	private Fund getFundFromList(List<Fund> funds, String fundSelected) {
+	private FundBO getFundFromList(List<FundBO> funds, String fundSelected) {
 		prdDefLogger
 				.debug("start getFundFromList method of Loan Product Action ");
-		for (Fund fund : funds)
+		for (FundBO fund : funds)
 			if (fund.getFundId().equals(getShortValue(fundSelected)))
 				return fund;
 		return null;

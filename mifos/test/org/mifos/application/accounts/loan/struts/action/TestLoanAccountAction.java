@@ -14,8 +14,6 @@ import javax.servlet.http.HttpSession;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -32,7 +30,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -497,7 +495,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
-				new ArrayList<Fund>(), request.getSession());
+				new ArrayList<FundBO>(), request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
 				request.getSession());
 		setRequestPathInfo("/loanAccountAction.do");
@@ -521,7 +519,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
-				new ArrayList<Fund>(), request.getSession());
+				new ArrayList<FundBO>(), request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
 				request.getSession());
 		setRequestPathInfo("/loanAccountAction.do");
@@ -552,7 +550,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
-				new ArrayList<Fund>(), request.getSession());
+				new ArrayList<FundBO>(), request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
 				request.getSession());
 		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
@@ -585,7 +583,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
-				new ArrayList<Fund>(), request.getSession());
+				new ArrayList<FundBO>(), request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
 				request.getSession());
 		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
@@ -618,7 +616,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
-				new ArrayList<Fund>(), request.getSession());
+				new ArrayList<FundBO>(), request.getSession());
 		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
 				request.getSession());
 		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,

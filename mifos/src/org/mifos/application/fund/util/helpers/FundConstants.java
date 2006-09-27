@@ -55,4 +55,16 @@ public interface FundConstants {
 	public static final String MANDATORY = "errors.mandatory";
 	public static final String GLCODE = "GL code";
 	public static final String METHOD_GET_ALL_FUNDS = "getAllFunds";
+	
+	
+	public String ERROR_CREATE = "errors.create";
+	public String ERROR_SELECT = "errors.select";
+	public String ERROR_MANDATORY="errors.mandatory";
+	public String FUND_NAME="FUND_NAME";
+	public String INVALID_FUND_NAME = "errors.Fund.invalidName";
+	public String INVALID_FUND_CODE = "errors.Fund.invalidFundCode";
+	public String FUND_ACTIONFORM = "fundActionForm";
+	public String FUNDNAME = "fund Name";
+	public String FUND_CODE = "fund Code";
+	public String METHODCALLED="methodCalled";
 }

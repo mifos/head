@@ -760,19 +760,17 @@ public class ActivityMapper {
 				SecurityConstants.APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS);
 
 		// fund mapping
-		activityMap.put("/fundAction-load",
-				SecurityConstants.FUNDS_CREATE_FUNDS);
-		activityMap.put("/fundAction-create",
-				SecurityConstants.FUNDS_CREATE_FUNDS);
+		activityMap.put("/fundAction-load",	SecurityConstants.FUNDS_CREATE_FUNDS);
+		activityMap.put("/fundAction-create",SecurityConstants.FUNDS_CREATE_FUNDS);
 		activityMap.put("/fundAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/fundAction-getAllFunds", SecurityConstants.VIEW);
-		activityMap.put("/fundAction-get", SecurityConstants.VIEW);
-		activityMap.put("/fundAction-update",
-				SecurityConstants.FUNDS_EDIT_FUNDS);
-		activityMap.put("/fundAction-previous",
-				SecurityConstants.FUNDS_CREATE_FUNDS);
-		activityMap.put("/fundAction-manage",
-				SecurityConstants.FUNDS_EDIT_FUNDS);
+		activityMap.put("/fundAction-previous",	SecurityConstants.FUNDS_CREATE_FUNDS);
+		activityMap.put("/fundAction-cancelCreate", SecurityConstants.VIEW);
+		activityMap.put("/fundAction-cancelManage", SecurityConstants.VIEW);
+		activityMap.put("/fundAction-manage",SecurityConstants.FUNDS_EDIT_FUNDS);
+		activityMap.put("/fundAction-previewManage",SecurityConstants.FUNDS_EDIT_FUNDS);
+		activityMap.put("/fundAction-previousManage",SecurityConstants.FUNDS_EDIT_FUNDS);
+		activityMap.put("/fundAction-update",SecurityConstants.FUNDS_EDIT_FUNDS);
+		activityMap.put("/fundAction-viewAllFunds", SecurityConstants.VIEW);
 
 		// mapping for bulk entry
 		activityMap.put("/bulkentryaction-load", SecurityConstants.VIEW);

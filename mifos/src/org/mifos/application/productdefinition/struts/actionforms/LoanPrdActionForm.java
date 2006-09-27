@@ -49,7 +49,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -708,15 +708,15 @@ public class LoanPrdActionForm extends BaseActionForm {
 					feeViews, request);
 		} catch (PageExpiredException e) {
 		}
-		List<Fund> selectedFunds = new ArrayList<Fund>();
+		List<FundBO> selectedFunds = new ArrayList<FundBO>();
 		try {
 			if (getLoanOfferingFunds() != null
 					&& getLoanOfferingFunds().length > 0) {
 
-				List<Fund> funds = (List<Fund>) SessionUtils.getAttribute(
+				List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.SRCFUNDSLIST, request);
 				for (String selectedFund : getLoanOfferingFunds()) {
-					Fund fund = getFundFromList(funds, selectedFund);
+					FundBO fund = getFundFromList(funds, selectedFund);
 					if (fund != null)
 						selectedFunds.add(fund);
 				}
@@ -741,11 +741,11 @@ public class LoanPrdActionForm extends BaseActionForm {
 		return null;
 	}
 
-	private Fund getFundFromList(List<Fund> funds, String fundSelected) {
+	private FundBO getFundFromList(List<FundBO> funds, String fundSelected) {
 		prdDefLogger
 				.debug("getFundFromList method of Loan Product Action form method called :"
 						+ fundSelected);
-		for (Fund fund : funds)
+		for (FundBO fund : funds)
 			if (fund.getFundId().equals(getShortValue(fundSelected)))
 				return fund;
 		return null;

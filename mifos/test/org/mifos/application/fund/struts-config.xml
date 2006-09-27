@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Document   : struts-config.xml
+	Created on : August 22, 2005
+	Author     : ashishsmital
+	Description: Purpose of the document follows.
+-->
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+
+
+<struts-config>
+	<form-beans>
+		<form-bean name="fundActionForm" type="org.mifos.application.fund.struts.actionforms.FundActionForm" />
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.SystemException" scope="request"
+			path="/pages/framework/jsp/error.jsp" />
+		<exception
+			type="org.mifos.framework.exceptions.ApplicationException"
+			handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+			key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp"/>
+	</global-exceptions>
+
+	<action-mappings>
+		<action path="/fundAction" type="org.mifos.application.fund.struts.action.FundAction" parameter="method" scope="session" name="fundActionForm" validate="true" input="/fundAction.do?method=validate">
+			<forward name="load_success" path="/pages/application/fund/jsp/createfund.jsp" />
+			<forward name="load_failure" path="/pages/application/fund/jsp/createfund.jsp" />
+			<forward name="preview_success" path="/pages/application/fund/jsp/createfundpreview.jsp" />
+			<forward name="preview_failure" path="/pages/application/fund/jsp/createfund.jsp" />
+			<forward name="previous_success" path="/pages/application/fund/jsp/createfund.jsp" />
+			<forward name="previous_failure" path="/pages/application/fund/jsp/createfundpreview.jsp" />
+			<forward name="cancelCreate_success" path="/AdminAction.do?method=load" />
+			<forward name="create_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="create_failure" path="/pages/application/fund/jsp/createfundpreview.jsp" />
+			
+			<forward name="manage_success" path="/pages/application/fund/jsp/editfund.jsp" />
+			<forward name="manage_failure" path="/pages/application/fund/jsp/viewallfund.jsp" />
+			<forward name="previewManage_success" path="/pages/application/fund/jsp/editfundpreview.jsp" />
+			<forward name="previewManage_failure" path="/pages/application/fund/jsp/editfund.jsp" />
+			<forward name="previousManage_success" path="/pages/application/fund/jsp/editfund.jsp" />
+			<forward name="previousManage_failure" path="/pages/application/fund/jsp/editfundpreview.jsp" />
+			<forward name="update_success" path="/fundAction.do?method=viewAllFunds" />
+			<forward name="cancelManage_success" path="/fundAction.do?method=viewAllFunds" />
+			<forward name="update_failure" path="/pages/application/fund/jsp/editfundpreview.jsp" />
+			<forward name="viewAllFunds_success" path="/pages/application/fund/jsp/viewallfund.jsp" />
+		</action>
+	</action-mappings>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/meeting/validation.xml,org/mifos/application/meeting/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

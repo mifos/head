@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.mifos.application.accounts.util.valueobjects.Account;
 import org.mifos.application.customer.util.valueobjects.Customer;
-import org.mifos.application.fund.util.valueobjects.Fund;
 import org.mifos.application.master.util.valueobjects.Currency;
 import org.mifos.application.meeting.util.valueobjects.Meeting;
 import org.mifos.framework.util.helpers.Money;
@@ -66,7 +65,7 @@ public class Loan extends Account{
 	private Currency currency;
 	
 	/** The value of the fund association. */
-	private Fund fund;
+	//private Fund fund;
 	
 	/** The value of the gracePeriodType association. */
 	private Short gracePeriodTypeId;
@@ -187,16 +186,16 @@ public class Loan extends Account{
 	/**
 	 * @return Returns the fund}.
 	 */
-	public Fund getFund() {
+/*	public Fund getFund() {
 		return fund;
-	}
+	}*/
 	
 	/**
 	 * @param fund The fund to set.
 	 */
-	public void setFund(Fund fund) {
+/*	public void setFund(Fund fund) {
 		this.fund = fund;
-	}
+	}*/
 	
 	/**
 	 * @return Returns the groupFlag}.

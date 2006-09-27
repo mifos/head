@@ -46,7 +46,7 @@ import java.util.Set;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -141,7 +141,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			Double defInterestRate, Short maxNoInstallments,
 			Short minNoInstallments, Short defNoInstallments,
 			boolean loanCounter, boolean intDedDisbursement,
-			boolean prinDueLastInst, List<Fund> funds, List<FeeBO> fees,
+			boolean prinDueLastInst, List<FundBO> funds, List<FeeBO> fees,
 			MeetingBO meeting, GLCodeEntity principalGLcode,
 			GLCodeEntity interestGLcode) throws ProductDefinitionException {
 		super(userContext, prdOfferingName, prdOfferingShortName, prdCategory,
@@ -173,7 +173,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		this.interestGLcode = interestGLcode;
 		this.loanOfferingFunds = new HashSet<LoanOfferingFundEntity>();
 		if (funds != null && funds.size() > 0) {
-			for (Fund fund : funds) {
+			for (FundBO fund : funds) {
 				addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
 			}
 		}
@@ -383,7 +383,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			Double defInterestRate, Short maxNoInstallments,
 			Short minNoInstallments, Short defNoInstallments,
 			boolean loanCounter, boolean intDedDisbursement,
-			boolean prinDueLastInst, List<Fund> funds, List<FeeBO> fees,
+			boolean prinDueLastInst, List<FundBO> funds, List<FeeBO> fees,
 			Short recurAfter, RecurrenceType recurrenceType)
 			throws ProductDefinitionException {
 		prdLogger.debug("Updating loan Offering :" + prdOfferingName);
@@ -430,7 +430,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		if (this.loanOfferingFunds != null) {
 			this.loanOfferingFunds.clear();
 			if (funds != null && funds.size() > 0) {
-				for (Fund fund : funds) {
+				for (FundBO fund : funds) {
 					addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
 				}
 			}
@@ -460,7 +460,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			Double defInterestRate, Short maxNoInstallments,
 			Short minNoInstallments, Short defNoInstallments,
 			boolean loanCounter, boolean intDedDisbursement,
-			boolean prinDueLastInst, List<Fund> funds, List<FeeBO> fees,
+			boolean prinDueLastInst, List<FundBO> funds, List<FeeBO> fees,
 			MeetingBO meeting, GLCodeEntity principalGLcode,
 			GLCodeEntity interestGLcode) throws ProductDefinitionException {
 		prdLogger.debug("validating fields in Loan offering ");
@@ -544,7 +544,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			Double defInterestRate, Short maxNoInstallments,
 			Short minNoInstallments, Short defNoInstallments,
 			boolean loanCounter, boolean intDedDisbursement,
-			boolean prinDueLastInst, List<Fund> funds, List<FeeBO> fees,
+			boolean prinDueLastInst, List<FundBO> funds, List<FeeBO> fees,
 			Short recurAfter) throws ProductDefinitionException {
 		prdLogger.debug("validating fields in Loan offering for update");
 		if (interestTypes == null

@@ -53,7 +53,7 @@ import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -517,8 +517,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(fee);
 		fees.add(fee1);
-		List<Fund> funds = new ArrayList<Fund>();
-		funds.add(new Fund());
+		List<FundBO> funds = new ArrayList<FundBO>();
+		funds.add(new FundBO());
 		LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
 				.getContext(), "Loan Offering", "LOAP", productCategory,
 				prdApplicableMaster, startDate, endDate, null, gracePeriodType,
@@ -977,8 +977,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(fee);
 		fees.add(fee1);
-		List<Fund> funds = new ArrayList<Fund>();
-		funds.add(new Fund());
+		List<FundBO> funds = new ArrayList<FundBO>();
+		funds.add(new FundBO());
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
 		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
 				prdApplicableMaster, startDate, endDate,

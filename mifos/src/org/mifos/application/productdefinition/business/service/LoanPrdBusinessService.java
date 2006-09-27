@@ -3,7 +3,7 @@ package org.mifos.application.productdefinition.business.service;
 import java.util.Iterator;
 import java.util.List;
 
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -59,7 +59,7 @@ public class LoanPrdBusinessService extends BusinessService {
 		}
 	}
 
-	public List<Fund> getSourcesOfFund() throws ServiceException {
+	public List<FundBO> getSourcesOfFund() throws ServiceException {
 		try {
 			return new LoansPrdPersistence().getSourcesOfFund();
 		} catch (PersistenceException e) {

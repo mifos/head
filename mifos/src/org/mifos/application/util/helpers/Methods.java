@@ -40,7 +40,7 @@ package org.mifos.application.util.helpers;
 public enum Methods {
 	method, preview, editPreview, create, cancel, load, previous, searchNext, searchPrev, search, get, update,
 	getPrdOfferings,schedulePreview, manage, managePreview,editPrevious,validate, next, previewPersonalInfo,loadParent,edit, previewEditPersonalInfo,
-	cancelCreate,cancelEdit,editpreview,editprevious, previewEditMfiInfo,createPreview,searchResults, previewManage , previousManage, loadStatus, previewStatus,updateStatus,chooseOffice, 
-	loadChangePassword,login,logout,updatePassword,loadUnLockUser,unLockUserAccount;
+	cancelCreate,cancelEdit,editpreview,editprevious, previewEditMfiInfo,createPreview,searchResults, previewManage , previousManage, cancelManage, loadStatus, previewStatus,updateStatus,chooseOffice, 
+	loadChangePassword,login,logout,updatePassword,loadUnLockUser,unLockUserAccount, viewAllFunds;
 
 }

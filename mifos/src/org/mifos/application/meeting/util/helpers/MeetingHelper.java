@@ -39,7 +39,6 @@ public class MeetingHelper {
 	public String getMessageWithFrequency(MeetingBO meeting, UserContext userContext){
 		String key = null;
 		Object []args = new Object[1];
-		initializeLocale(meeting, userContext.getLocaleId());
 		if(meeting.isWeekly())
 			key = MeetingConstants.WEEK_FREQUENCY;		
 		else if(meeting.isMonthly())
@@ -52,7 +51,6 @@ public class MeetingHelper {
 	public String getDetailMessageWithFrequency(MeetingBO meeting, UserContext userContext){
 		String key = null;
 		Object []args = new Object[1];
-		initializeLocale(meeting, userContext.getLocaleId());
 		if(meeting.isWeekly())
 			key = MeetingConstants.WEEK_SCHEDULE_SHORT;		
 		else if(meeting.isMonthly())

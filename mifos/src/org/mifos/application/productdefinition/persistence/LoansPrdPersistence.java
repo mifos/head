@@ -43,7 +43,7 @@ import java.util.List;
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.PrdOfferingFeesEntity;
@@ -65,7 +65,7 @@ public class LoansPrdPersistence extends Persistence {
 		return Short.valueOf("10");
 	}
 
-	public List<Fund> getSourcesOfFund() throws PersistenceException {
+	public List<FundBO> getSourcesOfFund() throws PersistenceException {
 		return executeNamedQuery(NamedQueryConstants.PRDSRCFUNDS, null);
 	}
 

@@ -42,127 +42,73 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fund.util.helpers.FundConstants;
-import org.mifos.application.master.util.valueobjects.GLCode;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.struts.actionforms.MifosActionForm;
+import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.StringUtils;
 
-/**
- * FundActionForm class contains all getter and setter methods for
- * Fund Module
- */
-
-public class FundActionForm extends MifosActionForm {	
-	
-	/**
-	 * @return Returns the fundId.
-	 */
-	public String getFundId() {
-		return fundId;
-	}
-
-	/**
-	 * @param fundId The fundId to set.
-	 */
-	public void setFundId(String fundId) {
-		this.fundId = fundId;
-	}
-
-	public FundActionForm(){
-		glCode=new GLCode();
-	}
-	private static final long serialVersionUID = -5462456510477953927L;
-	/**
-	 * The value of fundId
-	 */
-	private String fundId;
-	/**
-	 * The value of fundName
-	 */
+public class FundActionForm extends BaseActionForm {	
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
+	private String fundCodeId;
 	private String fundName;
-	/**
-	 * The value of glCode
-	 */
-	private GLCode glCode;
+	private String fundCode;
 	
-	
-	/**
-	 * @return Returns the glCode.
-	 */
-	public GLCode getGlCode() {
-		return glCode;
+	public String getFundCode() {
+		return fundCode;
 	}
-
-	/**
-	 * @param glCode The glCode to set.
-	 */
-	public void setGlCode(GLCode glCode) {
-		this.glCode = glCode;
+	public void setFundCode(String fundCode) {
+		this.fundCode = fundCode;
 	}
-
-	/**
-	 * @return Returns the fundName.
-	 */
+	public String getFundCodeId() {
+		return fundCodeId;
+	}
+	public void setFundCodeId(String fundCodeId) {
+		this.fundCodeId = fundCodeId;
+	}
 	public String getFundName() {
 		return fundName;
 	}
-
-	/**
-	 * @param fundName The fundName to set.
-	 */
 	public void setFundName(String fundName) {
 		this.fundName = fundName;
 	}
 	
-	/**
-	 * This method is the method which would be called for any validation in the application.
-	 * This method checks the method of the action called and based on that it will call validate of
-	 * the super class and the customValidate of the sub class. If the call is for validate method, it
-	 * will return empty ActionErrors.  
-	 * Here validation is done for mandatory requirement for the fund name and gl code during a create and editing of details
-	 * @param mapping
-	 * @param request
-	 * @return ActionErrors
-	 * 
-	 * @see org.apache.struts.validator.ValidatorForm#validate(org.apache.struts.action.ActionMapping,
-	 *      javax.servlet.http.HttpServletRequest)
-	 */
-	public final ActionErrors customValidate(ActionMapping mapping,
+	@Override
+	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
-		ActionErrors errors;
-		String methodCalled = request.getParameter("method");		
-		if (null != methodCalled) 
-		{		
-			System.out.println("*************************Inside Fund Action Form Custom Validate" +methodCalled);
-			MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER).info("Inside Fund Action Form Custom Validate" +methodCalled);
-			if (CustomerConstants.METHOD_LOAD.equals(methodCalled) || 
-				FundConstants.METHOD_GET_ALL_FUNDS.equals(methodCalled) || 
-				CustomerConstants.METHOD_GET.equals(methodCalled) || 
-				CustomerConstants.METHOD_MANAGE.equals(methodCalled) || 
-				CustomerConstants.METHOD_CREATE.equals(methodCalled)||
-				CustomerConstants.METHOD_UPDATE.equals(methodCalled)||
-				CustomerConstants.METHOD_PREVIOUS.equals(methodCalled))
-			{
-				
-				request.setAttribute(Constants.SKIPVALIDATION, Boolean.valueOf(true));
-				System.out.println("*************************Skipping validation");
-			}			
-			
-		}	
-		return null;
+		ActionErrors errors = new ActionErrors();
+		request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+		String method = request.getParameter(ProductDefinitionConstants.METHOD);
+		logger.debug("validate method of Fund Action form method called :" + method);
+		if (method != null && method.equals(Methods.preview.toString())) {
+			validateForPreview(request, errors);
+		}
+		if (method != null && !method.equals(Methods.validate.toString())) {
+			request.setAttribute(ProductDefinitionConstants.METHODCALLED, method);
+		}
+		logger.debug("validate method of Fund Action form called and error size:" + errors.size());
+		return errors;
 	}
-	/**
-	 * The reset method is called before setting the values into the actionform.In this method,
-	 * the values are cleared and the default values are set.
-	 *  
-	 */
-	
-	/*public void reset(ActionMapping mapping, HttpServletRequest request) {
-		super.reset(mapping, request);			
-		this.fundName=null;
-		this.glCode=null;	
-	}*/
+
+	public void clear() {
+		logger.debug("start clear method of Fund Action form method :" + fundCodeId);
+		this.fundCode = null;
+		this.fundCodeId = null;
+		this.fundName = null;
+		logger.debug("clear method of Fund Action form method called :"	+ fundCodeId);
+	}
+
+	private void validateForPreview(HttpServletRequest request,
+			ActionErrors errors) {
+		logger.debug("start validateForPreview method of Fund Action form method :"	+ fundName);
+		if (StringUtils.isNullOrEmpty(getFundName()))
+			addError(errors, "fundName", FundConstants.ERROR_MANDATORY, FundConstants.FUNDNAME);
+		if (StringUtils.isNullOrEmpty(getFundCode()))
+			addError(errors, "fundCode", FundConstants.ERROR_SELECT, FundConstants.FUND_CODE);
+		logger.debug("validateForPreview method of Fund Action form method called :" + fundName);
+	}
 }

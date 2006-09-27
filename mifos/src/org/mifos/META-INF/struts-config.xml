@@ -71,7 +71,7 @@
 		<form-bean name="CheckListForm" type="org.mifos.application.checklist.struts.actionforms.CheckListActionForm" />
 		<!--  end -->
 		<!-- FundsActionForm Action Form  -->
-		<form-bean name="FundActionForm" type="org.mifos.application.fund.struts.actionforms.FundActionForm" />
+		<form-bean name="fundActionForm" type="org.mifos.application.fund.struts.actionforms.FundActionForm" />
 		<!--  end -->
 		
 		<!-- Bulk Entry form -->
@@ -672,25 +672,27 @@
 		</action>
 		<!-- Ends-->
 		<!-- Funds Action -->
-		<action path="/fundAction" type="org.mifos.application.fund.struts.action.FundAction" parameter="method" scope="session" name="FundActionForm" validate="true" input="/fundAction.do?method=validate">
-			<forward name="load_success" path="/pages/application/fund/jsp/DefineFunds.jsp" />
-			<forward name="load_failure" path="/pages/application/fund/jsp/DefineFunds.jsp" />
-			<forward name="previewCreate_success" path="/pages/application/fund/jsp/DefineFundsPreview.jsp" />
-			<forward name="previewCreate_failure" path="/pages/application/fund/jsp/DefineFunds.jsp" />
-			<forward name="previewEdit_success" path="/pages/application/fund/jsp/PreviewFund.jsp" />
-			<forward name="previewEdit_failure" path="/pages/application/fund/jsp/EditFunds.jsp" />
-			<forward name="previousCreate_success" path="/pages/application/fund/jsp/DefineFunds.jsp" />
-			<forward name="previousCreate_failure" path="/pages/application/fund/jsp/DefineFundsPreview.jsp" />
-			<forward name="previousEdit_success" path="/pages/application/fund/jsp/EditFunds.jsp" />
-			<forward name="previousEdit_failure" path="/pages/application/fund/jsp/PreviewFund.jsp" />
+		<action path="/fundAction" type="org.mifos.application.fund.struts.action.FundAction" parameter="method" scope="session" name="fundActionForm" validate="true" input="/fundAction.do?method=validate">
+			<forward name="load_success" path="/pages/application/fund/jsp/createfund.jsp" />
+			<forward name="load_failure" path="/pages/application/fund/jsp/createfund.jsp" />
+			<forward name="preview_success" path="/pages/application/fund/jsp/createfundpreview.jsp" />
+			<forward name="preview_failure" path="/pages/application/fund/jsp/createfund.jsp" />
+			<forward name="previous_success" path="/pages/application/fund/jsp/createfund.jsp" />
+			<forward name="previous_failure" path="/pages/application/fund/jsp/createfundpreview.jsp" />
+			<forward name="cancelCreate_success" path="/AdminAction.do?method=load" />
 			<forward name="create_success" path="/pages/application/admin/jsp/admin.jsp" />
-			<forward name="create_failure" path="/pages/application/fund/jsp/DefineFundsPreview.jsp" />
-			<forward name="search_success" path="/pages/application/fund/jsp/VIewFunds.jsp" />
-			<forward name="search_failure" path="/pages/application/admin/jsp/admin.jsp" />
-			<forward name="manage_success" path="/pages/application/fund/jsp/EditFunds.jsp" />
-			<forward name="manage_failure" path="/pages/application/fund/jsp/VIewFunds.jsp" />
-			<forward name="update_success" path="/fundAction.do?method=getAllFunds" />
-			<forward name="update_failure" path="/pages/application/fund/jsp/PreviewFund.jsp" />
+			<forward name="create_failure" path="/pages/application/fund/jsp/createfundpreview.jsp" />
+			
+			<forward name="manage_success" path="/pages/application/fund/jsp/editfund.jsp" />
+			<forward name="manage_failure" path="/pages/application/fund/jsp/viewallfund.jsp" />
+			<forward name="previewManage_success" path="/pages/application/fund/jsp/editfundpreview.jsp" />
+			<forward name="previewManage_failure" path="/pages/application/fund/jsp/editfund.jsp" />
+			<forward name="previousManage_success" path="/pages/application/fund/jsp/editfund.jsp" />
+			<forward name="previousManage_failure" path="/pages/application/fund/jsp/editfundpreview.jsp" />
+			<forward name="update_success" path="/fundAction.do?method=viewAllFunds" />
+			<forward name="cancelManage_success" path="/fundAction.do?method=viewAllFunds" />
+			<forward name="update_failure" path="/pages/application/fund/jsp/editfundpreview.jsp" />
+			<forward name="viewAllFunds_success" path="/pages/application/fund/jsp/viewallfund.jsp" />
 		</action>
 		<!-- Ends-->
 		<!-- Loan Disbursment-->

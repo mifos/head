@@ -18,6 +18,5 @@
         <many-to-one name="glCode" column="GLCODE_ID" class="org.mifos.application.master.util.valueobjects.GLCode"   unique="true" lazy="false" insert="true" update="true"/>
  
     </class>
-    <query name="product.srcfund"><![CDATA[from org.mifos.application.fund.util.valueobjects.Fund fund]]></query>
     <query name="fund.doesFundNameExist"><![CDATA[from org.mifos.application.fund.util.valueobjects.Fund fund where fund.fundName = :fundname]]></query>
 </hibernate-mapping>

@@ -38,14 +38,14 @@
 
 package org.mifos.application.productdefinition.business;
 
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.framework.business.PersistentObject;
 
 public class LoanOfferingFundEntity extends PersistentObject {
 
 	private final Short loanOfferingFundId;
 
-	private final Fund fund;
+	private final FundBO fund;
 
 	private final LoanOfferingBO loanOffering;
 
@@ -55,13 +55,13 @@ public class LoanOfferingFundEntity extends PersistentObject {
 		this.loanOffering = null;
 	}
 
-	protected LoanOfferingFundEntity(Fund fund, LoanOfferingBO loanOffering) {
+	protected LoanOfferingFundEntity(FundBO fund, LoanOfferingBO loanOffering) {
 		this.loanOfferingFundId = null;
 		this.fund = fund;
 		this.loanOffering = loanOffering;
 	}
 
-	public Fund getFund() {
+	public FundBO getFund() {
 		return fund;
 	}
 

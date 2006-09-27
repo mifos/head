@@ -3,7 +3,7 @@ package org.mifos.application.productdefinition.persistence;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -35,7 +35,7 @@ public class LoanPrdPersistenceTest extends MifosTestCase {
 	}
 
 	public void testGetSourcesOfFund() throws Exception {
-		List<Fund> funds = new LoansPrdPersistence().getSourcesOfFund();
+		List<FundBO> funds = new LoansPrdPersistence().getSourcesOfFund();
 		assertNotNull(funds);
 		assertEquals(5, funds.size());
 	}

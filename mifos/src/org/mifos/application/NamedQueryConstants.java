@@ -60,6 +60,9 @@ public interface NamedQueryConstants {
 	public String MASTERDATA_GL_CODES = "masterdata.GlCodes";
 	//fund related
 	public String DOES_FUND_NAME_EXIST = "fund.doesFundNameExist";
+	public String CHECK_FUND_NAME_EXIST = "fund.checkFundNameExist";
+	public String GET_FUND_CODES = "fund.getFundCodes";
+	public String GET_FUND_FOR_GIVEN_NAME="fund.getFundForGivenName";
 	public String GET_OFFICE_COUNT = "office.getOfficeCountForLevel";
 	// for group status 
 	public String MASTERDATA_STATUS="masterdata.status";

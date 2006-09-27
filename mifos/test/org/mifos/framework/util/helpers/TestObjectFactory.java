@@ -113,8 +113,9 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fund.util.valueobjects.Fund;
+import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CollateralTypeEntity;
+import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -517,7 +518,7 @@ public class TestObjectFactory {
 							.toString()), new Money(defLnAmnt.toString()),
 					defIntRate, defIntRate, defIntRate, defInstallments,
 					defInstallments, defInstallments, true, interestDisAtDisb,
-					principalDueLastInst, new ArrayList<Fund>(),
+					principalDueLastInst, new ArrayList<FundBO>(),
 					new ArrayList<FeeBO>(), meeting, glCodePrincipal,
 					glCodeInterest);
 		} catch (ProductDefinitionException e) {
@@ -559,7 +560,7 @@ public class TestObjectFactory {
 			loan = new LoanBO(TestObjectFactory.getUserContext(), loanOfering, customer,
 						AccountState.getStatus(accountStateId),	new Money(currency, "300.0"),
 						Short.valueOf("6"),meetingDates.get(0),true,0.0,(short) 0,
-						new Fund(),new ArrayList<FeeView>());
+						new FundBO(),new ArrayList<FeeView>());
 			
 		} catch (NumberFormatException e) {
 		} catch (AccountException e) {
@@ -1405,7 +1406,7 @@ public class TestObjectFactory {
 				loan = new LoanBO(TestObjectFactory.getUserContext(), loanOfering, customer,
 						AccountState.getStatus(accountStateId),new Money(currency, "300.0"),
 						Short.valueOf("6"),meetingDates.get(0),false,10.0,
-						(short)0,new Fund(),new ArrayList<FeeView>());
+						(short)0,new FundBO(),new ArrayList<FeeView>());
 			} catch (NumberFormatException e) {
 			} catch (AccountException e) {
 				e.printStackTrace();
@@ -1934,5 +1935,22 @@ public class TestObjectFactory {
 		roleBO.save();
 		HibernateUtil.commitTransaction();
 		return roleBO;
+	}
+	
+	public static void cleanUp(FundBO fundBO){
+		if(fundBO!=null){
+			Session session= HibernateUtil.getSessionTL();
+			Transaction transaction = HibernateUtil.startTransaction();
+			session.lock(fundBO, LockMode.NONE);
+			session.delete(fundBO);
+			transaction.commit();
+		}
+	}
+	
+	public static FundBO createFund(FundCodeEntity fundCode, String fundName) throws Exception {
+		FundBO fundBO = new FundBO(fundCode,fundName);
+		fundBO.save();
+		HibernateUtil.commitTransaction();
+		return fundBO;
 	}
 }

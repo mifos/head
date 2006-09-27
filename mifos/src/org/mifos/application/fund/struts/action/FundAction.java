@@ -38,10 +38,7 @@
 
 package org.mifos.application.fund.struts.action;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,268 +46,161 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.customer.center.struts.actionforms.CenterActionForm;
-import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.center.util.helpers.ValidateMethods;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.fund.business.service.FundBusinessService;
 import org.mifos.application.fund.struts.actionforms.FundActionForm;
 import org.mifos.application.fund.util.helpers.FundConstants;
-import org.mifos.application.fund.util.valueobjects.Fund;
-import org.mifos.application.master.util.valueobjects.GLCode;
+import org.mifos.application.master.business.FundCodeEntity;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.struts.action.MifosBaseAction;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.valueobjects.Context;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
-/**
- * Fund action class through which all actions related to fund module
- * happen
- */
-
-public class FundAction extends MifosBaseAction {
-
-	/**An instance of the logger which is used to log statements */
-	private MifosLogger logger =MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
+public class FundAction extends BaseAction {
 	
-	/**
-	 * Returns keyMethod map to be added to the keyMethodMap of the base Action class.
-	 * This method is called from <code>getKeyMethodMap<code> of the base Action Class.
-	 * The map returned from this method is appended to the map of the <code>getKeyMethodMap<code> in the base action class and that will form the complete map for that action.
-	 * This map will have method names of extra methods to be called in case of ClientCreationAction.
-	 * @return
-	 */
-	public Map<String,String> appendToMap()
-	{
-		Map<String,String> methodHashMap = new HashMap<String,String>();
+	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FUNDLOGGER);
 
-		//TODO change this code------------------------
-		methodHashMap.putAll(super.appendToMap());
-		methodHashMap.put(FundConstants.METHOD_GET_ALL_FUNDS, FundConstants.METHOD_GET_ALL_FUNDS);
-		return methodHashMap;
-	}
-	/**
-	 * This method is called before th laod page for center is called
-	 * It sets this information in session and context.This should be removed after center was successfully created.
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	public ActionForward customLoad(ActionMapping mapping,
-			ActionForm form,
-			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-		this.clearActionForm(form);
-		return null;
-	}
-	/**
-	 * This method is called before converting action form to value object on every method call.
-	 * if on a particular method conversion is not required , it returns false, otherwise returns true
-	 * @return Returns whether the action form should be converted or not
-	 */
-	protected boolean isActionFormToValueObjectConversionReq(String methodName) {
-		if (null != methodName	&& (methodName.equals("load"))) {			
-			return false;
-		} else {
-			return true;
-		}
+	@Override
+	protected BusinessService getService() throws ServiceException {
+		return getFundBizService();
 	}
 	
-	
-	/**
-	 * overriden getpath method returns the path used to find valueobject
-	 * business processor and dao of checklist module
-	 * 
-	 * @return java.lang.String
-	 */
-
-	protected String getPath() {		
-		return FundConstants.FUNDSPATH;
+	@Override
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
+		return true;
 	}
 	
-	/**
-	  *	Method which is called to load the page to preview the details entered by the user. Depending on the input
-	  * page, this method forwards to the respective preview page
-	  * @param mapping The page to which the control passes to. This is specified in the struts-config.xml
-	  * @param form The form bean associated with this action
-	  * @param request Contains the request parameters
-	  * @param response
-	  * @return The mapping to the next page
-	  */
-
-	 public ActionForward customPreview(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
-		FundActionForm fundActionForm = (FundActionForm)form;
-		String forward = null;
-		//obtaining the input page, so that the repective forward can be decided
-		String fromPage =fundActionForm.getInput();
-		Context context =(Context)request.getAttribute(Constants.CONTEXT);
-		logger.debug("Inside customPreview and input page is: "+fromPage);
-		//personnel object and display address is set only if input page is create or manage
-		Fund fund = (Fund)context.getValueObject();
-		//get selected loan officer name and set in center value object
-		if(CenterConstants.INPUT_CREATE.equals(fromPage)){
-			if(fundActionForm.getGlCode().getGlCodeId() !=null ||fundActionForm.getGlCode().getGlCodeId().shortValue() !=0 ){
-				GLCode glCode = getGlCode(context,fundActionForm.getGlCode().getGlCodeId());
-				fundActionForm.setGlCode(glCode);
-				fund.setGlCode(glCode);
-			}
-			else{
-				fund.setGlCode(null);
-			}
-		}
-		//deciding forward page based on the input page
-		if(  CenterConstants.INPUT_CREATE.equals(fromPage))
-			forward = FundConstants.FUND_CREATE_PREVIEW_PAGE;
-		else if(CenterConstants.INPUT_MANAGE.equals(fromPage ))
-			forward = FundConstants.FUND_EDIT_PREVIEW_PAGE;
-		logger.debug("forward: "+forward);
-		return mapping.findForward(forward);
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward load(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("start Load method of Fund Action");
+		doCleanUp(request);
+		SessionUtils.setAttribute(FundConstants.ALL_FUNDLIST, getFundCodes(),request);
+		logger.debug("Load method of Fund Action called");
+		return mapping.findForward(ActionForwards.load_success.toString());
 	}
-	 /**
-	  *	Method which is called to load the page to preview the details entered by the user. Depending on the input
-	  * page, this method forwards to the respective preview page
-	  * @param mapping The page to which the control passes to. This is specified in the struts-config.xml
-	  * @param form The form bean associated with this action
-	  * @param request Contains the request parameters
-	  * @param response
-	  * @return The mapping to the next page
-	  */
 
-	 public ActionForward customPrevious(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
-		FundActionForm fundActionForm = (FundActionForm)form;
-		String forward = null;
-		//obtaining the input page, so that the repective forward can be decided
-		String fromPage =fundActionForm.getInput();
-		//deciding forward page based on the input page
-		if(  CenterConstants.INPUT_CREATE.equals(fromPage))
-			forward = FundConstants.FUND_CREATE_PAGE;
-		else if(CenterConstants.INPUT_MANAGE.equals(fromPage ))
-			forward = FundConstants.FUND_EDIT_PAGE;
-		logger.debug("forward: "+forward);
-		return mapping.findForward(forward);
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("start preview method of loan Product Action");
+		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
-	 
-	 /**
-	  *	Method which is called to load the page to edit the fund details entered by the user. This sets the object 
-	  * whose details have to be edited as the value object in the context.
-	  * @param mapping The page to which the control passes to. This is specified in the struts-config.xml
-	  * @param form The form bean associated with this action
-	  * @param request Contains the request parameters
-	  * @param response
-	  * @return The mapping to the next page
-	  */
 
-	 public ActionForward customManage(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response){
-		
-		 FundActionForm fundActionForm = (FundActionForm)form;
-		String forward = null;
-		//obtaining the input page, so that the repective forward can be decided
-		String fundId =fundActionForm.getFundId();
-		Context context =(Context)request.getAttribute(Constants.CONTEXT);
-		Iterator iteratorFund=((List)context.getSearchResultBasedOnName(FundConstants.ALL_FUNDLIST).getValue()).iterator();
-		//get selected fund object and set as valueobject in the context
-		if(!ValidateMethods.isNullOrBlank(fundId) ){
-			//Obtaining the fund object which ahs been selected, so that its details can be edited
-			while (iteratorFund.hasNext()){
-				Fund fundItem=(Fund)iteratorFund.next();
-				if(fundItem.getFundId().shortValue()== Short.valueOf(fundId).shortValue()){
-					context.setValueObject(fundItem);
-					context.addBusinessResults("OldFundName",fundItem.getFundName());
-					break;
-				}
-			}
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previous(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("start previous method of Fund Action");
+		return mapping.findForward(ActionForwards.previous_success.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelCreate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("start cancelCreate method of Fund Action");
+		return mapping.findForward(ActionForwards.cancelCreate_success.toString());
+	}
+	
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward create(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("start create method of Fund Action");
+		FundActionForm fundActionForm = (FundActionForm) form;
+		FundCodeEntity fundCodeEntity = getFundCode(fundActionForm.getFundCode(),request);
+		FundBO fundBO = new FundBO(fundCodeEntity,fundActionForm.getFundName());
+		fundBO.save();
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+	
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward viewAllFunds(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		return mapping.findForward(ActionForwards.viewAllFunds_success.toString());
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward manage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.manage_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previewManage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("start editPreview of Fund Action ");
+		return mapping.findForward(ActionForwards.previewManage_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previousManage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("start editPrevious of Fund Action ");
+		return mapping.findForward(ActionForwards.previousManage_success.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelManage(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("start cancelCreate method of Fund Action");
+		return mapping.findForward(ActionForwards.cancelManage_success.toString());
+	}
+
+	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward update(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute(ProductDefinitionConstants.METHODCALLED);
+		logger.debug("start validate method of Fund Action"	+ method);
+		if (method != null)
+			return mapping.findForward(method + "_failure");
+		return mapping.findForward(ActionForwards.preview_failure.toString());
+	}
+	
+	private FundBusinessService getFundBizService() {
+		return (FundBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.fund);
+	}
+	
+	private void doCleanUp(HttpServletRequest request) {
+		SessionUtils.setAttribute(FundConstants.FUND_ACTIONFORM, null,request.getSession());
+	}
+	
+	private List<FundCodeEntity> getFundCodes() throws Exception{
+		return getFundBizService().getFundCodes();
+	}
+	
+	private FundCodeEntity getFundCode(String fundCode, HttpServletRequest request)throws Exception{
+		List<FundCodeEntity> fundList = (List<FundCodeEntity>) SessionUtils.getAttribute(FundConstants.ALL_FUNDLIST,request);
+		for(FundCodeEntity fundCodeEntity : fundList) {
+			if(fundCodeEntity.getFundCodeId().equals(getShortValue(fundCode)))
+				return fundCodeEntity;
 		}
 		return null;
 	}
-	 
-	 /**
-	  *	Method which is called to load the page to view the list of fund currently in the system 
-	  * @param mapping The page to which the control passes to. This is specified in the struts-config.xml
-	  * @param form The form bean associated with this action
-	  * @param request Contains the request parameters
-	  * @param response
-	  * @return The mapping to the next page
-	  */
-
-	 public ActionForward getAllFunds(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response)throws Exception{
-		FundActionForm fundActionForm = (FundActionForm)form;
-		String forward = FundConstants.ALL_FUNDS_PAGE;
-		//obtaining the input page, so that the repective forward can be decided
-		String fundId =fundActionForm.getInput();
-		Context context =(Context)request.getAttribute(Constants.CONTEXT);
-		context.setBusinessAction(FundConstants.METHOD_GET_ALL_FUNDS);
-		delegate(context , request);
-		return mapping.findForward(forward);
-	}
-	 /**
-	  * This method iterates through the list of glcodes. This retrieves the selected glcode object
-	  * @param context
-	  * @param glCodeId
-	  * @return
-	  */
-	 private GLCode getGlCode(Context context, short glCodeId) {
-			GLCode glCode = new GLCode();
-			Iterator iteratorGLCode=((List)context.getSearchResultBasedOnName(FundConstants.GLCODELIST).getValue()).iterator();
-			//Obtaining the name of the selected loan officer from the master list of loan officers
-			while (iteratorGLCode.hasNext()){
-				GLCode glCodeItem=(GLCode)iteratorGLCode.next();
-				if(glCodeItem.getGlCodeId().shortValue()==glCodeId){
-					glCode.setGlCodeId(glCodeItem.getGlCodeId());
-					glCode.setGlCodeValue(glCodeItem.getGlCodeValue());
-				}
-			}
-			return glCode;
-		}
-	 
-	 /**
-	  * This method is called to clear action form values, whenever a fresh request to create a fund comes in
-	  * This is necessary because action form is stored in session
-	  * @param mapping indicates action mapping defined in struts-config.xml
-	  * @param form The form bean associated with this action
-	  */
-	private void clearActionForm(ActionForm form){
-		FundActionForm fundForm = (FundActionForm)form;
-		fundForm.setGlCode(new GLCode());
-		fundForm.setFundName("");
-		
-
-	}
-	 /**
-	  *	Method which is called to decide the pages on which the errors on failure of validation will be displayed
-	  * this method forwards to the respective input page
-	  * @param mapping The page to which the control passes to. This is specified in the struts-config.xml
-	  * @param form The form bean associated with this action
-	  * @param request Contains the request parameters
-	  * @param response
-	  * @return The mapping to the next page
-	  */
-	public ActionForward customValidate(ActionMapping mapping,ActionForm form,HttpServletRequest request,HttpServletResponse response) {
-
-		String forward = null;
-		String methodCalled= (String)request.getAttribute("methodCalled");
-		logger.debug("methodCalled: "+methodCalled);
-		FundActionForm fundForm = (FundActionForm)form;
-		String fromPage =fundForm.getInput();
-		//deciding forward page
-		if(null !=methodCalled) {
-			//depending on where the preview was called from, the action forwards to the page where the errors will be displayed
-			if(CustomerConstants.METHOD_PREVIEW.equals(methodCalled)){
-				if(  CenterConstants.INPUT_CREATE.equals(fromPage))
-					forward =FundConstants.FUND_CREATE_PREVIEW__FAILUREPAGE;
-				else if(CenterConstants.INPUT_MANAGE.equals(fromPage ))
-					forward = FundConstants.FUND_EDIT_PREVIEW_FAILURPAGE;
-
-			}
-			logger.debug("forward: "+forward);
-
-		}
-		return mapping.findForward(forward);
-
-	}
-	
 }
