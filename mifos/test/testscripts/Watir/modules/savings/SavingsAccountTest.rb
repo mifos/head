@@ -29,7 +29,8 @@ class SavingsAccountCreateEdit < TestClass
 		@@client_name=dbresult[0]
 		@@cust_id=dbresult[1]
 		@@global_cust_num=dbresult[2]
-		dbquery("select prd_offering_id,prd_offering_name from prd_offering where prd_applicable_master_id="+typeid+" and prd_category_id=2 and offering_status_id=2")
+		#dbquery("select prd_offering_id,prd_offering_name from prd_offering where prd_applicable_master_id="+typeid+" and prd_category_id=2 and offering_status_id=2")
+		dbquery("select a.prd_offering_id,a.prd_offering_name from prd_offering a,savings_offering b where b.prd_offering_id=a.prd_offering_id and a.prd_applicable_master_id="+ typeid+" and a.prd_category_id=2 and b.savings_type_id=1 and a.offering_status_id=2")
 		@@prod_name=dbresult[1]
 		@@prod_id=dbresult[0]
 		
@@ -424,7 +425,9 @@ class SavingsAccountCreateEdit < TestClass
 	 begin
 	  $ie.link(:text,@@close_account).click
       $ie.select_list(:name,"paymentTypeId").select_value("1")
-      $ie.select_list(:name,"customerId").select("Non-specified")
+      if @@type_id=="2"
+        $ie.select_list(:name,"customerId").select("Non-specified")
+      end
       $ie.text_field(:name,"notes").set("aaaaa")
       $ie.button(@@button_preview).click
       assert($ie.contains_text(@@savings_account_close_msg))
