@@ -150,8 +150,12 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
 
 5. Install the mifos database
 
-   You can use the ant target 'build_db' to install the mifos
-   database. You can also perform the steps manually:
+   Invoke the ant target 'build_db' to install the mifos
+   database:
+
+       ant build_db
+
+   In some cases it might be necessary to perform some steps manually:
 
        Start a mysql session: 
 
@@ -164,6 +168,13 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
            grant all privileges on mifos.* to mifos identified by 'mifos'  
            \. sql/mifosdbcreationscript.sql
            \. sql/mifosmasterdata.sql 
+           
+       However, you'll need to look at the build_db target in
+       build.xml for the specific
+       set of *.sql files needed to create the database (or upgrade
+       a database for a previous version of MIFOS).  The above
+       list of .sql files are not all the ones needed to create
+       a database.
 
 note: if you issue the above commands one by one, you need to issue this command: 
 mySQL> use mifos ;  
