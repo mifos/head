@@ -63,6 +63,8 @@ public class ClientBO extends CustomerBO {
 	
 	private ClientDetailEntity customerDetail;
 	
+	private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
+	
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CLIENTLOGGER);
 	
 	public ClientBO(UserContext userContext, String displayName,
@@ -220,6 +222,15 @@ public class ClientBO extends CustomerBO {
 
 	public void setSecondLastName(String secondLastName) {
 		this.secondLastName = secondLastName;
+	}
+
+	public Set<ClientInitialSavingsOfferingEntity> getOfferingsAssociatedInCreate() {
+		return offeringsAssociatedInCreate;
+	}
+
+	public void setOfferingsAssociatedInCreate(
+			Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate) {
+		this.offeringsAssociatedInCreate = offeringsAssociatedInCreate;
 	}
 
 	@Override

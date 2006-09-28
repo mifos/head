@@ -4,7 +4,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -17,6 +19,7 @@ import org.mifos.application.customer.business.CustomerMovementEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -38,6 +41,8 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
@@ -53,7 +58,8 @@ public class TestClientBO extends MifosTestCase {
 	private CenterBO center1;
 	private CustomerBO group;
 	private GroupBO group1;
-	
+	private SavingsOfferingBO savingsOffering1;
+	private SavingsOfferingBO savingsOffering2;
 	private ClientBO client;
 	
 	private MeetingBO meeting;
@@ -79,9 +85,41 @@ public class TestClientBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.cleanUp(center1);
 		TestObjectFactory.cleanUp(office);
+		TestObjectFactory.removeObject(savingsOffering1);
+		TestObjectFactory.removeObject(savingsOffering2);
 		super.tearDown();
 	}
 
+	public void testInitialSavingsOfferingAtCreate()throws Exception{
+		savingsOffering1 = createSavingsOffering("Offering1", "s1");
+		savingsOffering2 = createSavingsOffering("Offering2", "s2");
+		String name = "client1";
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
+		client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, personnel, officeId, null, null,
+				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+		
+		Set<ClientInitialSavingsOfferingEntity> offeringAssociated = new HashSet<ClientInitialSavingsOfferingEntity>();
+		offeringAssociated.add(new ClientInitialSavingsOfferingEntity(client, savingsOffering1));
+		offeringAssociated.add(new ClientInitialSavingsOfferingEntity(client, savingsOffering2));
+		client.setOfferingsAssociatedInCreate(offeringAssociated);
+		client.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		client = new ClientPersistence().getClient(client.getCustomerId());
+		assertEquals(offeringAssociated.size(), client.getOfferingsAssociatedInCreate().size());
+		for(ClientInitialSavingsOfferingEntity clientOffering: client.getOfferingsAssociatedInCreate()){
+			if(clientOffering.getSavingsOffering().getPrdOfferingId().equals(savingsOffering1.getPrdOfferingId()))
+				assertTrue(true);
+			if(clientOffering.getSavingsOffering().getPrdOfferingId().equals(savingsOffering2.getPrdOfferingId()))
+				assertTrue(true);
+		}
+		savingsOffering1 = (SavingsOfferingBO)TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering1.getPrdOfferingId());
+		savingsOffering2 = (SavingsOfferingBO)TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering2.getPrdOfferingId());
+	}		
+	
 	public void testAddClientAttendance() throws PersistenceException {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
@@ -163,51 +201,7 @@ public class TestClientBO extends MifosTestCase {
 
 	}
 
-	private void createInitialObjects() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE.getValue(),
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
-		HibernateUtil.closeSession();
-	}
 	
-	private void createParentObjects() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("7"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		HibernateUtil.closeSession();
-	}
-
-	private ClientAttendanceBO getClientAttendance(java.util.Date meetingDate) {
-		ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
-		clientAttendance.setAttendance(Short.valueOf("1"));
-		clientAttendance.setMeetingDate(meetingDate);
-		return clientAttendance;
-	}
-
-	private Date getDateOffset(int numberOfDays) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month,
-				(day - numberOfDays));
-		return new Date(currentDateCalendar.getTimeInMillis());
-	}
-
-	private MeetingBO getMeeting() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-	//	meeting.setMeetingStartDate(new GregorianCalendar());
-		return meeting;
-	}
 	
 	public void testCreateClientWithoutName() throws Exception {
 		try {
@@ -823,4 +817,61 @@ public class TestClientBO extends MifosTestCase {
 			return fields;
 	}
 	
+	private void createInitialObjects() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE.getValue(),
+				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+		HibernateUtil.closeSession();
+	}
+	
+	private void createParentObjects() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("7"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		HibernateUtil.closeSession();
+	}
+
+	private ClientAttendanceBO getClientAttendance(java.util.Date meetingDate) {
+		ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
+		clientAttendance.setAttendance(Short.valueOf("1"));
+		clientAttendance.setMeetingDate(meetingDate);
+		return clientAttendance;
+	}
+
+	private Date getDateOffset(int numberOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month,
+				(day - numberOfDays));
+		return new Date(currentDateCalendar.getTimeInMillis());
+	}
+
+	private MeetingBO getMeeting() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		return meeting;
+	}
+	
+	private SavingsOfferingBO createSavingsOffering(String offeringName, String shortName) {
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		return TestObjectFactory
+				.createSavingsOffering(offeringName, shortName, Short.valueOf("2"),
+						new Date(System.currentTimeMillis()), Short
+								.valueOf("2"), 300.0, Short.valueOf("1"), 24.0,
+						200.0, 200.0, SavingsType.MANDATORY.getValue(), InterestCalcType.AVERAGE_BALANCE.getValue(),
+						meetingIntCalc, meetingIntPost);
+	}
 }

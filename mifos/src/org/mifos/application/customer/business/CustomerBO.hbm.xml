@@ -97,6 +97,10 @@
 				<key column="CUSTOMER_ID" />
 				<one-to-many class="org.mifos.application.customer.client.business.ClientAttendanceBO" />
 			</set>
+			<set name="offeringsAssociatedInCreate"  table="CLIENT_INITIAL_SAVINGS_OFFERING" inverse="true" cascade="save-update"  access="field" lazy="true">
+				<key column="CUSTOMER_ID" />
+				<many-to-many class="org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity" column="CLIENT_OFFERING_ID"/>
+			</set>
 			<one-to-one name="performanceHistory" class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" cascade="all" lazy="true" property-ref="client" access="field"/>
 		</subclass>
 

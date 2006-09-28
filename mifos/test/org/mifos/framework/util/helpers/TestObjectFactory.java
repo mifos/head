@@ -97,9 +97,11 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
+import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.CategoryTypeEntity;
@@ -1154,6 +1156,8 @@ public class TestObjectFactory {
 		deleteCenterMeeting(customer);
 		deleteClientAttendence(customer);
 		deleteCustomerNotes(customer);
+		deleteClientOfferings(customer);
+		
 		List<FeeBO> feeList = new ArrayList<FeeBO>();
 		for (AccountBO account : customer.getAccounts()) {
 			if (null != account) {
@@ -1168,6 +1172,17 @@ public class TestObjectFactory {
 		transaction.commit();
 	}
 
+	private static void deleteClientOfferings(CustomerBO customer){
+		Session session = HibernateUtil.getSessionTL();
+		if(customer instanceof ClientBO){
+			Set<ClientInitialSavingsOfferingEntity> clientOfferings = ((ClientBO)customer).getOfferingsAssociatedInCreate();
+			if(clientOfferings!=null){
+				for(ClientInitialSavingsOfferingEntity clientOffering: clientOfferings)
+					session.delete(clientOffering);
+			}
+		}
+	}
+	
 	private static void deleteCustomerNotes(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		Set<CustomerNoteEntity> customerNotes = customer.getCustomerNotes();
