@@ -341,6 +341,7 @@ class GroupCreateEdit < TestClass
       end      
       dbquery("select customer_id,display_name,branch_id from customer where customer_level_id=3 and status_id=13 and branch_id="+@@office_id+" order by display_name")
       @@cdisplay_name=dbresult[1]  
+      @@customer_id=dbresult[0]
       $ie.text_field(:name,"searchNode(searchString)").set(@@cdisplay_name)        
       $ie.button(:value,@@button_search).click
       $ie.link(:text,@@cdisplay_name).click
@@ -686,7 +687,8 @@ class GroupCreateEdit < TestClass
   
   def fee_select_one_by_one()
     begin
-      search_res=$dbh.real_query("SELECT fee_id FROM fees where category_id in (1,3) and status=1 and default_admin_fee='No'")
+      #search_res=$dbh.real_query("SELECT fee_id FROM fees where category_id in (1,3) and status=1 and default_admin_fee='No'")
+      search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=(select recurrence_id from recurrence_detail a ,customer_meeting cm where a.meeting_id=cm.meeting_id and customer_id = "+@@customer_id+") and a.fee_id not in (select fee_id from feelevel) and a.category_id in (1,3) and status=1 group by a.fee_id")      
       dbresult1=search_res.fetch_row.to_a
       row1=search_res.num_rows()
       rowf=0

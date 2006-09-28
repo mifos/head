@@ -412,6 +412,7 @@ class ClientCreateEdit<TestClass
       end      
       dbquery("select customer_id,display_name,branch_id from customer where customer_level_id=2 and status_id=9 and branch_id=" + @@office_id)
       @@gdisplay_name=dbresult[1]  
+      @@customer_id=dbresult[0]
       $ie.text_field(:name,"searchNode(searchString)").set(@@gdisplay_name)        
       $ie.button(:value,"Proceed").click
       $ie.link(:text,@@gdisplay_name).click
@@ -933,7 +934,8 @@ class ClientCreateEdit<TestClass
   #selecting fee one by one while creating center
   
   def fee_select_one_by_one()
-    search_res=$dbh.real_query("select * from fees where category_id=2 and default_admin_fee='no' and status=1")
+    #search_res=$dbh.real_query("select * from fees where category_id=2 and default_admin_fee='no' and status=1")
+    search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=(select recurrence_id from recurrence_detail a ,customer_meeting cm where a.meeting_id=cm.meeting_id and customer_id = "+@@customer_id+") and a.fee_id not in (select fee_id from feelevel) and a.category_id in (1,2) and status=1 group by a.fee_id")
     dbresult1=search_res.fetch_row.to_a
     row1=search_res.num_rows()
     rowf=0
@@ -1311,17 +1313,61 @@ class ClientCreateEdit<TestClass
       select_office()
       client_create_with_all_data(nsalutation,nfname,nmname,nsname,nlname,ngovtid,ndate,nmonth,nyear,ngender,nmstatus,nnoofchildren,nreligion,neducation,nsorftype,nsorffname,nsorfmname,nsorfsname,nsorflname,naddress1,naddress2,naddress3,ncity,nstate,ncountry,npcode,nphone,ncustom)
       click_continue() 
-      client_create_enter_all_data_mfi(nexternalid,ntdate,ntmonth,ntyear)
+      if(@frequncymeeting.to_i==2) then # for month
+        client_create_enter_all_data_mfi(nexternalid,ntdate,ntmonth,ntyear)
+      elsif(@frequncymeeting.to_i==1) then # for week
+      client_create_enter_all_data_mfi_outofgroup(nexternalid,ntdate,ntmonth,ntyear)
+      end
+      
     end
   end
   
+  # seperate function for out of group members
+  
+  def client_create_enter_all_data_mfi_outofgroup(nexternalid,ntdate,ntmonth,ntyear)
+    $ie.select_list(:name,"formedByPersonnel").select_value(@@personnel_id)
+      $ie.text_field(:name,"externalId").set(nexternalid)
+      $ie.checkbox(:name,"trained","1").set
+      $ie.text_field(:name,"trainedDateDD").set(ntdate)
+      $ie.text_field(:name,"trainedDateMM").set(ntmonth)      
+      $ie.text_field(:name,"trainedDateYY").set(ntyear)
+      fee_select_one_by_one_outofgroup()
+  end
   #Selecting the loan officer while entering MFI information
   
   def select_loan_officer()
     $ie.select_list(:name,"loanOfficerId").select_value(@@personnel_id)
     meeting(@@lookup_name_client)
-    
   end
+  
+  # selecting fee for clients out of group
+def   fee_select_one_by_one_outofgroup()
+
+   search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=1 and a.fee_id not in (select fee_id from feelevel) and category_id in (1,2) and status=1 group by a.fee_id")
+    dbresult1=search_res.fetch_row.to_a
+    row1=search_res.num_rows()
+    rowf=0
+    number=3
+    if row1=="0" then
+      $looger.log_results("No Fess created for the group","","","Passed")
+    elsif row1 < number then
+      while (rowf < row1)
+        fee_id=dbresult1[0]
+        $ie.select_list(:name,"selectedFee["+String(rowf)+"].feeId").select_value(fee_id)
+        dbresult1=search_res.fetch_row.to_a
+        rowf+=1
+      end
+    else
+      while(rowf < number)
+          fee_id=dbresult1[0]
+          $ie.select_list(:name,"selectedFee["+String(rowf)+"].feeId").select_value(fee_id)
+          dbresult1=search_res.fetch_row.to_a
+          rowf+=1
+      end
+    end
+
+end
+  
  # Selecting Branch office while creating client out side group
   def select_office()
     begin
