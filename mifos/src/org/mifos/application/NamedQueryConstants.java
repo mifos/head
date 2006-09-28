@@ -301,6 +301,7 @@ public interface NamedQueryConstants {
 	
 	public String CUSTOMERSEARCH="Customer.search";
 	public String COUNT_CUSTOMERSEARCH="Customer.count_search";
+	
 	public String CUSTOMERSEARCH_NOOFFICEID="Customer.search_noofficeid";
 	public String COUNT_CUSTOMERSEARCH_NOCLIENTS="Customer.count_search_noclients";
 	public String CUSTOMERSEARCH_NOCLIENTS="Customer.search_noclients";
@@ -534,4 +535,14 @@ public interface NamedQueryConstants {
 	
 	public String PRODUCT_STATUS="product.status";
 	public String PRODUCT_ALL_LOAN_PRODUCTS="product.getAllLoanProducts";
+	
+	
+	//m2 search quaries 
+	
+	public String CUSTOMER_SEARCH_COUNT="Customer.cust_count_search";
+	public String CUSTOMER_SEARCH="Customer.cust_search";
+	public String CUSTOMER_SEARCH_NOOFFICEID="Customer.cust_search_noofficeid";
+	public String  CUSTOMER_SEARCH_COUNT_NOOFFICEID="Customer.cust_count_search_noofficeid";
+	public String CUSTOMER_ID_SEARCH_NOOFFICEID="Customer.cust_idsearch_withoutoffice";
+	public String CUSTOMER_ID_SEARCH="Customer.cust_idsearch";
 }

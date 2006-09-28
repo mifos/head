@@ -217,5 +217,98 @@
 	</query>
 	<query name="Customer.fetchLoanCounters">
 	        	   <![CDATA[select lo.loanOffering.prdOfferingName from org.mifos.application.accounts.loan.business.LoanBO as lo where lo.customer.customerId=:customerId and lo.loanOffering.loanCounter=1 and lo.accountState.id in (3,4,5,6,9) order by lo.loanOffering.prdOfferingName asc]]>
-        </query>   	  
+        </query> 
+        
+    <query name="Customer.cust_count_search">
+	        	   <![CDATA[select count(*) 
+	        	   from org.mifos.application.customer.business.CustomerBO as c  
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per 
+	        	   where ( 
+	        	         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
+	        	         or :USERLEVEL_ID!=:LOID) 
+	        	         and c.office.officeId=:OFFICEID 
+	        	         and ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING) 
+	        	              or (c.customerLevel.id =:LEVELID 
+	        	              
+	        	               
+	        	              and (c.firstName like :SEARCH_STRING 
+	        	              or c.lastName like :SEARCH_STRING 
+	        	              or c.secondLastName like :SEARCH_STRING)
+	        	               )
+	        	         ) ]]>
+        </query>
+        <query name="Customer.cust_search">
+	        	   <![CDATA[select  c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum 
+	        	   from org.mifos.application.customer.business.CustomerBO as c  
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per  
+	        	   where ( 
+	        	         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
+	        	         or :USERLEVEL_ID!=:LOID) 
+	        	         and c.office.officeId=:OFFICEID 
+	        	         and ((c.customerLevel.id !=:LEVELID and c.displayName like :SEARCH_STRING) 
+	        	              or (c.customerLevel.id =:LEVELID 
+	        	              
+	        	               
+	        	              and (c.firstName like :SEARCH_STRING 
+	        	              or c.lastName like :SEARCH_STRING 
+	        	              or c.secondLastName like :SEARCH_STRING)
+	        	               )
+	        	         ) order by c.customerLevel.id,c.lastName,c.firstName,c.displayName]]>
+        </query> 
+        <query name="Customer.cust_search_noofficeid">
+	        	   <![CDATA[select   c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from 
+	        	    org.mifos.application.customer.business.CustomerBO as c 
+	        	    left join c.parentCustomer as pa 
+	        	    left join pa.parentCustomer as papa  
+	        	    left join c.office as off  
+	        	    left join c.personnel as per
+                    where ( 
+                    		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
+                         and (off.searchId like :OFFICE_SEARCH_ID) 
+                         and (
+                               (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) 
+                    		   or (c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING ))
+                    		   )
+                    		 ) 
+                    order by c.customerLevel.id,c.lastName,c.firstName,c.displayName]]>
+        </query>
+        <query name="Customer.cust_count_search_noofficeid">
+	        	   <![CDATA[select  count(c.customerId) from  
+	        	    org.mifos.application.customer.business.CustomerBO as c 
+	        	    left join c.parentCustomer as pa left join pa.parentCustomer as papa  
+	        	    left join c.office as off  
+	        	    left join c.personnel as per 
+                    where ( 
+                    		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
+                         and (off.searchId like :OFFICE_SEARCH_ID) 
+                         and (
+                               (c.customerLevel.id in (2,3)  and c.displayName like :SEARCH_STRING) 
+                    		   or (c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING ))
+                    		   )
+                    		 ) 
+					]]>
+        </query>
+         <query name="Customer.cust_idsearch_withoutoffice">
+	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
+	        	   from org.mifos.application.customer.business.CustomerBO as c 
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING ]]>
+        </query>
+        <query name="Customer.cust_idsearch">
+	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
+	        	   from org.mifos.application.customer.business.CustomerBO as c 
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING ]]>
+        </query>
+     	  
 </hibernate-mapping>

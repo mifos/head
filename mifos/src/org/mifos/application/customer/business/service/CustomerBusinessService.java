@@ -183,6 +183,15 @@ public class CustomerBusinessService extends BusinessService {
 		return customerActivityViewList;
 	}
 
+	public QueryResult  search(String searchString,Short officeId,Short userId,Short userOfficeId) throws ServiceException{
+		
+		try {
+			return new CustomerPersistence().search(searchString,officeId,userId,userOfficeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+		
+	}
 	private CustomerRecentActivityView getCustomerActivityView(
 			CustomerActivityEntity customerActivityEntity) {
 		CustomerRecentActivityView customerRecentActivityView = new CustomerRecentActivityView();

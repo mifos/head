@@ -47,6 +47,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
@@ -616,6 +617,13 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 	
+	public void testSearch()throws Exception{
+		
+		center = createCenter("MyCenter");
+		QueryResult queryResult = service.search("MyCenter",Short.valueOf("3"),Short.valueOf("1"),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+	}
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
 			String offeringName, String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());

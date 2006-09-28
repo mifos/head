@@ -45,6 +45,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -174,27 +175,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	}
 
-	private void createCustomers(CustomerStatus centerStatus, CustomerStatus groupStatus, CustomerStatus clientStatus) {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", centerStatus.getValue(), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", groupStatus.getValue(), center.getSearchId() + ".1", center,
-				new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", clientStatus.getValue(), group.getSearchId() + ".1", group,
-				new Date(System.currentTimeMillis()));
-	}
-
-	private static java.util.Date getMeetingDates(MeetingBO meeting) {
-		List<java.util.Date> dates = new ArrayList<java.util.Date>();
-		try {
-			dates = meeting.getAllDates(new java.util.Date(System
-					.currentTimeMillis()));
-		} catch (MeetingException e) {
-			e.printStackTrace();
-		}
-		return dates.get(dates.size() - 1);
-	}
+	
+	
 
 	public void testGetSavingsProducts() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
@@ -916,7 +898,40 @@ public class TestCustomerPersistence extends MifosTestCase {
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		assertNull(client.getCustomerMeeting());	
 	}
-	
+	public void testSearchWithOfficeId()throws Exception{
+		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
+		HibernateUtil.commitTransaction();
+		QueryResult queryResult = new CustomerPersistence().search("C",Short.valueOf("3"),Short.valueOf("1"),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(2,queryResult.getSize());
+		
+		//check main query also 
+		assertEquals(2,queryResult.get(0,10).size());
+		
+	}
+	public void testSearchWithoutOfficeId()throws Exception{
+		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
+		HibernateUtil.commitTransaction();
+		QueryResult queryResult = new CustomerPersistence().search("C",Short.valueOf("0"),Short.valueOf("1"),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(2,queryResult.getSize());
+		//check main query also 
+		assertEquals(2,queryResult.get(0,10).size());
+
+	}	
+	public void testSearchWithGlobalNo()throws Exception{
+		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
+		HibernateUtil.commitTransaction();
+		
+		
+		QueryResult queryResult = new CustomerPersistence().search(group.getGlobalCustNum(),Short.valueOf("3"),Short.valueOf("1"),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		
+		//check main query also 
+		assertEquals(1,queryResult.get(0,10).size());
+		
+	}	
 	private void getCustomer() throws  Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -967,7 +982,27 @@ public class TestCustomerPersistence extends MifosTestCase {
 				client, Short.valueOf("16"), new Date(System
 						.currentTimeMillis()), savingsOffering1);
 	}
+	private void createCustomers(CustomerStatus centerStatus, CustomerStatus groupStatus, CustomerStatus clientStatus) {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", centerStatus.getValue(), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", groupStatus.getValue(), center.getSearchId() + ".1", center,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client", clientStatus.getValue(), group.getSearchId() + ".1", group,
+				new Date(System.currentTimeMillis()));
+	}
 
+	private static java.util.Date getMeetingDates(MeetingBO meeting) {
+		List<java.util.Date> dates = new ArrayList<java.util.Date>();
+		try {
+			dates = meeting.getAllDates(new java.util.Date(System
+					.currentTimeMillis()));
+		} catch (MeetingException e) {
+			e.printStackTrace();
+		}
+		return dates.get(dates.size() - 1);
+	}
 	
 	private CenterBO createCenter() {
 		return createCenter("Center_Active_test");

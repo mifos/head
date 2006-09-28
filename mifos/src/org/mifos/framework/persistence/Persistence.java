@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -160,5 +161,9 @@ public abstract class Persistence {
 			throw new PersistenceException(he);
 		}
 	}
-
+	protected  Param typeNameValue(String type,String name,Object value)
+	{
+		System.out.println("param name is ---"+ name +" and param value is -----"+value);
+		return new Param(type,name,value);
+	}
 }

@@ -67,9 +67,14 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
+import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -78,11 +83,15 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
+import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.hibernate.helper.QueryResultIdSearch;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class CustomerPersistence extends Persistence {
 
@@ -237,6 +246,100 @@ public class CustomerPersistence extends Persistence {
 		return customer;
 	}
 
+	public QueryResult search(String searchString, Short officeId,
+			Short userId, Short userOfficeId) throws PersistenceException {
+
+		QueryResult queryResult = null;
+
+		try {
+			searchString = StringUtils.normalizeSearchString(searchString);
+			queryResult = idSearch(searchString, officeId);
+			if (queryResult == null) {
+				queryResult = mainSearch(searchString, officeId, userId,
+						userOfficeId);
+			}
+
+		} catch (HibernateSearchException e) {
+			throw new PersistenceException(e);
+		} catch (SystemException e) {
+			throw new PersistenceException(e);
+		}
+
+		return queryResult;
+	}
+
+	private QueryResult mainSearch(String searchString, Short officeId,
+			Short userId, Short userOfficeId) throws PersistenceException,
+			HibernateSearchException {
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
+		QueryInputs queryInputs = new QueryInputs();
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
+		String[] aliasNames = { "customerId", "centerName",
+				"centerGlobalCustNum", "customerType", "branchGlobalNum",
+				"branchName", "loanOfficerName", "loanOffcerGlobalNum",
+				"customerStatus", "groupName", "groupGlobalCustNum",
+				"clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
+		if (officeId.shortValue() != 0) {
+			namedQuery[0] = NamedQueryConstants.CUSTOMER_SEARCH_COUNT;
+			namedQuery[1] = NamedQueryConstants.CUSTOMER_SEARCH;
+			paramList.add(typeNameValue("Short", "OFFICEID", officeId));
+
+		} else {
+			namedQuery[0] = NamedQueryConstants.CUSTOMER_SEARCH_COUNT_NOOFFICEID;
+			namedQuery[1] = NamedQueryConstants.CUSTOMER_SEARCH_NOOFFICEID;
+			paramList.add(typeNameValue("String", "OFFICE_SEARCH_ID",
+					new OfficePersistence().getOffice(userOfficeId)
+							.getSearchId()
+							+ "%"));
+		}
+		paramList.add(typeNameValue("Short", "USERID", userId));
+		paramList.add(typeNameValue("Short", "LOID",
+				PersonnelLevel.LOAN_OFFICER.getValue()));
+		paramList.add(typeNameValue("Short", "LEVELID", CustomerLevel.CLIENT
+				.getValue()));
+		paramList.add(typeNameValue("Short", "USERLEVEL_ID",
+				new PersonnelPersistence().getPersonnel(userId).getLevel()
+						.getId()));
+		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
+				+ "%"));
+
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs.setParamList(paramList);
+		queryInputs
+				.setPath("org.mifos.application.customer.util.valueobjects.CustomerSearch");
+		queryInputs.setAliasNames(aliasNames);
+		queryResult.setQueryInputs(queryInputs);
+
+		return queryResult;
+
+	}
+
+	private QueryResult idSearch(String searchSting, Short officeId)
+			throws HibernateSearchException, SystemException {
+
+		List searchResults = null;
+		QueryInputs queryInputs = new QueryInputs();
+		String[] Names = { "customerId", "centerName", "centerGlobalCustNum",
+				"customerType", "branchGlobalNum", "branchName",
+				"loanOfficerName", "loanOffcerGlobalNum", "customerStatus",
+				"groupName", "groupGlobalCustNum", "clientName",
+				"clientGlobalCustNum", "loanGlobalAccountNumber" };
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(CustomerSearchConstants.IDSEARCH);
+		queryInputs
+				.setPath("org.mifos.application.customer.util.valueobjects.CustomerSearch");
+		queryInputs.setAliasNames(Names);
+		queryResult.setQueryInputs(queryInputs);
+		if (officeId != null) {
+			searchResults = ((QueryResultIdSearch) queryResult)
+					.customerIdSearch(searchSting, officeId);
+		}
+		return searchResults != null && searchResults.size() > 0 ? queryResult
+				: null;
+	}
+
 	private void initializeCustomer(CustomerBO customer) {
 		customer.getGlobalCustNum();
 		customer.getOffice().getOfficeId();
@@ -297,9 +400,9 @@ public class CustomerPersistence extends Persistence {
 		return queryResult;
 	}
 
-	protected List<CustomerBO> getActiveAndOnHoldChildren(String parentSearchId,
-			Short parentOfficeId, CustomerLevel childrenLevel)
-			throws PersistenceException {
+	protected List<CustomerBO> getActiveAndOnHoldChildren(
+			String parentSearchId, Short parentOfficeId,
+			CustomerLevel childrenLevel) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("SEARCH_STRING", parentSearchId + ".%");
 		queryParameters.put("OFFICE_ID", parentOfficeId);
@@ -309,7 +412,7 @@ public class CustomerPersistence extends Persistence {
 				queryParameters);
 		return queryResult;
 	}
-	
+
 	public List<CustomerBO> getChildren(String parentSearchId,
 			Short parentOfficeId, CustomerLevel childrenLevel,
 			ChildrenStateType childrenStateType) throws PersistenceException {
@@ -323,7 +426,8 @@ public class CustomerPersistence extends Persistence {
 		if (childrenStateType.equals(ChildrenStateType.ALL))
 			return getAllChildren(parentSearchId, parentOfficeId, childrenLevel);
 		if (childrenStateType.equals(ChildrenStateType.ACTIVE_AND_ONHOLD))
-			return getActiveAndOnHoldChildren(parentSearchId,parentOfficeId, childrenLevel);
+			return getActiveAndOnHoldChildren(parentSearchId, parentOfficeId,
+					childrenLevel);
 		return null;
 	}
 

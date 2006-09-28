@@ -111,12 +111,12 @@ public class QueryResultIdSearch extends QueryResultSearchDTOImpl {
 		session=QuerySession.getSession();				
 		if(officeId != null && officeId.shortValue()==0)
 		{				
-			query=session.getNamedQuery(NamedQueryConstants.CUSTOMER_IDSEARCH_WITHOUTOFFICE); 
+			query=session.getNamedQuery(NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID); 
 			query.setString("SEARCH_STRING",searchString);
 		}
 		else
 		{			
-			query=session.getNamedQuery(NamedQueryConstants.CUSTOMER_IDSEARCH); 
+			query=session.getNamedQuery(NamedQueryConstants.CUSTOMER_ID_SEARCH); 
 			query.setString("SEARCH_STRING",searchString);
 			query.setShort("OFFICEID",officeId);
 							

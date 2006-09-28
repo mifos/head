@@ -78,7 +78,7 @@ public class StringUtils {
 	public static boolean isNullOrEmpty(String stringToBeChecked) {
 		return !isNullSafe(stringToBeChecked) || isEmpty(stringToBeChecked);
 	}
-	
+
 	public static boolean isNullSafe(String stringToBeChecked) {
 		return stringToBeChecked != null;
 	}
@@ -87,13 +87,24 @@ public class StringUtils {
 		return "".equals(stringToBeChecked.trim());
 	}
 
-	public static String getMessageWithSubstitution(String bundleName, Locale userLocale, String key, Object[] args){
-		ResourceBundle resourceBundle = ResourceBundle.getBundle(bundleName, userLocale);
+	public static String getMessageWithSubstitution(String bundleName,
+			Locale userLocale, String key, Object[] args) {
+		ResourceBundle resourceBundle = ResourceBundle.getBundle(bundleName,
+				userLocale);
 		String label = resourceBundle.getString(key);
-		if(args!=null){
-			MessageFormat formatter = new MessageFormat (label);
+		if (args != null) {
+			MessageFormat formatter = new MessageFormat(label);
 			label = formatter.format(args);
 		}
 		return label;
+	}
+
+	public static String normalizeSearchString(String searchString) {
+		String searchStr = searchString.trim();
+		if (searchString.contains("%") && searchString.length() > 1)
+			return searchStr.replace("%", "\\%");
+		else
+			return searchStr;
+
 	}
 }
