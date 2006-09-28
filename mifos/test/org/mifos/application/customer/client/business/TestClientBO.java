@@ -239,9 +239,10 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
 		String name = "Client 1";
+		Short povertyStatus = Short.valueOf("41");
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
-		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
+		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),povertyStatus);
 		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, personnel, officeId, null, null,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
@@ -249,6 +250,7 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		assertEquals(name, client.getDisplayName());
+		assertEquals(povertyStatus, client.getCustomerDetail().getPovertyStatus());
 		assertEquals(officeId, client.getOffice().getOfficeId());
 	}
 	
@@ -654,14 +656,16 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testUpdateClientDetails()throws Exception{
 		createObjectsForClient("Client 1",CustomerStatus.CLIENT_ACTIVE);
+		Short povertyStatus = Short.valueOf("41");
 		assertEquals(1, client.getCustomerDetail().getEthinicity().intValue());
 		assertEquals(1, client.getCustomerDetail().getCitizenship().intValue());
 		assertEquals(1, client.getCustomerDetail().getHandicapped().intValue());
-		ClientDetailView clientDetailView = new ClientDetailView(2,2,2,2,2,2,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
+		ClientDetailView clientDetailView = new ClientDetailView(2,2,2,2,2,2,Short.valueOf("1"),Short.valueOf("1"),povertyStatus);
 		client.updateClientDetails(clientDetailView);
 		assertEquals(2, client.getCustomerDetail().getEthinicity().intValue());
 		assertEquals(2, client.getCustomerDetail().getCitizenship().intValue());
 		assertEquals(2, client.getCustomerDetail().getHandicapped().intValue());
+		assertEquals(povertyStatus, client.getCustomerDetail().getPovertyStatus());
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		office = new OfficePersistence().getOffice(office.getOfficeId());
 	}
