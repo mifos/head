@@ -1,5 +1,6 @@
 package org.mifos.application.customer.center.persistence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,32 +8,73 @@ import java.util.Map;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.QueryFactory;
+import org.mifos.framework.hibernate.helper.QueryInputs;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 
-public class CenterPersistence extends  Persistence{
-	
-	public boolean isCenterExists(String name) throws PersistenceException{
+public class CenterPersistence extends Persistence {
+
+	public boolean isCenterExists(String name) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(CustomerConstants.DISPLAY_NAME, name);
-		List queryResult = executeNamedQuery(NamedQueryConstants.GET_CENTER_COUNT_BY_NAME, queryParameters);
-		return ((Integer)queryResult.get(0)).intValue()>0;
+		List queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CENTER_COUNT_BY_NAME, queryParameters);
+		return ((Integer) queryResult.get(0)).intValue() > 0;
 	}
 
-	public CenterBO getCenter(Integer customerId) throws PersistenceException{
-		return (CenterBO) getPersistentObject(CenterBO.class,customerId);
+	public CenterBO getCenter(Integer customerId) throws PersistenceException {
+		return (CenterBO) getPersistentObject(CenterBO.class, customerId);
 	}
-	
-	public CenterBO getCenterBySystemId(String globalCustNum) throws PersistenceException{
+
+	public CenterBO getCenterBySystemId(String globalCustNum)
+			throws PersistenceException {
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		CenterBO center = null;
 		queryParameters.put("globalCustNum", globalCustNum);
-			List<CenterBO> queryResult = executeNamedQuery(
-						NamedQueryConstants.GET_CENTER_BY_SYSTEMID,
-						queryParameters);
-				if (null != queryResult && queryResult.size() > 0) {
-					center = queryResult.get(0);
-				}
+		List<CenterBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CENTER_BY_SYSTEMID, queryParameters);
+		if (null != queryResult && queryResult.size() > 0) {
+			center = queryResult.get(0);
+		}
 		return center;
+	}
+
+	public QueryResult search(String searchString, Short officeId,
+			Short userId, Short userOfficeId) throws PersistenceException {
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
+		QueryInputs queryInputs = new QueryInputs();
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(PersonnelConstants.USER_LIST);
+		String officeSearchId = new OfficePersistence().getSearchId(officeId);
+		namedQuery[0]=NamedQueryConstants.CENTER_SEARCH_COUNT;
+		namedQuery[1]=NamedQueryConstants.CENTER_SEARCH;			
+		paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));	
+		paramList.add(typeNameValue("String","CENTER_NAME",searchString+"%"));
+		paramList.add(typeNameValue("Short","LEVEL_ID",CustomerConstants.CENTER_LEVEL_ID));
+		paramList.add(typeNameValue("Short","STATUS_ID",CustomerConstants.CENTER_ACTIVE_STATE));
+		paramList.add(typeNameValue("Short","USER_ID",userId));
+		paramList.add(typeNameValue("Short","USER_LEVEL_ID",new PersonnelPersistence().getPersonnel(userId).getLevel()
+				.getId()));
+		paramList.add(typeNameValue("Short","LO_LEVEL_ID",PersonnelConstants.LOAN_OFFICER));
+		String[] aliasNames = {"parentOfficeId" , "parentOfficeName" , "centerSystemId" , "centerName"};
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs.setPath("org.mifos.application.customer.center.util.helpers.CenterSearchResults");
+		queryInputs.setAliasNames(aliasNames);	
+		queryInputs.setParamList(paramList);
+		try {
+			queryResult.setQueryInputs(queryInputs);
+		} catch (HibernateSearchException e) {
+			throw new PersistenceException(e);
+		}
+		return queryResult;
+
 	}
 }

@@ -36,6 +36,8 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
 public class TestPersonnelBO extends MifosTestCase {
 
 	UserContext userContext;
@@ -142,59 +144,43 @@ public class TestPersonnelBO extends MifosTestCase {
 	}
 
 	public void testGetDateSucess()throws Exception {
-		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				Short.valueOf("1")));
-		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
-				"abcd", "abcd", "abcd");
 		Date date = new Date();
 		PersonnelBO personnel = new PersonnelBO(
 				PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"),
 				Short.valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com",
 				((PersonnelBusinessService) ServiceFactory.getInstance()
 						.getBusinessService(BusinessServiceName.Personnel))
-						.getRoles(), customFieldView, name, "111111", date,
+						.getRoles(), getCustomFields(), name, "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				address, userContext.getId());
+				getAddress(), userContext.getId());
 		assertEquals("0" ,personnel.getAge());
 
 	}
 	
 	public void testGetDateFailure()throws Exception {
-		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				Short.valueOf("1")));
-		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
-				"abcd", "abcd", "abcd");
 		Date date = new Date();
 		PersonnelBO personnel = new PersonnelBO(
 				PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"),
 				Short.valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com",
 				((PersonnelBusinessService) ServiceFactory.getInstance()
 						.getBusinessService(BusinessServiceName.Personnel))
-						.getRoles(), customFieldView, name, "111111", null,
+						.getRoles(), getCustomFields(), name, "111111", null,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				address, userContext.getId());
+				getAddress(), userContext.getId());
 		assertEquals("" ,personnel.getAge());
 
 	}
 
 	public void testSaveFailure() throws Exception {
-		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				Short.valueOf("1")));
-		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
-				"abcd", "abcd", "abcd");
 		Date date = new Date();
-		
 		PersonnelBO personnel = new PersonnelBO(
 				PersonnelLevel.NON_LOAN_OFFICER, office, Integer.valueOf("1"),
 				Short.valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com",
 				((PersonnelBusinessService) ServiceFactory.getInstance()
 						.getBusinessService(BusinessServiceName.Personnel))
-						.getRoles(), customFieldView, name, "111111", date,
+						.getRoles(), getCustomFields(), name, "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				address, userContext.getId());
+				getAddress(), userContext.getId());
 		HibernateUtil.getSessionTL().close();
 		try{
 				personnel.save();
@@ -205,11 +191,6 @@ public class TestPersonnelBO extends MifosTestCase {
 		}
 	}
 	public void testCreateSucess() throws Exception {
-		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				Short.valueOf("1")));
-		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
-				"abcd", "abcd", "abcd");
 		Date date = new Date();
 
 		PersonnelBO personnel = new PersonnelBO(
@@ -217,9 +198,9 @@ public class TestPersonnelBO extends MifosTestCase {
 				Short.valueOf("1"), "ABCD", "RAJ", "rajendersaini@yahoo.com",
 				((PersonnelBusinessService) ServiceFactory.getInstance()
 						.getBusinessService(BusinessServiceName.Personnel))
-						.getRoles(), customFieldView, name, "111111", date,
+						.getRoles(), getCustomFields(), name, "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				address, userContext.getId());
+				getAddress(), userContext.getId());
 		personnel.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeandFlushSession();
@@ -795,15 +776,13 @@ public class TestPersonnelBO extends MifosTestCase {
 
 	private PersonnelBO createPersonnel(OfficeBO office,
 			PersonnelLevel personnelLevel) throws Exception {
-		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				Short.valueOf("1")));
+		
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
 		Date date = new Date();
 		personnel = new PersonnelBO(personnelLevel, office, Integer
 				.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
-				"xyz@yahoo.com", getRoles(), customFieldView, name, "111111", date,
+				"xyz@yahoo.com", getRoles(), getCustomFields(), name, "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
 				address, userContext.getId());
 		personnel.save();

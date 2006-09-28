@@ -314,5 +314,28 @@
 	        	   left join c.office as off  
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING ]]>
         </query>
+         <query name="search_Centers">
+	        	   <![CDATA[select  customer.office.officeId, customer.office.officeName,customer.globalCustNum,customer.displayName 
+	        	   from org.mifos.application.customer.business.CustomerBO customer 
+	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
+	        	   and customer.office.searchId like :SEARCH_ID 
+	        	   and customer.displayName like :CENTER_NAME 
+	        	   and customer.customerLevel.id =:LEVEL_ID 
+	        	   and customer.customerStatus.id = :STATUS_ID 
+	        	   ORDER BY customer.office.officeName ,customer.displayName ]]>
+        </query>
+        
+         <query name="count_search_Centers">
+	        	   <![CDATA[select count(*) 
+	        	   from org.mifos.application.customer.business.CustomerBO customer 
+	        	   where ((customer.personnel.personnelId=:USER_ID and :USER_LEVEL_ID=:LO_LEVEL_ID)
+	        	   or(:USER_LEVEL_ID!=:LO_LEVEL_ID)) 
+	        	   and customer.office.searchId like :SEARCH_ID 
+	        	   and customer.displayName like :CENTER_NAME 
+	        	   and customer.customerLevel.id =:LEVEL_ID 
+	        	   and customer.customerStatus.id = :STATUS_ID
+	        	    ]]>
+        </query>
      	  
 </hibernate-mapping>

@@ -101,5 +101,21 @@
 	<query name="getPersonBySystemId">
 		<![CDATA[from org.mifos.application.personnel.business.PersonnelBO as personnel where personnel.globalPersonnelNum =:globalPersonnelNum]]>
 	</query>
-	
+	<query name="search_Personnel">
+		<![CDATA[select distinct personnel.office.officeId, personnel.office.officeName,personnel.personnelId,personnel.globalPersonnelNum,personnel.displayName 
+			from org.mifos.application.personnel.business.PersonnelBO personnel 
+			where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
+			and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) 
+			and (personnel.personnelDetails.name.firstName like :USER_NAME or personnel.personnelDetails.name.lastName like :USER_NAME )
+			 order by personnel.office.officeName, personnel.personnelDetails.name.lastName
+			 ]]>
+	</query>
+	<query name="count_search_Personnel">
+		<![CDATA[select count(*) 
+			from org.mifos.application.personnel.business.PersonnelBO personnel 
+			where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
+			and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) 
+			and (personnel.personnelDetails.name.firstName like :USER_NAME or personnel.personnelDetails.name.lastName like :USER_NAME )
+	 		]]>
+	 </query>	
 </hibernate-mapping>

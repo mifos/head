@@ -1,5 +1,6 @@
 package org.mifos.application.personnel.persistence;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +11,18 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
+import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
 
@@ -161,15 +167,51 @@ public class PersonnelPersistence extends Persistence {
 				NamedQueryConstants.GETPERSONNELBYNAME, queryParameters);
 		return personnelBO;
 	}
-	
-	public void updateWithCommit(PersonnelBO personnelBO) throws PersistenceException {
+
+	public void updateWithCommit(PersonnelBO personnelBO)
+			throws PersistenceException {
 		super.createOrUpdate(personnelBO);
-		try{
+		try {
 			HibernateUtil.commitTransaction();
-		} catch(HibernateException e){
+		} catch (HibernateException e) {
 			HibernateUtil.rollbackTransaction();
 			throw new PersistenceException(e);
 		}
-		
+
+	}
+
+	public QueryResult search(String searchString, Short officeId,
+			Short userId, Short userOfficeId) throws PersistenceException {
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
+		QueryInputs queryInputs = new QueryInputs();
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(PersonnelConstants.USER_LIST);
+		String officeSearchId = new OfficePersistence().getSearchId(officeId);
+		namedQuery[0] = NamedQueryConstants.PERSONNEL_SEARCH_COUNT;
+		namedQuery[1] = NamedQueryConstants.PERSONNEL_SEARCH;
+		paramList.add(typeNameValue("String", "USER_NAME", searchString + "%"));
+		paramList.add(typeNameValue("String", "SEARCH_ID", officeSearchId));
+		paramList.add(typeNameValue("String", "SEARCH_ALL", officeSearchId
+				+ ".%"));
+		paramList.add(typeNameValue("Short", "USERID", userId));
+		paramList.add(typeNameValue("Short", "LOID",
+				PersonnelLevel.LOAN_OFFICER.getValue()));
+		paramList.add(typeNameValue("Short", "USERLEVEL_ID",
+				new PersonnelPersistence().getPersonnel(userId).getLevel()
+						.getId()));
+		String[] aliasNames = { "officeId", "officeName", "personnelId",
+				"globalPersonnelNum", "personnelName" };
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs
+				.setPath("org.mifos.application.personnel.util.helpers.UserSearchResultsView");
+		queryInputs.setAliasNames(aliasNames);
+		queryInputs.setParamList(paramList);
+		try {
+			queryResult.setQueryInputs(queryInputs);
+		} catch (HibernateSearchException e) {
+			throw new PersistenceException(e);
+		}
+		return queryResult;
 	}
 }

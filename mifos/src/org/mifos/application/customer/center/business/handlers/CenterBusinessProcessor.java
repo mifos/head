@@ -41,8 +41,8 @@ package org.mifos.application.customer.center.business.handlers;
 import java.util.List;
 
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.customer.center.util.helpers.CenterSearchResults;
 import org.mifos.application.customer.center.util.valueobjects.Center;
-import org.mifos.application.customer.center.util.valueobjects.CenterSearchResults;
 import org.mifos.application.customer.dao.SearchDAO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
