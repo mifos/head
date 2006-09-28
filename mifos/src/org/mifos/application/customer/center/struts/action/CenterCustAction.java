@@ -60,14 +60,11 @@ import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.center.business.service.CenterBusinessService;
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
-import org.mifos.application.customer.center.util.valueobjects.Center;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.group.util.helpers.LinkParameters;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.valueobjects.Customer;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -385,22 +382,5 @@ public class CenterCustAction extends CustAction {
 		actionForm.setCustomerId(null);
 		actionForm.setExternalId(null);
 		actionForm.setLoanOfficerId(null);
-	}
-
-	//TODO: remove this function after complete migration
-	LinkParameters getLinkValues(Center center){
-		LinkParameters linkParams = new LinkParameters();
-		linkParams.setCustomerId(center.getCustomerId());
-		linkParams.setCustomerName(center.getDisplayName());
-		linkParams.setGlobalCustNum(center.getGlobalCustNum());
-		linkParams.setCustomerOfficeId(center.getOffice().getOfficeId());
-		linkParams.setCustomerOfficeName(center.getOffice().getOfficeName());
-		linkParams.setLevelId(CustomerConstants.CENTER_LEVEL_ID);
-		Customer parent = center.getParentCustomer();
-		if(parent!=null){
-			linkParams.setCustomerParentGCNum(parent.getGlobalCustNum());
-			linkParams.setCustomerParentName(parent.getDisplayName());
-		}
-		return linkParams;
 	}
 }

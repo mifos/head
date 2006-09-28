@@ -332,13 +332,13 @@ public class TestCustomerBO extends MifosTestCase {
 		Short newStatusId = CustomerStatus.CENTER_INACTIVE.getValue();
 		try {
 			center.changeStatus(newStatusId, null, "Test");
-			// assertFalse(true);
+			assertFalse(true);
 		} catch (CustomerException sce) {
 			assertTrue(true);
 			assertEquals(sce.getKey(),
 					CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION);
+			assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(),center.getCustomerStatus().getId());
 		}
-		// TestObjectFactory.cleanUp(savings);
 	}
 
 	public void testValidateStatusForClientWithPartialGroups() throws Exception {
@@ -358,8 +358,8 @@ public class TestCustomerBO extends MifosTestCase {
 			assertFalse(true);
 		} catch (CustomerException sce) {
 			assertTrue(true);
-			assertEquals(sce.getKey(),
-					ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION);
+			assertEquals(sce.getKey(),ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION);
+			assertEquals(CustomerStatus.CLIENT_PARTIAL.getValue(),client.getCustomerStatus().getId());
 		}
 	}
 
@@ -387,6 +387,7 @@ public class TestCustomerBO extends MifosTestCase {
 			assertTrue(true);
 			assertEquals(sce.getKey(),
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+			assertEquals(CustomerStatus.CLIENT_ACTIVE.getValue(),client.getCustomerStatus().getId());
 		}
 		HibernateUtil.closeSession();
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
@@ -414,6 +415,7 @@ public class TestCustomerBO extends MifosTestCase {
 		} catch (CustomerException ce) {
 			assertTrue(true);
 			assertEquals(ce.getKey(), CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
+			assertEquals(CustomerStatus.CENTER_INACTIVE.getValue(),center.getCustomerStatus().getId());
 		}
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
 		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
@@ -440,6 +442,7 @@ public class TestCustomerBO extends MifosTestCase {
 		} catch (CustomerException ce) {
 			assertTrue(true);
 			assertEquals(ce.getKey(), CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION);
+			assertEquals(CustomerStatus.CENTER_INACTIVE.getValue(),center.getCustomerStatus().getId());
 		}
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
 		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
@@ -463,6 +466,7 @@ public class TestCustomerBO extends MifosTestCase {
 			assertTrue(true);
 			assertEquals(sce.getKey(),
 					CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+			assertEquals(CustomerStatus.CLIENT_ACTIVE.getValue(),client.getCustomerStatus().getId());
 		}
 		HibernateUtil.closeSession();
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
@@ -525,7 +529,7 @@ public class TestCustomerBO extends MifosTestCase {
 	private void createInitialObjects() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.4", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));

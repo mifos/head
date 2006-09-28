@@ -20,6 +20,7 @@ import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
@@ -826,8 +827,21 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.updateObject(center);
 		assertEquals(1, customerPersistence.getAllCustomerNotes(
 				center.getCustomerId()).getSize());
+		for(CustomerNoteEntity note : center.getCustomerNotes()) {
+			assertEquals("Test Note",note.getComment());
+			assertEquals(center.getPersonnel().getPersonnelId(),note.getPersonnel().getPersonnelId());
+		}
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center.getCustomerId())));
+	}
+	
+	public void testGetAllCustomerNotesWithZeroNotes() throws Exception {
+		center = createCenter();
+		assertEquals(0, customerPersistence.getAllCustomerNotes(
+				center.getCustomerId()).getSize());
+		for(CustomerNoteEntity note : center.getCustomerNotes()) {
+			assertFalse(true);
+		}
 	}
 
 	public void testGetFormedByPersonnel() throws NumberFormatException,
@@ -859,6 +873,19 @@ public class TestCustomerPersistence extends MifosTestCase {
 				group.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
 				.size());
 		assertEquals(1, customerPersistence.getAllClosedAccount(
+				client.getCustomerId(), AccountTypes.SAVINGSACCOUNT.getValue())
+				.size());
+	}
+	
+	public void testGetAllClosedAccountsWhenNoAccountsClosed() throws Exception {
+		getCustomer();
+		assertEquals(0, customerPersistence.getAllClosedAccount(
+				client.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				.size());
+		assertEquals(0, customerPersistence.getAllClosedAccount(
+				group.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				.size());
+		assertEquals(0, customerPersistence.getAllClosedAccount(
 				client.getCustomerId(), AccountTypes.SAVINGSACCOUNT.getValue())
 				.size());
 	}

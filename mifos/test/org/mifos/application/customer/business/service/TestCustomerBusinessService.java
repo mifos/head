@@ -14,6 +14,10 @@ import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
@@ -22,6 +26,7 @@ import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -43,7 +48,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -61,6 +65,20 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	private CustomerBO client;
 
 	private AccountBO account;
+	
+	private LoanBO groupAccount;
+
+	private LoanBO clientAccount;
+
+	private SavingsBO clientSavingsAccount;
+	
+	private MeetingBO meeting;
+	
+	private SavingsTestHelper helper = new SavingsTestHelper();
+
+	private SavingsOfferingBO savingsOffering;
+
+	private SavingsBO savingsBO;
 
 	private MifosCurrency currency = Configuration.getInstance()
 			.getSystemConfig().getCurrency();
@@ -77,30 +95,17 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	@Override
-	public void tearDown() throws Exception {
+	protected void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(clientSavingsAccount);
+		TestObjectFactory.cleanUp(groupAccount);
+		TestObjectFactory.cleanUp(clientAccount);
 		TestObjectFactory.cleanUp(account);
+		TestObjectFactory.cleanUp(savingsBO);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 		super.tearDown();
-	}
-
-	protected LoanBO getLoanAccount() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
-				.valueOf("2"), new Date(System.currentTimeMillis()), Short
-				.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-				.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), Short
-				.valueOf("1"), Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), new Date(System.currentTimeMillis()),
-				loanOffering);
 	}
 
 	public void testFetchLoanCycleCounter() throws Exception {
@@ -246,8 +251,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		}
 	}
 
-	public void testFindBySystemId() throws PersistenceException,
-			ServiceException {
+	public void testFindBySystemId() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
@@ -255,14 +259,22 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
-		GroupBO groupBO = (GroupBO) service.findBySystemId(group
-				.getGlobalCustNum());
-		assertEquals("Group_Active_test", groupBO.getDisplayName());
+				.currentTimeMillis()));		
+		savingsBO = getSavingsAccount(group,"fsaf5","ads5");
+		HibernateUtil.closeSession();
+		group = (GroupBO) service.findBySystemId(group.getGlobalCustNum());
+		assertEquals("Group_Active_test", group.getDisplayName());
+		assertEquals(2, group.getAccounts().size());
+		assertEquals(0, group.getOpenLoanAccounts().size());
+		assertEquals(1, group.getOpenSavingAccounts().size());
+		assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(), group.getCustomerStatus().getId());
+		HibernateUtil.closeSession();
+		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
 	}
 
-	public void testgetBySystemId() throws PersistenceException,
-			ServiceException {
+	public void testgetBySystemId() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
@@ -271,9 +283,59 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
-		GroupBO groupBO = (GroupBO) service.getBySystemId(group
+		savingsBO = getSavingsAccount(group,"fsaf5","ads5");
+		HibernateUtil.closeSession();
+		group = (GroupBO) service.getBySystemId(group
 				.getGlobalCustNum(), group.getCustomerLevel().getId());
-		assertEquals("Group_Active_test", groupBO.getDisplayName());
+		assertEquals("Group_Active_test", group.getDisplayName());
+		assertEquals(2, group.getAccounts().size());
+		assertEquals(0, group.getOpenLoanAccounts().size());
+		assertEquals(1, group.getOpenSavingAccounts().size());
+		assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(), group.getCustomerStatus().getId());
+		HibernateUtil.closeSession();
+		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+	}
+	
+	public void testSuccessfulGet() throws Exception {
+		center = createCenter("MyCenter");
+		savingsBO = getSavingsAccount(center,"fsaf5","ads5");
+		HibernateUtil.closeSession();
+		center = service.getCustomer(center.getCustomerId());
+		assertNotNull(center);
+		assertEquals("MyCenter", center.getDisplayName());
+		assertEquals(2, center.getAccounts().size());
+		assertEquals(0, center.getOpenLoanAccounts().size());
+		assertEquals(1, center.getOpenSavingAccounts().size());
+		assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(), center.getCustomerStatus().getId());
+		HibernateUtil.closeSession();
+		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+	}
+
+	public void testFailureGet() throws Exception {
+		center = createCenter("MyCenter");
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			service.getCustomer(center.getCustomerId());
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
+	}
+
+	public void testFailureGetBySystemId() throws Exception {
+		center = createCenter("MyCenter");
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			service.findBySystemId(center.getGlobalCustNum());
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
 	}
 
 	public void testGetCenterPerformanceHistory() throws Exception {
@@ -489,8 +551,25 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		TestObjectFactory.updateObject(center);
 		assertEquals(1, service.getAllCustomerNotes(center.getCustomerId())
 				.getSize());
+		for(CustomerNoteEntity note : center.getCustomerNotes()) {
+			assertEquals("Test Note",note.getComment());
+			assertEquals(center.getPersonnel().getPersonnelId(),note.getPersonnel().getPersonnelId());
+		}
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
 				new Integer(center.getCustomerId())));
+	}
+	
+	public void testGetAllCustomerNotesWithZeroNotes() throws Exception {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active_test", Short
+				.valueOf("13"), "1.4", meeting, new Date(System
+				.currentTimeMillis()));
+		assertEquals(0, service.getAllCustomerNotes(
+				center.getCustomerId()).getSize());
+		for(CustomerNoteEntity note : center.getCustomerNotes()) {
+			assertFalse(true);
+		}
 	}
 
 	public void testGetStatusName() throws Exception {
@@ -585,37 +664,6 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				TestObjectFactory.getUserContext().getLocaleId());
 		assertEquals(2, statusListForClient.size());
 	}
-
-	public void testSuccessfulGet() throws Exception {
-		center = createCenter("MyCenter");
-		center = service.getCustomer(center.getCustomerId());
-		assertNotNull(center);
-		assertEquals("MyCenter", center.getDisplayName());
-	}
-
-	public void testFailureGet() throws Exception {
-		center = createCenter("MyCenter");
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			service.getCustomer(center.getCustomerId());
-			assertTrue(false);
-		} catch (ServiceException e) {
-			assertTrue(true);
-		}
-		HibernateUtil.closeSession();
-	}
-
-	public void testFailureGetBySystemId() throws Exception {
-		center = createCenter("MyCenter");
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			service.findBySystemId(center.getGlobalCustNum());
-			assertTrue(false);
-		} catch (ServiceException e) {
-			assertTrue(true);
-		}
-		HibernateUtil.closeSession();
-	}
 	
 	public void testSearch()throws Exception{
 		
@@ -624,6 +672,45 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertNotNull(queryResult);
 		assertEquals(1,queryResult.getSize());
 	}
+	
+	public void testGetAllClosedAccounts() throws Exception {
+		getCustomer();
+		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+				AccountStateFlag.LOAN_WITHDRAW.getValue(),
+				"WITHDRAW LOAN ACCOUNT");
+		clientAccount.changeStatus(AccountState.LOANACC_WRITTENOFF.getValue(),
+				null, "WITHDRAW LOAN ACCOUNT");
+		clientSavingsAccount.changeStatus(AccountState.SAVINGS_ACC_CANCEL
+				.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
+				"WITHDRAW LOAN ACCOUNT");
+		TestObjectFactory.updateObject(groupAccount);
+		TestObjectFactory.updateObject(clientAccount);
+		TestObjectFactory.updateObject(clientSavingsAccount);
+		HibernateUtil.commitTransaction();
+		assertEquals(1, service.getAllClosedAccount(
+				client.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				.size());
+		assertEquals(1, service.getAllClosedAccount(
+				group.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				.size());
+		assertEquals(1, service.getAllClosedAccount(
+				client.getCustomerId(), AccountTypes.SAVINGSACCOUNT.getValue())
+				.size());
+	}
+	
+	public void testGetAllClosedAccountsWhenNoAccountsClosed() throws Exception {
+		getCustomer();
+		assertEquals(0, service.getAllClosedAccount(
+				client.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				.size());
+		assertEquals(0, service.getAllClosedAccount(
+				group.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				.size());
+		assertEquals(0, service.getAllClosedAccount(
+				client.getCustomerId(), AccountTypes.SAVINGSACCOUNT.getValue())
+				.size());
+	}
+	
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
 			String offeringName, String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());
@@ -711,11 +798,57 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	private CenterBO createCenter(String name) throws Exception {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		return TestObjectFactory.createCenter(name,
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
 				new Date(System.currentTimeMillis()));
 	}
-
+	
+	private LoanBO getLoanAccount() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
+				.valueOf("2"), new Date(System.currentTimeMillis()), Short
+				.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
+				.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), Short
+				.valueOf("1"), Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccount("42423142341", group, Short
+				.valueOf("5"), new Date(System.currentTimeMillis()),
+				loanOffering);
+	}
+	
+	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) throws Exception {
+		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
+		return TestObjectFactory.createSavingsAccount("000100000000017", customerBO,
+				AccountStates.SAVINGS_ACC_APPROVED, new Date(System
+						.currentTimeMillis()), savingsOffering);
+	}
+	
+	private void getCustomer() throws  Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
+				"Loanwer","43fs", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
+				"Loancd123","vfr" ,Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
+				group, Short.valueOf("5"),
+				new Date(System.currentTimeMillis()), loanOffering1);
+		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
+				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				loanOffering2);
+		clientSavingsAccount = getSavingsAccount(client,"SavingPrd11","abc2");
+	}
 }

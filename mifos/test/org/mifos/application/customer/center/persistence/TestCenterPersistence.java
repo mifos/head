@@ -1,4 +1,4 @@
-package org.mifos.application.customer.persistence;
+package org.mifos.application.customer.center.persistence;
 
 import java.util.Date;
 import java.util.GregorianCalendar;

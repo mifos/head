@@ -8,6 +8,7 @@ import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
 import org.mifos.application.customer.business.service.TestCustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBOTest;
 import org.mifos.application.customer.center.business.service.TestCenterBusinessService;
+import org.mifos.application.customer.center.persistence.TestCenterPersistence;
 import org.mifos.application.customer.center.struts.action.CenterActionTest;
 import org.mifos.application.customer.client.business.TestClientBO;
 import org.mifos.application.customer.client.struts.action.ClientTransferActionTest;
@@ -17,7 +18,6 @@ import org.mifos.application.customer.group.business.service.GroupBusinessServic
 import org.mifos.application.customer.group.persistence.GroupPersistenceTest;
 import org.mifos.application.customer.group.struts.action.GroupActionTest;
 import org.mifos.application.customer.group.struts.action.GroupTransferActionTest;
-import org.mifos.application.customer.persistence.TestCenterPersistence;
 import org.mifos.application.customer.persistence.TestCustomerPersistence;
 import org.mifos.application.customer.struts.action.CustActionTest;
 import org.mifos.application.customer.struts.action.CustHistoricalDataActionTest;
