@@ -97,6 +97,7 @@ public interface Constants {
 	//User Context for storing in session
 	//added by mohammedn
 	public final static String USERCONTEXT="UserContext";
+	public final static String TEMPUSERCONTEXT="Temp_UserContext";
 	public final static String SELECTTAG="select";
 
 	public static final short NO = 0;

@@ -126,7 +126,7 @@ public class FundBO extends BusinessObject {
 			throws FundException {
 		logger.debug("Checking for duplicate Fund name");
 		try {
-			if (!new FundPersistence().getFundNameCount(fundName).equals(
+			if (!new FundPersistence().getFundNameCount(fundName.trim()).equals(
 					Integer.valueOf("0")))
 				throw new FundException(
 						FundConstants.DUPLICATE_FUNDNAME_EXCEPTION);

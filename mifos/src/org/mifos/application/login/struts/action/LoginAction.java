@@ -47,6 +47,7 @@ public class LoginAction extends BaseAction {
 
 	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside load of LoginAction");
+		SessionUtils.setAttribute(LoginConstants.LOGINACTIONFORM, null,request.getSession());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,new FlowManager());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -60,6 +61,10 @@ public class LoginAction extends BaseAction {
 		PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(userName);
 		UserContext userContext = personnelBO.login(password);
 		setAttributes(userContext, request);
+		if(personnelBO.isPasswordChanged())
+			setUserContextInSession(userContext, request);
+		else
+			SessionUtils.setAttribute(Constants.TEMPUSERCONTEXT,userContext,request);
 		setFlow(userContext.getPasswordChanged(),request);
 		personnelBO = null;
 		return mapping.findForward(getLoginForward(userContext.getPasswordChanged()));
@@ -80,6 +85,7 @@ public class LoginAction extends BaseAction {
 	public ActionForward updatePassword(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside updatePassword of LoginAction");
 		LoginActionForm loginActionForm = (LoginActionForm) form;
+		UserContext userContext = null;
 		String userName = loginActionForm.getUserName();
 		if (null == userName || "".equals(userName)) {
 			throw new ApplicationException(LoginConstants.SESSIONTIMEOUT);
@@ -87,8 +93,12 @@ public class LoginAction extends BaseAction {
 		String oldPassword = loginActionForm.getOldPassword();
 		String newpassword = loginActionForm.getNewPassword();
 		PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(userName);
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		if(personnelBO.isPasswordChanged())
+			userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
+		else 
+			userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
 		personnelBO.updatePassword(oldPassword,newpassword, userContext.getId());
+		setUserContextInSession(userContext, request);
 		personnelBO = null;
 		return mapping.findForward(ActionForwards.updatePassword_success.toString());
 	}
@@ -120,8 +130,11 @@ public class LoginAction extends BaseAction {
 	
 	private void setAttributes(UserContext userContext, HttpServletRequest request) {
 		ActivityContext activityContext = new ActivityContext((short)0,userContext.getBranchId().shortValue(),userContext.getId().shortValue());		
-		request.getSession(false).setAttribute(Constants.USERCONTEXT,userContext);
 		request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT,activityContext);
+	}
+	
+	private void setUserContextInSession(UserContext userContext, HttpServletRequest request) {
+		request.getSession(false).setAttribute(Constants.USERCONTEXT,userContext);
 	}
 	
 	private String getLoginForward(Short passwordChanged) {

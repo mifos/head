@@ -52,6 +52,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -92,8 +93,10 @@ public class CustomerNotesAction extends SearchAction {
 		CustomerBO customerBO = getCustomerBusinessService().getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
 		customerBO.setUserContext(userContext);
 		setFormAttributes(userContext, form,customerBO);
+		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request.getSession());
+		SessionUtils.setAttribute(CustomerConstants.PERSONNEL_NAME, personnelBO.getDisplayName(), request.getSession());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 	

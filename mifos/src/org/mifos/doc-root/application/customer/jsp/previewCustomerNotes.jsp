@@ -84,7 +84,7 @@
 			</span><br>
                       <span class="fontnormal">
 			<c:out value="${sessionScope.customerNotesActionForm.comment}"/>	
-                      - <em><c:out value="${sessionScope.UserContext.name}"/></em></span> </td>
+                      - <em><c:out value="${sessionScope.personnelName}"/></em></span> </td>
                 </tr>
                 <tr>
                   <td align="left" valign="top">

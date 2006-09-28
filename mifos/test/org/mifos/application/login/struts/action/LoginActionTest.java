@@ -66,6 +66,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
+		assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
@@ -112,8 +113,9 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
+		assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
 		userContext.setId(Short.valueOf("1"));
 		setRequestPathInfo("/loginAction.do");
 		addRequestParameter("method", Methods.updatePassword.toString());
@@ -122,12 +124,12 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("newPassword", "NEW_PASSWORD");
 		addRequestParameter("confirmPassword", "NEW_PASSWORD");
 		addRequestParameter("input", "LoginChangePW");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updatePassword_success.toString());
+		assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		HibernateUtil.commitTransaction();
 		assertTrue(personnel.isPasswordChanged());
@@ -146,6 +148,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
+		assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
 		setRequestPathInfo("/loginAction.do");
@@ -175,6 +178,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
+		assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
 		setRequestPathInfo("/loginAction.do");
@@ -205,8 +209,9 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
+		assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
 		userContext.setId(Short.valueOf("1"));
 		setRequestPathInfo("/loginAction.do");
 		addRequestParameter("method", Methods.updatePassword.toString());
@@ -221,6 +226,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 
 		HibernateUtil.commitTransaction();
 		assertTrue(personnel.isPasswordChanged());
+		assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
 		setRequestPathInfo("/loginAction.do");
@@ -231,6 +237,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.login_success.toString());
+		assertNotNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
