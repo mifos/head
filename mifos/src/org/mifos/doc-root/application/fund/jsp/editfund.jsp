@@ -102,12 +102,12 @@
                   <td width="27%" align="right">
                  		<mifos:mifoslabel name="funds.fund_name" mandatory="yes" bundle="fundUIResources"/>:</td>
                   <td width="73%" valign="top">
-                  	<mifos:mifosalphanumtext property="fundName" value="${sessionScope.fundActionForm.fundName}" />
+                  	<mifos:mifosalphanumtext property="fundName" value="${sessionScope.fundActionForm.fundName}" maxlength="100"/>
                   </td>
                 </tr>
                 <tr class="fontnormal">
                   <td align="right" valign="top">
-                 		 <mifos:mifoslabel name="funds.fund_name" mandatory="yes" bundle="fundUIResources"/>:
+                 		 <mifos:mifoslabel name="funds.fundcode" mandatory="yes" bundle="fundUIResources"/>:
                   </td>
                   <td valign="top">
                   <c:out value="${sessionScope.fundActionForm.fundCode}"/>

@@ -107,7 +107,7 @@
                   <c:out value="${sessionScope.fundActionForm.fundName}"/> 
                   <br>
                   <span class="fontnormalbold"> 
-                  <mifos:mifoslabel name="funds.fund_name" bundle="fundUIResources"/>:                
+                  <mifos:mifoslabel name="funds.fundcode" bundle="fundUIResources"/>:                
                   </span>
 				  <c:out value="${sessionScope.fundActionForm.fundCode}"/>
 				  <br>
