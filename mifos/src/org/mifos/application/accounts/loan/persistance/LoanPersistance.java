@@ -91,7 +91,7 @@ public class LoanPersistance extends Persistence {
 		return queryResult == null ? null : (LoanBO) queryResult;
 	}
 
-	public List<LoanBO> getLoanAccountsInArrears(Short latenessDays)
+	public List<Integer> getLoanAccountsInArrears(Short latenessDays)
 			throws PersistenceException {
 
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -118,15 +118,8 @@ public class LoanPersistance extends Persistence {
 				.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING));
 		queryParameters.put("CHECKDATE", date);
 
-		List<LoanBO> loanAccounts = executeNamedQuery(
+		return executeNamedQuery(
 				NamedQueryConstants.GETLOANACOUNTSINARREARS, queryParameters);
-
-		for (LoanBO loanBO : loanAccounts) {
-			if (loanBO.getAccountStatusChangeHistory() != null
-					&& loanBO.getAccountStatusChangeHistory().size() > 0)
-				Hibernate.initialize(loanBO.getAccountStatusChangeHistory());
-		}
-		return loanAccounts;
 	}
 
 	public LoanBO getAccount(Integer accountId) throws PersistenceException {

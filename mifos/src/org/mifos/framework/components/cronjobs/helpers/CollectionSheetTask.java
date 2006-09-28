@@ -38,6 +38,7 @@
 package org.mifos.framework.components.cronjobs.helpers;
 
 import org.mifos.framework.components.cronjobs.MifosTask;
+import org.mifos.framework.components.cronjobs.TaskHelper;
 
 /**
  * This is the class which is invoked by the scheduler.The run method of this task 
@@ -45,12 +46,9 @@ import org.mifos.framework.components.cronjobs.MifosTask;
  */
 public class CollectionSheetTask extends MifosTask {
 	
-	public CollectionSheetTask() {
-		super();
-	}
-	
-	public void run() {
-		new CollectionSheetHelper().executeTask(this);
+	@Override
+	public TaskHelper getTaskHelper() {
+		return new CollectionSheetHelper(this);
 	}
 
 }

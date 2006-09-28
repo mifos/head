@@ -40,7 +40,7 @@ package org.mifos.framework.components.cronjobs;
 
 import java.util.TimerTask;
 
-public class MifosTask extends TimerTask {
+public abstract class MifosTask extends TimerTask {
 
 	public static boolean cronJobRunning = false;
 
@@ -67,9 +67,13 @@ public class MifosTask extends TimerTask {
 	public MifosTask() {
 	}
 
-	public void run() {
+	@Override
+	public final void run() {
+		helper = getTaskHelper();
+		helper.executeTask();
 	}
 
+	@Override
 	public boolean cancel() {
 		return true;
 	}
@@ -85,4 +89,6 @@ public class MifosTask extends TimerTask {
 	public static void cronJobFinished() {
 		cronJobRunning = false;
 	}
+	
+	public abstract TaskHelper getTaskHelper() ;
 }

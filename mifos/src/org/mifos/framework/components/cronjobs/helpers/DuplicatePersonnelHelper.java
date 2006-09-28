@@ -36,76 +36,65 @@
 
  */
 
-package org.mifos.framework.components.cronjobs.helpers ;
+package org.mifos.framework.components.cronjobs.helpers;
 
 import java.util.Iterator;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.TaskHelper;
-import org.mifos.framework.components.cronjobs.valueobjects.TempTable;
-import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class DuplicatePersonnelHelper extends TaskHelper{
+public class DuplicatePersonnelHelper extends TaskHelper {
+
+	public DuplicatePersonnelHelper(MifosTask mifosTask) {
+		super(mifosTask);
+	}
 
 	@Override
-	public void execute(long timeInMillis) {
-		Session session=null;
-		Transaction txn=null;
-		TempTable temp=null;
-		int count=0;
-		try{
-			//When Government Id is null
-			session = HibernateUtil.getSession();
-			txn=session.beginTransaction();
-			String hql= "SELECT A.personnelId  FROM    Personnel A, Personnel B," +
-					"	PersonnelDetails C, PersonnelDetails D	" +
-					"   WHERE  " +
-					"   A.personnelId !=B.personnelId  AND " +
-					"   A.personnelId=C.personnelId AND" +
-					"   B.personnelId = D.personnelId AND" +
-					"   C.governmentIdNumber IS NULL AND" +
-					"   D.governmentIdNumber IS NULL AND" +
-					"   C.firstName=D.firstName AND " +
-					"   C.lastName=D.lastName AND" +
-					"   C.dob=D.dob";
-			Iterator itr = session.createQuery(hql).iterate() ;
-			
-			while(itr.hasNext()){
-				hql="update Personnel A set A.personnelStatus=3 where A.personnelId:=id ";
-				session.createQuery(hql).setShort("id",(Short)itr.next()).executeUpate();
+	public void execute(long timeInMillis) throws CronJobException {
+		Session session = null;
+		try {
+			// When Government Id is null
+			session = HibernateUtil.getSessionTL();
+			HibernateUtil.startTransaction();
+			String hql = "SELECT A.personnelId  FROM    PersonnelBO A, PersonnelBO B,"
+					+ "	PersonnelDetailsEntity C, PersonnelDetailsEntity D	"
+					+ "   WHERE  "
+					+ "   A.personnelId !=B.personnelId  AND "
+					+ "   A.personnelId=C.personnelId AND"
+					+ "   B.personnelId = D.personnelId AND"
+					+ "   C.governmentIdNumber IS NULL AND"
+					+ "   D.governmentIdNumber IS NULL AND"
+					+ "   C.name.firstName=D.name.firstName AND "
+					+ "   C.name.lastName=D.name.lastName AND"
+					+ "   C.dob=D.dob";
+			Iterator itr = session.createQuery(hql).iterate();
+			while (itr.hasNext()) {
+				hql = "update PersonnelBO a set a.status=3 where a.personnelId:=id ";
+				session.createQuery(hql).setShort("id", (Short) itr.next())
+						.executeUpate();
 			}
-			
-			//When Government Id is not null
-			hql= "SELECT A.personnelId  FROM    Personnel A, Personnel B," +
-					"	PersonnelDetails C, PersonnelDetails D	" +
-					"   WHERE  " +
-					"   A.personnelId !=B.personnelId  AND " +
-					"   A.personnelId=C.personnelId AND" +
-					"   B.personnelId = D.personnelId AND" +
-					"   C.governmentIdNumber IS NOT NULL AND" +
-					"   D.governmentIdNumber IS NOT NULL AND" +
-					"   C.governmentIdNumber=D.governmentIdNumber";
-			itr = session.createQuery(hql).iterate() ;
-			
-			while(itr.hasNext()){
-				hql="update Personnel A set A.personnelStatus=3 where A.personnelId =:id";
-				session.createQuery(hql).setShort("id",(Short)itr.next()).executeUpate();
-					
+			// When Government Id is not null
+			hql = "SELECT A.personnelId  FROM    PersonnelBO A, PersonnelBO B,"
+					+ "	PersonnelDetailsEntity C, PersonnelDetailsEntity D	"
+					+ "   WHERE  " + "   A.personnelId !=B.personnelId  AND "
+					+ "   A.personnelId=C.personnelId AND"
+					+ "   B.personnelId = D.personnelId AND"
+					+ "   C.governmentIdNumber IS NOT NULL AND"
+					+ "   D.governmentIdNumber IS NOT NULL AND"
+					+ "   C.governmentIdNumber=D.governmentIdNumber";
+			itr = session.createQuery(hql).iterate();
+			while (itr.hasNext()) {
+				hql = "update PersonnelBO a set a.status=3 where a.personnelId:=id ";
+				session.createQuery(hql).setShort("id", (Short) itr.next())
+						.executeUpate();
 			}
-			
-			txn.commit(); 
-		}catch(HibernateProcessException e){
-			e.printStackTrace(); 
-		}
-		finally
-		{
-			try{
-			    HibernateUtil.closeSession(session);
-			}catch(Exception e){
-				e.printStackTrace(); 
-			}
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+			throw new CronJobException(e);
 		}
 	}
 
@@ -113,8 +102,5 @@ public class DuplicatePersonnelHelper extends TaskHelper{
 	public boolean isTaskAllowedToRun() {
 		return true;
 	}
-	
-	
-	
 
 }

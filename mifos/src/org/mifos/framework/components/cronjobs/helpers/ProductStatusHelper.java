@@ -38,90 +38,72 @@
 
 package org.mifos.framework.components.cronjobs.helpers;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.TaskHelper;
-import org.mifos.framework.components.cronjobs.valueobjects.Task;
-import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class ProductStatusHelper extends TaskHelper {
 
+	public ProductStatusHelper(MifosTask mifosTask) {
+		super(mifosTask);
+	}
+
 	@Override
-	public void execute(long timeInMillis) {
-		Session session=null;
-		Transaction txn=null;
-		String hqlUpdate=null;
-		Query query=null;
-		try{
-			session = HibernateUtil.getSession();
-			txn=session.beginTransaction();
-			
-			hqlUpdate = "update PrdOffering p set p.prdStatus =:activeLoanStatus where p.prdType=:loan and p.startDate=:currentDate";
-			query= session.createQuery(hqlUpdate);
+	public void execute(long timeInMillis) throws CronJobException {
+		Session session = null;
+		String hqlUpdate = null;
+		Query query = null;
+		try {
+			session = HibernateUtil.getSessionTL();
+			HibernateUtil.startTransaction();
+
+			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:activeLoanStatus "
+					+ "where p.prdType.productTypeID=:loan and p.startDate=:currentDate";
+			query = session.createQuery(hqlUpdate);
 			query.setShort("activeLoanStatus", PrdStatus.LOANACTIVE.getValue());
-			query.setShort("loan",ProductType.LOAN.getValue());
+			query.setShort("loan", ProductType.LOAN.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpate();
-			
-		    hqlUpdate = "update PrdOffering p set p.prdStatus =:inActiveLoanStatus where p.prdType=:loan and p.endDate=:currentDate";
-			query= session.createQuery(hqlUpdate);
-			query.setShort("inActiveLoanStatus", PrdStatus.LOANINACTIVE.getValue());
-			query.setShort("loan",ProductType.LOAN.getValue());
+
+			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:inActiveLoanStatus "
+					+ "where p.prdType.productTypeID=:loan and p.endDate=:currentDate";
+			query = session.createQuery(hqlUpdate);
+			query.setShort("inActiveLoanStatus", PrdStatus.LOANINACTIVE
+					.getValue());
+			query.setShort("loan", ProductType.LOAN.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpate();
-			
-			hqlUpdate = "update PrdOffering p set p.prdStatus =:activeSavingStatus where p.prdType=:saving and p.startDate=:currentDate";
-			query= session.createQuery(hqlUpdate);
-			query.setShort("activeSavingStatus", PrdStatus.SAVINGSACTIVE.getValue());
-			query.setShort("saving",ProductType.SAVINGS.getValue());
+
+			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:activeSavingStatus "
+					+ "where p.prdType.productTypeID=:saving and p.startDate=:currentDate";
+			query = session.createQuery(hqlUpdate);
+			query.setShort("activeSavingStatus", PrdStatus.SAVINGSACTIVE
+					.getValue());
+			query.setShort("saving", ProductType.SAVINGS.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpate();
-			
-			hqlUpdate = "update PrdOffering p set p.prdStatus =:inActiveSavingStatus where p.prdType=:saving and p.endDate=:currentDate";
-			query= session.createQuery(hqlUpdate);
-			query.setShort("inActiveSavingStatus", PrdStatus.SAVINGSINACTIVE.getValue());
-			query.setShort("saving",ProductType.SAVINGS.getValue());
+
+			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:inActiveSavingStatus "
+					+ "where p.prdType.productTypeID=:saving and p.endDate=:currentDate";
+			query = session.createQuery(hqlUpdate);
+			query.setShort("inActiveSavingStatus", PrdStatus.SAVINGSINACTIVE
+					.getValue());
+			query.setShort("saving", ProductType.SAVINGS.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpate();
-	
-			txn.commit(); 
-		
-		}
-		catch(HibernateProcessException hpe){
-			hpe.printStackTrace();
-			txn.rollback();
-		}catch(HibernateException he){
-			he.printStackTrace();
-			txn.rollback();
-		}catch(IllegalArgumentException iae){
-			iae.printStackTrace();
-			txn.rollback();
-		}catch(Exception e){
-			e.printStackTrace();
-			txn.rollback(); 
-		}
-		finally
-		{
-			try{
-			    HibernateUtil.closeSession(session);
-			}catch(HibernateProcessException hpe){
-				hpe.printStackTrace();
-			}catch(Exception e){
-				e.printStackTrace(); 
-			}
+
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+			throw new CronJobException(e);
 		}
 	}
 
-	
-	
-	
 }

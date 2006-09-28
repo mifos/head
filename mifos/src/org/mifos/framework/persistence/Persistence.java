@@ -1,6 +1,5 @@
 package org.mifos.framework.persistence;
 
-import java.sql.Connection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +15,9 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public abstract class Persistence {
 
-	protected Connection getConnection() {
-		return null;
-	}
-
 	protected Session openSession() throws PersistenceException {
 		try {
-			return HibernateUtil.getSession();
+			return HibernateUtil.getSessionTL();
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		}
@@ -38,8 +33,8 @@ public abstract class Persistence {
 
 	public Object createOrUpdate(Object object) throws PersistenceException {
 		Session session = HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
 		try {
+			HibernateUtil.startTransaction();
 			session.saveOrUpdate(object);
 		} catch (Exception he) {
 			throw new PersistenceException(he);
@@ -49,8 +44,8 @@ public abstract class Persistence {
 
 	public void delete(Object object) throws PersistenceException {
 		Session session = HibernateUtil.getSessionTL();
-		HibernateUtil.startTransaction();
 		try {
+			HibernateUtil.startTransaction();
 			session.delete(object);
 		} catch (Exception he) {
 			throw new PersistenceException(he);
@@ -61,7 +56,7 @@ public abstract class Persistence {
 	 * This method takes the name of a named query to be executed as well as a
 	 * list of parameters that the query uses. It assumes the session is open.
 	 */
-	public static List executeNamedQuery(String queryName, Map queryParameters)
+	public List executeNamedQuery(String queryName, Map queryParameters)
 			throws PersistenceException {
 		try {
 			Query query = null;
@@ -86,7 +81,7 @@ public abstract class Persistence {
 		}
 	}
 
-	public static Object execUniqueResultNamedQuery(String queryName,
+	public Object execUniqueResultNamedQuery(String queryName,
 			Map queryParameters) throws PersistenceException {
 		try {
 			Query query = null;
@@ -109,7 +104,7 @@ public abstract class Persistence {
 		}
 	}
 
-	public static void setParametersInQuery(Query query, String queryName,
+	public void setParametersInQuery(Query query, String queryName,
 			Map queryParameters) throws PersistenceException {
 
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
@@ -161,9 +156,8 @@ public abstract class Persistence {
 			throw new PersistenceException(he);
 		}
 	}
-	protected  Param typeNameValue(String type,String name,Object value)
-	{
-		System.out.println("param name is ---"+ name +" and param value is -----"+value);
-		return new Param(type,name,value);
+
+	protected Param typeNameValue(String type, String name, Object value) {
+		return new Param(type, name, value);
 	}
 }

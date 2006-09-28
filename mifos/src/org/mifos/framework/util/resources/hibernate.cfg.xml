@@ -132,8 +132,7 @@
 	<mapping resource="org/mifos/application/customer/client/util/valueobjects/CustomerPicture.hbm.xml" />
 
 	<!-- Cron Jobs -->
-	<mapping resource="org/mifos/framework/components/cronjobs/valueobjects/Task.hbm.xml" />
-	<mapping resource="org/mifos/framework/components/cronjobs/valueobjects/TempTable.hbm.xml" />
+	<mapping resource="org/mifos/framework/components/cronjobs/business/Task.hbm.xml" />
 
 	<!-- M2 style objects for office-->
 

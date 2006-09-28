@@ -1,13 +1,12 @@
 package org.mifos.framework.components.cronjobs.helpers;
 
 import org.mifos.framework.components.cronjobs.MifosTask;
+import org.mifos.framework.components.cronjobs.TaskHelper;
 
 public class PortfolioAtRiskTask extends MifosTask {
 
 	@Override
-	public void run() {
-		helper = new PortfolioAtRiskHelper();
-		helper.executeTask(this);
-		super.run();		
+	public TaskHelper getTaskHelper() {
+		return new PortfolioAtRiskHelper(this);
 	}
 }

@@ -48,5 +48,6 @@ public interface SchedulerConstants {
 	public static final String DELAYTIME="delay-time";
 	public static final String START="Start";
 	public static final String FINISHEDSUCCESSFULLY="Finished Successfully";
+	public static final String FAILURE="Failure";
 	
 }

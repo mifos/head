@@ -40,182 +40,150 @@ package org.mifos.framework.components.cronjobs;
 
 import java.sql.Timestamp;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.mifos.framework.components.cronjobs.business.Task;
+import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
 import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
-import org.mifos.framework.components.cronjobs.valueobjects.Task;
-import org.mifos.framework.dao.DAO;
-import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.components.cronjobs.persistence.TaskPersistence;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public abstract class TaskHelper extends DAO {
+public abstract class TaskHelper {
 
-	public MifosTask mifosTask;
+	private MifosTask mifosTask;
+
 	private Task task;
-	long timeInMillis=0;
 
-	public TaskHelper() {
+	long timeInMillis = 0;
+
+	public TaskHelper(MifosTask mifosTask) {
+		this.mifosTask = mifosTask;
 	}
 
 	/**
-	 * This method is responsible for inserting a row with the task name in the database.
-	 * In cases that the task fails, the next day's task will not run till the
-	 *  completion of the previous day's task.
+	 * This method is responsible for inserting a row with the task name in the
+	 * database. In cases that the task fails, the next day's task will not run
+	 * till the completion of the previous day's task.
 	 */
-	public void registerStartup(long timeInMillis) {
-
-		Session session=null;
-	    try{
-	    	MifosTask.cronJobStarted();
-	    	session = HibernateUtil.getSession();
-			Transaction txn=session.beginTransaction();
+	public final void registerStartup(long timeInMillis)
+			throws CronJobException {
+		try {
+			MifosTask.cronJobStarted();
 			task = new Task();
 			task.setDescription(SchedulerConstants.START);
 			task.setTask(mifosTask.name);
 			task.setStatus(TaskStatus.INCOMPLETE.getValue());
-			if(timeInMillis==0){
+			if (timeInMillis == 0) {
 				task.setStartTime(new Timestamp(System.currentTimeMillis()));
-			}else{
+			} else {
 				task.setStartTime(new Timestamp(timeInMillis));
 			}
-			session.save(task);
-			txn.commit();
-		}catch(HibernateProcessException e){
-			e.printStackTrace();
-		}
-		finally
-		{
-			try{
-			    HibernateUtil.closeSession(session);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+			new TaskPersistence().saveAndCommitTask(task);
+		} catch (PersistenceException e) {
+			throw new CronJobException(e);
 		}
 	}
 
 	/**
-	 * This method is responsible for inserting a row with the task name in the database,
-	 * at end of task completion. In cases where the task fails, the next day's
-	 *  task will not run till the completion of th previous day's task.
+	 * This method is responsible for inserting a row with the task name in the
+	 * database, at end of task completion. In cases where the task fails, the
+	 * next day's task will not run till the completion of th previous day's
+	 * task.
 	 */
-	public void registerCompletion(long timeInMillis) {
-		Session session=null;
-	    try{
-			session = HibernateUtil.getSession();
-			Transaction txn=session.beginTransaction();
-			task.setDescription(SchedulerConstants.FINISHEDSUCCESSFULLY);
-			task.setStatus(TaskStatus.COMPLETE.getValue());
-			if(timeInMillis==0){
+	public final void registerCompletion(long timeInMillis, String description,
+			TaskStatus status) {
+		try {
+			task.setDescription(description);
+			task.setStatus(status.getValue());
+			if (timeInMillis == 0) {
 				task.setEndTime(new Timestamp(System.currentTimeMillis()));
-			}else{
+			} else {
 				task.setEndTime(new Timestamp(timeInMillis));
 			}
-			session.update(task);
-			txn.commit();
-		}catch(HibernateProcessException e){
-			e.printStackTrace();
-		}
-		finally
-		{
-			try{
-				MifosTask.cronJobFinished();
-			    HibernateUtil.closeSession(session);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+			new TaskPersistence().saveAndCommitTask(task);
+		} catch (PersistenceException e) {
+			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error(
+					"Cron job task " + mifosTask.name + " failed");
+		} finally {
+			MifosTask.cronJobFinished();
 		}
 	}
 
-
 	/**
-	 * This method is called by run method of Mifostask. This calls registerStartUP,istaksAllowedToRun,
-	 * execute and registerCompletion in the order. The class also ensures that
-	 * no exception is thrown up.
+	 * This method is called by run method of Mifostask. This calls
+	 * registerStartUP,istaksAllowedToRun, execute and registerCompletion in the
+	 * order. The class also ensures that no exception is thrown up.
 	 */
-	public void executeTask(MifosTask mifosTask) {
-		this.mifosTask=mifosTask;
-		if (!isTaskAllowedToRun()){
-			while((System.currentTimeMillis()-timeInMillis)/(1000*60*60*24)!=1){
-				perform(timeInMillis+(1000*60*60*24));
+	public final void executeTask() {
+		if (!isTaskAllowedToRun()) {
+			while ((System.currentTimeMillis() - timeInMillis)
+					/ (1000 * 60 * 60 * 24) != 1) {
+				perform(timeInMillis + (1000 * 60 * 60 * 24));
 			}
-		}else{
-			if(timeInMillis==0){
-				timeInMillis=System.currentTimeMillis();
+		} else {
+			if (timeInMillis == 0) {
+				timeInMillis = System.currentTimeMillis();
 			}
 			perform(timeInMillis);
 		}
 	}
 
 	/**
-     * This methods, performs the job specific to each task.
+	 * This methods, performs the job specific to each task.
 	 */
-	public abstract void execute(long timeInMillis) ;
+	public abstract void execute(long timeInMillis) throws CronJobException;
 
 	/**
 	 * This method determines if the task is allowed to run the nextday.if the
-	 * previous day's task has failed, the default mplementation suspends the current day's task and
-	 *  runs the previous days task.
-	 *
-	 *  Override this method and return true, if it is not mandatory that task should run daily
-	 *  i.e. In case yesterday's task has failed, you want it to continue running current days task.
-	 *
+	 * previous day's task has failed, the default mplementation suspends the
+	 * current day's task and runs the previous days task.
+	 * 
+	 * Override this method and return true, if it is not mandatory that task
+	 * should run daily i.e. In case yesterday's task has failed, you want it to
+	 * continue running current days task.
+	 * 
 	 */
 	public boolean isTaskAllowedToRun() {
-		Session session=null;
-		Transaction txn=null;
-		String hqlSelect=null;
-		Query query=null;
-		try{
-			session = HibernateUtil.getSession();
-			txn=session.beginTransaction();
-			hqlSelect = "select max(t.startTime) from Task t where t.task=:taskName and t.description=:finishedSuccessfully";
-			query= session.createQuery(hqlSelect);
-			query.setString("taskName",mifosTask.name);
-			query.setString("finishedSuccessfully",SchedulerConstants.FINISHEDSUCCESSFULLY);
-			if(query.uniqueResult()==null){//When schedular starts for the first time
-				timeInMillis=System.currentTimeMillis();
-			    return true;
-			}else{
-				timeInMillis=((Timestamp)query.uniqueResult()).getTime();
+		try {
+			Session session = HibernateUtil.getSessionTL();
+			HibernateUtil.startTransaction();
+			String hqlSelect = "select max(t.startTime) from Task t "
+					+ "where t.task=:taskName and t.description=:finishedSuccessfully";
+			Query query = session.createQuery(hqlSelect);
+			query.setString("taskName", mifosTask.name);
+			query.setString("finishedSuccessfully",
+					SchedulerConstants.FINISHEDSUCCESSFULLY);
+			if (query.uniqueResult() == null) {
+				// When schedular starts for the first time
+				timeInMillis = System.currentTimeMillis();
+				return true;
+			} else {
+				timeInMillis = ((Timestamp) query.uniqueResult()).getTime();
 			}
-			txn.commit();
-			if((System.currentTimeMillis()-timeInMillis)/(1000*60*60*24)<=1){
-				timeInMillis=System.currentTimeMillis();
+			HibernateUtil.commitTransaction();
+			if ((System.currentTimeMillis() - timeInMillis)
+					/ (1000 * 60 * 60 * 24) <= 1) {
+				timeInMillis = System.currentTimeMillis();
 				return true;
 			}
+			return false;
+		} catch (Exception e) {
+			return true;
 		}
-		catch(HibernateProcessException hpe){
-			hpe.printStackTrace();
-		}catch(HibernateException he){
-			he.printStackTrace();
-		}catch(IllegalArgumentException iae){
-			iae.printStackTrace();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		finally
-		{
-			try{
-			    HibernateUtil.closeSession(session);
-			}catch(HibernateProcessException hpe){
-				hpe.printStackTrace();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-		}
-		return false;
 	}
-	
+
 	private void perform(long timeInMillis) {
 		try {
 			registerStartup(timeInMillis);
 			execute(timeInMillis);
-		} catch (Exception e) {
-		} finally {
-			registerCompletion(timeInMillis);
+			registerCompletion(0, SchedulerConstants.FINISHEDSUCCESSFULLY,
+					TaskStatus.COMPLETE);
+		} catch (CronJobException e) {
+			registerCompletion(timeInMillis, e.getErrorMessage(),
+					TaskStatus.INCOMPLETE);
 		}
 	}
-
 }

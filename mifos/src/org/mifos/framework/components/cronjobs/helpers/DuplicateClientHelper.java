@@ -41,65 +41,58 @@ package org.mifos.framework.components.cronjobs.helpers;
 import java.util.Iterator;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.TaskHelper;
-import org.mifos.framework.components.cronjobs.valueobjects.TempTable;
-import org.mifos.framework.exceptions.HibernateProcessException;
+import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class DuplicateClientHelper extends TaskHelper {
 
+	public DuplicateClientHelper(MifosTask mifosTask) {
+		super(mifosTask);
+	}
+
 	@Override
-	public void execute(long timeInMillis) {
-		Session session=null;
-		Transaction txn=null;
-		TempTable temp=null;
-		int count=0;
-		try{
-			//When Government Id is null
-			session = HibernateUtil.getSession();
-			txn=session.beginTransaction();
-			
-			String hql="select a.customerId from Customer a, Customer b" +
-					   		"  where a.customerId!=b.customerId and " +
-					   		"  a.governmentId is null and " +
-					   		"  b.governmentId is null and " +
-					   		"  a.displayName=b.displayName and " +
-					   		"  a.dateOfBirth=b.dateOfBirth";
+	public void execute(long timeInMillis) throws CronJobException {
+		Session session = null;
+		try {
+			// When Government Id is null
+			session = HibernateUtil.getSessionTL();
+			HibernateUtil.startTransaction();
 
-			Iterator itr = session.createQuery(hql).iterate() ;
+			String hql = "select a.customerId from ClientBO a, ClientBO b"
+					+ "  where a.customerId!=b.customerId and "
+					+ "  a.governmentId is null and "
+					+ "  b.governmentId is null and "
+					+ "  a.displayName=b.displayName and "
+					+ "  a.dateOfBirth=b.dateOfBirth";
 
-			while(itr.hasNext()){
-				hql="update Customer A set A.statusId=6 where A.customerId=:id";
-				session.createQuery(hql).setInteger("id",(Integer)itr.next()).executeUpate();
+			Iterator itr = session.createQuery(hql).iterate();
+
+			while (itr.hasNext()) {
+				hql = "update CustomerBO a set a.customerStatus=6 where a.customerId=:id";
+				session.createQuery(hql).setInteger("id", (Integer) itr.next())
+						.executeUpate();
 			}
 
-			hql="select a.customerId from Customer a, Customer b" +
-	   				"  where a.customerId!=b.customerId and " +
-	   				"  a.governmentId is not null and " +
-	   				"  b.governmentId is not null and " +
-	   				"  a.governmentId=b.governmentId";
+			hql = "select a.customerId from ClientBO a, ClientBO b"
+					+ "  where a.customerId!=b.customerId and "
+					+ "  a.governmentId is not null and "
+					+ "  b.governmentId is not null and "
+					+ "  a.governmentId=b.governmentId";
 
-			itr = session.createQuery(hql).iterate() ;
+			itr = session.createQuery(hql).iterate();
 
-			while(itr.hasNext()){
-				hql="update Customer A set A.statusId=6 where A.customerId=:id";
-				session.createQuery(hql).setInteger("id",(Integer)itr.next()).executeUpate();
+			while (itr.hasNext()) {
+				hql = "update CustomerBO a set a.customerStatus=6 where a.customerId=:id";
+				session.createQuery(hql).setInteger("id", (Integer) itr.next())
+						.executeUpate();
 			}
 
-			txn.commit();
-		}catch(HibernateProcessException e){
-			e.printStackTrace();
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
-		finally
-		{
-			try{
-			    HibernateUtil.closeSession(session);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+			HibernateUtil.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtil.rollbackTransaction();
+			throw new CronJobException(e);
 		}
 	}
 

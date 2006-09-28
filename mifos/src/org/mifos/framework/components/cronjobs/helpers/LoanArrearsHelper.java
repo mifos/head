@@ -37,71 +37,58 @@
  */
 package org.mifos.framework.components.cronjobs.helpers;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
+import org.mifos.framework.components.cronjobs.MifosTask;
+import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
-public class LoanArrearsHelper extends TaskHelper{
+public class LoanArrearsHelper extends TaskHelper {
+
+	public LoanArrearsHelper(MifosTask mifosTask) {
+		super(mifosTask);
+	}
 
 	@Override
-	public void execute(long timeInMillis) {
-		// TODO Auto-generated method stub
-		
-		Short latenessDays = null;
-		LoanPersistance loanPersistence = new LoanPersistance();
-		LoansPrdPersistence loansPrdPersistence = new LoansPrdPersistence();
-
+	public void execute(long timeInMillis) throws CronJobException {
+		AccountPersistence accountPersistence = new AccountPersistence();
+		List<String> errorList = new ArrayList<String>();
+		List<Integer> listAccountIds = null;
 		try {
-			
-			latenessDays = loansPrdPersistence.retrieveLatenessForPrd();
-
-			List<LoanBO> listAccounts = loanPersistence
+			Short latenessDays = new LoansPrdPersistence()
+					.retrieveLatenessForPrd();
+			listAccountIds = new LoanPersistance()
 					.getLoanAccountsInArrears(latenessDays);
-			
-
-			for (LoanBO loanBO : listAccounts) {
-				try {
-					loanBO.handleArrears();
-					HibernateUtil.commitTransaction();
-				} catch (HibernateException ex) {
-					HibernateUtil.getTransaction().rollback();
-					MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
-							.error(
-									"Loan Account Arrears: Changes to Glob_Act_Num "
-											+ loanBO.getGlobalAccountNum()
-											+ "could not be committed.");
-				}finally{
-					HibernateUtil.closeSession();
-				}
-			}
-
 		} catch (Exception e) {
-			e.printStackTrace();
-			
-		} finally {
+			throw new CronJobException(e);
+		}
+		for (Integer accountId : listAccountIds) {
 			try {
-				HibernateUtil.closeSession();
+				LoanBO loanBO = (LoanBO) accountPersistence
+						.getAccount(accountId);
+				loanBO.handleArrears();
+				HibernateUtil.commitTransaction();
 			} catch (Exception e) {
-				e.printStackTrace();
+				HibernateUtil.rollbackTransaction();
+				errorList.add(accountId.toString());
+			} finally {
+				HibernateUtil.closeSession();
 			}
 		}
-
+		if (errorList.size() > 0)
+			throw new CronJobException(SchedulerConstants.FAILURE, errorList);
 	}
 
 	@Override
 	public boolean isTaskAllowedToRun() {
 		return true;
 	}
-
-
-
 
 }

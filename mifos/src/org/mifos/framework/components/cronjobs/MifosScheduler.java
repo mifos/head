@@ -53,98 +53,105 @@ import org.w3c.dom.Text;
 
 public class MifosScheduler extends Timer {
 
-	Timer timer=null;
+	Timer timer = null;
+
 	public MifosScheduler() {
-		timer=new Timer();
+		timer = new Timer();
 	}
 
 	/**
-	 * This method schedules a specified task to run at a specified time afer a specified delay
+	 * This method schedules a specified task to run at a specified time afer a
+	 * specified delay
 	 */
 	public void schedule(MifosTask task, Date initial, long delay) {
-			timer.schedule(task,initial,delay);
+		timer.schedule(task, initial, delay);
 	}
 
-
 	/**
-	 * This method reads all the task from a xml file and registers them with the MifosScheduler"
+	 * This method reads all the task from a xml file and registers them with
+	 * the MifosScheduler"
 	 */
-	public void registerTasks() throws Exception{
-			MifosTask mifosTask;
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document document = builder
-					.parse(ResourceLoader.getURI(SchedulerConstants.PATH).toString());
-
-			NodeList rootSchedulerTasks = document.getElementsByTagName(SchedulerConstants.SCHEDULERTASKS);
-			Element rootNodeName = (Element) rootSchedulerTasks.item(0);
-			NodeList collectionOfScheduledTasks= rootNodeName.getElementsByTagName(SchedulerConstants.SCHEDULER);
-			for(int i=0;i<collectionOfScheduledTasks.getLength();i++){
-				Element scheduledTask = (Element) collectionOfScheduledTasks.item(i);
-
-				Element subNodeName1 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.TASKCLASSNAME).item(0);
-				String taskName = ((Text) subNodeName1.getFirstChild()).getData().trim();
-
-
-				Element subNodeName2 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.INITIALTIME).item(0);
-				String initialTime = ((Text) subNodeName2.getFirstChild()).getData().trim();
-
-
-				Element subNodeName3=null;
-				String delayTime=null;
-
-				if((scheduledTask.getElementsByTagName(SchedulerConstants.DELAYTIME))!=null){
-					subNodeName3 = (Element) scheduledTask.getElementsByTagName(SchedulerConstants.DELAYTIME).item(0);
-					if(subNodeName3.getFirstChild()!=null){
-						delayTime = ((Text) subNodeName3.getFirstChild()).getData().trim();
-					}
+	public void registerTasks() throws Exception {
+		MifosTask mifosTask;
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.parse(ResourceLoader.getURI(
+				SchedulerConstants.PATH).toString());
+		NodeList rootSchedulerTasks = document
+				.getElementsByTagName(SchedulerConstants.SCHEDULERTASKS);
+		Element rootNodeName = (Element) rootSchedulerTasks.item(0);
+		NodeList collectionOfScheduledTasks = rootNodeName
+				.getElementsByTagName(SchedulerConstants.SCHEDULER);
+		for (int i = 0; i < collectionOfScheduledTasks.getLength(); i++) {
+			Element scheduledTask = (Element) collectionOfScheduledTasks
+					.item(i);
+			Element subNodeName1 = (Element) scheduledTask
+					.getElementsByTagName(SchedulerConstants.TASKCLASSNAME)
+					.item(0);
+			String taskName = ((Text) subNodeName1.getFirstChild()).getData()
+					.trim();
+			Element subNodeName2 = (Element) scheduledTask
+					.getElementsByTagName(SchedulerConstants.INITIALTIME).item(
+							0);
+			String initialTime = ((Text) subNodeName2.getFirstChild())
+					.getData().trim();
+			Element subNodeName3 = null;
+			String delayTime = null;
+			if ((scheduledTask
+					.getElementsByTagName(SchedulerConstants.DELAYTIME)) != null) {
+				subNodeName3 = (Element) scheduledTask.getElementsByTagName(
+						SchedulerConstants.DELAYTIME).item(0);
+				if (subNodeName3.getFirstChild() != null) {
+					delayTime = ((Text) subNodeName3.getFirstChild()).getData()
+							.trim();
 				}
-
-					mifosTask= (MifosTask) Class.forName("org.mifos.framework.components.cronjobs.helpers.".concat(taskName)).newInstance();
-	                mifosTask.name=taskName;
-
-	                if(delayTime!=null){
-	                	if(Long.parseLong(delayTime)<86400){
-	                		throw new IllegalArgumentException("Please specify the delay time >= 86400(1 day)");
-	                	}
-	                	 schedule(mifosTask,parseInitialTime(initialTime),Long.parseLong(delayTime)*1000);
-	                }else{
-	                	schedule(mifosTask,parseInitialTime(initialTime));
-	                }
-
 			}
-
+			mifosTask = (MifosTask) Class.forName(
+					"org.mifos.framework.components.cronjobs.helpers."
+							.concat(taskName)).newInstance();
+			mifosTask.name = taskName;
+			if (delayTime != null) {
+				if (Long.parseLong(delayTime) < 86400) {
+					throw new IllegalArgumentException(
+							"Please specify the delay time >= 86400(1 day)");
+				}
+				schedule(mifosTask, parseInitialTime(initialTime), Long
+						.parseLong(delayTime) * 1000);
+			} else {
+				schedule(mifosTask, parseInitialTime(initialTime));
+			}
+		}
 	}
 
 	/**
-	 * These are the non-reqular jobs which do not recure but have to be run infrequently on user request.
-	 *  Hence there is no delay input. An example: Change in center meeting schedule which needs to
-	 *  change all inherited meetings as  well as reschedule loans, these tasks typically require
-	 *  a few input params as well.
+	 * These are the non-reqular jobs which do not recure but have to be run
+	 * infrequently on user request. Hence there is no delay input. An example:
+	 * Change in center meeting schedule which needs to change all inherited
+	 * meetings as well as reschedule loans, these tasks typically require a few
+	 * input params as well.
 	 */
 	public void schedule(MifosTask task, Date initial) {
-			timer.schedule(task,initial);
+		timer.schedule(task, initial);
 	}
 
 	/**
-	 * This is a helper method that parses the initialtime string and returns a valid Date time.
+	 * This is a helper method that parses the initialtime string and returns a
+	 * valid Date time.
 	 */
-	public Date parseInitialTime(String initialTime){
-		int firstIndex=initialTime.indexOf(":");
-		int lastIndex=initialTime.indexOf(":",firstIndex);
-
+	public Date parseInitialTime(String initialTime) {
+		int firstIndex = initialTime.indexOf(":");
+		int lastIndex = initialTime.indexOf(":", firstIndex);
 		Calendar time = Calendar.getInstance();
-
-		int hourOfTheDay=Integer.parseInt(initialTime.substring(0,firstIndex));
-		int minutes=Integer.parseInt(initialTime.substring(firstIndex+1,lastIndex+firstIndex+1));
-		int seconds=Integer.parseInt(initialTime.substring(lastIndex+firstIndex+2,initialTime.length()));
-
-		time.set(Calendar.HOUR_OF_DAY,hourOfTheDay);
-		time.set(Calendar.MINUTE,minutes);
-		time.set(Calendar.SECOND,seconds);
-
+		int hourOfTheDay = Integer.parseInt(initialTime
+				.substring(0, firstIndex));
+		int minutes = Integer.parseInt(initialTime.substring(firstIndex + 1,
+				lastIndex + firstIndex + 1));
+		int seconds = Integer.parseInt(initialTime.substring(lastIndex
+				+ firstIndex + 2, initialTime.length()));
+		time.set(Calendar.HOUR_OF_DAY, hourOfTheDay);
+		time.set(Calendar.MINUTE, minutes);
+		time.set(Calendar.SECOND, seconds);
 		return time.getTime();
 	}
-
 
 }

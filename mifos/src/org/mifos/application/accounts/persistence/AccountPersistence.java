@@ -134,7 +134,7 @@ public class AccountPersistence extends Persistence {
 				queryParameters);
 	}
 
-	public List<AccountBO> getActiveCustomerAndSavingsAccounts()
+	public List<Integer> getActiveCustomerAndSavingsAccounts()
 			throws PersistenceException {
 		return executeNamedQuery(
 				NamedQueryConstants.GET_ACTIVE_CUSTOMER__AND_SAVINGS_ACCOUNTS,

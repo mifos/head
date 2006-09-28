@@ -47,7 +47,7 @@ public class TestAccountPersistence extends TestAccount {
 	public void testFailureLoadBusinessObject() {
 		try {
 			accountPersistence.getAccount(null);
-			assertTrue(false);
+			fail();
 		} catch (PersistenceException e) {
 			assertTrue(true);
 		}
@@ -87,7 +87,6 @@ public class TestAccountPersistence extends TestAccount {
 	}
 
 	public void testGetCustomerAccountsForFee() throws Exception {
-
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"ClientPeridoicFee", FeeCategory.CENTER, "5",
 				RecurrenceType.WEEKLY, Short.valueOf("1"));
@@ -112,41 +111,40 @@ public class TestAccountPersistence extends TestAccount {
 				group.getCustomerId());
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-
 	}
 
 	public void testGetActiveCustomerAndSavingsAccounts() throws Exception {
-
 		SavingsBO savingsBO = TestObjectFactory.createSavingsAccount(
 				"12345678910", group, new Short("16"), new Date(),
 				createSavingsOffering("qqqqq"), TestObjectFactory
 						.getUserContext());
-		List<AccountBO> customerAccounts = accountPersistence
+		List<Integer> customerAccounts = accountPersistence
 				.getActiveCustomerAndSavingsAccounts();
 		assertNotNull(customerAccounts);
 		assertEquals(3, customerAccounts.size());
 		TestObjectFactory.cleanUp(savingsBO);
 	}
 
-	public void testSearchAccount() throws Exception{
+	public void testSearchAccount() throws Exception {
 		SavingsBO savingsBO = getSavingsAccount();
-		
+
 		QueryResult queryResult = null;
-		
-		queryResult = accountPersistence.search(savingsBO.getGlobalAccountNum(),Short.valueOf("3"));
+
+		queryResult = accountPersistence.search(
+				savingsBO.getGlobalAccountNum(), Short.valueOf("3"));
 		assertNotNull(queryResult);
-		assertEquals(1,queryResult.getSize());
+		assertEquals(1, queryResult.getSize());
 		TestObjectFactory.cleanUp(savingsBO);
-		
+
 	}
-	
-	private SavingsBO getSavingsAccount() throws Exception{
-		return TestObjectFactory.createSavingsAccount(
-				"12345678910", group, new Short("16"), new Date(),
-				createSavingsOffering("qqqqq"), TestObjectFactory
-						.getUserContext());
-		
+
+	private SavingsBO getSavingsAccount() throws Exception {
+		return TestObjectFactory.createSavingsAccount("12345678910", group,
+				new Short("16"), new Date(), createSavingsOffering("qqqqq"),
+				TestObjectFactory.getUserContext());
+
 	}
+
 	private SavingsOfferingBO createSavingsOffering(String offeringName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));

@@ -8,8 +8,6 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.LoanAccountView;
-import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -22,7 +20,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -95,22 +92,14 @@ public class TestLoanPersistence extends MifosTestCase {
 	}
 
 	public void testGetFeeAmountAtDisbursement() throws Exception {
-		loanAccountForDisbursement = getLoanAccount("cdfg",group, meeting, Short
-				.valueOf("3"));
+		loanAccountForDisbursement = getLoanAccount("cdfg", group, meeting,
+				Short.valueOf("3"));
 		assertEquals(30.0, loanPersistence
 				.getFeeAmountAtDisbursement(loanAccountForDisbursement
 						.getAccountId()));
 	}
 
-	/**
-	 * Test case to check whether the Loan Accounts that are in arrears are
-	 * being returned properly. Requires a Loan Account that has atleat one due
-	 * date of payment past the current system date - lateness days
-	 * 
-	 * @param latenessDays
-	 * @throws PersistenceException
-	 */
-	public void testGetLoanAccountsInArrears() {
+	public void testGetLoanAccountsInArrears() throws PersistenceException {
 		Short latenessDays = 1;
 		Calendar actionDate = new GregorianCalendar();
 		int year = actionDate.get(Calendar.YEAR);
@@ -119,44 +108,30 @@ public class TestLoanPersistence extends MifosTestCase {
 		actionDate = new GregorianCalendar(year, month, day - latenessDays);
 
 		Date date = new Date(actionDate.getTimeInMillis());
-		List<LoanBO> list;
-		try {
-
-			Calendar checkDate = new GregorianCalendar(year, month, day - 15);
-			Date startDate = new Date(checkDate.getTimeInMillis());
-			for (AccountActionDateEntity accountAction : loanAccount
-					.getAccountActionDates()) {
-				accountAction.setActionDate(startDate);
-			}
-			TestObjectFactory.updateObject(loanAccount);
-			loanAccount = new AccountPersistence().getAccount(loanAccount
-					.getAccountId());
-
-			list = loanPersistence.getLoanAccountsInArrears(latenessDays);
-			assertNotNull(list);
-			LoanBO testBO = (LoanBO) list.get(0);
-
-			assertEquals(Short
-					.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING),
-					testBO.getAccountState().getId());
-
-			// Get the first action date i.e for the first Installment
-			AccountActionDateEntity actionDates = testBO
-					.getAccountActionDate(Short.valueOf("1"));
-
-			// assert that the date comes after the action date
-			assertTrue(date.after(actionDates.getActionDate()));
-
-			// assert that the payment status in 0 - unpaid
-			assertEquals(PaymentStatus.UNPAID.getValue(), actionDates
-					.getPaymentStatus());
-
-		} catch (PersistenceException e) {
-			// TODO Auto-generated catch block
-
-			e.printStackTrace();
+		Calendar checkDate = new GregorianCalendar(year, month, day - 15);
+		Date startDate = new Date(checkDate.getTimeInMillis());
+		for (AccountActionDateEntity accountAction : loanAccount
+				.getAccountActionDates()) {
+			accountAction.setActionDate(startDate);
 		}
-
+		TestObjectFactory.updateObject(loanAccount);
+		loanAccount = new AccountPersistence().getAccount(loanAccount
+				.getAccountId());
+		List<Integer> list = loanPersistence
+				.getLoanAccountsInArrears(latenessDays);
+		assertNotNull(list);
+		LoanBO testBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, list
+				.get(0));
+		assertEquals(Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING),
+				testBO.getAccountState().getId());
+		// Get the first action date i.e for the first Installment
+		AccountActionDateEntity actionDates = testBO.getAccountActionDate(Short
+				.valueOf("1"));
+		// assert that the date comes after the action date
+		assertTrue(date.after(actionDates.getActionDate()));
+		// assert that the payment status in 0 - unpaid
+		assertEquals(PaymentStatus.UNPAID.getValue(), actionDates
+				.getPaymentStatus());
 	}
 
 	public void testGetAccount() throws Exception {
@@ -175,7 +150,7 @@ public class TestLoanPersistence extends MifosTestCase {
 								.getAccountId()));
 	}
 
-	private void disburseLoan(Date startDate) throws Exception{
+	private void disburseLoan(Date startDate) throws Exception {
 		((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate,
 				Short.valueOf("1"), loanAccountForDisbursement.getPersonnel(),
 				startDate, Short.valueOf("1"));
@@ -185,23 +160,23 @@ public class TestLoanPersistence extends MifosTestCase {
 	private AccountBO getLoanAccount(Short accountSate, Date startDate,
 			int disbursalType) {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loanvcfg","bhgf", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+				"Loanvcfg", "bhgf", Short.valueOf("2"), startDate, Short
+						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				Short.valueOf("1"), Short.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, accountSate, startDate, loanOffering,
 				disbursalType);
 	}
 
-	private AccountBO getLoanAccount(String shortName,CustomerBO customer, MeetingBO meeting,
-			Short accountSate) {
+	private AccountBO getLoanAccount(String shortName, CustomerBO customer,
+			MeetingBO meeting, Short accountSate) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan123",shortName, Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+				"Loan123", shortName, Short.valueOf("2"), startDate, Short
+						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				Short.valueOf("1"), Short.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"42423142341", customer, accountSate, startDate, loanOffering,
 				1);
@@ -211,10 +186,10 @@ public class TestLoanPersistence extends MifosTestCase {
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loancfgb","dhsq", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+				"Loancfgb", "dhsq", Short.valueOf("2"), startDate, Short
+						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				Short.valueOf("1"), Short.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				Short.valueOf("5"), startDate, loanOffering);
 
