@@ -69,6 +69,8 @@ public class ClientDetailEntity extends PersistentObject {
 
 	private String handicappedDetails;
 
+	private Short povertyStatus;
+	
 	public ClientDetailEntity(ClientBO client, ClientDetailView view) {
 		super();
 		this.customerId = null;
@@ -83,6 +85,7 @@ public class ClientDetailEntity extends PersistentObject {
 		this.gender = view.getGender();
 		this.dateStarted = null;
 		this.handicappedDetails = null;
+		this.povertyStatus = view.getPovertyStatus();
 	}
 
 	protected ClientDetailEntity() {
@@ -189,6 +192,14 @@ public class ClientDetailEntity extends PersistentObject {
 		return client;
 	}
 
+	public Short getPovertyStatus() {
+		return povertyStatus;
+	}
+
+	public void setPovertyStatus(Short povertyStatus) {
+		this.povertyStatus = povertyStatus;
+	}
+
 	public void updateClientDetails(ClientDetailView view) {
 		this.ethinicity = view.getEthinicity();
 		this.citizenship = view.getCitizenship();
@@ -198,8 +209,8 @@ public class ClientDetailEntity extends PersistentObject {
 		this.educationLevel = view.getEducationLevel();
 		this.numChildren = view.getNumChildren();
 		this.gender = view.getGender();
+		this.povertyStatus = view.getPovertyStatus();
 		this.dateStarted = null;
-		this.handicappedDetails = null;
-		
+		this.handicappedDetails = null;		
 	}
 }

@@ -22,6 +22,7 @@
         <property name="gender" column="GENDER" type="short" />
         <property name="dateStarted" column="DATE_STARTED" type="date" />
         <property name="handicappedDetails" column="HANDICAPPED_DETAILS" type="string"  />
+        <property name="povertyStatus" column="POVERTY_STATUS" />
         <one-to-one name="client" class="org.mifos.application.customer.client.business.ClientBO" cascade="all" access="field"/>
     </class>
          

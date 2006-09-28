@@ -233,7 +233,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private List<CustomFieldView> getCustomFieldView() {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-		customFields.add(new CustomFieldView(new Short("1"), "13", null));
+		customFields.add(new CustomFieldView(new Short("8"), "13", null));
 		return customFields;
 
 	}
@@ -257,7 +257,7 @@ public class TestSavingsBO extends MifosTestCase {
 		Iterator itr = savings.getAccountCustomFields().iterator();
 		AccountCustomFieldEntity customFieldEntity = (AccountCustomFieldEntity) itr
 				.next();
-		assertEquals(Short.valueOf("1"), customFieldEntity.getFieldId());
+		assertEquals(Short.valueOf("8"), customFieldEntity.getFieldId());
 		assertEquals("13", customFieldEntity.getFieldValue());
 		assertEquals(AccountTypes.SAVINGSACCOUNT.getValue(), savings
 				.getAccountType().getAccountTypeId());

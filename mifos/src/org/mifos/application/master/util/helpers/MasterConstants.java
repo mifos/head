@@ -44,6 +44,7 @@ public interface MasterConstants {
 	public static final String PERSONNEL_STATUS="PersonnelStatus";
 	public static final String CITIZENSHIP = "CitizenShip";
 	public static final String ETHINICITY = "Ethinicity";
+	public static final String POVERTY_STATUS = "PovertyStatus";
 	public static final String EDUCATION_LEVEL ="EducationLevel";
 	public static final String BUSINESS_ACTIVITIES ="BusinessActivities";
 	public static final String BUSINESS_ACTIVITIE_NAME ="BusinessActivitieName";

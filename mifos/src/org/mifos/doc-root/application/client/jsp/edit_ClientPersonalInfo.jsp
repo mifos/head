@@ -302,6 +302,17 @@
 										</c:forEach>
 									</mifos:select></td>
 						</tr>
+						<%-- Poverty Status --%>
+						<tr class="fontnormal">
+							<td align="right"><mifos:mifoslabel keyhm="Client.PovertyStatus"
+								name="client.PovertyStatus" bundle="ClientUIResources"></mifos:mifoslabel></td>
+							<td><mifos:select name="clientCustActionForm" keyhm="Client.PovertyStatus"
+										property="clientDetailView.povertyStatus" size="1">
+										<c:forEach var="povertyStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'povertyStatus')}" >
+											<html-el:option value="${povertyStatus.id}">${povertyStatus.name}</html-el:option>
+										</c:forEach>
+									</mifos:select></td>
+						</tr>
 						<%-- Handicapped --%>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel keyhm="Client.Handicapped" isColonRequired="yes"

@@ -307,6 +307,15 @@
 											</c:if>
 										</c:forEach><br>
 									</span></td></tr>
+									<tr id="Client.PovertyStatus"><td class="fontnormalbold"><mifos:mifoslabel name="client.PovertyStatus"
+										bundle="ClientUIResources" keyhm="Client.PovertyStatus" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <span
+										class="fontnormal">
+										<c:forEach var="povertyStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'povertyStatus')}">
+											<c:if test = "${povertyStatus.id == sessionScope.clientCustActionForm.clientDetailView.povertyStatus}">
+												<c:out value="${povertyStatus.name}"/>
+											</c:if>
+										</c:forEach><br>
+									</span></td></tr>
 									<tr id="Client.Handicapped"><td class="fontnormalbold"><mifos:mifoslabel
 										name="${ConfigurationConstants.HANDICAPPED}" keyhm="Client.Handicapped" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/> <span
 										class="fontnormal">

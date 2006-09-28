@@ -500,6 +500,17 @@
 							<br>
 							</td>
 						</tr>
+						<tr id="Client.PovertyStatus">
+							<td class="fontnormal">
+							<mifos:mifoslabel name="client.PovertyStatus" bundle="ClientUIResources" keyhm="Client.PovertyStatus" isManadatoryIndicationNotRequired="yes"/>
+							<c:forEach var="povertyStatus" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'povertyStatus')}">
+									<c:if test = "${povertyStatus.id == BusinessKey.customerDetail.povertyStatus}">
+										<c:out value="${povertyStatus.name}"/>
+									</c:if>
+							</c:forEach>
+							<br>
+							</td>
+						</tr>
 						<tr id="Client.Citizenship">
 							<td class="fontnormal">
 							<mifos:mifoslabel name="${ConfigurationConstants.CITIZENSHIP}" keyhm="Client.Citizenship" isColonRequired="yes" isManadatoryIndicationNotRequired="yes"/>

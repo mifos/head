@@ -64,6 +64,7 @@ import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -178,7 +179,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				CustomerConstants.CUSTOM_FIELDS_LIST, request));
 		assertNotNull(SessionUtils.getAttribute(
 				CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
-
+		List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>)SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+		assertNotNull(povertyStatusList);
 	}
 
 	public void testLoadClientUnderGroup() throws Exception {
@@ -536,6 +538,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		flowKey =(String) request.getAttribute(Constants.CURRENTFLOWKEY);
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+		
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "next");
 		addRequestParameter("officeId", "3");
@@ -548,6 +552,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("dateOfBirth", "03/20/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
+		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
 		int i = 0;
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 			addRequestParameter("customField[" + i + "].fieldId",
@@ -607,6 +612,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		flowKey =(String) request.getAttribute(Constants.CURRENTFLOWKEY);
+		List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
@@ -621,6 +627,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("dateOfBirth", "03/20/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
+		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
 		int i = 0;
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 			addRequestParameter("customField[" + i + "].fieldId",
@@ -669,6 +676,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			verifyNoActionErrors();
 			verifyNoActionMessages();
 			verifyForward(ActionForwards.load_success.toString());
+			List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
 			List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 					.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 			setRequestPathInfo("/clientCustAction.do");
@@ -683,6 +691,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			addRequestParameter("dateOfBirth", "03/20/2006");
 			addRequestParameter("clientDetailView.gender", "1");
 			addRequestParameter("input", "personalInfo");
+			addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
 			int i = 0;
 			for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 				addRequestParameter("customField[" + i + "].fieldId",
@@ -735,6 +744,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.get_success.toString());
+		List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>)SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+		assertNotNull(povertyStatusList);
 		assertEquals("Age of customer should be 50 years", 50, SessionUtils
 				.getAttribute(ClientConstants.AGE, request));
 		// assertEquals("No of active loan accounts should be
@@ -783,6 +794,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				ClientConstants.ETHINICITY_ENTITY, request));
 		assertNotNull(SessionUtils.getAttribute(
 				CustomerConstants.CUSTOM_FIELDS_LIST, request));
+		List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>)SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+		assertNotNull(povertyStatusList);
 
 	}
 
@@ -797,6 +810,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.editPersonalInfo_success.toString());
+		
+		List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>)SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditPersonalInfo");
 		addRequestParameter("officeId", "3");
@@ -809,6 +824,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.nameType", "");
 		addRequestParameter("dateOfBirth", "");
 		addRequestParameter("clientDetailView.gender", "");
+		addRequestParameter("customerDetail.povertyStatus", povertyStatusList.get(0).getId().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals("Client salutation", 1,
@@ -1073,7 +1089,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
 				"first", "middle", "last", "secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1,
-				1, Short.valueOf("1"), Short.valueOf("1"));
+				1, Short.valueOf("1"), Short.valueOf("1"),Short.valueOf("41"));
 		client = new ClientBO(TestObjectFactory.getUserContext(),
 				clientNameDetailView.getDisplayName(), CustomerStatus
 						.getStatus(new Short("1")), null, null, new Address(),

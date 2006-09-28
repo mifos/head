@@ -366,7 +366,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		office = TestObjectFactory.getOffice(Short.valueOf("1"));
 		Name name = new Name("XYZ", null, null, null);
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");

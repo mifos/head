@@ -275,7 +275,7 @@ public class TestObjectFactory {
 	
 	public static List<CustomFieldView> getCustomFields(){
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();		
-		CustomFieldView fee = new CustomFieldView(Short.valueOf("1"),"Custom",Short.valueOf("1"));
+		CustomFieldView fee = new CustomFieldView(Short.valueOf("4"),"Custom",Short.valueOf("1"));
 		customFields.add(fee);
 		return customFields;
 	}
@@ -354,7 +354,7 @@ public class TestObjectFactory {
 			Short personnel = new Short("1");	
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder("testClientName"),customerName,"middle",customerName,"secondLast");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
-			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
+			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office, parentCustomer, null,
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			client.save();
@@ -374,7 +374,7 @@ public class TestObjectFactory {
 			Short personnel = new Short("1");	
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("3"),1,new StringBuilder(customerName),customerName,"middle",customerName,"secondLast");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
-			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
+			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			client = new ClientBO(getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, office,meeting,personnel, new Date(),
 					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			client.save();
@@ -392,7 +392,7 @@ public class TestObjectFactory {
 		try {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(customerName+customerName),customerName,"",customerName,"");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
-			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"));
+			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			client = new ClientBO(getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), personnel, parentCustomer.getOffice().getOfficeId(), parentCustomer, null,
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			
@@ -723,7 +723,7 @@ public class TestObjectFactory {
 	}
 	private static List<CustomFieldView> getCustomFieldView(){
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-		customFields.add(new CustomFieldView(new Short("1"),"custom field value",null));
+		customFields.add(new CustomFieldView(new Short("8"),"custom field value",null));
 		return customFields;
 
 	}

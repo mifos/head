@@ -143,7 +143,7 @@ public class TestPersonnelBO extends MifosTestCase {
 
 	public void testGetDateSucess()throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
@@ -162,7 +162,7 @@ public class TestPersonnelBO extends MifosTestCase {
 	
 	public void testGetDateFailure()throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
@@ -181,7 +181,7 @@ public class TestPersonnelBO extends MifosTestCase {
 
 	public void testSaveFailure() throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
@@ -206,7 +206,7 @@ public class TestPersonnelBO extends MifosTestCase {
 	}
 	public void testCreateSucess() throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
@@ -257,7 +257,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		for (PersonnelCustomFieldEntity personnelCustomField : personnelSaved
 				.getCustomFields()) {
 			assertEquals("123456", personnelCustomField.getFieldValue());
-			assertEquals(1, personnelCustomField.getFieldId().intValue());
+			assertEquals(9, personnelCustomField.getFieldId().intValue());
 		}
 
 		TestObjectFactory.cleanUp(personnelSaved);
@@ -796,7 +796,7 @@ public class TestPersonnelBO extends MifosTestCase {
 	private PersonnelBO createPersonnel(OfficeBO office,
 			PersonnelLevel personnelLevel) throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
@@ -816,7 +816,7 @@ public class TestPersonnelBO extends MifosTestCase {
 
 	private List<CustomFieldView> getCustomFields() {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-		customFields.add(new CustomFieldView(Short.valueOf("1"), "123456",
+		customFields.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
 		return customFields;
 	}

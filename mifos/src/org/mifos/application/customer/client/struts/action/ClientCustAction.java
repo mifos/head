@@ -70,7 +70,6 @@ import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerHelper;
@@ -136,7 +135,8 @@ public class ClientCustAction extends CustAction {
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		doCleanUp(actionForm, request);
-		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING,
+				request);
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
 			actionForm.setParentGroup(getCustomerBusinessService().getCustomer(
 					Integer.valueOf(actionForm.getParentGroupId())));
@@ -260,6 +260,10 @@ public class ClientCustAction extends CustAction {
 		SessionUtils.setAttribute(ClientConstants.ETHINICITY_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.ETHINICITY,
+						getUserContext(request).getLocaleId()), request);
+		SessionUtils.setAttribute(ClientConstants.POVERTY_STATUS,
+				getCustomerBusinessService().retrieveMasterEntities(
+						MasterConstants.POVERTY_STATUS,
 						getUserContext(request).getLocaleId()), request);
 	}
 
@@ -726,7 +730,8 @@ public class ClientCustAction extends CustAction {
 						.getBusinessActivities(), customerDetail
 						.getMaritalStatus(),
 				customerDetail.getEducationLevel(), customerDetail
-						.getNumChildren(), customerDetail.getGender());
+						.getNumChildren(), customerDetail.getGender(),
+				customerDetail.getPovertyStatus());
 	}
 
 	private List<ClientNameDetailView> createNameViews(
@@ -756,87 +761,72 @@ public class ClientCustAction extends CustAction {
 			SystemException {
 		loadMasterDataEntities(actionForm, request);
 		loadCustomFieldDefinitions(EntityType.CLIENT, request);
-
 	}
 
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			ClientBO clientBO) throws ApplicationException {
-		try {
-			Short localeId = getUserContext(request).getLocaleId();
-			SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()
-					.calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
-							.getTime())), request);
-
-			SessionUtils
-					.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
-							getMasterEntities(SpouseFatherLookupEntity.class,
-									localeId), request);
-			SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCE,
-					getCustomerBusinessService().numberOfMeetings(true,
-							clientBO.getCustomerId()), request);
-			SessionUtils.setAttribute(
-					CustomerConstants.CUSTOMERPERFORMANCEHISTORY,
-					getCustomerBusinessService().numberOfMeetings(false,
-							clientBO.getCustomerId()), request);
-			SessionUtils.setAttribute(ClientConstants.LOANCYCLECOUNTER,
-					getCustomerBusinessService().fetchLoanCycleCounter(
-							clientBO.getCustomerId()), request);
-			List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();
-			List<SavingsBO> savingsAccounts = clientBO.getOpenSavingAccounts();
-			setLocaleIdToLoanStatus(loanAccounts, localeId);
-			setLocaleIdToSavingsStatus(savingsAccounts, localeId);
-			SessionUtils.setAttribute(
-					ClientConstants.CUSTOMERLOANACCOUNTSINUSE, loanAccounts,
-					request);
-			SessionUtils.setAttribute(
-					ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
-					savingsAccounts, request);
-			SessionUtils.setAttribute(
-					ClientConstants.BUSINESS_ACTIVITIES_ENTITY_NAME,
-					getNameForBusinessActivityEntity(clientBO
-							.getCustomerDetail().getBusinessActivities(),
-							localeId), request);
-			SessionUtils.setAttribute(ClientConstants.HANDICAPPED_ENTITY_NAME,
-					getNameForBusinessActivityEntity(clientBO
-							.getCustomerDetail().getHandicapped(), localeId),
-					request);
-			SessionUtils.setAttribute(
-					ClientConstants.MARITAL_STATUS_ENTITY_NAME,
-					getNameForBusinessActivityEntity(clientBO
-							.getCustomerDetail().getMaritalStatus(), localeId),
-					request);
-			SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY_NAME,
-					getNameForBusinessActivityEntity(clientBO
-							.getCustomerDetail().getCitizenship(), localeId),
-					request);
-			SessionUtils.setAttribute(ClientConstants.ETHINICITY_ENTITY_NAME,
-					getNameForBusinessActivityEntity(clientBO
-							.getCustomerDetail().getEthinicity(), localeId),
-					request);
-			SessionUtils
-					.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY_NAME,
-							getNameForBusinessActivityEntity(clientBO
-									.getCustomerDetail().getEducationLevel(),
-									localeId), request);
-			SessionUtils
-					.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
-							getMasterEntities(SpouseFatherLookupEntity.class,
-									localeId), request);
-		} catch (PersistenceException e) {
-			throw new CustomerException(e);
-		}
+		Short localeId = getUserContext(request).getLocaleId();
+		SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()
+				.calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
+						.getTime())), request);
+		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
+				request);
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCE,
+				getCustomerBusinessService().numberOfMeetings(true,
+						clientBO.getCustomerId()), request);
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCEHISTORY,
+				getCustomerBusinessService().numberOfMeetings(false,
+						clientBO.getCustomerId()), request);
+		SessionUtils.setAttribute(ClientConstants.LOANCYCLECOUNTER,
+				getCustomerBusinessService().fetchLoanCycleCounter(
+						clientBO.getCustomerId()), request);
+		List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();
+		List<SavingsBO> savingsAccounts = clientBO.getOpenSavingAccounts();
+		setLocaleIdToLoanStatus(loanAccounts, localeId);
+		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
+		SessionUtils.setAttribute(ClientConstants.CUSTOMERLOANACCOUNTSINUSE,
+				loanAccounts, request);
+		SessionUtils.setAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
+				savingsAccounts, request);
+		SessionUtils.setAttribute(
+				ClientConstants.BUSINESS_ACTIVITIES_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getBusinessActivities(), localeId), request);
+		SessionUtils.setAttribute(ClientConstants.HANDICAPPED_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getHandicapped(), localeId), request);
+		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getMaritalStatus(), localeId), request);
+		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getCitizenship(), localeId), request);
+		SessionUtils.setAttribute(ClientConstants.ETHINICITY_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getEthinicity(), localeId), request);
+		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY_NAME,
+				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
+						.getEducationLevel(), localeId), request);
+		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
+				request);
+		SessionUtils.setAttribute(ClientConstants.POVERTY_STATUS,
+				getCustomerBusinessService().retrieveMasterEntities(
+						MasterConstants.POVERTY_STATUS,
+						getUserContext(request).getLocaleId()), request);
 	}
 
 	private void setLocaleIdToLoanStatus(List<LoanBO> accountList,
 			Short localeId) {
 		for (LoanBO accountBO : accountList)
-			setLocaleForAccount((AccountBO) accountBO, localeId);
+			setLocaleForAccount(accountBO, localeId);
 	}
 
 	private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList,
 			Short localeId) {
 		for (SavingsBO accountBO : accountList)
-			setLocaleForAccount((AccountBO) accountBO, localeId);
+			setLocaleForAccount(accountBO, localeId);
 	}
 
 	private void setLocaleForAccount(AccountBO account, Short localeId) {

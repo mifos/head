@@ -60,6 +60,7 @@ public interface ClientConstants {
 	public static final String  MARITAL_STATUS_ENTITY = "maritalStatusEntity";
 	public static final String  CITIZENSHIP_ENTITY = "citizenshipEntity";
 	public static final String  ETHINICITY_ENTITY= "ethinicityEntity";
+	public static final String  POVERTY_STATUS= "povertyStatus";
 	public static final String  EDUCATION_LEVEL_ENTITY = "educationLevelEntity";
 	public static final String BUSINESS_ACTIVITIES_ENTITY = "businessActivitiesEntity";
 	public static final String  HANDICAPPED_ENTITY = "handicappedEntity";

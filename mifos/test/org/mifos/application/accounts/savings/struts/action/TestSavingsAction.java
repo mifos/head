@@ -127,7 +127,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	private List<CustomFieldView> getCustomFieldView() {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-		customFields.add(new CustomFieldView(new Short("1"), "13", null));
+		customFields.add(new CustomFieldView(new Short("8"), "13", null));
 		return customFields;
 
 	}

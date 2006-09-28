@@ -224,7 +224,7 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 	private void createPersonnelAndSetInSession(OfficeBO office,
 			PersonnelLevel personnelLevel) throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
-		customFieldView.add(new CustomFieldView(Short.valueOf("1"), "123456",
+		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");

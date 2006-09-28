@@ -56,6 +56,8 @@ public class ClientDetailView {
 
 	private Short gender;
 
+	private Short povertyStatus;
+	
 	public ClientDetailView() {
 		super();
 	}
@@ -63,7 +65,7 @@ public class ClientDetailView {
 	public ClientDetailView(Integer ethinicity, Integer citizenship,
 			Integer handicapped, Integer businessActivities,
 			Integer maritalStatus, Integer educationLevel, Short numChildren,
-			Short gender) {
+			Short gender, Short povertyStatus) {
 		this.ethinicity = ethinicity;
 		this.citizenship = citizenship;
 		this.handicapped = handicapped;
@@ -72,6 +74,7 @@ public class ClientDetailView {
 		this.educationLevel = educationLevel;
 		this.numChildren = numChildren;
 		this.gender = gender;
+		this.povertyStatus = povertyStatus;
 	}
 
 	public Integer getBusinessActivities() {
@@ -136,6 +139,14 @@ public class ClientDetailView {
 
 	public void setNumChildren(Short numChildren) {
 		this.numChildren = numChildren;
+	}
+	
+	public Short getPovertyStatus() {
+		return povertyStatus;
+	}
+
+	public void setPovertyStatus(Short povertyStatus) {
+		this.povertyStatus = povertyStatus;
 	}
 
 }
