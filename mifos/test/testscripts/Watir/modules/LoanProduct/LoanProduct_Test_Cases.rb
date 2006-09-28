@@ -829,18 +829,18 @@ class LoanProduct_Test_Cases < TestClass
     if (b!=nil) 
       begin
         assert($ie.contains_text(@errormessage_space))      
-        $logger.log_results("SavingProduct- Error message appears when short_name contains space", short_name, @errormessage_space, "Passed")
+        $logger.log_results("LoanProduct- Error message appears when short_name contains space", short_name, @errormessage_space, "Passed")
       rescue Test::Unit::AssertionFailedError=>e
-        $logger.log_results("SavingProduct- Error message did not appear when short_name contains space", short_name,@errormessage_space,"Failed")
+        $logger.log_results("LoanProduct- Error message did not appear when short_name contains space", short_name,@errormessage_space,"Failed")
       rescue =>excp
         quit_on_error(excp)          
       end
     else
       begin
         assert(!$ie.contains_text(@errormessage_space))
-        $logger.log_results("SavingProduct- Error message does not appear when short_name does not contain space",short_name,"No error message","passed")
+        $logger.log_results("LoanProduct- Error message does not appear when short_name does not contain space",short_name,"No error message","passed")
       rescue Test::Unit::AssertionFailedError=>e
-        $logger.log_results("SavingProduct- Error message appears when short_name does not contain space",short_name,"No error message","failed")
+        $logger.log_results("LoanProduct- Error message appears when short_name does not contain space",short_name,"No error message","failed")
       rescue =>excp
         quit_on_error(excp)         
       end 
