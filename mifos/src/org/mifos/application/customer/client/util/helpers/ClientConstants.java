@@ -184,6 +184,7 @@ public interface ClientConstants {
 	public static final String INVALID_CLIENT_STATUS_EXCEPTION ="GroupStatusException";
 	public static final String ERRORS_LOWER_GROUP_STATUS="errors.Client.lowerGroupStatus";
 	public static final String ERRORS_ACTIVE_ACCOUNTS_PRESENT="errors.Client.hasActiveAccount";
+	public static final String ERRORS_DUPLICATE_OFFERING_SELECTED="errors.Client.duplicateOfferingSelected";
 	
 	public String CLIENTPERFORMANCEHISTORY = "ClientPerformanceHistory";
 	public static final String YES ="1";

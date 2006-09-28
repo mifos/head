@@ -1093,7 +1093,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		client = new ClientBO(TestObjectFactory.getUserContext(),
 				clientNameDetailView.getDisplayName(), CustomerStatus
 						.getStatus(new Short("1")), null, null, new Address(),
-				getCustomFields(), null, personnel, officeId, meeting,
+				getCustomFields(), null, null, personnel, officeId, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
 				spouseNameDetailView, clientDetailView, null);

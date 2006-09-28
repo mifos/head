@@ -372,7 +372,7 @@ public class ClientCustAction extends CustAction {
 								actionForm.getMfiJoiningDate(), userContext
 										.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
-								.getFeesToApply(), actionForm
+								.getFeesToApply(), null, actionForm
 								.getFormedByPersonnelValue(), actionForm
 								.getOfficeIdValue(), meeting, actionForm
 								.getLoanOfficerIdValue(), getDateFromString(
@@ -393,7 +393,7 @@ public class ClientCustAction extends CustAction {
 								actionForm.getMfiJoiningDate(), userContext
 										.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
-								.getFeesToApply(), actionForm
+								.getFeesToApply(), null, actionForm
 								.getFormedByPersonnelValue(), actionForm
 								.getParentGroup().getOffice().getOfficeId(),
 						actionForm.getParentGroup(), getDateFromString(
