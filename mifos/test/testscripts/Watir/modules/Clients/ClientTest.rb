@@ -197,10 +197,10 @@ class ClientCreateEdit<TestClass
     @mstatus
   end
   def  Noofchildren
-     @noofchildren
+    @noofchildren
   end
   def Religion 
-     @religion
+    @religion
   end
   def Education 
     @education
@@ -298,29 +298,76 @@ class ClientCreateEdit<TestClass
   #logining into Mifos
   
   def client_login()
-		start
-		login($validname,$validpwd)
+    begin  
+      start
+      login($validname,$validpwd)
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
   #calling the method load_properties from test class to read properties from properties file
   def propertis_load()
+    
     @@clientprop=load_properties("modules/propertis/ClientUIResources.properties")
     @@meetingprop=load_properties("modules/propertis/Meeting.properties")
     @@adminprop=load_properties("modules/propertis/adminUIResources.properties")
     @@menuprop=load_properties("modules/propertis/MenuResources.properties")
-    
+    @@groupprop=load_properties("modules/propertis/GroupUIResources.properties")
+    @@officeprop=load_properties("modules/propertis/OfficeUIResources.properties")
+    @@customerprop=load_properties("modules/propertis/CustomerUIResources.properties")
+  end
+  
+  #labels like member are fetched from the database
+  def get_labels_from_db
+    begin
+      dbquery("select Lookup_value from lookup_value_locale where lookup_id=108")
+      @@branch_label=dbresult[0]
+      dbquery("select Lookup_value from lookup_value_locale where lookup_id=82")
+      @@member_label=dbresult[0]
+    rescue =>excp
+      quit_on_error(excp) 
+    end
+  end
+  
+  def read_values_from_hash()
+    @@client_salitution_msg=string_replace_message(@@customerprop['errors.mandatory'],"{0}",@@clientprop['client.SalutationValue'])
+    @@client_fname_msg=string_replace_message(@@customerprop['errors.mandatory'],"{0}",@@clientprop['client.FirstNameValue'])
+    @@client_lname_msg=string_replace_message(@@customerprop['errors.mandatory'],"{0}",@@clientprop['client.LastNameValue'])
+    @@client_dob_msg=string_replace_message(@@customerprop['errors.mandatory'],"{0}",@@clientprop['client.DateOfBirthValue'])
+    @@client_gender_msg=string_replace_message(@@customerprop['errors.mandatory'],"{0}",@@clientprop['client.GenderValue'])
+    @@client_education_msg=string_replace(@@clientprop['exception.framework.fieldConfiguration.mandatory'],"{0}",@@clientprop['client.EducationLevelValue'])
+    @@client_relesion=string_replace(@@clientprop['exception.framework.fieldConfiguration.mandatory'],"{0}",@@clientprop['client.CitizenshipValue'])
+    @@client_spo_or_father_type_msg=string_replace(@@clientprop['errors.requiredSelect'],"{0}",@@clientprop['client.SpouseNameTypeValue'])
+    @@client_spo_or_father_fname_msg=string_replace_message(@@customerprop['errors.mandatory'],"{0}",@@clientprop['client.SpouseFirstNameValue'])
+    @@client_spo_or_father_lname_msg=string_replace_message(@@customerprop['errors.mandatory'],"{0}",@@clientprop['client.SpouseLastNameValue'])
+    #@@client_note_msg=string_replace(@@clientprop['errors.mandatory'],"{0}",@@clientprop['client.Note'])      
+    @@client_note_msg=@@customerprop['errors.mandatorytextarea']
+    @@client_custom_msg=remove_li_tag(@@clientprop['errors.requiredCustomField'])
+    @@client_formedby_msg=remove_li_tag(@@clientprop['FormedByLoanOfficerBlankException'])
+    @@button_continue=@@clientprop['button.continue']
+    @@button_preview=@@clientprop['button.preview']
+    @@button_submit=@@clientprop['button.submit']
+    @@return_to_details_page=@@clientprop['client.butbachdetpage']
+    @@edit_group_client=string_replace_message(@@clientprop['client.EditGroupMembershipLink'],"group",@@lookup_name_group)
+    @@edit_branch_membership_link=@@clientprop['client.EditLink']+" "+@@branch_label.to_s+" "+@@clientprop['client.MembershipLink']
+    @@member_outof_group_link=@@groupprop['Group.clickheretocontinueif']+" "+@@groupprop['Group.group']+" "+@@groupprop['Group.membershipisnotrequiredforyour']+" "+@@member_label
+    @@Member_select_branch_msg=@@clientprop['client.CreateTitle']+" "+@@member_label+" - "+@@clientprop['client.SelectBranchHeading']+" "+@@branch_label
+    @@change_group_membership=@@groupprop['Group.change']+" "+@@groupprop['Group.group']+" "+@@groupprop['Group.membership']
   end
   
   #checking for the link Create new client in clients&accounts section
   
   def check_createnewclient_link()
-		begin
-		  $ie.link(:text,"Clients & Accounts").click
-		  @@createclientlabel=@@menuprop['label.createnew']+' '+@@lookup_name_client
-		  assert($ie.contains_text(@@createclientlabel))
-		  $logger.log_results("Link Check in Clients & Accounts Section",@@createclientlabel,@@createclientlabel,"passed")
-		rescue Test::Unit::AssertionFailedError=>e
-		  $logger.log_results("Link Check in Clients & Accounts Section",@@createclientlabel,"Not existed","failed")
-		end
+    begin
+      $ie.link(:text,"Clients & Accounts").click
+      @@createclientlabel=@@menuprop['label.createnew']+' '+@@lookup_name_client
+      assert($ie.contains_text(@@createclientlabel))
+      $logger.log_results("Link Check in Clients &amp; Accounts Section",@@createclientlabel,@@createclientlabel,"passed")
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Link Check in Clients &amp; Accounts Section",@@createclientlabel,"NA","failed")
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
   
   
@@ -335,35 +382,43 @@ class ClientCreateEdit<TestClass
       $logger.log_results(@@createclientlabel,"Link Should work","Working","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results(@@createclientlabel,"Link work","Not Working","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   
   #checking cancel button functionality in select group page
- 
+    
   def click_cancel_from_group_select()
     begin
-        @@button_cancel=@@clientprop['button.cancel']
-        $ie.button(:value,@@button_cancel).click
-        assert($ie.contains_text(@@createclientlabel))
-        $logger.log_results("Cancel button in select group page","Should work","Working","Passed")
+      @@button_cancel=@@clientprop['button.cancel']
+      $ie.button(:value,@@button_cancel).click
+      assert($ie.contains_text(@@createclientlabel))
+      $logger.log_results("Cancel button in select group page","Should work","Working","Passed")
     rescue Test::Unit::AssertionFailedError=>e
-        $logger.log_results("Cancel button in select group page","Should work","Not Working","Passed")
+      $logger.log_results("Cancel button in select group page","Should work","Not Working","Passed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
+  
   #Searching for a group which is not in database
   def no_groups_while_search()
     begin
       $ie.link(:text,"Clients & Accounts").click
       $ie.link(:text,@@createclientlabel).click
       $ie.text_field(:name,"searchNode(searchString)").set("%^")        
-      $ie.button(:value,"Proceed").click
+      $ie.button(:value,@@groupprop['button.proceed']).click
       assert($ie.contains_text("No results found"))
       $logger.log_results("Displaying No results when there is no Group Names in database","N/A","N/A","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Displaying results when there is no Group Names in database","N/A","N/A","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
+  
   #Checking the next link functionality in search group page
   
   def check_next_link_in_search_group_page()
@@ -371,33 +426,41 @@ class ClientCreateEdit<TestClass
       $ie.link(:text,"Clients & Accounts").click
       $ie.link(:text,@@createclientlabel).click
       $ie.text_field(:name,"searchNode(searchString)").set("%")        
-      $ie.button(:value,"Proceed").click
+      $ie.button(:value,@@groupprop['button.proceed']).click
       dbquery("select count(*) from customer where customer_level_id=2")
       @@count=dbresult[0]
       if @@count.to_i>10
-      $ie.link(:text,"Next").click
-      begin
-        assert($ie.contains_text("Results 11"))
-        $logger.log_results("Next Button","Should Work","Working","Passed")
-      rescue Test::Unit::AssertionFailedError=>e
-        $logger.log_results("Next Button","Should Work","Working","Failed")
+        $ie.link(:text,"Next").click
+        begin
+          assert($ie.contains_text("Results 11"))
+          $logger.log_results("Next Button","Should Work","Working","Passed")
+        rescue Test::Unit::AssertionFailedError=>e
+          $logger.log_results("Next Button","Should Work","Working","Failed")
+        end
       end
-      end
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
+  
+  #checks the previous link when number of records are more than 10.skips otherwise
   def check_previous_link_in_search_group_page()
-     begin
+    begin
       if @@count.to_i>10
-      $ie.link(:text,"Previous").click
-      begin
-        assert($ie.contains_text("Results 1"))
-        $logger.log_results("Previous Button","Should Work","Working","Passed")
-      rescue Test::Unit::AssertionFailedError=>e
-        $logger.log_results("Previous Button","Should Work","Working","Failed")
+        $ie.link(:text,"Previous").click
+        begin
+          assert($ie.contains_text("Results 1"))
+          $logger.log_results("Previous Button","Should Work","Working","Passed")
+        rescue Test::Unit::AssertionFailedError=>e
+          $logger.log_results("Previous Button","Should Work","Working","Failed")
+        end
       end
-      end
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
+  
+  #selects the group before creating a client
   def select_group()
     begin
       $ie.link(:text,"Clients & Accounts").click
@@ -406,15 +469,15 @@ class ClientCreateEdit<TestClass
       @@office_id=dbresult[0]
       @@display_name=dbresult[1]
       if (@@office_id=="1") then
-          get_next_data
-          @@office_id=dbresult[0]
-          @@display_name=dbresult[1]
+        get_next_data
+        @@office_id=dbresult[0]
+        @@display_name=dbresult[1]
       end      
       dbquery("select customer_id,display_name,branch_id from customer where customer_level_id=2 and status_id=9 and branch_id=" + @@office_id)
-      @@gdisplay_name=dbresult[1]  
-      @@customer_id=dbresult[0]
+      @@gdisplay_name=dbresult[1] 
+      @@customer_id=dbresult[0] 
       $ie.text_field(:name,"searchNode(searchString)").set(@@gdisplay_name)        
-      $ie.button(:value,"Proceed").click
+      $ie.button(:value,@@groupprop['button.proceed']).click
       $ie.link(:text,@@gdisplay_name).click
       $ie.wait(10)
       @@client_select_client=(@@createclient+" "+@@clientprop['client.CreatePersonalInformationTitle']).squeeze(" ")
@@ -422,33 +485,16 @@ class ClientCreateEdit<TestClass
       $logger.log_results(@@client_select_client,"Page Should appear","appearing","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results(@@client_select_client,"Page Should appear","not appearing","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end      
   end
   
   
   #checking all the mandatory fields in enter personal information page
- 
+  
   def check_all_mandatory_fields_for_client()
     begin
-      
-      @@client_salitution_msg=string_replace(@@clientprop['errors.requiredSelect'],"{0}",@@clientprop['client.SalutationValue'])
-      @@client_fname_msg=string_replace(@@clientprop['errors.mandatory'],"{0}",@@clientprop['client.FirstNameValue'])
-      @@client_lname_msg=string_replace(@@clientprop['errors.mandatory'],"{0}",@@clientprop['client.LastNameValue'])
-      @@client_dob_msg=string_replace(@@clientprop['errors.mandatory'],"{0}",@@clientprop['client.DateOfBirthValue'])
-      @@client_gender_msg=string_replace(@@clientprop['errors.requiredSelect'],"{0}",@@clientprop['client.GenderValue'])
-      @@client_education_msg=string_replace(@@clientprop['exception.framework.fieldConfiguration.mandatory'],"{0}",@@clientprop['client.EducationLevelValue'])
-      @@client_relesion=string_replace(@@clientprop['exception.framework.fieldConfiguration.mandatory'],"{0}",@@clientprop['client.CitizenshipValue'])
-      @@client_spo_or_father_type_msg=string_replace(@@clientprop['errors.requiredSelect'],"{0}",@@clientprop['client.SpouseNameTypeValue'])
-      @@client_spo_or_father_fname_msg=string_replace(@@clientprop['errors.mandatory'],"{0}",@@clientprop['client.SpouseFirstNameValue'])
-      @@client_spo_or_father_lname_msg=string_replace(@@clientprop['errors.mandatory'],"{0}",@@clientprop['client.SpouseLastNameValue'])
-      @@client_note_msg=string_replace(@@clientprop['errors.mandatory'],"{0}",@@clientprop['client.Note'])      
-      @@client_custom_msg=remove_li_tag(@@clientprop['errors.requiredCustomField'])
-      @@client_formedby_msg=remove_li_tag(@@clientprop['FormedByLoanOfficerBlankException'])
-      @@button_continue=@@clientprop['button.continue']
-      @@button_preview=@@clientprop['button.preview']
-      @@button_submit=@@clientprop['button.submit']
-      @@return_to_details_page=@@clientprop['client.butbachdetpage']
-      @@edit_group_client=string_replace_message(@@clientprop['client.EditGroupMembershipLink'],"group",@@lookup_name_group)
       $ie.button(:value,@@button_continue).click
       $ie.wait
       assert($ie.contains_text(@@client_salitution_msg))and \
@@ -463,8 +509,11 @@ class ClientCreateEdit<TestClass
       $logger.log_results("Checking of all mandatory check in Enter personnel information","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Checking of all mandatory fields in Enter personnel information","NA","NA","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
+  
   def check_all_mandatory_when_salutation_selected()
     begin
       $ie.select_list(:name,"clientName.salutation").select_value("47")
@@ -481,8 +530,11 @@ class ClientCreateEdit<TestClass
       $logger.log_results("All mandatory check in Enter personnel information with out salutation ","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("all mandatory check with out salutation","NA","NA","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
+  
   #checking mandatory with out salutation and firstname in enter personal information page
   
   def check_all_mandatory_when_salutation_fname_entered()
@@ -520,8 +572,11 @@ class ClientCreateEdit<TestClass
       $logger.log_results("All mandatory check in Enter personnel information with out salutation, firstname and lastname ","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e 
       $logger.log_results("All mandatory check in Enter personnel information with out salutation, firstname and lastname","NA","NA","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
+  
   
   #checking mandatory with out salutation,firstname,dob and last name in enter personal information page
   
@@ -542,6 +597,8 @@ class ClientCreateEdit<TestClass
       $logger.log_results("all mandatory check with out salutation, firstname, lastname and DOB ","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("all mandatory check with out salutation, firstname, lastname and DOB","NA","NA","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
@@ -565,9 +622,11 @@ class ClientCreateEdit<TestClass
       $logger.log_results("all mandatory check with out salutation, firstname, lastname, DOB and Gender ","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("all mandatory check with out salutation, firstname, lastname, DOB and Gender","NA","NA","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
-   
+  
   
   #checking mandatory with out salutation,firstname,dob,gender,religion,educationlevel,spouce or father type and last name in enter personal information page
   
@@ -588,6 +647,8 @@ class ClientCreateEdit<TestClass
       $logger.log_results("all mandatory check with out salutation, firstname, lastname, religion,Education level, DOB, spouce or father type and Gender ","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("all mandatory check with out salutation, firstname, lastname, religion,Education level, DOB, spouce or father type and Gender","NA","NA","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
@@ -611,6 +672,8 @@ class ClientCreateEdit<TestClass
       $logger.log_results("all mandatory check with out salutation, firstname, lastname, religion,Education level, DOB, spouce or father type, spouce or father first name and Gender ","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("all mandatory check with out salutation, firstname, lastname, religion,Education level, DOB, spouce or father type, spouce or father first name and Gender","NA","NA","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
@@ -634,13 +697,15 @@ class ClientCreateEdit<TestClass
       $logger.log_results("all mandatory check with out salutation, firstname, lastname, religion,Education level, DOB, spouce or father type, spouce or father first name,spouce or father last name and Gender ","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("all mandatory check with out salutation, firstname, lastname, religion,Education level, DOB, spouce or father type, spouce or father first name,spouce or father lats name and Gender","NA","NA","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   #Method for Create client with all mandatory data in enter personal information page
   
   def create_client_with_all_mandatory_data(nsalutation,nfname,nlname,ndate,nmonth,nyear,ngender,nreligion,nsorftype,nsorffname,nsorflname,ncustom)
-     begin
+    begin
       select_group()
       @@client_mfi_page_msg=(@@createclient+" "+@@clientprop['client.CreateMfiInformationTitle']).squeeze(" ")
       $ie.select_list(:name,"clientName.salutation").select_value(nsalutation)
@@ -662,38 +727,52 @@ class ClientCreateEdit<TestClass
       $logger.log_results("page redirected to create client enter MFI information","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("page redirected to create client enter MFI information","NA","NA","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
-   #checking for the no of mandatory custom fields
+  #checking for the no of mandatory custom fields
   def custom_fields(ncustom)
+    begin
       search_client=$dbh.real_query("SELECT entity_id FROM custom_field_definition  where entity_type=1 and mandatory_flag=1")
       dbresult1=search_client.fetch_row.to_a
       rowl= search_client.num_rows
       rowc=0
-	  while(rowc < rowl)
+      while(rowc < rowl)
         @@entity_id=dbresult1[0]
         if @@entity_id=="10" then
-           insert_data_in_to_first_custom_field(ncustom)
+          insert_data_in_to_first_custom_field(ncustom)
         elsif @@entity_id=="58" then
-           insert_data_in_to_second_custom_field(ncustom)
+          insert_data_in_to_second_custom_field(ncustom)
         end
         dbresult1=search_client.fetch_row.to_a
         rowc+=1
-      end    
+      end
+    rescue =>excp
+      quit_on_error(excp) 
+    end    
   end
   
   #inserts data into first custom field
   def insert_data_in_to_first_custom_field(ncustom)
-     $ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
+    begin
+      $ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
   
   #inserts data into second custom field
   def insert_data_in_to_second_custom_field(ncustom)
-     $ie.text_field(:name,"customField[1].fieldValue").set(ncustom)
+    begin
+      $ie.text_field(:name,"customField[1].fieldValue").set(ncustom)
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
-  #mandatory check with out formed by in Enter MFI information page
   
+  #mandatory check with out formed by in Enter MFI information page
   def check_create_client_mfi_mandatory()
     begin
       $ie.select_list(:name,"formedByPersonnel").select_value("")
@@ -702,33 +781,36 @@ class ClientCreateEdit<TestClass
       $logger.log_results("Checked Mandatory_MFI Information","N/A","N/A","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Checked Mandatory_MFI Information","N/A","N/A","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
-   #Method for Create client with all mandatory data in Enter MFI information page
-  
+  #Method for Create client with all mandatory data in Enter MFI information page
   def create_client_enter_mfidata(nsalutation,nfname,nlname,ndate,nmonth,nyear,ngender,nreligion,nsorftype,nsorffname,nsorflname,ncustom)
     begin
-     if ($validname=="mifos") then
-      dbquery("select personnel_id,display_name from personnel where level_id=1 and office_id="+@@office_id)
-      @@personnel_id=dbresult[0]
-      @@loan_officer=dbresult[1]
-     else
-      dbquery("select personnel_id,display_name from personnel where level_id=1 and login_name='"+$validname+"'")
-      @@personnel_id=dbresult[0]
-      @@loan_officer=dbresult[1]
-     end
-     @@client_review=@@createclient+" "+@@clientprop['client.CreatePreviewReviewSubmitTitle'].squeeze(" ")
-     $ie.select_list(:name,"formedByPersonnel").select_value(@@personnel_id)
-     $ie.button(:value,@@button_preview).click
-     assert($ie.contains_text(@@client_review)) 
-     $logger.log_results("Create client Review&Submit page displaying proper data","N/A","N/A","Passed")
-   rescue Test::Unit::AssertionFailedError=>e
-     $logger.log_results("Create client Review&Submit page displaying proper data","N/A","N/A","Failed")
-   end
+      if ($validname=="mifos") then
+        dbquery("select personnel_id,display_name from personnel where level_id=1 and office_id="+@@office_id)
+        @@personnel_id=dbresult[0]
+        @@loan_officer=dbresult[1]
+      else
+        dbquery("select personnel_id,display_name from personnel where level_id=1 and login_name='"+$validname+"'")
+        @@personnel_id=dbresult[0]
+        @@loan_officer=dbresult[1]
+      end
+      @@client_review=@@createclient+" "+@@clientprop['client.CreatePreviewReviewSubmitTitle'].squeeze(" ")
+      $ie.select_list(:name,"formedByPersonnel").select_value(@@personnel_id)
+      $ie.button(:value,@@button_preview).click
+      assert($ie.contains_text(@@client_review)) 
+      $logger.log_results("Create client Review&amp;Submit page displaying proper data","N/A","N/A","Passed")
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Create client Review&amp;Submit page displaying proper data","N/A","N/A","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
   
-   #method for clicking on submit or save for later while creating client
+  #method for clicking on submit or save for later while creating client
   
   def submit_data(nstatus)
     begin
@@ -739,10 +821,12 @@ class ClientCreateEdit<TestClass
       go_to_detailspage()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("client created successfully","N/A","N/A","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
-   # Checking that whether View client details now link is working
+  # Checking that whether View client details now link is working
   
   def go_to_detailspage()
     begin
@@ -754,19 +838,25 @@ class ClientCreateEdit<TestClass
       change_status()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Opened Edit client details page","N/A","N/A","passed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end 
   
   #Changing the staus of client.Getting the current status and what to change
   
   def change_status()
-    puts @@c_name
-    dbquery("select status_id from customer where display_name='"+@@c_name+"'")
-    status_id=dbresult[0]
-    if status_id=="1" then
-      change_status_pending()
-    elsif status_id=="2" then
-      change_status_active()
+    #puts @@c_name
+    begin
+      dbquery("select status_id from customer where display_name='"+@@c_name+"'")
+      status_id=dbresult[0]
+      if status_id=="1" then
+        change_status_pending()
+      elsif status_id=="2" then
+        change_status_active()
+      end
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
@@ -787,10 +877,12 @@ class ClientCreateEdit<TestClass
       #view_change_log_pending()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Pending","NA","NA","failed") 
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end  
   
-    
+  
   #Changing the status from Pending to Active
   
   def change_status_active()
@@ -807,10 +899,12 @@ class ClientCreateEdit<TestClass
       #view_change_log_active()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Active","NA","NA","failed") 
+    rescue =>excp
+      quit_on_error(excp) 
     end
-  end  
+  end   
   
-    
+  
   #checking the change log after changing the status to pending from partial
   
   def view_change_log_pending()
@@ -826,12 +920,13 @@ class ClientCreateEdit<TestClass
       $ie.button(:value,@@return_to_details_page).click 
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   
   #Checking the change log after changing the status to active from pending
-  
   def view_change_log_active()
     begin
       $ie.link(:text,@@change_log).click
@@ -840,6 +935,8 @@ class ClientCreateEdit<TestClass
       $ie.button(:value,@@return_to_details_page).click  
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
@@ -848,7 +945,7 @@ class ClientCreateEdit<TestClass
   def check_client_charges_label()
     begin
       @@view_details=@@clientprop['client.viewdetails']
-      @@client_charges_label=@@clientprop['client.ApplyCharges']
+      @@client_charges_label=@@member_label+" "+ @@clientprop['client.clientcharges']
       $ie.link(:text,@@view_details).click
       assert($ie.contains_text(@@client_charges_label))and \
       assert($ie.document.body.innerText.scan(@@client_charges_label).size==2)
@@ -857,56 +954,66 @@ class ClientCreateEdit<TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results(@@client_charges_label+" label does not appear for customer type client","NA",@@client_charges_label,"failed") 
       $ie.link(:text,@@c_name).click
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
- #checking the database whether the created client is storing in the data base
+  #checking the database whether the created client is storing in the data base
   
   def db_check()
-    db_center=$dbh.real_query("select * from customer where display_name='"+@@c_name+"' and loan_officer_id="+@@personnel_id+" and branch_id="+@@office_id)
-    rowcount= db_center.num_rows
-    if rowcount==0 then
-      $logger.log_results("Data Base Check","NA","NA","failed") 
-    else
-      $logger.log_results("Data Base Check","NA","NA","passed")  
-    end   
+    begin
+      db_center=$dbh.real_query("select * from customer where display_name='"+@@c_name+"' and loan_officer_id="+@@personnel_id+" and branch_id="+@@office_id)
+      rowcount= db_center.num_rows
+      if rowcount==0 then
+        $logger.log_results("Data Base Check","NA","NA","failed") 
+      else
+        $logger.log_results("Data Base Check","NA","NA","passed")  
+      end 
+    rescue =>excp
+      quit_on_error(excp) 
+    end  
   end
   
- #method for create client with all data in enter personal information page
+  #method for create client with all data in enter personal information page
   
   def client_create_with_all_data(nsalutation,nfname,nmname,nsname,nlname,ngovtid,ndate,nmonth,nyear,ngender,nmstatus,nnoofchildren,nreligion,neducation,nsorftype,nsorffname,nsorfmname,nsorfsname,nsorflname,naddress1,naddress2,naddress3,ncity,nstate,ncountry,npcode,nphone,ncustom)
-    $ie.select_list(:name,"clientName.salutation").select_value(nsalutation)
-    $ie.text_field(:name,"clientName.firstName").set(nfname)
-    #$ie.text_field(:name,"clientName.middleName").set(nmname)
-    #$ie.text_field(:name,"clientName.secondLastName").set(nsname)
-    $ie.text_field(:name,"clientName.lastName").set(nlname)
-    #$ie.text_field(:name,"governmentId").set(ngovtid)
-    $ie.text_field(:name,"dateOfBirthDD").set(ndate)
-    $ie.text_field(:name,"dateOfBirthMM").set(nmonth)
-    $ie.text_field(:name,"dateOfBirthYY").set(nyear)
-    $ie.select_list(:name,"clientDetailView.gender").select_value(ngender)
-    $ie.select_list(:name,"clientDetailView.maritalStatus").select_value(nmstatus)
-    $ie.text_field(:name,"clientDetailView.numChildren").set(nnoofchildren)    
-    $ie.select_list(:name,"clientDetailView.citizenship").select_value(nreligion)
-    $ie.select_list(:name,"clientDetailView.educationLevel").select_value(neducation)
-    $ie.select_list(:name,"spouseName.nameType").select_value(nsorftype)
-    $ie.text_field(:name,"spouseName.firstName").set(nsorffname)
-    $ie.text_field(:name,"spouseName.middleName").set(nsorfmname)
-    $ie.text_field(:name,"spouseName.secondLastName").set(nsorfsname)
-    $ie.text_field(:name,"spouseName.lastName").set(nsorflname)
-    #$ie.text_field(:name,"customerAddressDetail.line1").set(naddress1)
-    #$ie.text_field(:name,"customerAddressDetail.line2").set(naddress2)
-    #$ie.text_field(:name,"customerAddressDetail.line3").set(naddress3)
-    #$ie.text_field(:name,"customerAddressDetail.city").set(ncity)
-    #$ie.text_field(:name,"customerAddressDetail.state").set(nstate)
-    #$ie.text_field(:name,"customerAddressDetail.country").set(ncountry)
-    #$ie.text_field(:name,"customerAddressDetail.zip").set(npcode)
-    #$ie.text_field(:name,"customerAddressDetail.phoneNumber").set(nphone)
-    custom_fields(ncustom)
-    #@@c_name=String(nfname)+" "+String(nmname)+" "+String(nsname)+" "+String(nlname)
-    @@c_name=String(nfname)+" "+String(nlname)
+    begin
+      $ie.select_list(:name,"clientName.salutation").select_value(nsalutation)
+      $ie.text_field(:name,"clientName.firstName").set(nfname)
+      #$ie.text_field(:name,"clientName.middleName").set(nmname)
+      #$ie.text_field(:name,"clientName.secondLastName").set(nsname)
+      $ie.text_field(:name,"clientName.lastName").set(nlname)
+      #$ie.text_field(:name,"governmentId").set(ngovtid)
+      $ie.text_field(:name,"dateOfBirthDD").set(ndate)
+      $ie.text_field(:name,"dateOfBirthMM").set(nmonth)
+      $ie.text_field(:name,"dateOfBirthYY").set(nyear)
+      $ie.select_list(:name,"clientDetailView.gender").select_value(ngender)
+      $ie.select_list(:name,"clientDetailView.maritalStatus").select_value(nmstatus)
+      $ie.text_field(:name,"clientDetailView.numChildren").set(nnoofchildren)    
+      $ie.select_list(:name,"clientDetailView.citizenship").select_value(nreligion)
+      $ie.select_list(:name,"clientDetailView.educationLevel").select_value(neducation)
+      $ie.select_list(:name,"spouseName.nameType").select_value(nsorftype)
+      $ie.text_field(:name,"spouseName.firstName").set(nsorffname)
+      $ie.text_field(:name,"spouseName.middleName").set(nsorfmname)
+      $ie.text_field(:name,"spouseName.secondLastName").set(nsorfsname)
+      $ie.text_field(:name,"spouseName.lastName").set(nsorflname)
+      #$ie.text_field(:name,"customerAddressDetail.line1").set(naddress1)
+      #$ie.text_field(:name,"customerAddressDetail.line2").set(naddress2)
+      #$ie.text_field(:name,"customerAddressDetail.line3").set(naddress3)
+      #$ie.text_field(:name,"customerAddressDetail.city").set(ncity)
+      #$ie.text_field(:name,"customerAddressDetail.state").set(nstate)
+      #$ie.text_field(:name,"customerAddressDetail.country").set(ncountry)
+      #$ie.text_field(:name,"customerAddressDetail.zip").set(npcode)
+      #$ie.text_field(:name,"customerAddressDetail.phoneNumber").set(nphone)
+      custom_fields(ncustom)
+      #@@c_name=String(nfname)+" "+String(nmname)+" "+String(nsname)+" "+String(nlname)
+      @@c_name=String(nfname)+" "+String(nlname)
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
- 
+  
   #method for click on continue button 
   
   def click_continue() 
@@ -916,13 +1023,15 @@ class ClientCreateEdit<TestClass
       $logger.log_results("page redirected to create client enter MFI information","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("page redirected to create client enter MFI information","NA","NA","passed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end 
   
   #method for create client with all MFI information in Enter MFI information page
   
   def client_create_enter_all_data_mfi(nexternalid,ntdate,ntmonth,ntyear)
-      
+    begin
       $ie.select_list(:name,"formedByPersonnel").select_value(@@personnel_id)
       $ie.text_field(:name,"externalId").set(nexternalid)
       $ie.checkbox(:name,"trained","1").set
@@ -930,52 +1039,63 @@ class ClientCreateEdit<TestClass
       $ie.text_field(:name,"trainedDateMM").set(ntmonth)      
       $ie.text_field(:name,"trainedDateYY").set(ntyear)
       fee_select_one_by_one()
-  end  
+    rescue =>excp
+      quit_on_error(excp) 
+    end
+  end   
   #selecting fee one by one while creating center
   
   def fee_select_one_by_one()
-    #search_res=$dbh.real_query("select * from fees where category_id=2 and default_admin_fee='no' and status=1")
-    search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=(select recurrence_id from recurrence_detail a ,customer_meeting cm where a.meeting_id=cm.meeting_id and customer_id = "+@@customer_id+") and a.fee_id not in (select fee_id from feelevel) and a.category_id in (1,2) and status=1 group by a.fee_id")
-    dbresult1=search_res.fetch_row.to_a
-    row1=search_res.num_rows()
-    rowf=0
-    number=3
-    if row1=="0" then
-      $looger.log_results("No Fess created for the group","","","Passed")
-    elsif row1 < number then
-      while (rowf < row1)
-        fee_id=dbresult1[0]
-        $ie.select_list(:name,"selectedFee["+String(rowf)+"].feeId").select_value(fee_id)
-        dbresult1=search_res.fetch_row.to_a
-        rowf+=1
-      end
-    else
-      while(rowf < number)
+    begin
+      #search_res=$dbh.real_query("select * from fees where category_id=2 and default_admin_fee='no' and status=1")
+      search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=(select recurrence_id from recurrence_detail a ,customer_meeting cm where a.meeting_id=cm.meeting_id and customer_id = "+@@customer_id+") and a.fee_id not in (select fee_id from feelevel) and a.category_id in (1,2) and status=1 group by a.fee_id")
+      dbresult1=search_res.fetch_row.to_a
+      row1=search_res.num_rows()
+      rowf=0
+      number=3
+      if row1=="0" then
+        $logger.log_results("No Fees created for the group","NA","NA","Passed")
+      elsif row1 < number then
+        while (rowf < row1)
           fee_id=dbresult1[0]
           $ie.select_list(:name,"selectedFee["+String(rowf)+"].feeId").select_value(fee_id)
           dbresult1=search_res.fetch_row.to_a
           rowf+=1
+        end
+      else
+        while(rowf < number)
+          fee_id=dbresult1[0]
+          $ie.select_list(:name,"selectedFee["+String(rowf)+"].feeId").select_value(fee_id)
+          dbresult1=search_res.fetch_row.to_a
+          rowf+=1
+        end
       end
+    rescue =>excp
+      quit_on_error(excp)
     end
   end
   
-   #method for click on Preview button
+  #method for click on Preview button
   
   def click_preview()
-      begin
-        $ie.button(:value,@@button_preview).click
-        assert($ie.contains_text(@@client_review)) 
-        $logger.log_results("Create client Review&Submit page displaying proper data","N/A","N/A","Passed")
-      rescue Test::Unit::AssertionFailedError=>e
-        $logger.log_results("Create client Review&Submit page displaying proper data","N/A","N/A","Failed")
-      end
+    begin
+      $ie.button(:value,@@button_preview).click
+      assert($ie.contains_text(@@client_review)) 
+      $logger.log_results("Create client Review&amp;Submit page displaying proper data","N/A","N/A","Passed")
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Create client Review&amp;Submit page displaying proper data","N/A","N/A","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
   
-   #Editing the client personal information from the review page
+  #Editing the client personal information from the review page
   
   def edit_personal_information_from_review(nsalutation,nfname,nmname,nsname,nlname,ngovtid,ndate,nmonth,nyear,ngender,nmstatus,nnoofchildren,nreligion,neducation,nsorftype,nsorffname,nsorfmname,nsorfsname,nsorflname,naddress1,naddress2,naddress3,ncity,nstate,ncountry,npcode,nphone,ncustom)
     begin
-      @@client_edit_personnel=@@clientprop['client.ManageTitle']+" "+@@lookup_name_client+" "+@@clientprop['client.EditPersonalInformationTitle'].squeeze(" ")
+      @@client_edit_personnel=@@clientprop['client.CreateTitle']+" "+@@lookup_name_client+" "+@@clientprop['client.CreatePersonalInformationTitle'].squeeze(" ")
+      #@@client_edit_personnel=nfname.to_s+" "+nlname.to_s+" - "+@@clientprop['client.EditPersonalInformationLink'].to_s
+      #puts "label1 "+@@client_edit_personnel.to_s
       $ie.button(:value,@@clientprop['button.previousPersonalInfo']).click
       assert($ie.contains_text(@@client_edit_personnel))
       $logger.log_results("Page redirected to Manage client-edit personnel information","N/A","N/A","Passed")
@@ -983,9 +1103,10 @@ class ClientCreateEdit<TestClass
       click_preview()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page redirected to Manage client-edit personnel information","N/A","N/A","Failed")
-       client_create_with_all_data(nsalutation,nfname,nmname,nsname,nlname,ngovtid,ndate,nmonth,nyear,ngender,nmstatus,nnoofchildren,nreligion,neducation,nsorftype,nsorffname,nsorfmname,nsorfsname,nsorflname,naddress1,naddress2,naddress3,ncity,nstate,ncountry,npcode,nphone,ncustom)
+      client_create_with_all_data(nsalutation,nfname,nmname,nsname,nlname,ngovtid,ndate,nmonth,nyear,ngender,nmstatus,nnoofchildren,nreligion,neducation,nsorftype,nsorffname,nsorfmname,nsorfsname,nsorflname,naddress1,naddress2,naddress3,ncity,nstate,ncountry,npcode,nphone,ncustom)
       click_preview()
-       
+    rescue =>excp
+      quit_on_error(excp)   
     end
   end
   
@@ -993,7 +1114,9 @@ class ClientCreateEdit<TestClass
   
   def edit_mfi_information_from_review(nexternalid,ntdate,ntmonth,ntyear)
     begin
-      @@client_edit_mfi=@@clientprop['client.ManageTitle']+" "+@@lookup_name_client+" "+@@clientprop['client.EditMfiInformationTitle'].squeeze(" ")
+      @@client_edit_mfi=@@clientprop['client.CreateTitle']+" "+@@lookup_name_client+" "+@@clientprop['client.CreateMfiInformationTitle'].squeeze(" ")
+      #@@client_edit_mfi=@@clientprop['client.EditMfiInformationLink']
+      #puts "label2 "+@@client_edit_mfi.to_s
       $ie.button(:value,@@clientprop['button.previousMFIInfo']).click
       assert($ie.contains_text(@@client_edit_mfi))
       $logger.log_results("Page redirected to Manage client-edit MFI information","N/A","N/A","Passed")
@@ -1003,10 +1126,12 @@ class ClientCreateEdit<TestClass
       $logger.log_results("Page redirected to Manage client-edit MFI information","N/A","N/A","Failed")
       client_create_enter_all_data_mfi(nexternalid,ntdate,ntmonth,ntyear)
       click_preview()
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
-   #Search for the client from clients accounts page
+  #Search for the client from clients accounts page
   
   def search_client_from_clients_accounts_page()
     begin
@@ -1021,10 +1146,12 @@ class ClientCreateEdit<TestClass
       $logger.log_results("client Details page","Open","opened","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("client Details page","Open","not opened","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
-   #Checking whether Edit personal information link is working 
+  #Checking whether Edit personal information link is working 
   
   def check_edit_client_personalinformation_link_from_details_page()
     begin
@@ -1035,6 +1162,8 @@ class ClientCreateEdit<TestClass
       $ie.button(:value,@@button_cancel).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("client Details page-Edit Personnel Information","Open","opened","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
@@ -1070,14 +1199,16 @@ class ClientCreateEdit<TestClass
       custom_fields(ncustom)
       $ie.button(:value,@@button_preview).click
       assert($ie.contains_text(@@clientprop['client.EditPreviewPersonalReviewTitle']))
-      $logger.log_results("Edit Personnel from details page--review&submit personal information page","n/a","n/a","passed")
+      $logger.log_results("Edit Personnel from details page--review&amp;submit personal information page","n/a","n/a","passed")
       $ie.button(:value,@@button_submit).click
     rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Edit Personnel from details page--review&submit personal information page","n/a","n/a","failed")
+      $logger.log_results("Edit Personnel from details page--review&amp;submit personal information page","n/a","n/a","failed")
+    rescue =>excp
+      quit_on_error(excp)
     end
   end
-  #checking whether Edit MFI information link working
   
+  #checking whether Edit MFI information link working
   def check_edit_client_mfi_data_link_from_details_page()
     begin
       @@edit_mfi=@@clientprop['client.EditMfiInformationLink']
@@ -1087,50 +1218,55 @@ class ClientCreateEdit<TestClass
       $ie.button(:value,@@button_cancel).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("client Details page-Edit MFI Information","Open","opened","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
-  #editing the MFI information from clients details page
   
+  #editing the MFI information from clients details page
   def edit_client_mfi_enter_data(nexternalid)
-      begin
-        @@review_mfi=@@clientprop['client.PreviewMFIInformation']
-        $ie.link(:text,@@edit_mfi).click
-        $ie.text_field(:name,"externalId").set(nexternalid)
-        $ie.button(:value,@@button_preview).click
-        assert($ie.contains_text(@@review_mfi))
-        $logger.log_results("Edit Personnel from details page--review&submit MFI information page","n/a","n/a","passed")
-        $ie.button(:value,@@button_submit).click
-      rescue Test::Unit::AssertionFailedError=>e
-        $logger.log_results("Edit Personnel from details page--review&submit MFI information page","n/a","n/a","Failed")
-      end
+    begin
+      @@review_mfi=@@clientprop['client.PreviewMFIInformation']
+      $ie.link(:text,@@edit_mfi).click
+      $ie.text_field(:name,"externalId").set(nexternalid)
+      $ie.button(:value,@@button_preview).click
+      assert($ie.contains_text(@@review_mfi))
+      $logger.log_results("Edit Personnel from details page--review&amp;submit MFI information page","n/a","n/a","passed")
+      $ie.button(:value,@@button_submit).click
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Edit Personnel from details page--review&amp;submit MFI information page","n/a","n/a","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
   
-   #Checking whether the Edit Group membership link is existed
-  
+  #Checking whether the Edit Group membership link is existed
   def check_edit_group_membership_link()
     begin
       assert($ie.contains_text(@@edit_group_client))
       $logger.log_results("Edit group membership link Exists",@@edit_group_client,@@edit_group_client,"Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Edit group membership link Exists",@@edit_group_client,@@edit_group_client,"Failed")    
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   
   #Checking whether the Edit Group membership link is working
-  
   def click_edit_group_membership_link()
     begin
       $ie.link(:text,@@edit_group_client).click
-      assert($ie.contains_text($change_group))
+      assert($ie.contains_text(@@change_group_membership))
       $logger.log_results("Edit group membership link working","should work","working","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Edit group membership link working","should work","not working","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   #Changing the group membership
-  
   def edit_group_membership()
     begin
       dbquery("select display_name from customer where customer_level_id=2 and status_id=9 and branch_id="+@@office_id+" and display_name not in ('"+@@gdisplay_name+"')")
@@ -1143,9 +1279,12 @@ class ClientCreateEdit<TestClass
       $ie.button(:value,@@button_submit).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Change Group Membership confirm page","N/A","N/A","Failed")    
+    rescue =>excp
+      quit_on_error(excp)    
     end
   end
-   # checking whether view summarized historical Data link exist
+  
+  # checking whether view summarized historical Data link exist
   def check_view_summarized_historical_Data_link_exist()
     begin
       @@historical_data_link=@@clientprop['client.HistoricalDataLink']
@@ -1154,45 +1293,52 @@ class ClientCreateEdit<TestClass
       $logger.log_results("View Summarized Historical Data","Should exist","Existed","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Summarized Historical Data","Should exist","Existed","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
- # checking whether view summarized historical Data link exist
- def check_view_summarized_historical_Data_link_functinality()
+  
+  # checking whether view summarized historical Data link exist
+  def check_view_summarized_historical_Data_link_functionality()
     begin
       @@historical_data_link=@@clientprop['client.HistoricalDataLink']
       $ie.link(:text,@@historical_data_link).click
-      text_to_check=@@c_name+" - Historical data"
-      assert($ie.contains_text("Add/Edit historical Data"))
+      text_to_check=@@c_name+" - "+@@customerprop['label.historicaldata']
+      assert($ie.contains_text(@@customerprop['label.add_edit_hd']))
       $logger.log_results("View Summarized Historical Data","Should work","Working","Passed")
       $ie.button(:value,@@return_to_details_page).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Summarized Historical Data","Should work","Working","Failed")
       $ie.button(:value,@@return_to_details_page).click
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   #Checking that View all closed accounts existed 
-  
   def check_view_all_closed_accounts_link()
     begin
       @@view_all_closed_accounts_client=@@clientprop['client.ClosedAccountsLink']
       assert($ie.contains_text(@@view_all_closed_accounts_client))
       $logger.log_results("View all closed accounts link existed","NA","NA","passed")
-      rescue Test::Unit::AssertionFailedError=>e
+    rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View all closed accounts link existed","NA","NA","failed")    
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
-#Checking that View all closed accountsworking
-
+  #Checking that View all closed accountsworking
   def click_view_all_closed_accounts_link
     begin
       $ie.link(:text,@@view_all_closed_accounts_client).click
-      assert($ie.contains_text("- Closed accounts"))    
+      assert($ie.contains_text("- "+@@clientprop['client.closedacc']))    
       $logger.log_results("View all closed accounts link working","NA","NA","passed")
       $ie.button(:value,@@return_to_details_page).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View all closed accounts link working","NA","NA","failed")   
+    rescue =>excp
+      quit_on_error(excp) 
     end
     
   end
@@ -1205,21 +1351,25 @@ class ClientCreateEdit<TestClass
       $logger.log_results("Link "+@@clientprop['client.NotesLink'],"Should Exist","Existed","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Link "+@@clientprop['client.NotesLink'],"Should Exist","Not Existed","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
- 
- #Clicking on Add notes link
+  
+  #Clicking on Add notes link
   def click_add_notes_link()
     begin
       $ie.link(:text,@@notes).click
-      assert($ie.contains_text(@@c_name+" - Add note"))
+      assert($ie.contains_text(@@c_name+" - "+@@customerprop['Customer.addnoteheading']))
       $logger.log_results("Link "+@@clientprop['client.NotesLink'],"Should Work","Working","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Link "+@@clientprop['client.NotesLink'],"Should Work","Not Working","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
- 
- #Checking for the mandatory fields in add notes page
+  
+  #Checking for the mandatory fields in add notes page
   def check_mandatory_in_add_notes_page()
     begin
       $ie.button(:value,@@button_preview).click
@@ -1227,87 +1377,100 @@ class ClientCreateEdit<TestClass
       $logger.log_results("Mandatory Check when you don't enter any note","N/A","N/A","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Mandatory Check when you don't enter any note","N/A","N/A","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
- #Checking for boundary condition for the field notes
- 
- def enter_more_data_in_notes_field(nnotes)
-  begin
-    $ie.text_field(:name,"comment").set(nnotes)
-    $ie.button(:value,@@button_preview).click
-    @@client_note_error_message="The maximum length for Note field is"+" 500"
-    assert($ie.contains_text(@@client_note_error_message))
-    $logger.log_results("Bundaory Check for Notes ","Should display Proper Error Message","Displaying","Passed")
+  
+  #Checking for boundary condition for the field notes
+  def enter_more_data_in_notes_field(nnotes)
+    begin
+      $ie.text_field(:name,"comment").set(nnotes)
+      $ie.button(:value,@@button_preview).click
+      @@client_note_error_message="The maximum length for Note field is"+" 500"
+      assert($ie.contains_text(@@client_note_error_message))
+      $logger.log_results("Boundary Check for Notes ","Should display Proper Error Message","Displaying","Passed")
     rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("Bundaory Check for Notes ","Should display Proper Error Message","Not Displaying","Failed")    
+      $logger.log_results("Boundary Check for Notes ","Should display Proper Error Message","Not Displaying","Failed")    
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
- end
- #Adding a note to the customer record
+  
+  #Adding a note to the customer record
   def enter_data_in_add_note()
-   begin
-    $ie.text_field(:name,"comment").set("Adding A note")
-    $ie.button(:value,@@button_preview).click
-    assert($ie.contains_text(@@c_name+" - Preview note"))
-    $logger.log_results("Page Redirected to Preview page","N/A","N/A","Passed")
-    $ie.button(:value,@@button_submit).click
-   rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("Page not Redirected to Preview page","N/A","N/A","Failed")
-    $ie.button(:value,@@button_submit).click
-   end
- end
- 
- #Check for see all notes link
- def check_for_see_all_notes_link
-  begin
-    $ie.wait(10)
-    assert($ie.contains_text(@@clientprop['client.SeeAllNotesLink']))
-    $logger.log_results(@@clientprop['client.SeeAllNotesLink'],"Link should Exist","Existed","Passed")
-  rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results(@@clientprop['client.SeeAllNotesLink'],"Link should Exist","Not Existed","Failed")
+    begin
+      $ie.text_field(:name,"comment").set("Adding A note")
+      $ie.button(:value,@@button_preview).click
+      assert($ie.contains_text(@@c_name+" - "+@@customerprop['Customer.PreviewNote']))
+      $logger.log_results("Page Redirected to Preview page","N/A","N/A","Passed")
+      $ie.button(:value,@@button_submit).click
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Page not Redirected to Preview page","N/A","N/A","Failed")
+      $ie.button(:value,@@button_submit).click
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
- end
-
-#Click on see all notes link and check the functionality
+  
+  #Check for see all notes link
+  def check_for_see_all_notes_link
+    begin
+      #$ie.wait(10)
+      assert($ie.contains_text(@@clientprop['client.SeeAllNotesLink']))
+      $logger.log_results(@@clientprop['client.SeeAllNotesLink'],"Link should Exist","Existed","Passed")
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results(@@clientprop['client.SeeAllNotesLink'],"Link should Exist","Not Existed","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
+    end
+  end
+  
+  #Click on see all notes link and check the functionality
   def click_see_all_notes_link()
     begin 
       $ie.link(:text,@@clientprop['client.SeeAllNotesLink']).click
-      assert($ie.contains_text(@@c_name+"  - Add note"))
+      assert($ie.contains_text(@@c_name+"  - "+@@customerprop['Customer.addnoteheading']))
       $logger.log_results(@@clientprop['client.SeeAllNotesLink'],"Link should Work","Working","Passed")
       $ie.link(:text,@@c_name).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results(@@clientprop['client.SeeAllNotesLink'],"Link should Work","Not Working","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   #Checking that Click here to continue if Group membership is not required for your client is existed
-  
   def check_create_client_out_of_group_link()
     begin
       $ie.link(:text,"Clients & Accounts").click
       $ie.link(:text,@@createclientlabel).click
-      assert($ie.contains_text($Member_outof_group_link))
+      assert($ie.contains_text(@@member_outof_group_link))
       $logger.log_results("Create client Out of group link","Should exist","Existed","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Create client Out of group link","Should exist","Existed","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   #Checking that Click here to continue if Group membership is not required for your client is working
-  
   def click_create_client_out_of_group_link() 
     begin
-      $ie.link(:text,$Member_outof_group_link).click
-      assert($ie.contains_text($Member_select_branch))
+      $ie.link(:text,@@member_outof_group_link+".").click
+      assert($ie.contains_text(@@Member_select_branch_msg))
       $logger.log_results("Page select branch out of group","Should appear","appeared","passed")
       #$ie.link(:text,@@display_name).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page select branch out of group","Should appear","not appeared","failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   
-   #Create client out side the group with all mandatory data
-    
+  #Create client out side the group with all mandatory data
+  
   def create_client_out_of_group(nsalutation,nfname,nmname,nsname,nlname,ngovtid,ndate,nmonth,nyear,ngender,nmstatus,nnoofchildren,nreligion,neducation,nsorftype,nsorffname,nsorfmname,nsorfsname,nsorflname,naddress1,naddress2,naddress3,ncity,nstate,ncountry,npcode,nphone,ncustom,nexternalid,ntdate,ntmonth,ntyear)
     begin
       select_office()
@@ -1316,68 +1479,79 @@ class ClientCreateEdit<TestClass
       if(@frequncymeeting.to_i==2) then # for month
         client_create_enter_all_data_mfi(nexternalid,ntdate,ntmonth,ntyear)
       elsif(@frequncymeeting.to_i==1) then # for week
-      client_create_enter_all_data_mfi_outofgroup(nexternalid,ntdate,ntmonth,ntyear)
+        client_create_enter_all_data_mfi_outofgroup(nexternalid,ntdate,ntmonth,ntyear)
       end
-      
+    rescue =>excp
+      quit_on_error(excp)   
     end
   end
   
   # seperate function for out of group members
   
   def client_create_enter_all_data_mfi_outofgroup(nexternalid,ntdate,ntmonth,ntyear)
-    $ie.select_list(:name,"formedByPersonnel").select_value(@@personnel_id)
+    begin
+      $ie.select_list(:name,"formedByPersonnel").select_value(@@personnel_id)
       $ie.text_field(:name,"externalId").set(nexternalid)
       $ie.checkbox(:name,"trained","1").set
       $ie.text_field(:name,"trainedDateDD").set(ntdate)
       $ie.text_field(:name,"trainedDateMM").set(ntmonth)      
       $ie.text_field(:name,"trainedDateYY").set(ntyear)
       fee_select_one_by_one_outofgroup()
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
   #Selecting the loan officer while entering MFI information
   
   def select_loan_officer()
-    $ie.select_list(:name,"loanOfficerId").select_value(@@personnel_id)
-    meeting(@@lookup_name_client)
+    begin
+      $ie.select_list(:name,"loanOfficerId").select_value(@@personnel_id)
+      meeting(@@lookup_name_client)
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
   
   # selecting fee for clients out of group
-def   fee_select_one_by_one_outofgroup()
-
-   search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=1 and a.fee_id not in (select fee_id from feelevel) and category_id in (1,2) and status=1 group by a.fee_id")
-    dbresult1=search_res.fetch_row.to_a
-    row1=search_res.num_rows()
-    rowf=0
-    number=3
-    if row1=="0" then
-      $looger.log_results("No Fess created for the group","","","Passed")
-    elsif row1 < number then
-      while (rowf < row1)
-        fee_id=dbresult1[0]
-        $ie.select_list(:name,"selectedFee["+String(rowf)+"].feeId").select_value(fee_id)
-        dbresult1=search_res.fetch_row.to_a
-        rowf+=1
-      end
-    else
-      while(rowf < number)
+  def   fee_select_one_by_one_outofgroup()
+    begin
+      search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=1 and a.fee_id not in (select fee_id from feelevel) and category_id in (1,2) and status=1 group by a.fee_id")
+      dbresult1=search_res.fetch_row.to_a
+      row1=search_res.num_rows()
+      rowf=0
+      number=3
+      if row1=="0" then
+        $looger.log_results("No Fess created for the group","","","Passed")
+      elsif row1 < number then
+        while (rowf < row1)
           fee_id=dbresult1[0]
           $ie.select_list(:name,"selectedFee["+String(rowf)+"].feeId").select_value(fee_id)
           dbresult1=search_res.fetch_row.to_a
           rowf+=1
+        end
+      else
+        while(rowf < number)
+          fee_id=dbresult1[0]
+          $ie.select_list(:name,"selectedFee["+String(rowf)+"].feeId").select_value(fee_id)
+          dbresult1=search_res.fetch_row.to_a
+          rowf+=1
+        end
       end
+    rescue =>excp
+      quit_on_error(excp) 
     end
-
-end
+  end
   
- # Selecting Branch office while creating client out side group
+  # Selecting Branch office while creating client out side group
   def select_office()
     begin
       dbquery("select office_id,display_name from office where status_id=1 and office_level_id=5 and  search_id like '"+@@search_id+"%'")
       @@office_id=dbresult[0]
       display_name=dbresult[1]
       if (display_name=="Mifos HO") then
-          get_next_data
-          @@office_id=dbresult[0]
-          display_name=dbresult[1]
+        get_next_data
+        @@office_id=dbresult[0]
+        display_name=dbresult[1]
       end   
       $ie.link(:text,display_name).click 
       $ie.wait
@@ -1385,15 +1559,17 @@ end
       @@client_select_client=(@@createclient+" "+@@clientprop['client.CreatePersonalInformationTitle']).squeeze(" ")
       assert($ie.contains_text(@@client_select_client))
       $logger.log_results("page redirected to",@@client_select_client,"Page","Passed")
-      rescue Test::Unit::AssertionFailedError=>e
+    rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("page redirected to",@@client_select_client,"Page","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
     end      
   end
   
   #Checking that create client with out admin fee
-  
   def client_create_remove_admin_fee_from_review_page()
-      $ie.button(:value,"Edit MFI related information").click
+    begin
+      $ie.button(:value,@@clientprop['button.previousMFIInfo']).click
       search_fee=$dbh.real_query("select * from fees where category_id=2 and default_admin_fee='yes' and status=1")
       dbresult1=search_fee.fetch_row.to_a
       no_of_fee=search_fee.num_rows()
@@ -1409,36 +1585,40 @@ end
         end
       end     
       click_preview()
-  end 
+    rescue =>excp
+      quit_on_error(excp) 
+    end
+  end
   
   #Check for edit branch membership link exist
- 
- def check_edit_branch_member_link_exist()
-  begin
-    assert($ie.contains_text("Edit Branch Office membership"))
-    $logger.log_results("Link","Edit branch membership","Should exist","Passed")
+  def check_edit_branch_member_link_exist()
+    begin
+      assert($ie.contains_text(@@edit_branch_membership_link))
+      $logger.log_results("Link","Edit branch membership","Should exist","Passed")
     rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("Link","Edit branch membership","Should exist","Failed")
+      $logger.log_results("Link","Edit branch membership","Should exist","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
+    end
   end
- end
- 
- #Check for edit branch membership link working
- 
- def check_edit_branch_member_link_functionality()
-  begin
-    $ie.link(:text,"Edit Branch Office membership").click
-    assert($ie.contains_text(@@c_name+" -"+" Edit Branch Office membership"))
-    $logger.log_results("Link","Edit branch membership","Should Work","Passed")
+  
+  #Check for edit branch membership link working
+  def check_edit_branch_member_link_functionality()
+    begin
+      $ie.link(:text,@@edit_branch_membership_link).click
+      assert($ie.contains_text(@@c_name+" - "+@@edit_branch_membership_link))
+      $logger.log_results("Link","Edit branch membership","Should Work","Passed")
     rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("Link","Edit branch membership","Not Working","Failed")
-  end
+      $logger.log_results("Link","Edit branch membership","Not Working","Failed")
+    rescue =>excp
+      quit_on_error(excp) 
+    end
     
   end
- 
- #Editing branch membership 
- 
- def edit_branch_membership()
-   begin
+  
+  #Editing branch membership 
+  def edit_branch_membership()
+    begin
       dbquery("select office_id,display_name from office where status_id=1 and office_level_id=5 and office_id not in ('"+@@office_id+"')")
       @@office_name=dbresult[1]
       $ie.link(:text,@@office_name).click
@@ -1449,52 +1629,58 @@ end
       $ie.button(:value,@@button_submit).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Change Branch Membership confirm page","N/A","N/A","Failed")    
+    rescue =>excp
+      quit_on_error(excp) 
     end
- end
- 
- #Meeting Creation
- def create_meeting(frequncymeeting,monthtype,reccurweek,weekweekday,monthday,monthmonth,monthrank,monthweek,monthmonthrank,meetingplace)
-  begin
-     
-    if frequncymeeting=="1" then
-      $ie.radio(:name,"frequency","1").set
-      $ie.text_field(:name,"recurWeek").set(reccurweek)
-      $ie.select_list(:name,"weekDay").select_value(weekweekday)
-      $ie.text_field(:name,"meetingPlace").set(meetingplace)
-      $ie.button(:value,"Save").click
-    elsif frequncymeeting=="2" then
-      $ie.radio(:name,"frequency","2").set
-      if monthtype=="1" then
-      $ie.radio(:name,"monthType","1").set
-      $ie.text_field(:name,"monthDay").set(monthday)
-      $ie.text_field(:name,"dayRecurMonth").set(monthmonth)
-      $ie.text_field(:name,"meetingPlace").set(meetingplace)
-      $ie.button(:value,"Save").click
-      elsif monthtype=="2" then
-      $ie.select_list(:name,"monthRank").select_value(monthrank)
-      $ie.select_list(:name,"monthWeek").select_value(monthweek)
-      $ie.text_field(:name,"monthMonthRank").set(monthmonthrank)
-      $ie.text_field(:name,"meetingPlace").set(meetingplace)
-      $ie.button(:value,"Save").click
+  end
+  
+  #Meeting Creation
+  def create_meeting(frequncymeeting,monthtype,reccurweek,weekweekday,monthday,monthmonth,monthrank,monthweek,monthmonthrank,meetingplace)
+    begin
+      
+      if frequncymeeting=="1" then
+        $ie.radio(:name,"frequency","1").set
+        $ie.text_field(:name,"recurWeek").set(reccurweek)
+        $ie.select_list(:name,"weekDay").select_value(weekweekday)
+        $ie.text_field(:name,"meetingPlace").set(meetingplace)
+        $ie.button(:value,@@meetingprop['meeting.button.save']).click
+      elsif frequncymeeting=="2" then
+        $ie.radio(:name,"frequency","2").set
+        if monthtype=="1" then
+          $ie.radio(:name,"monthType","1").set
+          $ie.text_field(:name,"monthDay").set(monthday)
+          $ie.text_field(:name,"dayRecurMonth").set(monthmonth)
+          $ie.text_field(:name,"meetingPlace").set(meetingplace)
+          $ie.button(:value,@@meetingprop['meeting.button.save']).click
+        elsif monthtype=="2" then
+          $ie.select_list(:name,"monthRank").select_value(monthrank)
+          $ie.select_list(:name,"monthWeek").select_value(monthweek)
+          $ie.text_field(:name,"monthMonthRank").set(monthmonthrank)
+          $ie.text_field(:name,"meetingPlace").set(meetingplace)
+          $ie.button(:value,@@meetingprop['meeting.button.save']).click
+        end
       end
-    end
-    assert($ie.contains_text("Administrative set fees"))
-    $logger.log_results("Meeting creation","NA","NA","passed");
+      assert($ie.contains_text(@@clientprop['client.AdministrativeFeesHeading']))
+      $logger.log_results("Meeting creation","NA","NA","passed");
     rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("Meeting creation","NA","NA","failed");
+      $logger.log_results("Meeting creation","NA","NA","failed");
+    rescue =>excp
+      quit_on_error(excp) 
     end
     
   end
   
 end
 class ClientTest
-   clientobject=ClientCreateEdit.new
-   #centerobject=CenterCreateEdit.new
-   clientobject.client_login
-   clientobject.database_connection
-   clientobject.propertis_load
+  clientobject=ClientCreateEdit.new
+  #centerobject=CenterCreateEdit.new
+  clientobject.client_login
+  clientobject.database_connection
+  clientobject.propertis_load
+  clientobject.get_labels_from_db
+  clientobject.read_values_from_hash
   
-#Checks for the create new client link, check for the page select group and click cancel from the group select page
+  #Checks for the create new client link, check for the page select group and click cancel from the group select page
   
   clientobject.check_createnewclient_link
   clientobject.select_grouppage_check
@@ -1518,37 +1704,37 @@ class ClientTest
   clientobject.open(filename,1)
   rowid=-1
   
-#  creating a client with different sets of mandatory data it reads the data from the opened .xls file
-# and put send the values to create client test cases
+  #  creating a client with different sets of mandatory data it reads the data from the opened .xls file
+  # and put send the values to create client test cases
   
-    while(rowid<$maxrow*$maxcol-1)
+  while(rowid<$maxrow*$maxcol-1)
     clientobject.read_client_values(rowid,1)
     clientobject.create_client_with_all_mandatory_data(clientobject.Salutation,clientobject.Fname,clientobject.Lname,clientobject.Date,clientobject.Month,\
-                                                       clientobject.Year,clientobject.Gender,clientobject.Religion,clientobject.Sorftype,clientobject.Sorffname,\
-                                                       clientobject.Sorflname,clientobject.Custom)
-   
+    clientobject.Year,clientobject.Gender,clientobject.Religion,clientobject.Sorftype,clientobject.Sorffname,\
+    clientobject.Sorflname,clientobject.Custom)
+    
     clientobject.check_create_client_mfi_mandatory()
     clientobject.create_client_enter_mfidata(clientobject.Salutation,clientobject.Fname,clientobject.Lname,clientobject.Date,clientobject.Month,\
-                                                       clientobject.Year,clientobject.Gender,clientobject.Religion,clientobject.Sorftype,clientobject.Sorffname,\
-                                                       clientobject.Sorflname,clientobject.Custom)
+    clientobject.Year,clientobject.Gender,clientobject.Religion,clientobject.Sorftype,clientobject.Sorffname,\
+    clientobject.Sorflname,clientobject.Custom)
     clientobject.submit_data(clientobject.Statusname) 
     clientobject.check_client_charges_label()
     clientobject.db_check()
-#Checking for the View Summarised historical data link exist
-#Checking for the View Summarised historical data link functionality
+    #Checking for the View Summarised historical data link exist
+    #Checking for the View Summarised historical data link functionality
     clientobject.check_view_summarized_historical_Data_link_exist()
-    clientobject.check_view_summarized_historical_Data_link_functinality()    
+    clientobject.check_view_summarized_historical_Data_link_functionality()    
     
     rowid+=$maxcol
- end    
- 
- #Opening the second sheet in the testdata.xls file
+  end    
+  
+  #Opening the second sheet in the testdata.xls file
   
   clientobject.open(filename,2)
   rowid=-1
   
-#Creating and editing Client with different sets of mandatory and optional data.
-#data comes from the second sheet of testdata.xls
+  #Creating and editing Client with different sets of mandatory and optional data.
+  #data comes from the second sheet of testdata.xls
   
   while(rowid<$maxrow*$maxcol-1)
     clientobject.read_client_values(rowid,2)
@@ -1559,56 +1745,56 @@ class ClientTest
                                              clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
                                              clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)                                               
     clientobject.click_continue() 
-   clientobject.check_create_client_mfi_mandatory
+    clientobject.check_create_client_mfi_mandatory
     clientobject.client_create_enter_all_data_mfi(clientobject.Externalid,clientobject.Tdate,clientobject.Tmonth,clientobject.Tyear)
-   clientobject.click_preview()
+    clientobject.click_preview()
     clientobject.edit_personal_information_from_review(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,\
-                                             clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.Mstatus,clientobject.Noofchildren,\
-                                             clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
-                                             clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
-                                             clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)
+                                                       clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.Mstatus,clientobject.Noofchildren,\
+                                                       clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
+                                                       clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
+                                                       clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)
     clientobject.edit_mfi_information_from_review(clientobject.Externalid,clientobject.Tdate,clientobject.Tmonth,clientobject.Tyear)
-#Submits the client data with given status, 
-#change the status and checks the entity in View change log page
-#checks for different labels and functionality of links 
+    #Submits the client data with given status, 
+    #change the status and checks the entity in View change log page
+    #checks for different labels and functionality of links 
     
     clientobject.submit_data(clientobject.Statusname) 
     clientobject.check_client_charges_label()
     clientobject.db_check()
-#Searching the client from the Clients&Accounts page and editing the personnnel and MFI informations from client details page
-#Editing the group membership from client details page
-#checking for the view all closed account link functionality
-
+    #Searching the client from the Clients&Accounts page and editing the personnnel and MFI informations from client details page
+    #Editing the group membership from client details page
+    #checking for the view all closed account link functionality
+    
     clientobject.search_client_from_clients_accounts_page()
     clientobject.check_edit_client_personalinformation_link_from_details_page
     clientobject.edit_client_personnel_enter_data(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,\
-                                             clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.Mstatus,clientobject.Noofchildren,\
-                                             clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
-                                             clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
-                                             clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)
+                                                  clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.Mstatus,clientobject.Noofchildren,\
+                                                  clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
+                                                  clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
+                                                  clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)
     clientobject.check_edit_client_mfi_data_link_from_details_page
     clientobject.edit_client_mfi_enter_data(clientobject.Externalid)
-#Checking for edit group membership link
-#checking for edit group membership link functionality
-#editing the group membership  
+    #Checking for edit group membership link
+    #checking for edit group membership link functionality
+    #editing the group membership  
     clientobject.check_edit_group_membership_link()
     clientobject.click_edit_group_membership_link()   
     clientobject.edit_group_membership() 
-#Checking for View closed account link functinality
+    #Checking for View closed account link functinality
     clientobject.check_view_all_closed_accounts_link
     clientobject.click_view_all_closed_accounts_link
-#Clicking on the links and check the page whether it is redirecting to proper page
-#Adding a note
+    #Clicking on the links and check the page whether it is redirecting to proper page
+    #Adding a note
     clientobject.check_add_notes_link
     clientobject.click_add_notes_link
     clientobject.check_mandatory_in_add_notes_page
     clientobject.enter_more_data_in_notes_field(clientobject.Notes)
-#Checking for the Add notes and see all notes links    
+    #Checking for the Add notes and see all notes links    
     clientobject.enter_data_in_add_note
     clientobject.check_for_see_all_notes_link
     clientobject.click_see_all_notes_link        
-
-
+    
+    
     rowid+=$maxcol
   end 
   
@@ -1617,34 +1803,34 @@ class ClientTest
   clientobject.open(filename,3)
   rowid=-1
   
- #Creating and editing of client when client is out side the group with different sets of mandatory and optional data
- #creating meeting to the client
- #Removing the admin fee
-    #clientobject.check_all_mandatory_fields_for_client()
- #   clientobject.check_createnewclient_link()
-    while(rowid<$maxrow*$maxcol-1)
-      clientobject.read_client_values(rowid,3)
-      clientobject.check_create_client_out_of_group_link 
-      clientobject.click_create_client_out_of_group_link 
-      clientobject.create_client_out_of_group(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,clientobject.Date,\
+  #Creating and editing of client when client is out side the group with different sets of mandatory and optional data
+  #creating meeting to the client
+  #Removing the admin fee
+  #clientobject.check_all_mandatory_fields_for_client()
+  #   clientobject.check_createnewclient_link()
+  while(rowid<$maxrow*$maxcol-1)
+    clientobject.read_client_values(rowid,3)
+    clientobject.check_create_client_out_of_group_link 
+    clientobject.click_create_client_out_of_group_link 
+    clientobject.create_client_out_of_group(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,clientobject.Date,\
                                             clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.Mstatus,clientobject.Noofchildren,clientobject.Religion,\
                                             clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,clientobject.Sorfsname,clientobject.Sorflname,\
                                             clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,clientobject.State,clientobject.Country,clientobject.Pcode,\
                                             clientobject.Phone,clientobject.Custom,clientobject.Externalid,clientobject.Tdate,clientobject.Tmonth,clientobject.Tyear)
-      clientobject.select_loan_officer 
-     clientobject.create_meeting(clientobject.Frequncymeeting,clientobject.Monthtype,clientobject.Reccurweek,clientobject.Weekweekday,clientobject.Monthday,clientobject.Monthmonth,\
+    clientobject.select_loan_officer 
+    clientobject.create_meeting(clientobject.Frequncymeeting,clientobject.Monthtype,clientobject.Reccurweek,clientobject.Weekweekday,clientobject.Monthday,clientobject.Monthmonth,\
                                 clientobject.Monthrank,clientobject.Monthweek,clientobject.Monthmonthrank,clientobject.Meetingplace)                                           
-     clientobject.click_preview 
-     clientobject.client_create_remove_admin_fee_from_review_page()
-     clientobject.submit_data(clientobject.Statusname)
-     
- #Check for edit branch membership link
- #check for edit branch membership working
- #Editing the branch membership   
+    clientobject.click_preview 
+    clientobject.client_create_remove_admin_fee_from_review_page()
+    clientobject.submit_data(clientobject.Statusname)
+    
+    #Check for edit branch membership link
+    #check for edit branch membership working
+    #Editing the branch membership   
     clientobject.check_edit_branch_member_link_exist
     clientobject.check_edit_branch_member_link_functionality
     clientobject.edit_branch_membership                              
-     rowid+=$maxcol
-   end    
-   clientobject.mifos_logout
- end
+    rowid+=$maxcol
+  end    
+  clientobject.mifos_logout
+end
