@@ -76,7 +76,7 @@ public class QueryResultLoanAccountIdSearch extends QueryResultIdSearch{
 				    		  Integer customerId = cs.getCustomerId();	
 				    		  short customerLevel = cs.getCustomerType();				    		  
 				    		  //query= session.createQuery("select account.globalAccountNum,account.accountTypeId from Account account left join account.customer where account.customer.customerId=:customerId and (account.accountTypeId=:loanAccountTypeId or account.accountTypeId=:savingsAccountTypeId) and account.globalAccountNum=:searchString");
-				    		  query =  session.getNamedQuery(NamedQueryConstants.LISTOFSAVINGSANDLOANACCOUNTS);
+				    		  query =  session.getNamedQuery(NamedQueryConstants.ACCOUNT_LIST_ID_SEARCH);
 				    		  query.setInteger("customerId",customerId).setShort("loanAccountTypeId",CustomerSearchConstants.LOAN_TYPE);
 				    		  query.setShort("savingsAccountTypeId",CustomerSearchConstants.SAVINGS_TYPE);
 				    		  query.setString("searchString",searchString);
@@ -128,13 +128,13 @@ public class QueryResultLoanAccountIdSearch extends QueryResultIdSearch{
 				Query query=null;	
 				if( officeId.shortValue()==0)
 				{			
-					query=session.getNamedQuery(NamedQueryConstants.ACCOUNTIDSEARCH_WITHOUTOFFICE); 
+					query=session.getNamedQuery(NamedQueryConstants.ACCOUNT_ID_SEARCH_NOOFFICEID); 
 					query.setString("SEARCH_STRING",searchString);	
 				}
 				else
 				{			
 				
-					query=session.getNamedQuery(NamedQueryConstants.ACCOUNTIDSEARCH); 
+					query=session.getNamedQuery(NamedQueryConstants.ACCOUNT_ID_SEARCH); 
 					query.setString("SEARCH_STRING",searchString);							
 					query.setShort("OFFICEID",officeId);
 				}

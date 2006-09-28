@@ -21,6 +21,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountPersistence extends TestAccount {
@@ -127,6 +128,25 @@ public class TestAccountPersistence extends TestAccount {
 		TestObjectFactory.cleanUp(savingsBO);
 	}
 
+	public void testSearchAccount() throws Exception{
+		SavingsBO savingsBO = getSavingsAccount();
+		
+		QueryResult queryResult = null;
+		
+		queryResult = accountPersistence.search(savingsBO.getGlobalAccountNum(),Short.valueOf("3"));
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		TestObjectFactory.cleanUp(savingsBO);
+		
+	}
+	
+	private SavingsBO getSavingsAccount() throws Exception{
+		return TestObjectFactory.createSavingsAccount(
+				"12345678910", group, new Short("16"), new Date(),
+				createSavingsOffering("qqqqq"), TestObjectFactory
+						.getUserContext());
+		
+	}
 	private SavingsOfferingBO createSavingsOffering(String offeringName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));

@@ -330,4 +330,31 @@
 				and loanAccount.personnel.personnelId = :PERSONNEL_ID
 				order by loanAccount.accountId]]>
 	</query>
+	<query name="accounts.account_IdSearch">
+	        	   <![CDATA[select c.customerId,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName, per.personnelId,a.accountState.id, pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
+	        	   from org.mifos.application.customer.business.CustomerBO as c 
+	        	   left join  c.accounts as a  
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  left join c.personnel as per 
+	        	   where off.officeId=:OFFICEID and a.globalAccountNum =:SEARCH_STRING ]]>
+    </query>
+    <query name="accounts.account_IdSearch_withoutoffice">
+	        	   <![CDATA[select c.customerId,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName, per.personnelId,a.accountState.id, pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
+	        	   from org.mifos.application.customer.business.CustomerBO as c 
+	        	   left join  c.accounts as a  
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per where a.globalAccountNum =:SEARCH_STRING ]]>
+    </query>
+	<query name="accounts.account_list_IdSearch">
+		<![CDATA[select account.globalAccountNum,account.accountType.accountTypeId 
+		from org.mifos.application.accounts.business.AccountBO account 
+		left join account.customer 
+		where account.customer.customerId=:customerId 
+		and (account.accountType.accountTypeId=:loanAccountTypeId or account.accountType.accountTypeId=:savingsAccountTypeId) 
+		and account.globalAccountNum=:searchString ]]>
+	</query>
+	
 </hibernate-mapping>

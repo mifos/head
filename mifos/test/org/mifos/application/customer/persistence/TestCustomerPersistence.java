@@ -932,6 +932,19 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(1,queryResult.get(0,10).size());
 		
 	}	
+	public void testSearchWithAccountGlobalNo()throws Exception{
+		getCustomer();
+		HibernateUtil.commitTransaction();
+		
+		
+		QueryResult queryResult = new CustomerPersistence().search(groupAccount.getGlobalAccountNum(),Short.valueOf("3"),Short.valueOf("1"),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		
+		//check main query also 
+		assertEquals(1,queryResult.get(0,10).size());
+		
+	}	
 	private void getCustomer() throws  Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

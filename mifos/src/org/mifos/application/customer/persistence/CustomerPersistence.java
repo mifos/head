@@ -52,6 +52,7 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
@@ -253,10 +254,16 @@ public class CustomerPersistence extends Persistence {
 
 		try {
 			searchString = StringUtils.normalizeSearchString(searchString);
-			queryResult = idSearch(searchString, officeId);
+
+			queryResult = new AccountPersistence().search(searchString,
+					officeId);
+
 			if (queryResult == null) {
-				queryResult = mainSearch(searchString, officeId, userId,
-						userOfficeId);
+				queryResult = idSearch(searchString, officeId);
+				if (queryResult == null) {
+					queryResult = mainSearch(searchString, officeId, userId,
+							userOfficeId);
+				}
 			}
 
 		} catch (HibernateSearchException e) {

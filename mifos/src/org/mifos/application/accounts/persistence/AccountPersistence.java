@@ -20,13 +20,18 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
+import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.hibernate.helper.QueryResultLoanAccountIdSearch;
 import org.mifos.framework.persistence.Persistence;
 
 public class AccountPersistence extends Persistence {
@@ -175,8 +180,9 @@ public class AccountPersistence extends Persistence {
 		queryParameters.put("prdTypeId", prdTypeId);
 		List<AccountStateEntity> queryResult = executeNamedQuery(
 				NamedQueryConstants.RETRIEVEALLACCOUNTSTATES, queryParameters);
-		for(AccountStateEntity accountStateEntity : queryResult) {
-			for(AccountStateFlagEntity accountStateFlagEntity : accountStateEntity.getFlagSet()) {
+		for (AccountStateEntity accountStateEntity : queryResult) {
+			for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
+					.getFlagSet()) {
 				Hibernate.initialize(accountStateFlagEntity);
 				Hibernate.initialize(accountStateFlagEntity.getNames());
 			}
@@ -216,4 +222,40 @@ public class AccountPersistence extends Persistence {
 		}
 	}
 
+	public QueryResult search(String queryString, Short officeId)
+			throws PersistenceException {
+		List searchResults = null;
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(CustomerSearchConstants.LOANACCOUNTIDSEARCH);
+		try {
+
+			QueryInputs queryInputs = new QueryInputs();
+			String[] aliasNames = { "customerId", "centerName",
+					"centerGlobalCustNum", "customerType", "branchGlobalNum",
+					"branchName", "loanOfficerName", "loanOffcerGlobalNum",
+					"customerStatus", "groupName", "groupGlobalCustNum",
+					"clientName", "clientGlobalCustNum",
+					"loanGlobalAccountNumber" };
+			queryInputs
+					.setPath("org.mifos.application.customer.util.valueobjects.CustomerSearch");
+			queryInputs.setAliasNames(aliasNames);
+			queryResult.setQueryInputs(queryInputs);
+			if (officeId != null) {
+
+				searchResults = ((QueryResultLoanAccountIdSearch) queryResult)
+						.accountIdSearch(queryString, officeId);
+			}
+
+		} catch (HibernateSearchException e) {
+
+			throw new PersistenceException(e);
+		} catch (SystemException e) {
+			
+			throw new PersistenceException(e);
+
+		}
+		return searchResults != null && searchResults.size() > 0 ? queryResult
+				: null;
+
+	}
 }
