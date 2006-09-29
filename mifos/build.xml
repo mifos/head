@@ -47,7 +47,8 @@
 	</path>
 
 	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
-	<taskdef  name="junit" classpathref="class.path" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
+	<taskdef name="junit" classpathref="class.path" 
+		classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
 
 	<!--<echo level="debug">CLASSPATH - ${java.class.path}</echo>-->
 

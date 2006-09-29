@@ -212,10 +212,11 @@ ant clean copy_files compile war
    For jetty, copy it to the webapps subdirectory of the directory
        where you unpacked jetty.
    
-   The war file contains default database parameters like username=root, password=mysql.
-   If these are to different please mention the same in deploymifosDB.properties
+   The war file contains default database parameters like 
+   username=root, password=mysql.
+   If you want non-default settings, create a file deploymifosDB.properties
    
-   An example of such file is mentioned below. 
+   Here is an example of what to put in that file:
 	   
 	hibernate.connection.driver_class=com.mysql.jdbc.Driver
 	hibernate.connection.url=jdbc:mysql://localhost:3306/mifos?useUnicode=true&characterEncoding=UTF-8
@@ -227,12 +228,13 @@ ant clean copy_files compile war
 	hibernate.cache.provider_class=org.hibernate.cache.HashtableCacheProvider
 	hibernate.connection.isolation=2 
 
-	Copy the above contents into the file and change the relevant values. 
+   Copy the above contents into the file and change the relevant values. 
 
-	For JBOSS, the file is to be put into the server $JBOSS_HOME/server/mifos/conf folder.
-	
-	If the above mentioned file is not present the application takes the default parameters 
-	present in the war file for database connection.
+   For JBOSS, put the file into the server $JBOSS_HOME/server/mifos/conf folder.
+
+   If the above mentioned file is not present the application 
+   takes the default parameters 
+   present in the war file for database connection.
 
 8. Start Mifos
 
