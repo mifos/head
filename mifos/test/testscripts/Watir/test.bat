@@ -9,7 +9,7 @@ ruby -I ./modules -S modules/Centers/CenterTest.rb
 ruby -I ./modules -S modules/Groups/GroupTest.rb
 rem ruby -I ./modules -S modules/GroupOutofCenter/GroupOutOfCenterTest.rb
 ruby -I ./modules -S modules/Clients/ClientTest.rb
-ruby -I ./modules -S modules/LoanAccount/LoanAccountTest.rb
+ruby -I ./modules -S modules/LoanAccount/LoanAccountCreateEdit.rb
 ruby -I ./modules -S modules/Loans/FeeP.rb
 ruby -I ./modules -S modules/FeeOnetime/Feeone.rb
 ruby -I ./modules -S modules/SavingProduct/SavingProduct_Test_Cases.rb
