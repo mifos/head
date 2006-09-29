@@ -457,6 +457,30 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		
 	}
 	
+	public void testDeleteFailure() throws Exception{
+		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+		RoleBO roleBO=rolesPermissionsPersistence.getRole("Admin");
+		setRequestPathInfo("/rolesPermission.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("id", roleBO.getId().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.preview_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		
+		setRequestPathInfo("/rolesPermission.do");
+		addRequestParameter("method", "delete");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyActionErrors(new String[] { RolesAndPermissionConstants.KEYROLEASSIGNEDTOPERSONNEL });
+		verifyForward(ActionForwards.delete_failure.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+			
+	}
+
+	
 	public void testCancel(){
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "cancel");

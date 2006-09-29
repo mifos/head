@@ -1106,6 +1106,7 @@
 			<forward name="update_success" path="/rolesPermission.do?method=viewRoles" />
 			<forward name="update_failure" path="/pages/application/rolesandpermission/jsp/managerole.jsp" />
 			<forward name="preview_success" path="/pages/application/rolesandpermission/jsp/confirmdeleterole.jsp" />
+			<forward name="delete_failure" path="/pages/application/rolesandpermission/jsp/confirmdeleterole.jsp" />
 			<forward name="delete_success" path="/rolesPermission.do?method=viewRoles" />
 			<forward name="cancel_success" path="/AdminAction.do?method=load" />
 		</action>
