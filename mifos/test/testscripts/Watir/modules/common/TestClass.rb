@@ -199,14 +199,11 @@ class TestClass
     def link_check(linkname)
 		begin
 		assert($ie.link(:text,linkname).exists?())
-		$logger.log_results("link",linkname,"exists","passed")
+		$logger.log_results("link "+linkname.to_s+" exists","NA","exists","passed")
 		$ie.link(:text,linkname).click
 		rescue Test::Unit::AssertionFailedError=>e
 		$logger.log_results("error ","could not find"+linkname,"NA","failed")
-		$ie.link(:text,"Logout").click
-		$logger.end_log
-		$ie.close
-		exit
+        mifos_logout
 		end
 	end
 	def check_value(value)
