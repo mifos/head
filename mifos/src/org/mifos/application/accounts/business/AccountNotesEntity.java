@@ -58,12 +58,14 @@ public class AccountNotesEntity extends PersistentObject {
 
 	private AccountBO account;
 
-	public AccountNotesEntity() {
+	protected AccountNotesEntity() {
 		super();
 	}
-	public AccountNotesEntity(Date commentDate,String comment,PersonnelBO personnel) {
+
+	public AccountNotesEntity(Date commentDate, String comment,
+			PersonnelBO personnel) {
 		this.commentDate = commentDate;
-		this.comment  = comment;
+		this.comment = comment;
 		this.personnel = personnel;
 	}
 
@@ -110,8 +112,8 @@ public class AccountNotesEntity extends PersistentObject {
 	public void setPersonnel(PersonnelBO personnel) {
 		this.personnel = personnel;
 	}
-	
-	public String getPersonnelName(){
+
+	public String getPersonnelName() {
 		return personnel.getDisplayName();
 	}
 

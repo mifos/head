@@ -44,23 +44,30 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.struts.tags.DateHelper;
 
-public class AccountStatusChangeHistoryEntity extends PersistentObject{
+public class AccountStatusChangeHistoryEntity extends PersistentObject {
 	private Integer accountStatusChangeId;
-	private AccountBO account;
-	private AccountStateEntity oldStatus;
-	private AccountStateEntity newStatus;
-	private PersonnelBO personnel;
-	private Locale locale=null;
-	
-	public AccountStatusChangeHistoryEntity(){}
 
-	public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus,AccountStateEntity newStatus,PersonnelBO personnel){
+	private AccountBO account;
+
+	private AccountStateEntity oldStatus;
+
+	private AccountStateEntity newStatus;
+
+	private PersonnelBO personnel;
+
+	private Locale locale = null;
+
+	protected AccountStatusChangeHistoryEntity() {
+	}
+
+	public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus,
+			AccountStateEntity newStatus, PersonnelBO personnel) {
 		this.setOldStatus(oldStatus);
 		this.setNewStatus(newStatus);
-		//this.setCreatedBy(personnelId);
 		this.setPersonnel(personnel);
 		this.setCreatedDate(new Date(System.currentTimeMillis()));
 	}
+
 	public AccountBO getAccount() {
 		return account;
 	}
@@ -100,19 +107,19 @@ public class AccountStatusChangeHistoryEntity extends PersistentObject{
 	public void setPersonnel(PersonnelBO personnel) {
 		this.personnel = personnel;
 	}
-	
-	public String getPersonnelName(){
+
+	public String getPersonnelName() {
 		return personnel.getDisplayName();
 	}
-	
-	public String getOldStatusName(){
-			return oldStatus.getName(account.getUserContext().getLocaleId());
+
+	public String getOldStatusName() {
+		return oldStatus.getName(account.getUserContext().getLocaleId());
 	}
-	
-	public String getNewStatusName(){
+
+	public String getNewStatusName() {
 		return newStatus.getName(account.getUserContext().getLocaleId());
 	}
-	
+
 	public Locale getLocale() {
 		return locale;
 	}
@@ -122,7 +129,8 @@ public class AccountStatusChangeHistoryEntity extends PersistentObject{
 	}
 
 	public String getUserPrefferedTransactionDate() {
-		return DateHelper.getUserLocaleDate(getLocale(),getCreatedDate().toString());
+		return DateHelper.getUserLocaleDate(getLocale(), getCreatedDate()
+				.toString());
 	}
-	
+
 }

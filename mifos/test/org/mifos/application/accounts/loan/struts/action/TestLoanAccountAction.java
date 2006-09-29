@@ -35,6 +35,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -828,12 +829,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	}
 
 	private AccountNotesEntity createAccountNotes(String comment) {
-		AccountNotesEntity accountNotes = new AccountNotesEntity();
-		accountNotes.setCommentDate(new java.sql.Date(System
-				.currentTimeMillis()));
-		accountNotes.setPersonnel(TestObjectFactory.getPersonnel(userContext
-				.getId()));
-		accountNotes.setComment(comment);
+		AccountNotesEntity accountNotes = new AccountNotesEntity(
+				new java.sql.Date(System.currentTimeMillis()), comment,
+				TestObjectFactory.getPersonnel(userContext.getId()));
 		return accountNotes;
 	}
 

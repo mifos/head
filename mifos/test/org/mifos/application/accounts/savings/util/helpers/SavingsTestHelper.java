@@ -82,8 +82,8 @@ public class SavingsTestHelper {
 		SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(
 				paymentEntity, (AccountActionEntity) new MasterPersistence()
 						.getPersistentObject(AccountActionEntity.class,
-								accountAction), amount, balance, createdBy, customer,
-				dueDate, trxnDate, comments, relatedTrxn);
+								accountAction), amount, balance, createdBy,
+				customer, dueDate, trxnDate, comments, relatedTrxn);
 		return trxn;
 	}
 
@@ -188,11 +188,10 @@ public class SavingsTestHelper {
 	}
 
 	public AccountNotesEntity getAccountNotes(SavingsBO savingsBO) {
-		AccountNotesEntity notes = new AccountNotesEntity();
+		AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(
+				System.currentTimeMillis()), "xxxxxxxxxxxx", savingsBO
+				.getPersonnel());
 		notes.setAccount(savingsBO);
-		notes.setComment("xxxxxxxxxxxx");
-		notes.setCommentDate(new java.sql.Date(System.currentTimeMillis()));
-		notes.setPersonnel(savingsBO.getPersonnel());
 		return notes;
 	}
 

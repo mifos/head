@@ -49,13 +49,9 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
 public class AccountPaymentEntity extends PersistentObject {
-
 
 	private final Integer paymentId=null;
 
@@ -107,7 +103,6 @@ public class AccountPaymentEntity extends PersistentObject {
 		
 	}
 
-	
 	public Integer getPaymentId() {
 		return paymentId;
 	}

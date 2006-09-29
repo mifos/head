@@ -3916,8 +3916,9 @@ public class TestSavingsBO extends MifosTestCase {
 			AccountPaymentEntity payment = new AccountPaymentEntity(savings,
 					balanceAmount.add(interestAtClosure), null, null,
 					new PaymentTypeEntity(Short.valueOf("1")));
-			AccountNotesEntity notes = new AccountNotesEntity();
-			notes.setComment("closing account");
+			AccountNotesEntity notes = new AccountNotesEntity(
+					new java.sql.Date(System.currentTimeMillis()), "closing account",
+					TestObjectFactory.getPersonnel(userContext.getId()));
 			savings.closeAccount(payment, notes, group);
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();

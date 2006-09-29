@@ -61,6 +61,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -146,8 +147,8 @@ public class SavingsClosureAction extends BaseAction {
 								RecommendedAmountUnit.PERINDIVIDUAL.getValue())))
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.ACTIVE_AND_ONHOLD),
-					request.getSession());
+							ChildrenStateType.ACTIVE_AND_ONHOLD), request
+					.getSession());
 		else
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
 					request.getSession());
@@ -215,8 +216,10 @@ public class SavingsClosureAction extends BaseAction {
 		logger.debug("In SavingsClosureAction::close(), accountId: "
 				+ savings.getAccountId());
 		SavingsClosureActionForm actionForm = (SavingsClosureActionForm) form;
-		AccountNotesEntity notes = new AccountNotesEntity();
-		notes.setComment(actionForm.getNotes());
+		AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(
+				System.currentTimeMillis()), actionForm.getNotes(),
+				(new PersonnelPersistence()).getPersonnel(getUserContext(
+						request).getId()));
 		CustomerBO customer = searchForCustomer(request, actionForm
 				.getCustomerId());
 		if (customer == null)

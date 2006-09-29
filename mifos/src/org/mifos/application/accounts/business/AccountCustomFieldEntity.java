@@ -50,6 +50,9 @@ public class AccountCustomFieldEntity extends PersistentObject {
 
 	private String fieldValue;
 
+	public AccountCustomFieldEntity() {
+	}
+
 	public AccountCustomFieldEntity(AccountBO account, Short fieldId,
 			String fieldValue) {
 		super();
@@ -57,10 +60,6 @@ public class AccountCustomFieldEntity extends PersistentObject {
 		this.fieldId = fieldId;
 		this.fieldValue = fieldValue;
 
-	}
-
-	public AccountCustomFieldEntity() {
-		super();
 	}
 
 	public Integer getAccountCustomFieldId() {

@@ -1782,17 +1782,16 @@ public class SavingsBO extends AccountBO {
 
 	public AccountNotesEntity createAccountNotes(String comment)
 			throws AccountException {
-		AccountNotesEntity accountNotes = new AccountNotesEntity();
-		accountNotes.setCommentDate(new java.sql.Date(System
-				.currentTimeMillis()));
 		try {
-			accountNotes.setPersonnel((new PersonnelPersistence())
-					.getPersonnel(userContext.getId()));
+			AccountNotesEntity accountNotes = new AccountNotesEntity(
+					new java.sql.Date(System.currentTimeMillis()), comment,
+					(new PersonnelPersistence()).getPersonnel(userContext
+							.getId()));
+			return accountNotes;
+
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
-		accountNotes.setComment(comment);
-		return accountNotes;
 	}
 
 	private boolean isPermissionAllowed(AccountStateEntity newSate,

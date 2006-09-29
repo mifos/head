@@ -12,16 +12,13 @@ import org.mifos.application.productdefinition.util.valueobjects.ProductType;
 
 public class AccountStateEntity extends StateEntity {
 
-	private static final long serialVersionUID = 13465L;
-
-	/** The value of the prdTypeId property. */
 	private ProductType prdType;
 
 	private Set<AccountStateFlagEntity> flagSet;
 	
 	private Short optional;
 	
-	public AccountStateEntity() {
+	protected AccountStateEntity() {
 	}
 
 	public AccountStateEntity(AccountState accountState) {
