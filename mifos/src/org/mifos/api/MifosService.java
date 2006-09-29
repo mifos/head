@@ -14,7 +14,7 @@ public class MifosService {
 	//private String propertiesFile = "mifos.properties";
 
 	// This filename is also in Initialization.xml
-	private String hibernateProperties = "conf/hibernate.properties";
+	private String hibernateProperties = "hibernate.properties";
 
     MifosService() {
     }

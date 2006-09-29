@@ -1,10 +1,14 @@
 package org.mifos.api;
 
+import java.util.Date;
+
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Money;
 
 
 public class Loan {
@@ -45,4 +49,9 @@ public class Loan {
 	public String getLoanCurrency() {
 		return bo.getTotalAmountDue().getCurrency().getCurrencyName();
 	}
+	
+	// This is, in fact, a little more complicated.
+	//public void writeOff(String reason) throws AccountException {
+	//	bo.writeOff(reason);
+	//}
 }

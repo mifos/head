@@ -19,6 +19,8 @@
 	<session-config>
 		<session-timeout>30</session-timeout>
 	</session-config>
+
+	<!-- Struts -->
 	<servlet>
 		<servlet-name>Controller</servlet-name>
 		<servlet-class>
@@ -38,6 +40,18 @@
 		<servlet-name>Controller</servlet-name>
 		<url-pattern>*.do</url-pattern>
 	</servlet-mapping>
+
+	<!-- Axis -->
+	<servlet>
+	  <servlet-name>AxisServlet</servlet-name>
+	  <servlet-class>org.apache.axis2.transport.http.AxisServlet</servlet-class>
+	  <load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+	  <servlet-name>AxisServlet</servlet-name>
+	  <url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+
 	<welcome-file-list>
 		<welcome-file>
 			/pages/application/login/jsp/index.jsp

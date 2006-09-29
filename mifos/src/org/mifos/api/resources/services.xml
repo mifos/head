@@ -1,0 +1,13 @@
+<!-- This file was auto-generated from WSDL -->
+<!-- by the Apache Axis2 version: #axisVersion# #today# -->
+<serviceGroup>
+<service name="MifosService">
+<messageReceivers>
+<messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-out" class="org.mifos.api.MifosServiceMessageReceiverInOut"/>
+</messageReceivers>
+<parameter name="ServiceClass" locked="false">org.mifos.api.MifosServiceSkeleton</parameter>
+<operation name="findLoan" mep="http://www.w3.org/2004/08/wsdl/in-out">
+<actionMapping>http://localhost:8080/mifos/services/MifosService/findLoan</actionMapping>
+</operation>
+</service>
+</serviceGroup>

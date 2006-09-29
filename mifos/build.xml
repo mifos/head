@@ -47,8 +47,7 @@
 	</path>
 
 	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
-	<taskdef name="junit" classpathref="class.path" 
-		classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
+	<taskdef  name="junit" classpathref="class.path" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
 
 	<!--<echo level="debug">CLASSPATH - ${java.class.path}</echo>-->
 
@@ -77,6 +76,8 @@
 		<mkdir dir="${dist.dir}"/>
 		<mkdir dir="${build.classes}"/>
 		<mkdir dir="${build.web-inf}"/>
+		<mkdir dir="${build.web-inf}/services/MifosService/META-INF"/>
+		<mkdir dir="${build.web-inf}/services/MifosService/modules"/>
 		<mkdir dir="${test.classes}"/>
 		<mkdir dir="${build.classes}/conf"/>
 		<mkdir dir="${test.classes}/conf"/>
@@ -161,6 +162,12 @@
 			<fileset dir="${conf.dir}">
 				<include name="hibernate.properties"/>
 			</fileset>
+		</copy>
+		<copy todir="${build.web-inf}/services/MifosService/META-INF">
+		    <fileset dir="${src.dir}/org/mifos/api/resources">
+		        <include name="services.xml"/>
+		        <include name="*.wsdl"/>
+		    </fileset>
 		</copy>
 	</target>
 
