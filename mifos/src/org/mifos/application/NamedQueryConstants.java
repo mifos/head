@@ -536,14 +536,12 @@ public interface NamedQueryConstants {
 	
 	public String PRODUCT_STATUS="product.status";
 	public String PRODUCT_ALL_LOAN_PRODUCTS="product.getAllLoanProducts";
-	
-	
 	//m2 search quaries 
 	
 	public String CUSTOMER_SEARCH_COUNT="Customer.cust_count_search";
 	public String CUSTOMER_SEARCH="Customer.cust_search";
 	public String CUSTOMER_SEARCH_NOOFFICEID="Customer.cust_search_noofficeid";
-	public String  CUSTOMER_SEARCH_COUNT_NOOFFICEID="Customer.cust_count_search_noofficeid";
+	public String CUSTOMER_SEARCH_COUNT_NOOFFICEID="Customer.cust_count_search_noofficeid";
 	public String CUSTOMER_ID_SEARCH_NOOFFICEID="Customer.cust_idsearch_withoutoffice";
 	public String CUSTOMER_ID_SEARCH="Customer.cust_idsearch";
 	public String ACCOUNT_ID_SEARCH="accounts.account_IdSearch";
@@ -553,4 +551,17 @@ public interface NamedQueryConstants {
 	public String PERSONNEL_SEARCH="search_Personnel";
 	public String CENTER_SEARCH="search_Centers";
 	public String CENTER_SEARCH_COUNT="count_search_Centers";
+	public String GROUP_SEARCHWITH_CENTER="group_SearchWithCenter";
+	public String GROUP_SEARCH_COUNT_WITH_CENTER="count_group_SearchWithCenter";
+	public String GROUP_SEARCH_COUNT_WITHOUT_CENTER="count_group_SearchWithoutCenter";
+	public String GROUP_SEARCHWITHOUT_CENTER="group_SearchWithoutCenter";
+	public String SEARCH_GROUP_CLIENT_COUNT_LO="Customer.count_cust_for_account";
+	public String SEARCH_GROUP_CLIENT_LO="Customer.cust_for_account";
+	public String SEARCH_GROUP_CLIENT_COUNT="Customer.cust_count_account_Search";
+	public String SEARCH_GROUP_CLIENT="Customer.cust_account_Search";
+	public String SEARCH_CUSTOMER_FOR_SAVINGS_COUNT="Customer.count_customersForSavingsAccount";
+	public String SEARCH_CUSTOMER_FOR_SAVINGS="Customer.customersForSavingsAccount";
+	public String SEARCH_CUSTOMER_FOR_SAVINGS_COUNT_NOLO="Customer.count_customersForSavingsAccountNonLO";
+	public String SEARCH_CUSTOMER_FOR_SAVINGS_NOLO="Customer.customersForSavingsAccountNonLO";
+
 }

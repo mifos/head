@@ -35,7 +35,7 @@
  *
 
  */
-package org.mifos.application.customer.group.util.valueobjects;
+package org.mifos.application.customer.group.util.helpers;
 
 import java.io.Serializable;
 

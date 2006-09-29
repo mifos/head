@@ -72,6 +72,7 @@ import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
@@ -273,6 +274,95 @@ public class CustomerPersistence extends Persistence {
 		}
 
 		return queryResult;
+	}
+
+	public QueryResult searchGroupClient(String searchString, Short officeId,
+			Short userId, Short userOfficeId) throws PersistenceException {
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
+		QueryInputs queryInputs = new QueryInputs();
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(CustomerSearchConstants.ACCOUNTSEARCHRESULTS);
+		if (new PersonnelPersistence().getPersonnel(userId).getLevel().getId()
+				.equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
+			namedQuery[0] = NamedQueryConstants.SEARCH_GROUP_CLIENT_COUNT_LO;
+			namedQuery[1] = NamedQueryConstants.SEARCH_GROUP_CLIENT_LO;
+			paramList.add(typeNameValue("Short", "PERSONNEL_ID", userId));
+
+		} else {
+			namedQuery[0] = NamedQueryConstants.SEARCH_GROUP_CLIENT_COUNT;
+			namedQuery[1] = NamedQueryConstants.SEARCH_GROUP_CLIENT;
+
+		}
+
+		paramList.add(typeNameValue("String", "SEARCH_ID",
+				new OfficePersistence().getOffice(userOfficeId).getSearchId()
+						+ "%"));
+		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
+				+ "%"));
+		paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED",
+				Configuration.getInstance().getCustomerConfig(officeId)
+						.canGroupApplyForLoan() == true ? new Boolean(true)
+						: new Boolean(true)));
+
+		String[] aliasNames = { "clientName", "clientId", "groupName",
+				"centerName", "officeName", "globelNo" };
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs
+				.setPath("org.mifos.application.accounts.util.helpers.AccountSearchResults");
+		queryInputs.setAliasNames(aliasNames);
+		queryInputs.setParamList(paramList);
+		try {
+			queryResult.setQueryInputs(queryInputs);
+		} catch (HibernateSearchException e) {
+			throw new PersistenceException(e);
+		}
+
+		return queryResult;
+
+	}
+
+	public QueryResult searchCustForSavings(String searchString,
+			Short officeId, Short userId, Short userOfficeId)
+			throws PersistenceException {
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
+		QueryInputs queryInputs = new QueryInputs();
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(CustomerSearchConstants.CUSTOMERSFORSAVINGSACCOUNT);
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+		if (personnel.getLevel().getId().equals(
+				PersonnelLevel.LOAN_OFFICER.getValue())) {
+			namedQuery[0] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_COUNT;
+			namedQuery[1] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS;
+			paramList.add(typeNameValue("Short", "PERSONNEL_ID", userId));
+
+		} else {
+			namedQuery[0] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_COUNT_NOLO;
+			namedQuery[1] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_NOLO;
+
+		}
+		paramList.add(typeNameValue("String", "SEARCH_ID", personnel
+				.getOffice().getSearchId()
+				+ "%"));
+		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
+				+ "%"));
+
+		String[] aliasNames = { "clientName", "clientId", "groupName",
+				"centerName", "officeName", "globelNo" };
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs
+				.setPath("org.mifos.application.accounts.util.helpers.AccountSearchResults");
+		queryInputs.setAliasNames(aliasNames);
+		queryInputs.setParamList(paramList);
+		try {
+			queryResult.setQueryInputs(queryInputs);
+		} catch (HibernateSearchException e) {
+			throw new PersistenceException(e);
+		}
+
+		return queryResult;
+
 	}
 
 	private QueryResult mainSearch(String searchString, Short officeId,

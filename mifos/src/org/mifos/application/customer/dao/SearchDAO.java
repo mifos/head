@@ -196,7 +196,7 @@ public class SearchDAO {
 		paramList.add(typeNameValue("Short","LO_LEVEL_ID",PersonnelConstants.LOAN_OFFICER));
 		String[] aliasNames = {"parentOfficeId" , "parentOfficeName" , "centerSystemId" , "centerName"};
 		queryInputs.setQueryStrings(namedQuery);
-		queryInputs.setPath("org.mifos.application.customer.center.util.valueobjects.CenterSearchResults");
+		queryInputs.setPath("org.mifos.application.customer.center.util.helpers.CenterSearchResults");
 		queryInputs.setAliasNames(aliasNames);	
 	}
 	public void intiliatizeQueryInputsForGroupSearch(String searchString, Short userLevelId,String officeSearchId ,Short UserId ,Short officeId) throws SystemException
@@ -222,7 +222,7 @@ public class SearchDAO {
 		paramList.add(typeNameValue("Short","LO_LEVEL_ID",PersonnelConstants.LOAN_OFFICER));
 		
 		queryInputs.setQueryStrings(namedQuery);
-		queryInputs.setPath("org.mifos.application.customer.group.util.valueobjects.GroupSearchResults");
+		queryInputs.setPath("org.mifos.application.customer.group.util.helpers.GroupSearchResults");
 		
 	}
 	public void intiliatizeQueryInputsForClientOrGroupSearch(String searchString, Short userLevelId,String officeSearchId ,Short UserId ,Short officeId) throws SystemException
@@ -262,7 +262,7 @@ public class SearchDAO {
 				"centerName", "officeName", "globelNo" };
 		queryInputs.setQueryStrings(namedQuery);
 		queryInputs
-				.setPath("org.mifos.application.accounts.util.valueobjects.AccountSearchResults");
+				.setPath("org.mifos.application.accounts.util.helpers.AccountSearchResults");
 		queryInputs.setAliasNames(aliasNames);	
 	}
 	public void intiliatizeQueryInputsForCustomerSearch(String searchString,
@@ -304,8 +304,6 @@ public class SearchDAO {
 		{		
 				namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSFORSAVINGSACCOUNT;
 				namedQuery[1]=NamedQueryConstants.CUSTOMERSFORSAVINGSACCOUNT;				
-				paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
-				paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
 				paramList.add(typeNameValue("Short","PERSONNEL_ID",UserId));				
 				
 		
@@ -314,13 +312,14 @@ public class SearchDAO {
 		{				
 				namedQuery[0]=NamedQueryConstants.COUNT_CUSTOMERSFORSAVINGSACCOUNTNONLO;
 				namedQuery[1]=NamedQueryConstants.CUSTOMERSFORSAVINGSACCOUNTNONLO;				
-				paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
-				paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
 			
-		}	
+		}
+		paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
+		paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
+
 		String[] aliasNames = { "clientName", "clientId", "groupName","centerName", "officeName","globelNo" };
 		queryInputs.setQueryStrings(namedQuery);
-		queryInputs.setPath("org.mifos.application.accounts.util.valueobjects.AccountSearchResults");
+		queryInputs.setPath("org.mifos.application.accounts.util.helpers.AccountSearchResults");
 		queryInputs.setAliasNames(aliasNames);	
 	}
 	

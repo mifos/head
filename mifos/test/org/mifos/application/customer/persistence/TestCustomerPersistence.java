@@ -915,12 +915,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		client = TestObjectFactory.createClient("myClient", meeting, CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());
 		HibernateUtil.closeSession();
-		
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		customerPersistence.deleteMeeting(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		assertNull(client.getCustomerMeeting());	
 	}
@@ -930,10 +928,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		QueryResult queryResult = new CustomerPersistence().search("C",Short.valueOf("3"),Short.valueOf("1"),Short.valueOf("1"));
 		assertNotNull(queryResult);
 		assertEquals(2,queryResult.getSize());
-		
-		//check main query also 
 		assertEquals(2,queryResult.get(0,10).size());
-		
 	}
 	public void testSearchWithoutOfficeId()throws Exception{
 		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
@@ -941,36 +936,45 @@ public class TestCustomerPersistence extends MifosTestCase {
 		QueryResult queryResult = new CustomerPersistence().search("C",Short.valueOf("0"),Short.valueOf("1"),Short.valueOf("1"));
 		assertNotNull(queryResult);
 		assertEquals(2,queryResult.getSize());
-		//check main query also 
 		assertEquals(2,queryResult.get(0,10).size());
-
 	}	
 	public void testSearchWithGlobalNo()throws Exception{
 		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.commitTransaction();
-		
-		
 		QueryResult queryResult = new CustomerPersistence().search(group.getGlobalCustNum(),Short.valueOf("3"),Short.valueOf("1"),Short.valueOf("1"));
 		assertNotNull(queryResult);
 		assertEquals(1,queryResult.getSize());
-		
-		//check main query also 
 		assertEquals(1,queryResult.get(0,10).size());
 		
 	}	
 	public void testSearchWithAccountGlobalNo()throws Exception{
 		getCustomer();
 		HibernateUtil.commitTransaction();
-		
-		
 		QueryResult queryResult = new CustomerPersistence().search(groupAccount.getGlobalAccountNum(),Short.valueOf("3"),Short.valueOf("1"),Short.valueOf("1"));
 		assertNotNull(queryResult);
 		assertEquals(1,queryResult.getSize());
+		assertEquals(1,queryResult.get(0,10).size());
 		
-		//check main query also 
+	}
+	
+	public void testSearchGropAndClient()throws Exception{
+		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
+		HibernateUtil.commitTransaction();
+		QueryResult queryResult = new CustomerPersistence().searchGroupClient("C",Short.valueOf("3"),Short.valueOf("1"),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
 		assertEquals(1,queryResult.get(0,10).size());
 		
 	}	
+	public void testSearchCustForSavings()throws Exception{
+		createCustomers(CustomerStatus.CENTER_ACTIVE,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE);
+		HibernateUtil.commitTransaction();
+		QueryResult queryResult = new CustomerPersistence().searchCustForSavings("C",Short.valueOf("3"),Short.valueOf("1"),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(2,queryResult.getSize());
+		assertEquals(2,queryResult.get(0,10).size());
+		
+	}		
 	private void getCustomer() throws  Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

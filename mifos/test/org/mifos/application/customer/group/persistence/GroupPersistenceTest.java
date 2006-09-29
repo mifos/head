@@ -9,6 +9,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class GroupPersistenceTest extends MifosTestCase {
@@ -34,16 +35,20 @@ public class GroupPersistenceTest extends MifosTestCase {
 	}
 
 	public void testGetGroupBySystemId() throws PersistenceException{
-		center = createCenter();
-		String groupName = "Group_Active_test";
-		group = TestObjectFactory.createGroup(groupName, Short
-				.valueOf("9"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
-		HibernateUtil.closeSession();
+		createGroup();
 		group = (GroupBO) groupPersistence.getGroupBySystemId(group.getGlobalCustNum());
-		assertEquals(groupName, group.getDisplayName());
+		assertEquals("Group_Active_test", group.getDisplayName());
 	}
 
+	
+	public void testSearch() throws Exception{
+		createGroup();
+		QueryResult queryResult = groupPersistence.search(group.getDisplayName(),group.getOffice().getOfficeId(),Short.valueOf("1"),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		assertEquals(1,queryResult.get(0,10).size());
+	}
+	
 	private CenterBO createCenter() {
 		return createCenter("Center_Active_test");
 	}
@@ -53,5 +58,14 @@ public class GroupPersistenceTest extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		return TestObjectFactory.createCenter(name, Short.valueOf("13"), "1.4",
 				meeting, new Date(System.currentTimeMillis()));
+	}
+	private void createGroup(){
+		center = createCenter();
+		group = TestObjectFactory.createGroup("Group_Active_test", Short
+				.valueOf("9"), "1.1.1", center, new Date(System
+				.currentTimeMillis()));
+		HibernateUtil.closeSession();
+
+		
 	}
 }
