@@ -191,7 +191,7 @@ public interface ClientConstants {
 	public static final String NO ="0";
 	public static final Short SPOUSE_VALUE = 1;
 	public static final Short FATHER_VALUE = 2;
-	
+	public static final Short MAX_OFFERINGS_SIZE=3;
 	public static final String AGE = "age";
 	public static final String LOANCYCLECOUNTER = "loanCycleCounter";
 	public static final String CUSTOMERLOANACCOUNTSINUSE = "customerLoanAccountsInUse";

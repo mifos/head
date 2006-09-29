@@ -41,6 +41,7 @@ package org.mifos.application.customer.client.struts.actionforms;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -86,7 +87,13 @@ public class ClientCustActionForm extends CustomerActionForm {
 	private FormFile picture;
 	private InputStream customerPicture;
 	private int age;
-
+	private List<Short> selectedOfferings;
+	
+	public ClientCustActionForm(){
+		super();
+		selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
+	}
+	
 	public String getGroupFlag() {
 		return groupFlag;
 	}
@@ -206,6 +213,19 @@ public class ClientCustActionForm extends CustomerActionForm {
 
 	}
 
+	public List<Short> getSelectedOfferings() {
+		return selectedOfferings;
+	}
+
+	public Short getSavingsOffering(int i){
+		return (i<ClientConstants.MAX_OFFERINGS_SIZE)?selectedOfferings.get(i):null;
+	}
+	
+	public void setSavingsOffering(int i, Short value){
+		if(i<ClientConstants.MAX_OFFERINGS_SIZE)
+			selectedOfferings.set(i, value);
+	}
+	
 	@Override
 	protected ActionErrors validateFields(HttpServletRequest request, String method) throws ApplicationException{
 
@@ -325,5 +345,5 @@ public class ClientCustActionForm extends CustomerActionForm {
 			 return parentGroup.getCustomerMeeting().getMeeting();
 		else
 			return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING,request);
-	}
+	}	
 }

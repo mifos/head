@@ -489,6 +489,7 @@ public interface NamedQueryConstants {
 	public String CHECKOFFICENAMEUNIQUENESS="office.getOfficeWithName";
 	public String CHECKOFFICESHORTNAMEUNIQUENESS="office.getOfficeWithShortName";
 	public String GET_CLIENT_BASEDON_NAME_DOB="Customer.getClientBasedOnNameAndDateOfBirth";
+	public String GET_ACTIVE_OFFERINGS_FOR_CUSTOMER="product.getActiveOfferingsForCustomer";
 	public String GET_CLIENT_BASEDON_GOVTID="Customer.getClientBasedOnGovtId";
 	public String GETOFFICEACTIVEPERSONNEL="getCountActivePersonnel";
 	public String GETCOUNTOFACTIVECHILDERN="getCountOfActiveChildren";

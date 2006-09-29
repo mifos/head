@@ -82,7 +82,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 	}
 
 	@Override
-	public void tearDown() {
+	public void tearDown() throws Exception{
 		TestObjectFactory.cleanUp(centerSavingsAccount);
 		TestObjectFactory.cleanUp(groupSavingsAccount);
 		TestObjectFactory.cleanUp(clientSavingsAccount);
@@ -92,12 +92,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-
 		HibernateUtil.closeSession();
-
+		super.tearDown();
 	}
 
-	public void testCustomersUnderLO() throws NumberFormatException, PersistenceException {
+	public void testCustomersUnderLO() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

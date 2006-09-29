@@ -64,7 +64,7 @@ public class ClientBO extends CustomerBO {
 
 	private ClientDetailEntity customerDetail;
 
-	private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
+	private final Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
 
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.CLIENTLOGGER);
@@ -111,8 +111,9 @@ public class ClientBO extends CustomerBO {
 	protected ClientBO() {
 		super();
 		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
-		clientAttendances = new HashSet<ClientAttendanceBO>();
+		this.clientAttendances = new HashSet<ClientAttendanceBO>();
 		this.performanceHistory = null;
+		this.offeringsAssociatedInCreate = null;
 	}
 
 	private ClientBO(UserContext userContext, String displayName,
@@ -135,6 +136,7 @@ public class ClientBO extends CustomerBO {
 		nameDetailSet = new HashSet<ClientNameDetailEntity>();
 		clientAttendances = new HashSet<ClientAttendanceBO>();
 		this.performanceHistory = new ClientPerformanceHistoryEntity(this);
+		
 		this.dateOfBirth = dateOfBirth;
 		this.governmentId = governmentId;
 		if (trained != null)
@@ -152,6 +154,7 @@ public class ClientBO extends CustomerBO {
 				spouseNameDetailView));
 		this.customerDetail = new ClientDetailEntity(this, clientDetailView);
 		createPicture(picture);
+		offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
 		createAssociatedOfferings(offeringsSelected);
 		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
@@ -232,11 +235,6 @@ public class ClientBO extends CustomerBO {
 
 	public Set<ClientInitialSavingsOfferingEntity> getOfferingsAssociatedInCreate() {
 		return offeringsAssociatedInCreate;
-	}
-
-	public void setOfferingsAssociatedInCreate(
-			Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate) {
-		this.offeringsAssociatedInCreate = offeringsAssociatedInCreate;
 	}
 
 	@Override
@@ -525,7 +523,6 @@ public class ClientBO extends CustomerBO {
 
 	private void createAssociatedOfferings(List<SavingsOfferingBO> offeringsSelected) {
 		if(offeringsSelected!=null){
-			offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
 			for(SavingsOfferingBO offering : offeringsSelected)
 				offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(this, offering));
 		}
