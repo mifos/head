@@ -42,6 +42,7 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -91,7 +92,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 
 	public void testFailure_InitialSavingsOfferingAtCreate()throws Exception{
-		savingsOffering1 = createSavingsOffering("Offering1", "s1");
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		String name = "client1";
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
@@ -110,8 +111,8 @@ public class TestClientBO extends MifosTestCase {
 	}		
 	
 	public void testInitialSavingsOfferingAtCreate()throws Exception{
-		savingsOffering1 = createSavingsOffering("Offering1", "s1");
-		savingsOffering2 = createSavingsOffering("Offering2", "s2");
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2", "s2", SavingsType.VOLUNTARY, PrdApplicableMaster.CLIENTS);
 		String name = "client1";
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
@@ -877,18 +878,5 @@ public class TestClientBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		return meeting;
-	}
-	
-	private SavingsOfferingBO createSavingsOffering(String offeringName, String shortName) {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory
-				.createSavingsOffering(offeringName, shortName, Short.valueOf("2"),
-						new Date(System.currentTimeMillis()), Short
-								.valueOf("2"), 300.0, Short.valueOf("1"), 24.0,
-						200.0, 200.0, SavingsType.MANDATORY.getValue(), InterestCalcType.AVERAGE_BALANCE.getValue(),
-						meetingIntCalc, meetingIntPost);
 	}
 }

@@ -83,7 +83,7 @@ public interface ClientConstants {
 	/**Request parameter names for the dropdown values*/
 	public static final String SALUTATION_VALUE  = "salutationValue";
 	public static final String GENDER_VALUE  ="genderValue";
-	
+	public static final String SAVINGS_OFFERING_LIST  ="savingsOfferingList";
 	
 	public static final String  MARITAL_STATUS_VALUE = "maritalStatusValue";
 	public static final String  CITIZENSHIP_VALUE = "citizenshipValue";
@@ -191,7 +191,7 @@ public interface ClientConstants {
 	public static final String NO ="0";
 	public static final Short SPOUSE_VALUE = 1;
 	public static final Short FATHER_VALUE = 2;
-	public static final Short MAX_OFFERINGS_SIZE=3;
+	public static final int MAX_OFFERINGS_SIZE=3;
 	public static final String AGE = "age";
 	public static final String LOANCYCLECOUNTER = "loanCycleCounter";
 	public static final String CUSTOMERLOANACCOUNTSINUSE = "customerLoanAccountsInUse";

@@ -101,7 +101,6 @@ import org.mifos.application.customer.client.business.ClientInitialSavingsOfferi
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.CategoryTypeEntity;
@@ -698,7 +697,20 @@ public class TestObjectFactory {
 		return (SavingsOfferingBO) addObject(testObjectPersistence
 				.persist(savingsOffering));
 	}
-
+	
+	public static SavingsOfferingBO createSavingsOffering(String offeringName, String shortName, 
+			SavingsType savingsTypeId,PrdApplicableMaster applicableTo) {
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		return createSavingsOffering(offeringName, shortName, applicableTo.getValue(),
+						new Date(System.currentTimeMillis()), Short
+								.valueOf("2"), 300.0, Short.valueOf("1"), 24.0,
+						200.0, 200.0, savingsTypeId.getValue(), InterestCalcType.MINIMUM_BALANCE.getValue(),
+						meetingIntCalc, meetingIntPost);
+	}
+	
 	public static SavingsBO createSavingsAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			SavingsOfferingBO savingsOffering) throws Exception {

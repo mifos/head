@@ -82,6 +82,7 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -221,6 +222,7 @@ public class ClientCustAction extends CustAction {
 		} else
 			officeId = actionForm.getParentGroup().getOffice().getOfficeId();
 		loadFormedByPersonnel(officeId, request);
+		SessionUtils.setAttribute(ClientConstants.SAVINGS_OFFERING_LIST, getClientBusinessService().retrieveOfferingsApplicableToClient(), request);
 	}
 
 	private void loadMasterDataEntities(ClientCustActionForm actionForm,
@@ -338,7 +340,7 @@ public class ClientCustAction extends CustAction {
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws ApplicationException, IOException {
+			throws Exception {
 		ClientBO client = null;
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(
@@ -364,6 +366,7 @@ public class ClientCustAction extends CustAction {
 			checkPermissionForCreate(actionForm.getStatusValue().getValue(),
 					getUserContext(request), null, officeId, getUserContext(
 							request).getId());
+		List<SavingsOfferingBO> selectedOfferings = getSelectedOfferings(actionForm, request);
 		try {
 			if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 				client = new ClientBO(userContext, actionForm.getClientName()
@@ -372,7 +375,7 @@ public class ClientCustAction extends CustAction {
 								actionForm.getMfiJoiningDate(), userContext
 										.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
-								.getFeesToApply(), null, actionForm
+								.getFeesToApply(), selectedOfferings, actionForm
 								.getFormedByPersonnelValue(), actionForm
 								.getOfficeIdValue(), meeting, actionForm
 								.getLoanOfficerIdValue(), getDateFromString(
@@ -393,7 +396,7 @@ public class ClientCustAction extends CustAction {
 								actionForm.getMfiJoiningDate(), userContext
 										.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
-								.getFeesToApply(), null, actionForm
+								.getFeesToApply(), selectedOfferings, actionForm
 								.getFormedByPersonnelValue(), actionForm
 								.getParentGroup().getOffice().getOfficeId(),
 						actionForm.getParentGroup(), getDateFromString(
@@ -424,6 +427,19 @@ public class ClientCustAction extends CustAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
+	private List<SavingsOfferingBO> getSelectedOfferings(ClientCustActionForm actionForm, HttpServletRequest request)throws Exception{
+		List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>(ClientConstants.MAX_OFFERINGS_SIZE);
+		List<SavingsOfferingBO> offeringsList = (List<SavingsOfferingBO>)SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
+		for(Short offeringId: actionForm.getSelectedOfferings()){
+			if(offeringId!=null){
+				for(SavingsOfferingBO savingsOffering:offeringsList)
+					if(offeringId.equals(savingsOffering.getPrdOfferingId()))
+						selectedOfferings.add(savingsOffering);
+			}
+		}
+		return selectedOfferings;
+	}
+	
 	private void doCleanUp(ClientCustActionForm actionForm,
 			HttpServletRequest request) {
 		clearActionForm(actionForm);

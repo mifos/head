@@ -54,6 +54,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
+import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -69,6 +70,9 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -100,7 +104,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	private AccountBO accountBO;
 
 	private String flowKey;
-
+	private SavingsOfferingBO savingsOffering1;
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -143,11 +148,13 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+		TestObjectFactory.removeObject(savingsOffering1);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 
 	public void testLoad() throws Exception {
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsoffering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -181,6 +188,10 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
 		List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>)SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
 		assertNotNull(povertyStatusList);
+		List<SavingsOfferingBO> savingsOfferingList = (List<SavingsOfferingBO>)SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
+		assertNotNull(savingsOfferingList);
+		assertEquals(1, savingsOfferingList.size());
+		HibernateUtil.closeSession();
 	}
 
 	public void testLoadClientUnderGroup() throws Exception {
@@ -527,6 +538,60 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		removeFees(feesToRemove);
 	}
 
+	public void testPreviewFailure_DuplicateOfferingsSelected() throws Exception {
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsPrd1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		flowKey =(String) request.getAttribute(Constants.CURRENTFLOWKEY);
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "next");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("clientName.salutation", "1");
+		addRequestParameter("clientName.firstName", "Client");
+		addRequestParameter("clientName.lastName", "LastName");
+		addRequestParameter("spouseName.firstName", "Spouse");
+		addRequestParameter("spouseName.lastName", "LastName");
+		addRequestParameter("spouseName.nameType", "1");
+		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("clientDetailView.gender", "1");
+		addRequestParameter("input", "personalInfo");
+		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "11");
+			i++;
+		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		List<SavingsOfferingBO> savingsOfferingList = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
+				ClientConstants.SAVINGS_OFFERING_LIST, request);
+		
+		savingsOffering1 = savingsOfferingList.get(0);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("input", "mfiInfo");
+		addRequestParameter("formedByPersonnel", "1");
+		addRequestParameter("savingsOffering[0]", savingsOffering1.getPrdOfferingId().toString());
+		addRequestParameter("savingsOffering[1]", savingsOffering1.getPrdOfferingId().toString());
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
+				new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"),
+						new Date(), MeetingType.CUSTOMERMEETING), request);
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		assertEquals("Duplicate Offerings", 1, getErrrorSize(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));		
+	}
+	
 	public void testPreviewSuccess() throws Exception {
 		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
 		setRequestPathInfo("/clientCustAction.do");
@@ -583,6 +648,59 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		removeFees(feesToRemove);
 	}
 
+	public void testSuccessfulPreviewWithSavingsOfferingsSelected() throws Exception {
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsPrd1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		flowKey =(String) request.getAttribute(Constants.CURRENTFLOWKEY);
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "next");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("clientName.salutation", "1");
+		addRequestParameter("clientName.firstName", "Client");
+		addRequestParameter("clientName.lastName", "LastName");
+		addRequestParameter("spouseName.firstName", "Spouse");
+		addRequestParameter("spouseName.lastName", "LastName");
+		addRequestParameter("spouseName.nameType", "1");
+		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("clientDetailView.gender", "1");
+		addRequestParameter("input", "personalInfo");
+		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "11");
+			i++;
+		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		List<SavingsOfferingBO> savingsOfferingList = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
+				ClientConstants.SAVINGS_OFFERING_LIST, request);
+		
+		savingsOffering1 = savingsOfferingList.get(0);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("input", "mfiInfo");
+		addRequestParameter("formedByPersonnel", "1");
+		addRequestParameter("savingsOffering[0]", savingsOffering1.getPrdOfferingId().toString());
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
+				new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"),
+						new Date(), MeetingType.CUSTOMERMEETING), request);
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward(ActionForwards.preview_success.toString());
+	}
+	
 	public void testSuccessfulPrevPersonalInfo() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "prevPersonalInfo");
@@ -603,6 +721,81 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 	}
 
+	public void testCreateSuccessWithAssociatedSavingsOfferings() throws Exception {
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsPrd1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		flowKey =(String) request.getAttribute(Constants.CURRENTFLOWKEY);
+		List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "next");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("clientName.salutation", "1");
+		addRequestParameter("clientName.firstName", "Client");
+		addRequestParameter("clientName.lastName", "LastName");
+		addRequestParameter("spouseName.firstName", "Spouse");
+		addRequestParameter("spouseName.lastName", "LastName");
+		addRequestParameter("spouseName.nameType", "1");
+		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("clientDetailView.gender", "1");
+		addRequestParameter("input", "personalInfo");
+		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "Req");
+			i++;
+		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		
+		List<SavingsOfferingBO> savingsOfferingList = (List<SavingsOfferingBO>) SessionUtils.getAttribute(
+				ClientConstants.SAVINGS_OFFERING_LIST, request);
+		savingsOffering1 = savingsOfferingList.get(0);
+		
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("input", "mfiInfo");
+		addRequestParameter("loanOfficerId", "1");
+		addRequestParameter("formedByPersonnel", "1");
+		addRequestParameter("savingsOffering[0]", savingsOffering1.getPrdOfferingId().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.preview_success.toString());
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter("input", "create");
+		addRequestParameter("status", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.create_success.toString());
+		ClientCustActionForm actionForm = (ClientCustActionForm) request
+				.getSession().getAttribute("clientCustActionForm");
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				new Integer(actionForm.getCustomerId()).intValue());
+		assertNotNull(client);
+		assertNotNull(client.getOfferingsAssociatedInCreate());
+		assertEquals(1,client.getOfferingsAssociatedInCreate().size());
+		for(ClientInitialSavingsOfferingEntity offering: client.getOfferingsAssociatedInCreate()){
+			assertEquals(savingsOffering1.getPrdOfferingId(),offering.getSavingsOffering().getPrdOfferingId());
+			assertTrue(true);
+		}
+			
+		removeFees(feesToRemove);
+	}
+	
 	public void testCreateSuccessWithoutGroup() throws Exception {
 		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
@@ -1076,7 +1269,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 	}
-
+	
 	private void createAndSetClientInSession() throws Exception {
 		String name = "Client 1";
 		Short officeId = 1;

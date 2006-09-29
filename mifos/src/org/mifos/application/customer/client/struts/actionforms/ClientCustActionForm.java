@@ -92,8 +92,9 @@ public class ClientCustActionForm extends CustomerActionForm {
 	public ClientCustActionForm(){
 		super();
 		selectedOfferings = new ArrayList<Short>(ClientConstants.MAX_OFFERINGS_SIZE);
-	}
-	
+		for(int i=0;i<ClientConstants.MAX_OFFERINGS_SIZE;i++)
+			selectedOfferings.add(null);
+	}	
 	public String getGroupFlag() {
 		return groupFlag;
 	}
@@ -244,6 +245,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 			validateConfigurableMandatoryFields(request,errors,EntityType.CLIENT);
 			validateTrained(request, errors);
 			validateFees(request, errors);
+			validateSelectedOfferings(errors);
 		}
 
 		if(method.equals(Methods.previewEditMfiInfo.toString()) ){
@@ -338,7 +340,20 @@ public class ClientCustActionForm extends CustomerActionForm {
 		}
 	}
 
-
+	private void validateSelectedOfferings(ActionErrors errors){
+		boolean duplicateFound = false;
+		for(int i=0;i<selectedOfferings.size()-1;i++){
+			for(int j=i+1; j<selectedOfferings.size();j++)
+				if(selectedOfferings.get(i)!=null && selectedOfferings.get(j)!=null && selectedOfferings.get(i).equals(selectedOfferings.get(j))){
+					errors.add(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED,new ActionMessage(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));
+					duplicateFound = true;
+					break;
+				}
+			if(duplicateFound)
+				break;
+		}
+	}
+	
 	@Override
 	protected MeetingBO getCustomerMeeting(HttpServletRequest request)throws ApplicationException{
 		if(groupFlag.equals(ClientConstants.YES))

@@ -41,7 +41,7 @@ public class ClientBusinessServiceTest extends MifosTestCase{
 	}
 	
 	public void testFailureRetrieveOfferings() throws Exception {
-		savingsOffering1 = createSavingsOffering("Offering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		HibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -54,10 +54,10 @@ public class ClientBusinessServiceTest extends MifosTestCase{
 	}
 	
 	public void testRetrieveOfferingsApplicableToClient()throws Exception{
-		savingsOffering1 = createSavingsOffering("Offering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
-		savingsOffering2 = createSavingsOffering("Offering2","s2", SavingsType.VOLUNTARY, PrdApplicableMaster.CLIENTS);
-		savingsOffering3 = createSavingsOffering("Offering3","s3", SavingsType.MANDATORY, PrdApplicableMaster.GROUPS);
-		savingsOffering4 = createSavingsOffering("Offering4","s4", SavingsType.VOLUNTARY, PrdApplicableMaster.CENTERS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2","s2", SavingsType.VOLUNTARY, PrdApplicableMaster.CLIENTS);
+		savingsOffering3 = TestObjectFactory.createSavingsOffering("Offering3","s3", SavingsType.MANDATORY, PrdApplicableMaster.GROUPS);
+		savingsOffering4 = TestObjectFactory.createSavingsOffering("Offering4","s4", SavingsType.VOLUNTARY, PrdApplicableMaster.CENTERS);
 		HibernateUtil.closeSession();
 		List<SavingsOfferingBO> offerings = service.retrieveOfferingsApplicableToClient();
 		assertEquals(2,offerings.size());
@@ -69,19 +69,4 @@ public class ClientBusinessServiceTest extends MifosTestCase{
 		}
 		HibernateUtil.closeSession();
 	}
-
-	private SavingsOfferingBO createSavingsOffering(String offeringName, String shortName, 
-			SavingsType savingsTypeId,PrdApplicableMaster applicableTo) {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory
-				.createSavingsOffering(offeringName, shortName, applicableTo.getValue(),
-						new Date(System.currentTimeMillis()), Short
-								.valueOf("2"), 300.0, Short.valueOf("1"), 24.0,
-						200.0, 200.0, savingsTypeId.getValue(), InterestCalcType.MINIMUM_BALANCE.getValue(),
-						meetingIntCalc, meetingIntPost);
-	}
-
 }
