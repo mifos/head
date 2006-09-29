@@ -81,16 +81,28 @@
                  </td>
               </tr>
             </table>
-            <br>
-            <table width="100%" border="0" cellspacing="0" cellpadding="2">
+			<br>
+			<table width="95%" border="0" cellspacing="0" cellpadding="2">
               <tr>
-                <td width="25%" class="fontnormal">
-				<html-el:radio property="lastPaymentAmountOption" value="1" /><mifos:mifoslabel name="Savings.modifylastPayment"/></td>
-                <td width="75%" class="fontnormal"><mifos:mifoslabel name="Savings.amount"/>:
-                    <mifos:mifosdecimalinput name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount"/> 
-                <c:if test="${sessionScope.isLastPaymentValid == 1}">
-                    &nbsp;( <mifos:mifoslabel name="Savings.paymentType"/>: 
-                  	<c:out value="${sessionScope.accountAction.name}"/><c:if test="${(!empty sessionScope.clientName) or (sessionScope.BusinessKey.customer.customerLevel.id!=1)}">; <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
+                <td width="34%" class="fontnormal">
+                <mifos:mifoslabel name="savings.Last" bundle="SavingsUIResources" />
+                <c:out value="${sessionScope.accountAction.name}"/>
+                <mifos:mifoslabel name="savings.made" bundle="SavingsUIResources" />:
+                  <c:out value="${sessionScope.BusinessKey.lastPmnt.amount}"/></td>
+                </tr>
+              <tr>
+                <td class="fontnormal">
+                <mifos:mifoslabel name="savings.correct" bundle="SavingsUIResources" />
+                <c:out value="${sessionScope.accountAction.name}"/>
+                <mifos:mifoslabel name="Savings.amount" />:
+                   <c:if test="${param.method == 'load'}">
+						<mifos:mifosdecimalinput name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount" value=""/>
+					</c:if>
+					<c:if test="${param.method != 'load'}">
+						<mifos:mifosdecimalinput name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount"/>
+					</c:if>
+				   <c:if test="${sessionScope.isLastPaymentValid == 1}">
+                    &nbsp;( <c:if test="${(!empty sessionScope.clientName) or (sessionScope.BusinessKey.customer.customerLevel.id!=1)}"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
                   	<mifos:mifoslabel name="Savings.clientName"/>:</c:if>
                   	<c:choose>
 	              		<c:when test="${!empty sessionScope.clientName}">
@@ -103,24 +115,12 @@
                   	</c:otherwise>
                   </c:choose>)
                 </c:if>
-                </td>
-              </tr>
-             <%-- <tr>
-                <td class="fontnormal"><input type="radio" name="radiobutton" value="radiobutton">
-                  Adjust account balance</td>
-                <td class="fontnormal">Amount:
-                    <input name="textfield24103423222" type="text" >
-                </td>
-              </tr>
-              <tr>
-                <td class="fontnormal"><input type="radio" name="radiobutton" value="radiobutton">
-      Adjust interest earned</td>
-                <td class="fontnormal">Amount:
-                    <input name="textfield24103423223" type="text" >
-                </td>
-              </tr>--%>
+				</td>
+                </tr>
             </table>
             <br>
+           
+            
             <table width="93%" border="0" cellpadding="3" cellspacing="0">
               <tr>
                 <td width="5%" valign="top" class="fontnormal">

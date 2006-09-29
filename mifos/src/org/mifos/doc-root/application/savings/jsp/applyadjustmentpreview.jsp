@@ -89,14 +89,15 @@
                 </td>
               </tr>               
               <tr>
-                <td width="19%" align="right" valign="top" class="fontnormalbold">
-                <mifos:mifoslabel name="Savings.modifylastPayment"/>: <br>
+                <td width="29%" align="right" valign="top" class="fontnormalbold">
+                <mifos:mifoslabel name="savings.correct" bundle="SavingsUIResources" />
+                <c:out value="${sessionScope.accountAction.name}"/>
+                <mifos:mifoslabel name="Savings.amount"/>: <br>
                 </td>
                 <td width="81%" class="fontnormal">
                 <c:out value="${sessionScope.savingsApplyAdjustmentActionForm.lastPaymentAmount}"/>
                 <c:if test="${sessionScope.isLastPaymentValid == 1}">
-                &nbsp;  ( <mifos:mifoslabel name="Savings.paymentType"/>: 
-                  	<c:out value="${sessionScope.accountAction.name}"/><c:if test="${(!empty sessionScope.clientName) or (sessionScope.BusinessKey.customer.customerLevel.id!=1)}">; <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/> 
+                &nbsp;  ( <c:if test="${(!empty sessionScope.clientName) or (sessionScope.BusinessKey.customer.customerLevel.id!=1)}"> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/> 
                   	<mifos:mifoslabel name="Savings.clientName"/>:</c:if>
                   	<c:choose>
 	              		<c:when test="${!empty sessionScope.clientName}">
