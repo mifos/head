@@ -485,7 +485,7 @@ public class TestObjectFactory {
 		} catch (PropertyNotFoundException e) {
 			e.printStackTrace();
 		}
-		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
+		ProductCategoryBO productCategory = TestObjectFactory
 				.getLoanPrdCategory();
 		GracePeriodTypeEntity gracePeriodType = null;
 		try {

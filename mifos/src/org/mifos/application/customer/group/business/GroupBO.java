@@ -270,17 +270,20 @@ public class GroupBO extends CustomerBO {
 	}
 
 	@Override
-	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
+	protected boolean isActiveForFirstTime(Short oldStatus,
 			Short newStatusId) {
-		if ((oldStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue()) || oldStatus
+		return ((oldStatus.equals(CustomerStatus.GROUP_PARTIAL.getValue()) || oldStatus
 				.equals(CustomerStatus.GROUP_PENDING.getValue()))
-				&& newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue())) {
-			this.setCustomerActivationDate(new Date());
-			return true;
-		}
-		return false;
+				&& newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue()));
 	}
 
+	@Override
+	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
+		super.handleActiveForFirstTime(oldStatusId, newStatusId);
+		if (isActiveForFirstTime(oldStatusId, newStatusId))
+			this.setCustomerActivationDate(new Date());
+	}
+	
 	protected void validateFieldsForUpdate(String displayName,
 			Short loanOfficerId) throws CustomerException {
 		if (getCustomerStatus().getId().equals(

@@ -132,7 +132,7 @@ public class CenterBO extends CustomerBO {
 	}
 	
 	@Override
-	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
+	protected boolean isActiveForFirstTime(Short oldStatus,
 			Short newStatusId) {
 		return false;
 	}

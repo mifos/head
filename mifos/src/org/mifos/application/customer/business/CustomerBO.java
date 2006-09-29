@@ -206,7 +206,7 @@ public abstract class CustomerBO extends BusinessObject {
 			this.historicalData = null;
 			this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
 
-			this.addCustomerAccount(createCustomerAccount(fees));
+			this.addAccount(createCustomerAccount(fees));
 
 			this.setCreateDetails();
 		} catch (PersistenceException e) {
@@ -689,17 +689,22 @@ public abstract class CustomerBO extends BusinessObject {
 			if (customerStatusFlagEntity.isBlackListed())
 				blackListed = YesNoFlag.YES.getValue();
 		}
-		if (checkNewStatusIsFirstTimeActive(oldStatusId, newStatusId)) {
+		
+		handleActiveForFirstTime(oldStatusId, newStatusId);
+		this.update();
+		logger
+				.debug("In CustomerBO::changeStatus(), successfully changed status, newStatusId: "
+						+ newStatusId);
+	}
+
+	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
+		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
 			try {
 				this.getCustomerAccount().generateCustomerFeeSchedule();
 			} catch (AccountException ae) {
 				throw new CustomerException(ae);
 			}
-		}
-		this.update();
-		logger
-				.debug("In CustomerBO::changeStatus(), successfully changed status, newStatusId: "
-						+ newStatusId);
+		}		
 	}
 
 	public abstract void updateMeeting(MeetingBO meeting)
@@ -819,7 +824,7 @@ public abstract class CustomerBO extends BusinessObject {
 				: null;
 	}
 
-	protected abstract boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
+	protected abstract boolean isActiveForFirstTime(Short oldStatus,
 			Short newStatusId);
 
 	private boolean checkStatusChangeCancelToPartial(CustomerStatus oldStatus,
@@ -1030,8 +1035,8 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
-	private void addCustomerAccount(CustomerAccountBO customerAccount) {
-		this.accounts.add(customerAccount);
+	protected void addAccount(AccountBO account) {
+		this.accounts.add(account);
 	}
 
 	private void validateFields(String displayName,

@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
@@ -29,6 +32,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -161,6 +165,7 @@ public class ClientBO extends CustomerBO {
 		if (isActive()) {
 			validateFieldsForActiveClient(loanOfficerId, meeting);
 			this.setCustomerActivationDate(this.getCreatedDate());
+			createAccountsForClient();
 		}
 
 		if (parentCustomer != null)
@@ -327,7 +332,7 @@ public class ClientBO extends CustomerBO {
 				.debug("In ClientBO::changeStatus(), successfully changed status, newStatusId: "
 						+ newStatusId);
 	}
-
+	
 	@Override
 	public void updateMeeting(MeetingBO meeting) throws CustomerException {
 		if (getCustomerMeeting() == null)
@@ -358,17 +363,22 @@ public class ClientBO extends CustomerBO {
 	}
 
 	@Override
-	protected boolean checkNewStatusIsFirstTimeActive(Short oldStatus,
-			Short newStatusId) {
-		if ((oldStatus.equals(CustomerStatus.CLIENT_PARTIAL.getValue()) || oldStatus
+	protected boolean isActiveForFirstTime(Short oldStatus,
+			Short newStatusId){
+		return ((oldStatus.equals(CustomerStatus.CLIENT_PARTIAL.getValue()) || oldStatus
 				.equals(CustomerStatus.CLIENT_PENDING.getValue()))
-				&& newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
-			this.setCustomerActivationDate(new Date());
-			return true;
-		}
-		return false;
+				&& newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())); 
 	}
 
+	@Override
+	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{
+		super.handleActiveForFirstTime(oldStatusId, newStatusId);
+		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
+			this.setCustomerActivationDate(new Date());
+			createAccountsForClient();
+		}
+	}
+	
 	@Override
 	public void save() throws CustomerException {
 		super.save();
@@ -776,6 +786,22 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
+	private void createAccountsForClient() throws CustomerException {
+		if(offeringsAssociatedInCreate!=null){
+			for(ClientInitialSavingsOfferingEntity clientOffering: offeringsAssociatedInCreate){
+				try {
+					SavingsOfferingBO savingsOffering = new SavingsPrdPersistence().getSavingsProduct(clientOffering.getSavingsOffering().getPrdOfferingId());
+					if(savingsOffering.isActive())
+						addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACC_APPROVED,savingsOffering.getRecommendedAmount(), null));
+				} catch (PersistenceException pe) {
+					throw new CustomerException(pe);
+				} catch (AccountException pe) {
+					throw new CustomerException(pe);
+				}
+			}				
+		}
+	}
+	
 	private boolean isGroupStatusLower(Short clientStatusId, Short parentStatus) {
 		return isGroupStatusLower(CustomerStatus.getStatus(clientStatusId),
 				CustomerStatus.getStatus(parentStatus));

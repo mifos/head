@@ -242,6 +242,10 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 				+ getPrdOfferingName());
 	}
 
+	public boolean isActive(){
+		return getPrdStatus().getOfferingStatusId().equals(PrdStatus.SAVINGSACTIVE.getValue());
+	}
+	
 	public void update(Short userId, String prdOfferingName,
 			String prdOfferingShortName, ProductCategoryBO prdCategory,
 			PrdApplicableMasterEntity prdApplicableMaster, Date startDate,
