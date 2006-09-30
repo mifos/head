@@ -1213,7 +1213,7 @@ public class TestObjectFactory {
 		}
 	}
 
-	private static void deleteClientAttendence(CustomerBO customer) {
+	public static void deleteClientAttendence(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		if (customer instanceof ClientBO) {
 			Set<ClientAttendanceBO> attendance = ((ClientBO) customer)
@@ -1980,4 +1980,6 @@ public class TestObjectFactory {
 		HibernateUtil.commitTransaction();
 		return fundBO;
 	}
+    
+   
 }

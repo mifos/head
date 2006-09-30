@@ -59,6 +59,9 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -67,6 +70,9 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class BulkEntryActionForm extends ActionForm {
+    
+    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
+    
 
 	private static final long serialVersionUID = 1L;
 
@@ -142,6 +148,7 @@ public class BulkEntryActionForm extends ActionForm {
 
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
+        logger.debug("BulkEntryActionForm.reset");
 		if (request.getParameter(BulkEntryConstants.METHOD).equalsIgnoreCase(
 				BulkEntryConstants.PREVIEWMETHOD)) {
 			request.setAttribute(Constants.CURRENTFLOWKEY, request
@@ -219,6 +226,7 @@ public class BulkEntryActionForm extends ActionForm {
 	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
+        logger.debug("BulkEntryActionForm.validate");
 		request.setAttribute(Constants.CURRENTFLOWKEY, request
 				.getParameter(Constants.CURRENTFLOWKEY));
 		ActionErrors errors = new ActionErrors();
@@ -263,6 +271,7 @@ public class BulkEntryActionForm extends ActionForm {
 
 	private ActionErrors validatePopulatedData(BulkEntryView parent,
 			ActionErrors errors) {
+        logger.debug("validatePopulatedData");
 		List<BulkEntryView> children = parent.getBulkEntryChildren();
 		if (null != children) {
 			for (BulkEntryView bulkEntryView : children) {

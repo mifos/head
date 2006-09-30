@@ -78,6 +78,9 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
@@ -90,6 +93,9 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 public class BulkEntryAction extends BaseAction {
 
 	private MasterDataService masterService;
+    
+    private static MifosLogger logger = 
+    	MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
 	public BulkEntryAction() {
 		masterService = (MasterDataService) ServiceFactory.getInstance()
@@ -344,7 +350,8 @@ public class BulkEntryAction extends BaseAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		BulkEntryBusinessService bulkEntryService = new BulkEntryBusinessService();
+		logger.debug("create ");
+        BulkEntryBusinessService bulkEntryService = new BulkEntryBusinessService();
 		List<String> loanAccountNums = new ArrayList<String>();
 		List<String> savingsDepositAccountNums = new ArrayList<String>();
 		List<String> savingsWithdrawalsAccountNums = new ArrayList<String>();
@@ -355,8 +362,14 @@ public class BulkEntryAction extends BaseAction {
 		UserContext userContext = getUserContext(request);
 		BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(
 				BulkEntryConstants.BULKENTRY, request);
-		Date meetingDate = (Date) SessionUtils.getAttribute("LastMeetingDate",
-				request);
+        
+        logger.debug("transactionDate " +((BulkEntryActionForm)form).getTransactionDate());
+        
+		//Date meetingDate = DateHelper.getSQLDate(DateHelper.convertUserToDbFmt( ((BulkEntryActionForm)form).getTransactionDate(),  "dd/MM/yyyy"));//(Date) SessionUtils.getAttribute("LastMeetingDate",
+        //Date meetingDate = DateHelper.getSQLDate(((BulkEntryActionForm)form).getTransactionDate());//(Date) SessionUtils.getAttribute("LastMeetingDate",
+       
+        Date meetingDate = Date.valueOf(DateHelper.convertUserToDbFmt( ((BulkEntryActionForm)form).getTransactionDate(),  "dd/MM/yyyy"));
+            
 		Short personnelId = userContext.getId();
 		saveData(bulkEntry, personnelId, meetingDate, loanAccountNums,
 				savingsDepositAccountNums, savingsWithdrawalsAccountNums,
@@ -387,6 +400,7 @@ public class BulkEntryAction extends BaseAction {
 			List<String> savingsWithdrawalsAccountNums,
 			List<String> customerAccountNums,
 			BulkEntryBusinessService bulkEntryBusinessService) {
+        logger.debug("saveDate");
 		BulkEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
 		String receiptId = bulkEntry.getReceiptId();
 		Short paymentId = bulkEntry.getPaymentType().getPaymentTypeId();
@@ -582,8 +596,9 @@ public class BulkEntryAction extends BaseAction {
 
 	private void saveAttendance(BulkEntryView bulkEntryView, Date meetingDate,
 			BulkEntryBusinessService bulkEntryBusinessService) {
-		try {
-			Short attendance = Short.valueOf(bulkEntryView.getAttendence());
+		logger.debug("save Attendance " + bulkEntryView.getAttendence());
+        try {
+			Short attendance = bulkEntryView.getAttendence();
 			bulkEntryBusinessService.saveAttendance(bulkEntryView
 					.getCustomerDetail().getCustomerId(), meetingDate,
 					attendance);

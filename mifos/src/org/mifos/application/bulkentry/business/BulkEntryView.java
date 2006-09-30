@@ -60,6 +60,9 @@ import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUni
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.business.View;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.Money;
 
 public class BulkEntryView extends View {
@@ -76,9 +79,11 @@ public class BulkEntryView extends View {
 
 	private CustomerAccountView customerAccountDetails;
 
-	private String attendence;
+	private Short attendence;
 
 	private MifosCurrency currency;
+    
+    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
 	public BulkEntryView(CustomerView customerDetail) {
 		this.customerDetail = customerDetail;
@@ -127,11 +132,11 @@ public class BulkEntryView extends View {
 		this.savingsAccountDetails.add(savingsAccount);
 	}
 
-	public String getAttendence() {
+	public Short getAttendence() {
 		return attendence;
 	}
 
-	public void setAttendence(String attendence) {
+	public void setAttendence(Short attendence) {
 		this.attendence = attendence;
 	}
 
@@ -371,7 +376,23 @@ public class BulkEntryView extends View {
 			}
 		}
 	}
-
+    public void populateClientAttendance(Integer customerId,
+            Date transactionDate,
+            List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceViews) {
+        if (customerDetail.isCustomerCenter())
+            return;
+        for (BulkEntryClientAttendanceView clientAttendanceView : bulkEntryClientAttendanceViews) {
+            logger.debug("populateClientAttendance");
+            logger.debug("clientAttendanceView.getCustomerId() " +clientAttendanceView.getCustomerId());
+            logger.debug("customerId " + customerId);
+            logger.debug("customerDetail.getCustomerId() " + customerDetail.getCustomerId());
+            if (clientAttendanceView.getCustomerId().compareTo(customerId)== 0) {
+                setAttendence(clientAttendanceView.getAttendance());
+            }
+        }
+    }
+   
+   
 	private void addAccountActionToSavingsView(
 			SavingsAccountView savingsAccountView, Integer customerId,
 			Date transactionDate,

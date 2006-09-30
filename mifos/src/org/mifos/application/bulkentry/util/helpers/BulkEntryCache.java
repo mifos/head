@@ -43,6 +43,7 @@ import java.util.Map;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
 
 public class BulkEntryCache {
 
@@ -52,6 +53,7 @@ public class BulkEntryCache {
 
 	private Map<Short, PersonnelBO> personnels = new HashMap<Short, PersonnelBO>();
 
+    private Map<Integer, ClientAttendanceBO> clientAttendances = new HashMap<Integer, ClientAttendanceBO>();
 	public boolean isPersonnelPresent(Short personnelId) {
 		return personnels.containsKey(personnelId);
 	}
@@ -63,6 +65,10 @@ public class BulkEntryCache {
 	public boolean isCustomerPresent(Integer customerId) {
 		return customers.containsKey(customerId);
 	}
+    
+    public boolean isClientAttendancePresent(Integer customerId) {
+        return clientAttendances.containsKey(customerId);
+    }
 
 	public PersonnelBO getPersonnel(Short personnelId) {
 		return personnels.get(personnelId);
@@ -75,6 +81,9 @@ public class BulkEntryCache {
 	public CustomerBO getCustomer(Integer customerId) {
 		return customers.get(customerId);
 	}
+    public ClientAttendanceBO getClientAttendance(Integer customerId) {
+        return clientAttendances.get(customerId);
+    }
 
 	public void addPersonnel(Short personnelId, PersonnelBO personnel) {
 		personnels.put(personnelId, personnel);
@@ -87,5 +96,8 @@ public class BulkEntryCache {
 	public void addCustomer(Integer customerId, CustomerBO customer) {
 		customers.put(customerId, customer);
 	}
+    public void addClientAttendance(Integer customerId, ClientAttendanceBO clientAttendance) {
+        clientAttendances.put(customerId, clientAttendance);
+    }
 
 }

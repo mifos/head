@@ -61,6 +61,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
 
 public class BulkEntryPersistanceService extends PersistenceService {
 
@@ -79,7 +80,13 @@ public class BulkEntryPersistanceService extends PersistenceService {
 			AccountTypes accountType) throws PersistenceException {
 		return new BulkEntryPersistance().getBulkEntryFeeActionView(
 				meetingDate, searchString, officeId, accountType);
+	}
 
+	public List<BulkEntryClientAttendanceView> 
+	    getBulkEntryClientAttendanceActionView(Date meetingDate, Short officeId) 
+	throws PersistenceException {
+		return new BulkEntryPersistance().getBulkEntryClientAttendanceActionView(
+			meetingDate, officeId);
 	}
 
 	public AccountBO getCustomerAccountWithAccountActionsInitialized(

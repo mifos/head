@@ -53,6 +53,9 @@ import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
@@ -80,6 +83,8 @@ public class BulkEntryBO extends BusinessObject {
 	private List<PrdOfferingBO> savingsProducts;
 
 	private int totalCustomers;
+    
+    private static MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
 
 	public BulkEntryBO() {
 		super();
@@ -203,13 +208,22 @@ public class BulkEntryBO extends BusinessObject {
 				.getBulkEntryFeeActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
 						AccountTypes.CUSTOMERACCOUNT);
+        List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceViews = bulkEntryPersistanceService
+                .getBulkEntryClientAttendanceActionView(
+                        transactionDate, office.getOfficeId() );
+        
+        logger.debug("bulkEntryClientAttendanceViews" + bulkEntryClientAttendanceViews.size());
+        
 		totalCustomers = allChildNodes.size();
 		bulkEntryParent = BulkEntryNodeBuilder.buildBulkEntry(allChildNodes,
 				parentCustomer, transactionDate, bulkEntryLoanScheduleViews,
 				bulkEntryCustomerScheduleViews, bulkEntryLoanFeeScheduleViews,
-				bulkEntryCustomerFeeScheduleViews);
+				bulkEntryCustomerFeeScheduleViews,
+                bulkEntryClientAttendanceViews); //adde  
 		BulkEntryNodeBuilder.buildBulkEntrySavingsAccounts(bulkEntryParent,
 				transactionDate, bulkEntrySavingsScheduleViews);
+        BulkEntryNodeBuilder.buildBulkEntryClientAttendance(bulkEntryParent,
+               transactionDate, bulkEntryClientAttendanceViews);
 	}
 
 	private List<CustomerBO> retrieveActiveCustomersUnderParent(
@@ -336,8 +350,8 @@ public class BulkEntryBO extends BusinessObject {
 
 	private void setClientAttendance(BulkEntryView bulkEntryView,
 			String attendance) {
-		if (null != attendance) {
-			bulkEntryView.setAttendence(attendance);
+		if (null != attendance && attendance.length() > 0) {
+			bulkEntryView.setAttendence(Short.valueOf(attendance));
 		}
 	}
 

@@ -1,5 +1,6 @@
 package org.mifos.application.bulkentry.business;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,10 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
@@ -38,20 +43,27 @@ public class TestBulkEntryView extends MifosTestCase {
 	private LoanBO account2;
 
 	private LoanOfferingBO loanOffering;
+    
+    private ClientBO client;
+    
+    private CustomerPersistence customerPersistence;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+        customerPersistence = new CustomerPersistence();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUpWithoutDeletetingProduct(account1);
 		TestObjectFactory.cleanUpWithoutDeletetingProduct(account2);
+		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		TestObjectFactory.removeObject(loanOffering);
 		HibernateUtil.closeSession();
+		customerPersistence = null;
 		super.tearDown();
 	}
 
@@ -82,7 +94,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		bulkEntry.setPaymentType(getPaymentTypeView());
 		bulkEntry.setTransactionDate(new java.sql.Date(System
 				.currentTimeMillis()));
-		CustomerView parentCustomer = getCusomerView(center);
+		CustomerView parentCustomer = getCustomerView(center);
 		bulkEntry.buildBulkEntryView(parentCustomer);
 
 		BulkEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
@@ -135,7 +147,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		bulkEntry.setPaymentType(getPaymentTypeView());
 		bulkEntry.setTransactionDate(new java.sql.Date(System
 				.currentTimeMillis()));
-		CustomerView parentCustomer = getCusomerView(center);
+		CustomerView parentCustomer = getCustomerView(center);
 		bulkEntry.buildBulkEntryView(parentCustomer);
 
 		BulkEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
@@ -189,7 +201,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		bulkEntry.setPaymentType(getPaymentTypeView());
 		bulkEntry.setTransactionDate(new java.sql.Date(System
 				.currentTimeMillis()));
-		CustomerView parentCustomer = getCusomerView(center);
+		CustomerView parentCustomer = getCustomerView(center);
 		bulkEntry.buildBulkEntryView(parentCustomer);
 
 		BulkEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
@@ -230,7 +242,7 @@ public class TestBulkEntryView extends MifosTestCase {
 						center.getSearchId(), center.getOffice().getOfficeId(),
 						AccountTypes.CUSTOMERACCOUNT);
 		assertNotNull(center.getCustomerAccount());
-		BulkEntryView bulkEntryView = new BulkEntryView(getCusomerView(center));
+		BulkEntryView bulkEntryView = new BulkEntryView(getCustomerView(center));
 		bulkEntryView.populateCustomerAccountInformation(center,
 				bulkEntryAccountActionViews, bulkEntryAccountFeeActionViews);
 		CustomerAccountView customerAccountView = bulkEntryView
@@ -245,6 +257,64 @@ public class TestBulkEntryView extends MifosTestCase {
 				.getTotalAmountDue().getAmountDoubleValue(), 100.0);
 	}
 
+    public void testPopulateAttendance() 
+    throws SystemException, ApplicationException{
+        BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+                    .getMeetingHelper(1, 1, 4, 2));
+        center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
+                "1.1", meeting, new Date(System.currentTimeMillis()));
+        group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
+                "1.1.1", center, new Date(System.currentTimeMillis()));
+        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE.getValue(),
+                "1.1.1.1", group, new Date(System.currentTimeMillis()));
+         
+        java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
+         
+        java.sql.Date sqlMeetingDate = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
+         
+        ClientAttendanceBO clientAttendance = new ClientAttendanceBO();
+        clientAttendance.setAttendance(new Short("2"));
+        clientAttendance.setMeetingDate(meetingDate);
+        client.addClientAttendance(clientAttendance );
+        customerPersistence.createOrUpdate(client);
+        HibernateUtil.commitTransaction();
+        HibernateUtil.closeSession();
+         
+        List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceView = bulkEntryPersistanceService
+            .getBulkEntryClientAttendanceActionView(meetingDate, center.getOffice().getOfficeId() );
+         
+        BulkEntryView bulkEntryView = new BulkEntryView(getCustomerView(client));
+        bulkEntryView.populateClientAttendance(client.getCustomerId(), sqlMeetingDate, bulkEntryClientAttendanceView);
+         
+        assertEquals(
+                "Attendance was set",
+                    clientAttendance.getAttendance().toString(), bulkEntryView.getAttendence().toString());
+             
+        BulkEntryBO bulkEntry = new BulkEntryBO();
+        bulkEntry.setOffice(getOfficeView(center.getOffice()));
+        bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
+        bulkEntry.setPaymentType(getPaymentTypeView());
+        bulkEntry.setTransactionDate(new java.sql.Date(System
+                .currentTimeMillis()));
+        CustomerView parentCustomer = getCustomerView(center);
+        bulkEntry.buildBulkEntryView(parentCustomer);
+
+        BulkEntryView parentBulkEntryView = bulkEntry.getBulkEntryParent();
+        BulkEntryView groupBulkEntryView = parentBulkEntryView
+                .getBulkEntryChildren().get(0);  
+        BulkEntryView clientBulkEntryView = 
+        	groupBulkEntryView.getBulkEntryChildren().get(0); 
+             
+        //System.out.println(clientBulkEntryView.getAttendence());
+         
+        assertEquals(
+             "Testing BulkEntryBO.buildBulkEntryView",
+             clientAttendance.getAttendance().toString(), clientBulkEntryView.getAttendence().toString());
+         
+         HibernateUtil.closeSession();
+     }
+	     
 	private PersonnelView getPersonnelView(PersonnelBO personnel) {
 		PersonnelView personnelView = new PersonnelView(personnel
 				.getPersonnelId(), personnel.getDisplayName());
@@ -264,7 +334,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		return officeView;
 	}
 
-	private CustomerView getCusomerView(CustomerBO customer) {
+	private CustomerView getCustomerView(CustomerBO customer) {
 		CustomerView customerView = new CustomerView();
 		customerView.setCustomerId(customer.getCustomerId());
 		customerView.setCustomerLevelId(customer.getCustomerLevel().getId());

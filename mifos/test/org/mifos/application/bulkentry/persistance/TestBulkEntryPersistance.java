@@ -11,13 +11,18 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
+import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -32,16 +37,26 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	private CustomerBO client;
 
 	private AccountBO account;
+    
+    private ClientAttendanceBO clientAttendance;
+    
+    private BulkEntryPersistance bulkEntryPersistance;
+    
+    private CustomerPersistence customerPersistence;
+    
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		accountPersistence = new AccountPersistence();
+        bulkEntryPersistance = new BulkEntryPersistance();  
+        customerPersistence = new CustomerPersistence();  
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(account);
+        //TestObjectFactory.deleteClientAttendence(client);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
@@ -68,8 +83,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
-		account = (LoanBO) accountPersistence
-				.getAccount(account.getAccountId());
+		account = accountPersistence.getAccount(account.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
 	}
@@ -92,8 +106,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
-		account = (LoanBO) accountPersistence
-				.getAccount(account.getAccountId());
+		account = accountPersistence.getAccount(account.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
 
@@ -134,8 +147,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
-		account = (LoanBO) accountPersistence
-				.getAccount(account.getAccountId());
+		account = accountPersistence.getAccount(account.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
 
@@ -171,8 +183,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
-		account = (LoanBO) accountPersistence
-				.getAccount(account.getAccountId());
+		account = accountPersistence.getAccount(account.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");
 		for (AccountActionDateEntity actionDate : account
@@ -199,4 +210,42 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		}
 		
 	}
+       
+    public void testGetBulkEntryClientAttendanceActionView() throws PersistenceException{
+        
+        createInitialObjects();
+        java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
+        
+        clientAttendance = new ClientAttendanceBO();
+        clientAttendance.setAttendance(new Short("1"));
+        clientAttendance.setMeetingDate(meetingDate);
+        ((ClientBO)client).addClientAttendance(clientAttendance );
+        customerPersistence.createOrUpdate(client);
+        HibernateUtil.commitTransaction();
+        HibernateUtil.closeSession();
+        
+        List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceView = 
+            bulkEntryPersistance.getBulkEntryClientAttendanceActionView(
+                meetingDate, client.getOffice().getOfficeId());    
+        
+        assertEquals(bulkEntryClientAttendanceView.size(),1);
+        
+    }
+    
+    private void createInitialObjects() {
+        
+            MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+        
+                .getMeetingHelper(1, 1, 4, 2));
+            center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
+                    "1.1", meeting, new Date(System.currentTimeMillis()));
+            group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
+                    "1.1.1", center, new Date(System.currentTimeMillis()));
+            client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE.getValue(),
+                    "1.1.1.1", group, new Date(System.currentTimeMillis()));
+                        
+            HibernateUtil.closeSession();
+        
+        
+    }
 }

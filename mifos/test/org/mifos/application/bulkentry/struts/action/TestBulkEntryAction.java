@@ -64,6 +64,7 @@ import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.PaymentTypeView;
@@ -102,7 +103,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	CustomerBO group;
 
-	CustomerBO client;
+	ClientBO client;
 
 	AccountBO account;
 
@@ -179,7 +180,21 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "create");
+        
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        
+        Calendar meetinDateCalendar = new GregorianCalendar();
+        //meetinDateCalendar.setTime(getMeetingDates(meeting));
+        int year = meetinDateCalendar.get(Calendar.YEAR);
+        int month = meetinDateCalendar.get(Calendar.MONTH);
+        int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
+        meetinDateCalendar = new GregorianCalendar(year, month, day);
+        //SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
+        //        meetinDateCalendar.getTimeInMillis()), request);
+        addRequestParameter("attendenceSelected[0]", "2");
+        addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+                + year);
+        
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -193,8 +208,23 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				center.getCustomerId());
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
 				client.getCustomerId());
+        
+        
+        assertEquals(client.getClientAttendances().size(), 1);
+        
+        // TODO: This should be replaced by asserts, it would seem
+//        for (ClientAttendanceBO attendance: client.getClientAttendances()){
+//            System.out.println("$$$ "+ attendance.getMeetingDate());
+//            System.out.println("$$$ " +attendance.getAttendance());
+//        }
+        
+        assertEquals(
+        	"2",
+            client.getClientAttendanceForMeeting(
+            	new java.sql.Date(meetinDateCalendar.getTimeInMillis()))
+            	    .getAttendance().toString());
 
 	}
 
@@ -206,6 +236,18 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        
+        Calendar meetinDateCalendar = new GregorianCalendar();
+        //meetinDateCalendar.setTime(getMeetingDates(meeting));
+        int year = meetinDateCalendar.get(Calendar.YEAR);
+        int month = meetinDateCalendar.get(Calendar.MONTH);
+        int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
+        meetinDateCalendar = new GregorianCalendar(year, month, day);
+        //SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
+        //        meetinDateCalendar.getTimeInMillis()), request);
+        addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+                + year);
+        
 		actionPerform();
 		
 
@@ -217,7 +259,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				center.getCustomerId());
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
 				client.getCustomerId());
 		
 		verifyActionErrors(new String[] { "errors.update" });
@@ -240,6 +282,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("depositAmountEntered[2][2]", "100.0");
 		addRequestParameter("withDrawalAmountEntered[0][0]", "100.0");
 		addRequestParameter("depositAmountEntered[0][0]", "100.0");
+        //addRequestParameter("transactionDate", "preview"); //transaction date
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -544,6 +587,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
 				client, Short.valueOf("16"), new Date(System
 						.currentTimeMillis()), savingsOffering1);
+        
+        //java.sql.Date transactionDate = new Date(System.currentTimeMillis());
+        
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 
 		BulkEntryView bulkEntryParent = new BulkEntryView(
@@ -561,7 +607,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				getCusomerView(client));
 		LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
 		bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);
-		bulkEntrySubChild.setAttendence("1");
+		bulkEntrySubChild.setAttendence(new Short("2"));
 		bulkEntrySubChild
 				.addSavingsAccountDetail(getSavingsAccountView(clientSavingsAccount));
 		bulkEntrySubChild
@@ -637,7 +683,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		BulkEntryView bulkEntrySubChild = new BulkEntryView(
 				getCusomerView(client));
 		bulkEntrySubChild.addLoanAccountDetails(loanAccountView);
-		bulkEntrySubChild.setAttendence("1");
+		bulkEntrySubChild.setAttendence(new Short("2"));
 		bulkEntrySubChild
 				.setCustomerAccountDetails(getCustomerAccountView(group));
 		bulkEntryChild.addChildNode(bulkEntrySubChild);
@@ -797,5 +843,43 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		}
 		return locale;
 	}
-
+    
+    /*
+    public void testSetClientAttendance() throws PageExpiredException{
+        BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+        SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+                request);
+        setRequestPathInfo("/bulkentryaction.do");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        addRequestParameter("method", "create");
+        addRequestParameter("attendenceSelected[0]", "1");
+        addRequestParameter("enteredAmount[0][0]", "212.0");
+        addRequestParameter("enteredAmount[1][1]", "212.0");
+        addRequestParameter("enteredAmount[0][1]", "212.0");
+        addRequestParameter("enteredAmount[1][0]", "212.0");
+        addRequestParameter("withDrawalAmountEntered[2][2]", "100.0");
+        addRequestParameter("depositAmountEntered[2][2]", "100.0");
+        addRequestParameter("withDrawalAmountEntered[0][0]", "100.0");
+        addRequestParameter("depositAmountEntered[0][0]", "100.0");
+        
+        Calendar meetinDateCalendar = new GregorianCalendar();
+        //meetinDateCalendar.setTime(getMeetingDates(meeting));
+        int year = meetinDateCalendar.get(Calendar.YEAR);
+        int month = meetinDateCalendar.get(Calendar.MONTH);
+        int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
+        meetinDateCalendar = new GregorianCalendar(year, month, day);
+        //SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
+        //        meetinDateCalendar.getTimeInMillis()), request);
+        addRequestParameter("transactionDate", (month + 1) + "/" + day + "/"
+                + year);
+        
+        actionPerform();
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward("create_success");
+        
+       
+    }
+    */
 }

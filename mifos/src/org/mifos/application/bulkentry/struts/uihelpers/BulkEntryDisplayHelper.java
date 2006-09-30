@@ -411,9 +411,14 @@ public class BulkEntryDisplayHelper {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendenceSelected[" + rows
 					+ "]\"  style=\"width:40px;\" class=\"fontnormal8pt\">");
+            builder.append("<option value= \"\"></option>)");
 			for (LookUpMaster attendence : custAttTypes) {
-				builder.append("<option value=\"" + attendence.getId() + "\">"
-						+ attendence.getLookUpValue() + "</option>");
+				builder.append("<option value=\"" + attendence.getId() + "\"");
+                if (bulkEntryView.getAttendence() != null && (attendence.getId().intValue()== bulkEntryView.getAttendence().intValue()))
+                {
+                    builder.append(" selected=\"selected\"");
+                }
+                builder.append( ">" 	+ attendence.getLookUpValue() + "</option>");
 			}
 			builder.append("</select>");
 			builder.append("</td>");
@@ -424,7 +429,7 @@ public class BulkEntryDisplayHelper {
 				if (null != bulkEntryView.getAttendence()
 						&& attendence.getId().equals(
 								Integer.valueOf(bulkEntryView.getAttendence()))) {
-					if (!bulkEntryView.getAttendence().equals("1")) {
+					if (!bulkEntryView.getAttendence().toString().equals("1")) {
 						builder.append("<font color=\"#FF0000\">"
 								+ attendence.getLookUpValue() + "</font>");
 					} else {

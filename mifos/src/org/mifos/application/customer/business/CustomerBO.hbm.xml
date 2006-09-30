@@ -200,7 +200,18 @@
     </query>					  
 	<query name="Customer.getClientBasedOnNameAndDateOfBirth">
 	    <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientBO as client where (client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and :customerId = 0) or (:customerId != 0 and client.displayName = :clientName and client.customerLevel.id =:LEVELID and client.dateOfBirth =:DATE_OFBIRTH and client.customerId !=:customerId)]]>
-    </query>
+  </query>
+    <query name="Customer.getAttedanceForOffice">
+	    <![CDATA[select new org.mifos.application.bulkentry.business. BulkEntryClientAttendanceView( client.customerId,
+			clientAttendance.attendance, clientAttendance.meetingDate)   
+			from org.mifos.application.customer.client.business.ClientBO client,
+			org.mifos.application.customer.client.business.ClientAttendanceBO clientAttendance
+			where 
+			client.customerId = clientAttendance.customer.customerId
+			and client.office.officeId = :OFFICE_ID
+			and clientAttendance.meetingDate = :MEETING_DATE	]]>
+    </query>				      	  
+  
     
     <query name="Customer.getLOForCustomer">
 	    <![CDATA[select customer.personnel.personnelId from org.mifos.application.customer.business.CustomerBO as customer where customer.customerId =:CUSTOMER_ID)]]>
