@@ -21,16 +21,25 @@
 		              <span class="fontnormal">
 		              	<mifos:mifoslabel name="reports.instructions" bundle="reportsUIResources"/>   
 		              	<mifos:mifoslabel name="reports.or" bundle="reportsUIResources"/> 
-		              	<html-el:link action="reportsAction.do?method=getReportPage&viewPath=administerreports_path">  
+		              	<html-el:link action="reportsAction.do?method=getAdminReportPage&viewPath=administerreports_path">  
 		              	<mifos:mifoslabel name="reports.administerreports" bundle="reportsUIResources"/>          			               		              	
-		              	</html-el:link> 
-		              	<font class="fontnormalRedBold">	
-		              	<br><br>              		
-						<html-el:errors	bundle="reportsUIResources" /> 
-						</font>        			               		              			              	
+		              	</html-el:link>         			               		              	
+						
+
+
 			          </span>         
-		            </td>	
-		            </tr>	            	   					
+
+		            </td>		            
+		          </tr>	          
+		          
+		          <tr width="100%">
+					<td align="left" valign="top">												
+						<font class="fontnormalRedBold">
+							<html-el:errors	bundle="reportsUIResources" /> 
+						</font>						
+					</td>
+					</tr>
+		          
             	  <c:forEach var="reportCategory" items="${sessionScope.listOfReports}" varStatus="loop" begin='0'>			            	  			            	  	
             	  	<c:choose>		            	  	
 					  	<c:when test="${loop.index %2 == 0}">							  		
@@ -48,16 +57,14 @@
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 					                  <td width="97%">
 					                  	<c:choose>
-					                  	<c:when test="${report.reportIdentifier != null}">
-						                  <a href="reportsAction.do?method=getReportPage&viewPath=${report.reportIdentifier}">
+					                  	<c:when test="${report.reportsJasperMap.reportJasper != null}">
+						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}">
 						                  	<c:out value="${report.reportName}"/>
 						                  </a>
 					                    </c:when>
 					                    <c:otherwise>
-					                      <a href="#">
-						                  	<c:out value="${report.reportName}"/>
-						                  </a>
-					                    </c:otherwise>
+					                      	<c:out value="${report.reportName}"/>
+						                  </c:otherwise>
 					                    </c:choose>
 					                  </td>
 					                </tr>
@@ -81,16 +88,14 @@
 					                  <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 					                  <td width="97%">
 						                <c:choose>
-					                  	<c:when test="${report.reportIdentifier != null}">
-						                  <a href="reportsAction.do?method=getReportPage&viewPath=${report.reportIdentifier}">
+					                  	<c:when test="${report.reportsJasperMap.reportJasper != null}">
+						                  <a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}">
 						                  	<c:out value="${report.reportName}"/>
 						                  </a>
 					                    </c:when>
 					                    <c:otherwise>
-					                      <a href="#">
-						                  	<c:out value="${report.reportName}"/>
-						                  </a>
-					                    </c:otherwise>
+					                      	<c:out value="${report.reportName}"/>
+						                  </c:otherwise>
 					                    </c:choose>
 					                  </td>
 					                </tr>

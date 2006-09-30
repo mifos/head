@@ -122,6 +122,22 @@
 		<!-- Customer Account Action form -->
 		<form-bean name="customerAccountActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerAccountActionForm"></form-bean>
 		
+		<!-- ADDED BY MFTECH -->
+		<form-bean name="reportsParamsActionForm"
+				type="org.mifos.application.reports.struts.actionforms.ReportsParamsActionForm" />
+
+		<form-bean name="reportsUserParamsActionForm"
+				type="org.mifos.application.reports.struts.actionforms.ReportsUserParamsActionForm" />
+
+		<form-bean name="reportsDataSourceActionForm"
+				type="org.mifos.application.reports.struts.actionforms.ReportsDataSourceActionForm" />
+		<form-bean name="reportsParamsMapActionForm"
+				type="org.mifos.application.reports.struts.actionforms.ReportsParamsMapActionForm" />
+		<form-bean name="reportsUploadActionForm"
+				type="org.mifos.application.reports.struts.actionforms.ReportsUploadActionForm" />
+
+<!-- ENDED BY MFTECH -->
+		
 	</form-beans>
 
 	<global-exceptions>
@@ -797,9 +813,86 @@
 			<forward name="branchwise_report" path="/reportsAction.do?method=load" />
 			<forward name="analysis" path="/reportsAction.do?method=load" />
 			<forward name="kendra_meeting" path="/reportsAction.do?method=load" />
-			<forward name="administerreports_path" path="/reportsAction.do?method=load" />
+			<!-- ADDED BY MFTECH -->
+			<forward name="administerreports_path" path="/pages/application/reports/jsp/report_designer.jsp" />
+			<forward name="administerreportslist_path" path="/reportsAction.do?method=getAdminReportPage" />
+			<!-- ENDED BY MFTECH -->
 		</action>
 		<!--  Reports Action End -->
+		<!-- ADDED BY MFTECH -->
+
+		
+		<!--  Reports Params Action -->
+		<action path="/reportsParamsAction"
+			type="org.mifos.application.reports.struts.action.ReportsParamsAction"
+			name="reportsParamsActionForm" parameter="method" scope="session"
+			input="/reportsParamsAction.do?method=validate"
+			validate="false">
+			<forward name="reportparamslist_path" path="/pages/application/reports/jsp/report_designer_params_list.jsp" />
+<forward name="reportparams_path"
+				path="/reportsParamsAction.do?method=loadList" />
+			
+<forward name="reportparamsadd_path" path="/pages/application/reports/jsp/report_designer_params_add.jsp" />
+<forward name="reportparamsview_path" path="/pages/application/reports/jsp/report_designer_params_view.jsp" />
+
+		</action>		
+		<!--  Reports Params Action End -->
+
+		
+<!--  Reports DataSource Action -->
+		<action path="/reportsDataSourceAction"
+			type="org.mifos.application.reports.struts.action.ReportsDataSourceAction"
+			name="reportsDataSourceActionForm" parameter="method" scope="session"
+			input="/reportsDataSourceAction.do?method=validate"
+			validate="false">
+			<forward name="reportdatasourcelist_path" path="/pages/application/reports/jsp/report_designer_datasource_list.jsp" />
+<forward name="reportdatasource_path"
+				path="/reportsDataSourceAction.do?method=loadList" />
+<forward name="reportdatasourceadd_path" path="/pages/application/reports/jsp/report_designer_datasource_add.jsp" />
+<forward name="reportdatasourceview_path" path="/pages/application/reports/jsp/report_designer_datasource_view.jsp" />
+
+
+		</action>		
+		<!--  Reports DataSource Action End -->
+
+<!--  Reports Params Map Action -->
+		<action path="/reportsParamsMapAction"
+			type="org.mifos.application.reports.struts.action.ReportsParamsMapAction"
+			name="reportsParamsMapActionForm" parameter="method" scope="session"
+			input="/reportsParamsMapAction.do?method=validate"
+			validate="false">
+			<forward name="reportparamsmapaddlist_path" path="/pages/application/reports/jsp/report_designer_paramsmap_listadd.jsp" />
+			<forward name="reportparamsmap_path"
+				path="/reportsParamsMapAction.do?method=loadAddList" />
+		</action>		
+		<!--  Reports Params Map Action End -->
+
+<!--  ReportsUploadAction -->
+		<action path="/reportsUploadAction"
+			type="org.mifos.application.reports.struts.action.ReportsUploadAction"
+			name="reportsUploadActionForm" parameter="method" scope="session"
+			input="/reportsUploadAction.do?method=validate"
+			validate="false">
+			<forward name="administerreports_path" path="/pages/application/reports/jsp/report_designer.jsp" />
+
+		</action>		
+		<!--  Reports Upload Action End -->
+
+
+<!--ReportsUserParamsAction-->
+<action path="/reportsUserParamsAction"
+			type="org.mifos.application.reports.struts.action.ReportsUserParamsAction"
+			name="reportsUserParamsActionForm" parameter="method" scope="session"
+			input="/reportsUserParamsAction.do?method=validate"
+			validate="false">
+	
+		<forward name="reportuserparamslist_path" path="/pages/application/reports/jsp/report_user_params.jsp" />
+<forward name="reportsuserprocess_path" path="/pages/application/reports/jsp/reportsView.jsp" />
+		</action>		
+		<!--  Reports UserParams Action End -->
+
+<!-- ENDED BY MFTECH -->
+
 		<!-- LoanActivity Action -->
 		<action path="/loanActivityAction" type="org.mifos.application.accounts.loan.struts.action.LoanActivityAction" name="loanActivityActionForm" parameter="method" validate="true" input="/loanActivityAction.do?method=validate" scope="session">
 			<forward name="getAllActivity_success" path="/pages/application/loan/jsp/viewloanaccountactivity.jsp" />

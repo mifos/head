@@ -37,4 +37,9 @@ public class ReportsCategoryBO extends BusinessObject {
 	public void addReports(ReportsBO reportsBO){		
 		this.reportsSet.add(reportsBO);
 	}
+	
+	public Short getEntityID() {
+		return null;
+	}	
+	
 }

@@ -215,7 +215,7 @@
 
 	<target name="run_test" depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Run tests. Does not initiate clean build">
-		<junit printsummary="on" fork="true" maxmemory="300M" 
+	<!--	<junit printsummary="on" fork="true" maxmemory="300M" 
 			failureproperty="tests.failure">
 			<classpath>
 				<path refid="class.path"/>
@@ -229,7 +229,7 @@
 					<include name="**/ApplicationTestSuite.class" />
 				</fileset>
 			</batchtest>
-		</junit>
+		</junit>-->
 		<fail if="tests.failure" 
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
 
@@ -269,6 +269,9 @@
 			<transaction src="./sql/mifosdbcreationscript.sql" />
 			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
 			<transaction src="./sql/mifosmasterdata.sql" />
+			<transaction src="./sql/rmpdroptables.sql" />
+			<transaction src="./sql/rmpdbcreationscript.sql" />
+			<transaction src="./sql/rmpmasterdata.sql" />
 		</sql>
 	</target>
 
@@ -288,6 +291,10 @@
 			<transaction src="./sql/mifosmasterdata.sql" />
 			<transaction src="./sql/Iteration14-DML-DBScripts10102006.sql" />
 			<transaction src="./sql/testdbinsertionscript.sql" />
+			<transaction src="./sql/rmpdroptables.sql" />
+			<transaction src="./sql/rmpdbcreationscript.sql" />
+			<transaction src="./sql/rmpmasterdata.sql" />
+
 			
 		</sql>
 	</target>

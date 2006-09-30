@@ -113,4 +113,12 @@ public interface LoggerConstants {
 	public String COLLECTIONSHEETLOGGER="org.mifos.application.collectionsheet";
 	
 	public String CUSTOMERLOGGER = "org.mifos.application.customer.business.CustomerBO";
+	
+	//////////Added by Mftech////////////////
+	/**
+	 * Logger for Reports
+	 */
+	
+	public String REPORTSLOGGER="org.mifos.application.reports";
+	////////////////////////////////////
 }

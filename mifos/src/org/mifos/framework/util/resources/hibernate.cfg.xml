@@ -305,6 +305,16 @@
  	<mapping resource="org/mifos/application/rolesandpermission/business/RoleBO.hbm.xml" />
 	<mapping resource="org/mifos/application/fund/business/FundBO.hbm.xml" />
  	<mapping resource="org/mifos/application/master/business/FundCodeEntity.hbm.xml" />
+	
+		<!--  ADDED BY MFTECH -->
+	<mapping resource="org/mifos/application/reports/business/ReportsParams.hbm.xml" />
+    <mapping resource="org/mifos/application/reports/business/ReportsParamsValue.hbm.xml" />
+    <mapping resource="org/mifos/application/reports/business/ReportsDataSource.hbm.xml" />
+    <mapping resource="org/mifos/application/reports/business/ReportsParamsMapValue.hbm.xml" />
+    <mapping resource="org/mifos/application/reports/business/ReportsParamsMap.hbm.xml" />
+    <mapping resource="org/mifos/application/reports/business/ReportsJasperMap.hbm.xml" />	
+    <!--  END BY MFTECH-->
+	
 </session-factory>
 
 </hibernate-configuration>  

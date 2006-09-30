@@ -385,4 +385,7 @@ public interface SecurityConstants {
 	public final short SAVINGS_CAN_ADD_NOTES_TO_SAVINGS = 191;
 	
 	public final short CAN_APPROVE_LOANS_IN_BULK = 192;
+		//ADDED BY MFTECH
+	public final short ADMINISTER_REPORTPARAMS = 142;
+    public final short ADMINISTER_REPORTDS = 142;
 }
