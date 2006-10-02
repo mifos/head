@@ -29,5 +29,12 @@
 	<classpathentry kind="lib" path="lib/jta.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.4.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.3-bin.jar"/>
+	<classpathentry kind="lib" path="lib/axis2-kernel-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/stax-api-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/axiom-api-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/axis2-adb-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/axis2-codegen-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-spec-activation-1.0.2-rc4.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-1.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
