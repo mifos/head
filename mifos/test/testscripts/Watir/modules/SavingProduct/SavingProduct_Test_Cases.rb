@@ -194,9 +194,8 @@ class SavingProduct_Test_Cases < TestClass
       $logger.log_results("savingproduct links "+@view_savingproduct_link+" and "+@new_savingproduct_link +" exist on admin page", "NA","links should be present","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("savingproduct links "+@view_savingproduct_link+" and "+@new_savingproduct_link +" do not exist on  admin page", "NA","links should be present","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout        
+    rescue =>excp
+      quit_on_error(excp)        
     end
   end
   
@@ -206,20 +205,18 @@ class SavingProduct_Test_Cases < TestClass
       $ie.link(:text, @new_savingproduct_link).click
       $ie.button(:value,@cancel_button).click     
       verify_admin_page()      
+    rescue =>excp
+      quit_on_error(excp)
     end
   end
   
-  # Check new SavingProduct link on admin page
+  # Checks "Add a new Margin Money Product - Enter Margin Money Product information " string on the landing page of new savings product \
+  #creation
   def Check_New_SavingProduct()
     begin   
-    puts @add_savingproduct_msg+" - "+@enter_savingproduct_msg   
-      assert($ie.contains_text(@add_savingproduct_msg+" - "+@enter_savingproduct_msg))
-      $logger.log_results("SavingProduct- Check for Define new Margin Money product link on admin page", "Click on 'Define new Margin Money product' link","Access to the Define a new SavingProduct page","Passed")
-    rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("SavingProduct- Check for Define new Margin Money product link on admin page", "Click on 'Define new Margin Money product' link","Access to the Define a new SavingProduct page","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout       
+      assert_on_page(@add_savingproduct_msg+" - "+@enter_savingproduct_msg)
+    rescue =>excp
+      quit_on_error(excp)      
     end      
   end
   
@@ -229,6 +226,8 @@ class SavingProduct_Test_Cases < TestClass
     begin
          
       $ie.link(:text, @new_savingproduct_link).click  
+            
+      Check_New_SavingProduct()
       
       Man_New_SavingProduct()
       
@@ -636,6 +635,8 @@ class SavingProduct_Test_Cases < TestClass
       verify_MaxAmountPerWithdrawal(max_amount_per_withdrawal)
       verify_MinBalanceInterestrate(min_balance_interestrate)
       $ie.button(:value, @cancel_button).click 
+    rescue =>excp
+      quit_on_error(excp)
     end
   end
   
@@ -1153,8 +1154,8 @@ class SavingProduct_Test_Cases < TestClass
       elsif deposit_type==@voluntary_label
         assert_on_page(@savingprd_properties['product.recamtdep']+": " + deposit_amount.to_f.to_s)
       end
-      assert_on_page(@service_charge_rate_label+" : " + interest_rate.to_f.to_s + " %")
-      assert_on_page(@balance_usedfor_service_charge_label+" : " + balance_interestcalc.to_s)
+      assert_on_page(@service_charge_rate_label+": " + interest_rate.to_f.to_s + " %")
+      assert_on_page(@balance_usedfor_service_charge_label+": " + balance_interestcalc.to_s)
       assert_on_page(@timeperiod_service_charge_label+" : " + time_interestcalc.to_i.to_s + " Day(s)")          
       assert_on_page(@frequency_service_charge_label+" : " + interest_postingfrequency.to_i.to_s + " month(s)")
       assert_on_page(@savingprd_properties['product.glcodedep']+": " + deposit_glcode.to_s)
@@ -1281,10 +1282,7 @@ class SavingProduct_Main
   
   while(rowid < $maxrow * $maxcol - 1)
     saving_obj.read_user_values(rowid)
-    
     saving_obj.Click_Admin_page
-    saving_obj.Check_New_SavingProduct
-    
     saving_obj.Create_New_SavingProduct(
     saving_obj.Prd_instance_name,saving_obj.Short_name,saving_obj.Prd_category,saving_obj.Applicable_for,saving_obj.Applies_to,
     saving_obj.Deposit_type,saving_obj.Deposit_amount,saving_obj.Interest_rate,saving_obj.Balance_interest_calc,

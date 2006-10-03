@@ -236,9 +236,9 @@ class TestClass
   # Verifies the admin page
   def verify_admin_page()  
     assert($ie.contains_text("Administrative tasks")) and assert($ie.contains_text("Manage organization"))
-        $logger.log_results("Office- Check for the admin page", "Click on admin link","Access to the admin page","Passed")
+        $logger.log_results("Check for the admin page", "Click on admin link","Access to the admin page","Passed")
     rescue =>e
-        $logger.log_results("Office- Check for the admin page", "Click on admin link","Access to the admin page","Failed") 
+        $logger.log_results("Check for the admin page", "Click on admin link","Access to the admin page","Failed") 
   end 
 
   # Enter the data in the text field
