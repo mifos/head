@@ -331,7 +331,8 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
 			//m2		 personnel related mappings
 		activityMap.put("/PersonAction-get",SecurityConstants.VIEW);
-
+		activityMap.put("/PersonAction-loadSearch",SecurityConstants.VIEW);
+		activityMap.put("/PersonAction-search",SecurityConstants.VIEW);
 		activityMap.put("/PersonAction-chooseOffice",
 				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
 		activityMap.put("/PersonAction-load",
@@ -440,8 +441,8 @@ public class ActivityMapper {
 				SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
 
 		activityMap.put("/centerCustAction-get", SecurityConstants.VIEW);
-
-
+		activityMap.put("/centerCustAction-loadSearch", SecurityConstants.VIEW);
+		activityMap.put("/centerCustAction-search", SecurityConstants.VIEW);
 		// For M2 Center ends
 
 		// colsed account searchaction in center details page

@@ -16,6 +16,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -96,6 +97,12 @@ public class TestCenterBusinessService extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 	
+	public void testSearch() throws Exception{
+	center = createCenter("center1");
+	  QueryResult queryResult = 	service.search("center1",Short.valueOf("1"));
+	  assertEquals(1,queryResult.getSize());
+	  assertEquals(1,queryResult.get(0,10).size());	
+	}
 	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) throws Exception {
 		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017", customerBO,

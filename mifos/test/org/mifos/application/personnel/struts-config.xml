@@ -51,6 +51,8 @@
 			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />		
 			<forward name="unLockUserAccount_success" path="/PersonAction.do?method=get" />	
 			<forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp" />	
+			<forward name="search_success" path="/pages/application/personnel/jsp/viewusers.jsp" />		
+			<forward name="loadSearch_success" path="/pages/application/personnel/jsp/viewusers.jsp" />		
 		</action>
 	</action-mappings>
 	<message-resources key="PersonnelUIResources" parameter="org.mifos.application.personnel.util.resources.PersonnelUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />

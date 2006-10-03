@@ -202,7 +202,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	public  void testSearch()throws Exception{
 		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
 		personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-		QueryResult queryResult = persistence.search(personnel.getUserName(),branchOffice.getOfficeId(),Short.valueOf("1"),Short.valueOf("1"));
+		QueryResult queryResult = persistence.search(personnel.getUserName(),Short.valueOf("1"));
 		assertNotNull(queryResult);
 		assertEquals(1,queryResult.getSize());
 		assertEquals(1,queryResult.get(0,10).size());

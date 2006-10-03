@@ -39,6 +39,8 @@ package org.mifos.framework.components.tabletag;
 
 import java.util.ResourceBundle;
 
+import javax.servlet.jsp.PageContext;
+
 /**
  * This class renders the page scroll property of the page like previous and next links.
  */
@@ -46,16 +48,17 @@ public class PageScroll {
 
 	/**
 	 * Function is used to get the required pages on the click of previous or next link.
-	 * @param prev		boolean value to find out whether previous is clicked or not.
-	 * @param next		boolean value to find out whether next is clicked or not.
 	 * @param current	value of the current page.
 	 * @param pageSize	no of data in a single page.
 	 * @param size		size of the data.
+	 * @param currentFlowKey TODO
+	 * @param prev		boolean value to find out whether previous is clicked or not.
+	 * @param next		boolean value to find out whether next is clicked or not.
 	 * @param jsp		name of the jsp to which this previous or next click will take you to.
 	 * @return string	next page.
 	 */
 	protected static String getPages(int current,
-			int pageSize, int size, String action) {
+			int pageSize, int size, String action, String currentFlowKey) {
 		StringBuilder result = new StringBuilder();
 		ResourceBundle resource = ResourceBundle.getBundle(TableTagConstants.PROPERTIESFILE);
 		//to check the onClick status of the prev and next whether that is disable or not
@@ -80,13 +83,13 @@ public class PageScroll {
 		
 		
 		if (prev) {
-			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Previous"),"searchPrev")).append("</td>");
+			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Previous"),"searchPrev", currentFlowKey)).append("</td>");
 		} else {
 			result.append("<td width=\"75\" class=\"fontnormalboldgray\">Previous</td>");
 		}
 		result.append("<td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results "+ pageStart + "-" + pageEnd + " of " + size + " </td>");
 		if (next) {
-			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Next"),"searchNext")).append("</td>");
+			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Next"),"searchNext", currentFlowKey)).append("</td>");
 		} else {
 			result.append("<td width=\"75\" align=\"right\" class=\"fontnormalboldgray\">Next</td>");
 		}
@@ -98,17 +101,21 @@ public class PageScroll {
 	 * Function to get the link property on previous and next.
 	 * @param hRef			page to which it is going on click.
 	 * @param text			text to be displayed.
+	 * @param currentFlowKey TODO
 	 * @param paramName1	current. 
 	 * @param paramvalue1	current page number.
 	 * @param paramName2	method name.
 	 * @param paramvalue2	method value(previous or next).
 	 * @return
 	 */
-	protected static String getAnchor(String hRef, String text,String method) {
+	protected static String getAnchor(String hRef, String text,String method, String currentFlowKey) {
 		StringBuilder result = new StringBuilder();
+		
 		result.append("<a href='").append(hRef)
 			  .append("?method=")
 			  .append(method)
+			  .append("&currentFlowKey=")
+			  .append(currentFlowKey)
 			  .append("'>").append(text)
 			  .append("</a>");
 		return result.toString();

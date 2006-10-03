@@ -24,6 +24,7 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -99,8 +100,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	
 
 	public void testChooseOffice() {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.chooseOffice.toString());
+		addActionAndMethod(Methods.chooseOffice.toString());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -108,8 +108,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testLoad() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.load.toString());
+		addActionAndMethod(Methods.load.toString());
 		addRequestParameter("officeId", "1");
 		actionPerform();
 		verifyNoActionErrors();
@@ -130,8 +129,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 
 	}
 	public void testLoadWithBranchOffice() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.load.toString());
+		addActionAndMethod(Methods.load.toString());
 		addRequestParameter("officeId", "3");
 		actionPerform();
 		verifyNoActionErrors();
@@ -152,8 +150,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.load_success.toString());
 	}
 	public void testPreviewFailure() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.preview.toString());
+		addActionAndMethod(Methods.preview.toString());
 		actionPerform();
 		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_FIRSTNAME));
 		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_LASTNAME));
@@ -166,8 +163,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testPreviewFailureWrongPasswordLength() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.preview.toString());
+		addActionAndMethod(Methods.preview.toString());
 		setRequestData();
 		addRequestParameter("userPassword", "XXX");
 		actionPerform();
@@ -177,8 +173,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 
 	public void testPreviewFailureWrongPasswordAndReaptPassword()
 			throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.preview.toString());
+		addActionAndMethod(Methods.preview.toString());
 		setRequestData();
 		addRequestParameter("userPassword", "XXXXXX");
 		addRequestParameter("passwordRepeat", "XXXXXZ");
@@ -188,8 +183,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testPreviewSucess() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.preview.toString());
+		addActionAndMethod(Methods.preview.toString());
 		addRequestParameter("userPassword", "XXXXXXXX");
 		addRequestParameter("passwordRepeat", "XXXXXXXX");
 
@@ -200,8 +194,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.preview_success.toString());
 	}
 	public void testPreviousSucess() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.previous.toString());
+		addActionAndMethod(Methods.previous.toString());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -209,8 +202,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testCreateSucess() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.create.toString());
+		addActionAndMethod(Methods.create.toString());
 		setRequestData();
 		addRequestParameter("userPassword", "XXXXXXXX");
 		addRequestParameter("passwordRepeat", "XXXXXXXX");
@@ -233,8 +225,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testCreateSucessWithNoRoles() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.create.toString());
+		addActionAndMethod(Methods.create.toString());
 		addRequestParameter("firstName", "Jim");
 		addRequestParameter("lastName", "khan");
 		addRequestParameter("gender", "1");
@@ -264,8 +255,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testGetSucess()throws Exception{
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.get.toString());
+		addActionAndMethod(Methods.get.toString());
 		addRequestParameter("globalPersonnelNum", "1");
 		actionPerform();
 		verifyNoActionErrors();
@@ -273,7 +263,46 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyMasterData();
 		verifyForward(ActionForwards.get_success.toString());
 	}
+	public void testSearchSucess()throws Exception{
+		addActionAndMethod(Methods.search.toString());
+		addRequestParameter("input", "Mi");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		QueryResult queryResult =(QueryResult) SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request);
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		assertEquals(1,queryResult.get(0,10).size());
+		verifyForward(ActionForwards.search_success.toString());
+	}
+	
+	public void testSearchwithNoinput()throws Exception{
+		cleanRequest();
+		addActionAndMethod(Methods.search.toString());
+		addRequestParameter("input", "");
+		actionPerform();
+		assertEquals(1, getErrrorSize(PersonnelConstants.NO_SEARCH_STRING));
+		verifyInputForward();
+	}
+	
+	public void testLoadSearchSucess()throws Exception{
+		addActionAndMethod(Methods.search.toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.search_success.toString());
+	}	
+	private void addActionAndMethod(String method){
+		setRequestPathInfo("/PersonAction.do");
+		addRequestParameter("method", method);
 
+	}
+	private void cleanRequest() throws PageExpiredException{
+		SessionUtils.removeAttribute(PersonnelConstants.OFFICE, request);
+		SessionUtils.removeAttribute(PersonnelConstants.ROLES_LIST,  request);
+		SessionUtils.removeAttribute(PersonnelConstants.ROLEMASTERLIST, request);
+
+	}
 	private void verifyMasterData()throws Exception{
 		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST,
 				request));
@@ -294,8 +323,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	public void testManage() throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.manage.toString());
+		addActionAndMethod(Methods.manage.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
@@ -313,8 +341,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	public void testPreviewManage() throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.manage.toString());
+		addActionAndMethod(Methods.manage.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
@@ -327,8 +354,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
 		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.previewManage.toString());
+		addActionAndMethod(Methods.previewManage.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("userPassword", "abcdef");
 		addRequestParameter("passwordRepeat", "abcdef");
@@ -340,8 +366,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testManagePreviewFailure() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.previewManage.toString());
+		addActionAndMethod(Methods.previewManage.toString());
 		actionPerform();
 		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_FIRSTNAME));
 		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_LASTNAME));
@@ -355,8 +380,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testManagePreviewFailureWrongPasswordLength() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.preview.toString());
+		addActionAndMethod(Methods.preview.toString());
 		setRequestData();
 		addRequestParameter("userPassword", "XXX");
 		actionPerform();
@@ -366,8 +390,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 
 	public void testManagePreviewFailureWrongPasswordAndReaptPassword()
 			throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.preview.toString());
+		addActionAndMethod(Methods.preview.toString());
 		setRequestData();
 		addRequestParameter("userPassword", "XXXXXX");
 		addRequestParameter("passwordRepeat", "XXXXXZ");
@@ -381,8 +404,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
 		assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
 		assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.manage.toString());
+		addActionAndMethod(Methods.manage.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
@@ -395,8 +417,8 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.LANGUAGE_LIST, request));
 		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.previewManage.toString());
+		addActionAndMethod(Methods.previewManage.toString());
+		
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("personnelRoles", "1");
 		addRequestParameter("gender", "2");
@@ -407,22 +429,19 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.previewManage_success.toString());
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.update.toString());
+		addActionAndMethod(Methods.update.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-
 		assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
 		assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
 		personnel = (PersonnelBO)TestObjectFactory.getObject(PersonnelBO.class,personnel.getPersonnelId());	
 	}
 	
 	public void testLoadUnLockUser() throws Exception {
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.loadUnLockUser.toString());
+		addActionAndMethod(Methods.loadUnLockUser.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();
@@ -433,8 +452,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	
 	public void testUnLockUser() throws Exception {
 		createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
-		setRequestPathInfo("/PersonAction.do");
-		addRequestParameter("method", Methods.unLockUserAccount.toString());
+		addActionAndMethod(Methods.unLockUserAccount.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyNoActionErrors();

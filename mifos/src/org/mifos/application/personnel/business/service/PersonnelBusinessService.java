@@ -97,4 +97,14 @@ public class PersonnelBusinessService extends BusinessService {
 		}
 		return personnel;
 	}
+	
+	public QueryResult search(String searchString, Short officeId,
+			Short userId) throws ServiceException{
+		
+		try {
+			return new PersonnelPersistence().search(searchString,userId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
 }

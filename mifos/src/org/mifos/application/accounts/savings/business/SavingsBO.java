@@ -287,7 +287,6 @@ public class SavingsBO extends AccountBO {
 	public void addSavingsActivityDetails(SavingsActivityEntity savingsActivity) {
 		if (savingsActivityDetails == null)
 			savingsActivityDetails = new HashSet<SavingsActivityEntity>();
-		savingsActivity.setAccount(this);
 		savingsActivityDetails.add(savingsActivity);
 	}
 
@@ -1982,7 +1981,7 @@ public class SavingsBO extends AccountBO {
 			throw new AccountException(e);
 		}
 		return new SavingsActivityEntity(personnel, accountAction, amount,
-				balanceAmount, trxnDate);
+				balanceAmount, trxnDate,this);
 	}
 
 	@Override

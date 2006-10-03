@@ -17,6 +17,8 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
+import org.mifos.framework.components.tabletag.TableTagConstants;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
@@ -117,5 +119,15 @@ public class BaseActionForm extends ValidatorActionForm {
 		} catch (ConfigurationException e) {
 			return null;
 		}
+	}
+	protected void cleanUpSearch(HttpServletRequest request) throws PageExpiredException
+	{
+		SessionUtils.setRemovableAttribute("TableCache",null,TableTagConstants.PATH,request.getSession());
+		SessionUtils.setRemovableAttribute("current",null,TableTagConstants.PATH,request.getSession());
+		SessionUtils.setRemovableAttribute("meth",null,TableTagConstants.PATH,request.getSession());
+		SessionUtils.setRemovableAttribute("forwardkey",null,TableTagConstants.PATH,request.getSession());
+		SessionUtils.setRemovableAttribute("action",null,TableTagConstants.PATH,request.getSession());
+		SessionUtils.removeAttribute(Constants.SEARCH_RESULTS,request);
+		
 	}
 }

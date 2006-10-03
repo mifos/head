@@ -32,11 +32,13 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -744,6 +746,33 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		verifyForwardPath("/pages/framework/jsp/pageexpirederror.jsp");
 	}
 
+	
+	public void testLoadSearch() throws Exception{
+		addActionAndMethod(Methods.loadSearch.toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.loadSearch_success.toString());
+	}
+	public void testSearch() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("SearchCenter", Short.valueOf("13"),
+				"1.4", meeting, new Date(System.currentTimeMillis()));
+		addActionAndMethod(Methods.search.toString());
+		addRequestParameter("input", "Sear");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.search_success.toString());
+		QueryResult queryResult = (QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request);
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		assertEquals(1,queryResult.get(0,10).size());
+	}	
+	private void addActionAndMethod(String method){
+		setRequestPathInfo("/centerCustAction.do");
+		addRequestParameter("method", method);
+
+	}
 	private SavingsBO getSavingsAccount(String offeringName, String shortName,
 			CustomerBO customer) throws Exception {
 		savingsOffering = helper.createSavingsOffering(offeringName, shortName);

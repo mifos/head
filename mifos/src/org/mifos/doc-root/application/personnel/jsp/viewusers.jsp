@@ -40,9 +40,10 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
-<html-el:form action="PersonnelAction.do?method=search" focus="searchNode(searchString)">
+<html-el:form action="PersonAction.do?method=search" focus="input">
 
        <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
@@ -82,8 +83,8 @@
                 </tr>
                 <tr class="fontnormal8pt">
                   <td width="17%">
-                  	<html-el:text property="searchNode(searchString)" maxlength="200"/>
- 	                <html-el:hidden property="searchNode(search_name)" value="UserList"/>
+                  	<html-el:text property="input" maxlength="200"/>
+ 	                
                   </td>
                   <td width="83%">&nbsp;
                   	<html-el:submit styleClass="buttn" style="width:60px;">
@@ -100,7 +101,7 @@
                 <tr>
                   <td>
                   <span class="fontnormal">
-                  <c:if test="${requestScope.Context.searchResult.size>0}">
+                  <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'office').size>0}">
 	                  <mifos:mifoslabel name="Personnel.ClickUserLink" bundle ="PersonnelUIResources"></mifos:mifoslabel>
                   </c:if>
                   </span></td>
@@ -114,7 +115,8 @@
       </table>
       <br>
 <br>
-<html-el:hidden property="input" value="ViewUsers"/>
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+
 </html-el:form>
 </tiles:put>
 </tiles:insert>

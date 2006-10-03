@@ -265,7 +265,7 @@ public class PersonActionForm extends BaseActionForm {
 		this.dateOfJoiningMFI = null;
 		this.dateOfJoiningBranch = null;
 		this.personnelRoles = new String[10];
-		;
+		this.input=null;
 		address = new Address();
 		customFields = new ArrayList<CustomFieldView>();
 	}
@@ -359,17 +359,33 @@ public class PersonActionForm extends BaseActionForm {
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter("method");
+		request.setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
+		request.getSession().setAttribute(Constants.CURRENTFLOWKEY, request
+				.getParameter(Constants.CURRENTFLOWKEY));
+
 		if (method.equals(Methods.preview.toString())) {
 			handleCreatePreviewValidations(errors, request);
 		}
 		if (method.equals(Methods.previewManage.toString())) {
 			handleManagePreviewValidations(errors, request);
 		}
+		
+		if (method.equals(Methods.search.toString())) {
+			if( StringUtils.isNullOrEmpty(input))
+			{
+				try {
+				cleanUpSearch(request);
+				} catch (PageExpiredException e) {
+					// TODO: do we need to ingnore it ?
+				}
+				errors.add(PersonnelConstants.NO_SEARCH_STRING,new ActionMessage(PersonnelConstants.NO_SEARCH_STRING));
+			}
+		}
+		
 		if (null != errors && !errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
-			request.setAttribute(Constants.CURRENTFLOWKEY, request
-					.getParameter(Constants.CURRENTFLOWKEY));
 			// update the role list also
 
 			try {
@@ -394,6 +410,7 @@ public class PersonActionForm extends BaseActionForm {
 			List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(
 					PersonnelConstants.ROLEMASTERLIST, request);
 
+			if( masterList!=null)
 			for (RoleBO role : masterList) {
 				for (String roleId : personnelRoles) {
 					if (roleId != null

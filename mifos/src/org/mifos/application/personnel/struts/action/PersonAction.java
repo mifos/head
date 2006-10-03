@@ -31,6 +31,7 @@ import org.mifos.application.personnel.business.PersonnelLevelEntity;
 import org.mifos.application.personnel.business.PersonnelRoleEntity;
 import org.mifos.application.personnel.business.PersonnelStatusEntity;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
@@ -46,16 +47,15 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.util.valueobjects.Context;
 
-public class PersonAction extends BaseAction {
+public class PersonAction extends SearchAction {
 
 	@Override
 	protected BusinessService getService() throws ServiceException {
@@ -81,18 +81,16 @@ public class PersonAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		PersonActionForm personActionForm = (PersonActionForm) form;
-		
+
 		OfficeBO office = ((PersonnelBusinessService) getService())
-		.getOffice(getShortValue(personActionForm
-				.getOfficeId()));
-		SessionUtils
-				.setAttribute(PersonnelConstants.OFFICE,
-						office, request);
+				.getOffice(getShortValue(personActionForm.getOfficeId()));
+		SessionUtils.setAttribute(PersonnelConstants.OFFICE, office, request);
 		personActionForm.clear();
 		loadCreateMasterData(request, personActionForm);
-		if ( office.getOfficeLevel()!=OfficeLevel.BRANCHOFFICE)
+		if (office.getOfficeLevel() != OfficeLevel.BRANCHOFFICE)
 			updatePersonnelLevelList(request);
-		personActionForm.setDateOfJoiningMFI(DateHelper.getCurrentDate(getUserLocale(request)));
+		personActionForm.setDateOfJoiningMFI(DateHelper
+				.getCurrentDate(getUserLocale(request)));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -119,7 +117,7 @@ public class PersonAction extends BaseAction {
 		personActionForm.setPersonnelRoles(null);
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
-	
+
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -161,31 +159,33 @@ public class PersonAction extends BaseAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
-	
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		PersonActionForm actionform = (PersonActionForm) form;
 		actionform.clear();
-		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-		PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnel.getPersonnelId());
+		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		PersonnelBO personnelBO = ((PersonnelBusinessService) getService())
+				.getPersonnel(personnel.getPersonnelId());
 		personnel = null;
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,personnelBO, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnelBO, request);
 		loadUpdateMasterData(request, actionform);
-		setValuesInActionForm(actionform,request);
+		setValuesInActionForm(actionform, request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
-	
+
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward previewManage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		PersonActionForm actionForm = (PersonActionForm) form;
 		updateRoleLists(request, actionForm);
-		return mapping.findForward(ActionForwards.previewManage_success.toString());
+		return mapping.findForward(ActionForwards.previewManage_success
+				.toString());
 	}
-	
+
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward previousManage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -195,7 +195,7 @@ public class PersonAction extends BaseAction {
 		return mapping.findForward(ActionForwards.previousManage_success
 				.toString());
 	}
-	
+
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -205,27 +205,30 @@ public class PersonAction extends BaseAction {
 		PersonActionForm actionForm = (PersonActionForm) form;
 		PersonnelLevel level = PersonnelLevel
 				.getPersonnelLevel(getShortValue(actionForm.getLevel()));
-		PersonnelStatus personnelStatus = PersonnelStatus.getPersonnelStatus(getShortValue(actionForm.getStatus()));
-		OfficeBusinessService officeService = (OfficeBusinessService)ServiceFactory.getInstance().getBusinessService(
-				BusinessServiceName.Office);
-		OfficeBO office = officeService.getOffice(getShortValue(actionForm.getOfficeId()));
+		PersonnelStatus personnelStatus = PersonnelStatus
+				.getPersonnelStatus(getShortValue(actionForm.getStatus()));
+		OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Office);
+		OfficeBO office = officeService.getOffice(getShortValue(actionForm
+				.getOfficeId()));
 		Integer title = getIntegerValue(actionForm.getTitle());
 		Short perefferedLocale = getLocaleId(getShortValue(actionForm
 				.getPreferredLocale()));
-		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-		personnel.update(personnelStatus,level, office, title,
-				perefferedLocale, actionForm.getUserPassword(),
-				actionForm.getEmailId(),
-				getRoles(request, actionForm), actionForm
-						.getCustomFields(), actionForm.getName(),
-						getIntegerValue(actionForm.getMaritalStatus()),
-						getIntegerValue(actionForm.getGender()),
-						actionForm.getAddress(),userContext.getId());
+		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		personnel.update(personnelStatus, level, office, title,
+				perefferedLocale, actionForm.getUserPassword(), actionForm
+						.getEmailId(), getRoles(request, actionForm),
+				actionForm.getCustomFields(), actionForm.getName(),
+				getIntegerValue(actionForm.getMaritalStatus()),
+				getIntegerValue(actionForm.getGender()), actionForm
+						.getAddress(), userContext.getId());
 		request.setAttribute("displayName", personnel.getDisplayName());
-		request.setAttribute("globalPersonnelNum", personnel.getGlobalPersonnelNum());
+		request.setAttribute("globalPersonnelNum", personnel
+				.getGlobalPersonnelNum());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
-		
+
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -233,18 +236,19 @@ public class PersonAction extends BaseAction {
 		String method = (String) request.getAttribute("methodCalled");
 		return mapping.findForward(method + "_failure");
 	}
+
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String forward=null;
+		String forward = null;
 		PersonActionForm actionForm = (PersonActionForm) form;
 		String fromPage = actionForm.getInput();
-		if (fromPage.equals(PersonnelConstants.MANAGE_USER) || 
-				fromPage.equals(PersonnelConstants.UNLOCK_USER)){
-			forward=ActionForwards.cancelEdit_success.toString();
-		} else{
-			forward=ActionForwards.cancel_success.toString();
+		if (fromPage.equals(PersonnelConstants.MANAGE_USER)
+				|| fromPage.equals(PersonnelConstants.UNLOCK_USER)) {
+			forward = ActionForwards.cancelEdit_success.toString();
+		} else {
+			forward = ActionForwards.cancel_success.toString();
 		}
 		return mapping.findForward(forward.toString());
 	}
@@ -255,16 +259,16 @@ public class PersonAction extends BaseAction {
 			throws Exception {
 		PersonActionForm personActionForm = (PersonActionForm) form;
 		PersonnelBO personnel = ((PersonnelBusinessService) getService())
-		.getPersonnelByGlobalPersonnelNum(personActionForm
-				.getGlobalPersonnelNum());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,personnel,request);
+				.getPersonnelByGlobalPersonnelNum(personActionForm
+						.getGlobalPersonnelNum());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		personnel.getStatus().setLocaleId(userContext.getLocaleId());
-		loadCreateMasterData(request,personActionForm);
+		loadCreateMasterData(request, personActionForm);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
-	
+
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadUnLockUser(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -279,10 +283,34 @@ public class PersonAction extends BaseAction {
 	public ActionForward unLockUserAccount(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
 		personnel.unlockPersonnel(userContext.getId());
-		return mapping.findForward(ActionForwards.unLockUserAccount_success.toString());
+		return mapping.findForward(ActionForwards.unLockUserAccount_success
+				.toString());
+	}
+
+	@Override
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward search(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
+				new PersonnelPersistence().search(((PersonActionForm) form)
+						.getInput(), userContext.getId()), request);
+		return super.search(mapping, form, request, response);
+	}
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		((PersonActionForm) form).clear();
+		cleanUpSearch(request);
+		return mapping.findForward(ActionForwards.search_success.toString());
 	}
 
 	private void loadMasterData(HttpServletRequest request,
@@ -327,43 +355,46 @@ public class PersonAction extends BaseAction {
 		SessionUtils.setAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
 				customFieldDefs, request);
 	}
-	
-	private void updatePersonnelLevelList(HttpServletRequest request) throws PageExpiredException{
-		List<MasterDataEntity>levelList =(List<MasterDataEntity>) SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST,request);
+
+	private void updatePersonnelLevelList(HttpServletRequest request)
+			throws PageExpiredException {
+		List<MasterDataEntity> levelList = (List<MasterDataEntity>) SessionUtils
+				.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request);
 		for (MasterDataEntity level : levelList) {
-			if (level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue()))
-			{
+			if (level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
 				levelList.remove(level);
 				break;
 			}
 		}
-		
+
 	}
+
 	private void loadCreateMasterData(HttpServletRequest request,
 			PersonActionForm personActionForm) throws Exception {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		loadMasterData(request,personActionForm);
+		loadMasterData(request, personActionForm);
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-		.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		loadCreateCustomFields(personActionForm, customFieldDefs, userContext);
 	}
-	
+
 	private void loadUpdateMasterData(HttpServletRequest request,
-			PersonActionForm personActionForm) throws Exception{
-		loadMasterData(request,personActionForm);
+			PersonActionForm personActionForm) throws Exception {
+		loadMasterData(request, personActionForm);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SessionUtils.setAttribute(PersonnelConstants.STATUS_LIST,
-				getMasterEntities(PersonnelStatusEntity.class,
-						getUserContext(request).getLocaleId()), request);
-		OfficeBusinessService officeService = (OfficeBusinessService)ServiceFactory.getInstance().getBusinessService(
-				BusinessServiceName.Office);
-		OfficeBO loggedInOffice = officeService.getOffice(userContext.getBranchId());
-		SessionUtils.setAttribute(PersonnelConstants.OFFICE_LIST,
-				officeService.getChildOffices(loggedInOffice.getSearchId()), request);
+				getMasterEntities(PersonnelStatusEntity.class, getUserContext(
+						request).getLocaleId()), request);
+		OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Office);
+		OfficeBO loggedInOffice = officeService.getOffice(userContext
+				.getBranchId());
+		SessionUtils.setAttribute(PersonnelConstants.OFFICE_LIST, officeService
+				.getChildOffices(loggedInOffice.getSearchId()), request);
 	}
-	
+
 	private void loadCreateCustomFields(PersonActionForm actionForm,
 			List<CustomFieldDefinitionEntity> customFieldDefs,
 			UserContext userContext) throws SystemException,
@@ -385,60 +416,69 @@ public class PersonAction extends BaseAction {
 		}
 		actionForm.setCustomFields(customFields);
 	}
-	
+
 	private void setValuesInActionForm(PersonActionForm actionForm,
-			HttpServletRequest request) throws  Exception {
-		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+			HttpServletRequest request) throws Exception {
+		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
 		actionForm.setPersonnelId(personnel.getPersonnelId().toString());
-		if (personnel.getOffice() != null) 
-			actionForm.setOfficeId(personnel.getOffice().getOfficeId().toString());
-		if (personnel.getTitle() != null) 
+		if (personnel.getOffice() != null)
+			actionForm.setOfficeId(personnel.getOffice().getOfficeId()
+					.toString());
+		if (personnel.getTitle() != null)
 			actionForm.setTitle(personnel.getTitle().toString());
-		if (personnel.getLevel() != null) 
+		if (personnel.getLevel() != null)
 			actionForm.setLevel(personnel.getLevel().getId().toString());
 		if (personnel.getStatus() != null)
-				actionForm.setStatus(personnel.getStatus().getId().toString());
+			actionForm.setStatus(personnel.getStatus().getId().toString());
 		actionForm.setLoginName(personnel.getUserName());
 		actionForm.setGlobalPersonnelNum(personnel.getGlobalPersonnelNum());
-		actionForm.setCustomFields(createCustomFieldViews(personnel.getCustomFields(), request));
-		
-		if(personnel.getPersonnelDetails()!=null){
-		PersonnelDetailsEntity personnelDetails = personnel.getPersonnelDetails();
+		actionForm.setCustomFields(createCustomFieldViews(personnel
+				.getCustomFields(), request));
+
+		if (personnel.getPersonnelDetails() != null) {
+			PersonnelDetailsEntity personnelDetails = personnel
+					.getPersonnelDetails();
 			actionForm.setFirstName(personnelDetails.getName().getFirstName());
-			actionForm.setMiddleName(personnelDetails.getName().getMiddleName());
-			actionForm.setSecondLastName(personnelDetails.getName().getSecondLastName());
+			actionForm
+					.setMiddleName(personnelDetails.getName().getMiddleName());
+			actionForm.setSecondLastName(personnelDetails.getName()
+					.getSecondLastName());
 			actionForm.setLastName(personnelDetails.getName().getLastName());
-			if(personnelDetails.getGender()!=null)
+			if (personnelDetails.getGender() != null)
 				actionForm.setGender(personnelDetails.getGender().toString());
-			if(personnelDetails.getMaritalStatus()!=null)
-				actionForm.setMaritalStatus(personnelDetails.getMaritalStatus().toString());
+			if (personnelDetails.getMaritalStatus() != null)
+				actionForm.setMaritalStatus(personnelDetails.getMaritalStatus()
+						.toString());
 			actionForm.setAddress(personnelDetails.getAddress());
-			if (personnelDetails.getDateOfJoiningMFI() != null){
+			if (personnelDetails.getDateOfJoiningMFI() != null) {
 				actionForm.setDateOfJoiningMFI(DateHelper.getUserLocaleDate(
-						getUserContext(request).getPereferedLocale(), personnelDetails.getDateOfJoiningMFI().toString()));
+						getUserContext(request).getPereferedLocale(),
+						personnelDetails.getDateOfJoiningMFI().toString()));
 			}
-			if (personnelDetails.getDob() != null){
-				actionForm.setDob(DateHelper.getUserLocaleDate(
-						getUserContext(request).getPereferedLocale(), 
-						personnelDetails.getDob().toString()));
+			if (personnelDetails.getDob() != null) {
+				actionForm.setDob(DateHelper.getUserLocaleDate(getUserContext(
+						request).getPereferedLocale(), personnelDetails
+						.getDob().toString()));
 			}
-			
+
 		}
 		actionForm.setEmailId(personnel.getEmailId());
-		if(personnel.getPreferredLocale()!=null)
-			actionForm.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLanguage().getLookUpId()));
+		if (personnel.getPreferredLocale() != null)
+			actionForm.setPreferredLocale(getStringValue(personnel
+					.getPreferredLocale().getLanguage().getLookUpId()));
 		List<RoleBO> selectList = new ArrayList<RoleBO>();
-		for(PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()){
+		for (PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()) {
 			selectList.add(personnelRole.getRole());
 		}
-		SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
+		SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+				selectList, request);
 	}
-	
+
 	private List<CustomFieldView> createCustomFieldViews(
 			Set<PersonnelCustomFieldEntity> customFieldEntities,
-			HttpServletRequest request)throws ApplicationException {
+			HttpServletRequest request) throws ApplicationException {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-
 
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
@@ -465,7 +505,7 @@ public class PersonAction extends BaseAction {
 		}
 		return customFields;
 	}
-	
+
 	private List<RoleBO> getRoles(HttpServletRequest request,
 			PersonActionForm personActionForm) throws PageExpiredException {
 		boolean addFlag = false;
@@ -473,15 +513,16 @@ public class PersonAction extends BaseAction {
 		List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(
 				PersonnelConstants.ROLEMASTERLIST, request);
 		if (personActionForm.getPersonnelRoles() != null)
-		for (RoleBO role : masterList) {
-			for (String roleId : personActionForm.getPersonnelRoles()) {
-				if (roleId != null&&role.getId().intValue() == Integer.valueOf(roleId)
-						.intValue()) {
-					selectList.add(role);
-					addFlag = true;
+			for (RoleBO role : masterList) {
+				for (String roleId : personActionForm.getPersonnelRoles()) {
+					if (roleId != null
+							&& role.getId().intValue() == Integer.valueOf(
+									roleId).intValue()) {
+						selectList.add(role);
+						addFlag = true;
+					}
 				}
 			}
-		}
 		if (addFlag)
 			return selectList;
 		else
@@ -527,7 +568,7 @@ public class PersonAction extends BaseAction {
 		return Short.valueOf("1");
 
 	}
-	
+
 	protected Locale getUserLocale(HttpServletRequest request) {
 		Locale locale = null;
 		HttpSession session = request.getSession();

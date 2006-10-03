@@ -61,6 +61,7 @@ import org.mifos.application.customer.center.business.service.CenterBusinessServ
 import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -341,6 +342,29 @@ public class CenterCustAction extends CustAction {
 	  return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
+	@TransactionDemarcate (saveToken = true)
+	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		CenterCustActionForm actionForm = (CenterCustActionForm) form;
+		actionForm.setInput(null);
+		cleanUpSearch(request);
+		return mapping.findForward(ActionForwards.loadSearch_success.toString());
+	}
+	@TransactionDemarcate (joinToken = true)
+	public ActionForward search(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		CenterCustActionForm actionForm = (CenterCustActionForm) form;
+		String searchString = actionForm.getInput();
+		if (searchString==null) throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+		searchString=searchString.trim();
+		if (searchString.equals("")) throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,new CenterBusinessService().search(searchString,userContext.getId()),request);
+	 return super.search(mapping, form, request, response);
+	}
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,CenterBO centerBO,Short localeId)
 	throws Exception {
 		List<SavingsBO> savingsAccounts = centerBO.getOpenSavingAccounts();

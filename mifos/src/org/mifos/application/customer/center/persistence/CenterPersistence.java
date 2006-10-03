@@ -10,6 +10,7 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -46,14 +47,14 @@ public class CenterPersistence extends Persistence {
 		return center;
 	}
 
-	public QueryResult search(String searchString, Short officeId,
-			Short userId, Short userOfficeId) throws PersistenceException {
+	public QueryResult search(String searchString,Short userId) throws PersistenceException {
 		String[] namedQuery = new String[2];
 		List<Param> paramList = new ArrayList<Param>();
 		QueryInputs queryInputs = new QueryInputs();
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(PersonnelConstants.USER_LIST);
-		String officeSearchId = new OfficePersistence().getSearchId(officeId);
+		PersonnelBO user = new PersonnelPersistence().getPersonnel(userId);
+		String officeSearchId = user.getOffice().getSearchId();
 		namedQuery[0]=NamedQueryConstants.CENTER_SEARCH_COUNT;
 		namedQuery[1]=NamedQueryConstants.CENTER_SEARCH;			
 		paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));	
@@ -61,7 +62,7 @@ public class CenterPersistence extends Persistence {
 		paramList.add(typeNameValue("Short","LEVEL_ID",CustomerConstants.CENTER_LEVEL_ID));
 		paramList.add(typeNameValue("Short","STATUS_ID",CustomerConstants.CENTER_ACTIVE_STATE));
 		paramList.add(typeNameValue("Short","USER_ID",userId));
-		paramList.add(typeNameValue("Short","USER_LEVEL_ID",new PersonnelPersistence().getPersonnel(userId).getLevel()
+		paramList.add(typeNameValue("Short","USER_LEVEL_ID",user.getLevel()
 				.getId()));
 		paramList.add(typeNameValue("Short","LO_LEVEL_ID",PersonnelConstants.LOAN_OFFICER));
 		String[] aliasNames = {"parentOfficeId" , "parentOfficeName" , "centerSystemId" , "centerName"};

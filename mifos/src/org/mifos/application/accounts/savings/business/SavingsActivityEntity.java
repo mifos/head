@@ -11,87 +11,69 @@ import org.mifos.framework.util.helpers.Money;
 
 public class SavingsActivityEntity extends PersistentObject {
 
-	private Integer id;
+	private final Integer id;
 
-	private PersonnelBO trxnCreatedBy;
+	private final PersonnelBO trxnCreatedBy;
 
-	private AccountBO account;
+	private final AccountBO account;
 
-	private Timestamp trxnCreatedDate;
+	private final Timestamp trxnCreatedDate;
 
-	private AccountActionEntity activity;
+	private final AccountActionEntity activity;
 
-	private Money amount;
+	private final Money amount;
 
-	private Money balanceAmount;
+	private final Money balanceAmount;
 
 	protected SavingsActivityEntity() {
+		this.id=null;
+		this.account=null;
+		this.trxnCreatedBy =null;
+		this.activity = null;
+		this.amount = null;
+		this.balanceAmount = null;
+		this.trxnCreatedDate = null;
 
 	}
 
 	public SavingsActivityEntity(PersonnelBO trxnCreatedBy,
-			AccountActionEntity activity, Money amount, Money balanceAmount, Date trxnDate) {
+			AccountActionEntity activity, Money amount, Money balanceAmount, Date trxnDate,AccountBO account ) {
+		id=null;
 		this.trxnCreatedBy = trxnCreatedBy;
 		this.activity = activity;
 		this.amount = amount;
 		this.balanceAmount = balanceAmount;
 		this.trxnCreatedDate = new Timestamp(trxnDate.getTime());
+		this.account=account;
 	}
 
 	public AccountBO getAccount() {
 		return account;
 	}
-
-	public void setAccount(AccountBO account) {
-		this.account = account;
-	}
-
 	public AccountActionEntity getActivity() {
 		return activity;
 	}
 
-	private void setActivity(AccountActionEntity activity) {
-		this.activity = activity;
-	}
 
 	public Money getAmount() {
 		return amount;
 	}
 
-	private void setAmount(Money amount) {
-		this.amount = amount;
-	}
 
 	public Money getBalanceAmount() {
 		return balanceAmount;
-	}
-
-	private void setBalanceAmount(Money balanceAmount) {
-		this.balanceAmount = balanceAmount;
 	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	private void setId(Integer id) {
-		this.id = id;
-	}
-
 	private PersonnelBO getTrxnCreatedBy() {
 		return trxnCreatedBy;
 	}
-
-	public void setTrxnCreatedBy(PersonnelBO trxnCreatedBy) {
-		this.trxnCreatedBy = trxnCreatedBy;
-	}
-
 	public Timestamp getTrxnCreatedDate() {
 		return trxnCreatedDate;
 	}
 
-	private void setTrxnCreatedDate(Timestamp trxnCreatedDate) {
-		this.trxnCreatedDate = trxnCreatedDate;
-	}
 
 }

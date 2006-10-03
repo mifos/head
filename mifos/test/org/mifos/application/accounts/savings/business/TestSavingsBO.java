@@ -1844,8 +1844,8 @@ public class TestSavingsBO extends MifosTestCase {
 					savings.getPersonnel(), (AccountActionEntity) HibernateUtil
 							.getSessionTL().get(AccountActionEntity.class,
 									Short.valueOf("1")), new Money("100"),
-					new Money("22"), new Date());
-			savingsActivity.setAccount(savings);
+					new Money("22"), new Date(),savings);
+			
 			savingsActivity.setCreatedBy(Short.valueOf("1"));
 			savingsActivity
 					.setCreatedDate(new Date(System.currentTimeMillis()));

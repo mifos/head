@@ -75,7 +75,7 @@
 								src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td width="97%"><a
-								href="PersonnelAction.do?method=loadSearch&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								href="PersonAction.do?method=loadSearch&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 								<mifos:mifoslabel name="admin.viewsysusers" /></a> | <a
 								href="PersonAction.do?method=chooseOffice&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 								<mifos:mifoslabel name="admin.definenewusers" /></a></td>

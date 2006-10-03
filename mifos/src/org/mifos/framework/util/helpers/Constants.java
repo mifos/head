@@ -79,6 +79,7 @@ public interface Constants {
 	public final static String USER_ID="user_id";
 	public final static String BRANCH_ID="branch_id";
 	public final static String SEARCH_NAME="search_name";
+	public final static String SEARCH_RESULTS="search_name";
 
 	public final static String ALGORITHM = "Algorithm";
 	public final static short BRANCH_SAME =0;

@@ -43,7 +43,7 @@ public class SearchAction extends BaseAction {
 		return mapping.findForward((String)SessionUtils.getAttribute("forwardkey",request.getSession()));
 	}
 	
-	private void cleanUpSearch(HttpServletRequest request)
+	protected void cleanUpSearch(HttpServletRequest request)
 	{
 		SessionUtils.setRemovableAttribute("TableCache",null,TableTagConstants.PATH,request.getSession());
 		SessionUtils.setRemovableAttribute("current",null,TableTagConstants.PATH,request.getSession());

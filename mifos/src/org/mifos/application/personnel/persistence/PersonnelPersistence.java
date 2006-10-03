@@ -180,14 +180,16 @@ public class PersonnelPersistence extends Persistence {
 
 	}
 
-	public QueryResult search(String searchString, Short officeId,
-			Short userId, Short userOfficeId) throws PersistenceException {
+	public QueryResult search(String searchString, Short userId) throws PersistenceException {
 		String[] namedQuery = new String[2];
 		List<Param> paramList = new ArrayList<Param>();
 		QueryInputs queryInputs = new QueryInputs();
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(PersonnelConstants.USER_LIST);
-		String officeSearchId = new OfficePersistence().getSearchId(officeId);
+		
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
+		
+		String officeSearchId = personnel.getOffice().getSearchId();
 		namedQuery[0] = NamedQueryConstants.PERSONNEL_SEARCH_COUNT;
 		namedQuery[1] = NamedQueryConstants.PERSONNEL_SEARCH;
 		paramList.add(typeNameValue("String", "USER_NAME", searchString + "%"));
@@ -197,9 +199,7 @@ public class PersonnelPersistence extends Persistence {
 		paramList.add(typeNameValue("Short", "USERID", userId));
 		paramList.add(typeNameValue("Short", "LOID",
 				PersonnelLevel.LOAN_OFFICER.getValue()));
-		paramList.add(typeNameValue("Short", "USERLEVEL_ID",
-				new PersonnelPersistence().getPersonnel(userId).getLevel()
-						.getId()));
+		paramList.add(typeNameValue("Short", "USERLEVEL_ID",personnel.getLevel().getId()));
 		String[] aliasNames = { "officeId", "officeName", "personnelId",
 				"globalPersonnelNum", "personnelName" };
 		queryInputs.setQueryStrings(namedQuery);

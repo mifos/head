@@ -48,10 +48,15 @@
 			<forward name="editpreview_failure" path="/pages/application/center/jsp/editcenter.jsp" />			
 			<forward name="editprevious_success" path="/pages/application/center/jsp/editcenter.jsp" />						
 			<forward name="update_success" path="/centerAction.do?method=get" />
+			<forward name="search_success" path="/pages/application/center/jsp/center_search_results.jsp" />
+			<forward name="search_failure" path="/pages/application/center/jsp/center_search.jsp" />
+			<forward name="loadSearch_success" path="/pages/application/center/jsp/center_search.jsp" />
 			
 			<!-- Cancel Page Forwards -->
 			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
 			<forward name="get_success" path="/pages/application/center/jsp/center_details.jsp" />
+			
+			
 		</action>
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">

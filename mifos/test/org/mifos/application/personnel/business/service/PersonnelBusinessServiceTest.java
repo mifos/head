@@ -14,6 +14,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PersonnelBusinessServiceTest extends MifosTestCase {
@@ -57,7 +58,15 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 		}
 
 	}
-	
+
+	public void testSearch()throws Exception{
+		personnel = createPersonnel();
+		QueryResult queryResult=personnelBusinessService.search(personnel.getUserName(),Short.valueOf("1"),Short.valueOf("1")				);
+		
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		assertEquals(1,queryResult.get(0,10).size());
+	}
 	private PersonnelBO createPersonnel() throws Exception {
 		office = TestObjectFactory.getOffice(Short.valueOf("1"));
 		Name name = new Name("XYZ", null, null, null);
@@ -79,4 +88,6 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
 	}
+	
+	
 }

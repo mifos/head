@@ -53,8 +53,7 @@ public class TestCenterPersistence extends MifosTestCase{
 	public void testSearch() throws Exception{
 		String centerName="NewCenter";
 		center = TestObjectFactory.createCenter(centerName,CustomerStatus.CENTER_ACTIVE.getValue(),"",getMeeting(),new Date());
-	   QueryResult queryResult=	new CenterPersistence().search(center.getDisplayName(),Short.valueOf("3")
-				,Short.valueOf("1"),Short.valueOf("1"));
+	   QueryResult queryResult=	new CenterPersistence().search(center.getDisplayName(),Short.valueOf("1"));
 	   assertNotNull(queryResult);
 	   assertEquals(1,queryResult.getSize());
 	   assertEquals(1,queryResult.get(0,10).size());
