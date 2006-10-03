@@ -8,75 +8,46 @@ import org.mifos.framework.util.helpers.Money;
 
 public class CustomerActivityEntity extends PersistentObject {
 
-	private Integer customerActivityId;
+	private final Integer customerActivityId;
 
-	private Money amount;
+	private final Money amount;
 
-	private CustomerAccountBO customerAccount;
+	private final CustomerAccountBO customerAccount;
 
-	private String description;
+	private final String description;
 
-	private PersonnelBO personnel;
+	private final PersonnelBO personnel;
 
 	protected CustomerActivityEntity() {
+		customerActivityId = null;
+		this.customerAccount = null;
+		this.personnel = null;
+		this.amount = null;
+		this.description = null;
+		this.createdDate = null;
 	}
 
-	public CustomerActivityEntity(PersonnelBO personnel, String description,
-			Money amount,Date trxnDate) {
+	public CustomerActivityEntity(CustomerAccountBO customerAccount,
+			PersonnelBO personnel, Money amount, String description,
+			Date trxnDate) {
+		customerActivityId = null;
+		this.customerAccount = customerAccount;
 		this.personnel = personnel;
 		this.amount = amount;
 		this.description = description;
 		this.createdDate = trxnDate;
 	}
-	
-	public CustomerActivityEntity(CustomerAccountBO customerAccount,PersonnelBO personnel, Money amount,
-			String description) {
-		this.customerAccount=customerAccount;
-		this.personnel = personnel;
-		this.amount = amount;
-		this.description = description;
-		this.createdDate = new Date(System.currentTimeMillis());
-	}
-
 
 	public Money getAmount() {
 		return amount;
-	}
-
-	private void setAmount(Money amount) {
-		this.amount = amount;
-	}
-
-	private CustomerAccountBO getCustomerAccount() {
-		return customerAccount;
-	}
-
-	public void setCustomerAccount(CustomerAccountBO customerAccount) {
-		this.customerAccount = customerAccount;
-	}
-
-	private Integer getCustomerActivityId() {
-		return customerActivityId;
-	}
-
-	private void setCustomerActivityId(Integer customerActivityId) {
-		this.customerActivityId = customerActivityId;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	private void setDescription(String description) {
-		this.description = description;
-	}
-
 	public PersonnelBO getPersonnel() {
 		return personnel;
-	}
-
-	private void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
 	}
 
 }

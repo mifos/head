@@ -47,6 +47,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -71,6 +72,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	private CustomerBO group;
 	private UserContext userContext ;
 	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
@@ -103,6 +105,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		request.getSession().setAttribute(SecurityConstants.SECURITY_PARAM,"Loan");
 	}
 	
+	@Override
 	public void tearDown()throws Exception{
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
@@ -150,7 +153,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	
 	public void testApplyPaymentForLoan()throws Exception{
 		accountBO = createLoanAccount();
-		accountBO.setAccountState(new AccountStateEntity(AccountStates.LOANACC_BADSTANDING));
+		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_BADSTANDING));
 		request.getSession().setAttribute(Constants.BUSINESS_KEY,accountBO);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));
@@ -174,7 +177,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	
 	public void testApplyPaymentAndRetrievalForLoanWhenStatusIsChanged()throws Exception{
 		accountBO = createLoanAccount();
-		accountBO.setAccountState(new AccountStateEntity(AccountStates.LOANACC_BADSTANDING));
+		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_BADSTANDING));
 		request.getSession().setAttribute(Constants.BUSINESS_KEY,accountBO);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));
@@ -210,7 +213,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	
 	public void testApplyPaymentForLoanWhenReceiptDateisNull()throws Exception{
 		accountBO = createLoanAccount();
-		accountBO.setAccountState(new AccountStateEntity(AccountStates.LOANACC_BADSTANDING));
+		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_BADSTANDING));
 		request.getSession().setAttribute(Constants.BUSINESS_KEY,accountBO);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));

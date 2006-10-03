@@ -45,26 +45,34 @@ import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.struts.tags.DateHelper;
 
 public class AccountStatusChangeHistoryEntity extends PersistentObject {
-	private Integer accountStatusChangeId;
+	private final Integer accountStatusChangeId;
 
-	private AccountBO account;
+	private final AccountBO account;
 
-	private AccountStateEntity oldStatus;
+	private final AccountStateEntity oldStatus;
 
-	private AccountStateEntity newStatus;
+	private final AccountStateEntity newStatus;
 
-	private PersonnelBO personnel;
+	private final PersonnelBO personnel;
 
 	private Locale locale = null;
 
 	protected AccountStatusChangeHistoryEntity() {
+		accountStatusChangeId = null;
+		this.oldStatus = null;
+		this.newStatus = null;
+		this.personnel = null;
+		this.account = null;
 	}
 
 	public AccountStatusChangeHistoryEntity(AccountStateEntity oldStatus,
-			AccountStateEntity newStatus, PersonnelBO personnel) {
-		this.setOldStatus(oldStatus);
-		this.setNewStatus(newStatus);
-		this.setPersonnel(personnel);
+			AccountStateEntity newStatus, PersonnelBO personnel,
+			AccountBO account) {
+		accountStatusChangeId = null;
+		this.oldStatus = oldStatus;
+		this.newStatus = newStatus;
+		this.personnel = personnel;
+		this.account = account;
 		this.setCreatedDate(new Date(System.currentTimeMillis()));
 	}
 
@@ -72,40 +80,20 @@ public class AccountStatusChangeHistoryEntity extends PersistentObject {
 		return account;
 	}
 
-	public void setAccount(AccountBO account) {
-		this.account = account;
-	}
-
 	public Integer getAccountStatusChangeId() {
 		return accountStatusChangeId;
-	}
-
-	public void setAccountStatusChangeId(Integer accountStatusChangeId) {
-		this.accountStatusChangeId = accountStatusChangeId;
 	}
 
 	public AccountStateEntity getNewStatus() {
 		return newStatus;
 	}
 
-	public void setNewStatus(AccountStateEntity newStatus) {
-		this.newStatus = newStatus;
-	}
-
 	public AccountStateEntity getOldStatus() {
 		return oldStatus;
 	}
 
-	public void setOldStatus(AccountStateEntity oldStatus) {
-		this.oldStatus = oldStatus;
-	}
-
 	public PersonnelBO getPersonnel() {
 		return personnel;
-	}
-
-	public void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
 	}
 
 	public String getPersonnelName() {

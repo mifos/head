@@ -47,7 +47,6 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -98,7 +97,6 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 	}
 
 	public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
-		feesTrxn.setAccountTrxn(this);
 		feesTrxnDetails.add(feesTrxn);
 	}
 
@@ -169,9 +167,9 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
 		for (AccountFeesEntity accountFeesEntity : accountFees) {
 			if (accountFeesEntity.isTimeOfDisbursement()) {
-				FeesTrxnDetailEntity feesTrxnDetailEntity = new FeesTrxnDetailEntity();
-				feesTrxnDetailEntity.setFeeDetails(accountFeesEntity,
-						accountFeesEntity.getAccountFeeAmount());
+				FeesTrxnDetailEntity feesTrxnDetailEntity = new FeesTrxnDetailEntity(
+						this, accountFeesEntity, accountFeesEntity
+								.getAccountFeeAmount());
 				addFeesTrxnDetail(feesTrxnDetailEntity);
 			}
 		}
@@ -201,16 +199,17 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 				Money feeAmount = loanPaymentDataView.getFeesPaid().get(
 						accountFeesActionDetail.getFee().getFeeId());
 				accountFeesActionDetail.makePayment(feeAmount);
-				FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity();
-				feesTrxnDetailBO.setFeeDetails(accountFeesActionDetail
-						.getAccountFee(), feeAmount);
+				FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity(
+						this, accountFeesActionDetail.getAccountFee(),
+						feeAmount);
 				addFeesTrxnDetail(feesTrxnDetailBO);
 			}
 		}
 	}
 
 	@Override
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment) throws AccountException {
+	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
+			throws AccountException {
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
@@ -223,16 +222,16 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
 		LoanTrxnDetailEntity reverseAccntTrxn;
 		try {
-			reverseAccntTrxn = new LoanTrxnDetailEntity(
-					getAccountPayment(),
-					(AccountActionEntity) new MasterPersistence().getPersistentObject(
-							AccountActionEntity.class,
-							AccountConstants.ACTION_LOAN_ADJUSTMENT),
+			reverseAccntTrxn = new LoanTrxnDetailEntity(getAccountPayment(),
+					(AccountActionEntity) new MasterPersistence()
+							.getPersistentObject(AccountActionEntity.class,
+									AccountConstants.ACTION_LOAN_ADJUSTMENT),
 					getInstallmentId(), getDueDate(), getPersonnel(),
 					getActionDate(), getAmount().negate(), comment, this,
-					getPrincipalAmount().negate(), getInterestAmount().negate(),
-					getPenaltyAmount().negate(), getMiscFeeAmount().negate(),
-					getMiscPenaltyAmount().negate());
+					getPrincipalAmount().negate(),
+					getInterestAmount().negate(), getPenaltyAmount().negate(),
+					getMiscFeeAmount().negate(), getMiscPenaltyAmount()
+							.negate());
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -242,7 +241,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 					"Before generating reverse entries for fees");
 			for (FeesTrxnDetailEntity feeTrxnDetail : getFeesTrxnDetails()) {
 				reverseAccntTrxn.addFeesTrxnDetail(feeTrxnDetail
-						.generateReverseTrxn());
+						.generateReverseTrxn(reverseAccntTrxn));
 			}
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"after generating reverse entries for fees");

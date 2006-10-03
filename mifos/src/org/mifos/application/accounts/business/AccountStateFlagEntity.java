@@ -39,14 +39,16 @@ package org.mifos.application.accounts.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
 
-public class AccountStateFlagEntity extends MasterDataEntity{	
+public class AccountStateFlagEntity extends MasterDataEntity {
 	private Short statusId;
+
 	private String flagDescription;
+
 	private Short retained;
 
-	public AccountStateFlagEntity(){	}
-	
-	
+	protected AccountStateFlagEntity() {
+	}
+
 	public String getFlagDescription() {
 		return flagDescription;
 	}
@@ -54,7 +56,7 @@ public class AccountStateFlagEntity extends MasterDataEntity{
 	public void setFlagDescription(String flagDescription) {
 		this.flagDescription = flagDescription;
 	}
-	
+
 	public Short getStatusId() {
 		return statusId;
 	}
@@ -63,18 +65,16 @@ public class AccountStateFlagEntity extends MasterDataEntity{
 		this.statusId = statusId;
 	}
 
-
 	void setRetained(Short retained) {
 		this.retained = retained;
 	}
-	
+
 	Short getRetained() {
 		return this.retained;
 	}
-	
-	public boolean isFlagRetained(){
-		return this.getRetained()==1;
+
+	public boolean isFlagRetained() {
+		return this.getRetained() == 1;
 	}
-	
-	
+
 }

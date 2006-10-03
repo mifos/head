@@ -48,33 +48,35 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class AccountNotesEntity extends PersistentObject {
 
-	private Integer commentId;
+	private final Integer commentId;
 
-	private Date commentDate;
+	private final Date commentDate;
 
-	private String comment;
+	private final String comment;
 
-	private PersonnelBO personnel;
+	private final PersonnelBO personnel;
 
-	private AccountBO account;
+	private final AccountBO account;
 
 	protected AccountNotesEntity() {
-		super();
+		commentId = null;
+		this.commentDate = null;
+		this.comment = null;
+		this.personnel = null;
+		this.account = null;
 	}
 
 	public AccountNotesEntity(Date commentDate, String comment,
-			PersonnelBO personnel) {
+			PersonnelBO personnel, AccountBO account) {
+		commentId = null;
 		this.commentDate = commentDate;
 		this.comment = comment;
 		this.personnel = personnel;
+		this.account = account;
 	}
 
-	public java.lang.Integer getCommentId() {
+	public Integer getCommentId() {
 		return commentId;
-	}
-
-	public void setCommentId(Integer commentId) {
-		this.commentId = commentId;
 	}
 
 	public String getCommentDateStr() {
@@ -85,32 +87,16 @@ public class AccountNotesEntity extends PersistentObject {
 		return this.commentDate;
 	}
 
-	public void setCommentDate(Date commentDate) {
-		this.commentDate = commentDate;
-	}
-
 	public String getComment() {
 		return this.comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	public AccountBO getAccount() {
 		return account;
 	}
 
-	public void setAccount(AccountBO account) {
-		this.account = account;
-	}
-
 	public PersonnelBO getPersonnel() {
 		return personnel;
-	}
-
-	public void setPersonnel(PersonnelBO personnel) {
-		this.personnel = personnel;
 	}
 
 	public String getPersonnelName() {

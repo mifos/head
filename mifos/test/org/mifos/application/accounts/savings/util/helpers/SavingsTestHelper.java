@@ -190,8 +190,7 @@ public class SavingsTestHelper {
 	public AccountNotesEntity getAccountNotes(SavingsBO savingsBO) {
 		AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(
 				System.currentTimeMillis()), "xxxxxxxxxxxx", savingsBO
-				.getPersonnel());
-		notes.setAccount(savingsBO);
+				.getPersonnel(),savingsBO);
 		return notes;
 	}
 

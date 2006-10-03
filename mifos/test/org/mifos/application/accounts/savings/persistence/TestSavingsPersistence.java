@@ -300,7 +300,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000021",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION,
 				userContext);
-		savings.setAccountState(new AccountStateEntity(AccountStates.SAVINGS_ACC_INACTIVE));
+		savings.setAccountState(new AccountStateEntity(AccountState.SAVINGS_ACC_INACTIVE));
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -338,7 +338,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000021",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION,
 				userContext);
-		savings.setAccountState(new AccountStateEntity(AccountStates.SAVINGS_ACC_INACTIVE));
+		savings.setAccountState(new AccountStateEntity(AccountState.SAVINGS_ACC_INACTIVE));
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -494,8 +494,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		ProductTypeEntity productTypeEntity = (ProductTypeEntity) session.get(
 				ProductTypeEntity.class, (short) 2);
 
-		AccountStateEntity accountStateEntity = new AccountStateEntity(Short
-				.valueOf("13"));
+		AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
 
 		accountCheckList.setAccountStateEntity(accountStateEntity);
 		accountCheckList.setProductTypeEntity(productTypeEntity);

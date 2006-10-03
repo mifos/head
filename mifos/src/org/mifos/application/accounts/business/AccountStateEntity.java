@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.mifos.application.accounts.business;
 
 import java.util.HashSet;
@@ -8,16 +5,16 @@ import java.util.Set;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.StateEntity;
-import org.mifos.application.productdefinition.util.valueobjects.ProductType;
+import org.mifos.application.productdefinition.business.ProductTypeEntity;
 
 public class AccountStateEntity extends StateEntity {
 
-	private ProductType prdType;
+	private ProductTypeEntity prdType;
 
 	private Set<AccountStateFlagEntity> flagSet;
-	
+
 	private Short optional;
-	
+
 	protected AccountStateEntity() {
 	}
 
@@ -25,18 +22,9 @@ public class AccountStateEntity extends StateEntity {
 		super(accountState.getValue());
 		this.flagSet = new HashSet<AccountStateFlagEntity>();
 	}
-	
-	public AccountStateEntity(Short accountStateId) {
-		super(accountStateId);
-		this.flagSet = new HashSet<AccountStateFlagEntity>();
-	}
 
-	public ProductType getPrdType() {
+	public ProductTypeEntity getPrdType() {
 		return prdType;
-	}
-
-	private void setPrdType(ProductType prdType) {
-		this.prdType = prdType;
 	}
 
 	public Set<AccountStateFlagEntity> getFlagSet() {

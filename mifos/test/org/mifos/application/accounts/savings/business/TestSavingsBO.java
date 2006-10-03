@@ -3740,7 +3740,7 @@ public class TestSavingsBO extends MifosTestCase {
 		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
 		meetingDates.remove(0);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
-				AccountStates.SAVINGS_ACC_CANCEL);
+				AccountState.SAVINGS_ACC_CANCEL);
 		savings.setAccountState(accountStateEntity);
 		savings.regenerateFutureInstallments((short) (accountActionDateEntity
 				.getInstallmentId().intValue() + 1));
@@ -3918,7 +3918,7 @@ public class TestSavingsBO extends MifosTestCase {
 					new PaymentTypeEntity(Short.valueOf("1")));
 			AccountNotesEntity notes = new AccountNotesEntity(
 					new java.sql.Date(System.currentTimeMillis()), "closing account",
-					TestObjectFactory.getPersonnel(userContext.getId()));
+					TestObjectFactory.getPersonnel(userContext.getId()),savings);
 			savings.closeAccount(payment, notes, group);
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
@@ -3987,7 +3987,7 @@ public class TestSavingsBO extends MifosTestCase {
 		PersonnelBO personnelBO = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 		AccountNotesEntity accountNotesEntity = new AccountNotesEntity(
-				currentDate, comment, personnelBO);
+				currentDate, comment, personnelBO,savings);
 		savings.addAccountNotes(accountNotesEntity);
 		savings.update();
 		HibernateUtil.commitTransaction();

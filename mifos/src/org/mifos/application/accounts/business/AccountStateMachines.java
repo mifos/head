@@ -64,19 +64,15 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.components.stateMachineFactory.StateMachine;
 import org.mifos.framework.components.stateMachineFactory.StateXMLParser;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 
 public class AccountStateMachines implements StateMachine {
-	AccountBusinessService accountBusinessService = new AccountBusinessService();
-
-	CustomerBusinessService customerBusinessService = new CustomerBusinessService();
-
-	private AccountStateMachines() {
-	}
 
 	private static AccountStateMachines statemachine = new AccountStateMachines();
+	
+	private AccountStateMachines() {
+	}
 
 	public static AccountStateMachines getInstance() {
 		return statemachine;
@@ -115,30 +111,41 @@ public class AccountStateMachines implements StateMachine {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
-	public void initialize(Short localeId, Short officeId, AccountTypes accountType,
-			CustomerLevel level) throws StatesInitializationException {
+	public void initialize(Short localeId, Short officeId,
+			AccountTypes accountType, CustomerLevel level)
+			throws StatesInitializationException {
 		logger.debug("In AccountStateMachines::initialize()");
 		String configName = getConfigurationName(officeId, accountType, level);
 		try {
 			if (accountType.equals(AccountTypes.LOANACCOUNT)) {
-				statesMapForLoan = loadMap(AccountStates.TRANSITION_CONFIG_FILE_PATH_LOAN,configName);
+				statesMapForLoan = loadMap(
+						AccountStates.TRANSITION_CONFIG_FILE_PATH_LOAN,
+						configName);
 				accountStateEntityListForLoan = retrieveAllAccountStateList(accountType);
 				populateLoanStatesViewMap();
 			} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
-				statesMapForSavings = loadMap(AccountStates.TRANSITION_CONFIG_FILE_PATH_SAVINGS,configName);
+				statesMapForSavings = loadMap(
+						AccountStates.TRANSITION_CONFIG_FILE_PATH_SAVINGS,
+						configName);
 				accountStateEntityListForSavings = retrieveAllAccountStateList(accountType);
 				populateSavingsStatesViewMap();
 			} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
 				if (level.equals(CustomerLevel.CENTER)) {
-					statesMapForCenter =loadMap(CustomerConstants.TRANSITION_CONFIG_FILE_PATH_CENTER,configName);
+					statesMapForCenter = loadMap(
+							CustomerConstants.TRANSITION_CONFIG_FILE_PATH_CENTER,
+							configName);
 					customerStatusListForCenter = retrieveAllCustomerStatusList(level);
 					populateCenterStatesViewMap();
 				} else if (level.equals(CustomerLevel.GROUP)) {
-					statesMapForGroup = loadMap(CustomerConstants.TRANSITION_CONFIG_FILE_PATH_GROUP,configName);
+					statesMapForGroup = loadMap(
+							CustomerConstants.TRANSITION_CONFIG_FILE_PATH_GROUP,
+							configName);
 					customerStatusListForGroup = retrieveAllCustomerStatusList(level);
 					populateGroupStatesViewMap();
 				} else if (level.equals(CustomerLevel.CLIENT)) {
-					statesMapForClient = loadMap(CustomerConstants.TRANSITION_CONFIG_FILE_PATH_CLIENT,configName);
+					statesMapForClient = loadMap(
+							CustomerConstants.TRANSITION_CONFIG_FILE_PATH_CLIENT,
+							configName);
 					customerStatusListForClient = retrieveAllCustomerStatusList(level);
 					populateClientStatesViewMap();
 				}
@@ -149,18 +156,20 @@ public class AccountStateMachines implements StateMachine {
 		}
 	}
 
-	public String getAccountStatusName(Short localeId, AccountState accountState,
-			AccountTypes accountType) {
+	public String getAccountStatusName(Short localeId,
+			AccountState accountState, AccountTypes accountType) {
 		logger.debug("In AccountStateMachines::getAccountStatusName()");
 		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
 			for (AccountStateEntity accountStateEntityObj : accountStateEntityListForLoan) {
-				if (accountStateEntityObj.getId().equals(accountState.getValue())) {
+				if (accountStateEntityObj.getId().equals(
+						accountState.getValue())) {
 					return accountStateEntityObj.getName(localeId);
 				}
 			}
 		} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
 			for (AccountStateEntity accountStateEntityObj : accountStateEntityListForSavings) {
-				if (accountStateEntityObj.getId().equals(accountState.getValue())) {
+				if (accountStateEntityObj.getId().equals(
+						accountState.getValue())) {
 					return accountStateEntityObj.getName(localeId);
 				}
 			}
@@ -168,47 +177,52 @@ public class AccountStateMachines implements StateMachine {
 		return null;
 	}
 
-	public String getAccountFlagName(Short localeId, AccountStateFlag flag, AccountTypes accountType) {
+	public String getAccountFlagName(Short localeId, AccountStateFlag flag,
+			AccountTypes accountType) {
 		logger.debug("In AccountStateMachines::getAccountFlagName()");
 		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
 			for (AccountStateEntity accountStateEntity : accountStateEntityListForLoan) {
-				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity.getFlagSet()) {
-						if (accountStateFlagEntity.getId().equals(flag.getValue())) {
-							return accountStateFlagEntity.getName(localeId);
-						}
+				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
+						.getFlagSet()) {
+					if (accountStateFlagEntity.getId().equals(flag.getValue())) {
+						return accountStateFlagEntity.getName(localeId);
+					}
 				}
 			}
 		} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
 			for (AccountStateEntity accountStateEntity : accountStateEntityListForSavings) {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
 						.getFlagSet()) {
-						if (accountStateFlagEntity.getId().equals(flag.getValue())) {
-							return accountStateFlagEntity.getName(localeId);
-						}
+					if (accountStateFlagEntity.getId().equals(flag.getValue())) {
+						return accountStateFlagEntity.getName(localeId);
+					}
 				}
 			}
 		}
 		return null;
 	}
 
-	public String getCustomerStatusName(Short localeId, CustomerStatus customerStatus,
-			CustomerLevel customerLevel) {
+	public String getCustomerStatusName(Short localeId,
+			CustomerStatus customerStatus, CustomerLevel customerLevel) {
 		logger.debug("In AccountStateMachines::getCustomerStatusName()");
 		if (customerLevel.equals(CustomerLevel.CENTER)) {
 			for (CustomerStatusEntity customerStatusEntity : customerStatusListForCenter) {
-				if (customerStatusEntity.getId().equals(customerStatus.getValue())) {
+				if (customerStatusEntity.getId().equals(
+						customerStatus.getValue())) {
 					return customerStatusEntity.getName(localeId);
 				}
 			}
 		} else if (customerLevel.equals(CustomerLevel.GROUP)) {
 			for (CustomerStatusEntity customerStatusEntity : customerStatusListForGroup) {
-				if (customerStatusEntity.getId().equals(customerStatus.getValue())) {
+				if (customerStatusEntity.getId().equals(
+						customerStatus.getValue())) {
 					return customerStatusEntity.getName(localeId);
 				}
 			}
 		} else if (customerLevel.equals(CustomerLevel.CLIENT)) {
 			for (CustomerStatusEntity customerStatusEntity : customerStatusListForClient) {
-				if (customerStatusEntity.getId().equals(customerStatus.getValue())) {
+				if (customerStatusEntity.getId().equals(
+						customerStatus.getValue())) {
 					return customerStatusEntity.getName(localeId);
 				}
 			}
@@ -216,15 +230,16 @@ public class AccountStateMachines implements StateMachine {
 		return null;
 	}
 
-	public String getCustomerFlagName(Short localeId, CustomerStatusFlag customerStatusFlag,
-			CustomerLevel customerLevel) {
+	public String getCustomerFlagName(Short localeId,
+			CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel) {
 		logger.debug("In AccountStateMachines::getCustomerFlagName()");
 		if (customerLevel.equals(CustomerLevel.CENTER)) {
 			for (CustomerStatusEntity customerStatus : customerStatusListForCenter) {
 				for (CustomerStatusFlagEntity customerStateFlagEntity : customerStatus
 						.getFlagSet()) {
 					if (null != customerStateFlagEntity.getId()) {
-						if (customerStateFlagEntity.getId().equals(customerStatusFlag.getValue())) {
+						if (customerStateFlagEntity.getId().equals(
+								customerStatusFlag.getValue())) {
 							return customerStateFlagEntity.getName(localeId);
 						}
 					}
@@ -235,7 +250,8 @@ public class AccountStateMachines implements StateMachine {
 				for (CustomerStatusFlagEntity customerStateFlagEntity : customerStatus
 						.getFlagSet()) {
 					if (null != customerStateFlagEntity.getId()) {
-						if (customerStateFlagEntity.getId().equals(customerStatusFlag.getValue())) {
+						if (customerStateFlagEntity.getId().equals(
+								customerStatusFlag.getValue())) {
 							return customerStateFlagEntity.getName(localeId);
 						}
 					}
@@ -246,7 +262,8 @@ public class AccountStateMachines implements StateMachine {
 				for (CustomerStatusFlagEntity customerStateFlagEntity : customerStatus
 						.getFlagSet()) {
 					if (null != customerStateFlagEntity.getId()) {
-						if (customerStateFlagEntity.getId().equals(customerStatusFlag.getValue())) {
+						if (customerStateFlagEntity.getId().equals(
+								customerStatusFlag.getValue())) {
 							return customerStateFlagEntity.getName(localeId);
 						}
 					}
@@ -255,8 +272,9 @@ public class AccountStateMachines implements StateMachine {
 		}
 		return null;
 	}
-	
-	public List<AccountStateEntity> getStatusList(AccountStateEntity accountStateEntity, AccountTypes accountTypes) {
+
+	public List<AccountStateEntity> getStatusList(
+			AccountStateEntity accountStateEntity, AccountTypes accountTypes) {
 		logger.debug("In AccountStateMachines::getStatusList()");
 		if (accountTypes.equals(AccountTypes.LOANACCOUNT)) {
 			return statesViewMapForLoan.get(accountStateEntity.getId());
@@ -266,7 +284,8 @@ public class AccountStateMachines implements StateMachine {
 		return null;
 	}
 
-	public List<CustomerStatusEntity> getStatusList(CustomerStatusEntity customerStatus, CustomerLevel customerLevel) {
+	public List<CustomerStatusEntity> getStatusList(
+			CustomerStatusEntity customerStatus, CustomerLevel customerLevel) {
 		logger.debug("In AccountStateMachines::getStatusList()");
 		if (customerLevel.equals(CustomerLevel.CENTER)) {
 			if (statesViewMapForCenter.containsKey(customerStatus.getId())) {
@@ -284,8 +303,8 @@ public class AccountStateMachines implements StateMachine {
 		return null;
 	}
 
-	private String getConfigurationName(Short officeId, AccountTypes accountType,
-			CustomerLevel level) {
+	private String getConfigurationName(Short officeId,
+			AccountTypes accountType, CustomerLevel level) {
 		logger.debug("In AccountStateMachines::getConfigurationName()");
 		String configurationName = null;
 		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
@@ -309,8 +328,7 @@ public class AccountStateMachines implements StateMachine {
 				configurationName = "configuration 1";
 			else
 				configurationName = "configuration 2";
-		} else if (accountType
-				.equals(AccountTypes.CUSTOMERACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
 			if (level.equals(CustomerLevel.CENTER)) {
 				configurationName = "configuration 1";
 			} else if (level.equals(CustomerLevel.GROUP)) {
@@ -332,9 +350,10 @@ public class AccountStateMachines implements StateMachine {
 
 	private List<CustomerStatusEntity> retrieveAllCustomerStatusList(
 			CustomerLevel customerLevel) throws StatesInitializationException {
-		logger.debug("In AccountStateMachines::retrieveAllCustomerStatusList()");
+		logger
+				.debug("In AccountStateMachines::retrieveAllCustomerStatusList()");
 		try {
-			return customerBusinessService
+			return new CustomerBusinessService()
 					.retrieveAllCustomerStatusList(customerLevel.getValue());
 		} catch (ServiceException pe) {
 			throw new StatesInitializationException(
@@ -471,7 +490,8 @@ public class AccountStateMachines implements StateMachine {
 
 	private List<CustomerStatusEntity> retrieveNextPossibleCustomerStateForGroup(
 			StateEntity customerStateEntityObj) throws ApplicationException {
-		logger.debug("In AccountStateMachines::retrieveNextPossibleCustomerStateForGroup()");
+		logger
+				.debug("In AccountStateMachines::retrieveNextPossibleCustomerStateForGroup()");
 		List<CustomerStatusEntity> stateEntityList = new ArrayList<CustomerStatusEntity>();
 		try {
 			List<StateEntity> stateList = statesMapForGroup
@@ -495,7 +515,8 @@ public class AccountStateMachines implements StateMachine {
 
 	private List<CustomerStatusEntity> retrieveNextPossibleCustomerStateForClient(
 			StateEntity customerStateEntityObj) throws ApplicationException {
-		logger.debug("In AccountStateMachines::retrieveNextPossibleCustomerStateForClient()");
+		logger
+				.debug("In AccountStateMachines::retrieveNextPossibleCustomerStateForClient()");
 		List<CustomerStatusEntity> stateEntityList = new ArrayList<CustomerStatusEntity>();
 		try {
 			List<StateEntity> stateList = statesMapForClient
@@ -571,7 +592,7 @@ public class AccountStateMachines implements StateMachine {
 			AccountTypes accountType) throws ApplicationException {
 		logger.debug("In AccountStateMachines::retrieveAllAccountStateList()");
 		try {
-			return accountBusinessService
+			return new AccountBusinessService()
 					.retrieveAllAccountStateList(accountType);
 		} catch (ServiceException e) {
 			throw new ApplicationException(
@@ -638,8 +659,10 @@ public class AccountStateMachines implements StateMachine {
 			}
 		}
 	}
-	
-	private Map<StateEntity,List<StateEntity>> loadMap(String filename, String configurationName) {
-		return StateXMLParser.getInstance().loadMapFromXml(filename,configurationName);
+
+	private Map<StateEntity, List<StateEntity>> loadMap(String filename,
+			String configurationName) {
+		return StateXMLParser.getInstance().loadMapFromXml(filename,
+				configurationName);
 	}
 }

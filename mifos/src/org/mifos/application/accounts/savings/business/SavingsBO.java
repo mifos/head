@@ -368,7 +368,7 @@ public class SavingsBO extends AccountBO {
 					.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 							this.getAccountState(), this.getAccountState(),
 							(new PersonnelPersistence())
-									.getPersonnel(userContext.getId())));
+									.getPersonnel(userContext.getId()),this));
 
 			(new SavingsPersistence()).createOrUpdate(this);
 
@@ -637,9 +637,6 @@ public class SavingsBO extends AccountBO {
 								payment.getAmount()));
 				buildFinancialEntries(payment.getAccountTrxns());
 			}
-			notes.setCommentDate(new java.sql.Date(helper.getCurrentDate()
-					.getTime()));
-			notes.setPersonnel(loggedInUser);
 			this.addAccountNotes(notes);
 			this.setLastIntCalcDate(helper.getCurrentDate());
 			this.setLastIntPostDate(helper.getCurrentDate());
@@ -649,7 +646,7 @@ public class SavingsBO extends AccountBO {
 			this.setClosedDate(new Date(System.currentTimeMillis()));
 			this
 					.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-							accountState, this.getAccountState(), loggedInUser));
+							accountState, this.getAccountState(), loggedInUser,this));
 			this.update();
 			logger
 					.debug("In SavingsBO::close(), account closed successfully ; accountId: "
@@ -1786,7 +1783,7 @@ public class SavingsBO extends AccountBO {
 			AccountNotesEntity accountNotes = new AccountNotesEntity(
 					new java.sql.Date(System.currentTimeMillis()), comment,
 					(new PersonnelPersistence()).getPersonnel(userContext
-							.getId()));
+							.getId()),this);
 			return accountNotes;
 
 		} catch (PersistenceException e) {

@@ -209,8 +209,9 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.getAccountFeesActionDetails()) {
 			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
 					.getMoneyForMFICurrency(100));
-			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity();
-			feeTrxn.makePayment(accountFeesActionDetailEntity);
+			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
+					accountTrxnEntity, accountFeesActionDetailEntity.getAccountFee(),
+					accountFeesActionDetailEntity.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}

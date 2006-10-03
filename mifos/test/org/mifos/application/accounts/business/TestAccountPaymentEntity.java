@@ -1,13 +1,9 @@
 package org.mifos.application.accounts.business;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
@@ -15,7 +11,7 @@ import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -75,10 +71,14 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 			TestObjectFactory.getMoneyForMFICurrency(100), TestObjectFactory.getMoneyForMFICurrency(100));
 		
 		
-		for(AccountFeesActionDetailEntity accountFeesActionDetailEntity:accountAction.getAccountFeesActionDetails()) {
-			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory.getMoneyForMFICurrency(100));
-			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity();
-			feeTrxn.makePayment(accountFeesActionDetailEntity);
+		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction
+				.getAccountFeesActionDetails()) {
+			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
+					.getMoneyForMFICurrency(100));
+			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
+					accountTrxnEntity, accountFeesActionDetailEntity
+							.getAccountFee(), accountFeesActionDetailEntity
+							.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}

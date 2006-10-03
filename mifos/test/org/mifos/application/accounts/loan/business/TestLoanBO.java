@@ -1450,7 +1450,7 @@ public class TestLoanBO extends MifosTestCase {
 		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
-				AccountStates.LOANACC_CANCEL);
+				AccountState.LOANACC_CANCEL);
 		accountBO.setAccountState(accountStateEntity);
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
@@ -1551,7 +1551,7 @@ public class TestLoanBO extends MifosTestCase {
 			SystemException {
 		accountBO = getLoanAccount();
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
-				AccountStates.LOANACC_BADSTANDING);
+				AccountState.LOANACC_BADSTANDING);
 		accountBO.setAccountState(accountStateEntity);
 		changeInstallmentDate(accountBO, 14, Short.valueOf("1"));
 		changeInstallmentDate(accountBO, 14, Short.valueOf("2"));
@@ -1711,7 +1711,7 @@ public class TestLoanBO extends MifosTestCase {
 			throws AccountException, SystemException {
 		accountBO = getLoanAccountWithPerformanceHistory();
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
-				AccountStates.LOANACC_BADSTANDING);
+				AccountState.LOANACC_BADSTANDING);
 		accountBO.setAccountState(accountStateEntity);
 		TestObjectFactory.updateObject(accountBO);
 		HibernateUtil.getSessionTL().flush();
@@ -2586,7 +2586,7 @@ public class TestLoanBO extends MifosTestCase {
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();
 		accountBO.setAccountState(new AccountStateEntity(
-				AccountState.LOANACC_APPROVED.getValue()));
+				AccountState.LOANACC_APPROVED));
 		((LoanBO) accountBO).setDisbursementDate(newDate);
 		((LoanBO) accountBO).updateLoan();
 		HibernateUtil.commitTransaction();
@@ -3790,7 +3790,7 @@ public class TestLoanBO extends MifosTestCase {
 		Date disbursementDate =offSetCurrentDate(28);
 		AccountActionDateEntity accountActionDate1 = loan.getAccountActionDate((short)1);
 		AccountActionDateEntity accountActionDate2 = loan.getAccountActionDate((short)2);
-		loan.setAccountState(new AccountStateEntity(AccountStates.LOANACC_APPROVED));
+		loan.setAccountState(new AccountStateEntity(AccountState.LOANACC_APPROVED));
 		accountActionDate1.setActionDate(offSetCurrentDate(21));
 		accountActionDate2.setActionDate(offSetCurrentDate(14));
 		loan.setDisbursementDate(disbursementDate);

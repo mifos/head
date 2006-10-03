@@ -459,11 +459,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 		HibernateUtil.closeSession();
 		account = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				loanBO.getAccountId());
-		AccountStateEntity accountStateEntity = new AccountStateEntity(Short
-				.valueOf("6"));
+		AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.LOANACC_OBLIGATIONSMET);
 		AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = new AccountStatusChangeHistoryEntity(
 				account.getAccountState(), accountStateEntity, center
-						.getPersonnel());
+						.getPersonnel(),account);
 		account.addAccountStatusChangeHistory(accountStatusChangeHistoryEntity);
 		account.setAccountState(accountStateEntity);
 		TestObjectFactory.updateObject(account);
@@ -652,8 +651,6 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testGetAllChildrenForParent() throws NumberFormatException,
 			PersistenceException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
 		center = createCenter("Center");
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				center.getSearchId() + ".1", center, new Date(System
@@ -689,8 +686,6 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testGetChildrenForParent() throws NumberFormatException,
 			SystemException, ApplicationException {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
 		center = createCenter("center");
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				center.getSearchId() + ".1", center, new Date(System

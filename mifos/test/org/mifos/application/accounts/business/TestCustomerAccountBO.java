@@ -20,7 +20,6 @@ import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.customer.util.valueobjects.CustomerFeesActionDetail;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
@@ -1180,8 +1179,10 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getAccountFeesActionDetails()) {
 			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
 					.getMoneyForMFICurrency(100));
-			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity();
-			feeTrxn.makePayment(accountFeesActionDetailEntity);
+			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
+					accountTrxnEntity, accountFeesActionDetailEntity
+					.getAccountFee(), accountFeesActionDetailEntity
+					.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}

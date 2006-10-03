@@ -125,11 +125,6 @@ public class AccountBO extends BusinessObject {
 	private Date closedDate;
 
 	protected AccountBO() {
-		this(null);
-	}
-
-	protected AccountBO(UserContext userContext) {
-		super(userContext);
 		accountId = null;
 		globalAccountNum = null;
 		customer = null;
@@ -165,7 +160,6 @@ public class AccountBO extends BusinessObject {
 		this.personnel = customer.getPersonnel();
 		this.setAccountState(new AccountStateEntity(accountState));
 		setCreateDetails();
-
 	}
 
 	public Integer getAccountId() {
@@ -246,7 +240,6 @@ public class AccountBO extends BusinessObject {
 
 	public void addAccountStatusChangeHistory(
 			AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
-		accountStatusChangeHistoryEntity.setAccount(this);
 		this.accountStatusChangeHistory.add(accountStatusChangeHistoryEntity);
 	}
 
@@ -268,7 +261,6 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public void addAccountNotes(AccountNotesEntity notes) {
-		notes.setAccount(this);
 		accountNotes.add(notes);
 	}
 
@@ -374,10 +366,10 @@ public class AccountBO extends BusinessObject {
 			PersonnelBO personnel = new PersonnelPersistence()
 					.getPersonnel(getUserContext().getId());
 			AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
-					this.getAccountState(), accountStateEntity, personnel);
+					this.getAccountState(), accountStateEntity, personnel, this);
 			AccountNotesEntity accountNotesEntity = new AccountNotesEntity(
 					new java.sql.Date(System.currentTimeMillis()), comment,
-					personnel);
+					personnel, this);
 			this.addAccountStatusChangeHistory(historyEntity);
 			this.setAccountState(accountStateEntity);
 			this.addAccountNotes(accountNotesEntity);

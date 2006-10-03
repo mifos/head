@@ -92,7 +92,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	Set<CustomerActivityEntity> customerActivitDetails = null;
 
-	public CustomerAccountBO() {
+	protected CustomerAccountBO() {
 		super();
 		customerActivitDetails = new HashSet<CustomerActivityEntity>();
 	}
@@ -161,7 +161,6 @@ public class CustomerAccountBO extends AccountBO {
 
 	public void addCustomerActivity(
 			CustomerActivityEntity customerActivityEntity) {
-		customerActivityEntity.setCustomerAccount(this);
 		customerActivitDetails.add(customerActivityEntity);
 	}
 
@@ -203,8 +202,8 @@ public class CustomerAccountBO extends AccountBO {
 			}
 			accountPayment.addAcountTrxn(accountTrxn);
 		}
-		addCustomerActivity(new CustomerActivityEntity(paymentData
-				.getPersonnel(), "Payment rcvd.", paymentData.getTotalAmount(),
+		addCustomerActivity(new CustomerActivityEntity(this, paymentData
+				.getPersonnel(), paymentData.getTotalAmount(), "Payment rcvd.",
 				paymentData.getTransactionDate()));
 		return accountPayment;
 	}
@@ -358,8 +357,8 @@ public class CustomerAccountBO extends AccountBO {
 				personnel = new PersonnelPersistence()
 						.getPersonnel(personnelId);
 			}
-			return new CustomerActivityEntity(personnel, description, amount,
-					new Date(System.currentTimeMillis()));
+			return new CustomerActivityEntity(this, personnel, amount,
+					description, new Date(System.currentTimeMillis()));
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -591,15 +590,18 @@ public class CustomerAccountBO extends AccountBO {
 							.valueOf(AccountConstants.MISC_PENALTY)))
 				customerActivityEntity = new CustomerActivityEntity(this,
 						personnel, charge,
-						AccountConstants.MISC_PENALTY_APPLIED);
+						AccountConstants.MISC_PENALTY_APPLIED, new Date(System
+								.currentTimeMillis()));
 			else if (chargeType != null
 					&& chargeType.equals(Short
 							.valueOf(AccountConstants.MISC_FEES)))
 				customerActivityEntity = new CustomerActivityEntity(this,
-						personnel, charge, AccountConstants.MISC_FEES_APPLIED);
+						personnel, charge, AccountConstants.MISC_FEES_APPLIED,
+						new Date(System.currentTimeMillis()));
 			else
 				customerActivityEntity = new CustomerActivityEntity(this,
-						personnel, charge, comments);
+						personnel, charge, comments, new Date(System
+								.currentTimeMillis()));
 			addCustomerActivity(customerActivityEntity);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);

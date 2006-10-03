@@ -219,7 +219,7 @@ public class SavingsClosureAction extends BaseAction {
 		AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(
 				System.currentTimeMillis()), actionForm.getNotes(),
 				(new PersonnelPersistence()).getPersonnel(getUserContext(
-						request).getId()));
+						request).getId()),savings);
 		CustomerBO customer = searchForCustomer(request, actionForm
 				.getCustomerId());
 		if (customer == null)

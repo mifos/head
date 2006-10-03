@@ -54,7 +54,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -280,7 +280,7 @@ public class TestAccountBO extends TestAccount {
 		LoanBO loan = (LoanBO) accountBO;
 
 		loan.setAccountState(new AccountStateEntity(
-				AccountStates.LOANACC_OBLIGATIONSMET));
+				AccountState.LOANACC_OBLIGATIONSMET));
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
@@ -497,7 +497,7 @@ public class TestAccountBO extends TestAccount {
 				.currentTimeMillis());
 		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(TestObjectFactory.getUserContext().getId());
 		AccountNotesEntity accountNotesEntity = new AccountNotesEntity(
-				currentDate, "account updated", personnelBO);
+				currentDate, "account updated", personnelBO,accountBO);
 		accountBO.addAccountNotes(accountNotesEntity);
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();

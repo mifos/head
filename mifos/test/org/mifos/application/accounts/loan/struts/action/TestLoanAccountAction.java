@@ -828,23 +828,23 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		return accountPersistence.getAccount(account.getAccountId());
 	}
 
-	private AccountNotesEntity createAccountNotes(String comment) {
+	private AccountNotesEntity createAccountNotes(String comment,AccountBO account) {
 		AccountNotesEntity accountNotes = new AccountNotesEntity(
 				new java.sql.Date(System.currentTimeMillis()), comment,
-				TestObjectFactory.getPersonnel(userContext.getId()));
+				TestObjectFactory.getPersonnel(userContext.getId()),account);
 		return accountNotes;
 	}
 
 	private void addNotes() {
-		accountBO.addAccountNotes(createAccountNotes("Notes1"));
+		accountBO.addAccountNotes(createAccountNotes("Notes1",accountBO));
 		TestObjectFactory.updateObject(accountBO);
-		accountBO.addAccountNotes(createAccountNotes("Notes2"));
+		accountBO.addAccountNotes(createAccountNotes("Notes2",accountBO));
 		TestObjectFactory.updateObject(accountBO);
-		accountBO.addAccountNotes(createAccountNotes("Notes3"));
+		accountBO.addAccountNotes(createAccountNotes("Notes3",accountBO));
 		TestObjectFactory.updateObject(accountBO);
-		accountBO.addAccountNotes(createAccountNotes("Notes4"));
+		accountBO.addAccountNotes(createAccountNotes("Notes4",accountBO));
 		TestObjectFactory.updateObject(accountBO);
-		accountBO.addAccountNotes(createAccountNotes("Notes5"));
+		accountBO.addAccountNotes(createAccountNotes("Notes5",accountBO));
 		TestObjectFactory.updateObject(accountBO);
 	}
 

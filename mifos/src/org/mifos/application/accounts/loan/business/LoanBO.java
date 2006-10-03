@@ -609,7 +609,7 @@ public class LoanBO extends AccountBO {
 		// update status change history also
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						this.getAccountState(), newState, personnel));
+						this.getAccountState(), newState, personnel,this));
 		this.setAccountState(newState);
 
 		if (this.isInterestDeductedAtDisbursement()) {
@@ -713,7 +713,7 @@ public class LoanBO extends AccountBO {
 							AccountStates.LOANACC_OBLIGATIONSMET);
 			addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 					getAccountState(), newAccountState,
-					new PersonnelPersistence().getPersonnel(personnelId)));
+					new PersonnelPersistence().getPersonnel(personnelId),this));
 			setAccountState((AccountStateEntity) masterPersistence
 					.getPersistentObject(AccountStateEntity.class,
 							AccountStates.LOANACC_OBLIGATIONSMET));
@@ -739,7 +739,7 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(e);
 		}
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
-				this.getAccountState(), stateEntity, this.getPersonnel());
+				this.getAccountState(), stateEntity, this.getPersonnel(),this);
 		this.addAccountStatusChangeHistory(historyEntity);
 		this.setAccountState(stateEntity);
 		String systemDate = DateHelper.getCurrentDate(Configuration
@@ -2389,7 +2389,7 @@ public class LoanBO extends AccountBO {
 		}
 		this
 				.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
-						accountState, this.getAccountState(), personnel));
+						accountState, this.getAccountState(), personnel,this));
 	}
 
 	private Money getTotalRepayableAmount() {

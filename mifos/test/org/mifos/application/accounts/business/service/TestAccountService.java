@@ -188,7 +188,7 @@ public class TestAccountService extends MifosTestCase {
 		accountBO = getLoanAccountWithAllTypesOfFees();
 		incrementInstallmentDate(accountBO, 1, Short.valueOf("1"));
 		accountBO.setAccountState(new AccountStateEntity(
-				AccountState.LOANACC_DBTOLOANOFFICER.getValue()));
+				AccountState.LOANACC_DBTOLOANOFFICER));
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,

@@ -24,37 +24,23 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class NotesAction extends SearchAction {
 
-	AccountBusinessService accountBusinessService = null;
-
-	private MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-
-	public NotesAction() throws ServiceException {
-		accountBusinessService = (AccountBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Accounts);
-	}
-
+	@Override
 	protected BusinessService getService() {
-		return accountBusinessService;
+		return (AccountBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Accounts);
 	}
 
+	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		if (method.equals(Methods.previous.toString())
 				|| method.equals(Methods.load.toString())
@@ -71,8 +57,10 @@ public class NotesAction extends SearchAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		clearActionForm(form);
-		AccountBO accountBO = accountBusinessService.getAccount(Integer
-				.valueOf(((NotesActionForm) form).getAccountId()));
+		AccountBO accountBO = ((AccountBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Accounts))
+				.getAccount(Integer.valueOf(((NotesActionForm) form)
+						.getAccountId()));
 		setFormAttributes(form, accountBO);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -83,11 +71,14 @@ public class NotesAction extends SearchAction {
 		NotesActionForm notesActionForm = (NotesActionForm) form;
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc
 				.getId());
+		AccountBO account = ((AccountBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Accounts))
+				.getAccount(Integer.valueOf(notesActionForm.getAccountId()));
 		AccountNotesEntity accountNotes = new AccountNotesEntity(
 				new java.sql.Date(System.currentTimeMillis()), notesActionForm
-						.getComment(), personnelBO);
+						.getComment(), personnel, account);
 		SessionUtils.setAttribute(AccountConstants.ACCOUNT_NOTES, accountNotes,
 				request.getSession());
 		return mapping.findForward(ActionForwards.preview_success.toString());
@@ -112,7 +103,9 @@ public class NotesAction extends SearchAction {
 		ActionForward forward = null;
 		NotesActionForm notesActionForm = (NotesActionForm) form;
 		try {
-			AccountBO accountBO = accountBusinessService.getAccount(Integer
+			AccountBO accountBO = ((AccountBusinessService) ServiceFactory
+					.getInstance().getBusinessService(
+							BusinessServiceName.Accounts)).getAccount(Integer
 					.valueOf(notesActionForm.getAccountId()));
 			UserContext uc = (UserContext) SessionUtils.getAttribute(
 					Constants.USER_CONTEXT_KEY, request.getSession());
@@ -170,8 +163,10 @@ public class NotesAction extends SearchAction {
 
 	@Override
 	protected QueryResult getSearchResult(ActionForm form) throws Exception {
-		return accountBusinessService.getAllAccountNotes(Integer
-				.valueOf(((NotesActionForm) form).getAccountId()));
+		return ((AccountBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Accounts))
+				.getAllAccountNotes(Integer.valueOf(((NotesActionForm) form)
+						.getAccountId()));
 	}
 
 	private void setFormAttributes(ActionForm form, AccountBO accountBO)

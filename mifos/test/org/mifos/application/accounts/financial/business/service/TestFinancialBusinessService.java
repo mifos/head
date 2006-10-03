@@ -53,6 +53,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 
 	private UserContext userContext;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		userContext = new UserContext();
@@ -68,6 +69,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		userContext.setBranchGlobalNum("0001");
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(loan);
 		TestObjectFactory.cleanUp(savings);
@@ -140,8 +142,9 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				.getAccountFeesActionDetails()) {
 			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
 					.getMoneyForMFICurrency(100));
-			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity();
-			feeTrxn.makePayment(accountFeesActionDetailEntity);
+			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
+					accountTrxnEntity, accountFeesActionDetailEntity.getAccountFee(),
+					accountFeesActionDetailEntity.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 		}
 

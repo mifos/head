@@ -721,7 +721,7 @@ public class TestObjectFactory {
 				.getMeeting());
 		SavingsBO savings = new SavingsBO(userContext,savingsOffering,customer,AccountState.SAVINGS_ACC_PARTIALAPPLICATION,new Money(currency, "300.0"),null);
 		savings.save();
-		savings.setAccountState(new AccountStateEntity(accountStateId));
+		savings.setAccountState(new AccountStateEntity(AccountState.getStatus(accountStateId)));
 		savings.setGlobalAccountNum(globalNum);
 		savings.setActivationDate(new Date(System.currentTimeMillis()));
 		List<Date> meetingDates = getMeetingDates(meeting, 3);

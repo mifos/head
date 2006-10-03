@@ -38,25 +38,29 @@
 
 package org.mifos.application.accounts.business;
 
-
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class FeesTrxnDetailEntity extends PersistentObject {
 
-	private Integer feesTrxnId;
+	private final Integer feesTrxnId;
 
-	private AccountTrxnEntity accountTrxn;
+	private final AccountTrxnEntity accountTrxn;
 
-	private AccountFeesEntity accountFees;
+	private final AccountFeesEntity accountFees;
 
-	private Money feeAmount;
-	
-	public FeesTrxnDetailEntity(){
+	private final Money feeAmount;
+
+	protected FeesTrxnDetailEntity() {
+		feesTrxnId = null;
+		accountTrxn = null;
+		accountFees = null;
+		feeAmount = null;
 	}
-	
+
 	public FeesTrxnDetailEntity(AccountTrxnEntity accountTrxnEntity,
 			AccountFeesEntity accountFeesEntity, Money amount) {
+		feesTrxnId = null;
 		accountTrxn = accountTrxnEntity;
 		accountFees = accountFeesEntity;
 		feeAmount = amount;
@@ -66,59 +70,22 @@ public class FeesTrxnDetailEntity extends PersistentObject {
 		return accountFees;
 	}
 
-	public void setAccountFees(AccountFeesEntity accountFees) {
-		this.accountFees = accountFees;
-	}
-
 	public AccountTrxnEntity getAccountTrxn() {
 		return accountTrxn;
 	}
 
-	public void setAccountTrxn(AccountTrxnEntity accountTrxn) {
-		this.accountTrxn = accountTrxn;
-	}
-
-	
-
 	public Money getFeeAmount() {
 		return feeAmount;
-	}
-
-	public void setFeeAmount(Money feeAmount) {
-		this.feeAmount = feeAmount;
 	}
 
 	public Integer getFeesTrxnId() {
 		return feesTrxnId;
 	}
 
-	public void setFeesTrxnId(Integer feesTrxnId) {
-		this.feesTrxnId = feesTrxnId;
-	}
-
-	public void makePayment(
-			AccountFeesActionDetailEntity accountFeesActionDetail) {
-		accountFees = accountFeesActionDetail.getAccountFee();
-		feeAmount = accountFeesActionDetail.getFeeAmount();
-	}
-	
-	
-	public void setFeeDetails(AccountFeesEntity accountFeesEntity, Money feeAmount){
-		this.setAccountFees(accountFeesEntity);
-		this.setFeeAmount(feeAmount);
-	}
-
-	public FeesTrxnDetailEntity generateReverseTrxn() {
-		FeesTrxnDetailEntity reverseFeeTrxn = new FeesTrxnDetailEntity();
-		reverseFeeTrxn.setAccountFees(getAccountFees());
-		reverseFeeTrxn.setFeeAmount(getFeeAmount().negate());
-		return reverseFeeTrxn;
-	}
-	
-	public void adjustFeeTransaction(FeesTrxnDetailEntity feeTrxnDetail)
-	{
-		setAccountFees(feeTrxnDetail.getAccountFees());
-		setFeeAmount(feeTrxnDetail.getFeeAmount());
+	public FeesTrxnDetailEntity generateReverseTrxn(
+			AccountTrxnEntity accountTrxn) {
+		return new FeesTrxnDetailEntity(accountTrxn, getAccountFees(),
+				getFeeAmount().negate());
 	}
 
 }

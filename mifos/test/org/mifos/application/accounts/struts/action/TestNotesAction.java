@@ -47,6 +47,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 
 	private SavingsOfferingBO savingsOffering;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
@@ -78,6 +79,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 	}
 
+	@Override
 	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(savingsBO);
 		TestObjectFactory.cleanUp(loanBO);
@@ -105,6 +107,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter("accountId", savingsBO.getAccountId().toString());
 		actionPerform();
 		verifyForward("preview_success");
 		verifyNoActionErrors();
@@ -210,6 +213,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter("accountId", loanBO.getAccountId().toString());
 		actionPerform();
 		verifyForward("preview_success");
 		verifyNoActionErrors();
