@@ -1,4 +1,3 @@
-
 package org.mifos.application.accounts.savings.persistence;
 
 import java.util.Date;
@@ -9,6 +8,7 @@ import java.util.Map;
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -224,5 +224,16 @@ public class SavingsPersistence extends Persistence {
 				count = (Integer) obj;
 		}
 		return count.intValue();
+	}
+
+	public AccountBO getSavingsAccountWithAccountActionsInitialized(
+			Integer accountId) throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("accountId", accountId);
+		List obj = executeNamedQuery(
+				"accounts.retrieveSavingsAccountWithAccountActions",
+				queryParameters);
+		Object[] obj1 = (Object[]) obj.get(0);
+		return (AccountBO) obj1[0];
 	}
 }

@@ -54,6 +54,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
@@ -807,5 +808,37 @@ public class CustomerPersistence extends Persistence {
 	public void deleteMeeting(CustomerBO customer) throws PersistenceException {
 		delete(customer.getCustomerMeeting());
 		customer.setCustomerMeeting(null);
+	}
+
+	public List<Integer> getCustomerAccountsForFee(Short feeId)
+			throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("FEEID", feeId);
+		return executeNamedQuery(
+				NamedQueryConstants.GET_CUSTOMER_ACCOUNTS_FOR_FEE,
+				queryParameters);
+	}
+
+	public AccountBO getCustomerAccountWithAccountActionsInitialized(
+			Integer accountId) throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("accountId", accountId);
+		List obj = executeNamedQuery(
+				"accounts.retrieveCustomerAccountWithAccountActions",
+				queryParameters);
+		Object[] obj1 = (Object[]) obj.get(0);
+		return (AccountBO) obj1[0];
+	}
+
+	public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(
+			Integer accountId, Date transactionDate)
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("ACCOUNT_ID", accountId);
+		queryParameters.put("ACTION_DATE", transactionDate);
+		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
+		return executeNamedQuery(
+				NamedQueryConstants.CUSTOMER_ACCOUNT_ACTIONS_DATE,
+				queryParameters);
 	}
 }

@@ -3,6 +3,7 @@ package org.mifos.application.productdefinition.business.service;
 import java.util.Iterator;
 import java.util.List;
 
+import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -100,6 +101,16 @@ public class LoanPrdBusinessService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new LoansPrdPersistence().getAllLoanOfferings(localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<LoanOfferingBO> getApplicablePrdOfferings(
+			CustomerLevelEntity customerLevel) throws ServiceException {
+		try {
+			return new LoansPrdPersistence()
+					.getApplicablePrdOfferings(customerLevel);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

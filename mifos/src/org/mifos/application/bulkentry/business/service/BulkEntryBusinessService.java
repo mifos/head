@@ -50,7 +50,6 @@ import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -67,6 +66,7 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
+import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -146,7 +146,8 @@ public class BulkEntryBusinessService extends BusinessService {
 		}
 	}
 
-	public CustomerBO retrieveCustomerAccountInfo(Integer customerId) throws ServiceException{
+	public CustomerBO retrieveCustomerAccountInfo(Integer customerId)
+			throws ServiceException {
 		try {
 			return customerPersistence.getCustomer(customerId);
 		} catch (PersistenceException pe) {
@@ -157,9 +158,8 @@ public class BulkEntryBusinessService extends BusinessService {
 	public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(
 			Integer accountId, Date transactionDate) throws ServiceException {
 		try {
-			return new AccountPersistence()
-					.retrieveCustomerAccountActionDetails(accountId,
-							transactionDate);
+			return customerPersistence.retrieveCustomerAccountActionDetails(
+					accountId, transactionDate);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -178,7 +178,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	public List<PrdOfferingBO> getLoanOfferingBOForCustomer(
 			String customerSearchId, Date trxnDate) throws ServiceException {
 		try {
-			return loanPersistence.getLoanOfferingBOForCustomer(
+			return new LoansPrdPersistence().getLoanOfferingForCustomer(
 					customerSearchId, trxnDate);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
@@ -188,7 +188,8 @@ public class BulkEntryBusinessService extends BusinessService {
 	public void saveLoanAccount(
 			LoanAccountsProductView loanAccountsProductView, Short personnelId,
 			String recieptId, Short paymentId, Date receiptDate,
-			Date transactionDate) throws BulkEntryAccountUpdateException, ServiceException {
+			Date transactionDate) throws BulkEntryAccountUpdateException,
+			ServiceException {
 		for (LoanAccountView accountView : loanAccountsProductView
 				.getLoanAccountViews()) {
 			Integer accountId = accountView.getAccountId();
@@ -234,7 +235,8 @@ public class BulkEntryBusinessService extends BusinessService {
 	public void saveCustomerAccountCollections(
 			CustomerAccountView customerAccountView, Short personnelId,
 			String recieptId, Short paymentId, Date receiptDate,
-			Date transactionDate) throws BulkEntryAccountUpdateException, ServiceException {
+			Date transactionDate) throws BulkEntryAccountUpdateException,
+			ServiceException {
 		Integer accountId = customerAccountView.getAccountId();
 		PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(
 				customerAccountView.getAccountActionDates(),
@@ -254,7 +256,8 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	public void saveAttendance(Integer customerId, Date meetingDate,
-			Short attendance) throws BulkEntryAccountUpdateException, ServiceException {
+			Short attendance) throws BulkEntryAccountUpdateException,
+			ServiceException {
 		ClientBO client = (ClientBO) getCustomer(customerId);
 		try {
 			client.handleAttendance(meetingDate, attendance);
@@ -287,7 +290,7 @@ public class BulkEntryBusinessService extends BusinessService {
 		}
 	}
 
-	private CustomerBO getCustomer(Integer customerId) throws ServiceException{
+	private CustomerBO getCustomer(Integer customerId) throws ServiceException {
 		try {
 			return bulkEntryPersistanceService.getCustomer(customerId);
 		} catch (PersistenceException pe) {

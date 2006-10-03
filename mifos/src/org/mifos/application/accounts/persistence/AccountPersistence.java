@@ -1,6 +1,5 @@
 package org.mifos.application.accounts.persistence;
 
-import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -11,12 +10,10 @@ import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -61,18 +58,6 @@ public class AccountPersistence extends Persistence {
 			throws PersistenceException {
 		return (AccountFeesEntity) getPersistentObject(AccountFeesEntity.class,
 				accountFeesEntityId);
-	}
-
-	public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(
-			Integer accountId, Date transactionDate)
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("ACCOUNT_ID", accountId);
-		queryParameters.put("ACTION_DATE", transactionDate);
-		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
-		return executeNamedQuery(
-				NamedQueryConstants.CUSTOMER_ACCOUNT_ACTIONS_DATE,
-				queryParameters);
 	}
 
 	public List<AccountStateEntity> getAccountStates(Short optionalFlag)
@@ -125,53 +110,11 @@ public class AccountPersistence extends Persistence {
 		return notesResult;
 	}
 
-	public List<Integer> getCustomerAccountsForFee(Short feeId)
-			throws PersistenceException {
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("FEEID", feeId);
-		return executeNamedQuery(
-				NamedQueryConstants.GET_CUSTOMER_ACCOUNTS_FOR_FEE,
-				queryParameters);
-	}
-
 	public List<Integer> getActiveCustomerAndSavingsAccounts()
 			throws PersistenceException {
 		return executeNamedQuery(
 				NamedQueryConstants.GET_ACTIVE_CUSTOMER__AND_SAVINGS_ACCOUNTS,
 				null);
-	}
-
-	public AccountBO getCustomerAccountWithAccountActionsInitialized(
-			Integer accountId) throws PersistenceException {
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("accountId", accountId);
-		List obj = executeNamedQuery(
-				"accounts.retrieveCustomerAccountWithAccountActions",
-				queryParameters);
-		Object[] obj1 = (Object[]) obj.get(0);
-		return (AccountBO) obj1[0];
-	}
-
-	public AccountBO getSavingsAccountWithAccountActionsInitialized(
-			Integer accountId) throws PersistenceException {
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("accountId", accountId);
-		List obj = executeNamedQuery(
-				"accounts.retrieveSavingsAccountWithAccountActions",
-				queryParameters);
-		Object[] obj1 = (Object[]) obj.get(0);
-		return (AccountBO) obj1[0];
-	}
-
-	public AccountBO getLoanAccountWithAccountActionsInitialized(
-			Integer accountId) throws PersistenceException {
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("accountId", accountId);
-		List obj = executeNamedQuery(
-				"accounts.retrieveLoanAccountWithAccountActions",
-				queryParameters);
-		Object[] obj1 = (Object[]) obj.get(0);
-		return (AccountBO) obj1[0];
 	}
 
 	public List<AccountStateEntity> retrieveAllAccountStateList(Short prdTypeId)
@@ -250,7 +193,7 @@ public class AccountPersistence extends Persistence {
 
 			throw new PersistenceException(e);
 		} catch (SystemException e) {
-			
+
 			throw new PersistenceException(e);
 
 		}

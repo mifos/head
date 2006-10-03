@@ -7,20 +7,12 @@ import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.fees.business.AmountFeeBO;
-import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -60,16 +52,6 @@ public class TestAccountPersistence extends TestAccount {
 		assertNotNull(accountaction);
 	}
 
-	public void testRetrieveCustomerAccountActionDetails() throws Exception {
-		assertNotNull(center.getCustomerAccount());
-		List<AccountActionDateEntity> actionDates = accountPersistence
-				.retrieveCustomerAccountActionDetails(center
-						.getCustomerAccount().getAccountId(),
-						new java.sql.Date(System.currentTimeMillis()));
-		assertEquals("The size of the due insallments is ", actionDates.size(),
-				1);
-	}
-
 	public void testOptionalAccountStates() throws Exception {
 		assertEquals(Integer.valueOf(1).intValue(), accountPersistence
 				.getAccountStates(Short.valueOf("0")).size());
@@ -84,33 +66,6 @@ public class TestAccountPersistence extends TestAccount {
 			throws PersistenceException {
 		assertEquals(0, accountPersistence
 				.getAccountsWithYesterdaysInstallment().size());
-	}
-
-	public void testGetCustomerAccountsForFee() throws Exception {
-		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
-				"ClientPeridoicFee", FeeCategory.CENTER, "5",
-				RecurrenceType.WEEKLY, Short.valueOf("1"));
-		AccountFeesEntity accountFee = new AccountFeesEntity(center
-				.getCustomerAccount(), periodicFee, ((AmountFeeBO) periodicFee)
-				.getFeeAmount().getAmountDoubleValue());
-		CustomerAccountBO customerAccount = center.getCustomerAccount();
-		customerAccount.addAccountFees(accountFee);
-		TestObjectFactory.updateObject(customerAccount);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-
-		// check for the account fee
-		List accountList = accountPersistence
-				.getCustomerAccountsForFee(periodicFee.getFeeId());
-		assertNotNull(accountList);
-		assertEquals(1, accountList.size());
-		// get all objects again
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
-				accountBO.getAccountId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
 	}
 
 	public void testGetActiveCustomerAndSavingsAccounts() throws Exception {

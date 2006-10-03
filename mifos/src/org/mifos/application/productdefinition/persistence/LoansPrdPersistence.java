@@ -37,16 +37,22 @@
  */
 package org.mifos.application.productdefinition.persistence;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingFeesEntity;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -111,5 +117,27 @@ public class LoansPrdPersistence extends Persistence {
 			}
 		}
 		return loanOfferings;
+	}
+
+	public List<PrdOfferingBO> getLoanOfferingForCustomer(
+			String customerSearchId, Date disbursmentDate)
+			throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("CUSTOMER_SEARCH_ID", customerSearchId);
+		queryParameters.put("DISBURSEMENT_DATE", disbursmentDate);
+		return executeNamedQuery(
+				NamedQueryConstants.GET_LOANOFFERINGLIST_FOR_LOANS,
+				queryParameters);
+	}
+
+	public List<LoanOfferingBO> getApplicablePrdOfferings(
+			CustomerLevelEntity customerLevel) throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOANACTIVE
+				.getValue());
+		queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,
+				customerLevel.getProductApplicableType());
+		return executeNamedQuery(NamedQueryConstants.APPLICABLE_LOAN_OFFERINGS,
+				queryParameters);
 	}
 }

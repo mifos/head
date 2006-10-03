@@ -1,16 +1,12 @@
 package org.mifos.application.accounts.loan.business.service;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
@@ -22,7 +18,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -144,75 +139,6 @@ public class TestLoanBusinessService extends MifosTestCase {
 
 		assertNotNull(loanAllActivityView);
 		assertEquals(6, loanAllActivityView.size());
-	}
-
-	public void testGetUpcomingInstallmentDetails() {
-		accountBO = getLoanAccount();
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			LoanScheduleEntity installment = (LoanScheduleEntity) accountActionDateEntity;
-			if (installment.getInstallmentId().intValue() == 1) {
-				installment.setPrincipal(installment.getPrincipal().add(
-						new Money("10")));
-				installment.setPenalty(installment.getPenalty().add(
-						new Money("20")));
-				installment.setMiscPenalty(installment.getMiscPenalty().add(
-						new Money("30")));
-				installment.setInterest(installment.getInterest().add(
-						new Money("40")));
-			}
-		}
-		TestObjectFactory.updateObject(accountBO);
-		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
-				accountBO.getAccountId());
-		ViewInstallmentDetails viewInstallmentDetails = loanBusinessService
-				.getUpcomingInstallmentDetails(((LoanBO) accountBO)
-						.getDetailsOfNextInstallment());
-		assertEquals("110.0", viewInstallmentDetails.getPrincipal().toString());
-		assertEquals("50.0", viewInstallmentDetails.getPenalty().toString());
-		assertEquals("100.0", viewInstallmentDetails.getFees().toString());
-		assertEquals("52.0", viewInstallmentDetails.getInterest().toString());
-	}
-
-	public void testGetOverDueInstallmentDetails() {
-		accountBO = getLoanAccount();
-
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-		calendar.add(calendar.WEEK_OF_MONTH, -1);
-		java.sql.Date lastWeekDate = new java.sql.Date(calendar
-				.getTimeInMillis());
-
-		Calendar date = new GregorianCalendar();
-		date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
-		date.add(date.WEEK_OF_MONTH, -2);
-		java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date
-				.getTimeInMillis());
-
-		for (AccountActionDateEntity installment : accountBO
-				.getAccountActionDates()) {
-			if (installment.getInstallmentId().intValue() == 1) {
-				installment.setActionDate(lastWeekDate);
-			} else if (installment.getInstallmentId().intValue() == 2) {
-				installment.setActionDate(twoWeeksBeforeDate);
-			}
-		}
-		TestObjectFactory.updateObject(accountBO);
-		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
-				accountBO.getAccountId());
-		assertEquals(2, ((LoanBO) accountBO)
-				.getDetailsOfInstallmentsInArrears().size());
-
-		ViewInstallmentDetails viewInstallmentDetails = loanBusinessService
-				.getOverDueInstallmentDetails(((LoanBO) accountBO)
-						.getDetailsOfInstallmentsInArrears());
-		assertEquals("0.0", viewInstallmentDetails.getPenalty().toString());
-		assertEquals("200.0", viewInstallmentDetails.getPrincipal().toString());
-		assertEquals("200.0", viewInstallmentDetails.getFees().toString());
-		assertEquals("24.0", viewInstallmentDetails.getInterest().toString());
-		assertEquals("424.0", viewInstallmentDetails.getSubTotal().toString());
 	}
 
 	private AccountBO getLoanAccount() {

@@ -4,12 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -21,16 +18,12 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class ApplyChargeAction extends BaseAction {
@@ -70,13 +63,11 @@ public class ApplyChargeAction extends BaseAction {
 		ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
 		Short chargeType = Short.valueOf(applyChargeActionForm.getChargeType());
 		Double chargeAmount = new Double(request.getParameter("charge"));
-		AccountBO accountBO = (AccountBO) getAccountBusinessService()
-				.getAccount(
-						Integer.valueOf(applyChargeActionForm.getAccountId()));
+		AccountBO accountBO = getAccountBusinessService().getAccount(
+				Integer.valueOf(applyChargeActionForm.getAccountId()));
 		accountBO.setUserContext(userContext);
 		accountBO.applyCharge(chargeType, chargeAmount);
 		accountBO.update();
-		HibernateUtil.commitTransaction();
 		return mapping.findForward(getDetailAccountPage(accountBO));
 	}
 

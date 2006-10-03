@@ -4,18 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.application.customer.business.CustomerLevelEntity;
-import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -110,69 +103,10 @@ public class LoanBusinessService extends BusinessService {
 		}
 	}
 
-	public ViewInstallmentDetails getUpcomingInstallmentDetails(
-			AccountActionDateEntity upcomingAccountActionDate) {
-		if (upcomingAccountActionDate != null) {
-			LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity) upcomingAccountActionDate;
-			return new ViewInstallmentDetails(upcomingInstallment
-					.getPrincipalDue(), upcomingInstallment.getInterestDue(),
-					upcomingInstallment.getTotalFeeDueWithMiscFeeDue(),
-					upcomingInstallment.getPenaltyDue());
-		}
-		return null;
-	}
-
-	public ViewInstallmentDetails getOverDueInstallmentDetails(
-			List<AccountActionDateEntity> overDueInstallmentList) {
-		Money principalDue = new Money();
-		Money interestDue = new Money();
-		Money feesDue = new Money();
-		Money penaltyDue = new Money();
-		for (AccountActionDateEntity accountActionDate : overDueInstallmentList) {
-			LoanScheduleEntity installment = (LoanScheduleEntity) accountActionDate;
-			principalDue = principalDue.add(installment.getPrincipalDue());
-			interestDue = interestDue.add(installment.getInterestDue());
-			feesDue = feesDue.add(installment.getTotalFees());
-			penaltyDue = penaltyDue.add(installment.getPenaltyDue());
-		}
-		return new ViewInstallmentDetails(principalDue, interestDue, feesDue,
-				penaltyDue);
-	}
-
 	public Short getLastPaymentAction(Integer accountId)
 			throws ServiceException {
 		try {
 			return new LoanPersistance().getLastPaymentAction(accountId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
-	public List<LoanOfferingBO> getApplicablePrdOfferings(
-			CustomerLevelEntity customerLevel) throws ServiceException {
-		try {
-			return new LoanPersistance()
-					.getApplicablePrdOfferings(customerLevel);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
-	public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId)
-			throws ServiceException {
-		try {
-			return new LoanPersistance().getLoanOffering(loanOfferingId,
-					localeId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
-	public List<BusinessActivityEntity> retrieveMasterEntities(
-			String entityName, Short localeId) throws ServiceException {
-		try {
-			return new MasterPersistence().retrieveMasterEntities(entityName,
-					localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

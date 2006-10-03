@@ -6,6 +6,7 @@ import java.util.List;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.dao.MasterDAO;
@@ -163,6 +164,16 @@ public class MasterDataService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new MasterPersistence().retrieveMasterEntities(entityId,
+					localeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<BusinessActivityEntity> retrieveMasterEntities(
+			String entityName, Short localeId) throws ServiceException {
+		try {
+			return new MasterPersistence().retrieveMasterEntities(entityName,
 					localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);

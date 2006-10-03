@@ -24,6 +24,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -136,15 +137,16 @@ public class TestFinancialBusinessService extends MifosTestCase {
 						.getMoneyForMFICurrency(200), TestObjectFactory
 						.getMoneyForMFICurrency(300), new Money(),
 				TestObjectFactory.getMoneyForMFICurrency(10), TestObjectFactory
-						.getMoneyForMFICurrency(20));
+						.getMoneyForMFICurrency(20), null);
 
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction
 				.getAccountFeesActionDetails()) {
 			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
 					.getMoneyForMFICurrency(100));
 			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
-					accountTrxnEntity, accountFeesActionDetailEntity.getAccountFee(),
-					accountFeesActionDetailEntity.getFeeAmount());
+					accountTrxnEntity, accountFeesActionDetailEntity
+							.getAccountFee(), accountFeesActionDetailEntity
+							.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 		}
 
@@ -416,10 +418,17 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				.getUserContext().getId());
 		LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(
 				accountPaymentEntity,
-				(AccountActionEntity) masterPersistenceService.findById(
-						AccountActionEntity.class,
-						AccountConstants.ACTION_WRITEOFF),
-				accountActionDateEntity, personnel, "Loan Written Off");
+				(AccountActionEntity) new MasterPersistence()
+						.getPersistentObject(AccountActionEntity.class,
+								AccountConstants.ACTION_WRITEOFF),
+				accountActionDateEntity.getInstallmentId(),
+				accountActionDateEntity.getActionDate(), personnel, new Date(
+						System.currentTimeMillis()),
+				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
+				"Loan Written Off", null,
+				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
+				new Money(), new Money(), new Money(), new Money(), null);
+
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 		loan.addAccountPayment(accountPaymentEntity);
 		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);

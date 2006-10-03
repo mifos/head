@@ -40,6 +40,7 @@ package org.mifos.application.accounts.business;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -54,15 +55,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanTrxnDetailEntity extends AccountTrxnEntity {
-
-	protected LoanTrxnDetailEntity() {
-		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-		principalAmount = null;
-		interestAmount = null;
-		penaltyAmount = null;
-		miscFeeAmount = null;
-		miscPenaltyAmount = null;
-	}
 
 	private final Money principalAmount;
 
@@ -104,105 +96,65 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		return miscPenaltyAmount;
 	}
 
+	protected LoanTrxnDetailEntity() {
+		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
+		principalAmount = null;
+		interestAmount = null;
+		penaltyAmount = null;
+		miscFeeAmount = null;
+		miscPenaltyAmount = null;
+	}
+
 	public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment,
 			AccountActionEntity accountActionEntity, Short installmentId,
 			Date dueDate, PersonnelBO personnel, Date actionDate, Money amount,
 			String comments, AccountTrxnEntity relatedTrxn,
 			Money principalAmount, Money interestAmount, Money penaltyAmount,
-			Money miscFeeAmount, Money miscPenaltyAmount) {
+			Money miscFeeAmount, Money miscPenaltyAmount,
+			List<AccountFeesEntity> accountFees) {
 		super(accountPayment, accountActionEntity, installmentId, dueDate,
 				personnel, null, actionDate, amount, comments, relatedTrxn);
-
 		this.principalAmount = principalAmount;
 		this.interestAmount = interestAmount;
 		this.penaltyAmount = penaltyAmount;
 		this.miscFeeAmount = miscFeeAmount;
 		this.miscPenaltyAmount = miscPenaltyAmount;
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-	}
-
-	public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment,
-			AccountActionEntity accountActionEntity,
-			AccountActionDateEntity accountActionDateEntity,
-			PersonnelBO personnel, String comments) {
-		super(accountPayment, accountActionEntity, accountActionDateEntity
-				.getInstallmentId(), accountActionDateEntity.getActionDate(),
-				personnel, new Date(System.currentTimeMillis()),
-				((LoanScheduleEntity) accountActionDateEntity).getPrincipal(),
-				comments);
-		this.principalAmount = ((LoanScheduleEntity) accountActionDateEntity)
-				.getPrincipal();
-		this.interestAmount = new Money();
-		this.penaltyAmount = new Money();
-		this.miscFeeAmount = new Money();
-		this.miscPenaltyAmount = new Money();
-		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-	}
-
-	public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
-			Date recieptDate, AccountActionEntity accountActionEntity,
-			PersonnelBO personnel, String comments, Short installmentId,
-			Money totalAmount) {
-		super(accountPaymentEntity, accountActionEntity, installmentId,
-				recieptDate, personnel, recieptDate, totalAmount, comments);
-		interestAmount = new Money();
-		penaltyAmount = new Money();
-		principalAmount = totalAmount;
-		miscFeeAmount = new Money();
-		miscPenaltyAmount = new Money();
-		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-	}
-
-	public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
-			Date recieptDate, AccountActionEntity accountActionEntity,
-			PersonnelBO personnel, String comments, Short installmentId,
-			Money totalFeeAmount, Set<AccountFeesEntity> accountFees) {
-		super(accountPaymentEntity, accountActionEntity, installmentId,
-				recieptDate, personnel, recieptDate, totalFeeAmount, comments);
-		interestAmount = new Money();
-		penaltyAmount = new Money();
-		principalAmount = new Money();
-		miscFeeAmount = new Money();
-		miscPenaltyAmount = new Money();
-		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-		for (AccountFeesEntity accountFeesEntity : accountFees) {
-			if (accountFeesEntity.isTimeOfDisbursement()) {
-				FeesTrxnDetailEntity feesTrxnDetailEntity = new FeesTrxnDetailEntity(
-						this, accountFeesEntity, accountFeesEntity
-								.getAccountFeeAmount());
-				addFeesTrxnDetail(feesTrxnDetailEntity);
+		if (accountFees != null && accountFees.size() > 0) {
+			for (AccountFeesEntity accountFeesEntity : accountFees) {
+				addFeesTrxnDetail(new FeesTrxnDetailEntity(this,
+						accountFeesEntity, accountFeesEntity
+								.getAccountFeeAmount()));
 			}
 		}
 	}
 
 	public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity,
-			LoanPaymentData loanPaymentDataView, PersonnelBO personnel,
+			LoanPaymentData loanPaymentData, PersonnelBO personnel,
 			java.util.Date transactionDate,
 			AccountActionEntity accountActionEntity, Money amount,
 			String comments) {
 
-		super(accountPaymentEntity, accountActionEntity, loanPaymentDataView
-				.getInstallmentId(), loanPaymentDataView.getAccountActionDate()
-				.getActionDate(), personnel, transactionDate, amount, comments);
-		interestAmount = loanPaymentDataView.getInterestPaid();
-		penaltyAmount = loanPaymentDataView.getPenaltyPaid();
-		principalAmount = loanPaymentDataView.getPrincipalPaid();
-		miscFeeAmount = loanPaymentDataView.getMiscFeePaid();
-		miscPenaltyAmount = loanPaymentDataView.getMiscPenaltyPaid();
+		super(accountPaymentEntity, accountActionEntity, loanPaymentData
+				.getInstallmentId(), loanPaymentData.getAccountActionDate()
+				.getActionDate(), personnel, null, transactionDate, amount,
+				comments, null);
+		interestAmount = loanPaymentData.getInterestPaid();
+		penaltyAmount = loanPaymentData.getPenaltyPaid();
+		principalAmount = loanPaymentData.getPrincipalPaid();
+		miscFeeAmount = loanPaymentData.getMiscFeePaid();
+		miscPenaltyAmount = loanPaymentData.getMiscPenaltyPaid();
 		feesTrxnDetails = new HashSet<FeesTrxnDetailEntity>();
-		LoanScheduleEntity loanSchedule = (LoanScheduleEntity) loanPaymentDataView
+		LoanScheduleEntity loanSchedule = (LoanScheduleEntity) loanPaymentData
 				.getAccountActionDate();
 		for (AccountFeesActionDetailEntity accountFeesActionDetail : loanSchedule
 				.getAccountFeesActionDetails()) {
-			if (loanPaymentDataView.getFeesPaid().containsKey(
+			if (loanPaymentData.getFeesPaid().containsKey(
 					accountFeesActionDetail.getFee().getFeeId())) {
-				Money feeAmount = loanPaymentDataView.getFeesPaid().get(
-						accountFeesActionDetail.getFee().getFeeId());
-				accountFeesActionDetail.makePayment(feeAmount);
-				FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity(
-						this, accountFeesActionDetail.getAccountFee(),
-						feeAmount);
-				addFeesTrxnDetail(feesTrxnDetailBO);
+				addFeesTrxnDetail(new FeesTrxnDetailEntity(this,
+						accountFeesActionDetail.getAccountFee(),
+						loanPaymentData.getFeesPaid().get(
+								accountFeesActionDetail.getFee().getFeeId())));
 			}
 		}
 	}
@@ -231,7 +183,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 					getPrincipalAmount().negate(),
 					getInterestAmount().negate(), getPenaltyAmount().negate(),
 					getMiscFeeAmount().negate(), getMiscPenaltyAmount()
-							.negate());
+							.negate(), null);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}

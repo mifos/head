@@ -20,7 +20,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
-	
+
 	private final Set<FeesTrxnDetailEntity> feesTrxnDetails;
 
 	private final Money totalAmount;
@@ -44,8 +44,9 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		super(accountPaymentEntity, accountActionEntity,
 				customerAccountPaymentDataView.getInstallmentId(),
 				customerAccountPaymentDataView.getAccountActionDate()
-						.getActionDate(), personnel, transactionDate,
-				customerAccountPaymentDataView.getTotalPaidAmnt(), comments);
+						.getActionDate(), personnel, null, transactionDate,
+				customerAccountPaymentDataView.getTotalPaidAmnt(), comments,
+				null);
 		totalAmount = customerAccountPaymentDataView.getTotalPaidAmnt();
 		miscFeeAmount = customerAccountPaymentDataView.getMiscFeePaid();
 		miscPenaltyAmount = customerAccountPaymentDataView.getMiscPenaltyPaid();

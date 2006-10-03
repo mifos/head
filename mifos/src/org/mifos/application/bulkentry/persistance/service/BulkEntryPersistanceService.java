@@ -45,11 +45,13 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
+import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.persistance.BulkEntryPersistance;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryCache;
@@ -61,7 +63,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
 
 public class BulkEntryPersistanceService extends PersistenceService {
 
@@ -82,16 +83,15 @@ public class BulkEntryPersistanceService extends PersistenceService {
 				meetingDate, searchString, officeId, accountType);
 	}
 
-	public List<BulkEntryClientAttendanceView> 
-	    getBulkEntryClientAttendanceActionView(Date meetingDate, Short officeId) 
-	throws PersistenceException {
-		return new BulkEntryPersistance().getBulkEntryClientAttendanceActionView(
-			meetingDate, officeId);
+	public List<BulkEntryClientAttendanceView> getBulkEntryClientAttendanceActionView(
+			Date meetingDate, Short officeId) throws PersistenceException {
+		return new BulkEntryPersistance()
+				.getBulkEntryClientAttendanceActionView(meetingDate, officeId);
 	}
 
 	public AccountBO getCustomerAccountWithAccountActionsInitialized(
 			Integer accountId) throws PersistenceException {
-		return new AccountPersistence()
+		return new CustomerPersistence()
 				.getCustomerAccountWithAccountActionsInitialized(accountId);
 	}
 
@@ -99,7 +99,7 @@ public class BulkEntryPersistanceService extends PersistenceService {
 			Integer accountId) throws PersistenceException {
 		if (!bulkEntryCache.isAccountPresent(accountId)) {
 			AccountBO account;
-			account = new AccountPersistence()
+			account = new SavingsPersistence()
 					.getSavingsAccountWithAccountActionsInitialized(accountId);
 			bulkEntryCache.addAccount(accountId, account);
 			Set<AccountActionDateEntity> accountActionDates = account
@@ -123,11 +123,12 @@ public class BulkEntryPersistanceService extends PersistenceService {
 
 	public AccountBO getLoanAccountWithAccountActionsInitialized(
 			Integer accountId) throws PersistenceException {
-		return new AccountPersistence()
+		return new LoanPersistance()
 				.getLoanAccountWithAccountActionsInitialized(accountId);
 	}
 
-	public CustomerBO getCustomer(Integer customerId) throws PersistenceException{
+	public CustomerBO getCustomer(Integer customerId)
+			throws PersistenceException {
 		if (!bulkEntryCache.isCustomerPresent(customerId)) {
 			CustomerBO customer = new CustomerPersistence()
 					.getCustomer(customerId);
@@ -136,19 +137,18 @@ public class BulkEntryPersistanceService extends PersistenceService {
 		return bulkEntryCache.getCustomer(customerId);
 	}
 
-	public PersonnelBO getPersonnel(Short personnelId)throws ServiceException {
-		
-		try{
-		if (!bulkEntryCache.isPersonnelPresent(personnelId)) {
-			PersonnelBO personnel = new PersonnelPersistence()
-					.getPersonnel(personnelId);
-			bulkEntryCache.addPersonnel(personnelId, personnel);
-		}
-		return bulkEntryCache.getPersonnel(personnelId);
-		}catch (PersistenceException e) {
+	public PersonnelBO getPersonnel(Short personnelId) throws ServiceException {
+
+		try {
+			if (!bulkEntryCache.isPersonnelPresent(personnelId)) {
+				PersonnelBO personnel = new PersonnelPersistence()
+						.getPersonnel(personnelId);
+				bulkEntryCache.addPersonnel(personnelId, personnel);
+			}
+			return bulkEntryCache.getPersonnel(personnelId);
+		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
-		
 
 	}
 

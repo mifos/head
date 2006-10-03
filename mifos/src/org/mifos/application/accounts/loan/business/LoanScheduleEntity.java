@@ -189,7 +189,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	public Money getMiscPenaltyPaid() {
 		return miscPenaltyPaid;
 	}
-	
+
 	public Money getMiscPenaltyDue() {
 		return getMiscPenalty().subtract(getMiscPenaltyPaid());
 	}
@@ -227,7 +227,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 						getTotalScheduledFeeAmountWithMiscFee()).add(
 						getMiscPenalty()));
 	}
-	
+
 	public void setPaymentDetails(LoanPaymentData loanPaymentData,
 			Date paymentDate) {
 		this.principalPaid = this.principalPaid.add(loanPaymentData
@@ -242,6 +242,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 				.getMiscPenaltyPaid());
 		this.paymentStatus = loanPaymentData.getPaymentStatus();
 		this.paymentDate = paymentDate;
+		for (AccountFeesActionDetailEntity accountFeesActionDetail : getAccountFeesActionDetails()) {
+			if (loanPaymentData.getFeesPaid().containsKey(
+					accountFeesActionDetail.getFee().getFeeId())) {
+				accountFeesActionDetail.makePayment(loanPaymentData
+						.getFeesPaid().get(
+								accountFeesActionDetail.getFee().getFeeId()));
+			}
+		}
 	}
 
 	public OverDueAmounts getDueAmnts() {
@@ -334,16 +342,16 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		}
 		return totalFees;
 	}
-	
+
 	public Money getTotalFeeAmountPaidWithMiscFee() {
 		Money totalFees = new Money();
 		for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
 			totalFees = totalFees.add(obj.getFeeAmountPaid());
 		}
-		totalFees =totalFees.add(getMiscFeePaid());
+		totalFees = totalFees.add(getMiscFeePaid());
 		return totalFees;
 	}
-	
+
 	public Money getTotalScheduledFeeAmountWithMiscFee() {
 		Money totalFees = new Money();
 		for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
@@ -356,7 +364,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	public Money getTotalFees() {
 		return getMiscFee().add(getTotalFeeDue());
 	}
-	
+
 	public Money getTotalFeeDueWithMiscFeeDue() {
 		return getMiscFeeDue().add(getTotalFeeDue());
 	}
@@ -403,12 +411,10 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		}
 		return null;
 	}
-	
-	public AccountFeesActionDetailEntity getAccountFeesAction(
-			Short feeId) {
+
+	public AccountFeesActionDetailEntity getAccountFeesAction(Short feeId) {
 		for (AccountFeesActionDetailEntity accountFeesAction : getAccountFeesActionDetails()) {
-			if (accountFeesAction.getFee().getFeeId().equals(
-					feeId)) {
+			if (accountFeesAction.getFee().getFeeId().equals(feeId)) {
 				return accountFeesAction;
 			}
 		}
@@ -423,28 +429,29 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	}
 
 	public void applyPeriodicFees(Short feeId) {
-		AccountFeesEntity accountFeesEntity = account
-				.getAccountFees(feeId);
+		AccountFeesEntity accountFeesEntity = account.getAccountFees(feeId);
 		AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
-				this, accountFeesEntity.getFees(),
-				accountFeesEntity, accountFeesEntity.getAccountFeeAmount());
+				this, accountFeesEntity.getFees(), accountFeesEntity,
+				accountFeesEntity.getAccountFeeAmount());
 		addAccountFeesAction(accountFeesActionDetailEntity);
 	}
-	
-	public void applyMiscCharge(Short chargeType,Money charge){
-		if(chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
+
+	public void applyMiscCharge(Short chargeType, Money charge) {
+		if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
 			setMiscFee(getMiscFee().add(charge));
-		else if(chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+		else if (chargeType
+				.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
 			setMiscPenalty(getMiscPenalty().add(charge));
 	}
-	
-	public boolean isPrincipalZero(){
-		return principal.getAmountDoubleValue() == 0.0 ;
+
+	public boolean isPrincipalZero() {
+		return principal.getAmountDoubleValue() == 0.0;
 	}
-	
-	public boolean isFeeAlreadyAttatched(Short feeId){
-		for(AccountFeesActionDetailEntity accountFeesActionDetailEntity : this.getAccountFeesActionDetails()){
-			if(accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId))
+
+	public boolean isFeeAlreadyAttatched(Short feeId) {
+		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : this
+				.getAccountFeesActionDetails()) {
+			if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId))
 				return true;
 		}
 		return false;

@@ -81,7 +81,6 @@ public class AccountTrxnEntity extends PersistentObject {
 	private final AccountTrxnEntity relatedTrxn;
 
 	protected AccountTrxnEntity() {
-		super();
 		createdDate = new Date(System.currentTimeMillis());
 		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
 		financialTransactions = new HashSet<FinancialTransactionBO>();
@@ -96,26 +95,6 @@ public class AccountTrxnEntity extends PersistentObject {
 		amount = null;
 		accountPayment = null;
 		comments = null;
-	}
-
-	public AccountTrxnEntity(AccountPaymentEntity accountPayment,
-			CustomerBO customer, AccountActionEntity accountActionEntity,
-			Short installmentId, Date dueDate, PersonnelBO personnel,
-			Date actionDate, Money amount, String comments) {
-		createdDate = new Date(System.currentTimeMillis());
-		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
-		financialTransactions = new HashSet<FinancialTransactionBO>();
-		this.account = accountPayment.getAccount();
-		this.accountActionEntity = accountActionEntity;
-		this.installmentId = installmentId;
-		this.dueDate = dueDate;
-		this.customer = customer;
-		this.personnel = personnel;
-		this.actionDate = actionDate;
-		this.amount = amount;
-		this.relatedTrxn = null;
-		this.accountPayment = accountPayment;
-		this.comments = comments;
 	}
 
 	public AccountTrxnEntity(AccountPaymentEntity accountPayment,
@@ -138,26 +117,6 @@ public class AccountTrxnEntity extends PersistentObject {
 		this.actionDate = actionDate;
 		this.amount = amount;
 		this.relatedTrxn = relatedTrxn;
-		this.accountPayment = accountPayment;
-		this.comments = comments;
-	}
-
-	public AccountTrxnEntity(AccountPaymentEntity accountPayment,
-			AccountActionEntity accountActionEntity, Short installmentId,
-			Date dueDate, PersonnelBO personnel, Date actionDate, Money amount,
-			String comments) {
-		createdDate = new Date(System.currentTimeMillis());
-		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
-		financialTransactions = new HashSet<FinancialTransactionBO>();
-		this.account = accountPayment.getAccount();
-		this.accountActionEntity = accountActionEntity;
-		this.installmentId = installmentId;
-		this.dueDate = dueDate;
-		this.customer = account.getCustomer();
-		this.personnel = personnel;
-		this.actionDate = actionDate;
-		this.amount = amount;
-		this.relatedTrxn = null;
 		this.accountPayment = accountPayment;
 		this.comments = comments;
 	}
@@ -224,9 +183,6 @@ public class AccountTrxnEntity extends PersistentObject {
 		return trxnCreatedDate;
 	}
 
-	/**
-	 * This method will be implemented by the sub class.
-	 */
 	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
 			throws AccountException {
 		return null;

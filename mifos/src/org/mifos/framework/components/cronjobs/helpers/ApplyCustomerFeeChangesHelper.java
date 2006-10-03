@@ -13,6 +13,7 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
@@ -49,7 +50,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 				try {
 					if (!fee.getFeeChangeType().equals(
 							FeeChangeType.NOT_UPDATED)) {
-						List<Integer> accounts = accountPersistence
+						List<Integer> accounts = new CustomerPersistence()
 								.getCustomerAccountsForFee(fee.getFeeId());
 						if (accounts != null && accounts.size() > 0) {
 							for (Integer accountId : accounts) {

@@ -3,12 +3,9 @@ package org.mifos.application.accounts.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
@@ -24,7 +21,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
@@ -100,36 +96,20 @@ public class NotesAction extends SearchAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		ActionForward forward = null;
 		NotesActionForm notesActionForm = (NotesActionForm) form;
-		try {
-			AccountBO accountBO = ((AccountBusinessService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.Accounts)).getAccount(Integer
-					.valueOf(notesActionForm.getAccountId()));
-			UserContext uc = (UserContext) SessionUtils.getAttribute(
-					Constants.USER_CONTEXT_KEY, request.getSession());
-			AccountNotesEntity accountNotes = (AccountNotesEntity) SessionUtils
-					.getAttribute(AccountConstants.ACCOUNT_NOTES, request
-							.getSession());
-			accountBO.addAccountNotes(accountNotes);
-			accountBO.setUserContext(uc);
-			accountBO.update();
-			HibernateUtil.commitTransaction();
-			forward = mapping.findForward(chooseForward(Short
-					.valueOf(notesActionForm.getAccountTypeId())));
-		} catch (Exception e) {
-			ActionErrors errors = new ActionErrors();
-			errors.add(AccountConstants.UNKNOWN_EXCEPTION, new ActionMessage(
-					AccountConstants.UNKNOWN_EXCEPTION));
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			forward = mapping.findForward(ActionForwards.create_failure
-					.toString());
-			HibernateUtil.rollbackTransaction();
-		} finally {
-			HibernateUtil.closeSession();
-		}
-		return forward;
+		AccountBO accountBO = ((AccountBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Accounts))
+				.getAccount(Integer.valueOf(notesActionForm.getAccountId()));
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		AccountNotesEntity accountNotes = (AccountNotesEntity) SessionUtils
+				.getAttribute(AccountConstants.ACCOUNT_NOTES, request
+						.getSession());
+		accountBO.addAccountNotes(accountNotes);
+		accountBO.setUserContext(uc);
+		accountBO.update();
+		return mapping.findForward(chooseForward(Short.valueOf(notesActionForm
+				.getAccountTypeId())));
 	}
 
 	private String chooseForward(Short accountTypeId) {
