@@ -67,6 +67,7 @@ public class MeetingBOTest extends MifosTestCase{
 			meeting = createDailyMeeting(recurAfter, startDate);
 			List list = meeting.getAllDates(null);
 			assertNull(list);
+			fail();
 		}catch (MeetingException e){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_ENDDATE,e.getKey());
@@ -81,6 +82,7 @@ public class MeetingBOTest extends MifosTestCase{
 			meeting = createDailyMeeting(recurAfter, startDate);
 			List list = meeting.getAllDates(endDate);
 			assertNull(list);
+			fail();
 		}catch (MeetingException e){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_ENDDATE,e.getKey());
@@ -88,19 +90,15 @@ public class MeetingBOTest extends MifosTestCase{
 	}
 	
 	public void testSuccessfulGetAllDates_EndDateEqualStartDate()throws Exception{
-		try{
-			recurAfter = Short.valueOf("1");
-			startDate = getDate("18/08/2006");
-			endDate = getDate("18/08/2006");
-			meeting = createDailyMeeting(recurAfter, startDate);
-			List list = meeting.getAllDates(endDate);
-			assertNotNull(list);
-			assertEquals(0, list.size());
-		}catch (MeetingException e){
-			assertTrue(true);
-			assertEquals(MeetingConstants.INVALID_ENDDATE,e.getKey());
-		}
+		recurAfter = Short.valueOf("1");
+		startDate = getDate("18/08/2006");
+		endDate = getDate("18/08/2006");
+		meeting = createDailyMeeting(recurAfter, startDate);
+		List list = meeting.getAllDates(endDate);
+		assertNotNull(list);
+		assertEquals(0, list.size());
 	}
+
 	public void testSuccessfulGetAllDates_Day()throws Exception{
 		List list=null;
 		List expectedList=null;		
@@ -329,8 +327,8 @@ public class MeetingBOTest extends MifosTestCase{
 			startDate = getDate("18/08/2006");
 			occurrences = 0;
 			meeting = createDailyMeeting(recurAfter, startDate);
-			List list = meeting.getAllDates(occurrences);
-			assertNull(list);
+			meeting.getAllDates(occurrences);
+			fail();
 		}catch (MeetingException e){
 			assertTrue(true);
 		}
@@ -580,6 +578,7 @@ public class MeetingBOTest extends MifosTestCase{
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfter, startDate);
 		try{
 			meeting.isValidMeetingDate(getDate("29/02/2004"),0);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_OCCURENCES,me.getKey());
@@ -637,6 +636,7 @@ public class MeetingBOTest extends MifosTestCase{
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfter, startDate);
 		try{
 			meeting.isValidMeetingDate(null,endDate);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_MEETINGDATE,me.getKey());
@@ -651,6 +651,7 @@ public class MeetingBOTest extends MifosTestCase{
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfter, startDate);
 		try{
 			meeting.isValidMeetingDate(getDate("29/02/2004"),null);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_ENDDATE,me.getKey());
@@ -709,6 +710,7 @@ public class MeetingBOTest extends MifosTestCase{
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfter, startDate);
 		try{
 			meeting.getNextScheduleDateAfterRecurrence(null);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_MEETINGDATE,me.getKey());
@@ -733,13 +735,17 @@ public class MeetingBOTest extends MifosTestCase{
 		assertEquals(getDate("31/03/2006"),resultDate);
 	}
 	
-	public void testGetFailurePrevScheduleDate()throws Exception{
+	/** What case is this intended to test?  Right now it is just
+        the same as {@link #testGetNextScheduleDateAfterRecurrenceOnEndofMonth}
+    */
+	public void xtestGetFailurePrevScheduleDate()throws Exception{
 		startDate = getDate("01/01/2006");
 		dayNumber = Short.valueOf("31");
 		recurAfter = Short.valueOf("2");
 		meeting = createMonthlyMeetingOnDate(dayNumber, recurAfter, startDate);
 		try{
 			meeting.getNextScheduleDateAfterRecurrence(getDate("01/01/2006"));
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_MEETINGDATE,me.getKey());
@@ -769,6 +775,7 @@ public class MeetingBOTest extends MifosTestCase{
 		try{
 			meeting = createDailyMeeting(null,new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_RECURAFTER,me.getKey());
@@ -780,6 +787,7 @@ public class MeetingBOTest extends MifosTestCase{
 			recurAfter = (short)-1;
 			meeting = createDailyMeeting(recurAfter,new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
@@ -791,6 +799,7 @@ public class MeetingBOTest extends MifosTestCase{
 			recurAfter = (short)1;
 			meeting = createDailyMeeting(recurAfter,null);
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_STARTDATE,me.getKey());
@@ -814,6 +823,7 @@ public class MeetingBOTest extends MifosTestCase{
 			recurAfter = Short.valueOf("1");
 			meeting = createWeeklyMeeting(null, recurAfter, new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_WEEKDAY, me.getKey());
@@ -824,6 +834,7 @@ public class MeetingBOTest extends MifosTestCase{
 		try{
 			meeting = createWeeklyMeeting(WeekDay.MONDAY, null, new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
@@ -835,6 +846,7 @@ public class MeetingBOTest extends MifosTestCase{
 			recurAfter = Short.valueOf("1");
 			meeting = createWeeklyMeeting(WeekDay.MONDAY, recurAfter, null);
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_STARTDATE,me.getKey());
@@ -846,6 +858,7 @@ public class MeetingBOTest extends MifosTestCase{
 			recurAfter = Short.valueOf("1");
 			meeting = new MeetingBO(WeekDay.MONDAY, recurAfter, new Date(), MeetingType.CUSTOMERMEETING, "");
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_MEETINGPLACE,me.getKey());
@@ -870,6 +883,7 @@ public class MeetingBOTest extends MifosTestCase{
 			recurAfter = Short.valueOf("1");
 			meeting = createMonthlyMeetingOnDate(null, recurAfter, new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_DAYNUMBER_OR_WEEK, me.getKey());
@@ -882,6 +896,7 @@ public class MeetingBOTest extends MifosTestCase{
 			dayNumber = Short.valueOf("32");
 			meeting = createMonthlyMeetingOnDate(dayNumber, recurAfter, new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_DAYNUMBER, me.getKey());
@@ -893,6 +908,7 @@ public class MeetingBOTest extends MifosTestCase{
 			dayNumber = Short.valueOf("5");
 			meeting = createMonthlyMeetingOnDate(dayNumber, null, new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
@@ -905,6 +921,7 @@ public class MeetingBOTest extends MifosTestCase{
 			dayNumber = Short.valueOf("5");
 			meeting = createMonthlyMeetingOnDate(dayNumber, recurAfter, null);
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
@@ -930,6 +947,7 @@ public class MeetingBOTest extends MifosTestCase{
 			recurAfter = Short.valueOf("1");
 			meeting = createMonthlyMeetingOnWeekDay(null,RankType.FIRST,recurAfter, new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
@@ -941,6 +959,7 @@ public class MeetingBOTest extends MifosTestCase{
 			recurAfter = Short.valueOf("1");
 			meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, null, recurAfter, new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
@@ -952,6 +971,7 @@ public class MeetingBOTest extends MifosTestCase{
 			recurAfter = Short.valueOf("1");
 			meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.FIRST, null, new Date());
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_RECURAFTER, me.getKey());
@@ -964,6 +984,7 @@ public class MeetingBOTest extends MifosTestCase{
 			dayNumber = Short.valueOf("5");
 			meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY,RankType.FIRST,recurAfter, null);
 			assertNull(meeting);
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_STARTDATE, me.getKey());
@@ -990,6 +1011,7 @@ public class MeetingBOTest extends MifosTestCase{
 		meeting = createWeeklyMeeting(WeekDay.MONDAY, recurAfter, new Date());
 		try{
 			meeting.update(WeekDay.WEDNESDAY,"");
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_MEETINGPLACE, me.getKey());
@@ -1010,6 +1032,7 @@ public class MeetingBOTest extends MifosTestCase{
 		meeting = createMonthlyMeetingOnDate(Short.valueOf("5"), recurAfter, new Date());
 		try{
 			meeting.update(Short.valueOf("32"),"Delhi");
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_DAYNUMBER, me.getKey());
@@ -1021,6 +1044,7 @@ public class MeetingBOTest extends MifosTestCase{
 		meeting = createMonthlyMeetingOnDate(Short.valueOf("5"), recurAfter, new Date());
 		try{
 			meeting.update(Short.valueOf("6"),"");
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_MEETINGPLACE, me.getKey());
@@ -1041,6 +1065,7 @@ public class MeetingBOTest extends MifosTestCase{
 		meeting = createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.FIRST, recurAfter, new Date());
 		try{
 			meeting.update(null, null, "Delhi");
+			fail();
 		}catch(MeetingException me){
 			assertTrue(true);
 			assertEquals(MeetingConstants.INVALID_WEEKDAY_OR_WEEKRANK, me.getKey());
@@ -1075,11 +1100,10 @@ public class MeetingBOTest extends MifosTestCase{
 	
 	private List createExpectedList(String dates)throws Exception{
 		List expectedList=new ArrayList();
-		StringTokenizer st= new StringTokenizer(dates,",");
-		String str;
-		while(st.hasMoreTokens()){
-			str=st.nextToken();
-			expectedList.add(getDate(str));	
+		StringTokenizer tokenizer = new StringTokenizer(dates,",");
+		while(tokenizer.hasMoreTokens()){
+			String date = tokenizer.nextToken();
+			expectedList.add(getDate(date));	
 		}
 		return expectedList;
 	}
