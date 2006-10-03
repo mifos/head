@@ -87,6 +87,20 @@ public class MeetingBOTest extends MifosTestCase{
 		}
 	}
 	
+	public void testSuccessfulGetAllDates_EndDateEqualStartDate()throws Exception{
+		try{
+			recurAfter = Short.valueOf("1");
+			startDate = getDate("18/08/2006");
+			endDate = getDate("18/08/2006");
+			meeting = createDailyMeeting(recurAfter, startDate);
+			List list = meeting.getAllDates(endDate);
+			assertNotNull(list);
+			assertEquals(0, list.size());
+		}catch (MeetingException e){
+			assertTrue(true);
+			assertEquals(MeetingConstants.INVALID_ENDDATE,e.getKey());
+		}
+	}
 	public void testSuccessfulGetAllDates_Day()throws Exception{
 		List list=null;
 		List expectedList=null;		

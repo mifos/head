@@ -210,10 +210,8 @@ public class MeetingBO extends BusinessObject {
 		validateMeetingDate(meetingDate);
 		validateEndDate(endDate);
 		Date currentScheduleDate=getFirstDate(getStartDate());
-		
 		Date meetingDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());
 		Date endDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(endDate.getTime());
-		
 		if(meetingDateWOTimeStamp.compareTo(endDateWOTimeStamp)>0)
 			return false;
 
@@ -284,7 +282,7 @@ public class MeetingBO extends BusinessObject {
 	}
 	
 	private void validateEndDate(Date endDate)throws MeetingException{
-		if(endDate == null || endDate.compareTo(getStartDate())<=0)
+		if(endDate == null || endDate.compareTo(getStartDate())<0)
 			throw new MeetingException(MeetingConstants.INVALID_ENDDATE);
 	}
 	

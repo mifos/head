@@ -3512,12 +3512,13 @@ public class TestLoanBO extends MifosTestCase {
 	public void testDisburseLoanWithAllTypeOfFees()
 			throws NumberFormatException, InvalidUserException,
 			PropertyNotFoundException, SystemException, ApplicationException {
-		Short dayOfMonth = (short) 1;
-		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2, 2, 4);
+		Short dayOfMonth = (short) 25;
+		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2, 1, 4);
+		
+		TestObjectFactory.createMeeting(meeting);
 		meeting.setMeetingStartDate(Calendar.getInstance());
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
 				dayOfMonth);
-		TestObjectFactory.createMeeting(meeting);
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
@@ -3532,7 +3533,7 @@ public class TestLoanBO extends MifosTestCase {
 		Calendar disbursementDate = new GregorianCalendar();
 		int year = disbursementDate.get(Calendar.YEAR);
 		int month = disbursementDate.get(Calendar.MONTH);
-		int day = disbursementDate.get(0);
+		int day = 25;
 		if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth
 				.intValue())
 			disbursementDate = new GregorianCalendar(year, month, day);
@@ -3566,12 +3567,12 @@ public class TestLoanBO extends MifosTestCase {
 		disbursementDate = new GregorianCalendar();
 		year = disbursementDate.get(Calendar.YEAR);
 		month = disbursementDate.get(Calendar.MONTH);
-		day = disbursementDate.get(0);
+		day = 25;
 		if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth
 				.intValue())
-			disbursementDate = new GregorianCalendar(year, month + 2, day);
+			disbursementDate = new GregorianCalendar(year, month + 1, day);
 		else
-			disbursementDate = new GregorianCalendar(year, month + 3, day);
+			disbursementDate = new GregorianCalendar(year, month + 2, day);
 		((LoanBO) accountBO).disburseLoan("1234", disbursementDate.getTime(),
 				Short.valueOf("1"), accountBO.getPersonnel(), disbursementDate
 						.getTime(), Short.valueOf("1"));
