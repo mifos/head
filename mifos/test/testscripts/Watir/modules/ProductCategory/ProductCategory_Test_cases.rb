@@ -74,9 +74,8 @@ class ProductCategory_Test_Cases < TestClass
       $logger.log_results("ProductCategory- Check for productcategory links on admin page", "Click on admin link","The links should be there","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("ProductCategory- Check for productcategory links on admin page", "Click on admin link","The links should be there","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout
+    rescue =>excp
+      quit_on_error(excp)
     end
   end
   
@@ -97,9 +96,8 @@ class ProductCategory_Test_Cases < TestClass
       $logger.log_results("ProductCategory- Check for Define a new ProductCategory link on admin page", "Click on 'Define a new ProductCategory' link","Access to the Define a new ProductCategory page","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("ProductCategory- Check for Define a new ProductCategory link on admin page", "Click on 'Define a new ProductCategory' link","Access to the Define a new ProductCategory page","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)  
     end      
   end
   
@@ -129,9 +127,8 @@ class ProductCategory_Test_Cases < TestClass
       
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("ProductCategory- Check for all error message when only preview button is clicked ", "NA","NA","failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)  
     end    
   end
   
@@ -147,9 +144,8 @@ class ProductCategory_Test_Cases < TestClass
      
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("ProductCategory- Check for validation error while creating new ProductCategory", "product_type ","All validation error message for other mandatory fields","Failed")     
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)  
     end    
   end
   
@@ -165,17 +161,20 @@ class ProductCategory_Test_Cases < TestClass
       $logger.log_results("ProductCategory- Check for validation error while creating new ProductCategory", "product_type, category_name", "NA","Passed")     
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("ProductCategory- Check for validation error while creating new ProductCategory", "product_type, category_name", "NA","Failed")     
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)  
     end    
   end
   
   #enter values in description field and check for error message when string length greater than 500 is given as input
   def ProductCategory_with_desc(description)
+    begin
       set_value_txtfield("productCategoryDesc",description)
       $ie.button(:value,@preview_button).click
       max_field_len(description,500,@prdcat_desc_max_len)
+    rescue =>excp
+      quit_on_error(excp)
+    end
   end
   
   # Check for all mandatory validation error
@@ -186,6 +185,8 @@ class ProductCategory_Test_Cases < TestClass
       Check_New_ProductCategory()      
       verify_CategoryName(category_name)      
       $ie.button(:value,@cancel_button).click 
+    rescue =>excp
+      quit_on_error(excp)
     end
   end
   
@@ -198,9 +199,8 @@ class ProductCategory_Test_Cases < TestClass
       $logger.log_results("ProductCategory- Check for validation error while creating new ProductCategory", "category_name", "validation error message", "Passed")
     rescue  Test::Unit::AssertionFailedError=>e
       $logger.log_results("ProductCategory- Check for validation error while creating new ProductCategory", "category_name","validation error message","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp)  
     end
   end
   
@@ -214,12 +214,15 @@ class ProductCategory_Test_Cases < TestClass
         $logger.log_results("Error message appears for duplicate product category name",category_name.to_s,@prdcat_dupl_name_msg,"passed")
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Error message does not  appear for duplicate product category name",category_name.to_s,@prdcat_dupl_name_msg,"failed")
-      rescue Watir::Exception::UnknownObjectException=>bang
-        $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-        mifos_logout  
+      rescue =>excp
+      quit_on_error(excp)  
       end
     else
-      $ie.button(:value,@submit_button).click
+      begin
+        $ie.button(:value,@submit_button).click
+      rescue =>excp
+        quit_on_error(excp)
+      end
     end
   end
   
@@ -232,6 +235,8 @@ class ProductCategory_Test_Cases < TestClass
       $ie.button(:value,@submit_button).click
       validate_ProductCategory_creation(product_type, category_name, description)
       ProductCategory_Creation_Conformation()
+    rescue =>excp
+      quit_on_error(excp)
     end
   end
   
@@ -252,39 +257,38 @@ class ProductCategory_Test_Cases < TestClass
     verify_admin_page()         
   rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("ProductCategory- Check for Define a new ProductCategory link on admin page", "Click on admin 'Define a new ProductCategory' link","Access to the Define a new ProductCategory page","Failed")    
-  rescue Watir::Exception::UnknownObjectException=>bang
-    $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-    mifos_logout    
+  rescue =>excp
+    quit_on_error(excp)    
   end
   
   # Check the edit data link on the preview page
   def edit_ProductCategory_name(old_category_name, new_category_name, product_type, description)
-    
-    Click_Admin_page()
-    $ie.link(:text, @view_category_link).click
-    $ie.link(:text, old_category_name).click    
-    $ie.wait     
-    $ie.link(:text, @edit_category_button).click
-    assert($ie.contains_text(old_category_name.to_s + " - "+@edit_category_button))
-    $logger.log_results("ProductCategory- Check for edit the ProductCategory with change the name", "click on edit ProductCategory link ", "page to edit the ProductCategory", "Passed")
-    set_value_txtfield("productCategoryName", new_category_name)
-    $ie.button(:value,@preview_button).click
-    
-    if( $ie.contains_text(@prdcat_properties['product.categoryname']+": " + new_category_name.to_s) and $ie.contains_text(description.to_s) )
+    begin
+      Click_Admin_page()
+      $ie.link(:text, @view_category_link).click
+      $ie.link(:text, old_category_name).click    
+      $ie.wait     
+      $ie.link(:text, @edit_category_button).click
+      assert($ie.contains_text(old_category_name.to_s + " - "+@edit_category_button))
+      $logger.log_results("ProductCategory- Check for edit the ProductCategory with change the name", "click on edit ProductCategory link ", "page to edit the ProductCategory", "Passed")
+      set_value_txtfield("productCategoryName", new_category_name)
+      $ie.button(:value,@preview_button).click
       
-      $logger.log_results("ProductCategory- Check for edit the ProductCategory with change the name", "validating the preview page after change", "valid preview page after change", "Passed")
-    else
+      if( $ie.contains_text(@prdcat_properties['product.categoryname']+": " + new_category_name.to_s) and $ie.contains_text(description.to_s) )
+        
+        $logger.log_results("ProductCategory- Check for edit the ProductCategory with change the name", "validating the preview page after change", "valid preview page after change", "Passed")
+      else
+        
+        $logger.log_results("ProductCategory- Check for edit the ProductCategory with change the name", "validating the preview page after change", "valid preview page after change", "Failed")
+      end 
       
-      $logger.log_results("ProductCategory- Check for edit the ProductCategory with change the name", "validating the preview page after change", "valid preview page after change", "Failed")
-    end 
-    
-    $ie.button(:value,@submit_button).click
-    validate_productcategory_view(product_type, new_category_name, description)
-  rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("ProductCategory- Check for edit the ProductCategory with change the name", "click on edit ProductCategory link ","page to edit the ProductCategory", "Failed")
-  rescue Watir::Exception::UnknownObjectException=>bang
-    $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-    mifos_logout    
+      $ie.button(:value,@submit_button).click
+      validate_productcategory_view(product_type, new_category_name, description)
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("ProductCategory- Check for edit the ProductCategory with change the name", "click on edit ProductCategory link ","page to edit the ProductCategory", "Failed")
+    rescue =>excp
+      quit_on_error(excp)    
+    end
   end
   
   # Enter the new ProductCategory data 
@@ -299,6 +303,8 @@ class ProductCategory_Test_Cases < TestClass
       set_value_selectlist("productType", product_type)
       set_value_txtfield("productCategoryName", category_name)
       set_value_txtfield("productCategoryDesc", description)
+    rescue =>excp
+      quit_on_error(excp)
     end
   end
   
@@ -321,9 +327,8 @@ class ProductCategory_Test_Cases < TestClass
       $logger.log_results("description "+description.to_s+" appears on page", description.to_s,"NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("description "+description.to_s+" does not appear on page", description.to_s,"NA","passed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout    
+    rescue =>excp
+      quit_on_error(excp)   
     end
     
   end  
@@ -351,21 +356,24 @@ class ProductCategory_Test_Cases < TestClass
       dbcheck("Category Name",category_name.to_s,db_category_name.to_s) 
       dbcheck("Description",description.to_s,db_description.to_s) 
       dbcheck("Status","1",db_state_id.to_s) 
+    rescue =>excp
+      quit_on_error(excp)
     end 
   end  
   
   #Check for the ProductCategoryCreation-Conformation page
   def ProductCategory_Creation_Conformation()
-    assert($ie.contains_text(@prdcat_success_msg)) and assert($ie.contains_text(@prdcat_def_new_msg))\
-    and assert($ie.contains_text(@prdcat_view_details_msg))
-    $logger.log_results("ProductCategory- ProductCategory created", "ProductCategory created","The page should redirect to ProductCategoryCreation-Conformation page","Passed")
-    $ie.link(:text, @prdcat_def_new_msg).click
+    begin
+      assert($ie.contains_text(@prdcat_success_msg)) and assert($ie.contains_text(@prdcat_def_new_msg))\
+      and assert($ie.contains_text(@prdcat_view_details_msg))
+      $logger.log_results("ProductCategory- ProductCategory created", "ProductCategory created","The page should redirect to ProductCategoryCreation-Conformation page","Passed")
+      $ie.link(:text, @prdcat_def_new_msg).click
     #Check_New_ProductCategory()
-  rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("ProductCategory- ProductCategory created", "ProductCategory created","The page should redirect to ProductCategoryCreation-Conformation page","Failed")     
-  rescue Watir::Exception::UnknownObjectException=>bang
-    $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-    mifos_logout    
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("ProductCategory- ProductCategory created", "ProductCategory created","The page should redirect to ProductCategoryCreation-Conformation page","Failed")     
+    rescue =>excp
+      quit_on_error(excp)    
+    end
   end      
   
   # Mandatory check for view check list
@@ -376,6 +384,8 @@ class ProductCategory_Test_Cases < TestClass
       $ie.link(:text, category_name).click    
       $ie.wait 
       validate_productcategory_view(product_type, category_name, description)    
+    rescue =>excp
+      quit_on_error(excp)
     end 
   end 
   
@@ -387,17 +397,20 @@ class ProductCategory_Test_Cases < TestClass
       $logger.log_results("ProductCategory- validating the preview page for new ProductCategory", "Click view ProductCategory link", "Valid preview page content", "Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("ProductCategory- validating the preview page for new ProductCategory", "Click view ProductCategory link","Valid preview page content", "Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout  
+    rescue =>excp
+      quit_on_error(excp) 
     end
   end
   
   # Check for the status change from active to inactive and then inactive to active
   def check_status(category_name)
-    edit_productcategory_status(category_name, "Inactive")
-    edit_productcategory_status(category_name, "Active")  
-    $ie.link(:text,@admin_link).click
+    begin
+      edit_productcategory_status(category_name, "Inactive")
+      edit_productcategory_status(category_name, "Active")  
+      $ie.link(:text,@admin_link).click
+    rescue =>excp
+      quit_on_error(excp)
+    end
   end
   
   # Change the ProductCategory status
@@ -418,21 +431,21 @@ class ProductCategory_Test_Cases < TestClass
       verify_status_change(category_name, status)    
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("ProductCategory- Edit ProductCategory information", "click on Edit ProductCategory information","Edit page should be opened","Failed")
-    rescue Watir::Exception::UnknownObjectException=>bang
-      $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-      mifos_logout      
+    rescue =>excp
+      quit_on_error(excp)      
     end      
   end 
   
   # verifies the changed status   
-  def verify_status_change(category_name, status)    
-    assert($ie.contains_text(status)) and assert($ie.contains_text(category_name.to_s))
-    $logger.log_results("ProductCategory- Edit ProductCategory information", "status change","Preview page with changed status","Passed")       
-  rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("ProductCategory- Edit ProductCategory information", "status change","Preview page with changed status","Failed")
-  rescue Watir::Exception::UnknownObjectException=>bang
-    $logger.log_results("Unable to locate object ,quitting current test .Error description in Status column","NA","NA",bang.to_s)
-    mifos_logout      
+  def verify_status_change(category_name, status)
+    begin    
+      assert($ie.contains_text(status)) and assert($ie.contains_text(category_name.to_s))
+      $logger.log_results("ProductCategory- Edit ProductCategory information", "status change","Preview page with changed status","Passed")       
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("ProductCategory- Edit ProductCategory information", "status change","Preview page with changed status","Failed")
+    rescue =>excp
+      quit_on_error(excp)      
+    end
   end 
   
   
