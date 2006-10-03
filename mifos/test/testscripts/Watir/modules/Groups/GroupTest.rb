@@ -30,10 +30,14 @@ class GroupCreateEdit < TestClass
   def read_group_values(rowid,sheetid)
     if sheetid==1 then
       @groupname=arrval[rowid+=1]
+      #added by Dilip so that i can access original groupname in the function create_group_mandatary_forfees()
+      #also no need of changing the excel sheet for every run
+      @groupname1=@groupname+Time.now.strftime("%d%m%Y%H%M%S")
       @customfield=arrval[rowid+=1].to_i.to_s
       @statusname=arrval[rowid+=1]
     elsif sheetid==2 then
       @groupname=arrval[rowid+=1]
+      @groupname1=@groupname+Time.now.strftime("%d%m%Y%H%M%S")
       @gdate=arrval[rowid+=1].to_i.to_s
       @gmonth=arrval[rowid+=1].to_i.to_s
       @gyear=arrval[rowid+=1].to_i.to_s
@@ -49,6 +53,8 @@ class GroupCreateEdit < TestClass
       @customfield=arrval[rowid+=1].to_i.to_s
       @statusname=arrval[rowid+=1]
       @edit_gname=arrval[rowid+=1]
+      #added by Dilip
+      @edit_gname1=@edit_gname+Time.now.strftime("%d%m%Y%H%M%S")
       @edit_externalid=arrval[rowid+=1]
       @edit_address1=arrval[rowid+=1]
       @edit_address2=arrval[rowid+=1]
@@ -67,7 +73,7 @@ class GroupCreateEdit < TestClass
     end
   end
   def Groupname()
-    @groupname
+    @groupname1
   end
   def Gdate()
     @gdate
@@ -115,7 +121,7 @@ class GroupCreateEdit < TestClass
     @statusname
   end
   def Edit_gname
-    @edit_gname
+    @edit_gname1
   end
   def Edit_externalid
     @edit_externalid
@@ -477,9 +483,30 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Group created successfully","N/A","N/A","Failed")
     rescue =>excp
+     #puts excp.to_s
       quit_on_error(excp)    
     end
   end
+ #added by Dilip as the function to by pass the go_to_details function on 2/10/2006
+ #this function creates a group with a pending status
+  def create_group_with_mandatory_forfees(gname,customfield,status)
+      begin
+      puts "inside my function"
+      review_group_with_mandatory(gname,customfield,status)
+      $ie.button(:value,status).click
+      assert($ie.contains_text(@@group_success))
+      $logger.log_results("Group created successfully","N/A","N/A","Passed")
+      $ie.link(:text,@@view_group_details_now).click
+      #$ie.link(:text,@@edit_group_status).click
+      #change_status_pending
+      rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Group created successfully","N/A","N/A","Failed")
+      rescue =>excp
+      #puts excp.to_s
+      quit_on_error(excp)    
+      end
+  end #end of function
+  
   
   def go_to_detailspage(gname)
     begin
@@ -531,7 +558,6 @@ class GroupCreateEdit < TestClass
      
   def change_status_active()
     begin
-      
       dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=9")
       @@status_active_name=dbresult[0]
       dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=8")
@@ -850,7 +876,91 @@ class GroupCreateEdit < TestClass
       quit_on_error(excp)
     end
   end
+  
+#Added by Dilip as partof the bug#397 on 2/10/2006
+  def check_feeApplied_status()
+    
+    count=count_records("Select count(global_cust_num) from Customer where Status_ID in (8)")
+    #puts "count "+count.to_s
+    if(count.to_i==0) # if  there are not groups with status pending then create one
+      create_group_with_mandatory_forfees(@groupname+Time.now.strftime("%d%m%Y%H%M%S"),"351",@statusname)
+      apply_feestogroup
+    else
+      apply_feestogroup
+    end
+        
+  end # end of check_feeApplied_status function
+  
+  #added by Dilip on 2/10/2006.This function apply charges to inactive group and checks whether its displayed
+  def apply_feestogroup()
+    #FOR GROUPS
+        dbquery("Select global_cust_num,Display_name,status_id,customer_id from Customer where Status_ID in (8)")
+        @@global_cust_num=dbresult[0]
+        @@Display_name=dbresult[1]
+        @@status_id=dbresult[2]
+        @@customer_id=dbresult[3]
+        search_client(@@global_cust_num) 
+        $ie.link(:text,@@Display_name.strip()+": ID "+@@global_cust_num).click
+        $ie.link(:text,"View details").click
+        $ie.link(:text,"Apply charges").click
+        feetypearr=$ie.select_list(:name,"chargeType").getAllContents()
+        $ie.select_list(:name,"chargeType").select(feetypearr[1].to_s)
+        #    arr=$ie.select_list(:name,"chargeType").getSelectedItems()
+        $ie.button(:value,"Submit").click
+        search_client(@@global_cust_num) 
+        $ie.link(:text,@@Display_name.strip()+": ID "+@@global_cust_num).click
+        table_obj=$ie.table(:index,15)
+        puts table_obj[2][0].text
+        begin
+        assert(table_obj[2][0].text=="Amount due: 0.0")
+        $logger.log_results("Bug#397-Fee applied to a customer","Fee applied a group which is not active","Fee should not be applied till the group is active","passed")
+        rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Bug#397-Fee applied to a customer","Fee applied a group which is not active","Fee displayed for inactive group","failed")
+        end
+        change_status(@@Display_name)
+        # again verifying the view details page ro check whether the fees applied is displayed now.
+         search_client(@@global_cust_num) 
+        $ie.link(:text,@@Display_name.strip()+": ID "+@@global_cust_num).click
+        table_obj=$ie.table(:index,15)
+        puts table_obj[2][0].text
+         chargeamount=gettotalfeesapplied(@@customer_id)
+       # puts chargeamount.to_f
+        begin
+        assert(table_obj[2][0].text=="Amount due: "+chargeamount.to_f.to_s+"")
+        $logger.log_results("Bug#397-Fee applied to a customer","Customer is made Active","Fee applied should be displayed","passed")
+        rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Bug#397-Fee applied to a customer","fees is not displayed for active group","","failed")
+        end
+  end # end of funtion apply_feestogroup
+  
+  #added by Dilip.This function returns the count for any query.
+  def count_records(query)
+    dbquery(query)
+    count=dbresult[0]
+    return count.to_i
+  end
+
+#to get the  total fees applied to a customer added by Dilip as part of bug#397
+def gettotalfeesapplied(customerid)
+  dbquery("select sum(account_fee_amnt) from account a,account_fees af where a.account_id=af.account_id and a.customer_id="+customerid+" group by a.account_id")
+  totalfees=dbresult[0]
+  return totalfees
 end
+ 
+ #added by Dilip. This function searches for any customer number given as input 
+   def search_client(custnum)
+    $ie.link(:text,"Clients & Accounts").click
+    $ie.text_field(:name,"searchNode(searchString)").set(custnum)
+    $ie.button(:value,"Search").click
+    assert($ie.contains_text(custnum))
+    $logger.log_results("Search results","Should work","Working","Passed")
+    rescue Test::Unit::AssertionFailedError=>e
+    $logger.log_results("Search results","NA","NA","failed")
+    
+  end #end of search_client method
+  
+  
+end #end of class
 
 class GroupTest
   groupobject=GroupCreateEdit.new
@@ -869,6 +979,7 @@ class GroupTest
   groupobject.mandatory_all
   groupobject.mandatory_with_groupname
   groupobject.mandatory_with_gname_addInformation
+  
   filename=File.expand_path(File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
   groupobject.open(filename,1)
   rowid=-1
@@ -908,5 +1019,7 @@ class GroupTest
     rowid+=$maxcol
   end
   groupobject.Activate_Group
+  #added by Dilip as part of bug#397
+  groupobject.check_feeApplied_status
   groupobject.mifos_logout()
 end

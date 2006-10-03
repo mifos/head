@@ -27,6 +27,7 @@ class CenterCreateEdit < TestClass
   def read_center_values(rowid,sheetid)
     if sheetid==1 then
       @centername=arrval[rowid+=1]
+      @centername1=@centername+Time.now.strftime("%d%m%Y%H%M%S")
       @external_id=arrval[rowid+=1].to_i.to_s
       @mfi_date=arrval[rowid+=1].to_i.to_s
       @mfi_month=arrval[rowid+=1].to_i.to_s
@@ -55,7 +56,7 @@ class CenterCreateEdit < TestClass
     end
   end
   def Centername()
-    @centername
+    @centername1
   end
   def External_id()
     @external_id

@@ -20,12 +20,15 @@ class ClientCreateEdit<TestClass
     @@lookup_name_client=dbresult[0]
     dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=83 and locale_id=1")
     @@lookup_name_group=dbresult[0]
+
     
   end
   def read_client_values(rowid,sheetid)
     if sheetid==1 then
       @salutation=arrval[rowid+=1]
       @fname=arrval[rowid+=1]
+      #added so that the excel sheet need not be updated for every run
+      @fname1=@fname+Time.now.strftime("%d%m%Y%H%M%S")
       @lname=arrval[rowid+=1]
       @date=arrval[rowid+=1].to_i.to_s
       @month=arrval[rowid+=1].to_i.to_s
@@ -40,6 +43,7 @@ class ClientCreateEdit<TestClass
     elsif sheetid==2 then
       @salutation=arrval[rowid+=1]
       @fname=arrval[rowid+=1]
+      @fname1=@fname+Time.now.strftime("%d%m%Y%H%M%S")
       @mname=arrval[rowid+=1]
       @sname=arrval[rowid+=1]
       @lname=arrval[rowid+=1]
@@ -75,6 +79,7 @@ class ClientCreateEdit<TestClass
     elsif sheetid==3 then
       @salutation=arrval[rowid+=1]
       @fname=arrval[rowid+=1]
+      @fname1=@fname+Time.now.strftime("%d%m%Y%H%M%S")
       @mname=arrval[rowid+=1]
       @sname=arrval[rowid+=1]
       @lname=arrval[rowid+=1]
@@ -167,7 +172,7 @@ class ClientCreateEdit<TestClass
     @salutation
   end
   def Fname()
-    @fname
+    @fname1
   end
   def Mname()
     @mname 
@@ -1575,7 +1580,7 @@ class ClientCreateEdit<TestClass
       no_of_fee=search_fee.num_rows()
       rowf=0
       if no_of_fee=="0" then
-        $looger.log_results("No Fess created for the group","","","Passed")
+        $logger.log_results("No Fess created for the group","","","Passed")
       else
         while (rowf < no_of_fee)
           fee_id=dbresult1[0]
@@ -1669,8 +1674,185 @@ class ClientCreateEdit<TestClass
     end
     
   end
+ 
+ #added bu Dilip  as part of bug#577
+def check_applyfee()
   
-end
+    count=count_records("select count(global_cust_num) from customer where customer_id in (select distinct customer_id from account a, customer_account ca where a.account_id=ca.account_id and a.account_id   in (select distinct account_id from account_fees where fee_status=2)) and CUSTOMER_LEVEL_ID = 1 and status_id in (1,2,3,4)")
+    if(count.to_i>0) then
+      applycharges()
+    else
+    applycustomerfee()
+    applycharges()
+    end #end if    
+    
+  end # end of check_applyfee function
+  
+  #function to apply charges to a client added by Dilip as part of Bug#577 on 1/10/2006
+  
+  def applycharges()
+       dbquery("select global_cust_num,display_name from customer where customer_id in (select distinct customer_id from account a, customer_account ca where a.account_id=ca.account_id and a.account_id   in (select distinct account_id from account_fees where fee_status=2)) and CUSTOMER_LEVEL_ID = 1 and status_id in (1,2,3,4)")
+        @@global_cust_num=dbresult[0]
+        @@Display_name=dbresult[1]
+        search_client @@global_cust_num
+        $ie.link(:text,@@Display_name+": ID "+@@global_cust_num).click
+        $ie.link(:text,"View details").click
+        $ie.link(:text,"Apply Charges").click
+        feetypearr=$ie.select_list(:name,"chargeType").getAllContents()
+        $ie.select_list(:name,"chargeType").select(feetypearr[1].to_s)
+        #    arr=$ie.select_list(:name,"chargeType").getSelectedItems()
+        $ie.button(:value,"Submit").click
+        begin
+          assert($ie.contains_text("Apply Charges"))
+          $logger.log_results("Apply Charges Link check","Should work","Working","Passed")
+          table_obj=$ie.table(:index,16)
+          begin
+            assert(table_obj[2][2].text==feetypearr[1].to_s.strip+" applied")
+            $logger.log_results("Bug#577- Issue2-Fee name display","Apply a fees to customer","Fee name should be displayed","Passed")        
+            rescue Test::Unit::AssertionFailedError=>e
+            $logger.log_results("Bug#577- Issue2-Fee name display","Apply a fees to customer","Fee name is not displayed","failed")       
+          end
+        rescue Test::Unit::AssertionFailedError=>e
+          $logger.log_results("Apply Charges Link check","NA","NA","failed")
+        end
+  end #end of applycharges
+
+# function to apply fees to a cutomer in this case its a member added by Dilip on 1/10/2006
+
+  def applycustomerfee()
+  
+    dbquery("select display_name,global_cust_num from customer where customer_level_id=1 and status_id in (1,2,3,4) order by customer_id desc")
+    globalcustnum=dbresult[1]
+    displayname=dbresult[0]
+    search_client(globalcustnum)
+     $ie.link(:text,displayname+": ID "+globalcustnum).click
+     $ie.link(:text,"View details").click
+     $ie.link(:text,"Apply Charges").click
+     feetypearr=$ie.select_list(:name,"chargeType").getAllContents()
+     $ie.select_list(:name,"chargeType").select(feetypearr[1].to_s)
+     
+  end
+  
+  #Added as part of Bug#577.
+  def click_removeFee()
+    
+    $ie.link(:text,"remove").click
+    table_obj=$ie.table(:index,16)
+    assert(table_obj[2][3].text=="-")
+    $logger.log_results("Bug#577-issue4-Remove peridic Fee of a customer","Should display -","Working","Passed")
+    rescue Test::Unit::AssertionFailedError=>e
+    $logger.log_results("Bug#577-issue4-Remove peridic Fee of a customer","NA","NA","failed")
+    
+  end
+  
+  #function added as part of bug#577 by Dilip on 1/10/2006
+def check_blueband_links
+
+    #query which retreives the group/center of the given client.
+    dbquery("select ch1.display_name as kendra,ch2.display_name as grp,ch3.display_name as member from customer ch3 join customer ch2 on ch3.parent_customer_id=ch2.customer_id join  customer ch1 on ch2.parent_customer_id=ch1.customer_id where ch3.global_cust_num='"+@@global_cust_num+"'")
+    @kendraname=dbresult[0]
+    @groupname=dbresult[1]
+    @membername=dbresult[2]
+    
+    begin
+      assert($ie.contains_text(@kendraname))
+      $logger.log_results("Bug#577- Issue3-Center name check","Center name to be present on the blue band","Center name present on the blue band","passed")
+      rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Bug#577- Issue3-Center name check","Center name to be present on the blue band","Center name not present on the blue band","failed")
+    end
+    
+    begin    
+      assert($ie.contains_text(@groupname))
+      $logger.log_results("Bug#577- Issue3-Group name check","Group name to be present on the blue band","Group name present on the blue band","passed")
+      rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Bug#577- Issue3-Group name check","Group name to be present on the blue band","Group name not present on the blue band","failed")
+    end
+    
+    begin
+      assert($ie.contains_text(@membername))
+      $logger.log_results("Bug#577- Issue3-Member name check","Member name to be present on the blue band","Member name present on the blue band","passed")
+      rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Bug#577- Issue3-Member name check","Member name to be present on the blue band","Member name not present on the blue band","failed")
+    end
+    
+    $ie.link(:text,@membername).click
+    
+    assert($ie.contains_text("Edit Member status"))
+    $logger.log_results("Bug#577- Issue3-Click on Member link","should work","should not work","passed")            
+    rescue Test::Unit::AssertionFailedError=>e
+    $logger.log_results("Bug#577- Issue3-Click on Member link","should work","should not work","failed")
+    
+  end #end of check_blueband_links
+
+
+
+#function added as part of bug#277 by Dilip on 1/10/2006.Apply misc/penalty fees  to a client
+def apply_miscfees(fee_type)
+    
+    dbquery("Select Display_name,global_cust_num from Customer where Status_ID in (3,4) and CUSTOMER_LEVEL_ID = 1")
+    @@Display_name=dbresult[0]
+    @@global_cust_num=dbresult[1]
+    search_client @@global_cust_num
+    $ie.link(:text,@@Display_name+": ID "+@@global_cust_num).click
+    $ie.link(:text,"View details").click
+    $ie.link(:text,"Apply Charges").click
+    if(fee_type=="-1")
+      $ie.select_list(:name,"chargeType").select_value("-1")
+    elsif(fee_type=="-2")
+      $ie.select_list(:name,"chargeType").select_value("-2")
+    end
+    $ie.text_field(:name,"chargeAmount").set("34")
+    $ie.button(:value,"Submit").click
+    assert($ie.contains_text("Account summary"))
+    $logger.log_results("Bug#577-Issue1-Apply Misc Fees/penalty","Enter a Misc fees or penalty","NA","passed")
+    rescue Test::Unit::AssertionFailedError=>e
+    $logger.log_results("Bug#577-Issue1-Apply Misc Fees/penalty","Enter a Misc fees or penalty","not working","failed")
+  end #end function  apply_miscfees
+ 
+ #A small function which will search the client/group with the customer number provided.Added by Dilip on 1/10/2006
+ def search_client(custnum)
+    $ie.link(:text,"Clients & Accounts").click
+    $ie.text_field(:name,"searchNode(searchString)").set(custnum)
+    $ie.button(:value,"Search").click
+     
+  end #end of search_client method
+   
+    # function which will get all periodic fee and customer for whom no periodic fees has been applied till now
+  def add_periodicFee()
+    begin
+      
+      #To find all customers for whom no fees has been applied.
+      dbquery("select a.account_id,c.customer_id,c.global_cust_num,c.display_name from account a,customer c ,account_fees d where a.customer_id=c.customer_id and a.account_type_id=3 and a.account_id not in (select account_id from account_fees where fee_status is null or fee_status=1) and c.customer_level_id=1 and c.status_id=3 group by a.account_id")
+      newmemberCustomerNum=dbresult[2]
+      display_name=dbresult[3]
+      customerid=dbresult[1]
+      #To get all periodic  fees
+      dbquery("select  a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=(select recurrence_id from recurrence_detail a ,customer_meeting cm where a.meeting_id=cm.meeting_id and customer_id = "+customerid+") and a.fee_id not in (select fee_id from feelevel) and a.category_id in (1,2) and status=1 group by a.fee_id")
+      periodicfeeid=dbresult[0]
+      search_client(newmemberCustomerNum) 
+      $ie.link(:text,display_name+": ID "+newmemberCustomerNum).click
+      $ie.link(:text,"View details").click
+      $ie.link(:text,"Apply Charges").click
+      $ie.select_list(:name,"chargeType").select_value(periodicfeeid)
+      $ie.button(:value,"Submit").click
+      assert($ie.contains_text("Apply Charges"))
+      $logger.log_results("Apply Charges","Should work","Working","Passed")
+      click_removeFee
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Apply Charges","NA","NA","failed")
+      
+    end
+  end  #End of add periodic fee
+  
+   def count_records(query)
+    dbquery(query)
+    count=dbresult[0]
+    return count.to_i
+  end
+  
+end # end of class
+
+
 class ClientTest
   clientobject=ClientCreateEdit.new
   #centerobject=CenterCreateEdit.new
@@ -1832,5 +2014,16 @@ class ClientTest
     clientobject.edit_branch_membership                              
     rowid+=$maxcol
   end    
+  
+  for i in ["-1","-2"] # selecting Misc Fees and Misc Penalty
+  # for i in ["-1"]
+        clientobject.apply_miscfees(i)
+   end
+   
+   clientobject.add_periodicFee
+       clientobject.check_applyfee
+   clientobject.check_blueband_links  
+
+  
   clientobject.mifos_logout
 end
