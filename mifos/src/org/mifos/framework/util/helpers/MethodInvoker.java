@@ -41,13 +41,11 @@ package org.mifos.framework.util.helpers;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.mifos.framework.business.handlers.MifosBusinessProcessor;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.MethodInvocationException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This is a helper class used to invoke methods by reflection.It has two variants of the same method:
@@ -107,7 +105,9 @@ public static Object invoke(Object targetObject,String methodName,Object[] param
 
 
 /**
- * Invokes the method specified on the object. Unlike invoke it does not throw any exception even if the method we are trying to invoke is not available or inaccessible.
+ * Invokes the method specified on the object. 
+ * Unlike invoke it does not throw any exception even if the method 
+ * we are trying to invoke is not available or inaccessible.
  * @param targetObject - Object on which method is to be invoked.
  * @param methodName   - Name of the method to be called.
  * @param parametersToBePassed - Array of parameters to be passed.
@@ -116,7 +116,9 @@ public static Object invoke(Object targetObject,String methodName,Object[] param
  * @throws SystemException
  * @throws ApplicationException
  */
-public static Object invokeWithNoException(Object targetObject,String methodName,Object[] parametersToBePassed,Class... parameterTypes)throws SystemException,ApplicationException {
+public static Object invokeWithNoException(Object targetObject,
+	String methodName,Object[] parametersToBePassed,Class... parameterTypes)
+throws SystemException,ApplicationException {
 	
 	Method method = null;
 	Object invocationResult = null;

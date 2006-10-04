@@ -241,69 +241,18 @@ public class TableTag extends BodyTagSupport {
 	 */
 	@Override
 	public int doStartTag() throws JspException {
-		// Used to set the value of the list which we are getting from the Cache
-		List list = null;
 		// call the helper method to display the result.
 		try {
-			list = getList();
+			// Value of the list which we are getting from the Cache
+			List list = getList();
 			if (list == null) {
 				return super.doStartTag();
 			}
 			if (list.size() == 0) {
-				StringBuilder result = new StringBuilder();
 				JspWriter out = pageContext.getOut();
-				result
-						.append(
-								"<table width=\"96%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">")
-						.append(
-								"<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\" ><br>")
-						.append("<span class=\"headingorange\">");
-				result.append("No results found");
 				Context context = (Context) SessionUtils.getAttribute(
 						"Context", pageContext.getSession());
-				if (context.getSearchObject() != null) {
-					String officeId = context
-							.getSearchObject()
-							.getFromSearchNodeMap(
-									CustomerSearchConstants.CUSTOMERSEARCOFFICEID);
-
-					if (officeId != null) {
-						Map map = context.getSearchObject().getSearchNodeMap();
-						Set set = map.keySet();
-						Iterator iterator = set.iterator();
-						if (iterator.hasNext()) {
-							result.append(" for" + "<span class=\"heading\"> "
-									+ map.get(iterator.next()) + " </span>");
-						}
-						if (officeId.equals("0")) {
-							result
-									.append("<span class=\"headingorange\"> in</span> <span class=\"heading\">"
-											+ "All Branches" + "</span>");
-						} else if (iterator.hasNext()) {
-							String officeName = map.get(iterator.next())
-									.toString();
-							if (!officeName.equals("")) {
-								result
-										.append("<span class=\"headingorange\"> in</span> <span class=\"heading\">"
-												+ officeName + "</span>");
-							} else {
-								result
-										.append("<span class=\"headingorange\"> in</span> <span class=\"heading\">"
-												+ context
-														.getBusinessResults("Office")
-												+ "</span>");
-							}
-						}
-
-						result.append("</span></td></tr>");
-						if (type.equalsIgnoreCase("single")) {
-							result
-									.append("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\"><br>");
-							result
-									.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
-						}
-					}
-				}
+				StringBuilder result = noResults(context);
 				out.write(result.toString());
 				return super.doStartTag();
 			}
@@ -323,11 +272,64 @@ public class TableTag extends BodyTagSupport {
 
 	}
 
+	private StringBuilder noResults(Context context) {
+		StringBuilder result = new StringBuilder();
+		result
+				.append(
+						"<table width=\"96%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">")
+				.append(
+						"<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\" ><br>")
+				.append("<span class=\"headingorange\">");
+		result.append("No results found");
+		result.append("<br />Kilroy was here.");
+		if (context.getSearchObject() != null) {
+			String officeId = context
+					.getSearchObject()
+					.getFromSearchNodeMap(
+							CustomerSearchConstants.CUSTOMERSEARCOFFICEID);
+
+			if (officeId != null) {
+				Map map = context.getSearchObject().getSearchNodeMap();
+				Set set = map.keySet();
+				Iterator iterator = set.iterator();
+				if (iterator.hasNext()) {
+					result.append(" for" + "<span class=\"heading\"> "
+							+ map.get(iterator.next()) + " </span>");
+				}
+				if (officeId.equals("0")) {
+					result
+							.append("<span class=\"headingorange\"> in</span> <span class=\"heading\">"
+									+ "All Branches" + "</span>");
+				} else if (iterator.hasNext()) {
+					String officeName = map.get(iterator.next())
+							.toString();
+					if (!officeName.equals("")) {
+						result
+								.append("<span class=\"headingorange\"> in</span> <span class=\"heading\">"
+										+ officeName + "</span>");
+					} else {
+						result
+								.append("<span class=\"headingorange\"> in</span> <span class=\"heading\">"
+										+ context
+												.getBusinessResults("Office")
+										+ "</span>");
+					}
+				}
+
+				result.append("</span></td></tr>");
+				if (type.equalsIgnoreCase("single")) {
+					result
+							.append("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\"><br>");
+					result
+							.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
+				}
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * Function used to start table creation.
-	 *
-	 * @param result
-	 * @param size
 	 */
 	private void createStartTable(StringBuilder result, boolean headingRequired, boolean topBlueLineRequired) {
 		if (headingRequired) {

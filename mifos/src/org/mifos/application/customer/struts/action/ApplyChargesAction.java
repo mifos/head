@@ -70,27 +70,19 @@ public class ApplyChargesAction extends MifosBaseAction {
 	 * The map returned from this method is appended to the map of the <code>getKeyMethodMap<code> in the base action class and that will form the complete map for that action.
 	 * The methods entered in this map are: -
 	 * 1)remove - this is called to remove a recurring account fee.
-	 * @return
 	 */
-	//public Map<String,String> appendToMap()
-	public Map appendToMap()
+	@Override
+	public Map<String,String> appendToMap()
 	{
-		//HashMap<String,String> keyMethodMap = new HashMap<String,String>();
-		HashMap keyMethodMap = new HashMap();
+		HashMap<String,String> keyMethodMap = new HashMap<String,String>();
 		keyMethodMap.put(null, "remove");
 		return keyMethodMap;
-		
 	}
 	
 	/**
 	 *No need to override. 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param httpservletresponse
-	 * @return
-	 * @throws Exception
 	 */
+	@Override
 	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
 	throws Exception
 	{
@@ -100,12 +92,6 @@ public class ApplyChargesAction extends MifosBaseAction {
 	/**
 	 *This method is called to remove the recurring fee associated with that customer account.
 	 *It obtains the accountFeeId of the fee to be removed from the action form.  
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param httpservletresponse
-	 * @return
-	 * @throws Exception
 	 */
 	public ActionForward remove(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
 	throws Exception
@@ -115,13 +101,8 @@ public class ApplyChargesAction extends MifosBaseAction {
 	
 	/**
 	 *No need to override.  
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param httpservletresponse
-	 * @return
-	 * @throws Exception
 	 */
+	@Override
 	public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
 	throws Exception
 	{
@@ -130,13 +111,8 @@ public class ApplyChargesAction extends MifosBaseAction {
 	
 	/**
 	 *No need to override. 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param httpservletresponse
-	 * @return
-	 * @throws Exception
 	 */
+	@Override
 	public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
 	throws Exception
 	{
@@ -145,13 +121,8 @@ public class ApplyChargesAction extends MifosBaseAction {
 	
 	/**
 	 *It returns an ActionForward which is a chained action forward and calls get on the ViewDetails action to show the updated details on the page. 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param httpservletresponse
-	 * @return
-	 * @throws Exception
 	 */
+	@Override
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse httpservletresponse)
 	throws Exception
 	{

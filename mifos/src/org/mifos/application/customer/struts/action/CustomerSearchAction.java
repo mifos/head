@@ -70,14 +70,13 @@ public class CustomerSearchAction extends MifosSearchAction {
 	 * @see org.mifos.framework.struts.action.MifosBaseAction#getPath()
 	 */
 
+	@Override
 	protected String getPath() {
 		return CustomerSearchConstants.GETPATHCUSTOMERSEARCH;
 	}
 
-	/*
+	/**
 	 * This method we are using to get to the home page
-	 * 
-	 * @see org.mifos.framework.struts.action.MifosSearchAction#appendToMap()
 	 */
 	@Override
 	public Map<String, String> appendToMap() {
@@ -95,10 +94,6 @@ public class CustomerSearchAction extends MifosSearchAction {
 	/**
 	 * The method is called when the user clicks home tab of the header.
 	 * 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
 	 * @return ActionForward-- Forwards to Homepage
 	 */
 	public ActionForward getHomePage(ActionMapping mapping, ActionForm form,
@@ -121,14 +116,8 @@ public class CustomerSearchAction extends MifosSearchAction {
 
 	/**
 	 * No need to override
-	 * 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
+	@Override
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -195,16 +184,8 @@ public class CustomerSearchAction extends MifosSearchAction {
 	}
 
 	/**
-	 * 
 	 * It returns an action forward based on the searchParameter coming from the
 	 * UI which can be obatined from the search node map.
-	 * 
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
 	public ActionForward customSearch(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)

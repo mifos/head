@@ -23,8 +23,6 @@ public abstract class MifosSearchAction extends MifosBaseAction {
 	
 	/**
 	 * The method adds Search to the getKeyMethodMap of MifosBaseAction
-	 * 
-	 * @see org.mifos.framework.struts.action.MifosBaseAction#appendToMap()
 	 */
 	@Override
 	public Map<String, String> appendToMap() {
@@ -33,6 +31,7 @@ public abstract class MifosSearchAction extends MifosBaseAction {
 		searchMap.put(TableTagConstants.SEARCHNEXT, "searchNext");
 		return searchMap;
 	}
+
 	public ActionForward searchPrev(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		int current=Integer.valueOf((Integer)SessionUtils.getAttribute("current",request.getSession()));
 		SessionUtils.setRemovableAttribute("current",Integer.valueOf(current-1),TableTagConstants.PATH,request.getSession());

@@ -130,22 +130,16 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	 * Returns keyMethod map to be added to the keyMethodMap of the base Action class.
 	 * This method is called from <code>getKeyMethodMap<code> of the base Action Class.
 	 * The map returned from this method is appended to the map of the <code>getKeyMethodMap<code> in the base action class and that will form the complete map for that action.
-	 * @return
 	 */
 	public Map<String,String> appendToMap()
-	//public Map appendToMap()
 	{
 		return new HashMap<String,String>();
-		//return new HashMap();
 	}
 	
 	
 	
 	/**
 	 * Does some activities before the execute method is called like cleaningup of session,creating valueobject and context
-	 * @param actionForm
-	 * @param request
-	 * @throws SystemException
 	 */
 	protected void preExecute(ActionForm actionForm,HttpServletRequest request)throws SystemException,ApplicationException {
 		
@@ -172,7 +166,7 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Context object found in session hence not necessary to create it");
 		}
 		
-		if(isActionFormToValueObjectConversionReq((String)request.getParameter("method"))){	
+		if(isActionFormToValueObjectConversionReq(request.getParameter("method"))){	
 			UserContext userContext = (UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT);
 			Locale locale=null;
 			if(null != userContext) {
@@ -661,25 +655,26 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	 * It delegates the call to the business processor and  passing the {@link Context} object.
 	 * The <code>Context</code> object to be passed is obtained from the request as that is the scope where it was set by the <code>preExecute</code> method.
 	 * Before delegating the call to the <code>BusinessProcessor</code> the <code>businessAction</code> attribute of the <code>Context</code> object is set to "search".
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
 	public ActionForward search(ActionMapping mapping,
 			ActionForm form,
 			HttpServletRequest request,
-			HttpServletResponse response)throws Exception {
-		
-		ActionForward forward = null;
+			HttpServletResponse response)
+	throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, request
 				.getParameter(Constants.CURRENTFLOWKEY));
 		Context context = (Context)request.getAttribute(Constants.CONTEXT);
 		context.setSearchObject(formSearchObject(form,request));
 		context.setBusinessAction("search");
-		forward = (ActionForward)MethodInvoker.invokeWithNoException(this, "customSearch", new Object[]{mapping,form,request,response}, new Class[]{ActionMapping.class,ActionForm.class,HttpServletRequest.class,HttpServletResponse.class});
+		ActionForward forward = (ActionForward)MethodInvoker.invokeWithNoException(
+			this,
+			"customSearch", 
+			new Object[]{mapping,form,request,response}, 
+			new Class[]{ActionMapping.class,
+				ActionForm.class,
+				HttpServletRequest.class,
+				HttpServletResponse.class
+			});
 		delegate(context,request);
 		if(null != forward){
 			return forward;
@@ -695,12 +690,6 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	 * It delegates the call to the business processor and  passing the {@link Context} object.
 	 * The <code>Context</code> object to be passed is obtained from the request as that is the scope where it was set by the <code>preExecute</code> method.
 	 * Before delegating the call to the <code>BusinessProcessor</code> the <code>businessAction</code> attribute of the <code>Context</code> object is set to "load".
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping,
@@ -724,12 +713,9 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	/**
 	 * Returns the {@link SearchObject} which is formed by reading the form object passed to it as parameter.
 	 * This method in turn calls the <code>getSearchObject</code> method  on {@link ValueObjectUtil} class.
-	 * @param request
-	 * @return
 	 * @throws SearchObjectNotCreatedException - If there is any exception in forming the SearchObject
 	 */
 	protected SearchObject formSearchObject(ActionForm form,HttpServletRequest request) throws SearchObjectNotCreatedException {
-		
 		return ValueObjectUtil.getSearchObject(form);
 	}
 	
@@ -741,8 +727,6 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	 * The valueObject factory reads the dependency.xml file which has the FQClassName for the ValueObject
 	 * along with the path attribute same as that returned by the <code>getPath()</code> method of the action class
 	 * @param path - Should be obtained calling <code>getPath()</code> method of the action class
-	 * @return
-	 * @throws ResourceNotCreatedException
 	 */
 	protected ValueObject getValueObject(String path)throws ResourceNotCreatedException{
 		ValueObject valueObject = null;
@@ -761,26 +745,21 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	
 	/**
 	 * This method uses the helper class ValueObjectConvertor and gets a value object given an action form,modulename and submodule name
-	 * @param actionForm
-	 * @param name
-	 * @return
 	 * @throws ValueObjectConversionException
 	 */
-	protected ValueObject convertActionFormToValueObject(ActionForm actionForm,ValueObject valueObject, Locale locale)throws ValueObjectConversionException {
-		
+	protected ValueObject convertActionFormToValueObject(
+		ActionForm actionForm, ValueObject valueObject, Locale locale)
+	throws ValueObjectConversionException {
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Converting valueObject to action form", false, null);
 		return ValueObjectUtil.getValueObject(actionForm,valueObject, locale);
 	}
 	
 	
 	/**
-	 *  This method gets the Delegator and delegates the call to the BusinessProcessor where the actual business logic lies.
-	 * @param context
-	 * @param request
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * This method gets the Delegator and delegates the call to the BusinessProcessor where the actual business logic lies.
 	 */
-	protected void delegate(Context context,HttpServletRequest request)throws SystemException,ApplicationException {
+	protected void delegate(Context context, HttpServletRequest request)
+	throws SystemException, ApplicationException {
 		if(null == delegator){
 			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Delegator is null hence getting it from request", false, null);
 			delegator = getDelegator(request);
