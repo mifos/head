@@ -4,7 +4,7 @@
 
  
 
- * Copyright © 2005-2006 Grameen Foundation USA
+ * Copyright (c) 2005-2006 Grameen Foundation USA
 
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
 
@@ -39,28 +39,14 @@ package org.mifos.application.reports.business;
 
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
-/**
- * 
- * @author zankar
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+
 public class ReportsBO extends BusinessObject {
-	/**
-	 * creates Beans for BO etc..
-	 *
-	 */
+
 	public ReportsBO(){	
 		this.reportsCategoryBO = new ReportsCategoryBO();
 		this.reportsJasperMap = new ReportsJasperMap();
-
 	}
-	/**
-	 * 
-	 * @param userContext
-	 */
+
 	public ReportsBO(UserContext userContext) {
 		super(userContext);		
 	}
