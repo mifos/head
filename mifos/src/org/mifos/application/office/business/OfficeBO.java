@@ -570,6 +570,7 @@ public class OfficeBO extends BusinessObject {
 		return offices;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 
 		if (this.officeId.equals(((OfficeBO) obj).getOfficeId()))

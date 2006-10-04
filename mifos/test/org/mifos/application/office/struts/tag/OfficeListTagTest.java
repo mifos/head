@@ -2,9 +2,11 @@ package org.mifos.application.office.struts.tag;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
+import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -15,22 +17,42 @@ import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class OfficeListTagTest extends TestCase {
 	
-	private StringBuilder result;
+	private XmlBuilder result;
 	private UserContext userContext;
 
 	@Override
 	protected void setUp() throws Exception {
-		result = new StringBuilder();
+		result = new XmlBuilder();
 		userContext = TestUtils.makeUser(1);
 	}
 
 	public void testNoBranches() throws Exception {
 		new OfficeListTag().getBranchOffices(
-			result, null, TestUtils.makeUser(1), "Branch");
+			result, null, userContext, "Branch");
 		assertWellFormedFragment(result.toString());
+	}
+	
+	public void testBranches() throws Exception {
+		OfficeBO head = makeOffice("East&West Indies", OfficeLevel.HEADOFFICE);
+		OfficeBO branch = OfficeBO.makeForTest(
+			userContext, OfficeLevel.BRANCHOFFICE, head, null, 
+			"Trinidad&Tobago", "Trinidad&Tobago", null,
+			OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
+		head.setChildren(Collections.singleton(branch));
+		assertEquals(1, head.getBranchOnlyChildren().size());
+
+		List<OfficeBO> officeList = new ArrayList<OfficeBO>();
+		officeList.add(head);
+
+		new OfficeListTag().getBranchOffices(
+			result, officeList, userContext, "Branch");
+		String html = result.toString();
+		assertWellFormedFragment(html);
+		StringAssert.assertContains("Trinidad&amp;Tobago", html);
 	}
 	
 	public void testNothingAboveBranches() throws Exception {
@@ -51,7 +73,9 @@ public class OfficeListTagTest extends TestCase {
 
 		new OfficeListTag().getAboveBranches(result,
 			offices, "Province <State>", "County <Duchy>", "Parish <City>");
-		assertWellFormedFragment(result.toString());
+		String html = result.toString();
+		assertWellFormedFragment(html);
+		StringAssert.assertContains("Toronto&amp;Ottawa", html);
 	}
 	
 	private OfficeBO makeOffice(String name, OfficeLevel level)
@@ -71,6 +95,15 @@ public class OfficeListTagTest extends TestCase {
 		catch (DocumentException e) {
 			
 		}
+	}
+	
+	public void testGetLink() throws Exception {
+		OfficeListTag tag = new OfficeListTag("action", "method", "flow");
+		XmlBuilder link = tag.getLink((short) 234, "My Office");
+		assertEquals("<a href=\"action?method=method&amp;" +
+			"office.officeId=234&amp;office.officeName=My%20Office&amp;" +
+			"officeId=234&amp;officeName=My%20Office&amp;" +
+			"currentFlowKey=flow\">My Office</a>", link.getOutput());
 	}
 	
 	public static void assertWellFormedFragment(String xml) throws DocumentException {

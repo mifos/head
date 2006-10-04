@@ -42,6 +42,7 @@ import org.mifos.application.office.struts.tag.OfficeListTagTest;
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.struts.tags.DateHelperTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
+import org.mifos.framework.struts.tags.XmlBuilderTest;
 import org.mifos.framework.util.helpers.MoneyTest;
 
 /**
@@ -59,6 +60,7 @@ public class FastTests extends MifosTestSuite {
 		suite.addTestSuite(MifosTagUtilsTest.class);
 
 		suite.addTestSuite(OfficeListTagTest.class);
+		suite.addTestSuite(XmlBuilderTest.class);
 		return suite;
 	}
 

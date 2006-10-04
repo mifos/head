@@ -93,20 +93,13 @@ public class ListOffices extends BodyTagSupport {
 	}
 
 	/**
-	 * This function make the list of all the branch offices 
-	 * @param result
-	 * @param officeList
-	 * @param levelList
-	 * @param uc
+	 * Make a list of all the branch offices.
 	 */
 	private void getBranchOffices(StringBuilder result,
 			List<BranchParentOffice> officeList,
 			List<OfficeLevelMaster> levelList,UserContext uc) {
 
 		if (null != officeList) {
-			
-			MifosTagUtils tagUtils = MifosTagUtils.getInstance();
-			
 			if (officeList.size() > 0) {
 
 				
@@ -191,8 +184,6 @@ public class ListOffices extends BodyTagSupport {
 	private void getAboveBranches(StringBuilder result,
 			List<OfficeLevelMaster> officeList) {
 		if (null != officeList) {
-			MifosTagUtils tagUtils = MifosTagUtils.getInstance();
-
 			for (int i = 0; i < officeList.size(); i++) {
 				OfficeLevelMaster office = officeList.get(i);
 				if (office.getLevelId() == OfficeConstants.HEADOFFICE) {

@@ -40,21 +40,9 @@ package org.mifos.framework.struts.tags;
 public class MifosTagUtils {
 
 	/**
-	 * private constructor to prevent multiple instance creation.
+	 * There's no need for an instance of this class.
 	 */
 	private MifosTagUtils() {
-	}
-	/**
-	 * The static instance of the class
-	 */
-
-	private static MifosTagUtils instance = new MifosTagUtils();
-
-	/**
-	 * static method to obatin the instance of the class.
-	 */
-	public static MifosTagUtils getInstance() {
-		return instance;
 	}
 	
     /**

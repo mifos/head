@@ -113,7 +113,8 @@ public class RawSelect {
 	 * @return String  String  representation of the button
 	 */
 
-    public String toString() {
+    @Override
+	public String toString() {
          super.toString();
          StringBuffer results = new StringBuffer();
          results.append("<SELECT onMouseover=\"showtip(this,event,'Select the item(s)')\" onMouseOut=\"hidetip()\" onchange =\"showtip(this,event,'Select the item(s)')\" style=\"WIDTH: 136px\"" );
@@ -122,7 +123,6 @@ public class RawSelect {
          prepareAttribute(results,"multiple",getMultiple());
          prepareAttribute(results,"style",getStyle());
          results.append(">");
-         MifosTagUtils mifosTagUtils = MifosTagUtils.getInstance();
          if (getData()!=null)
          {
         	 Map map = getData();
