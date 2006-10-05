@@ -85,6 +85,8 @@ class ProductCategory_Test_Cases < TestClass
       $ie.link(:text,@def_new_category_link).click
       $ie.button(:value,@cancel_button).click     
       verify_admin_page()      
+    rescue =>excp
+      quit_on_error(excp)
     end
   end
   
@@ -113,6 +115,8 @@ class ProductCategory_Test_Cases < TestClass
       if $ie.contains_text(@prdcat_def_text+" - "+@review_submit)
           create_ProductCategory_duplicate_name(category_name)
       end
+    rescue =>excp
+      quit_on_error(excp)
     end
   end 
   
@@ -215,7 +219,7 @@ class ProductCategory_Test_Cases < TestClass
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Error message does not  appear for duplicate product category name",category_name.to_s,@prdcat_dupl_name_msg,"failed")
       rescue =>excp
-      quit_on_error(excp)  
+        quit_on_error(excp)  
       end
     else
       begin

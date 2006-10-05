@@ -38,12 +38,7 @@ $month_msg="Please select the day of month or rank of day if month is selected"
 #meeting end
 
 # Check list Start
-$review_checklist_info = "Add new checklist - Review checklist information"
 $checklist_item_msg = "Please specify at least one Item."
-$checklist_name_msg = "Please specify Name."
-$checklist_status_msg = "Please select the Displayed when moving into Status."
-$checklist_type_msg = "Please select the Type."
-$checklist_max_len="The length of Name cannot be greater than 50 character(s)."
 # Check list End
 
 #Office start
