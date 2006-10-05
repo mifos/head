@@ -728,16 +728,11 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	 * along with the path attribute same as that returned by the <code>getPath()</code> method of the action class
 	 * @param path - Should be obtained calling <code>getPath()</code> method of the action class
 	 */
-	protected ValueObject getValueObject(String path)throws ResourceNotCreatedException{
+	protected ValueObject getValueObject(String path)
+	throws ResourceNotCreatedException {
 		ValueObject valueObject = null;
-		try {
-			
-			valueObject = (ValueObject)ValueObjectFactory.getInstance().get(path);
-			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("after getting valueobject using valueobject factory");
-		} catch (ResourceNotCreatedException rnce) {
-			
-			rnce.printStackTrace();
-		}
+		valueObject = (ValueObject)ValueObjectFactory.getInstance().get(path);
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("after getting valueobject using valueobject factory");
 		return valueObject;
 	}
 	
@@ -806,11 +801,10 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	
 	/**
 	 * Returns the business processor corresponding to the path passed to it
-	 * @param path
-	 * @return
-	 * @throws ResourceNotCreatedException
 	 */
-	protected BusinessProcessor getBusinessProcessor(String path,String businessProcessorImplementation)throws ResourceNotCreatedException{
+	protected BusinessProcessor getBusinessProcessor(
+		String path, String businessProcessorImplementation)
+	throws ResourceNotCreatedException {
 		ServiceLocatorFactory serviceLocatorFactory = null;
 		ServiceLocator serviceLocator = null;
 		BusinessProcessor businessProcessor = null;

@@ -175,13 +175,8 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 	 * create an object which will store the values of previous request in case
 	 * the request is successful and if there is an exception it reads values
 	 * from that object and context and dups all in the request.
-	 *
-	 * @see org.apache.struts.action.RequestProcessor#processActionPerform(javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse,
-	 *      org.apache.struts.action.Action,
-	 *      org.apache.struts.action.ActionForm,
-	 *      org.apache.struts.action.ActionMapping)
 	 */
+	@Override
 	protected ActionForward processActionPerform(HttpServletRequest request,
 			HttpServletResponse response, Action action, ActionForm form,
 			ActionMapping mapping) throws IOException, ServletException {
@@ -251,9 +246,9 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 				session.removeAttribute(SecurityConstants.SECURITY_PARAM);
 			} catch (Exception e) {
 			}
-			return forward;
 		}
 
+		return forward;
 	}
 
 	private void populateTheRequestFromPreviousValues(

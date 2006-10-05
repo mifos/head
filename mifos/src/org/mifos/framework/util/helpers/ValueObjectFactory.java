@@ -62,9 +62,7 @@ public class ValueObjectFactory extends ResourceFactory {
 		return instance;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.util.helpers.ResourceFactory#get(java.lang.String)
-	 */
+	@Override
 	public Object get(String path)throws ResourceNotCreatedException  {
 		ValueObject valueObject = null;
 		try{
@@ -90,10 +88,7 @@ public class ValueObjectFactory extends ResourceFactory {
 		return valueObject;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.util.helpers.ResourceFactory#getFromCache(java.lang.String)
-	 */
-	
+	@Override
 	protected Object getFromCache(String path) {
 		Object valueObject = null;
 		try {
@@ -102,19 +97,14 @@ public class ValueObjectFactory extends ResourceFactory {
 				 valueObject = valueObject.getClass().newInstance();
 			 }
 		} catch (InstantiationException e) {
-			
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {
-			
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return valueObject;
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see org.mifos.framework.util.helpers.ResourceFactory#updateValueObjectCache(java.lang.String, org.mifos.framework.util.valueobjects.ValueObject)
-	 */
+	@Override
 	protected void updateValueObjectCache(String path, ValueObject valueObjectObj) {
 		valueObjectrepository.put(path, valueObjectObj);
 		

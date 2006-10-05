@@ -45,6 +45,7 @@ package org.mifos.framework.exceptions;
 public class SearchObjectNotCreatedException extends
 		ResourceNotCreatedException {
 	
+	@Override
 	public String getKey(){
 		return "exception.framework.SystemException.SearchObjectNotCreatedException";
 	}

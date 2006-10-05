@@ -268,7 +268,9 @@
 			<transaction src="./sql/mifosdroptables.sql" />
 			<transaction src="./sql/mifosdbcreationscript.sql" />
 			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
+			<transaction src="./sql/Iteration14-DDL-DBScripts10102006.sql" />
 			<transaction src="./sql/mifosmasterdata.sql" />
+			<transaction src="./sql/Iteration14-DML-DBScripts10102006.sql" />
 			<transaction src="./sql/rmpdroptables.sql" />
 			<transaction src="./sql/rmpdbcreationscript.sql" />
 			<transaction src="./sql/rmpmasterdata.sql" />
@@ -284,6 +286,12 @@
 				create database ${testdb.name};
 				use ${testdb.name};
 			</transaction>
+			<!-- The following list of scripts is supposed to
+			     be the same as the one in build_db except
+			     for testdbinsertionscript.sql.  I just
+			     haven't yet figured out how I can factor
+			     out the duplication in ant.
+			-->
 			<transaction src="./sql/mifosdroptables.sql" />
 			<transaction src="./sql/mifosdbcreationscript.sql" />
 			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />

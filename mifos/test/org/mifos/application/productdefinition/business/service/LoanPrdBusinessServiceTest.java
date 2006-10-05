@@ -3,7 +3,6 @@ package org.mifos.application.productdefinition.business.service;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
@@ -107,11 +106,9 @@ public class LoanPrdBusinessServiceTest extends MifosTestCase {
 	public void testGetApplicablePrdStatusForInvalidConnection() {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			List<PrdStatusEntity> prdStatusList = new LoanPrdBusinessService()
-					.getApplicablePrdStatus((short) 1);
-			assertTrue(false);
+			new LoanPrdBusinessService().getApplicablePrdStatus((short) 1);
+			fail();
 		} catch (ServiceException e) {
-			assertTrue(true);
 		}
 	}
 

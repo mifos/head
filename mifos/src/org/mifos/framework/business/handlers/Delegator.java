@@ -39,10 +39,8 @@
 package org.mifos.framework.business.handlers;
 
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ResourceNotCreatedException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.valueobjects.Context;
-
 
 /**
  * This is the class which is used to delegate calls from the action class 
@@ -58,24 +56,18 @@ public class Delegator {
 	 * It calls the ServiceLocatorFactory to get the correct ServiceLocator 
 	 * which then returns the instance of the corresponding BusinessProcessor 
 	 * and process method of the BusinessProcessor is called.
-	 * @param context
-	 * @throws SystemException
-	 * @throws ApplicationException
 	 */
-	public void process(Context context)throws SystemException,ApplicationException {
+	public void process(Context context)
+	throws SystemException, ApplicationException {
 		ServiceLocatorFactory serviceLocatorFactory = null;
 		ServiceLocator serviceLocator = null;
 		BusinessProcessor businessProcessor = null;
-		try{
-			serviceLocatorFactory = ServiceLocatorFactory.getInstance();
-			serviceLocator = serviceLocatorFactory.getServiceLocator(businessProcessorImplementation);
-			if(null != serviceLocator){
-				businessProcessor = serviceLocator.getBusinessProcessor(context.getPath());	
-			}
-			businessProcessor.execute(context);
-		}catch(ResourceNotCreatedException rnce){
-			throw rnce;
+		serviceLocatorFactory = ServiceLocatorFactory.getInstance();
+		serviceLocator = serviceLocatorFactory.getServiceLocator(businessProcessorImplementation);
+		if(null != serviceLocator){
+			businessProcessor = serviceLocator.getBusinessProcessor(context.getPath());	
 		}
+		businessProcessor.execute(context);
 	}
 
 	/**
