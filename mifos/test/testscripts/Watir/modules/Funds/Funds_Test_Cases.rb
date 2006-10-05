@@ -16,7 +16,8 @@ class Funds_Test_Cases < TestClass
 
   def read_fund_values(rowid)
     @fund_name = arrval[rowid+=1].to_s
-    @glcode = arrval[rowid+=1].to_i.to_s
+   # @glcode = arrval[rowid+=1].to_i.to_s
+   @glcode = arrval[rowid+=1].to_s
   end
   
   def Fund_name
@@ -99,7 +100,7 @@ class Funds_Test_Cases < TestClass
     def Man_New_Funds_with_GLCode(glcode)    
     begin
       #set_value_txtfield("fundName", fund_name)
-      set_value_selectlist("glCode.glCodeId", glcode)
+      set_value_selectlist("fundCode", glcode)
       $ie.button(:value,"Preview").click
       assert(!$ie.contains_text($funds_GLCode_msg))
      #assert($ie.contains_text($review_funds_info))
@@ -230,7 +231,7 @@ class Funds_Test_Cases < TestClass
             $logger.log_results("Funds- Create new Funds page", "Click on admin 'Define a new Funds' link","Access to the new Funds page","Failed")
          end
       set_value_txtfield("fundName", fund_name)
-      set_value_selectlist("glCode.glCodeId", glcode)
+      set_value_selectlist("fundCode", glcode)
    end
   end
   
@@ -258,7 +259,7 @@ class Funds_Test_Cases < TestClass
   def   validate_Funds_creation(fund_name, glcode)
     begin    
       # Fetch the data from database and store the values in the corresponding variables
-      dbquery("select GLCODE_VALUE, fund_name from fund f, gl_code gc where fund_id = (select  max(fund_id) from fund) and f.glcode_id = gc.glcode_id")
+      dbquery("select GLCODE_VALUE, fund_name from fund f, gl_code gc where fund_id = (select  max(fund_id) from fund) and f.fundcode_id = gc.glcode_id")
       db_glcode = dbresult[0]
       db_fund_name = dbresult[1]
 	  
