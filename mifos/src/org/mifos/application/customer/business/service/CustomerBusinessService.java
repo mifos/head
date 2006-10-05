@@ -104,10 +104,10 @@ public class CustomerBusinessService extends BusinessService {
 		}
 	}
 
-	public CustomerBO getBySystemId(String globalCustNum, Short levelId)
+	public CustomerBO findBySystemId(String globalCustNum, Short levelId)
 			throws ServiceException {
 		try {
-			return new CustomerPersistence().getBySystemId(globalCustNum,
+			return new CustomerPersistence().findBySystemId(globalCustNum,
 					levelId);
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);

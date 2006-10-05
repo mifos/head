@@ -323,7 +323,7 @@ public class CenterCustAction extends CustAction {
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		CustomerBusinessService customerBusinessService = ((CustomerBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Customer));
-		CenterBO centerBO =(CenterBO) customerBusinessService.getBySystemId(actionForm.getGlobalCustNum(),CustomerLevel.CENTER.getValue());
+		CenterBO centerBO =(CenterBO) customerBusinessService.findBySystemId(actionForm.getGlobalCustNum(),CustomerLevel.CENTER.getValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, centerBO, request);
 		centerBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
 		SessionUtils.setAttribute(CenterConstants.GROUP_LIST,centerBO.getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),request);

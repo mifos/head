@@ -527,13 +527,33 @@
 											</c:if>
 										</c:forEach>
 									</c:forEach>
+									</td>
+								</tr>
+								<!--  savings offerings -->
+								<tr>
+									<td class="fontnormalbold"><br>
+										<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
+										<mifos:mifoslabel name="client.accounts" bundle="ClientUIResources"/>
+										<br>
+										 <c:forEach var="selectedOffering" items="${sessionScope.clientCustActionForm.selectedOfferings}">
+											<c:forEach var="offering" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingsOfferingList')}">
+												<c:if test="${selectedOffering == offering.prdOfferingId}">
+													<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
+													<mifos:mifoslabel name="client.instanceName" bundle="ClientUIResources" isColonRequired="yes"/>
+														<span class="fontnormal">
+														<c:out value="${offering.prdOfferingName}"/>
+													</span><br>
+												</c:if>
+											</c:forEach>
+										</c:forEach>
 									<br>
 									<!-- Additional Fees preview end --> <!-- Edit MFI Detail Button -->
 									<html-el:button onclick="goToMfiPage()" property="editButton"
 										styleClass="insidebuttn">
 										<mifos:mifoslabel name="button.previousMFIInfo"
 											bundle="ClientUIResources"></mifos:mifoslabel>
-									</html-el:button></td>
+									</html-el:button>
+									</td>
 								</tr>
 							</table>
 

@@ -385,7 +385,35 @@
 
 							<!-- Fees End --> <br>
 
-
+							<!--  Savings accounts-->
+							<table width="93%" border="0" cellpadding="3" cellspacing="0">
+								<tr>
+									<td colspan="4" class="fontnormalbold">
+										<mifos:mifoslabel name="client.create" bundle="ClientUIResources"/>
+										<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
+										<mifos:mifoslabel name="client.accounts" bundle="ClientUIResources"/>
+										<br><br>
+									</td>
+								</tr>
+							 	<c:forEach begin="0" end="2" step="1" varStatus="savingsLoopStatus">
+								 	<bean:define id="savingsCtr" toScope="request">
+										<c:out value="${savingsLoopStatus.index}" />
+									</bean:define>
+									<tr>
+										<td width="27%" align="right" class="fontnormal">
+											<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
+											<mifos:mifoslabel name="client.instanceName" bundle="ClientUIResources" isColonRequired="yes"/>
+										</td>
+										<td width="73%" class="fontnormal">
+											<mifos:select name="clientCustActionForm" property="savingsOffering[${savingsCtr}]">
+												<c:forEach var="offering" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingsOfferingList')}" >
+													<html-el:option value="${offering.prdOfferingId}">${offering.prdOfferingName}</html-el:option>
+												</c:forEach>
+											</mifos:select>
+										</td>
+									</tr>
+							 	</c:forEach>							
+							</table>
 							<br>
 							<!-- Buttons -->
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">

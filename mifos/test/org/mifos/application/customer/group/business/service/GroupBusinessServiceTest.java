@@ -74,7 +74,7 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
 		savingsBO2 = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class, savingsBO2.getAccountId());
 		savingsBO1 = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class, savingsBO1.getAccountId());
-		group = groupBusinessService.getGroupBySystemId(group.getGlobalCustNum());
+		group = groupBusinessService.findBySystemId(group.getGlobalCustNum());
 		assertNotNull(group);
 		assertEquals(groupName, group.getDisplayName());
 		assertEquals(3,group.getAccounts().size());

@@ -39,7 +39,6 @@
 package org.mifos.application.customer.client.struts.action;
 
 import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -390,6 +389,8 @@ public class ClientCustAction extends CustAction {
 						actionForm.getClientDetailView(), actionForm
 								.getCustomerPicture());
 			} else {
+				CustomerBO parentCustomer =getCustomerBusinessService().getCustomer(actionForm.getParentGroup().getCustomerId());
+				parentCustomer.setVersionNo(actionForm.getParentGroup().getVersionNo());
 				client = new ClientBO(userContext, actionForm.getClientName()
 						.getDisplayName(), actionForm.getStatusValue(),
 						actionForm.getExternalId(), getDateFromString(
@@ -397,9 +398,8 @@ public class ClientCustAction extends CustAction {
 										.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
 								.getFeesToApply(), selectedOfferings, actionForm
-								.getFormedByPersonnelValue(), actionForm
-								.getParentGroup().getOffice().getOfficeId(),
-						actionForm.getParentGroup(), getDateFromString(
+								.getFormedByPersonnelValue(), parentCustomer.getOffice().getOfficeId(),
+								parentCustomer, getDateFromString(
 								actionForm.getDateOfBirth(), userContext
 										.getPereferedLocale()), actionForm
 								.getGovernmentId(), actionForm
@@ -466,6 +466,8 @@ public class ClientCustAction extends CustAction {
 		actionForm.setSpouseName(new ClientNameDetailView());
 		actionForm.setClientDetailView(new ClientDetailView());
 		actionForm.setNextOrPreview("next");
+		for(int i = 0;i< actionForm.getSelectedOfferings().size();i++)
+			actionForm.getSelectedOfferings().set(i,null);
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -482,7 +484,7 @@ public class ClientCustAction extends CustAction {
 			throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		ClientBO clientBO = (ClientBO) getCustomerBusinessService()
-				.getBySystemId(actionForm.getGlobalCustNum(),
+				.findBySystemId(actionForm.getGlobalCustNum(),
 						CustomerLevel.CLIENT.getValue());
 		clientBO.setUserContext(getUserContext(request));
 		clientBO.getCustomerStatus().setLocaleId(
@@ -507,7 +509,7 @@ public class ClientCustAction extends CustAction {
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		ClientBO clientBO = (ClientBO) getCustomerBusinessService()
-				.getBySystemId(client.getGlobalCustNum(),
+				.findBySystemId(client.getGlobalCustNum(),
 						CustomerLevel.CLIENT.getValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);
 		client = null;
@@ -605,7 +607,7 @@ public class ClientCustAction extends CustAction {
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		ClientBO clientBO = (ClientBO) getCustomerBusinessService()
-				.getBySystemId(client.getGlobalCustNum(),
+				.findBySystemId(client.getGlobalCustNum(),
 						CustomerLevel.CLIENT.getValue());
 		client = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientBO, request);

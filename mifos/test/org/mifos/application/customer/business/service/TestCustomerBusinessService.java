@@ -285,7 +285,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.currentTimeMillis()));
 		savingsBO = getSavingsAccount(group,"fsaf5","ads5");
 		HibernateUtil.closeSession();
-		group = (GroupBO) service.getBySystemId(group
+		group = (GroupBO) service.findBySystemId(group
 				.getGlobalCustNum(), group.getCustomerLevel().getId());
 		assertEquals("Group_Active_test", group.getDisplayName());
 		assertEquals(2, group.getAccounts().size());

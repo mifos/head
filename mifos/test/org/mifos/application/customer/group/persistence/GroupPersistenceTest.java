@@ -36,7 +36,7 @@ public class GroupPersistenceTest extends MifosTestCase {
 
 	public void testGetGroupBySystemId() throws PersistenceException{
 		createGroup();
-		group = (GroupBO) groupPersistence.getGroupBySystemId(group.getGlobalCustNum());
+		group = (GroupBO) groupPersistence.findBySystemId(group.getGlobalCustNum());
 		assertEquals("Group_Active_test", group.getDisplayName());
 	}
 

@@ -12,7 +12,6 @@ import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -24,7 +23,7 @@ import org.mifos.framework.persistence.Persistence;
 
 public class GroupPersistence extends Persistence {
 
-	public GroupBO getGroupBySystemId(String globalCustNum) throws PersistenceException{
+	public GroupBO findBySystemId(String globalCustNum) throws PersistenceException{
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		GroupBO group = null;
 		queryParameters.put("globalCustNum", globalCustNum);
@@ -48,6 +47,7 @@ public class GroupPersistence extends Persistence {
 		List queryResult = executeNamedQuery(NamedQueryConstants.GET_GROUP_COUNT_BY_NAME, queryParameters);
 		return ((Integer)queryResult.get(0)).intValue()>0;
 	}
+	
 	public QueryResult search(String searchString, Short officeId,
 			Short userId, Short userOfficeId) throws PersistenceException {
 		String[] namedQuery = new String[2];

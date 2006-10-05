@@ -218,7 +218,7 @@ public class CustomerPersistence extends Persistence {
 		return customer;
 	}
 
-	public CustomerBO getBySystemId(String globalCustNum, Short levelId)
+	public CustomerBO findBySystemId(String globalCustNum, Short levelId)
 			throws PersistenceException {
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		CustomerBO customer = null;

@@ -55,6 +55,7 @@ import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTransactionHistoryView;
@@ -86,7 +87,11 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.util.ActivityContext;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -163,10 +168,10 @@ public class SavingsAction extends AccountAppAction {
 	private void loadMasterData(UserContext uc, HttpServletRequest request)
 			throws ApplicationException, SystemException {
 
-		SessionUtils
-				.setAttribute(
-						MasterConstants.INTEREST_CAL_TYPES,
-						masterDataService.retrieveMasterEntities(InterestCalcTypeEntity.class,uc.getLocaleId()), request);
+		SessionUtils.setAttribute(MasterConstants.INTEREST_CAL_TYPES,
+				masterDataService.retrieveMasterEntities(
+						InterestCalcTypeEntity.class, uc.getLocaleId()),
+				request);
 		loadMasterDataPartail(uc, request);
 
 	}
@@ -174,18 +179,13 @@ public class SavingsAction extends AccountAppAction {
 	private void loadMasterDataPartail(UserContext uc,
 			HttpServletRequest request) throws PageExpiredException,
 			ApplicationException, SystemException {
-		SessionUtils
-				.setAttribute(
-						MasterConstants.SAVINGS_TYPE,
-						masterDataService
-								.retrieveMasterEntities(SavingsTypeEntity.class,									
-										uc.getLocaleId()), request);
-		SessionUtils
-				.setAttribute(
-						MasterConstants.RECOMMENDED_AMOUNT_UNIT,
-						masterDataService
-								.retrieveMasterEntities(RecommendedAmntUnitEntity.class,
-										uc.getLocaleId()), request);
+		SessionUtils.setAttribute(MasterConstants.SAVINGS_TYPE,
+				masterDataService.retrieveMasterEntities(
+						SavingsTypeEntity.class, uc.getLocaleId()), request);
+		SessionUtils.setAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT,
+				masterDataService.retrieveMasterEntities(
+						RecommendedAmntUnitEntity.class, uc.getLocaleId()),
+				request);
 		SessionUtils.setAttribute(SavingsConstants.CUSTOM_FIELDS,
 				savingsService.retrieveCustomFieldsDefinition(), request);
 
@@ -242,7 +242,8 @@ public class SavingsAction extends AccountAppAction {
 		return mapping.findForward("previous_success");
 	}
 
-	@CloseSession @TransactionDemarcate(validateAndResetToken = true)
+	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -256,12 +257,18 @@ public class SavingsAction extends AccountAppAction {
 		Integer version = customer.getVersionNo();
 		customer = getCustomer(customer.getCustomerId());
 		customer.setVersionNo(version);
+
 		SavingsOfferingBO savingsOfferingBO = (SavingsOfferingBO) SessionUtils
 				.getAttribute(SavingsConstants.PRDOFFCERING, request);
 		version = savingsOfferingBO.getVersionNo();
 		savingsOfferingBO = savingsPrdService
 				.getSavingsProduct(savingsOfferingBO.getPrdOfferingId());
 		savingsOfferingBO.setVersionNo(version);
+
+		checkPermissionForCreate(getShortValue(savingsActionForm
+				.getStateSelected()), uc, null, customer.getOffice()
+				.getOfficeId(), customer.getPersonnel().getPersonnelId());
+
 		SavingsBO saving = new SavingsBO(uc, savingsOfferingBO, customer,
 				AccountState.getStatus(getShortValue(savingsActionForm
 						.getStateSelected())), savingsActionForm
@@ -364,7 +371,8 @@ public class SavingsAction extends AccountAppAction {
 		return mapping.findForward("editPrevious_success");
 	}
 
-	@CloseSession @TransactionDemarcate(validateAndResetToken = true)
+	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -384,8 +392,8 @@ public class SavingsAction extends AccountAppAction {
 				.getGlobalAccountNum());
 		logger
 				.info("In SavingsAction::update(), Savings object updated successfully");
-		
-		doCleanUp(actionForm,request);
+
+		doCleanUp(actionForm, request);
 		return mapping.findForward("update_success");
 	}
 
@@ -593,5 +601,23 @@ public class SavingsAction extends AccountAppAction {
 			return amount.negate().getAmountDoubleValue();
 		else
 			return amount.getAmountDoubleValue();
+	}
+
+	protected void checkPermissionForCreate(Short newState,
+			UserContext userContext, Short flagSelected, Short officeId,
+			Short loanOfficerId) throws ApplicationException {
+		if (!isPermissionAllowed(newState, userContext, officeId,
+				loanOfficerId, true))
+			throw new AccountException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowed(Short newSate, UserContext userContext,
+			Short officeId, Short loanOfficerId, boolean saveFlag) {
+		return AuthorizationManager.getInstance().isActivityAllowed(
+				userContext,
+				new ActivityContext(ActivityMapper.getInstance()
+						.getActivityIdForState(newSate), officeId,
+						loanOfficerId));
 	}
 }

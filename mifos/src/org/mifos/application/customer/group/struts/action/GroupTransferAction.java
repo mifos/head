@@ -108,7 +108,7 @@ public class GroupTransferAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
-		CenterBO transferToCenter = (CenterBO)getCenterBusinessService().getCenterBySystemId(actionForm.getCenterSystemId());
+		CenterBO transferToCenter = (CenterBO)getCenterBusinessService().findBySystemId(actionForm.getCenterSystemId());
 		transferToCenter.setUserContext(getUserContext(request));
 		
 		GroupBO groupInSession = (GroupBO) SessionUtils.getAttribute(

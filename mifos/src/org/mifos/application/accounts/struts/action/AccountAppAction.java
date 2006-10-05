@@ -100,7 +100,7 @@ public class AccountAppAction extends BaseAction {
 				accountBusinessService.getTrxnHistory(accountBO, uc), request
 						.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerService
-				.getBySystemId(accountBO.getCustomer().getGlobalCustNum(),
+				.findBySystemId(accountBO.getCustomer().getGlobalCustNum(),
 						accountBO.getCustomer().getCustomerLevel().getId()),
 				request.getSession());
 		return mapping.findForward("getTransactionHistory_success");

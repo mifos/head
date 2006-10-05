@@ -203,7 +203,7 @@ public class GroupCustAction extends CustAction {
 		logger.debug("In GroupCustAction get method " );
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 		GroupBO groupBO;
-		groupBO = (GroupBO) getGroupBusinessService().getGroupBySystemId(
+		groupBO = (GroupBO) getGroupBusinessService().findBySystemId(
 					actionForm.getGlobalCustNum());
 		groupBO.setUserContext(getUserContext(request));
 		groupBO.getCustomerStatus().setLocaleId(
@@ -226,7 +226,7 @@ public class GroupCustAction extends CustAction {
 		GroupBO group = (GroupBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		logger.debug("Entering GroupCustAction manage method and customer id: "+ group.getGlobalCustNum());
-		GroupBO groupBO = (GroupBO) getCustomerBusinessService().getBySystemId(
+		GroupBO groupBO = (GroupBO) getCustomerBusinessService().findBySystemId(
 				group.getGlobalCustNum(), CustomerLevel.GROUP.getValue());
 		group = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, groupBO, request);

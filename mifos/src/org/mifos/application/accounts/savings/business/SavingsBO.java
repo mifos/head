@@ -17,7 +17,6 @@ import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.AccountStateFlagEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -62,11 +61,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.util.ActivityContext;
-import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -357,8 +352,6 @@ public class SavingsBO extends AccountBO {
 				+ getAccountId());
 
 		try {
-			// security check befor saving
-			checkPermissionForSave(this.getAccountState(), userContext, null);
 			this
 					.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
 							this.getAccountState(), this.getAccountState(),
@@ -1792,44 +1785,6 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	private boolean isPermissionAllowed(AccountStateEntity newSate,
-			UserContext userContext, AccountStateFlagEntity flagSelected,
-			boolean saveFlag) {
-		short newSateId = newSate.getId().shortValue();
-		short cancelFlag = flagSelected != null ? flagSelected.getId()
-				.shortValue() : 0;
-		if (saveFlag)
-			return AuthorizationManager.getInstance().isActivityAllowed(
-					userContext,
-					new ActivityContext(ActivityMapper.getInstance()
-							.getActivityIdForState(newSateId), this.getOffice()
-							.getOfficeId(), this.getCustomer().getPersonnel()
-							.getPersonnelId()));
-		else
-			return AuthorizationManager.getInstance().isActivityAllowed(
-					userContext,
-					new ActivityContext(ActivityMapper.getInstance()
-							.getActivityIdForNewStateId(newSateId, cancelFlag),
-							this.getOffice().getOfficeId(), this.getCustomer()
-									.getPersonnel().getPersonnelId()));
-	}
-
-	private void checkPermissionForStatusChange(AccountStateEntity newState,
-			UserContext userContext, AccountStateFlagEntity flagSelected)
-			throws AccountException {
-		if (!isPermissionAllowed(newState, userContext, flagSelected, false))
-			throw new AccountException(
-					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-	}
-
-	private void checkPermissionForSave(AccountStateEntity newState,
-			UserContext userContext, AccountStateFlagEntity flagSelected)
-			throws AccountException {
-		if (!isPermissionAllowed(newState, userContext, flagSelected, true))
-			throw new AccountException(
-					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-	}
-
 	public Money getOverDueDepositAmount(java.sql.Date meetingDate) {
 		Money overdueAmount = new Money();
 		if (isMandatory()) {
@@ -1981,7 +1936,7 @@ public class SavingsBO extends AccountBO {
 			throw new AccountException(e);
 		}
 		return new SavingsActivityEntity(personnel, accountAction, amount,
-				balanceAmount, trxnDate,this);
+				balanceAmount, trxnDate, this);
 	}
 
 	@Override
@@ -1991,11 +1946,8 @@ public class SavingsBO extends AccountBO {
 				AccountStates.SAVINGS_ACC_CANCEL)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.SAVINGS_ACC_CLOSED)) {
-			// SchedulerIntf scheduler;
 			List<Date> meetingDates = null;
 			try {
-				// scheduler = SchedulerHelper.getScheduler(getCustomer()
-				// .getCustomerMeeting().getMeeting());
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
 						.getAllDates(DateUtils.getLastDayOfCurrentYear());
 			} catch (MeetingException me) {

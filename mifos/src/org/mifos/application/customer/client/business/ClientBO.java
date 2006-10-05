@@ -7,9 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
@@ -162,15 +164,15 @@ public class ClientBO extends CustomerBO {
 		createAssociatedOfferings(offeringsSelected);
 		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
+		if (parentCustomer != null)
+			checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer
+					.getStatus().getValue());
+	
 		if (isActive()) {
 			validateFieldsForActiveClient(loanOfficerId, meeting);
 			this.setCustomerActivationDate(this.getCreatedDate());
 			createAccountsForClient();
 		}
-
-		if (parentCustomer != null)
-			checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer
-					.getStatus().getValue());
 		generateSearchId();
 	}
 
@@ -376,6 +378,7 @@ public class ClientBO extends CustomerBO {
 		if (isActiveForFirstTime(oldStatusId, newStatusId)) {
 			this.setCustomerActivationDate(new Date());
 			createAccountsForClient();
+			persistSavingAccounts();
 		}
 	}
 	
@@ -386,6 +389,7 @@ public class ClientBO extends CustomerBO {
 			if (this.getParentCustomer() != null)
 				new CustomerPersistence().createOrUpdate(this
 						.getParentCustomer());
+			persistSavingAccounts();
 		} catch (PersistenceException pe) {
 			throw new CustomerException(
 					CustomerConstants.CREATE_FAILED_EXCEPTION, pe);
@@ -799,6 +803,19 @@ public class ClientBO extends CustomerBO {
 					throw new CustomerException(pe);
 				}
 			}				
+		}
+	}
+	
+	private void persistSavingAccounts()throws CustomerException{
+		for(AccountBO account: getAccounts()){
+			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGSACCOUNT.getValue())
+					&& account.getGlobalAccountNum()==null){
+				try {
+					((SavingsBO)account).save();
+				} catch (AccountException ae) {
+					throw new CustomerException(ae);
+				}
+			}
 		}
 	}
 	

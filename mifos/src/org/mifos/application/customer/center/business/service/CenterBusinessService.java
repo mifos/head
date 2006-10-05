@@ -24,10 +24,10 @@ public class CenterBusinessService extends BusinessService {
 		}
 	}
 
-	public CenterBO getCenterBySystemId(String globalCustNum)
+	public CenterBO findBySystemId(String globalCustNum)
 			throws ServiceException {
 		try {
-			return new CenterPersistence().getCenterBySystemId(globalCustNum);
+			return new CenterPersistence().findBySystemId(globalCustNum);
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}

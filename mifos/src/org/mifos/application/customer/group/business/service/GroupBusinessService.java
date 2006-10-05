@@ -15,9 +15,9 @@ public class GroupBusinessService extends BusinessService {
 		return null;
 	}
 	
-	public GroupBO getGroupBySystemId(String globalCustNum) throws ServiceException{
+	public GroupBO findBySystemId(String globalCustNum) throws ServiceException{
 		try {
-			return new GroupPersistence().getGroupBySystemId(globalCustNum);
+			return new GroupPersistence().findBySystemId(globalCustNum);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

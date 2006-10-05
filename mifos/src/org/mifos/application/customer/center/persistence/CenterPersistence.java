@@ -34,7 +34,7 @@ public class CenterPersistence extends Persistence {
 		return (CenterBO) getPersistentObject(CenterBO.class, customerId);
 	}
 
-	public CenterBO getCenterBySystemId(String globalCustNum)
+	public CenterBO findBySystemId(String globalCustNum)
 			throws PersistenceException {
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		CenterBO center = null;

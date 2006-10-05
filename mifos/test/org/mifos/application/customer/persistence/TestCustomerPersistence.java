@@ -498,7 +498,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
-		GroupBO groupBO = (GroupBO) customerPersistence.getBySystemId(group
+		GroupBO groupBO = (GroupBO) customerPersistence.findBySystemId(group
 				.getGlobalCustNum(), group.getCustomerLevel().getId());
 		assertEquals(groupBO.getDisplayName(), group.getDisplayName());
 	}

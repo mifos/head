@@ -100,7 +100,7 @@ public class TestClientBO extends MifosTestCase {
 		offerings.add(savingsOffering1);
 		try{
 			client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, personnel, officeId, null, null,
-				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+				null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		}catch(CustomerException ce){
 			assertEquals(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, ce.getKey());
 			assertTrue(true);
@@ -265,6 +265,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testSuccessfulCreateInActiveState_WithAssociatedSavingsOffering() throws Exception {
+		try{
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("offering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		HibernateUtil.closeSession();
 		List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
@@ -275,22 +276,31 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),povertyStatus);
-		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_ACTIVE, null, null, null, null, null, selectedOfferings, personnel, officeId, null, null,
-				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_ACTIVE, null, null, null, null, null, selectedOfferings, personnel, Short.valueOf("3"), getMeeting(), personnel,
+				null, null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
 		HibernateUtil.commitTransaction();
+		System.out.println("---after comit");
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		assertEquals(name, client.getDisplayName());
 		assertEquals(1, client.getOfferingsAssociatedInCreate().size());
 		assertEquals(2, client.getAccounts().size());
+		System.out.println("-client.getAccounts().size(): "+ client.getAccounts().size());
 		for(AccountBO account: client.getAccounts()){
 			if(account instanceof SavingsBO){
 				assertEquals(savingsOffering1.getPrdOfferingId(), ((SavingsBO)account).getSavingsOffering().getPrdOfferingId());
+				System.out.println("-----account.getGlobalAccountNum(): "+ account.getGlobalAccountNum());
+				assertNotNull(account.getGlobalAccountNum());
 				assertTrue(true);
 			}
 		}
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		savingsOffering1 = null;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public void testSavingsAccountOnChangeStatusToActive() throws Exception {
@@ -326,6 +336,7 @@ public class TestClientBO extends MifosTestCase {
 		
 		for(AccountBO account: client.getAccounts()){
 			if(account instanceof SavingsBO){
+				assertNotNull(account.getGlobalAccountNum());
 				assertTrue(true);
 			}
 		}
