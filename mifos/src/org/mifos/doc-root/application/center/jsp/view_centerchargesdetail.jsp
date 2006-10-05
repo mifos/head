@@ -138,7 +138,7 @@
 					<tr>
 						<td width="70%" class="headingorange"><mifos:mifoslabel
 							name="Center.UpcomingCharges" bundle="CenterUIResources" /> (<c:out
-							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,custAccount.nextMeetingDate)}' />)
+							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,custAccount.upcomingChargesDate)}' />)
 						</td>
 						<td width="70%" align="right" class="fontnormal"><html-el:link
 							href="accountAppAction.do?method=getTrxnHistory&statusId=${sessionScope.BusinessKey.customerStatus.id}&globalCustNum=${sessionScope.BusinessKey.globalCustNum}&input=ViewCenterCharges&globalAccountNum=${sessionScope.BusinessKey.customerAccount.globalAccountNum}&accountId=${sessionScope.BusinessKey.customerAccount.accountId}&accountType=${sessionScope.BusinessKey.customerAccount.accountType.accountTypeId}&prdOfferingName=${sessionScope.BusinessKey.displayName}&headingInput=ViewCenterCharges&searchInput=ClientChargesDetails">
@@ -159,7 +159,7 @@
 						</tr>
 
 						<c:forEach
-							items="${custAccount.detailsOfNextInstallment.accountFeesActionDetails}"
+							items="${custAccount.upcomingInstallment.accountFeesActionDetails}"
 							var="upcomingCharges">
 							<tr>
 								<td width="19%" class="drawtablerow"><c:out

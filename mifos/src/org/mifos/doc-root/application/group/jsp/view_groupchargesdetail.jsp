@@ -148,7 +148,7 @@
 					<tr>
 						<td width="70%" class="headingorange"><mifos:mifoslabel
 							name="Group.upcomcharges" bundle="GroupUIResources" /> (<c:out
-							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,custAccount.nextMeetingDate)}' />)
+							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,custAccount.upcomingChargesDate)}' />)
 						<!-- c:out value='${requestScope.Context.businessResults["UpcomingChargesDate"]}'/-->
 						</td>
 						<td width="70%" align="right" class="fontnormal"><html-el:link
@@ -160,7 +160,7 @@
 
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
 					<c:if
-						test='${!empty custAccount.detailsOfNextInstallment.accountFeesActionDetails}'>
+						test='${!empty custAccount.upcomingInstallment.accountFeesActionDetails}'>
 						<tr>
 							<td width="19%" class="drawtablerowboldnoline"><mifos:mifoslabel
 								name="Group.feetype" bundle="GroupUIResources" /></td>

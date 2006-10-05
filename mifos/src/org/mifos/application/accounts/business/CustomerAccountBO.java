@@ -511,6 +511,33 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 
+	public Date getUpcomingChargesDate(){
+		AccountActionDateEntity nextAccountAction = null;
+		if(getTotalDueInstallments().size() > 0){
+			nextAccountAction = getTotalDueInstallments().get(0);
+		}
+		return nextAccountAction != null ? nextAccountAction.getActionDate()
+				: new java.sql.Date(System.currentTimeMillis());
+	}
+	
+	@Override
+	public Money getTotalAmountDue() {
+		Money totalAmt = getTotalAmountInArrears();
+		List<AccountActionDateEntity> dueActionDateList = getTotalDueInstallments(); 
+		if(dueActionDateList.size() > 0){
+			AccountActionDateEntity nextInstallment = dueActionDateList.get(0);
+			totalAmt = totalAmt.add(getDueAmount(nextInstallment));
+		}
+		return totalAmt;
+	}
+	
+	public AccountActionDateEntity getUpcomingInstallment() {
+		List<AccountActionDateEntity> dueActionDateList = getTotalDueInstallments();
+		if(dueActionDateList.size()>0)
+			return dueActionDateList.get(0);
+		return null;
+	}
+	
 	private void addFeeToAccountFee(Short feeId, Double charge) {
 		FeeBO fee = new FeePersistence().getFee(feeId);
 		AccountFeesEntity accountFee = null;
