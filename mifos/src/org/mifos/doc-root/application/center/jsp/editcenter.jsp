@@ -222,9 +222,8 @@
 														:
 													</td>
 													<td width="83%">
-														<c:set var="clientcol" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clients')}" />
 														<mifos:select name="centerCustActionForm" property='customerPosition[${ctr}].customerId' size="1">
-															<c:forEach var="clientColList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientcol')}" >
+															<c:forEach var="clientColList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clients')}" >
 																<html-el:option value="${clientColList.customerId}">${clientColList.displayName}</html-el:option>
 															</c:forEach>
 														</mifos:select>

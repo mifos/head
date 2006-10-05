@@ -298,7 +298,7 @@
 							<td><mifos:select name="clientCustActionForm" keyhm="Client.BusinessActivities"
 										property="clientDetailView.businessActivities" size="1">
 										<c:forEach var="businessActivitiesEntityList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntity')}" >
-											<html-el:option value="${businessActivitiesEntityList.id}">${educationLevelEntityListbusinessActivitiesEntityList.name}</html-el:option>
+											<html-el:option value="${businessActivitiesEntityList.id}">${businessActivitiesEntityList.name}</html-el:option>
 										</c:forEach>
 									</mifos:select></td>
 						</tr>
