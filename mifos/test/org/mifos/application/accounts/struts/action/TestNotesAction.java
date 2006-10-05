@@ -22,6 +22,8 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -46,6 +48,8 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 	private SavingsTestHelper helper = new SavingsTestHelper();
 
 	private SavingsOfferingBO savingsOffering;
+
+	private String flowKey;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -77,6 +81,16 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
+
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 	}
 
 	@Override
@@ -96,6 +110,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", savingsBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Savings");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionErrors();
@@ -108,6 +123,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
 		addRequestParameter("accountId", savingsBO.getAccountId().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("preview_success");
 		verifyNoActionErrors();
@@ -118,6 +134,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		savingsBO = getSavingsAccount("fsaf3", "ads3");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "previous");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("previous_success");
 		verifyNoActionErrors();
@@ -130,6 +147,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "cancel");
 		addRequestParameter("accountTypeId", savingsBO.getAccountType()
 				.getAccountTypeId().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("savings_details_page");
 		verifyNoActionErrors();
@@ -143,17 +161,20 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", savingsBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Savings");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("comment", "Notes created");
 		getRequest().getSession().setAttribute("security_param", "Savings");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("savings_details_page");
 		verifyNoActionErrors();
@@ -170,21 +191,25 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", savingsBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Savings");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "create");
 		getRequest().getSession().setAttribute("security_param", "Savings");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "search");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();
@@ -202,6 +227,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Loan");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionErrors();
@@ -214,6 +240,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("preview_success");
 		verifyNoActionErrors();
@@ -224,6 +251,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		loanBO = getLoanAccount();
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "previous");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("previous_success");
 		verifyNoActionErrors();
@@ -236,6 +264,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "cancel");
 		addRequestParameter("accountTypeId", loanBO.getAccountType()
 				.getAccountTypeId().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("loan_detail_page");
 		verifyNoActionErrors();
@@ -249,17 +278,20 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Loan");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("comment", "Notes created");
 		getRequest().getSession().setAttribute("security_param", "Loan");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("loan_detail_page");
 		verifyNoActionErrors();
@@ -276,21 +308,25 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());
 		getRequest().getSession().setAttribute("security_param", "Loan");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "create");
 		getRequest().getSession().setAttribute("security_param", "Loan");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "search");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();

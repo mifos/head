@@ -18,7 +18,7 @@
           <td class="tablightorange"><a href="CustomerSearchAction.do?method=getHomePage">Home</a></td>
           <td class="tablightorange"><a href="CustomerSearchAction.do?method=load">Clients &amp; Accounts </a></td>
           <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
-          <td class="taborange"><a href="AdminAction.do?method=load" class="tabfontwhite">Admin</a></td>
+          <td class="taborange"><a href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}" class="tabfontwhite">Admin</a></td>
         </tr>
       </table>
     </td>

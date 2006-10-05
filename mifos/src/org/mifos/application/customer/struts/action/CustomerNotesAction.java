@@ -71,21 +71,23 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustomerNotesAction extends SearchAction {
 
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CUSTOMERLOGGER);
-	
+
 	@Override
 	protected BusinessService getService() {
 		return getCustomerBusinessService();
 	}
-	
+
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
-	
+
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		logger.debug("In CustomerNotesAction::load()");
 		clearActionForm(form);
@@ -94,28 +96,32 @@ public class CustomerNotesAction extends SearchAction {
 		customerBO.setUserContext(userContext);
 		setFormAttributes(userContext, form,customerBO);
 		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request.getSession());
-		SessionUtils.setAttribute(CustomerConstants.PERSONNEL_NAME, personnelBO.getDisplayName(), request.getSession());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
+		SessionUtils.setAttribute(CustomerConstants.PERSONNEL_NAME, personnelBO.getDisplayName(), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
-	
+
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		logger.debug("In CustomerNotesAction::preview()");
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
-	
+
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		logger.debug("In CustomerNotesAction::previous()");
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
-	
+
+	@TransactionDemarcate (validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		logger.debug("In CustomerNotesAction::cancel()");
 		return mapping.findForward(getDetailCustomerPage(form));
 	}
-	
+
 	@CloseSession
+	@TransactionDemarcate (validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,	HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("In CustomerNotesAction::create()");
 		ActionForward forward = null;
@@ -131,7 +137,7 @@ public class CustomerNotesAction extends SearchAction {
 		customerBO = null;
 		return forward;
 	}
-	
+
 	private String getDetailCustomerPage(ActionForm form) {
 		CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
 		String input = notesActionForm.getInput();
@@ -144,7 +150,8 @@ public class CustomerNotesAction extends SearchAction {
 			forward = ActionForwards.client_detail_page.toString();
 		return forward;
 	}
-	
+
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -158,7 +165,7 @@ public class CustomerNotesAction extends SearchAction {
 		}
 		return mapping.findForward(forward);
 	}
-	
+
 	private void clearActionForm(ActionForm form){
 		((CustomerNotesActionForm)form).setComment("");
 		((CustomerNotesActionForm)form).setCommentDate("");
@@ -169,23 +176,23 @@ public class CustomerNotesAction extends SearchAction {
 	protected QueryResult getSearchResult(ActionForm form)throws ApplicationException{
 		return getCustomerBusinessService().getAllCustomerNotes(Integer.valueOf(((CustomerNotesActionForm)form).getCustomerId()));
 	}
-	
+
 	private CustomerBusinessService getCustomerBusinessService() {
 		return (CustomerBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Customer);
 	}
-	
+
 	private void setFormAttributes(UserContext userContext , ActionForm form,CustomerBO customerBO ) throws ApplicationException{
 		CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
 		notesActionForm.setLevelId(customerBO.getCustomerLevel().getId().toString());
 		notesActionForm.setGlobalCustNum(customerBO.getGlobalCustNum());
 		notesActionForm.setCustomerName(customerBO.getDisplayName());
 		notesActionForm.setCommentDate(DateHelper.getCurrentDate(userContext.getPereferedLocale()));
-		if(customerBO instanceof CenterBO) 
+		if(customerBO instanceof CenterBO)
 			notesActionForm.setInput("center");
-		else if(customerBO instanceof GroupBO) 
+		else if(customerBO instanceof GroupBO)
 			notesActionForm.setInput("group");
-		else if(customerBO instanceof ClientBO) 
+		else if(customerBO instanceof ClientBO)
 			notesActionForm.setInput("client");
 	}
 }

@@ -147,7 +147,7 @@
 							</tr>
 						</table>
 						<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivityForDetailPage')}" var="recentActivityForDetailPage" scope="session" />
-						
+
 						<mifoscustom:mifostabletag source="recentActivityForDetailPage" scope="session" xmlFileName="SavingsAccountRecentActivity.xml" moduleName="accounts\\savings" passLocale="true" />
 						<br>
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
@@ -171,30 +171,30 @@
 	                  </c:otherwise>
 											</c:choose> <c:out value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}" /> <c:choose>
 												<c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
-	                    ( <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" 
+	                    ( <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}"
 											var="item">
 							<c:if test="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id == item.id}">
 							    <c:out value="${item.name}"></c:out>
-							</c:if>				
-											
+							</c:if>
+
 					</c:forEach> )
 	                    </c:when>
 												<c:otherwise>
-													 <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}" 
+													 <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}"
 											var="item">
 							<c:if test="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id == item.id}">
 							    <c:out value="${item.name}"></c:out>
-							</c:if>				
-											
-					</c:forEach> 
+							</c:if>
+
+					</c:forEach>
 												</c:otherwise>
-											</c:choose> <br> <br> <mifos:mifoslabel name="Savings.typeOfDeposits" />:<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsType')}" 
+											</c:choose> <br> <br> <mifos:mifoslabel name="Savings.typeOfDeposits" />:<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsType')}"
 											var="item">
 							<c:if test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == item.id}">
 							    <c:out value="${item.name}"></c:out>
-							</c:if>				
-											
-					</c:forEach>   
+							</c:if>
+
+					</c:forEach>
 
 											 </span>
 										<br>
@@ -306,7 +306,7 @@
                 <span class="fontnormal8pt">
                 	<mifos:mifoslabel name="Savings.totalDeposits"/>:
                 	<c:out value="${sessionScope.BusinessKey.savingsPerformance.totalDeposits}" />
-                	
+
                 </span></td>
               </tr>
               <tr>
@@ -318,14 +318,14 @@
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
                 <mifos:mifoslabel name="Savings.totalWithdrawls"/>: <c:out value="${sessionScope.BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
-              </tr>  
+              </tr>
                <c:if test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
                    <tr>
 	                <td class="paddingL10">
 	                <span class="fontnormal8pt">
 	                <mifos:mifoslabel name="Savings.missedDeposits"/>: <c:out value="${sessionScope.BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
-	  			  </tr>  
-	  			</c:if>  
+	  			  </tr>
+	  			</c:if>
 						</table>
 						<table width="95%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
@@ -356,27 +356,27 @@
 			                	</c:forEach>
 			                </c:when>
              				<c:otherwise>
-	         					<span class="fontnormal"> 
+	         					<span class="fontnormal">
 	              	 				<mifos:mifoslabel name="accounts.NoNotesAvailable" />
 	         					</span>
 	     					</c:otherwise>
 	 					</c:choose>
                   </td>
-                </tr> 
-				<tr> 
+                </tr>
+				<tr>
                 	<td align="right" class="paddingleft05">
 						<span class="fontnormal8pt">
 							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
-								<html-el:link href="notesAction.do?method=search&accountId=${sessionScope.BusinessKey.accountId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&prdOfferingName=${sessionScope.BusinessKey.savingsOffering.prdOfferingName}&securityParamInput=Savings&accountTypeId=${sessionScope.BusinessKey.accountType.accountTypeId}">
+								<html-el:link href="notesAction.do?method=search&accountId=${sessionScope.BusinessKey.accountId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&prdOfferingName=${sessionScope.BusinessKey.savingsOffering.prdOfferingName}&securityParamInput=Savings&accountTypeId=${sessionScope.BusinessKey.accountType.accountTypeId}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="Savings.seeAllNotes" />
 								</html-el:link>
 							</c:if>
-							
+
 								<br>
-							<html-el:link href="notesAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}">
+							<html-el:link href="notesAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="Savings.addANote" />
 							</html-el:link>
-							
+
 						</span>
 					</td>
                 </tr>

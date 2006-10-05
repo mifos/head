@@ -27,6 +27,7 @@ import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class NotesAction extends SearchAction {
 
@@ -49,6 +50,7 @@ public class NotesAction extends SearchAction {
 			return false;
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -61,6 +63,7 @@ public class NotesAction extends SearchAction {
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -75,17 +78,18 @@ public class NotesAction extends SearchAction {
 		AccountNotesEntity accountNotes = new AccountNotesEntity(
 				new java.sql.Date(System.currentTimeMillis()), notesActionForm
 						.getComment(), personnel, account);
-		SessionUtils.setAttribute(AccountConstants.ACCOUNT_NOTES, accountNotes,
-				request.getSession());
+		SessionUtils.setAttribute(AccountConstants.ACCOUNT_NOTES, accountNotes, request);
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
+	@TransactionDemarcate (validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -93,6 +97,7 @@ public class NotesAction extends SearchAction {
 				.valueOf(((NotesActionForm) form).getAccountTypeId())));
 	}
 
+	@TransactionDemarcate (validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -103,8 +108,7 @@ public class NotesAction extends SearchAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		AccountNotesEntity accountNotes = (AccountNotesEntity) SessionUtils
-				.getAttribute(AccountConstants.ACCOUNT_NOTES, request
-						.getSession());
+				.getAttribute(AccountConstants.ACCOUNT_NOTES, request);
 		accountBO.addAccountNotes(accountNotes);
 		accountBO.setUserContext(uc);
 		accountBO.update();
@@ -121,6 +125,7 @@ public class NotesAction extends SearchAction {
 		return forward;
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

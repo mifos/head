@@ -14,25 +14,25 @@
         <tr>
           	<td class="bluetablehead05">
 			  <span class="fontnormal8pt">
-	          	<customtags:headerLink/> 
-	          </span>               
+	          	<customtags:headerLink/>
+	          </span>
           </td>
         </tr>
       </table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-          <td width="70%" align="left" valign="top" class="paddingL15T15">   
+          <td width="70%" align="left" valign="top" class="paddingL15T15">
           	<table width="95%" border="0" cellpadding="3" cellspacing="0">
             	<tr>
               		<td width="83%" class="headingorange">
 						<span class="heading">
 							<c:out value="${sessionScope.notesActionForm.prdOfferingName}"/> # <c:out
-								value="${sessionScope.notesActionForm.globalAccountNum}" /> - 
+								value="${sessionScope.notesActionForm.globalAccountNum}" /> -
 						</span>
 						<mifos:mifoslabel name="Account.Notes" bundle="accountsUIResources"></mifos:mifoslabel>
 					</td>
               		<td width="17%" align="right" class="fontnormal">
-						<a href="notesAction.do?method=load&globalAccountNum=<c:out value="${sessionScope.notesActionForm.globalAccountNum}"/>">
+						<a href="notesAction.do?method=load&globalAccountNum=<c:out value="${sessionScope.notesActionForm.globalAccountNum}"/>&currentFlowKey=${requestScope.currentFlowKey}">
 						<mifos:mifoslabel name="Account.AddNewNote" bundle="accountsUIResources"></mifos:mifoslabel></a>
 				 	</td>
             	</tr>
@@ -42,18 +42,18 @@
 							bundle="accountsUIResources" /></font></td>
 						</logic:messagesPresent>
 				</tr>
-            	
+
           	</table>
             <br>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td>
-                	<mifos:mifostabletagdata name="accountNote" key="allnotes" type="single" 
+                	<mifos:mifostabletagdata name="accountNote" key="allnotes" type="single"
        					width="95%" border="0" cellspacing="0" cellpadding="0"/>
                 </td>
               </tr>
             </table>
-            
+
             <br>
           </td>
         </tr>
@@ -63,6 +63,7 @@
 	  <html-el:hidden property="securityParamInput" value="${param.securityParamInput}" />
       <html-el:hidden property="globalAccountNum" value="${sessionScope.notesActionForm.globalAccountNum}"/>
       <html-el:hidden property="accountTypeId" value="${param.accountTypeId}"/>
+      <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
   </html-el:form>
 </tiles:put>
 </tiles:insert>

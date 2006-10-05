@@ -51,6 +51,8 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -66,6 +68,8 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 
 	private CustomerBO center;
 
+	private String flowKey;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -74,12 +78,22 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		setConfigFile(ResourceLoader.getURI(
 				"org/mifos/application/customer/struts-config.xml")
 				.getPath());
-	
+
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
+
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 	}
 
 	@Override
@@ -97,6 +111,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", center.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionErrors();
@@ -107,6 +122,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "preview");
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals(1, getErrrorSize());
 		assertEquals("Notes", 1,
@@ -132,6 +148,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 						+ "Testing for comment length exceeding by 500 characters"
 						+ "Testing for comment length exceeding by 500 characters");
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals(1, getErrrorSize());
 		assertEquals("Notes", 1,
@@ -145,6 +162,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Test");
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("preview_success");
 		verifyNoActionErrors();
@@ -156,6 +174,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "previous");
 		addRequestParameter("comment", "Test");
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("previous_success");
 		verifyNoActionErrors();
@@ -168,10 +187,12 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", center.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "cancel");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.center_detail_page.toString());
 		verifyNoActionErrors();
@@ -184,17 +205,20 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", center.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("comment", "Notes created");
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.center_detail_page.toString());
 		verifyNoActionErrors();
@@ -210,6 +234,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", client.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Client");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionErrors();
@@ -221,6 +246,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "preview");
 		getRequest().getSession().setAttribute("security_param", "Client");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals(1, getErrrorSize());
 		assertEquals("Notes", 1,
@@ -234,6 +260,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Test");
 		getRequest().getSession().setAttribute("security_param", "Client");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("preview_success");
 		verifyNoActionErrors();
@@ -245,6 +272,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "previous");
 		addRequestParameter("comment", "Test");
 		getRequest().getSession().setAttribute("security_param", "Client");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("previous_success");
 		verifyNoActionErrors();
@@ -257,10 +285,12 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", client.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Client");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "cancel");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.client_detail_page.toString());
 		verifyNoActionErrors();
@@ -273,17 +303,20 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", client.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Client");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("comment", "Notes created");
 		getRequest().getSession().setAttribute("security_param", "Client");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.client_detail_page.toString());
 		verifyNoActionErrors();
@@ -303,21 +336,25 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", center.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "create");
 		getRequest().getSession().setAttribute("security_param", "Center");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "search");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();
@@ -335,6 +372,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Group");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionErrors();
@@ -345,6 +383,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "preview");
 		getRequest().getSession().setAttribute("security_param", "Group");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals(1, getErrrorSize());
 		assertEquals("Notes", 1,
@@ -358,6 +397,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Test");
 		getRequest().getSession().setAttribute("security_param", "Group");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("preview_success");
 		verifyNoActionErrors();
@@ -369,6 +409,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "previous");
 		addRequestParameter("comment", "Test");
 		getRequest().getSession().setAttribute("security_param", "Group");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("previous_success");
 		verifyNoActionErrors();
@@ -381,10 +422,12 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Group");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("load_success");
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "cancel");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.group_detail_page.toString());
 		verifyNoActionErrors();
@@ -397,17 +440,20 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Group");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("comment", "Notes created");
 		getRequest().getSession().setAttribute("security_param", "Group");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.group_detail_page.toString());
 		verifyNoActionErrors();
@@ -427,21 +473,25 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		getRequest().getSession().setAttribute("security_param", "Group");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "create");
 		getRequest().getSession().setAttribute("security_param", "Group");
 		addRequestParameter("comment", "Notes created");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "search");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();

@@ -23,10 +23,10 @@ function goToCancelPage(){
 				<tr>
 					<td class="bluetablehead05">
 					  <span class="fontnormal8pt">
-			          	<customtags:headerLink/> 
-			          </span>               
-          			</td> 
-				</tr> 
+			          	<customtags:headerLink/>
+			          </span>
+          			</td>
+				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -47,7 +47,7 @@ function goToCancelPage(){
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td><br>
-							<span class="fontnormal"> 
+							<span class="fontnormal">
 								<mifos:mifoslabel name="Customer.EnterANote" ></mifos:mifoslabel>
 								<mifos:mifoslabel name="Customer.ClickPreview" ></mifos:mifoslabel>
 								<mifos:mifoslabel name="Customer.ClickCancel1" />
@@ -60,7 +60,7 @@ function goToCancelPage(){
 								<c:if test="${sessionScope.customerNotesActionForm.levelId == CustomerLevel.CLIENT.value}">
 									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
 								</c:if>
-					            <mifos:mifoslabel name="Customer.ClickCancel2" /> 
+					            <mifos:mifoslabel name="Customer.ClickCancel2" />
 					         </span></td>
 						</tr>
 						<tr>

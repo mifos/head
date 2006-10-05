@@ -24,10 +24,10 @@ function goToCancelPage(){
 				<tr>
 					<td class="bluetablehead05">
 					  <span class="fontnormal8pt">
-			          	<customtags:headerLink/> 
-			          </span>               
-          			</td> 
-				</tr> 
+			          	<customtags:headerLink/>
+			          </span>
+          			</td>
+				</tr>
 			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -49,7 +49,7 @@ function goToCancelPage(){
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td><br>
-							<span class="fontnormal"> 
+							<span class="fontnormal">
 								<mifos:mifoslabel name="Account.EnterANote" bundle="accountsUIResources"></mifos:mifoslabel>
 								<mifos:mifoslabel name="Account.ClickPreview" bundle="accountsUIResources"></mifos:mifoslabel>
 								<mifos:mifoslabel name="Savings.clickCancelToReturn" bundle="SavingsUIResources"/>
@@ -59,7 +59,7 @@ function goToCancelPage(){
 								<c:if test="${sessionScope.notesActionForm.accountTypeId == '2'}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
 								</c:if>
-					            <mifos:mifoslabel name="Savings.accountDetailsPage" bundle="SavingsUIResources"/> 
+					            <mifos:mifoslabel name="Savings.accountDetailsPage" bundle="SavingsUIResources"/>
 					         </span></td>
 						</tr>
 						<tr>
@@ -110,6 +110,7 @@ function goToCancelPage(){
 			<html-el:hidden property="securityParamInput" value="${sessionScope.notesActionForm.securityParamInput}" />
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.notesActionForm.globalAccountNum}"/>
 			<html-el:hidden property="accountTypeId" value="${sessionScope.notesActionForm.accountTypeId}"/>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
