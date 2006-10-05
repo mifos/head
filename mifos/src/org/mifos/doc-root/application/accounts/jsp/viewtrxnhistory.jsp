@@ -44,7 +44,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 <SCRIPT >
@@ -58,7 +58,8 @@
 
 </SCRIPT>
 	<html-el:form method="post" action="/loanAccountAction.do?method=get" >
-
+	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
@@ -98,7 +99,7 @@
               <tr>
                 <td width="83%" class="headingorange">
                 	<span class="heading">
-                	<c:out value="${sessionScope.BusinessKey.displayName}"></c:out> # <c:out value="${sessionScope.BusinessKey.customerAccount.globalAccountNum}"></c:out> - 
+                	<c:out value="${BusinessKey.displayName}"></c:out> # <c:out value="${BusinessKey.customerAccount.globalAccountNum}"></c:out> - 
                 	</span> 
                 	<mifos:mifoslabel name="Savings.Transactionhistory"/>
 	            </td>
@@ -140,7 +141,7 @@
 </html-el:form>
 
 <html-el:form action="customerAccountAction.do">
-	<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.globalCustNum}" /> 
+	<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" /> 
 </html-el:form>
 </tiles:put>
 </tiles:insert>        

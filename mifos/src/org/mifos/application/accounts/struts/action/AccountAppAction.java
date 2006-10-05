@@ -25,6 +25,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountAppAction extends BaseAction {
 
@@ -87,7 +88,8 @@ public class AccountAppAction extends BaseAction {
 			return mapping.findForward(AccountConstants.REMOVE_SUCCESS);
 		}
 	}
-
+	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward getTrxnHistory(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -101,8 +103,7 @@ public class AccountAppAction extends BaseAction {
 						.getSession());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerService
 				.findBySystemId(accountBO.getCustomer().getGlobalCustNum(),
-						accountBO.getCustomer().getCustomerLevel().getId()),
-				request.getSession());
+						accountBO.getCustomer().getCustomerLevel().getId()),request);
 		return mapping.findForward("getTransactionHistory_success");
 	}
 

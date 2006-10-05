@@ -17,6 +17,7 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<html-el:form action="loanAccountAction.do">
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

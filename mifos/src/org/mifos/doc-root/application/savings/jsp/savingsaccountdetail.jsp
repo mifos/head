@@ -70,7 +70,7 @@
 								</td>
 								<td width="38%" rowspan="2" align="right" valign="top" class="fontnormal">
 									<c:if test="${sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
-										<html-el:link href="editStatusAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}">
+										<html-el:link href="editStatusAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="Savings.Edit" />
 											<mifos:mifoslabel name="Savings.account" />
 											<mifos:mifoslabel name="Savings.status" />

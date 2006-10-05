@@ -543,7 +543,7 @@
 												<td width="17%" class="fontnormal">
 													<mifos:select name="loanAccountActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount',${loopStatus2.index} )">
 														<c:forEach var="additionalFee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" >
-															<html-el:option value="${additionalFee.feeId}">${feeId.feeName}</html-el:option>
+															<html-el:option value="${additionalFee.feeId}">${additionalFee.feeName}</html-el:option>
 														</c:forEach>
 													</mifos:select>
 												</td>
@@ -559,7 +559,7 @@
 
 
 												<c:if test="${ctr2 == 0}">
-													<c:forEach var="fee" items="${sessionScope.additionalFeeList}" varStatus="loopStatus3">
+													<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" varStatus="loopStatus3">
 														<bean:define id="ctr3" toScope="request">
 															<c:out value="${loopStatus3.index}" />
 														</bean:define>
