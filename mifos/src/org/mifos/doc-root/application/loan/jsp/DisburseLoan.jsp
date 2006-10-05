@@ -45,7 +45,7 @@
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -61,6 +61,7 @@
 		<html-el:form
 			action="loanDisbursmentAction.do?method=preview&globalAccountNum=${loanDisbursmentActionForm.globalAccountNum}"
 			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))">
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
@@ -125,8 +126,9 @@
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="loan.mode_of_payment" mandatory="yes" />:&nbsp;</td>
 							<td><mifos:select property="paymentTypeId" style="width:136px;">
-								<html-el:options collection="PaymentType" property="id"
-									labelProperty="name" />
+								<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+									<html-el:option value="${PT.id}">${PT.name}</html-el:option>
+								</c:forEach>
 							</mifos:select></td>
 						</tr>
 					</table>
@@ -153,15 +155,17 @@
 									test="${loanDisbursmentActionForm.amount.amountDoubleValue == 0.0}">
 									<mifos:select property="paymentModeOfPayment"
 										style="width:136px;" disabled="true">
-										<html-el:options collection="PaymentType" property="id"
-											labelProperty="name" />
+										<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+											<html-el:option value="${PT.id}">${PT.name}</html-el:option>
+										</c:forEach>
 									</mifos:select>
 								</c:when>
 								<c:otherwise>
 									<mifos:select property="paymentModeOfPayment"
 										style="width:136px;">
-										<html-el:options collection="PaymentType" property="id"
-											labelProperty="name" />
+										<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+											<html-el:option value="${PT.id}">${PT.name}</html-el:option>
+										</c:forEach>
 									</mifos:select>
 								</c:otherwise>
 							</c:choose></td>

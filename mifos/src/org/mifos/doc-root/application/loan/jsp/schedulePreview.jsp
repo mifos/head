@@ -45,6 +45,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -53,6 +54,9 @@
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form action="/loanAccountAction.do">
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -149,7 +153,7 @@
 											<td class="fontnormal">
 												<br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="loan.acc_owner" />: </span>
-												<c:out value="${sessionScope.loanAccountOwner.displayName}" />
+												<c:out value="${customer.displayName}" />
 											</td>
 										</tr>
 									</table>
@@ -159,10 +163,10 @@
 											<td width="100%" height="23" class="fontnormalbold">
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 												<mifos:mifoslabel name="loan.amt" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.loanAmount}" /> <br> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.loanAmount}" /> <br> </span>
 												<mifos:mifoslabel name="loan.proposed_date" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.disbursementDate)}" /> <br> </span> <span class="fontnormal"> <br> </span>
-												<c:forEach items="${sessionScope.BusinessKey.accountFees}" var="feesSet">
+												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.disbursementDate)}" /> <br> </span> <span class="fontnormal"> <br> </span>
+												<c:forEach items="${BusinessKey.accountFees}" var="feesSet">
 													<c:if test="${feesSet.timeOfDisbursement}">
 														<table cellpadding="0" cellspacing="0">
 															<tr>

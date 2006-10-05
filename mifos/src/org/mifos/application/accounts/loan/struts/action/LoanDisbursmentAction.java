@@ -30,6 +30,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class LoanDisbursmentAction extends BaseAction {
 
@@ -37,6 +38,7 @@ public class LoanDisbursmentAction extends BaseAction {
 
 	private MasterDataService masterDataService = null;
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -53,17 +55,18 @@ public class LoanDisbursmentAction extends BaseAction {
 						.getDisbursementDate().toString()));
 		loan.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request
-				.getSession());
+				);
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
 				getMasterDataService().getSupportedPaymentModes(
 						uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
-				request.getSession());
+				request);
 		loanDisbursmentActionForm.setAmount(loan
 				.getAmountTobePaidAtdisburtail(currentDate));
 		loanDisbursmentActionForm.setLoanAmount(loan.getLoanAmount());
 		return mapping.findForward(Constants.LOAD_SUCCESS);
 	}
-
+	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -71,18 +74,20 @@ public class LoanDisbursmentAction extends BaseAction {
 		return mapping.findForward(Constants.PREVIEW_SUCCESS);
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(Constants.PREVIOUS_SUCCESS);
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		LoanBO savedloan = (LoanBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) form;
 		LoanBO loan = ((LoanBusinessService) getService()).getAccount(Integer
 				.valueOf(actionForm.getAccountId()));

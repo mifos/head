@@ -46,6 +46,7 @@
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -74,6 +75,10 @@
 		}
 		</SCRIPT>
 		<html-el:form action="/loanAccountAction.do">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOffering')}" var="LoanOffering" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -173,7 +178,7 @@
 											<td class="fontnormal">
 												<br>
 												<span class="fontnormalbold"> <mifos:mifoslabel name="loan.acc_owner" />: </span>
-												<c:out value="${sessionScope.loanAccountOwner.displayName}" />
+												<c:out value="${customer.displayName}" />
 											</td>
 										</tr>
 									</table>
@@ -190,17 +195,17 @@
 												<span class="fontnormal"></span> <span class="fontnormal"></span>
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 												<mifos:mifoslabel name="loan.instancename" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.loanOffering.prdOfferingName}" /><br> <br> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${LoanOffering.prdOfferingName}" /><br> <br> </span>
 												<mifos:mifoslabel name="loan.instance_info" />
 												<span class="fontnormal"><br> </span>
 												<mifos:mifoslabel name="loan.description" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.loanOffering.description}" /> <br> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${LoanOffering.description}" /> <br> </span>
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 												<mifos:mifoslabel name="loan.interest_type" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.loanOffering.interestTypes.name}" /> <br> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${LoanOffering.interestTypes.name}" /> <br> </span>
 												<mifos:mifoslabel name="loan.freq_of_inst" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.loanOffering.prdOfferingMeeting.meeting.meetingDetails.recurAfter}" />&nbsp; <c:choose>
-														<c:when test="${sessionScope.loanOffering.prdOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId == 1}">
+												:&nbsp; <span class="fontnormal"> <c:out value="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurAfter}" />&nbsp; <c:choose>
+														<c:when test="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId == 1}">
 															<mifos:mifoslabel name="loan.week(s)" />
 														</c:when>
 														<c:otherwise>
@@ -209,7 +214,7 @@
 													</c:choose><br> </span>
 												<mifos:mifoslabel name="loan.principle_due" />
 												:&nbsp; <span class="fontnormal"> <c:choose>
-														<c:when test="${sessionScope.loanOffering.prinDueLastInst}">
+														<c:when test="${LoanOffering.prinDueLastInst}">
 															<mifos:mifoslabel name="loan.yes" />
 														</c:when>
 														<c:otherwise>
@@ -217,47 +222,47 @@
 														</c:otherwise>
 													</c:choose> <br> </span>
 												<mifos:mifoslabel name="loan.grace_period_type" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.loanOffering.gracePeriodType.name}" /><br> <br> <br> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${LoanOffering.gracePeriodType.name}" /><br> <br> <br> </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.amount" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.loanAmount}" /> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${sessionScope.loanOffering.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
-														value="${sessionScope.loanOffering.maxLoanAmount}" />) </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.loanAmount}" /> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${LoanOffering.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+														value="${LoanOffering.maxLoanAmount}" />) </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 												<mifos:mifoslabel name="loan.interest_rate" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.interestRate}" /> <mifos:mifoslabel name="loan.allowed_interest1" /> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
-														name="loan.allowed_interest2" /> :&nbsp; <c:out value="${sessionScope.loanOffering.minInterestRate}" />&nbsp; - &nbsp; <c:out value="${sessionScope.loanOffering.maxInterestRate}" />) </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.interestRate}" /> <mifos:mifoslabel name="loan.allowed_interest1" /> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
+														name="loan.allowed_interest2" /> :&nbsp; <c:out value="${LoanOffering.minInterestRate}" />&nbsp; - &nbsp; <c:out value="${LoanOffering.maxInterestRate}" />) </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.no_of_inst" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.noOfInstallments}" /> <mifos:mifoslabel name="loan.allowed_no_of_inst"></mifos:mifoslabel>&nbsp; <c:out value="${sessionScope.loanOffering.minNoInstallments}" />&nbsp;
-													- &nbsp; <c:out value="${sessionScope.loanOffering.maxNoInstallments}" />) </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.noOfInstallments}" /> <mifos:mifoslabel name="loan.allowed_no_of_inst"></mifos:mifoslabel>&nbsp; <c:out value="${LoanOffering.minNoInstallments}" />&nbsp;
+													- &nbsp; <c:out value="${LoanOffering.maxNoInstallments}" />) </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.proposed_date" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.disbursementDate)}" /> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.disbursementDate)}" /> </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.grace_period" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.gracePeriodDuration}" />&nbsp; <mifos:mifoslabel name="loan.inst"></mifos:mifoslabel> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.gracePeriodDuration}" />&nbsp; <mifos:mifoslabel name="loan.inst"></mifos:mifoslabel> </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.source_fund" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.fund.fundName}" /> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.fund.fundName}" /> </span>
 											</td>
 										</tr>
 										<tr>
@@ -265,7 +270,7 @@
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 												<mifos:mifoslabel name="loan.interest_disb" />
 												:&nbsp; <span class="fontnormal"> <c:choose>
-														<c:when test="${sessionScope.BusinessKey.interestDeductedAtDisbursement}">
+														<c:when test="${BusinessKey.interestDeductedAtDisbursement}">
 															<mifos:mifoslabel name="loan.yes" />
 														</c:when>
 														<c:otherwise>
@@ -278,8 +283,8 @@
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.business_work_act" keyhm="Loan.PurposeOfLoan" isManadatoryIndicationNotRequired="yes" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />
-												&nbsp; <span class="fontnormal"> <c:forEach items="${sessionScope.BusinessActivities}" var="busId">
-														<c:if test="${busId.id eq sessionScope.BusinessKey.businessActivityId}">
+												&nbsp; <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" var="busId">
+														<c:if test="${busId.id eq BusinessKey.businessActivityId}">
 															<c:out value="${busId.name}" />
 														</c:if>
 													</c:forEach> </span>
@@ -288,13 +293,13 @@
 										<tr id="Loan.CollateralType">
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.collateral_type" keyhm="Loan.CollateralType" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-												&nbsp; <span class="fontnormal"> <c:out value="${sessionScope.BusinessKey.collateralType.name}" /> </span>
+												&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.collateralType.name}" /> </span>
 											</td>
 										</tr>
 										<tr id="Loan.CollateralNotes">
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.collateral_notes" keyhm="Loan.CollateralNotes" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-												&nbsp; <span class="fontnormal"><br> <c:out value="${sessionScope.BusinessKey.collateralNote}" /> </span>
+												&nbsp; <span class="fontnormal"><br> <c:out value="${BusinessKey.collateralNote}" /> </span>
 											</td>
 										</tr>
 										<tr>
@@ -305,7 +310,7 @@
 												<c:forEach var="fee" items="${requestScope.feeFormulaList}" varStatus="loopStatus3">
 													<input type="hidden" id="FEE_${fee.feeFormulaId}" value="${fee.feeFormulaName}" />
 												</c:forEach>
-												<c:forEach items="${sessionScope.BusinessKey.accountFees}" var="feesSet">
+												<c:forEach items="${BusinessKey.accountFees}" var="feesSet">
 													<c:if test="${feesSet.fees.feeId != null }">
 														<!--<span class="fontnormal">-->
 														<table cellpadding="0" cellspacing="0">
@@ -390,9 +395,10 @@
 													<mifos:mifoslabel name="loan.saveForLater" />
 												</html-el:button>
 												&nbsp;
-
+												<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'pendingApprovalDefined')}" var="PendingApproval" />
 												<c:choose>
-													<c:when test='${sessionScope.pendingApprovalDefined == true}'>
+													
+													<c:when test='${PendingApproval == true}'>
 														<html-el:button property="submitForApprovalButton" styleClass="buttn" style="width:130px;" onclick="javascript:fun_submitForApproval(this.form)">
 															<mifos:mifoslabel name="loan.submitForApproval" />
 														</html-el:button>
@@ -412,6 +418,7 @@
 											<!-- This hidden field is being used in the customPreview method of the LoanAction class to discriminate the preview method call-->
 											<html-el:hidden property="input" value="accountPreview" />
 											<html-el:hidden value="" property="stateSelected" />
+											<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 										</tr>
 									</table>
 									<br>

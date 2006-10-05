@@ -6,7 +6,7 @@
 <%@taglib uri="/mifos/customtags" prefix="customtable"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <script language="javascript">
 	function fun_return(form)
 		{
@@ -17,6 +17,7 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<html-el:form action="loanAccountAction.do">
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
@@ -30,8 +31,8 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"> <c:out
-								value="${sessionScope.BusinessKey.loanOffering.prdOfferingName}" />
-							#<c:out value="${sessionScope.BusinessKey.globalAccountNum}" /> -
+								value="${BusinessKey.loanOffering.prdOfferingName}" />
+							#<c:out value="${BusinessKey.globalAccountNum}" /> -
 							</span> <mifos:mifoslabel name="Account.StatusHistory"
 								bundle="accountsUIResources" /></td>
 						</tr>
@@ -56,9 +57,9 @@
 			</table>
 			<br>
 			<html-el:hidden property="globalAccountNum"
-				value="${sessionScope.BusinessKey.globalAccountNum}" />
+				value="${BusinessKey.globalAccountNum}" />
 			<html-el:hidden property="accountTypeId"
-				value="${sessionScope.BusinessKey.accountType.accountTypeId}" />
+				value="${BusinessKey.accountType.accountTypeId}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

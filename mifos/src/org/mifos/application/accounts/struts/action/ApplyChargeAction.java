@@ -25,6 +25,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class ApplyChargeAction extends BaseAction {
 
@@ -38,22 +39,23 @@ public class ApplyChargeAction extends BaseAction {
 		return true;
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		doCleanUp(request.getSession(), form);
+		doCleanUp(request, form);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		Integer accountId = Integer.valueOf(request.getParameter("accountId"));
 		SessionUtils.setAttribute(AccountConstants.APPLICABLE_CHARGE_LIST,
 				getAccountBusinessService().getAppllicableFees(accountId,
-						userContext), request.getSession());
+						userContext), request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,
-				getAccountBusinessService().getAccount(accountId), request
-						.getSession());
+				getAccountBusinessService().getAccount(accountId), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -71,12 +73,13 @@ public class ApplyChargeAction extends BaseAction {
 		return mapping.findForward(getDetailAccountPage(accountBO));
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) {
-		request.getSession().removeAttribute(
+			HttpServletRequest request, HttpServletResponse response) throws Exception{
+		request.removeAttribute(
 				AccountConstants.APPLICABLE_CHARGE_LIST);
 		AccountBO accountBO = (AccountBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		return mapping.findForward(getDetailAccountPage(accountBO));
 	}
 
@@ -86,12 +89,12 @@ public class ApplyChargeAction extends BaseAction {
 				.getBusinessService(BusinessServiceName.Accounts);
 	}
 
-	private void doCleanUp(HttpSession session, ActionForm form) {
+	private void doCleanUp(HttpServletRequest request, ActionForm form) {
 		ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
 		applyChargeActionForm.setAccountId(null);
 		applyChargeActionForm.setChargeType(null);
 		applyChargeActionForm.setChargeAmount(null);
-		session.removeAttribute(AccountConstants.APPLICABLE_CHARGE_LIST);
+		request.removeAttribute(AccountConstants.APPLICABLE_CHARGE_LIST);
 	}
 
 	public ActionForward validate(ActionMapping mapping, ActionForm form,

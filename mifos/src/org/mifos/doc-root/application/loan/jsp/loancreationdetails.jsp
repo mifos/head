@@ -45,6 +45,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -124,6 +125,7 @@
 					}
 			</SCRIPT>
 		<html-el:form action="/loanAccountAction.do" onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOffering')}" var="LoanOffering" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">
@@ -244,7 +246,9 @@
 											</td>
 											<td width="70%">
 												<html-el:select onchange="javascript:fun_refresh(this.form)" property="prdOfferingId" style="width:136px;">
-													<html-el:options collection="loanPrdOfferings" property="prdOfferingId" labelProperty="prdOfferingName" />
+													<c:forEach var="loanPrdOffering" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanPrdOfferings')}" >
+															<html-el:option value="${loanPrdOffering.prdOfferingId}">${loanPrdOffering.prdOfferingName}</html-el:option>
+														</c:forEach>
 												</html-el:select>
 											</td>
 										</tr>
@@ -265,7 +269,7 @@
 												:
 											</td>
 											<td valign="top">
-												<c:out value="${sessionScope.loanOffering.description}" />
+												<c:out value="${LoanOffering.description}" />
 											</td>
 										</tr>
 
@@ -276,7 +280,7 @@
 												:
 											</td>
 											<td width="70%" valign="top">
-												<c:out value="${sessionScope.loanOffering.interestTypes.name}" />
+												<c:out value="${LoanOffering.interestTypes.name}" />
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -285,10 +289,10 @@
 												:
 											</td>
 											<td valign="top">
-												<c:out value="${sessionScope.loanOffering.prdOfferingMeeting.meeting.meetingDetails.recurAfter}" />
+												<c:out value="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurAfter}" />
 												&nbsp;
 												<c:choose>
-													<c:when test="${sessionScope.loanOffering.prdOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId == 1}">
+													<c:when test="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId == 1}">
 														<mifos:mifoslabel name="loan.week(s)" />
 													</c:when>
 													<c:otherwise>
@@ -305,7 +309,7 @@
 											</td>
 											<td valign="top">
 												<c:choose>
-													<c:when test="${sessionScope.loanOffering.prinDueLastInst}">
+													<c:when test="${LoanOffering.prinDueLastInst}">
 														<mifos:mifoslabel name="loan.yes" />
 													</c:when>
 													<c:otherwise>
@@ -333,9 +337,9 @@
 												<mifos:mifosdecimalinput property="loanAmount" />
 												<mifos:mifoslabel name="loan.allowed_amount" />
 												&nbsp;
-												<c:out value="${sessionScope.loanOffering.minLoanAmount}" />
+												<c:out value="${LoanOffering.minLoanAmount}" />
 												&nbsp; - &nbsp;
-												<c:out value="${sessionScope.loanOffering.maxLoanAmount}" />
+												<c:out value="${LoanOffering.maxLoanAmount}" />
 												)
 											</td>
 										</tr>
@@ -352,9 +356,9 @@
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 												<mifos:mifoslabel name="loan.allowed_interest2" />
 												&nbsp;
-												<c:out value="${sessionScope.loanOffering.minInterestRate}" />
+												<c:out value="${LoanOffering.minInterestRate}" />
 												&nbsp; - &nbsp;
-												<c:out value="${sessionScope.loanOffering.maxInterestRate}" />
+												<c:out value="${LoanOffering.maxInterestRate}" />
 												%)
 											</td>
 										</tr>
@@ -368,9 +372,9 @@
 												<mifos:mifosnumbertext property="noOfInstallments" />
 												<mifos:mifoslabel name="loan.allowed_no_of_inst" />
 												&nbsp;
-												<c:out value="${sessionScope.loanOffering.minNoInstallments}" />
+												<c:out value="${LoanOffering.minNoInstallments}" />
 												&nbsp; - &nbsp;
-												<c:out value="${sessionScope.loanOffering.maxNoInstallments}" />
+												<c:out value="${LoanOffering.maxNoInstallments}" />
 												)
 											</td>
 										</tr>
@@ -416,7 +420,9 @@
 											</td>
 											<td valign="top">
 												<mifos:select property="loanOfferingFund" style="width:136px;">
-													<html-el:options collection="loanfunds" property="fundId" labelProperty="fundName" />
+													<c:forEach var="loanfund" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanfunds')}" >
+															<html-el:option value="${loanfund.fundId}">${loanfund.fundName}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 										</tr>
@@ -427,7 +433,9 @@
 											</td>
 											<td valign="top">
 												<mifos:select keyhm="Loan.PurposeOfLoan" property="businessActivityId" style="width:136px;">
-													<html-el:options collection="BusinessActivities" property="id" labelProperty="name" />
+													<c:forEach var="BusinessActivity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" >
+															<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 										</tr>
@@ -438,7 +446,9 @@
 											</td>
 											<td valign="top">
 												<mifos:select keyhm="Loan.CollateralType" property="collateralTypeId" style="width:136px;">
-													<html-el:options collection="CollateralTypes" property="id" labelProperty="name" />
+													<c:forEach var="CollateralType" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypes')}" >
+															<html-el:option value="${CollateralType.id}">${CollateralType.name}</html-el:option>
+													</c:forEach>
 												</mifos:select>
 											</td>
 										</tr>
@@ -454,8 +464,6 @@
 
 									</table>
 									<br>
-
-
 									<!-- Administrative Set Fees -->
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
@@ -534,7 +542,9 @@
 												</td>
 												<td width="17%" class="fontnormal">
 													<mifos:select name="loanAccountActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount',${loopStatus2.index} )">
-														<html-el:options collection="additionalFeeList" property="feeId" labelProperty="feeName"></html-el:options>
+														<c:forEach var="additionalFee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" >
+															<html-el:option value="${additionalFee.feeId}">${feeId.feeName}</html-el:option>
+														</c:forEach>
 													</mifos:select>
 												</td>
 												<td width="12%" align="right" class="fontnormal">
@@ -588,8 +598,9 @@
 				</tr>
 			</table>
 			<html-el:hidden property="method" value="schedulePreview" />
-			<html-el:hidden property="gracePeriodTypeId" value="${sessionScope.loanOffering.gracePeriodType.id}" />
-			<html-el:hidden property="gracePeriodname" value="${sessionScope.loanOffering.gracePeriodType.name}" />
+			<html-el:hidden property="gracePeriodTypeId" value="${LoanOffering.gracePeriodType.id}" />
+			<html-el:hidden property="gracePeriodname" value="${LoanOffering.gracePeriodType.name}" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<script>intDedAtDisb();</script>
 		</html-el:form>
 	</tiles:put>

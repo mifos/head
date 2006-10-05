@@ -6,7 +6,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
@@ -28,6 +28,8 @@
  			 }
 		</script>
 		<html-el:form action="editStatusAction.do?method=preview">
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -52,7 +54,7 @@
 							<td class="headingorange"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="accounts.currentstatus" bundle="accountsUIResources" />:<mifoscustom:MifosImage
 								id="${sessionScope.editStatusActionForm.currentStatusId}"
-								moduleName="accounts" /></span> <span class="fontnormal"><c:out value="${sessionScope.BusinessKey.accountState.name}" />
+								moduleName="accounts" /></span> <span class="fontnormal"><c:out value="${BusinessKey.accountState.name}" />
 								</span></td>
 						</tr>
 						<tr><logic:messagesPresent>
@@ -91,7 +93,7 @@
 							<td align="left" valign="top">
 							<table width="95%" border="0" cellpadding="0" cellspacing="0">
 
-								<c:forEach var="status" items="${sessionScope.statusList}"	varStatus="loopStatus">
+								<c:forEach var="status" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusList')}"	varStatus="loopStatus">
 									<bean:define id="ctr">
 										<c:out value="${loopStatus.index}" />
 									</bean:define>
@@ -102,7 +104,7 @@
 										<td width="98%"><c:out value="${status.name}" /></td>
 									</tr>
 								</c:forEach>
-								<c:forEach var="status" items="${sessionScope.statusList}">
+								<c:forEach var="status" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusList')}">
 									<c:if test="${status.id == '10' || status.id == '15'}">
 										<tr class="fontnormal">
 											<td align="center">&nbsp;</td>

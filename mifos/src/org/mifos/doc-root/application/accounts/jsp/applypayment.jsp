@@ -45,6 +45,8 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
+<%@ taglib uri="/sessionaccess" prefix="session"%>
+
 	<tiles:put name="body" type="string">
 		<SCRIPT>
 	function ViewDetails(){
@@ -62,7 +64,8 @@
 			action="/applyPaymentAction.do?method=preview"
 			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))"
 			focus="paymentTypeId">
-
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/>
@@ -97,8 +100,8 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="70%" class="headingorange"><span class="heading"> <c:out
-								value="${param.prdOfferingName}" /> # <c:out
-						value="${sessionScope.BusinessKey.globalAccountNum}" /> - </span><mifos:mifoslabel
+								value="${BusinessKey.loanOffering.prdOfferingName}" /> # <c:out
+						value="${BusinessKey.globalAccountNum}" /> - </span><mifos:mifoslabel
 								name="accounts.apply_payment" />
 								</td>
 						</tr>
@@ -125,7 +128,7 @@
 								mandatory="yes" name="accounts.amount" isColonRequired="Yes" /></td>
 							<td width="76%">
 							<c:choose>
-								<c:when test="${sessionScope.BusinessKey.accountType.accountTypeId==1}">
+								<c:when test="${BusinessKey.accountType.accountTypeId==1}">
 								<mifos:mifosdecimalinput property="amount"
 								name="applyPaymentActionForm" />
 								</c:when>
@@ -142,8 +145,9 @@
 
 							<td class="fontnormal"><mifos:select
 								name="applyPaymentActionForm" property="paymentTypeId">
-								<html-el:options collection="PaymentType" property="id"
-									labelProperty="name"></html-el:options>
+								<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+									<html-el:option value="${PT.id}">${PT.name}</html-el:option>
+								</c:forEach>
 							</mifos:select></td>
 						</tr>
 						<tr>
@@ -168,7 +172,7 @@
 						<tr>
 							<td align="center"><c:choose>
 								<c:when
-									test="${(sessionScope.BusinessKey.accountType.accountTypeId!=1) && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
+									test="${(BusinessKey.accountType.accountTypeId!=1) && (applyPaymentActionForm.amount == '0.0'||applyPaymentActionForm.amount=='0')}">
 									<html-el:submit styleClass="buttn" disabled="true"
 										style="width:130px;" property="Preview">
 										<mifos:mifoslabel name="accounts.reviewtransaction">
@@ -206,7 +210,7 @@
 			<html-el:hidden property="input" value="${param.input}" />
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
-			<html-el:hidden property="accountType" value="${sessionScope.BusinessKey.accountType.accountTypeId}" />
+			<html-el:hidden property="accountType" value="${BusinessKey.accountType.accountTypeId}" />
 		</html-el:form>
 		<html-el:form action="customerAccountAction.do?method=load">
 			<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />

@@ -71,6 +71,7 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountApplyPaymentAction extends BaseAction {
 	AccountBusinessService accountBusinessService = null;
@@ -92,6 +93,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 		return true;
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -104,34 +106,36 @@ public class AccountApplyPaymentAction extends BaseAction {
 		AccountBO account = getAccountBusinessService().getAccount(
 				Integer.valueOf(actionForm.getAccountId()));
 		account.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request
-				.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
 				getMasterDataService().getSupportedPaymentModes(
 						uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
-				request.getSession());
+				request);
 		actionForm.setAmount(account.getTotalPaymentDue());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	@CloseSession
 	public ActionForward applyPayment(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		AccountBO savedAccount = (AccountBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
 		AccountBO account = getAccountBusinessService().getAccount(
 				Integer.valueOf(actionForm.getAccountId()));
@@ -161,6 +165,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 						.getInput()));
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

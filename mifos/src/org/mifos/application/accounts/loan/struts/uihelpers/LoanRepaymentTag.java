@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
@@ -15,9 +16,11 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -30,10 +33,19 @@ public class LoanRepaymentTag extends BodyTagSupport {
 		Money totalPrincipal = new Money();
 		Money totalInterest = new Money();
 		Money totalFees = new Money();
+		LoanBO loanBO = null;
 
 		try {
-			LoanBO loanBO = (LoanBO) pageContext.getSession().getAttribute(
-					Constants.BUSINESS_KEY);
+			String currentFlowKey = (String) pageContext.getRequest()
+			.getAttribute(Constants.CURRENTFLOWKEY);
+			HttpSession session =  pageContext.getSession();
+			FlowManager flowManager = (FlowManager) session
+					.getAttribute(Constants.FLOWMANAGER);
+			 loanBO =(LoanBO) flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
+					
+			/*LoanBO loanBO = (LoanBO) pageContext.getRequest().getAttribute(
+					Constants.BUSINESS_KEY);*/
+			System.out.println("Loan bo: "+loanBO.getAccountId());
 			if (loanBO != null) {
 				List<AccountActionDateEntity> list = new ArrayList<AccountActionDateEntity>();
 				list.addAll(loanBO.getAccountActionDates());

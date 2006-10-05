@@ -46,7 +46,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -61,7 +61,8 @@
 			}
 	</script>
 		<html-el:form  action="repayLoanAction.do?method=makeRepayment">
-
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -122,7 +123,7 @@
 								<td align="right" class="fontnormalbold"><mifos:mifoslabel
 									name="loan.mode_of_payment"  />:&nbsp;</td>
 								<td class="fontnormal">
-									<c:forEach var="payment" items="${sessionScope.PaymentType}">
+									<c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
                  						<c:if test="${payment.id == sessionScope.repayLoanActionForm.paymentTypeId}">
                  							<c:out value="${payment.name}"/>
                  						</c:if>

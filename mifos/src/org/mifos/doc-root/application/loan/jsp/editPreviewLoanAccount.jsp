@@ -45,13 +45,14 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/application/loan/js/PreviewLoanAccount.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form method="post" action="/loanAccountAction.do?method=update"
 			onsubmit="func_disableSubmitBtn('previewDetailsBtn')">
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<td height="822" align="left" valign="top" bgcolor="#FFFFFF"
 				class="paddingleftmain">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -135,13 +136,15 @@
 								name="loan.business_work_act" keyhm="Loan.PurposeOfLoan"
 								isManadatoryIndicationNotRequired="yes" /><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />&nbsp;
-							<span class="fontnormal"> <c:out value="${sessionScope.BusinessActivitieName}" /></span></td>
+							<span class="fontnormal">
+							
+							 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivitieName')}" /></span></td>
 						</tr>
 						<tr id="Loan.CollateralType">
 							<td class="fontnormal"><mifos:mifoslabel
 								name="loan.collateral_type" keyhm="Loan.CollateralType"
 								isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />&nbsp;
-							<span class="fontnormal"> <c:out value="${sessionScope.CollateralTypeName}" /></span></td>
+							<span class="fontnormal"> <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypeName')}"/></span></td>
 						</tr>
 						<tr id="Loan.CollateralNotes">
 							<td class="fontnormal"><br>

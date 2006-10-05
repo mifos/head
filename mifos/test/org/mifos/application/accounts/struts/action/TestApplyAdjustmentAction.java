@@ -60,6 +60,9 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 /**
@@ -69,7 +72,8 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	private CenterBO center;
 	private GroupBO group;
 	private LoanBO loan;
-
+	private UserContext userContext;
+	private String flowKey;
 	public TestApplyAdjustmentAction(){
 		try {
 			MifosLogManager.configure(FilePaths.LOGFILE);
@@ -96,24 +100,18 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 			e.printStackTrace();
 		}
-		// create the user context with the preferred locale,branch id and userId.
-		UserContext userContext=new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		userContext.setBranchId(Short.valueOf("1"));
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		// prepare the roles and add to the user context.
-		HashSet hashSet = new HashSet();
-		hashSet.add(new Short("1"));
-		userContext.setRoles(hashSet);
-		// prepare activity context
-		ActivityContext activityContext = new ActivityContext(Short.valueOf("116"),Short.valueOf("0"),Short.valueOf("0"));
-		getRequest().getSession().setAttribute(LoginConstants.ACTIVITYCONTEXT, activityContext);
-
-		request.getSession().setAttribute(Constants.USERCONTEXT,userContext);
+		userContext = TestObjectFactory.getContext();
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
+		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);	
+		
 
 	}
 
@@ -150,6 +148,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testLoadAdjustment()throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan,700);
 
@@ -157,7 +156,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 		addRequestParameter("method", "loadAdjustment");
 		setRequestPathInfo("/applyAdjustment");
-
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
@@ -165,6 +164,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testPreviewAdjustment()throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan,700);
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
@@ -172,12 +172,14 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "previewAdjustment");
 		addRequestParameter("adjustmentNote", "adjusting the last payment");
 		addRequestParameter("adjustcheckbox", "true");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
 		verifyForward("previewadj_success");
 	}
 
 	public void testApplyAdjustment()throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan,212);
 		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,
@@ -189,7 +191,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "applyAdjustment");
 		addRequestParameter("adjustmentNote", "Loan adjustment testing");
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
-
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		getRequest().getSession().setAttribute(Constants.USERCONTEXT, TestObjectFactory.getUserContext());
 
 		actionPerform();
@@ -198,19 +200,23 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testCancelAdjustment()throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "cancelAdjustment");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("canceladj_success");
 	}
 
 	public void testLoadAdjustmentWithNoPmnts()throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		addRequestParameter("method", "loadAdjustment");
 		setRequestPathInfo("/applyAdjustment");
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
 		verifyForward("loadAdjustment_failure");
@@ -218,7 +224,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testAdjustmentForZeroPmnt()throws Exception{
-
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan, 0);
 		TestObjectFactory.flushandCloseSession();
@@ -226,7 +232,8 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "applyAdjustment");
 		addRequestParameter("adjustmentNote", "Loan adjustment testing");
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
-		getRequest().getSession().setAttribute(Constants.BUSINESS_KEY, loan);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan,request);
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
 		verifyForward("applyAdjustment_failure");
@@ -234,23 +241,27 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testValidation()throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)createLoanAccount();
 		applyPayment(loan,700);
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "previewAdjustment");
 		addRequestParameter("adjustcheckbox", "true");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyActionErrors(new String[]{"errors.mandatorytextarea"});
 	} 
 	
 	public void testValidationAdjustmentNoteSize()throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)createLoanAccount();
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "previewAdjustment");
 		addRequestParameter("adjustmentNote", "This is to test errors in case adjustment note size exceeds 200 characters.This is to test errors in case adjustment note size exceeds 200 characters.This is to test errors in case adjustment note size exceeds 200 characters.This is to test errors in case adjustment note size exceeds 200 characters.This is to test errors in case adjustment note size exceeds 200 characters.");
 		addRequestParameter("adjustcheckbox", "true");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyActionErrors(new String[]{"errors.adjustmentNoteTooBig"});
 	}

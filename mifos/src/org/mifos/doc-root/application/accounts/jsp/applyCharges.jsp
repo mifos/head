@@ -50,7 +50,7 @@
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
@@ -113,12 +113,15 @@
 		
 	</script>
 		<html-el:form method="post" action="applyChargeAction.do?method=update" onsubmit="fun_submit()">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+			
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
 						<span class="fontnormal8pt">
 							<c:choose>
-									<c:when test="${sessionScope.BusinessKey.accountType.accountTypeId==AccountTypes.LOANACCOUNT.value}">
+									<c:when test="${BusinessKey.accountType.accountTypeId==AccountTypes.LOANACCOUNT.value}">
 										<customtags:headerLink/>
 									</c:when>
 									<c:otherwise>
@@ -150,12 +153,12 @@
 							<td width="70%" class="headingorange"><span class="heading"> 
 								
 								<c:choose>
-									<c:when test="${sessionScope.BusinessKey.accountType.accountTypeId==AccountTypes.LOANACCOUNT.value}">
-										<c:out value="${sessionScope.BusinessKey.loanOffering.prdOfferingName}" />&nbsp;#&nbsp;
-										<c:out value="${sessionScope.BusinessKey.globalAccountNum}" />
+									<c:when test="${BusinessKey.accountType.accountTypeId==AccountTypes.LOANACCOUNT.value}">
+										<c:out value="${BusinessKey.loanOffering.prdOfferingName}" />&nbsp;#&nbsp;
+										<c:out value="${BusinessKey.globalAccountNum}" />
 									</c:when>
 									<c:otherwise>
-										<c:out value="${sessionScope.BusinessKey.customer.displayName}" />
+										<c:out value="${BusinessKey.customer.displayName}" />
 									</c:otherwise>
 								</c:choose>
 								&nbsp;-&nbsp; </span> 
@@ -177,8 +180,10 @@
 								name="accounts.sel_charge_type" /></td>
 							<td width="20%"  align="left" class="fontnormal">
 							<mifos:select property="chargeType" style="width:136px;" onchange="loadValues(this)">
-								<html-el:options collection="applicableChargeList" property="feeId"
-									labelProperty="feeName" />
+								<c:forEach var="applicableCharge" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'applicableChargeList')}" >
+									<html-el:option value="${applicableCharge.feeId}">${applicableCharge.feeName}</html-el:option>
+								</c:forEach>
+								
 							</mifos:select>
 							</td>
 							<td width="10%" align="left" class="fontnormal"><mifos:mifoslabel
@@ -193,7 +198,7 @@
 									<html-el:hidden property="periodicity" value=""/>	
 									<html-el:hidden property="paymentType" value=""/>
 									<html-el:hidden property="charge" value=""/>	
-							<c:forEach var="fee" items="${sessionScope.applicableChargeList}" >
+							<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'applicableChargeList')}" >
 									<html-el:hidden property="amount" value="${fee.amountOrRate}"/>
 									<html-el:hidden property="formulaId" value="${fee.formula}"/>
 									<html-el:hidden property="periodicity" value="${fee.periodicity}"/>	
@@ -225,9 +230,9 @@
 				</tr>
 			</table>
 			<br>
-	<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
-	<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/> 
-	<html-el:hidden property="globalCustNum" value="${sessionScope.BusinessKey.customer.globalCustNum}"/>
+	<html-el:hidden property="accountId" value="${BusinessKey.accountId}"/>
+	<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/> 
+	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}"/>
 	</html-el:form>
 	
 	</tiles:put>

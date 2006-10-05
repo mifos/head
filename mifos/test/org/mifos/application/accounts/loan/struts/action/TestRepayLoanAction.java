@@ -1,5 +1,10 @@
 package org.mifos.application.accounts.loan.struts.action;
 
+import java.net.URISyntaxException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -7,21 +12,19 @@ import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.framework.MifosMockStrutsTestCase;
-
-import java.net.URISyntaxException;
-import java.util.*;
 
 public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 
@@ -30,7 +33,8 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 	private CustomerBO center = null;
 
 	private CustomerBO group = null;
-
+	private UserContext userContext;
+	private String flowKey;
 	
 	// success
 	protected void setUp() throws Exception {
@@ -45,23 +49,17 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		UserContext userContext = new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		Set<Short> set = new HashSet<Short>();
-		set.add(Short.valueOf("1"));
-		userContext.setRoles(set);
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		userContext.setPereferedLocale(new Locale("en", "US"));
-		userContext.setBranchId(new Short("1"));
+		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute(LoginConstants.ACTIVITYCONTEXT,
-				ac);
+		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);	
 		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
@@ -79,38 +77,45 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 	
-	public void testLoadRepayment() throws HibernateProcessException{
+	public void testLoadRepayment() throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/repayLoanAction");
 		addRequestParameter("method", "loadRepayment");
 		addRequestParameter("globalAccountNum", accountBO.getGlobalAccountNum());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward(Constants.LOAD_SUCCESS);
-		Money amount =(Money)request.getSession().getAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT);
+		Money amount =(Money)SessionUtils.getAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT,request);
 		assertEquals(amount,((LoanBO)accountBO).getTotalEarlyRepayAmount());		
 	}
 	
 	public void testRepaymentPreview(){
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/repayLoanAction");
 		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward(Constants.PREVIEW_SUCCESS);
 	}
 	
 	public void testRepaymentPrevious(){
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/repayLoanAction");
 		addRequestParameter("method", "previous");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward(Constants.PREVIOUS_SUCCESS);
 	}
 	
 	public void testMakeRepaymentForCurrentDateSameAsInstallmentDate(){
-		
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Money amount=((LoanBO)accountBO).getTotalEarlyRepayAmount();
 		String accountGlobalNum=request.getParameter("globalAccountNum");
 		setRequestPathInfo("/repayLoanAction");
 		addRequestParameter("method", "makeRepayment");
 		addRequestParameter("globalAccountNum",accountBO.getGlobalAccountNum());
 		addRequestParameter("paymentTypeId","1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward(Constants.UPDATE_SUCCESS);
 		
@@ -122,6 +127,7 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDates(){
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		changeFirstInstallmentDate(accountBO);
 		
 		Money amount=((LoanBO)accountBO).getTotalEarlyRepayAmount();
@@ -131,6 +137,7 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "makeRepayment");
 		addRequestParameter("globalAccountNum",accountBO.getGlobalAccountNum());
 		addRequestParameter("paymentTypeId","1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward(Constants.UPDATE_SUCCESS);
 		

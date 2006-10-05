@@ -31,6 +31,7 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class RepayLoanAction extends BaseAction {
 
@@ -53,6 +54,7 @@ public class RepayLoanAction extends BaseAction {
 		return loanBusinessService;
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadRepayment(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -67,19 +69,20 @@ public class RepayLoanAction extends BaseAction {
 		SessionUtils
 				.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, Money
 						.round(loanBO.getTotalEarlyRepayAmount()), request
-						.getSession());
+						);
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
 				masterDataService.retrievePaymentTypes(uc.getLocaleId()),
-				request.getSession());
+				request);
 		return mapping.findForward(Constants.LOAD_SUCCESS);
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	@CloseSession
 	public ActionForward makeRepayment(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		request.getSession().removeAttribute(
-				LoanConstants.TOTAL_REPAYMENT_AMOUNT);
+		SessionUtils.removeAttribute(
+				LoanConstants.TOTAL_REPAYMENT_AMOUNT,request);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info(
 				"Performing loan repayment");
 		String globalAccountNum = request.getParameter("globalAccountNum");
@@ -100,12 +103,14 @@ public class RepayLoanAction extends BaseAction {
 		return mapping.findForward(Constants.UPDATE_SUCCESS);
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(Constants.PREVIEW_SUCCESS);
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

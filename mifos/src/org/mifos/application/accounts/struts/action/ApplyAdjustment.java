@@ -57,6 +57,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 /**
  * This is the action class for applying adjustment. This action is to be merged
@@ -71,6 +72,7 @@ public class ApplyAdjustment extends BaseAction {
 		return accntBizService;
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -79,8 +81,7 @@ public class ApplyAdjustment extends BaseAction {
 		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
 		AccountBO accnt = ((AccountBusinessService) getService())
 				.findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request
-				.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
 		request.setAttribute("method", "loadAdjustment");
 		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
 
@@ -91,6 +92,7 @@ public class ApplyAdjustment extends BaseAction {
 
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previewAdjustment(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -106,6 +108,7 @@ public class ApplyAdjustment extends BaseAction {
 		return mapping.findForward("previewadj_success");
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	@CloseSession
 	public ActionForward applyAdjustment(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
@@ -132,6 +135,7 @@ public class ApplyAdjustment extends BaseAction {
 		return mapping.findForward("applyadj_success");
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancelAdjustment(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -157,7 +161,7 @@ public class ApplyAdjustment extends BaseAction {
 
 	protected boolean isNewBizRequired(HttpServletRequest request)
 			throws ServiceException {
-		if (request.getSession().getAttribute(Constants.BUSINESS_KEY) != null) {
+		if (request.getAttribute(Constants.BUSINESS_KEY) != null) {
 			return false;
 		}
 		return true;

@@ -43,11 +43,13 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 
 		<html-el:form method="post" action="/loanAccountAction.do?method=get">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="left" valign="top" class="paddingL15T15">
@@ -70,28 +72,28 @@
 							<tr>
 								<td class="fontnormalbold">
 									<mifos:mifoslabel name="loan.plz_note" />
-									&nbsp;<span class="fontnormal"> <mifos:mifoslabel name="loan.congo1_1" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.congo1_2" /> <c:out value='${sessionScope.loanAccountOwner.displayName}' /> <mifos:mifoslabel
-											name="loan.congo2" /> <c:out value='${sessionScope.BusinessKey.globalAccountNum}' /> <mifos:mifoslabel name="loan.congo3" /> <br> <br> <br> </span>
+									&nbsp;<span class="fontnormal"> <mifos:mifoslabel name="loan.congo1_1" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="loan.congo1_2" /> <c:out value='${customer.displayName}' /> <mifos:mifoslabel
+											name="loan.congo2" /> <c:out value='${requestScope.globalAccountNum}' /> <mifos:mifoslabel name="loan.congo3" /> <br> <br> <br> </span>
 									<html-el:link href="loanAccountAction.do?method=get
-									&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}
-									&recordOfficeId=${requestScope.loan.officeId}
-									&recordLoanOfficerId=${requestScope.loan.personnelId}">
+									&globalAccountNum=${requestScope.globalAccountNum}
+									&recordOfficeId=${requestScope.loan.office.officeId}
+									&recordLoanOfficerId=${requestScope.loan.personnel.personnelId}">
 										<mifos:mifoslabel name="loan.view_loan_acc1" />
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 										<mifos:mifoslabel name="loan.view_loan_acc2" />
 									</html-el:link>
 									<span class="fontnormal"><br> <br> </span><span class="fontnormalboldorange"><mifos:mifoslabel name="loan.suggested_steps" /></span><span class="fontnormal"> <br> <mifos:mifoslabel name="loan.open_new_acc" /> <c:out
-											value='${sessionScope.loanAccountOwner.displayName}' /> <br> </span>
+											value='${customer.displayName}' /> <br> </span>
 									<table width="80%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="2%">
 												<img src="pages/framework/images/trans.gif" width="15" height="10">
 											</td>
 											<td width="98%">
-												<span class="fontnormal"><html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${sessionScope.loanAccountOwner.customerId}">
+												<span class="fontnormal"><html-el:link href="savingsAction.do?method=getPrdOfferings&customerId=${customer.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="loan.open_new" />
 														<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />&nbsp;<mifos:mifoslabel name="accounts.account" />
-													</html-el:link> <br> <html-el:link href="loanAccountAction.do?method=getPrdOfferings">
+													</html-el:link> <br> <html-el:link href="loanAccountAction.do?method=getPrdOfferings&customerId=${customer.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="loan.open_new" />
 														<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />&nbsp;<mifos:mifoslabel name="accounts.account" />
 													</html-el:link></span>
@@ -106,8 +108,6 @@
 					</td>
 				</tr>
 			</table>
-			<html-el:hidden value='${sessionScope.BusinessKey.globalAccountNum}' property="globalAccountNum" />
-			<html-el:hidden property="accountId" value="${requestScope.loan.accountId}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

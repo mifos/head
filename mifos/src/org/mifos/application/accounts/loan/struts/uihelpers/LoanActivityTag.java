@@ -5,16 +5,19 @@ import java.util.List;
 import java.util.Locale;
 
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.application.accounts.loan.business.LoanActivityView;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 public class LoanActivityTag extends BodyTagSupport{
@@ -22,7 +25,12 @@ public class LoanActivityTag extends BodyTagSupport{
 	public int doStartTag() throws JspException {
 		StringBuilder builder = new StringBuilder();
 		try {
-			Object object = pageContext.getSession().getAttribute(LoanConstants.LOAN_ALL_ACTIVITY_VIEW);
+			String currentFlowKey = (String) pageContext.getRequest()
+			.getAttribute(Constants.CURRENTFLOWKEY);
+			HttpSession session =  pageContext.getSession();
+			FlowManager flowManager = (FlowManager) session
+					.getAttribute(Constants.FLOWMANAGER);
+			Object object = flowManager.getFromFlow(currentFlowKey, LoanConstants.LOAN_ALL_ACTIVITY_VIEW);
 			if(null != object) {
 				locale = ((UserContext)pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY)).getPereferedLocale();
 				builder.append("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");

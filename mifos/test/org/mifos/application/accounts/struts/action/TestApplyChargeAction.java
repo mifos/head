@@ -27,6 +27,8 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -44,6 +46,8 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 	private CustomerBO center;
 	
 	private MeetingBO meeting;
+	
+	private String flowKey;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -56,24 +60,17 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		userContext = new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		Set<Short> set = new HashSet<Short>();
-		set.add(Short.valueOf("1"));
-		userContext.setRoles(set);
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		userContext.setPereferedLocale(new Locale("en", "US"));
-		userContext.setBranchId(new Short("1"));
-		userContext.setBranchGlobalNum("0001");
+		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);	
 	}
 
 	public void tearDown() throws Exception {
@@ -85,29 +82,33 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
-	public void testLoad() {
+	public void testLoad() throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client,meeting);
 		setRequestPathInfo("/applyChargeAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		
-		assertNotNull(SessionUtils.getAttribute(AccountConstants.APPLICABLE_CHARGE_LIST,request.getSession()));
-		assertEquals("Size of the list should be 2",2,((List<ApplicableCharge>)SessionUtils.getAttribute(AccountConstants.APPLICABLE_CHARGE_LIST,request.getSession())).size());
+		assertNotNull(SessionUtils.getAttribute(AccountConstants.APPLICABLE_CHARGE_LIST,request));
+		assertEquals("Size of the list should be 2",2,((List<ApplicableCharge>)SessionUtils.getAttribute(AccountConstants.APPLICABLE_CHARGE_LIST,request)).size());
 	}
 	
-	public void testCancel() throws ServiceException, SystemException, ApplicationException {
+	public void testCancel() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client,meeting);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,
 				getAccountBusinessService().getAccount(accountBO.getAccountId()), request
-						.getSession());
+						);
 		setRequestPathInfo("/applyChargeAction.do");
 		addRequestParameter("method", "cancel");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("loanDetails_success");
 		verifyNoActionErrors();
@@ -115,6 +116,7 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testUpdateSuccess() {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client,meeting);
 		setRequestPathInfo("/applyChargeAction.do");
@@ -122,6 +124,7 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 		addRequestParameter("chargeType","-1");
 		addRequestParameter("charge", "18");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("loanDetails_success");
 		verifyNoActionErrors();

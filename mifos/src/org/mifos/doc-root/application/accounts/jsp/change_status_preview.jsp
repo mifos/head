@@ -7,7 +7,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
@@ -21,6 +21,7 @@
 			  }
 		</script>
 		<html-el:form action="editStatusAction.do?method=update">
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -46,9 +47,9 @@
 							</span> <span class="fontnormal"> <mifoscustom:MifosImage
 								id="${sessionScope.editStatusActionForm.newStatusId}"
 								moduleName="accounts" /><c:out
-								value="${sessionScope.newStatusName}" /> <c:if
-								test="${!empty sessionScope.flagName}">
-                     	- <c:out value="${sessionScope.flagName}" />
+								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'newStatusName')}" /> <c:if
+								test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'flagName')}">
+                     	- <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'flagName')}" />
 							</c:if></span></td>
 						</tr>
 						<tr><logic:messagesPresent>
@@ -96,7 +97,7 @@
 							<bean:size collection="${sessionScope.checklist}" id="listSize" />
 							<html-el:hidden property="chklistSize"
 								value="${pageScope.listSize}" />
-							<c:forEach var="chklist" items="${sessionScope.checklist}">
+							<c:forEach var="chklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
 								<tr class="fontnormal">
 									<html-el:multibox name="editStatusActionForm"
 										property="selectedItems">

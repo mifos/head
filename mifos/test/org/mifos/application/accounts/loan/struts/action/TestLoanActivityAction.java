@@ -16,6 +16,8 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -28,6 +30,8 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 	protected CustomerBO center = null;
 
 	protected CustomerBO group = null;
+	
+	private String flowKey;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -41,24 +45,17 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		userContext = new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		Set<Short> set = new HashSet<Short>();
-		set.add(Short.valueOf("1"));
-		userContext.setRoles(set);
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		userContext.setPereferedLocale(new Locale("en", "US"));
-		userContext.setBranchId(new Short("1"));
-		userContext.setBranchGlobalNum("0001");
+		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
-		request.getSession(false).setAttribute("ActivityContext", ac);
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);	
 	}
 
 	@Override
@@ -72,11 +69,13 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testGetAllActivity() {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getAllActivity");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		actionPerform();
 		verifyForward("getAllActivity_success");

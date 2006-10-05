@@ -51,7 +51,7 @@
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
@@ -64,6 +64,8 @@
 		</script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<html-el:form action="repayLoanAction.do?method=preview&globalAccountNum=${param.globalAccountNum}" onsubmit="return validateMyForm(recieptDate,recieptDateFormat,recieptDateYY)">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -115,7 +117,7 @@
 									:
 								</td>
 								<td class="fontnormal">
-									<c:out value="${sessionScope.totalRepaymentAmount}" />
+									<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
 								</td>
 							</tr>
 							<tr>
@@ -126,7 +128,9 @@
 								</td>
 								<td class="fontnormal">
 									<mifos:select name="repayLoanActionForm" property="paymentTypeId" style="width:136px;">
-										<html-el:options collection="PaymentType" property="id" labelProperty="name" />
+										<c:forEach var="PT" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+									<html-el:option value="${PT.id}">${PT.name}</html-el:option>
+								</c:forEach>
 									</mifos:select>
 								</td>
 							</tr>
@@ -178,7 +182,7 @@
 			<html-el:hidden property="method" value="${requestScope.method}" />
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
 			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}" />
-			<html-el:hidden property="amount" value="${sessionScope.totalRepaymentAmount}" />
+			<html-el:hidden property="amount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
 			<html-el:hidden property="dateOfPayment" value="${loanfn:getCurrrentDate(sessionScope.UserContext.pereferedLocale)}" />
 		</html-el:form>
 	</tiles:put>

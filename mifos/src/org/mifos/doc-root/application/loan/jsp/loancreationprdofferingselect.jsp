@@ -43,7 +43,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 		
@@ -172,7 +172,9 @@
 											</td>
 											<td width="70%">
 												<mifos:select property="prdOfferingId" style="width:136px;">
-													<html-el:options collection="loanPrdOfferings" property="prdOfferingId" labelProperty="prdOfferingName" />
+													<c:forEach var="loanPrdOffering" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanPrdOfferings')}" >
+															<html-el:option value="${loanPrdOffering.prdOfferingId}">${loanPrdOffering.prdOfferingName}</html-el:option>
+														</c:forEach>
 												</mifos:select>
 											</td>
 										</tr>
@@ -209,7 +211,9 @@
 				</tr>
 			</table>
 			<html-el:hidden property="method" value="load" />
-			<html-el:hidden property="customerId" value="${sessionScope.loanAccountOwner.customerId}" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
+			<html-el:hidden property="customerId" value="${customer.customerId}" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

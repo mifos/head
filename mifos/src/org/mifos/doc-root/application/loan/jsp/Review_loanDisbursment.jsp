@@ -46,6 +46,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 	<tiles:put name="body" type="string">
 
 		<script>
@@ -64,7 +65,7 @@
 					}
 	</script>
 		<html-el:form action="loanDisbursmentAction.do?method=update">
-
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
@@ -143,8 +144,7 @@
 						<tr>
 							<td align="right" class="fontnormalbold"><mifos:mifoslabel
 								name="loan.mode_of_payment" />:&nbsp;</td>
-							<td class="fontnormal"><c:forEach var="payment"
-								items="${sessionScope.PaymentType}">
+							<td class="fontnormal"><c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 								<c:if
 									test="${payment.id == sessionScope.loanDisbursmentActionForm.paymentTypeId}">
 									<c:out value="${payment.name}" />
@@ -172,8 +172,7 @@
 								name="loan.mode_of_payment" />:&nbsp;</td>
 							<td class="fontnormal">
 							
-							<c:forEach var="payment"
-								items="${sessionScope.PaymentType}">
+							<c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 								<c:if
 									test="${payment.id == sessionScope.loanDisbursmentActionForm.paymentModeOfPayment}">
 									<c:out value="${payment.name}" />

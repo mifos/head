@@ -44,7 +44,9 @@
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
+
 	<tiles:put name="body" type="string">
 		<SCRIPT>
 	function ViewDetails(){
@@ -61,6 +63,8 @@
 	}
 </SCRIPT>
 		<html-el:form method="post" action="/applyPaymentAction.do?method=applyPayment">
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -91,8 +95,8 @@
 			<table width="96%" border="0" cellpadding="3" cellspacing="0">
 				<tr>
 					<td width="100%" colspan="2" class="headingorange"><span
-						class="heading"><c:out value="${param.prdOfferingName}" /> # <c:out
-						value="${sessionScope.BusinessKey.globalAccountNum}" /> - </span> <mifos:mifoslabel
+						class="heading"><c:out value="${BusinessKey.loanOffering.prdOfferingName}" /> # <c:out
+						value="${BusinessKey.globalAccountNum}" /> - </span> <mifos:mifoslabel
 						name="accounts.reviewtransaction" /></td>
 				</tr>
 				<tr>
@@ -126,8 +130,7 @@
 				<tr>
 					<td align="right" class="fontnormalbold"><mifos:mifoslabel
 						name="accounts.mode_of_payment" isColonRequired="Yes"  /></td>
-					<td class="fontnormal"><c:forEach var="payment"
-						items="${sessionScope.PaymentType}">
+					<td class="fontnormal"><c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 						<c:if
 							test="${payment.id == sessionScope.applyPaymentActionForm.paymentTypeId}">
 							<c:out value="${payment.name}" />
@@ -188,7 +191,7 @@
 				</tr>
 			</table>
 						<html-el:hidden property="input" value="${param.input}" />
-						<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
+						<html-el:hidden property="accountId" value="${BusinessKey.accountId}" />
 						<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />
 						<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
 			</html-el:form>

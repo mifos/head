@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -55,9 +56,11 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -384,6 +387,9 @@ public class LoanAccountActionForm extends BaseActionForm {
 			HttpServletRequest request) {
 		String method = request.getParameter(Methods.method.toString());
 		ActionErrors errors = new ActionErrors();
+		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+		try{
 		if (method.equals(Methods.getPrdOfferings.toString()))
 			checkValidationForGetPrdOfferings(errors);
 		else if (method.equals(Methods.load.toString()))
@@ -392,6 +398,11 @@ public class LoanAccountActionForm extends BaseActionForm {
 			checkValidationForSchedulePreview(errors, request);
 		else if (method.equals(Methods.managePreview.toString()))
 			checkValidationForSchedulePreview(errors, request);
+		}catch(ApplicationException ae){
+			errors = new ActionErrors();
+			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
+					.getValues()));
+		}
 		if (!errors.isEmpty()) {
 			request.setAttribute("methodCalled", method);
 		}
@@ -414,9 +425,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 	}
 
 	private void checkValidationForSchedulePreview(ActionErrors errors,
-			HttpServletRequest request) {
-		LoanOfferingBO loanOffering = (LoanOfferingBO) request.getSession()
-				.getAttribute(LoanConstants.LOANOFFERING);
+			HttpServletRequest request) throws ApplicationException{
+		LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING,request);
 		checkForMinMax(errors, getLoanAmount(),
 				loanOffering.getMaxLoanAmount().getAmountDoubleValue(), loanOffering
 						.getMinLoanAmount().getAmountDoubleValue(), LoanConstants.LOANAMOUNT);
@@ -455,7 +465,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 		}
 	}
 
-	protected void validateFees(HttpServletRequest request, ActionErrors errors) {
+	protected void validateFees(HttpServletRequest request, ActionErrors errors) throws ApplicationException{
 		validateForFeeAmount(errors);
 		validateForDuplicatePeriodicFee(request, errors);
 	}
@@ -470,10 +480,9 @@ public class LoanAccountActionForm extends BaseActionForm {
 	}
 
 	protected void validateForDuplicatePeriodicFee(HttpServletRequest request,
-			ActionErrors errors) {
+			ActionErrors errors) throws ApplicationException {
 		List<FeeView> additionalFeeList = (List<FeeView>) SessionUtils
-				.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST, request
-						.getSession());
+				.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST, request);
 		for (FeeView selectedFee : getAdditionalFees()) {
 			int count = 0;
 			for (FeeView duplicateSelectedfee : getAdditionalFees()) {

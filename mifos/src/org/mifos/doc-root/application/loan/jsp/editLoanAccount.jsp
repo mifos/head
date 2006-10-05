@@ -46,7 +46,7 @@
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<body onload="disableFields()">
@@ -55,6 +55,9 @@
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form action="/loanAccountAction.do?method=managePreview"
 			onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+			
 			<td height="200" align="left" valign="top" bgcolor="#FFFFFF"
 				class="paddingleftmain">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -69,8 +72,8 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td width="83%" class="headingorange"><span class="heading"> <c:out
-								value="${sessionScope.BusinessKey.loanOffering.prdOfferingName}" />&nbsp;#
-							<c:out value="${sessionScope.BusinessKey.globalAccountNum}" />-&nbsp;
+								value="${BusinessKey.loanOffering.prdOfferingName}" />&nbsp;#
+							<c:out value="${BusinessKey.globalAccountNum}" />-&nbsp;
 							</span> <mifos:mifoslabel name="loan.edit_loan_acc" /></td>
 						</tr>
 						<tr>
@@ -98,9 +101,9 @@
 							<td valign="top"><mifos:mifosdecimalinput property="loanAmount"
 								value="${sessionScope.loanAccountActionForm.loanAmount}" /> <mifos:mifoslabel
 								name="loan.allowed_amount" />&nbsp; <c:out
-								value="${sessionScope.BusinessKey.loanOffering.minLoanAmount}" />
+								value="${BusinessKey.loanOffering.minLoanAmount}" />
 							&nbsp; - &nbsp; <c:out
-								value="${sessionScope.BusinessKey.loanOffering.maxLoanAmount}" />)
+								value="${BusinessKey.loanOffering.maxLoanAmount}" />)
 							</td>
 
 						</tr>
@@ -115,9 +118,9 @@
 								name="loan.allowed_interest1" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
 								name="loan.int_rate" />&nbsp; <c:out
-								value="${sessionScope.BusinessKey.loanOffering.minInterestRate}" />&nbsp;
+								value="${BusinessKey.loanOffering.minInterestRate}" />&nbsp;
 							- &nbsp; <c:out
-								value="${sessionScope.BusinessKey.loanOffering.maxInterestRate}" />
+								value="${BusinessKey.loanOffering.maxInterestRate}" />
 							%)</td>
 						</tr>
 						<tr class="fontnormal">
@@ -128,9 +131,9 @@
 								name="loanAccountActionForm" property="noOfInstallments"
 								value="${sessionScope.loanAccountActionForm.noOfInstallments}" />
 							<mifos:mifoslabel name="loan.allowed_no_of_inst" />&nbsp; <c:out
-								value="${sessionScope.BusinessKey.loanOffering.minNoInstallments}" />&nbsp;
+								value="${BusinessKey.loanOffering.minNoInstallments}" />&nbsp;
 							- &nbsp; <c:out
-								value="${sessionScope.BusinessKey.loanOffering.maxNoInstallments}" />)
+								value="${BusinessKey.loanOffering.maxNoInstallments}" />)
 							</td>
 						</tr>
 
@@ -157,7 +160,7 @@
 						<html-el:hidden property="inheritedGracePeriodDuration"
 								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />
 							<html-el:hidden property="gracePeriodDuration"/>
-							<html-el:hidden property="gracePeriodTypeId" value="${sessionScope.BusinessKey.gracePeriodType.id}" />
+							<html-el:hidden property="gracePeriodTypeId" value="${BusinessKey.gracePeriodType.id}" />
 						<script>setIntrestAtDisb();</script>
 						<tr class="fontnormal">
 							<td align="right" class="fontnormal"><mifos:mifoslabel
@@ -168,12 +171,13 @@
 								isManadatoryIndicationNotRequired="yes" /></td>
 							<td valign="top"><mifos:select keyhm="Loan.PurposeOfLoan"
 								property="businessActivityId" style="width:136px;">
-								<html-el:options collection="BusinessActivities" property="id"
-									labelProperty="name" />
+								<c:forEach var="BusinessActivity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" >
+									<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
+								</c:forEach>
 							</mifos:select></td>
 						</tr>
 						<c:if
-							test="${sessionScope.BusinessKey.accountState.id != 1 || sessionScope.BusinessKey.accountState.id != 2}">
+							test="${BusinessKey.accountState.id != 1 || BusinessKey.accountState.id != 2}">
 							<html-el:hidden
 								value="${sessionScope.loanAccountActionForm.loanAmount}"
 								property="loanAmount" />
@@ -197,8 +201,9 @@
 								isColonRequired="yes" bundle="loanUIResources" /></td>
 							<td valign="top"><mifos:select keyhm="Loan.CollateralType"
 								property="collateralTypeId" style="width:136px;">
-								<html-el:options collection="CollateralTypes" property="id"
-									labelProperty="name" />
+								<c:forEach var="CollateralType" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypes')}" >
+									<html-el:option value="${CollateralType.id}">${CollateralType.name}</html-el:option>
+								</c:forEach>
 							</mifos:select></td>
 						</tr>
 						<tr class="fontnormal">
@@ -233,9 +238,9 @@
 				</tr>
 			</table>
 			</td>
-			<html-el:hidden value="${sessionScope.BusinessKey.globalAccountNum}"
+			<html-el:hidden value="${BusinessKey.globalAccountNum}"
 				property="globalAccountNum" />
-			<html-el:hidden value="${sessionScope.BusinessKey.accountState.id}"
+			<html-el:hidden value="${BusinessKey.accountState.id}"
 				property="accountStateId" />
 			
 		</html-el:form>
