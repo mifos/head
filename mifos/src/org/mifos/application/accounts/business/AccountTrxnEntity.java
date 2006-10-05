@@ -50,7 +50,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class AccountTrxnEntity extends PersistentObject {
+public abstract class AccountTrxnEntity extends PersistentObject {
 
 	private final Integer accountTrxnId = null;
 
@@ -183,9 +183,7 @@ public class AccountTrxnEntity extends PersistentObject {
 		return trxnCreatedDate;
 	}
 
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
-			throws AccountException {
-		return null;
-	}
+	public abstract AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
+	throws AccountException;
 
 }
