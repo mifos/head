@@ -281,7 +281,6 @@ public class TableTag extends BodyTagSupport {
 						"<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\" ><br>")
 				.append("<span class=\"headingorange\">");
 		result.append("No results found");
-		result.append("<br />Kilroy was here.");
 		if (context.getSearchObject() != null) {
 			String officeId = context
 					.getSearchObject()
