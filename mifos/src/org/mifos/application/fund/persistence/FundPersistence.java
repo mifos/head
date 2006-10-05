@@ -27,7 +27,7 @@ public class FundPersistence extends Persistence {
 	}
 	
 	public List<FundCodeEntity> getFundCodes() throws PersistenceException {
-		return (List<FundCodeEntity>)executeNamedQuery(NamedQueryConstants.GET_FUND_CODES,null);
+		return executeNamedQuery(NamedQueryConstants.GET_FUND_CODES,null);
 	}
 	
 	public List<FundBO> getSourcesOfFund() throws PersistenceException {
