@@ -267,19 +267,6 @@ $savings_dupl_short_name_message="The short name already exists in the applicati
 $savings_dupl_inst_name_message="The Product instance name already exists in the application. Please specify a different Name."
 #Error message for field validation End
 #SavingProduct End
-
-#Funds Start
-$review_funds_info = "Define new fund - Review & Submit"
-$new_funds_link = "Define new fund"
-$view_funds_link = "View funds"
-$new_funds_page_msg = "Define new fund - Enter fund information"
-$edit_funds_link = "Edit fund information"
-# Validation messages for new Funds
-$funds_FundName_msg = "Please specify Name."
-$funds_GLCode_msg = "Please select GL code."
-#end of  Validation messages for new Funds
-#Funds End
-
 #labels 
 $loan="loan"
 $savings="savings"
