@@ -3,7 +3,6 @@ package org.mifos.application.productdefinition.persistence;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -29,22 +28,16 @@ public class LoanPrdPersistenceTest extends MifosTestCase {
 
 	public void testretrieveLatenessForPrd() throws Exception {
 		Short latenessDays = null;
-		latenessDays = new LoansPrdPersistence().retrieveLatenessForPrd();
+		latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
 		assertNotNull(latenessDays);
 		assertEquals(Short.valueOf("10"), latenessDays);
-	}
-
-	public void testGetSourcesOfFund() throws Exception {
-		List<FundBO> funds = new LoansPrdPersistence().getSourcesOfFund();
-		assertNotNull(funds);
-		assertEquals(5, funds.size());
 	}
 
 	public void testGetLoanOffering() throws PersistenceException {
 		loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
 		HibernateUtil.closeSession();
 
-		loanOffering = new LoansPrdPersistence().getLoanOffering(loanOffering
+		loanOffering = new LoanPrdPersistence().getLoanOffering(loanOffering
 				.getPrdOfferingId());
 		assertNotNull(loanOffering);
 		assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
@@ -55,7 +48,7 @@ public class LoanPrdPersistenceTest extends MifosTestCase {
 		loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
 		HibernateUtil.closeSession();
 
-		loanOffering = new LoansPrdPersistence().getLoanOffering(loanOffering
+		loanOffering = new LoanPrdPersistence().getLoanOffering(loanOffering
 				.getPrdOfferingId(), (short) 1);
 		assertNotNull(loanOffering);
 		assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
@@ -77,7 +70,7 @@ public class LoanPrdPersistenceTest extends MifosTestCase {
 				"Loa1");
 		HibernateUtil.closeSession();
 
-		List<LoanOfferingBO> loanOfferings = new LoansPrdPersistence()
+		List<LoanOfferingBO> loanOfferings = new LoanPrdPersistence()
 				.getAllLoanOfferings((short) 1);
 		assertNotNull(loanOfferings);
 		assertEquals(2, loanOfferings.size());

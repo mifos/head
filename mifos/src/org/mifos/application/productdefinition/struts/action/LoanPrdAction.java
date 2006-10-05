@@ -56,6 +56,7 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.fund.business.service.FundBusinessService;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -64,9 +65,9 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
-import org.mifos.application.productdefinition.business.PrdOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
@@ -246,9 +247,10 @@ public class LoanPrdAction extends BaseAction {
 			fundsSelected.add(loanOfferingFund.getFund());
 		}
 		List<FeeView> feeSelected = new ArrayList<FeeView>();
-		for (PrdOfferingFeesEntity prdOfferingFees : loanOffering
-				.getPrdOfferingFees()) {
-			feeSelected.add(new FeeView(getUserContext(request),prdOfferingFees.getFees()));
+		for (LoanOfferingFeesEntity prdOfferingFees : loanOffering
+				.getLoanOfferingFees()) {
+			feeSelected.add(new FeeView(getUserContext(request),
+					prdOfferingFees.getFees()));
 		}
 		loadSelectedFeesAndFunds(feeSelected, fundsSelected, request);
 		loadStatusList(request);
@@ -379,7 +381,7 @@ public class LoanPrdAction extends BaseAction {
 				((LoanPrdBusinessService) ServiceFactory.getInstance()
 						.getBusinessService(BusinessServiceName.LoanProduct))
 						.getAllLoanOfferings(getUserContext(request)
-								.getLocaleId()),request);
+								.getLocaleId()), request);
 		return mapping.findForward(ActionForwards.viewAllLoanProducts_success
 				.toString());
 	}
@@ -393,6 +395,8 @@ public class LoanPrdAction extends BaseAction {
 		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.FeesService);
+		FundBusinessService fundService = (FundBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.fund);
 		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
 		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setAttribute(
@@ -412,9 +416,9 @@ public class LoanPrdAction extends BaseAction {
 				getMasterEntities(InterestCalcTypeEntity.class, localeId),
 				request);
 		SessionUtils.setAttribute(ProductDefinitionConstants.SRCFUNDSLIST,
-				service.getSourcesOfFund(), request);
+				fundService.getSourcesOfFund(), request);
 		SessionUtils.setAttribute(ProductDefinitionConstants.LOANFEESLIST,
-				getFeeViewList(getUserContext(request),fees), request);
+				getFeeViewList(getUserContext(request), fees), request);
 		SessionUtils.setAttribute(
 				ProductDefinitionConstants.LOANPRICIPALGLCODELIST, getGLCodes(
 						FinancialActionConstants.PRINCIPALPOSTING,
@@ -502,7 +506,8 @@ public class LoanPrdAction extends BaseAction {
 		return null;
 	}
 
-	private List<FundBO> getFundsFromList(List<FundBO> funds, String[] fundsSelected) {
+	private List<FundBO> getFundsFromList(List<FundBO> funds,
+			String[] fundsSelected) {
 		prdDefLogger
 				.debug("start getFundsFromList method of Loan Product Action ");
 		List<FundBO> fundList = new ArrayList<FundBO>();
@@ -528,7 +533,8 @@ public class LoanPrdAction extends BaseAction {
 		return null;
 	}
 
-	private List<FeeView> getFeeViewList(UserContext userContext, List<FeeBO> fees) {
+	private List<FeeView> getFeeViewList(UserContext userContext,
+			List<FeeBO> fees) {
 		prdDefLogger
 				.debug("start getFeeViewList method of Loan Product Action ");
 		List<FeeView> feeViews = new ArrayList<FeeView>();
@@ -626,10 +632,10 @@ public class LoanPrdAction extends BaseAction {
 		loanPrdActionForm.setLoanCounter(getStringValue(loanOffering
 				.isIncludeInLoanCounter()));
 		loanPrdActionForm.setRecurAfter(getStringValue(loanOffering
-				.getPrdOfferingMeeting().getMeeting().getMeetingDetails()
+				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
 				.getRecurAfter()));
 		loanPrdActionForm.setFreqOfInstallments(getStringValue(loanOffering
-				.getPrdOfferingMeeting().getMeeting().getMeetingDetails()
+				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
 				.getRecurrenceType().getRecurrenceId()));
 		loanPrdActionForm.setPrincipalGLCode(getStringValue(loanOffering
 				.getPrincipalGLcode().getGlcodeId()));

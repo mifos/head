@@ -758,10 +758,10 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				.isPrinDueLastInstValue());
 		assertEquals(loanOffering.isIncludeInLoanCounter(), loanPrdActionForm
 				.isLoanCounterValue());
-		assertEquals(loanOffering.getPrdOfferingMeeting().getMeeting()
+		assertEquals(loanOffering.getLoanOfferingMeeting().getMeeting()
 				.getMeetingDetails().getRecurAfter().toString(),
 				loanPrdActionForm.getRecurAfter());
-		assertEquals(loanOffering.getPrdOfferingMeeting().getMeeting()
+		assertEquals(loanOffering.getLoanOfferingMeeting().getMeeting()
 				.getMeetingDetails().getRecurrenceType().getRecurrenceId()
 				.toString(), loanPrdActionForm.getFreqOfInstallments());
 		assertEquals(
@@ -770,7 +770,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals(loanOffering.getInterestGLcode().getGlcodeId().toString(),
 				loanPrdActionForm.getInterestGLCode());
 
-		assertEquals(loanOffering.getPrdOfferingFees().size(),
+		assertEquals(loanOffering.getLoanOfferingFees().size(),
 				((List<FeeView>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANPRDFEESELECTEDLIST,
 						request)).size());
@@ -973,12 +973,12 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals(new Money("11000"), loanOffering.getMaxLoanAmount());
 		assertEquals(new Money("2000"), loanOffering.getMinLoanAmount());
 		assertEquals(new Money("5000"), loanOffering.getDefaultLoanAmount());
-		assertEquals(Short.valueOf("1"), loanOffering.getPrdOfferingMeeting()
+		assertEquals(Short.valueOf("1"), loanOffering.getLoanOfferingMeeting()
 				.getMeeting().getMeetingDetails().getRecurAfter());
-		assertEquals(Short.valueOf("2"), loanOffering.getPrdOfferingMeeting()
+		assertEquals(Short.valueOf("2"), loanOffering.getLoanOfferingMeeting()
 				.getMeeting().getMeetingDetails().getRecurrenceType()
 				.getRecurrenceId());
-		assertEquals(1, loanOffering.getPrdOfferingFees().size());
+		assertEquals(1, loanOffering.getLoanOfferingFees().size());
 
 		assertNull(((FlowManager) request.getSession().getAttribute(
 				Constants.FLOWMANAGER)).getFlow(flowKey));
@@ -1021,13 +1021,13 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(loanOffering1.isIntDedDisbursement());
 		assertNotNull(loanOffering1.isPrinDueLastInst());
 		assertNotNull(loanOffering1.isIncludeInLoanCounter());
-		assertNotNull(loanOffering1.getPrdOfferingMeeting().getMeeting()
+		assertNotNull(loanOffering1.getLoanOfferingMeeting().getMeeting()
 				.getMeetingDetails().getRecurAfter());
-		assertNotNull(loanOffering1.getPrdOfferingMeeting().getMeeting()
+		assertNotNull(loanOffering1.getLoanOfferingMeeting().getMeeting()
 				.getMeetingDetails().getRecurrenceType().getRecurrenceId());
 		assertNotNull(loanOffering1.getPrincipalGLcode().getGlcode());
 		assertNotNull(loanOffering1.getInterestGLcode().getGlcode());
-		assertNotNull(loanOffering1.getPrdOfferingFees());
+		assertNotNull(loanOffering1.getLoanOfferingFees());
 		assertNotNull(loanOffering1.getLoanOfferingFunds());
 		HibernateUtil.closeSession();
 	}

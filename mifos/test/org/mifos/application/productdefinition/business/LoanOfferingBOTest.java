@@ -526,7 +526,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
 				(short) 17, false, false, false, funds, fees, frequency,
 				principalglCodeEntity, intglCodeEntity);
-		assertEquals(2, loanOffering.getPrdOfferingFees().size());
+		assertEquals(2, loanOffering.getLoanOfferingFees().size());
 		assertEquals(1, loanOffering.getLoanOfferingFunds().size());
 	}
 
@@ -585,10 +585,10 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertFalse(loanOffering.isIncludeInLoanCounter());
 		assertFalse(loanOffering.isIntDedDisbursement());
 		assertFalse(loanOffering.isPrinDueLastInst());
-		assertEquals(2, loanOffering.getPrdOfferingFees().size());
-		assertNotNull(loanOffering.getPrdOfferingMeeting());
+		assertEquals(2, loanOffering.getLoanOfferingFees().size());
+		assertNotNull(loanOffering.getLoanOfferingMeeting());
 		assertEquals(RecurrenceType.WEEKLY.getValue(), loanOffering
-				.getPrdOfferingMeeting().getMeeting().getMeetingDetails()
+				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
 				.getRecurrenceType().getRecurrenceId());
 		assertNotNull(loanOffering.getPrincipalGLcode());
 		assertNotNull(loanOffering.getInterestGLcode());
@@ -987,7 +987,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
 				(short) 2, false, true, false, funds, fees, (short) 2,
 				RecurrenceType.WEEKLY);
-		assertEquals(2, loanOffering.getPrdOfferingFees().size());
+		assertEquals(2, loanOffering.getLoanOfferingFees().size());
 		assertEquals(1, loanOffering.getLoanOfferingFunds().size());
 	}
 
@@ -1043,10 +1043,10 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertFalse(loanOffering.isIncludeInLoanCounter());
 		assertTrue(loanOffering.isIntDedDisbursement());
 		assertFalse(loanOffering.isPrinDueLastInst());
-		assertEquals(2, loanOffering.getPrdOfferingFees().size());
-		assertNotNull(loanOffering.getPrdOfferingMeeting());
+		assertEquals(2, loanOffering.getLoanOfferingFees().size());
+		assertNotNull(loanOffering.getLoanOfferingMeeting());
 		assertEquals(RecurrenceType.MONTHLY.getValue(), loanOffering
-				.getPrdOfferingMeeting().getMeeting().getMeetingDetails()
+				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
 				.getRecurrenceType().getRecurrenceId());
 		assertNotNull(loanOffering.getPrincipalGLcode());
 		assertNotNull(loanOffering.getInterestGLcode());

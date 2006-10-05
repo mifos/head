@@ -48,9 +48,9 @@
 			<property name="minNoInstallments" column="MIN_NO_INSTALLMENTS" />
 			<property name="defNoInstallments" column="DEF_NO_INSTALLMENTS" />
 			<property name="gracePeriodDuration" column="GRACE_PERIOD_DURATION" />
-			<property name="intDedDisbursement" column="INT_DED_DISBURSEMENT_FLAG" access="field" type="short"/>
-			<property name="prinDueLastInst" column="PRIN_DUE_LAST_INST_FLAG" access="field" type="short"/>
-			<property name="loanCounter" column="LOAN_COUNTER_FLAG" access="field" type="short"/>
+			<property name="intDedDisbursement" column="INT_DED_DISBURSEMENT_FLAG" access="field" type="short" />
+			<property name="prinDueLastInst" column="PRIN_DUE_LAST_INST_FLAG" access="field" type="short" />
+			<property name="loanCounter" column="LOAN_COUNTER_FLAG" access="field" type="short" />
 
 			<many-to-one name="gracePeriodType" column="GRACEPERIOD_TYPE_ID" class="org.mifos.application.productdefinition.business.GracePeriodTypeEntity" cascade="none" />
 			<many-to-one name="interestTypes" column="INTEREST_TYPE_ID" class="org.mifos.application.master.business.InterestTypesEntity" not-null="true" />
@@ -63,11 +63,11 @@
 				<one-to-many class="org.mifos.application.productdefinition.business.LoanOfferingFundEntity" />
 			</set>
 
-			<set name="prdOfferingFees" cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_FEES" access="field">
+			<set name="loanOfferingFees" cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_FEES" access="field">
 				<key column="PRD_OFFERING_ID" />
-				<one-to-many class="org.mifos.application.productdefinition.business.PrdOfferingFeesEntity" />
+				<one-to-many class="org.mifos.application.productdefinition.business.LoanOfferingFeesEntity" />
 			</set>
-			<one-to-one name="prdOfferingMeeting" class="org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity" cascade="all" property-ref="prdOffering" />
+			<one-to-one name="loanOfferingMeeting" class="org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity" cascade="all" property-ref="prdOffering" />
 
 		</joined-subclass>
 		<joined-subclass name="org.mifos.application.productdefinition.business.SavingsOfferingBO" table="SAVINGS_OFFERING">
@@ -94,7 +94,7 @@
 			<many-to-one name="depositGLCode" column="DEPOSIT_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
 			<many-to-one name="interestGLCode" column="INTEREST_GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
 
-			<set name="prdOfferingMeetings" cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_MEETING" lazy="true" access="field">
+			<set name="savingsOfferingMeetings" cascade="all,delete-orphan" inverse="true" table="PRD_OFFERING_MEETING" lazy="true" access="field">
 				<key column="PRD_OFFERING_ID" />
 				<one-to-many class="org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity" />
 			</set>
@@ -125,15 +125,15 @@
 		where recType.recurrenceId=2 or recType.recurrenceId=3 
 		order by recType.recurrenceName]]>
 	</query>
-	
+
 	<query name="productOffering.getAllSavingsProducts">
 		<![CDATA[from org.mifos.application.productdefinition.business.SavingsOfferingBO savingsOffering order by savingsOffering.prdOfferingName]]>
 	</query>
-	
+
 	<query name="product.getAllLoanProducts">
 		<![CDATA[from org.mifos.application.productdefinition.business.LoanOfferingBO loanOffering order by loanOffering.prdOfferingName]]>
 	</query>
-	
+
 	<query name="product.getActiveOfferingsForCustomer">
 		<![CDATA[from org.mifos.application.productdefinition.business.SavingsOfferingBO savingsOffering where savingsOffering.prdStatus.id=2 and savingsOffering.prdApplicableMaster.id=:prdApplicableTo]]>
 	</query>

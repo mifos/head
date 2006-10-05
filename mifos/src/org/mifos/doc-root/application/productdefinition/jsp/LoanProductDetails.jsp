@@ -157,10 +157,10 @@
 									</tr>
 									<tr>
 										<td height="23" class="fontnormalbold">
-											<span class="fontnormal"> <mifos:mifoslabel name="product.freqofinst" bundle="ProductDefUIResources" />: <c:out value="${requestScope.BusinessKey.prdOfferingMeeting.meeting.meetingDetails.recurAfter}" /> <c:if
-													test="${requestScope.BusinessKey.prdOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId eq 1}">
+											<span class="fontnormal"> <mifos:mifoslabel name="product.freqofinst" bundle="ProductDefUIResources" />: <c:out value="${requestScope.BusinessKey.loanOfferingMeeting.meeting.meetingDetails.recurAfter}" /> <c:if
+													test="${requestScope.BusinessKey.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId eq 1}">
 													<mifos:mifoslabel name="product.week" bundle="ProductDefUIResources" />
-												</c:if> <c:if test="${requestScope.BusinessKey.prdOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId eq 2}">
+												</c:if> <c:if test="${requestScope.BusinessKey.loanOfferingMeeting.meeting.meetingDetails.recurrenceType.recurrenceId eq 2}">
 													<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
 												</c:if> <br> <mifos:mifoslabel name="product.maxinst" bundle="ProductDefUIResources" />: <c:out value="${requestScope.BusinessKey.maxNoInstallments}" /><br> <mifos:mifoslabel name="product.mininst" bundle="ProductDefUIResources" />: <c:out
 													value="${requestScope.BusinessKey.minNoInstallments}" /><br> <mifos:mifoslabel name="product.definst" bundle="ProductDefUIResources" />: <c:out value="${requestScope.BusinessKey.defNoInstallments}" /><br> <mifos:mifoslabel
@@ -191,7 +191,7 @@
 									</tr>
 									<tr>
 										<td height="23" class="fontnormalbold">
-											<span class="fontnormal"> <mifos:mifoslabel name="product.feestypes" bundle="ProductDefUIResources" />: <br> <c:forEach items="${requestScope.BusinessKey.prdOfferingFees}" var="prdOfferingFees">
+											<span class="fontnormal"> <mifos:mifoslabel name="product.feestypes" bundle="ProductDefUIResources" />: <br> <c:forEach items="${requestScope.BusinessKey.loanOfferingFees}" var="prdOfferingFees">
 													<c:out value="${prdOfferingFees.fees.feeName}" />
 													<br>
 												</c:forEach> <br> </span>

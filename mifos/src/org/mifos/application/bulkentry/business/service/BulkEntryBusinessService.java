@@ -66,7 +66,7 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
-import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
+import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -178,7 +178,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	public List<PrdOfferingBO> getLoanOfferingBOForCustomer(
 			String customerSearchId, Date trxnDate) throws ServiceException {
 		try {
-			return new LoansPrdPersistence().getLoanOfferingForCustomer(
+			return new LoanPrdPersistence().getLoanOfferingForCustomer(
 					customerSearchId, trxnDate);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);

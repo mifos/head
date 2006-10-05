@@ -195,7 +195,7 @@ public class LoanBO extends AccountBO {
 		this.gracePeriodPenalty = Short.valueOf("0");
 		this.fund = fund;
 		this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting()
-				.getMeeting(), loanOffering.getPrdOfferingMeeting()
+				.getMeeting(), loanOffering.getLoanOfferingMeeting()
 				.getMeeting(), disbursementDate);
 		buildAccountFee(feeViews);
 		this.disbursementDate = disbursementDate;

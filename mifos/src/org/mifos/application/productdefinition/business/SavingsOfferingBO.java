@@ -65,7 +65,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
 	private InterestCalcTypeEntity interestCalcType;
 
-	private final Set<PrdOfferingMeetingEntity> prdOfferingMeetings;
+	private final Set<PrdOfferingMeetingEntity> savingsOfferingMeetings;
 
 	private Money recommendedAmount;
 
@@ -121,7 +121,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		this.interestCalcType = interestCalcType;
 		this.recommendedAmntUnit = recommendedAmntUnit;
 
-		prdOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
+		savingsOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
 		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,
 				this, MeetingType.SAVINGSTIMEPERFORINTCALC));
 		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,
@@ -139,11 +139,11 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 	protected SavingsOfferingBO() {
 		depositGLCode = null;
 		interestGLCode = null;
-		prdOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
+		savingsOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
 	}
 
-	private Set<PrdOfferingMeetingEntity> getPrdOfferingMeetings() {
-		return prdOfferingMeetings;
+	private Set<PrdOfferingMeetingEntity> getSavingsOfferingMeetings() {
+		return savingsOfferingMeetings;
 	}
 
 	public PrdOfferingMeetingEntity getFreqOfPostIntcalc()
@@ -152,7 +152,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 	}
 
 	public void setFreqOfPostIntcalc(PrdOfferingMeetingEntity freqOfPostIntcalc) {
-		this.prdOfferingMeetings.add(freqOfPostIntcalc);
+		this.savingsOfferingMeetings.add(freqOfPostIntcalc);
 	}
 
 	public PrdOfferingMeetingEntity getTimePerForInstcalc()
@@ -162,7 +162,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
 	public void setTimePerForInstcalc(
 			PrdOfferingMeetingEntity timePerForInstcalc) {
-		this.prdOfferingMeetings.add(timePerForInstcalc);
+		this.savingsOfferingMeetings.add(timePerForInstcalc);
 	}
 
 	public Double getInterestRate() {
@@ -267,7 +267,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		this.savingsType = savingsType;
 		this.interestCalcType = interestCalcType;
 		this.recommendedAmntUnit = recommendedAmntUnit;
-		this.prdOfferingMeetings.clear();
+		this.savingsOfferingMeetings.clear();
 		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,
 				this, MeetingType.SAVINGSTIMEPERFORINTCALC));
 		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,
@@ -289,9 +289,9 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 	private PrdOfferingMeetingEntity getPrdOfferingMeeting(
 			MeetingType meetingType) throws ProductDefinitionException {
 		prdLogger.debug("getting product offering meeting for :" + meetingType);
-		if (getPrdOfferingMeetings() != null
-				&& getPrdOfferingMeetings().size() > 0)
-			for (PrdOfferingMeetingEntity prdOfferingMeeting : getPrdOfferingMeetings())
+		if (getSavingsOfferingMeetings() != null
+				&& getSavingsOfferingMeetings().size() > 0)
+			for (PrdOfferingMeetingEntity prdOfferingMeeting : getSavingsOfferingMeetings())
 				if (prdOfferingMeeting.getprdOfferingMeetingType().equals(
 						meetingType))
 					return prdOfferingMeeting;

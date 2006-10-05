@@ -43,7 +43,7 @@ import java.util.List;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
+import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;
@@ -62,7 +62,7 @@ public class LoanArrearsHelper extends TaskHelper {
 		List<String> errorList = new ArrayList<String>();
 		List<Integer> listAccountIds = null;
 		try {
-			Short latenessDays = new LoansPrdPersistence()
+			Short latenessDays = new LoanPrdPersistence()
 					.retrieveLatenessForPrd();
 			listAccountIds = new LoanPersistance()
 					.getLoanAccountsInArrears(latenessDays);

@@ -6,7 +6,7 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.application.productdefinition.business.PrdOfferingFeesEntity" table="PRD_OFFERING_FEES">
+	<class name="org.mifos.application.productdefinition.business.LoanOfferingFeesEntity" table="PRD_OFFERING_FEES">
 		<id name="prdOfferingFeeId" column="PRD_OFFERING_FEE_ID" access="field">
 			<generator class="native" />
 		</id>

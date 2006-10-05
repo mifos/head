@@ -4,14 +4,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerLevelEntity;
-import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
-import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
+import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
@@ -60,18 +59,10 @@ public class LoanPrdBusinessService extends BusinessService {
 		}
 	}
 
-	public List<FundBO> getSourcesOfFund() throws ServiceException {
-		try {
-			return new LoansPrdPersistence().getSourcesOfFund();
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
 	public LoanOfferingBO getLoanOffering(Short prdofferingId)
 			throws ServiceException {
 		try {
-			return new LoansPrdPersistence().getLoanOffering(prdofferingId);
+			return new LoanPrdPersistence().getLoanOffering(prdofferingId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -90,7 +81,7 @@ public class LoanPrdBusinessService extends BusinessService {
 	public LoanOfferingBO getLoanOffering(Short loanOfferingId, Short localeId)
 			throws ServiceException {
 		try {
-			return new LoansPrdPersistence().getLoanOffering(loanOfferingId,
+			return new LoanPrdPersistence().getLoanOffering(loanOfferingId,
 					localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
@@ -100,7 +91,7 @@ public class LoanPrdBusinessService extends BusinessService {
 	public List<LoanOfferingBO> getAllLoanOfferings(Short localeId)
 			throws ServiceException {
 		try {
-			return new LoansPrdPersistence().getAllLoanOfferings(localeId);
+			return new LoanPrdPersistence().getAllLoanOfferings(localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -108,7 +99,7 @@ public class LoanPrdBusinessService extends BusinessService {
 	
 	public Short retrieveLatenessForPrd() throws ServiceException{
 		try{
-			return new LoansPrdPersistence().retrieveLatenessForPrd();
+			return new LoanPrdPersistence().retrieveLatenessForPrd();
 		}catch (PersistenceException pe){
 			throw new ServiceException(pe);
 		}
@@ -117,7 +108,7 @@ public class LoanPrdBusinessService extends BusinessService {
 	public List<LoanOfferingBO> getApplicablePrdOfferings(
 			CustomerLevelEntity customerLevel) throws ServiceException {
 		try {
-			return new LoansPrdPersistence()
+			return new LoanPrdPersistence()
 					.getApplicablePrdOfferings(customerLevel);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);

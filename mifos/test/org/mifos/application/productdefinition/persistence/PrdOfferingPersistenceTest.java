@@ -27,7 +27,7 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 
 	public void testretrieveLatenessForPrd() throws Exception {
 		Short latenessDays = null;
-		latenessDays = new LoansPrdPersistence().retrieveLatenessForPrd();
+		latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
 		assertNotNull(latenessDays);
 		assertEquals(Short.valueOf("10"), latenessDays);
 	}

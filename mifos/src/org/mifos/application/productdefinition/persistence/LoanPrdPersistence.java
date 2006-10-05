@@ -1,6 +1,6 @@
 /**
 
- * LoansPrdPersistence.java    version: 1.0
+ * LoanPrdPersistence.java    version: 1.0
 
  
 
@@ -47,16 +47,15 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerLevelEntity;
-import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
-import org.mifos.application.productdefinition.business.PrdOfferingFeesEntity;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
-public class LoansPrdPersistence extends Persistence {
+public class LoanPrdPersistence extends Persistence {
 
 	public Short retrieveLatenessForPrd() throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -69,10 +68,6 @@ public class LoansPrdPersistence extends Persistence {
 			return queryResult.get(0);
 		}
 		return Short.valueOf("10");
-	}
-
-	public List<FundBO> getSourcesOfFund() throws PersistenceException {
-		return executeNamedQuery(NamedQueryConstants.PRDSRCFUNDS, null);
 	}
 
 	public LoanOfferingBO getLoanOffering(Short prdofferingId)
@@ -98,10 +93,10 @@ public class LoansPrdPersistence extends Persistence {
 			for (LoanOfferingFundEntity loanOfferingFund : loanOffering
 					.getLoanOfferingFunds())
 				loanOfferingFund.getFund().getFundName();
-		if (loanOffering.getPrdOfferingFees() != null
-				&& loanOffering.getPrdOfferingFees().size() > 0)
-			for (PrdOfferingFeesEntity prdOfferingFees : loanOffering
-					.getPrdOfferingFees())
+		if (loanOffering.getLoanOfferingFees() != null
+				&& loanOffering.getLoanOfferingFees().size() > 0)
+			for (LoanOfferingFeesEntity prdOfferingFees : loanOffering
+					.getLoanOfferingFees())
 				prdOfferingFees.getFees().getFeeName();
 
 		return loanOffering;

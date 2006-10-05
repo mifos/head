@@ -43,7 +43,7 @@ import java.util.Set;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
+import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -118,7 +118,7 @@ public class ProductTypeEntity extends BusinessObject {
 		else
 			this.dormancyDays = latenessDormancy;
 		try {
-			new LoansPrdPersistence().createOrUpdate(this);
+			new LoanPrdPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}

@@ -64,21 +64,6 @@ public class LoanPrdBusinessServiceTest extends MifosTestCase {
 				.getLoanApplicableCustomerTypes((short) 1).size());
 	}
 
-	public void testGetSourcesOfFundForInvalidConnection() {
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			new LoanPrdBusinessService().getSourcesOfFund();
-			assertTrue(false);
-		} catch (ServiceException e) {
-			assertTrue(true);
-		}
-	}
-
-	public void testGetSourcesOfFund() throws ServiceException {
-		List<FundBO> funds = new LoanPrdBusinessService().getSourcesOfFund();
-		assertNotNull(funds);
-	}
-
 	public void testGetLoanOffering() throws ServiceException {
 		loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
 		HibernateUtil.closeSession();

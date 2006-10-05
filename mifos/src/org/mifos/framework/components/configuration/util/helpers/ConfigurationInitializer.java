@@ -59,7 +59,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
-import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
+import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.ConfigEntity;
@@ -178,7 +178,7 @@ public class ConfigurationInitializer {
 	private void setLateNessAndDormancyDaysForAccount(
 			Map<Key, Object> officeConfigMap) throws SystemException,
 			ApplicationException {
-		Short latenessDays = new LoansPrdPersistence().retrieveLatenessForPrd();
+		Short latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
 		Short dormancyDays = new SavingsPrdPersistence().retrieveDormancyDays();
 		officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
 				ConfigConstants.LATENESS_DAYS), latenessDays);

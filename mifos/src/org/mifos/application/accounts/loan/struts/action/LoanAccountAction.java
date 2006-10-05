@@ -474,7 +474,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.hasNext();) {
 			LoanOfferingBO loanOffering = iter.next();
 			if (!isMeetingMatched(customerMeeting, loanOffering
-					.getPrdOfferingMeeting().getMeeting()))
+					.getLoanOfferingMeeting().getMeeting()))
 				iter.remove();
 		}
 	}

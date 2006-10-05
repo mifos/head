@@ -18,8 +18,6 @@ import org.mifos.application.productdefinition.util.helpers.ProductDefinitionCon
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
@@ -28,7 +26,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 public class PrdCategoryAction extends BaseAction {
 
 	@Override
-	protected BusinessService getService() throws ServiceException {
+	protected BusinessService getService() {
 		return getBusinessService();
 	}
 
@@ -45,13 +43,13 @@ public class PrdCategoryAction extends BaseAction {
 
 	public ActionForward createPreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception, NumberFormatException {
+			throws Exception {
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
 	public ActionForward createPrevious(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception, NumberFormatException {
+			throws Exception {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
@@ -107,14 +105,14 @@ public class PrdCategoryAction extends BaseAction {
 
 	public ActionForward managePreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception, NumberFormatException {
+			throws Exception {
 		return mapping.findForward(ActionForwards.editpreview_success
 				.toString());
 	}
 
 	public ActionForward managePrevious(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception, NumberFormatException {
+			throws Exception {
 		return mapping.findForward(ActionForwards.editprevious_success
 				.toString());
 	}
@@ -179,7 +177,7 @@ public class PrdCategoryAction extends BaseAction {
 	}
 
 	private List<ProductTypeEntity> getProductTypes(UserContext userContext)
-			throws ServiceException {
+			throws Exception {
 		List<ProductTypeEntity> productCategoryList = getBusinessService()
 				.getProductTypes();
 		for (ProductTypeEntity productTypeEntity : productCategoryList)
@@ -188,7 +186,7 @@ public class PrdCategoryAction extends BaseAction {
 	}
 
 	private List<PrdCategoryStatusEntity> getProductCategoryStatusList(
-			UserContext userContext) throws ServiceException {
+			UserContext userContext) throws Exception {
 		List<PrdCategoryStatusEntity> productCategoryStatusList = getBusinessService()
 				.getProductCategoryStatusList();
 		for (PrdCategoryStatusEntity prdCategoryStatusEntity : productCategoryStatusList)
@@ -198,7 +196,7 @@ public class PrdCategoryAction extends BaseAction {
 
 	private ProductTypeEntity getProductType(
 			List<ProductTypeEntity> productCategoryList, Short prdTypeId)
-			throws PersistenceException {
+			throws Exception {
 		for (ProductTypeEntity productTypeEntity : productCategoryList)
 			if (productTypeEntity.getProductTypeID().equals(prdTypeId))
 				return productTypeEntity;
@@ -206,7 +204,7 @@ public class PrdCategoryAction extends BaseAction {
 	}
 
 	private List<ProductCategoryBO> getAllCategories(UserContext userContext)
-			throws ServiceException {
+			throws Exception {
 		List<ProductCategoryBO> productCategoryList = getBusinessService()
 				.getAllCategories();
 		if (productCategoryList != null) {

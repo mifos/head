@@ -53,7 +53,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
+import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -99,9 +99,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
 	private final Set<LoanOfferingFundEntity> loanOfferingFunds;
 
-	private final Set<PrdOfferingFeesEntity> prdOfferingFees;
+	private final Set<LoanOfferingFeesEntity> loanOfferingFees;
 
-	private PrdOfferingMeetingEntity prdOfferingMeeting;
+	private PrdOfferingMeetingEntity loanOfferingMeeting;
 
 	private final GLCodeEntity principalGLcode;
 
@@ -177,13 +177,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
 			}
 		}
-		this.prdOfferingMeeting = new PrdOfferingMeetingEntity(meeting, this,
+		this.loanOfferingMeeting = new PrdOfferingMeetingEntity(meeting, this,
 				MeetingType.LOANFREQUENCYOFINSTALLMENTS);
-		this.prdOfferingFees = new HashSet<PrdOfferingFeesEntity>();
+		this.loanOfferingFees = new HashSet<LoanOfferingFeesEntity>();
 		if (fees != null && fees.size() > 0) {
 			for (FeeBO fee : fees) {
 				if (isFrequencyMatchingOfferingFrequency(fee, meeting))
-					addPrdOfferingFee(new PrdOfferingFeesEntity(this, fee));
+					addPrdOfferingFee(new LoanOfferingFeesEntity(this, fee));
 			}
 		}
 		prdLogger.debug("Loan offering build :" + getGlobalPrdOfferingNum());
@@ -193,7 +193,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		principalGLcode = null;
 		interestGLcode = null;
 		loanOfferingFunds = new HashSet<LoanOfferingFundEntity>();
-		prdOfferingFees = new HashSet<PrdOfferingFeesEntity>();
+		loanOfferingFees = new HashSet<LoanOfferingFeesEntity>();
 	}
 
 	public GracePeriodTypeEntity getGracePeriodType() {
@@ -260,12 +260,12 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		return loanOfferingFunds;
 	}
 
-	public Set<PrdOfferingFeesEntity> getPrdOfferingFees() {
-		return prdOfferingFees;
+	public Set<LoanOfferingFeesEntity> getLoanOfferingFees() {
+		return loanOfferingFees;
 	}
 
-	public PrdOfferingMeetingEntity getPrdOfferingMeeting() {
-		return prdOfferingMeeting;
+	public PrdOfferingMeetingEntity getLoanOfferingMeeting() {
+		return loanOfferingMeeting;
 	}
 
 	public GLCodeEntity getPrincipalGLcode() {
@@ -344,20 +344,20 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			this.loanOfferingFunds.add(loanOfferingFund);
 	}
 
-	public void addPrdOfferingFee(PrdOfferingFeesEntity prdOfferingFeesEntity) {
+	public void addPrdOfferingFee(LoanOfferingFeesEntity prdOfferingFeesEntity) {
 		if (null != prdOfferingFeesEntity)
-			this.prdOfferingFees.add(prdOfferingFeesEntity);
+			this.loanOfferingFees.add(prdOfferingFeesEntity);
 	}
 
-	public void setPrdOfferingMeeting(
+	public void setLoanOfferingMeeting(
 			PrdOfferingMeetingEntity prdOfferingMeeting) {
-		this.prdOfferingMeeting = prdOfferingMeeting;
+		this.loanOfferingMeeting = prdOfferingMeeting;
 	}
 
 	public boolean isFeePresent(FeeBO fee) {
 		prdLogger.debug("checking isFeePresent :" + fee);
-		if (prdOfferingFees != null && prdOfferingFees.size() > 0)
-			for (PrdOfferingFeesEntity prdOfferingFee : prdOfferingFees) {
+		if (loanOfferingFees != null && loanOfferingFees.size() > 0)
+			for (LoanOfferingFeesEntity prdOfferingFee : loanOfferingFees) {
 				if (prdOfferingFee.isFeePresent(fee.getFeeId()))
 					return true;
 			}
@@ -412,14 +412,14 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		setLoanCounter(loanCounter);
 		setIntDedDisbursement(intDedDisbursement);
 		setPrinDueLastInst(prinDueLastInst);
-		if (this.prdOfferingMeeting.getMeeting().getMeetingDetails()
+		if (this.loanOfferingMeeting.getMeeting().getMeetingDetails()
 				.getRecurrenceType().getRecurrenceId().equals(
 						recurrenceType.getValue())) {
-			this.prdOfferingMeeting.getMeeting().getMeetingDetails()
+			this.loanOfferingMeeting.getMeeting().getMeetingDetails()
 					.setRecurAfter(recurAfter);
 		} else {
 			try {
-				this.prdOfferingMeeting.setMeeting(new MeetingBO(
+				this.loanOfferingMeeting.setMeeting(new MeetingBO(
 						recurrenceType, recurAfter, startDate,
 						MeetingType.LOANFREQUENCYOFINSTALLMENTS));
 			} catch (MeetingException e) {
@@ -435,18 +435,18 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				}
 			}
 		}
-		if (this.prdOfferingFees != null) {
-			this.prdOfferingFees.clear();
+		if (this.loanOfferingFees != null) {
+			this.loanOfferingFees.clear();
 			if (fees != null && fees.size() > 0) {
 				for (FeeBO fee : fees) {
 					if (isFrequencyMatchingOfferingFrequency(fee,
-							this.prdOfferingMeeting.getMeeting()))
-						addPrdOfferingFee(new PrdOfferingFeesEntity(this, fee));
+							this.loanOfferingMeeting.getMeeting()))
+						addPrdOfferingFee(new LoanOfferingFeesEntity(this, fee));
 				}
 			}
 		}
 		try {
-			new LoansPrdPersistence().createOrUpdate(this);
+			new LoanPrdPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}

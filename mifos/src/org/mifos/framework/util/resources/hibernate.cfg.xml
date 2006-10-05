@@ -189,7 +189,7 @@
 	<mapping resource="org/mifos/application/productdefinition/business/GracePeriodTypeEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/business/LoanOfferingFundEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/business/PrdOfferingBO.hbm.xml" />
-	<mapping resource="org/mifos/application/productdefinition/business/PrdOfferingFeesEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/productdefinition/business/LoanOfferingFeesEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/business/PrdOfferingMeetingEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/business/PrdPmntTypeEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/productdefinition/business/PrdStateEntity.hbm.xml" />

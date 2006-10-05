@@ -43,7 +43,7 @@ import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 
-public class PrdOfferingFeesEntity extends PersistentObject {
+public class LoanOfferingFeesEntity extends PersistentObject {
 
 	private final Short prdOfferingFeeId;
 
@@ -51,20 +51,16 @@ public class PrdOfferingFeesEntity extends PersistentObject {
 
 	private final FeeBO fees;
 
-	public PrdOfferingFeesEntity(LoanOfferingBO loanOffering, FeeBO fees) {
+	public LoanOfferingFeesEntity(LoanOfferingBO loanOffering, FeeBO fees) {
 		this.prdOfferingFeeId = null;
 		this.loanOffering = loanOffering;
 		this.fees = fees;
 	}
 
-	protected PrdOfferingFeesEntity() {
+	protected LoanOfferingFeesEntity() {
 		this.prdOfferingFeeId = null;
 		this.loanOffering = null;
 		this.fees = null;
-	}
-
-	public LoanOfferingBO getLoanOffering() {
-		return loanOffering;
 	}
 
 	public FeeBO getFees() {
@@ -81,10 +77,10 @@ public class PrdOfferingFeesEntity extends PersistentObject {
 
 	@Override
 	public boolean equals(Object object) {
-		PrdOfferingFeesEntity prdOfferingFees = null;
+		LoanOfferingFeesEntity prdOfferingFees = null;
 		boolean value = false;
 		if (object != null) {
-			prdOfferingFees = (PrdOfferingFeesEntity) object;
+			prdOfferingFees = (LoanOfferingFeesEntity) object;
 			if (prdOfferingFees.getPrdOfferingFeeId().equals(
 					this.prdOfferingFeeId)) {
 				value = true;

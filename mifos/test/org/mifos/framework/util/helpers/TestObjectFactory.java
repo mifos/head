@@ -1041,8 +1041,8 @@ public class TestObjectFactory {
 				session.delete(loan.getLoanSummary());
 			}
 			session.delete(account);
-			loan.getLoanOffering().getPrdOfferingMeeting().setMeeting(null);
-			session.delete(loan.getLoanOffering().getPrdOfferingMeeting());
+			loan.getLoanOffering().getLoanOfferingMeeting().setMeeting(null);
+			session.delete(loan.getLoanOffering().getLoanOfferingMeeting());
 			session.delete(loan.getLoanOffering());
 
 		}
