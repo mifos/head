@@ -49,12 +49,14 @@
 <%@taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/application/accounts/js/applyadjustment.js"></SCRIPT>
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form method="post" action="applyAdjustment.do" onsubmit="return fn_submit();">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -124,7 +126,7 @@
 								<c:choose>
 									<c:when test="${requestScope.method=='loadAdjustment'}">
 										<mifos:mifoslabel name="accounts.last_pmnt"/>:
-										<c:out value="${sessionScope.BusinessKey.lastPmntAmnt}"/>
+										<c:out value="${BusinessKey.lastPmntAmnt}"/>
 										<br><br>
 									</c:when>
 									<c:otherwise>
@@ -132,7 +134,7 @@
 											<mifos:mifoslabel name="accounts.amnt_tobe_adjusted" />:<br>
 										</td>
 										<td width="75%" class="fontnormal">	
-											<c:out value="${sessionScope.BusinessKey.lastPmntAmnt}"/>
+											<c:out value="${BusinessKey.lastPmntAmnt}"/>
 										</td>
 									</tr>	
 									</c:otherwise>
@@ -189,14 +191,14 @@
 										<br>
 										<br>
 										<mifos:mifoslabel name="accounts.last_pmnt"/>:
-										<c:out value="${sessionScope.BusinessKey.lastPmntAmnt}"/>
+										<c:out value="${BusinessKey.lastPmntAmnt}"/>
 									</c:when>
 									<c:otherwise>
 										<td width="27%" align="right" class="fontnormalbold">
 										<mifos:mifoslabel name="accounts.amnt_tobe_adjusted" />:
 										<td >
 												
-											<c:out value="${sessionScope.BusinessKey.lastPmntAmnt}"/>
+											<c:out value="${BusinessKey.lastPmntAmnt}"/>
 										</td>	
 									</c:otherwise>
 								</c:choose>
