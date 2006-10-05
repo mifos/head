@@ -6,6 +6,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 
 public class GroupBusinessService extends BusinessService {
@@ -29,5 +30,15 @@ public class GroupBusinessService extends BusinessService {
 		}catch(PersistenceException pe){
 			throw new ServiceException(pe);
 		}
+	}
+	public QueryResult search(String searchString,
+			Short userId) throws ServiceException {
+		
+		try {
+			return new GroupPersistence().search(searchString,userId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+		
 	}
 }

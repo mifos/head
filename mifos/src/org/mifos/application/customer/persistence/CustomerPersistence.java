@@ -277,13 +277,14 @@ public class CustomerPersistence extends Persistence {
 		return queryResult;
 	}
 
-	public QueryResult searchGroupClient(String searchString, Short officeId,
-			Short userId, Short userOfficeId) throws PersistenceException {
+	public QueryResult searchGroupClient(String searchString,
+			Short userId) throws PersistenceException {
 		String[] namedQuery = new String[2];
 		List<Param> paramList = new ArrayList<Param>();
 		QueryInputs queryInputs = new QueryInputs();
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.ACCOUNTSEARCHRESULTS);
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
 		if (new PersonnelPersistence().getPersonnel(userId).getLevel().getId()
 				.equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
 			namedQuery[0] = NamedQueryConstants.SEARCH_GROUP_CLIENT_COUNT_LO;
@@ -297,12 +298,12 @@ public class CustomerPersistence extends Persistence {
 		}
 
 		paramList.add(typeNameValue("String", "SEARCH_ID",
-				new OfficePersistence().getOffice(userOfficeId).getSearchId()
+				personnel.getOffice().getSearchId()
 						+ "%"));
 		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
 				+ "%"));
 		paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED",
-				Configuration.getInstance().getCustomerConfig(officeId)
+				Configuration.getInstance().getCustomerConfig(personnel.getOffice().getOfficeId())
 						.canGroupApplyForLoan() == true ? new Boolean(true)
 						: new Boolean(true)));
 
@@ -324,7 +325,7 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public QueryResult searchCustForSavings(String searchString,
-			Short officeId, Short userId, Short userOfficeId)
+			 Short userId)
 			throws PersistenceException {
 		String[] namedQuery = new String[2];
 		List<Param> paramList = new ArrayList<Param>();

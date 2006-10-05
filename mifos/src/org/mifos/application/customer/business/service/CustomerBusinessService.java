@@ -87,6 +87,22 @@ public class CustomerBusinessService extends BusinessService {
 		return null;
 	}
 
+	public QueryResult searchGroupClient(String searchString ,Short userId)throws ServiceException{
+		try {
+			return new CustomerPersistence().searchGroupClient(searchString,userId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+		
+	}
+	public QueryResult searchCustForSavings(String searchString ,Short userId)throws ServiceException{
+		try {
+			return new CustomerPersistence().searchCustForSavings(searchString,userId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+		
+	}	
 	public CustomerBO getCustomer(Integer customerId) throws ServiceException {
 		try {
 			return new CustomerPersistence().getCustomer(customerId);

@@ -124,6 +124,8 @@
 		<!-- Customer Account Action form -->
 		<form-bean name="customerAccountActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerAccountActionForm"></form-bean>
 		
+						<form-bean name="custSearchActionForm" type="org.mifos.application.customer.struts.actionforms.CustSearchActionForm"></form-bean>
+		
 		<!-- ADDED BY MFTECH -->
 		<form-bean name="reportsParamsActionForm"
 				type="org.mifos.application.reports.struts.actionforms.ReportsParamsActionForm" />
@@ -156,6 +158,14 @@
 	</global-forwards>
 
 	<action-mappings>
+	<action path="/custSearchAction" type="org.mifos.application.customer.struts.action.CustSearchAction" 
+  			name="custSearchActionForm"
+       		parameter="method"	
+       		scope="session">
+       		<forward name="loadSearch_success" 	path="/pages/application/customer/jsp/cust_search_account.jsp"/>
+      		<forward name="search_success" 	path="/pages/application/customer/jsp/cust_search_account_results.jsp"/>
+        	<forward name="search_failure" 	path="/pages/application/customer/jsp/cust_search_account.jsp"/>	
+    </action>
 	<action path="/customerAccountAction" 
 				type="org.mifos.application.customer.struts.action.CustomerAccountAction" 
 				name="customerAccountActionForm"
@@ -274,7 +284,7 @@
 		<action path="/clientCreationAction" type="org.mifos.application.customer.client.struts.action.ClientCreationAction" name="clientCreationActionForm" parameter="method" input="/clientCreationAction.do?method=validate" validate="true"
 			scope="session">
 			<!--  Load forwards -->
-			<forward name="preLoad_success" path="/GroupAction.do?method=loadSearch" />
+			<forward name="preLoad_success" path="/groupCustAction.do?method=loadSearch" />
 			<forward name="load_success" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
 			<!--  Next forwards -->
 			<forward name="next_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
@@ -1191,6 +1201,9 @@
 			<!--Cancel forwards-->
 			<forward name="cancelEdit_success" path="/groupCustAction.do?method=get" />			
 			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
+			<forward name="loadSearch_success" path="/pages/application/group/jsp/group_search.jsp" />
+			<forward name="search_success" path="/pages/application/group/jsp/group_search_results.jsp" />
+			<forward name="search_failure" path="/pages/application/group/jsp/group_search.jsp" />
 			
 			
 		</action>

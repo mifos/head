@@ -35,7 +35,7 @@
 						<namefragment>Loan</namefragment> 
 						<namefragment>label.account</namefragment> 
 					</displayname>
-					<linkvalue> AccountsSearchAction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan	</linkvalue>
+					<linkvalue> custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan	</linkvalue>
 				</menuitem>
 				<menuitem>
 					<displayname> 
@@ -43,7 +43,7 @@
 						<namefragment>Savings</namefragment>
 						<namefragment>label.account</namefragment> 
 					</displayname>
-					<linkvalue>AccountsSearchAction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
+					<linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
 				</menuitem>
 				<menuitem>
 					<displayname> 
@@ -129,7 +129,7 @@
 						<namefragment>Savings</namefragment>
 						<namefragment>label.account</namefragment>  
 					</displayname>
-					<linkvalue>AccountsSearchAction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
+					<linkvalue>custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=savings</linkvalue>
 				</menuitem>
 					
 				<menuitem>
@@ -138,7 +138,7 @@
 						<namefragment>Loan</namefragment>
 						<namefragment>label.account</namefragment>  
 					</displayname>
-					<linkvalue>	AccountsSearchAction.do?method=load&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
+					<linkvalue>	custSearchAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=loan</linkvalue>
 				</menuitem>		
 			</menugroup>
 			<menugroup>

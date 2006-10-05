@@ -29,6 +29,7 @@ import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -50,9 +51,7 @@ public class LoanDisbursmentAction extends BaseAction {
 
 		LoanBO loan = ((LoanBusinessService) getService()).getAccount(Integer
 				.valueOf(loanDisbursmentActionForm.getAccountId()));
-		loanDisbursmentActionForm.setTransactionDate(DateHelper
-				.getUserLocaleDate(uc.getPereferedLocale(), loan
-						.getDisbursementDate().toString()));
+		loanDisbursmentActionForm.setTransactionDate(DateHelper.toDatabaseFormat(loan.getDisbursementDate()));
 		loan.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request
 				);
@@ -96,6 +95,7 @@ public class LoanDisbursmentAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		Date trxnDate = getDateFromString(actionForm.getTransactionDate(), uc
 				.getPereferedLocale());
+		trxnDate=DateUtils.getDateWithoutTimeStamp(trxnDate.getTime());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
 				.getPereferedLocale());
 		PersonnelBO personnel = new PersonnelPersistence()

@@ -17,7 +17,9 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
@@ -28,7 +30,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 
 	protected UserContext userContext = null;
 
-	protected LoanBO accountBO = null;
+
 	
 	protected LoanBO loanBO = null;
 
@@ -70,16 +72,14 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/loanDisbursmentAction");
 		 calendar = new GregorianCalendar();
 		currentDate=new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short
-				.valueOf(AccountStates.LOANACC_APPROVED),currentDate , 2);
-		addRequestParameter("accountId", accountBO.getAccountId().toString());
+		
+		
 		
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(loanBO);
-		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
@@ -106,6 +106,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testLoad() throws Exception  {
+		createInitialObjects(2);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("method", "load");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -116,14 +117,15 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 				MasterConstants.PAYMENT_TYPE,request));
 		LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) request
 				.getSession().getAttribute("loanDisbursmentActionForm");
-		assertEquals(actionForm.getAmount(), accountBO
+		assertEquals(actionForm.getAmount(), loanBO
 				.getAmountTobePaidAtdisburtail(new Date(System
 						.currentTimeMillis())));
-		assertEquals(actionForm.getLoanAmount(), accountBO.getLoanAmount());
+		assertEquals(actionForm.getLoanAmount(), loanBO.getLoanAmount());
 
 	}
 
 	public void testPreviewFailure_NomaadatoryFieds() {
+		createInitialObjects(2);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
 		String []errors = {AccountConstants.ERROR_MANDATORY,AccountConstants.ERROR_MANDATORY};
@@ -137,11 +139,12 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 
 	}
 	public void testPreviewFailure_futureTxnDate() {
+		createInitialObjects(2);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
 		
 		Calendar calendar = new GregorianCalendar();
-		calendar.roll(Calendar.YEAR,1);
+		calendar.add(Calendar.YEAR,1);
 		addRequestParameter("receiptDate", sdf.format(new Date(calendar.getTimeInMillis())));
 		addRequestParameter("transactionDate", sdf.format(new Date(calendar.getTimeInMillis())));
 		addRequestParameter("paymentTypeId", "1");
@@ -158,6 +161,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	
 	
 	public void testPreviewSucess(){
+		createInitialObjects(2);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		addRequestParameter("receiptDate", sdf.format(currentDate));
@@ -173,6 +177,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	}
 	
 	public void testPreviuos(){
+		createInitialObjects(2);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("method", "previous");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -182,11 +187,12 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testUpdate()throws Exception{
+		createInitialObjects(2);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		addRequestParameter("receiptDate", sdf.format(currentDate));
-		addRequestParameter("transactionDate", sdf.format(currentDate));
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO,request);
+		addRequestParameter("transactionDate",sdf.format(currentDate));
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO,request);
 		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("paymentModeOfPayment", "1");
@@ -198,13 +204,12 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 
 	}
 	public void testUpdateNopaymentAtDisbursal()throws Exception{
+		createInitialObjects(3);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		loanBO =getLoanAccount(Short
-				.valueOf(AccountStates.LOANACC_APPROVED),currentDate , 3);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		addRequestParameter("receiptDate", sdf.format(currentDate));
 		addRequestParameter("transactionDate", sdf.format(currentDate));
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO,request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO,request);
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
 		addRequestParameter("paymentTypeId", "1");
@@ -214,5 +219,14 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 		verifyForward(Constants.UPDATE_SUCCESS);
 	
 		
+	}
+	private void createInitialObjects(int disbursalType) {
+	//	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	//	String date = sdf.format(currentDate);
+		loanBO = getLoanAccount(Short.valueOf(AccountStates.LOANACC_APPROVED),
+				currentDate, disbursalType);
+		addRequestParameter("recordLoanOfficerId", "1");
+		addRequestParameter("accountId", loanBO.getAccountId().toString());
+
 	}
 }

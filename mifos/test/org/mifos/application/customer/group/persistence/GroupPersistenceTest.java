@@ -43,7 +43,7 @@ public class GroupPersistenceTest extends MifosTestCase {
 	
 	public void testSearch() throws Exception{
 		createGroup();
-		QueryResult queryResult = groupPersistence.search(group.getDisplayName(),group.getOffice().getOfficeId(),Short.valueOf("1"),Short.valueOf("1"));
+		QueryResult queryResult = groupPersistence.search(group.getDisplayName(),Short.valueOf("1"));
 		assertNotNull(queryResult);
 		assertEquals(1,queryResult.getSize());
 		assertEquals(1,queryResult.get(0,10).size());

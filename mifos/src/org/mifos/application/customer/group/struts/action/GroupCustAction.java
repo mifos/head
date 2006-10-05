@@ -55,7 +55,10 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
+import org.mifos.application.customer.center.business.service.CenterBusinessService;
+import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
 import org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm;
@@ -285,6 +288,29 @@ public class GroupCustAction extends CustAction {
 		return mapping.findForward(forward.toString());
 	}
 
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		GroupCustActionForm actionForm = (GroupCustActionForm) form;
+		actionForm.setInput(null);
+		cleanUpSearch(request);
+		return mapping.findForward(ActionForwards.loadSearch_success.toString());
+	}	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward search(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		GroupCustActionForm actionForm = (GroupCustActionForm) form;
+		String searchString = actionForm.getInput();
+		if (searchString==null) throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+		searchString=searchString.trim();
+		if (searchString.equals("")) throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
+		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,new GroupBusinessService().search(searchString,userContext.getId()),request);
+	 return super.search(mapping, form, request, response);
+	}	
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			GroupBO groupBO, Short localeId) throws Exception{
 		SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED,
@@ -402,7 +428,7 @@ public class GroupCustAction extends CustAction {
 		clearActionForm(actionForm);
 		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request.getSession());
 	}
-	
+	//TODO should be moved to action form itself 
 	private void clearActionForm(GroupCustActionForm actionForm) {
 		actionForm.setDefaultFees(new ArrayList<FeeView>());
 		actionForm.setAdditionalFees(new ArrayList<FeeView>());

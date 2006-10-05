@@ -106,6 +106,10 @@ public class ActivityMapper {
 	private ActivityMapper() {
 
 
+		
+		//m2 search action 
+		activityMap.put("/custSearchAction-loadSearch", SecurityConstants.VIEW);
+		activityMap.put("/custSearchAction-search", SecurityConstants.VIEW);
 
 		activityMap.put("/AdminAction-load", SecurityConstants.VIEW);
 
@@ -1099,6 +1103,8 @@ public class ActivityMapper {
 		activityMap.put("/groupCustAction-previewManage",SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-previousManage",SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-update",SecurityConstants.GROUP_EDIT_GROUP);
+		activityMap.put("/groupCustAction-loadSearch",SecurityConstants.VIEW);
+		activityMap.put("/groupCustAction-search",SecurityConstants.VIEW);
 
 //		for your settings new action class
 		activityMap.put("/yourSettings-get", SecurityConstants.VIEW);

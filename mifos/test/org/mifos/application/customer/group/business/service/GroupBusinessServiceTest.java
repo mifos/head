@@ -19,6 +19,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -130,6 +131,15 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 			assertTrue(true);
 		}
 		HibernateUtil.closeSession();
+	}
+	public void testSearch() throws Exception{
+		center = createCenter("Center_Active_test");
+		String groupName = "Group_Active_test";
+		group = createGroup(groupName);
+		QueryResult queryResult = groupBusinessService.search(group.getDisplayName(),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		assertEquals(1,queryResult.get(0,10).size());
 	}
 	
 	private GroupBO createGroup(String groupName){

@@ -68,11 +68,13 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
@@ -880,8 +882,40 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.cancelCreate_success.toString());		
-	}	
+	}
 	
+	public void testLoadSearch()throws Exception{
+		addActionAndMethod(Methods.loadSearch.toString());
+		addCurrentFlowKey();
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.loadSearch_success.toString());
+	}
+	public void testSearch()throws Exception{
+		createGroupWithCenter();
+		addRequestParameter("input", "gr");
+		addActionAndMethod(Methods.search.toString());
+		addCurrentFlowKey();
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.search_success.toString());
+		QueryResult queryResult = (QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request);
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		assertEquals(1,queryResult.get(0,10).size());
+		
+	}	
+	private void addActionAndMethod(String method){
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", method);
+
+	}
+	private void addCurrentFlowKey(){
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter(Constants.CURRENTFLOWKEY,flowKey);
+	}
 	private void createGroupWithCenterAndSetInSession() throws Exception {
 		createGroupWithCenter();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,

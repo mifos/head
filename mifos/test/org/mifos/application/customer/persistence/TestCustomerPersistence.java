@@ -1002,9 +1002,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		createCustomers(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.commitTransaction();
-		QueryResult queryResult = new CustomerPersistence()
-				.searchGroupClient("C", Short.valueOf("3"), Short.valueOf("1"),
-						Short.valueOf("1"));
+		QueryResult queryResult = new CustomerPersistence().searchGroupClient("C",  Short.valueOf("1"));
 		assertNotNull(queryResult);
 		assertEquals(1, queryResult.getSize());
 		assertEquals(1, queryResult.get(0, 10).size());
@@ -1016,8 +1014,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.commitTransaction();
 		QueryResult queryResult = new CustomerPersistence()
-				.searchCustForSavings("C", Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"));
+				.searchCustForSavings("C", Short.valueOf("1"));
 		assertNotNull(queryResult);
 		assertEquals(2, queryResult.getSize());
 		assertEquals(2, queryResult.get(0, 10).size());

@@ -77,6 +77,9 @@
 			<!--Cancel forwards-->
 			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
 			<forward name="cancelEdit_success" path="/groupCustAction.do?method=get" />
+			<forward name="loadSearch_success" path="/pages/application/group/jsp/group_search.jsp" />
+			<forward name="search_success" path="/pages/application/group/jsp/group_search_results.jsp" />
+			<forward name="search_failure" path="/pages/application/group/jsp/group_search.jsp" />
 		</action>
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">

@@ -19,6 +19,7 @@
 				<form-bean name="customerNotesActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerNotesActionForm" />
 				<form-bean name="custApplyAdjustmentActionForm"	type="org.mifos.application.customer.struts.actionforms.CustomerApplyAdjustmentActionForm" />
 				<form-bean name="customerAccountActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerAccountActionForm"></form-bean>
+				<form-bean name="custSearchActionForm" type="org.mifos.application.customer.struts.actionforms.CustSearchActionForm"></form-bean>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException"
@@ -47,6 +48,14 @@
        		<forward name="viewCenterActivity" 	path="/pages/application/center/jsp/viewCenterActivity.jsp"/>
        		<forward name="viewAllClosedAccounts" path="/pages/application/customer/jsp/viewallclosedaccounts.jsp" />
   		</action>
+  		<action path="/custSearchAction" type="org.mifos.application.customer.struts.action.CustSearchAction" 
+  			name="custSearchActionForm"
+       		parameter="method"	
+       		scope="session">
+       		<forward name="loadSearch_success" 	path="/pages/application/customer/jsp/cust_search_account.jsp"/>
+      		<forward name="search_success" 	path="/pages/application/customer/jsp/cust_search_account_results.jsp"/>
+        		
+       	</action>
   		<action path="/custApplyAdjustment" type="org.mifos.application.customer.struts.action.CustomerApplyAdjustmentAction" 
       		name="custApplyAdjustmentActionForm" 
        		parameter="method"	

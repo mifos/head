@@ -35,6 +35,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -108,6 +109,22 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		super.tearDown();
 	}
 
+	public void testSearchGropAndClient() throws Exception {
+		createInitialCustomers();
+		QueryResult queryResult = new CustomerBusinessService().searchGroupClient("cl",  Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1, queryResult.getSize());
+		assertEquals(1, queryResult.get(0, 10).size());
+		
+	}
+	public void testSearchCustForSavings() throws Exception {
+		createInitialCustomers();
+		QueryResult queryResult = new CustomerBusinessService().searchCustForSavings("c",  Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(2, queryResult.getSize());
+		assertEquals(2, queryResult.get(0, 10).size());
+
+	}	
 	public void testFetchLoanCycleCounter() throws Exception {
 		account = getLoanAccount();
 		loanOffering.setLoanCounter(true);
