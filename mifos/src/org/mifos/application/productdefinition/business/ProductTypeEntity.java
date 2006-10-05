@@ -42,7 +42,11 @@ import java.util.Set;
 
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.persistence.LoansPrdPersistence;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.exceptions.PersistenceException;
 
 public class ProductTypeEntity extends BusinessObject {
 
@@ -100,10 +104,23 @@ public class ProductTypeEntity extends BusinessObject {
 		Set<LookUpValueLocaleEntity> lookupSet = getLookUpValue()
 				.getLookUpValueLocales();
 		for (LookUpValueLocaleEntity entity : lookupSet) {
-			if (entity.getLocaleId().equals(userContext.getLocaleId())) {
+			if (entity.getLocaleId().equals(userContext.getLocaleId()))
 				name = entity.getLookUpValue();
-			}
 		}
 		return name;
+	}
+
+	public void update(Short latenessDormancy)
+			throws ProductDefinitionException {
+
+		if (productTypeID.equals(ProductType.LOAN.getValue()))
+			this.latenessDays = latenessDormancy;
+		else
+			this.dormancyDays = latenessDormancy;
+		try {
+			new LoansPrdPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
 	}
 }

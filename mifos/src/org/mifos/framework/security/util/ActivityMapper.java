@@ -603,7 +603,10 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/prdconfigurationaction-update",
 				SecurityConstants.EDIT_PRODUCT_CATEGORIES);
-
+		activityMap.put("/prdconfaction-load",
+				SecurityConstants.VIEW);
+		activityMap.put("/prdconfaction-update",
+				SecurityConstants.EDIT_PRODUCT_CATEGORIES);
 		// loan product categories
 
 		activityMap.put("/loanprdaction-load",

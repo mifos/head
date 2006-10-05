@@ -167,7 +167,7 @@
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td><html-el:link
-								href="prdconfigurationaction.do?method=search&searchNode(search_name)=ProductTypes&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
+								href="prdconfaction.do?method=load">
 								<mifos:mifoslabel name="admin.viewlate/dordef" /></html-el:link></td>
 						</tr>
 					</table>

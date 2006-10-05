@@ -6,8 +6,6 @@ import java.util.List;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -92,6 +90,21 @@ public class SavingsPrdBusinessServiceTest extends MifosTestCase {
 	}
 
 	public void testGetActiveSavingsProductCategoriesFailure() throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			new SavingsPrdBusinessService().getActiveSavingsProductCategories();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+	}
+	
+	public void testRetrieveDormancyDays() throws Exception{
+		Short dormancyDays = new SavingsPrdBusinessService().retrieveDormancyDays();
+		assertEquals(dormancyDays, Short.valueOf("30"));
+	}
+
+	public void testRetrieveDormancyDaysForInvalidConnection() throws Exception{
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			new SavingsPrdBusinessService().getActiveSavingsProductCategories();

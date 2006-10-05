@@ -22,6 +22,8 @@
 		<form-bean name="loginActionForm" type="org.mifos.application.login.struts.actionforms.LoginActionForm"></form-bean>
 		<!-- Product Configuration -->
 		<form-bean name="prdconfigurationactionform" type="org.mifos.application.productdefinition.struts.actionforms.PrdConfigurationActionForm"></form-bean>
+		<!-- Product Configuration -->
+		<form-bean name="prdconfactionform" type="org.mifos.application.productdefinition.struts.actionforms.PrdConfActionForm"></form-bean>
 		<!-- Loan Product -->
 		<form-bean name="loanproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm"></form-bean>
 		<!-- Disburse loan-->
@@ -531,6 +533,14 @@
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/editLatenessDefn.jsp"></forward>
 			<forward name="search_failure" path="/pages/application/productdefinition/jsp/editLatenessDefn.jsp"></forward>
 		</action>
+		
+		<action path="/prdconfaction" name="prdconfactionform" type="org.mifos.application.productdefinition.struts.action.PrdConfAction" input="/prdconfaction.do?method=validate" parameter="method" validate="true">
+			<forward name="update_success" path="/AdminAction.do?method=load"></forward>
+			<forward name="load_success" path="/pages/application/productdefinition/jsp/editLatenessDormancy.jsp"></forward>
+			<forward name="update_failure" path="/pages/application/productdefinition/jsp/editLatenessDormancy.jsp"></forward>
+			<forward name="load_failure" path="/AdminAction.do?method=load"></forward>
+		</action>
+		
 		<!-- Loan Product -->
 		<action path="/loanproductaction" name="loanproductactionform" type="org.mifos.application.productdefinition.struts.action.LoanPrdAction" input="/loanproductaction.do?method=validate" parameter="method" validate="true" scope="session">
 			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>

@@ -105,6 +105,14 @@ public class LoanPrdBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	public Short retrieveLatenessForPrd() throws ServiceException{
+		try{
+			return new LoansPrdPersistence().retrieveLatenessForPrd();
+		}catch (PersistenceException pe){
+			throw new ServiceException(pe);
+		}
+	}
 
 	public List<LoanOfferingBO> getApplicablePrdOfferings(
 			CustomerLevelEntity customerLevel) throws ServiceException {

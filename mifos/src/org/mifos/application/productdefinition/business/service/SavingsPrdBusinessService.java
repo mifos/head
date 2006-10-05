@@ -107,4 +107,12 @@ public class SavingsPrdBusinessService extends BusinessService {
 		}
 
 	}
+	
+	public Short retrieveDormancyDays() throws ServiceException{
+		try{
+			return new SavingsPrdPersistence().retrieveDormancyDays();
+		}catch (PersistenceException pe){
+			throw new ServiceException(pe);
+		}
+	}
 }

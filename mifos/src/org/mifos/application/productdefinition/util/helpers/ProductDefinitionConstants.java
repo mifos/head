@@ -178,6 +178,7 @@ public interface ProductDefinitionConstants {
 	public String ERRORFEEFREQUENCY="errors.feefrequency";
 	public String ERRORMANDAMOUNT="errors.mandAmount";
 	public String INVALIDFIELD="exceptions.application.productDef.invalidfield";
+	public String ERRORMANDATORY = "error.mandatory";
 	
 	//GLcodes
 	public String PRICIPALGLCODE="principal";
@@ -216,5 +217,11 @@ public interface ProductDefinitionConstants {
 	public String ERRORSDEFMINMAXCONFIG="errors.defMinMaxconfig";
 	public String ERRORSMINMAXINTCONFIG="errors.maxminIntRateconfig";
 	public String ERRORSDEFINTCONFIG="errors.defIntRateconfig";
+	
+	//product configuration
+	public String LATENESS_DAYS = "lateness_days";
+	public String DORMANCY_DAYS = "dormancy_days";
+	public String DORMANCYDAYS ="dormancy days";
+	public String LATENESSDAYS = "lateness days";
 }
 

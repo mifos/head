@@ -198,6 +198,29 @@ public class LoanPrdBusinessServiceTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
+	public void testRetrieveLatenessForPrd() throws Exception{
+		try {
+			Short latenessDays = new LoanPrdBusinessService().retrieveLatenessForPrd();
+			assertEquals(latenessDays,Short.valueOf("10"));
+		} catch (ServiceException e) {
+			assertTrue(false);
+		}
+		HibernateUtil.closeSession();
+		
+	}
+	
+	public void testRetrieveLatenessForPrdForInvalidConnection() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			new LoanPrdBusinessService().retrieveLatenessForPrd();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
+		
+	}
+	
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
