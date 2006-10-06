@@ -42,66 +42,75 @@ import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class FinancialTransactionBO extends BusinessObject {
-	
-	protected FinancialTransactionBO (){}
-	
-	public FinancialTransactionBO(FinancialActionBO financialAction,
-			Money postedMoney,GLCodeEntity glcode,Date actionDate,PersonnelBO personnel,Short debitCreditFlag) {
-		this.financialAction=financialAction;
-		this.postedAmount=postedMoney;
-		this.balanceAmount=postedMoney;
-		this.glcode=glcode;
-		this.actionDate=actionDate;
-		this.postedDate=new Date(System.currentTimeMillis());
-		this.postedBy=personnel;
-		this.debitCreditFlag=debitCreditFlag;
+
+	protected FinancialTransactionBO() {
 	}
-	
-	
-	
+
+	public FinancialTransactionBO(FinancialActionBO financialAction,
+			Money postedMoney, GLCodeEntity glcode, Date actionDate,
+			PersonnelBO personnel, Short debitCreditFlag) {
+		this.financialAction = financialAction;
+		this.postedAmount = postedMoney;
+		this.balanceAmount = postedMoney;
+		this.glcode = glcode;
+		this.actionDate = actionDate;
+		this.postedDate = new Date(System.currentTimeMillis());
+		this.postedBy = personnel;
+		this.debitCreditFlag = debitCreditFlag;
+	}
+
 	private Integer trxnId;
+
 	private AccountTrxnEntity accountTrxn;
+
 	private FinancialTransactionBO relatedFinancialTrxn;
+
 	private Money postedMoney;
+
 	private Money balanceMoney;
+
 	private FinancialActionBO financialAction;
+
 	private GLCodeEntity glcode;
+
 	private Date actionDate;
+
 	private Date postedDate;
+
 	private PersonnelBO postedBy;
+
 	private Short accountingUpdated;
+
 	private Money postedAmount;
+
 	private Money balanceAmount;
+
 	private String notes;
+
 	private Short debitCreditFlag;
 
-
-
-	public boolean isDebitEntry(){
+	public boolean isDebitEntry() {
 		return this.debitCreditFlag.equals(FinancialConstants.DEBIT);
 	}
 
-	public boolean isCreditEntry(){
+	public boolean isCreditEntry() {
 		return this.debitCreditFlag.equals(FinancialConstants.CREDIT);
-	}	
+	}
 
 	private void setDebitCreditFlag(Short debitCreditFlag) {
 		this.debitCreditFlag = debitCreditFlag;
 	}
-	
-	public Short getDebitCreditFlag(){
+
+	public Short getDebitCreditFlag() {
 		return debitCreditFlag;
 	}
 
@@ -186,10 +195,6 @@ public class FinancialTransactionBO extends BusinessObject {
 		this.trxnId = trxnId;
 	}
 
-	private Money buildMoney(MifosCurrency currency, double amount) {
-		return new Money(currency, amount);
-	}
-
 	public AccountTrxnEntity getAccountTrxn() {
 		return accountTrxn;
 	}
@@ -206,29 +211,29 @@ public class FinancialTransactionBO extends BusinessObject {
 		this.postedBy = postedBy;
 	}
 
-	public FinancialTransactionBO generateReverseTrxn() throws SystemException,ApplicationException {
+	public FinancialTransactionBO generateReverseTrxn() throws SystemException,
+			ApplicationException {
 		FinancialTransactionBO financialTrxn = new FinancialTransactionBO();
-		//FinancialActionBO financialAction = new FinancialActionBO();
-		//financialAction.setFinancialId(FinancialActionConstants.REVERSAL_ADJUSTMENT);
 		financialTrxn.setPostedAmount(getPostedAmount().negate());
 		financialTrxn.setFinancialAction(getFinancialAction());
 		financialTrxn.setBalanceAmount(getBalanceAmount());
 		financialTrxn.setFinancialAction(getFinancialAction());
 		financialTrxn.setGlcode(getGlcode());
 		financialTrxn.setActionDate(getActionDate());
-		financialTrxn.setPostedDate(DateHelper.getSQLDate(DateHelper.getCurrentDate(getUserContext().getMfiLocale())));
-		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getAccountTrxn().getAccount().getUserContext().getId());
+		financialTrxn.setPostedDate(DateHelper.getSQLDate(DateHelper
+				.getCurrentDate(getUserContext().getMfiLocale())));
+		PersonnelBO personnel = new PersonnelPersistence()
+				.getPersonnel(getAccountTrxn().getAccount().getUserContext()
+						.getId());
 		financialTrxn.setPostedBy(personnel);
-		//TODO replace this with a constant.
+		// TODO replace this with a constant.
 		financialTrxn.setAccountingUpdated(Short.valueOf("1"));
-		if(isDebitEntry()){
+		if (isDebitEntry()) {
 			financialTrxn.setDebitCreditFlag(FinancialConstants.CREDIT);
-		}else if(isCreditEntry()){
+		} else if (isCreditEntry()) {
 			financialTrxn.setDebitCreditFlag(FinancialConstants.DEBIT);
 		}
 		return financialTrxn;
 	}
-
-
 
 }

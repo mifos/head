@@ -236,9 +236,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 	}
 
 	public Money getTotalAmntOverDue() {
-
-		return new Money(Configuration.getInstance().getSystemConfig()
-				.getCurrency(), 0).add(getPrincipalOverDue()).add(
+		return new Money("0").add(getPrincipalOverDue()).add(
 				getInterestOverDue()).add(getFeesOverDue()).add(
 				getPenaltyOverDue());
 	}

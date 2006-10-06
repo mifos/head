@@ -104,8 +104,6 @@ public class SavingsBO extends AccountBO {
 
 	private Set<SavingsActivityEntity> savingsActivityDetails;
 
-	private SavingsPersistence savingsPersistence;
-
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
@@ -781,9 +779,10 @@ public class SavingsBO extends AccountBO {
 					initialBalance = lastTrxnAmt;
 				}
 
-				totalBalance = totalBalance.add(new Money(Configuration
-						.getInstance().getSystemConfig().getCurrency(),
-						initialBalance.getAmountDoubleValue() * days));
+				totalBalance = totalBalance
+						.add(new Money(String.valueOf(initialBalance
+								.getAmountDoubleValue()
+								* days)));
 				initialBalance = lastTrxnAmt;
 				if (adjustedTrxn != null
 						&& getLastPmnt().getPaymentId().equals(
@@ -793,17 +792,12 @@ public class SavingsBO extends AccountBO {
 			}
 		}
 		int days = helper.calculateDays(fromDate, toDate);
-
-		totalBalance = totalBalance.add(new Money(Configuration.getInstance()
-				.getSystemConfig().getCurrency(), initialBalance
+		totalBalance = totalBalance.add(new Money(String.valueOf(initialBalance
 				.getAmountDoubleValue()
-				* days));
+				* days)));
 		noOfDays += days;
-
-		return (noOfDays == 0 ? initialBalance : new Money(Configuration
-				.getInstance().getSystemConfig().getCurrency(), totalBalance
-				.getAmountDoubleValue()
-				/ noOfDays));
+		return (noOfDays == 0 ? initialBalance : new Money(String
+				.valueOf(totalBalance.getAmountDoubleValue() / noOfDays)));
 	}
 
 	private Money getLastTrxnBalance(List<AccountTrxnEntity> accountTrxnList,

@@ -92,9 +92,6 @@ public class AmountFeeBO extends FeeBO {
 				glCodeEntity, isCustomerDefaultFee, feePayment, meeting);
 		validateFeeAmount(amount);
 		this.feeAmount = amount;
-
-		this.rateOrAmount = feeAmount.getAmountDoubleValue();
-		this.rateAmountFlag = RateAmountFlag.AMOUNT.getValue();
 	}
 
 	public Money getFeeAmount() {
@@ -103,9 +100,9 @@ public class AmountFeeBO extends FeeBO {
 
 	public void setFeeAmount(Money feeAmount) {
 		this.feeAmount = feeAmount;
-		this.rateOrAmount = feeAmount.getAmountDoubleValue();
 	}
 
+	@Override
 	public RateAmountFlag getFeeType() {
 		return RateAmountFlag.AMOUNT;
 	}

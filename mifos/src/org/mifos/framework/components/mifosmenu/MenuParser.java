@@ -166,8 +166,8 @@ public class MenuParser {
 		if(methodName!=null && methodName!=""){
 			CustomerConfig customerConfig = Configuration.getInstance().getCustomerConfig(Short.valueOf("1"));
 			try{
-				Method method = customerConfig.getClass().getMethod(methodName,null);
-				return (Boolean)method.invoke(customerConfig,null);
+				Method method = customerConfig.getClass().getMethod(methodName);
+				return (Boolean)method.invoke(customerConfig);
 			}
 			catch(NoSuchMethodException nsme){
 				new MenuParseException(nsme);

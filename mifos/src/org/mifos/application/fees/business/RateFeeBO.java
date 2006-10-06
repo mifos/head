@@ -43,7 +43,6 @@ import org.mifos.application.fees.util.helpers.FeeConstants;
 import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 
 public class RateFeeBO extends FeeBO {
 
@@ -102,8 +101,6 @@ public class RateFeeBO extends FeeBO {
 		validateFields(rate, feeFormula);
 		this.feeFormula = feeFormula;
 		this.rate = rate;
-		this.rateOrAmount = rate;
-		this.rateAmountFlag = RateAmountFlag.RATE.getValue();
 	}
 
 	private void validateFields(Double rate, FeeFormulaEntity feeFormula)
@@ -124,6 +121,7 @@ public class RateFeeBO extends FeeBO {
 		this.rate = rate;
 	}
 
+	@Override
 	public RateAmountFlag getFeeType() {
 		return RateAmountFlag.RATE;
 	}

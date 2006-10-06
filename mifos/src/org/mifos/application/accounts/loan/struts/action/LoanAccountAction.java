@@ -11,12 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -30,7 +27,6 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -235,12 +231,12 @@ public class LoanAccountAction extends AccountAppAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
+		loadFees(loanActionForm, loanActionForm
+				.getPrdOfferingIdValue(), request);
 		LoanOfferingBO loanOffering = getLoanOffering(loanActionForm
 				.getPrdOfferingIdValue(), getUserContext(request).getLocaleId());
 		setDataIntoForm(loanOffering, loanActionForm, request);
-		loadFees(loanActionForm, loanOffering, request);
 		loadMasterData(request);
-
 		SessionUtils.removeAttribute(LoanConstants.LOANOFFERING,request);
 
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
@@ -544,20 +540,24 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private void loadFees(LoanAccountActionForm actionForm,
-			LoanOfferingBO loanOffering, HttpServletRequest request)
-			throws Exception {
+			Short loanOfferingId, HttpServletRequest request) throws Exception {
 		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.FeesService);
+		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.LoanProduct))
+				.getLoanOffering(loanOfferingId);
 		UserContext userContext = getUserContext(request);
 		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
 		List<FeeView> additionalFees = new ArrayList<FeeView>();
 		List<FeeView> defaultFees = new ArrayList<FeeView>();
 		for (FeeBO fee : fees) {
+			FeeView feeView = new FeeView(userContext, fee);
 			if (loanOffering.isFeePresent(fee))
-				defaultFees.add(new FeeView(userContext, fee));
+				defaultFees.add(feeView);
 			else
-				additionalFees.add(new FeeView(userContext, fee));
+				additionalFees.add(feeView);
 		}
 		actionForm.setDefaultFees(defaultFees);
 		SessionUtils.setAttribute(LoanConstants.ADDITIONAL_FEES_LIST,

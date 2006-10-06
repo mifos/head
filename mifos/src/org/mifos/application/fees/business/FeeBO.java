@@ -64,12 +64,6 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public abstract class FeeBO extends BusinessObject {
 
-	@Deprecated
-	protected Double rateOrAmount;
-
-	@Deprecated
-	protected Short rateAmountFlag;
-
 	private final Short feeId;
 
 	private final OfficeBO office;

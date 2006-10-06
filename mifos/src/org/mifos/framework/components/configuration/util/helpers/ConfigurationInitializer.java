@@ -266,8 +266,8 @@ public class ConfigurationInitializer {
 			String key = (String) keyIterator.next();
 			String methodName = "get" + officeConfigConstants.get(key);
 			try {
-				Method method = config.getClass().getMethod(methodName, null);
-				Object invocationResult = method.invoke(config, null);
+				Method method = config.getClass().getMethod(methodName);
+				Object invocationResult = method.invoke(config);
 				if (invocationResult != null)
 					officeConfigMap.put(new Key(config.getOffice()
 							.getOfficeId(), officeConfigConstants.get(key)),

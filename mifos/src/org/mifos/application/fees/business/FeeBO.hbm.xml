@@ -16,12 +16,9 @@
 		<property name="createdBy" column="CREATED_BY" />
 		<property name="updatedDate" column="UPDATED_DATE" />
 		<property name="updatedBy" column="UPDATED_BY" />
-
 		<property name="feeName" column="FEE_NAME" access="field" />
-		<property name="rateOrAmount" column="RATE_OR_AMOUNT" access="field" />
-		<property name="rateAmountFlag" column="RATE_FLAT_FALG" access="field" />
+		<property name="changeType" column="UPDATE_FLAG" access="field" />
 		
-		<property name="changeType"  column="UPDATE_FLAG" access="field"/>
 		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" insert="true" update="false" access="field" />
 		<many-to-one name="categoryType" column="CATEGORY_ID" class="org.mifos.application.fees.business.CategoryTypeEntity" update="false" insert="true" access="field" />
 		<many-to-one name="glCode" column="GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" lazy="true" insert="true" update="false" access="field" />
@@ -51,28 +48,28 @@
 	<query name="retrieveProductFees">
 		<![CDATA[from FeeBO fee where fee.categoryType.id in (5) order by fee.feeName]]>
 	</query>
-	
+
 	<query name="getUpdatedFeesForCustomers">
 		<![CDATA[from FeeBO fee where  fee.changeType in (1,2,3) and fee.categoryType.id in (1,2,3,4)]]>
 	</query>
-	
+
 	<query name="retrieveCustomerFeesByCategoryType">
 		<![CDATA[from FeeBO fee where fee.feeStatus=1 and (fee.categoryType.id=:ALLCUSTOMERS or fee.categoryType.id=:CUSTOMER_CATEGAORY) order by fee.feeName]]>
-	</query>	
+	</query>
 	<query name="getAllApplicableFeesForCustomer">
 		<![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id in (:category1,:category2) 
 		and fees.feeId not in ( select af.fees.feeId from org.mifos.application.accounts.business.AccountFeesEntity af 
 		where af.account.accountId=:accountId and af.fees.feeFrequency.feeFrequencyType.id=:feeFrequencyTypeId and (af.feeStatus=null or af.feeStatus=:active))
 		]]>
-	</query>  
+	</query>
 	<query name="getAllApplicableFeesForLoan">
 		<![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id in (:category) 
 		and fees.feeId not in ( select af.fees.feeId from org.mifos.application.accounts.business.AccountFeesEntity af 
 		where af.account.accountId=:accountId and af.fees.feeFrequency.feeFrequencyType.id=:feeFrequencyTypeId and (af.feeStatus=null or af.feeStatus=:active))
 		]]>
-	</query> 
+	</query>
 	<query name="getAllApplicableFeesForLoanCreation">
 		<![CDATA[from FeeBO as fees where fees.feeStatus.id=:active and fees.categoryType.id =:category]]>
-	</query>  
-	
+	</query>
+
 </hibernate-mapping>

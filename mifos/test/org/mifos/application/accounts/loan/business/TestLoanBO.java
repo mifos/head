@@ -345,7 +345,8 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
@@ -468,7 +469,8 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
@@ -2647,7 +2649,8 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
@@ -2780,7 +2783,8 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
@@ -2930,7 +2934,8 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
@@ -3080,7 +3085,8 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
-
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
@@ -3231,7 +3237,8 @@ public class TestLoanBO extends MifosTestCase {
 						.valueOf("3"), Short.valueOf("1"), Short.valueOf("0"),
 				Short.valueOf("1"), center.getCustomerMeeting().getMeeting(),
 				Short.valueOf("3"));
-
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY,
@@ -3395,7 +3402,8 @@ public class TestLoanBO extends MifosTestCase {
 			disbursementDate = new GregorianCalendar(year, month, day);
 		else
 			disbursementDate = new GregorianCalendar(year, month + 1, day);
-
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
@@ -3543,7 +3551,8 @@ public class TestLoanBO extends MifosTestCase {
 			disbursementDate = new GregorianCalendar(year, month, day);
 		else
 			disbursementDate = new GregorianCalendar(year, month + 1, day);
-
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
