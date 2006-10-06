@@ -3685,7 +3685,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
 		
-		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
+		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
 		meetingDates.remove(0);
 		savings.regenerateFutureInstallments((short) (accountActionDateEntity
 				.getInstallmentId().intValue() + 1));
@@ -3737,7 +3737,7 @@ public class TestSavingsBO extends MifosTestCase {
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
-		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
+		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
 		meetingDates.remove(0);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountState.SAVINGS_ACC_CANCEL);
@@ -4030,7 +4030,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.intValue()
 				+ (short) 1;
 
-		savingsBO.generateMeetingsForNextYear();
+		savingsBO.generateMeetingsForYearAfterNextYear();
 		TestObjectFactory.updateObject(savingsBO);
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.updateObject(group);
@@ -4044,11 +4044,10 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsBO.class, savingsBO.getAccountId());
 
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
-		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
-				.getInstance()));
-		List<Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfNextYear(Calendar.getInstance()).getTime());
+		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfYearAfterNextYear());
+		List<Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfYearAfterNextYear().getTime());
 		Date FirstSavingInstallmetDate = savingsBO.getAccountActionDate(
-				Short.valueOf(installmetId.shortValue())).getActionDate();
+				(short)(installmetId+1)).getActionDate();
 		Calendar calendar2 = Calendar.getInstance();
 		calendar2.setTime(meetingDates.get(0));
 		Calendar calendar3 = Calendar.getInstance();

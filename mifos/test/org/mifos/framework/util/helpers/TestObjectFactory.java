@@ -792,7 +792,7 @@ public class TestObjectFactory {
 	public static List<Date> getAllMeetingDates(MeetingBO meeting) {
 		List<Date> dates = new ArrayList<Date>();
 		try {
-			dates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
+			dates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
 		} catch (MeetingException e) {
 			e.printStackTrace();
 		}

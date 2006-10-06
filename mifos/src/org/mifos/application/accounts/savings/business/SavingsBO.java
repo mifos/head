@@ -908,7 +908,7 @@ public class SavingsBO extends AccountBO {
 		List<Date> depositDates = null;
 		try {
 			depositDates = meeting.getAllDates(DateUtils
-					.getLastDayOfCurrentYear());
+					.getLastDayOfNextYear());
 		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}
@@ -1949,7 +1949,7 @@ public class SavingsBO extends AccountBO {
 			List<Date> meetingDates = null;
 			try {
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
-						.getAllDates(DateUtils.getLastDayOfCurrentYear());
+						.getAllDates(DateUtils.getLastDayOfNextYear());
 			} catch (MeetingException me) {
 				throw new AccountException(me);
 			}
@@ -2067,7 +2067,7 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	public void generateMeetingsForNextYear() throws AccountException {
+	public void generateMeetingsForYearAfterNextYear() throws AccountException {
 		CustomerBO customerBO = getCustomer();
 		if (customerBO.getCustomerMeeting() != null
 				&& customerBO.getCustomerMeeting().getMeeting() != null) {
@@ -2080,8 +2080,7 @@ public class SavingsBO extends AccountBO {
 			calendar.setTimeInMillis(installment.getActionDate().getTime());
 			depositSchedule.setMeetingStartDate(calendar);
 
-			Date endDate = DateUtils.getLastDayOfNextYear(
-					Calendar.getInstance()).getTime();
+			Date endDate = DateUtils.getLastDayOfYearAfterNextYear().getTime();
 			if (customerBO.getCustomerLevel().getId().equals(
 					CustomerConstants.CLIENT_LEVEL_ID)
 					|| (customerBO.getCustomerLevel().getId().equals(

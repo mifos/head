@@ -1114,32 +1114,28 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	protected void regenerateFutureInstallments(Short nextIntallmentId)
+	protected void regenerateFutureInstallments(Short nextInstallmentId)
 			throws AccountException {
-		if (!this.getAccountState().getId().equals(
-				AccountStates.LOANACC_OBLIGATIONSMET)
-				&& !this.getAccountState().getId().equals(
-						AccountStates.LOANACC_WRITTENOFF)
-				&& !this.getAccountState().getId().equals(
-						AccountStates.LOANACC_CANCEL)) {
-
+		if ((!this.getAccountState().getId().equals(
+				AccountState.LOANACC_OBLIGATIONSMET.getValue()))
+				&& (!this.getAccountState().getId().equals(
+						AccountState.LOANACC_WRITTENOFF.getValue()))
+				&& (!this.getAccountState().getId().equals(
+						AccountState.LOANACC_CANCEL.getValue()))) {
 			List<Date> meetingDates = null;
+			int installmentSize = getAccountActionDates().size();
+			int totalInstallmentDatesToBeChanged = installmentSize
+					- nextInstallmentId + 1;
 			try {
-
-				meetingDates = getCustomer()
-						.getCustomerMeeting()
-						.getMeeting()
-						.getAllDates(
-								getApplicableIdsForFutureInstallments().size() + 1);
+				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
+						.getAllDates(totalInstallmentDatesToBeChanged);
 			} catch (MeetingException me) {
 				throw new AccountException(me);
 			}
-			meetingDates.remove(0);
-			int count = 0;
-			List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForFutureInstallments();
-			for (AccountActionDateEntity accountActionDateEntity : accountActionDateList) {
-				accountActionDateEntity.setActionDate(new java.sql.Date(
-						meetingDates.get(count++).getTime()));
+			for (int count = 0; count < meetingDates.size(); count++) {
+				short installmentId = (short) (nextInstallmentId.intValue() + count);
+				getAccountActionDate(installmentId).setActionDate(
+						new java.sql.Date(meetingDates.get(count).getTime()));
 			}
 		}
 	}
@@ -1692,7 +1688,7 @@ public class LoanBO extends AccountBO {
 		try {
 			isValid = this.getCustomer().getCustomerMeeting().getMeeting()
 					.isValidMeetingDate(disbursementDate,
-							DateUtils.getLastDayOfCurrentYear());
+							DateUtils.getLastDayOfNextYear());
 		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}

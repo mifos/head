@@ -412,7 +412,7 @@ public class CustomerAccountBO extends AccountBO {
 			List<Date> meetingDates = null;
 			try {
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
-						.getAllDates(DateUtils.getLastDayOfCurrentYear());
+						.getAllDates(DateUtils.getLastDayOfNextYear());
 			} catch (MeetingException e) {
 				throw new AccountException(e);
 			}
@@ -426,7 +426,7 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 
-	public void generateMeetingsForNextYear() throws AccountException {
+	public void generateMeetingsForYearAfterNextYear() throws AccountException {
 		Short lastInstallmentId = getLastInstallmentId();
 		MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
 		Calendar meetingStartDate = meeting.getMeetingStartDate();
@@ -436,7 +436,7 @@ public class CustomerAccountBO extends AccountBO {
 		List<Date> installmentDates = null;
 		try {
 			installmentDates = meeting.getAllDates(DateUtils
-					.getLastDayOfNextYear(Calendar.getInstance()).getTime());
+					.getLastDayOfYearAfterNextYear().getTime());
 		} catch (MeetingException me) {
 			throw new AccountException(me);
 		}

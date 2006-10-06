@@ -319,14 +319,22 @@ public class AccountBO extends BusinessObject {
 
 	public final void handleChangeInMeetingSchedule() throws AccountException {
 		AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
+		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		short installmentId = 0;
 		if (accountActionDateEntity != null) {
+			if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
+				installmentId = (short) (accountActionDateEntity
+						.getInstallmentId().intValue() + 1);
+			} else {
+				installmentId = (short) (accountActionDateEntity
+						.getInstallmentId().intValue());
+			}
 			MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
 			Calendar meetingStartDate = meeting.getMeetingStartDate();
 			meeting.setMeetingStartDate(DateUtils
 					.getCalendarDate(accountActionDateEntity.getActionDate()
 							.getTime()));
-			regenerateFutureInstallments((short) (accountActionDateEntity
-					.getInstallmentId().intValue() + 1));
+			regenerateFutureInstallments(installmentId);
 			meeting.setMeetingStartDate(meetingStartDate);
 			try {
 				(new AccountPersistence()).createOrUpdate(this);
@@ -825,7 +833,7 @@ public class AccountBO extends BusinessObject {
 						+ installmentToSkip);
 			else
 				dueDates = meeting.getAllDates(DateUtils
-						.getLastDayOfCurrentYear());
+						.getLastDayOfNextYear());
 		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}

@@ -407,7 +407,6 @@ public class TestAccountBO extends TestAccount {
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
-		meetingDates.remove(0);
 		TestObjectFactory.updateObject(center);
 		center.getCustomerAccount().handleChangeInMeetingSchedule();
 		accountBO.handleChangeInMeetingSchedule();
@@ -422,12 +421,12 @@ public class TestAccountBO extends TestAccount {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
 			else if (actionDateEntity.getInstallmentId().equals(
 					Short.valueOf("3")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
 		}
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {

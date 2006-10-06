@@ -457,7 +457,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
-		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
+		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
 		meetingDates.remove(0);
 		center.getCustomerAccount()
 				.regenerateFutureInstallments(
@@ -492,7 +492,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		
-		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfCurrentYear());
+		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
 		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -568,11 +568,11 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getCustomerId());
 		int lastInstallmentId = center.getCustomerAccount()
 				.getAccountActionDates().size();
-		center.getCustomerAccount().generateMeetingsForNextYear();
+		center.getCustomerAccount().generateMeetingsForYearAfterNextYear();
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
 		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
 				.getInstance()));
-		List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfNextYear(Calendar.getInstance()).getTime());
+		List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfYearAfterNextYear().getTime());
 
 		Date date = center.getCustomerAccount().getAccountActionDate(
 				(short) (lastInstallmentId + 1)).getActionDate();

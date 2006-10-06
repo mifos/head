@@ -43,9 +43,9 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 				AccountBO accountBO = accountPersistence.getAccount(accountId);
 				if (accountBO instanceof CustomerAccountBO)
 					((CustomerAccountBO) accountBO)
-							.generateMeetingsForNextYear();
+							.generateMeetingsForYearAfterNextYear();
 				else if (accountBO instanceof SavingsBO)
-					((SavingsBO) accountBO).generateMeetingsForNextYear();
+					((SavingsBO) accountBO).generateMeetingsForYearAfterNextYear();
 
 				HibernateUtil.commitTransaction();
 			} catch (Exception e) {
@@ -60,11 +60,10 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 	}
 
 	private boolean isYearEnd(long timeInMillis) {
-
 		Calendar currentDate = Calendar.getInstance();
 		currentDate.setTimeInMillis(timeInMillis);
 		Calendar lastDayOfyear = Calendar.getInstance();
-		lastDayOfyear.setTime(DateUtils.getLastDayOfYear());
+		lastDayOfyear.setTime(DateUtils.getLastDayOfCurrentYear());
 		return new GregorianCalendar(currentDate.get(Calendar.YEAR),
 				currentDate.get(Calendar.MONTH),
 				currentDate.get(Calendar.DATE), 0, 0, 0)

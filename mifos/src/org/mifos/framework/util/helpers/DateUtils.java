@@ -71,7 +71,7 @@ public class DateUtils {
 		dateCalendar.setTimeInMillis(timeInMills);
 		return dateCalendar;
 	}
-	public static Date getLastDayOfYear(){
+	public static Date getLastDayOfCurrentYear(){
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH,Calendar.DECEMBER);
@@ -90,21 +90,21 @@ public class DateUtils {
 		return cal1;
 	}
 	
-	public static Date getLastDayOfCurrentYear(){
+	public static Date getLastDayOfNextYear(){
 		Calendar cal = GregorianCalendar.getInstance();
 		cal.set(Calendar.MONTH,Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
 		Calendar cal1 = Calendar.getInstance();
-		cal1.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		cal1.set(cal.get(Calendar.YEAR)+1,cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
 		return cal1.getTime();
 	}
 	
-	public static Calendar getLastDayOfNextYear(Calendar cal){
-		cal.roll(Calendar.YEAR,1);
+	public static Calendar getLastDayOfYearAfterNextYear(){
+		Calendar cal = GregorianCalendar.getInstance();
 		cal.set(Calendar.MONTH,Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));
 		Calendar cal1 = Calendar.getInstance();
-		cal1.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		cal1.set(cal.get(Calendar.YEAR)+2,cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
 		return cal1;
 	}
 	
@@ -115,5 +115,14 @@ public class DateUtils {
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
 		currentDateCalendar = new GregorianCalendar(year+1, month, day);
 		return new Date(currentDateCalendar.getTimeInMillis());
+	}
+	
+	public static Calendar getFistDayOfYearAfterNextYear(){
+		Calendar cal = GregorianCalendar.getInstance();
+		cal.set(Calendar.MONTH,Calendar.JANUARY);
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DATE));
+		Calendar cal1 = Calendar.getInstance();
+		cal1.set(cal.get(Calendar.YEAR)+2,cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
+		return cal1;
 	}
 }
