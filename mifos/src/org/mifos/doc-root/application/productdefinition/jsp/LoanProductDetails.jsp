@@ -1,10 +1,10 @@
-<!-- 
+<!--
 
 /**
 
  * LoanProductDetails.jsp    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -12,27 +12,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -191,7 +191,7 @@
 									</tr>
 									<tr>
 										<td height="23" class="fontnormalbold">
-											<span class="fontnormal"> <mifos:mifoslabel name="product.feestypes" bundle="ProductDefUIResources" />: <br> <c:forEach items="${requestScope.BusinessKey.loanOfferingFees}" var="prdOfferingFees">
+											<span class="fontnormal"> <c:forEach items="${requestScope.BusinessKey.loanOfferingFees}" var="prdOfferingFees">
 													<c:out value="${prdOfferingFees.fees.feeName}" />
 													<br>
 												</c:forEach> <br> </span>

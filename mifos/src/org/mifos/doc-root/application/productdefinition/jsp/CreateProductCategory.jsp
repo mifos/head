@@ -1,10 +1,10 @@
-<!-- 
+<!--
 
 /**
 
  * CreateCategory.jsp    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -12,27 +12,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -46,6 +46,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
@@ -58,7 +59,7 @@
 			}
 		//-->
 		</script>
-		<html-el:form action="/productCategoryAction.do?method=createPreview">			
+		<html-el:form action="/productCategoryAction.do?method=createPreview">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -137,8 +138,9 @@
 										bundle="ProductDefUIResources" />:</td>
 									<td width="80%"><mifos:select name="productCategoryActionForm"
 										property="productType" style="width:136px;">
-										<html-el:options property="productTypeID" labelProperty="name"
-											collection="ProductTypeList" />
+										<c:forEach var="ProductTypeList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductTypeList')}" >
+											<html-el:option value="${ProductTypeList.productTypeID}">${ProductTypeList.name}</html-el:option>
+										</c:forEach>
 									</mifos:select></td>
 								</tr>
 								<tr class="fontnormal">
@@ -184,6 +186,7 @@
 					</td>
 				</tr>
 			</table>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

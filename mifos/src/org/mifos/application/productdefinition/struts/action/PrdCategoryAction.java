@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -22,6 +21,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class PrdCategoryAction extends BaseAction {
 
@@ -30,29 +30,33 @@ public class PrdCategoryAction extends BaseAction {
 		return getBusinessService();
 	}
 
+	@TransactionDemarcate (saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		doCleanUp(request.getSession(), form);
+		doCleanUp(request, form);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SessionUtils.setAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
-				getProductTypes(userContext), request.getSession());
+				getProductTypes(userContext), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward createPreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward createPrevious(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
+	@TransactionDemarcate (validateAndResetToken = true)
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -63,46 +67,49 @@ public class PrdCategoryAction extends BaseAction {
 				userContext, getProductType(
 						(List<ProductTypeEntity>) SessionUtils.getAttribute(
 								ProductDefinitionConstants.PRODUCTTYPELIST,
-								request.getSession()), Short
+								request), Short
 								.valueOf(productCategoryActionForm
 										.getProductType())),
 				productCategoryActionForm.getProductCategoryName(),
 				productCategoryActionForm.getProductCategoryDesc());
 		productCategoryBO.save();
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, productCategoryBO,
-				request.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, productCategoryBO, request);
+		productCategoryActionForm.setGlobalPrdCategoryNum(productCategoryBO.getGlobalPrdCategoryNum());
+
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
+	@TransactionDemarcate (saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		doCleanUp(request.getSession(), form);
+		doCleanUp(request, form);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SessionUtils.setAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
-				getProductTypes(userContext), request.getSession());
+				getProductTypes(userContext), request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, getBusinessService()
 				.findByGlobalNum(request.getParameter("globalPrdCategoryNum")),
-				request.getSession());
+				request);
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ProductCategoryBO productCategoryBO = (ProductCategoryBO) SessionUtils
-				.getAttribute(Constants.BUSINESS_KEY, request.getSession());
+				.getAttribute(Constants.BUSINESS_KEY, request);
 		populateForm(form, productCategoryBO);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SessionUtils
 				.setAttribute(ProductDefinitionConstants.PRDCATEGORYSTATUSLIST,
-						getProductCategoryStatusList(userContext), request
-								.getSession());
+						getProductCategoryStatusList(userContext), request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward managePreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -110,6 +117,7 @@ public class PrdCategoryAction extends BaseAction {
 				.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward managePrevious(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -117,26 +125,27 @@ public class PrdCategoryAction extends BaseAction {
 				.toString());
 	}
 
+	@TransactionDemarcate (validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ProductCategoryBO productCategoryBO = (ProductCategoryBO) SessionUtils
-				.getAttribute(Constants.BUSINESS_KEY, request.getSession());
+				.getAttribute(Constants.BUSINESS_KEY, request);
 		PrdCategoryActionForm prdCategoryActionForm = (PrdCategoryActionForm) form;
 		SessionUtils.getAttribute(
-				ProductDefinitionConstants.PRDCATEGORYSTATUSLIST, request
-						.getSession());
+				ProductDefinitionConstants.PRDCATEGORYSTATUSLIST, request);
 		productCategoryBO.updateProductCategory(prdCategoryActionForm
 				.getProductCategoryName(), prdCategoryActionForm
 				.getProductCategoryDesc(), getProductCategoryStatus(
 				(List<PrdCategoryStatusEntity>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.PRDCATEGORYSTATUSLIST,
-						request.getSession()), Short
+						request), Short
 						.valueOf(prdCategoryActionForm
 								.getProductCategoryStatus())));
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
+	@TransactionDemarcate (saveToken = true)
 	public ActionForward getAllCategories(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -144,10 +153,11 @@ public class PrdCategoryAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SessionUtils.setAttribute(
 				ProductDefinitionConstants.PRODUCTCATEGORYLIST,
-				getAllCategories(userContext), request.getSession());
+				getAllCategories(userContext), request);
 		return mapping.findForward(ActionForwards.search_success.toString());
 	}
 
+	@TransactionDemarcate (joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -225,13 +235,14 @@ public class PrdCategoryAction extends BaseAction {
 		return null;
 	}
 
-	private void doCleanUp(HttpSession session, ActionForm form) {
+	private void doCleanUp(HttpServletRequest request, ActionForm form)
+	throws Exception {
 		PrdCategoryActionForm prdCategoryActionForm = (PrdCategoryActionForm) form;
 		prdCategoryActionForm.setProductType(null);
 		prdCategoryActionForm.setProductCategoryName(null);
 		prdCategoryActionForm.setProductCategoryDesc(null);
 		prdCategoryActionForm.setProductCategoryStatus(null);
-		session.removeAttribute(Constants.BUSINESS_KEY);
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 	}
 
 	private void populateForm(ActionForm form,

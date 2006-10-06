@@ -1,10 +1,10 @@
-<!-- 
+<!--
 
 /**
 
  * ManageProductCategory.jsp    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -12,27 +12,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -46,6 +46,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -72,6 +73,8 @@
 		</script>
 
 		<html-el:form action="/productCategoryAction">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+				   var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
@@ -83,7 +86,7 @@
 						<mifos:mifoslabel name="product.viewprdcat"
 							bundle="ProductDefUIResources" />
 					</html-el:link> / <html-el:link href="javascript:fnGet()">
-						<c:out value="${sessionScope.BusinessKey.productCategoryName}" />
+						<c:out value="${BusinessKey.productCategoryName}" />
 					</html-el:link></span></td>
 				</tr>
 			</table>
@@ -93,7 +96,7 @@
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"><c:out
-								value="${sessionScope.BusinessKey.productCategoryName}" /> - </span><mifos:mifoslabel
+								value="${BusinessKey.productCategoryName}" /> - </span><mifos:mifoslabel
 								name="product.buteditcat" bundle="ProductDefUIResources" /></td>
 						</tr>
 						<tr>
@@ -136,8 +139,9 @@
 							<td><mifos:select
 								property="productCategoryStatus"
 								name="productCategoryActionForm" style="width:136px;">
-								<html-el:options collection="PrdCategoryStatusList"
-									property="id" labelProperty="name" />
+								<c:forEach var="PrdCategoryStatusList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PrdCategoryStatusList')}" >
+									<html-el:option value="${PrdCategoryStatusList.id}">${PrdCategoryStatusList.name}</html-el:option>
+								</c:forEach>
 							</mifos:select></td>
 						</tr>
 					</table>
@@ -149,7 +153,7 @@
 					<br>
 					<html-el:hidden property="method" value="managePreview" />
 					<html-el:hidden property="globalPrdCategoryNum"
-							value="${sessionScope.BusinessKey.globalPrdCategoryNum}" /> 
+							value="${BusinessKey.globalPrdCategoryNum}" />
 					<html-el:hidden property="searchNode(search_name)"
 						value="ProductCategories" />
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">
@@ -170,6 +174,7 @@
 					</td>
 				</tr>
 			</table>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>
