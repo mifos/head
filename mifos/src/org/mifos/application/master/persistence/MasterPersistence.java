@@ -175,7 +175,7 @@ public class MasterPersistence extends Persistence {
 			throw new PersistenceException(he);
 		}
 	}
-
+	
 	public List<BusinessActivityEntity> retrieveMasterEntities(
 			String entityName, Short localeId) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -207,6 +207,22 @@ public class MasterPersistence extends Persistence {
 		}
 		return (String) queryResult.get(0);
 	}
+	
+	public List<MasterDataEntity> retrieveMasterDataEntity(String classPath)
+			throws PersistenceException {
+		List<MasterDataEntity> queryResult = null;
+		try {
+			queryResult = HibernateUtil
+			.getSessionTL()
+			.createQuery(
+					"from "+classPath)
+			.list();
+		} catch (Exception he) {
+			throw new PersistenceException(he);
+		}
+		return queryResult;
+	}
+	
 	
 	
 }

@@ -1,0 +1,61 @@
+package org.mifos.framework.components.audit.util.helpers;
+
+import java.util.Locale;
+
+import org.mifos.framework.struts.tags.DateHelper;
+
+public class AuditLogView {
+
+	private String date;
+	private String field;
+	private String oldValue;
+	private String newValue;
+	private String user;
+	private String mfiDate;
+	private Locale mfiLocale;
+	
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getField() {
+		return field;
+	}
+	public void setField(String field) {
+		this.field = field;
+	}
+	public String getMfiDate() {
+		return DateHelper.getUserLocaleDate(getMfiLocale(),getDate().toString());
+	}
+	public void setMfiDate(String mfiDate) {
+		this.mfiDate = mfiDate;
+	}
+	public Locale getMfiLocale() {
+		return mfiLocale;
+	}
+	public void setMfiLocale(Locale mfiLocale) {
+		this.mfiLocale = mfiLocale;
+	}
+	public String getNewValue() {
+		return newValue;
+	}
+	public void setNewValue(String newValue) {
+		this.newValue = newValue;
+	}
+	public String getOldValue() {
+		return oldValue;
+	}
+	public void setOldValue(String oldValue) {
+		this.oldValue = oldValue;
+	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	
+}

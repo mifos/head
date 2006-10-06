@@ -70,6 +70,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
@@ -783,6 +784,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	public void testUpdateSuccess() throws Exception {
+		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
+		auditConfigurtion.createEntityValueMap();
 		String newDisplayName ="group_01";
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createGroupWithCenterAndSetInSession();
@@ -820,6 +823,50 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, new Integer(group.getCustomerId()).intValue());
 		assertTrue(group.isTrained());
 		assertEquals(newDisplayName ,group.getDisplayName());
+	}
+	
+	public void testUpdateSuccessForLogging() throws Exception {
+		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
+		auditConfigurtion.createEntityValueMap();
+		String newDisplayName ="group_01";
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createGroupWithCenterAndSetInSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>)SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("displayName", newDisplayName);
+		int i = 0;
+		for(CustomFieldDefinitionEntity customFieldDef: customFieldDefs){
+			addRequestParameter("customField["+ i +"].fieldId", customFieldDef.getFieldId().toString());
+			addRequestParameter("customField["+ i +"].fieldType", customFieldDef.getFieldType().toString());
+			addRequestParameter("customField["+ i +"].fieldValue", "Req");
+			i++;
+		}
+		addRequestParameter("trained", "1");
+		addRequestParameter("trainedDate", "03/20/2006");
+		addRequestParameter("externalId", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.previewManage_success.toString());
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.update_success.toString());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, new Integer(group.getCustomerId()).intValue());
+		assertTrue(group.isTrained());
+		assertEquals(newDisplayName ,group.getDisplayName());
+		TestObjectFactory.cleanUpChangeLog();
 	}
 	
 	public void testUpdateSuccessWithoutTrained() throws Exception {

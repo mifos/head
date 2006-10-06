@@ -36,6 +36,9 @@ public abstract class Persistence {
 		try {
 			HibernateUtil.startTransaction();
 			session.saveOrUpdate(object);
+			if(HibernateUtil.getInterceptor().isAuditLogRequired()){
+				HibernateUtil.getInterceptor().createChangeValueMap(object);
+			}
 		} catch (Exception he) {
 			throw new PersistenceException(he);
 		}

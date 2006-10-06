@@ -32,7 +32,17 @@ public class TableTag extends BodyTagSupport {
   private String xmlFileName=null;
   private String moduleName=null;
   private String passLocale=null;
+  private String rootName;
   
+  
+  
+  public String getRootName() {
+	return rootName;
+  }
+  
+  public void setRootName(String rootName) {
+	this.rootName = rootName;
+  }
   
   public void setSource(String source){
 	  this.source =source;
@@ -75,9 +85,11 @@ public class TableTag extends BodyTagSupport {
   public int doStartTag() throws JspException {
     try {
 
-      table=TableTagParser.getInstance().parser(ResourceLoader.getURI("org/mifos/application/"+moduleName+"/util/resources/"+xmlFileName).toString());
-     // PropertyResourceBundle bundle =	(PropertyResourceBundle)PropertyResourceBundle.getBundle("org/mifos/application/"+moduleName+"/util/resources/"+getResourcebundleName(moduleName));
-      
+    	if(rootName==null)
+    		table=TableTagParser.getInstance().parser(ResourceLoader.getURI("org/mifos/application/"+moduleName+"/util/resources/"+xmlFileName).toString());
+    	else
+    		table=TableTagParser.getInstance().parser(ResourceLoader.getURI("org/mifos/"+rootName+"/"+moduleName+"/util/resources/"+xmlFileName).toString());
+     
 		
       tableInfo=new StringBuilder();
       if(source==null || scope==null){
@@ -89,6 +101,7 @@ public class TableTag extends BodyTagSupport {
       else if(scope.equalsIgnoreCase("request"))
     	  obj=(List)pageContext.getRequest().getAttribute(source);
      
+    
 
       if(obj==null || obj.isEmpty() ){
        	return super.doStartTag();

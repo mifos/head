@@ -619,6 +619,9 @@
 								href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="Group.viewhistoricaldata"
 								bundle="GroupUIResources"></mifos:mifoslabel> </a> <br>
+								<html-el:link href="groupCustAction.do?method=loadChangeLog&entityType=Group&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+							<mifos:mifoslabel name="Group.viewchangelog"
+								bundle="GroupUIResources"></mifos:mifoslabel> </html-el:link> <br>
 							</span></td>
 						</tr>
 					</table>

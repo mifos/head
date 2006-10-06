@@ -62,6 +62,7 @@ import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.ComponentsTestSuite;
+import org.mifos.framework.components.audit.TestAuditLogSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
 import org.mifos.framework.components.cronjob.CronjobTestSuite;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
@@ -105,6 +106,7 @@ public class ApplicationTestSuite extends MifosTestSuite {
 		suite.addTest(MeetingTestSuite.suite());
 		suite.addTest(LoginTestSuite.suite());
 		suite.addTest(FundTestSuite.suite());
+		suite.addTest(TestAuditLogSuite.suite());
 		return suite;
 	}
 

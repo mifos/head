@@ -21,7 +21,11 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -203,6 +207,9 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testUpdateSuccessForLoan()throws Exception{
+		TestObjectFactory.cleanUpChangeLog();
+		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
+		auditConfigurtion.createEntityValueMap();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting);
@@ -245,6 +252,23 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.loan_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.LOAN.getValue(),accountBO.getAccountId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.LOAN.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(3,auditLogList.get(0).getAuditLogRecords().size());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Explanation")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("Withdraw");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase(" Note")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("Test");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("Active in Good Standing");
+				auditLogRecord.getNewValue().equalsIgnoreCase("Closed- Rescheduled");
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
 	}
 
 	public void testUpdateSuccessForSavings() throws Exception {

@@ -96,6 +96,8 @@
 			<forward name="update_failure" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp" />
 			<forward name="manageprevious_success" path="/pages/application/loan/jsp/editLoanAccount.jsp" />
 			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
+			<forward name="viewLoanChangeLog" path="/pages/application/accounts/loan/jsp/viewChangeLog.jsp" />
+			<forward name="cancelLoanChangeLog" path="/loanAccountAction.do?method=get" />
 
 		</action>
 		<!-- Loan Disbursment-->

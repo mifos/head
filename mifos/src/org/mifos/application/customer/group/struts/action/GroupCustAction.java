@@ -264,13 +264,18 @@ public class GroupCustAction extends CustAction {
 		GroupBO group = (GroupBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
-
 		Date trainedDate = null; 
 		if(actionForm.getTrainedDate()!=null)
 			trainedDate = getDateFromString(actionForm.getTrainedDate(), getUserContext(request)
 				.getPereferedLocale());
-		
-		group.update(getUserContext(request),actionForm.getDisplayName(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),actionForm.getTrainedValue(),trainedDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
+
+		GroupBO groupBO;
+		groupBO = (GroupBO) getGroupBusinessService().findBySystemId(
+				actionForm.getGlobalCustNum());
+		groupBO.setVersionNo(group.getVersionNo());
+		groupBO.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(groupBO);
+		groupBO.update(getUserContext(request),actionForm.getDisplayName(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(),actionForm.getTrainedValue(),trainedDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 	

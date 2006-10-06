@@ -386,6 +386,7 @@ public interface NamedQueryConstants {
 
 	/*custom fields*/
 	public String RETRIEVE_CUSTOM_FIELDS="retrieveCustomFields";
+	public String RETRIEVE_ALL_CUSTOM_FIELDS="retrieveAllCustomFields";
 	
 	public String LISTOFSAVINGSANDLOANACCOUNTS="accounts.listOfAccountsForLoanAccountIdSearch";
 	public String GETPOTENTIAL_DISBDATE = "accounts.getPotentialDisbDate";
@@ -563,5 +564,7 @@ public interface NamedQueryConstants {
 	public String SEARCH_CUSTOMER_FOR_SAVINGS="Customer.customersForSavingsAccount";
 	public String SEARCH_CUSTOMER_FOR_SAVINGS_COUNT_NOLO="Customer.count_customersForSavingsAccountNonLO";
 	public String SEARCH_CUSTOMER_FOR_SAVINGS_NOLO="Customer.customersForSavingsAccountNonLO";
+	
+	public String RETRIEVE_AUDIT_LOG_RECORD="retrieveAuditLogRecords";
 
 }

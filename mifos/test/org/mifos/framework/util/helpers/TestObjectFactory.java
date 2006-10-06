@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -157,6 +158,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
@@ -1979,6 +1981,47 @@ public class TestObjectFactory {
 		fundBO.save();
 		HibernateUtil.commitTransaction();
 		return fundBO;
+	}
+	
+	public static GroupBO createGroupUnderBranch(String customerName,
+			CustomerStatus customerStatus, Short officeId, MeetingBO meeting,
+			Short loanOfficerId,List<CustomFieldView> customFields){
+		Short formedBy = new Short("1");
+		return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, customFields, getFees(), formedBy, officeId, meeting, loanOfficerId);
+	}
+
+
+	public static void cleanUpChangeLog() {
+		Session session = HibernateUtil.getSessionTL();
+		Transaction transaction = HibernateUtil.startTransaction();
+		List<AuditLog> auditLogList = session.createQuery(
+				"from org.mifos.framework.components.audit.business.AuditLog")
+				.list();
+		if (auditLogList != null) {
+			for (Iterator<AuditLog> iter = auditLogList.iterator(); iter
+					.hasNext();) {
+				AuditLog auditLog = iter.next();
+				session.delete(auditLog);
+			}
+		}
+		transaction.commit();
+	}
+	
+	public static List<AuditLog> getChangeLog(Short entityType, Integer entityId) {
+		return HibernateUtil
+				.getSessionTL()
+				.createQuery(
+						"from org.mifos.framework.components.audit.business.AuditLog al where al.entityType="
+								+ entityType + " and al.entityId=" + entityId)
+				.list();
+	}
+	
+	public static void  cleanUp(AuditLog auditLog) {
+		Session session = HibernateUtil.getSessionTL();
+		Transaction transaction = HibernateUtil.startTransaction();
+		session.lock(auditLog, LockMode.NONE);
+		session.delete(auditLog);
+		transaction.commit();
 	}
     
    

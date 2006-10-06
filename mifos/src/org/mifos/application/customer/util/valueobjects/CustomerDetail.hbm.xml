@@ -25,10 +25,5 @@
         <one-to-one name="customer" class="org.mifos.application.customer.util.valueobjects.Customer" cascade="all" />
     </class>
     
-     <!-- This query obtains  thechange log details of the client -->
-        <query name="Client.getClientChangeLog">
-	    	<![CDATA[from org.mifos.framework.components.audit.util.valueobjects.AuditLog auditLog
-	        	 where auditLog.featureId=:customerId and auditLog.featureName=:entityType]]>
-        </query>  
-         
+          
 </hibernate-mapping>

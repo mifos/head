@@ -116,6 +116,7 @@ public class EditStatusAction extends BaseAction {
 				Integer.valueOf(editStatusActionForm.getAccountId()));
 		accountBO.setUserContext(userContext);
 		accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
+		setInitialObjectForAuditLogging(accountBO);
 		Short flagId = null;
 		Short newStatusId = null;
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getFlagId()))

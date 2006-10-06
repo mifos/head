@@ -388,6 +388,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.getGlobalAccountNum());
 		loanBO.setVersionNo(loanBOInSession.getVersionNo());
 		loanBO.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(loanBO);
 		updateBusinessData(loanBO, form, request);
 		loanBO.updateLoan();
 		loanBOInSession = null;

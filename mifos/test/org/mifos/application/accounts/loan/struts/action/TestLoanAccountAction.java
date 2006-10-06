@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
@@ -37,7 +39,11 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -105,6 +111,37 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 		super.tearDown();
+	}
+	
+	public void testLoadChangeLog(){
+		accountBO = getLoanAccount();
+		AuditLog auditLog = new AuditLog(accountBO.getAccountId(), EntityType.LOAN.getValue(), "Mifos", new java.sql.Date(System.currentTimeMillis()),
+				Short.valueOf("3"));
+		Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
+		AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1",
+				"test_1", "new_test_1", auditLog);
+		auditLogRecords.add(auditLogRecord);
+		auditLog.addAuditLogRecords(auditLogRecords);
+		auditLog.save();
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("method", "loadChangeLog");
+		addRequestParameter("entityType", "Loan");
+		addRequestParameter("entityId", accountBO.getAccountId().toString());
+		actionPerform();
+		assertEquals(1,((List)request.getSession().getAttribute(AuditConstants.AUDITLOGRECORDS)).size());
+		verifyForward("viewLoanChangeLog");
+		TestObjectFactory.cleanUpChangeLog();
+	}
+	
+	public void testCancelChangeLog(){
+		accountBO = getLoanAccount();
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("method", "cancelChangeLog");
+		addRequestParameter("entityType", "Loan");
+		actionPerform();
+		verifyForward("cancelLoanChangeLog");
 	}
 
 	public void testGetAllActivity() {

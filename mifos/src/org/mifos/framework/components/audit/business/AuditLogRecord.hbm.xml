@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.framework.components.audit.business.AuditLogRecord" table="CHANGE_LOG_DETAIL">
+  		<id name="squenceNo" column="SEQUENCE_NUM" type="integer" unsaved-value="null" access="field">
+            <generator class="native"/>
+        </id>
+  		<property name="fieldName" column="FIELD_NAME" type="string" access="field"/>
+        <property name="oldValue" column="OLD_VALUE" type="string" access="field"/>
+        <property name="newValue" column="NEW_VALUE" type="string" access="field"/>
+        <many-to-one  name="auditLog" column="CHANGE_LOG_ID" class="org.mifos.framework.components.audit.business.AuditLog"  access="field"/>
+      
+    </class>
+    
+</hibernate-mapping>

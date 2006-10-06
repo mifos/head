@@ -404,6 +404,9 @@
 							<html-el:link href="loanAccountAction.do?method=viewStatusHistory&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="loan.view_status_history" />
 							</html-el:link><br>
+								<html-el:link href="loanAccountAction.do?method=loadChangeLog&entityType=Loan&entityId=${BusinessKey.accountId}&currentFlowKey=${requestScope.currentFlowKey}">
+								<mifos:mifoslabel name="loan.view_change_log" />
+							</html-el:link><br>
 							<html-el:link href="accountAppAction.do?method=getTrxnHistory&input=LoanDetails&globalAccountNum=${BusinessKey.globalAccountNum}&accountId=${BusinessKey.accountId}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
                     	<mifos:mifoslabel name="Center.TransactionHistory" />
                     	</html-el:link>

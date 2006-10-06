@@ -50,7 +50,7 @@ public interface AuditConstants {
   public static final String TRANSACTIONEND="transactionEnd";
   
   //Columns that should not be displayed
-  public static final String VERSIONNO="version";
+  public static final String VERSIONNO="versionno";
   public static final String CREATEDBY="createdby";
   public static final String UPDATEDBY="updatedby";
   public static final String CREATEDDATE="createddate";
@@ -69,6 +69,14 @@ public interface AuditConstants {
   public static final String PERSONNEL="Personnel";
   public static final String CENTER="Center";
   public static final String CLIENT="Client";
+  
+  public static final String AUDITLOGRECORDS="auditLogRecords";
+  public static final String ENTITY_TYPE="entityType";
+  public static final String ENTITY_ID="entityId";
+  public static final String VIEW="view";
+  public static final String CHANGE_LOG="ChangeLog";
+  public static final String CANCEL="cancel";
+  
   
   
  

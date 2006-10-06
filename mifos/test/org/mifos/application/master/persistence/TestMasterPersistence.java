@@ -3,6 +3,9 @@ package org.mifos.application.master.persistence;
 import java.util.List;
 
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
+import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
@@ -59,4 +62,20 @@ public class TestMasterPersistence extends MifosTestCase {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		assertEquals("Partial Application",masterPersistence.retrieveMasterEntities(1,Short.valueOf("1")));
 	}
+	
+	public void testRetrieveMasterDataEntity() throws Exception {
+		MasterPersistence masterPersistence = new MasterPersistence();
+		List<MasterDataEntity> masterDataList = masterPersistence
+				.retrieveMasterDataEntity("org.mifos.application.accounts.business.AccountStateEntity");
+		assertEquals(18, masterDataList.size());
+		for (MasterDataEntity masterDataEntity : masterDataList) {
+			for (LookUpValueLocaleEntity lookUpValueLocaleEntity : masterDataEntity
+					.getLookUpValue().getLookUpValueLocales()) {
+				assertEquals(Short.valueOf("1"), lookUpValueLocaleEntity
+						.getLocaleId());
+			}
+		}
+	}
+	
+	
 }

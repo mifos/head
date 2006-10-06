@@ -43,7 +43,7 @@ public abstract class MasterDataEntity extends PersistentObject {
 		this.id = id;
 	}
 	
-	protected LookUpValueEntity getLookUpValue() {
+	public LookUpValueEntity getLookUpValue() {
 		return lookUpValue;
 	}
 	

@@ -5,12 +5,10 @@ package org.mifos.framework.components.audit.util.helpers;
 
 public class EntityName {
 	
-	String name=null;
+	String name;
 	
-	ClassPath classPath=null;
+	ClassPath classPath;
 	
-	PkColumn pkColumn=null;
-
 	public ClassPath getClassPath() {
 		return classPath;
 	}
@@ -27,14 +25,5 @@ public class EntityName {
 		this.name = name;
 	}
 
-	public PkColumn getPkColumn() {
-		return pkColumn;
-	}
-
-	public void setPkColumn(PkColumn pkColumn) {
-		this.pkColumn = pkColumn;
-	}
-	
-	
 
 }

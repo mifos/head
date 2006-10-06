@@ -40,7 +40,6 @@ package org.mifos.framework.components.audit.util.helpers;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -49,141 +48,47 @@ import org.hibernate.EntityMode;
 import org.hibernate.Interceptor;
 import org.hibernate.Transaction;
 import org.hibernate.type.Type;
-import org.mifos.framework.components.audit.dao.AuditLogDAO;
-import org.mifos.framework.components.audit.util.valueobjects.AuditLog;
-import org.mifos.framework.components.audit.util.valueobjects.AuditLogRecord;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.struts.plugin.helper.EntityMasterData;
+import org.mifos.framework.security.util.UserContext;
 
 public class AuditInterceptor implements Interceptor {
 
-	private LogInfo logInfo = null;
-	private LogInfo[] logInfos=null; 
-	private AuditLog auditLog = null;
-	private Collection<AuditLogRecord> auditLogRecords = null;
-	private InterceptHelper interceptHelper=null;
-	private Integer DirtyCount=0;
-	private Integer FinalCount=0;
-	private MifosLogger logger =null;
+	private AuditLog auditLog;
+	private InterceptHelper interceptHelper;
+	private MifosLogger logger;
+	private UserContext userContext;
 
 
 	public AuditInterceptor() {
-		logger = MifosLogManager.getLogger(LoggerConstants.AUDITLOGGER);	
+		logger = MifosLogManager.getLogger(LoggerConstants.AUDITLOGGER);
+		interceptHelper = new InterceptHelper();
 	}
 
-	public AuditInterceptor(LogInfo logInfo) {
-		this.logInfo = logInfo;
-		logger = MifosLogManager.getLogger(LoggerConstants.AUDITLOGGER);
+	public  void createInitialValueMap(Object object){
+		userContext=((BusinessObject)object).getUserContext();
+		interceptHelper.hibernateMeta(object,AuditConstants.TRANSACTIONBEGIN);
 	}
 	
+	public void createChangeValueMap(Object object){
+		logger.debug("createChangeValueMap  enity name : "+interceptHelper.getEntityName());
+		logger.debug("createChangeValueMap class: "+object.getClass().getName());
+		if(interceptHelper.getEntityName().equals(AuditConfigurtion.getEntityToClassPath(object.getClass().getName())))
+			interceptHelper.hibernateMeta(object,AuditConstants.TRANSACTIONEND);
+	}
 	
-	public AuditInterceptor(LogInfo[] logInfo) {
-		this.logInfos = logInfo;
-		logger = MifosLogManager.getLogger(LoggerConstants.AUDITLOGGER);
+	public boolean isAuditLogRequired(){
+		if(interceptHelper.isInitialValueMapEmpty())
+			return false;
+		return true;
 	}
-
-	public boolean onLoad(Object arg0, Serializable arg1, Object[] arg2,
-			String[] arg3, Type[] arg4) {
-		return false;
-	}
-
-	public void afterTransactionBegin(Transaction tx) {
-	}
-
-	public boolean onFlushDirty(Object entity, Serializable id,
-			Object[] currentState, Object[] previousState,
-			String[] propertyNames, Type[] types) {
-		return false;
-	}
-
-	public AuditLog  createAuditLog(Collection<AuditLogRecord> auditLogRecord,LogInfo logInfo) {
-		auditLog.setFeatureId(new Integer(logInfo.getEntityId().toString()));
-		auditLog.setFeatureName(new Short(EntityMasterData.entityMap.get(
-				logInfo.getEntityType()).toString()));
-		auditLog.setUpdatedDate(new Date(System.currentTimeMillis()));
-		auditLog.setUserName(logInfo.getContext().getUserContext().getId());
-		auditLog.setActualName(logInfo.getContext().getUserContext().getName());
-		auditLog.setAuditLogRecords(auditLogRecords);
-		return auditLog; 
-	}
-
-
-	protected Collection<AuditLogRecord> createAuditLogRecord(LogInfo logInfo) {
-		AuditLogRecord auditLogRecord = null;
-		auditLogRecords = new HashSet<AuditLogRecord>();
-		Set set=logInfo.getPropertyNames().keySet();
-		Iterator iterator=set.iterator();
-		Object key=null;
-		while(iterator.hasNext()){
-			key=iterator.next();
-			if((key.toString()).toLowerCase().contains(AuditConstants.VERSIONNO)
-					|| (key.toString()).toLowerCase().contains(AuditConstants.CREATEDBY)
-					|| (key.toString()).toLowerCase().contains(AuditConstants.CREATEDDATE)
-					||(key.toString()).toLowerCase().contains(AuditConstants.UPDATEDBY)
-					||(key.toString()).toLowerCase().contains(AuditConstants.UPDATEDDATE)
-					||(key.toString()).toLowerCase().contains(AuditConstants.LOOKUPID)){
-				continue;
-			}
-
-			logger.debug("Key: "+key);
-			if (logInfo.getInitialValues().get(key)  != null 
-					&& !logInfo.getInitialValues().get(key).toString().trim().equals("")
-					&& logInfo.getChangedValues().get(key) == null 
-					&& !logInfo.getPropertyNames().get(key).toString().equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY) ) {
-				auditLogRecord = new AuditLogRecord();
-				auditLogRecord.setFieldName(logInfo.getPropertyNames().get(key).toString());
-				auditLogRecord.setNewValue("-");
-				auditLogRecord.setOldValue(removeComma(logInfo.getInitialValues().get(key).toString()));
-				auditLogRecord.setAuditLog(auditLog);
-				addToAuditLogRecord(auditLogRecord);
-			} else if (logInfo.getInitialValues().get(key) == null
-					&& logInfo.getChangedValues().get(key) != null
-					&& !logInfo.getChangedValues().get(key).toString().equals("")
-					&& !logInfo.getPropertyNames().get(key).toString().equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY)) {
-				auditLogRecord = new AuditLogRecord();
-				auditLogRecord.setFieldName(logInfo.getPropertyNames().get(key).toString());
-				auditLogRecord.setNewValue(removeComma(logInfo.getChangedValues().get(key).toString()));
-				auditLogRecord.setOldValue("-");
-				auditLogRecord.setAuditLog(auditLog);
-				addToAuditLogRecord(auditLogRecord);
-			} else if (logInfo.getChangedValues().get(key) != null
-					&& logInfo.getInitialValues().get(key) != null
-					&& !(logInfo.getChangedValues().get(key).toString()).equals(logInfo.getInitialValues().get(key).toString())
-					&& (compareSet(logInfo.getInitialValues().get(key).toString(),logInfo.getChangedValues().get(key).toString())==false) 
-					&& !logInfo.getPropertyNames().get(key).toString().equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY)) {
-				auditLogRecord = new AuditLogRecord();
-				auditLogRecord.setFieldName(logInfo.getPropertyNames().get(key).toString());
-				if(logInfo.getChangedValues().get(key).toString().trim().equals("")){
-					auditLogRecord.setNewValue("-");
-				}else{
-					auditLogRecord.setNewValue(removeComma(logInfo.getChangedValues().get(key).toString()));
-				}
-				if(logInfo.getInitialValues().get(key).toString().trim().equals("")){
-					auditLogRecord.setOldValue("-");
-				}else{
-					auditLogRecord.setOldValue(removeComma(logInfo.getInitialValues().get(key).toString()));
-				}
-				auditLogRecord.setAuditLog(auditLog);
-				addToAuditLogRecord(auditLogRecord);
-			}
-		}
-		return auditLogRecords; 
-	}
-
-
-	protected void addToAuditLogRecord(AuditLogRecord auditLogRecord) {
-		auditLogRecords.add(auditLogRecord);
-	}
-
+	
 	public void beforeTransactionCompletion(Transaction tx) {
-	}
-
-	protected Collection createAuditLogRecord(int[] indexOfChangedProperties,
-			Object[] currentState, Object[] previousState,
-			String[] propertyNames) {
-		return null;
 	}
 
 	public boolean onSave(Object arg0, Serializable arg1, Object[] arg2,
@@ -223,41 +128,101 @@ public class AuditInterceptor implements Interceptor {
 	public Object getEntity(String arg0, Serializable arg1) {
 		return null;
 	}
+		
+	public boolean onLoad(Object arg0, Serializable arg1, Object[] arg2,
+			String[] arg3, Type[] arg4) {
+		return false;
+	}
 
+	public void afterTransactionBegin(Transaction tx) {
+	}
+
+	public boolean onFlushDirty(Object entity, Serializable id,
+			Object[] currentState, Object[] previousState,
+			String[] propertyNames, Type[] types) {
+		return false;
+	}
+	
 	public void afterTransactionCompletion(Transaction tx) {
-		if(tx==null){
-			if(logInfo!=null && logInfos==null){
-				interceptHelper=new InterceptHelper(); ;
-				logInfo.setChangedValues(interceptHelper.hibernateMeta(logInfo,AuditConstants.TRANSACTIONEND));
-				auditLog=new AuditLog(); 
-				Collection<AuditLogRecord> auditLogRecords=createAuditLogRecord(logInfo);
-				if (!auditLogRecords.isEmpty()) {
-					logInfo.setInitialValues(null);
-					logInfo.setChangedValues(null);
-					logInfo.setPropertyNames(null);
-					AuditLogDAO auditLogDao = new AuditLogDAO();
-					auditLogDao.createAuditLog(createAuditLog(auditLogRecords,logInfo));
-				}
-			}else if(logInfos!=null && logInfo==null){
-				for(int i=0;i<logInfos.length;i++){
-					interceptHelper=new InterceptHelper(); 
-					logInfos[i].setChangedValues(interceptHelper.hibernateMeta(logInfos[i],AuditConstants.TRANSACTIONEND));
-					auditLog=new AuditLog();
-					Collection<AuditLogRecord> auditLogRecords=createAuditLogRecord(logInfos[i]);
-					if (!auditLogRecords.isEmpty()) {
-						logInfos[i].setInitialValues(null);
-						logInfos[i].setChangedValues(null);
-						logInfos[i].setPropertyNames(null);
-						AuditLogDAO auditLogDao = new AuditLogDAO();
-						auditLogDao.createAuditLog(createAuditLog(auditLogRecords,logInfos[i]));
-					}
-				}
+		if (tx == null && ((interceptHelper.getInitialValueMap() != null
+				&& interceptHelper.getInitialValueMap().size() > 0) || 
+				(interceptHelper.getChangeValueMap() != null
+						&& interceptHelper.getChangeValueMap().size() > 0))) {
+			logger.debug("After transaction completion");
+			auditLog = new AuditLog(interceptHelper.getEntityId(), EntityType
+					.getEntityValue(interceptHelper.getEntityName().toUpperCase()),
+					userContext.getName(),
+					new Date(System.currentTimeMillis()), userContext.getId());
+			Set<AuditLogRecord> auditLogRecords = createAuditLogRecord();
+			auditLog.addAuditLogRecords(auditLogRecords);
+			if (!auditLogRecords.isEmpty()) {
+				auditLog.save();
 			}
 		}
 	}
-
 	
-	public boolean compareSet(String initialString,String changeString){
+	private Set<AuditLogRecord> createAuditLogRecord() {
+		Set<AuditLogRecord> auditLogRecords=new HashSet<AuditLogRecord>();
+		Set set=interceptHelper.getPropertyNames().keySet();
+		Iterator iterator=set.iterator();
+		while(iterator.hasNext()){
+			AuditLogRecord auditLogRecord=null;
+			Object key=iterator.next();
+			if((key.toString()).toLowerCase().contains(AuditConstants.VERSIONNO)
+					|| (key.toString()).toLowerCase().contains(AuditConstants.CREATEDBY)
+					|| (key.toString()).toLowerCase().contains(AuditConstants.CREATEDDATE)
+					||(key.toString()).toLowerCase().contains(AuditConstants.UPDATEDBY)
+					||(key.toString()).toLowerCase().contains(AuditConstants.UPDATEDDATE)
+					||(key.toString()).toLowerCase().contains(AuditConstants.LOOKUPID)){
+				continue;
+			}
+			logger.debug("Key: "+key);
+			logger.debug("Column Name : " +interceptHelper.getPropertyName(key));
+			logger.debug("Initial Value : " + interceptHelper.getInitialValue(key));
+			logger.debug("New  Value : " + interceptHelper.getChangeValue(key));
+			if (interceptHelper.getInitialValue(key)  != null 
+					&& !interceptHelper.getInitialValue(key).toString().trim().equals("")
+					&& interceptHelper.getChangeValue(key) == null 
+					&& !interceptHelper.getPropertyName(key).toString().equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY) ) {
+				auditLogRecord = new AuditLogRecord(interceptHelper
+						.getPropertyName(key).toString(),removeComma(interceptHelper
+						.getInitialValue(key).toString()), "-", auditLog);
+				auditLogRecords.add(auditLogRecord);
+			} else if (interceptHelper.getInitialValue(key) == null
+					&& interceptHelper.getChangeValue(key) != null
+					&& !interceptHelper.getChangeValue(key).toString().equals("")
+					&& !interceptHelper.getPropertyName(key).toString().equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY)) {
+				auditLogRecord = new AuditLogRecord(interceptHelper
+						.getPropertyName(key).toString(), "-",
+						removeComma(interceptHelper.getChangeValue(key)
+								.toString()), auditLog);
+				auditLogRecords.add(auditLogRecord);
+			} else if (interceptHelper.getChangeValue(key) != null
+					&& interceptHelper.getInitialValue(key) != null
+					&& !(interceptHelper.getChangeValue(key).toString()).equals(interceptHelper.getInitialValue(key).toString())
+					&& (compareSet(interceptHelper.getInitialValue(key).toString(),interceptHelper.getChangeValue(key).toString())==false) 
+					&& !interceptHelper.getPropertyName(key).toString().equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY)) {
+				String newValue=null;
+				if(interceptHelper.getChangeValue(key).toString().trim().equals("")){
+					newValue="-";
+				}else{
+					newValue=removeComma(interceptHelper.getChangeValue(key).toString());
+				}
+				String oldValue=null;
+				if(interceptHelper.getInitialValue(key).toString().trim().equals("")){
+					oldValue="-";
+				}else{
+					oldValue=removeComma(interceptHelper.getInitialValue(key).toString());
+				}
+				auditLogRecord=new AuditLogRecord(interceptHelper.getPropertyName(key).toString(),oldValue,newValue,auditLog);
+				auditLogRecords.add(auditLogRecord);
+			}
+		}
+		return auditLogRecords;
+	}
+	
+
+	private boolean compareSet(String initialString,String changeString){
 		if(initialString.trim().startsWith(",")){
 			initialString=initialString.substring(1,initialString.length()); 
 		}
@@ -307,5 +272,5 @@ public class AuditInterceptor implements Interceptor {
 		return string;
 	}
 	
-	
+
 }

@@ -21,10 +21,13 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
+import org.mifos.framework.components.audit.business.service.AuditBusinessService;
+import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -295,6 +298,11 @@ public abstract class BaseAction extends DispatchAction {
 		return date;
 	}
 	
+	protected void setInitialObjectForAuditLogging(Object object){
+		HibernateUtil.getSessionTL();
+		HibernateUtil.getInterceptor().createInitialValueMap(object);
+	}
+	
 	private ActionForward logout(ActionMapping mapping, HttpServletRequest request) throws ApplicationException {
 		request.getSession(false).invalidate();
 		ActionErrors error = new ActionErrors();
@@ -302,4 +310,23 @@ public abstract class BaseAction extends DispatchAction {
 		request.setAttribute(Globals.ERROR_KEY, error);
 		return mapping.findForward(ActionForwards.load_main_page.toString());
 	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward loadChangeLog(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		Short entityType = EntityType.getEntityValue(request.getParameter(AuditConstants.ENTITY_TYPE).toUpperCase());
+		Integer entityId = Integer.valueOf(request.getParameter(AuditConstants.ENTITY_ID));
+		AuditBusinessService auditBusinessService = (AuditBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.AuditLog);
+		request.getSession().setAttribute(AuditConstants.AUDITLOGRECORDS,auditBusinessService.getAuditLogRecords(entityType,entityId));
+		return mapping.findForward(AuditConstants.VIEW+request.getParameter(AuditConstants.ENTITY_TYPE)+AuditConstants.CHANGE_LOG);
+	}
+	
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelChangeLog(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(AuditConstants.CANCEL+request.getParameter(AuditConstants.ENTITY_TYPE)+AuditConstants.CHANGE_LOG);
+	}
+
 }

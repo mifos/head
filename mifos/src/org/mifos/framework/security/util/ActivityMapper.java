@@ -721,6 +721,10 @@ public class ActivityMapper {
 		activityMap.put("/loanAccountAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-create", SecurityConstants.VIEW);
+		
+		activityMap.put("/loanAccountAction-loadChangeLog", SecurityConstants.VIEW);
+		activityMap.put("/loanAccountAction-cancelChangeLog", SecurityConstants.VIEW);
+		
 		// mapping for account status::TO BE REMOVED
 		activityMap.put("/LoanStatusAction-load", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-preview", SecurityConstants.VIEW);
@@ -1081,6 +1085,8 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-showPicture",
 				SecurityConstants.VIEW);
+		
+		
 
 
 		activityMap.put("/ChangeAccountStatus-load", SecurityConstants.CAN_APPROVE_LOANS_IN_BULK);
@@ -1105,6 +1111,10 @@ public class ActivityMapper {
 		activityMap.put("/groupCustAction-update",SecurityConstants.GROUP_EDIT_GROUP);
 		activityMap.put("/groupCustAction-loadSearch",SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-search",SecurityConstants.VIEW);
+
+		activityMap.put("/groupCustAction-loadChangeLog", SecurityConstants.VIEW);
+		activityMap.put("/groupCustAction-cancelChangeLog", SecurityConstants.VIEW);
+		
 
 //		for your settings new action class
 		activityMap.put("/yourSettings-get", SecurityConstants.VIEW);

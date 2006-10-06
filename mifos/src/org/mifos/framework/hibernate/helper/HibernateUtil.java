@@ -37,22 +37,23 @@
  */
 package org.mifos.framework.hibernate.helper;
 
-import org.hibernate.*;
-
-import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.HibernateProcessException;
-import org.mifos.framework.components.audit.util.helpers.AuditInterceptor; 
-import org.mifos.framework.components.audit.util.helpers.LogInfo;
+import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 
 public class HibernateUtil {
 
 	private static final SessionFactory sessionFactory;
 	
 	private static final ThreadLocal<SessionHolder> threadLocal = new ThreadLocal<SessionHolder>();
-
+	
 	static {
 		try {
 			sessionFactory = HibernateSessionFactory.getSessionFactory();
@@ -109,57 +110,15 @@ public class HibernateUtil {
 		return sessionFactory;
 	}
 
-	/** 
-	   *   Method returns a hibernate session object which it obtains from SessionFactory.  
-	   *   It also registers the interceptor with the session and puts the interceptor in the 
-	   *   threadLocal variable so that a reference to interceptor can be obtained later.
-	   */
-	public static Session getSessionWithInterceptor(LogInfo info) throws HibernateProcessException
-	{  
-			Session session = null;
-			try
-			{
-				info.setInitialValueMap(); 
-				Interceptor interceptor=new AuditInterceptor(info); 
-				session = sessionFactory.openSession(interceptor);
-				return session;
-			}catch(HibernateException e)
-			{
-				throw new HibernateProcessException(HibernateConstants.FAILED_OPENINGSESSION,e);
-			}
-	  }
-
-	/** 
-	   *  
-	   *   Method returns a hibernate session object which it obtains from SessionFactory.  
-	   *   It also registers the interceptor with the session and puts the interceptor in the 
-	   *   threadLocal variable so that a reference to interceptor can be obtained later.
-	   *   @return Session
-	   *   @throws HibernateProcessException
-	   *  
-	   */
-	public static Session getSessionWithInterceptor(LogInfo[] info) throws HibernateProcessException
-	{  
-			Session session = null;
-			try
-			{
-				for(int i=0;i<info.length;i++){
-					info[i].setInitialValueMap();
-				}
-				Interceptor interceptor=new AuditInterceptor(info); 
-				session = sessionFactory.openSession(interceptor);
-				return session;
-			}catch(HibernateException e)
-			{
-				throw new HibernateProcessException(HibernateConstants.FAILED_OPENINGSESSION,e);
-			}
-	  }
-
+	
 	public static Session getSessionTL() {
 		try {
 			if (threadLocal.get() == null) {
+				AuditInterceptor auditInterceptor = new AuditInterceptor();
+				SessionHolder sessionHolder = new SessionHolder(sessionFactory.openSession(auditInterceptor));
+				sessionHolder.setInterceptor(auditInterceptor);
 				threadLocal
-						.set(new SessionHolder(sessionFactory.openSession()));
+						.set(sessionHolder);
 			}
 		} catch (HibernateException he) {
 			throw new ConnectionNotFoundException(he);
@@ -167,6 +126,11 @@ public class HibernateUtil {
 		return threadLocal.get().getSession();
 
 	}
+	
+	public static AuditInterceptor getInterceptor(){
+		return getSessionHolder().getInterceptor();
+	}
+	
 
 	public static Transaction startTransaction() {
 		Transaction transaction = getSessionHolder().getTransaction();
@@ -191,8 +155,10 @@ public class HibernateUtil {
 			Session s = sessionHolder.getSession();
 			s.close();
 			s=null;
+			getSessionHolder().setInterceptor(null);
 			threadLocal.set(null);
 		}
+		
 	}
 	public static void closeandFlushSession() {
 		SessionHolder sessionHolder = getSessionHolder();
@@ -201,8 +167,10 @@ public class HibernateUtil {
 			s.flush();
 			s.close();
 			s=null;
+			getSessionHolder().setInterceptor(null);
 			threadLocal.set(null);
 		}
+		
 	}
 	private static SessionHolder getSessionHolder() {
 		if (null == threadLocal.get()) {
@@ -225,6 +193,7 @@ public class HibernateUtil {
 			getTransaction().commit();
 			getSessionHolder().setTranasction(null);
 		}
+		
 	}
 
 	public static void rollbackTransaction() {
@@ -232,6 +201,7 @@ public class HibernateUtil {
 			getTransaction().rollback();
 			getSessionHolder().setTranasction(null);
 		}
+		
 	}
 
 }

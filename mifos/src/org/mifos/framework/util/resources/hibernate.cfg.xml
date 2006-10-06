@@ -127,8 +127,8 @@
 	
 	<!-- Audit Log -->
 	<mapping resource="org/mifos/framework/struts/plugin/valueObjects/EntityMaster.hbm.xml" />
-	<mapping resource="org/mifos/framework/components/audit/util/valueobjects/AuditLog.hbm.xml" />
-	<mapping resource="org/mifos/framework/components/audit/util/valueobjects/AuditLogRecord.hbm.xml" />
+	<mapping resource="org/mifos/framework/components/audit/business/AuditLog.hbm.xml" />
+	<mapping resource="org/mifos/framework/components/audit/business/AuditLogRecord.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/client/util/valueobjects/CustomerPicture.hbm.xml" />
 
 	<!-- Cron Jobs -->

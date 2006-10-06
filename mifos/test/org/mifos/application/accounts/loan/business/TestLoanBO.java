@@ -51,7 +51,12 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.persistence.AuditPersistence;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
@@ -102,6 +107,50 @@ public class TestLoanBO extends MifosTestCase {
 
 		HibernateUtil.closeSession();
 		super.tearDown();
+	}
+	
+	public void testUpdateLoanForLogging()
+			throws ApplicationException, SystemException {
+		AuditConfigurtion auditConfigurtion=new AuditConfigurtion();
+		auditConfigurtion.createEntityValueMap();
+		Date startDate = new Date(System.currentTimeMillis());
+		Date newDate = incrementCurrentDate(14);
+		accountBO = getLoanAccount();
+		accountBO.setUserContext(TestObjectFactory.getUserContext());
+		HibernateUtil.getInterceptor().createInitialValueMap(accountBO);
+
+		((LoanBO) accountBO).setDisbursementDate(newDate);
+		((LoanBO) accountBO).setCollateralNote("Added note");
+		((LoanBO) accountBO).setInterestDeductedAtDisbursement(false);
+		((LoanBO) accountBO).setGracePeriodDuration(Short.valueOf("2"));
+		((LoanBO) accountBO).setBusinessActivityId(Integer.valueOf("2"));
+
+		((LoanBO) accountBO).updateLoan();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.LOAN.getValue(),accountBO.getAccountId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.LOAN.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(4,auditLogList.get(0).getAuditLogRecords().size());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Collateral Notes")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("Added note");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Service Charge deducted At Disbursement")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("1");
+				auditLogRecord.getNewValue().equalsIgnoreCase("0");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase(" Service Charge deducted At Disbursement")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("0");
+				auditLogRecord.getNewValue().equalsIgnoreCase("2");
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
+		
 	}
 
 	public void testGetTotalRepayAmountForCurrentDateBeforeFirstInstallment() {

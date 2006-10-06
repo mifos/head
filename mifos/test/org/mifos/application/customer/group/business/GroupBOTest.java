@@ -5,7 +5,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 
+import org.hibernate.EntityMode;
+import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.LazyInitializer;
+import org.hibernate.type.AbstractComponentType;
+import org.hibernate.type.Type;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -16,6 +23,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMovementEntity;
+import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -40,8 +48,12 @@ import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.CustomFieldType;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -100,6 +112,102 @@ public class GroupBOTest extends MifosTestCase {
 		TestObjectFactory.cleanUp(center1);
 		TestObjectFactory.cleanUp(officeBO);
 		HibernateUtil.closeSession();
+	}
+	
+	
+	public void testSuccessfulUpdate_Group_UnderBranchForLoggig() throws Exception {
+			AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
+			auditConfigurtion.createEntityValueMap();
+			String name = "Group_underBranch";
+			String newName = "Group_NameChanged";
+			group = createGroupUnderBranch(name, CustomerStatus.GROUP_ACTIVE,getCustomFields());
+			group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+					.getCustomerId());
+			client = TestObjectFactory.createClient("Client",
+					ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+					group, new Date(System.currentTimeMillis()));
+			client1 = TestObjectFactory.createClient("Client1",
+					ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".2",
+					group, new Date(System.currentTimeMillis()));
+			HibernateUtil.getSessionTL();
+			HibernateUtil.getInterceptor().createInitialValueMap(group);
+			
+			List<CustomerPositionView> customerPositionList= new ArrayList<CustomerPositionView>();
+			group.setDisplayName("changed group name");
+			group.update(TestObjectFactory.getUserContext(), group.getDisplayName(), personnel,
+					"ABCD", Short.valueOf("1"), new Date(), TestObjectFactory
+							.getAddressHelper(), getNewCustomFields(),
+							customerPositionList);
+			HibernateUtil.commitTransaction();
+			HibernateUtil.closeSession();
+			group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+					.getCustomerId());
+			
+			List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),group.getCustomerId());
+			assertEquals(1,auditLogList.size());
+			assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
+			assertEquals(8,auditLogList.get(0).getAuditLogRecords().size());
+			for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+				if(auditLogRecord.getFieldName().equalsIgnoreCase("City/District")){
+					auditLogRecord.getOldValue().equalsIgnoreCase("-");
+					auditLogRecord.getNewValue().equalsIgnoreCase("city");
+				}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Trained")){
+					auditLogRecord.getOldValue().equalsIgnoreCase("0");
+					auditLogRecord.getNewValue().equalsIgnoreCase("1");
+				}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Additional Information")){
+					auditLogRecord.getOldValue().equalsIgnoreCase("Replacement Status-value2,GRT Staff Id-value1");
+					auditLogRecord.getNewValue().equalsIgnoreCase("Replacement Status-value4,GRT Staff Id-value3");
+				}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Name")){
+					auditLogRecord.getOldValue().equalsIgnoreCase("Group_underBranch");
+					auditLogRecord.getNewValue().equalsIgnoreCase("changed group name");
+				}
+			}
+			TestObjectFactory.cleanUpChangeLog();
+			
+	}
+	
+	public void testSuccessfulTransferToCenterInSameBranchForLogging() throws Exception {
+		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
+		auditConfigurtion.createEntityValueMap();
+		createObjectsForTranferToCenterInSameBranch();
+		String newCenterSearchId = center1.getSearchId();
+		HibernateUtil.closeSession();
+
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		group.setUserContext(center.getUserContext());
+		HibernateUtil.getSessionTL();
+		HibernateUtil.getInterceptor().createInitialValueMap(group);
+		group.transferToCenter(center1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		center1 = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+				center1.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		client1 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				client1.getCustomerId());
+		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				client2.getCustomerId());
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),group.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(1,auditLogList.get(0).getAuditLogRecords().size());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase(" Kendra Name")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("Center");
+				auditLogRecord.getNewValue().equalsIgnoreCase("toTransfer");
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
 	}
 
 	public void testCreateWithoutName() throws Exception {
@@ -946,6 +1054,13 @@ public class GroupBOTest extends MifosTestCase {
 				office, meeting, personnel);
 	}
 	
+	private GroupBO createGroupUnderBranch(String name,
+			CustomerStatus customerStatus,List<CustomFieldView> customFieldView) {
+		meeting = getMeeting();
+		return TestObjectFactory.createGroupUnderBranch(name, customerStatus,
+				office, meeting, personnel,customFieldView);
+	}
+	
 	private GroupBO createGroupUnderBranch(CustomerStatus groupStatus) {
 		return createGroupUnderBranch(groupStatus, officeId);
 	}
@@ -976,8 +1091,20 @@ public class GroupBOTest extends MifosTestCase {
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
 		fields.add(new CustomFieldView(Short.valueOf("4"), "value1",
 				CustomFieldType.ALPHA_NUMERIC.getValue()));
+		fields.add(new CustomFieldView(Short.valueOf("3"), "value2",
+				CustomFieldType.NUMERIC.getValue()));
 		return fields;
 	}
+	
+	private List<CustomFieldView> getNewCustomFields() {
+		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
+		fields.add(new CustomFieldView(Short.valueOf("4"), "value3",
+				CustomFieldType.ALPHA_NUMERIC.getValue()));
+		fields.add(new CustomFieldView(Short.valueOf("3"), "value4",
+				CustomFieldType.NUMERIC.getValue()));
+		return fields;
+	}
+
 
 	private Address getAddress() {
 		Address address = new Address();

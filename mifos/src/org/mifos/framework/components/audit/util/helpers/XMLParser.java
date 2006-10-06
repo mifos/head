@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.mifos.framework.components.customTableTag.Table;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,7 +29,7 @@ public class XMLParser {
 
 	ColumnPropertyMapping columnPropertyMapping = null;
 
-	public ColumnPropertyMapping parser() {
+	public ColumnPropertyMapping parser() throws SystemException {
 		Table table = null;
 		Document document = null;
 		try {
@@ -43,15 +44,15 @@ public class XMLParser {
 
 			getColumnPropertyMapping(document);
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			throw new SystemException(e);
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			throw new SystemException(e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new SystemException(e);
 		} catch (SAXParseException e) {
-			e.printStackTrace();
+			throw new SystemException(e);
 		} catch (SAXException e) {
-			e.printStackTrace();
+			throw new SystemException(e);
 		}
 		return columnPropertyMapping;
 	}
@@ -66,11 +67,18 @@ public class XMLParser {
 
 	public EntityType[] getEntityTypes(NodeList elements) {
 		EntityType[] entityTypes = new EntityType[elements.getLength()];
-
 		for (int j = 0; j < elements.getLength(); j++) {
 			entityTypes[j] = new EntityType();
 			entityTypes[j].setName(elements.item(j).getAttributes()
 					.getNamedItem(XMLConstants.NAME).getNodeValue());
+			
+			entityTypes[j].setClassPath(elements.item(j).getAttributes()
+					.getNamedItem(XMLConstants.CLASSPATH).getNodeValue());
+			
+			entityTypes[j].setEntitiesToLog(getEntitiesToLog(((Element) elements
+								.item(j))
+								.getElementsByTagName(XMLConstants.ENTITIES_TO_LOG)));
+			
 			entityTypes[j]
 					.setPropertyNames(getPropertyNames(((Element) elements
 							.item(j))
@@ -78,6 +86,41 @@ public class XMLParser {
 		}
 		return entityTypes;
 	}
+	
+	public EntitiesToLog getEntitiesToLog(NodeList elements) {
+		EntitiesToLog entitiesToLog = new EntitiesToLog();
+		for (int j = 0; j < elements.getLength(); j++) {
+			entitiesToLog.setEntities(getEntity(((Element) elements
+								.item(j))
+								.getElementsByTagName(XMLConstants.ENTITY)));
+		}
+		return entitiesToLog;
+	}
+	
+	public Entity[] getEntity(NodeList elements) {
+		Entity[] entities = new Entity[elements.getLength()];
+		for (int j = 0; j < elements.getLength(); j++) {
+			entities[j]=new Entity();
+			entities[j].setName(elements.item(j).getAttributes()
+					.getNamedItem(XMLConstants.NAME).getNodeValue());
+			if((elements.item(j).getAttributes().getNamedItem(XMLConstants.PARENTNAME))!=null){
+				entities[j].setParentName(elements.item(j).getAttributes()
+					.getNamedItem(XMLConstants.PARENTNAME).getNodeValue());
+			}
+			if((elements.item(j).getAttributes().getNamedItem(XMLConstants.MERGE_PROPERTIES))==null
+					|| (elements.item(j).getAttributes().getNamedItem(XMLConstants.MERGE_PROPERTIES)).getNodeValue().equalsIgnoreCase("no")){
+				entities[j].setMergeProperties("No");
+			}else{
+				entities[j].setMergeProperties(elements.item(j).getAttributes()
+						.getNamedItem(XMLConstants.MERGE_PROPERTIES).getNodeValue());
+				
+				entities[j].setDisplayKey(elements.item(j).getAttributes()
+				.getNamedItem(XMLConstants.DISPLAYKEY).getNodeValue());
+			}
+		}
+		return entities;
+	}
+
 
 	public PropertyName[] getPropertyNames(NodeList elements) {
 		PropertyName[] propertyNames = new PropertyName[elements.getLength()];
@@ -95,7 +138,7 @@ public class XMLParser {
 					.getNamedItem(XMLConstants.PARENTNAME).getNodeValue());
 			}
 			
-			//If lonotlog is not defined in xml, it will be default set to No
+			//If donotlog is not defined in xml, it will be default set to No
 			if((elements.item(j).getAttributes().getNamedItem(XMLConstants.DONOTLOG))==null){
 				propertyNames[j].setDoNotLog("No");
 			}else{
@@ -113,10 +156,14 @@ public class XMLParser {
 			}
 
 			if (lookUp.equalsIgnoreCase(XMLConstants.YES)) {
-				propertyNames[j]
-						.setEntityName(getEntityName(((Element) elements
-								.item(j))
-								.getElementsByTagName(XMLConstants.ENTITYNAME)));
+				
+				if((elements.item(j).getAttributes().getNamedItem(XMLConstants.METHODNAME))!=null){
+					propertyNames[j].setMethodName(elements.item(j).getAttributes().getNamedItem(XMLConstants.METHODNAME).getNodeValue());
+				}else{
+					if(((Element) elements.item(j)).getElementsByTagName(XMLConstants.ENTITYNAME)!=null){
+						propertyNames[j].setEntityName(getEntityName(((Element) elements.item(j)).getElementsByTagName(XMLConstants.ENTITYNAME)));
+					}
+				}
 			}
 
 		}
@@ -127,19 +174,14 @@ public class XMLParser {
 		EntityName entityName = new EntityName();
 		entityName.setName(elements.item(0).getAttributes().getNamedItem(
 				XMLConstants.NAME).getNodeValue());
-
 		if (((Element) elements.item(0)).getElementsByTagName(
-				XMLConstants.CLASSPATH).item(0) != null
-				&& ((Element) elements.item(0)).getElementsByTagName(
-						XMLConstants.PKCOLUMN).item(0) != null) {
+				XMLConstants.CLASSPATH).item(0) != null) {
 			entityName.setClassPath(getClassPath(((Element) elements.item(0))
 					.getElementsByTagName(XMLConstants.CLASSPATH)));
-			entityName.setPkColumn(getPkColumn(((Element) elements.item(0))
-					.getElementsByTagName(XMLConstants.PKCOLUMN)));
 		}
 		return entityName;
 	}
-
+	
 	public ClassPath getClassPath(NodeList elements) {
 		ClassPath classPath = new ClassPath();
 		classPath.setPath(elements.item(0).getAttributes().getNamedItem(
@@ -156,7 +198,12 @@ public class XMLParser {
 
 	public static void main(String args[]) {
 		XMLParser ttp = new XMLParser();
-		ttp.parser();
+		try {
+			ttp.parser();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

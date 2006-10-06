@@ -16,6 +16,8 @@ public class PropertyName {
 	String parentName=null;
 	
 	EntityName entityName=null;
+	
+	String methodName;
 
 	public String getDisplayKey() {
 		return displayKey;
@@ -64,6 +66,15 @@ public class PropertyName {
 	public void setParentName(String parentName) {
 		this.parentName = parentName;
 	}
+
+	public String getMethodName() {
+		return methodName;
+	}
+
+	public void setMethodName(String methodName) {
+		this.methodName = methodName;
+	}
+
 	
 	
 
