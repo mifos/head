@@ -152,37 +152,7 @@ $mandatory_without_client="Please specify some value"
 $mandatory_without_product="Please select the value for Product Instance"
 $savings_success="You have successfully created a new Margin Money account"
 #savings account end
-#fee started
-$feecheck="Define new fees"
-$f_m_nam_e="Please specify Fee Name "
-$f_m_max_le="The length for fee name should not be greater than 50 characters."
-$f_m_amt_e="Please specify Amount"
-$f_m_max_amt="Amount should lie between 0-999999999.99"
-$f_m_cat_e="Please select customers/products to which Fees Applies"
-$f_m_freq_pe="Please select periodic along with frequency."
-$f_m_freq_oe="Please select one time along with payment type."
-$f_m_freq_we="Please select the value for recur every week if week is selected."
-$f_m_freq_me="Please select the value for recur every month if month is selected."
-$f_m_freq_ra="Please enter either rate or amount."
-$gl_code="Please select GL Code"
-$fee_success="You have successfully defined a new fee"
-$f_m_rate_formula="Please enter rate along with formula."
-$f_m_rate_and_formula="Rate should lie between 0-999%"
-$fee_app_to={
-"1"=>"All Customers",
-"2"=>"Member",
-"3"=>"Group",
-"4"=>"Kendra",
-"5"=>"Loans"
-}
-$default_fee={
-"0"=>"No","1"=>"yes"}
-$timeocrg={"1"=>"Upfront","2"=>"Time Of Disburstment","3"=>"Time of First Loan Repayment"}
-$fee_freq={"1"=>"Periodic","2"=>"One time"}
-$recur_type={"1"=>"week(s)","2"=>"month(s)"}
-$formula={"1"=>"Loan Amount","2"=>"LoanAmount+Service Charge","3"=>"Service Charge"}
-$feestatus={"1"=>"Active","2"=>"InActive"}
-#fee end
+
 
 #Loan Account start
 $loan_select_client="Create Loan Account - Select Member"

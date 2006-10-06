@@ -1,6 +1,6 @@
 ruby -I ./modules -S modules/Office/Office.rb
 ruby -I ./modules -S modules/User/User_Test_Cases.rb
-ruby -I ./modules -S modules/Fee/fees_man.rb
+ruby -I ./modules -S modules/Fee/Feeclass.rb
 ruby -I ./modules -S modules/check_list/Check_List_Test_Cases.rb
 ruby -I ./modules -S modules/Funds/Funds_Test_Cases.rb
 ruby -I ./modules -S modules/ProductCategory/ProductCategory_Test_cases.rb
