@@ -62,7 +62,7 @@ public interface CustomerSearchConstants {
 	public String SEARCH_SUCCESS="search_sucess";
 	public String CUSTOMERSEARCHRESULTS="CustomerSearchResults";
 	public String CUSTOMERSEARCSTRING="searchString";
-	public String CUSTOMERSEARCOFFICEID="search_officeId";
+	public String CUSTOMER_SEARCH_OFFICE_ID="search_officeId";
 	public String CUSTOMERSEARCBRANCH="searchBranch";
 	public String LOADALLBRANCHES_SUCCESS="loadallbranches_success";
 	public String CENTER_ACTIVE="CENTERACTIVE";

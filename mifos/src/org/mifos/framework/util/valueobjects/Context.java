@@ -13,7 +13,11 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.SearchObject;
 
 /**
- *  This class acts as a wrapper around the parameters that need to passed from the action class to the business processor. As of now it has only moduleName,subModuleName and valueObject as its instance variable , but it will have more later depending upon the parameters that needs to be passes to all the action methods of the business processor. The context object is formed in the ActionClass and is then passed as parameter to the BusinessProcessor's execute method.
+   This class acts as a wrapper around the parameters that need to 
+   passed from the action class to the business processor. 
+   The context object is formed in the 
+   ActionClass and is then passed as parameter to the BusinessProcessor's 
+   execute method.
  */
 public class Context implements Serializable {
 
@@ -90,9 +94,6 @@ public class Context implements Serializable {
 		this.searchObject = searchObject;
 	}
 
-	/**
-	 * @param valueObject
-	 */
 	public void setValueObject(ValueObject valueObject) {
 		this.valueObject = valueObject;
 
@@ -188,12 +189,12 @@ public class Context implements Serializable {
 	 */
 	// TODO: Actually, it does nothing.  What is it intended to do?
 	public void cleanAttributes(){
-		if(null != results){
-			for(Object item:results){
-				item=null;
-			}
-			
-		}
+//		if(null != results){
+//			for(Object item:results){
+//				item=null;
+//			}
+//			
+//		}
 	}
 
 }

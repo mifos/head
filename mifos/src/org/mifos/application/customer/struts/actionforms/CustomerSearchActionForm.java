@@ -134,7 +134,7 @@ public class CustomerSearchActionForm extends MifosSearchActionForm {
 			
 			if("search".equals(methodCalled)) {
 				String searchString=getSearchNode(CustomerSearchConstants.CUSTOMERSEARCSTRING);
-				String searchBranch=getSearchNode(CustomerSearchConstants.CUSTOMERSEARCOFFICEID);
+				String searchBranch=getSearchNode(CustomerSearchConstants.CUSTOMER_SEARCH_OFFICE_ID);
 				if(ValidateMethods.isNullOrBlank(searchString)){
 					errors.add(CustomerSearchConstants.NAMEMANDATORYEXCEPTION,
 							new ActionMessage(CustomerSearchConstants.NAMEMANDATORYEXCEPTION));

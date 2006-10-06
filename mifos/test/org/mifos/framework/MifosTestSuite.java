@@ -43,6 +43,9 @@ import junit.framework.TestSuite;
 public class MifosTestSuite extends TestSuite {
 
 	public MifosTestSuite() {
+		// Why?  It tends to hurt performance to second-guess
+		// the system about how often to garbage collect.  
+		// But is there some specific reason?
 		System.gc();
 	}
 

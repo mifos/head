@@ -75,13 +75,12 @@ public class CustomerSearchBusinessProcessor extends MifosBusinessProcessor {
 	}
 	
 	/**
-	 * Gets a list of Customers using getCustomers under the loanofficer method and puts them in the context.
-	 * 
-	 * @param context
-	 * @throws SystemException
-	 * @throws ApplicationException
+	 * Gets a list of Customers using getCustomers under the loanofficer method 
+	 * and puts them in the context.
 	 */
-	public void get(Context context)throws SystemException,ApplicationException{
+	@Override
+	public void get(Context context)
+	throws SystemException,ApplicationException{
 		MifosLogManager.getLogger(LoggerConstants.CUSTOMERSEARCHLOGGER).info(
 			"Inside get method of CustomerSearchBusinessProcessor ");
 		CustomerSearch customerSearch=(CustomerSearch)context.getValueObject();
@@ -96,21 +95,22 @@ public class CustomerSearchBusinessProcessor extends MifosBusinessProcessor {
 	
 	/**
 	 * Gets a list of LoanOfficers using getLoanOfficers under the branch method and puts them in the context.
-	 * 
-	 * @param context
-	 * @throws SystemException
-	 * @throws ApplicationException
 	 */
-	public void preview(Context context)throws SystemException,ApplicationException{
+	@Override
+	public void preview(Context context)
+	throws SystemException,ApplicationException{
 		MifosLogManager.getLogger(LoggerConstants.CUSTOMERSEARCHLOGGER).info(
 			"Inside preview method of CustomerSearchBusinessProcessor ");
 		CustomerSearch customerSearch=(CustomerSearch)context.getValueObject();
 		if(null != customerSearch) {
 			Short officeId=customerSearch.getOfficeId();
 			List<Personnel> personnelList=getLoanOfficers(officeId,context.getPath());
-			context.addBusinessResults(CustomerSearchConstants.LOANOFFICERSLIST,personnelList);
-			context.addBusinessResults(CustomerSearchConstants.LOADFORWARD,CustomerSearchConstants.LOADFORWARDNONLOANOFFICER);
-			context.addBusinessResults(CustomerSearchConstants.OFFICE,customerSearch.getOfficeName());
+			context.addBusinessResults(CustomerSearchConstants.LOANOFFICERSLIST,
+				personnelList);
+			context.addBusinessResults(CustomerSearchConstants.LOADFORWARD,
+				CustomerSearchConstants.LOADFORWARDNONLOANOFFICER);
+			context.addBusinessResults(CustomerSearchConstants.OFFICE,
+				customerSearch.getOfficeName());
 		}
 	}
 	
@@ -118,11 +118,9 @@ public class CustomerSearchBusinessProcessor extends MifosBusinessProcessor {
 	 * Gets a list of Branches using getBranchesUnderDataScope method and puts them in the context.
 	 * It puts the same list of branches into two searchResults and puts them in the Context twice because
 	 * we need them for two combo boxes. 
-	 * @param context
-	 * @throws SystemException
-	 * @throws ApplicationException
 	 */
-	public void loadInitial(Context context)throws SystemException,ApplicationException{
+	public void loadInitial(Context context)
+	throws SystemException,ApplicationException{
 		MifosLogManager.getLogger(LoggerConstants.CUSTOMERSEARCHLOGGER).info(
 			"Inside loadInitial method of CustomerSearchBusinessProcessor ");
 		UserContext userContext=context.getUserContext();
@@ -143,7 +141,8 @@ public class CustomerSearchBusinessProcessor extends MifosBusinessProcessor {
 				context.addBusinessResults(CustomerSearchConstants.LOADFORWARD,CustomerSearchConstants.LOADFORWARDLOANOFFICER);
 				MifosLogManager.getLogger(LoggerConstants.CUSTOMERSEARCHLOGGER).info(
 					"Inside loadInitial method of CustomerSearchBusinessProcessor officeName"+office.getOfficeName());
-				context.addBusinessResults(CustomerSearchConstants.OFFICE,office.getOfficeName());
+				context.addBusinessResults(CustomerSearchConstants.OFFICE,
+					office.getOfficeName());
 			}
 			else {
 				if(office.getLevel().getLevelId().equals(OfficeConstants.BRANCHOFFICE)) {
@@ -152,7 +151,8 @@ public class CustomerSearchBusinessProcessor extends MifosBusinessProcessor {
 					context.addBusinessResults(CustomerSearchConstants.LOADFORWARD,CustomerSearchConstants.LOADFORWARDNONLOANOFFICER);
 					MifosLogManager.getLogger(LoggerConstants.CUSTOMERSEARCHLOGGER).info(
 						"Inside loadInitial method of CustomerSearchBusinessProcessor officeName"+office.getOfficeName());
-					context.addBusinessResults(CustomerSearchConstants.OFFICE,office.getOfficeName());
+					context.addBusinessResults(CustomerSearchConstants.OFFICE,
+						office.getOfficeName());
 				}
 				else {
 					List<Office> officesList=getBranchesUnderDataScope(office.getSearchId(),context.getPath());
@@ -161,7 +161,8 @@ public class CustomerSearchBusinessProcessor extends MifosBusinessProcessor {
 						(officesList!=null?String.valueOf(officesList.size()):"NULL"));
 					context.addAttribute(new SearchResults(CustomerSearchConstants.OFFICESLIST,officesList));
 					context.addBusinessResults(CustomerSearchConstants.LOADFORWARD,CustomerSearchConstants.LOADFORWARDNONBRANCHOFFICE);
-					context.addBusinessResults(CustomerSearchConstants.OFFICE,office.getOfficeName());
+					context.addBusinessResults(CustomerSearchConstants.OFFICE,
+						office.getOfficeName());
 				}
 			}
 			
@@ -172,14 +173,9 @@ public class CustomerSearchBusinessProcessor extends MifosBusinessProcessor {
 	
 	/**
 	 * Gets the office details for the given office Id
-	 * 
-	 * @param officeId
-	 * @param path
-	 * @return
-	 * @throws SystemException
-	 * @throws ApplicationException
 	 */
-	private Office getOffice(Short officeId,String path) throws  SystemException, ApplicationException {
+	private Office getOffice(Short officeId, String path) 
+	throws SystemException, ApplicationException {
 		MifosLogManager.getLogger(LoggerConstants.CUSTOMERSEARCHLOGGER).info(
 			"Inside getCustomers method of CustomerSearchBusinessProcessor ");
 		return ((CustomerSearchDAO) getDAO(path)).getOffice(officeId);
@@ -249,7 +245,7 @@ public class CustomerSearchBusinessProcessor extends MifosBusinessProcessor {
 	public void getCustomerSearchResults(Context context)  throws  SystemException, ApplicationException {
 		CustomerSearch  customerSearch=(CustomerSearch)context.getValueObject();		
 		String searchString=context.getSearchObject().getFromSearchNodeMap(CustomerSearchConstants.CUSTOMERSEARCSTRING);
-		Short officeId=Short.valueOf(context.getSearchObject().getFromSearchNodeMap(CustomerSearchConstants.CUSTOMERSEARCOFFICEID));	
+		Short officeId=Short.valueOf(context.getSearchObject().getFromSearchNodeMap(CustomerSearchConstants.CUSTOMER_SEARCH_OFFICE_ID));	
 		String officeSearchId = HierarchyManager.getInstance().getSearchId(context.getUserContext().getBranchId());
 		SearchDAO searchDAO=new SearchDAO();
 		String searchType=CustomerSearchConstants.CUSTOMERSEARCHRESULTS;

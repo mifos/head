@@ -1,6 +1,5 @@
 package org.mifos.application.office.struts.tag;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,12 +8,13 @@ import junit.framework.TestCase;
 import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
-import org.dom4j.io.SAXReader;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
+import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -104,11 +104,6 @@ public class OfficeListTagTest extends TestCase {
 			"office.officeId=234&amp;office.officeName=My%20Office&amp;" +
 			"officeId=234&amp;officeName=My%20Office&amp;" +
 			"currentFlowKey=flow\">My Office</a>", link.getOutput());
-	}
-	
-	public static void assertWellFormedFragment(String xml) throws DocumentException {
-		SAXReader reader = new SAXReader();
-        reader.read(new StringReader("<root>" + xml + "</root>"));
 	}
 
 }

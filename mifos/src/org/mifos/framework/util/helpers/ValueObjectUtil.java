@@ -40,13 +40,10 @@ package org.mifos.framework.util.helpers;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
-import org.apache.commons.beanutils.converters.SqlDateConverter;
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.upload.FormFile;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -117,13 +114,9 @@ public class ValueObjectUtil {
 	 * <p>
 	 * It is mandatory for the actionform to have a map based property named searchNode 
 	 * which will be a key value pair of the searchparameters and searchvalues 
-	 * @param actionForm
-	 * @return
-	 * @throws SearchObjectNotCreatedException
 	 */
-	public static SearchObject getSearchObject(ActionForm actionForm)throws SearchObjectNotCreatedException{
-		Map propertyValues,propertyValues1 = null;
-		Set keySet = null;
+	public static SearchObject getSearchObject(ActionForm actionForm)
+	throws SearchObjectNotCreatedException{
 		SearchObject searchObject = new SearchObject();
 		Map<String,String> searchNodeMap = null;
 		

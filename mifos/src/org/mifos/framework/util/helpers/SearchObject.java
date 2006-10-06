@@ -40,9 +40,7 @@ package org.mifos.framework.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BasicDynaBean;
-import org.apache.commons.beanutils.DynaClass;
-import org.mifos.framework.util.valueobjects.Context;
+import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 
 public class SearchObject{// extends BasicDynaBean {
 
@@ -70,21 +68,25 @@ public class SearchObject{// extends BasicDynaBean {
 	public void addToSearchNodeMap(String key, String value){
 		searchNodeMap.put(key, value);
 	}
+
+	public void addSearchTermAndOffice(String searchTerm, String officeId) {
+		addToSearchNodeMap(
+			"dummy-search-term-key", searchTerm);
+		addToSearchNodeMap(
+			CustomerSearchConstants.CUSTOMER_SEARCH_OFFICE_ID, 
+				officeId);
+	}
+	
 	public String getFromSearchNodeMap(String key){
 		return searchNodeMap.get(key);
 	}
-	/**
-	 * @return Returns the searchNode}.
-	 */
+
 	public Map<String, String> getSearchNodeMap() {
 		return searchNodeMap;
 	}
-	/**
-	 * @param searchNode The searchNode to set.
-	 */
+
 	public void setSearchNodeMap(Map<String, String> searchNodeMap) {
 		this.searchNodeMap = searchNodeMap;
 	}
-	
 
 }

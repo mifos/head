@@ -46,14 +46,14 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-public class CollectionSheetTestSuite extends MifosTestSuite{
-public static void main (String[] args)
+public class CollectionSheetTestSuite extends MifosTestSuite {
+
+	public static void main (String[] args)
 	{
 		Test testSuite = suite();
 		
 		TestRunner.run (testSuite);
 	}
-	
 
 	public static Test suite()
 	{

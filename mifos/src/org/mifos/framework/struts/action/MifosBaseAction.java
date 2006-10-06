@@ -380,7 +380,6 @@ public abstract class MifosBaseAction extends LookupDispatchAction {
 	/**
 	 * This method cleans up the context in the sense that it removes only the master data which is set in the 
 	 * context as attributes, it will not remove the business results. 
-	 * @param request
 	 */
 	protected void cleanUpContext(HttpServletRequest request) {
 		Context context = (Context)SessionUtils.getAttribute(Constants.CONTEXT, request.getSession());

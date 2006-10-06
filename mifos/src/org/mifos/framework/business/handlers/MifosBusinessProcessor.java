@@ -189,7 +189,7 @@ public class MifosBusinessProcessor implements BusinessProcessor {
 		searchObject = context.getSearchObject();
 		String searchName = null;
 		if(null != searchObject){
-			searchName = (String)searchObject.getFromSearchNodeMap(Constants.SEARCH_NAME);
+			searchName = searchObject.getFromSearchNodeMap(Constants.SEARCH_NAME);
 		}
 		if(null != searchName && !searchName.equals("")){
 			

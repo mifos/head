@@ -61,9 +61,11 @@ import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Cache;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FileCacheRep;
+import org.mifos.framework.util.helpers.SearchObject;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.valueobjects.Context;
 
@@ -71,6 +73,8 @@ import org.mifos.framework.util.valueobjects.Context;
  * This class renders the table list.
  */
 public class TableTag extends BodyTagSupport {
+
+	public static final String ALL_BRANCHES = "0";
 
 	private int pageSize = Integer.valueOf(TableTagConstants.MIFOSTABLE_PAGESIZE);
 
@@ -95,9 +99,17 @@ public class TableTag extends BodyTagSupport {
 	public String cellpadding;
 
 	/** Used to set the xml file type whether we are taking single or multiple */
+	// TODO: should be enum {single, multiple} not string
 	public String type;
 
 	private String className;
+
+	public TableTag() {
+	}
+
+	public TableTag(String type) {
+		this.type = type;
+	}
 
 	public String getClassName() {
 		return className;
@@ -107,17 +119,10 @@ public class TableTag extends BodyTagSupport {
 		this.className = className;
 	}
 
-	/**
-	 * @return Returns the type.
-	 */
 	public String getType() {
 		return type;
 	}
 
-	/**
-	 * @param type
-	 *            The type to set.
-	 */
 	public void setType(String type) {
 		this.type = type;
 	}
@@ -133,9 +138,6 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function set the name of XML and JSP file
-	 *
-	 * @param name
-	 *            The name to set.
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -143,8 +145,6 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function get the value of the border
-	 *
-	 * @return Returns the border.
 	 */
 	public String getBorder() {
 		return border;
@@ -152,9 +152,6 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function set the value of the border
-	 *
-	 * @param border
-	 *            The border to set.
 	 */
 	public void setBorder(String border) {
 		this.border = border;
@@ -162,8 +159,6 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function get the value of the cellpadding
-	 *
-	 * @return Returns the cellpadding.
 	 */
 	public String getCellpadding() {
 		return cellpadding;
@@ -171,9 +166,6 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function set the value of the cellpadding
-	 *
-	 * @param cellpadding
-	 *            The cellpadding to set.
 	 */
 	public void setCellpadding(String cellpadding) {
 		this.cellpadding = cellpadding;
@@ -181,8 +173,6 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function get the value of the cellspacing
-	 *
-	 * @return Returns the cellspacing.
 	 */
 	public String getCellspacing() {
 		return cellspacing;
@@ -190,44 +180,23 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function set the value of the cellspacing
-	 *
-	 * @param cellspacing
-	 *            The cellspacing to set.
 	 */
 	public void setCellspacing(String cellspacing) {
 		this.cellspacing = cellspacing;
 	}
 
-	/**
-	 * Function get the value of the width
-	 *
-	 * @return Returns the width.
-	 */
 	public String getWidth() {
 		return width;
 	}
 
-	/**
-	 * @return Returns the key.
-	 */
 	public String getKey() {
 		return key;
 	}
 
-	/**
-	 * @param key
-	 *            The key to set.
-	 */
 	public void setKey(String key) {
 		this.key = key;
 	}
 
-	/**
-	 * Function set the value of the width
-	 *
-	 * @param width
-	 *            The width to set.
-	 */
 	public void setWidth(String width) {
 		this.width = width;
 	}
@@ -252,8 +221,12 @@ public class TableTag extends BodyTagSupport {
 				JspWriter out = pageContext.getOut();
 				Context context = (Context) SessionUtils.getAttribute(
 						"Context", pageContext.getSession());
-				StringBuilder result = noResults(context);
-				out.write(result.toString());
+				String defaultOfficeName = (String) context
+					.getBusinessResults(CustomerSearchConstants.OFFICE);
+				XmlBuilder result = noResults(
+					defaultOfficeName, context.getSearchObject()
+				);
+				out.write(result.getOutput());
 				return super.doStartTag();
 			}
 			getTableData(list);
@@ -272,59 +245,75 @@ public class TableTag extends BodyTagSupport {
 
 	}
 
-	private StringBuilder noResults(Context context) {
-		StringBuilder result = new StringBuilder();
-		result
-				.append(
-						"<table width=\"96%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">")
-				.append(
-						"<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\" ><br>")
-				.append("<span class=\"headingorange\">");
-		result.append("No results found");
-		if (context.getSearchObject() != null) {
-			String officeId = context
-					.getSearchObject()
+	XmlBuilder noResults(
+		String defaultOfficeName, SearchObject searchObject) {
+		XmlBuilder html = new XmlBuilder();
+		html.startTag("table", "width", "96%", "border", "0", 
+			"cellpadding", "0", "cellspacing", "0");
+		html.startTag("tr", "class", "fontnormal");
+		html.startTag("td", "colspan", "2", "valign", "top");
+		html.singleTag("br");
+		html.startTag("span", "class", "headingorange");
+		html.text("No results found");
+		if (searchObject != null) {
+			String officeId = searchObject
 					.getFromSearchNodeMap(
-							CustomerSearchConstants.CUSTOMERSEARCOFFICEID);
+							CustomerSearchConstants.CUSTOMER_SEARCH_OFFICE_ID);
 
 			if (officeId != null) {
-				Map map = context.getSearchObject().getSearchNodeMap();
+				Map map = searchObject.getSearchNodeMap();
 				Set set = map.keySet();
 				Iterator iterator = set.iterator();
 				if (iterator.hasNext()) {
-					result.append(" for" + "<span class=\"heading\"> "
-							+ map.get(iterator.next()) + " </span>");
+					html.text(" for ");
+					html.startTag("span", "class", "heading");
+					html.text(map.get(iterator.next()).toString());
+					html.text(" ");
+					html.endTag("span");
 				}
-				if (officeId.equals("0")) {
-					result
-							.append("<span class=\"headingorange\"> in</span> <span class=\"heading\">"
-									+ "All Branches" + "</span>");
+				if (officeId.equals(ALL_BRANCHES)) {
+					renderInClause(html, "All Branches");
 				} else if (iterator.hasNext()) {
 					String officeName = map.get(iterator.next())
 							.toString();
 					if (!officeName.equals("")) {
-						result
-								.append("<span class=\"headingorange\"> in</span> <span class=\"heading\">"
-										+ officeName + "</span>");
+						renderInClause(html, officeName);
 					} else {
-						result
-								.append("<span class=\"headingorange\"> in</span> <span class=\"heading\">"
-										+ context
-												.getBusinessResults("Office")
-										+ "</span>");
+						renderInClause(html, defaultOfficeName);
 					}
 				}
 
-				result.append("</span></td></tr>");
+				html.endTag("span");
+				html.endTag("td");
+				html.endTag("tr");
 				if (type.equalsIgnoreCase("single")) {
-					result
-							.append("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\"><br>");
-					result
-							.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
+					html.startTag("tr");
+					html.startTag("td", 
+						"colspan", "2", "valign", "top", "class", "blueline");
+					html.singleTag("br");
+					html.singleTag("img", 
+						"src", "pages/framework/images/trans.gif",
+						"width", "5",
+						"height", "3");
+					html.endTag("td");
+					html.endTag("tr");
 				}
 			}
 		}
-		return result;
+		html.endTag("table");
+		return html;
+	}
+
+	private void renderInClause(XmlBuilder html, String myOfficeName) {
+		html.startTag("span", "class", "headingorange");
+		html.text(" in");
+		html.endTag("span");
+
+		html.text(" ");
+
+		html.startTag("span", "class", "heading");
+		html.text(myOfficeName);
+		html.endTag("span");
 	}
 
 	/**
@@ -342,9 +331,10 @@ public class TableTag extends BodyTagSupport {
 			if (iterator.hasNext()) {				
 				result.append("<span class=\"heading\">"+ map.get(iterator.next()) + " </span>");
 			}
-			String officeId=context.getSearchObject().getFromSearchNodeMap(CustomerSearchConstants.CUSTOMERSEARCOFFICEID);				
+			String officeId=context.getSearchObject().getFromSearchNodeMap(CustomerSearchConstants.CUSTOMER_SEARCH_OFFICE_ID);				
 			
-			if(officeId!=null && officeId.equals("0"))
+			/** TODO: unify with corresponding code in {@link #noResults}. */
+			if(officeId!=null && officeId.equals(ALL_BRANCHES))
 			{			
 					result.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
 							+ "All Branches"+ "</span>");			
@@ -395,13 +385,6 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function to get single xml file.
-	 *
-	 * @param object
-	 *            query object
-	 * @return
-	 * @throws TableTagParseException
-	 * @throws TableTagException
-	 * @throws JspException
 	 */
 	private String getSingleFile() throws TableTagParseException,
 			TableTagException, JspException {
@@ -417,9 +400,6 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function to get the action
-	 *
-	 * @param table
-	 * @throws JspException
 	 */
 	private String getAction(Table table) throws JspException {
 
@@ -553,7 +533,7 @@ public class TableTag extends BodyTagSupport {
 		out.write((number) + ".</td><td width=\"97%\">");
 		out.write(data);
 		if (table.getPageRequirements().getBlanklinerequired().equalsIgnoreCase("true")) {
-			out.write("<br>");
+			out.write("<br />");
 		}
 		out.write("</td></tr>");
 	}
@@ -581,7 +561,7 @@ public class TableTag extends BodyTagSupport {
 			out.write(data);
 			if (table.getPageRequirements().getBlanklinerequired().equalsIgnoreCase("true")) {
 				if (it.hasNext()) {
-					out.write("<br>");
+					out.write("<br />");
 				}
 			}
 			if (table.getPageRequirements().getBluelineRequired().equalsIgnoreCase("true")) {

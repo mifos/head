@@ -1,9 +1,12 @@
 package org.mifos.framework;
 
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -26,6 +29,12 @@ public class TestUtils {
 		user.setBranchId(new Short("1"));
 		user.setBranchGlobalNum("0001");
 		return user;
+	}
+
+	public static void assertWellFormedFragment(String xml) 
+	throws DocumentException {
+		SAXReader reader = new SAXReader();
+	    reader.read(new StringReader("<root>" + xml + "</root>"));
 	}
 
 }
