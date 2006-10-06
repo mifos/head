@@ -45,7 +45,7 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
@@ -56,6 +56,9 @@
 		}
 	</script>
 		<html-el:form method="post" action="/savingsClosureAction.do?method=preview" onsubmit="return validateMyForm(receiptDate,receiptDateFormat,receiptDateYY)">
+		 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountPayment')}" var="accountPayment" />
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -70,7 +73,7 @@
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td width="70%" class="headingorange">
-									<span class="heading"><c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}" /> # <c:out value="${sessionScope.BusinessKey.globalAccountNum}" /> - </span>
+									<span class="heading"><c:out value="${BusinessKey.savingsOffering.prdOfferingName}" /> # <c:out value="${BusinessKey.globalAccountNum}" /> - </span>
 									<mifos:mifoslabel name="Savings.closeAccount" />
 								</td>
 							</tr>
@@ -112,7 +115,7 @@
 									:
 								</td>
 								<td width="76%" valign="top" class="fontnormal">
-									<c:out value="${sessionScope.accountPayment.amount.amountDoubleValue}" />
+									<c:out value="${accountPayment.amount.amountDoubleValue}" />
 								</td>
 							</tr>
 							<tr>
@@ -122,7 +125,9 @@
 								</td>
 								<td>
 									<mifos:select name="savingsClosureForm" property="paymentTypeId">
-										<html-el:options collection="PaymentType" property="id" labelProperty="name"></html-el:options>
+										<c:forEach var="Payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+											<html-el:option value="${Payment.id}">${Payment.name}</html-el:option>
+										</c:forEach>
 									</mifos:select>
 								</td>
 							</tr>
@@ -153,12 +158,12 @@
 										</td>
 										<td>
 											<mifos:select name="savingsClosureForm" property="customerId">
-												<c:forEach var="client" items="${sessionScope.clientList}">
+												<c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
 													<html-el:option value="${client.customerId}">
 														<c:out value="${client.displayName}" />
 													</html-el:option>
 												</c:forEach>
-												<html-el:option value="${sessionScope.BusinessKey.customer.customerId}">
+												<html-el:option value="${BusinessKey.customer.customerId}">
 													<mifos:mifoslabel name="Savings.nonSpecified" />
 												</html-el:option>
 											</mifos:select>
@@ -166,7 +171,7 @@
 									</tr>
 								</c:when>
 								<c:otherwise>
-									<html-el:hidden property="customerId" value="${sessionScope.BusinessKey.customer.customerId}" />
+									<html-el:hidden property="customerId" value="${BusinessKey.customer.customerId}" />
 								</c:otherwise>
 							</c:choose>
 							<tr>
@@ -206,8 +211,8 @@
 					</td>
 				</tr>
 			</table>
-			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
-			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}" />
+			<html-el:hidden property="accountId" value="${BusinessKey.accountId}" />
+			<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

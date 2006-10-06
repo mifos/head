@@ -45,10 +45,13 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@taglib uri="/mifos/savingsoverdue" prefix="savingsoverdue"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<html-el:form method="post" action="/savingsAction.do">
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -62,7 +65,7 @@
 						<table width="95%" border="0" cellpadding="0" cellspacing="0">
 							<tr>
 								<td width="83%" class="headingorange">
-									<span class="heading"> <c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}" /> #<c:out value="${sessionScope.BusinessKey.globalAccountNum}" /> -</span>
+									<span class="heading"> <c:out value="${BusinessKey.savingsOffering.prdOfferingName}" /> #<c:out value="${BusinessKey.globalAccountNum}" /> -</span>
 									<mifos:mifoslabel name="Savings.depositduedetails" />
 								</td>
 							</tr>
@@ -77,10 +80,10 @@
 							<tr>
 								<td bgcolor="#F0D4A5" style="padding-left:10px; padding-bottom:3px;">
 									<span class="fontnormalbold"><mifos:mifoslabel name="Savings.applytrans" />:</span>&nbsp;&nbsp;&nbsp;&nbsp; 
-									<html-el:link  href="savingsDepositWithdrawalAction.do?method=load">
+									<html-el:link  href="savingsDepositWithdrawalAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="Savings.makeDepositWithdrawl" />
 									</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-									<html-el:link href="savingsApplyAdjustmentAction.do?method=load">
+									<html-el:link href="savingsApplyAdjustmentAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="Savings.applyAdjustment" />
 									</html-el:link>
 								</td>
@@ -104,11 +107,11 @@
 									<mifos:mifoslabel name="Savings.nextdeposit" />
 								</td>
 								<td align="right" class="drawtablerow">
-									<c:out value="${sessionScope.BusinessKey.totalAmountDueForNextInstallment}" />
+									<c:out value="${BusinessKey.totalAmountDueForNextInstallment}" />
 								</td>
 								<td align="right" class="drawtablerow">
 									<c:choose>
-										<c:when test="${sessionScope.BusinessKey.totalAmountDueForNextInstallment.amount > 0}">
+										<c:when test="${BusinessKey.totalAmountDueForNextInstallment.amount > 0}">
 											<html-el:link action="/savingsAction.do?method=waiveAmountDue">
 												<mifos:mifoslabel name="Savings.waive" />
 											</html-el:link>
@@ -136,11 +139,11 @@
 									<em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <mifos:mifoslabel name="Savings.subtotal" /> </em>
 								</td>
 								<td align="right" class="drawtablerow">
-									<c:out value="${sessionScope.BusinessKey.totalAmountInArrears}" />
+									<c:out value="${BusinessKey.totalAmountInArrears}" />
 								</td>
 								<td align="right" class="drawtablerow">
 									<c:choose>
-										<c:when test="${sessionScope.BusinessKey.totalAmountInArrears.amount > 0}">
+										<c:when test="${BusinessKey.totalAmountInArrears.amount > 0}">
 											<html-el:link action="/savingsAction.do?method=waiveAmountOverDue">
 												<mifos:mifoslabel name="Savings.waive" />
 											</html-el:link>
@@ -155,10 +158,10 @@
 								<td class="drawtablerowbold">
 									<mifos:mifoslabel name="Savings.totalamountdue" />
 									&nbsp;
-									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.nextMeetingDate)}" />
+									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.nextMeetingDate)}" />
 								</td>
 								<td align="right" class="drawtablerow">
-									<c:out value="${sessionScope.BusinessKey.totalAmountDue}" />
+									<c:out value="${BusinessKey.totalAmountDue}" />
 								</td>
 								<td align="right" class="drawtablerow">
 									&nbsp;
@@ -180,7 +183,7 @@
 							</tr>
 						</table>
 						<html-el:hidden property="method" value="get" />
-						<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}" />
+						<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
 						<html-el:hidden property="recordOfficeId" value="${param.recordOfficeId}" />
 						<html-el:hidden property="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
 					</td>

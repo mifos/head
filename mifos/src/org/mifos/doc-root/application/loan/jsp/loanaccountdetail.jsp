@@ -533,8 +533,8 @@
 						<tr>
 							<td class="paddingL10">
 							<c:choose>
-	              				<c:when test="${!empty sessionScope.notes}">
-									<c:forEach var="note" items="${sessionScope.notes}">
+	              				<c:when test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
+									<c:forEach var="note" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
 										<span class="fontnormal8ptbold"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}"/>:</span>
 										<span class="fontnormal8pt"> 
 				                				<c:out value="${note.comment}"/>-<em>
@@ -552,12 +552,12 @@
 						</tr>
 						<tr>
 							<td align="right" class="paddingleft05"><span
-								class="fontnormal8pt"> <c:if test="${!empty sessionScope.notes}">
-								<html-el:link href="notesAction.do?method=search&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&securityParamInput=Loan&accountTypeId=${BusinessKey.accountType.accountTypeId}">
+								class="fontnormal8pt"> <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
+								<html-el:link href="notesAction.do?method=search&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&securityParamInput=Loan&accountTypeId=${BusinessKey.accountType.accountTypeId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="loan.seeallnotes" />
 								</html-el:link>
 							</c:if> <br>
-							<html-el:link href="notesAction.do?method=load&accountId=${BusinessKey.accountId}">
+							<html-el:link href="notesAction.do?method=load&accountId=${BusinessKey.accountId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="loan.addnote" />
 							</html-el:link> </span></td>
 						</tr>

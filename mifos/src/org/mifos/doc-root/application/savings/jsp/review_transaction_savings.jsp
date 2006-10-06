@@ -44,7 +44,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<script language="javascript">
@@ -64,7 +64,9 @@
 	</script>
 <SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 <html-el:form method="post" action="savingsDepositWithdrawalAction.do?method=makePayment" >
-   <table width="95%" border="0" cellpadding="0" cellspacing="0">
+    <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+	<table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
 		    <span class="fontnormal8pt">
@@ -79,7 +81,7 @@
           <table width="96%" border="0" cellpadding="3" cellspacing="0">
             <tr>
               <td width="100%" colspan="2" class="headingorange">
-              	<span class="heading"><c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${sessionScope.BusinessKey.globalAccountNum}"/>
+              	<span class="heading"><c:out value="${BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${BusinessKey.globalAccountNum}"/>
                   - </span><mifos:mifoslabel name="Savings.reviewTransaction" /></td>
             </tr>
             <tr>
@@ -100,19 +102,19 @@
 		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
 			      </td>
 			  </tr>
-			  <c:set var="customerLevel" value="${sessionScope.BusinessKey.customer.customerLevel.id}" />
+			  <c:set var="customerLevel" value="${BusinessKey.customer.customerLevel.id}" />
 			  <c:if test="${customerLevel==CustomerLevel.CENTER.value or (customerLevel==CustomerLevel.GROUP.value and 
-				  				sessionScope.BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
+				  				BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
 	              <tr>
 	                	<td align="right" class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
 		              	  <mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/></td>
 		                <td class="fontnormal">
 			              <c:choose>
-				              <c:when test="${sessionScope.BusinessKey.customer.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
+				              <c:when test="${BusinessKey.customer.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
 					              <mifos:mifoslabel name="Savings.nonSpecified" />
 				              </c:when>
 				              <c:otherwise>
-					              <c:forEach var="client" items="${sessionScope.clientList}">
+					             <c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
 					                	<c:if test="${client.customerId == sessionScope.savingsDepositWithdrawalForm.customerId}">
 					                		<c:out value ="${client.displayName}"/>
 					                	</c:if>
@@ -136,7 +138,7 @@
                 	<mifos:mifoslabel name="Savings.paymentType" isColonRequired="Yes"/>
                 </td>
                 <td class="fontnormal">
-                	<c:forEach var="trxnType" items="${sessionScope.trxnTypes}">
+                	<c:forEach var="trxnType" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'trxnTypes')}" >
 		             	<c:if test="${trxnType.id == sessionScope.savingsDepositWithdrawalForm.trxnTypeId}">
 		             		<c:out value="${trxnType.name}"/>
 		             	</c:if>
@@ -157,7 +159,7 @@
                	 <mifos:mifoslabel name="Savings.modeOfPayment" isColonRequired="Yes"/>
                 </td>
                 <td class="fontnormal">
-		            <c:forEach var="payment" items="${sessionScope.PaymentType}">
+		           <c:forEach var="Payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 		             	<c:if test="${payment.id == sessionScope.savingsDepositWithdrawalForm.paymentTypeId}">
 		             		<c:out value="${payment.name}"/>
 		             	</c:if>
@@ -214,8 +216,8 @@
             </td>
         </tr>
       </table>
-<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
-<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>      
+<html-el:hidden property="accountId" value="${BusinessKey.accountId}"/>
+<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/>      
 </html-el:form>
 </tiles:put>
 </tiles:insert>        

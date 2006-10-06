@@ -44,7 +44,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@taglib uri="/loan/loanfunctions" prefix="loanfn"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
@@ -74,7 +74,7 @@
               </tr>
             </table>
             <br>
-       
+        <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivityList')}" var="recentActivityList" scope="session" />
             <mifoscustom:mifostabletag source="recentActivityList" scope="session" xmlFileName="SavingsAccountActivity.xml" moduleName="accounts\\savings" passLocale="true"/>
             <br>
             

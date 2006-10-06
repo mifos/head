@@ -99,7 +99,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		SavingsBO savingsObj = new SavingsBO(userContext, savingsOffering,
 				group, AccountState.SAVINGS_ACC_APPROVED, savingsOffering
 						.getRecommendedAmount(), getCustomFieldView());
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savingsObj);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsObj,request);
 		addRequestParameter("selectedPrdOfferingId", savingsOffering
 				.getPrdOfferingId().toString());
 
@@ -433,7 +433,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savings = createSavingsAccount("000X00000000018", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		savingsOffering = null;
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		try {
 			SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
 					TestObjectFactory.getUserContext(), request.getSession());
@@ -447,8 +447,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("getRecentActivity_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(((List<SavingsRecentActivityView>) request.getSession()
-				.getAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST)).size(),
+		assertEquals(((List<SavingsRecentActivityView>) SessionUtils
+				.getAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST , request)).size(),
 				0);
 	}
 
@@ -458,7 +458,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		savingsOffering = null;
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		try {
 			SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
 					TestObjectFactory.getUserContext(), request.getSession());
@@ -472,8 +472,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("getTransactionHistory_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(((List<SavingsTransactionHistoryView>) request
-				.getSession().getAttribute(SavingsConstants.TRXN_HISTORY_LIST))
+		assertEquals(((List<SavingsTransactionHistoryView>)SessionUtils.getAttribute(SavingsConstants.TRXN_HISTORY_LIST,request))
 				.size(), 0);
 	}
 
@@ -485,7 +484,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		savingsOffering = null;
 		HibernateUtil.closeSession();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, TestObjectFactory
 				.getUserContext(), request.getSession());
 		setRequestPathInfo("/savingsAction.do");
@@ -509,7 +508,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				AccountStates.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
 		savingsOffering = null;
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, TestObjectFactory
 				.getUserContext(), request.getSession());
 		setRequestPathInfo("/savingsAction.do");
@@ -532,7 +531,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		savingsOffering = null;
 		HibernateUtil.closeSession();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, TestObjectFactory
 				.getUserContext(), request.getSession());
 		setRequestPathInfo("/savingsAction.do");
@@ -563,7 +562,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings
 				.getAccountState().getId().shortValue());
 
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		try {
 			SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
 					TestObjectFactory.getUserContext(), request.getSession());
@@ -577,9 +576,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("getStatusHistory_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(2, ((List<SavingsTransactionHistoryView>) request
-				.getSession().getAttribute(
-						SavingsConstants.STATUS_CHANGE_HISTORY_LIST)).size());
+		assertEquals(2, ((List<SavingsTransactionHistoryView>) SessionUtils.getAttribute(
+						SavingsConstants.STATUS_CHANGE_HISTORY_LIST , request)).size());
 	}
 
 }

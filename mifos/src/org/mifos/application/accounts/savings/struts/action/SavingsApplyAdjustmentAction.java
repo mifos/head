@@ -69,6 +69,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class SavingsApplyAdjustmentAction extends BaseAction {
 	private SavingsBusinessService savingsService;
@@ -91,6 +92,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		return false;
 	}
 	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -100,13 +102,12 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		Integer accountId = savings.getAccountId();
-		request.removeAttribute(Constants.BUSINESS_KEY);
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY , request);
 		savings = getSavingsService().findById(accountId);
 		savings.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request
-				.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 		AccountPaymentEntity lastPayment = savings.getLastPmnt();
 		if (null != lastPayment
 				&& lastPayment.getAmount().getAmountDoubleValue() != 0
@@ -122,20 +123,21 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 			accountAction.setLocaleId(uc.getLocaleId());
 			Hibernate.initialize(savings.getLastPmnt().getAccountTrxns());
 			SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION,
-					accountAction, request.getSession());
+					accountAction, request);
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_NAME,
-					getClientName(savings, lastPayment), request.getSession());
+					getClientName(savings, lastPayment), request);
 			SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,
-					Constants.YES, request.getSession());
+					Constants.YES, request);
 		} else
 			SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,
-					Constants.NO, request.getSession());
+					Constants.NO, request);
 
 		logger.debug("In SavingsAdjustmentAction::load(), accountId: "
 				+ savings.getAccountId());
 		return mapping.findForward("load_success");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -143,6 +145,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		return mapping.findForward("preview_success");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -150,6 +153,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		return mapping.findForward("previous_success");
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward adjustLastUserAction(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -158,13 +162,12 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		Integer accountId = savings.getAccountId();
-		request.removeAttribute(Constants.BUSINESS_KEY);
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY , request);
 		savings = getSavingsService().findById(accountId);
 		savings.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request
-				.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
 		savings.adjustLastUserAction(actionForm.getLastPaymentAmount(),
 				actionForm.getNote());
@@ -174,6 +177,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		return mapping.findForward("account_detail_page");
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -204,9 +208,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		actionForm.setNote(null);
 	}
 
-	private void doCleanUp(HttpServletRequest request) {
-		request.getSession().removeAttribute(SavingsConstants.ACCOUNT_ACTION);
-		request.getSession().removeAttribute(SavingsConstants.CLIENT_NAME);
+	private void doCleanUp(HttpServletRequest request) throws Exception {
+		SessionUtils.removeAttribute(SavingsConstants.ACCOUNT_ACTION,request);
+		SessionUtils.removeAttribute(SavingsConstants.CLIENT_NAME,request);
 	}
 
 	private SavingsBusinessService getSavingsService() throws ServiceException {

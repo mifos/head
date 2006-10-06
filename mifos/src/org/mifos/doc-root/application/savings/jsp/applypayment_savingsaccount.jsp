@@ -44,7 +44,7 @@
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
@@ -60,6 +60,10 @@
 	</script>
 
 <html-el:form method="post" action="/savingsDepositWithdrawalAction.do?method=preview" onsubmit="return (validateMyForm(receiptDate,receiptDateFormat,receiptDateYY) && validateMyForm(trxnDate,trxnDateFormat,trxnDateYY))">
+    <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isBackDatedTrxnAllowed')}" var="isBackDatedTrxnAllowed" />
+	 
    <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
@@ -76,7 +80,7 @@
               <tr>
                 <td width="70%" class="headingorange">
                 <span class="heading">
-                <c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}" /> # <c:out value="${sessionScope.BusinessKey.globalAccountNum}" /> - 
+                <c:out value="${BusinessKey.savingsOffering.prdOfferingName}" /> # <c:out value="${BusinessKey.globalAccountNum}" /> - 
                 </span>
                 <mifos:mifoslabel name="Savings.makeDepositWithdrawal" />
                 </td>
@@ -93,11 +97,11 @@
 		    	      <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
 			      </td>
 			  </tr>			  
-                	<c:set var="customerLevel" value="${sessionScope.BusinessKey.customer.customerLevel.id}" />
+                	<c:set var="customerLevel" value="${BusinessKey.customer.customerLevel.id}" />
 			  		<c:choose>
 				  		<c:when test="${customerLevel==CustomerLevel.CENTER.value or 
 				  				(customerLevel==CustomerLevel.GROUP.value and 
-				  				sessionScope.BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
+				  				BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
 						<tr>
 			                <td align="right" class="fontnormal"><span class="fontnormalRed">*</span>
 	            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
@@ -105,12 +109,12 @@
 							</td>
 			                <td>				  				
 					  			<mifos:select name="savingsDepositWithdrawalForm" property="customerId" onchange="javascript:reLoad(this.form)">
-									<c:forEach var="client" items="${sessionScope.clientList}">
+									<c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
 										<html-el:option value="${client.customerId}">
 											<c:out value="${client.displayName}" />
 										</html-el:option>
 									</c:forEach>
-									<html-el:option value="${sessionScope.BusinessKey.customer.customerId}">
+									<html-el:option value="${BusinessKey.customer.customerId}">
 										<mifos:mifoslabel name="Savings.nonSpecified" />
 									</html-el:option>
 								</mifos:select>
@@ -118,7 +122,7 @@
 						</tr>
 				  		</c:when>
 				  		<c:otherwise>
-					  		<html-el:hidden property="customerId" value="${sessionScope.BusinessKey.customer.customerId}" />
+					  		<html-el:hidden property="customerId" value="${BusinessKey.customer.customerId}" />
 				  		</c:otherwise>
 			  		</c:choose>
 			 <tr>
@@ -127,7 +131,7 @@
                 </td>
                 <td class="fontnormal">
                 	<c:choose>
-	                	<c:when test="${sessionScope.isBackDatedTrxnAllowed == true}">
+	                	<c:when test="${isBackDatedTrxnAllowed == true}">
 		                	<date:datetag property="trxnDate" />
 	                	</c:when>
 	                	<c:otherwise>
@@ -142,7 +146,9 @@
                 </td>
                 <td>
                 <mifos:select name="savingsDepositWithdrawalForm" property="trxnTypeId" onchange="javascript:reLoad(this.form)">
-						<html-el:options collection="trxnTypes" property="id" labelProperty="name"></html-el:options>
+					<c:forEach var="trxnType" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'trxnTypes')}" >
+						<html-el:option value="${trxnType.id}">${trxnType.name}</html-el:option>
+					</c:forEach>
 				</mifos:select>
                 </td>
               </tr>
@@ -161,7 +167,9 @@
                 </td>
                 <td>
                 	<mifos:select name="savingsDepositWithdrawalForm" property="paymentTypeId">
-						<html-el:options collection="PaymentType" property="id" labelProperty="name"></html-el:options>
+						<c:forEach var="Payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+							<html-el:option value="${Payment.id}">${Payment.name}</html-el:option>
+						</c:forEach>
 					</mifos:select>
                 </td>
               </tr>
@@ -204,8 +212,8 @@
             </table></td>
         </tr>
       </table>
-		<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
-		<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}" />
+		<html-el:hidden property="accountId" value="${BusinessKey.accountId}" />
+		<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>      

@@ -44,7 +44,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 	<script language="javascript">
@@ -63,7 +63,11 @@
 		}
 	</script>
 	<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
-<html-el:form method="post" action="savingsClosureAction.do?method=close" >
+	<html-el:form method="post" action="savingsClosureAction.do?method=close" >
+    <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+						<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountPayment')}" var="accountPayment" />
+    
     <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
@@ -79,7 +83,7 @@
             <tr>
               <td width="100%" colspan="2" class="headingorange">
               <span class="heading">
-              		<c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${sessionScope.BusinessKey.globalAccountNum}"/> - 
+              		<c:out value="${BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${BusinessKey.globalAccountNum}"/> - 
 			  </span><mifos:mifoslabel name="Savings.review"/></td>
             </tr>
             <tr>
@@ -109,13 +113,13 @@
               <tr>
                 <td width="22%" align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.amount"/>: </td>
                 <td width="78%" class="fontnormal">
-                   	<c:out value="${sessionScope.accountPayment.amount.amountDoubleValue}"/>
+                   	<c:out value="${accountPayment.amount.amountDoubleValue}"/>
                 </td>
               </tr>
               <tr>
                 <td align="right" class="fontnormalbold"><mifos:mifoslabel name="Savings.modeOfPayment"/>: </td>
                 <td class="fontnormal">
-                 <c:forEach var="payment" items="${sessionScope.PaymentType}">
+                <c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
                  	<c:if test="${payment.id == sessionScope.savingsClosureForm.paymentTypeId}">
                  		<c:out value="${payment.name}"/>
                  	</c:if>
@@ -139,12 +143,12 @@
 	                <td align="right" class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
 	                <mifos:mifoslabel name="Savings.clientName"/>:</td>
 	                <td class="fontnormal">
-		                <c:forEach var="client" items="${sessionScope.clientList}">
+		                <c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
 		                	<c:if test="${client.customerId == sessionScope.savingsClosureForm.customerId}">
 		                		<c:out value ="${client.displayName}"/>
 		                	</c:if>
 		                </c:forEach>
-	                	<c:if test="${sessionScope.BusinessKey.customer.customerId == sessionScope.savingsClosureForm.customerId}">
+	                	<c:if test="${BusinessKey.customer.customerId == sessionScope.savingsClosureForm.customerId}">
 	                		<mifos:mifoslabel name="Savings.nonSpecified" />
 	                	</c:if>
 	                </td>
@@ -189,8 +193,8 @@
             </td>
         </tr>
       </table> 
-<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
-<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>      
+<html-el:hidden property="accountId" value="${BusinessKey.accountId}"/>
+<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/>      
 </html-el:form>
 </tiles:put>
 </tiles:insert>  

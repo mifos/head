@@ -43,10 +43,16 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 <tiles:put name="body" type="string">
 	<html-el:form  action="savingsApplyAdjustmentAction?method=adjustLastUserAction">
+	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountAction')}" var="accountAction" />
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isLastPaymentValid')}" var="isLastPaymentValid" />
+	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientName')}" var="clientName" />
+	
 	<script language="javascript">
 		function funCancel(form){
 			form.action="savingsApplyAdjustmentAction.do?method=cancel";
@@ -71,7 +77,7 @@
           <td width="70%" height="24" align="left" valign="top" class="paddingL15T15">
           <table width="96%" border="0" cellpadding="3" cellspacing="0">
               <tr>
-                <td width="70%" class="headingorange"><span class="heading"><c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${sessionScope.BusinessKey.globalAccountNum}"/> - </span>
+                <td width="70%" class="headingorange"><span class="heading"><c:out value="${BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${BusinessKey.globalAccountNum}"/> - </span>
                 <mifos:mifoslabel name="Savings.reviewAdjustment"/></td>
                 </tr>
                 <tr>
@@ -91,20 +97,20 @@
               <tr>
                 <td width="29%" align="right" valign="top" class="fontnormalbold">
                 <mifos:mifoslabel name="savings.correct" bundle="SavingsUIResources" />
-                <c:out value="${sessionScope.accountAction.name}"/>
+                <c:out value="${accountAction.name}"/>
                 <mifos:mifoslabel name="Savings.amount"/>: <br>
                 </td>
                 <td width="81%" class="fontnormal">
                 <c:out value="${sessionScope.savingsApplyAdjustmentActionForm.lastPaymentAmount}"/>
-                <c:if test="${sessionScope.isLastPaymentValid == 1}">
-                &nbsp;  ( <c:if test="${(!empty sessionScope.clientName) or (sessionScope.BusinessKey.customer.customerLevel.id!=1)}"> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/> 
+                <c:if test="${isLastPaymentValid == 1}">
+                &nbsp;  ( <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/> 
                   	<mifos:mifoslabel name="Savings.clientName"/>:</c:if>
                   	<c:choose>
-	              		<c:when test="${!empty sessionScope.clientName}">
-							<c:out value="${sessionScope.clientName}"/>
+	              		<c:when test="${!empty clientName}">
+							<c:out value="${clientName}"/>
 	                	</c:when>
 	                  	<c:otherwise>
-		                  	<c:if test="${sessionScope.BusinessKey.customer.customerLevel.id!=1}">
+		                  	<c:if test="${BusinessKey.customer.customerLevel.id!=1}">
 			                  	<mifos:mifoslabel name="Savings.nonSpecified"/>
 		                  	</c:if>
 	                  	</c:otherwise>
@@ -150,8 +156,8 @@
             </table></td>
         </tr>
       </table>
-<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}"/>
-<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}"/>       
+<html-el:hidden property="accountId" value="${BusinessKey.accountId}"/>
+<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/>       
 </html-el:form>
 </tiles:put>
 </tiles:insert>

@@ -56,21 +56,21 @@
 					</td>
 				</tr>
 			</table>
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" scope="session" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td width="62%" class="headingorange">
-									<c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}" />
+									<c:out value="${BusinessKey.savingsOffering.prdOfferingName}" />
 									#
-									<c:out value="${sessionScope.BusinessKey.globalAccountNum}" />
+									<c:out value="${BusinessKey.globalAccountNum}" />
 									<br>
 								</td>
 								<td width="38%" rowspan="2" align="right" valign="top" class="fontnormal">
-									<c:if test="${sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
-										<html-el:link href="editStatusAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									<c:if test="${BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
+										<html-el:link href="editStatusAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="Savings.Edit" />
 											<mifos:mifoslabel name="Savings.account" />
 											<mifos:mifoslabel name="Savings.status" />
@@ -91,8 +91,8 @@
 							<tr>
 								<td class="fontnormalbold">
 									<%--<span class="fontnormal"><img src="pages/framework/images/status_activegreen.gif" width="8" height="9"> Active</span>--%>
-									<span class="fontnormal"> <mifoscustom:MifosImage id="${sessionScope.BusinessKey.accountState.id}" moduleName="accounts.savings" /> <c:out value="${sessionScope.BusinessKey.accountState.name}" />&nbsp; <c:forEach var="flagSet"
-											items="${sessionScope.BusinessKey.accountFlags}">
+									<span class="fontnormal"> <mifoscustom:MifosImage id="${BusinessKey.accountState.id}" moduleName="accounts.savings" /> <c:out value="${BusinessKey.accountState.name}" />&nbsp; <c:forEach var="flagSet"
+											items="${BusinessKey.accountFlags}">
 											<span class="fontnormal"> <c:if test="${flagSet.flag.id == 6}">
 													<mifos:MifosImage id="blackflag" moduleName="accounts.savings" />
 												</c:if><c:out value="${flagSet.flag.name}" /> </span>
@@ -102,26 +102,26 @@
 							<tr>
 								<td class="fontnormal">
 									<mifos:mifoslabel name="Savings.accountBalance" />:
-									<c:out value="${sessionScope.BusinessKey.savingsBalance}" />
+									<c:out value="${BusinessKey.savingsBalance}" />
 									<br>
 								</td>
 								<td align="right" valign="top" class="fontnormal">
 									<c:if
-										test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY
-												&& (sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED ||
-												sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE)}">
-										<html-el:link href="savingsAction.do?method=getDepositDueDetails&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
+										test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY
+												&& (BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED ||
+												BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE)}">
+										<html-el:link href="savingsAction.do?method=getDepositDueDetails&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 											<mifos:mifoslabel name="Savings.viewDepositDueDetails" />
 										</html-el:link>
 									</c:if>
 								</td>
 							</tr>
-							<c:if test="${sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
+							<c:if test="${BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
 								<tr>
 									<td class="fontnormal" colspan="2">
 										<mifos:mifoslabel name="Savings.totalamountdue" />
-										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.nextMeetingDate)}" />:
-										<c:out value="${sessionScope.BusinessKey.totalAmountDue}" />
+										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.nextMeetingDate)}" />:
+										<c:out value="${BusinessKey.totalAmountDue}" />
 									</td>
 								</tr>
 							</c:if>
@@ -140,7 +140,7 @@
 								</td>
 								<td width="65%" align="right" class="fontnormal">
 									&nbsp;
-									<html-el:link href="savingsAction.do?method=getRecentActivity&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
+									<html-el:link href="savingsAction.do?method=getRecentActivity&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewAllAccountActivity" />
 									</html-el:link>
 								</td>
@@ -163,17 +163,17 @@
 								<td height="23" class="fontnormal">
 									<p>
 										<span class="fontnormal"> <c:choose>
-												<c:when test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
+												<c:when test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
 													<mifos:mifoslabel name="Savings.mandatoryAmountForDeposit" />:
 	                  </c:when>
 												<c:otherwise>
 													<mifos:mifoslabel name="Savings.recommendedAmountForDeposit" />:
 	                  </c:otherwise>
-											</c:choose> <c:out value="${sessionScope.BusinessKey.recommendedAmount.amountDoubleValue}" /> <c:choose>
-												<c:when test="${sessionScope.BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
+											</c:choose> <c:out value="${BusinessKey.recommendedAmount.amountDoubleValue}" /> <c:choose>
+												<c:when test="${BusinessKey.customer.customerLevel.id==CustomerConstants.GROUP_LEVEL_ID}">
 	                    ( <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}"
 											var="item">
-							<c:if test="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id == item.id}">
+							<c:if test="${BusinessKey.savingsOffering.recommendedAmntUnit.id == item.id}">
 							    <c:out value="${item.name}"></c:out>
 							</c:if>
 
@@ -182,7 +182,7 @@
 												<c:otherwise>
 													 <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'RecommendedAmtUnit')}"
 											var="item">
-							<c:if test="${sessionScope.BusinessKey.savingsOffering.recommendedAmntUnit.id == item.id}">
+							<c:if test="${BusinessKey.savingsOffering.recommendedAmntUnit.id == item.id}">
 							    <c:out value="${item.name}"></c:out>
 							</c:if>
 
@@ -190,7 +190,7 @@
 												</c:otherwise>
 											</c:choose> <br> <br> <mifos:mifoslabel name="Savings.typeOfDeposits" />:<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsType')}"
 											var="item">
-							<c:if test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == item.id}">
+							<c:if test="${BusinessKey.savingsOffering.savingsType.id == item.id}">
 							    <c:out value="${item.name}"></c:out>
 							</c:if>
 
@@ -199,16 +199,16 @@
 											 </span>
 										<br>
 										<mifos:mifoslabel name="Savings.maxAmountPerWithdrawl" />:
-										<c:out value="${sessionScope.BusinessKey.savingsOffering.maxAmntWithdrawl}" />
+										<c:out value="${BusinessKey.savingsOffering.maxAmntWithdrawl}" />
 										<br>
-										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <c:out value="${sessionScope.BusinessKey.savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc" />
+										<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel name="Savings.rate" />: <c:out value="${BusinessKey.savingsOffering.interestRate}" /> <mifos:mifoslabel name="Savings.perc" />
 										</span>
 										<br>
 										<br>
 										<span class="fontnormalbold"> <mifos:mifoslabel name="Savings.additionalInformation" /> </span>
 										<br>
 										<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-											<c:forEach var="cf" items="${sessionScope.BusinessKey.accountCustomFields}">
+											<c:forEach var="cf" items="${BusinessKey.accountCustomFields}">
 												<c:if test="${cfdef.fieldId==cf.fieldId}">
 													<span class="fontnormal"> <mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"></mifos:mifoslabel>: <c:out value="${cf.fieldValue}" /> </span>
 													<br>
@@ -219,7 +219,7 @@
 									</p>
 								</td>
 								<td align="right" valign="top" class="fontnormal">
-									<c:if test="${sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && sessionScope.BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
+									<c:if test="${BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CANCEL && BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
 										<html-el:link action="savingsAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="Savings.EditAccountInformation" />
 										</html-el:link>
@@ -236,14 +236,14 @@
 							</tr>
 							<tr>
 								<td class="fontnormal">
-									<html-el:link href="savingsAction.do?method=getTransactionHistory&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
+									<html-el:link href="savingsAction.do?method=getTransactionHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Savings.viewTransactionHistory" />
 									</html-el:link>
 									<br>
 									<span class="fontnormal"> <html-el:link href="#">
 											<mifos:mifoslabel name="Savings.viewChangeLog" />
 										</html-el:link> <br>
-									 <html-el:link href="savingsAction.do?method=getStatusHistory&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}">
+									 <html-el:link href="savingsAction.do?method=getStatusHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 											<mifos:mifoslabel name="Savings.viewStatusHistory" />
 										</html-el:link> </span>
 								</td>
@@ -260,18 +260,18 @@
 							<tr>
 								<td class="paddingL10">
 									<span class="fontnormal8pt">
-				<c:if test="${sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
-		           <html-el:link  href="savingsDepositWithdrawalAction.do?method=load">
+				<c:if test="${BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
+		           <html-el:link  href="savingsDepositWithdrawalAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 		          	    <mifos:mifoslabel name="Savings.makeDepositWithdrawl"/>
 		           </html-el:link><br>
 
-					<html-el:link href="savingsApplyAdjustmentAction.do?method=load">
+					<html-el:link href="savingsApplyAdjustmentAction.do?method=load&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 						<mifos:mifoslabel name="Savings.applyAdjustment" />
 					</html-el:link>
 					<br>
 				</c:if>
-				<c:if test="${sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || sessionScope.BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
-											<html-el:link href="savingsClosureAction.do?method=load">
+				<c:if test="${BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_APPROVED || BusinessKey.accountState.id == AccountStates.SAVINGS_ACC_INACTIVE}">
+											<html-el:link href="savingsClosureAction.do?method=load&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="Savings.closeAccount" />
 											</html-el:link>
 										</c:if> </span>
@@ -298,32 +298,32 @@
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-               		<mifos:mifoslabel name="Savings.dateAccountOpened"/>: <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.BusinessKey.activationDate)}" />
+               		<mifos:mifoslabel name="Savings.dateAccountOpened"/>: <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.activationDate)}" />
 					 </span></td>
 			  </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
                 	<mifos:mifoslabel name="Savings.totalDeposits"/>:
-                	<c:out value="${sessionScope.BusinessKey.savingsPerformance.totalDeposits}" />
+                	<c:out value="${BusinessKey.savingsPerformance.totalDeposits}" />
 
                 </span></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalInterestEarned"/>: <c:out value="${sessionScope.BusinessKey.savingsPerformance.totalInterestEarned}" /></span></td>
+                <mifos:mifoslabel name="Savings.totalInterestEarned"/>: <c:out value="${BusinessKey.savingsPerformance.totalInterestEarned}" /></span></td>
               </tr>
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-                <mifos:mifoslabel name="Savings.totalWithdrawls"/>: <c:out value="${sessionScope.BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
+                <mifos:mifoslabel name="Savings.totalWithdrawls"/>: <c:out value="${BusinessKey.savingsPerformance.totalWithdrawals}" /> </span></td>
               </tr>
-               <c:if test="${sessionScope.BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
+               <c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
                    <tr>
 	                <td class="paddingL10">
 	                <span class="fontnormal8pt">
-	                <mifos:mifoslabel name="Savings.missedDeposits"/>: <c:out value="${sessionScope.BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
+	                <mifos:mifoslabel name="Savings.missedDeposits"/>: <c:out value="${BusinessKey.savingsPerformance.missedDeposits}" /> </span></td>
 	  			  </tr>
 	  			</c:if>
 						</table>
@@ -367,13 +367,13 @@
                 	<td align="right" class="paddingleft05">
 						<span class="fontnormal8pt">
 							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
-								<html-el:link href="notesAction.do?method=search&accountId=${sessionScope.BusinessKey.accountId}&globalAccountNum=${sessionScope.BusinessKey.globalAccountNum}&prdOfferingName=${sessionScope.BusinessKey.savingsOffering.prdOfferingName}&securityParamInput=Savings&accountTypeId=${sessionScope.BusinessKey.accountType.accountTypeId}&currentFlowKey=${requestScope.currentFlowKey}">
+								<html-el:link href="notesAction.do?method=search&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.savingsOffering.prdOfferingName}&securityParamInput=Savings&accountTypeId=${BusinessKey.accountType.accountTypeId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="Savings.seeAllNotes" />
 								</html-el:link>
 							</c:if>
 
 								<br>
-							<html-el:link href="notesAction.do?method=load&accountId=${sessionScope.BusinessKey.accountId}&currentFlowKey=${requestScope.currentFlowKey}">
+							<html-el:link href="notesAction.do?method=load&accountId=${BusinessKey.accountId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="Savings.addANote" />
 							</html-el:link>
 
@@ -385,8 +385,8 @@
 				</tr>
 			</table>
 			<mifos:SecurityParam property="Savings" />
-			<html-el:hidden property="accountId" value="${sessionScope.BusinessKey.accountId}" />
-			<html-el:hidden property="globalAccountNum" value="${sessionScope.BusinessKey.globalAccountNum}" />
+			<html-el:hidden property="accountId" value="${BusinessKey.accountId}" />
+			<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
 			 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>

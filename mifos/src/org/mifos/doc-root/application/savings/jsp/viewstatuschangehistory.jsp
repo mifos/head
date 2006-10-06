@@ -6,7 +6,7 @@
 <%@taglib uri="/mifos/customtags" prefix="customtable"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
@@ -37,6 +37,7 @@
 
 					</table>
 					<br>
+					 <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusChangeHistoryList')}" var="statusChangeHistoryList" scope="session" />
 					<customtable:mifostabletag  source="statusChangeHistoryList" scope="session"  xmlFileName="SavingsStatusChangeHistory.xml" moduleName="accounts\\savings" passLocale="true"/> 
 					
 

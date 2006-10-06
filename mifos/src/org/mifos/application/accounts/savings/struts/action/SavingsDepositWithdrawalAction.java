@@ -48,6 +48,7 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class SavingsDepositWithdrawalAction extends BaseAction {
 	private SavingsBusinessService savingsService;
@@ -67,11 +68,12 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		return true;
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		logger.debug("In SavingsDepositWithdrawalAction::load(), accountId: "
 				+ savings.getAccountId());
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
@@ -85,7 +87,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		trxnTypes.add(getAccountsService().getAccountAction(
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, uc.getLocaleId()));
 		SessionUtils.setAttribute(AccountConstants.TRXN_TYPES, trxnTypes,
-				request.getSession());
+				request);
 
 		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.CENTER_LEVEL_ID
 				|| (savings.getCustomer().getCustomerLevel().getId()
@@ -93,28 +95,28 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 						.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue())))
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(
-							CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request
-					.getSession());
+							CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request);
 		else
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
-					request.getSession());
+					request);
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
-				new ArrayList<PaymentTypeEntity>(), request.getSession());
+				new ArrayList<PaymentTypeEntity>(), request);
 		SessionUtils.setAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,
 				new Boolean(Configuration.getInstance().getAccountConfig(
 						savings.getCustomer().getOffice().getOfficeId())
-						.isBackDatedTxnAllowed()), request.getSession());
+						.isBackDatedTxnAllowed()), request);
 
 		actionForm.setTrxnDate(DateHelper.getCurrentDate(uc
 				.getPereferedLocale()));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward reLoad(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		logger.debug("In SavingsDepositWithdrawalAction::reload(), accountId: "
 				+ savings.getAccountId());
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
@@ -127,8 +129,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
 						getMasterDataService().getSupportedPaymentModes(
 								uc.getLocaleId(),
-								TrxnTypes.savings_deposit.getValue()), request
-								.getSession());
+								TrxnTypes.savings_deposit.getValue()), request);
 				if (actionForm.getCustomerId() != null
 						&& actionForm.getCustomerId() != "")
 					actionForm.setAmount(savings.getTotalPaymentDue(Integer
@@ -139,24 +140,27 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 						getMasterDataService().getSupportedPaymentModes(
 								uc.getLocaleId(),
 								TrxnTypes.savings_withdrawal.getValue()),
-						request.getSession());
+						request);
 			}
 		}
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -165,12 +169,13 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	@CloseSession
 	public ActionForward makePayment(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		SavingsBO savedAccount = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		SavingsBO savings = getSavingsService().findById(
 				savedAccount.getAccountId());
 		logger
@@ -252,10 +257,10 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		return mapping.findForward(forward);
 	}
 
-	private void doCleanUp(HttpServletRequest request) {
-		request.getSession().removeAttribute(AccountConstants.TRXN_TYPES);
-		request.getSession().removeAttribute(SavingsConstants.CLIENT_LIST);
-		request.getSession().removeAttribute(MasterConstants.PAYMENT_TYPE);
+	private void doCleanUp(HttpServletRequest request) throws Exception{
+		SessionUtils.removeAttribute(AccountConstants.TRXN_TYPES,request);
+		SessionUtils.removeAttribute(SavingsConstants.CLIENT_LIST,request);
+		SessionUtils.removeAttribute(MasterConstants.PAYMENT_TYPE,request);
 	}
 
 	private MasterDataService getMasterDataService() throws ServiceException {

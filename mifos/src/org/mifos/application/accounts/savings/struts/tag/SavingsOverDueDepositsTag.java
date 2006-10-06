@@ -5,15 +5,18 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsOverDueDepositsTag extends BodyTagSupport {
@@ -23,9 +26,14 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 
 	@Override
 	public int doStartTag() throws JspException {
-		Object obj = pageContext.getSession().getAttribute(
-				Constants.BUSINESS_KEY);
-
+		String currentFlowKey = (String) pageContext.getRequest()
+		.getAttribute(Constants.CURRENTFLOWKEY);
+		HttpSession session =  pageContext.getSession();
+		FlowManager flowManager = (FlowManager) session
+				.getAttribute(Constants.FLOWMANAGER);
+		try{
+		Object obj = flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
+		
 		if (null != obj) {
 			List<AccountActionDateEntity> installmentsInArrears = ((SavingsBO) obj)
 					.getDetailsOfInstallmentsInArrears();
@@ -72,6 +80,10 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+		}
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return SKIP_BODY;

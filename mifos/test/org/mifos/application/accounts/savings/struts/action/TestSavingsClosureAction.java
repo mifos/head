@@ -32,6 +32,8 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -59,6 +61,8 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	private CustomerBO client4;
 
 	private SavingsTestHelper helper = new SavingsTestHelper();
+	
+	private String flowKey;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -80,6 +84,14 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				userContext);
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 	}
 
 	@Override
@@ -103,19 +115,19 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
 				group, AccountStates.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsClosureAction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
 		verifyForward("load_success");
-		savings = (SavingsBO) request.getSession().getAttribute(
-				Constants.BUSINESS_KEY);
+		savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY,request);
 		Hibernate.initialize(savings.getAccountPayments());
 		Hibernate.initialize(savings.getAccountFees());
 		Hibernate.initialize(savings.getAccountActionDates());
-		assertNotNull(request.getSession().getAttribute(
-				MasterConstants.PAYMENT_TYPE));
-		List<CustomerBO> clientList = (List<CustomerBO>)request.getSession().getAttribute(SavingsConstants.CLIENT_LIST);
+		assertNotNull(SessionUtils.getAttribute(
+				MasterConstants.PAYMENT_TYPE,request));
+		List<CustomerBO> clientList = (List<CustomerBO>)SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,request);
 		assertNotNull(clientList);
 		assertEquals(2, clientList.size());
 		
@@ -131,12 +143,12 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				.getCustomer(client4.getCustomerId());
 	}
 
-	public void testSuccessfullPreview() {
+	public void testSuccessfullPreview()throws Exception {
 		AccountPaymentEntity payment = new AccountPaymentEntity(null,
 				new Money(Configuration.getInstance().getSystemConfig()
 						.getCurrency(), "500"), null, null, null);
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
-				request.getSession());
+				request);
 		addRequestParameter("receiptId", "101");
 		String currentDate = DateHelper.getCurrentDate(userContext
 				.getPereferedLocale());
@@ -213,7 +225,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		AccountPaymentEntity payment = new AccountPaymentEntity(savings,
 				balanceAmount.add(interestAtClosure), null, null,
 				new PaymentTypeEntity(Short.valueOf("1")));
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 
 		for (AccountPaymentEntity acPayment : savings.getAccountPayments())
 			acPayment.getAccountTrxns();
@@ -226,7 +238,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 			notes.getCommentDate();
 
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
-				request.getSession());
+				request);
 		addRequestParameter("notes", "this is the notes added");
 		setRequestPathInfo("/savingsClosureAction.do");
 		addRequestParameter("method", "close");
@@ -234,6 +246,8 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward("close_success");
+		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+				savings.getAccountId());
 	}
 
 	private void createInitialObjects() {

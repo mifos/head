@@ -22,8 +22,11 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
@@ -38,6 +41,8 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	private SavingsOfferingBO savingsOffering;
 
 	private SavingsTestHelper helper = new SavingsTestHelper();
+	
+	private String flowKey;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -59,6 +64,14 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				userContext);
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 	}
 
 	@Override
@@ -93,24 +106,23 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionMessages();
 		verifyNoActionErrors();
-		savings = (SavingsBO) request.getSession().getAttribute(
-				Constants.BUSINESS_KEY);
+		savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY,request);
 		assertNotNull(savings.getLastPmnt());
-		assertNotNull(request.getSession().getAttribute(
-				SavingsConstants.ACCOUNT_ACTION));
-		AccountActionEntity accountAction = (AccountActionEntity) request
-				.getSession().getAttribute(SavingsConstants.ACCOUNT_ACTION);
+		assertNotNull(SessionUtils.getAttribute(
+				SavingsConstants.ACCOUNT_ACTION,request ));
+		AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION,request);
 		assertEquals(AccountConstants.ACTION_SAVINGS_DEPOSIT, accountAction
 				.getId().shortValue());
-		assertEquals(Short.valueOf("1"), (Short) request.getSession()
-				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID));
+		assertEquals(Short.valueOf("1"), (Short) SessionUtils
+				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
@@ -137,24 +149,23 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionMessages();
 		verifyNoActionErrors();
-		savings = (SavingsBO) request.getSession().getAttribute(
-				Constants.BUSINESS_KEY);
+		savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY,request);
 		assertNotNull(savings.getLastPmnt());
-		assertNotNull(request.getSession().getAttribute(
-				SavingsConstants.ACCOUNT_ACTION));
-		AccountActionEntity accountAction = (AccountActionEntity) request
-				.getSession().getAttribute(SavingsConstants.ACCOUNT_ACTION);
+		assertNotNull(SessionUtils.getAttribute(
+				SavingsConstants.ACCOUNT_ACTION,request));
+		AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION,request);
 		assertEquals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL, accountAction
 				.getId().shortValue());
-		assertEquals(Short.valueOf("1"), (Short) request.getSession()
-				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID));
+		assertEquals(Short.valueOf("1"), (Short)SessionUtils
+				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
@@ -165,22 +176,22 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
 				group, AccountStates.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionMessages();
 		verifyNoActionErrors();
-		savings = (SavingsBO) request.getSession().getAttribute(
-				Constants.BUSINESS_KEY);
+		savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY,request);
 		assertNull(savings.getLastPmnt());
-		assertNull(request.getSession().getAttribute(
-				SavingsConstants.ACCOUNT_ACTION));
-		assertNull(request.getSession().getAttribute(
-				SavingsConstants.CLIENT_NAME));
-		assertEquals(Short.valueOf("0"), (Short) request.getSession()
-				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID));
+		assertNull(SessionUtils.getAttribute(
+				SavingsConstants.ACCOUNT_ACTION,request));
+		assertNull(SessionUtils.getAttribute(
+				SavingsConstants.CLIENT_NAME,request));
+		assertEquals(Short.valueOf("0"), (Short) SessionUtils
+				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
@@ -204,7 +215,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		savings.addAccountPayment(payment);
 		savings.update();
 		HibernateUtil.closeSession();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		addRequestParameter("note", "adjustmentComment");
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "preview");
@@ -212,8 +223,8 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		verifyForward("preview_success");
 		verifyNoActionMessages();
 		verifyNoActionErrors();
-		savings = (SavingsBO) request.getSession().getAttribute(
-				Constants.BUSINESS_KEY);
+		savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY,request);
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
@@ -224,7 +235,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
 				group, AccountStates.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "preview");
 		actionPerform();
@@ -238,15 +249,12 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		verifyForward("previous_success");
 	}
 
-	public void testSuccessfullCancel() {
+	public void testSuccessfullCancel()throws Exception {
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "cancel");
 		actionPerform();
 		verifyForward("account_detail_page");
-		assertNull(request.getSession().getAttribute(
-				SavingsConstants.ACCOUNT_ACTION));
-		assertNull(request.getSession().getAttribute(
-				SavingsConstants.CLIENT_NAME));
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testSuccessfullAdjustUserPayment_AmountNullified()
@@ -272,7 +280,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		assertEquals(Integer.valueOf(1).intValue(), savings.getLastPmnt()
 				.getAccountTrxns().size());
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "adjustLastUserAction");
 		actionPerform();

@@ -49,6 +49,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -99,27 +100,34 @@ public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String method = request.getParameter("method");
 		ActionErrors errors = null;
-		if(method!=null && method.equals("load")||
-						method.equals("previous")||
-						method.equals("validate")||
-						method.equals("adjustLastUserAction")||
-						method.equals("cancel")){
-		}else{
-			if(method.equals("preview")){
-				SavingsBO savings = (SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request.getSession());
-				AccountPaymentEntity payment = savings.getLastPmnt();
-				if(payment==null || savings.getLastPmntAmnt()==0 || !(new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL) || new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))){
-					if(errors==null)
-						errors = new ActionErrors();
-					errors.add(SavingsConstants.INVALID_LAST_PAYMENT,new ActionMessage(SavingsConstants.INVALID_LAST_PAYMENT));
+		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+		try{
+			if(method!=null && method.equals("load")||
+							method.equals("previous")||
+							method.equals("validate")||
+							method.equals("adjustLastUserAction")||
+							method.equals("cancel")){
+			}else{
+				if(method.equals("preview")){
+					SavingsBO savings = (SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
+					AccountPaymentEntity payment = savings.getLastPmnt();
+					if(payment==null || savings.getLastPmntAmnt()==0 || !(new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL) || new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))){
+						if(errors==null)
+							errors = new ActionErrors();
+						errors.add(SavingsConstants.INVALID_LAST_PAYMENT,new ActionMessage(SavingsConstants.INVALID_LAST_PAYMENT));
+					}
+				}
+				if(errors==null){
+					errors = new ActionErrors();
+					errors.add(super.validate(mapping,request));
 				}
 			}
-			if(errors==null){
-				errors = new ActionErrors();
-				errors.add(super.validate(mapping,request));
-			}
+		}catch(ApplicationException ae){
+			errors = new ActionErrors();
+			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
+					.getValues()));
 		}
-		
 		if (null != errors && !errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);

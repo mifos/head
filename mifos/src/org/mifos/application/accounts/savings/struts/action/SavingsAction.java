@@ -397,6 +397,7 @@ public class SavingsAction extends AccountAppAction {
 		return mapping.findForward("update_success");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward getRecentActivity(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -409,14 +410,15 @@ public class SavingsAction extends AccountAppAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		savings = savingsService.findById(savings.getAccountId());
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST,
-				savings.getRecentAccountActivity(null), request.getSession());
+				savings.getRecentAccountActivity(null), request);
 		return mapping.findForward("getRecentActivity_success");
 	}
-
+	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward getTransactionHistory(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -492,10 +494,11 @@ public class SavingsAction extends AccountAppAction {
 			}
 		}
 		SessionUtils.setAttribute(SavingsConstants.TRXN_HISTORY_LIST,
-				savingsTransactionHistoryViewList, request.getSession());
+				savingsTransactionHistoryViewList, request);
 		return mapping.findForward("getTransactionHistory_success");
 	}
-
+	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward getStatusHistory(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -508,7 +511,7 @@ public class SavingsAction extends AccountAppAction {
 		List<AccountStatusChangeHistoryEntity> savingsStatusHistoryViewList = new ArrayList<AccountStatusChangeHistoryEntity>(
 				savings.getAccountStatusChangeHistory());
 		SessionUtils.setAttribute(SavingsConstants.STATUS_CHANGE_HISTORY_LIST,
-				savingsStatusHistoryViewList, request.getSession());
+				savingsStatusHistoryViewList, request);
 
 		return mapping.findForward("getStatusHistory_success");
 	}
@@ -532,11 +535,12 @@ public class SavingsAction extends AccountAppAction {
 		return mapping.findForward(forward);
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward getDepositDueDetails(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		logger.debug("In SavingsAction::getDepositDueDetails()");
-		request.getSession().removeAttribute(Constants.BUSINESS_KEY);
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
 		SavingsBO savings = savingsService
 				.findBySystemId(((SavingsActionForm) form)
 						.getGlobalAccountNum());
@@ -554,8 +558,7 @@ public class SavingsAction extends AccountAppAction {
 		Hibernate.initialize(savings.getAccountFlags());
 		savings.getAccountState().setLocaleId(uc.getLocaleId());
 		savings.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request
-				.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 		return mapping.findForward("depositduedetails_success");
 	}
 
@@ -566,7 +569,7 @@ public class SavingsAction extends AccountAppAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		savings = savingsService.findBySystemId(((SavingsActionForm) form)
 				.getGlobalAccountNum());
 		savings.setUserContext(uc);
@@ -581,7 +584,7 @@ public class SavingsAction extends AccountAppAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
+				Constants.BUSINESS_KEY, request);
 		savings = savingsService.findBySystemId(((SavingsActionForm) form)
 				.getGlobalAccountNum());
 		savings.setUserContext(uc);
@@ -590,10 +593,10 @@ public class SavingsAction extends AccountAppAction {
 	}
 
 	private void doCleanUp(SavingsActionForm savingsActionForm,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception {
 		savingsActionForm.clear();
 		// remove old savings object
-		request.getSession().removeAttribute(Constants.BUSINESS_KEY);
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
 	}
 
 	private Double removeSign(Money amount) {

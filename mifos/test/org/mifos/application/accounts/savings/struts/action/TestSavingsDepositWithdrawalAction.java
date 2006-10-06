@@ -22,7 +22,10 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
@@ -36,6 +39,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 	private CustomerBO client3;
 	private CustomerBO client4;
 	private SavingsTestHelper helper = new SavingsTestHelper();
+	private String flowKey;
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -55,6 +59,14 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 	}
 	
 	@Override
@@ -78,20 +90,20 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		HibernateUtil.closeSession();
 		
 		savings = new SavingsPersistence().findById(savings.getAccountId());
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
 		verifyForward("load_success");
 
-		List<AccountActionEntity> trxnTypes = (List<AccountActionEntity>)request.getSession().getAttribute(AccountConstants.TRXN_TYPES);
+		List<AccountActionEntity> trxnTypes = (List<AccountActionEntity>)SessionUtils.getAttribute(AccountConstants.TRXN_TYPES,request);
 		assertNotNull(trxnTypes);
 		assertEquals(2, trxnTypes.size());
 		
-		List<CustomerBO> clientList = (List<CustomerBO>)request.getSession().getAttribute(SavingsConstants.CLIENT_LIST);
+		List<CustomerBO> clientList = (List<CustomerBO>)SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,request);
 		assertNotNull(clientList);
 		assertEquals(2, clientList.size());
-		Boolean isBackDatedAllowed = (Boolean)request.getSession().getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED);
+		Boolean isBackDatedAllowed = (Boolean)SessionUtils.getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,request);
 		assertNotNull(isBackDatedAllowed);
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -112,14 +124,14 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		HibernateUtil.closeSession();
 		
 		savings = new SavingsPersistence().findById(savings.getAccountId());
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
 		addRequestParameter("method", "reLoad");
 		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_WITHDRAWAL));
 		actionPerform();
 		verifyForward("load_success");
 		
-		assertNotNull(request.getSession().getAttribute(MasterConstants.PAYMENT_TYPE));
+		assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request));
 	}
 	
 	public void testFailurePreview() throws Exception {
@@ -128,7 +140,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());
-		request.getSession().setAttribute(Constants.BUSINESS_KEY, savings);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("amount", "");
