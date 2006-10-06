@@ -290,6 +290,7 @@
 	<mapping resource="org/mifos/application/customer/business/CustomerScheduleEntity.hbm.xml" />
 
 	<mapping resource="org/mifos/application/accounts/loan/business/LoanFeeScheduleEntity.hbm.xml" />
+	<mapping resource="org/mifos/application/accounts/loan/business/LoanArrearsAgingEntity.hbm.xml" />
 	<mapping resource="org/mifos/application/customer/business/CustomerFeeScheduleEntity.hbm.xml" />
 	<mapping
 		resource="org/mifos/application/customer/util/valueobjects/CustomerActionDate.hbm.xml" />
