@@ -21,7 +21,7 @@
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Client</namefragment> 
 					</displayname>
-					<linkvalue>clientCreationAction.do?method=preLoad&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>
 			</menugroup>
 			<menugroup>
@@ -114,7 +114,7 @@
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Client</namefragment>
 					</displayname>
-					<linkvalue> clientCreationAction.do?method=preLoad&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue> groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
 				</menuitem>
 						
 			</menugroup>
