@@ -126,7 +126,8 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		center.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
 
 		List<java.util.Date> meetingDates = center.getCustomerMeeting()
-				.getMeeting().getAllDates(DateUtils.getLastDayOfNextYear());
+				.getMeeting().getAllDates((short) 10);
+		meetingDates.remove(0);
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
 
@@ -152,13 +153,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				.getCustomerAccount().getAccountActionDates()) {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(1).getTime()), DateUtils
+						.get(0).getTime()), DateUtils
 						.getDateWithoutTimeStamp(actionDateEntity
 								.getActionDate().getTime()));
 			else if (actionDateEntity.getInstallmentId().equals(
 					Short.valueOf("3")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(2).getTime()), DateUtils
+						.get(1).getTime()), DateUtils
 						.getDateWithoutTimeStamp(actionDateEntity
 								.getActionDate().getTime()));
 		}
@@ -167,13 +168,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				.getCustomerAccount().getAccountActionDates()) {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(1).getTime()), DateUtils
+						.get(0).getTime()), DateUtils
 						.getDateWithoutTimeStamp(actionDateEntity
 								.getActionDate().getTime()));
 			else if (actionDateEntity.getInstallmentId().equals(
 					Short.valueOf("3")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-						.get(2).getTime()), DateUtils
+						.get(1).getTime()), DateUtils
 						.getDateWithoutTimeStamp(actionDateEntity
 								.getActionDate().getTime()));
 		}
@@ -224,7 +225,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 						.getActionDate().getTime()));
 		for (AccountBO account : center.getAccounts()) {
 			meetingDates = center.getCustomerMeeting().getMeeting()
-					.getAllDates(DateUtils.getLastDayOfNextYear());
+					.getAllDates((short) 10);
 			meetingDates.remove(0);
 			for (AccountActionDateEntity actionDateEntity : account
 					.getAccountActionDates()) {
@@ -243,19 +244,6 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 			}
 		}
 		for (AccountBO account : group.getAccounts()) {
-			if (account instanceof LoanBO) {
-				meetingDates = center
-						.getCustomerMeeting()
-						.getMeeting()
-						.getAllDates(
-								accountBO
-										.getApplicableIdsForFutureInstallments()
-										.size() + 1);
-			} else {
-				meetingDates = center.getCustomerMeeting().getMeeting()
-						.getAllDates(DateUtils.getLastDayOfNextYear());
-				meetingDates.remove(0);
-			}
 			for (AccountActionDateEntity actionDateEntity : account
 					.getAccountActionDates()) {
 				if (actionDateEntity.getInstallmentId().equals(
@@ -338,13 +326,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("2")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
+							.get(0).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 				else if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("3")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(2).getTime()), DateUtils
+							.get(1).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 			}
@@ -355,13 +343,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("2")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
+							.get(0).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 				else if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("3")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(2).getTime()), DateUtils
+							.get(1).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 			}
@@ -372,13 +360,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("2")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
+							.get(0).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 				else if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("3")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(2).getTime()), DateUtils
+							.get(1).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 			}
@@ -390,13 +378,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("2")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(1).getTime()), DateUtils
+							.get(0).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 				else if (actionDateEntity.getInstallmentId().equals(
 						Short.valueOf("3")))
 					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
-							.get(2).getTime()), DateUtils
+							.get(1).getTime()), DateUtils
 							.getDateWithoutTimeStamp(actionDateEntity
 									.getActionDate().getTime()));
 			}

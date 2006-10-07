@@ -125,4 +125,14 @@ public class DateUtils {
 		cal1.set(cal.get(Calendar.YEAR)+2,cal.get(Calendar.MONTH),cal.get(Calendar.DATE),0,0,0);
 		return cal1;
 	}
+	
+	public static Calendar getCalendar(Date date) {
+		Calendar dateCalendar = new GregorianCalendar();
+		dateCalendar.setTimeInMillis(date.getTime());
+		int year = dateCalendar.get(Calendar.YEAR);
+		int month = dateCalendar.get(Calendar.MONTH);
+		int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
+		dateCalendar = new GregorianCalendar(year, month, day);
+		return dateCalendar;
+	}
 }

@@ -122,6 +122,7 @@ public abstract class TaskHelper {
 			while ((System.currentTimeMillis() - timeInMillis)
 					/ (1000 * 60 * 60 * 24) != 1) {
 				perform(timeInMillis + (1000 * 60 * 60 * 24));
+				timeInMillis +=  (1000 * 60 * 60 * 24);
 			}
 		} else {
 			if (timeInMillis == 0) {

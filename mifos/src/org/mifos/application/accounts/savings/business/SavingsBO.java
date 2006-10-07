@@ -4,7 +4,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -901,8 +900,7 @@ public class SavingsBO extends AccountBO {
 			MeetingBO meeting) throws AccountException {
 		List<Date> depositDates = null;
 		try {
-			depositDates = meeting.getAllDates(DateUtils
-					.getLastDayOfNextYear());
+			depositDates = meeting.getAllDates((short) 10);
 		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}
@@ -920,42 +918,29 @@ public class SavingsBO extends AccountBO {
 	}
 
 	private void generateDepositAccountActions(CustomerBO customer,
-			MeetingBO meeting, Short installmentId, Date endDate)
+			MeetingBO meeting, AccountActionDateEntity lastInstallment)
 			throws AccountException {
 		List<Date> depositDates;
 		try {
-			depositDates = meeting.getAllDates(endDate);
+			depositDates = meeting.getAllDates((short) 11);
+			if (depositDates.get(0).compareTo(lastInstallment.getActionDate()) == 0) {
+				depositDates.remove(0);
+			} else {
+				depositDates.remove(10);
+			}
 		} catch (MeetingException me) {
 			throw new AccountException(me);
 		}
-		if (skipFirstInstallment(depositDates.get(0)))
-			depositDates.remove(0);
-		short installmentNumber = installmentId;
+		short installmentNumber = lastInstallment.getInstallmentId();
 		for (Date dt : depositDates) {
 			AccountActionDateEntity actionDate = helper.createActionDateObject(
-					this, customer, installmentNumber++, dt, userContext
-							.getId(), getRecommendedAmount());
+					this, customer, ++installmentNumber, dt, (short)1, getRecommendedAmount());
 
 			addAccountActionDate(actionDate);
 			logger
 					.debug("In SavingsBO::generateDepositAccountActions(), Successfully added account action on date: "
 							+ dt);
 		}
-	}
-
-	private boolean skipFirstInstallment(Date date) {
-		Calendar fistDay = DateUtils.getFistDayOfNextYear(Calendar
-				.getInstance());
-		Calendar firstInstallmentDate = Calendar.getInstance();
-		firstInstallmentDate.setTime(date);
-		Calendar firstInstallmentDateWithoutTimestamp = new GregorianCalendar(
-				firstInstallmentDate.get(Calendar.YEAR), firstInstallmentDate
-						.get(Calendar.MONTH), firstInstallmentDate
-						.get(Calendar.DATE), 0, 0, 0);
-
-		return firstInstallmentDateWithoutTimestamp.compareTo(fistDay) < 0 ? true
-				: false;
-
 	}
 
 	@Override
@@ -1934,21 +1919,28 @@ public class SavingsBO extends AccountBO {
 	}
 
 	@Override
-	public void regenerateFutureInstallments(Short nextIntallmentId)
+	public void regenerateFutureInstallments(Short nextInstallmentId)
 			throws AccountException {
 		if (!this.getAccountState().getId().equals(
 				AccountStates.SAVINGS_ACC_CANCEL)
 				&& !this.getAccountState().getId().equals(
 						AccountStates.SAVINGS_ACC_CLOSED)) {
 			List<Date> meetingDates = null;
+			int installmentSize = getLastInstallmentId();
+			int totalInstallmentDatesToBeChanged = installmentSize
+					- nextInstallmentId + 1;
 			try {
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
-						.getAllDates(DateUtils.getLastDayOfNextYear());
+						.getAllDates(totalInstallmentDatesToBeChanged + 1);
+				if (meetingDates.get(0).compareTo(
+						DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
+					meetingDates.remove(0);
+				} else {
+					meetingDates.remove(totalInstallmentDatesToBeChanged);
+				}
 			} catch (MeetingException me) {
 				throw new AccountException(me);
 			}
-			meetingDates.remove(0);
-			deleteFutureInstallments();
 			if (getCustomer().getCustomerLevel().getId().equals(
 					CustomerConstants.CLIENT_LEVEL_ID)
 					|| (getCustomer().getCustomerLevel().getId().equals(
@@ -1956,12 +1948,12 @@ public class SavingsBO extends AccountBO {
 							.getId().equals(
 									RecommendedAmountUnit.COMPLETEGROUP
 											.getValue()))) {
-				for (Date date : meetingDates) {
-					AccountActionDateEntity actionDate = helper
-							.createActionDateObject(this, getCustomer(),
-									nextIntallmentId++, date, null,
-									getRecommendedAmount());
-					addAccountActionDate(actionDate);
+				for (int count = 0; count < meetingDates.size(); count++) {
+					short installmentId = (short) (nextInstallmentId.intValue() + count);
+					AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
+					if (accountActionDate != null)
+						accountActionDate.setActionDate(new java.sql.Date(
+								meetingDates.get(count).getTime()));
 				}
 			} else {
 				List<CustomerBO> children;
@@ -1971,14 +1963,14 @@ public class SavingsBO extends AccountBO {
 				} catch (CustomerException ce) {
 					throw new AccountException(ce);
 				}
-				for (Date date : meetingDates) {
-					Short installmentId = new Short(nextIntallmentId++);
+				for (int count = 0; count < meetingDates.size(); count++) {
+					short installmentId = (short) (nextInstallmentId.intValue() + count);
 					for (CustomerBO customer : children) {
-						AccountActionDateEntity actionDate = helper
-								.createActionDateObject(this, customer,
-										installmentId, date, null,
-										getRecommendedAmount());
-						addAccountActionDate(actionDate);
+						AccountActionDateEntity accountActionDate = getAccountActionDate(
+								installmentId, customer.getCustomerId());
+						if (accountActionDate != null)
+							accountActionDate.setActionDate(new java.sql.Date(
+									meetingDates.get(count).getTime()));
 					}
 				}
 			}
@@ -2061,20 +2053,17 @@ public class SavingsBO extends AccountBO {
 		}
 	}
 
-	public void generateMeetingsForYearAfterNextYear() throws AccountException {
+	public void generateNextSetOfMeetingDates() throws AccountException {
 		CustomerBO customerBO = getCustomer();
 		if (customerBO.getCustomerMeeting() != null
 				&& customerBO.getCustomerMeeting().getMeeting() != null) {
 			MeetingBO depositSchedule = customerBO.getCustomerMeeting()
 					.getMeeting();
-
 			Calendar calendar = Calendar.getInstance();
 			Short lastInstallmentId = getLastInstallmentId();
-			AccountActionDateEntity installment = getAccountActionDate(lastInstallmentId);
-			calendar.setTimeInMillis(installment.getActionDate().getTime());
+			AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
+			calendar.setTimeInMillis(lastInstallment.getActionDate().getTime());
 			depositSchedule.setMeetingStartDate(calendar);
-
-			Date endDate = DateUtils.getLastDayOfYearAfterNextYear().getTime();
 			if (customerBO.getCustomerLevel().getId().equals(
 					CustomerConstants.CLIENT_LEVEL_ID)
 					|| (customerBO.getCustomerLevel().getId().equals(
@@ -2083,7 +2072,7 @@ public class SavingsBO extends AccountBO {
 									RecommendedAmountUnit.COMPLETEGROUP
 											.getValue()))) {
 				generateDepositAccountActions(customerBO, depositSchedule,
-						(short) (installment.getInstallmentId() + 1), endDate);
+						lastInstallment);
 			} else {
 				List<CustomerBO> children;
 				try {
@@ -2093,14 +2082,14 @@ public class SavingsBO extends AccountBO {
 					throw new AccountException(ce);
 				}
 				for (CustomerBO customer : children) {
-
 					generateDepositAccountActions(customer, depositSchedule,
-							installment.getInstallmentId(), endDate);
+							lastInstallment);
 				}
 			}
 		}
 	}
 
+	@Override
 	public Date getNextMeetingDate() {
 		AccountActionDateEntity nextAccountAction = getDetailsOfNextInstallment();
 

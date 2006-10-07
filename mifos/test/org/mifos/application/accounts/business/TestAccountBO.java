@@ -433,12 +433,12 @@ public class TestAccountBO extends TestAccount {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
 			else if (actionDateEntity.getInstallmentId().equals(
 					Short.valueOf("3")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
 		}
 
 	}

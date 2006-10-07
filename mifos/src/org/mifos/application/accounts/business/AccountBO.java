@@ -831,9 +831,6 @@ public class AccountBO extends BusinessObject {
 			if (!noOfInstallments.equals(Short.valueOf("0")))
 				dueDates = meeting.getAllDates(noOfInstallments
 						+ installmentToSkip);
-			else
-				dueDates = meeting.getAllDates(DateUtils
-						.getLastDayOfNextYear());
 		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}
@@ -980,7 +977,7 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-	protected Short getLastInstallmentId() {
+	public Short getLastInstallmentId() {
 		Short LastInstallmentId = null;
 		for (AccountActionDateEntity date : this.getAccountActionDates()) {
 

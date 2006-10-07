@@ -398,7 +398,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	@Override
-	protected void regenerateFutureInstallments(Short nextIntallmentId)
+	protected void regenerateFutureInstallments(Short nextInstallmentId)
 			throws AccountException {
 		if (!this.getCustomer().getCustomerStatus().getId().equals(
 				ClientConstants.STATUS_CANCELLED)
@@ -410,33 +410,48 @@ public class CustomerAccountBO extends AccountBO {
 						GroupConstants.CLOSED)) {
 
 			List<Date> meetingDates = null;
+			int installmentSize = getLastInstallmentId();
+			int totalInstallmentDatesToBeChanged = installmentSize
+					- nextInstallmentId + 1;
 			try {
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
-						.getAllDates(DateUtils.getLastDayOfNextYear());
-			} catch (MeetingException e) {
-				throw new AccountException(e);
+						.getAllDates(totalInstallmentDatesToBeChanged + 1);
+				if (meetingDates.get(0).compareTo(
+						DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
+					meetingDates.remove(0);
+				} else {
+					meetingDates.remove(totalInstallmentDatesToBeChanged);
+				}
+			} catch (MeetingException me) {
+				throw new AccountException(me);
 			}
-			meetingDates.remove(0);
-			deleteFutureInstallments();
-			for (Date date : meetingDates) {
-				addAccountActionDate(new CustomerScheduleEntity(this,
-						getCustomer(), nextIntallmentId++, new java.sql.Date(
-								date.getTime()), PaymentStatus.UNPAID));
+			for (int count = 0; count < meetingDates.size(); count++) {
+				short installmentId = (short) (nextInstallmentId.intValue() + count);
+				AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
+				if (accountActionDate != null)
+					accountActionDate.setActionDate(new java.sql.Date(
+							meetingDates.get(count).getTime()));
 			}
 		}
 	}
 
-	public void generateMeetingsForYearAfterNextYear() throws AccountException {
+	public void generateNextSetOfMeetingDates() throws AccountException {
 		Short lastInstallmentId = getLastInstallmentId();
+		AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
 		MeetingBO meeting = getCustomer().getCustomerMeeting().getMeeting();
 		Calendar meetingStartDate = meeting.getMeetingStartDate();
-		meeting.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
-				.getInstance()));
+		meeting.setMeetingStartDate(DateUtils.getCalendar(lastInstallment
+				.getActionDate()));
 
 		List<Date> installmentDates = null;
 		try {
-			installmentDates = meeting.getAllDates(DateUtils
-					.getLastDayOfYearAfterNextYear().getTime());
+			installmentDates = meeting.getAllDates((short) 11);
+			if (installmentDates.get(0).compareTo(
+					lastInstallment.getActionDate()) == 0) {
+				installmentDates.remove(0);
+			} else {
+				installmentDates.remove(10);
+			}
 		} catch (MeetingException me) {
 			throw new AccountException(me);
 		}
@@ -511,33 +526,33 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 
-	public Date getUpcomingChargesDate(){
+	public Date getUpcomingChargesDate() {
 		AccountActionDateEntity nextAccountAction = null;
-		if(getTotalDueInstallments().size() > 0){
+		if (getTotalDueInstallments().size() > 0) {
 			nextAccountAction = getTotalDueInstallments().get(0);
 		}
 		return nextAccountAction != null ? nextAccountAction.getActionDate()
 				: new java.sql.Date(System.currentTimeMillis());
 	}
-	
+
 	@Override
 	public Money getTotalAmountDue() {
 		Money totalAmt = getTotalAmountInArrears();
-		List<AccountActionDateEntity> dueActionDateList = getTotalDueInstallments(); 
-		if(dueActionDateList.size() > 0){
+		List<AccountActionDateEntity> dueActionDateList = getTotalDueInstallments();
+		if (dueActionDateList.size() > 0) {
 			AccountActionDateEntity nextInstallment = dueActionDateList.get(0);
 			totalAmt = totalAmt.add(getDueAmount(nextInstallment));
 		}
 		return totalAmt;
 	}
-	
+
 	public AccountActionDateEntity getUpcomingInstallment() {
 		List<AccountActionDateEntity> dueActionDateList = getTotalDueInstallments();
-		if(dueActionDateList.size()>0)
+		if (dueActionDateList.size() > 0)
 			return dueActionDateList.get(0);
 		return null;
 	}
-	
+
 	private void addFeeToAccountFee(Short feeId, Double charge) {
 		FeeBO fee = new FeePersistence().getFee(feeId);
 		AccountFeesEntity accountFee = null;
@@ -747,7 +762,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	private void generateMeetingSchedule() throws AccountException {
 		List<InstallmentDate> installmentDates = getInstallmentDates(
-				getCustomer().getCustomerMeeting().getMeeting(), (short) 0,
+				getCustomer().getCustomerMeeting().getMeeting(), (short) 10,
 				(short) 0);
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)

@@ -56,7 +56,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		userContext=TestObjectFactory.getContext();
+		userContext = TestObjectFactory.getContext();
 		super.setUp();
 	}
 
@@ -97,9 +97,10 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						customerAccount.getAccountId(), transactionDate).size(),
 				0);
 		assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
-		
-		for (CustomerActivityEntity activity : customerAccount.getCustomerActivitDetails()) {
-			
+
+		for (CustomerActivityEntity activity : customerAccount
+				.getCustomerActivitDetails()) {
+
 			assertEquals(transactionDate, activity.getCreatedDate());
 		}
 
@@ -376,7 +377,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			assertEquals(2, accountFeesEntity.getFeeStatus().intValue());
 		}
 	}
-	
+
 	public void testRemoveFeeWithNonActiveCustomer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -394,7 +395,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		customerAccountBO = group.getCustomerAccount();
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
-		for (AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()) {
+		for (AccountFeesEntity accountFeesEntity : customerAccountBO
+				.getAccountFees()) {
 			FeeBO feesBO = accountFeesEntity.getFees();
 			customerAccountBO.removeFees(feesBO.getFeeId(), Short.valueOf("1"));
 		}
@@ -411,11 +413,12 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 		for (AccountFeesEntity accountFeesEntity : group.getCustomerAccount()
 				.getAccountFees()) {
-			assertEquals(Short.valueOf("2"),accountFeesEntity.getFeeStatus());
-			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
+			assertEquals(Short.valueOf("2"), accountFeesEntity.getFeeStatus());
+			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils
+					.getDateWithoutTimeStamp(accountFeesEntity
+							.getStatusChangeDate().getTime()));
 		}
 	}
-
 
 	public void testUpdateAccountActivity() throws NumberFormatException,
 			SystemException, ApplicationException {
@@ -427,8 +430,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			FeeBO feesBO = accountFeesEntity.getFees();
 			feeId = feesBO.getFeeId();
 		}
-		customerAccountBO.updateAccountActivity(null,null,new Money("222"), null,Short
-				.valueOf("1"), "Mainatnence Fee removed");
+		customerAccountBO.updateAccountActivity(null, null, new Money("222"),
+				null, Short.valueOf("1"), "Mainatnence Fee removed");
 		TestObjectFactory.updateObject(customerAccountBO);
 		group = (CustomerBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
@@ -444,26 +447,38 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 	}
 
-	public void testRegenerateFutureInstallments() throws ApplicationException,
-			SystemException {
+	public void testRegenerateFutureInstallments() throws Exception {
 		createCenter();
+		java.util.Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		AccountActionDateEntity accountActionDateEntity = center
 				.getCustomerAccount().getDetailsOfNextInstallment();
+		short nextInstallmentId = 0;
+		if (accountActionDateEntity != null) {
+			if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
+				nextInstallmentId = (short) (accountActionDateEntity
+						.getInstallmentId().intValue() + 1);
+			} else {
+				nextInstallmentId = (short) (accountActionDateEntity
+						.getInstallmentId().intValue());
+			}
+		}
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
-		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
+		List<java.util.Date> meetingDates = null;
+
+		meetingDates = meeting.getAllDates((short) 10);
 		meetingDates.remove(0);
-		center.getCustomerAccount()
-				.regenerateFutureInstallments(
-						(short) (accountActionDateEntity.getInstallmentId()
-								.intValue() + 1));
-		HibernateUtil.getTransaction().commit();
+		center.getCustomerAccount().regenerateFutureInstallments(
+				nextInstallmentId);
+		TestObjectFactory.updateObject(center);
+
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -481,8 +496,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 	}
 
-	public void testRegenerateFutureInstallmentsForGroup()
-			throws ApplicationException, SystemException {
+	public void testRegenerateFutureInstallmentsForGroup() throws Exception {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -491,9 +505,12 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getCustomerId());
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
-		
-		List<java.util.Date> meetingDates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
+
+		List<java.util.Date> meetingDates = meeting.getAllDates((short) 10);
+		meetingDates.remove(0);
 		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
+		TestObjectFactory.updateObject(center);
+		TestObjectFactory.updateObject(group);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -505,12 +522,12 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
 			else if (actionDateEntity.getInstallmentId().equals(
 					Short.valueOf("3")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
 		}
 	}
 
@@ -561,19 +578,23 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		}
 	}
 
-	public void testGenerateMeetingsForNextYear() throws Exception {
+	public void testGenerateMeetingsForNextSet() throws Exception {
 		createInitialObjects();
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		int lastInstallmentId = center.getCustomerAccount()
 				.getAccountActionDates().size();
-		center.getCustomerAccount().generateMeetingsForYearAfterNextYear();
+		AccountActionDateEntity accountActionDateEntity = center
+				.getCustomerAccount().getAccountActionDate(
+						(short) lastInstallmentId);
+		center.getCustomerAccount().generateNextSetOfMeetingDates();
 		MeetingBO meetingBO = center.getCustomerMeeting().getMeeting();
-		meetingBO.setMeetingStartDate(DateUtils.getFistDayOfNextYear(Calendar
-				.getInstance()));
-		List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils.getLastDayOfYearAfterNextYear().getTime());
-
+		meetingBO.setMeetingStartDate(TestObjectFactory
+				.getCalendar(accountActionDateEntity.getActionDate()));
+		List<java.util.Date> meetingDates = meetingBO.getAllDates(DateUtils
+				.getLastDayOfYearAfterNextYear().getTime());
+		meetingDates.remove(0);
 		Date date = center.getCustomerAccount().getAccountActionDate(
 				(short) (lastInstallmentId + 1)).getActionDate();
 		Calendar calendar = Calendar.getInstance();
@@ -625,7 +646,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			assertEquals(amount, customerActivityEntity.getAmount());
 		}
 	}
-	
+
 	public void testApplyMiscChargeWithNonActiveCustomer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -643,14 +664,15 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		customerAccountBO = group.getCustomerAccount();
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
-		try{
-		customerAccountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
-		assertFalse(false);
-		}catch(AccountException e){
-			assertEquals(AccountConstants.MISC_CHARGE_NOT_APPLICABLE,e.getKey());
+		try {
+			customerAccountBO
+					.applyCharge(Short.valueOf("-1"), new Double("33"));
+			assertFalse(false);
+		} catch (AccountException e) {
+			assertEquals(AccountConstants.MISC_CHARGE_NOT_APPLICABLE, e
+					.getKey());
 		}
 	}
-
 
 	public void testApplyMiscChargeWithFirstInstallmentPaid() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -761,7 +783,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 							.getLastAppliedDate().getTime()));
 		}
 	}
-	
+
 	public void testApplyPeriodicFeeToPartialPending() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -782,40 +804,46 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				RecurrenceType.WEEKLY, Short.valueOf("2"));
 		UserContext uc = TestObjectFactory.getUserContext();
 		customerAccountBO.setUserContext(uc);
-		
+
 		customerAccountBO.applyCharge(periodicFee.getFeeId(),
 				((AmountFeeBO) periodicFee).getFeeAmount()
 						.getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		AccountFeesEntity accountFeesEntity = customerAccountBO
 				.getAccountFees(periodicFee.getFeeId());
-		assertEquals(Short.valueOf("1"),accountFeesEntity.getFeeStatus());
+		assertEquals(Short.valueOf("1"), accountFeesEntity.getFeeStatus());
 		assertNull(accountFeesEntity.getLastAppliedDate());
-		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
+		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils
+				.getDateWithoutTimeStamp(accountFeesEntity
+						.getStatusChangeDate().getTime()));
 		assertEquals(1, customerAccountBO.getCustomerActivitDetails().size());
 
-		customerAccountBO.removeFees(periodicFee.getFeeId(),Short.valueOf("1"));
+		customerAccountBO
+				.removeFees(periodicFee.getFeeId(), Short.valueOf("1"));
 		HibernateUtil.commitTransaction();
 		assertEquals(2, customerAccountBO.getCustomerActivitDetails().size());
-		assertEquals(2,customerAccountBO.getAccountFees().size());
-		for (AccountFeesEntity accountFees : customerAccountBO
-				.getAccountFees()) {
-			if(accountFees.getFees().getFeeName().equals("Periodic Fee")){
-				assertEquals(Short.valueOf("2"),accountFees.getFeeStatus());
-				assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(accountFees.getStatusChangeDate().getTime()));
+		assertEquals(2, customerAccountBO.getAccountFees().size());
+		for (AccountFeesEntity accountFees : customerAccountBO.getAccountFees()) {
+			if (accountFees.getFees().getFeeName().equals("Periodic Fee")) {
+				assertEquals(Short.valueOf("2"), accountFees.getFeeStatus());
+				assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),
+						DateUtils.getDateWithoutTimeStamp(accountFees
+								.getStatusChangeDate().getTime()));
 			}
 		}
-		
+
 		customerAccountBO.applyCharge(periodicFee.getFeeId(),
 				((AmountFeeBO) periodicFee).getFeeAmount()
 						.getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
-		assertEquals(3, customerAccountBO.getCustomerActivitDetails().size());	
-		accountFeesEntity = customerAccountBO
-				.getAccountFees(periodicFee.getFeeId());
-		assertEquals(Short.valueOf("1"),accountFeesEntity.getFeeStatus());
+		assertEquals(3, customerAccountBO.getCustomerActivitDetails().size());
+		accountFeesEntity = customerAccountBO.getAccountFees(periodicFee
+				.getFeeId());
+		assertEquals(Short.valueOf("1"), accountFeesEntity.getFeeStatus());
 		assertNull(accountFeesEntity.getLastAppliedDate());
-		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
+		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils
+				.getDateWithoutTimeStamp(accountFeesEntity
+						.getStatusChangeDate().getTime()));
 	}
 
 	public void testApplyUpfrontFee() throws Exception {
@@ -844,7 +872,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		Date lastAppliedDate = null;
 		Money amount = new Money("20");
-	
+
 		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
 				.getAccountActionDates()) {
 			CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
@@ -895,7 +923,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee(
 				"Upfront Fee", FeeCategory.ALLCUSTOMERS, "30",
 				FeePayment.UPFRONT);
-		feeView.add(new FeeView(userContext,upfrontFee));
+		feeView.add(new FeeView(userContext, upfrontFee));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()), feeView);
@@ -957,7 +985,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee(
 				"Upfront Fee", FeeCategory.ALLCUSTOMERS, "30",
 				FeePayment.UPFRONT);
-		feeView.add(new FeeView(userContext,upfrontFee));
+		feeView.add(new FeeView(userContext, upfrontFee));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()), feeView);
@@ -1037,7 +1065,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
 
 	}
-	
+
 	public void testGenerateMeetingScheduleWhenFirstTwoMeeingDatesOfCenterIsPassed()
 			throws ApplicationException, SystemException {
 		MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory
@@ -1045,7 +1073,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meetingBO,
 				new Date(System.currentTimeMillis()));
-		changeAllInstallmentDateToPreviousDate(center.getCustomerAccount(),14);
+		changeAllInstallmentDateToPreviousDate(center.getCustomerAccount(), 14);
 		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1057,7 +1085,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		java.util.Date nextMeetingDate = center.getCustomerAccount().getNextMeetingDate();
+		java.util.Date nextMeetingDate = center.getCustomerAccount()
+				.getNextMeetingDate();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		for (AccountActionDateEntity actionDateEntity : group
@@ -1068,7 +1097,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						.getDateWithoutTimeStamp(nextMeetingDate.getTime()));
 		}
 	}
-	
+
 	public void testGenerateMeetingScheduleForGroupWhenMeeingDatesOfCenterIsPassed()
 			throws ApplicationException, SystemException {
 		MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory
@@ -1100,7 +1129,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						.getDateWithoutTimeStamp(nextMeetingDate.getTime()));
 		}
 	}
-	
+
 	private void createCenter() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -1137,7 +1166,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				new Date(System.currentTimeMillis()));
 	}
 
-	private void applyPayment() throws ServiceException, FinancialException, NumberFormatException, PersistenceException {
+	private void applyPayment() throws ServiceException, FinancialException,
+			NumberFormatException, PersistenceException {
 		client = TestObjectFactory.createClient("Client_Active_test", Short
 				.valueOf("3"), "1.1.1", group, new Date(System
 				.currentTimeMillis()));
@@ -1181,8 +1211,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 					.getMoneyForMFICurrency(100));
 			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
 					accountTrxnEntity, accountFeesActionDetailEntity
-					.getAccountFee(), accountFeesActionDetailEntity
-					.getFeeAmount());
+							.getAccountFee(), accountFeesActionDetailEntity
+							.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
@@ -1203,7 +1233,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		return new Date(currentDateCalendar.getTimeInMillis());
 	}
 
-	private void changeAllInstallmentDateToPreviousDate(CustomerAccountBO customerAccountBO, int noOfDays) {
+	private void changeAllInstallmentDateToPreviousDate(
+			CustomerAccountBO customerAccountBO, int noOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);
@@ -1211,8 +1242,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
 				.getAccountActionDates()) {
-				accountActionDateEntity.setActionDate(new java.sql.Date(
-						currentDateCalendar.getTimeInMillis()));
+			accountActionDateEntity.setActionDate(new java.sql.Date(
+					currentDateCalendar.getTimeInMillis()));
 		}
 	}
 }

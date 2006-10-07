@@ -2023,6 +2023,16 @@ public class TestObjectFactory {
 		session.delete(auditLog);
 		transaction.commit();
 	}
+	
+	public static Calendar getCalendar(Date date) {
+		Calendar dateCalendar = new GregorianCalendar();
+		dateCalendar.setTimeInMillis(date.getTime());
+		int year = dateCalendar.get(Calendar.YEAR);
+		int month = dateCalendar.get(Calendar.MONTH);
+		int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
+		dateCalendar = new GregorianCalendar(year, month, day);
+		return dateCalendar;
+	}
     
    
 }

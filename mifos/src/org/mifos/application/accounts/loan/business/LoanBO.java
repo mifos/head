@@ -1123,19 +1123,27 @@ public class LoanBO extends AccountBO {
 				&& (!this.getAccountState().getId().equals(
 						AccountState.LOANACC_CANCEL.getValue()))) {
 			List<Date> meetingDates = null;
-			int installmentSize = getAccountActionDates().size();
+			int installmentSize = getLastInstallmentId();
 			int totalInstallmentDatesToBeChanged = installmentSize
 					- nextInstallmentId + 1;
 			try {
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
-						.getAllDates(totalInstallmentDatesToBeChanged);
+						.getAllDates(totalInstallmentDatesToBeChanged + 1);
+				if (meetingDates.get(0).compareTo(
+						DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {
+					meetingDates.remove(0);
+				} else {
+					meetingDates.remove(totalInstallmentDatesToBeChanged);
+				}
 			} catch (MeetingException me) {
 				throw new AccountException(me);
 			}
 			for (int count = 0; count < meetingDates.size(); count++) {
 				short installmentId = (short) (nextInstallmentId.intValue() + count);
-				getAccountActionDate(installmentId).setActionDate(
-						new java.sql.Date(meetingDates.get(count).getTime()));
+				AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
+				if (accountActionDate != null)
+					accountActionDate.setActionDate(new java.sql.Date(
+							meetingDates.get(count).getTime()));
 			}
 		}
 	}

@@ -38,36 +38,29 @@
 package org.mifos.framework.util.helpers;
 
 import org.apache.commons.beanutils.Converter;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.configuration.business.SystemConfiguration;
 
 /**
- * This class is used by bean utils to convert string to money object.
- * This converter can be registered with BeanUtils so that it can convert
- * string to money.
+ * This class is used by bean utils to convert string to money object. This
+ * converter can be registered with BeanUtils so that it can convert string to
+ * money.
  */
 public class StringToMoneyConverter implements Converter {
 
-	private SystemConfiguration config;
-	
-	public StringToMoneyConverter(){
-		this.config = Configuration.getInstance().getSystemConfig();
+	public StringToMoneyConverter() {
 	}
-		
+
 	/**
-	 * As of now this method returns a new Money object with the currency set to default currency
-	 * and amount set to the BigDecimal obtained from the value passed to it.
-	 * @see org.apache.commons.beanutils.Converter#convert(java.lang.Class, java.lang.Object)
+	 * As of now this method returns a new Money object with the currency set to
+	 * default currency and amount set to the BigDecimal obtained from the value
+	 * passed to it.
+	 * 
 	 */
 	public Object convert(Class clazz, Object value) {
-		String amnt = (String)value;
-		MifosCurrency defaultCurrency = null; 
-		defaultCurrency = config.getCurrency();
-		if(amnt=="" || amnt.trim().equals("."))
-			return new Money(defaultCurrency,0);
+		String amnt = (String) value;
+		if (amnt == "" || amnt.trim().equals("."))
+			return new Money("0");
 		else
-			return new Money(defaultCurrency,Double.valueOf(amnt));
+			return new Money(amnt);
 	}
 
 }

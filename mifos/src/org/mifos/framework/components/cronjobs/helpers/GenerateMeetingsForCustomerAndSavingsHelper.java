@@ -1,10 +1,10 @@
 package org.mifos.framework.components.cronjobs.helpers;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -25,9 +25,6 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
 	@Override
 	public void execute(long timeInMillis) throws CronJobException {
-
-		if (!isYearEnd(timeInMillis))
-			return;
 		AccountPersistence accountPersistence = new AccountPersistence();
 		List<Integer> customerAccountIds;
 		try {
@@ -39,14 +36,17 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 		List<String> errorList = new ArrayList<String>();
 		for (Integer accountId : customerAccountIds) {
 			try {
+				HibernateUtil.getSessionTL();
 				HibernateUtil.startTransaction();
 				AccountBO accountBO = accountPersistence.getAccount(accountId);
-				if (accountBO instanceof CustomerAccountBO)
-					((CustomerAccountBO) accountBO)
-							.generateMeetingsForYearAfterNextYear();
-				else if (accountBO instanceof SavingsBO)
-					((SavingsBO) accountBO).generateMeetingsForYearAfterNextYear();
-
+				if (isScheduleToBeGenerated(accountBO.getLastInstallmentId(),
+						accountBO.getDetailsOfNextInstallment())) {
+					if (accountBO instanceof CustomerAccountBO)
+						((CustomerAccountBO) accountBO)
+								.generateNextSetOfMeetingDates();
+					else if (accountBO instanceof SavingsBO)
+						((SavingsBO) accountBO).generateNextSetOfMeetingDates();
+				}
 				HibernateUtil.commitTransaction();
 			} catch (Exception e) {
 				HibernateUtil.rollbackTransaction();
@@ -59,17 +59,21 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 			throw new CronJobException(SchedulerConstants.FAILURE, errorList);
 	}
 
-	private boolean isYearEnd(long timeInMillis) {
-		Calendar currentDate = Calendar.getInstance();
-		currentDate.setTimeInMillis(timeInMillis);
-		Calendar lastDayOfyear = Calendar.getInstance();
-		lastDayOfyear.setTime(DateUtils.getLastDayOfCurrentYear());
-		return new GregorianCalendar(currentDate.get(Calendar.YEAR),
-				currentDate.get(Calendar.MONTH),
-				currentDate.get(Calendar.DATE), 0, 0, 0)
-				.compareTo(new GregorianCalendar(lastDayOfyear
-						.get(Calendar.YEAR), lastDayOfyear.get(Calendar.MONTH),
-						lastDayOfyear.get(Calendar.DATE), 0, 0, 0)) == 0 ? true
-				: false;
+	private boolean isScheduleToBeGenerated(int installmentSize,
+			AccountActionDateEntity nextInstallment) {
+		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		short nextInstallmentId = (short) installmentSize;
+		if (nextInstallment != null) {
+			if (nextInstallment.getActionDate().compareTo(currentDate) == 0) {
+				nextInstallmentId = (short) (nextInstallment.getInstallmentId()
+						.intValue() + 1);
+			} else {
+				nextInstallmentId = (short) (nextInstallment.getInstallmentId()
+						.intValue());
+			}
+		}
+		int totalInstallmentDatesToBeChanged = installmentSize
+				- nextInstallmentId + 1;
+		return totalInstallmentDatesToBeChanged <= 5;
 	}
 }

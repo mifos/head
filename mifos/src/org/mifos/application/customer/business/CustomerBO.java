@@ -723,6 +723,7 @@ public abstract class CustomerBO extends BusinessObject {
 				oldMeeting.update(meeting.getMeetingDetails().getWeekDay(),
 						meeting.getMeetingDetails().getWeekRank(), meeting
 								.getMeetingPlace());
+			customerMeeting.setUpdatedFlag(YesNoFlag.YES.getValue());
 		} catch (MeetingException me) {
 			throw new CustomerException(me);
 		}
