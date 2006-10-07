@@ -5,6 +5,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
@@ -66,8 +67,10 @@
 							</td>	
 							<td>
 							<mifos:select style="width:136px;" property="officeId" onchange="getLoanOfficers(this.form)" >
-								<html-el:options  collection="OfficesBranchOffices" property="officeId" labelProperty="officeName" />
-							</mifos:select> 
+								<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficesBranchOffices')}" var="branchOffice">
+									<html-el:option value="${branchOffice.officeId}">${branchOffice.officeName}</html-el:option>
+								</c:forEach>
+							</mifos:select>
 							</td>
 						</tr>
 						<tr>
@@ -75,10 +78,10 @@
 								<mifos:mifoslabel  name="accountStatus.loanOfficer" mandatory="yes" /> 
 							</td>
 							<td>
-								<mifos:select 
-									style="width:136px;" 
-									property="personnelId">
-										<html-el:options collection="loanOfficers" property="personnelId" labelProperty="displayName" />
+								<mifos:select style="width:136px;" property="personnelId">
+									<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}" var="loanOfficer">
+										<html-el:option value="${loanOfficer.personnelId}">${loanOfficer.displayName}</html-el:option>
+									</c:forEach>
 								</mifos:select>
 							</td>
 						</tr>
@@ -88,7 +91,7 @@
 							</td>
 							<td>
 							<html-el:select property="type" style="width:136px;">
-								<html-el:option value="0">Loan</html-el:option>
+								<html-el:option value="0"><mifos:mifoslabel name="accountStatus.loan"/></html-el:option>
 							</html-el:select>
 							</td>
 						</tr>
@@ -98,7 +101,7 @@
 							</td>
 							<td>
 							<html-el:select property="currentStatus" style="width:136px;" >
-								<html-el:option value="2">Pending-Approval</html-el:option>
+								<html-el:option value="2"><mifos:mifoslabel name="accountStatus.state"/></html-el:option>
 							</html-el:select>
 							</td>
 						</tr>
@@ -132,7 +135,7 @@
 
 					</td>
 				</tr>
-			</table>
+			</table><html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

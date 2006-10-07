@@ -77,7 +77,7 @@
 									<html-el:link href="loanAccountAction.do?method=get
 									&globalAccountNum=${requestScope.globalAccountNum}
 									&recordOfficeId=${requestScope.loan.office.officeId}
-									&recordLoanOfficerId=${requestScope.loan.personnel.personnelId}">
+									&recordLoanOfficerId=${requestScope.loan.personnel.personnelId}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="loan.view_loan_acc1" />
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 										<mifos:mifoslabel name="loan.view_loan_acc2" />

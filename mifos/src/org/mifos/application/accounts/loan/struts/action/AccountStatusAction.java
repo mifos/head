@@ -65,6 +65,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountStatusAction extends BaseAction {
 	private MasterDataService masterService;
@@ -86,6 +87,7 @@ public class AccountStatusAction extends BaseAction {
 				BusinessServiceName.Office);
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse httpservletresponse)
 			throws Exception {
@@ -99,21 +101,22 @@ public class AccountStatusAction extends BaseAction {
 				.getActiveBranches(userContext.getBranchId());
 
 		SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
-				activeBranches, request.getSession());
+				activeBranches, request);
 
 		if (activeBranches.size() == 1) {
 			List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
 					userContext, activeBranches.get(0).getOfficeId());
 			SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
-					loanOfficers, request.getSession());
+					loanOfficers, request);
 		} else {
 			SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
-					new ArrayList<PersonnelView>(), request.getSession());
+					new ArrayList<PersonnelView>(), request);
 		}
 		return mapping.findForward(ActionForwards.changeAccountStatus_success
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward searchResults(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse httpservletresponse)
 			throws Exception {
@@ -129,7 +132,6 @@ public class AccountStatusAction extends BaseAction {
 			loanBO.getAccountState().setLocaleId(
 					getUserContext(request).getLocaleId());
 		if (searchResults == null) {
-			System.out.println("null returned");
 			throw new AccountException(LoanConstants.NOSEARCHRESULTS);
 		}
 		if (searchResults.size() == 0) {
@@ -137,13 +139,14 @@ public class AccountStatusAction extends BaseAction {
 		}
 
 		SessionUtils.setAttribute(LoanConstants.SEARCH_RESULTS, searchResults,
-				request.getSession());
+				request);
 
 		return mapping
 				.findForward(ActionForwards.changeAccountStatusSearch_success
 						.toString());
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse httpservletresponse)
 			throws Exception {
@@ -152,15 +155,14 @@ public class AccountStatusAction extends BaseAction {
 		List accountList = updateAccountsStatus(accountStatusActionForm
 				.getAccountRecords(), accountStatusActionForm.getNewStatus(),
 				accountStatusActionForm.getComments(), getUserContext(request));
-
-		SessionUtils.setAttribute(LoanConstants.ACCOUNTS_LIST, accountList,
-				request.getSession());
+		request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountList);
 
 		return mapping
 				.findForward(ActionForwards.changeAccountStatusConfirmation_success
 						.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward getLoanOfficers(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
@@ -168,8 +170,7 @@ public class AccountStatusAction extends BaseAction {
 		Short officeId = Short.valueOf(accountStatusActionForm.getOfficeId());
 		List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
 				getUserContext(request), officeId);
-		SessionUtils.setAttribute("loanOfficers", loanOfficers, request
-				.getSession());
+		SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers, request);
 
 		return mapping.findForward(ActionForwards.changeAccountStatus_success
 				.toString());

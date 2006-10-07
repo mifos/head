@@ -1,6 +1,5 @@
 package org.mifos.application.accounts.loan.struts.action;
 
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,15 +78,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/accounts/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/accounts/struts-config.xml").getPath());
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
@@ -112,11 +105,12 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-	
-	public void testLoadChangeLog(){
+
+	public void testLoadChangeLog() {
 		accountBO = getLoanAccount();
-		AuditLog auditLog = new AuditLog(accountBO.getAccountId(), EntityType.LOAN.getValue(), "Mifos", new java.sql.Date(System.currentTimeMillis()),
-				Short.valueOf("3"));
+		AuditLog auditLog = new AuditLog(accountBO.getAccountId(),
+				EntityType.LOAN.getValue(), "Mifos", new java.sql.Date(System
+						.currentTimeMillis()), Short.valueOf("3"));
 		Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
 		AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1",
 				"test_1", "new_test_1", auditLog);
@@ -129,12 +123,13 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("entityType", "Loan");
 		addRequestParameter("entityId", accountBO.getAccountId().toString());
 		actionPerform();
-		assertEquals(1,((List)request.getSession().getAttribute(AuditConstants.AUDITLOGRECORDS)).size());
+		assertEquals(1, ((List) request.getSession().getAttribute(
+				AuditConstants.AUDITLOGRECORDS)).size());
 		verifyForward("viewLoanChangeLog");
 		TestObjectFactory.cleanUpChangeLog();
 	}
-	
-	public void testCancelChangeLog(){
+
+	public void testCancelChangeLog() {
 		accountBO = getLoanAccount();
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -144,25 +139,20 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		verifyForward("cancelLoanChangeLog");
 	}
 
-	public void testGetAllActivity() {
-		try {
-			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-			Date startDate = new Date(System.currentTimeMillis());
-			accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
-			LoanBO loan = (LoanBO) accountBO;
-			setRequestPathInfo("/loanAccountAction.do");
-			addRequestParameter("method", "getAllActivity");
-			addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
-			addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
-					.getAttribute(Constants.CURRENTFLOWKEY));
-			actionPerform();
-			verifyForward("getAllActivity_success");
-			assertEquals(1, ((List<LoanActivityView>) SessionUtils
-					.getAttribute(LoanConstants.LOAN_ALL_ACTIVITY_VIEW, request
-							.getSession())).size());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void testGetAllActivity() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		LoanBO loan = (LoanBO) accountBO;
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getAllActivity");
+		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyForward("getAllActivity_success");
+		assertEquals(1, ((List<LoanActivityView>) SessionUtils.getAttribute(
+				LoanConstants.LOAN_ALL_ACTIVITY_VIEW, request)).size());
 	}
 
 	public void testGetInstallmentDetails() {

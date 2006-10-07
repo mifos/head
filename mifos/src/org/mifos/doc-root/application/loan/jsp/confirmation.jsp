@@ -4,6 +4,7 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutmenu">
 	<tiles:put name="body" type="string">
@@ -26,14 +27,13 @@
 							name="accountStatus.statusmessage" />:<br><br></td>
 							
 					</tr>
-					<c:forEach var="account" items="${sessionScope.accountsList}">
+					<c:forEach var="account" items="${accountsList}">
 					<tr class="fontnormal">
 						<td valign="top">
 							<span class="fontnormal">
-								<html-el:link href="loanAccountAction.do?method=get&globalAccountNum=${account}">
+								<html-el:link href="loanAccountAction.do?method=get&globalAccountNum=${account}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="accountStatus.account" />
 									<c:out value="${account}" />
-							
 								</html-el:link>
 							</span>
 						</td>
