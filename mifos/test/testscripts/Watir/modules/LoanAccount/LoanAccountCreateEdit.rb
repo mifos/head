@@ -210,7 +210,7 @@ class LoanAccountCreateEdit<TestClass
   def search_client() 
     begin
       $ie.link(:text,@@loan_account_link).click
-      $ie.text_field(:name,"searchNode(searchString)").set(@@display_name)
+      $ie.text_field(:name,"searchString").set(@@display_name)
       $ie.button(:value,@@loanprop['loan.search']).click
       assert($ie.contains_text(@@display_name))
       $logger.log_results("Search results contains "+@@display_name.to_s,"N/A",@@display_name.to_s+" should exist","Passed")
@@ -567,7 +567,7 @@ class LoanAccountCreateEdit<TestClass
     begin
       $ie.link(:text,"Clients & Accounts").click
       $ie.link(:text,@@loan_account_link).click
-      $ie.text_field(:name,"searchNode(searchString)").set(@@display_name)
+      $ie.text_field(:name,"searchString").set(@@display_name)
       $ie.button(:value,@@loanprop['loan.search']).click
       client_data=@@display_name+":ID"+@@global_account_num
       $ie.link(:text,client_data).click
