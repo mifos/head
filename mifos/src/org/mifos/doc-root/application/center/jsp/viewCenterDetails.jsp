@@ -454,6 +454,11 @@
 									</c:if>
 								</c:forEach>
 							</c:forEach> <br>
+							<br>
+							<html-el:link href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+							<mifos:mifoslabel
+								name="Center.ChangeLogLink" bundle="CenterUIResources"></mifos:mifoslabel>
+							</html-el:link> <br>
 
 						</tr>
 					</table>

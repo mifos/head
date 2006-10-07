@@ -239,7 +239,11 @@ public class CenterCustAction extends CustAction {
 		if(actionForm.getMfiJoiningDate()!=null)
 			mfiJoiningDate = getDateFromString(actionForm.getMfiJoiningDate(), getUserContext(request)
 				.getPereferedLocale());
-		center.update(getUserContext(request), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), mfiJoiningDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
+		CenterBO centerBO = ((CenterBusinessService)getService()).findBySystemId(center.getGlobalCustNum());
+		centerBO.setVersionNo(center.getVersionNo());
+		centerBO.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(centerBO);
+		centerBO.update(getUserContext(request), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), mfiJoiningDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 

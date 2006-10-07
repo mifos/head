@@ -157,7 +157,8 @@ public class InterceptHelper {
 								initialValues.put(propertyNames[i], new String((byte[])propertyValues[i]));
 							}else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
 								try{
-									initialValues.put(propertyNames[i], DateHelper.getUserLocaleDate(locale,propertyValues[i].toString()));
+									Date date=(Date)propertyValues[i];
+									initialValues.put(propertyNames[i], DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
 								}catch(Exception e){
 									initialValues.put(propertyNames[i],propertyValues[i].toString());
 								}
@@ -184,7 +185,8 @@ public class InterceptHelper {
 								changedValues.put(propertyNames[i], new String((byte[])propertyValues[i]));
 							}else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
 								try{
-									changedValues.put(propertyNames[i], DateHelper.getUserLocaleDate(locale,propertyValues[i].toString()));
+									Date date=(Date)propertyValues[i];
+									changedValues.put(propertyNames[i], DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
 								}catch(Exception e){
 									changedValues.put(propertyNames[i],propertyValues[i].toString());
 								}
@@ -249,6 +251,7 @@ public class InterceptHelper {
 	
 	
 	public void readFurtherMeta(Object obj,String firstName,String state) {
+		logger.debug("readFurtherMeta firstName : " + firstName);
 		Class clazz = getClazz(obj);
 
 		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
@@ -263,7 +266,7 @@ public class InterceptHelper {
 		
 		
 		for (int i = 0; i < propertyNames.length; i++) {
-			
+			logger.debug("readFurtherMeta property : " + propertyNames[i]);
 			setColumnValues(propertyTypes[i],propertyNames[i],firstName,state,propertyValues[i]);
 			
 			//Reading masterdata Types
@@ -297,6 +300,7 @@ public class InterceptHelper {
 					!(propertyValues[i] instanceof MasterDataEntity) && 
 					AuditConfigurtion.isObjectToBeLogged(entityName,propertyNames[i],firstName)) {
 				Object obj1 = propertyValues[i];
+				logger.debug("readFurtherMeta propertyValues[i] : " + propertyValues[i]);
 				if (obj1 != null) {
 					readFurtherMeta(obj1, propertyNames[i],state);
 				}
@@ -337,7 +341,8 @@ public class InterceptHelper {
 								initialValues.put(name, new String((byte[])propertyValues[i]));	
 						 }else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
 							 try{
-								initialValues.put(name, DateHelper.getUserLocaleDate(locale,propertyValues[i].toString()));
+								 Date date=(Date)propertyValues[i];
+							     initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
 							 }catch(Exception e){
 								 initialValues.put(name, propertyValues[i].toString());
 							 }
@@ -364,7 +369,8 @@ public class InterceptHelper {
 						 }else if(propertyValues[i] instanceof byte[] && propertyValues[i]!=null){
 							 changedValues.put(name, new String((byte[])propertyValues[i]));	
 						 }else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
-							 changedValues.put(name, DateHelper.getUserLocaleDate(locale,propertyValues[i].toString()));
+							 Date date=(Date)propertyValues[i];
+							 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
 						 }else{
 							 changedValues.put(name, propertyValues[i]);
 						 }
@@ -397,7 +403,8 @@ public class InterceptHelper {
 							initialValues.put(name, new String((byte[])propertyValue));	
 					 }else if(propertyValue instanceof Date && propertyValue!=null){
 						 try{
-							initialValues.put(name, DateHelper.getUserLocaleDate(locale,propertyValue.toString()));
+							 Date date=(Date)propertyValue;
+							initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
 						 }catch(Exception e){
 							 initialValues.put(name, propertyValue.toString());
 						 }
@@ -425,7 +432,8 @@ public class InterceptHelper {
 						 changedValues.put(name, new String((byte[])propertyValue));	
 					 }else if(propertyValue instanceof Date && propertyValue!=null){
 						 try{
-							 changedValues.put(name, DateHelper.getUserLocaleDate(locale,propertyValue.toString()));
+							 Date date=(Date)propertyValue;
+							 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
 						 }catch(Exception e){
 							 changedValues.put(name, propertyValue.toString());
 						 }
@@ -489,13 +497,15 @@ public class InterceptHelper {
 						 }else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
 							 if(!oldValue.equals("")){
 								 try{
-									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,propertyValues[i].toString()).toString().concat(",").concat(oldValue));
+									 Date date=(Date)propertyValues[i];
+									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
 								 }catch(Exception e){
 									 initialValues.put(name,propertyValues[i].toString().concat(",").concat(oldValue));
 								 }
 							 }else{
 								 try{
-									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,propertyValues[i].toString()));
+									 Date date=(Date)propertyValues[i];
+									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
 								 }catch(Exception e){
 									 initialValues.put(name,propertyValues[i].toString());
 								 }
@@ -543,13 +553,15 @@ public class InterceptHelper {
 						 }else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
 							 if(!oldValue.equals("")){
 								 try{
-									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,propertyValues[i].toString()).toString().concat(",").concat(oldValue));
+									 Date date= (Date)propertyValues[i];	
+									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
 								 }catch(Exception e){
 									 changedValues.put(name, propertyValues[i].toString().concat(",").concat(oldValue));
 								 }
 							 }else{
 								 try{
-									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,propertyValues[i].toString()));
+									 Date date= (Date)propertyValues[i];
+									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
 								 }catch(Exception e){
 									 changedValues.put(name, propertyValues[i].toString());
 								 }
@@ -604,7 +616,7 @@ public class InterceptHelper {
 		//setPrimaryKeyValueForCollectionTypeAndMerge(customMeta,obj,firstName.concat(customMeta.getIdentifierPropertyName()),state);
 		
 		for (int i = 0; i < propertyNames.length; i++) {
-			System.out.println("property Name : " + propertyNames[i]);
+			logger.debug("property Name : " + propertyNames[i]);
 				if (!propertyTypes[i].isEntityType() 
 						&& !propertyTypes[i].isComponentType() && !propertyTypes[i].isCollectionType()) {
 					 if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
@@ -613,16 +625,17 @@ public class InterceptHelper {
 						 if(isValueLoggable(propertyNames[i],firstName)){
 							 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 								 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,propertyValues[i],localeId);
-								 if(initialArray.length()==0 || initialArray.toString().endsWith(","))
+								 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
 									 initialArray.append(value);
-								 else
-									 initialArray.append("-").append(value);
+								 else if(value.trim().length()!=0)
+									 initialArray.append("-").append(value);	 
 							 }else{
 								 if(propertyValues[i]!= null)
-									 if(initialArray.length()==0 || initialArray.toString().endsWith(","))
+									 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
 										 initialArray.append(propertyValues[i]);
-									 else
+									 else if(propertyValues[i].toString().trim().length()!=0)
 										 initialArray.append("-").append(propertyValues[i]);
+									 
 							 }
 						 }
 					 }
@@ -632,16 +645,15 @@ public class InterceptHelper {
 						 if(isValueLoggable(propertyNames[i],firstName)){
 							 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 								 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,propertyValues[i],localeId);
-								 if(changeArray.length()==0 || changeArray.toString().endsWith(","))
+								 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
 									 changeArray.append(value);
-								 else
+								 else if(value.trim().length()!=0)
 									 changeArray.append("-").append(value);
 							 }else{
-								 
 								 if(propertyValues[i]!= null)
-									 if(changeArray.length()==0 || changeArray.toString().endsWith(","))
+									 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
 										 changeArray.append(propertyValues[i]);
-									 else
+									 else if(propertyValues[i].toString().trim().length()!=0)
 										 changeArray.append("-").append(propertyValues[i]);
 							 }
 						 }
@@ -664,7 +676,6 @@ public class InterceptHelper {
 					}
 				}
 		}
-
 	}
 
 	
@@ -726,14 +737,14 @@ public class InterceptHelper {
 			if(isValueLoggable(name,null)){
 				if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 					String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
-					if(initialArray.length()==0 || initialArray.toString().endsWith(","))
+					if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
 						 initialArray.append(value);
-				    else
+				    else if(value.trim().length()!=0)
 						 initialArray.append("-").append(value);
 				}else{
-					if(initialArray.length()==0 || initialArray.toString().endsWith(","))
+					if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
 			    		 initialArray.append(customMeta.getIdentifier(obj,EntityMode.POJO));
-				    else
+				    else if(customMeta.getIdentifier(obj,EntityMode.POJO).toString().trim().length()!=0)
 						 initialArray.append("-").append(customMeta.getIdentifier(obj,EntityMode.POJO));
 				}
 			}
@@ -743,14 +754,14 @@ public class InterceptHelper {
 			if(isValueLoggable(name,null)){
 				if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 					String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
-					if(changeArray.length()==0 || changeArray.toString().endsWith(",")) 
+					if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(",")) 
 						changeArray.append(value);
-				    else
+				    else if(value.trim().length()!=0)
 				    	changeArray.append("-").append(value);
 				}else{
-					if(changeArray.length()==0 || changeArray.toString().endsWith(","))
+					if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
 						changeArray.append(customMeta.getIdentifier(obj,EntityMode.POJO));
-				    else
+				    else if(customMeta.getIdentifier(obj,EntityMode.POJO).toString().trim().length()!=0)
 				    	changeArray.append("-").append(customMeta.getIdentifier(obj,EntityMode.POJO));
 				}
 			}
@@ -762,10 +773,10 @@ public class InterceptHelper {
 			if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 				String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
 				initialValues.put(name, value);
-				System.out.println("i setPrimaryKeyValues "+name+ " : " +  value);
+				logger.debug("i setPrimaryKeyValues "+name+ " : " +  value);
 			}else{
 				initialValues.put(name, customMeta.getIdentifier(obj,EntityMode.POJO));
-				System.out.println("i setPrimaryKeyValues "+name+ " : " + customMeta.getIdentifier(obj,EntityMode.POJO));
+				logger.debug("i setPrimaryKeyValues "+name+ " : " + customMeta.getIdentifier(obj,EntityMode.POJO));
 			}
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
 			if(columnName!=null && !columnName.equals("")){
@@ -777,13 +788,13 @@ public class InterceptHelper {
 		else{
 			if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 				String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
-				System.out.println("c setPrimaryKeyValues "+name+ " : " +  value);
+				logger.debug("c setPrimaryKeyValues "+name+ " : " +  value);
 				changedValues.put(name,value);
 			}else{
 				changedValues.put(name,customMeta.getIdentifier(obj,EntityMode.POJO));
 			}
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
-			System.out.println("c setPrimaryKeyValues "+name+ " : " + customMeta.getIdentifier(obj,EntityMode.POJO));
+			logger.debug("c setPrimaryKeyValues "+name+ " : " + customMeta.getIdentifier(obj,EntityMode.POJO));
 			if(columnName!=null && !columnName.equals("")){
 				columnNames.put(name,columnName);
 			}else{

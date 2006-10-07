@@ -116,8 +116,6 @@ public class GroupBOTest extends MifosTestCase {
 	
 	
 	public void testSuccessfulUpdate_Group_UnderBranchForLoggig() throws Exception {
-			AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
-			auditConfigurtion.createEntityValueMap();
 			String name = "Group_underBranch";
 			String newName = "Group_NameChanged";
 			group = createGroupUnderBranch(name, CustomerStatus.GROUP_ACTIVE,getCustomFields());
@@ -167,8 +165,6 @@ public class GroupBOTest extends MifosTestCase {
 	}
 	
 	public void testSuccessfulTransferToCenterInSameBranchForLogging() throws Exception {
-		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
-		auditConfigurtion.createEntityValueMap();
 		createObjectsForTranferToCenterInSameBranch();
 		String newCenterSearchId = center1.getSearchId();
 		HibernateUtil.closeSession();
@@ -182,6 +178,8 @@ public class GroupBOTest extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		center1 = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
@@ -200,7 +198,6 @@ public class GroupBOTest extends MifosTestCase {
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),group.getCustomerId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
-		assertEquals(1,auditLogList.get(0).getAuditLogRecords().size());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
 			if(auditLogRecord.getFieldName().equalsIgnoreCase(" Kendra Name")){
 				auditLogRecord.getOldValue().equalsIgnoreCase("Center");

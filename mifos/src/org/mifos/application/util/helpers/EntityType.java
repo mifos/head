@@ -9,7 +9,8 @@ public enum EntityType {
 	CLIENT(Short.valueOf("1")),
 	OFFICE(Short.valueOf("15")), GROUP(Short.valueOf("12")),
 	LOAN(Short.valueOf("22")),
-	CUSTOMER(Short.valueOf("11"));
+	CUSTOMER(Short.valueOf("11")),
+	SAVING(Short.valueOf("21"));
 
 	Short value;
 

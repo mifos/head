@@ -43,15 +43,16 @@
 		  
 	</entityType>
 	
-	<entityType name="Customer" classPath="org.mifos.application.customer.business.CustomerBO">	
+	<entityType name="Client" classPath="org.mifos.application.customer.client.business.ClientBO">
+		
 		<entitiesToLog>
 			<entity name="customerStatus"/>
 			<entity name="customerFlags"/>
 			<entity name="statusFlag"  parentName="customerFlags"/>
 			<entity name="customerNotes"/>
 		</entitiesToLog>
-			
-				 
+	
+		<propertyName name="commentId" parentName="customerNotes" doNotLog="yes" />		 
  		<propertyName name="_customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
  		<propertyName name="commentDate" parentName="customerNotes" doNotLog="yes" />
   		<propertyName name="customerStatus" displayKey="Group.statusId" doNotLog="No" lookUp="yes">
@@ -65,16 +66,98 @@
 			</entityName>	
 		</propertyName>
 		<propertyName name="comment" displayKey="Group.comment" parentName="customerNotes" />
+	
+	
+		<propertyName name="numChildren" parentName="customerDetail" displayKey="Client.customerDetail.numChildren"/>
 		
-	</entityType>	
+		<propertyName name="line3" parentName="customerAddressDetail" displayKey="Address3"  />
+		<propertyName name="line2" parentName="customerAddressDetail" displayKey="Address2" />
+		<propertyName name="mfiJoiningDate" displayKey="Client.mfiJoiningDate" />		
+		<propertyName name="zip" parentName="customerAddressDetail" displayKey="PostalCode" />
+		<propertyName name="personnelId" displayKey="Client.personnelId" doNotLog="Yes"/>
+		<propertyName name="externalId" displayKey="ExternalId" />
+		<propertyName name="city" parentName="customerAddressDetail" displayKey="City" />
+		<propertyName name="state" parentName="customerAddressDetail" displayKey="State" />
+		<propertyName name="phoneNumber" parentName="customerAddressDetail" displayKey="Client.PhoneNumber" />
+		<propertyName name="country" parentName="customerAddressDetail" displayKey="Client.country" />
+		<propertyName name="displayAddress" displayKey="Client.displayAddress" doNotLog="Yes"/>
+		<propertyName name="line1" parentName="customerAddressDetail" displayKey="Address1" />
+		
+		<propertyName name="displayName" displayKey="Client.displayName" />
+		<propertyName name="governmentId" displayKey="GovernmentId" />
+		<propertyName name="dateOfBirth" displayKey="Client.dateOfBirth" />
+		
+		<propertyName name="firstName" parentName="customerNameDetailSet" displayKey="Client.customerNameDetailSet.firstName" />
+		<propertyName name="secondLastName" parentName="customerNameDetailSet" displayKey="Client.customerNameDetailSet.secondLastName" />
+		<propertyName name="displayName"  parentName="customerNameDetailSet" doNotLog="Yes"/>
+		<propertyName name="nameType"  parentName="customerNameDetailSet" displayKey="Client.customerNameDetailSet.nameType" />
+		<propertyName name="lastName" parentName="customerNameDetailSet" displayKey="Client.customerNameDetailSet.lastName" />
+		<propertyName name="middleName" parentName="customerNameDetailSet" displayKey="Client.customerNameDetailSet.middleName" />
+		
+		<propertyName name="customerFlagId" doNotLog="Yes" />
+		<propertyName name="meetingPlace" parentName="meeting" displayKey="Client.meeting.meetingPlace" />
+		<propertyName name="displayName" parentName="parentCustomer" displayKey="Group,Client.parentCustomer.displayName" />
+		<propertyName name="customerActivationDate"  displayKey="Client,Client.clientApprovalDate" />
+		<propertyName name="governmentId" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="customerActivationDate" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="customerId" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="dateOfBirth" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="trainedDate" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="groupFlag" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="maxChildCount" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="globalCustNum" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="hoUpdated" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="statusId" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="searchId" doNotLog="yes" />
+		<propertyName name="searchId" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="displayAddress" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="mfiJoiningDate" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="trained" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="externalId" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="blackListed" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="externalId" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="blackListed" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="dateOfBirth" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="clientConfidential" parentName="parentCustomer" doNotLog="yes" />
+		<propertyName name="meeting" parentName="parentCustomer" doNotLog="yes" />		
+		<propertyName name="meetingPlace" parentName="meeting" displayKey="Group.meeting.meetingPlace" />	
+		<propertyName name="customerCustomFieldId" parentName="customFieldSet" doNotLog="yes" />
+		<propertyName name="fieldId" parentName="customFieldSet" doNotLog="yes" />
+		<propertyName name="fieldValue" parentName="customFieldSet" displayKey="Customer.customField.displayName" />
+			
+				
+	</entityType>
 	
 	<entityType name="Center" classPath="org.mifos.application.customer.center.business.CenterBO">
 		<entitiesToLog>
+
+			<entity  name="personnel"/>
+		
+			<entity name="customerAddressDetail"/>
+			<entity name="address" parentName="customerAddressDetail"/>
+			<entity name="customerPositions" mergeProperties="yes" propertyNames="position,customer" displayKey="Group.customerPosition.displayName"/>
+			<entity name="position" parentName="customerPositions"/>
+			<entity name="customer" parentName="customerPositions"/>
+			<entity name="customFields" mergeProperties="yes"  displayKey="Customer.customField.displayName"/>
+		
 			<entity name="customerStatus"/>
 			<entity name="customerFlags"/>
 			<entity name="statusFlag"  parentName="customerFlags"/>
 			<entity name="customerNotes"/>
+			
+			<entity name="customerMeeting"/>
+			<entity  name="meeting"  parentName="customerMeeting"/>
+			<entity  name="meetingDetails"  parentName="meeting"/>
+			<entity  name="meetingRecurrence"  parentName="meetingDetails"/>
+			<entity  name="weekDay"  parentName="meetingRecurrence"/>
+			
 		</entitiesToLog>
+		
+		<propertyName name="weekDay" parentName="meetingRecurrence" displayKey="Center.meetingRecurrence.weekDay" doNotLog="No" lookUp="yes">
+			<entityName name="WeekDays">
+				<classPath  path="org.mifos.application.meeting.business.WeekDaysEntity"/>
+			</entityName>	
+		</propertyName>
 		
 		<propertyName name="commentId" parentName="customerNotes" doNotLog="yes" />		 
  		<propertyName name="_customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
@@ -91,60 +174,92 @@
 		</propertyName>
 		<propertyName name="comment" displayKey="Group.comment" parentName="customerNotes" />
 		
-		<propertyName name="line3" parentName="customerAddressDetail" displayKey="Address3"  />
-		<propertyName name="line2" parentName="customerAddressDetail" displayKey="Address2" />
+		<propertyName name="fieldId" parentName="customFields" displayKey="Customer.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
+		<propertyName name="fieldValue" parentName="customFields" displayKey="Customer.customField.feildValue" />
+		<propertyName name="position" parentName="customerPositions" displayKey="Group.Position.displayName" doNotLog="No" lookUp="yes">
+			<entityName name="Position">
+				<classPath  path="org.mifos.application.customer.business.PositionEntity"/>
+			</entityName>	
+		</propertyName>
+		
+		<propertyName name="trained" displayKey="Group.trained" doNotLog="No" />
+		<propertyName name="trainedDate" displayKey="Group.trainedDate"  />
+		<propertyName name="displayName" displayKey="Group.displayName"  />
+		<propertyName name="externalId" displayKey="ExternalId"  />
+
+		<propertyName name="customerFlagId" parentName="customerFlag" doNotLog="yes"/>
+		<propertyName name="addressName" parentName="customerAddressDetail" doNotLog="yes"  />
+		<propertyName name="displayAddress"  doNotLog="yes"  />
+
+		<propertyName name="customerActivationDate"  displayKey="Group,Group.groupApprovalDate" />
+		<propertyName name="meetingStartDate" parentName="meeting" displayKey="Group.meeting.meetingPlace" />		
+
+		<propertyName name="line2" parentName="address" displayKey="Address2" />
+		<propertyName name="line3" parentName="address" displayKey="Address3"  />
+		<propertyName name="line1" parentName="address" displayKey="Address1" />
+		<propertyName name="zip" parentName="address" displayKey="PostalCode" />
+		<propertyName name="city" parentName="address" displayKey="City" />
+		<propertyName name="country" parentName="address" displayKey="Group.country" />
+		<propertyName name="phoneNumber" parentName="address" displayKey="Group.phoneNumber"  />
+		<propertyName name="state" parentName="address"  displayKey="State"  />
+		
+		
 		<propertyName name="mfiJoiningDate" displayKey="Center.mfiJoiningDate" />		
-		<propertyName name="zip" parentName="customerAddressDetail" displayKey="PostalCode" />
+	
 		<propertyName name="personnelId" displayKey="Center.personnelId" doNotLog="Yes"/>
 		<propertyName name="externalId" displayKey="ExternalId" />
-		<propertyName name="city" parentName="customerAddressDetail" displayKey="City" />
-		<propertyName name="state" parentName="customerAddressDetail" displayKey="State" />
-		<propertyName name="phoneNumber" parentName="customerAddressDetail" displayKey="Center.PhoneNumber" />
-		<propertyName name="country" parentName="customerAddressDetail" displayKey="Center.country" />
 		<propertyName name="displayAddress" displayKey="Center.displayAddress" doNotLog="Yes"/>
-		<propertyName name="line1" parentName="customerAddressDetail" displayKey="Address1" />
-		<propertyName name="customerActivationDate"  displayKey="Center,Center.centerApprovalDate" />	
-		<propertyName name="positionId" parentName="customerPositions" doNotLog="yes" />
-		<propertyName name="customerPositionId" parentName="customerPositions" doNotLog="yes" />
-		<propertyName name="customerId" parentName="customerPositions" doNotLog="yes" />
-		
-		<propertyName name="governmentId" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="customerId" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="dateOfBirth" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="trainedDate" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="groupFlag" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="maxChildCount" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="hoUpdated" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="globalCustNum" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="hoUpdated" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="statusId" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="customerActivationDate" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="searchId" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="displayAddress" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="mfiJoiningDate" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="trained" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="externalId" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="blackListed" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="dateOfBirth" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="clientConfidential" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="personnelId" parentName="customerPosition" doNotLog="yes" />
-		<propertyName name="displayName" parentName="customerPosition" displayKey="Center.customerPosition.displayName" />
-		
+
 		<propertyName name="personnelId" parentName="personnel" doNotLog="yes" />
 		<propertyName name="globalPersonnelNum" parentName="personnel" doNotLog="yes" />
 		<propertyName name="userName" parentName="personnel" doNotLog="yes" />
-		<propertyName name="encriptedPassword" parentName="personnel" doNotLog="yes" />
-		
+		<propertyName name="encriptedPassword" parentName="personnel" doNotLog="yes" /> 
+		<propertyName name="locked" parentName="personnel" doNotLog="yes" />
+		<propertyName name="passwordChanged" parentName="personnel" doNotLog="yes" />
+		<propertyName name="title" parentName="personnel" doNotLog="yes" />
+		<propertyName name="noOfTries" parentName="personnel" doNotLog="yes" />
+		<propertyName name="lastLogin" parentName="personnel" doNotLog="yes" />
+
 		<propertyName name="displayName" parentName="personnel" displayKey="Center.personnel.displayName" />
 		<propertyName name="meetingPlace" parentName="meeting" displayKey="Center.meeting.meetingPlace" />	
 		<propertyName name="customerCustomFieldId" parentName="customFieldSet" doNotLog="yes" />
 		<propertyName name="fieldId" parentName="customFieldSet" doNotLog="yes" />
 		<propertyName name="fieldValue" parentName="customFieldSet" displayKey="Customer.customField.displayName" />
+		
+		<propertyName name="searchId" doNotLog="yes" />
+		
+		<propertyName name="positionId" parentName="customer" doNotLog="yes" />
+		<propertyName name="customerPositionId" parentName="customer" doNotLog="yes" />
+		<propertyName name="customerId" parentName="customer" doNotLog="yes" />
+		<propertyName name="firstName" parentName="customer" doNotLog="yes" />
+		<propertyName name="secondLastName" parentName="customer" doNotLog="yes" />
+		<propertyName name="lastName" parentName="customer" doNotLog="yes" />
+		<propertyName name="governmentId" parentName="customer" doNotLog="yes" />
+		<propertyName name="customerId" parentName="customer" doNotLog="yes" />
+		<propertyName name="dateOfBirth" parentName="customer" doNotLog="yes" />
+		<propertyName name="trainedDate" parentName="customer" doNotLog="yes" />
+		<propertyName name="groupFlag" parentName="customer" doNotLog="yes" />
+		<propertyName name="maxChildCount" parentName="customer" doNotLog="yes" />
+		<propertyName name="hoUpdated" parentName="customer" doNotLog="yes" />
+		<propertyName name="globalCustNum" parentName="customer" doNotLog="yes" />
+		<propertyName name="hoUpdated" parentName="customer" doNotLog="yes" />
+		<propertyName name="statusId" parentName="customer" doNotLog="yes" />
+		<propertyName name="customerActivationDate" parentName="customer" doNotLog="yes" />
+		<propertyName name="searchId" parentName="customer" doNotLog="yes" />
+		<propertyName name="displayAddress" parentName="customer" doNotLog="yes" />
+		<propertyName name="mfiJoiningDate" parentName="customer" doNotLog="yes" />
+		<propertyName name="trained" parentName="customer" doNotLog="yes" />
+		<propertyName name="externalId" parentName="customer" doNotLog="yes" />
+		<propertyName name="blackListed" parentName="customer" doNotLog="yes" />
+		<propertyName name="dateOfBirth" parentName="customer" doNotLog="yes" />
+		<propertyName name="clientConfidential" parentName="customer" doNotLog="yes" />
+		<propertyName name="personnelId" parentName="customer" doNotLog="yes" />
 			
 	</entityType>
 	
 		
 	<entityType name="Group" classPath="org.mifos.application.customer.group.business.GroupBO">	
+	
 		<entitiesToLog>
 			<entity name="customerAddressDetail"/>
 			<entity name="address" parentName="customerAddressDetail"/>
@@ -158,8 +273,20 @@
 			<entity name="customerFlags"/>
 			<entity name="statusFlag"  parentName="customerFlags"/>
 			<entity name="customerNotes"/>
+			
+			<entity name="customerMeeting"/>
+			<entity  name="meeting"  parentName="customerMeeting"/>
+			<entity  name="meetingDetails"  parentName="meeting"/>
+			<entity  name="meetingRecurrence"  parentName="meetingDetails"/>
+			<entity  name="weekDay"  parentName="meetingRecurrence"/>
+		
 		</entitiesToLog>
 		
+		<propertyName name="weekDay" parentName="meetingRecurrence" displayKey="Group.meetingRecurrence.weekDay" doNotLog="No" lookUp="yes">
+			<entityName name="WeekDays">
+				<classPath  path="org.mifos.application.meeting.business.WeekDaysEntity"/>
+			</entityName>	
+		</propertyName>
 
 		<propertyName name="commentId" parentName="customerNotes" doNotLog="yes" />
  		<propertyName name="_customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
@@ -179,8 +306,6 @@
 		
 		<propertyName name="fieldId" parentName="customFields" displayKey="Customer.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
 		<propertyName name="fieldValue" parentName="customFields" displayKey="Customer.customField.feildValue" />
-
-		
 		<propertyName name="position" parentName="customerPositions" displayKey="Group.Position.displayName" doNotLog="No" lookUp="yes">
 			<entityName name="Position">
 				<classPath  path="org.mifos.application.customer.business.PositionEntity"/>
@@ -197,7 +322,7 @@
 		<propertyName name="displayAddress"  doNotLog="yes"  />
 
 		<propertyName name="customerActivationDate"  displayKey="Group,Group.groupApprovalDate" />
-		
+		<propertyName name="meetingStartDate" parentName="meeting" displayKey="Group.meeting.meetingPlace" />		
 
 		<propertyName name="line2" parentName="address" displayKey="Address2" />
 		<propertyName name="line3" parentName="address" displayKey="Address3"  />
@@ -214,7 +339,6 @@
 		<propertyName name="positionId" parentName="customer" doNotLog="yes" />
 		<propertyName name="customerPositionId" parentName="customer" doNotLog="yes" />
 		<propertyName name="customerId" parentName="customer" doNotLog="yes" />
-		
 		<propertyName name="firstName" parentName="customer" doNotLog="yes" />
 		<propertyName name="secondLastName" parentName="customer" doNotLog="yes" />
 		<propertyName name="lastName" parentName="customer" doNotLog="yes" />
@@ -260,13 +384,30 @@
 		<propertyName name="dateOfBirth" parentName="parentCustomer" doNotLog="yes" />
 		<propertyName name="clientConfidential" parentName="parentCustomer" doNotLog="yes" />
 		<propertyName name="meeting" parentName="parentCustomer" doNotLog="yes" />		
-		<propertyName name="meetingPlace" parentName="meeting" displayKey="Group.meeting.meetingPlace" />		
 
 		
 		
+	 </entityType>
+	 
+	 <entityType name="Savings" classPath="org.mifos.application.accounts.savings.business.SavingsBO">
+		
+		<propertyName name="collateralNote" displayKey="Loan.CollateralNote" />
+		<propertyName name="disbursementDate" displayKey="Loan.DisbursementDate" />
+		<propertyName name="noOfInstallments" displayKey="Loan.NoOfInstallments" />
+		<propertyName name="interestRate" displayKey="Interest,Loan.Rate" />
+		<propertyName name="intrestAtDisbursement" displayKey="Interest,Loan.intDedDisbursement" />
+		<propertyName name="gracePeriodDuration" displayKey="Loan.gracePeriodDuration" />
+		<propertyName name="loanAmount" displayKey="Loan.loanAmount" />
+		<propertyName name="closedDate" doNotLog="yes"/>
+		
+		<propertyName name="commentDate" parentName="accountNotes" doNotLog="yes"/>
+		<propertyName name="comment" displayKey="Loan.comment" parentName="accountNotes" />
+		 
+		<propertyName name="_accountFlagsBackref" parentName="accountFlags" doNotLog="yes"/>
+		  
 	</entityType>
 	
-		<entityType name="SavingsProduct" classPath="org.mifos.application.accounts.savings.business.SavingsBO">
+	<!-- <entityType name="SavingsProduct" classPath="org.mifos.application.accounts.savings.business.SavingsBO">
 		<propertyName name="prdOfferingName" displayKey="SavingsProduct.prdOfferingName" />
 		<propertyName name="prdOfferingShortName" displayKey="SavingsProduct.prdOfferingShortName" />
 		<propertyName name="description" displayKey="SavingsProduct.description" />
@@ -287,7 +428,7 @@
 		<propertyName name="globalPrdOfferingNum" parentName="prdCategory" doNotLog="yes" />
 		
 		
-	</entityType>
+	</entityType>-->
 
 	
 	<!-- <entityType name="Personnel">

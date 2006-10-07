@@ -208,8 +208,6 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 
 	public void testUpdateSuccessForLoan()throws Exception{
 		TestObjectFactory.cleanUpChangeLog();
-		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
-		auditConfigurtion.createEntityValueMap();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting);

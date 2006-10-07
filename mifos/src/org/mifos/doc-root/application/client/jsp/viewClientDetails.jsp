@@ -629,6 +629,9 @@
 							<a href="custHistoricalDataAction.do?method=get&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>"><mifos:mifoslabel
 								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							</a> <br>
+							<html-el:link href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
+							<mifos:mifoslabel name="client.ChangeLogLink" bundle="ClientUIResources"/>
+							</html-el:link> <br>
 							</span> </td>
 						</tr>
 					</table>

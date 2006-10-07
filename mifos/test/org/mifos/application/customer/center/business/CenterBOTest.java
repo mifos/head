@@ -22,8 +22,12 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.CustomFieldType;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -53,6 +57,52 @@ public class CenterBOTest extends MifosTestCase {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
+	}
+	
+	public void testSuccessfulUpdateForLogging() throws Exception {
+		createCustomers();
+		Date mfiJoiningDate = getDate("11/12/2005");
+		String city ="Bangalore";
+		String addressLine1="Aditi";
+		String externalId = "1234";
+		Address address = new Address();
+		address.setCity(city);
+		address.setLine1(addressLine1);
+		center.setUserContext(TestObjectFactory.getUserContext());
+		HibernateUtil.getInterceptor().createInitialValueMap(center);
+		center.update(TestObjectFactory.getUserContext(), personnel, externalId, mfiJoiningDate, address, null, null);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CENTER.getValue(),center.getCustomerId());
+		assertEquals(EntityType.CENTER.getValue(),auditLogList.get(0).getEntityType());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Address1")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("Aditi");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("City/District")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("Bangalore");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("mifos");
+				auditLogRecord.getNewValue().equalsIgnoreCase("loan officer");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("MFI Joining Date")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("11/12/2005");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("External Id")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("1234");
+			}
+		}
+		
+		HibernateUtil.closeSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		TestObjectFactory.cleanUpChangeLog();
+	
 	}
 
 	public void testCreateWithoutName() throws Exception {

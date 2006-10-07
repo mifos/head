@@ -784,8 +784,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	public void testUpdateSuccess() throws Exception {
-		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
-		auditConfigurtion.createEntityValueMap();
 		String newDisplayName ="group_01";
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createGroupWithCenterAndSetInSession();
@@ -826,8 +824,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	public void testUpdateSuccessForLogging() throws Exception {
-		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
-		auditConfigurtion.createEntityValueMap();
 		String newDisplayName ="group_01";
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createGroupWithCenterAndSetInSession();

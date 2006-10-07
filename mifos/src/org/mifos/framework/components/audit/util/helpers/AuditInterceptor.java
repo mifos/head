@@ -63,6 +63,7 @@ public class AuditInterceptor implements Interceptor {
 	private InterceptHelper interceptHelper;
 	private MifosLogger logger;
 	private UserContext userContext;
+	private Boolean flag=false;
 
 
 	public AuditInterceptor() {
@@ -144,7 +145,9 @@ public class AuditInterceptor implements Interceptor {
 	}
 	
 	public void afterTransactionCompletion(Transaction tx) {
-		if (tx == null && ((interceptHelper.getInitialValueMap() != null
+		if(tx!=null && tx.wasCommitted() && !tx.wasRolledBack())
+			flag=true;
+		if (tx==null && flag && ((interceptHelper.getInitialValueMap() != null
 				&& interceptHelper.getInitialValueMap().size() > 0) || 
 				(interceptHelper.getChangeValueMap() != null
 						&& interceptHelper.getChangeValueMap().size() > 0))) {

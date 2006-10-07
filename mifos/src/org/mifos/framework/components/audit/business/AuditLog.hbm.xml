@@ -16,7 +16,7 @@
 	    <property name="updatedBy" column="CHANGED_BY" type="short" access="field"/>
         <property name="updatedDate" column="CHANGED_DATE" access="field"/>
         
-        <set name="auditLogRecords"  cascade="all" 	inverse="true" table="CHANGE_LOG_DETAIL" access="field">
+        <set name="auditLogRecords"  cascade="all" 	inverse="true" table="CHANGE_LOG_DETAIL" access="field" order-by="SEQUENCE_NUM">
             <key column="CHANGE_LOG_ID"  />
             <one-to-many   class="org.mifos.framework.components.audit.business.AuditLogRecord"   />
     	</set>	

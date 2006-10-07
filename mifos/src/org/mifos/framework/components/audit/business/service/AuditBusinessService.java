@@ -26,7 +26,6 @@ public class AuditBusinessService extends BusinessService {
 			AuditPersistence auditPersistence = new AuditPersistence();
 			List<AuditLog> auditLogRecords = auditPersistence
 					.getAuditLogRecords(entityType, entityId);
-			System.out.println("***servie************size : " +  auditLogRecords.size());
 			List<AuditLogView> auditLogViewList = new ArrayList<AuditLogView>();
 			for (AuditLog auditLog : auditLogRecords) {
 				for (AuditLogRecord auditLogRecord : auditLog

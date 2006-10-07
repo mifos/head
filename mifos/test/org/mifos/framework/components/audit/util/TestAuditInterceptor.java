@@ -64,10 +64,7 @@ protected AccountBO accountBO = null;
 		super.tearDown();
 	}
 
-	public void testUpdateLoanForLogging() throws ApplicationException,
-			SystemException {
-		AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
-		auditConfigurtion.createEntityValueMap();
+	public void testUpdateLoanForLogging() throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();

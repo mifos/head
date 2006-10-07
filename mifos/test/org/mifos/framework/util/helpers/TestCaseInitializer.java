@@ -39,6 +39,7 @@ package org.mifos.framework.util.helpers;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.security.authorization.AuthorizationManager;
@@ -53,6 +54,7 @@ public class TestCaseInitializer {
 			AuthorizationManager.getInstance().init();
 			HierarchyManager.getInstance().init();
 			MifosConfiguration.getInstance().init();
+			AuditConfigurtion.init();
 
 		} catch (Exception e) {
 			throw new Error("Failed to start up", e);

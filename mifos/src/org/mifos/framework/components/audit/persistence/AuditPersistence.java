@@ -5,13 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;

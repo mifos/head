@@ -447,6 +447,8 @@ public class ActivityMapper {
 		activityMap.put("/centerCustAction-get", SecurityConstants.VIEW);
 		activityMap.put("/centerCustAction-loadSearch", SecurityConstants.VIEW);
 		activityMap.put("/centerCustAction-search", SecurityConstants.VIEW);
+		activityMap.put("/centerCustAction-loadChangeLog", SecurityConstants.VIEW);
+		activityMap.put("/centerCustAction-cancelChangeLog", SecurityConstants.VIEW);
 		// For M2 Center ends
 
 		// colsed account searchaction in center details page
@@ -1100,6 +1102,10 @@ public class ActivityMapper {
 		activityMap.put("/clientCustAction-retrievePicture",
 				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-showPicture",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-loadChangeLog",
+				SecurityConstants.VIEW);
+		activityMap.put("/clientCustAction-cancelChangeLog",
 				SecurityConstants.VIEW);
 		
 		

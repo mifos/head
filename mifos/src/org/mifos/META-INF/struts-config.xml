@@ -280,6 +280,10 @@
 			<forward name="search_success" path="/pages/application/center/jsp/center_search_results.jsp" />
 			<forward name="search_failure" path="/pages/application/center/jsp/center_search.jsp" />
 			<forward name="loadSearch_success" path="/pages/application/center/jsp/center_search.jsp" />
+			
+			<forward name="viewCenterChangeLog" path="/pages/application/center/jsp/viewChangeLog.jsp" />
+			<forward name="cancelCenterChangeLog" path="/centerCustAction.do?method=get" />
+			
 		
 		</action>
 		<!-- Client Creation Action -->
@@ -1146,6 +1150,8 @@
 			<!-- Cancel Page Forwards -->
 			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
 			<forward name="cancelEdit_success" path="/clientCustAction.do?method=get" />
+			<forward name="viewClientChangeLog" path="/pages/application/client/jsp/viewChangeLog.jsp" />
+			<forward name="cancelClientChangeLog" path="/clientCustAction.do?method=get" />
 		</action>
 		<!-- offAction start-->
 		<action path="/offAction" type="org.mifos.application.office.struts.action.OffAction" 

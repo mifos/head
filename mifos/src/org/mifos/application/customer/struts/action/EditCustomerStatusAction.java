@@ -394,7 +394,7 @@ public class EditCustomerStatusAction extends BaseAction {
 			newStatusId = editStatusActionForm.getNewStatusIdValue();
 		if(!(customerBO.getCustomerLevel().isCenter()))
 			checkPermission(customerBO, request, newStatusId, flagId);
-		//setInitialObjectForAuditLogging(customerBO);
+		setInitialObjectForAuditLogging(customerBO);
 		customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
 				.getNotes());
 		customerBO = null;

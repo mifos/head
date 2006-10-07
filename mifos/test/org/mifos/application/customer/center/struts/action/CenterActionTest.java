@@ -513,6 +513,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 				new Address(), null, null, null, null, Short.valueOf("3"),
 				getMeeting(), Short.valueOf("1"));
 		center.save();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
 				new Integer(center.getCustomerId()).intValue());

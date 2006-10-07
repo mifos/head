@@ -35,9 +35,13 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -81,6 +85,73 @@ public class TestCustomerBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(createdBranchOffice);
 		HibernateUtil.closeSession();
 		super.tearDown();
+	}
+	
+	public void testStatusChangeForCenterForLogging() throws Exception {
+		OfficeBO office = TestObjectFactory.getOffice(Short.valueOf("1"));
+		createdBranchOffice = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
+		HibernateUtil.closeSession();
+		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
+				OfficeBO.class, createdBranchOffice.getOfficeId());
+		createPersonnel(PersonnelLevel.LOAN_OFFICER);
+		
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("14"),
+				"1.4", meeting, getBranchOffice().getOfficeId(), loanOfficer.getPersonnelId(), new Date(System
+						.currentTimeMillis()));
+		center.setUserContext(TestObjectFactory.getUserContext());
+		HibernateUtil.getInterceptor().createInitialValueMap(center);
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(),null,"comment");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
+		loanOfficer=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,loanOfficer.getPersonnelId());
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CENTER.getValue(),center.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.CENTER.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(2,auditLogList.get(0).getAuditLogRecords().size());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Note")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("comment");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("Active");
+				auditLogRecord.getNewValue().equalsIgnoreCase("Inactive");
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
+	}
+	
+	public void testStatusChangeForGroupForLogging() throws Exception {
+		createGroup();
+		group.setUserContext(TestObjectFactory.getUserContext());
+		HibernateUtil.getInterceptor().createInitialValueMap(group);
+		group.changeStatus(CustomerStatus.GROUP_CANCELLED.getValue(),Short.valueOf("14"),"comment");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,center.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),group.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(3,auditLogList.get(0).getAuditLogRecords().size());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Note")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("comment");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("Active");
+				auditLogRecord.getNewValue().equalsIgnoreCase("Inactive");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status Change Explanation")){
+				auditLogRecord.getOldValue().equalsIgnoreCase("-");
+				auditLogRecord.getNewValue().equalsIgnoreCase("Duplicate");
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
 	}
 
 	public void testGroupPerfObject() throws PersistenceException {
@@ -591,6 +662,15 @@ public class TestCustomerBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("14"),
 				"1.4", meeting, officeId, personnelId, new Date(System
 						.currentTimeMillis()));
+	}
+	
+	private void createGroup() {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
+				"1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
+				"1.4.1", center, new Date(System.currentTimeMillis()));
 	}
 	
 	public OfficeBO getBranchOffice(){

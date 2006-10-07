@@ -80,7 +80,9 @@ public class AuditConfigurtion {
 	private ConfigurationPersistence configurationPersistence; 
 	private MasterPersistence masterPersistence;
 	
-	public AuditConfigurtion(){
+	public static AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
+	
+	private AuditConfigurtion(){
 		masterPersistence=new MasterPersistence();
 		configurationPersistence=new ConfigurationPersistence();
 		locales=new ArrayList<Short>();
@@ -90,8 +92,12 @@ public class AuditConfigurtion {
 		locale =Configuration.getInstance().getSystemConfig().getMFILocale();
 	}
 	
+	public static  void init() throws SystemException{
+		auditConfigurtion.createEntityValueMap();
+	}
+	
 
-	public void createEntityValueMap() throws SystemException{
+	private void createEntityValueMap() throws SystemException{
 		ColumnPropertyMapping columnPropertyMapping =XMLParser.getInstance().parser();
 		EntityType[] entityTypes = columnPropertyMapping.getEntityTypes();
 		for(int i=0;i<entityTypes.length;i++){
@@ -108,37 +114,22 @@ public class AuditConfigurtion {
 	
 	public static boolean isObjectToBeLogged(String entityType,String name,String parentName){
 		Boolean flag=false;
-		System.out.println("********NAME BEING CHECKED: " + name);
-		if(name.equalsIgnoreCase("statusFlag")){
-			System.out.println("*********parent name : " + parentName);
-			System.out.println("*********entityType : " + entityType);
-		}
 		EntitiesToLog objectToBeLogged=entitiesToLog.get(entityType);
 		if(objectToBeLogged==null || objectToBeLogged.getEntities()==null){
-			System.out.println("*******1***flag value : "+flag);
 			return flag;
 		}
 		Entity[] entities = objectToBeLogged.getEntities();
 		for(Entity entity : entities){
-			System.out.println("********name : " + entity.getName());
 			if(entity.getName().equalsIgnoreCase(name)){
-				System.out.println("********name matched *********");
 				if(parentName==null){
-					System.out.println("***************2***********parent passed : " + parentName);
 					flag = entity.getParentName()==null;
-					System.out.println("***************2***********parent name : " + entity.getParentName());
-					System.out.println("***2*******flag value : "+flag);
 					return flag;
 				}else if(parentName!=null && entity.getParentName()!=null){
-					System.out.println("***************2***********parent passed : " + parentName);
 					flag = entity.getParentName().equalsIgnoreCase(parentName);
-					System.out.println("***************2***********parent name : " + entity.getParentName());
-					System.out.println("****3******flag value : "+flag);
 					return flag;
 				}
 			}
 		}
-		System.out.println("****4******flag value : "+flag);
 		return flag;
 	}
 	
@@ -227,10 +218,8 @@ public class AuditConfigurtion {
 								&& entity.getMergeProperties().equalsIgnoreCase(
 										"yes")){
 						if (entity.getParentName() == null) {
-							System.out.println(entity.getName() +" : " +getColumnName(entity.getDisplayKey()));
 							columnPropertyMap.put(entity.getName(),getColumnName(entity.getDisplayKey()));
 						}else {
-							System.out.println(entity.getParentName().concat(entity.getName()) +" : " +getColumnName(entity.getDisplayKey()));
 							columnPropertyMap.put(entity.getParentName().concat(entity.getName()),getColumnName(entity.getDisplayKey()));
 							
 						}
@@ -261,20 +250,16 @@ public class AuditConfigurtion {
 			if(propertyNames[i].getLookUp().equalsIgnoreCase(XMLConstants.YES) && propertyNames[i].getMethodName()==null){
 				for(Short localeId : locales){
 					if(propertyNames[i].getParentName()!=null){
-						//System.out.println("*****propname  : "+ propertyNames[i].getParentName().concat(propertyNames[i].getName()).concat("_"+String.valueOf(localeId)));
 						propertyMap.put(propertyNames[i].getParentName().concat(propertyNames[i].getName()).concat("_"+String.valueOf(localeId)),createValueMap(propertyNames[i].getEntityName(),localeId));
 					}else{
-						//System.out.println("*****propname  : "+ propertyNames[i].getName().concat("_"+String.valueOf(localeId)));
 						propertyMap.put(propertyNames[i].getName().concat("_"+String.valueOf(localeId)),createValueMap(propertyNames[i].getEntityName(),localeId));
 					}
 				}
 			}else if(propertyNames[i].getLookUp().equalsIgnoreCase(XMLConstants.YES) && propertyNames[i].getMethodName()!=null){
 				for(Short localeId : locales){
 					if(propertyNames[i].getParentName()!=null){
-						System.out.println("*****propname  : "+ propertyNames[i].getParentName().concat(propertyNames[i].getName()).concat("_"+String.valueOf(localeId)));
 						propertyMap.put(propertyNames[i].getParentName().concat(propertyNames[i].getName()).concat("_"+String.valueOf(localeId)),callMethodToCreateValueMap(propertyNames[i].getMethodName(),localeId));
 					}else{
-						System.out.println("*****propname  : "+ propertyNames[i].getName().concat("_"+String.valueOf(localeId)));
 						propertyMap.put(propertyNames[i].getName().concat("_"+String.valueOf(localeId)),callMethodToCreateValueMap(propertyNames[i].getMethodName(),localeId));
 					}
 				}
