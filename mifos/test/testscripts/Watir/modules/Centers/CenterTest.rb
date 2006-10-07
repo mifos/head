@@ -150,6 +150,7 @@ class CenterCreateEdit < TestClass
     @@menuprop=load_properties("modules/propertis/MenuResources.properties")
     @@custprop=load_properties("modules/propertis/CustomerUIResources.properties")
     @@centerprop=load_properties("modules/propertis/CenterUIResources.properties")
+    @@officeprop=load_properties("modules/propertis/OfficeUIResources.properties")
   end
   
   #Getting the lables from properties file
@@ -167,8 +168,8 @@ class CenterCreateEdit < TestClass
     @@center_success=@@centerprop['Center.ConfirmationMessage']+" "+@@lookup_name_center
     @@meetin_msg=@@meetingprop['meeting.labelMeetingScheduleFor']+" "+@@lookup_name_center
     @@schedule_meeting_link=@@centerprop['Center.MeetingScheduleLink']
-    @@reccur_week_msg=@@meetingprop['meeting.reurweek.requiredmsg']
-    @@location_msg=@@meetingprop['meeting.meetingPlace.requiredmsg']
+    @@reccur_week_msg=@@meetingprop['errors.Meeting.specifyWeekDayAndRecurAfter']
+    @@location_msg=@@meetingprop['errors.Meeting.invalidMeetingPlace']
     @@view_all_closed_accounts=@@centerprop['Center.ClosedAccountsLink']
     @@account_information_label=@@centerprop['Center.AccountHeading']
     @@edit_center_status=@@centerprop['Center.Edit']+" "+@@lookup_name_center+" "+@@centerprop['Center.Status1']
@@ -180,6 +181,10 @@ class CenterCreateEdit < TestClass
     @@button_search=@@centerprop['button.Search']
     @@button_cancel=@@centerprop['button.cancel']
     @@button_save=@@meetingprop['meeting.button.save']
+    @@admin_link=@@officeprop['Office.labelLinkAdmin']
+    @@view_office=@@officeprop['Office.labelLinkViewOffices']
+    @@edit_office=@@officeprop['Office.labelEditOfficeInfo']
+    @@edit_office_error=@@officeprop['Office.error.hasActivePersonnel']
   end
   #checking for the link Create new center in clients&Accounts section
   def check_center()
@@ -356,7 +361,7 @@ class CenterCreateEdit < TestClass
       $logger.log_results("all mandatory check for week","NA","NA","failed");
       meeting_mandatory_month()
     rescue =>excp
-      quit_on_error(excp)     
+     quit_on_error(excp)     
     end
   end
     #checking mandatory for meeting month
@@ -690,9 +695,9 @@ class CenterCreateEdit < TestClass
     $ie.wait(10)
     assert($ie.contains_text(@@centerprop['center.SeeAllNotesLink']))
     $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Existed","Passed")
-  rescue Test::Unit::AssertionFailedError=>e
+    rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Not Existed","Failed")
-  rescue =>excp
+    rescue =>excp
     quit_on_error(excp)  
   end
  end
@@ -711,6 +716,24 @@ class CenterCreateEdit < TestClass
     end
   end
   
+  def make_office_inactive()
+    dbquery("select office_id,display_name from office where office_id in (select branch_id from customer where customer_level_id=3)")
+    officeid=dbresult[0] 
+    officename=dbresult[1]
+    $ie.link(:text,@@admin_link).click
+    $ie.link(:text,@@view_office).click
+    $ie.link(:text,officename).click
+    $ie.link(:text,@@edit_office).click
+    $ie.select_list(:name,"officeStatus").select_value("2")
+    $ie.button(:value,@@button_preview).click 
+    $ie.button(:value,@@button_submit).click
+    assert($ie.contains_text(@@edit_office_error))
+      $logger.log_results("Bug#830-Change the status of office","Change the status of an office to inactive having active customers","Should not allow to make inactive","Passed")
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Bug#830-Change the status of office","Change the status of an office to inactive having active customers","Allowed to make inactive","failed")
+    rescue =>excp
+      quit_on_error(excp)    
+  end
 end
 
 class CenterTest
@@ -764,5 +787,7 @@ class CenterTest
     centerobject.view_all_closed_accounts
     rowid+=$maxcol
   end
+  #added as part of bug#830
+  centerobject.make_office_inactive()
   centerobject.mifos_logout()
 end
