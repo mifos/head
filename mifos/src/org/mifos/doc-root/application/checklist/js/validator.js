@@ -13,6 +13,8 @@ var i=0;
 var numberOfItems=0;
 var count=0;
 var flag=0;
+var totalDetails = 0;
+var detailTxt="";
 
 function createCheckList()
 {		
@@ -41,6 +43,7 @@ function createCheckList()
 	{
 		var para = document.getElementById("myDiv");								
 		var newtd  = document.createElement("TD"); 			
+		var detailsTxt  = document.createElement("TD");
 		var divIdName = "my"+i+"Div";		
 		newtd.setAttribute("id",divIdName);			
 		var textArea=document.getElementsByName('text')[0].value;		
@@ -53,11 +56,14 @@ function createCheckList()
 			newtd.innerHTML+="<br>";		
 			incrementer=incrementer+80;
 		}		
-		newtd.innerHTML +="<input type='hidden'  name='value("+i+")' value='"+document.getElementsByName('text')[0].value+"' >";					
+		detailTxt += document.getElementsByName('text')[0].value + "^";
+		newtd.innerHTML +="<input type='hidden'  name='value("+i+")' value='"+document.getElementsByName('text')[0].value+"' >";
+		detailsTxt.innerHTML +="<input type='hidden'  name='detailsList["+i+"]' value='"+document.getElementsByName('text')[0].value+"' >";
 		para.appendChild(newtd);				
+		para.appendChild(detailsTxt);
 		i++;
 		numberOfItems++;	
-		document.getElementsByName('text')[0].value="";		
+		document.getElementsByName('text')[0].value="";	
 	}
 
 }
@@ -125,7 +131,7 @@ function validateFields(form)
 function fnEdit(form)
 {
 	form.method.value="previous";
-	form.action="checkListAction.do";
+	form.action="chkListAction.do";
 	form.submit();
 }
 /****************************************************************************
@@ -157,14 +163,17 @@ function fnCancel(form)
 /****************************************************************************
 *  populateParent function sets the hidden variable method to get the status of each product or client
 *******************************************************************************/
-function populateParent(form,selectBox)
+function populateStates(form,selectBox)
 {
-		 var typeArray=document.getElementsByName("typeOfLevel");
-		 var indexArray = document.getElementsByName("indexOfLevel");
-		document.CheckListForm.typeId.value=typeArray[selectBox.selectedIndex].value;
-		document.CheckListForm.categoryId.value=indexArray[selectBox.selectedIndex].value;
-		form.method.value="loadParent";
-		form.action="checkListAction.do";
+		var isCustIndex=document.getElementsByName("isCust");
+		var masterIdIndex=document.getElementsByName("masterId");
+		var masterNameIndex = document.getElementsByName("masterName");
+		
+		var isCust=isCustIndex[selectBox.selectedIndex].value;
+		var masterId=masterIdIndex[selectBox.selectedIndex].value;
+		var masterName=masterNameIndex[selectBox.selectedIndex].value;
+		
+		form.action="chkListAction.do?method=getStates&isCustomer="+isCust+"&masterTypeName="+masterName+"&masterTypeId="+masterId;
 		form.submit();		
 }
 
@@ -239,10 +248,6 @@ function manage(id,type,status,categoryId)
  		document.CheckListForm.submit();
  		
 }
-
-
-
-
 
 
 

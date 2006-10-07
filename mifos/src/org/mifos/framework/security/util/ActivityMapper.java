@@ -668,6 +668,22 @@ public class ActivityMapper {
 		activityMap.put("/feeaction-cancelEdit", SecurityConstants.VIEW);
 		// checklist mapping
 
+		activityMap.put("/chkListAction-load",
+				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		activityMap.put("/chkListAction-getStates", SecurityConstants.VIEW);
+		activityMap.put("/chkListAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/chkListAction-manage",
+				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
+		activityMap.put("/chkListAction-create",
+				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		activityMap.put("/chkListAction-update",
+				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
+		activityMap.put("/chkListAction-loadAllChecklist",
+				SecurityConstants.VIEW);
+		activityMap.put("/chkListAction-previous",
+				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		
+		
 		activityMap.put("/checkListAction-loadall", SecurityConstants.VIEW);
 		activityMap.put("/checkListAction-load",
 				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);

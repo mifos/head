@@ -769,7 +769,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 	}
 
 	public void testGetCustomerChecklist() throws NumberFormatException,
-			SystemException, ApplicationException {
+			SystemException, ApplicationException, Exception {
 
 		center = createCenter("center");
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,

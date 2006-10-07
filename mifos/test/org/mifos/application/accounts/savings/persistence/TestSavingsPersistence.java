@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -22,16 +20,14 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.checklist.business.AccountCheckListBO;
-import org.mifos.application.checklist.business.CheckListDetailEntity;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.MifosTestCase;
@@ -160,10 +156,14 @@ public class TestSavingsPersistence extends MifosTestCase {
 	}
 
 	public void testGetStatusChecklist() throws Exception {
-		createCheckList();
+		accountCheckList = TestObjectFactory
+				.createAccountChecklist(AccountTypes.SAVINGSACCOUNT.getValue(),
+						AccountState.SAVINGS_ACC_PARTIALAPPLICATION, Short
+								.valueOf("1"));
 		List statusCheckList = accountPersistence.getStatusChecklist(Short
-				.valueOf("13"), Short.valueOf("2"));
+				.valueOf("13"), AccountTypes.SAVINGSACCOUNT.getValue());
 		assertNotNull(statusCheckList);
+
 		assertEquals(1, statusCheckList.size());
 	}
 
@@ -186,9 +186,10 @@ public class TestSavingsPersistence extends MifosTestCase {
 			PersonnelBO createdBy = new PersonnelPersistence()
 					.getPersonnel(userContext.getId());
 			savingsOffering = helper.createSavingsOffering("effwe", "231");
-			savings = new SavingsBO(userContext,savingsOffering,group,AccountState.SAVINGS_ACC_APPROVED,savingsOffering
-					.getRecommendedAmount(),null);
-	
+			savings = new SavingsBO(userContext, savingsOffering, group,
+					AccountState.SAVINGS_ACC_APPROVED, savingsOffering
+							.getRecommendedAmount(), null);
+
 			AccountPaymentEntity payment = helper
 					.createAccountPaymentToPersist(savings, new Money(
 							Configuration.getInstance().getSystemConfig()
@@ -298,9 +299,10 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savingsOffering1 = createSavingsOffering("prd2", "q14f");
 		savingsOffering2 = createSavingsOffering("prd3", "z1as");
 		savings = helper.createSavingsAccount("000100000000021",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION,
-				userContext);
-		savings.setAccountState(new AccountStateEntity(AccountState.SAVINGS_ACC_INACTIVE));
+				savingsOffering, group,
+				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
+		savings.setAccountState(new AccountStateEntity(
+				AccountState.SAVINGS_ACC_INACTIVE));
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -336,9 +338,10 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savingsOffering1 = createSavingsOffering("prd2", "tj81");
 		savingsOffering2 = createSavingsOffering("prd3", "nvr4");
 		savings = helper.createSavingsAccount("000100000000021",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION,
-				userContext);
-		savings.setAccountState(new AccountStateEntity(AccountState.SAVINGS_ACC_INACTIVE));
+				savingsOffering, group,
+				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
+		savings.setAccountState(new AccountStateEntity(
+				AccountState.SAVINGS_ACC_INACTIVE));
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -464,46 +467,13 @@ public class TestSavingsPersistence extends MifosTestCase {
 	}
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,
-			SavingsOfferingBO savingsOffering) throws NumberFormatException, Exception {
+			SavingsOfferingBO savingsOffering) throws NumberFormatException,
+			Exception {
 		UserContext userContext = new UserContext();
 		userContext.setId(new Short("1"));
 		userContext.setBranchGlobalNum("1001");
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
 				new Short("14"), new Date(), savingsOffering, userContext);
-	}
-
-	private void createCheckList() {
-		Session session = HibernateUtil.getSessionTL();
-		Transaction tx = null;
-		tx = session.beginTransaction();
-
-		accountCheckList = new AccountCheckListBO();
-		accountCheckList.setChecklistName("productchecklist");
-		accountCheckList.setChecklistStatus(Short.valueOf("1"));
-
-		SupportedLocalesEntity supportedLocales = new SupportedLocalesEntity();
-		supportedLocales.setLocaleId(Short.valueOf("1"));
-		accountCheckList.setSupportedLocales(supportedLocales);
-
-		CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity();
-		checkListDetailEntity.setDetailText("item1");
-		checkListDetailEntity.setAnswerType(Short.valueOf("1"));
-		checkListDetailEntity.setSupportedLocales(supportedLocales);
-		accountCheckList.addChecklistDetail(checkListDetailEntity);
-
-		ProductTypeEntity productTypeEntity = (ProductTypeEntity) session.get(
-				ProductTypeEntity.class, (short) 2);
-
-		AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
-
-		accountCheckList.setAccountStateEntity(accountStateEntity);
-		accountCheckList.setProductTypeEntity(productTypeEntity);
-
-		accountCheckList.create();
-
-		tx.commit();
-		HibernateUtil.closeSession();
-
 	}
 
 	private java.sql.Date offSetCurrentDate(int noOfDays) {

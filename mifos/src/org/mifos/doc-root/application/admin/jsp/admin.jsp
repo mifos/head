@@ -137,7 +137,7 @@
 								action="checkListAction.do?method=loadall&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.viewcheklists" /></html-el:link>
 							| <html-el:link
-								action="checkListAction.do?method=load&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								action="chkListAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.defnewchecklist" /></html-el:link></td>
 						</tr>
 

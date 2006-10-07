@@ -567,4 +567,8 @@ public interface NamedQueryConstants {
 	
 	public String RETRIEVE_AUDIT_LOG_RECORD="retrieveAuditLogRecords";
 
+//	check List M2
+	public String MASTERDATA_CUSTOMER_CHECKLIST="masterdata.customer_checklist";
+	public String MASTERDATA_PRODUCT_CHECKLIST="masterdata.product_checklist";
+	public String CUSTOMER_STATES_LIST="customer_states_list";
 }

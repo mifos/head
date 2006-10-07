@@ -485,7 +485,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	public void testGetCustomerChecklist() throws NumberFormatException,
-			SystemException, ApplicationException {
+			SystemException, ApplicationException, Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

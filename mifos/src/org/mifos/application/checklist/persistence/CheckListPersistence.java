@@ -1,45 +1,80 @@
 package org.mifos.application.checklist.persistence;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.checklist.business.CheckListBO;
+import org.mifos.application.checklist.util.helpers.CheckListMasterView;
+import org.mifos.application.checklist.util.helpers.CheckListStatesView;
+import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.exceptions.PersistenceException;
 
 public class CheckListPersistence extends MasterPersistence {
-	
-	public CheckListPersistence(){		
+
+	public CheckListPersistence() {
 	}
-	
-	public void save(CheckListBO checkListBO) {
-		Session session = HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
-		session.save(checkListBO);
-		transaction.commit();
+
+	public List<CheckListMasterView> getCheckListMasterData(Short localeId)
+			throws PersistenceException {
+		List<CheckListMasterView> checkListMaster = new ArrayList();
+		List<CheckListMasterView> masterData = new ArrayList();
+
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("localeId", localeId);
+		masterData = executeNamedQuery(
+				NamedQueryConstants.MASTERDATA_CUSTOMER_CHECKLIST,
+				queryParameters);
+		for (CheckListMasterView checkListMasterDataView : masterData) {
+			checkListMasterDataView.setIsCustomer(true);
+		}
+		checkListMaster.addAll(masterData);
+		masterData = executeNamedQuery(
+				NamedQueryConstants.MASTERDATA_PRODUCT_CHECKLIST,
+				queryParameters);
+		for (CheckListMasterView checkListMasterDataView : masterData) {
+			checkListMasterDataView.setIsCustomer(false);
+		}
+		checkListMaster.addAll(masterData);
+		masterData = null;
+		return checkListMaster;
 	}
-	
-	public CheckListBO get(Short checkListId)
-	{
-		Session session = HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
-		CheckListBO checkListBO = (CheckListBO) session.get(CheckListBO.class,checkListId);
-		transaction.commit();
-		return checkListBO;
+
+	public List<CheckListStatesView> retrieveAllCustomerStatusList(
+			Short levelId, Short localeId) throws PersistenceException {
+		List<CheckListStatesView> checkListStatesView = new ArrayList<CheckListStatesView>();
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("LEVEL_ID", levelId);
+		List<CustomerStatusEntity> queryResult = executeNamedQuery(
+				NamedQueryConstants.GET_CUSTOMER_STATUS_LIST, queryParameters);
+		for (CustomerStatusEntity customerStatus : queryResult) {
+			checkListStatesView.add(new CheckListStatesView(customerStatus
+					.getId(), customerStatus.getName(localeId), customerStatus.getCustomerLevel().getId()));
+		}
+		return checkListStatesView;
 	}
-	
-	public void delete(CheckListBO checkListBO)
-	{
-		Session session = HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
-		session.delete(checkListBO);
-		transaction.commit();		
+
+	public List<CheckListStatesView> retrieveAllAccountStateList(
+			Short prdTypeId, Short localeId) throws PersistenceException {
+		List<CheckListStatesView> checkListStatesView = new ArrayList<CheckListStatesView>();
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("prdTypeId", prdTypeId);
+		List<AccountStateEntity> queryResult = executeNamedQuery(
+				NamedQueryConstants.RETRIEVEALLACCOUNTSTATES, queryParameters);
+		for (AccountStateEntity accountStatus : queryResult) {
+			checkListStatesView.add(new CheckListStatesView(accountStatus
+					.getId(), accountStatus.getName(localeId), accountStatus.getPrdType().getProductTypeID()));
+		}
+		return checkListStatesView;
 	}
-	
-	public void update(CheckListBO checkListBO) {
-		Session session = HibernateUtil.getSessionTL();
-		Transaction transaction = HibernateUtil.startTransaction();
-		session.update(checkListBO);
-		transaction.commit();
+
+	public CheckListBO get(Short checkListId) throws PersistenceException {
+		return (CheckListBO)getPersistentObject(CheckListBO.class,
+				checkListId);
+		
 	}
-	
 }

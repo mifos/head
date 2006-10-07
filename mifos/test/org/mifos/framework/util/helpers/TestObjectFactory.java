@@ -80,6 +80,7 @@ import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
+import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CheckListDetailEntity;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
@@ -102,6 +103,7 @@ import org.mifos.application.customer.client.business.ClientInitialSavingsOfferi
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.CategoryTypeEntity;
@@ -120,7 +122,6 @@ import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -139,6 +140,7 @@ import org.mifos.application.productdefinition.business.PrdApplicableMasterEntit
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
+import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
@@ -1339,31 +1341,35 @@ public class TestObjectFactory {
 	}
 
 	public static CustomerCheckListBO createCustomerChecklist(
-			Short customerLevel, Short customerStatus, Short checklistStatus){
-		Session session = HibernateUtil.getSessionTL();
-		session.beginTransaction();
-		CustomerCheckListBO customerChecklist = new CustomerCheckListBO();
-		customerChecklist.setChecklistName("productchecklist");
-		customerChecklist.setChecklistStatus(checklistStatus);
-
-		SupportedLocalesEntity supportedLocales = new SupportedLocalesEntity();
-		supportedLocales.setLocaleId(Short.valueOf("1"));
-		customerChecklist.setSupportedLocales(supportedLocales);
-
-		CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity();
-		checkListDetailEntity.setDetailText("item1");
-		checkListDetailEntity.setAnswerType(Short.valueOf("1"));
-		checkListDetailEntity.setSupportedLocales(supportedLocales);
-		customerChecklist.addChecklistDetail(checkListDetailEntity);
-		CustomerLevelEntity customerLevelEntity = (CustomerLevelEntity) 
-				session.get(CustomerLevelEntity.class, customerLevel);
-		CustomerStatusEntity customerStatusEntity = (CustomerStatusEntity) 
-				session.get(CustomerStatusEntity.class, customerStatus);
-		customerChecklist.setCustomerLevel(customerLevelEntity); 
-		customerChecklist.setCustomerStatus(customerStatusEntity);
-		customerChecklist.create();
+			Short customerLevel, Short customerStatus, Short checklistStatus)
+			throws Exception {
+		List<String> details = new ArrayList<String>();
+		details.add("item1");
+		CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.getLevel(customerLevel));
+		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.getStatus(customerStatus));
+		CustomerCheckListBO customerChecklist = new CustomerCheckListBO(
+				customerLevelEntity, customerStatusEntity, "productchecklist",
+				checklistStatus, details, Short.valueOf("1"), TestObjectFactory
+						.getUserContext().getId());
+		customerChecklist.save();
 		HibernateUtil.commitTransaction();
 		return customerChecklist;
+	}
+
+	public static AccountCheckListBO createAccountChecklist(
+			Short prdTypeId, AccountState accountState, Short checklistStatus)
+			throws Exception {
+		List<String> details = new ArrayList<String>();
+		details.add("item1");
+		ProductTypeEntity productTypeEntity =(ProductTypeEntity) HibernateUtil.getSessionTL().get(ProductTypeEntity.class,prdTypeId);
+		AccountStateEntity accountStateEntity = new AccountStateEntity(accountState);
+		AccountCheckListBO accountChecklist = new AccountCheckListBO(
+				productTypeEntity, accountStateEntity, "productchecklist",
+				checklistStatus, details, Short.valueOf("1"), TestObjectFactory
+						.getUserContext().getId());
+		accountChecklist.save();
+		HibernateUtil.commitTransaction();
+		return accountChecklist;
 	}
 	
 	public static void cleanUp(CheckListBO checkListBO) {
@@ -1378,8 +1384,8 @@ public class TestObjectFactory {
 			Transaction	transaction = HibernateUtil.startTransaction();
 				
 			
-			if (checkListBO.getChecklistDetailSet() != null) {
-				for (CheckListDetailEntity checklistDetail : checkListBO.getChecklistDetailSet()) {
+			if (checkListBO.getChecklistDetails() != null) {
+				for (CheckListDetailEntity checklistDetail : checkListBO.getChecklistDetails()) {
 					if (null != checklistDetail) {
 						session.delete(checklistDetail);
 					}

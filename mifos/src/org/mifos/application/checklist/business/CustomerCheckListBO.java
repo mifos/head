@@ -1,19 +1,28 @@
 package org.mifos.application.checklist.business;
 
+import java.util.List;
+
+import org.mifos.application.checklist.exceptions.CheckListException;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 
+public class CustomerCheckListBO extends CheckListBO {
 
-public class CustomerCheckListBO extends CheckListBO {	
-	
-	private static final long serialVersionUID = 18743658743L;
+	private CustomerLevelEntity customerLevel;
+
+	private CustomerStatusEntity customerStatus;
 
 	public CustomerCheckListBO() {
-	}	
-		
-	private CustomerLevelEntity customerLevel ;
-	private CustomerStatusEntity customerStatus;		
+	}
+
+	public CustomerCheckListBO(CustomerLevelEntity customerLevel,
+			CustomerStatusEntity customerStatus, String name,
+			Short checkListStatus, List<String> details, Short prefferedLocale,
+			Short userId) throws CheckListException {
+		super(name, checkListStatus, details, prefferedLocale, userId);
+		this.customerLevel = customerLevel;
+		this.customerStatus = customerStatus;
+	}
 
 	public CustomerLevelEntity getCustomerLevel() {
 		return customerLevel;
@@ -31,9 +40,4 @@ public class CustomerCheckListBO extends CheckListBO {
 		this.customerStatus = customerStatus;
 	}
 
-	@Override
-	public Short getEntityID() {
-		return EntityMasterConstants.Checklist;
-	}	
-	
 }

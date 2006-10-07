@@ -48,6 +48,7 @@ public interface CheckListConstants {
 	public static final String CATAGORY="catagory";
 	public final String GETPARENT="preLoad";
 	public static final String MANDATORY="errors.mandatory";
+	public static final String MAX_LENGTH="errors.maximumlength";
 	public static final String MANDATORY_ITEM="errors.mandatory_item";
 	public static final String ITEM="Item";
 	public static final String TYPE="Type";
@@ -73,5 +74,11 @@ public interface CheckListConstants {
 	public String PENDINGAPPROVAL="Application Pending Approval";
 	public final Short STATUS_ACTIVE = 1;
 	public final Short STATUS_INACTIVE = 0;
+	
+	public final String CHECKLIST_CREATION_EXCEPTION = "exception.checklist.creation";
+	public final String CHECKLIST_MASTERDATA="checkList_masterData";
+	public final String STATES="states";
+	public final String CHECKLIST_NAME="checklist name";
+	public final String DETAILS="details";
 	
 }
