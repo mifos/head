@@ -1,4 +1,4 @@
-ruby -I ./modules -S modules/Office/Office.rb
+ruby -I ./modules -S modules/Office/Office_Test_cases.rb
 ruby -I ./modules -S modules/User/User_Test_Cases.rb
 ruby -I ./modules -S modules/Fee/Feeclass.rb
 ruby -I ./modules -S modules/check_list/Check_List_Test_Cases.rb

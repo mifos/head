@@ -115,9 +115,9 @@ class TestClass
 		$ie.wait
 		begin
 		assert($ie.link(:text,"Admin").exists?()) and assert($ie.link(:text,"Clients & Accounts").exists?())
-		$logger.log_results("login",$validname,$validname,"passed")
+		$logger.log_results("successful login for user "+$validname,"NA","successful login","passed")
 		rescue Test::Unit::AssertionFailedError=>e
-		$logger.log_results("login","","","failed")
+		$logger.log_results("login failed for user "+$validname,"NA","successful login","failed")
 		$loggger.end_log
 		$ie.close
 		exit

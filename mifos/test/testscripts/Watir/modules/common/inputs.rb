@@ -37,23 +37,6 @@ $location_msg="Please specify a Meeting location"
 $month_msg="Please select the day of month or rank of day if month is selected"
 #meeting end
 
-# Check list Start
-$checklist_item_msg = "Please specify at least one Item."
-# Check list End
-
-#Office start
-$new_office_link = "Define a new office"
-$review_office_info = "Add a new office - Review & submit"
-$office_add_info_msg = "Please enter the value for the required additional information."
-$office_name_msg = "Please specify Office name."
-$office_shortname_msg = "Please specify Office short name."
-$office_parent_msg = "Please select Parent office."
-$office_type_msg = "Please select Office type."
-$office_created_msg = "You have successfully added a new office "
-$office_blankspaces_msg="Please specify character(s) other than blank space(s)."
-$office_dupl_name_msg="This Office name already exists in the application. Please specify a different name."
-$office_dupl_shortname_msg="This Office short name already exists in the application. Please specify a different name."
-#Office end
 
 #User Start
 $user_created_msg = "You have successfully added a new user" 
@@ -142,39 +125,6 @@ $Member_outof_group_link="Click here to continue if Group membership is not requ
 $Member_charges_label="Member charges"
 #Client end
 
-#savings account start
-$savingsaccount_link="Create Margin Money Account"
-$savings_select_client="Create Margin Money Account - Select Member"
-$savings_select_mmaccount="Create Margin Money account - Enter Margin Money account information"
-$savings_enter_account_information="Create Margin Money account - Enter Margin Money account information"
-$savings_preview="Create Margin Money account - Preview Margin Money account information"
-$mandatory_without_client="Please specify some value"
-$mandatory_without_product="Please select the value for Product Instance"
-$savings_success="You have successfully created a new Margin Money account"
-#savings account end
-
-
-#Loan Account start
-$loan_select_client="Create Loan Account - Select Member"
-$loan_select_loan_prd="Create Loan account -  Enter Loan account information"
-$loan_enter_loan_data="Loan Product Summary"
-$loan_loan_instance="Please select the Loan instance name"
-$loan_no_of_installments="Please specify Number of installments"
-$loan_interest_rate="Please specify rate"
-$loan_grace_priod_duration="Grace period duration should be less than the total number of installments"
-$loan_disbursal_date="Please specify Disbursal Date"
-$loan_ammount="Please specify valid amount"
-$loan_valid_installmets="Please specify valid No. of installments"
-$loan_valid_ammount="Please specify valid amount"
-$loan_valid_interest="Please specify valid Interest rate"
-$loan_installments_review="Create Loan account -  Review installments"
-$loan_account_preview="Create Loan account -  Preview Loan account information"
-$loan_create_success="You have successfully created a new Loan account"
-$loan_change_log="View change log"
-$loan_preview_from_view="Create Loan account -  Preview Loan account information"
-$Bad_Standing_text="Active in Bad Standing"
-$Good_Standing_text="Active in Good Standing"
-#Loan Account End
 #group out fo center start
 $select_branch_message="Create new Group - Choose Branch Office"
 $group_details="Group details"
@@ -190,53 +140,7 @@ $adm_fee="Administrative set fees"
 $add_fee="Additional fees"
 #group out fo center end
 
-#SavingProduct Start
-$savingproduct_created_msg = "You have successfully added a new Margin Money Product"
-$savingproduct_view_detail_msg = "View Margin Money Product details now"
-$create_savingproduct_msg = "Define a new Margin Money Product"
 
-$review_savingproduct_info = "Add a new Margin Money Product - Review & submit"
-$new_savingproduct_link = "Define new Margin Money product"
-$view_savingproduct_link = "View Margin Money products"
-$new_savingproduct_page_msg = "Add a new Margin Money Product - Enter Margin Money Product information"
-$edit_savingproduct_link = "Edit Margin Money product information"
-
-# Validation messages for new SavingProduct
-$prd_inst_name_msg = "Please specify the Product instance name."
-$shortname_msg = "Please specify the Short name."
-$prd_category_msg = "Please select a Product category."
-$savingproduct_appl_for_msg = "Please select a Applicable for."
-$savingproduct_type_of_diposit_msg = "Please select a Type of deposits."
-$savingproduct_interestrate_msg = "Please specify the Interest rate."
-$savingproduct_balance_interest_msg = "Please select a Balance used for Interest calculation."
-$savingproduct_time_interest_msg= "Please specify the Time period for interest calculation."
-$savingproduct_frequency_interest_msg = "Please specify the Frequency of interest posting to accounts."
-$savingproduct_glcode_deposit_msg = "Please select a GL code for deposits."
-$savingproduct_glcode_interest_msg = "Please select a GL code for interest."
-#end of  Validation messages for new SavingProduct
-
-#Error message for field validation Start
-$savingproduct_change_startdate_msg = "The start date cannot be changed. Either the product is active or the date specified is invalid."
-$savingproduct_valid_interestrate_msg = "Please enter a valid interest rate. Interest rate should be between 1 and 100."
-$savingproduct_man_depositamount_msg = "Please specify a value greater than zero for Mandatory amount for deposit."
-
-$savingproduct_valid_max_amount_per_withdrawal_msg = "Max amount per withdrawal is greater than the allowable size."
-$savingproduct_valid_depositamount_msg = "Mandatory amount for deposit is greater than the allowable size."
-$savingproduct_valid_min_balance_interestrate_msg = "Min balance required for interest rate calculation is greater than the allowable size."
-
-$savings_prd_max_length="The length of Product instance name can not be greater than 50 character(s)."
-$savings_desc_max_length="The length of Category Description can not be greater than 200 character(s)."
-$savings_max_mandatory_amt="Mandatory amount for deposit is greater than the allowable size."
-$savings_max_voluntary_amt="Voluntary amount for deposit is greater than the allowable size." 
-$savings_max_amtper_withdrawl="Mandatory amount for deposit is greater than the allowable size."
-$savings_min_balance="Min balance required for interest rate calculation is greater than the allowable size."
-$savings_valid_int_rate="Please specify valid interest rate."
-$savings_shortname_msg="Please do not specify [space] for Short name."
-$savings_amount_applies_to="Please select a Amount Applies to."
-$savings_dupl_short_name_message="The short name already exists in the application. Please specify a different Name."
-$savings_dupl_inst_name_message="The Product instance name already exists in the application. Please specify a different Name."
-#Error message for field validation End
-#SavingProduct End
 #labels 
 $loan="loan"
 $savings="savings"
