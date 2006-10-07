@@ -65,7 +65,7 @@ public class LoanArrearsHelper extends TaskHelper {
 			Short latenessDays = new LoanPrdPersistence()
 					.retrieveLatenessForPrd();
 			listAccountIds = new LoanPersistance()
-					.getLoanAccountsInArrears(latenessDays);
+					.getLoanAccountsInArrearsInGoodStanding(latenessDays);
 		} catch (Exception e) {
 			throw new CronJobException(e);
 		}

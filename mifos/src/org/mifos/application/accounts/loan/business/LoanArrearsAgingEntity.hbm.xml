@@ -7,10 +7,8 @@
 <hibernate-mapping>
 
 	<class name="org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity" table="LOAN_ARREARS_AGING">
-		<id name="accountId" column="ACCOUNT_ID" type="integer" access="field">
-			<generator class="foreign">
-				<param name="property">loan</param>
-			</generator>
+		<id name="id" column="ID" type="integer" unsaved-value="null" access="field">
+			<generator class="native" />
 		</id>
 		<property name="customerName" column="CUSTOMER_NAME"></property>
 		<property name="daysInArrears" column="DAYS_IN_ARREARS"></property>
@@ -39,8 +37,8 @@
 			<column name="UNPAID_BALANCE" />
 		</property>
 		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
+		<many-to-one name="loan" column="ACCOUNT_ID" class="org.mifos.application.accounts.loan.business.LoanBO" cascade="none" update="true" insert="true"  unique="true" lazy="true" access="field" />
 		<many-to-one name="parentCustomer" column="PARENT_CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" update="true" insert="true" unique="true" lazy="true" access="field" />
 		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
-		<one-to-one name="loan" class="org.mifos.application.accounts.loan.business.LoanBO" lazy="true" access="field" />
 	</class>
 </hibernate-mapping>

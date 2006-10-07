@@ -78,6 +78,8 @@
 			<many-to-one name="interestType" column="INTEREST_TYPE_ID" class="org.mifos.application.master.business.InterestTypesEntity" cascade="none" update="false" insert="true" unique="true" />
 			<one-to-one name="loanSummary" class="org.mifos.application.accounts.loan.business.LoanSummaryEntity" cascade="all" lazy="true" access="field" />
 			<one-to-one name="performanceHistory" class="org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity" cascade="all" lazy="true" property-ref="loan" access="field" />
+			<one-to-one name="loanArrearsAgingEntity" class="org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity" cascade="all" lazy="true"  property-ref="loan"/>
+
 			<set name="loanActivityDetails" cascade="all" inverse="true" access="field" table="LOAN_ACTIVITY_DETAILS" lazy="true" order-by="ID desc">
 				<key column="ACCOUNT_ID" />
 				<one-to-many class="org.mifos.application.accounts.loan.business.LoanActivityEntity" />
@@ -248,12 +250,21 @@
 	</query>
 
 	<!-- Get the Loan accounts	that are in arrears-->
-	<query name="accounts.GetLoanArrears">
+	<query name="accounts.GetLoanArrearsInGoodStanding">
 		<![CDATA[select account.accountId from org.mifos.application.accounts.loan.business.LoanBO account
 			join  account.accountActionDates as actiondate
 			where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
 			and account.accountState.id in (:LOANAPPROVED,:LOANACTIVEINGOODSTAND)
 			and actiondate.actionDate < :CHECKDATE
+			and actiondate.paymentStatus=:PAYMENTSTATUS 
+			group by account.accountId]]>
+	</query>
+	<query name="accounts.GetLoanArrears">
+		<![CDATA[select account.accountId from org.mifos.application.accounts.loan.business.LoanBO account
+			join  account.accountActionDates as actiondate
+			where account.accountType.accountTypeId=:ACCOUNTTYPE_ID
+			and account.accountState.id in (:LOANACTIVEINGOODSTAND,:BADSTANDING)
+			and actiondate.actionDate <= :CHECKDATE
 			and actiondate.paymentStatus=:PAYMENTSTATUS 
 			group by account.accountId]]>
 	</query>

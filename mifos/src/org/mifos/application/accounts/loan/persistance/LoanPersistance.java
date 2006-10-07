@@ -77,7 +77,7 @@ public class LoanPersistance extends Persistence {
 		return queryResult == null ? null : (LoanBO) queryResult;
 	}
 
-	public List<Integer> getLoanAccountsInArrears(Short latenessDays)
+	public List<Integer> getLoanAccountsInArrearsInGoodStanding(Short latenessDays)
 			throws PersistenceException {
 
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -104,10 +104,34 @@ public class LoanPersistance extends Persistence {
 				.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING));
 		queryParameters.put("CHECKDATE", date);
 
-		return executeNamedQuery(NamedQueryConstants.GETLOANACOUNTSINARREARS,
+		return executeNamedQuery(NamedQueryConstants.GET_LOAN_ACOUNTS_IN_ARREARS_IN_GOOD_STANDING,
 				queryParameters);
 	}
 
+	public List<Integer> getLoanAccountsInArrears(Short latenessDays)
+		throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		
+		Calendar currentDate = new GregorianCalendar();
+		currentDate.add(Calendar.DAY_OF_MONTH,-latenessDays);
+		
+		currentDate = new GregorianCalendar(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH),0,0,0);
+
+		queryParameters.put("ACCOUNTTYPE_ID", AccountTypes.LOANACCOUNT
+				.getValue());
+		queryParameters.put("PAYMENTSTATUS", Short.valueOf(PaymentStatus.UNPAID
+				.getValue()));
+		queryParameters.put("BADSTANDING", Short
+				.valueOf(AccountStates.LOANACC_BADSTANDING));
+		queryParameters.put("LOANACTIVEINGOODSTAND", Short
+				.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING));
+		
+		queryParameters.put("CHECKDATE", currentDate.getTime());
+		
+		return executeNamedQuery(NamedQueryConstants.GET_LOAN_ACOUNTS_IN_ARREARS,
+				queryParameters);
+	}
+	
 	public LoanBO getAccount(Integer accountId) throws PersistenceException {
 		return (LoanBO) getPersistentObject(LoanBO.class, accountId);
 	}

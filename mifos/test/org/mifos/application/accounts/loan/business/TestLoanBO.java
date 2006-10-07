@@ -55,8 +55,6 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.components.audit.persistence.AuditPersistence;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
@@ -109,9 +107,107 @@ public class TestLoanBO extends MifosTestCase {
 		super.tearDown();
 	}
 	
+	public void testHandleArrearsAging_Create()throws Exception{
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.WEEK_OF_MONTH, -2);
+		java.sql.Date secondWeekDate = new java.sql.Date(calendar.getTimeInMillis());
+
+		accountBO = getLoanAccount();
+		for (AccountActionDateEntity installment : accountBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
+				installment.setActionDate(secondWeekDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertNull(((LoanBO)accountBO).getLoanArrearsAgingEntity());
+		
+		((LoanBO)accountBO).handleArrearsAging();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		LoanArrearsAgingEntity agingEntity = ((LoanBO)accountBO).getLoanArrearsAgingEntity();
+		
+		assertNotNull(agingEntity);
+		assertEquals(new Money("100"), agingEntity.getOverduePrincipal());
+		assertEquals(new Money("12"), agingEntity.getOverdueInterest());
+		assertEquals(new Money("112"), agingEntity.getOverdueBalance());
+		assertEquals(Short.valueOf("14"), agingEntity.getDaysInArrears());
+		
+		assertEquals(((LoanBO)accountBO).getLoanSummary().getPrincipalDue(),
+				agingEntity.getUnpaidPrincipal());
+		assertEquals(((LoanBO)accountBO).getLoanSummary().getInterestDue(),
+				agingEntity.getUnpaidInterest());
+		assertEquals(((LoanBO)accountBO).getLoanSummary().getPrincipalDue().add(
+				((LoanBO)accountBO).getLoanSummary().getInterestDue()), agingEntity
+				.getUnpaidBalance());
+		
+		assertEquals(((LoanBO)accountBO).getTotalPrincipalAmountInArrears(),
+				agingEntity.getOverduePrincipal());
+		assertEquals(((LoanBO)accountBO).getTotalInterestAmountInArrears(),
+				agingEntity.getOverdueInterest());
+		assertEquals(((LoanBO)accountBO).getTotalPrincipalAmountInArrears().add(
+				((LoanBO)accountBO).getTotalInterestAmountInArrears()), agingEntity
+				.getOverdueBalance());
+	}
+
+	public void testHandleArrearsAging_Update()throws Exception{
+		testHandleArrearsAging_Create();
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.WEEK_OF_MONTH, -1);
+		java.sql.Date lastWeekDate = new java.sql.Date(calendar.getTimeInMillis());
+
+		for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 2) {
+				installment.setActionDate(lastWeekDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		
+		assertNotNull(((LoanBO)accountBO).getLoanArrearsAgingEntity());
+		
+		((LoanBO)accountBO).handleArrearsAging();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		LoanArrearsAgingEntity agingEntity = ((LoanBO)accountBO).getLoanArrearsAgingEntity();
+		
+		assertEquals(new Money("200"), agingEntity.getOverduePrincipal());
+		assertEquals(new Money("24"), agingEntity.getOverdueInterest());
+		assertEquals(new Money("224"), agingEntity.getOverdueBalance());
+		assertEquals(Short.valueOf("14"), agingEntity.getDaysInArrears());
+		
+		assertEquals(((LoanBO)accountBO).getLoanSummary().getPrincipalDue(),
+				agingEntity.getUnpaidPrincipal());
+		assertEquals(((LoanBO)accountBO).getLoanSummary().getInterestDue(),
+				agingEntity.getUnpaidInterest());
+		assertEquals(((LoanBO)accountBO).getLoanSummary().getPrincipalDue().add(
+				((LoanBO)accountBO).getLoanSummary().getInterestDue()), agingEntity
+				.getUnpaidBalance());
+		
+		assertEquals(((LoanBO)accountBO).getTotalPrincipalAmountInArrears(),
+				agingEntity.getOverduePrincipal());
+		assertEquals(((LoanBO)accountBO).getTotalInterestAmountInArrears(),
+				agingEntity.getOverdueInterest());
+		assertEquals(((LoanBO)accountBO).getTotalPrincipalAmountInArrears().add(
+				((LoanBO)accountBO).getTotalInterestAmountInArrears()), agingEntity
+				.getOverdueBalance());		
+	}
+	
 	public void testUpdateLoanForLogging()
 			throws ApplicationException, SystemException {
-		Date startDate = new Date(System.currentTimeMillis());
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getUserContext());
@@ -4160,6 +4256,96 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountActionDate((short) 1).getPaymentStatus());
 	}
 
+	public void testGetDaysInArrears() {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.DAY_OF_MONTH, -14);
+		java.sql.Date lastWeekDate = new java.sql.Date(calendar
+				.getTimeInMillis());
+		
+		Calendar date = new GregorianCalendar();
+		date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		date.add(date.DAY_OF_MONTH, -21);
+		java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date
+				.getTimeInMillis());
+
+		accountBO = getLoanAccount();
+		for (AccountActionDateEntity installment : accountBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
+				installment.setActionDate(twoWeeksBeforeDate);
+			} else if (installment.getInstallmentId().intValue() == 2) {
+				installment.setActionDate(lastWeekDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertEquals(Short.valueOf("21"), ((LoanBO)accountBO).getDaysInArrears());
+	}
+	
+	public void testGetTotalInterestAmountInArrears() {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.WEEK_OF_MONTH, -1);
+		java.sql.Date lastWeekDate = new java.sql.Date(calendar
+				.getTimeInMillis());
+
+		Calendar date = new GregorianCalendar();
+		date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		date.add(date.WEEK_OF_MONTH, -2);
+		java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date
+				.getTimeInMillis());
+		accountBO = getLoanAccount();
+		Money interest = new Money();
+		for (AccountActionDateEntity installment : accountBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
+				installment.setActionDate(lastWeekDate);
+				interest = interest.add(((LoanScheduleEntity)installment).getInterest());
+			} else if (installment.getInstallmentId().intValue() == 2) {
+				interest = interest.add(((LoanScheduleEntity)installment).getInterest());
+				installment.setActionDate(twoWeeksBeforeDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertEquals(interest, ((LoanBO) accountBO)
+				.getTotalInterestAmountInArrears());
+	}
+	
+	public void testGetTotalPrincipalAmountInArrears() {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		calendar.add(calendar.WEEK_OF_MONTH, -1);
+		java.sql.Date lastWeekDate = new java.sql.Date(calendar
+				.getTimeInMillis());
+
+		Calendar date = new GregorianCalendar();
+		date.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
+		date.add(date.WEEK_OF_MONTH, -2);
+		java.sql.Date twoWeeksBeforeDate = new java.sql.Date(date
+				.getTimeInMillis());
+		accountBO = getLoanAccount();
+		for (AccountActionDateEntity installment : accountBO
+				.getAccountActionDates()) {
+			if (installment.getInstallmentId().intValue() == 1) {
+				installment.setActionDate(lastWeekDate);
+			} else if (installment.getInstallmentId().intValue() == 2) {
+				installment.setActionDate(twoWeeksBeforeDate);
+			}
+		}
+		TestObjectFactory.updateObject(accountBO);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertEquals(new Money("200"), ((LoanBO) accountBO)
+				.getTotalPrincipalAmountInArrears());
+	}
+	
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments, Double interestRate)

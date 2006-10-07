@@ -53,7 +53,6 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -642,16 +641,6 @@ public class AccountBO extends BusinessObject {
 		}
 
 		return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
-	}
-
-	public Money getTotalPrincipalAmountInArrears() {
-		Money amount = new Money();
-		List<AccountActionDateEntity> actionDateList = getDetailsOfInstallmentsInArrears();
-		for (AccountActionDateEntity accountActionDateEntity : actionDateList) {
-			amount = amount.add(((LoanScheduleEntity) accountActionDateEntity)
-					.getPrincipal());
-		}
-		return amount;
 	}
 
 	public List<AccountNotesEntity> getRecentAccountNotes() {
