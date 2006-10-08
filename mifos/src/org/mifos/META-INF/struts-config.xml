@@ -615,6 +615,8 @@
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/View_AllSavingsProduct.jsp"></forward>
 			<forward name="failure" path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"></forward>
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/View_AllSavingsProduct.jsp"></forward>
+			<forward name="viewSavingsProductChangeLog" path="/pages/application/productdefinition/jsp/viewSavingsPrdChangeLog.jsp" />
+			<forward name="cancelSavingsProductChangeLog" path="/savingsproductaction.do?method=get" />
 		</action>
 		<!-- role action -->
 		<action path="/manageRolesAndPermission" type="org.mifos.application.rolesandpermission.struts.action.RolesandPermissionAction" name="rolesandPermissionActionForm" parameter="method" input="/manageRolesAndPermission.do?method=validate"

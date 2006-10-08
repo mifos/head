@@ -1185,10 +1185,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				matchValues(auditLogRecord,"Trading", "-");
 			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Salutation")){
 				matchValues(auditLogRecord,"Mr", "Mrs");
-			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("First Name")){
-				matchValues(auditLogRecord,"Client", "Diti");
-			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Last Name")){
-				matchValues(auditLogRecord,"1", "Sharma");
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();

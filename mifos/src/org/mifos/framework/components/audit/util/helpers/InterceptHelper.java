@@ -142,7 +142,7 @@ public class InterceptHelper {
 		setPrimaryKeyValues(customMeta,object,customMeta.getIdentifierPropertyName(),state);
 		
 		for (int i = 0; i < propertyNames.length; i++) {
-			logger.debug("i hibernateMeta property name : "+propertyNames[i]+ " and value : " + propertyValues[i] + " is propertyTypes[i].isComponentType() : " + propertyTypes[i].isComponentType()); 
+			logger.debug("hibernateMeta property name : "+propertyNames[i]+ " and value : " + propertyValues[i]); 
 				if (!propertyTypes[i].isEntityType()  
 						&& !propertyTypes[i].isCollectionType() 
 							&& !propertyTypes[i].isComponentType()) {
@@ -225,7 +225,6 @@ public class InterceptHelper {
 				Iterator iterator = ((Set) propertyValues[i]).iterator();
 				while (iterator.hasNext()) {
 					Object obj = iterator.next();
-					logger.debug("collection type Value of object: "+ obj);
 					readFurtherMetaForCollectionType(obj, propertyNames[i],state);
 				}
 			}
@@ -249,6 +248,16 @@ public class InterceptHelper {
 				}
 			}
 			
+			//Reading further component type
+			if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
+					!(propertyValues[i] instanceof MasterDataEntity) && 
+					AuditConfigurtion.isObjectToBeLogged(entityName,propertyNames[i],null)) {
+				Object obj1 = propertyValues[i];
+				if (obj1 != null) {
+					readFurtherComponenetMeta(obj1, propertyNames[i],state,propertyTypes[i]);
+				}
+			}
+			
 		}
 
 		if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
@@ -264,7 +273,6 @@ public class InterceptHelper {
 	
 	
 	public void readFurtherMeta(Object obj,String firstName,String state) {
-		logger.debug("readFurtherMeta firstName : " + firstName);
 		Class clazz = getClazz(obj);
 
 		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
@@ -296,7 +304,6 @@ public class InterceptHelper {
 				Iterator iterator = ((Set) propertyValues[i]).iterator();
 				while (iterator.hasNext()) {
 					Object valueFromSet = iterator.next();
-					logger.debug("Value of object: "+ valueFromSet);
 					readFurtherMetaForCollectionType(valueFromSet,propertyNames[i],state);
 				}
 			}
@@ -313,7 +320,6 @@ public class InterceptHelper {
 					!(propertyValues[i] instanceof MasterDataEntity) && 
 					AuditConfigurtion.isObjectToBeLogged(entityName,propertyNames[i],firstName)) {
 				Object obj1 = propertyValues[i];
-				logger.debug("readFurtherMeta propertyValues[i] : " + propertyValues[i]);
 				if (obj1 != null) {
 					readFurtherMeta(obj1, propertyNames[i],state);
 				}
@@ -344,7 +350,7 @@ public class InterceptHelper {
 	
 	private void readFurtherMoneyType(Object obj,String name,String state){
 		 if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
-			 logger.debug("i setColumnValues "+name+ " : " + obj);
+			logger.debug("i readFurtherMoneyType "+name+ " : " + obj);
 			initialValues.put(name, obj.toString());
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
 			if(columnName!=null && !columnName.equals(""))
@@ -352,6 +358,7 @@ public class InterceptHelper {
 			else
 				columnNames.put(name,name);
     	 }else{
+    		 logger.debug("c readFurtherMoneyType "+name+ " : " + obj); 
 		 	changedValues.put(name, obj.toString());
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
 			if(columnName!=null && !columnName.equals(""))
@@ -511,6 +518,7 @@ public class InterceptHelper {
 		setPrimaryKeyValueForCollectionType(customMeta,obj,firstName.concat(customMeta.getIdentifierPropertyName()),state);
 		
 		for (int i = 0; i < propertyNames.length; i++) {
+			logger.debug("readFurtherMetaForCollectionType : "+propertyNames[i]+ " : " + propertyValues[i]);
 			if (!propertyTypes[i].isEntityType() 
 					&& !propertyTypes[i].isComponentType() && !propertyTypes[i].isCollectionType()) {
 				 if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
@@ -568,8 +576,7 @@ public class InterceptHelper {
 					 }else{
 						 columnNames.put(name,propertyNames[i]);
 					 }
-				 }
-				 else{
+				 }else{
 					 String name=firstName.concat(propertyNames[i].toString());
 					 logger.debug("c readFurtherMetaForCollectionType : "+name+ " : " + propertyValues[i]);
 					 String oldValue=getOldValueToKey(changedValues,name);
@@ -654,9 +661,20 @@ public class InterceptHelper {
 					readFurtherMoneyType(obj1, firstName.concat(propertyNames[i]),state);
 				}
 			}
+			
+			//Reading further component type
+			if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
+					!(propertyValues[i] instanceof MasterDataEntity) && 
+					AuditConfigurtion.isObjectToBeLogged(entityName,propertyNames[i],firstName)) {
+				Object obj1 = propertyValues[i];
+				if (obj1 != null) {
+					readComponenetTypeInCollectionTypeWithoutMerge(obj1, propertyNames[i],state,propertyTypes[i]);
+				}
+			}
 
 		}
 	}
+	
 	
 	public void readAndMergeCollectionTypes(Object obj,String firstName,String parentName,String state) {
 		Class l = getClazz(obj);
@@ -671,12 +689,12 @@ public class InterceptHelper {
 		//setPrimaryKeyValueForCollectionTypeAndMerge(customMeta,obj,firstName.concat(customMeta.getIdentifierPropertyName()),state);
 		
 		for (int i = 0; i < propertyNames.length; i++) {
-			logger.debug("property Name : " + propertyNames[i]);
+			logger.debug("property Name : " + propertyNames[i] + " value : " + propertyValues[i]);
 				if (!propertyTypes[i].isEntityType() 
 						&& !propertyTypes[i].isComponentType() && !propertyTypes[i].isCollectionType()) {
 					 if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
 						 String name=firstName.concat(propertyNames[i]);
-						 logger.debug("i readFurtherMetaForCollectionType "+name+ " : " + propertyValues[i]);
+						 logger.debug("i readFurtherMetaForCollectionType "+name+ " value : " + propertyValues[i]);
 						 if(isValueLoggable(propertyNames[i],firstName)){
 							 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 								 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,propertyValues[i],localeId);
@@ -696,7 +714,7 @@ public class InterceptHelper {
 					 }
 					 else{
 						 String name=firstName.concat(propertyNames[i].toString());
-						 logger.debug("c readFurtherMetaForCollectionType "+name+ " : " + propertyValues[i]);
+						 logger.debug("c readFurtherMetaForCollectionType "+name+ " value : " + propertyValues[i]);
 						 if(isValueLoggable(propertyNames[i],firstName)){
 							 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 								 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,propertyValues[i],localeId);
@@ -739,15 +757,204 @@ public class InterceptHelper {
 						readFurtherMoneyType(obj1, firstName.concat(propertyNames[i]),state);
 					}
 				}
+				
+				//Reading further component type
+				if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
+						!(propertyValues[i] instanceof MasterDataEntity) && 
+						AuditConfigurtion.isObjectToBeLogged(entityName,propertyNames[i],firstName)) {
+					Object obj1 = propertyValues[i];
+					if (obj1 != null) {
+						readComponenetTypeInCollectionTypeWithMerge(obj1, propertyNames[i],state,propertyTypes[i]);
+					}
+				}
 		}
 	}
+	
+	private void readComponenetTypeInCollectionTypeWithMerge(Object obj,String firstName,String state,Type propertyType){
+		
+		AbstractComponentType abstractComponentType =(AbstractComponentType)propertyType;
+
+		Object[] propertyValues = abstractComponentType.getPropertyValues(obj,EntityMode.POJO);
+		String[] propertyNames = abstractComponentType.getPropertyNames();
+		
+		for (int i = 0; i < propertyNames.length; i++) {
+			logger.debug("property Name : " + propertyNames[i] + "  value  : "+propertyValues[i]);
+					 if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
+						 String name=firstName.concat(propertyNames[i]);
+						 logger.debug("i readComponenetTypeInCollectionTypeWithMerge "+name+ " value : " + propertyValues[i]);
+						 if(isValueLoggable(propertyNames[i],firstName)){
+							 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+								 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,propertyValues[i],localeId);
+								 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
+									 initialArray.append(value);
+								 else if(value.trim().length()!=0)
+									 initialArray.append("-").append(value);	 
+							 }else{
+								 if(propertyValues[i]!= null)
+									 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
+										 initialArray.append(propertyValues[i]);
+									 else if(propertyValues[i].toString().trim().length()!=0)
+										 initialArray.append("-").append(propertyValues[i]);
+									 
+							 }
+						 }
+					 }
+					 else{
+						 String name=firstName.concat(propertyNames[i].toString());
+						 logger.debug("c readComponenetTypeInCollectionTypeWithMerge "+name+ " value : " + propertyValues[i]);
+						 if(isValueLoggable(propertyNames[i],firstName)){
+							 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+								 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,propertyValues[i],localeId);
+								 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
+									 changeArray.append(value);
+								 else if(value.trim().length()!=0)
+									 changeArray.append("-").append(value);
+							 }else{
+								 if(propertyValues[i]!= null)
+									 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
+										 changeArray.append(propertyValues[i]);
+									 else if(propertyValues[i].toString().trim().length()!=0)
+										 changeArray.append("-").append(propertyValues[i]);
+							 }
+						 }
+					 }
+				
+		}
+		
+		
+	}
+
+	
+	
+	private void readComponenetTypeInCollectionTypeWithoutMerge(Object obj,String firstName,String state,Type propertyType){
+		
+		AbstractComponentType abstractComponentType =(AbstractComponentType)propertyType;
+
+		Object[] propertyValues = abstractComponentType.getPropertyValues(obj,EntityMode.POJO);
+		String[] propertyNames = abstractComponentType.getPropertyNames();
+		
+		for (int i = 0; i < propertyNames.length; i++) {
+			 if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
+					 String name=firstName.concat(propertyNames[i]);
+					 logger.debug("i readComponenetTypeInCollectionTypeWithoutMerge : "+name+ " value : " + propertyValues[i]);
+					 String oldValue=getOldValueToKey(initialValues,name);
+	
+					 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+						 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,propertyValues[i],localeId);
+						 if(!oldValue.equals("")){
+							 initialValues.put(name, value.concat(",").concat(oldValue));
+						 }else{
+							 initialValues.put(name, value);
+						 }
+					 }else{
+						 if(propertyValues[i] instanceof Calendar && propertyValues[i]!=null){
+							 if(!oldValue.equals("")){
+								 initialValues.put(name,((Calendar)propertyValues[i]).getTime().toString().concat(",").concat(oldValue) );
+							 }else{
+								 initialValues.put(name,((Calendar)propertyValues[i]).getTime());
+							 }
+						 }else if(!(propertyValues[i] instanceof Calendar) && !(propertyValues[i] instanceof Date) && propertyValues[i]!=null){
+							 if(!oldValue.equals("")){
+								 initialValues.put(name, propertyValues[i].toString().concat(",").concat(oldValue));
+							 }else{
+								 initialValues.put(name, propertyValues[i]);
+							 }
+						 }else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
+							 if(!oldValue.equals("")){
+								 try{
+									 Date date=(Date)propertyValues[i];
+									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
+								 }catch(Exception e){
+									 initialValues.put(name,propertyValues[i].toString().concat(",").concat(oldValue));
+								 }
+							 }else{
+								 try{
+									 Date date=(Date)propertyValues[i];
+									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+								 }catch(Exception e){
+									 initialValues.put(name,propertyValues[i].toString());
+								 }
+							 }
+						 }else{
+							 if(!oldValue.equals("")){
+								 initialValues.put(name, oldValue);
+							 }else{
+								 initialValues.put(name, propertyValues[i]);
+							 }
+						 }
+					 }
+					 String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+					 if(columnName!=null && !columnName.equals("")){
+						 columnNames.put(name,columnName);
+					 }else{
+						 columnNames.put(name,propertyNames[i]);
+					 }
+				 }else{
+					 String name=firstName.concat(propertyNames[i].toString());
+					 logger.debug("c readComponenetTypeInCollectionTypeWithoutMerge : "+name+ " value : " + propertyValues[i]);
+					 String oldValue=getOldValueToKey(changedValues,name);
+	
+					 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+						 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,propertyValues[i],localeId);
+						 if(!value.equals("")){
+							 changedValues.put(name, value.concat(",").concat(oldValue));
+						 }else{
+							 changedValues.put(name, oldValue);
+						 }
+					 }else{
+						 if(propertyValues[i] instanceof Calendar && propertyValues[i]!=null){
+							 if(!oldValue.equals("")){
+								 changedValues.put(name, ((Calendar)propertyValues[i]).getTime().toString().concat(",").concat(oldValue) );
+							 }else{
+								 changedValues.put(name, ((Calendar)propertyValues[i]).getTime() );
+							 }
+						 }else if(!(propertyValues[i] instanceof Calendar) && !(propertyValues[i] instanceof Date) && propertyValues[i]!=null){
+							 if(!oldValue.equals("")){
+								 changedValues.put(name, propertyValues[i].toString().concat(",").concat(oldValue));
+							 }else{
+								 changedValues.put(name, propertyValues[i]);
+							 }
+						 }else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
+							 if(!oldValue.equals("")){
+								 try{
+									 Date date= (Date)propertyValues[i];	
+									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
+								 }catch(Exception e){
+									 changedValues.put(name, propertyValues[i].toString().concat(",").concat(oldValue));
+								 }
+							 }else{
+								 try{
+									 Date date= (Date)propertyValues[i];
+									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+								 }catch(Exception e){
+									 changedValues.put(name, propertyValues[i].toString());
+								 }
+							 }
+						 }else{
+							 if(!oldValue.equals("")){
+								 changedValues.put(name, oldValue);
+							 }else{
+								 changedValues.put(name, propertyValues[i]);
+							 }
+						 }
+					 }
+					 String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+					 if(columnName!=null && !columnName.equals("")){
+						 columnNames.put(name,columnName);
+					 }else{
+						 columnNames.put(name,propertyNames[i]);
+					 }
+				 }
+		}
+	}
+
 
 	
 	
 	private void setPrimaryKeyValueForCollectionType(ClassMetadata customMeta,Object obj,String name,String state){
 		if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){		
 			String oldValue=getOldValueToKey(initialValues,name);
-			logger.debug("i primary key column name : "+ name +" : "+customMeta.getIdentifier(obj,EntityMode.POJO));
+			logger.debug("i setPrimaryKeyValueForCollectionType : "+ name +" value : "+customMeta.getIdentifier(obj,EntityMode.POJO));
 			if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 				String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
 				if(!oldValue.equals("")){
@@ -756,10 +963,12 @@ public class InterceptHelper {
 					initialValues.put(name, value);
 				}
 			}else{
-				if(!oldValue.equals("")){
-					initialValues.put(name, customMeta.getIdentifier(obj,EntityMode.POJO).toString().concat(",").concat(oldValue));
-				}else{
-					initialValues.put(name, customMeta.getIdentifier(obj,EntityMode.POJO));
+				if(customMeta.getIdentifier(obj,EntityMode.POJO)!=null){
+					if(!oldValue.equals("")){
+						initialValues.put(name, customMeta.getIdentifier(obj,EntityMode.POJO).toString().concat(",").concat(oldValue));
+					}else{
+						initialValues.put(name, customMeta.getIdentifier(obj,EntityMode.POJO));
+					}
 				}
 			}
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
@@ -771,7 +980,7 @@ public class InterceptHelper {
 		}
 		else{
 			String oldValue=getOldValueToKey(changedValues,name);
-			logger.debug("c primary key column name : "+ name +" : "+customMeta.getIdentifier(obj,EntityMode.POJO));
+			logger.debug("c setPrimaryKeyValueForCollectionType : "+ name +" value : "+customMeta.getIdentifier(obj,EntityMode.POJO));
 			if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 				String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
 				if(!oldValue.equals("")){
@@ -780,10 +989,12 @@ public class InterceptHelper {
 					changedValues.put(name,value);
 				}
 			}else{
-				if(!oldValue.equals("")){
-					changedValues.put(name,customMeta.getIdentifier(obj,EntityMode.POJO).toString().concat(",").concat(oldValue));
-				}else{
-					changedValues.put(name,customMeta.getIdentifier(obj,EntityMode.POJO));
+				if(customMeta.getIdentifier(obj,EntityMode.POJO)!=null){
+					if(!oldValue.equals("")){
+						changedValues.put(name,customMeta.getIdentifier(obj,EntityMode.POJO).toString().concat(",").concat(oldValue));
+					}else{
+						changedValues.put(name,customMeta.getIdentifier(obj,EntityMode.POJO));
+					}
 				}
 			}
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
@@ -797,7 +1008,7 @@ public class InterceptHelper {
 	
 	private void setPrimaryKeyValueForCollectionTypeAndMerge(ClassMetadata customMeta,Object obj,String name,String state){
 		if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){		
-			logger.debug("i primary key column name : "+ name +" : "+customMeta.getIdentifier(obj,EntityMode.POJO));
+			logger.debug("i setPrimaryKeyValueForCollectionTypeAndMerge : "+ name +" value : "+customMeta.getIdentifier(obj,EntityMode.POJO));
 			if(isValueLoggable(name,null)){
 				if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 					String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
@@ -814,7 +1025,7 @@ public class InterceptHelper {
 			}
 		}
 		else{
-			logger.debug("c primary key column name : "+ name +" : "+customMeta.getIdentifier(obj,EntityMode.POJO));
+			logger.debug("c setPrimaryKeyValueForCollectionTypeAndMerge : "+ name +" value : "+customMeta.getIdentifier(obj,EntityMode.POJO));
 			if(isValueLoggable(name,null)){
 				if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 					String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
@@ -837,10 +1048,10 @@ public class InterceptHelper {
 			if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 				String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
 				initialValues.put(name, value);
-				logger.debug("i setPrimaryKeyValues "+name+ " : " +  value);
+				logger.debug("i setPrimaryKeyValues "+name+ " value : " +  value);
 			}else{
 				initialValues.put(name, customMeta.getIdentifier(obj,EntityMode.POJO));
-				logger.debug("i setPrimaryKeyValues "+name+ " : " + customMeta.getIdentifier(obj,EntityMode.POJO));
+				logger.debug("i setPrimaryKeyValues "+name+ " value : " + customMeta.getIdentifier(obj,EntityMode.POJO));
 			}
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
 			if(columnName!=null && !columnName.equals("")){
@@ -852,13 +1063,13 @@ public class InterceptHelper {
 		else{
 			if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
 				String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,customMeta.getIdentifier(obj,EntityMode.POJO),localeId);
-				logger.debug("c setPrimaryKeyValues "+name+ " : " +  value);
+				logger.debug("c setPrimaryKeyValues "+name+ " value : " +  value);
 				changedValues.put(name,value);
 			}else{
 				changedValues.put(name,customMeta.getIdentifier(obj,EntityMode.POJO));
 			}
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
-			logger.debug("c setPrimaryKeyValues "+name+ " : " + customMeta.getIdentifier(obj,EntityMode.POJO));
+			logger.debug("c setPrimaryKeyValues "+name+ " value : " + customMeta.getIdentifier(obj,EntityMode.POJO));
 			if(columnName!=null && !columnName.equals("")){
 				columnNames.put(name,columnName);
 			}else{

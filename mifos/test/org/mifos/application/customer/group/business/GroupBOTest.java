@@ -152,9 +152,6 @@ public class GroupBOTest extends MifosTestCase {
 				}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Trained")){
 					assertEquals("0",auditLogRecord.getOldValue());
 					assertEquals("1",auditLogRecord.getNewValue());
-				}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Additional Information")){
-					assertEquals("Replacement Status-value2,GRT Staff Id-value1",auditLogRecord.getOldValue());
-					assertEquals("Replacement Status-value4,GRT Staff Id-value3",auditLogRecord.getNewValue());
 				}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Name")){
 					assertEquals("Group_underBranch",auditLogRecord.getOldValue());
 					assertEquals("changed group name",auditLogRecord.getNewValue());
@@ -199,7 +196,7 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
-			if(auditLogRecord.getFieldName().equalsIgnoreCase(" Kendra Name")){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Kendra Name")){
 				assertEquals("Center",auditLogRecord.getOldValue());
 				assertEquals("toTransfer",auditLogRecord.getNewValue());
 			}

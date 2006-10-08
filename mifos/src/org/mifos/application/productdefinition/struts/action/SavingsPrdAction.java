@@ -248,7 +248,11 @@ public class SavingsPrdAction extends BaseAction {
 						.getRecommendedAmntUnitValue());
 		SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils
 				.getAttribute(Constants.BUSINESS_KEY, request);
-		savingsOffering
+		SavingsOfferingBO savingsOfferingBO = ((SavingsPrdBusinessService) getService())
+		.getSavingsProduct(savingsOffering.getPrdOfferingId());
+		savingsOfferingBO.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(savingsOfferingBO);
+		savingsOfferingBO
 				.update(
 						userContext.getId(),
 						savingsprdForm.getPrdOfferingName(),

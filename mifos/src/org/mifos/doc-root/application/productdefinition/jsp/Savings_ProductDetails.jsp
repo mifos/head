@@ -262,9 +262,9 @@
 															<c:out value="${glCode.glcode}" />
 														</c:if>
 													</c:forEach> <br> <br>
-													 <%-- <html-el:link href="javascript:changelog(savingsprdactionform)">
-														<mifos:mifoslabel name="product.changelog" bundle="ProductDefUIResources" />
-													</html-el:link> --%>
+													 <html-el:link	href="savingsproductaction.do?method=loadChangeLog&entityType=SavingsProduct&entityId=${BusinessKey.prdOfferingId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&prdOfferName=${requestScope.BusinessKey.prdOfferingName}">
+														<mifos:mifoslabel name="product.viewchangelog" bundle="ProductDefUIResources" />
+													</html-el:link> 
 													</span>
 											</td>
 										</tr>

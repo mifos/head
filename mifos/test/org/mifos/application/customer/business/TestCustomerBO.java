@@ -145,7 +145,7 @@ public class TestCustomerBO extends MifosTestCase {
 				assertEquals("comment",auditLogRecord.getNewValue());
 			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
 				assertEquals("Active",auditLogRecord.getOldValue());
-				assertEquals("Inactive",auditLogRecord.getNewValue());
+				assertEquals("Cancelled",auditLogRecord.getNewValue());
 			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status Change Explanation")){
 				assertEquals("-",auditLogRecord.getOldValue());
 				assertEquals("Duplicate",auditLogRecord.getNewValue());

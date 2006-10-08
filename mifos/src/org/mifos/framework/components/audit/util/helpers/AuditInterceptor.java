@@ -188,7 +188,7 @@ public class AuditInterceptor implements Interceptor {
 					&& interceptHelper.getChangeValue(key) == null 
 					&& !interceptHelper.getPropertyName(key).toString().equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY) ) {
 				auditLogRecord = new AuditLogRecord(interceptHelper
-						.getPropertyName(key).toString(),removeComma(interceptHelper
+						.getPropertyName(key).toString().trim(),removeComma(interceptHelper
 						.getInitialValue(key).toString()), "-", auditLog);
 				auditLogRecords.add(auditLogRecord);
 			} else if (interceptHelper.getInitialValue(key) == null
@@ -196,7 +196,7 @@ public class AuditInterceptor implements Interceptor {
 					&& !interceptHelper.getChangeValue(key).toString().equals("")
 					&& !interceptHelper.getPropertyName(key).toString().equalsIgnoreCase(XMLConstants.DONOTLOGTHISPROPERTY)) {
 				auditLogRecord = new AuditLogRecord(interceptHelper
-						.getPropertyName(key).toString(), "-",
+						.getPropertyName(key).toString().trim(), "-",
 						removeComma(interceptHelper.getChangeValue(key)
 								.toString()), auditLog);
 				auditLogRecords.add(auditLogRecord);
@@ -217,7 +217,7 @@ public class AuditInterceptor implements Interceptor {
 				}else{
 					oldValue=removeComma(interceptHelper.getInitialValue(key).toString());
 				}
-				auditLogRecord=new AuditLogRecord(interceptHelper.getPropertyName(key).toString(),oldValue,newValue,auditLog);
+				auditLogRecord=new AuditLogRecord(interceptHelper.getPropertyName(key).toString().trim(),oldValue,newValue,auditLog);
 				auditLogRecords.add(auditLogRecord);
 			}
 		}

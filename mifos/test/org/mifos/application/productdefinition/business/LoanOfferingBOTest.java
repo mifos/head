@@ -143,9 +143,6 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			if(auditLogRecord.getFieldName().equalsIgnoreCase("Min Loan Amount")){
 				assertEquals("300.0",auditLogRecord.getOldValue());
 				assertEquals("1000.0",auditLogRecord.getNewValue());
-			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("End Date")){
-				assertEquals("-",auditLogRecord.getOldValue());
-				assertEquals("10/10/2006",auditLogRecord.getNewValue());
 			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Description")){
 				assertEquals("-",auditLogRecord.getOldValue());
 				assertEquals("Loan Product updated",auditLogRecord.getNewValue());

@@ -143,10 +143,10 @@
 		<propertyName name="governmentId" displayKey="GovernmentId" />
 		<propertyName name="dateOfBirth" displayKey="Client.dateOfBirth" />
 		
-		<propertyName name="firstName"  displayKey="Client.customerNameDetailSet.firstName" />
-		<propertyName name="secondLastName" displayKey="Client.customerNameDetailSet.secondLastName" />
-		<propertyName name="lastName"  displayKey="Client.customerNameDetailSet.lastName" />
-		<propertyName name="middleName" displayKey="Client.customerNameDetailSet.middleName" />
+		<propertyName name="firstName" parentName="name" displayKey="Client.customerNameDetailSet.firstName" />
+		<propertyName name="secondLastName" parentName="name" displayKey="Client.customerNameDetailSet.secondLastName" />
+		<propertyName name="lastName"  parentName="name" displayKey="Client.customerNameDetailSet.lastName" />
+		<propertyName name="middleName" parentName="name" displayKey="Client.customerNameDetailSet.middleName" />
 		
 		<propertyName name="displayName"  parentName="nameDetailSet" doNotLog="Yes"/>		
 		
@@ -591,6 +591,86 @@
 		<propertyName name="recurrenceName" parentName="recurrenceType" displayKey="LoanProduct.recurrenceType.recurrenceName"/>
 		<propertyName name="recurrenceId" parentName="recurrenceType" doNotLog="Yes" />
 		<propertyName name="description" parentName="recurrenceType" doNotLog="Yes" />
+		
+	</entityType>
+	
+	<entityType name="SavingsProduct" classPath="org.mifos.application.productdefinition.business.SavingsOfferingBO">
+	
+		<entitiesToLog>
+			<entity name="prdCategory"/>
+			<entity name="prdApplicableMaster"/>
+			<entity name="prdStatus"/>
+			<entity name="savingsType"/>
+			<entity name="recommendedAmntUnit"/>
+			<entity name="interestCalcType"/>
+			
+			<entity name="savingsOfferingMeetings"/>
+			<entity name="meeting" parentName="savingsOfferingMeetings"/>
+			<entity name="meetingDetails" parentName="meeting"/>
+			<entity name="recurrenceType" parentName="meetingDetails"/>
+			<entity name="meetingRecurrence" parentName="meetingDetails"/>
+			<entity name="weekDay" parentName="meetingRecurrence"/>
+			<entity name="rankOfDays" parentName="meetingRecurrence"/>
+		</entitiesToLog>
+		
+		<propertyName name="prdApplicableMaster" displayKey="LoanProduct.prdApplicableMaster.prdApplicableMasterId" doNotLog="No" lookUp="yes">
+			<entityName name="PrdApplicableMaster">
+				<classPath  path="org.mifos.application.productdefinition.business.PrdApplicableMasterEntity"/>
+			</entityName>	
+		</propertyName>
+		
+		<propertyName name="savingsType" displayKey="SavingsProduct.savingsType.savingsTypeId" doNotLog="No" lookUp="yes">
+			<entityName name="SavingsType">
+				<classPath  path="org.mifos.application.productdefinition.business.SavingsTypeEntity"/>
+			</entityName>	
+		</propertyName>
+		
+		<propertyName name="recommendedAmntUnit" displayKey="SavingsProduct.recommendedAmntUnit.recommendedAmntUnitId" doNotLog="No" lookUp="yes">
+			<entityName name="RecommendedAmtUnit">
+				<classPath  path="org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity"/>
+			</entityName>	
+		</propertyName>
+		
+		<propertyName name="interestCalcType" displayKey="SavingsProduct.BalanceusedforInterestratecalculation" doNotLog="No" lookUp="yes">
+			<entityName name="InterestCalcRule">
+				<classPath  path="org.mifos.application.productdefinition.business.InterestCalcTypeEntity"/>
+			</entityName>	
+		</propertyName>
+		
+		<propertyName name="offeringStatusId" parentName="prdStatus" displayKey="LoanProduct.status" lookUp="yes" methodName="retrieveProductStatus"/>
+		
+		<propertyName name="productCategoryID" parentName="prdCategory" doNotLog="yes" />
+		<propertyName name="productCategoryName" parentName="prdCategory" displayKey="LoanProduct.prdCategory.productCategoryName" />
+		<propertyName name="productCategoryDesc" parentName="prdCategory" doNotLog="yes" />
+		<propertyName name="globalPrdCategoryNum" parentName="prdCategory" doNotLog="yes" />
+	
+		<propertyName name="prdOfferingName" displayKey="SavingsProduct.prdOfferingName" />
+		<propertyName name="prdOfferingShortName" displayKey="SavingsProduct.prdOfferingShortName" />
+		<propertyName name="description" displayKey="SavingsProduct.description" />
+		<propertyName name="startDate" displayKey="SavingsProduct.startDate" />
+		<propertyName name="endDate" displayKey="SavingsProduct.endDate" />
+		<propertyName name="recommendedAmount" displayKey="SavingsProduct.recommendedAmount" />
+		<propertyName name="maxAmntWithdrawl" displayKey="SavingsProduct.maxAmntWithdrawl" />
+		<propertyName name="offeringStatusId" parentName="prdStatus" displayKey="SavingsProduct.prdStatus.offeringStatusId" />
+		<propertyName name="interestRate" displayKey="Interest,Loan.Rate" />
+		
+		<propertyName name="minAmntForInt" displayKey="LoanProduct.Min,SavingsProduct.interestCalcType.interestCalculationTypeID1,Interest,SavingsProduct.interestCalcType.interestCalculationTypeID2" />
+		<propertyName name="recurAfter" parentName="meetingDetails" displayKey="SavingsProduct.meetingDetails.recurAfter"/>
+		<propertyName name="prdOfferingMeetingId" parentName="savingsOfferingMeetings" doNotLog="yes" />
+		<propertyName name="recurrenceId" parentName="recurrenceType" doNotLog="yes" />
+		<propertyName name="meetingPlace" parentName="meeting" doNotLog="yes" />
+		<propertyName name="dayNumber" parentName="meetingRecurrence" doNotLog="yes" />
+		<propertyName name="meetingStartDate" parentName="meeting" doNotLog="yes" />
+		<propertyName name="meetingId" parentName="meeting" doNotLog="yes" />
+		<propertyName name="detailsId" parentName="meetingRecurrence" doNotLog="yes" />
+		<propertyName name="detailsId" parentName="meetingDetails" doNotLog="yes" />
+
+		<propertyName name="productCategoryID" parentName="prdCategory" doNotLog="yes" />
+		<propertyName name="productCategoryName" parentName="prdCategory" displayKey="LoanProduct.prdCategory.productCategoryName" />
+		<propertyName name="officeId" parentName="prdCategory" doNotLog="yes" />
+		<propertyName name="productCategoryDesc" parentName="prdCategory" doNotLog="yes" />
+		<propertyName name="globalPrdOfferingNum" parentName="prdCategory" doNotLog="yes" />
+		
 		
 	</entityType>
 	

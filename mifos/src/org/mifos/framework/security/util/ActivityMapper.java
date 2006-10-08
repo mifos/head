@@ -593,7 +593,9 @@ public class ActivityMapper {
 		activityMap.put("/savingsprdaction-update",
 				SecurityConstants.EDIT_SAVING_PRODUCT);
 
-
+		
+		activityMap.put("/savingsproductaction-loadChangeLog", SecurityConstants.VIEW);
+		activityMap.put("/savingsproductaction-cancelChangeLog", SecurityConstants.VIEW);
 		activityMap.put("/savingsproductaction-search", SecurityConstants.VIEW);
 		activityMap.put("/savingsproductaction-load",
 				SecurityConstants.DEFINE_NEW_SAVING_PRODUCT_INSTANCE);

@@ -40,6 +40,7 @@ package org.mifos.application.productdefinition.business;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -51,7 +52,10 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.SystemException;
@@ -76,6 +80,66 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		TestObjectFactory.removeObject(savingsOffering);
 		TestObjectFactory.removeObject(savingsOffering1);
 	}
+	
+	public void testUpdateSavingsOfferingForLogging() throws Exception {
+		String name = "Savings_offering";
+		String newName = "Savings_offeringChanged";
+		String shortName = "S";
+		String newShortName = "S1";
+		String desc = "Desc";
+		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
+				PrdApplicableMaster.CLIENTS);
+		SavingsTypeEntity savingsType = new SavingsTypeEntity(
+				SavingsType.MANDATORY);
+
+		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
+				InterestCalcType.AVERAGE_BALANCE);
+		MeetingBO intCalcMeeting = getMeeting();
+		MeetingBO intPostMeeting = getMeeting();
+		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
+				.getObject(ProductCategoryBO.class, (short) 2);
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(7);
+		savingsOffering = createSavingsOfferingBO(name, shortName,
+				PrdApplicableMaster.CLIENTS, startDate,
+				PrdStatus.SAVINGSACTIVE, SavingsType.VOLUNTARY,
+				InterestCalcType.MINIMUM_BALANCE);
+		savingsOffering.setUserContext(TestObjectFactory.getUserContext());
+		HibernateUtil.getInterceptor().createInitialValueMap(savingsOffering);
+		savingsOffering.update(Short.valueOf("1"), newName, newShortName,
+				productCategory, prdApplicableMaster, startDate, endDate,
+				"Desc", PrdStatus.SAVINGSINACTIVE, null, savingsType,
+				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
+				new Money("100"), new Money("1"), 10.0);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
+				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
+		
+
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.SAVINGSPRODUCT.getValue(),new Integer(savingsOffering.getPrdOfferingId().toString()));
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.SAVINGSPRODUCT.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(12,auditLogList.get(0).getAuditLogRecords().size());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Balance used for Interest rate calculation")){
+				assertEquals("Minimum Balance",auditLogRecord.getOldValue());
+				assertEquals("Average Balance",auditLogRecord.getNewValue());
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
+				assertEquals("Active",auditLogRecord.getOldValue());
+				assertEquals("Inactive",auditLogRecord.getNewValue());
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Type Of Deposits")){
+				assertEquals("Voluntary",auditLogRecord.getOldValue());
+				assertEquals("Mandatory",auditLogRecord.getNewValue());
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Service Charge Rate")){
+				assertEquals("1.2",auditLogRecord.getOldValue());
+				assertEquals("10.0",auditLogRecord.getNewValue());
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
+
+	}
+
 
 	public void testBuildSavingsOfferingWithoutData() {
 		try {
