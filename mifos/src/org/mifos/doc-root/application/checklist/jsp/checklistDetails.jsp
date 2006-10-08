@@ -37,13 +37,13 @@
 * 
 */
  -->
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@taglib uri="/tags/struts-html" prefix="html"%>
-<%@taglib uri="/tags/struts-bean" prefix="bean"%>
+<%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
+<%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
-<%@taglib uri="/tags/struts-html-el" prefix="html-el"%>
-<%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
+<%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
@@ -53,124 +53,110 @@
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 
-		<script language="JavaScript"
-			src="pages/application/checklist/js/validator.js"
-			type="text/javascript">
+		<script language="JavaScript" src="pages/application/checklist/js/validator.js" type="text/javascript">
 </script>
-<html-el:form action="/checkListAction">
-			<table width="95%" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td class="bluetablehead05">
-						<span class="fontnormal8pt">
-							 <html-el:link action="AdminAction.do?method=load">
-								<mifos:mifoslabel name="checklist.admin" />
-							 </html-el:link> / 
-							 <html-el:link action="checkListAction.do?method=loadall">
-								<mifos:mifoslabel name="checklist.view_checklists" />
-							 </html-el:link> / 
-						 </span>
-						 <span class="fontnormal8ptbold">
-						  	 <c:if	test="${not empty CheckListParent}">
-									${CheckListParent.checkList.checklistName}
-					     	 </c:if>									
-						 </span>
-					 </td>
-				</tr>
-			</table>
-			<table width="95%" border="0" cellpadding="0" cellspacing="0">		
-				<tr>					
-					<td width="70%" align="left" valign="top" class="paddingL15T15">
+
+		<table width="95%" border="0" cellpadding="0" cellspacing="0">
+			<c:set var="checkList" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
+			<tr>
+				<td class="bluetablehead05">
+					<span class="fontnormal8pt"> <html-el:link action="AdminAction.do?method=load">
+							<mifos:mifoslabel name="checklist.admin" />
+						</html-el:link> / <html-el:link action="chkListAction.do?method=loadAllChecklist&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+							<mifos:mifoslabel name="checklist.view_checklists" />
+						</html-el:link> / </span> <span class="fontnormal8ptbold"> ${checkList.checklistName} </span>
+				</td>
+			</tr>
+		</table>
+		<table width="95%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="70%" align="left" valign="top" class="paddingL15T15">
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td width="50%" height="23" class="headingorange">							
-								<c:if test="${not empty CheckListParent}">
-												${CheckListParent.checkList.checklistName}
-								</c:if>
+							<td width="50%" height="23" class="headingorange">
+								${checkList.checklistName}
 							</td>
-							<td width="50%" align="right">					
-									<html-el:link href="javascript:manage('${param.checklistId}','${param.typeId}','${param.statusOfCheckList}',${param.categoryId})">	
-											Edit checklist
-									</html-el:link>						
-						 	</td>
+							<td width="50%" align="right">
+								<html-el:link href="chkListAction.do?method=manage&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+									<mifos:mifoslabel name="checklist.edit_checklist" />
+								</html-el:link>
+							</td>
 						</tr>
 						<tr>
-							<font class="fontnormalRedBold"> 
-								<html-el:errors	bundle="checklistUIResources" /> 
-							</font>
-						</tr>						
-						<tr>							
+							<font class="fontnormalRedBold"> <html-el:errors bundle="checklistUIResources" /> </font>
+						</tr>
+						<tr>
 							<td height="23" colspan="2" class="fontnormal">
-								<span class="fontnormal"> </span>
-								<span class="fontnormal">									
-								<c:choose>
-									<c:when test='${CheckListParent.checkList.checklistStatus=="1"}'>								
-										<img src="pages/framework/images/status_activegreen.gif">
-										Active								
-									</c:when>
-									<c:otherwise>
-										<img src="pages/framework/images/status_closedblack.gif">
-										Inactive
-									</c:otherwise>
-								</c:choose>								
-							</span>
-							<br>
-							<br>
-							<mifos:mifoslabel name="checklist.type" />							
-							 <c:if	test="${not empty requestScope.Level}">
-								<c:forEach var="checklistmaster" items="${requestScope.Level}">
-									<c:choose>
-										<c:when test='${Type == 1}'>
-											<c:if test="${checklistmaster.checkListId ==CheckListParent.accountTypeId }">
-											     ${checklistmaster.checkListName}
-											  </c:if>
+								<span class="fontnormal"> </span> <span class="fontnormal"><c:choose>
+										<c:when test="${checkList.checklistStatus==1}">
+											<img src="pages/framework/images/status_activegreen.gif">
+											<mifos:mifoslabel name="checklist.active" />
 										</c:when>
 										<c:otherwise>
-											<c:if test="${checklistmaster.checkListId ==CheckListParent.levelId }">
-											     ${checklistmaster.checkListName}
-										  </c:if>
+											<img src="pages/framework/images/status_closedblack.gif">
+											<mifos:mifoslabel name="checklist.inactive" />
 										</c:otherwise>
-									</c:choose>
-								</c:forEach>
-							</c:if>
-							<br> 
-							<mifos:mifoslabel name="checklist.status" />: 
-							<c:out	value="${param.statusOfCheckList}"/>
-							 <br>
-							 <mifos:mifoslabel name="checklist.createdby" />:                  			                 			
-                  			<c:out	value="${CreatedBy}"/> <br>
-                 			<mifos:mifoslabel name="checklist.createddate" />:                 			
-                 			<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,CheckListParent.checkList.createdDate)}" />
-                 			 
-							<br>
-							<p class="fontnormal">
-							<span class="fontnormalbold">
-								<mifos:mifoslabel name="checklist.items" /> 
-							</span> 
-							<c:if test="${not empty requestScope.CheckListParent.checkList.checklistDetailSet }">							
-								<c:forEach var="details" items="${requestScope.CheckListParent.checkList.checklistDetailSet}">
-									<br>
-									<br>
-									<span class="fontnormal"> ${details.detailText} </span>
-								</c:forEach>
-							</c:if>
+									</c:choose> </span>
+								<br>
+								<br>
+								<mifos:mifoslabel name="checklist.type" />
+								<c:choose>
+									<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Type') == 1}">
+										<c:if test="${checkList.customerLevel.id==3}">
+											<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
+										</c:if>
+										<c:if test="${checkList.customerLevel.id==2}">
+											<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
+										</c:if>
+										<c:if test="${checkList.customerLevel.id==1}">
+											<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
+										</c:if>
+
+									</c:when>
+									<c:otherwise>
+										<c:out value="${checkList.productTypeEntity.name}" />
+									</c:otherwise>
+								</c:choose>
+								<br>
+								<mifos:mifoslabel name="checklist.status" />
+								:
+								<c:choose>
+									<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Type') == 1}">
+										<c:out value="${checkList.customerStatus.name}" />
+
+									</c:when>
+									<c:otherwise>
+										<c:out value="${checkList.accountStateEntity.name}" />
+
+									</c:otherwise>
+								</c:choose>
+								<br>
+								<mifos:mifoslabel name="checklist.createdby" />
+								:
+								<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'createdname')}" />
+								<br>
+								<mifos:mifoslabel name="checklist.createddate" />
+								:
+								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,checkList.createdDate)}" />
+
+								<br>
+								<p class="fontnormal">
+									<span class="fontnormalbold"> <mifos:mifoslabel name="checklist.items" /> </span>
+									<c:if test="${not empty checkList.checklistDetails}">
+										<c:forEach var="details" items="${checkList.checklistDetails}">
+											<br>
+											<br>
+											<span class="fontnormal"> ${details.detailText} </span>
+										</c:forEach>
+									</c:if>
 							</td>
 						</tr>
 					</table>
 					<br>
-					</td>
-				</tr>
-			</table>
-			<br>
-			<html-el:hidden property="method" value="" />
-			<html-el:hidden property="checklistId" value="" />			
-			<html-el:hidden property="categoryId" value="" />
-			<html-el:hidden property="typeId" value="create" />
-			<html-el:hidden property="statusOfCheckList" />		
-			<html-el:hidden property="previousChecklistId" value="${param.checklistId}" />			
-			<html-el:hidden property="previousCategoryId" value="${param.categoryId}" />
-			<html-el:hidden property="previousTypeId" value="${param.typeId}" />
-			<html-el:hidden property="previousStatusOfCheckList" value="${param.statusOfCheckList}"/>	
-</html-el:form>
+				</td>
+			</tr>
+		</table>
+		<br>
 	</tiles:put>
 </tiles:insert>
 

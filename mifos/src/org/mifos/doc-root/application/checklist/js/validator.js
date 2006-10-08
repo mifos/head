@@ -155,7 +155,8 @@ function fnUpdate(form)
 function fnCancel(form)
 {
 	flag=1;
-	form.action="chkListAction.do?method=cancelCreate";
+	var flowKey = form.currentFlowKey.value
+	form.action="chkListAction.do?method=cancelCreate&currentFlowKey="+flowKey;
 	form.submit();
 }
 

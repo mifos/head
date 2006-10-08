@@ -42,7 +42,7 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 /**
  * This class is a RunTimeException for the framework.
  */
-public class FrameworkRuntimeException extends RuntimeException {
+public class FrameworkRuntimeException extends SystemException {
 
 	/** 
 	 * This is a string which points to the actual message in the 

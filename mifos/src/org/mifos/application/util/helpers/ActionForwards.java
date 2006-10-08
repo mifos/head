@@ -52,5 +52,5 @@ public enum ActionForwards {
 	viewRoles_success,editPreview_success,editPreview_failure,editPrevious_success,editPrevious_failure,
 	login_success,login_failure,updatePassword_success,updatePassword_failure,logout_success,
 	delete_success,delete_failure,viewAllLoanProducts_success,viewAllLoanProducts_failure,loadUnLockUser_success,unLockUserAccount_success
-	, load_main_page,viewAllFunds_success,cancelManage_success,loadSearch_success;
+	, load_main_page,viewAllFunds_success,cancelManage_success,loadSearch_success,loadAllChecklist_success,loadAllChecklist_failure;
 }

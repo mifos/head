@@ -1,4 +1,5 @@
-	<!--
+
+<!--
 /**
 
 * ViewEditChecklists.jsp    version: 1.0
@@ -38,136 +39,131 @@
 */
  -->
 
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 <%@taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
-<%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
-<%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
-<%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
-<%@ taglib uri="/tags/date" prefix="date"%>
+<%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-
-		<script>
-  function getChecklist(id,type,status,categoryId)
- {
- 		
-     	document.CheckListForm.typeId.value=type;
-		document.CheckListForm.checklistId.value=id;
-		document.CheckListForm.categoryId.value=categoryId;
-		document.CheckListForm.statusOfCheckList.value=status;
- 		document.CheckListForm.method.value="get";
- 		document.CheckListForm.submit();
- }
-</script>
-		<html-el:form action="/chkListAction">   
-			<table width="100%" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> 
-							<html-el:link action="AdminAction.do?method=load">
-								<mifos:mifoslabel name="checklist.admin" />
-							</html-el:link> / 
-						</span> 
-						<span class="fontnormal8ptbold">
-							 <mifos:mifoslabel name="checklist.view_checklists" /> 
-						</span>
-					</td>
-				</tr>
-			</table>
-			<table width="95%" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td align="left" valign="top" class="paddingL15T15">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td class="bluetablehead05">
+					<span class="fontnormal8pt"> <html-el:link action="AdminAction.do?method=load">
+							<mifos:mifoslabel name="checklist.admin" />
+						</html-el:link> / </span> <span class="fontnormal8ptbold"> <mifos:mifoslabel name="checklist.view_checklists" /> </span>
+				</td>
+			</tr>
+		</table>
+		<table width="95%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td align="left" valign="top" class="paddingL15T15">
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">
-						<tr>						
-						<td class="headingorange"><span class="headingorange">
-							<mifos:mifoslabel name="checklist.view_checklists" /> </span>
-						</td>
+						<tr>
+							<td class="headingorange">
+								<span class="headingorange"> <mifos:mifoslabel name="checklist.view_checklists" /> </span>
+							</td>
 						</tr>
 						<tr>
 							<td class="fontnormalbold">
-								<span class="fontnormal"> 
-									<mifos:mifoslabel name="checklist.description" />
-										<html-el:link action="chkListAction.do?method=load">
-											<mifos:mifoslabel name="checklist.definenewchecklist" />
-										</html-el:link> 
-									<br>							
-								</span>
-								<span class="fontnormalbold"> </span>
-								<font class="fontnormalRedBold">
-							 <html-el:errors bundle="checklistUIResources" /> 
-						</font>
-							<table width="90%" border="0" cellspacing="0" cellpadding="0">
-								<tr class="fontnormal">
-									<td width="99%">
-									<c:if test="${not empty requestScope.CustomerLevelMaster}">
-										<c:forEach var="customermaster"	items="${requestScope.CustomerLevelMaster}">											
+								<span class="fontnormal"> <mifos:mifoslabel name="checklist.description" /> <html-el:link action="chkListAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+										<mifos:mifoslabel name="checklist.definenewchecklist" />
+									</html-el:link> <br> </span> <span class="fontnormalbold"> </span> <font class="fontnormalRedBold"> <html-el:errors bundle="checklistUIResources" /> </font>
+								<table width="90%" border="0" cellspacing="0" cellpadding="0">
+									<tr class="fontnormal">
+										<td width="99%">
+
 											<br>
-											<span class="fontnormalbold">${customermaster.checkListName}</span>
-											<c:if test="${not empty requestScope.CustomerSearchMaster}">
-												<c:forEach var="custSearchMaster" items="${requestScope.CustomerSearchMaster}">
-													<c:if test="${custSearchMaster.stateId == customermaster.checkListId}">														
-														<br>
-														<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
-														<html-el:link href="javascript:getChecklist(${custSearchMaster.checkListId},${custSearchMaster.recordType},'${custSearchMaster.stateName}',${custSearchMaster.stateId})">	
-															${custSearchMaster.checkListName}
+											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /></span>
+											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'centerchecklist')}">
+												<br>
+												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
+															${checklist.checklistName}
 														</html-el:link>
-														(${custSearchMaster.stateName})
-														<c:if test="${custSearchMaster.checklistStatus == 0}">
-														<img src="pages/framework/images/status_closedblack.gif">
+														(${checklist.customerStatus.name})
+														<c:if test="${checklist.checklistStatus == 0}">
+													<img src="pages/framework/images/status_closedblack.gif">
 														Inactive
 														</c:if>
-													</c:if>
-												</c:forEach>
-											</c:if>
+
+											</c:forEach>
 											<br>
-										</c:forEach>
-									</c:if>									
-									<c:if test="${not empty requestScope.PrdTypeMaster}">
-										<c:forEach var="checklistmaster" items="${requestScope.PrdTypeMaster}">
-											<br>											
-											<span class="fontnormalbold">${checklistmaster.checkListName}
-											</span>
-											<c:if test="${not empty requestScope.PrdSearchMaster}">
-												<c:forEach var="SearchMaster" items="${requestScope.PrdSearchMaster}">
-													<c:if test="${SearchMaster.typeNameId == checklistmaster.checkListId}">														
-														<br>
-														<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
-														<html-el:link href="javascript:getChecklist(${SearchMaster.checkListId},${SearchMaster.recordType},'${SearchMaster.stateName}',${SearchMaster.typeNameId})">	${SearchMaster.checkListName}</html-el:link>
-														(${SearchMaster.stateName})
-														<c:if test="${SearchMaster.checklistStatus == 0}">
-														<img src="pages/framework/images/status_closedblack.gif">
+											<br>
+											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></span>
+											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupchecklist')}">
+												<br>
+												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
+															${checklist.checklistName}
+														</html-el:link>
+														(${checklist.customerStatus.name})
+														<c:if test="${checklist.checklistStatus == 0}">
+													<img src="pages/framework/images/status_closedblack.gif">
 														Inactive
 														</c:if>
-													</c:if>
-												</c:forEach>
-											</c:if>
+
+											</c:forEach>
 											<br>
-										</c:forEach>
-									</c:if> </td>
-								</tr>
-								<html-el:hidden property="method" value="" />
-								<html-el:hidden property="input" value="" />
-								<html-el:hidden property="checklistId" />
-								<html-el:hidden property="checklistName" />
-								<html-el:hidden property="statusOfCheckList" />
-								<html-el:hidden property="typeId" />
-								<html-el:hidden property="categoryId" value="" />            
-							</table>
+											<br>
+											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /></span>
+											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientchecklist')}">
+												<br>
+												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
+															${checklist.checklistName}
+														</html-el:link>
+														(${checklist.customerStatus.name})
+														<c:if test="${checklist.checklistStatus == 0}">
+													<img src="pages/framework/images/status_closedblack.gif">
+														Inactive
+														</c:if>
+											</c:forEach>
+											<br>
+											<br>
+											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /></span>
+											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanchecklist')}">
+												<br>
+												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
+															${checklist.checklistName}
+														</html-el:link>
+														(${checklist.accountStateEntity.name})
+														<c:if test="${checklist.checklistStatus == 0}">
+													<img src="pages/framework/images/status_closedblack.gif">
+														Inactive
+														</c:if>
+											</c:forEach>
+											<br>
+											<br>
+											<span class="fontnormalbold"><mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" /></span>
+											<c:forEach var="checklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingschecklist')}">
+												<br>
+												<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
+												<html-el:link href="chkListAction.do?method=get&checkListId=${checklist.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
+															${checklist.checklistName}
+														</html-el:link>
+														(${checklist.accountStateEntity.name})
+														<c:if test="${checklist.checklistStatus == 0}">
+													<img src="pages/framework/images/status_closedblack.gif">
+														Inactive
+														</c:if>
+											</c:forEach>
+										</td>
+									</tr>
+								</table>
 							</td>
 						</tr>
 					</table>
-					<br>					
-					</td>                                  
-				</tr>			
-			</table>			
-			<br>
-			<br>		
-		</html-el:form>
+					<br>
+				</td>
+			</tr>
+		</table>
+		<br>
+		<br>
 	</tiles:put>
 </tiles:insert>
 

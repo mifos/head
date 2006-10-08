@@ -688,6 +688,7 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/chkListAction-previous",
 				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		activityMap.put("/chkListAction-get", SecurityConstants.VIEW);
 		
 		
 		activityMap.put("/checkListAction-loadall", SecurityConstants.VIEW);

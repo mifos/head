@@ -1,6 +1,6 @@
 package org.mifos.framework.exceptions;
 
-public class ServiceUnavailableException extends RuntimeException {
+public class ServiceUnavailableException extends SystemException {
 
 	protected String key = null;
 

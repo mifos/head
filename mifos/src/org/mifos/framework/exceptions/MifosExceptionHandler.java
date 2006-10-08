@@ -49,7 +49,6 @@ import org.apache.struts.action.ExceptionHandler;
 import org.apache.struts.config.ExceptionConfig;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.security.util.ActivityContext;
 
 /**
  * This class extends from ExceptionHandler class provided by Struts.Finally all
@@ -62,14 +61,10 @@ import org.mifos.framework.security.util.ActivityContext;
 public class MifosExceptionHandler extends ExceptionHandler {
 
 	/**
-	 * This method is used to log the exceptions
-	 */
-	/**
-	 * If the exception is of type {@link SystemException} or
-	 * {@link ApplicationException} it logs exception using MifosLogger else
-	 * calls <code>super.logException()</code>
+	 * This method is used to log the exceptions. If the exception is of type
+	 * {@link SystemException} or {@link ApplicationException} it logs exception
+	 * using MifosLogger else calls <code>super.logException()</code>
 	 * 
-	 * @see org.apache.struts.action.ExceptionHandler#logException(java.lang.Exception)
 	 */
 	@Override
 	protected void logException(Exception e) {
@@ -94,13 +89,6 @@ public class MifosExceptionHandler extends ExceptionHandler {
 	 * the exception is of type {@link ApplicationException}the page to which
 	 * the request is forwarded is figured out using the string
 	 * <method_invoked>+failure which should be defined in the ActionConfig.
-	 * 
-	 * @see org.apache.struts.action.ExceptionHandler#execute(java.lang.Exception,
-	 *      org.apache.struts.config.ExceptionConfig,
-	 *      org.apache.struts.action.ActionMapping,
-	 *      org.apache.struts.action.ActionForm,
-	 *      javax.servlet.http.HttpServletRequest,
-	 *      javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
 	public ActionForward execute(Exception ex, ExceptionConfig ae,
@@ -114,14 +102,14 @@ public class MifosExceptionHandler extends ExceptionHandler {
 		ActionMessage error = null;
 		if (ex instanceof ServiceUnavailableException) {
 			forwardToBeReturned = new ActionForward(ae.getPath());
-			error = new ActionMessage(((ServiceUnavailableException) ex).getKey(),
-					((ServiceUnavailableException) ex).getValues());
-		} 
+			error = new ActionMessage(((ServiceUnavailableException) ex)
+					.getKey(), ((ServiceUnavailableException) ex).getValues());
+		}
 		if (ex instanceof ConnectionNotFoundException) {
 			forwardToBeReturned = new ActionForward(ae.getPath());
-			error = new ActionMessage(((ConnectionNotFoundException) ex).getKey(),
-					((ConnectionNotFoundException) ex).getValues());
-		} 
+			error = new ActionMessage(((ConnectionNotFoundException) ex)
+					.getKey(), ((ConnectionNotFoundException) ex).getValues());
+		}
 		if (ex instanceof SystemException) {
 			forwardToBeReturned = new ActionForward(ae.getPath());
 			error = new ActionMessage(((SystemException) ex).getKey(),
@@ -133,51 +121,27 @@ public class MifosExceptionHandler extends ExceptionHandler {
 		} else if (ex instanceof ApplicationException) {
 			error = new ActionMessage(((ApplicationException) ex).getKey(),
 					((ApplicationException) ex).getValues());
-			// This is to handle DoubleSubmitException
-			// in which case we need to take the user to the last successful forward 
-			// and not to the forward based on the method called in the action class. 
-			if(ex instanceof DoubleSubmitException){
-				ActivityContext activityContext = null;
-				//getting the activity context from the session
-				activityContext = (ActivityContext) request.getSession().getAttribute("ActivityContext");
-				forwardToBeReturned = activityContext.getLastForward();
-				logException(ex);
-				// This will store the exception in the scope mentioned so that
-				// it can be displayed on the UI
-				this.storeException(request, error.getKey(), error,
-						forwardToBeReturned, ae.getScope());
-				return forwardToBeReturned;
-			}
-			
 			parameter = request.getParameter("method");
-			
-
 			// jsp to which the user should be returned is identified by
-			// methodname_failure
-			// e.g. if there is an exception in create the failure forward would
-			// be
-			// create_failure
-			// if input is not null it also tries to append that to parameter to
-			// find the action forward.
-			// if that is not availablee it still tries to find the forward with
-			// the actionforward being parameter_failure
+			// methodname_failure e.g. if there is an exception in create the
+			// failure forward would be create_failure if input is not null it
+			// also tries to append that to parameter to find the action
+			// forward.If that is not availablee it still tries to find the
+			// forward with the actionforward being parameter_failure
 			input = request.getParameter("input");
 
 			if (null != input) {
 				parameter = parameter + "_" + input;
 			}
-
-			
-			
 			forwardToBeReturned = mapping.findForward(parameter + "_failure");
-
 			if (null == forwardToBeReturned) {
-				forwardToBeReturned = mapping.findForward(request.getParameter("method") + "_failure");
+				forwardToBeReturned = mapping.findForward(request
+						.getParameter("method")
+						+ "_failure");
 			}
 			// if this returns null we get the path by the input parameter which
-			// is
-			// the hidden variable passed by the jsp from which the request is
-			// coming
+			// is the hidden variable passed by the jsp from which the request
+			// is coming
 			if (null == forwardToBeReturned) {
 				input = mapping.getInput();
 				if (null != input) {
@@ -188,7 +152,6 @@ public class MifosExceptionHandler extends ExceptionHandler {
 							formInstance, request, response);
 					// if we call super execute we do not want it to execute
 					// further statements
-
 					return forwardToBeReturned;
 				}
 

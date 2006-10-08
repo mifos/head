@@ -7,7 +7,9 @@ import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListBO;
+import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.helpers.CheckListMasterView;
 import org.mifos.application.checklist.util.helpers.CheckListStatesView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -74,7 +76,8 @@ public class CheckListPersistence extends MasterPersistence {
 		return checkListStatesView;
 	}
 
-	public CheckListBO get(Short checkListId) throws PersistenceException {
+	public CheckListBO getCheckList(Short checkListId)
+			throws PersistenceException {
 		return (CheckListBO) getPersistentObject(CheckListBO.class, checkListId);
 	}
 
@@ -91,5 +94,17 @@ public class CheckListPersistence extends MasterPersistence {
 			count = (Integer) execUniqueResultNamedQuery(
 					NamedQueryConstants.PRODUCT_VALIDATESTATE, queryParameters);
 		return count;
+	}
+
+	public List<CustomerCheckListBO> retreiveAllCustomerCheckLists()
+			throws PersistenceException {
+		return executeNamedQuery(
+				NamedQueryConstants.LOAD_ALL_CUSTOMER_CHECKLISTS, null);
+	}
+
+	public List<AccountCheckListBO> retreiveAllAccountCheckLists()
+			throws PersistenceException {
+		return executeNamedQuery(
+				NamedQueryConstants.LOAD_ALL_ACCOUNT_CHECKLISTS, null);
 	}
 }

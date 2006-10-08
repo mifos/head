@@ -575,5 +575,7 @@ public interface NamedQueryConstants {
 	public String CUSTOMER_STATES_LIST="customer_states_list";
 	public String CUSTOMER_VALIDATESTATE="customer.validateState";
 	public String PRODUCT_VALIDATESTATE="product.validateState";
+	public String LOAD_ALL_CUSTOMER_CHECKLISTS="checklist.loadAllCustomerCheckLists";
+	public String LOAD_ALL_ACCOUNT_CHECKLISTS="checklist.loadAllAccountCheckLists";
 	
 }

@@ -83,4 +83,11 @@ public interface CheckListConstants {
 	public final String EXCEPTION_STATE_ALREADY_EXIST="exceptions.application.checklist.Statusalreadydefined";
 	public final String STATE_COMBO="displayed when moving into Status";
 	public final String TYPE_COMBO="type";
+	public final String CENTER_CHECKLIST="centerchecklist";
+	public final String GROUP_CHECKLIST="groupchecklist";
+	public final String CLIENT_CHECKLIST="clientchecklist";
+	public final String LOAN_CHECKLIST="loanchecklist";
+	public final String SAVINGS_CHECKLIST="savingschecklist";
+	public final String CREATED_BY_NAME="createdname";
+	
 }

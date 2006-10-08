@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.checklist.exceptions.CheckListException;
+import org.mifos.application.checklist.util.helpers.CheckListType;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 
 public class AccountCheckListBO extends CheckListBO {
@@ -23,7 +24,7 @@ public class AccountCheckListBO extends CheckListBO {
 		this.productTypeEntity = productTypeEntity;
 		this.accountStateEntity = accountStateEntity;
 	}
-	
+
 	public ProductTypeEntity getProductTypeEntity() {
 		return productTypeEntity;
 	}
@@ -38,5 +39,10 @@ public class AccountCheckListBO extends CheckListBO {
 
 	public void setAccountStateEntity(AccountStateEntity accountStateEntity) {
 		this.accountStateEntity = accountStateEntity;
+	}
+
+	@Override
+	public CheckListType getCheckListType() {
+		return CheckListType.ACCOUNT_CHECKLIST;
 	}
 }

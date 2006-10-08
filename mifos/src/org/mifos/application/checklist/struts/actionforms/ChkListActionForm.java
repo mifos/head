@@ -13,7 +13,9 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class ChkListActionForm extends BaseActionForm {
-
+	
+	private String checkListId;
+	
 	private boolean isCustomer;
 
 	private String masterTypeId;
@@ -34,6 +36,14 @@ public class ChkListActionForm extends BaseActionForm {
 
 	public ChkListActionForm() {
 		detailsList = new ArrayList<String>();
+	}
+	
+	public String getCheckListId() {
+		return checkListId;
+	}
+
+	public void setCheckListId(String checkListId) {
+		this.checkListId = checkListId;
 	}
 
 	public List<String> getDetailsList() {

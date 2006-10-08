@@ -2,7 +2,7 @@ package org.mifos.framework.exceptions;
 
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
-public class StartUpException extends RuntimeException{
+public class StartUpException extends SystemException{
 	protected String key = null;
 	
 	public StartUpException() {

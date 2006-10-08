@@ -134,7 +134,7 @@
 							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
 								height="11"></td>
 							<td><html-el:link
-								action="checkListAction.do?method=loadall&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								action="chkListAction.do?method=loadAllChecklist&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.viewcheklists" /></html-el:link>
 							| <html-el:link
 								action="chkListAction.do?method=load&randomNUm=${sessionScope.randomNUm}">

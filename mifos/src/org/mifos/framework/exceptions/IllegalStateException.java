@@ -1,6 +1,6 @@
 package org.mifos.framework.exceptions;
 
-public class IllegalStateException extends RuntimeException {
+public class IllegalStateException extends SystemException {
 
 	public IllegalStateException() {
 	}

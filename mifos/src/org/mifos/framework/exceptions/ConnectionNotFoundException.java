@@ -1,6 +1,6 @@
 package org.mifos.framework.exceptions;
 
-public class ConnectionNotFoundException extends RuntimeException {
+public class ConnectionNotFoundException extends SystemException {
 	
 	protected String key = null;
 

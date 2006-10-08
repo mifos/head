@@ -3,6 +3,7 @@ package org.mifos.application.checklist.business;
 import java.util.List;
 
 import org.mifos.application.checklist.exceptions.CheckListException;
+import org.mifos.application.checklist.util.helpers.CheckListType;
 import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 
@@ -40,4 +41,8 @@ public class CustomerCheckListBO extends CheckListBO {
 		this.customerStatus = customerStatus;
 	}
 
+	@Override
+	public CheckListType getCheckListType(){
+		return CheckListType.CUSTOMER_CHECKLIST;
+	}
 }
