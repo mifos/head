@@ -78,8 +78,11 @@ public interface Constants {
 
 	public final static String USER_ID="user_id";
 	public final static String BRANCH_ID="branch_id";
+	public final static String OFFICE_NAME="office_name";
 	public final static String SEARCH_NAME="search_name";
 	public final static String SEARCH_RESULTS="search_name";
+	
+	public final static String SEARCH_STRING="search_string";
 
 	public final static String ALGORITHM = "Algorithm";
 	public final static short BRANCH_SAME =0;
@@ -113,4 +116,5 @@ public interface Constants {
 	public static final String CURRENTFLOWKEY="currentFlowKey";
 	public static final String FLOWMANAGER="flowManager";
 	public static final String RANDOMNUM="randomNUm";
+	public static final String INPUT="input";
 }

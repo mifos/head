@@ -110,8 +110,16 @@ public class ActivityMapper {
 		//m2 search action 
 		activityMap.put("/custSearchAction-loadSearch", SecurityConstants.VIEW);
 		activityMap.put("/custSearchAction-search", SecurityConstants.VIEW);
-
+		activityMap.put("/custSearchAction-load", SecurityConstants.VIEW);
+		activityMap.put("/custSearchAction-loadMainSearch", SecurityConstants.VIEW);
+		activityMap.put("/custSearchAction-mainSearch", SecurityConstants.VIEW);
+		activityMap.put("/custSearchAction-getHomePage", SecurityConstants.VIEW);
 		activityMap.put("/AdminAction-load", SecurityConstants.VIEW);
+		activityMap.put("/custSearchAction-loadAllBranches", SecurityConstants.VIEW);
+		activityMap.put("/custSearchAction-get", SecurityConstants.VIEW);
+		activityMap.put("/custSearchAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/custSearchAction-getOfficeHomePage",
+				SecurityConstants.VIEW);
 
 		// customer serach action
 		activityMap.put("/CustomerSearchAction-load", SecurityConstants.VIEW);

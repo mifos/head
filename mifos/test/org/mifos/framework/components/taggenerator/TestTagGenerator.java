@@ -67,7 +67,7 @@ public class TestTagGenerator extends MifosTestCase{
 	public void testSavingsAccountLinkWithoutSelfLink() throws Exception{
 		createInitialObjectsForSavings();
 		String createdLink = TagGenerator.createHeaderLinks(savings,false,randomNum);
-		assertEquals(true,createdLink.contains("CustomerSearchAction"));
+		assertEquals(true,createdLink.contains("custSearchAction"));
 		assertEquals(true,createdLink.contains("TestBranchOffice"));
 		assertEquals(true,createdLink.contains("centerCustAction"));
 		assertEquals(true,createdLink.contains("Center_Active_test"));
@@ -79,7 +79,7 @@ public class TestTagGenerator extends MifosTestCase{
 	public void testSavingsAccountLinkWithSelfLink() throws Exception{
 		createInitialObjectsForSavings();
 		String createdLink = TagGenerator.createHeaderLinks(savings,true,randomNum);
-		assertEquals(true,createdLink.contains("CustomerSearchAction"));
+		assertEquals(true,createdLink.contains("custSearchAction"));
 		assertEquals(true,createdLink.contains("TestBranchOffice"));
 		assertEquals(true,createdLink.contains("centerCustAction"));
 		assertEquals(true,createdLink.contains("Center_Active_test"));

@@ -3,7 +3,7 @@
 		xmlns="http://www.aditi.com" 
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
-  <path key="customersearch" forwardkey="search_sucess" action="CustomerSearchAction.do"/> 
+  <path key="customersearch" forwardkey="search_sucess" action="custSearchAction.do"/> 
   <pagerequirements numbersrequired="true" bluelinerequired="false"  blanklinerequired="true" headingrequired="true"/>  
   
   
@@ -53,12 +53,12 @@
   </row> 
   
   <row>
-	<column label="alsosee" labeltype="key" boldlabel="false" type="link" action="CustomerSearchAction.do">
+	<column label="alsosee" labeltype="key" boldlabel="false" type="link" action="custSearchAction.do">
 		<displayname>
 			<fragment-name name="branchName" type="method"/>
 		</displayname>
 		<parameters>
-			<parameter name="method" value="load" valuetype="string"/>
+			<parameter name="method" value="loadMainSearch" valuetype="string"/>
 		</parameters>
 	</column>
 	<column label="/" labeltype="string" boldlabel="false" type="link" action="centerCustAction.do">

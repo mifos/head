@@ -38,9 +38,11 @@
 package org.mifos.application.customer.business.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateMachines;
@@ -60,11 +62,13 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
+import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -87,22 +91,28 @@ public class CustomerBusinessService extends BusinessService {
 		return null;
 	}
 
-	public QueryResult searchGroupClient(String searchString ,Short userId)throws ServiceException{
+	public QueryResult searchGroupClient(String searchString, Short userId)
+			throws ServiceException {
 		try {
-			return new CustomerPersistence().searchGroupClient(searchString,userId);
+			return new CustomerPersistence().searchGroupClient(searchString,
+					userId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
-		
+
 	}
-	public QueryResult searchCustForSavings(String searchString ,Short userId)throws ServiceException{
+
+	public QueryResult searchCustForSavings(String searchString, Short userId)
+			throws ServiceException {
 		try {
-			return new CustomerPersistence().searchCustForSavings(searchString,userId);
+			return new CustomerPersistence().searchCustForSavings(searchString,
+					userId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
-		
-	}	
+
+	}
+
 	public CustomerBO getCustomer(Integer customerId) throws ServiceException {
 		try {
 			return new CustomerPersistence().getCustomer(customerId);
@@ -199,15 +209,18 @@ public class CustomerBusinessService extends BusinessService {
 		return customerActivityViewList;
 	}
 
-	public QueryResult  search(String searchString,Short officeId,Short userId,Short userOfficeId) throws ServiceException{
-		
+	public QueryResult search(String searchString, Short officeId,
+			Short userId, Short userOfficeId) throws ServiceException {
+
 		try {
-			return new CustomerPersistence().search(searchString,officeId,userId,userOfficeId);
+			return new CustomerPersistence().search(searchString, officeId,
+					userId, userOfficeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
-		
+
 	}
+
 	private CustomerRecentActivityView getCustomerActivityView(
 			CustomerActivityEntity customerActivityEntity) {
 		CustomerRecentActivityView customerRecentActivityView = new CustomerRecentActivityView();
@@ -474,6 +487,25 @@ public class CustomerBusinessService extends BusinessService {
 		try {
 			return new CustomerPersistence().getAllClosedAccount(customerId,
 					accountTypeId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
+
+	public List<CustomerBO> getActiveCentersUnderUser(PersonnelBO personnel)
+			throws ServiceException {
+		try {
+			return new CustomerPersistence()
+					.getActiveCentersUnderUser(personnel);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
+
+	public List<CustomerBO> getGroupsUnderUser(PersonnelBO personnel)
+			throws ServiceException {
+		try {
+			return new CustomerPersistence().getGroupsUnderUser(personnel);
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}

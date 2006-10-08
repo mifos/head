@@ -9,10 +9,12 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.tabletag.TableTagConstants;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.valueobjects.Context;
 
 public class SearchAction extends BaseAction {
@@ -43,23 +45,32 @@ public class SearchAction extends BaseAction {
 		return mapping.findForward((String)SessionUtils.getAttribute("forwardkey",request.getSession()));
 	}
 	
-	protected void cleanUpSearch(HttpServletRequest request)
+	protected void cleanUpSearch(HttpServletRequest request) throws PageExpiredException
 	{
 		SessionUtils.setRemovableAttribute("TableCache",null,TableTagConstants.PATH,request.getSession());
 		SessionUtils.setRemovableAttribute("current",null,TableTagConstants.PATH,request.getSession());
 		SessionUtils.setRemovableAttribute("meth",null,TableTagConstants.PATH,request.getSession());
 		SessionUtils.setRemovableAttribute("forwardkey",null,TableTagConstants.PATH,request.getSession());
 		SessionUtils.setRemovableAttribute("action",null,TableTagConstants.PATH,request.getSession());
-		
+		SessionUtils.removeAttribute(Constants.SEARCH_RESULTS,request);
 	}
 	
-	
+	protected void addSeachValues(String searchString , String officeId,String officeName,HttpServletRequest request) throws PageExpiredException{
+		
+		SessionUtils.setAttribute(Constants.SEARCH_STRING,searchString,request);
+		SessionUtils.setAttribute(Constants.BRANCH_ID,officeId,request);
+		SessionUtils.setAttribute(Constants.OFFICE_NAME,officeName,request);
+		
+	}
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		Context context = (Context)SessionUtils.getAttribute(Constants.CONTEXT, request.getSession());
 		if(context != null)
 		{
 			cleanUpSearch(request);
 			context.setSearchResult(getSearchResult(form));
+		}
+		else{
+			cleanUpSearch(request);
 		}
 		return mapping.findForward(ActionForwards.search_success.toString());
 	}

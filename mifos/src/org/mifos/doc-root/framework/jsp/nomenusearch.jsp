@@ -1,7 +1,7 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
-  <html-el:form action="CustomerSearchAction.do?method=loadAllBranches">
+  <html-el:form action="custSearchAction.do?method=loadAllBranches">
         <tr>
           <td class="leftpanelinks">
 	<table width="90%" border="0" cellspacing="0" cellpadding="0">
@@ -17,12 +17,10 @@
               <tr>
                 <td width="100%" colspan="2">
                 
-                <html-el:text property="searchNode(searchString)" size="20" maxlength="200"/>
-				<html-el:hidden property="searchNode(search_name)" value="CustomerSearchResults"/>
-				
+                <html-el:text property="searchString" size="20" maxlength="200"/>
 				<c:choose>
 				<c:when test='${sessionScope.UserContext.officeLevelId==5}'>
-				<html-el:hidden property="searchNode(search_officeId)" value="${sessionScope.UserContext.branchId}"/> 
+				<html-el:hidden property="officeId" value="${sessionScope.UserContext.branchId}"/> 
 				</c:when>
 				<c:otherwise>
 				<html-el:hidden property="searchNode(search_officeId)" value="0"/> 

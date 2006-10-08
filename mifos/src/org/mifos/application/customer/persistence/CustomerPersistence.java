@@ -70,6 +70,7 @@ import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -255,8 +256,6 @@ public class CustomerPersistence extends Persistence {
 		QueryResult queryResult = null;
 
 		try {
-			searchString = StringUtils.normalizeSearchString(searchString);
-
 			queryResult = new AccountPersistence().search(searchString,
 					officeId);
 
@@ -407,7 +406,7 @@ public class CustomerPersistence extends Persistence {
 		queryInputs.setQueryStrings(namedQuery);
 		queryInputs.setParamList(paramList);
 		queryInputs
-				.setPath("org.mifos.application.customer.util.valueobjects.CustomerSearch");
+				.setPath("org.mifos.application.customer.business.CustomerSearch");
 		queryInputs.setAliasNames(aliasNames);
 		queryResult.setQueryInputs(queryInputs);
 
@@ -428,7 +427,7 @@ public class CustomerPersistence extends Persistence {
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.IDSEARCH);
 		queryInputs
-				.setPath("org.mifos.application.customer.util.valueobjects.CustomerSearch");
+				.setPath("org.mifos.application.customer.business.CustomerSearch");
 		queryInputs.setAliasNames(Names);
 		queryResult.setQueryInputs(queryInputs);
 		if (officeId != null) {
@@ -842,4 +841,26 @@ public class CustomerPersistence extends Persistence {
 				NamedQueryConstants.CUSTOMER_ACCOUNT_ACTIONS_DATE,
 				queryParameters);
 	}
+	
+	public List<CustomerBO> getActiveCentersUnderUser( PersonnelBO personnel)throws PersistenceException{
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(CustomerSearchConstants.PERSONNELID,personnel.getPersonnelId());
+		queryParameters.put(CustomerSearchConstants.OFFICEID,personnel.getOffice().getOfficeId());
+		queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID,CustomerLevel.CENTER.getValue());	
+		queryParameters.put(CustomerSearchConstants.CENTER_ACTIVE,CustomerStatus.CENTER_ACTIVE.getValue());			
+		return executeNamedQuery(
+				NamedQueryConstants.SEARCH_CENTERS_FOR_LOAN_OFFICER,
+				queryParameters);
+	}
+	public List<CustomerBO> getGroupsUnderUser( PersonnelBO personnel)throws PersistenceException{
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(CustomerSearchConstants.PERSONNELID,personnel.getPersonnelId());
+		queryParameters.put(CustomerSearchConstants.OFFICEID,personnel.getOffice().getOfficeId());
+		queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID,CustomerLevel.GROUP.getValue());	
+		queryParameters.put(CustomerSearchConstants.GROUP_ACTIVE,CustomerStatus.GROUP_ACTIVE.getValue());
+		queryParameters.put(CustomerSearchConstants.GROUP_ONHOLD,CustomerStatus.GROUP_HOLD);				
+		return executeNamedQuery(
+				NamedQueryConstants.SEARCH_GROUPS_FOR_LOAN_OFFICER,
+				queryParameters);
+	}	
 }

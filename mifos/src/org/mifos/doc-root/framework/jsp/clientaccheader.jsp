@@ -15,8 +15,8 @@
   <tr>
     <td align="left" valign="bottom" bgcolor="#FFFFFF"><table border="0" cellspacing="1" cellpadding="0">
         <tr>
-          <td class="tablightorange"><a href="CustomerSearchAction.do?method=getHomePage">Home</a></td>
-          <td class="taborange"><a href="CustomerSearchAction.do?method=load" class="tabfontwhite">Clients &amp; Accounts </a></td>
+          <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage">Home</a></td>
+          <td class="taborange"><a href="custSearchAction.do?method=loadMainSearch" class="tabfontwhite">Clients &amp; Accounts </a></td>
           <td class="tablightorange"><a href="reportsAction.do?method=load">Reports</a></td>
           <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
         </tr>

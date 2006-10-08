@@ -1059,7 +1059,27 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals("The size of the due insallments is ", actionDates.size(),
 				1);
 	}
-
+	
+	public  void testGetActiveCentersUnderUser() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("center",meeting,Short.valueOf("1"),Short.valueOf("1"));
+		PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
+		List<CustomerBO>  customers = new CustomerPersistence().getActiveCentersUnderUser(personnel);
+		assertNotNull(customers);
+		assertEquals(1,customers.size());
+	}
+	public  void testgetGroupsUnderUser() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("center",meeting,Short.valueOf("1"),Short.valueOf("1"));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
+		List<CustomerBO>  customers = new CustomerPersistence().getGroupsUnderUser(personnel);
+		assertNotNull(customers);
+		assertEquals(1,customers.size());
+	}
 	private void getCustomer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

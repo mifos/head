@@ -207,7 +207,14 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		assertEquals(1,queryResult.getSize());
 		assertEquals(1,queryResult.get(0,10).size());
 	}
-	
+	public void  testGetActiveLoUnderUser()throws Exception{
+		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		personnel = createPersonnel(branchOffice, PersonnelLevel.NON_LOAN_OFFICER);
+		List<PersonnelBO> loanOfficers = persistence.getActiveLoUnderUser(branchOffice.getOfficeId());
+		assertNotNull(loanOfficers);
+		assertEquals(1,loanOfficers.size());
+		
+	}
 	private void createInitialObjects(Short officeId, Short personnelId) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -244,7 +251,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
 	}
-	
+
 	private void createCustomers(Short centerStatus, CustomerStatus groupStatus, Short clientStatus){
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", centerStatus, "1.4", meeting, new Date(System.currentTimeMillis()));

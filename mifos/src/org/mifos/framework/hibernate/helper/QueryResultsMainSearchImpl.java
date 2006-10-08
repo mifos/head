@@ -5,7 +5,7 @@ package org.mifos.framework.hibernate.helper;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.mifos.application.customer.util.valueobjects.CustomerSearch;
+import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
 public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
@@ -24,7 +24,7 @@ public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
 			    	list=query.list();			    	
 			    	this.queryInputs.setTypes(query.getReturnTypes());			    	
 			    	dtoBuilder.setInputs(queryInputs);
-			    	Query query1 = session.createQuery("select account.globalAccountNum from Account account where account.customer.customerId=:customerId and account.accountTypeId=:accountTypeId");
+			    	Query query1 = session.createQuery("select account.globalAccountNum from org.mifos.application.accounts.business.AccountBO account where account.customer.customerId=:customerId and account.accountType.accountTypeId=:accountTypeId");
 		    		if(list!=null)
 		 		   	{		    			
 			    	   for(int i=0;i < list.size(); i++)	  	     

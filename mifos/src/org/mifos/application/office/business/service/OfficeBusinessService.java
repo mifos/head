@@ -81,5 +81,11 @@ public class OfficeBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
-
+	public List<OfficeBO> getActiveBranchesUnderUser(String searchId) throws ServiceException {
+		try {
+			return officePersistence.getActiveBranchesUnderUser(searchId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
 }

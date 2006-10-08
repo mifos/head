@@ -74,6 +74,8 @@ import org.mifos.framework.util.helpers.StringUtils;
 public abstract class CustomerActionForm extends BaseActionForm{
 
 	protected String input;
+	
+	private String searchString;
 
 	private String customerId;
 
@@ -536,5 +538,13 @@ public abstract class CustomerActionForm extends BaseActionForm{
 			}
 		}
 		return locale;
+	}
+
+	public String getSearchString() {
+		return searchString;
+	}
+
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
 	}
 }

@@ -98,8 +98,8 @@
 
 						</tr>
 					</table>
-					<office:listOffices methodName="load"
-						actionName="clientCustAction.do" onlyBranchOffices="yes" />
+					<office:OfficeListTag methodName="load"
+						actionName="clientCustAction.do" onlyBranchOffices="yes" flowKey="${requestScope.currentFlowKey}" />
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center" class="blueline">&nbsp;</td>
@@ -121,6 +121,7 @@
 				</tr>
 			</table>
 			<br>
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

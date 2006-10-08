@@ -103,7 +103,7 @@ function goToCancelPage()
 			<table width="96%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td><span class="fontnormal"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />  <mifos:mifoslabel name="Group.name" /></span> <html-el:text
-						property="input" maxlength="200"/>  <html-el:submit
+						property="searchString" maxlength="200"/>  <html-el:submit
 						styleClass="buttn" style="width:70px;">
 						<mifos:mifoslabel name="button.search" bundle="GroupUIResources"></mifos:mifoslabel>
 					</html-el:submit></td>
@@ -129,6 +129,7 @@ function goToCancelPage()
 		</tr>
 	</table>
 	<br>
+	<html-el:hidden property="input" value="" />
 	<html-el:hidden property="method" value="search"/>  
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>

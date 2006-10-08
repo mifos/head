@@ -566,6 +566,10 @@ public interface NamedQueryConstants {
 	public String SEARCH_CUSTOMER_FOR_SAVINGS="Customer.customersForSavingsAccount";
 	public String SEARCH_CUSTOMER_FOR_SAVINGS_COUNT_NOLO="Customer.count_customersForSavingsAccountNonLO";
 	public String SEARCH_CUSTOMER_FOR_SAVINGS_NOLO="Customer.customersForSavingsAccountNonLO";
+	public String SEARCH_CENTERS_FOR_LOAN_OFFICER="Customer.get_loanofficer_centers";
+	public String SEARCH_GROUPS_FOR_LOAN_OFFICER="Customer.get_loanofficer_groups";
+	public String GET_ACTIVE_LOAN_OFFICER_UNDER_USER="get_active_loanofficers_under_office";
+	public String GET_ACTIVE_BRANCHES="get_active_offices";
 	
 	public String RETRIEVE_AUDIT_LOG_RECORD="retrieveAuditLogRecords";
 

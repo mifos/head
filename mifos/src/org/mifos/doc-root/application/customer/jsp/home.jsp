@@ -46,10 +46,10 @@
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".homePage">
 	<tiles:put name="body" type="string">
-		<html-el:form action="/CustomerSearchAction.do?method=loadAllBranches">
+		<html-el:form action="/custSearchAction.do">
 			
 				<table width="95%" border="0" cellpadding="0" cellspacing="0">
 					<tr>
@@ -99,11 +99,13 @@
 									<td class="fontnormal">&nbsp;</td>
 								</tr>
 								<tr>
+								<c:set var="isCenterHeirarchyExists"
+								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')}" />
 									<td class="fontnormalbold">
 										<mifos:mifoslabel name="CustomerSearch.quicklyfind"/>
 										<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>,
 										<c:choose>
-						                 	 <c:when test="${sessionScope.isCenterHeirarchyExists==Constants.YES}">
+						                 	 <c:when test="${isCenterHeirarchyExists=='true'}">
 						                 	 	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />,&nbsp;
 						                  		<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />,
 						                  	</c:when>
@@ -126,15 +128,13 @@
 											<tr class="fontnormal">
 												<td>
 												
-													<html-el:text property="searchNode(searchString)" maxlength="200"/>
-													<html-el:hidden property="searchNode(search_name)" value="CustomerSearchResults"/>																				
-													<html-el:hidden property="officeName" value='${requestScope.Context.businessResults["Office"]}'/>													
+													<html-el:text property="searchString" maxlength="200"/>
 													<c:choose>
 													<c:when test='${sessionScope.UserContext.officeLevelId==5}'>
-													<html-el:hidden property="searchNode(search_officeId)" value="${sessionScope.UserContext.branchId}"/> 
+													<html-el:hidden property="officeId" value="${sessionScope.UserContext.branchId}"/> 
 													</c:when>
 													<c:otherwise>
-													<html-el:hidden property="searchNode(search_officeId)" value="0"/> 
+													<html-el:hidden property="officeId" value="0"/> 
 													</c:otherwise>
 													</c:choose>												
 												</td>
@@ -156,6 +156,12 @@
 						</td>
 					</tr>
 				</table>
+				<html-el:hidden property="officeId" value="0"/>
+		
+		<html-el:hidden property="method" value="mainSearch" />	
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+				
+				
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

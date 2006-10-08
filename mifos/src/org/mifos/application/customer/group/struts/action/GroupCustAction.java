@@ -56,6 +56,7 @@ import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.center.business.service.CenterBusinessService;
+import org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -71,6 +72,7 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.service.BusinessService;
@@ -88,6 +90,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class GroupCustAction extends CustAction {
@@ -293,13 +296,26 @@ public class GroupCustAction extends CustAction {
 		return mapping.findForward(forward.toString());
 	}
 
-	@TransactionDemarcate(saveToken = true)
+	@TransactionDemarcate(conditionToken = true)
 	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
-		actionForm.setInput(null);
+		actionForm.setSearchString(null);
 		cleanUpSearch(request);
+		if (Configuration.getInstance().getCustomerConfig(
+				getUserContext(request).getBranchId())
+				.canClientExistOutsideGroup())
+			SessionUtils.setAttribute(CustomerConstants.GROUP_HIERARCHY_REQUIRED,
+					CustomerConstants.NO,request);
+		else
+			SessionUtils.setAttribute(CustomerConstants.GROUP_HIERARCHY_REQUIRED,
+					CustomerConstants.YES,request);
+		
+		
+		if ( actionForm.getInput()!=null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
+			return mapping.findForward(ActionForwards.loadTransferSearch_success.toString());
+		else
 		return mapping.findForward(ActionForwards.loadSearch_success.toString());
 	}	
 	@TransactionDemarcate(joinToken = true)
@@ -307,15 +323,34 @@ public class GroupCustAction extends CustAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
-		String searchString = actionForm.getInput();
-		if (searchString==null) throw new CustomerException(CenterConstants.NO_SEARCH_STING);
-		searchString=searchString.trim();
-		if (searchString.equals("")) throw new CustomerException(CenterConstants.NO_SEARCH_STING);
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = getUserContext(request);
+		ActionForward actionForward = super.search(mapping, form, request, response);
+		String searchString = actionForm.getSearchString();
+		if (searchString==null) checkSearchString(actionForm,request);
+		addSeachValues(searchString,userContext.getBranchId().toString(),new OfficeBusinessService().getOffice(userContext.getBranchId()).getOfficeName(),request);
+		searchString= StringUtils.normalizeSearchString(searchString);
+		if (searchString.equals(""))  checkSearchString(actionForm,request);
+		
 		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,new GroupBusinessService().search(searchString,userContext.getId()),request);
-	 return super.search(mapping, form, request, response);
+		
+		if ( actionForm.getInput()!=null && actionForm.equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
+			return mapping.findForward(ActionForwards.loadTransferSearch_success.toString());
+		else
+
+	 return actionForward;
+	}
+	
+	private void checkSearchString(GroupCustActionForm actionForm,HttpServletRequest request) throws CustomerException{
+		if (actionForm.getInput()!=null&&actionForm.getInput().equals(
+				GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
+			request.setAttribute(Constants.INPUT,CenterConstants.INPUT_SEARCH_TRANSFERGROUP);
+		else {
+			request.setAttribute(Constants.INPUT,null);
+		}
+		throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+
 	}	
+	
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			GroupBO groupBO, Short localeId) throws Exception{
 		SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED,

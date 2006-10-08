@@ -67,6 +67,10 @@ public class PersonAction extends SearchAction {
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
+	
+	private PersonnelBusinessService getPersonnelBusinessService() throws ServiceException{
+		return (PersonnelBusinessService)getService();
+	}
 
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward chooseOffice(ActionMapping mapping, ActionForm form,
@@ -297,12 +301,17 @@ public class PersonAction extends SearchAction {
 	public ActionForward search(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+		ActionForward actionForward = null;
+		UserContext userContext = getUserContext(request);
+		PersonnelBusinessService personnelBusinessService=getPersonnelBusinessService();
+		PersonnelBO personnel = personnelBusinessService.getPersonnel(userContext.getId());
+		String searchString = ((PersonActionForm) form).getSearchString();
+		addSeachValues(searchString,personnel.getOffice().getOfficeId().toString(),personnel.getOffice().getOfficeName(),request);
+		searchString= StringUtils.normalizeSearchString(searchString);
+		actionForward=super.search(mapping, form, request, response);
 		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
-				new PersonnelPersistence().search(((PersonActionForm) form)
-						.getInput(), userContext.getId()), request);
-		return super.search(mapping, form, request, response);
+				new PersonnelPersistence().search(searchString, userContext.getId()), request);
+		return actionForward;
 	}
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,

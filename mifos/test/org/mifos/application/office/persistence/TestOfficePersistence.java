@@ -23,15 +23,13 @@ public class TestOfficePersistence extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testGetActiveBranchesForHO() throws NumberFormatException,
-			PersistenceException {
+	public void testGetActiveBranchesForHO() throws Exception {
 		List<OfficeView> officeList = officePersistence.getActiveOffices(Short
 				.valueOf("1"));
 		assertEquals(1, officeList.size());
 	}
 
-	public void testGetActiveBranchs() throws NumberFormatException,
-			PersistenceException {
+	public void testGetActiveBranchs() throws Exception {
 		List<OfficeView> officeList = officePersistence.getActiveOffices(Short
 				.valueOf("3"));
 		assertEquals(1, officeList.size());
@@ -42,37 +40,33 @@ public class TestOfficePersistence extends MifosTestCase {
 				.getAllOffices().size());
 	}
 
-	public void testGetMaxOfficeId() throws PersistenceException {
+	public void testGetMaxOfficeId() throws Exception {
 		assertEquals(3, officePersistence.getMaxOfficeId().intValue());
 	}
 
-	public void testGetChildCount() throws NumberFormatException,
-			PersistenceException {
+	public void testGetChildCount() throws Exception{
 
 		assertEquals(1, officePersistence.getChildCount(Short.valueOf("1"))
 				.intValue());
 	}
 
-	public void testIsOfficeNameExist() throws PersistenceException {
+	public void testIsOfficeNameExist() throws Exception {
 		assertTrue(officePersistence.isOfficeNameExist("TestAreaOffice "));
 	}
 
-	public void testIsOfficeShortNameExist() throws PersistenceException {
+	public void testIsOfficeShortNameExist() throws Exception {
 		assertTrue(officePersistence.isOfficeShortNameExist("MIF2"));
 	}
 
-	public void testGetCountActiveChildern() throws NumberFormatException,
-			PersistenceException {
+	public void testGetCountActiveChildern() throws Exception{
 		assertTrue(officePersistence.hasActiveChildern(Short.valueOf("1")));
 	}
 
-	public void testGetCountActivePeronnel() throws NumberFormatException,
-			PersistenceException {
+	public void testGetCountActivePeronnel() throws Exception {
 		assertTrue(officePersistence.hasActivePeronnel(Short.valueOf("1")));
 	}
 
-	public void testGetActiveParents() throws NumberFormatException,
-			PersistenceException {
+	public void testGetActiveParents() throws Exception{
 		List<OfficeView> parents = officePersistence.getActiveParents(
 				OfficeLevel.BRANCHOFFICE, Short.valueOf("1"));
 		assertEquals(2, parents.size());
@@ -86,76 +80,67 @@ public class TestOfficePersistence extends MifosTestCase {
 
 	}
 
-	public void testGetActiveLevels() throws NumberFormatException,
-			PersistenceException {
+	public void testGetActiveLevels() throws Exception{
 
 		assertEquals(4, officePersistence.getActiveLevels(Short.valueOf("1"))
 				.size());
 
 	}
 
-	public void testGetActiveLevelsFailure() throws NumberFormatException,
-			PersistenceException {
+	public void testGetActiveLevelsFailure() throws Exception {
 
 		assertEquals(null, officePersistence.getActiveLevels(Short
 				.valueOf("-1")));
 
 	}
 
-	public void testGetStatusList() throws NumberFormatException,
-			PersistenceException {
+	public void testGetStatusList() throws Exception {
 		assertEquals(2, officePersistence.getStatusList(Short.valueOf("1"))
 				.size());
 	}
 
-	public void testGetStatusListFailure() throws NumberFormatException,
-			PersistenceException {
+	public void testGetStatusListFailure()throws Exception{
 		assertEquals(null, officePersistence.getStatusList(Short.valueOf("-1")));
 	}
 
-	public void testGetChildern() throws NumberFormatException,
-			PersistenceException {
+	public void testGetChildern() throws Exception{
 		assertEquals(1, officePersistence.getChildern(Short.valueOf("1"))
 				.size());
 	}
 
-	public void testGetChildern_failure() throws NumberFormatException,
-			PersistenceException {
+	public void testGetChildern_failure() throws Exception {
 		assertEquals(null, officePersistence.getChildern(Short.valueOf("-1")));
 	}
 
-	public void testGetSearchId() throws NumberFormatException,
-			PersistenceException {
+	public void testGetSearchId() throws Exception {
 		assertEquals("1.1", officePersistence.getSearchId(Short.valueOf("1")));
 	}
 
-	public void testIsBranchInactive() throws NumberFormatException,
-			PersistenceException {
+	public void testIsBranchInactive()throws Exception {
 		assertFalse(officePersistence.isBranchInactive(Short.valueOf("3")));
 	}
 
-	public void testGetBranchOffices() throws PersistenceException {
+	public void testGetBranchOffices() throws Exception {
 		assertEquals(1, officePersistence.getBranchOffices().size());
 	}
 
-	public void testGetOfficesTillBranchOffice() throws PersistenceException {
+	public void testGetOfficesTillBranchOffice() throws Exception {
 		assertEquals(2, officePersistence.getOfficesTillBranchOffice().size());
 	}
 
-	public void testGetOfficesTillBranchOfficeActive()
-			throws PersistenceException {
+	public void testGetOfficesTillBranchOfficeActive()throws Exception {
 		assertEquals(2, officePersistence.getOfficesTillBranchOffice("1.1")
 				.size());
 	}
 
-	public void testGetBranchParents() throws PersistenceException {
+	public void testGetBranchParents() throws Exception {
 		List<OfficeBO> officeList = officePersistence.getBranchParents("1.1");
 		assertEquals(1, officeList.size());
 		assertEquals(1, ((OfficeBO) officeList.get(0)).getChildren().size());
 		officeList = null;
 	}
 
-	public void testGetChildOffices() throws PersistenceException {
+	public void testGetChildOffices() throws Exception {
 		OfficeBO headOffice = TestObjectFactory.getOffice(Short.valueOf("1"));
 		List<OfficeView> officeList = officePersistence
 				.getChildOffices(headOffice.getSearchId());
@@ -163,4 +148,11 @@ public class TestOfficePersistence extends MifosTestCase {
 		officeList = null;
 		headOffice = null;
 	}
+	public void testGetBranchesUnderUser()throws Exception{
+		
+		List<OfficeBO> officeList =officePersistence.getActiveBranchesUnderUser("1.1");
+		assertNotNull(officeList);
+		assertEquals(1,officeList.size());
+	}
+	
 }

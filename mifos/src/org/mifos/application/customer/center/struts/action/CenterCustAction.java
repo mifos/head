@@ -70,6 +70,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
@@ -346,31 +347,65 @@ public class CenterCustAction extends CustAction {
 	  return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
-	@TransactionDemarcate (saveToken = true)
+	@TransactionDemarcate(conditionToken = true)
 	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
-		actionForm.setInput(null);
+		actionForm.setSearchString(null);
 		cleanUpSearch(request);
-		return mapping.findForward(ActionForwards.loadSearch_success.toString());
+		if (actionForm.getInput().equals(
+				CenterConstants.INPUT_SEARCH_TRANSFERGROUP))
+			 return mapping.findForward(ActionForwards.loadTransferSearch_success
+					.toString());
+		else
+			return mapping.findForward(ActionForwards.loadSearch_success
+					.toString());
 	}
-	@TransactionDemarcate (joinToken = true)
+
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward search(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
-		String searchString = actionForm.getInput();
-		if (searchString==null) throw new CustomerException(CenterConstants.NO_SEARCH_STING);
-		searchString=searchString.trim();
-		if (searchString.equals("")) throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+		ActionForward actionForward = super.search(mapping, form, request,
+				response);
+		String searchString = actionForm.getSearchString();
+
+		if (searchString == null)checkSearchString(actionForm,request);
+			
+		searchString = StringUtils.normalizeSearchString(searchString);
+		if (searchString.equals(""))
+			checkSearchString(actionForm,request);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,new CenterBusinessService().search(searchString,userContext.getId()),request);
-	 return super.search(mapping, form, request, response);
+		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
+				new CenterBusinessService().search(searchString, userContext
+						.getId()), request);
+		addSeachValues(searchString, userContext.getBranchId().toString(),
+				new OfficeBusinessService()
+						.getOffice(userContext.getBranchId()).getOfficeName(),
+				request);
+		if (actionForm.getInput().equals(
+				CenterConstants.INPUT_SEARCH_TRANSFERGROUP))
+			actionForward = mapping.findForward(ActionForwards.transferSearch_success
+					.toString());;
+		return actionForward;
 	}
-	private void loadMasterDataForDetailsPage(HttpServletRequest request,CenterBO centerBO,Short localeId)
-	throws Exception {
+	
+	private void checkSearchString(CenterCustActionForm actionForm,HttpServletRequest request) throws CustomerException{
+		if (actionForm.getInput()!=null&&actionForm.getInput().equals(
+				CenterConstants.INPUT_SEARCH_TRANSFERGROUP))
+			request.setAttribute(Constants.INPUT,CenterConstants.INPUT_SEARCH_TRANSFERGROUP);
+		else {
+			request.setAttribute(Constants.INPUT,null);
+		}
+		throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+
+	}
+
+	private void loadMasterDataForDetailsPage(HttpServletRequest request,
+			CenterBO centerBO, Short localeId) throws Exception {
 		List<SavingsBO> savingsAccounts = centerBO.getOpenSavingAccounts();
 		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
 		SessionUtils.setAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,

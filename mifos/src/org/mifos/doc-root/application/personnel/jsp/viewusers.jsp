@@ -83,7 +83,7 @@
                 </tr>
                 <tr class="fontnormal8pt">
                   <td width="17%">
-                  	<html-el:text property="input" maxlength="200"/>
+                  	<html-el:text property="searchString" maxlength="200"/>
  	                
                   </td>
                   <td width="83%">&nbsp;

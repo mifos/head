@@ -750,6 +750,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 	
 	public void testLoadSearch() throws Exception{
 		addActionAndMethod(Methods.loadSearch.toString());
+		addRequestParameter("input", "search");
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.loadSearch_success.toString());
@@ -760,7 +761,9 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter("SearchCenter", Short.valueOf("13"),
 				"1.4", meeting, new Date(System.currentTimeMillis()));
 		addActionAndMethod(Methods.search.toString());
-		addRequestParameter("input", "Sear");
+		addRequestParameter("searchString", "Sear");
+		addRequestParameter("input", "search");
+
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.search_success.toString());

@@ -180,7 +180,7 @@ public class AccountPersistence extends Persistence {
 					"clientName", "clientGlobalCustNum",
 					"loanGlobalAccountNumber" };
 			queryInputs
-					.setPath("org.mifos.application.customer.util.valueobjects.CustomerSearch");
+					.setPath("org.mifos.application.customer.business.CustomerSearch");
 			queryInputs.setAliasNames(aliasNames);
 			queryResult.setQueryInputs(queryInputs);
 			if (officeId != null) {

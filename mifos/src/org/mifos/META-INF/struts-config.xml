@@ -166,7 +166,15 @@
        		scope="session">
        		<forward name="loadSearch_success" 	path="/pages/application/customer/jsp/cust_search_account.jsp"/>
       		<forward name="search_success" 	path="/pages/application/customer/jsp/cust_search_account_results.jsp"/>
-        	<forward name="search_failure" 	path="/pages/application/customer/jsp/cust_search_account.jsp"/>	
+        	<forward name="search_failure" 	path="/pages/application/customer/jsp/cust_search_account.jsp"/>
+ 			<forward name="load_success" path="/pages/application/customer/jsp/clients_accounts.jsp" />
+			<forward name="load_branch" path="/pages/application/customer/jsp/branch_search_loanofficer.jsp" />
+			<forward name="load_loanofficer" path="/pages/application/customer/jsp/branch_search.jsp" />
+			<forward name="mainSearch_success" path="/pages/application/customer/jsp/search_result.jsp" />
+			<forward name="mainSearch_failure" path="/pages/application/customer/jsp/search_result.jsp" />
+			<forward name="getHomePage_success" path="/pages/application/customer/jsp/home.jsp" />
+			<forward name="loadallbranches_success" path="/custSearchAction.do?method=mainSearch" />
+ 			
     </action>
 	<action path="/customerAccountAction" 
 				type="org.mifos.application.customer.struts.action.CustomerAccountAction" 
@@ -274,17 +282,17 @@
 			<forward name="editprevious_success" path="/pages/application/center/jsp/editcenter.jsp" />						
 			<forward name="update_success" path="/centerCustAction.do?method=get" />
 			<!-- Cancel Page Forwards -->
-			<forward name="cancel_success" path="/CustomerSearchAction.do?method=load" />
+			<forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=mainpage" />
 			<forward name="editcancel_success" path="/centerCustAction.do?method=get" />
 			<forward name="get_success" path="/pages/application/center/jsp/viewCenterDetails.jsp" />
 			<forward name="search_success" path="/pages/application/center/jsp/center_search_results.jsp" />
 			<forward name="search_failure" path="/pages/application/center/jsp/center_search.jsp" />
 			<forward name="loadSearch_success" path="/pages/application/center/jsp/center_search.jsp" />
-			
+			<forward name="loadTransferSearch_success" path="/pages/application/center/jsp/center_search_transfer_group.jsp" />
+			<forward name="transferSearch_success" path="/pages/application/center/jsp/center_search_results_transfer_group.jsp" />
+			<forward name="search_CenterSearch_TransferGroup_failure" path="/pages/application/center/jsp/center_search_transfer_group.jsp" />
 			<forward name="viewCenterChangeLog" path="/pages/application/center/jsp/viewChangeLog.jsp" />
 			<forward name="cancelCenterChangeLog" path="/centerCustAction.do?method=get" />
-			
-		
 		</action>
 		<!-- Client Creation Action -->
 		<action path="/clientCreationAction" type="org.mifos.application.customer.client.struts.action.ClientCreationAction" name="clientCreationActionForm" parameter="method" input="/clientCreationAction.do?method=validate" validate="true"
@@ -352,7 +360,7 @@
 		<action path="/clientTransferAction" type="org.mifos.application.customer.client.struts.action.ClientTransferAction" name="clientTransferActionForm" parameter="method" input="/clientTransferAction.do?method=validate" validate="false"
 			scope="session">
 			<!--  Load forwards -->
-			<forward name="loadParents_success" path="/GroupAction.do?method=loadSearch" />
+			<forward name="loadParents_success" path="/groupCustAction.do?method=loadSearch&amp;input=GroupSearch_ClientTransfer" />
 			<forward name="loadBranches_success" path="/pages/application/client/jsp/choosebranch.jsp" />
 			<!-- Preview Page Forwards -->
 			<forward name="previewParentTransfer_success" path="/pages/application/client/jsp/confirmParentTransfer.jsp" />
@@ -368,7 +376,7 @@
 		<action path="/groupTransferAction" type="org.mifos.application.customer.group.struts.action.GroupTransferAction" name="groupTransferActionForm" parameter="method" input="/groupTransferAction.do?method=validate" validate="false"
 			scope="session">
 			<!--  Load forwards -->
-			<forward name="loadParents_success" path="/centerAction.do?method=loadSearch" />
+			<forward name="loadParents_success" path="/centerCustAction.do?method=loadSearch&amp;input=CenterSearch_TransferGroup" />
 			<forward name="loadBranches_success" path="/pages/application/group/jsp/choosebranch.jsp" />
 			<!-- Preview Page Forwards -->
 			<forward name="previewParentTransfer_success" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
@@ -529,12 +537,12 @@
 		<!--M2 Login Action -->
 		<action path="/loginAction" name="loginActionForm" type="org.mifos.application.login.struts.action.LoginAction" input="/loginAction.do?method=validate" parameter="method" validate="true" scope="session">
 			<forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp"></forward>
-			<forward name="login_success" path="/CustomerSearchAction.do?method=getHomePage" redirect="true"></forward>
+			<forward name="login_success" path="/custSearchAction.do?method=getHomePage" redirect="true"></forward>
 			<forward name="login_failure" path="/pages/application/login/jsp/login.jsp"></forward>
 			<forward name="load_success" path="/pages/application/login/jsp/login.jsp"></forward>
 			<forward name="logout_success" path="/loginAction.do?method=load"></forward>
 			<forward name="cancel_success" path="/loginAction.do?method=logout"></forward>
-			<forward name="updatePassword_success" path="/CustomerSearchAction.do?method=getHomePage" redirect="true"></forward>
+			<forward name="updatePassword_success" path="/custSearchAction.do?method=getHomePage" redirect="true"></forward>
 			<forward name="updatePassword_failure" path="/pages/application/login/jsp/changePassword.jsp"></forward>
 			<forward name="updateSettings_success" path="/yourSettings.do?method=get"></forward>
 		</action>
@@ -724,6 +732,7 @@
 		</action>
 		<!-- Ends-->
 		<!-- CheckList Action M2-->
+		<!-- CheckList Action M2-->
 		<action path="/chkListAction" 
 				type="org.mifos.application.checklist.struts.action.ChkListAction" 
 				parameter="method" 
@@ -745,6 +754,8 @@
 			<forward name="loadAllChecklist_success" path="/pages/application/checklist/jsp/view_checkList.jsp" />
 			<forward name="loadAllChecklist_failure" path="/AdminAction.do?method=load" />
 		</action>
+		<!-- Ends-->
+
 		<!-- Ends-->
 		
 		<!-- Funds Action -->
@@ -800,7 +811,7 @@
 			<forward name="create_failure" path="/pages/application/bulkentry/jsp/bulkentryconfirmation.jsp" />
 			<forward name="previuos_success" path="/pages/application/bulkentry/jsp/bulkentry_data.jsp" />
 			<forward name="preview_failure" path="/pages/application/bulkentry/jsp/bulkentry_data.jsp" />
-			<forward name="cancel_success" path="/CustomerSearchAction.do?method=load" />
+			<forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=bulkentrypage" />
 		</action>
 		<!-- Ends-->
 		<!-- New Account Action  -->
@@ -1156,7 +1167,7 @@
 			<forward name="chooseOffice_success" path="/pages/application/client/jsp/chooseOffice.jsp" />
 			<forward name="failure" path="/error.jsp" />
 			<!-- Cancel Page Forwards -->
-			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
+			<forward name="cancelCreate_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=clientCreate" />
 			<forward name="cancelEdit_success" path="/clientCustAction.do?method=get" />
 			<forward name="viewClientChangeLog" path="/pages/application/client/jsp/viewChangeLog.jsp" />
 			<forward name="cancelClientChangeLog" path="/clientCustAction.do?method=get" />
@@ -1238,15 +1249,16 @@
 			
 			<!--Cancel forwards-->
 			<forward name="cancelEdit_success" path="/groupCustAction.do?method=get" />			
-			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
+			<forward name="cancelCreate_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=createClient" />
 			<forward name="loadSearch_success" path="/pages/application/group/jsp/group_search.jsp" />
 			<forward name="search_success" path="/pages/application/group/jsp/group_search_results.jsp" />
 			<forward name="search_failure" path="/pages/application/group/jsp/group_search.jsp" />
-			
 			<!--Audit Log-->
 			<forward name="viewGroupChangeLog" path="/pages/application/group/jsp/viewChangeLog.jsp" />
 			<forward name="cancelGroupChangeLog" path="/groupCustAction.do?method=get" />
-			
+			<forward name="loadTransferSearch_success" path="/pages/application/group/jsp/group_search_client_transfer.jsp" />
+			<forward name="transferSearch_success" path="/pages/application/group/jsp/group_search_results_client_transfer.jsp" />
+			<forward name="search_GroupSearch_ClientTransfer_failure" path="/pages/application/group/jsp/group_search_client_transfer.jsp" />
 			
 		</action>
 		<!-- Customer action M2 style-->

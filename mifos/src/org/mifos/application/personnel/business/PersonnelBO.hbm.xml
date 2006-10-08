@@ -117,5 +117,12 @@
 			and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) 
 			and (personnel.personnelDetails.name.firstName like :USER_NAME or personnel.personnelDetails.name.lastName like :USER_NAME )
 	 		]]>
-	 </query>	
+	 </query>
+        <query name="get_active_loanofficers_under_office">
+	          <![CDATA[from  org.mifos.application.personnel.business.PersonnelBO personnel 
+	        	   			where personnel.level.id=:personnelLevelId and 
+	        	   			personnel.office.officeId=:officeId and personnel.status.id=:ACTIVE
+	         ]]>
+        </query>
+	 	
 </hibernate-mapping>

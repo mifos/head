@@ -52,6 +52,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
+import org.mifos.application.customer.struts.actionforms.CustSearchActionForm;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -219,13 +220,26 @@ public class TableTag extends BodyTagSupport {
 			}
 			if (list.size() == 0) {
 				JspWriter out = pageContext.getOut();
-				Context context = (Context) SessionUtils.getAttribute(
-						"Context", pageContext.getSession());
-				String defaultOfficeName = (String) context
-					.getBusinessResults(CustomerSearchConstants.OFFICE);
-				XmlBuilder result = noResults(
-					defaultOfficeName, context.getSearchObject()
-				);
+//				Context context = (Context) SessionUtils.getAttribute("Context", pageContext.getSession());
+//				String defaultOfficeName = (String) context	.getBusinessResults(CustomerSearchConstants.OFFICE);
+//				XmlBuilder result=null;
+//				if (context.getSearchObject() != null)
+//				 result = noResults(
+//					defaultOfficeName, context.getSearchObject()
+//				);
+//				else
+//				{
+					//CustSearchActionForm custSearchActionForm = (CustSearchActionForm) SessionUtils.getAttribute("custSearchActionForm", pageContext.getSession());
+					XmlBuilder result;
+					try {
+						result = noResults((String)SessionUtils.getAttribute(Constants.OFFICE_NAME,(HttpServletRequest) pageContext.getRequest()),
+								(String)SessionUtils.getAttribute(Constants.BRANCH_ID,(HttpServletRequest) pageContext.getRequest()),
+								(String)SessionUtils.getAttribute(Constants.SEARCH_STRING,(HttpServletRequest) pageContext.getRequest()));
+					} catch (PageExpiredException e) {
+						
+						throw new JspException(e);
+					}
+//				}
 				out.write(result.getOutput());
 				return super.doStartTag();
 			}
@@ -304,6 +318,46 @@ public class TableTag extends BodyTagSupport {
 		return html;
 	}
 
+	
+	//TODO one overloaded method will go 
+	XmlBuilder noResults(String officeName, String officeId, String searchString) {
+		XmlBuilder html = new XmlBuilder();
+		html.startTag("table", "width", "96%", "border", "0", "cellpadding",
+				"0", "cellspacing", "0");
+		html.startTag("tr", "class", "fontnormal");
+		html.startTag("td", "colspan", "2", "valign", "top");
+		html.singleTag("br");
+		html.startTag("span", "class", "headingorange");
+		html.text("No results found");
+		html.text(" for ");
+		html.startTag("span", "class", "heading");
+		html.text(searchString);
+		html.text(" ");
+		html.endTag("span");
+		if (officeId.equals(ALL_BRANCHES)) {
+			renderInClause(html, "All Branches");
+		} else {
+			renderInClause(html, officeName);
+		}
+
+		html.endTag("span");
+		html.endTag("td");
+		html.endTag("tr");
+		if (type.equalsIgnoreCase("single")) {
+			html.startTag("tr");
+			html.startTag("td", "colspan", "2", "valign", "top", "class",
+					"blueline");
+			html.singleTag("br");
+			html.singleTag("img", "src", "pages/framework/images/trans.gif",
+					"width", "5", "height", "3");
+			html.endTag("td");
+			html.endTag("tr");
+		}
+
+		html.endTag("table");
+		return html;
+	}	
+	
 	private void renderInClause(XmlBuilder html, String myOfficeName) {
 		html.startTag("span", "class", "headingorange");
 		html.text(" in");
@@ -363,7 +417,42 @@ public class TableTag extends BodyTagSupport {
 			.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
 		}
 	}
-
+	//TODO rename once all seach is gigrated to m2
+	private void createStartTable_M2(StringBuilder result, boolean headingRequired, boolean topBlueLineRequired) {
+		if (headingRequired) {
+			result.append("<table width=\"96%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">")
+				  .append("<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\"><span class=\"headingorange\">")
+				  .append(size + " results for </span>");
+			
+			CustSearchActionForm custSearchActionForm = 
+				(CustSearchActionForm) SessionUtils.getAttribute(
+						"custSearchActionForm", pageContext.getSession());
+				result.append("<span class=\"heading\">"+ custSearchActionForm.getSearchString() + " </span>");
+			
+			
+			if(custSearchActionForm.getOfficeId()!=null && custSearchActionForm.getOfficeId().equals("0"))
+			{			
+					result.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
+							+ "All Branches"+ "</span>");			
+			}
+							
+				else
+				{					
+					result.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
+							+ custSearchActionForm.getOfficeName()+ "</span>");
+				}
+						
+			result.append("</td></tr></table>");
+			result.append("<tr><td colspan=\"2\" valign=\"top\">")
+			.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
+		}
+		result.append("<table width=" + width + "border=" + border
+				+ "cellspacing=" + cellspacing + "cellpadding=" + cellpadding+" >");
+		if(topBlueLineRequired) {
+			result.append("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">")
+			.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
+		}
+	}
 	/**
 	 * Function used to create end part of the table.
 	 *
@@ -475,7 +564,7 @@ public class TableTag extends BodyTagSupport {
 			JspWriter out = pageContext.getOut();
 			boolean headingRequired=table.getPageRequirements().getHeadingRequired().equalsIgnoreCase("true");
 			boolean topBlueLineRequired=table.getPageRequirements().getTopbluelineRequired().equalsIgnoreCase("true");
-			createStartTable(result,  headingRequired,topBlueLineRequired);
+			createStartTable_M2(result,  headingRequired,topBlueLineRequired);
 			out.write(result.toString());
 			displayData(list, table,locale);
 		} else
@@ -486,7 +575,7 @@ public class TableTag extends BodyTagSupport {
 			TableTagParseException, TableTagException, JspException,IOException {
 		StringBuilder result = new StringBuilder();
 		JspWriter out = pageContext.getOut();
-		createStartTable(result,true,false);
+		createStartTable_M2(result,true,false);
 		ResourceBundle resource = ResourceBundle
 		.getBundle(TableTagConstants.PROPERTIESFILE);
 		out.write(result.toString());
@@ -610,12 +699,12 @@ public class TableTag extends BodyTagSupport {
 		//TODO context will go once search is migrated  
 
 		try{
-		Context context = (Context) SessionUtils.getAttribute(Constants.CONTEXT, pageContext.getSession());
-		if (context != null) {
-			QueryResult query = context.getSearchResult();
-			if(query==null ){
-				query = (QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,(HttpServletRequest)pageContext.getRequest());
-			}
+//		Context context = (Context) SessionUtils.getAttribute(Constants.CONTEXT, pageContext.getSession());
+//		if (context != null) {
+		//	QueryResult query = context.getSearchResult();
+		//	if(query==null ){
+			QueryResult query = (QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,(HttpServletRequest)pageContext.getRequest());
+			//}
 			if(null!= query) {
 				cache=new Cache(query);
 				list = cache.getList(0,"");
@@ -628,7 +717,7 @@ public class TableTag extends BodyTagSupport {
 					size=cache.getSize();
 				}
 			}
-		}
+	//	}
 			
 		}catch (PageExpiredException e) {
 

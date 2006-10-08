@@ -206,6 +206,14 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 
+		HibernateUtil.closeSession();
+		
+		setRequestPathInfo("/PersonAction.do");
+		addRequestParameter("method", Methods.get.toString());
+		
+		addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
+		actionPerform();
+		
 		setRequestPathInfo("/personnelNoteAction.do");
 		addRequestParameter("method", Methods.search.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -219,6 +227,10 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 				request.getSession());
 		assertEquals("Size of the search result should be 1", 1, context
 				.getSearchResult().getSize());
+		HibernateUtil.closeSession();
+		
+		personnel = (PersonnelBO)TestObjectFactory.getObject(PersonnelBO.class,personnel.getPersonnelId());
+		
 	}
 
 	private void createPersonnelAndSetInSession(OfficeBO office,

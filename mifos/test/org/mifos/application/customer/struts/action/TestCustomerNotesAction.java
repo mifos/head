@@ -329,6 +329,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 
 	public void testSearch() throws Exception {
 		Context context = new Context();
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.CONTEXT, context, request
 				.getSession());
 		createInitialObjects();
@@ -352,9 +353,17 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/centerCustAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("customerId", center.getCustomerId().toString());
+		addRequestParameter("globalCustNum", center.getGlobalCustNum());
+		actionPerform();
+		
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "search");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		System.out.println(request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY,(String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();
@@ -364,8 +373,18 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 				request.getSession());
 		assertEquals("Size of the search result should be 1", 1, context
 				.getSearchResult().getSize());
+		HibernateUtil.closeSession();
+		
+		getobjects();
+		
 	}
 
+	private void getobjects(){
+		client = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		center = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+	
+	}
 	public void testLoadForGroup() {
 		createInitialObjects();
 		setRequestPathInfo("/customerNotesAction.do");
@@ -489,9 +508,17 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
+
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("globalCustNum", group.getGlobalCustNum());
+		actionPerform();
+		
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "search");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();
@@ -501,6 +528,8 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 				request.getSession());
 		assertEquals("Size of the search result should be 1", 1, context
 				.getSearchResult().getSize());
+		HibernateUtil.closeSession();
+		getobjects();
 	}
 
 	private void createInitialObjects() {

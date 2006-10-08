@@ -562,8 +562,8 @@ public class OfficeBO extends BusinessObject {
 
 	public Set<OfficeBO> getBranchOnlyChildren() throws OfficeException {
 		Set<OfficeBO> offices = new HashSet<OfficeBO>();
-		if (children != null)
-			for (OfficeBO office : children) {
+		if (getChildren() != null)
+			for (OfficeBO office : getChildren()) {
 				if (office.getOfficeLevel().equals(OfficeLevel.BRANCHOFFICE))
 					offices.add(office);
 			}

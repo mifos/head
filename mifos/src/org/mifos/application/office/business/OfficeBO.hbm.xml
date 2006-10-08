@@ -101,4 +101,10 @@
        <query name="office.getOfficeCountForLevel">
             <![CDATA[select count(*) from org.mifos.application.office.business.OfficeBO office where office.level.id = :LEVEL_ID ]]>
     </query>
+        <query name="get_active_offices">
+	        	   <![CDATA[from  org.mifos.application.office.business.OfficeBO office 
+	        	   			where office.searchId like :officeSearchId and
+	        	   			office.level.id=:officeLevelId and office.status.id=:ACTIVE]]>
+        </query> 
+      
 </hibernate-mapping>

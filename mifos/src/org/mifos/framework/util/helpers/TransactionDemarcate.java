@@ -57,5 +57,6 @@ public @interface TransactionDemarcate {
 	public boolean saveToken() default false;
 	public boolean validateAndResetToken() default false;
 	public boolean joinToken() default false;
+	public boolean conditionToken() default false;
 	
 }

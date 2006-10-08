@@ -1943,7 +1943,7 @@ public class TestObjectFactory {
 				name,governmentIdNumber,
 				dob,maritalStatus,gender,
 				dateOfJoiningMFI,dateOfJoiningBranch,address,
-				null);
+				Short.valueOf("1"));
 		
 		personnelBO.save();
 		HibernateUtil.commitTransaction();

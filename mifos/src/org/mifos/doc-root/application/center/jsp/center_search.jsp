@@ -130,7 +130,7 @@
 					 <tr class="fontnormal">
                  	    <td align="right"><mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><c:out	value=" " /><mifos:mifoslabel name="Center.Name"  bundle="CenterUIResources"></mifos:mifoslabel></td>
 		                <td>
-		                  <html-el:text property="input" maxlength = "200"/>
+		                  <html-el:text property="searchString" maxlength = "200"/>
 		                </td>
 	                </tr>
 	               	<!-- Search results--->
@@ -154,6 +154,7 @@
       <br></td>
   </tr>
 </table>
+<html-el:hidden property="input" value="" />
 <html-el:hidden property="method" value="search" />
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>

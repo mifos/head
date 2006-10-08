@@ -5,6 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
 
@@ -90,7 +91,7 @@ function goToCancelPage()
                 <tr class="fontnormal">
                   <td align="right"><mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />  <mifos:mifoslabel name="Group.name" /></td>
                   <td>
-                  	<html-el:text property="input" maxlength="200"/>
+                  	<html-el:text property="searchString" maxlength="200"/>
                   </td>
                 </tr>
                 <tr class="fontnormal">
@@ -108,9 +109,11 @@ function goToCancelPage()
                 <tr class="fontnormal">
                   <td>&nbsp;</td>
                   <td>
-                  <c:if test="${sessionScope.groupHierarchyRequired eq 'No'}">
-                   <a href="clientCustAction.do?method=chooseOffice&amp;groupFlag=0"> 
-                 <%-- <a href="clientCreationAction.do?method=load&amp;office.officeId=5&amp;isClientUnderGrp=0"> --%>
+                  							<c:set var="groupHierarchyRequired"
+								value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'groupHierarchyRequired')}" />
+                  
+                  <c:if test="${groupHierarchyRequired eq 'No'}">
+                   <a href="clientCustAction.do?method=chooseOffice&amp;groupFlag=0&amp;currentFlowKey=${requestScope.currentFlowKey}"> 
                   <br>
                     <mifos:mifoslabel name="Group.clickheretocontinueif" /> <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel name="Group.membershipisnotrequiredforyour" /> <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />.</a>
                   </c:if>
@@ -122,6 +125,7 @@ function goToCancelPage()
         </tr>
       </table>
       <br>
+      <html-el:hidden property="input" value="" />
 <html-el:hidden property="method" value="search"/>       
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>

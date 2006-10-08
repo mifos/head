@@ -14,14 +14,14 @@
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Group</namefragment> 
 					</displayname>
-					<linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createGroup</linkvalue>
 				</menuitem>
 				<menuitem>
 					<displayname> 
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Client</namefragment> 
 					</displayname>
-					<linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue>groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
 				</menuitem>
 			</menugroup>
 			<menugroup>
@@ -107,14 +107,14 @@
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Group</namefragment>
 					</displayname>
-					<linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue>groupCustAction.do?method=hierarchyCheck&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createGroup</linkvalue>
 				</menuitem>
 				<menuitem>
 					<displayname> 
 						<namefragment>label.createnew</namefragment> 
 						<namefragment>Client</namefragment>
 					</displayname>
-					<linkvalue> groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0</linkvalue>
+					<linkvalue> groupCustAction.do?method=loadSearch&amp;recordOfficeId=0&amp;recordLoanOfficerId=0&amp;input=createClient</linkvalue>
 				</menuitem>
 						
 			</menugroup>

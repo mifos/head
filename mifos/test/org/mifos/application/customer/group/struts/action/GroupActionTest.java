@@ -937,7 +937,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	public void testSearch()throws Exception{
 		createGroupWithCenter();
-		addRequestParameter("input", "gr");
+		addRequestParameter("searchString", "gr");
 		addActionAndMethod(Methods.search.toString());
 		addCurrentFlowKey();
 		actionPerform();

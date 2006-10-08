@@ -11,12 +11,14 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -213,5 +215,14 @@ public class PersonnelPersistence extends Persistence {
 			throw new PersistenceException(e);
 		}
 		return queryResult;
+	}
+	
+	public List<PersonnelBO> getActiveLoUnderUser(Short officeId)throws PersistenceException{
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(CustomerSearchConstants.OFFICEID, officeId);
+		queryParameters.put(CustomerSearchConstants.PERSONNELLEVELID,PersonnelLevel.LOAN_OFFICER.getValue());
+		queryParameters.put(PersonnelConstants.LOANOFFICERACTIVE,PersonnelStatus.ACTIVE.getValue());
+		return (List<PersonnelBO>) executeNamedQuery(
+				NamedQueryConstants.GET_ACTIVE_LOAN_OFFICER_UNDER_USER, queryParameters);
 	}
 }

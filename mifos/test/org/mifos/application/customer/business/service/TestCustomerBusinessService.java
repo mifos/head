@@ -43,6 +43,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -727,7 +728,26 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				client.getCustomerId(), AccountTypes.SAVINGSACCOUNT.getValue())
 				.size());
 	}
-	
+	public  void testGetActiveCentersUnderUser() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("center",meeting,Short.valueOf("1"),Short.valueOf("1"));
+		PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
+		List<CustomerBO>  customers = service.getActiveCentersUnderUser(personnel);
+		assertNotNull(customers);
+		assertEquals(1,customers.size());
+	}
+	public  void testgetGroupsUnderUser() throws Exception{
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("center",meeting,Short.valueOf("1"),Short.valueOf("1"));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
+		List<CustomerBO>  customers = service.getGroupsUnderUser(personnel);
+		assertNotNull(customers);
+		assertEquals(1,customers.size());
+	}	
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
 			String offeringName, String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());

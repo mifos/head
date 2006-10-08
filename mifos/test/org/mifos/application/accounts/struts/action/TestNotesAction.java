@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -200,6 +201,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
+		
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "create");
 		getRequest().getSession().setAttribute("security_param", "Savings");
@@ -207,9 +209,19 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
+		
+		HibernateUtil.closeSession();
+		
+		addRequestParameter("globalAccountNum", savingsBO.getGlobalAccountNum());
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "get");
+		actionPerform();
+		
+		
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "search");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();
@@ -219,8 +231,17 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 				request.getSession());
 		assertEquals("Size of the search result should be 1", 1, context
 				.getSearchResult().getSize());
+		HibernateUtil.closeSession();
+		savingsBO = (SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savingsBO.getAccountId());
+		getobjects();
 	}
-
+	private void getobjects(){
+		
+		client = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		center = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+	
+	}
 	public void testLoad_Loan() {
 		loanBO = getLoanAccount();
 		setRequestPathInfo("/notesAction.do");
@@ -324,9 +345,18 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
+		HibernateUtil.closeSession();
+		addRequestParameter("globalAccountNum", loanBO.getGlobalAccountNum());
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "get");
+		actionPerform();
+		
+
+		
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "search");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter(Constants.CURRENTFLOWKEY,(String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("search_success");
 		verifyNoActionErrors();
@@ -336,6 +366,11 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 				request.getSession());
 		assertEquals("Size of the search result should be 1", 1, context
 				.getSearchResult().getSize());
+		HibernateUtil.closeSession();
+		loanBO = (LoanBO)TestObjectFactory.getObject(LoanBO.class,loanBO.getAccountId());
+
+		getobjects();
+		
 	}
 
 	private void createInitialObjects() {

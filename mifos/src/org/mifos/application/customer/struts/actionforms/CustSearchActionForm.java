@@ -11,6 +11,8 @@ public class CustSearchActionForm extends BaseActionForm {
 	private String searchString;
 
 	private String input;
+	
+	private String officeName;
 
 	public String getInput() {
 		return input;
@@ -42,6 +44,14 @@ public class CustSearchActionForm extends BaseActionForm {
 
 	public void setSearchString(String searchString) {
 		this.searchString = searchString;
+	}
+
+	public String getOfficeName() {
+		return officeName;
+	}
+
+	public void setOfficeName(String officeName) {
+		this.officeName = officeName;
 	}
 
 }

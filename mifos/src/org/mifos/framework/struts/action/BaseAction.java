@@ -127,24 +127,40 @@ public abstract class BaseAction extends DispatchAction {
 	protected void preHandleTransaction(HttpServletRequest request,
 			TransactionDemarcate annotation) throws PageExpiredException {
 		if (null != annotation && annotation.saveToken()) {
-			String flowKey = String.valueOf(System.currentTimeMillis());
-			FlowManager flowManager = (FlowManager) request.getSession()
-					.getAttribute(Constants.FLOWMANAGER);
-			flowManager.addFLow(flowKey, new Flow());
-			request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+			createToken(request);
 		} else if ((null != annotation && annotation.validateAndResetToken())
 				|| (null != annotation && annotation.joinToken())) {
+			joinToken(request);
+		}
+		else if (null != annotation && annotation.conditionToken()) {
 			String flowKey = (String) request
-					.getAttribute(Constants.CURRENTFLOWKEY);
-			FlowManager flowManager = (FlowManager) request.getSession()
-					.getAttribute(Constants.FLOWMANAGER);
-			if (flowKey == null || !flowManager.isFlowValid(flowKey)) {
-				throw new PageExpiredException(
-						ExceptionConstants.PAGEEXPIREDEXCEPTION);
-			}
+			.getAttribute(Constants.CURRENTFLOWKEY);
+			if ( flowKey==null)createToken(request);
+			else joinToken(request);
+			
 		}
 	}
 
+	private void createToken(HttpServletRequest request){
+		String flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = (FlowManager) request.getSession()
+				.getAttribute(Constants.FLOWMANAGER);
+		flowManager.addFLow(flowKey, new Flow());
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+
+	}
+	private void joinToken(HttpServletRequest request)
+			throws PageExpiredException {
+		String flowKey = (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY);
+		FlowManager flowManager = (FlowManager) request.getSession()
+				.getAttribute(Constants.FLOWMANAGER);
+		if (flowKey == null || !flowManager.isFlowValid(flowKey)) {
+			throw new PageExpiredException(
+					ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		}
+
+	}
 	protected void postHandleTransaction(HttpServletRequest request,
 			TransactionDemarcate annotation) throws SystemException,
 			ApplicationException {

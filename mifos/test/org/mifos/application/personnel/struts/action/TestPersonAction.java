@@ -265,7 +265,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 	public void testSearchSucess()throws Exception{
 		addActionAndMethod(Methods.search.toString());
-		addRequestParameter("input", "Mi");
+		addRequestParameter("searchString", "Mi");
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -287,6 +287,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	
 	public void testLoadSearchSucess()throws Exception{
 		addActionAndMethod(Methods.search.toString());
+		addRequestParameter("searchString", "Mi");
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();

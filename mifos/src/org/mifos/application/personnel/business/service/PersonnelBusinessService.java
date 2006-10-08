@@ -61,7 +61,7 @@ public class PersonnelBusinessService extends BusinessService {
 	public List<RoleBO> getRoles() throws ServiceException {
 		try {
 			return new RolesPermissionsPersistence().getRoles();
-		} catch(PersistenceException e){
+		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
@@ -69,40 +69,54 @@ public class PersonnelBusinessService extends BusinessService {
 	public List<SupportedLocalesEntity> getAllLocales() throws ServiceException {
 		return new ConfigurationPersistence().getSupportedLocale();
 	}
-	
-	public QueryResult getAllPersonnelNotes(Short personnelId) throws ServiceException {
+
+	public QueryResult getAllPersonnelNotes(Short personnelId)
+			throws ServiceException {
 		try {
 			return new PersonnelPersistence().getAllPersonnelNotes(personnelId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 	}
-	public PersonnelBO getPersonnelByGlobalPersonnelNum(String globalPersonnelNum)throws ServiceException{
+
+	public PersonnelBO getPersonnelByGlobalPersonnelNum(
+			String globalPersonnelNum) throws ServiceException {
 		try {
-			return new PersonnelPersistence().getPersonnelByGlobalPersonnelNum(globalPersonnelNum);
+			return new PersonnelPersistence()
+					.getPersonnelByGlobalPersonnelNum(globalPersonnelNum);
 		} catch (PersistenceException e) {
 
 			throw new ServiceException(e);
 		}
 	}
-	
-	public PersonnelBO getPersonnel(String personnelName) throws ServiceException {
+
+	public PersonnelBO getPersonnel(String personnelName)
+			throws ServiceException {
 		PersonnelBO personnel = null;
 		try {
 			personnel = new PersonnelPersistence().getPersonnel(personnelName);
-			if(personnel == null)
+			if (personnel == null)
 				throw new ServiceException(LoginConstants.KEYINVALIDUSER);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
 		return personnel;
 	}
-	
-	public QueryResult search(String searchString, Short officeId,
-			Short userId) throws ServiceException{
-		
+
+	public QueryResult search(String searchString, Short officeId, Short userId)
+			throws ServiceException {
+
 		try {
-			return new PersonnelPersistence().search(searchString,userId);
+			return new PersonnelPersistence().search(searchString, userId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+
+	public List<PersonnelBO> getActiveLoUnderUser(Short officeId)
+			throws ServiceException {
+		try {
+			return new PersonnelPersistence().getActiveLoUnderUser(officeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

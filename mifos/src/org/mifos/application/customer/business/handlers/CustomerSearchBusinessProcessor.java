@@ -40,12 +40,12 @@ package org.mifos.application.customer.business.handlers;
 
 import java.util.List;
 
+import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.dao.CustomerSearchDAO;
 import org.mifos.application.customer.dao.SearchDAO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.valueobjects.Customer;
-import org.mifos.application.customer.util.valueobjects.CustomerSearch;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.office.util.valueobjects.Office;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;

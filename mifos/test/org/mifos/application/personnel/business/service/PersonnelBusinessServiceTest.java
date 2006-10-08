@@ -15,6 +15,7 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PersonnelBusinessServiceTest extends MifosTestCase {
@@ -67,26 +68,38 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 		assertEquals(1,queryResult.getSize());
 		assertEquals(1,queryResult.get(0,10).size());
 	}
-	private PersonnelBO createPersonnel() throws Exception {
-		office = TestObjectFactory.getOffice(Short.valueOf("1"));
-		Name name = new Name("XYZ", null, null, null);
+	public void  testGetActiveLoUnderUser()throws Exception{
+		office = TestObjectFactory.getOffice(Short.valueOf("3"));
+		personnel = createPersonnel(office, PersonnelLevel.NON_LOAN_OFFICER);
+		List<PersonnelBO> loanOfficers = personnelBusinessService.getActiveLoUnderUser(office.getOfficeId());
+		assertNotNull(loanOfficers);
+		assertEquals(1,loanOfficers.size());
+		
+	}
+	private PersonnelBO createPersonnel(OfficeBO office,
+			PersonnelLevel personnelLevel) throws Exception {
+		UserContext userContext = TestObjectFactory.getUserContext();
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
 		Date date = new Date();
-		personnel = new PersonnelBO(PersonnelLevel.LOAN_OFFICER, office, Integer
+		personnel = new PersonnelBO(personnelLevel, office, Integer
 				.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
-				"xyz@yahoo.com", null, customFieldView, name, "111111", date,
+				"xyz@yahoo.com", null, customFieldView, new Name("XYZ", null, null, null), "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				address, Short.valueOf("1"));
+				address, userContext.getId());
 		personnel.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
+	}
+	private PersonnelBO createPersonnel() throws Exception {
+		office = TestObjectFactory.getOffice(Short.valueOf("1"));
+		return createPersonnel(office,PersonnelLevel.LOAN_OFFICER);
 	}
 	
 	

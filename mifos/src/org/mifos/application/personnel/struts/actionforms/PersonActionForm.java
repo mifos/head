@@ -27,6 +27,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -34,6 +35,8 @@ public class PersonActionForm extends BaseActionForm {
 
 	private String input;
 
+	private String searchString;
+	
 	private String personnelId;
 
 	private String level;
@@ -266,6 +269,7 @@ public class PersonActionForm extends BaseActionForm {
 		this.dateOfJoiningBranch = null;
 		this.personnelRoles = new String[10];
 		this.input=null;
+		this.searchString=null;
 		address = new Address();
 		customFields = new ArrayList<CustomFieldView>();
 	}
@@ -372,12 +376,13 @@ public class PersonActionForm extends BaseActionForm {
 		}
 		
 		if (method.equals(Methods.search.toString())) {
-			if( StringUtils.isNullOrEmpty(input))
+			if( StringUtils.isNullOrEmpty(searchString))
 			{
 				try {
 				cleanUpSearch(request);
 				} catch (PageExpiredException e) {
-					// TODO: do we need to ingnore it ?
+					
+					errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
 				}
 				errors.add(PersonnelConstants.NO_SEARCH_STRING,new ActionMessage(PersonnelConstants.NO_SEARCH_STRING));
 			}
@@ -391,7 +396,7 @@ public class PersonActionForm extends BaseActionForm {
 			try {
 				updateRoleLists(request);
 			} catch (PageExpiredException e) {
-				// TODO: do we need to ingnore it ?
+				errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
 			}
 
 		}
@@ -590,6 +595,14 @@ public class PersonActionForm extends BaseActionForm {
 			HttpServletRequest request, ActionErrors errors,
 			EntityType entityType) {
 		checkForMandatoryFields(entityType.getValue(), errors, request);
+	}
+
+	public String getSearchString() {
+		return searchString;
+	}
+
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
 	}
 
 }

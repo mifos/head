@@ -60,4 +60,10 @@ public class TestOfficeBusinessService extends MifosTestCase {
 		officeList = null;
 		headOffice = null;
 	}
+	public void testGetBranchesUnderUser()throws Exception{
+		
+		List<OfficeBO> officeList =officeBusinessService.getActiveBranchesUnderUser("1.1");
+		assertNotNull(officeList);
+		assertEquals(1,officeList.size());
+	}
 }
