@@ -68,6 +68,7 @@ public class AccountAppAction extends BaseAction {
 	}
 
 	@CloseSession
+	@TransactionDemarcate(validateAndResetToken=true)
 	public ActionForward removeFees(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -99,14 +100,14 @@ public class AccountAppAction extends BaseAction {
 		AccountBO accountBO = accountBusinessService
 				.findBySystemId(globalAccountNum);
 		SessionUtils.setAttribute(SavingsConstants.TRXN_HISTORY_LIST,
-				accountBusinessService.getTrxnHistory(accountBO, uc), request
-						.getSession());
+				accountBusinessService.getTrxnHistory(accountBO, uc), request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerService
 				.findBySystemId(accountBO.getCustomer().getGlobalCustNum(),
 						accountBO.getCustomer().getCustomerLevel().getId()),request);
 		return mapping.findForward("getTransactionHistory_success");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward waiveChargeDue(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -123,6 +124,7 @@ public class AccountAppAction extends BaseAction {
 		return mapping.findForward("waiveChargesDue_Success");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward waiveChargeOverDue(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

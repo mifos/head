@@ -1,6 +1,5 @@
 package org.mifos.application.customer.struts.action;
 
-import java.net.URISyntaxException;
 import java.sql.Date;
 
 import org.mifos.application.customer.center.business.CenterBO;
@@ -12,6 +11,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -24,20 +27,31 @@ public class TestCustomerAccountAction extends MifosMockStrutsTestCase {
 	private CenterBO center;
 
 	private MeetingBO meeting;
+	
+	private String flowKey;
+	
+	private UserContext userContext;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
 					"org/mifos/application/customer/struts-config.xml")
 					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-
+		userContext = TestObjectFactory.getContext();
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+		addRequestParameter("recordLoanOfficerId", "1");
+		addRequestParameter("recordOfficeId", "1");
+		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,flowManager);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 	}
 
 	@Override
@@ -53,24 +67,30 @@ public class TestCustomerAccountAction extends MifosMockStrutsTestCase {
 		initialization("Client");
 		addRequestParameter("globalCustNum", client.getGlobalCustNum());
 		getRequest().getSession().setAttribute("security_param", "Client");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.client_detail_page.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testLoadClientChargesDetails_group() {
 		initialization("Group");
 		addRequestParameter("globalCustNum", group.getGlobalCustNum());
 		getRequest().getSession().setAttribute("security_param", "Group");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.group_detail_page.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testLoadClientChargesDetails_center() {
 		initialization("Center");
 		addRequestParameter("globalCustNum", center.getGlobalCustNum());
 		getRequest().getSession().setAttribute("security_param", "Center");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.center_detail_page.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	private void initialization(String customer) {

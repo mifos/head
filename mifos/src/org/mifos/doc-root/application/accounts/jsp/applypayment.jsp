@@ -100,7 +100,7 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="70%" class="headingorange"><span class="heading"> <c:out
-								value="${BusinessKey.loanOffering.prdOfferingName}" /> # <c:out
+								value="${param.prdOfferingName}" /> # <c:out
 						value="${BusinessKey.globalAccountNum}" /> - </span><mifos:mifoslabel
 								name="accounts.apply_payment" />
 								</td>

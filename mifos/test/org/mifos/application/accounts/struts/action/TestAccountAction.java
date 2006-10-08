@@ -3,12 +3,9 @@
  */
 package org.mifos.application.accounts.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -19,12 +16,10 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
@@ -44,20 +39,15 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 	private UserContext userContext;
 	
 	private String flowKey;
-	// success
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
 					"org/mifos/application/accounts/struts-config.xml")
 					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
@@ -83,6 +73,7 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testSuccessfulRemoveFees() {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Short feeId = null;
 		Set<AccountFeesEntity> accountFeesSet = accountBO.getAccountFees();
 		for (AccountFeesEntity accountFeesEntity : accountFeesSet) {
@@ -92,9 +83,10 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "removeFees");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
 		addRequestParameter("feeId", feeId.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("remove_success");
-
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	private AccountBO getLoanAccount() {
@@ -141,8 +133,7 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());
 		List<TransactionHistoryView> trxnHistoryList = (List<TransactionHistoryView>) SessionUtils
-				.getAttribute(SavingsConstants.TRXN_HISTORY_LIST, request
-						.getSession());
+				.getAttribute(SavingsConstants.TRXN_HISTORY_LIST, request);
 		for (TransactionHistoryView transactionHistoryView : trxnHistoryList)
 			assertEquals(accountBO.getUserContext().getName(),
 					transactionHistoryView.getPostedBy());

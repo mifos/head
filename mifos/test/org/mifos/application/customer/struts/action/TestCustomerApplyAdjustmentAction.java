@@ -21,6 +21,8 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.ResourceLoader;
@@ -37,19 +39,27 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	private CustomerBO center;
 
+	private String flowKey;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-				.getPath());
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
 		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/customer/struts-config.xml")
-					.getPath());
+				"org/mifos/application/customer/struts-config.xml").getPath());
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		request.getSession(false).setAttribute("ActivityContext",
+				TestObjectFactory.getActivityContext());
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 	}
 
 	@Override
@@ -68,11 +78,13 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("input", "ViewClientCharges");
 		addRequestParameter("globalCustNum", client.getGlobalCustNum());
 		addRequestParameter("prdOfferingName", "Client_Active_test_3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		getRequest().getSession().setAttribute("security_param", "Client");
 		actionPerform();
 		verifyForward("loadAdjustment_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testPreviewAdjustment() throws Exception {
@@ -84,11 +96,13 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingName", "Client_Active_test_3");
 		addRequestParameter("adjustcheckbox", "true");
 		addRequestParameter("adjustmentNote", "abc");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		getRequest().getSession().setAttribute("security_param", "Client");
 		actionPerform();
 		verifyForward("previewAdjustment_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testApplyAdjustment() throws Exception {
@@ -99,20 +113,24 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingName", "Client_Active_test_3");
 		addRequestParameter("input", "ViewClientCharges");
 		addRequestParameter("adjustmentNote", "abcef");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		getRequest().getSession().setAttribute("security_param", "Client");
 		actionPerform();
 		verifyForward("applyAdjustment_client_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testCancelAdjustment() throws Exception {
 		setRequestPathInfo("/custApplyAdjustment.do");
 		addRequestParameter("method", "cancelAdjustment");
 		addRequestParameter("input", "ViewClientCharges");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		getRequest().getSession().setAttribute("security_param", "Client");
 		actionPerform();
 		verifyForward("canceladj_client_success");
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testValidation_AdjustmentCheckbox() throws Exception {
@@ -124,8 +142,10 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("input", "ViewClientCharges");
 		addRequestParameter("adjustmentNote", "This is to test errors.");
 		addRequestParameter("adjustcheckbox", "false");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.mandatorycheckbox" });
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testValidation_AdjustmentNoteSize() throws Exception {
@@ -139,8 +159,10 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				"adjustmentNote",
 				"This is to test errors in case adjustment note size exceeds 200 characters.This is to test errors in case adjustment note size exceeds 200 characters.This is to test errors in case adjustment note size exceeds 200 characters.This is to test errors in case adjustment note size exceeds 200 characters.This is to test errors in case adjustment note size exceeds 200 characters.");
 		addRequestParameter("adjustcheckbox", "true");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.adjustmentNoteTooBig" });
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testValidation_AdjustmentNoteMandatory() throws Exception {
@@ -151,8 +173,10 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingName", "Client_Active_test_3");
 		addRequestParameter("input", "ViewClientCharges");
 		addRequestParameter("adjustcheckbox", "true");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyActionErrors(new String[] { "errors.mandatorytextarea" });
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	private void createInitialObjects() {
@@ -210,8 +234,9 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
 					.getMoneyForMFICurrency(100));
 			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
-					accountTrxnEntity, accountFeesActionDetailEntity.getAccountFee(),
-					accountFeesActionDetailEntity.getFeeAmount());
+					accountTrxnEntity, accountFeesActionDetailEntity
+							.getAccountFee(), accountFeesActionDetailEntity
+							.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}

@@ -18,8 +18,10 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustomerApplyAdjustmentAction extends BaseAction {
 	private CustomerBusinessService customerBusinessService;
@@ -33,12 +35,13 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		return customerBusinessService;
 	}
 	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm)form;
 		resetActionFormFields(applyAdjustmentActionForm);
 		CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm.getGlobalCustNum());
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request.getSession());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request);
 		request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
 		if(null == customerBO.getCustomerAccount().getLastPmnt() || customerBO.getCustomerAccount().getLastPmntAmnt() == 0){
 			request.setAttribute("isDisabled", "true");
@@ -47,12 +50,13 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		return mapping.findForward(CustomerConstants.METHOD_LOAD_ADJUSTMENT_SUCCESS);
 	}
 	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previewAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_PREVIEW_ADJUSTMENT);
 		CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm)form;
 		CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm.getGlobalCustNum());
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request.getSession());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request);
 		if(null == customerBO.getCustomerAccount().getLastPmnt() || customerBO.getCustomerAccount().getLastPmntAmnt() == 0){
 			request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
 			request.setAttribute("isDisabled", "true");
@@ -61,13 +65,15 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		return mapping.findForward(CustomerConstants.METHOD_PREVIEW_ADJUSTMENT_SUCCESS);
 	}
 	
+	@TransactionDemarcate(validateAndResetToken = true)
+	@CloseSession
 	public ActionForward applyAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		String forward = null;
 		request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_APPLY_ADJUSTMENT);
 		CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm)form;
 		CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm.getGlobalCustNum());
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request.getSession());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request.getSession());
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request);
 		if(null == customerBO.getCustomerAccount().getLastPmnt() || customerBO.getCustomerAccount().getLastPmntAmnt() == 0){
 			request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_PREVIEW_ADJUSTMENT);
 			throw new ApplicationException(AccountExceptionConstants.ZEROAMNTADJUSTMENT);
@@ -78,7 +84,6 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		try {
 		customerBO.adjustPmnt(applyAdjustmentActionForm.getAdjustmentNote());
 		}catch(ApplicationException ae) {
-			ae.printStackTrace();
 			request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_PREVIEW_ADJUSTMENT);
 			throw ae;
 		}
@@ -99,6 +104,7 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		return mapping.findForward(forward);
 	}
 	
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancelAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		String forward = null;
 		CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm)form;

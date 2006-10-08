@@ -59,6 +59,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustomerAccountAction extends AccountAppAction {
 	public CustomerAccountAction() throws Exception {
@@ -70,6 +71,7 @@ public class CustomerAccountAction extends AccountAppAction {
 		return true;
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -81,12 +83,9 @@ public class CustomerAccountAction extends AccountAppAction {
 		CustomerAccountBO customerAccount = customerBO.getCustomerAccount();
 		List<CustomerRecentActivityView> recentActivities = customerService
 				.getRecentActivityView(customerBO.getCustomerId());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request
-				.getSession());
-		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_ACCOUNT,
-				customerAccount, request.getSession());
-		SessionUtils.setAttribute(CustomerConstants.RECENT_ACTIVITIES,
-				recentActivities, request.getSession());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_ACCOUNT,customerAccount, request);
+		SessionUtils.setAttribute(CustomerConstants.RECENT_ACTIVITIES,recentActivities, request);
 		ActionForwards forward = getForward(customerBO);
 		return mapping.findForward(forward.toString());
 	}

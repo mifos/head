@@ -95,7 +95,7 @@
 			<table width="96%" border="0" cellpadding="3" cellspacing="0">
 				<tr>
 					<td width="100%" colspan="2" class="headingorange"><span
-						class="heading"><c:out value="${BusinessKey.loanOffering.prdOfferingName}" /> # <c:out
+						class="heading"><c:out value="${param.prdOfferingName}" /> # <c:out
 						value="${BusinessKey.globalAccountNum}" /> - </span> <mifos:mifoslabel
 						name="accounts.reviewtransaction" /></td>
 				</tr>

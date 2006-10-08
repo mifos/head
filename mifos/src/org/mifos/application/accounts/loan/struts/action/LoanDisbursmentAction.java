@@ -15,6 +15,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -51,10 +52,16 @@ public class LoanDisbursmentAction extends BaseAction {
 
 		LoanBO loan = ((LoanBusinessService) getService()).getAccount(Integer
 				.valueOf(loanDisbursmentActionForm.getAccountId()));
-		loanDisbursmentActionForm.setTransactionDate(DateHelper.toDatabaseFormat(loan.getDisbursementDate()));
+		SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, loan
+				.getDisbursementDate(), request);
+		loanDisbursmentActionForm.setTransactionDate(DateHelper
+				.getUserLocaleDate(
+						getUserContext(request).getPereferedLocale(),
+						SessionUtils.getAttribute(
+								LoanConstants.PROPOSEDDISBDATE, request)
+								.toString()));
 		loan.setUserContext(uc);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request
-				);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
 				getMasterDataService().getSupportedPaymentModes(
 						uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
@@ -64,7 +71,7 @@ public class LoanDisbursmentAction extends BaseAction {
 		loanDisbursmentActionForm.setLoanAmount(loan.getLoanAmount());
 		return mapping.findForward(Constants.LOAD_SUCCESS);
 	}
-	
+
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -95,11 +102,11 @@ public class LoanDisbursmentAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		Date trxnDate = getDateFromString(actionForm.getTransactionDate(), uc
 				.getPereferedLocale());
-		trxnDate=DateUtils.getDateWithoutTimeStamp(trxnDate.getTime());
+		trxnDate = DateUtils.getDateWithoutTimeStamp(trxnDate.getTime());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
 				.getPereferedLocale());
-		PersonnelBO personnel = new PersonnelPersistence()
-				.getPersonnel(uc.getId());
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc
+				.getId());
 		if (!loan.isTrxnDateValid(trxnDate))
 			throw new AccountException("errors.invalidTxndate");
 		if (actionForm.getPaymentModeOfPayment() != null
@@ -112,7 +119,6 @@ public class LoanDisbursmentAction extends BaseAction {
 			loan.disburseLoan(actionForm.getReceiptId(), trxnDate, Short
 					.valueOf(actionForm.getPaymentTypeId()), personnel,
 					receiptDate, Short.valueOf("1"));
-		// loan.disburseLoan(actionForm.getReceiptId(),trxnDate,Short.valueOf(actionForm.getPaymentTypeId()),uc.getId(),receiptDate,Short.valueOf(actionForm.getPaymentModeOfPayment()));
 		return mapping.findForward(Constants.UPDATE_SUCCESS);
 	}
 
