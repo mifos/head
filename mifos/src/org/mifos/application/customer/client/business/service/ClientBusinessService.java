@@ -40,6 +40,7 @@ package org.mifos.application.customer.client.business.service;
 
 import java.util.List;
 
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.business.BusinessObject;
@@ -61,6 +62,14 @@ public class ClientBusinessService extends BusinessService {
 			return new ClientPersistence()
 					.retrieveOfferingsApplicableToClient();
 		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
+	
+	public ClientBO getClient(Integer customerId) throws ServiceException{
+		try{
+			return new ClientPersistence().getClient(customerId);
+		}catch(PersistenceException pe){
 			throw new ServiceException(pe);
 		}
 	}

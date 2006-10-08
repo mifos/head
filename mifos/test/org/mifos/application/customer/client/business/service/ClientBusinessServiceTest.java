@@ -1,11 +1,10 @@
 package org.mifos.application.customer.client.business.service;
 
-import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
@@ -22,6 +21,7 @@ public class ClientBusinessServiceTest extends MifosTestCase{
 	private SavingsOfferingBO savingsOffering3;
 	private SavingsOfferingBO savingsOffering4;
 	private ClientBusinessService service;
+	private ClientBO client;
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -36,8 +36,18 @@ public class ClientBusinessServiceTest extends MifosTestCase{
 		TestObjectFactory.removeObject(savingsOffering2);
 		TestObjectFactory.removeObject(savingsOffering3);
 		TestObjectFactory.removeObject(savingsOffering4);
+		TestObjectFactory.cleanUp(client);
 		HibernateUtil.closeSession();
 		super.tearDown();		
+	}
+	
+	public void testGetClient()throws Exception{
+		client = createClient("abc");
+		HibernateUtil.closeSession();
+		client = service.getClient(client.getCustomerId());
+		assertNotNull(client);
+		assertEquals("abc", client.getClientName().getName().getFirstName());
+		assertEquals("abc", client.getClientName().getName().getLastName());
 	}
 	
 	public void testFailureRetrieveOfferings() throws Exception {
@@ -68,5 +78,9 @@ public class ClientBusinessServiceTest extends MifosTestCase{
 				assertTrue(true);
 		}
 		HibernateUtil.closeSession();
+	}
+	
+	private ClientBO createClient(String clientName){
+		return TestObjectFactory.createClient(clientName, null, CustomerStatus.CLIENT_PARTIAL.getValue(), new java.util.Date());
 	}
 }

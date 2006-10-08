@@ -549,51 +549,48 @@ public class ClientCustAction extends CustAction {
 	public ActionForward updatePersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws ApplicationException {
-		try {
-			ClientBO client = (ClientBO) SessionUtils.getAttribute(
-					Constants.BUSINESS_KEY, request);
-			ClientCustActionForm actionForm = (ClientCustActionForm) form;
-			client.updateAddress(actionForm.getAddress());
-			convertCustomFieldDateToUniformPattern(
-					actionForm.getCustomFields(), getUserContext(request)
-							.getPereferedLocale());
-			for (CustomFieldView fieldView : actionForm.getCustomFields())
-				for (CustomerCustomFieldEntity fieldEntity : client
-						.getCustomFields())
-					if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
-						fieldEntity.setFieldValue(fieldView.getFieldValue());
-			client.getClientName()
-					.updateNameDetails(actionForm.getClientName());
-			client.getSpouseName()
-					.updateNameDetails(actionForm.getSpouseName());
-			client.setDisplayName(actionForm.getClientName().getDisplayName());
-			client.setFirstName(actionForm.getClientName().getFirstName());
-			client.setLastName(actionForm.getClientName().getLastName());
-			client.setSecondLastName(actionForm.getClientName()
-					.getSecondLastName());
-			client.setDateOfBirth(getDateFromString(
-					actionForm.getDateOfBirth(), getUserContext(request)
-							.getPereferedLocale()));
-			client.setGovernmentId(actionForm.getGovernmentId());
+		
+		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
+		client.setVersionNo(clientInSession.getVersionNo());
+		clientInSession=null;
+		client.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(client);
+		
+		ClientCustActionForm actionForm = (ClientCustActionForm) form;
+		client.updateAddress(actionForm.getAddress());
+		convertCustomFieldDateToUniformPattern(
+				actionForm.getCustomFields(), getUserContext(request)
+						.getPereferedLocale());
+		for (CustomFieldView fieldView : actionForm.getCustomFields())
+			for (CustomerCustomFieldEntity fieldEntity : client
+					.getCustomFields())
+				if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+					fieldEntity.setFieldValue(fieldView.getFieldValue());
+		client.getClientName()
+				.updateNameDetails(actionForm.getClientName());
+		client.getSpouseName()
+				.updateNameDetails(actionForm.getSpouseName());
+		client.setDisplayName(actionForm.getClientName().getDisplayName());
+		client.setFirstName(actionForm.getClientName().getFirstName());
+		client.setLastName(actionForm.getClientName().getLastName());
+		client.setSecondLastName(actionForm.getClientName()
+				.getSecondLastName());
+		client.setDateOfBirth(getDateFromString(
+				actionForm.getDateOfBirth(), getUserContext(request)
+						.getPereferedLocale()));
+		client.setGovernmentId(actionForm.getGovernmentId());
 
-			if (actionForm.getPicture() != null
-					&& !StringUtils.isNullOrEmpty(actionForm.getPicture()
-							.getFileName())) {
-				client.updatePicture(actionForm.getCustomerPicture());
-			}
-			client.setUserContext(getUserContext(request));
-			client.updateClientDetails(actionForm.getClientDetailView());
-			client.updatePersonalInfo();
-		} catch (ApplicationException ae) {
-			ae.printStackTrace();
-			ActionErrors errors = new ActionErrors();
-			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
-					.getValues()));
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			return mapping
-					.findForward(ActionForwards.updatePersonalInfo_failure
-							.toString());
+		if (actionForm.getPicture() != null
+				&& !StringUtils.isNullOrEmpty(actionForm.getPicture()
+						.getFileName())) {
+			client.updatePicture(actionForm.getCustomerPicture());
 		}
+		client.setUserContext(getUserContext(request));
+		client.updateClientDetails(actionForm.getClientDetailView());
+		client.updatePersonalInfo();
+		
 		return mapping.findForward(ActionForwards.updatePersonalInfo_success
 				.toString());
 	}
@@ -638,40 +635,35 @@ public class ClientCustAction extends CustAction {
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward updateMfiInfo(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		try {
-			ClientBO client = (ClientBO) SessionUtils.getAttribute(
-					Constants.BUSINESS_KEY, request);
-			ClientCustActionForm actionForm = (ClientCustActionForm) form;
-			client.setExternalId(actionForm.getExternalId());
-			if (actionForm.getTrainedValue() != null
-					&& actionForm.getTrainedValue().equals(
-							YesNoFlag.YES.getValue()))
-				client.setTrained(true);
-			else
-				client.setTrained(false);
+			throws Exception {	
+		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
+		client.setVersionNo(clientInSession.getVersionNo());
+		clientInSession=null;
+		client.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(client);
+		ClientCustActionForm actionForm = (ClientCustActionForm) form;
+		client.setExternalId(actionForm.getExternalId());
+		if (actionForm.getTrainedValue() != null
+				&& actionForm.getTrainedValue().equals(
+						YesNoFlag.YES.getValue()))
+			client.setTrained(true);
+		else
+			client.setTrained(false);
 
-			client.setTrainedDate(getDateFromString(
-					actionForm.getTrainedDate(), getUserContext(request)
-							.getPereferedLocale()));
-			if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
-				if (actionForm.getLoanOfficerIdValue() != null) {
-					client.setPersonnel(getPersonnelBusinessService()
-							.getPersonnel(actionForm.getLoanOfficerIdValue()));
-				} else
-					client.setPersonnel(null);
-			}
-			client.setUserContext(getUserContext(request));
-			client.updateMfiInfo();
-		} catch (ApplicationException ae) {
-			ae.printStackTrace();
-			ActionErrors errors = new ActionErrors();
-			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
-					.getValues()));
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			return mapping.findForward(ActionForwards.updateMfiInfo_failure
-					.toString());
+		client.setTrainedDate(getDateFromString(
+				actionForm.getTrainedDate(), getUserContext(request)
+						.getPereferedLocale()));
+		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
+			if (actionForm.getLoanOfficerIdValue() != null) {
+				client.setPersonnel(getPersonnelBusinessService()
+						.getPersonnel(actionForm.getLoanOfficerIdValue()));
+			} else
+				client.setPersonnel(null);
 		}
+		client.setUserContext(getUserContext(request));
+		client.updateMfiInfo();
 		return mapping.findForward(ActionForwards.updateMfiInfo_success
 				.toString());
 	}

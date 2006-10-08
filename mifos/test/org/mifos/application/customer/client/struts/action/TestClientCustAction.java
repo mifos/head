@@ -75,9 +75,12 @@ import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -1101,7 +1104,179 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				.getCustomerId());
 
 	}
+	
+	public void testSuccessfulUpdatePersonalInfo_AuditLog() throws Exception {
+		createClientForAuditLog();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editPersonalInfo");
+		addRequestParameter("officeId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditPersonalInfo");
+		addRequestParameter("clientName.salutation", Integer.valueOf("48").toString());
+		addRequestParameter("clientName.firstName", "Diti");
+		addRequestParameter("clientName.middleName", "S");
+		addRequestParameter("clientName.secondLastName", "S");
+		addRequestParameter("clientName.lastName", "Sharma");
+		addRequestParameter("spouseName.firstName", "Abc");
+		addRequestParameter("spouseName.middleName", "A");
+		addRequestParameter("spouseName.secondLastName", "A");
+		addRequestParameter("spouseName.lastName", "Sharma");
+		addRequestParameter("spouseName.nameType", "2");
+		addRequestParameter("clientDetailView.povertyStatus", povertyStatusList.get(1).getId().toString());
+		addRequestParameter("clientDetailView.gender", Integer.valueOf("50").toString());
+		addRequestParameter("clientDetailView.citizenship", Integer.valueOf("131").toString());
+		addRequestParameter("clientDetailView.ethinicity", Integer.valueOf("219").toString());
+		addRequestParameter("clientDetailView.handicapped", Integer.valueOf("139").toString());
+		addRequestParameter("clientDetailView.businessActivities", "");
+		addRequestParameter("clientDetailView.maritalStatus", Integer.valueOf("67").toString());
+		addRequestParameter("clientDetailView.educationLevel", Integer.valueOf("227").toString());
+		addRequestParameter("clientDetailView.numChildren", Integer.valueOf("2").toString());
+		
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "11");
+			addRequestParameter("customField[" + i + "].fieldType", "1");
+			i++;
+		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		assertEquals(0, getErrrorSize());
+		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
 
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "updatePersonalInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward(ActionForwards.updatePersonalInfo_success.toString());
+		assertEquals(219, client.getCustomerDetail().getEthinicity().shortValue());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());
+		
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Gender")){
+				matchValues(auditLogRecord,"Male", "Female");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Ethnicity")){
+				matchValues(auditLogRecord,"OBC", "FC");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Number Of Children")){
+				matchValues(auditLogRecord,"1", "2");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Handicapped")){
+				matchValues(auditLogRecord,"Yes", "No");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Marital Status")){
+				matchValues(auditLogRecord,"Married", "UnMarried");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Education Level")){
+				matchValues(auditLogRecord,"Both Literate", "Both Illiterate");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Poverty Status")){
+				matchValues(auditLogRecord,"Very poor", "Poor");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Citizenship")){
+				matchValues(auditLogRecord,"Hindu", "Muslim");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Business Activities")){
+				matchValues(auditLogRecord,"Trading", "-");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Salutation")){
+				matchValues(auditLogRecord,"Mr", "Mrs");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("First Name")){
+				matchValues(auditLogRecord,"Client", "Diti");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Last Name")){
+				matchValues(auditLogRecord,"1", "Sharma");
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
+	}
+	
+		
+	private void createClientForAuditLog() throws Exception {
+		String name = "Client 1";
+		Short officeId = 1;
+		Short personnel = 3;
+		meeting = getMeeting();
+		Integer salutaion = 47;
+		Integer ethincity = 218;
+		Integer citizenship = 130;
+		Integer handicapped = 138;
+		Integer businessActivities = 225;
+		Integer maritalStatus = 66;
+		Integer educationLevel = 226;
+		Short numChildren = Short.valueOf("1");
+		Short gender = Short.valueOf("49");
+		Short povertyStatus = Short.valueOf("41");
+		
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
+				Short.valueOf("3"), salutaion, new StringBuilder(name), "Client", "",
+				"1", "");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
+				Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
+				"first", "middle", "last", "secondLast");
+		ClientDetailView clientDetailView = new ClientDetailView(ethincity, citizenship,handicapped, businessActivities, maritalStatus,
+				educationLevel, numChildren, gender, povertyStatus);
+		client = new ClientBO(TestObjectFactory.getUserContext(),
+				clientNameDetailView.getDisplayName(), CustomerStatus
+						.getStatus(new Short("1")), null, null, new Address(),
+				getCustomFields(), null, null, personnel, officeId, meeting,
+				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
+						.getValue(), clientNameDetailView,
+				spouseNameDetailView, clientDetailView, null);
+		client.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				new Integer(client.getCustomerId()).intValue());
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
+	}
+
+	public void testUpdateMfiInfo_AuditLog() throws Exception {
+		createClientForAuditLog();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditMfiInfo");
+		addRequestParameter("trained", "0");
+		addRequestParameter("externalId", "123");
+		addRequestParameter("loanOfficerId", "1");
+		
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "updateMfiInfo");		
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.updateMfiInfo_success.toString());
+		assertEquals("123", client.getExternalId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());
+		
+		assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
+
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned")){
+				matchValues(auditLogRecord,"loan officer", "mifos");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("External Id")){
+				matchValues(auditLogRecord,"-", "123");
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
+	}
+	
 	public void testEditMfiInfoForClientInBranch() throws Exception {
 
 		createAndSetClientInSession();

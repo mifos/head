@@ -2,6 +2,7 @@ package org.mifos.application.customer.client.struts.action;
 
 import java.net.URISyntaxException;
 import java.sql.Date;
+import java.util.List;
 
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -14,7 +15,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -202,6 +206,41 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		assertEquals(center1.getSearchId()+".1.1", client.getSearchId());
 		CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
 		assertEquals(group1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
+	}
+	
+	public void testSuccessful_transferToParent_AuditLog() throws Exception {
+		createObjectsForTransferringClientInGroup();
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
+		setRequestPathInfo("/clientTransferAction.do");
+		addRequestParameter("method", "updateParent");
+		addRequestParameter("parentGroupId", group1.getCustomerId().toString());
+		addRequestParameter("parentGroupName", group1.getDisplayName());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward(ActionForwards.update_success.toString());
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		group1 = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group1.getCustomerId());
+		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		assertEquals(group1.getCustomerId(),client.getParentCustomer().getCustomerId());
+		assertEquals(0, group.getMaxChildCount().intValue());
+		assertEquals(1, group1.getMaxChildCount().intValue());
+		assertEquals(center1.getSearchId()+".1.1", client.getSearchId());
+		CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
+		assertEquals(group1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());
+		
+		assertEquals(1,auditLogList.get(0).getAuditLogRecords().size());
+		
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Kendra Name"))
+				matchValues(auditLogRecord,"Group", "Group2");
+		}
 	}
 	
 	private void createObjectsForClientTransfer()throws Exception{

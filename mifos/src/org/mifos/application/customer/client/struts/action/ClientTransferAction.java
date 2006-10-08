@@ -45,6 +45,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.client.struts.actionforms.ClientTransferActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -104,6 +105,7 @@ public class ClientTransferAction extends BaseAction {
 		ClientBO client = (ClientBO)getCustomerBusinessService().getCustomer(clientInSession.getCustomerId());
 		client.setVersionNo(clientInSession.getVersionNo());
 		client.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(client);
 		client.transferToBranch(officeToTransfer);
 		clientInSession = null;
 		officeToTransfer = null;
@@ -148,11 +150,11 @@ public class ClientTransferAction extends BaseAction {
 		ClientTransferActionForm actionForm = (ClientTransferActionForm) form;
 		GroupBO transferToGroup = (GroupBO) getCustomerBusinessService().getCustomer(actionForm.getParentGroupIdValue());
 		transferToGroup.setUserContext(getUserContext(request));
-		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request);
-		ClientBO client = (ClientBO)getCustomerBusinessService().getCustomer(clientInSession.getCustomerId());
+		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
 		client.setVersionNo(clientInSession.getVersionNo());
 		client.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(client);
 		client.transferToGroup(transferToGroup);
 		clientInSession = null;
 		transferToGroup = null;
@@ -170,5 +172,10 @@ public class ClientTransferAction extends BaseAction {
 			throws ServiceException {
 		return (CustomerBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Customer);
+	}
+	
+	private ClientBusinessService getClientBusinessService()throws ServiceException {
+		return (ClientBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Client);
 	}
 }

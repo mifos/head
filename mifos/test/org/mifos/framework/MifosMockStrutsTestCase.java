@@ -46,6 +46,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -68,6 +69,11 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 	protected int getErrrorSize(){
 		ActionErrors errors = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
 		return (errors == null || errors.isEmpty()) ? 0 : errors.size();
+	}
+	
+	protected void matchValues(AuditLogRecord auditLogRecord, String oldValue, String newValue){
+		assertEquals(oldValue, auditLogRecord.getOldValue());
+		assertEquals(newValue, auditLogRecord.getNewValue());
 	}
 	
 	@Override

@@ -1,6 +1,5 @@
 package org.mifos.framework.business.util;
 
-import org.mifos.application.personnel.util.valueobjects.PersonnelDetails;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class Name {
