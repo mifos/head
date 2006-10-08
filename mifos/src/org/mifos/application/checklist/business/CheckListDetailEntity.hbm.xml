@@ -14,7 +14,7 @@
         <property name="detailText" column="DETAIL_TEXT" type="string" />
         <property name="answerType" column="ANSWER_TYPE" type="short"  not-null="true" /> 
         <many-to-one name="supportedLocales" column="LOCALE_ID" class="org.mifos.application.master.business.SupportedLocalesEntity" lazy="true"/>         
-    	<many-to-one name="checkListBO" column="CHECKLIST_ID" class="org.mifos.application.checklist.business.CheckListBO" access="field"/>
+    	<many-to-one name="checkListBO" column="CHECKLIST_ID" class="org.mifos.application.checklist.business.CheckListBO" access="field" cascade="none" insert="true" update="true" />
    
     </class>
     

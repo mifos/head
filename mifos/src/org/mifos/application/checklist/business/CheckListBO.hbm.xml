@@ -20,7 +20,7 @@
 
 		<many-to-one name="supportedLocales" column="LOCALE_ID" class="org.mifos.application.master.business.SupportedLocalesEntity" not-null="true" lazy="true" />
 
-		<set name="checklistDetails" table="CHECKLIST_DETAIL" cascade="all" order-by="DETAIL_ID asc" inverse="true">
+		<set name="checklistDetails" table="CHECKLIST_DETAIL" cascade="all,delete-orphan" order-by="DETAIL_ID asc" inverse="true">
 			<key column="CHECKLIST_ID" />
 			<one-to-many class="org.mifos.application.checklist.business.CheckListDetailEntity" />
 		</set>

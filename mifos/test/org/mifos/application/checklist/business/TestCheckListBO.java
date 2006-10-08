@@ -1,32 +1,28 @@
 package org.mifos.application.checklist.business;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.checklist.exceptions.CheckListException;
+import org.mifos.application.checklist.util.helpers.CheckListType;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.customer.business.CustomerStatusEntity;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCheckListBO extends MifosTestCase {
 
-	private CustomerBO center;
-
 	private CustomerCheckListBO customerCheckList = null;
 
 	private AccountCheckListBO accountCheckList = null;
-
-	private UserContext userContext = null;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -35,56 +31,164 @@ public class TestCheckListBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(center);
-		customerCheckList = null;
-		accountCheckList = null;
+		TestObjectFactory.cleanUp(customerCheckList);
+		TestObjectFactory.cleanUp(accountCheckList);
+		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 
 	public void testCreateCheckListForCustomer() throws Exception {
-		center = createCenter("center");
-		customerCheckList = TestObjectFactory.createCustomerChecklist(center
-				.getCustomerLevel().getId(),
-				center.getCustomerStatus().getId(),
-				CheckListConstants.STATUS_ACTIVE);
-		assertEquals("productchecklist", customerCheckList.getChecklistName());
-		TestObjectFactory.deleteChecklist(customerCheckList);
+		CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(
+				CustomerLevel.CENTER);
+		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
+				CustomerStatus.CENTER_ACTIVE);
+		customerCheckList = new CustomerCheckListBO(customerLevelEntity,
+				customerStatusEntity, "Customer CheckList",
+				CheckListConstants.STATUS_ACTIVE, getCheckListDetails(),
+				(short) 1, (short) 1);
+		customerCheckList.save();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
-				.getCustomerId());
+
+		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, customerCheckList.getChecklistId());
+
+		assertEquals("Customer CheckList", customerCheckList.getChecklistName());
+		assertEquals(CheckListConstants.STATUS_ACTIVE, customerCheckList
+				.getChecklistStatus());
+		assertEquals(3, customerCheckList.getChecklistDetails().size());
+		assertEquals(CheckListType.CUSTOMER_CHECKLIST, customerCheckList
+				.getCheckListType());
+
 	}
 
 	public void testCreateCheckListForProduct() throws Exception {
-		Session session = HibernateUtil.getSessionTL();
-		Transaction tx = null;
-		tx = session.beginTransaction();
-
-		ProductTypeEntity productTypeEntity = (ProductTypeEntity) session.get(
-				ProductTypeEntity.class, (short) 2);
-
+		ProductTypeEntity productTypeEntity = (ProductTypeEntity) TestObjectFactory
+				.getObject(ProductTypeEntity.class, (short) 2);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
-
-		userContext = TestObjectFactory.getUserContext();
 		accountCheckList = new AccountCheckListBO(productTypeEntity,
-				accountStateEntity, "new name", Short.valueOf("1"),
-				getCheckListDetails(), Short.valueOf("1"), userContext.getId());
-
+				accountStateEntity, "Account CheckList", Short.valueOf("1"),
+				getCheckListDetails(), Short.valueOf("1"), (short) 1);
 		accountCheckList.save();
-		assertEquals("new name", accountCheckList.getChecklistName());
-
-		assertEquals(accountCheckList.getChecklistDetails().size(), 3);
-		TestObjectFactory.deleteChecklist(accountCheckList);
-		tx.commit();
+		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
+		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
+				AccountCheckListBO.class, accountCheckList.getChecklistId());
+
+		assertEquals("Account CheckList", accountCheckList.getChecklistName());
+		assertEquals(3, accountCheckList.getChecklistDetails().size());
+		assertEquals(CheckListConstants.STATUS_ACTIVE, accountCheckList
+				.getChecklistStatus());
+		assertEquals(CheckListType.ACCOUNT_CHECKLIST, accountCheckList
+				.getCheckListType());
 	}
 
-	private CenterBO createCenter(String name) {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createCenter(name, Short.valueOf("13"), "1.4",
-				meeting, new Date(System.currentTimeMillis()));
+	public void testUpdateForNullCheckListName() throws Exception {
+		customerCheckList = TestObjectFactory.createCustomerChecklist(
+				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
+						.getValue(), CheckListConstants.STATUS_ACTIVE);
+		try {
+			customerCheckList.update(customerCheckList.getCustomerLevel(),
+					customerCheckList.getCustomerStatus(), null,
+					customerCheckList.getChecklistStatus(),
+					getCheckListDetails(), (short) 1, (short) 1);
+			fail();
+		} catch (CheckListException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
+		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, customerCheckList.getChecklistId());
+	}
+
+	public void testUpdateForNullCheckListDetails() throws Exception {
+		customerCheckList = TestObjectFactory.createCustomerChecklist(
+				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
+						.getValue(), CheckListConstants.STATUS_ACTIVE);
+		try {
+			customerCheckList.update(customerCheckList.getCustomerLevel(),
+					customerCheckList.getCustomerStatus(), customerCheckList
+							.getChecklistName(), customerCheckList
+							.getChecklistStatus(), null, (short) 1, (short) 1);
+			fail();
+		} catch (CheckListException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
+		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, customerCheckList.getChecklistId());
+	}
+
+	public void testUpdateForEmptyCheckListDetails() throws Exception {
+		customerCheckList = TestObjectFactory.createCustomerChecklist(
+				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
+						.getValue(), CheckListConstants.STATUS_ACTIVE);
+		try {
+			customerCheckList.update(customerCheckList.getCustomerLevel(),
+					customerCheckList.getCustomerStatus(), customerCheckList
+							.getChecklistName(), customerCheckList
+							.getChecklistStatus(), new ArrayList<String>(),
+					(short) 1, (short) 1);
+			fail();
+		} catch (CheckListException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
+		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, customerCheckList.getChecklistId());
+	}
+
+	public void testUpdateCustomerCheckList() throws Exception {
+		customerCheckList = TestObjectFactory.createCustomerChecklist(
+				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
+						.getValue(), CheckListConstants.STATUS_ACTIVE);
+		HibernateUtil.closeSession();
+		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, customerCheckList.getChecklistId());
+
+		customerCheckList.update(customerCheckList.getCustomerLevel(),
+				customerCheckList.getCustomerStatus(), "Customer CheckList",
+				CheckListConstants.STATUS_INACTIVE, getCheckListDetails(),
+				(short) 1, (short) 1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, customerCheckList.getChecklistId());
+
+		assertEquals("Customer CheckList", customerCheckList.getChecklistName());
+		assertEquals(CheckListConstants.STATUS_INACTIVE, customerCheckList
+				.getChecklistStatus());
+		assertEquals(3, customerCheckList.getChecklistDetails().size());
+		assertEquals(CheckListType.CUSTOMER_CHECKLIST, customerCheckList
+				.getCheckListType());
+	}
+
+	public void testUpdateAccountCheckList() throws Exception {
+		accountCheckList = TestObjectFactory.createAccountChecklist(
+				ProductType.LOAN.getValue(),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				CheckListConstants.STATUS_ACTIVE);
+		HibernateUtil.closeSession();
+		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
+				AccountCheckListBO.class, accountCheckList.getChecklistId());
+
+		accountCheckList.update(accountCheckList.getProductTypeEntity(),
+				accountCheckList.getAccountStateEntity(), "Account CheckList",
+				CheckListConstants.STATUS_INACTIVE, getCheckListDetails(),
+				(short) 1, (short) 1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
+				AccountCheckListBO.class, accountCheckList.getChecklistId());
+
+		assertEquals("Account CheckList", accountCheckList.getChecklistName());
+		assertEquals(CheckListConstants.STATUS_INACTIVE, accountCheckList
+				.getChecklistStatus());
+		assertEquals(3, accountCheckList.getChecklistDetails().size());
+		assertEquals(CheckListType.ACCOUNT_CHECKLIST, accountCheckList
+				.getCheckListType());
 	}
 
 	private List<String> getCheckListDetails() {

@@ -13,6 +13,7 @@ import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public abstract class CheckListBO extends BusinessObject {
 
@@ -26,10 +27,10 @@ public abstract class CheckListBO extends BusinessObject {
 
 	private SupportedLocalesEntity supportedLocales;
 
-	public CheckListBO() {
+	protected CheckListBO() {
 		this.checklistId = null;
 		checklistDetails = new LinkedHashSet<CheckListDetailEntity>();
-		
+
 	}
 
 	protected CheckListBO(String checkListName, Short checkListStatus,
@@ -103,8 +104,8 @@ public abstract class CheckListBO extends BusinessObject {
 			throw new CheckListException(e);
 		}
 	}
-	
-	private void setCheckListDetails(List<String> details,Short locale) {
+
+	private void setCheckListDetails(List<String> details, Short locale) {
 		checklistDetails = new HashSet<CheckListDetailEntity>();
 		for (String detail : details) {
 			CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity(
@@ -114,4 +115,25 @@ public abstract class CheckListBO extends BusinessObject {
 	}
 
 	public abstract CheckListType getCheckListType();
+
+	protected void update(String checkListName, Short checkListStatus,
+			List<String> details, Short localeId, Short userId)
+			throws CheckListException {
+		setUpdateDetails(userId);
+		if (details == null || details.size() <= 0)
+			throw new CheckListException(
+					CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
+		if (StringUtils.isNullOrEmpty(checkListName))
+			throw new CheckListException(
+					CheckListConstants.CHECKLIST_CREATION_EXCEPTION);
+		this.checklistName = checkListName;
+		getChecklistDetails().clear();
+		for (String detail : details) {
+			CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity(
+					detail, Short.valueOf("1"), this, localeId);
+			getChecklistDetails().add(checkListDetailEntity);
+		}
+		this.checklistStatus = checkListStatus;
+		this.supportedLocales = new SupportedLocalesEntity(localeId);
+	}
 }
