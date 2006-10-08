@@ -80,5 +80,7 @@ public interface CheckListConstants {
 	public final String STATES="states";
 	public final String CHECKLIST_NAME="checklist name";
 	public final String DETAILS="details";
-	
+	public final String EXCEPTION_STATE_ALREADY_EXIST="exceptions.application.checklist.Statusalreadydefined";
+	public final String STATE_COMBO="displayed when moving into Status";
+	public final String TYPE_COMBO="type";
 }

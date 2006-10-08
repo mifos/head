@@ -48,6 +48,7 @@
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
@@ -60,7 +61,7 @@
 		<html-el:form action="/chkListAction.do?method=preview" focus="checklistName" >
 			<html-el:hidden property="typeName" value="" />
 			<html-el:hidden property="displayedStatus" value="" />
-
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -150,20 +151,21 @@
 									<td valign="top"><mifos:select property="type"
 										style="width:136px;"
 										onchange="populateStates(this.form,this);">
-										<c:forEach var="item" items="${checkList_masterData}" varStatus="loop">
+										<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
 											<html-el:option value="${loop.index}">${item.masterTypeName}</html-el:option>
 										</c:forEach>
 									</mifos:select> 
-									<html-el:hidden property="isCust" value="" />
-									<html-el:hidden property="masterId" value="" />
-									<html-el:hidden property="masterName" value="" /> 
+									<html-el:hidden property="isCustomers" value="" />
+									<html-el:hidden property="masterIds" value="" />
+									<html-el:hidden property="masterNames" value="" /> 
 									<c:forEach
-										var="item" items="${checkList_masterData}" varStatus="loop">
-										<html-el:hidden property="isCust"
+									
+										var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
+										<html-el:hidden property="isCustomers"
 											value="${item.isCustomer}" />
-										<html-el:hidden property="masterId"
-											value="${item.masterTypeId}" />
-										<html-el:hidden property="masterName"
+										<html-el:hidden property="masterIds"
+											value="${item.masterTypeId}" />	
+										<html-el:hidden property="masterNames"
 											value="${item.masterTypeName}" />
 									</c:forEach></td>
 								</tr>
@@ -172,32 +174,17 @@
 										name="checklist.displayed_status" mandatory="yes" /></td>
 									<td valign="top">
 
-									<html-el:select property="stateId" 
-										
-										style="width:136px;">
-										<c:choose>
-											<c:when test="${not empty states}">
-												<c:forEach var="item" items="${states}" varStatus="loop">
-												
-												<c:if test='${loop.index=="0"}'>
-												<html-el:option value="">--Select--</html-el:option>
-												</c:if>
-												
+									<mifos:select property="stateId" style="width:136px;"
+									onchange="populateStateName(this.form,this);">
+												<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}" varStatus="loop">
 												<html-el:option	value="${item.stateId}" >${item.stateName}</html-el:option>
-												
 												</c:forEach>
-											</c:when>
-											<c:otherwise>
-												<html-el:option value="">--Select--</html-el:option>
-											</c:otherwise>
-										</c:choose>
-									</html-el:select>
-									<c:forEach var="item" items="${states}" varStatus="loop">
-										<html-el:hidden property="customerLevelId"
-												value="${item.stateId}" />
-										<html-el:hidden property="accountStateId"
-												value="${item.stateId}" />
+									</mifos:select>
+									<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}" varStatus="loop">
+										
 										<html-el:hidden property="stateName"
+												value="${item.stateName}" />
+										<html-el:hidden property="stateNames"
 												value="${item.stateName}" />
 									</c:forEach>
 													</td>
@@ -237,7 +224,8 @@
 										<tr class="fontnormal">
 													<br>
 													<c:forEach var="item"
-														items="${sessionScope.details}"
+													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
+
 														varStatus="loop">
 														<bean:define id="ctr1" toScope="request">
 															<c:out value="${loop.index}" />
@@ -274,8 +262,7 @@
 									</td>
 								</tr>
 							</table>
-							<input name="totalDetails" type="hidden"
-														value='${loop.index}' />
+							
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center" class="blueline">&nbsp;</td>

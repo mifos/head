@@ -67,13 +67,7 @@
     	      <![CDATA[select new org.mifos.application.checklist.util.valueobjects.CheckListMaster(pt.productTypeID,lvl.lookUpValue) from org.mifos.application.productdefinition.util.valueobjects.ProductType as pt,org.mifos.application.master.util.valueobjects.LookUpValueLocale as lvl where pt.lookUpValue.lookUpId=lvl.lookUpId and lvl.localeId=:localeId ]]>
        </query> 
        
-       <query name="customer.validateState">
-    	      <![CDATA[select count(*) from	org.mifos.application.checklist.util.valueobjects.CustomerCheckList as ccl where ccl.levelId=:lvlId and ccl.customerState.statusId=:stsId ]]>
-       </query>
-       
-        <query name="product.validateState">
-    	      <![CDATA[select count(*) from org.mifos.application.accounts.util.valueobjects.AccountCheckList as acChecklist where acChecklist.accountTypeId=:lvlId and acChecklist.accountStatusId=:stsId and acChecklist.checkList.checklistId is not null ]]>
-       </query>
+      
        <query name="checklist.createdBy">
     	      <![CDATA[select personnel.userName from org.mifos.application.personnel.util.valueobjects.Personnel as personnel  where personnel.personnelId=:PERSONNEL_ID ]]>
        </query>  

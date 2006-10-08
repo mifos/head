@@ -62,5 +62,11 @@
 	<query name="masterdata.product_checklist">
     	<![CDATA[select new org.mifos.application.checklist.util.helpers.CheckListMasterView(pt.productTypeID,lvl.lookUpValue) from org.mifos.application.productdefinition.business.ProductTypeEntity as pt,org.mifos.application.master.business.LookUpValueLocaleEntity as lvl where pt.lookUpValue.lookUpId=lvl.lookUpId and lvl.localeId=:localeId ]]>
     </query>
-
+    <query name="customer.validateState">
+    	<![CDATA[select count(*) from org.mifos.application.checklist.business.CustomerCheckListBO as ccl where ccl.customerLevel.id=:levelId and ccl.customerStatus.id=:stateId ]]>
+	</query>
+	<query name="product.validateState">
+		<![CDATA[select count(*) from org.mifos.application.checklist.business.AccountCheckListBO as acChecklist where acChecklist.productTypeEntity.productTypeID=:levelId and acChecklist.accountStateEntity.id=:stateId]]>
+	</query>
+	
 </hibernate-mapping>

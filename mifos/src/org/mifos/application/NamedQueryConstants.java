@@ -573,4 +573,7 @@ public interface NamedQueryConstants {
 	public String MASTERDATA_CUSTOMER_CHECKLIST="masterdata.customer_checklist";
 	public String MASTERDATA_PRODUCT_CHECKLIST="masterdata.product_checklist";
 	public String CUSTOMER_STATES_LIST="customer_states_list";
+	public String CUSTOMER_VALIDATESTATE="customer.validateState";
+	public String PRODUCT_VALIDATESTATE="product.validateState";
+	
 }

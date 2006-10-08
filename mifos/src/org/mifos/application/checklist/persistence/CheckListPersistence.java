@@ -53,7 +53,8 @@ public class CheckListPersistence extends MasterPersistence {
 				NamedQueryConstants.GET_CUSTOMER_STATUS_LIST, queryParameters);
 		for (CustomerStatusEntity customerStatus : queryResult) {
 			checkListStatesView.add(new CheckListStatesView(customerStatus
-					.getId(), customerStatus.getName(localeId), customerStatus.getCustomerLevel().getId()));
+					.getId(), customerStatus.getName(localeId), customerStatus
+					.getCustomerLevel().getId()));
 		}
 		return checkListStatesView;
 	}
@@ -67,14 +68,28 @@ public class CheckListPersistence extends MasterPersistence {
 				NamedQueryConstants.RETRIEVEALLACCOUNTSTATES, queryParameters);
 		for (AccountStateEntity accountStatus : queryResult) {
 			checkListStatesView.add(new CheckListStatesView(accountStatus
-					.getId(), accountStatus.getName(localeId), accountStatus.getPrdType().getProductTypeID()));
+					.getId(), accountStatus.getName(localeId), accountStatus
+					.getPrdType().getProductTypeID()));
 		}
 		return checkListStatesView;
 	}
 
 	public CheckListBO get(Short checkListId) throws PersistenceException {
-		return (CheckListBO)getPersistentObject(CheckListBO.class,
-				checkListId);
-		
+		return (CheckListBO) getPersistentObject(CheckListBO.class, checkListId);
+	}
+
+	public int isValidCheckListState(Short levelId, Short stateId,
+			boolean isCustomer) throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("levelId", levelId);
+		queryParameters.put("stateId", stateId);
+		Integer count;
+		if (isCustomer)
+			count = (Integer) execUniqueResultNamedQuery(
+					NamedQueryConstants.CUSTOMER_VALIDATESTATE, queryParameters);
+		else
+			count = (Integer) execUniqueResultNamedQuery(
+					NamedQueryConstants.PRODUCT_VALIDATESTATE, queryParameters);
+		return count;
 	}
 }

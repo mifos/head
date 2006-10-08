@@ -21,12 +21,14 @@ import org.mifos.application.customer.business.CustomerLevelEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
+import org.mifos.application.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class ChkListAction extends BaseAction {
 
@@ -40,22 +42,24 @@ public class ChkListAction extends BaseAction {
 		return true;
 	}
 
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		List<CustomerStatusEntity> statesData = null;
 		List<String> details = null;
+		request.getSession().setAttribute("ChkListActionForm", null);
 		List<CheckListMasterView> masterData = ((CheckListBusinessService) getService())
 				.getCheckListMasterData(getUserContext(request));
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request
-				.getSession());
+		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
 		SessionUtils.setAttribute(CheckListConstants.STATES, statesData,
-				request.getSession());
+				request);
 		SessionUtils.setAttribute(CheckListConstants.CHECKLIST_MASTERDATA,
-				masterData, request.getSession());
+				masterData, request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward getStates(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -73,21 +77,100 @@ public class ChkListAction extends BaseAction {
 							.getMasterTypeId()), getUserContext(request)
 							.getLocaleId());
 		}
-		SessionUtils.setAttribute(CheckListConstants.STATES, states, request
-				.getSession());
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request
-				.getSession());
+		SessionUtils.setAttribute(CheckListConstants.STATES, states, request);
+		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
+		List<String> details = chkListActionForm.getDetailsList();
+		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
+		isValidCheckListState(
+				getShortValue(chkListActionForm.getMasterTypeId()),
+				getShortValue(chkListActionForm.getStateId()),
+				chkListActionForm.getIsCustomer());
+
+		return mapping.findForward(ActionForwards.preview_success.toString());
+
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward create(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
+		if (chkListActionForm.getIsCustomer()) {
+			CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(
+					CustomerLevel.getLevel(getShortValue(chkListActionForm
+							.getMasterTypeId())));
+			CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
+					getShortValue(chkListActionForm.getStateId()));
+			CustomerCheckListBO customerCheckListBO = new CustomerCheckListBO(
+					customerLevelEntity, customerStatusEntity,
+					chkListActionForm.getChecklistName(),
+					CheckListConstants.STATUS_ACTIVE, chkListActionForm
+							.getDetailsList(), getUserContext(request)
+							.getLocaleId(), getUserContext(request).getId());
+			customerCheckListBO.save();
+		} else {
+			ProductTypeEntity productTypeEntity = null;
+			for (ProductTypeEntity prdTypeEntity : new ProductCategoryBusinessService()
+					.getProductTypes()) {
+				if (chkListActionForm.getMasterTypeId().equals(
+						getStringValue(prdTypeEntity.getProductTypeID()))) {
+					productTypeEntity = prdTypeEntity;
+					break;
+				}
+			}
+			AccountStateEntity accountStateEntity = new AccountStateEntity(
+					AccountState.getStatus(getShortValue(chkListActionForm
+							.getStateId())));
+			AccountCheckListBO accountCheckListBO = new AccountCheckListBO(
+					productTypeEntity, accountStateEntity, chkListActionForm
+							.getChecklistName(),
+					CheckListConstants.STATUS_ACTIVE, chkListActionForm
+							.getDetailsList(), getUserContext(request)
+							.getLocaleId(), getUserContext(request).getId());
+			accountCheckListBO.save();
+		}
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse httpservletresponse)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+
+		if (method.equalsIgnoreCase(Methods.preview.toString()))
+			return mapping.findForward(ActionForwards.load_success.toString());
+		if (method.equalsIgnoreCase(Methods.create.toString()))
+			return mapping.findForward(ActionForwards.preview_success
+					.toString());
+		return null;
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancelCreate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return mapping.findForward(ActionForwards.cancelCreate_success
+				.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
 		List<String> details = chkListActionForm.getDetailsList();
 		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request
 				.getSession());
-		return mapping.findForward(ActionForwards.preview_success.toString());
+		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
@@ -99,45 +182,15 @@ public class ChkListAction extends BaseAction {
 				.getSession());
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
-
-	public ActionForward create(ActionMapping mapping, ActionForm form,
+	
+	public ActionForward editPreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
-		if (chkListActionForm.getIsCustomer()) {
-			CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(
-					CustomerLevel.getLevel(getShortValue(chkListActionForm
-							.getMasterTypeId())));
-			CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
-					getShortValue(chkListActionForm.getCustomerLevelId()));
-			CustomerCheckListBO customerCheckListBO = new CustomerCheckListBO(
-					customerLevelEntity, customerStatusEntity,
-					chkListActionForm.getChecklistName(),
-					CheckListConstants.STATUS_ACTIVE, chkListActionForm
-							.getDetailsList(), getUserContext(request)
-							.getLocaleId(), getUserContext(request).getId());
-			customerCheckListBO.save();
-		} else {
-			ProductTypeEntity productTypeEntity = new ProductTypeEntity(
-					getShortValue(chkListActionForm.getProductTypeId()));
-			AccountStateEntity accountStateEntity = new AccountStateEntity(
-					AccountState.getStatus(getShortValue(chkListActionForm
-							.getAccountStateId())));
-			AccountCheckListBO accountCheckListBO = new AccountCheckListBO(
-					productTypeEntity, accountStateEntity, chkListActionForm
-							.getChecklistName(),
-					CheckListConstants.STATUS_ACTIVE, chkListActionForm
-							.getDetailsList(), getUserContext(request)
-							.getLocaleId(), getUserContext(request).getId());
-			accountCheckListBO.save();
-		}
-		SessionUtils.removeAttribute(CheckListConstants.DETAILS, request
+		List<String> details = chkListActionForm.getDetailsList();
+		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request
 				.getSession());
-		SessionUtils.removeAttribute(CheckListConstants.CHECKLIST_MASTERDATA,
-				request.getSession());
-		SessionUtils.removeAttribute(CheckListConstants.STATES, request
-				.getSession());
-		return mapping.findForward(ActionForwards.create_success.toString());
+		return mapping.findForward(ActionForwards.editpreview_success.toString());
 	}
 
 	public ActionForward update(ActionMapping mapping, ActionForm form,
@@ -146,34 +199,16 @@ public class ChkListAction extends BaseAction {
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
-	public ActionForward loadAllChecklist(ActionMapping mapping,
-			ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		return mapping.findForward(ActionForwards.get_success.toString());
-	}
-
-	public ActionForward previous(ActionMapping mapping, ActionForm form,
+	public ActionForward cancelEdit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
-		List<String> details = chkListActionForm.getDetailsList();
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request
-				.getSession());
-		return mapping.findForward(ActionForwards.previous_success.toString());
+		return mapping
+				.findForward(ActionForwards.editcancel_success.toString());
 	}
 
-	public ActionForward validate(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse httpservletresponse)
-			throws Exception {
-		String method = (String) request.getAttribute("methodCalled");
-
-		if (method.equalsIgnoreCase(Methods.preview.toString()))
-			return mapping.findForward(ActionForwards.load_success.toString());
-		if (method.equalsIgnoreCase(Methods.update.toString()))
-			return mapping.findForward(ActionForwards.preview_success
-					.toString());
-		return null;
+	private void isValidCheckListState(Short levelId, Short customerState,
+			boolean isCustomer) throws Exception {
+		((CheckListBusinessService) getService()).isValidCheckListState(
+				levelId, customerState, isCustomer);
 	}
-	
-	
 }

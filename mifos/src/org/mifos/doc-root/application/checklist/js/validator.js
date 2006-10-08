@@ -155,8 +155,7 @@ function fnUpdate(form)
 function fnCancel(form)
 {
 	flag=1;
-	form.method.value="load";
-	form.action="AdminAction.do";
+	form.action="chkListAction.do?method=cancelCreate";
 	form.submit();
 }
 
@@ -165,9 +164,9 @@ function fnCancel(form)
 *******************************************************************************/
 function populateStates(form,selectBox)
 {
-		var isCustIndex=document.getElementsByName("isCust");
-		var masterIdIndex=document.getElementsByName("masterId");
-		var masterNameIndex = document.getElementsByName("masterName");
+		var isCustIndex=document.getElementsByName("isCustomers");
+		var masterIdIndex=document.getElementsByName("masterIds");
+		var masterNameIndex = document.getElementsByName("masterNames");
 		
 		var isCust=isCustIndex[selectBox.selectedIndex].value;
 		var masterId=masterIdIndex[selectBox.selectedIndex].value;
@@ -176,6 +175,15 @@ function populateStates(form,selectBox)
 		form.action="chkListAction.do?method=getStates&isCustomer="+isCust+"&masterTypeName="+masterName+"&masterTypeId="+masterId;
 		form.submit();		
 }
+
+function populateStateName(form,selectBox)
+{
+		var stateNameIndex=document.getElementsByName("stateNames");
+		var stateName=stateNameIndex[selectBox.selectedIndex - 1].value;
+		document.getElementsByName("stateName")[0].value = stateName;
+		
+}
+
 
 /****************************************************************************
 *  getChecklist function gets a particular checklist record based on checklist id ,type and status
