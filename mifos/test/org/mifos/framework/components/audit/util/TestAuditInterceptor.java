@@ -95,17 +95,13 @@ protected AccountBO accountBO = null;
 				.getAuditLogRecords()) {
 			if (auditLogRecord.getFieldName().equalsIgnoreCase(
 					"Collateral Notes")) {
-				auditLogRecord.getOldValue().equalsIgnoreCase("-");
-				auditLogRecord.getNewValue().equalsIgnoreCase("Added note");
+				assertEquals("-",auditLogRecord.getOldValue());
+				assertEquals("Added note",auditLogRecord.getNewValue());
 			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
 					"Service Charge deducted At Disbursement")) {
-				auditLogRecord.getOldValue().equalsIgnoreCase("1");
-				auditLogRecord.getNewValue().equalsIgnoreCase("0");
-			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
-					" Service Charge deducted At Disbursement")) {
-				auditLogRecord.getOldValue().equalsIgnoreCase("0");
-				auditLogRecord.getNewValue().equalsIgnoreCase("2");
-			}
+				assertEquals("1",auditLogRecord.getOldValue());
+				assertEquals("0",auditLogRecord.getNewValue());
+			} 
 		}
 		TestObjectFactory.cleanUpChangeLog();
 

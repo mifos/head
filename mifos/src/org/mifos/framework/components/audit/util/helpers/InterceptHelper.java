@@ -62,6 +62,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.Money;
 
 public class InterceptHelper {
 
@@ -141,6 +142,7 @@ public class InterceptHelper {
 		setPrimaryKeyValues(customMeta,object,customMeta.getIdentifierPropertyName(),state);
 		
 		for (int i = 0; i < propertyNames.length; i++) {
+			logger.debug("i hibernateMeta property name : "+propertyNames[i]+ " and value : " + propertyValues[i] + " is propertyTypes[i].isComponentType() : " + propertyTypes[i].isComponentType()); 
 				if (!propertyTypes[i].isEntityType()  
 						&& !propertyTypes[i].isCollectionType() 
 							&& !propertyTypes[i].isComponentType()) {
@@ -236,6 +238,17 @@ public class InterceptHelper {
 						readFurtherMeta(obj,propertyNames[i],state);
 					}
 			}
+			
+			//Reading further Money type
+			if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
+					!(propertyValues[i] instanceof MasterDataEntity) && 
+					(propertyValues[i] instanceof Money)) {
+				Object obj1 = propertyValues[i];
+				if (obj1 != null) {
+					readFurtherMoneyType(obj1, propertyNames[i],state);
+				}
+			}
+			
 		}
 
 		if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
@@ -316,8 +329,39 @@ public class InterceptHelper {
 				}
 			}
 			
+			//Reading further Money type
+			if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
+					!(propertyValues[i] instanceof MasterDataEntity) && 
+					(propertyValues[i] instanceof Money)) {
+				Object obj1 = propertyValues[i];
+				if (obj1 != null) {
+					readFurtherMoneyType(obj1, firstName.concat(propertyNames[i]),state);
+				}
+			}
+			
 		}
 	}
+	
+	private void readFurtherMoneyType(Object obj,String name,String state){
+		 if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
+			 logger.debug("i setColumnValues "+name+ " : " + obj);
+			initialValues.put(name, obj.toString());
+			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			if(columnName!=null && !columnName.equals(""))
+				columnNames.put(name,columnName);
+			else
+				columnNames.put(name,name);
+    	 }else{
+		 	changedValues.put(name, obj.toString());
+			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			if(columnName!=null && !columnName.equals(""))
+				columnNames.put(name,columnName);
+			else
+				columnNames.put(name,name);
+				
+    	 }
+	}
+
 	
 	private void readFurtherComponenetMeta(Object obj,String firstName,String state,Type propertyType){
 		
@@ -600,6 +644,17 @@ public class InterceptHelper {
 				}
 
 			}
+			
+			//Reading further Money type
+			if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
+					!(propertyValues[i] instanceof MasterDataEntity) && 
+					(propertyValues[i] instanceof Money)) {
+				Object obj1 = propertyValues[i];
+				if (obj1 != null) {
+					readFurtherMoneyType(obj1, firstName.concat(propertyNames[i]),state);
+				}
+			}
+
 		}
 	}
 	
@@ -673,6 +728,15 @@ public class InterceptHelper {
 					if (object != null) {
 						readAndMergeCollectionTypes(object,propertyNames[i],firstName,state);
 						
+					}
+				}
+				//Reading further Money type
+				if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
+						!(propertyValues[i] instanceof MasterDataEntity) && 
+						(propertyValues[i] instanceof Money)) {
+					Object obj1 = propertyValues[i];
+					if (obj1 != null) {
+						readFurtherMoneyType(obj1, firstName.concat(propertyNames[i]),state);
 					}
 				}
 		}

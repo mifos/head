@@ -116,11 +116,11 @@ public class TestCustomerBO extends MifosTestCase {
 		assertEquals(2,auditLogList.get(0).getAuditLogRecords().size());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
 			if(auditLogRecord.getFieldName().equalsIgnoreCase("Note")){
-				auditLogRecord.getOldValue().equalsIgnoreCase("-");
-				auditLogRecord.getNewValue().equalsIgnoreCase("comment");
+				assertEquals("-",auditLogRecord.getOldValue());
+				assertEquals("comment",auditLogRecord.getNewValue());
 			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
-				auditLogRecord.getOldValue().equalsIgnoreCase("Active");
-				auditLogRecord.getNewValue().equalsIgnoreCase("Inactive");
+				assertEquals("Active",auditLogRecord.getOldValue());
+				assertEquals("Inactive",auditLogRecord.getNewValue());
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();
@@ -141,14 +141,14 @@ public class TestCustomerBO extends MifosTestCase {
 		assertEquals(3,auditLogList.get(0).getAuditLogRecords().size());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
 			if(auditLogRecord.getFieldName().equalsIgnoreCase("Note")){
-				auditLogRecord.getOldValue().equalsIgnoreCase("-");
-				auditLogRecord.getNewValue().equalsIgnoreCase("comment");
+				assertEquals("-",auditLogRecord.getOldValue());
+				assertEquals("comment",auditLogRecord.getNewValue());
 			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
-				auditLogRecord.getOldValue().equalsIgnoreCase("Active");
-				auditLogRecord.getNewValue().equalsIgnoreCase("Inactive");
+				assertEquals("Active",auditLogRecord.getOldValue());
+				assertEquals("Inactive",auditLogRecord.getNewValue());
 			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status Change Explanation")){
-				auditLogRecord.getOldValue().equalsIgnoreCase("-");
-				auditLogRecord.getNewValue().equalsIgnoreCase("Duplicate");
+				assertEquals("-",auditLogRecord.getOldValue());
+				assertEquals("Duplicate",auditLogRecord.getNewValue());
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();

@@ -582,6 +582,9 @@
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/EditLoanProductPreview.jsp"></forward>
 			<forward name="viewAllLoanProducts_success" path="/pages/application/productdefinition/jsp/ViewEditLoanProduct.jsp"></forward>
 			<forward name="viewAllLoanProducts_failure" path="/AdminAction.do?method=load"></forward>
+			<forward name="viewLoanProductChangeLog" path="/pages/application/productdefinition/jsp/viewLoanPrdChangeLog.jsp" />
+			<forward name="cancelLoanProductChangeLog" path="/loanproductaction.do?method=get" />
+			
 		</action>
 		<!-- Savings Product -->
 		<action path="/savingsproductaction" name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.action.SavingsPrdAction" input="/savingsproductaction.do?method=validate" parameter="method" validate="true" scope="session">

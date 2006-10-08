@@ -147,17 +147,17 @@ public class GroupBOTest extends MifosTestCase {
 			assertEquals(8,auditLogList.get(0).getAuditLogRecords().size());
 			for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
 				if(auditLogRecord.getFieldName().equalsIgnoreCase("City/District")){
-					auditLogRecord.getOldValue().equalsIgnoreCase("-");
-					auditLogRecord.getNewValue().equalsIgnoreCase("city");
+					assertEquals("-",auditLogRecord.getOldValue());
+					assertEquals("city",auditLogRecord.getNewValue());
 				}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Trained")){
-					auditLogRecord.getOldValue().equalsIgnoreCase("0");
-					auditLogRecord.getNewValue().equalsIgnoreCase("1");
+					assertEquals("0",auditLogRecord.getOldValue());
+					assertEquals("1",auditLogRecord.getNewValue());
 				}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Additional Information")){
-					auditLogRecord.getOldValue().equalsIgnoreCase("Replacement Status-value2,GRT Staff Id-value1");
-					auditLogRecord.getNewValue().equalsIgnoreCase("Replacement Status-value4,GRT Staff Id-value3");
+					assertEquals("Replacement Status-value2,GRT Staff Id-value1",auditLogRecord.getOldValue());
+					assertEquals("Replacement Status-value4,GRT Staff Id-value3",auditLogRecord.getNewValue());
 				}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Name")){
-					auditLogRecord.getOldValue().equalsIgnoreCase("Group_underBranch");
-					auditLogRecord.getNewValue().equalsIgnoreCase("changed group name");
+					assertEquals("Group_underBranch",auditLogRecord.getOldValue());
+					assertEquals("changed group name",auditLogRecord.getNewValue());
 				}
 			}
 			TestObjectFactory.cleanUpChangeLog();
@@ -200,8 +200,8 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
 			if(auditLogRecord.getFieldName().equalsIgnoreCase(" Kendra Name")){
-				auditLogRecord.getOldValue().equalsIgnoreCase("Center");
-				auditLogRecord.getNewValue().equalsIgnoreCase("toTransfer");
+				assertEquals("Center",auditLogRecord.getOldValue());
+				assertEquals("toTransfer",auditLogRecord.getNewValue());
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();

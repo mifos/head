@@ -19,4 +19,7 @@
 		<![CDATA[from org.mifos.application.productdefinition.business.PrdStatusEntity prStatus
 		where prStatus.prdType.productTypeID=:productTypeID]]>
 	</query>
+	<query name="product.getAllPrdStates">
+		<![CDATA[from org.mifos.application.productdefinition.business.PrdStatusEntity]]>
+	</query>
 </hibernate-mapping>

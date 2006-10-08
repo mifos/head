@@ -62,7 +62,10 @@ import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.SystemException;
@@ -103,6 +106,58 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
+	
+	public void testUpdateLoanOfferingForLogging() throws ProductDefinitionException,
+			FeeException {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		Date endDate = offSetCurrentDate(2);
+		periodicFee = TestObjectFactory.createPeriodicAmountFee(
+				"Loan Periodic", FeeCategory.LOAN, "100",
+				RecurrenceType.MONTHLY, (short) 1);
+		oneTimeFee = TestObjectFactory.createOneTimeAmountFee("Loan One time",
+				FeeCategory.LOAN, "100", FeePayment.UPFRONT);
+		List<FeeBO> fees = new ArrayList<FeeBO>();
+		fees.add(periodicFee);
+		fees.add(oneTimeFee);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		HibernateUtil.getInterceptor().createInitialValueMap(loanOffering);
+		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+				prdApplicableMaster, startDate, endDate,
+				"Loan Product updated", PrdStatus.LOANACTIVE, null,
+				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
+				new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
+				(short) 2, false, true, false, null, fees, (short) 2,
+				RecurrenceType.MONTHLY);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+		
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.LOANPRODUCT.getValue(),new Integer(loanOffering.getPrdOfferingId().toString()));
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.LOANPRODUCT.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(17,auditLogList.get(0).getAuditLogRecords().size());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Min Loan Amount")){
+				assertEquals("300.0",auditLogRecord.getOldValue());
+				assertEquals("1000.0",auditLogRecord.getNewValue());
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("End Date")){
+				assertEquals("-",auditLogRecord.getOldValue());
+				assertEquals("10/10/2006",auditLogRecord.getNewValue());
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Description")){
+				assertEquals("-",auditLogRecord.getOldValue());
+				assertEquals("Loan Product updated",auditLogRecord.getNewValue());
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Applicable For")){
+				assertEquals("Groups",auditLogRecord.getOldValue());
+				assertEquals("Members",auditLogRecord.getNewValue());
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
+
+	}
+
 
 	public void testBuildloanOfferingWithoutDataForMandatoryFields() {
 		try {

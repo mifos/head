@@ -641,6 +641,9 @@ public class ActivityMapper {
 		activityMap.put("/loanproductaction-editCancel", SecurityConstants.VIEW);
 		activityMap.put("/loanproductaction-manage",SecurityConstants.EDIT_LOAN_PRODUCT);
 		activityMap.put("/loanproductaction-update",SecurityConstants.EDIT_LOAN_PRODUCT);
+		activityMap.put("/loanproductaction-update",SecurityConstants.EDIT_LOAN_PRODUCT);
+		activityMap.put("/loanproductaction-loadChangeLog", SecurityConstants.VIEW);
+		activityMap.put("/loanproductaction-cancelChangeLog", SecurityConstants.VIEW);
 
 
 		// Fee mapping

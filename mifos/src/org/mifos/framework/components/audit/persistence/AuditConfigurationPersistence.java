@@ -6,11 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.util.valueobjects.LookUpEntity;
 import org.mifos.application.master.util.valueobjects.LookUpLabel;
+import org.mifos.application.productdefinition.business.PrdStatusEntity;
+import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -34,10 +39,6 @@ public class AuditConfigurationPersistence extends Persistence {
 						.hasNext();) {
 					LookUpLabel lookUpLabel = iterator.next();
 					if (lookUpLabel.getLocaleId().equals(localeId)) {
-						// System.out.println("***************id : " +
-						// customFieldDefinitionEntity.getFieldId());
-						// System.out.println("***************name : " +
-						// lookUpLabel.getLabelName());
 						valueMap.put(customFieldDefinitionEntity.getFieldId()
 								.toString(), lookUpLabel.getLabelName());
 					}
@@ -49,4 +50,29 @@ public class AuditConfigurationPersistence extends Persistence {
 		return valueMap;
 
 	}
+	
+	public Map<String, String>  retrieveProductStatus(Short localeId) throws PersistenceException{
+		Map<String, String> valueMap = new HashMap<String, String>();
+		try {
+			List<PrdStatusEntity> productStates = (List<PrdStatusEntity>) executeNamedQuery(
+					NamedQueryConstants.ALL_PRD_STATES, null);
+			for (Iterator<PrdStatusEntity> iter = productStates
+					.iterator(); iter.hasNext();) {
+				PrdStatusEntity prdStatusEntity = iter
+						.next();
+				Set<LookUpValueLocaleEntity> lookUpValueLocaleSet= prdStatusEntity.getPrdState().getLookUpValue().getLookUpValueLocales();
+				for (Iterator<LookUpValueLocaleEntity> iterator = lookUpValueLocaleSet.iterator(); iterator
+						.hasNext();) {
+					LookUpValueLocaleEntity lookUpValueLocaleEntity = iterator.next();
+					if (lookUpValueLocaleEntity.getLocaleId().equals(localeId)) {
+						valueMap.put(prdStatusEntity.getOfferingStatusId().toString(), lookUpValueLocaleEntity.getLookUpValue());
+					}
+				}
+			}
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+		return valueMap;
+	}
+	
 }

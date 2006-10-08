@@ -303,6 +303,8 @@ public class LoanPrdAction extends BaseAction {
 				.getInstance().getBusinessService(
 						BusinessServiceName.LoanProduct))
 				.getLoanOffering(loanPrdActionForm.getPrdOfferingIdValue());
+		loanOffering.setUserContext(userContext);
+		setInitialObjectForAuditLogging(loanOffering);
 		loanOffering.update(userContext.getId(), loanPrdActionForm
 				.getPrdOfferingName(), loanPrdActionForm
 				.getPrdOfferingShortName(), getProductCategory(
@@ -363,6 +365,7 @@ public class LoanPrdAction extends BaseAction {
 				loanPrdActionForm.getPrdOfferingIdValue(), getUserContext(
 						request).getLocaleId());
 		request.setAttribute(Constants.BUSINESS_KEY, loanOffering);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanOffering,request);
 		loanPrdActionForm.clear();
 		loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering
 				.getPrdOfferingId()));

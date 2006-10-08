@@ -407,6 +407,119 @@
 		  
 	</entityType>
 	
+	<entityType name="LoanProduct" classPath="org.mifos.application.productdefinition.business.LoanOfferingBO">
+
+		<entitiesToLog>
+			<entity name="prdCategory"/>
+			<entity name="prdApplicableMaster"/>
+			<entity name="prdStatus"/>
+			<entity name="loanOfferingMeeting"/>
+			<entity name="meeting" parentName="loanOfferingMeeting"/>
+			<entity name="meetingDetails" parentName="meeting"/>
+			<entity name="recurrenceType" parentName="meetingDetails"/>
+			<entity name="gracePeriodType"/>
+			<entity name="loanOfferingFees"/>
+			<entity name="fees" parentName="loanOfferingFees"/>
+			<entity name="loanOfferingFunds"/>
+			<entity name="fund" parentName="loanOfferingFunds"/>
+			
+			
+		</entitiesToLog>
+		
+		<propertyName name="gracePeriodType" displayKey="LoanProduct.gracePeriodType.gracePeriodTypeId" doNotLog="No" lookUp="yes">
+			<entityName name="GracePeriodTypes">
+				<classPath  path="org.mifos.application.productdefinition.business.GracePeriodTypeEntity"/>
+			</entityName>	
+		</propertyName>
+		
+		<propertyName name="prdApplicableMaster" displayKey="LoanProduct.prdApplicableMaster.prdApplicableMasterId" doNotLog="No" lookUp="yes">
+			<entityName name="PrdApplicableMaster">
+				<classPath  path="org.mifos.application.productdefinition.business.PrdApplicableMasterEntity"/>
+			</entityName>	
+		</propertyName>
+		
+		
+		
+		<propertyName name="offeringStatusId" parentName="prdStatus" displayKey="LoanProduct.status" lookUp="yes" methodName="retrieveProductStatus"/>
+		
+		<propertyName name="loanCounter" displayKey="LoanProduct.loanCounterFlag1,Loan,LoanProduct.loanCounterFlag2"/>
+		
+		<propertyName name="prdOfferingName" displayKey="LoanProduct.prdOfferingName" />
+		<propertyName name="prdOfferingShortName" displayKey="LoanProduct.prdOfferingShortName" />
+		<propertyName name="description" displayKey="LoanProduct.description" />
+		<propertyName name="startDate" displayKey="LoanProduct.startDate" />
+		<propertyName name="endDate" displayKey="LoanProduct.endDate" />
+		<propertyName name="minLoanAmount"  displayKey="LoanProduct.Min,Loan,LoanProduct.Amount" />
+		<propertyName name="maxLoanAmount" displayKey="LoanProduct.Max,Loan,LoanProduct.Amount" />
+		<propertyName name="defaultLoanAmount" displayKey="LoanProduct.defaultLoanAmount" />
+		<propertyName name="offeringStatusId" parentName="prdStatus" displayKey="LoanProduct.prdStatus.offeringStatusId" />
+		<propertyName name="maxInterestRate" displayKey="LoanProduct.Max,Interest,Loan.Rate" />
+		<propertyName name="minInterestRate" displayKey="LoanProduct.Min,Interest,Loan.Rate" />
+		<propertyName name="defInterestRate" displayKey="LoanProduct.def,Interest,Loan.Rate" />
+		<propertyName name="maxNoInstallments" displayKey="LoanProduct.maxNoInstallments" />
+		<propertyName name="minNoInstallments" displayKey="LoanProduct.minNoInstallments" />
+		<propertyName name="defNoInstallments" displayKey="LoanProduct.defNoInstallments" />
+		<propertyName name="intDedDisbursementFlag" displayKey="Interest,LoanProduct.intDedDisbursementFlag" />
+		<propertyName name="prdOfferingFeeId" parentName="loanOfferingFees" doNotLog="yes" />
+
+		<propertyName name="prinDueLastInst" displayKey="LoanProduct.prinDueLastInstFlag" />
+		
+		<propertyName name="feeName"  parentName="fees" displayKey="LoanProduct.fees.feeName" />
+		<propertyName name="feeId"  parentName="fees" doNotLog="Yes" />
+		<propertyName name="categoryId" parentName="fees" doNotLog="Yes" />
+		<propertyName name="globalFeeNum" parentName="fees" doNotLog="Yes" />
+		<propertyName name="officeId" parentName="fees" doNotLog="Yes" />
+		<propertyName name="glcodeId" parentName="fees" doNotLog="Yes" />
+		<propertyName name="status" parentName="fees" doNotLog="Yes" />
+		<propertyName name="rateOrAmount" parentName="fees" doNotLog="Yes" />
+		<propertyName name="rateFlatFalg" parentName="fees" doNotLog="Yes" />
+		<propertyName name="formulaId" parentName="fees" doNotLog="Yes" />
+		<propertyName name="feeFrequency" parentName="fees" doNotLog="Yes" />
+		<propertyName name="updatedOfficeId" parentName="fees" doNotLog="Yes" />
+		<propertyName name="adminCheck" parentName="fees" doNotLog="Yes" />
+		<propertyName name="feeLevelSet" parentName="fees" doNotLog="Yes" />
+		<propertyName name="feeAmount" parentName="fees" doNotLog="Yes" />
+		<propertyName name="rate" parentName="fees" doNotLog="Yes" />
+		<propertyName name="changeType" parentName="fees" doNotLog="Yes" />
+		
+		<propertyName name="productCategoryID" parentName="prdCategory" doNotLog="yes" />
+		<propertyName name="productCategoryName" parentName="prdCategory" displayKey="LoanProduct.prdCategory.productCategoryName" />
+		<propertyName name="productCategoryDesc" parentName="prdCategory" doNotLog="yes" />
+		<propertyName name="globalPrdCategoryNum" parentName="prdCategory" doNotLog="yes" />
+				
+		<propertyName name="glcodeId" parentName="principalGLCode" doNotLog="yes" />
+		<propertyName name="glcode" parentName="principalGLCode" displayKey="LoanProduct.principalGLCode" />
+				
+		<propertyName name="glcodeId" parentName="interestGLCode" doNotLog="yes" />
+		<propertyName name="glcode" parentName="interestGLCode" displayKey="Interest,LoanProduct.interestGLCode" />
+
+		<propertyName name="glcodeId" parentName="penaltyGLCode" doNotLog="yes" />
+		<propertyName name="glcode" parentName="penaltyGLCode" displayKey="LoanProduct.penaltyGLCode" />
+				
+		<propertyName name="fundName"  parentName="fund" displayKey="LoanProduct.fund.fundName" />
+		<propertyName name="loanOfferingFundId"  parentName="loanOfferingFunds" doNotLog="Yes" />
+		<propertyName name="fundId" parentName="fund" doNotLog="Yes" />
+		<propertyName name="fundId" parentName="fund" doNotLog="Yes" />
+		
+		<propertyName name="penaltyID" parentName="penalty" doNotLog="Yes" />
+		<propertyName name="penaltyType" parentName="penalty"  displayKey="LoanProduct.penalty.penaltyID"/>
+
+		<propertyName name="penaltyRate" displayKey="LoanProduct.penaltyRate"/>
+		<propertyName name="penaltyGrace" displayKey="LoanProduct.penaltyGrace"/>
+		<propertyName name="gracePeriodDuration" displayKey="LoanProduct.gracePeriodDuration"/>
+		
+		
+		<propertyName name="meetingPlace" parentName="meeting" doNotLog="Yes" />
+		<propertyName name="detailsId" parentName="meetingDetails" doNotLog="Yes" />
+		<propertyName name="meetingId" parentName="meeting" doNotLog="Yes" />
+		<propertyName name="meetingStartDate" parentName="meeting" doNotLog="Yes" />
+		<propertyName name="recurAfter" parentName="meetingDetails" displayKey="LoanProduct.meetingDetails.recurAfter"/>
+		<propertyName name="recurrenceName" parentName="recurrenceType" displayKey="LoanProduct.recurrenceType.recurrenceName"/>
+		<propertyName name="recurrenceId" parentName="recurrenceType" doNotLog="Yes" />
+		<propertyName name="description" parentName="recurrenceType" doNotLog="Yes" />
+		
+	</entityType>
+	
 	<!-- <entityType name="SavingsProduct" classPath="org.mifos.application.accounts.savings.business.SavingsBO">
 		<propertyName name="prdOfferingName" displayKey="SavingsProduct.prdOfferingName" />
 		<propertyName name="prdOfferingShortName" displayKey="SavingsProduct.prdOfferingShortName" />

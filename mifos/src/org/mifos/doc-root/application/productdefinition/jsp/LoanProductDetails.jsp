@@ -213,9 +213,10 @@
 													value="${requestScope.BusinessKey.interestGLcode.glcode}" /> <br> <mifos:mifoslabel name="product.principal" bundle="ProductDefUIResources" />: <c:out value="${requestScope.BusinessKey.principalGLcode.glcode}" /> <br> </span>
 											<br>
 											<br>
-											<span class="fontnormal"> <html-el:link href="#">
-													<mifos:mifoslabel name="product.changelog" bundle="ProductDefUIResources" />
-												</html-el:link> </span>
+											<span class="fontnormal"> 							
+											<html-el:link	href="loanproductaction.do?method=loadChangeLog&entityType=LoanProduct&entityId=${requestScope.BusinessKey.prdOfferingId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&prdOfferName=${requestScope.BusinessKey.prdOfferingName}">
+												<mifos:mifoslabel name="product.viewchangelog" bundle="ProductDefUIResources" />
+											</html-el:link> </span>
 										</td>
 									</tr>
 								</table>
