@@ -92,7 +92,7 @@ class FeePeriodic < TestClass
       rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Error message check","Empty search","Error message "+@errormsg.to_s+" should appear","failed")
       end  
-        $ie.text_field(:name,"searchNode(searchString)").set(@@global_account_num)
+        $ie.text_field(:name,"searchString").set(@@global_account_num)
         $ie.button(:value,@search_button).click
         @@loan_account=@@accountprop['accounts.Account']+" # " + @@global_account_num
         $ie.link(:text, @@loan_account).click        
@@ -175,7 +175,7 @@ class FeePeriodic < TestClass
       @@personnel_id = dbresult[1]
       @@created_date = dbresult[2]
       $ie.link(:text,"Clients & Accounts").click
-      $ie.text_field(:name,"searchNode(searchString)").set(@@global_account_num)
+      $ie.text_field(:name,"searchString").set(@@global_account_num)
       $ie.button(:value,@search_button).click
       @@loan_account=@@accountprop['accounts.Account']+" # " + @@global_account_num
       $ie.link(:text, @@loan_account).click
