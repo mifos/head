@@ -37,42 +37,6 @@ $location_msg="Please specify a Meeting location"
 $month_msg="Please select the day of month or rank of day if month is selected"
 #meeting end
 
-
-#User Start
-$user_created_msg = "You have successfully added a new user" 
-$review_user_info = "Add a new user - Review & Submit"
-$new_user_link = "Define new system user"
-$new_user_page_msg = "Add a new user - Enter user information"
-$user_firstname_msg = "Please specify First Name."
-$user_lastname_msg = "Please specify Last Name."
-$user_dob_msg = "Please specify Date of Birth."
-$user_gender_msg = "Please select Gender."
-$user_userhierarchy_msg = "Please select User Hierarchy."
-$user_name_msg = "Please specify User Name."
-$user_pwd_msg = "Please ensure that password and confirm password entries are made and they are the same."
-
-$max_len_first_name="The maximum length for First Name field is 100 characters."
-$max_len_middle_name="The maximum length for Middle Name field is 100 characters."
-$max_len_sec_last_name="The maximum length for Second Last Name field is 100 characters."
-$max_len_last_name="The maximum length for Last Name field is 100 characters."
-$max_len_govt_id="The maximum length for Government ID field is 50 characters."
-$max_len_addr1="The maximum length for Address 1 field is 200 characters."
-$max_len_addr2="The maximum length for Address 2 field is 200 characters."
-$max_len_addr3="The maximum length for Address 2 field is 200 characters."
-$max_len_city="The maximum length for City field is 100 characters."
-$max_len_state="The maximum length for State field is 100 characters."
-$max_len_country="The maximum length for Country field is 100 characters."
-$max_len_post_code="The maximum length for Postal code field is 20 characters."
-$max_len_tel="The maximum length for Telephone field is 20 characters."
-$max_len_uname="The maximum length for User Name field is 20 characters."
-$max_len_passwd="The maximum length for Password field is 20 characters."
-$dupl_user_name_msg_0="The user name specified "
-$dupl_user_name_msg_1=" already exists in the application. Please specify a different user name."
-$dupl_name_dob_msg="The combination of Name and Date of Birth already exists in the application. Please specify a different name. "
-$username_with_space="Please do not specify [spaces] for User Name."
-
-#User End
-
 #Group start
 $group_name_msg="Please specify Name"
 $group_LO_msg="Please select Formed By"
