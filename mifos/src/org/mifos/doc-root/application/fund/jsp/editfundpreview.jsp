@@ -76,7 +76,7 @@
           <tr>
             <td width="70%" align="left" valign="top" class="paddingL15T15"><table width="93%" border="0" cellpadding="3" cellspacing="0">
               <tr>
-                <td class="headingorange"><span class="heading"><c:out value="${sessionScope.fundActionForm.fundName}"/> - </span>
+                <td class="headingorange"><span class="heading"><c:out value="${param.oldFundName}"/> - </span>
                 <mifos:mifoslabel name="funds.preview_fundInfo" bundle="fundUIResources"/>                
                 </td>
               </tr>
@@ -141,6 +141,7 @@
           </tr>
         </table>        
       <br><html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+      <html-el:hidden property="oldFundName" value="${param.oldFundName}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>

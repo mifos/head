@@ -137,6 +137,7 @@
           </tr>
         </table>        
       <br><html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+      <html-el:hidden property="oldFundName" value="${sessionScope.fundActionForm.fundName}" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>
