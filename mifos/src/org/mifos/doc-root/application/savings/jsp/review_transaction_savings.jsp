@@ -159,7 +159,7 @@
                	 <mifos:mifoslabel name="Savings.modeOfPayment" isColonRequired="Yes"/>
                 </td>
                 <td class="fontnormal">
-		           <c:forEach var="Payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
+		           <c:forEach var="payment" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentType')}" >
 		             	<c:if test="${payment.id == sessionScope.savingsDepositWithdrawalForm.paymentTypeId}">
 		             		<c:out value="${payment.name}"/>
 		             	</c:if>

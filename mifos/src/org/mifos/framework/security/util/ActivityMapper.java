@@ -865,7 +865,8 @@ public class ActivityMapper {
 				SecurityConstants.SAVINGS_CANWAIVE_DUEAMOUNT);
 		activityMap.put("/savingsAction-waiveAmountOverDue",
 				SecurityConstants.SAVINGS_CANWAIVE_OVERDUEAMOUNT);
-
+		activityMap.put("/savingsAction-loadChangeLog", SecurityConstants.VIEW);
+		activityMap.put("/savingsAction-cancelChangeLog", SecurityConstants.VIEW);
 		// close savings account
 		activityMap.put("/savingsClosureAction-load",
 				SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);

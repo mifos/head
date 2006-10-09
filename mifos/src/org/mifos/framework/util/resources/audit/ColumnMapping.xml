@@ -463,21 +463,39 @@
 		
 	 </entityType>
 	 
-	 <entityType name="Savings" classPath="org.mifos.application.accounts.savings.business.SavingsBO">
+	<entityType name="Savings" classPath="org.mifos.application.accounts.savings.business.SavingsBO">
 		
-		<propertyName name="collateralNote" displayKey="Loan.CollateralNote" />
-		<propertyName name="disbursementDate" displayKey="Loan.DisbursementDate" />
-		<propertyName name="noOfInstallments" displayKey="Loan.NoOfInstallments" />
-		<propertyName name="interestRate" displayKey="Interest,Loan.Rate" />
-		<propertyName name="intrestAtDisbursement" displayKey="Interest,Loan.intDedDisbursement" />
-		<propertyName name="gracePeriodDuration" displayKey="Loan.gracePeriodDuration" />
-		<propertyName name="loanAmount" displayKey="Loan.loanAmount" />
-		<propertyName name="closedDate" doNotLog="yes"/>
-		
+		<entitiesToLog>
+			<entity name="accountState"/>
+			<entity name="accountNotes"/>
+			<entity name="accountFlags"/>
+			<entity name="flag"  parentName="accountFlags"/>
+			<entity name="accountCustomFields" mergeProperties="yes"  displayKey="Account.customField.displayName"/>
+		</entitiesToLog>
+		<propertyName name="accountState" displayKey="Loan.accountState" doNotLog="No" lookUp="yes">
+			<entityName name="AccountStates">
+				<classPath  path="org.mifos.application.accounts.business.AccountStateEntity"/>
+			</entityName>	
+		</propertyName>
+		<propertyName name="flag" parentName="accountFlags" displayKey="Loan.flag" doNotLog="No" lookUp="yes">
+			<entityName name="AccountFlags">
+				<classPath  path="org.mifos.application.accounts.business.AccountStateFlagEntity"/>
+			</entityName>	
+		</propertyName>
+		<propertyName name="recommendedAmount" displayKey="Saving.RecommendedAmount" />
+		<propertyName name="interestToBePosted" doNotLog="yes"/>
+		<propertyName name="lastIntCalcDate" doNotLog="yes"/>
+		<propertyName name="lastIntPostDate" doNotLog="yes"/>
+		<propertyName name="nextIntCalcDate" doNotLog="yes"/>
+		<propertyName name="nextIntPostDate" doNotLog="yes"/>
+		<propertyName name="interIntCalcDate" doNotLog="yes"/>
+		<propertyName name="minAmntForInt" doNotLog="yes"/>
+		<propertyName name="interestRate" doNotLog="yes"/>
 		<propertyName name="commentDate" parentName="accountNotes" doNotLog="yes"/>
 		<propertyName name="comment" displayKey="Loan.comment" parentName="accountNotes" />
-		 
 		<propertyName name="_accountFlagsBackref" parentName="accountFlags" doNotLog="yes"/>
+		<propertyName name="fieldId" parentName="accountCustomFields" displayKey="Account.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
+		<propertyName name="fieldValue" parentName="accountCustomFields" displayKey="Account.customField.feildValue" />
 		  
 	</entityType>
 	

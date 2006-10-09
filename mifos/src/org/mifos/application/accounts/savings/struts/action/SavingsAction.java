@@ -1,40 +1,40 @@
 /**
- 
- * SavingsAction.java    version: xxx
- 
- 
- 
- * Copyright (c) 2005-2006 Grameen Foundation USA
- 
- * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
- * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- *
- 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
- *
- 
- */
+
+* SavingsAction.java    version: xxx
+
+
+
+* Copyright (c) 2005-2006 Grameen Foundation USA
+
+* 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+* All rights reserved.
+
+
+
+* Apache License 
+* Copyright (c) 2005-2006 Grameen Foundation USA 
+* 
+
+* Licensed under the Apache License, Version 2.0 (the "License"); you may
+* not use this file except in compliance with the License. You may obtain
+* a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+*
+
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and limitations under the 
+
+* License. 
+* 
+* See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+
+* and how it is applied. 
+
+*
+
+*/
 
 package org.mifos.application.accounts.savings.struts.action;
 
@@ -71,6 +71,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -92,6 +93,7 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -386,6 +388,7 @@ public class SavingsAction extends AccountAppAction {
 		savings = new SavingsBusinessService().findById(savings.getAccountId());
 		savings.setVersionNo(version);
 		savings.setUserContext(uc);
+		setInitialObjectForAuditLogging(savings);
 		savings.update(actionForm.getRecommendedAmntValue(),
 				getAccountCustomFieldView(actionForm));
 		request.setAttribute(SavingsConstants.GLOBALACCOUNTNUM, savings

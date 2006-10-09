@@ -10,7 +10,7 @@ public enum EntityType {
 	OFFICE(Short.valueOf("15")), GROUP(Short.valueOf("12")),
 	LOAN(Short.valueOf("22")),
 	CUSTOMER(Short.valueOf("11")),
-	SAVING(Short.valueOf("21")),
+	SAVINGS(Short.valueOf("21")),
 	LOANPRODUCT(Short.valueOf("2")),
 	SAVINGSPRODUCT(Short.valueOf("3"));
 

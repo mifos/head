@@ -240,7 +240,8 @@
 										<mifos:mifoslabel name="Savings.viewTransactionHistory" />
 									</html-el:link>
 									<br>
-									<span class="fontnormal"> <html-el:link href="#">
+									<span class="fontnormal"> 
+									<html-el:link href="savingsAction.do?method=loadChangeLog&entityType=Savings&entityId=${BusinessKey.accountId}&currentFlowKey=${requestScope.currentFlowKey}">
 											<mifos:mifoslabel name="Savings.viewChangeLog" />
 										</html-el:link> <br>
 									 <html-el:link href="savingsAction.do?method=getStatusHistory&globalAccountNum=${BusinessKey.globalAccountNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">

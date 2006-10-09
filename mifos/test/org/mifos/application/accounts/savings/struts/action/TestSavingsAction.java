@@ -23,7 +23,10 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -578,6 +581,47 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		assertEquals(2, ((List<SavingsTransactionHistoryView>) SessionUtils.getAttribute(
 						SavingsConstants.STATUS_CHANGE_HISTORY_LIST , request)).size());
+	}
+public void testSuccessful_Update_AuditLog() throws Exception {
+		createAndAddObjects(AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
+		savingsOffering = null;
+		addRequestParameter("recommendedAmount", "600.0");
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "update");
+		List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsBusinessService()
+				.retrieveCustomFieldsDefinition();
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "12");
+			i++;
+		}
+		actionPerform();
+		verifyForward("update_success");
+		String globalAccountNum = (String) request
+				.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
+		assertNotNull(globalAccountNum);
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findBySystemId(globalAccountNum);
+		assertNotNull(savings);
+		assertEquals(600.0, savings.getRecommendedAmount()
+				.getAmountDoubleValue());
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.SAVINGS.getValue(),savings.getAccountId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.SAVINGS.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(savings.getAccountId(),auditLogList.get(0).getEntityId());
+		
+		assertEquals(2,auditLogList.get(0).getAuditLogRecords().size());
+		
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Recommended Amount"))
+				matchValues(auditLogRecord,"300.0","600.0" );
+			else if(auditLogRecord.getFieldName().equalsIgnoreCase("Additional Information")){
+				matchValues(auditLogRecord,"External Savings Id-custom field value","External Savings Id-12" );
+		}
+		}
 	}
 
 }
