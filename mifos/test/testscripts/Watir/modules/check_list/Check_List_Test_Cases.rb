@@ -450,12 +450,17 @@ class Check_List_Test_Cases < TestClass
       dbquery("select date_format(c.created_date,'%d/%m/%Y'), p.login_name from checklist c, personnel p where c.created_by  = p.personnel_id and checklist_id =" + @@checklist_id)
       created_date = dbresult[0]
       created_by = dbresult[1]
-      if($ie.contains_text(checklist_name) and $ie.contains_text(@@checklistprop['checklist.type']+" "+ chk_type.to_s)and $ie.contains_text(@@checklistprop['checklist.status']+" "+ status.to_s) and $ie.contains_text(@@checklistprop['checklist.createdby']+" : "+ created_by.to_s) and $ie.contains_text(@@checklistprop['checklist.createddate']+" : "+ created_date.to_s))
-        $logger.log_results("CheckList- validating the preview page for new check list", "Click on preview button","Valid preview page content", "Passed")
-      else
-        $logger.log_results("CheckList- validating the preview page for new check list", "Click on preview button","Valid preview page content", "Failed")
-      end
+#      if($ie.contains_text(checklist_name) and $ie.contains_text(@@checklistprop['checklist.type']+" "+ chk_type.to_s)and $ie.contains_text(@@checklistprop['checklist.status']+" "+ status.to_s) and $ie.contains_text(@@checklistprop['checklist.createdby']+" : "+ created_by.to_s) and $ie.contains_text(@@checklistprop['checklist.createddate']+" : "+ created_date.to_s))
+#        $logger.log_results("CheckList- validating the preview page for new check list", "Click on preview button","Valid preview page content", "Passed")
+#      else
+#        $logger.log_results("CheckList- validating the preview page for new check list", "Click on preview button","Valid preview page content", "Failed")
+#      end
       $logger.log_results("checking for items attached to the checklist ","NA","NA","NA")
+      assert_on_page(checklist_name)
+      assert_on_page(@@checklistprop['checklist.type']+" "+ chk_type.to_s)
+      assert_on_page(@@checklistprop['checklist.status']+" : "+ status.to_s)
+      assert_on_page(@@checklistprop['checklist.createdby']+" : "+ created_by.to_s)
+      assert_on_page(@@checklistprop['checklist.createddate']+" : "+ created_date.to_s)
       count = 0 
       while count < check_list_items.length
         # if $ie.contains_text(check_list_items[count]) then
@@ -540,6 +545,6 @@ class Check_List
     count = 1
     rowid+=$maxcol
   end
-  checklist_obj.delete_all_checklist()
+  #checklist_obj.delete_all_checklist()
   checklist_obj.checklist_logout()
 end

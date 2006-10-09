@@ -311,7 +311,7 @@ class TestClass
       assert($ie.contains_text(stringname))
       $logger.log_results(stringname+" appears on page","NA","NA","passed")
      rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results(stringname+" does not appear on page","NA","NA","failed")
+      $logger.log_results("Assertion failure error  "+stringname+" does not appear on page","NA","NA","failed")
      end
   
   end
