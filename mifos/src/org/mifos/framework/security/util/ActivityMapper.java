@@ -106,8 +106,8 @@ public class ActivityMapper {
 	private ActivityMapper() {
 
 
-		
-		//m2 search action 
+
+		//m2 search action
 		activityMap.put("/custSearchAction-loadSearch", SecurityConstants.VIEW);
 		activityMap.put("/custSearchAction-search", SecurityConstants.VIEW);
 		activityMap.put("/custSearchAction-load", SecurityConstants.VIEW);
@@ -371,7 +371,8 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
 		activityMap.put("/PersonAction-unLockUserAccount",
 				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
-
+		activityMap.put("/PersonAction-loadChangeLog", SecurityConstants.VIEW);
+		activityMap.put("/PersonAction-cancelChangeLog", SecurityConstants.VIEW);
 
 		// for your settings link
 		activityMap.put("/PersonnelAction-getDetails", SecurityConstants.VIEW);
@@ -593,7 +594,7 @@ public class ActivityMapper {
 		activityMap.put("/savingsprdaction-update",
 				SecurityConstants.EDIT_SAVING_PRODUCT);
 
-		
+
 		activityMap.put("/savingsproductaction-loadChangeLog", SecurityConstants.VIEW);
 		activityMap.put("/savingsproductaction-cancelChangeLog", SecurityConstants.VIEW);
 		activityMap.put("/savingsproductaction-search", SecurityConstants.VIEW);
@@ -612,7 +613,7 @@ public class ActivityMapper {
 		activityMap.put("/savingsproductaction-update",	SecurityConstants.EDIT_SAVING_PRODUCT);
 		activityMap.put("/savingsproductaction-cancelEdit",
 				SecurityConstants.VIEW);
-		
+
 
 		// view lateness mappings
 		activityMap.put("/prdconfigurationaction-search",
@@ -699,8 +700,8 @@ public class ActivityMapper {
 		activityMap.put("/chkListAction-previous",
 				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
 		activityMap.put("/chkListAction-get", SecurityConstants.VIEW);
-		
-		
+
+
 		activityMap.put("/checkListAction-loadall", SecurityConstants.VIEW);
 		activityMap.put("/checkListAction-load",
 				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
@@ -754,10 +755,10 @@ public class ActivityMapper {
 		activityMap.put("/loanAccountAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-create", SecurityConstants.VIEW);
-		
+
 		activityMap.put("/loanAccountAction-loadChangeLog", SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-cancelChangeLog", SecurityConstants.VIEW);
-		
+
 		// mapping for account status::TO BE REMOVED
 		activityMap.put("/LoanStatusAction-load", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-preview", SecurityConstants.VIEW);
@@ -1123,8 +1124,8 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-cancelChangeLog",
 				SecurityConstants.VIEW);
-		
-		
+
+
 
 
 		activityMap.put("/ChangeAccountStatus-load", SecurityConstants.CAN_APPROVE_LOANS_IN_BULK);
@@ -1152,7 +1153,7 @@ public class ActivityMapper {
 
 		activityMap.put("/groupCustAction-loadChangeLog", SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-cancelChangeLog", SecurityConstants.VIEW);
-		
+
 
 //		for your settings new action class
 		activityMap.put("/yourSettings-get", SecurityConstants.VIEW);
@@ -1188,73 +1189,73 @@ public class ActivityMapper {
 				SecurityConstants.ROLES_DELETE_ROLES);
 		activityMap.put("/rolesPermission-delete",
 				SecurityConstants.ROLES_DELETE_ROLES);
-				
+
 		//ADDED BY MFTECH
 		activityMap.put("/reportsAction-load",SecurityConstants.VIEW);
-	       
+
         activityMap.put("/reportsAction-report_designer",SecurityConstants.CLIENTSDETAILVIEW);
         activityMap.put("/reportsAction-product_history",SecurityConstants.CLIENTSPRODUCTHISTORY);
-       
+
         activityMap.put("/reportsAction-branch_performance",SecurityConstants.BRANCHPERFORMANCE);
         activityMap.put("/reportsAction-area_performance",SecurityConstants.AREAPERFORMANCE);
-       
+
         activityMap.put("/reportsAction-collection_sheet",SecurityConstants.COLLECTIONSHEET);
-       
-       
+
+
         activityMap.put("/reportsAction-loan_distribution",SecurityConstants.LOANDISTRIBUTION);
         activityMap.put("/reportsAction-branch_disbursement",SecurityConstants.BRANCHDISBURSEMENT);
-       
+
         activityMap.put("/reportsAction-staffwise_report",SecurityConstants.STAFFWISEREPORT);
         activityMap.put("/reportsAction-branchwise_report",SecurityConstants.BRANCHWISEREPORT);
-       
+
         activityMap.put("/reportsAction-analysis",SecurityConstants.ANALYSIS);
-        activityMap.put("/reportsAction-kendra_meeting",SecurityConstants.KENDRA_MEETING);   
-       
+        activityMap.put("/reportsAction-kendra_meeting",SecurityConstants.KENDRA_MEETING);
+
         activityMap.put("/reportsAction-administerreports_path",SecurityConstants.ADMINISTER_REPORTS);
         activityMap.put("/reportsAction-administerreportslist_path",SecurityConstants.ADMINISTER_REPORTS);
         activityMap.put("/reportsParamsAction-load",SecurityConstants.ADMINISTER_REPORTS);
         activityMap.put("/reportsParamsAction-loadList",SecurityConstants.ADMINISTER_REPORTS);
-       
+
         activityMap.put("/reportsParamsAction-createParams",SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsParamsAction-deleteParams",SecurityConstants.ADMINISTER_REPORTPARAMS);
-       
-       
+
+
         activityMap.put("/reportsParamsAction-reportparams_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsParamsAction-reportparamsadd_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsParamsAction-reportparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsParamsAction-loadView", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsParamsAction-reportparamsview_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-       
-       
+
+
         activityMap.put("/reportsDataSourceAction-load",SecurityConstants.ADMINISTER_REPORTDS);
         activityMap.put("/reportsDataSourceAction-loadList",SecurityConstants.ADMINISTER_REPORTDS);
         activityMap.put("/reportsDataSourceAction-createDataSource",SecurityConstants.ADMINISTER_REPORTDS);
         activityMap.put("/reportsDataSourceAction-deleteDataSource",SecurityConstants.ADMINISTER_REPORTDS);
         activityMap.put("/reportsDataSourceAction-loadView", SecurityConstants.ADMINISTER_REPORTDS);
-       
-       
+
+
         activityMap.put("/reportsDataSourceAction-reportdatasource_path", SecurityConstants.ADMINISTER_REPORTDS);
         activityMap.put("/reportsDataSourceAction-reportdatasourceadd_path", SecurityConstants.ADMINISTER_REPORTDS);
         activityMap.put("/reportsDataSourceAction-reportdatasourcelist_path", SecurityConstants.ADMINISTER_REPORTDS);
         activityMap.put("/reportsDataSourceAction-reportdatasourceview_path", SecurityConstants.ADMINISTER_REPORTDS);
-       
+
         activityMap.put("/reportsParamsMapAction-loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsParamsMapAction-createParamsMap", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsParamsMapAction-deleteParamsMap", SecurityConstants.ADMINISTER_REPORTPARAMS);
-       
+
         activityMap.put("/reportsParamsMapAction-reportparamsmapaddlist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsParamsMapAction-reportparamsmap_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsUploadAction-uploadReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsUploadAction-administerreports_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-       
+
         activityMap.put("/reportsUserParamsAction-reportuserparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsUserParamsAction-loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsUserParamsAction-processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsUserParamsAction-reportsuserprocess_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-       
+
         activityMap.put("/reportsUserParamsAction-reportsuserprocess_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
         activityMap.put("/reportsUserParamsAction-reportsuserprocess_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        //END BY MFTECH		
+        //END BY MFTECH
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

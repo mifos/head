@@ -1,6 +1,8 @@
 package org.mifos.application.personnel.business;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -134,7 +136,7 @@ public class PersonnelBO extends BusinessObject {
 		this.encriptedPassword = getEncryptedPassword(password);
 		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 	}
-	
+
 	protected PersonnelBO() {
 		this.level = null;
 		this.personnelDetails = new PersonnelDetailsEntity();
@@ -439,7 +441,7 @@ public class PersonnelBO extends BusinessObject {
 			List<CustomFieldView> customFields, Name name,
 			Integer maritalStatus, Integer gender, Address address,
 			Short updatedById) throws PersonnelException {
-		logger.debug("update in personnelBO called with values: " +newLevel+office.getOfficeId()+title+" "+preferredLocale  
+		logger.debug("update in personnelBO called with values: " +newLevel+office.getOfficeId()+title+" "+preferredLocale
 				+" "+updatedById);
 		MasterPersistence masterPersistence = new MasterPersistence();
 		validateForUpdate(newStatus, office, newLevel);
@@ -448,24 +450,23 @@ public class PersonnelBO extends BusinessObject {
 		if (!this.office.getOfficeId().equals(office.getOfficeId())) {
 			makePersonalMovementEntries(office, updatedById);
 			dateOfJoiningBranch = new Date();
-
 		}
 		try {
 		PersonnelStatusEntity personnelStatus = (PersonnelStatusEntity) masterPersistence
 				.getPersistentObject(PersonnelStatusEntity.class, newStatus.getValue());
 		this.status = personnelStatus;
-		 
-		
+
+
 		 PersonnelLevelEntity personnelLevel = (PersonnelLevelEntity) masterPersistence
 					.getPersistentObject(PersonnelLevelEntity.class, newLevel.getValue());
 		 this.level = personnelLevel;
 		} catch (PersistenceException e) {
 			throw new PersonnelException(e);
 		}
-		
+
 		this.displayName = name.getDisplayName();
 		this.preferredLocale=new SupportedLocalesEntity(preferredLocale);
-		
+
 		if (StringUtils.isNullAndEmptySafe(password)) {
 			this.encriptedPassword = getEncryptedPassword(password);
 			this.unLock();
@@ -497,7 +498,7 @@ public class PersonnelBO extends BusinessObject {
 				this.personnelRoles.add(new PersonnelRoleEntity(role, this));
 			}
 		}
-		
+
 	}
 
 	public void update(String emailId, Name name, Integer maritalStatus,
@@ -670,11 +671,11 @@ public class PersonnelBO extends BusinessObject {
 	public boolean isActive() {
 		return getStatus().getId().equals(PersonnelStatus.ACTIVE.getValue());
 	}
-	
+
 	public boolean isLoanOfficer() {
 		return getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue());
 	}
-	
+
 	public UserContext login(String password) throws PersonnelException {
 		logger.info("Trying to login");
 		UserContext userContext = null;
@@ -692,7 +693,7 @@ public class PersonnelBO extends BusinessObject {
 		logger.info("Login successfull");
 		return userContext;
 	}
-	
+
 	public void updatePassword(String oldPassword,	String newPassword, Short updatedById) throws PersonnelException {
 		logger.info("Trying to updatePassword");
 		byte[] encryptedPassword = getEncryptedPassword(oldPassword,newPassword);
@@ -709,7 +710,7 @@ public class PersonnelBO extends BusinessObject {
 			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 		}
 	}
-	
+
 	public void unlockPersonnel(Short updatedById) throws PersonnelException {
 		logger.info("Trying to unlock Personnel");
 		if(isLocked()){
@@ -726,7 +727,7 @@ public class PersonnelBO extends BusinessObject {
 		}
 		logger.info("Personnel with id: "+ getPersonnelId()+" successfully unlocked");
 	}
-	
+
 	private void updateNoOfTries() throws PersonnelException {
 		logger.info("Trying to update  no of tries");
 		if(!isLocked()) {
@@ -742,7 +743,7 @@ public class PersonnelBO extends BusinessObject {
 			}
 		}
 	}
-	
+
 	private void resetNoOfTries() throws PersonnelException {
 		logger.info("Reseting  no of tries");
 		if(noOfTries.intValue()>0) {
@@ -755,7 +756,7 @@ public class PersonnelBO extends BusinessObject {
 		}
 		logger.info("No of tries reseted successfully");
 	}
-	
+
 	private boolean isPasswordValid(String password) throws PersonnelException {
 		logger.info("Checking password valid or not");
 		try {
@@ -766,7 +767,7 @@ public class PersonnelBO extends BusinessObject {
 			throw new PersonnelException(se);
 		}
 	}
-	
+
 	private void updateLastPersonnelLoggedin() throws PersonnelException {
 		logger.info("Updating lastLogin");
 		try{
@@ -776,7 +777,7 @@ public class PersonnelBO extends BusinessObject {
 			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 		}
 	}
-	
+
 	private UserContext setUserContext() throws PersonnelException {
 		logger.info("Setting  usercontext");
 		UserContext userContext = new UserContext();
@@ -810,7 +811,7 @@ public class PersonnelBO extends BusinessObject {
 		logger.info("got usercontext");
 		return userContext;
 	}
-	
+
 	private Set<Short> getRoles() {
 		Set<Short> roles = new HashSet<Short>();
 		for(PersonnelRoleEntity personnelRole : getPersonnelRoles()){
@@ -818,7 +819,7 @@ public class PersonnelBO extends BusinessObject {
 		}
 		return roles;
 	}
-	
+
 	private byte[] getEncryptedPassword(String oldPassword,	String newPassword) throws PersonnelException{
 		logger.info("Matching oldpassword with entered password.");
 		byte[] newEncryptedPassword = null;

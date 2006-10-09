@@ -2,7 +2,9 @@ package org.mifos.application.personnel.struts.action;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -15,10 +17,14 @@ import org.mifos.application.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -38,13 +44,13 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPersonAction extends MifosMockStrutsTestCase {
 	private String flowKey;
-	
+
 	private UserContext userContext;
-	
+
 	private OfficeBO createdBranchOffice;
-	
+
 	PersonnelBO personnel;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -81,12 +87,12 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(PersonnelConstants.ROLES_LIST, personnelBusinessService.getRoles(), request);
 		SessionUtils.setAttribute(PersonnelConstants.ROLEMASTERLIST,
 				personnelBusinessService.getRoles(), request);
-		
+
 		personnelBusinessService=null;
 
 	}
 
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		userContext = null;
@@ -96,8 +102,8 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
-	
-	
+
+
 
 	public void testChooseOffice() {
 		addActionAndMethod(Methods.chooseOffice.toString());
@@ -200,7 +206,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.previous_success.toString());
 	}
-	
+
 	public void testCreateSucess() throws Exception {
 		addActionAndMethod(Methods.create.toString());
 		setRequestData();
@@ -212,12 +218,12 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.create_success.toString());
 		assertNotNull(request.getAttribute("globalPersonnelNum"));
 		assertNotNull(request.getAttribute("displayName"));
-		PersonnelBO personnelBO = 
+		PersonnelBO personnelBO =
 			new PersonnelPersistence().getPersonnelByGlobalPersonnelNum(
 				(String)request.getAttribute("globalPersonnelNum")
 			);
 		assertNotNull(personnelBO);
-		//assert few values 
+		//assert few values
 		assertEquals("Jim",personnelBO.getPersonnelDetails().getName().getFirstName());
 		assertEquals("khan",personnelBO.getPersonnelDetails().getName().getLastName());
 		assertEquals(1,personnelBO.getPersonnelDetails().getGender().intValue());
@@ -245,15 +251,15 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertNotNull(request.getAttribute("displayName"));
 		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnelByGlobalPersonnelNum((String)request.getAttribute("globalPersonnelNum"));
 		assertNotNull(personnelBO);
-		//assert few values 
+		//assert few values
 		assertEquals("Jim",personnelBO.getPersonnelDetails().getName().getFirstName());
 		assertEquals("khan",personnelBO.getPersonnelDetails().getName().getLastName());
 		assertEquals(1,personnelBO.getPersonnelDetails().getGender().intValue());
 		TestObjectFactory.cleanUp(personnelBO);
 		personnelBO=null;
-		
+
 	}
-	
+
 	public void testGetSucess()throws Exception{
 		addActionAndMethod(Methods.get.toString());
 		addRequestParameter("globalPersonnelNum", "1");
@@ -275,7 +281,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(1,queryResult.get(0,10).size());
 		verifyForward(ActionForwards.search_success.toString());
 	}
-	
+
 	public void testSearchwithNoinput()throws Exception{
 		cleanRequest();
 		addActionAndMethod(Methods.search.toString());
@@ -284,7 +290,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(1, getErrrorSize(PersonnelConstants.NO_SEARCH_STRING));
 		verifyInputForward();
 	}
-	
+
 	public void testLoadSearchSucess()throws Exception{
 		addActionAndMethod(Methods.search.toString());
 		addRequestParameter("searchString", "Mi");
@@ -292,7 +298,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.search_success.toString());
-	}	
+	}
 	private void addActionAndMethod(String method){
 		setRequestPathInfo("/PersonAction.do");
 		addRequestParameter("method", method);
@@ -338,7 +344,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
 	}
-	
+
 	public void testPreviewManage() throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
@@ -365,7 +371,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.previewManage_success.toString());
 	}
-	
+
 	public void testManagePreviewFailure() throws Exception {
 		addActionAndMethod(Methods.previewManage.toString());
 		actionPerform();
@@ -399,7 +405,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(1, getErrrorSize("password"));
 		verifyInputForward();
 	}
-	
+
 	public void testUpdateSuccess() throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
@@ -419,7 +425,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(PersonnelConstants.ROLES_LIST, request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
 		addActionAndMethod(Methods.previewManage.toString());
-		
+
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("personnelRoles", "1");
 		addRequestParameter("gender", "2");
@@ -436,11 +442,10 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
-		assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
-		personnel = (PersonnelBO)TestObjectFactory.getObject(PersonnelBO.class,personnel.getPersonnelId());	
+		assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
+		personnel = (PersonnelBO)TestObjectFactory.getObject(PersonnelBO.class,personnel.getPersonnelId());
 	}
-	
+
 	public void testLoadUnLockUser() throws Exception {
 		addActionAndMethod(Methods.loadUnLockUser.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -450,7 +455,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.loadUnLockUser_success.toString());
 		assertEquals(LoginConstants.MAXTRIES,SessionUtils.getAttribute(PersonnelConstants.LOGIN_ATTEMPTS_COUNT,request));
 	}
-	
+
 	public void testUnLockUser() throws Exception {
 		createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
 		addActionAndMethod(Methods.unLockUserAccount.toString());
@@ -462,7 +467,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertFalse(personnel.isLocked());
 		assertEquals(0,personnel.getNoOfTries().intValue());
 	}
-	
+
 	private void createPersonnelAndSetInSession(OfficeBO office, PersonnelLevel personnelLevel) throws Exception{
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
@@ -481,11 +486,11 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		personnel=(PersonnelBO)HibernateUtil.getSessionTL().get(PersonnelBO.class,personnel.getPersonnelId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
 	}
-	
+
 	public OfficeBO getBranchOffice(){
 		return TestObjectFactory.getOffice(Short.valueOf("3"));
 	}
-	
+
 	private void setRequestData() throws PageExpiredException, ServiceException {
 		addRequestParameter("firstName", "Jim");
 		addRequestParameter("lastName", "khan");
@@ -499,4 +504,38 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("preferredLocale","189");
 	}
 
+	public void testLoadChangeLog() throws Exception {
+		addActionAndMethod(Methods.get.toString());
+		addRequestParameter("globalPersonnelNum", "1");
+		actionPerform();
+
+		personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		AuditLog auditLog = new AuditLog(personnel.getPersonnelId().intValue(), EntityType.PERSONNEL.getValue(), "Mifos", new java.sql.Date(System.currentTimeMillis()),
+				Short.valueOf("3"));
+		Set<AuditLogRecord> auditLogRecords = new HashSet<AuditLogRecord>();
+		AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1",
+				"test_1", "new_test_1", auditLog);
+		auditLogRecords.add(auditLogRecord);
+		auditLog.addAuditLogRecords(auditLogRecords);
+		auditLog.save();
+		setRequestPathInfo("/PersonAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("method", "loadChangeLog");
+		addRequestParameter("entityType", "Personnel");
+		addRequestParameter("entityId", personnel.getPersonnelId().toString());
+		actionPerform();
+		assertEquals(1,((List)request.getSession().getAttribute(AuditConstants.AUDITLOGRECORDS)).size());
+		verifyForward("viewPersonnelChangeLog");
+		personnel = null;
+		TestObjectFactory.cleanUpChangeLog();
+	}
+
+	public void testCancelChangeLog(){
+		setRequestPathInfo("/PersonAction.do");
+		addRequestParameter("method", "cancelChangeLog");
+		addRequestParameter("entityType", "Personnel");
+		actionPerform();
+		verifyForward("cancelPersonnelChangeLog");
+		personnel = null;
+	}
 }

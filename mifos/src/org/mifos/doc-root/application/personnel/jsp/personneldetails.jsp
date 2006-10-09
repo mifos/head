@@ -229,17 +229,17 @@
 								<c:if test="${cfdef.fieldId==cf.fieldId}">
 									<span class="fontnormal"> <mifos:mifoslabel
 										name="${cfdef.lookUpEntity.entityType}"
-										bundle="PersonnelUIResources"></mifos:mifoslabel>: 
+										bundle="PersonnelUIResources"></mifos:mifoslabel>:
 									<c:out value="${cf.fieldValue}" /> </span>
 									<br>
 								</c:if>
 							</c:forEach>
 						</c:forEach> <br>
-						<%-- <span class="fontnormal"> <html-el:link
-							href="javascript:viewChangeLog()">
+						<span class="fontnormal"> <html-el:link
+							href="PersonAction.do?method=loadChangeLog&entityType=Personnel&entityId=${personnelBO.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Personnel.ViewChangeLog"
 								bundle="PersonnelUIResources"></mifos:mifoslabel>
-						</html-el:link> </span> --%>
+						</html-el:link> </span>
 						</td>
 						<td height="23" align="right" valign="top" class="fontnormal"><c:if
 							test="${personnelBO.locked == 'true'}">

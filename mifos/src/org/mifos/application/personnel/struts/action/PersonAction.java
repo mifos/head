@@ -50,6 +50,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -67,7 +68,7 @@ public class PersonAction extends SearchAction {
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
-	
+
 	private PersonnelBusinessService getPersonnelBusinessService() throws ServiceException{
 		return (PersonnelBusinessService)getService();
 	}
@@ -200,6 +201,7 @@ public class PersonAction extends SearchAction {
 				.toString());
 	}
 
+	@CloseSession
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -218,17 +220,26 @@ public class PersonAction extends SearchAction {
 		Integer title = getIntegerValue(actionForm.getTitle());
 		Short perefferedLocale = getLocaleId(getShortValue(actionForm
 				.getPreferredLocale()));
+
 		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		personnel.update(personnelStatus, level, office, title,
+
+		PersonnelBO personnelInit = ((PersonnelBusinessService) getService())
+				.getPersonnel(Short.valueOf(actionForm.getPersonnelId()));
+
+		personnelInit.setVersionNo(personnel.getVersionNo());
+		personnelInit.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(personnelInit);
+
+		personnelInit.update(personnelStatus, level, office, title,
 				perefferedLocale, actionForm.getUserPassword(), actionForm
 						.getEmailId(), getRoles(request, actionForm),
 				actionForm.getCustomFields(), actionForm.getName(),
 				getIntegerValue(actionForm.getMaritalStatus()),
 				getIntegerValue(actionForm.getGender()), actionForm
 						.getAddress(), userContext.getId());
-		request.setAttribute("displayName", personnel.getDisplayName());
-		request.setAttribute("globalPersonnelNum", personnel
+		request.setAttribute("displayName", personnelInit.getDisplayName());
+		request.setAttribute("globalPersonnelNum", personnelInit
 				.getGlobalPersonnelNum());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}

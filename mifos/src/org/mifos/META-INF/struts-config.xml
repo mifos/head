@@ -33,16 +33,16 @@
 		<!-- Savings Product -->
 		<form-bean name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm"></form-bean>
 		<!-- Personnel Notes Action Form -->
-		
+
 		<form-bean name="personnelNoteActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelNoteActionForm"></form-bean>
 		<!-- Personnel Action Form -->
 		<form-bean name="personnelActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelActionForm"></form-bean>
-		
+
 		<!-- Person Action Form -->
 		<form-bean name="personActionForm"
 			type="org.mifos.application.personnel.struts.actionforms.PersonActionForm">
 		</form-bean>
-		
+
 		<!-- Group Action Form -->
 		<form-bean name="groupActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupActionForm"></form-bean>
 		<!-- Customer Search Action Form -->
@@ -77,7 +77,7 @@
 		<!-- FundsActionForm Action Form  -->
 		<form-bean name="fundActionForm" type="org.mifos.application.fund.struts.actionforms.FundActionForm" />
 		<!--  end -->
-		
+
 		<!-- Bulk Entry form -->
 		<form-bean name="bulkentryactionform" type="org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm"></form-bean>
 		<!-- New Account Action form -->
@@ -125,9 +125,9 @@
 		<form-bean name="personnelSettingsActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelSettingsActionForm"></form-bean>
 		<!-- Customer Account Action form -->
 		<form-bean name="customerAccountActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerAccountActionForm"></form-bean>
-		
+
 						<form-bean name="custSearchActionForm" type="org.mifos.application.customer.struts.actionforms.CustSearchActionForm"></form-bean>
-		
+
 		<!-- ADDED BY MFTECH -->
 		<form-bean name="reportsParamsActionForm"
 				type="org.mifos.application.reports.struts.actionforms.ReportsParamsActionForm" />
@@ -143,7 +143,7 @@
 				type="org.mifos.application.reports.struts.actionforms.ReportsUploadActionForm" />
 
 <!-- ENDED BY MFTECH -->
-		
+
 	</form-beans>
 
 	<global-exceptions>
@@ -160,9 +160,9 @@
 	</global-forwards>
 
 	<action-mappings>
-	<action path="/custSearchAction" type="org.mifos.application.customer.struts.action.CustSearchAction" 
+	<action path="/custSearchAction" type="org.mifos.application.customer.struts.action.CustSearchAction"
   			name="custSearchActionForm"
-       		parameter="method"	
+       		parameter="method"
        		scope="session">
        		<forward name="loadSearch_success" 	path="/pages/application/customer/jsp/cust_search_account.jsp"/>
       		<forward name="search_success" 	path="/pages/application/customer/jsp/cust_search_account_results.jsp"/>
@@ -174,12 +174,12 @@
 			<forward name="mainSearch_failure" path="/pages/application/customer/jsp/search_result.jsp" />
 			<forward name="getHomePage_success" path="/pages/application/customer/jsp/home.jsp" />
 			<forward name="loadallbranches_success" path="/custSearchAction.do?method=mainSearch" />
- 			
+
     </action>
-	<action path="/customerAccountAction" 
-				type="org.mifos.application.customer.struts.action.CustomerAccountAction" 
+	<action path="/customerAccountAction"
+				type="org.mifos.application.customer.struts.action.CustomerAccountAction"
 				name="customerAccountActionForm"
-				parameter="method" 
+				parameter="method"
 				scope="session">
 			<forward name="client_detail_page" path="/pages/application/client/jsp/view_clientchargesdetail.jsp" />
 			<forward name="group_detail_page" path="/pages/application/group/jsp/view_groupchargesdetail.jsp" />
@@ -195,8 +195,8 @@
 			<forward name="updateSettings_success" path="/yourSettings.do?method=get" />
 		</action>
 		<action path="/ChangeAccountStatus"
-				type="org.mifos.application.accounts.loan.struts.action.AccountStatusAction" 
-				name="accountStatusActionForm" 
+				type="org.mifos.application.accounts.loan.struts.action.AccountStatusAction"
+				name="accountStatusActionForm"
 				parameter="method"
 				validate="true"
 				input="/ChangeAccountStatus.do?method=validate"
@@ -263,9 +263,9 @@
 			<forward name="cancelManage_success" path="/centerAction.do?method=get" />
 			<forward name="cancelStatus_success" path="/centerAction.do?method=get" />
 		</action>
-		
+
 		<!-- Center Action -->
-		<action path="/centerCustAction" type="org.mifos.application.customer.center.struts.action.CenterCustAction" name="centerCustActionForm" parameter="method" 
+		<action path="/centerCustAction" type="org.mifos.application.customer.center.struts.action.CenterCustAction" name="centerCustActionForm" parameter="method"
 		input="/centerCustAction.do?method=validate" validate="true" scope="session">
 			<forward name="chooseOffice_success" path="/pages/application/center/jsp/chooseOffice.jsp" />
 			<forward name="load_success" path="/pages/application/center/jsp/createnewcenter.jsp" />
@@ -278,8 +278,8 @@
 			<forward name="loadMeeting_success" path="/meetingAction.do?method=load&amp;customerLevel=3" />
 			<forward name="manage_success" path="/pages/application/center/jsp/editcenter.jsp" />
 			<forward name="editpreview_success" path="/pages/application/center/jsp/previeweditcenter.jsp" />
-			<forward name="editPreview_failure" path="/pages/application/center/jsp/editcenter.jsp" />			
-			<forward name="editprevious_success" path="/pages/application/center/jsp/editcenter.jsp" />						
+			<forward name="editPreview_failure" path="/pages/application/center/jsp/editcenter.jsp" />
+			<forward name="editprevious_success" path="/pages/application/center/jsp/editcenter.jsp" />
 			<forward name="update_success" path="/centerCustAction.do?method=get" />
 			<!-- Cancel Page Forwards -->
 			<forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=mainpage" />
@@ -388,7 +388,7 @@
 			<!-- Cancel Page Forwards -->
 			<forward name="cancel_success" path="/groupCustAction.do?method=get" />
 		</action>
-		
+
 		<!-- Personnel action -->
 		<action path="/PersonnelAction" type="org.mifos.application.personnel.struts.action.PersonnelAction" name="personnelActionForm" parameter="method" validate="true" input="/PersonnelAction.do?method=validate" scope="session">
 			<forward name="getDetails_success" path="/pages/application/personnel/jsp/yoursettings.jsp" />
@@ -415,27 +415,29 @@
 		<action path="/PersonAction"	type="org.mifos.application.personnel.struts.action.PersonAction"	name="personActionForm" parameter="method" validate="true"	input="/PersonAction.do?method=validate" scope="session">
 			<forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp" />
 			<forward name="load_success" path="/pages/application/personnel/jsp/create_user.jsp" />
-			<forward name="preview_success" path="/pages/application/personnel/jsp/createuser_preview.jsp" />	
-			<forward name="preview_failure" path="/pages/application/personnel/jsp/create_user.jsp" />	
-			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
-			<forward name="create_success" path="/pages/application/personnel/jsp/createuser_confirmation.jsp" />	
-			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />		
+			<forward name="preview_success" path="/pages/application/personnel/jsp/createuser_preview.jsp" />
+			<forward name="preview_failure" path="/pages/application/personnel/jsp/create_user.jsp" />
+			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />
+			<forward name="create_success" path="/pages/application/personnel/jsp/createuser_confirmation.jsp" />
+			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />
 			<forward name="cancel_success" path="/AdminAction.do?method=load" />
 			<forward name="manage_success" path="/pages/application/personnel/jsp/edit_user.jsp" />
 			<forward name="previewManage_success" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />
-			<forward name="previewManage_failure" path="/pages/application/personnel/jsp/edit_user.jsp" />	
+			<forward name="previewManage_failure" path="/pages/application/personnel/jsp/edit_user.jsp" />
 			<forward name="previousManage_success" path="/pages/application/personnel/jsp/edit_user.jsp" />
 			<forward name="update_success" path="/PersonAction.do?method=get" />
-			<forward name="update_failure" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />			
-			<forward name="cancelEdit_success" path="/PersonAction.do?method=get" />	
-			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />	
-			<forward name="unLockUserAccount_success" path="/PersonAction.do?method=get" />	
+			<forward name="update_failure" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />
+			<forward name="cancelEdit_success" path="/PersonAction.do?method=get" />
+			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />
+			<forward name="unLockUserAccount_success" path="/PersonAction.do?method=get" />
 			<forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp" />
 			<forward name="search_success" path="/pages/application/personnel/jsp/viewusers.jsp" />
 			<forward name="search_failure" path="/pages/application/personnel/jsp/viewusers.jsp" />
-			<forward name="loadSearch_success" path="/pages/application/personnel/jsp/viewusers.jsp" />			
+			<forward name="loadSearch_success" path="/pages/application/personnel/jsp/viewusers.jsp" />
+			<forward name="viewPersonnelChangeLog" path="/pages/application/personnel/jsp/viewchangelog.jsp" />
+			<forward name="cancelPersonnelChangeLog" path="/PersonAction.do?method=get" />
 		</action>
-		
+
 		<!-- M2 Personnel Note action -->
 		<action path="/personnelNoteAction" type="org.mifos.application.personnel.struts.action.PersonnelNoteAction" name="personnelNoteActionForm" parameter="method" validate="true" input="/personnelNoteAction.do?method=validate" scope="session">
 			<forward name="load_success" path="/pages/application/personnel/jsp/addpersonnelnotes.jsp" />
@@ -448,7 +450,7 @@
 			<forward name="cancel_success" path="/PersonAction.do?method=get" />
 			<forward name="create_failure" path="/pages/application/personnel/jsp/previewpersonnelnotes.jsp" />
 		</action>
-		
+
 		<!-- Group action -->
 		<action path="/GroupAction" type="org.mifos.application.customer.group.struts.action.GroupAction" name="groupActionForm" parameter="method" validate="true" input="/GroupAction.do?method=validate" scope="session">
 			<forward name="CreateNewGroup" path="/GroupAction.do?method=chooseOffice" />
@@ -557,14 +559,14 @@
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/editLatenessDefn.jsp"></forward>
 			<forward name="search_failure" path="/pages/application/productdefinition/jsp/editLatenessDefn.jsp"></forward>
 		</action>
-		
+
 		<action path="/prdconfaction" name="prdconfactionform" type="org.mifos.application.productdefinition.struts.action.PrdConfAction" input="/prdconfaction.do?method=validate" parameter="method" validate="true">
 			<forward name="update_success" path="/AdminAction.do?method=load"></forward>
 			<forward name="load_success" path="/pages/application/productdefinition/jsp/editLatenessDormancy.jsp"></forward>
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/editLatenessDormancy.jsp"></forward>
 			<forward name="load_failure" path="/AdminAction.do?method=load"></forward>
 		</action>
-		
+
 		<!-- Loan Product -->
 		<action path="/loanproductaction" name="loanproductactionform" type="org.mifos.application.productdefinition.struts.action.LoanPrdAction" input="/loanproductaction.do?method=validate" parameter="method" validate="true" scope="session">
 			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateLoanProduct.jsp"></forward>
@@ -592,7 +594,7 @@
 			<forward name="viewAllLoanProducts_failure" path="/AdminAction.do?method=load"></forward>
 			<forward name="viewLoanProductChangeLog" path="/pages/application/productdefinition/jsp/viewLoanPrdChangeLog.jsp" />
 			<forward name="cancelLoanProductChangeLog" path="/loanproductaction.do?method=get" />
-			
+
 		</action>
 		<!-- Savings Product -->
 		<action path="/savingsproductaction" name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.action.SavingsPrdAction" input="/savingsproductaction.do?method=validate" parameter="method" validate="true" scope="session">
@@ -639,11 +641,11 @@
 		<!-- meeting action -->
 		<action path="/meetingAction" type="org.mifos.application.meeting.struts.action.MeetingAction" name="meetingActionForm" parameter="method" input="/meetingAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/meeting/jsp/createmeeting.jsp" />
-			<forward name="createMeeting_success" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />			
-			<forward name="createMeeting_failure" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />						
+			<forward name="createMeeting_success" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />
+			<forward name="createMeeting_failure" path="/pages/application/meeting/jsp/createcustomermeeting.jsp" />
 			<forward name="loadCreateCenter" path="/centerCustAction.do?method=previous&amp;input=CreateMeeting" />
 			<forward name="loadCreateGroup" path="/groupCustAction.do?method=previous&amp;input=CreateMeeting" />
-			<forward name="loadCreateClient" path="/clientCustAction.do?method=prevMeeting&amp;input=CreateMeeting" />						
+			<forward name="loadCreateClient" path="/clientCustAction.do?method=prevMeeting&amp;input=CreateMeeting" />
 			<forward name="create_failure" path="/pages/application/meeting/jsp/createmeeting.jsp" />
 			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
 			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
@@ -651,7 +653,7 @@
 			<forward name="edit_success" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
 			<forward name="update_success" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
 			<forward name="update_failure" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
-		</action>  
+		</action>
 		<action path="/AccountsSearchAction" type="org.mifos.application.accounts.struts.action.AccountsSearchAction" name="accountsSearchActionForm" parameter="method" input="/AccountsSearchAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/accounts/jsp/accountsAccountSearch.jsp" />
 			<forward name="cancel_success" path="/AdminAction.do?method=load" />
@@ -735,12 +737,12 @@
 		<!-- Ends-->
 		<!-- CheckList Action M2-->
 		<!-- CheckList Action M2-->
-		<action path="/chkListAction" 
-				type="org.mifos.application.checklist.struts.action.ChkListAction" 
-				parameter="method" 
-				scope="session" 
-				name="ChkListActionForm" 
-				validate="true" 
+		<action path="/chkListAction"
+				type="org.mifos.application.checklist.struts.action.ChkListAction"
+				parameter="method"
+				scope="session"
+				name="ChkListActionForm"
+				validate="true"
 				input="/chkListAction.do?method=validate">
 
 			<forward name="load_success" path="/pages/application/checklist/jsp/create_checkList.jsp" />
@@ -759,7 +761,7 @@
 		<!-- Ends-->
 
 		<!-- Ends-->
-		
+
 		<!-- Funds Action -->
 		<action path="/fundAction" type="org.mifos.application.fund.struts.action.FundAction" parameter="method" scope="session" name="fundActionForm" validate="true" input="/fundAction.do?method=validate">
 			<forward name="load_success" path="/pages/application/fund/jsp/createfund.jsp" />
@@ -771,7 +773,7 @@
 			<forward name="cancelCreate_success" path="/AdminAction.do?method=load" />
 			<forward name="create_success" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="create_failure" path="/pages/application/fund/jsp/createfundpreview.jsp" />
-			
+
 			<forward name="manage_success" path="/pages/application/fund/jsp/editfund.jsp" />
 			<forward name="manage_failure" path="/pages/application/fund/jsp/viewallfund.jsp" />
 			<forward name="previewManage_success" path="/pages/application/fund/jsp/editfundpreview.jsp" />
@@ -851,7 +853,7 @@
 			<!--  Audit Log -->
 			<forward name="viewSavingsChangeLog" path="/pages/application/savings/jsp/viewChangeLog.jsp" />
 			<forward name="cancelSavingsChangeLog" path="/savingsAction.do?method=get" />
-			
+
 		</action>
 		<!-- Savings Accounts action end -->
 		<!-- Apply Adjustment action -->
@@ -897,7 +899,7 @@
 		<!--  Reports Action End -->
 		<!-- ADDED BY MFTECH -->
 
-		
+
 		<!--  Reports Params Action -->
 		<action path="/reportsParamsAction"
 			type="org.mifos.application.reports.struts.action.ReportsParamsAction"
@@ -907,14 +909,14 @@
 			<forward name="reportparamslist_path" path="/pages/application/reports/jsp/report_designer_params_list.jsp" />
 <forward name="reportparams_path"
 				path="/reportsParamsAction.do?method=loadList" />
-			
+
 <forward name="reportparamsadd_path" path="/pages/application/reports/jsp/report_designer_params_add.jsp" />
 <forward name="reportparamsview_path" path="/pages/application/reports/jsp/report_designer_params_view.jsp" />
 
-		</action>		
+		</action>
 		<!--  Reports Params Action End -->
 
-		
+
 <!--  Reports DataSource Action -->
 		<action path="/reportsDataSourceAction"
 			type="org.mifos.application.reports.struts.action.ReportsDataSourceAction"
@@ -928,7 +930,7 @@
 <forward name="reportdatasourceview_path" path="/pages/application/reports/jsp/report_designer_datasource_view.jsp" />
 
 
-		</action>		
+		</action>
 		<!--  Reports DataSource Action End -->
 
 <!--  Reports Params Map Action -->
@@ -940,7 +942,7 @@
 			<forward name="reportparamsmapaddlist_path" path="/pages/application/reports/jsp/report_designer_paramsmap_listadd.jsp" />
 			<forward name="reportparamsmap_path"
 				path="/reportsParamsMapAction.do?method=loadAddList" />
-		</action>		
+		</action>
 		<!--  Reports Params Map Action End -->
 
 <!--  ReportsUploadAction -->
@@ -951,7 +953,7 @@
 			validate="false">
 			<forward name="administerreports_path" path="/pages/application/reports/jsp/report_designer.jsp" />
 
-		</action>		
+		</action>
 		<!--  Reports Upload Action End -->
 
 
@@ -961,10 +963,10 @@
 			name="reportsUserParamsActionForm" parameter="method" scope="session"
 			input="/reportsUserParamsAction.do?method=validate"
 			validate="false">
-	
+
 		<forward name="reportuserparamslist_path" path="/pages/application/reports/jsp/report_user_params.jsp" />
 <forward name="reportsuserprocess_path" path="/pages/application/reports/jsp/reportsView.jsp" />
-		</action>		
+		</action>
 		<!--  Reports UserParams Action End -->
 
 <!-- ENDED BY MFTECH -->
@@ -1011,7 +1013,7 @@
 			<forward name="viewGroupActivity" path="/pages/application/group/jsp/viewGroupActivity.jsp" />
 			<forward name="viewCenterActivity" path="/pages/application/center/jsp/viewCenterActivity.jsp" />
 		</action>
-		<action path="/applyPaymentAction" type="org.mifos.application.accounts.struts.action.AccountApplyPaymentAction" name="applyPaymentActionForm" parameter="method" 
+		<action path="/applyPaymentAction" type="org.mifos.application.accounts.struts.action.AccountApplyPaymentAction" name="applyPaymentActionForm" parameter="method"
 			input="/applyPaymentAction.do?method=validate" scope="session" validate="true">
 			<forward name="load_success" path="/pages/application/accounts/jsp/applypayment.jsp" />
 			<forward name="preview_success" path="/pages/application/accounts/jsp/reviewapplypayment.jsp" />
@@ -1021,13 +1023,13 @@
 			<forward name="applyPayment_failure" path="/pages/application/accounts/jsp/reviewapplypayment.jsp"/>
 			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
 		</action>
-		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" name="loanAccountActionForm" parameter="method" 
+		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" name="loanAccountActionForm" parameter="method"
 			input="/loanAccountAction.do?method=validate" scope="session" validate="true">
 			<forward name="viewInstmentDetails_success" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp" />
 			<forward name="getAllActivity_success" path="/pages/application/loan/jsp/viewloanaccountactivity.jsp" />
 			<forward name="waiveChargesDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
 			<forward name="waiveChargesOverDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
-			<forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>			
+			<forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>
 			<forward name="get_success" path="/pages/application/loan/jsp/loanaccountdetail.jsp" />
 			<forward name="getLoanRepaymentSchedule" path="/pages/application/loan/jsp/loanRepayment.jsp" />
 			<forward name="viewStatusHistory" path="/pages/application/loan/jsp/viewLoanStatusHistory.jsp" />
@@ -1043,13 +1045,13 @@
 			<forward name="update_failure" path="/pages/application/loan/jsp/editPreviewLoanAccount.jsp" />
 			<forward name="manageprevious_success" path="/pages/application/loan/jsp/editLoanAccount.jsp" />
 			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
-			
+
 			<!--  Audit Log -->
 			<forward name="viewLoanChangeLog" path="/pages/application/loan/jsp/viewChangeLog.jsp" />
 			<forward name="cancelLoanChangeLog" path="/loanAccountAction.do?method=get" />
-			
+
 		</action>
-		<action path="/savingsDepositWithdrawalAction" type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" name="savingsDepositWithdrawalForm" parameter="method" 
+		<action path="/savingsDepositWithdrawalAction" type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" name="savingsDepositWithdrawalForm" parameter="method"
 			input="/savingsDepositWithdrawalAction.do?method=validate" scope="session" validate="true">
 			<forward name="load_success" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp" />
 			<forward name="preview_success" path="/pages/application/savings/jsp/review_transaction_savings.jsp" />
@@ -1069,12 +1071,12 @@
 			<forward name="preview_failure" path="/pages/application/accounts/jsp/change_status.jsp" />
 		</action>
 		<!-- Edit Customer Status Action -->
-		<action path="/editCustomerStatusAction" 
-			type="org.mifos.application.customer.struts.action.EditCustomerStatusAction" 
-			name="editCustomerStatusActionForm" 
-			parameter="method" 
-			input="/editCustomerStatusAction.do?method=validate" 
-			validate="true" 
+		<action path="/editCustomerStatusAction"
+			type="org.mifos.application.customer.struts.action.EditCustomerStatusAction"
+			name="editCustomerStatusActionForm"
+			parameter="method"
+			input="/editCustomerStatusAction.do?method=validate"
+			validate="true"
 			scope="session">
 			<forward name="load_success" path="/pages/application/customer/jsp/changeStatus.jsp" />
 			<forward name="preview_success" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
@@ -1090,12 +1092,12 @@
 			<forward name="updateStatus_failure" path="/pages/application/customer/jsp/customerchangeStatusPreview.jsp" />
 			<forward name="previewStatus_failure" path="/pages/application/customer/jsp/customerchangeStatus.jsp" />
 		</action>
-		
+
 		<action path="/applyChargeAction" type="org.mifos.application.accounts.struts.action.ApplyChargeAction" parameter="method" name="ApplyChargeActionForm" input="/applyChargeAction.do?method=validate" validate="true" scope="session">
 			<forward name="load_success" path="/pages/application/accounts/jsp/applyCharges.jsp"></forward>
 			<forward name="update_failure" path="/pages/application/accounts/jsp/applyCharges.jsp"></forward>
 			<forward name="loanDetails_success" path="/loanAccountAction.do?method=get"></forward>
-			<!-- 
+			<!--
 			<forward name="clientDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails" />
 			<forward name="groupDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails" />
 			<forward name="centerDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails" />
@@ -1103,13 +1105,13 @@
 			<forward name="clientDetails_success" path="/customerAccountAction.do?method=load" />
 			<forward name="groupDetails_success" path="/customerAccountAction.do?method=load" />
 			<forward name="centerDetails_success" path="/customerAccountAction.do?method=load" />
-			
+
 		</action>
 		<!-- CustomerNotes action -->
-		<action path="/customerNotesAction" type="org.mifos.application.customer.struts.action.CustomerNotesAction" 
-			name="customerNotesActionForm" 
-			parameter="method" 
-			validate="true" 
+		<action path="/customerNotesAction" type="org.mifos.application.customer.struts.action.CustomerNotesAction"
+			name="customerNotesActionForm"
+			parameter="method"
+			validate="true"
 			input="/customerNotesAction.do?method=validate" scope="session">
 			<forward name="load_success" path="/pages/application/customer/jsp/addCustomerNotes.jsp" />
 			<forward name="get_success" path="/CustomerNoteAction.do?method=search" />
@@ -1122,10 +1124,10 @@
 			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
 			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
 		</action>
-		
+
 		<!-- Client Creation Action -->
-		<action path="/clientCustAction" type="org.mifos.application.customer.client.struts.action.ClientCustAction" 
-			name="clientCustActionForm" parameter="method" 
+		<action path="/clientCustAction" type="org.mifos.application.customer.client.struts.action.ClientCustAction"
+			name="clientCustActionForm" parameter="method"
 			input="/clientCustAction.do?method=validate" validate="true"
 			scope="session">
 			<forward name="load_success" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
@@ -1143,7 +1145,7 @@
 			<forward name="previewEditPersonalInfo_failure" path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp" />
 			<forward name="previewEditMfiInfo_success" path="/pages/application/client/jsp/preview_EditClientMfiInfo.jsp" />
 			<forward name="previewEditMfiInfo_failure" path="/pages/application/client/jsp/edit_ClientMfiInfo.jsp" />
-			 
+
 			 <!-- Preview Page Forwards End -->
 			<!-- Previous Page Forwards -->
 			<forward name="prevPersonalInfo_success" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
@@ -1178,8 +1180,8 @@
 			<forward name="cancelClientChangeLog" path="/clientCustAction.do?method=get" />
 		</action>
 		<!-- offAction start-->
-		<action path="/offAction" type="org.mifos.application.office.struts.action.OffAction" 
-		name="offActionForm" parameter="method" 
+		<action path="/offAction" type="org.mifos.application.office.struts.action.OffAction"
+		name="offActionForm" parameter="method"
 			input="/offAction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/office/jsp/CreateNewOffice.jsp" />
 			<forward name="preview_success" path="/pages/application/office/jsp/preview_new_office.jsp" />
@@ -1199,7 +1201,7 @@
 	    <!-- offAction End-->
 	    <!-- M2 Product Category -->
 		<action path="/productCategoryAction" name="productCategoryActionForm" type="org.mifos.application.productdefinition.struts.action.PrdCategoryAction" input="/productCategoryAction.do?method=validate" parameter="method" validate="true" scope="session">
-			
+
 			<forward name="load_success" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>
 			<forward name="previous_success" path="/pages/application/productdefinition/jsp/CreateProductCategory.jsp"></forward>
 			<forward name="preview_success" path="/pages/application/productdefinition/jsp/CreateProductCategoryPreview.jsp"></forward>
@@ -1215,9 +1217,9 @@
 			<forward name="update_failure" path="/pages/application/productdefinition/jsp/ManageProductCategoryPreview.jsp"></forward>
 			<forward name="search_success" path="/pages/application/productdefinition/jsp/ViewProductCategories.jsp"></forward>
 		</action>
-	    
+
 		<!-- off hierarchy Action start-->
-		<action path="/offhierarchyaction" type="org.mifos.application.office.struts.action.OffHierarchyAction" 
+		<action path="/offhierarchyaction" type="org.mifos.application.office.struts.action.OffHierarchyAction"
 		name="offhierarchyactionform" parameter="method" scope="session"
 			input="/offhierarchyaction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp" />
@@ -1226,7 +1228,7 @@
 			<forward name="cancel_success" path="/AdminAction.do?method=load" />
 		</action>
 	    <!-- off hierarchy Action End-->
-		
+
 		<!-- Group action M2 style-->
 		<action path="/groupCustAction"
 			type="org.mifos.application.customer.group.struts.action.GroupCustAction"
@@ -1236,24 +1238,24 @@
 			<forward name="loadCenterSearch" path="/centerCustAction.do?method=loadSearch" />
 			<forward name="chooseOffice_success" path="/pages/application/group/jsp/branchlist.jsp" />
 			<forward name="load_success" path="/pages/application/group/jsp/creategroup.jsp" />
-			<forward name="loadMeeting_success" path="/meetingAction.do?method=load&amp;customerLevel=2" />			
+			<forward name="loadMeeting_success" path="/meetingAction.do?method=load&amp;customerLevel=2" />
 			<forward name="preview_success" path="/pages/application/group/jsp/previewgroup.jsp" />
 			<forward name="preview_failure" path="/pages/application/group/jsp/creategroup.jsp" />
 			<forward name="previous_success" path="/pages/application/group/jsp/creategroup.jsp" />
 			<forward name="create_success" path="/pages/application/group/jsp/creategroupconfirmation.jsp" />
 			<forward name="create_failure" path="/pages/application/group/jsp/previewgroup.jsp" />
-			
+
 			<forward name="get_success" path="/pages/application/group/jsp/viewgroupdetails.jsp" />
 			<forward name="manage_success" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
 			<forward name="previewManage_success" path="/pages/application/group/jsp/preview_editgroupdetails.jsp" />
 			<forward name="previewManage_failure" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
 			<forward name="previousManage_success" path="/pages/application/group/jsp/edit_groupdetails.jsp" />
-			
+
 			<forward name="update_success" path="/groupCustAction.do?method=get" />
 			<forward name="update_failure" path="/pages/application/group/jsp/preview_editgroupdetails.jsp" />
-			
+
 			<!--Cancel forwards-->
-			<forward name="cancelEdit_success" path="/groupCustAction.do?method=get" />			
+			<forward name="cancelEdit_success" path="/groupCustAction.do?method=get" />
 			<forward name="cancelCreate_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=createClient" />
 			<forward name="loadSearch_success" path="/pages/application/group/jsp/group_search.jsp" />
 			<forward name="search_success" path="/pages/application/group/jsp/group_search_results.jsp" />
@@ -1264,14 +1266,14 @@
 			<forward name="loadTransferSearch_success" path="/pages/application/group/jsp/group_search_client_transfer.jsp" />
 			<forward name="transferSearch_success" path="/pages/application/group/jsp/group_search_results_client_transfer.jsp" />
 			<forward name="search_GroupSearch_ClientTransfer_failure" path="/pages/application/group/jsp/group_search_client_transfer.jsp" />
-			
+
 		</action>
 		<!-- Customer action M2 style-->
 		<action path="/custAction"
 			type="org.mifos.application.customer.struts.action.CustAction"
 			name="custActionForm" parameter="method" validate="true"
 			input="/custAction.do?method=validate" scope="session">
-			
+
 			<forward name="getAllClosedAccounts" path="/pages/application/customer/jsp/getallclosedaccounts.jsp" />
 			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
 			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
@@ -1292,8 +1294,8 @@
 			<forward name="delete_success" path="/rolesPermission.do?method=viewRoles" />
 			<forward name="cancel_success" path="/AdminAction.do?method=load" />
 		</action>
-		
-	
+
+
 	</action-mappings>
 
 	<controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
@@ -1317,7 +1319,7 @@
 	<!-- office resources -->
 	<message-resources key="OfficeResources" parameter="org.mifos.application.office.util.resources.Office" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
 	<message-resources key="OfficeUIResources" parameter="org.mifos.application.office.util.resources.OfficeUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
-	
+
 	<!-- meeting resources -->
 	<message-resources key="MeetingResources" parameter="org.mifos.application.meeting.util.resources.Meeting" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
 	<!-- Roles and permission resources -->

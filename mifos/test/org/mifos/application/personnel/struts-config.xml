@@ -35,24 +35,26 @@
 			name="personActionForm" parameter="method" validate="true"
 			input="/PersonAction.do?method=validate" scope="session">
 			<forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp" />
-			<forward name="load_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
+			<forward name="load_success" path="/pages/application/personnel/jsp/create_user.jsp" />
 			<forward name="manage_success" path="/pages/application/personnel/jsp/edit_user.jsp" />
 			<forward name="previewManage_success" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />
-			<forward name="previewManage_failure" path="/pages/application/personnel/jsp/edit_user.jsp" />	
+			<forward name="previewManage_failure" path="/pages/application/personnel/jsp/edit_user.jsp" />
 			<forward name="previousManage_success" path="/pages/application/personnel/jsp/edit_user.jsp" />
 			<forward name="update_success" path="/PersonnelAction.do?method=get" />
-			<forward name="update_failure" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />			
-			<forward name="cancelEdit_success" path="/PersonnelAction.do?method=get" />	
-			<forward name="preview_success" path="/pages/application/personnel/jsp/createuser_preview.jsp" />	
-			<forward name="preview_failure" path="/pages/application/personnel/jsp/create_user.jsp" />	
-			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
-			<forward name="create_success" path="/pages/application/personnel/jsp/create_user.jsp" />	
-			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />		
-			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />		
-			<forward name="unLockUserAccount_success" path="/PersonAction.do?method=get" />	
-			<forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp" />	
-			<forward name="search_success" path="/pages/application/personnel/jsp/viewusers.jsp" />		
-			<forward name="loadSearch_success" path="/pages/application/personnel/jsp/viewusers.jsp" />		
+			<forward name="update_failure" path="/pages/application/personnel/jsp/preview_EditUser.jsp" />
+			<forward name="cancelEdit_success" path="/PersonnelAction.do?method=get" />
+			<forward name="preview_success" path="/pages/application/personnel/jsp/createuser_preview.jsp" />
+			<forward name="preview_failure" path="/pages/application/personnel/jsp/create_user.jsp" />
+			<forward name="previous_success" path="/pages/application/personnel/jsp/create_user.jsp" />
+			<forward name="create_success" path="/pages/application/personnel/jsp/create_user.jsp" />
+			<forward name="create_failure" path="/pages/application/personnel/jsp/createuser_preview.jsp" />
+			<forward name="get_success" path="/pages/application/personnel/jsp/personneldetails.jsp" />
+			<forward name="unLockUserAccount_success" path="/PersonAction.do?method=get" />
+			<forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp" />
+			<forward name="search_success" path="/pages/application/personnel/jsp/viewusers.jsp" />
+			<forward name="loadSearch_success" path="/pages/application/personnel/jsp/viewusers.jsp" />
+			<forward name="viewPersonnelChangeLog" path="/pages/application/personnel/jsp/viewchangelog.jsp" />
+			<forward name="cancelPersonnelChangeLog" path="/PersonAction.do?method=get" />
 		</action>
 	</action-mappings>
 	<message-resources key="PersonnelUIResources" parameter="org.mifos.application.personnel.util.resources.PersonnelUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
@@ -61,5 +63,5 @@
 			value="org/mifos/application/personnel/validation.xml,org/mifos/application/personnel/validator-rules.xml" />
 		<set-property property="stopOnFirstError" value="false" />
 	</plug-in>
-	
+
 </struts-config>

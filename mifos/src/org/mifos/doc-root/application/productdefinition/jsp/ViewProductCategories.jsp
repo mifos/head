@@ -90,9 +90,9 @@
 								<mifos:mifoslabel name="product.addnewprdcat"
 									bundle="ProductDefUIResources" />
 							</html-el:link>
+							<br> <br>
 														<font class="fontnormalRedBold"><html-el:errors
 								bundle="ProductDefUIResources" /> </font>
-							<br> <br>
 							</span> <c:set var="id" /> <c:forEach var="productCategory"
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'ProductCategoryList')}">
 								<c:if	test="${empty id}">
