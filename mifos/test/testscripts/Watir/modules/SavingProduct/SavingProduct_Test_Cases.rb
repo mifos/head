@@ -139,6 +139,8 @@ class SavingProduct_Test_Cases < TestClass
     @frequency_service_charge_label=@savingprd_properties['product.freq']+" "+@interest_label+" "+@savingprd_properties['product.postacc']
     @glcode_service_charge_label=@savingprd_properties['product.Glcodefor']+" "+@interest_label
     @status=@savingprd_properties['product.status']
+    @change_log_label=string_replace_message(@savingprd_properties['product.changelog'],@savingprd_properties['product.savingsview'],"").squeeze(" ")
+    @edit_saving_product_label=@savingprd_properties['produt.edit']+" "+@savings_label.to_s+" "+@savingprd_properties['product.productinfo']
     #links
     @view_savingproduct_link=string_replace_message(@admin_properties['admin.viewsavprds'],$savings,@savings_label.to_s)
     @new_savingproduct_link=string_replace_message(@admin_properties['admin.defnewsavprd'],$savings,@savings_label.to_s)
@@ -186,6 +188,19 @@ class SavingProduct_Test_Cases < TestClass
     
     #error message when there are spaces in short name  
     @errormessage_space=string_replace_message(@savingprd_properties['errors.shortnamemask'],"{0}",@savingprd_properties['product.shortname'])
+  end
+  
+  #get labels for active and inactive for product
+  def get_labels_from_db
+    begin
+      dbquery("select lookup_value from lookup_value_locale where lookup_id=115")
+      @active_label=dbresult[0]
+      dbquery("select lookup_value from lookup_value_locale where lookup_id=116")
+      @inactive_label=dbresult[0]
+    rescue =>excp
+      quit_on_error(excp) 
+    end
+  
   end
   # Check savingproduct link on admin page after login
   def Check_SavingProduct_Links()
@@ -1167,11 +1182,11 @@ class SavingProduct_Test_Cases < TestClass
   #commented change log link as it is removed for the time being
   def check_status(prd_inst_name)
     rowcount=2
-    edit_savingproduct_status(prd_inst_name, "Inactive")
+    edit_savingproduct_status(prd_inst_name, @inactive_label)
     #change_log(prd_inst_name,"2","5",rowcount) #change log shows 2 for active and 5 for inactive
     rowcount+=1
     #$ie.button(:value,@savingprd_properties['product.back']).click
-    edit_savingproduct_status(prd_inst_name, "Active")  
+    edit_savingproduct_status(prd_inst_name, @active_label)  
     #change_log(prd_inst_name,"5","2",rowcount)
     rowcount+=1
     #$ie.button(:value,@savingprd_properties['product.back']).click   
@@ -1182,9 +1197,12 @@ class SavingProduct_Test_Cases < TestClass
   def  edit_savingproduct_status(prd_inst_name, status)
     begin    
       $ie.link(:text,@edit_savingproduct_link).click
-      
-      assert($ie.contains_text(prd_inst_name.to_s + " - Edit Margin Money Product information"))
-      $logger.log_results("SavingProduct- Edit Margin Money Product information ", "click on Edit Margin Money Product information","Edit page should be opened","Passed")
+      begin
+        assert($ie.contains_text(prd_inst_name.to_s + " - "+@edit_saving_product_label))
+        $logger.log_results("SavingProduct- Edit Margin Money Product information ", "click on Edit Margin Money Product information","Edit page should be opened","Passed")
+      rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("SavingProduct- Edit Margin Money Product information", "click on Edit Margin Money Product information ","Edit page should be opened","Failed")
+      end
       $ie.select_list(:name,"status").select(status)
       $ie.button(:value,@preview_button).click              
       if($ie.contains_text( @status+" : " + status.to_s))
@@ -1194,8 +1212,7 @@ class SavingProduct_Test_Cases < TestClass
       end
       $ie.button(:value,@submit_button).click              
       verify_status_change(prd_inst_name, status)    
-    rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("SavingProduct- Edit Margin Money Product information", "click on Edit Margin Money Product information ","Edit page should be opened","Failed")
+    
     rescue =>excp
       quit_on_error(excp)   
     end      
@@ -1205,7 +1222,7 @@ class SavingProduct_Test_Cases < TestClass
 
     begin
       $ie.link(:text,@view_changelog_link).click
-      assert($ie.contains_text(prd_inst_name+" - Change log"))
+      assert($ie.contains_text(prd_inst_name+" - "+@change_log_label))
       $logger.log_results("navigated to change log page of "+prd_inst_name,"NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("could not navigate to change log page of "+prd_inst_name,"NA","NA","failed")
@@ -1251,6 +1268,7 @@ class SavingProduct_Main
   saving_obj.mifos_login
   saving_obj.read_properties()
   saving_obj.read_hash_values()
+  saving_obj.get_labels_from_db
   saving_obj.Click_Admin_page
   saving_obj.Check_SavingProduct_Links
   saving_obj.Check_New_SavingProduct_cancel

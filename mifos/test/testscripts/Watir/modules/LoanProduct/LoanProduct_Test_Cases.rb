@@ -214,6 +214,7 @@ class LoanProduct_Test_Cases < TestClass
       @min_loan_amount_label=string_replace_message(@loanprd_properties['product.minloanamt'],$loan,@loan_label)
       @def_loan_amount_label=@loanprd_properties['product.default']+" "+@loan_label.to_s+" "+@loanprd_properties['product.amount']
       @status=@loanprd_properties['product.status']
+      @change_log_label=string_replace_message(@loanprd_properties['product.changelog'],@loanprd_properties['product.savingsview'],"").squeeze(" ")
       #links
       @admin_link=@loanprd_properties['product.admin']
       @view_loanproduct_link=string_replace_message(@admin_properties['admin.viewloanprd'],$loan,@loan_label.to_s)
@@ -281,7 +282,18 @@ class LoanProduct_Test_Cases < TestClass
       @back_ro_details_page_button=@loanprd_properties['product.back']
   end
   
-      
+  #get labels for active and inactive for product
+  def get_labels_from_db
+    begin
+      dbquery("select lookup_value from lookup_value_locale where lookup_id=115")
+      @active_label=dbresult[0]
+      dbquery("select lookup_value from lookup_value_locale where lookup_id=116")
+      @inactive_label=dbresult[0]
+    rescue =>excp
+      quit_on_error(excp)
+    end 
+  end
+        
   # Check loanproduct link on admin page after login
   def Check_LoanProduct_Links()
     begin    
@@ -1374,7 +1386,7 @@ class LoanProduct_Test_Cases < TestClass
       assert_on_page(@loanprd_properties['product.mininst']+" : " + min_installments.to_i.to_s)
       assert_on_page(@loanprd_properties['product.definst']+" : " + def_installments.to_i.to_s)
       assert_on_page(@loanprd_properties['product.principal']+" : " + principal_glcode.to_s)
-      assert_on_page(@loanprd_properties['product.penalties']+" : " + penalities_glcode.to_s) 
+      #assert_on_page(@loanprd_properties['product.penalties']+" : " + penalities_glcode.to_s) 
       #  puts "############## Preview Exit ###############"
     rescue =>excp
       quit_on_error(excp)       
@@ -1541,24 +1553,24 @@ class LoanProduct_Test_Cases < TestClass
       #       $logger.log_results("LoanProduct- validating the preview page for new LoanProduct", "Click view LoanProduct link","Valid preview page content", "Failed")
       #   end   
       # puts "########## In view prod ####################"
-      assert_on_page(@loanprd_properties['product.prodinstname']+" : " + prd_inst_name.to_s)
-      assert_on_page(@loanprd_properties['product.shortname']+" : " + short_name.to_s)
-      assert_on_page(@loanprd_properties['product.prodcat']+" : " + prd_category.to_s)
-      assert_on_page(@loanprd_properties['product.startdate']+" : " + @@current_date.to_s)
-      assert_on_page(@loanprd_properties['product.applfor']+" : " + appl_for.to_s)
-      assert_on_page(@min_loan_amount_label+" : " + min_ammount.to_f.to_s)
-      assert_on_page(@max_loan_amount_label+" : " + max_ammount.to_f.to_s)
-      assert_on_page(@loanprd_properties['product.defamt']+" : " + def_ammount.to_f.to_s)
-      assert_on_page(@service_charge_ratetype+" : " + interestrate_type.to_s)
-      assert_on_page(@max_service_charge+" : " + max_interestrate.to_f.to_s + " %")
-      assert_on_page(@min_service_charge+" : " + min_interestrate.to_f.to_s + " %")
-      assert_on_page(@def_service_charge+" : " + def_interestrate.to_f.to_s + " %")
-      assert_on_page(@loanprd_properties['product.freqofinst']+" : " + frequencyOfInstallments[1].to_s + " " + periods.to_s + "(s)") 
-      assert_on_page(@loanprd_properties['product.maxinst']+" : " + max_installments.to_i.to_s)      
-      assert_on_page(@loanprd_properties['product.mininst']+" : " + min_installments.to_i.to_s)
-      assert_on_page(@loanprd_properties['product.definst']+" : " + def_installments.to_i.to_s)
-      assert_on_page(@loanprd_properties['product.principal']+" : " + principal_glcode.to_s)
-      assert_on_page(@loanprd_properties['product.penalties']+" : " + penalities_glcode.to_s) 
+      assert_on_page(@loanprd_properties['product.prodinstname']+": " + prd_inst_name.to_s)
+      assert_on_page(@loanprd_properties['product.shortname']+": " + short_name.to_s)
+      assert_on_page(@loanprd_properties['product.prodcat']+": " + prd_category.to_s)
+      assert_on_page(@loanprd_properties['product.startdate']+": " + @@current_date.to_s)
+      assert_on_page(@loanprd_properties['product.applfor']+": " + appl_for.to_s)
+      assert_on_page(@min_loan_amount_label+": " + min_ammount.to_f.to_s)
+      assert_on_page(@max_loan_amount_label+": " + max_ammount.to_f.to_s)
+      assert_on_page(@loanprd_properties['product.defamt']+": " + def_ammount.to_f.to_s)
+      assert_on_page(@service_charge_ratetype+": " + interestrate_type.to_s)
+      assert_on_page(@max_service_charge+": " + max_interestrate.to_f.to_s + " %")
+      assert_on_page(@min_service_charge+": " + min_interestrate.to_f.to_s + " %")
+      assert_on_page(@def_service_charge+": " + def_interestrate.to_f.to_s + " %")
+      assert_on_page(@loanprd_properties['product.freqofinst']+": " + frequencyOfInstallments[1].to_s + " " + periods.to_s + "(s)") 
+      assert_on_page(@loanprd_properties['product.maxinst']+": " + max_installments.to_i.to_s)      
+      assert_on_page(@loanprd_properties['product.mininst']+": " + min_installments.to_i.to_s)
+      assert_on_page(@loanprd_properties['product.definst']+": " + def_installments.to_i.to_s)
+      assert_on_page(@loanprd_properties['product.principal']+": " + principal_glcode.to_s)
+      #assert_on_page(@loanprd_properties['product.penalties']+" : " + penalities_glcode.to_s) 
       #  puts "########### LEave prod ##############"
     rescue =>excp
       quit_on_error(excp)        
@@ -1573,12 +1585,12 @@ class LoanProduct_Test_Cases < TestClass
     begin
       rowcount=2
       #puts "in check status"
-      edit_loanproduct_status(prd_inst_name, "Inactive")
+      edit_loanproduct_status(prd_inst_name, @inactive_label)
       #commented as change log link has been removed currently
       #change_log(prd_inst_name,"1","4",rowcount)
       #$ie.button(:value,@back_ro_details_page_button).click 
       rowcount+=1
-      edit_loanproduct_status(prd_inst_name, "Active")  
+      edit_loanproduct_status(prd_inst_name, @active_label)  
       #change_log(prd_inst_name,"4","1",rowcount)
       rowcount+=1
       #$ie.button(:value,@back_ro_details_page_button).click
@@ -1614,7 +1626,7 @@ class LoanProduct_Test_Cases < TestClass
   def change_log(prd_inst_name,old_status,new_status,rowcount)
     $ie.link(:text,@view_changelog_link).click
     begin
-      assert($ie.contains_text(prd_inst_name+" - Change log"))
+      assert($ie.contains_text(prd_inst_name+" - "+@change_log_label))
       $logger.log_results("navigated to change log page of "+prd_inst_name,"NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("could not navigate to change log page of "+prd_inst_name,"NA","NA","failed")
@@ -1662,6 +1674,7 @@ class LoanProduct_Main
   loan_obj.mifos_login
   loan_obj.read_properties()
   loan_obj.read_hash_values()
+  loan_obj.get_labels_from_db
   loan_obj.Click_Admin_page
   loan_obj.Check_LoanProduct_Links
   loan_obj.Check_New_LoanProduct_cancel

@@ -148,7 +148,10 @@ class Check_List_Test_Cases < TestClass
     begin
       $ie.link(:text,@define_new_checklist_link).click
       $ie.button(:value,@preview_button).click
-      assert($ie.contains_text($checklist_item_msg)) and assert($ie.contains_text(@checklist_name_msg)) and assert($ie.contains_text(@checklist_type_msg)) and assert($ie.contains_text(@checklist_status_msg)) 
+      assert($ie.contains_text($checklist_item_msg)) 
+      assert($ie.contains_text(@checklist_name_msg)) 
+      assert($ie.contains_text(@checklist_type_msg)) 
+      assert($ie.contains_text(@checklist_status_msg)) 
       $logger.log_results("CheckList- Check for validation error while creating new check list", "nothing ","All validation error message","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("CheckList- Check for validation error while creating new check list", "nothing ","All validation error message","Failed")              
@@ -165,8 +168,10 @@ class Check_List_Test_Cases < TestClass
       $ie.text_field(:name,"checklistName").set(checklist_name)            
       $ie.button(:value,@preview_button).click
       #max_field_len(checklist_name,50,$checklist_max_len)
-      assert(!$ie.contains_text(@checklist_name_msg)) and \
-      assert($ie.contains_text($checklist_item_msg)) and assert($ie.contains_text(@checklist_type_msg)) and assert($ie.contains_text(@checklist_status_msg)) 
+      assert(!$ie.contains_text(@checklist_name_msg))
+      assert($ie.contains_text($checklist_item_msg))
+      assert($ie.contains_text(@checklist_type_msg))
+      assert($ie.contains_text(@checklist_status_msg)) 
       $logger.log_results("CheckList- Check for validation error while creating new check list", "Name","All validation error message","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("CheckList- Check for validation error while creating new check list", "Name ","All validation error message","Failed")
@@ -183,8 +188,9 @@ class Check_List_Test_Cases < TestClass
       # $ie.text_field(:name,"checklistName").set(checklist_name)  
       $ie.select_list(:name,"type").select(type)
       $ie.button(:value,@preview_button).click
-      assert(!$ie.contains_text(@checklist_type_msg)) and \
-      assert($ie.contains_text($checklist_item_msg)) and assert($ie.contains_text(@checklist_status_msg)) 
+      assert(!$ie.contains_text(@checklist_type_msg)) 
+      assert($ie.contains_text($checklist_item_msg)) 
+      assert($ie.contains_text(@checklist_status_msg)) 
       $logger.log_results("CheckList- Check for validation error while creating new check list", "Name and type ","All validation error message","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("CheckList- Check for validation error while creating new check list", "Name and type ","All validation error message","Failed")       
@@ -200,11 +206,12 @@ class Check_List_Test_Cases < TestClass
       # $ie.link(:text,@define_new_checklist_link).click
       # $ie.text_field(:name,"checklistName").set(checklist_name)  
       # $ie.select_list(:name,"type").select(type)
-      $ie.select_list(:name,"status").select(status)
+      $ie.select_list(:name,"stateId").select(status)
       
       $ie.button(:value,@preview_button).click
       
-      assert(!$ie.contains_text(@checklist_status_msg)) and assert($ie.contains_text($checklist_item_msg))
+      assert(!$ie.contains_text(@checklist_status_msg)) 
+      assert($ie.contains_text($checklist_item_msg))
       $logger.log_results("CheckList- Check for validation error while creating new check list", "Name,type and status ","All validation error message","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("CheckList- Check for validation error while creating new check list", "Name,type and status ","All validation error message","Failed")       
@@ -309,7 +316,7 @@ class Check_List_Test_Cases < TestClass
       
       $ie.text_field(:name,"checklistName").set(checklist_name)        
       $ie.select_list(:name,"type").select(chk_type)
-      $ie.select_list(:name,"status").select(status)
+      $ie.select_list(:name,"stateId").select(status)
       
       count = 0
       while count < check_list_items.length
@@ -443,7 +450,7 @@ class Check_List_Test_Cases < TestClass
       dbquery("select date_format(c.created_date,'%d/%m/%Y'), p.login_name from checklist c, personnel p where c.created_by  = p.personnel_id and checklist_id =" + @@checklist_id)
       created_date = dbresult[0]
       created_by = dbresult[1]
-      if($ie.contains_text(checklist_name) and $ie.contains_text("Type: "+ chk_type.to_s)and $ie.contains_text("Status: " + status.to_s) and $ie.contains_text("Created by: "+ created_by.to_s) and $ie.contains_text("Created date: " + created_date.to_s))
+      if($ie.contains_text(checklist_name) and $ie.contains_text(@@checklistprop['checklist.type']+" "+ chk_type.to_s)and $ie.contains_text(@@checklistprop['checklist.status']+" "+ status.to_s) and $ie.contains_text(@@checklistprop['checklist.createdby']+" : "+ created_by.to_s) and $ie.contains_text(@@checklistprop['checklist.createddate']+" : "+ created_date.to_s))
         $logger.log_results("CheckList- validating the preview page for new check list", "Click on preview button","Valid preview page content", "Passed")
       else
         $logger.log_results("CheckList- validating the preview page for new check list", "Click on preview button","Valid preview page content", "Failed")
@@ -470,7 +477,7 @@ class Check_List_Test_Cases < TestClass
   def edit_checklist(checklist_name)
     begin
       begin    
-        $ie.link(:text,"Edit checklist").click #currently this is not in the properties file.would be added once it is updated 
+        $ie.link(:text,@@checklistprop['checklist.edit_checklist']).click 
         assert($ie.contains_text(checklist_name+ " - "+@edit_checklist_label))
         $logger.log_results("CheckList- edit check list ", "click on Edit checklist link","Edit page should be opened","Passed")
       rescue Test::Unit::AssertionFailedError=>e

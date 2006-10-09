@@ -103,7 +103,9 @@ $add_information="Additional information"
 $adm_fee="Administrative set fees"
 $add_fee="Additional fees"
 #group out fo center end
-
+#checklist
+$checklist_item_msg="Please specify Item" #this is temporarily added for checklist.would be removed later
+#checklist end
 
 #labels 
 $loan="loan"

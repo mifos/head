@@ -156,7 +156,18 @@ class Office_Test_Cases < TestClass
       quit_on_error(excp)
     end
   end
-
+  
+  #get labels for active and inactive for office from db
+  def get_labels_from_db()
+    begin
+      dbquery("select lookup_value from lookup_value_locale where lookup_id=15")
+      @active_label=dbresult[0]
+      dbquery("select lookup_value from lookup_value_locale where lookup_id=16")
+      @inactive_label=dbresult[0]
+    rescue =>excp
+      quit_on_error(excp)
+    end
+  end
   # Login to Mifos and check the first page after login page
   def Office_login()
     begin
@@ -646,8 +657,8 @@ class Office_Test_Cases < TestClass
   # Check for the status change from active to inactive and then inactive to active
   def check_status(office_name)
     begin
-      edit_office_status(office_name, "Inactive")
-      edit_office_status(office_name, "Active")  
+      edit_office_status(office_name, @inactive_label)
+      edit_office_status(office_name, @active_label)  
       $ie.link(:text,@admin_label).click
     rescue =>excp
       quit_on_error(excp) 
@@ -713,6 +724,7 @@ class Office
   office_obj.read_from_properties_file
   office_obj.read_values_from_hash
   office_obj.Office_login
+  office_obj.get_labels_from_db()
   office_obj.Click_Admin_page
   office_obj.Check_office_hierarchy
   office_obj.Check_Office_Links

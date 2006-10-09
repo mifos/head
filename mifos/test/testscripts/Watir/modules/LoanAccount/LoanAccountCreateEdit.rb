@@ -266,7 +266,7 @@ class LoanAccountCreateEdit<TestClass
   
   def check_Proposed_or_actual_disbursement_date()
     begin
-      assert($ie.contains_text("Proposed/actual disbursement date"))
+      assert($ie.contains_text(@@loanprop['loan.dis_date']))
       $logger.log_results("Label Proposed/actual disbursement date","Displaying","Should not display","Failed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Label Proposed/actual disbursement date","Not Displaying","Should not display","Passed")
@@ -277,7 +277,7 @@ class LoanAccountCreateEdit<TestClass
   
   def check_Interest_Calculation_Rule_For_Early_or_Late_Payments()
     begin
-      assert($ie.contains_text("Interest Calculation Rule For Early/Late Payments"))
+      assert($ie.contains_text(@@loanprop['loan.interest_cal_payments']))
       $logger.log_results("Label Interest Calculation Rule For Early/Late Payments","Displaying","Should not display","Failed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Label Interest Calculation Rule For Early/Late Payments","Not Displaying","Should not display","Passed")
@@ -634,28 +634,7 @@ class LoanAccountCreateEdit<TestClass
     end
   end
   
-  def view_savings_account_creation_link()
-    begin
-      assert($ie.contains_text("Open a new Margin Money account"))
-      $logger.log_results("Link Open a new savings account","Should Exist","Existed","Passed")
-    rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Link Open a new savings account","Should Exist","Not Existed","Failed")
-    rescue =>excp
-      quit_on_error(excp)
-    end
-  end 
-  
-  def click_savings_account_link()
-    begin
-      $ie.link(:text,"Open a new Margin Money account").click
-      assert($ie.contains_text($savings_select_mmaccount))
-      $logger.log_results("Link Open a new savings account","Should work","Working","passed")
-      $ie.button(:value,@@accountprop['accounts.cancel']).click
-    rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Link Open a new savings account","Should work","not Working","Failed")
-    end
-  end
-  
+ 
   def view_client_details_link_click()
     begin
       $ie.link(:text,@@view_loan_account_details).click

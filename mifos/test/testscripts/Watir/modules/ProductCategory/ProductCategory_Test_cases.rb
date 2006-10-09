@@ -67,6 +67,18 @@ class ProductCategory_Test_Cases < TestClass
       @review_submit=string_replace_message(@prdcat_properties['product.review'],"amp;","")      #removing amp; from the string to get "review & submit" as properties file has it as "review &amp; submit" 
   end
   
+  #read labels from db
+  def get_labels_from_db()
+    begin
+      dbquery("select lookup_value from lookup_value_locale where lookup_id=113")
+      @inactive_label=dbresult[0]
+      dbquery("select lookup_value from lookup_value_locale where lookup_id=114")
+      @active_label=dbresult[0]  
+    rescue =>excp
+      quit_on_error(excp)
+    end
+  end
+  
   # Check savingproduct link on admin page after login
   def Check_ProductCategory_Links()
     begin    
@@ -409,8 +421,8 @@ class ProductCategory_Test_Cases < TestClass
   # Check for the status change from active to inactive and then inactive to active
   def check_status(category_name)
     begin
-      edit_productcategory_status(category_name, "Inactive")
-      edit_productcategory_status(category_name, "Active")  
+      edit_productcategory_status(category_name, @inactive_label)
+      edit_productcategory_status(category_name, @active_label)  
       $ie.link(:text,@admin_link).click
     rescue =>excp
       quit_on_error(excp)
@@ -422,7 +434,7 @@ class ProductCategory_Test_Cases < TestClass
     begin    
       
       $ie.link(:text, @edit_category_button).click
-      assert($ie.contains_text(category_name.to_s + " - Edit category information"))
+      assert($ie.contains_text(category_name.to_s + " - "+@edit_category_button))
       $logger.log_results("ProductCategory- Edit Product category information ", "click on Edit Product category information ","Edit page should be opened","Passed")
       $ie.select_list(:name,"productCategoryStatus").select(status)
       $ie.button(:value,@preview_button).click             
@@ -462,6 +474,7 @@ class ProductCategory_Main
     prdcat_obj.read_properties()
     prdcat_obj.read_hash_values()
     prdcat_obj.mifos_login
+    prdcat_obj.get_labels_from_db
     prdcat_obj.Click_Admin_page
     prdcat_obj.Check_ProductCategory_Links
     prdcat_obj.Check_New_ProductCategory_cancel
