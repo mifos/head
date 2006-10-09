@@ -12,7 +12,7 @@ include Watir
 #Testing saving creation and edit savings
 class SavingsAccountCreateEdit < TestClass
   #connecting to database and getting office_id, customerid and productid 
-  def data_connection(typeid,activeid)
+  def data_connection(typeid,activeid,savingstype)
     begin   
       name_login=$validname
       @@type_id=typeid
@@ -31,11 +31,12 @@ class SavingsAccountCreateEdit < TestClass
       @@client_name=dbresult[0]
       @@cust_id=dbresult[1]
       @@global_cust_num=dbresult[2]
-      #dbquery("select prd_offering_id,prd_offering_name from prd_offering where prd_applicable_master_id="+typeid+" and prd_category_id=2 and offering_status_id=2")
-      dbquery("select a.prd_offering_id,a.prd_offering_name from prd_offering a,savings_offering b where b.prd_offering_id=a.prd_offering_id and a.prd_applicable_master_id="+ typeid+" and a.prd_category_id=2 and b.savings_type_id=1 and a.offering_status_id=2")
+      dbquery("select a.prd_offering_id,a.prd_offering_name,b.recommended_amnt_unit_id  from prd_offering a,savings_offering b where b.prd_offering_id=a.prd_offering_id and a.prd_applicable_master_id="+typeid+" and a.prd_category_id=2 and b.savings_type_id="+savingstype+" and a.offering_status_id=2")
+      #dbquery("select a.prd_offering_id,a.prd_offering_name from prd_offering a,savings_offering b where b.prd_offering_id=a.prd_offering_id and a.prd_applicable_master_id="+typeid+" and a.prd_category_id=2 and b.savings_type_id=1 and a.offering_status_id=2")
       @@prod_name=dbresult[1]
       @@prod_id=dbresult[0]
-    rescue =>excp
+      @@recommended_amnt_unit=dbresult[2]
+      rescue =>excp
       quit_on_error(excp)
     end
   end 
@@ -50,6 +51,7 @@ class SavingsAccountCreateEdit < TestClass
       @status=arrval[rowid+=1]
       @nammount=arrval[rowid+=1].to_i.to_s
       @validationammount=arrval[rowid+=1].to_i.to_s
+      @savings_type=arrval[rowid+=1].to_i.to_s
     end
     if @status=="partial" then
       @status="Save for later"
@@ -77,6 +79,9 @@ class SavingsAccountCreateEdit < TestClass
   end
   def Validationammount()
     @validationammount
+  end
+  def Savings_type
+  @savings_type
   end
   #loging into Mifos and get some values like groupname.clientname,centername and savings account name from DB             
   def savings_login()
@@ -138,6 +143,9 @@ class SavingsAccountCreateEdit < TestClass
       @@view_deposit_dew_details=@@savingsprop['Savings.viewDepositDueDetails']
       @@deposit_dew_details=@@savingsprop['Savings.depositduedetails']
       @@savings_account_close_msg=@@savingsprop['Savings.reviewDetails']+" "+@@savingsprop['Savings.clickSubmitIfSatisfied']+" "+@@savingsprop['Savings.clickCancelToReturn']+" "+@@savingsprop['Savings.detailsWithOutClosing']
+      @@make_depositorwithdrawal=@@savingsprop['Savings.makeDepositWithdrawl']
+      @@button_reviewtransaction=@@savingsprop['Savings.reviewTransaction']
+      
     rescue =>excp
       quit_on_error(excp)
     end
@@ -179,10 +187,10 @@ class SavingsAccountCreateEdit < TestClass
     end
   end
   #selcting the client while creating savings account
-  def select_client_while_creating_savings_account(typeid,activeid)
+  def select_client_while_creating_savings_account(typeid,activeid,savingstype)
     begin
-      data_connection(typeid,activeid)
-      $ie.text_field(:name,"searchNode(searchString)").set(@@client_name)
+      data_connection(typeid,activeid,savingstype)
+      $ie.text_field(:name,"searchString").set(@@client_name)
       $ie.button(:value,@@button_search).click
       #$ie.goto($test_site+"/savingsAction.do?method=getPrdOfferings&customerId="+@@cust_id)
       $ie.link(:text,@@client_name+":ID"+@@global_cust_num).click
@@ -370,7 +378,7 @@ class SavingsAccountCreateEdit < TestClass
       $logger.log_results("Status Change","preview","page loaded","passed")
       $ie.button(:value,@@button_submit).click
       check_view_deposit_due_details_link_exist
-      check_view_deposit_due_details_link_functionality
+   #   check_view_deposit_due_details_link_functionality
       check_view_status_history_link_functionality_active
       check_close_account_link_exist
     rescue  Test::Unit::AssertionFailedError=>e
@@ -470,21 +478,22 @@ class SavingsAccountCreateEdit < TestClass
       assert($ie.contains_text(@@status_pending_name))and assert($ie.cotains_text(@@lookup_active))
       $logger.log_results("View Status History  is displaying proper data","N/A","N/A","Passed")    
       $ie.button(:value,@@button_return).click
-    rescue  Test::Unit::AssertionFailedError=>e
+      rescue  Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Status History  is displaying proper data","N/A","N/A","Failed")    
       $ie.button(:value,@@button_return).click
-    rescue =>excp
+      rescue =>excp
       quit_on_error(excp)
     end 
   end
+  
   #check for close account link after changing the account status to active
   def check_close_account_link_exist
     begin
       assert($ie.contains_text(@@close_account))
-      check_close_account_link_functionality
-    rescue  Test::Unit::AssertionFailedError=>e
+      check_close_account_link_functionality()
+      rescue  Test::Unit::AssertionFailedError=>e
       $logger.log_results("Close account","link","not existed","Failed")
-    rescue =>excp
+      rescue =>excp
       quit_on_error(excp)
     end
   end
@@ -493,7 +502,7 @@ class SavingsAccountCreateEdit < TestClass
     begin
       $ie.link(:text,@@close_account).click
       $ie.select_list(:name,"paymentTypeId").select_value("1")
-      if @@type_id=="2" or @@type_id=="3"
+      if (@@type_id=="2" and @@recommended_amnt_unit.to_i==1)
         $ie.select_list(:name,"customerId").select("Non-specified")
       end
       $ie.text_field(:name,"notes").set("aaaaa")
@@ -501,39 +510,56 @@ class SavingsAccountCreateEdit < TestClass
       assert($ie.contains_text(@@savings_account_close_msg))
       $logger.log_results("Account","close","status","Passed")
       $ie.button(:value,@@button_submit).click
-    rescue  Test::Unit::AssertionFailedError=>e
+      rescue  Test::Unit::AssertionFailedError=>e
       $logger.log_results("Account","close","status","Failed")
-    rescue =>excp
+      rescue =>excp
       quit_on_error(excp)
     end
   end
   #check for view deposit due details link exist
   def check_view_deposit_due_details_link_exist()
-    begin
-      assert($ie.contains_text(@@view_deposit_dew_details))
-      $logger.log_results(@@view_deposit_dew_details,"should exist","existed","Passed")
-    rescue  Test::Unit::AssertionFailedError=>e
-      $logger.log_results(@@view_deposit_dew_details,"should exist","not existed","Failed")
-    rescue =>excp
-      quit_on_error(excp)
-    end
+        if(@savings_type.to_i==1) then
+            begin
+              assert($ie.contains_text(@@view_deposit_dew_details))
+              check_view_deposit_due_details_link_functionality()
+              $logger.log_results(@@view_deposit_dew_details,"should exist","existed","Passed")
+              rescue  Test::Unit::AssertionFailedError=>e
+              $logger.log_results(@@view_deposit_dew_details,"should exist","not existed","Failed")
+              rescue =>excp
+              quit_on_error(excp)
+           end  
+        elsif(@savings_type.to_i==2) then
+           begin
+              assert(!($ie.contains_text(@@view_deposit_dew_details)))
+              $logger.log_results(@@view_deposit_dew_details,"Should not exist","does not exist","Passed")
+              rescue  Test::Unit::AssertionFailedError=>e
+              $logger.log_results(@@view_deposit_dew_details,"Should not exist","existed","Failed")
+              rescue =>excp
+              quit_on_error(excp)
+          end  
+        end 
+        
+  
   end   
   #check for view deposit due details link working or not
   def check_view_deposit_due_details_link_functionality()
     begin
-      $ie.link(:text,@@view_deposit_dew_details).click
-      assert($ie.contains_text(@@deposit_dew_details))
-      $logger.log_results(@@view_deposit_dew_details,"should work","Working","Passed")
-      $ie.button(:value,@@button_return).click
-    rescue  Test::Unit::AssertionFailedError=>e
-      $logger.log_results(@@view_deposit_dew_details,"should work","not Working","Failed")	   
-      $ie.button(:value,@@button_return).click
-    rescue =>excp
-      quit_on_error(excp)
+            $ie.link(:text,@@view_deposit_dew_details).click
+            begin
+              assert($ie.contains_text(@@deposit_dew_details))
+              $logger.log_results(@@view_deposit_dew_details,"should work","Working","Passed")
+              $ie.button(:value,@@button_return).click
+              rescue  Test::Unit::AssertionFailedError=>e
+              $logger.log_results(@@view_deposit_dew_details,"should work","not Working","Failed")	   
+              $ie.button(:value,@@button_return).click
+              rescue =>excp
+              quit_on_error(excp)
+            end  
+      end  
     end
   end
   
-end
+ 
 
 class SavingsAccountTest 
   savingsobj=SavingsAccountCreateEdit.new
@@ -552,7 +578,7 @@ class SavingsAccountTest
     savingsobj.check_savings_account_creation_link_exist
     savingsobj.click_savings_account_link_working
     savingsobj.check_mandatory_conditions_in_select_client_page
-    savingsobj.select_client_while_creating_savings_account(savingsobj.Typeid,savingsobj.Activeid)
+    savingsobj.select_client_while_creating_savings_account(savingsobj.Typeid,savingsobj.Activeid,savingsobj.Savings_type)
     savingsobj.checking_mandatory_conditions_in_select_savings_page
     savingsobj.select_savings_product_while_creating_savings_account
     savingsobj.check_mandatory_conditions_in_savings_creation_page_when_no_product_selected()
