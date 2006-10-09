@@ -50,7 +50,7 @@ import org.mifos.application.customer.client.struts.actionforms.ClientTransferAc
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.customer.util.valueobjects.CustomerSearchInput;
+import org.mifos.application.customer.util.helpers.CustomerSearchInputView;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -124,7 +124,7 @@ public class ClientTransferAction extends BaseAction {
 	public ActionForward loadParents(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		CustomerSearchInput clientSearchInput = new CustomerSearchInput();
+		CustomerSearchInputView clientSearchInput = new CustomerSearchInputView();
 		clientSearchInput.setOfficeId(getUserContext(request).getBranchId());
 		clientSearchInput
 				.setCustomerInputPage(ClientConstants.INPUT_GROUP_TRANSFER);

@@ -56,7 +56,6 @@ import org.hibernate.Transaction;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.framework.business.handlers.Delegator;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.cronjobs.MifosScheduler;
@@ -95,7 +94,7 @@ import org.mifos.framework.util.helpers.StringToMoneyConverter;
  */
 public class InitializerPlugin implements PlugIn {
 
-	 private String hibernatePropertiesPath;
+	private String hibernatePropertiesPath;
 
 	public String getHibernatePropertiesPath() {
 		return hibernatePropertiesPath;
@@ -110,11 +109,6 @@ public class InitializerPlugin implements PlugIn {
 	 * function then delegates the initialization part to different methods of
 	 * the class.
 	 * 
-	 * @throws ServletException -
-	 *             whenever application initialization fails
-	 * @see org.apache.struts.action.PlugIn#init(org.apache.struts.action.ActionServlet,
-	 *      org.apache.struts.config.ModuleConfig)
-	 * 
 	 */
 	public void init(ActionServlet servlet, ModuleConfig config)
 			throws ServletException {
@@ -122,8 +116,6 @@ public class InitializerPlugin implements PlugIn {
 		try {
 			initializeLogger();
 			initializeHibernate(this.hibernatePropertiesPath);
-			// System.out.println("logger has been initialized");
-			initializeApplication(servlet, config);
 			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info(
 					"Logger has been initialised", false, null);
 			initializeSecurity();
@@ -148,14 +140,15 @@ public class InitializerPlugin implements PlugIn {
 	}
 
 	/**
-	 *This method creates an instance of StringToMoney converter
-	 *and registers it with BeanUtils so that when struts uses this bean utils
-	 *to populate action form from request parameters it can use this converter. 
+	 * This method creates an instance of StringToMoney converter and registers
+	 * it with BeanUtils so that when struts uses this bean utils to populate
+	 * action form from request parameters it can use this converter.
 	 */
 	private void registerConverterWithBeanUtils() {
 		Converter stringToMoney = new StringToMoneyConverter();
-		BeanUtilsBean.getInstance().getConvertUtils().register(stringToMoney, Money.class);
-		
+		BeanUtilsBean.getInstance().getConvertUtils().register(stringToMoney,
+				Money.class);
+
 	}
 
 	/**
@@ -176,91 +169,6 @@ public class InitializerPlugin implements PlugIn {
 			e.printStackTrace();
 			throw new AppNotConfiguredException(e);
 		}
-	}
-
-	/**
-	 * Reads the iinitialization.xml and configures the system.Also reads the
-	 * dsn passed as servlet config and initializes the <code>DAO</code> with
-	 * the datasource.
-	 * 
-	 * @throws AppNotConfiguredException -
-	 *             when it fails to read initialization.xml or fails to
-	 *             initialize the <code>DAO</code> with the datasource
-	 */
-	private void initializeApplication(ActionServlet servlet,
-			ModuleConfig config) throws AppNotConfiguredException {
-		MifosNode node;
-		Delegator delegator = null;
-		String businessProcessorImplementation = null;
-
-		try {
-			// read delegator
-			node = getNode(FilePaths.INITIALIZATIONFILE, Constants.DELEGATOR);
-			delegator = (Delegator) Class.forName(
-					node.getElement(Constants.DELEGATOR)).newInstance();
-			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info(
-					"Delegator has been read from xml file", false, null);
-			// read businessprocessor implementation
-			node = getNode(FilePaths.INITIALIZATIONFILE,
-					Constants.BUSINESSPROCESSORIMPLEMENTATION);
-			businessProcessorImplementation = node
-					.getElement(Constants.BUSINESSPROCESSORIMPLEMENTATION);
-			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
-					"BusinessProcessor impl value is "
-							+ businessProcessorImplementation, false, null);
-			// set businessprocessor implementation in the delegator
-			// so that it can be used to return appropriate service locator
-			delegator
-					.setBusinessProcessorImplementation(businessProcessorImplementation);
-
-		} catch (XMLReaderException xre) {
-
-			xre.printStackTrace();
-			throw new AppNotConfiguredException(xre);
-		} catch (URISyntaxException urise) {
-
-			urise.printStackTrace();
-			throw new AppNotConfiguredException(urise);
-		} catch (InstantiationException ie) {
-
-			ie.printStackTrace();
-			throw new AppNotConfiguredException(ie);
-		} catch (IllegalAccessException iae) {
-
-			iae.printStackTrace();
-			throw new AppNotConfiguredException(iae);
-		} catch (ClassNotFoundException cnfe) {
-
-			cnfe.printStackTrace();
-			throw new AppNotConfiguredException(cnfe);
-		}
-
-		servlet.getServletContext()
-				.setAttribute(Constants.DELEGATOR, delegator);
-		servlet.getServletContext().setAttribute(
-				Constants.BUSINESSPROCESSORIMPLEMENTATION,
-				businessProcessorImplementation);
-
-	}
-
-	/**
-	 * Reads the xml file passed as argument and returns the object of
-	 * {@link MifosNode} corresponding to the node name passed as argument
-	 * 
-	 * @param filePath -
-	 *            relative path of the file which it is supposed to read.
-	 * @param nodeName -
-	 *            name of the node in the file to be read.
-	 * @return - the <code>MifosNode</code> object corresponding the node read
-	 * @throws XMLReaderException
-	 * @throws URISyntaxException
-	 */
-	private MifosNode getNode(String filePath, String nodeName)
-			throws XMLReaderException, URISyntaxException {
-		InitializationReader initReader = new InitializationReader();
-		return initReader.getElement(
-			new File(ResourceLoader.getURI(filePath)),
-			nodeName);
 	}
 
 	/**
@@ -298,7 +206,7 @@ public class InitializerPlugin implements PlugIn {
 		} catch (XMLReaderException e) {
 
 			throw new AppNotConfiguredException(e);
-		}  catch (EncryptionException e) {
+		} catch (EncryptionException e) {
 			throw new AppNotConfiguredException(e);
 		} catch (HibernateSystemException e) {
 			throw new AppNotConfiguredException(e);
@@ -386,13 +294,15 @@ public class InitializerPlugin implements PlugIn {
 	private void configureAuditLogValues() throws SystemException {
 		AuditConfigurtion.init();
 	}
-	void initializeConfiguration(ActionServlet servlet)throws AppNotConfiguredException{
-		
-		
+
+	void initializeConfiguration(ActionServlet servlet)
+			throws AppNotConfiguredException {
+
 		MifosConfiguration.getInstance().init();
 		initializeLabelConstants(servlet);
-		
+
 	}
+
 	private void initializeLabelConstants(ActionServlet servlet) {
 
 		ServletContext servletContext = servlet.getServletContext();
@@ -403,22 +313,23 @@ public class InitializerPlugin implements PlugIn {
 		setAttribute(servletContext, ConfigurationConstants.GROUP);
 		setAttribute(servletContext, ConfigurationConstants.CENTER);
 	}
-	
-	private void initializeEntityMaster() throws HibernateProcessException{
+
+	private void initializeEntityMaster() throws HibernateProcessException {
 		EntityMasterData.getInstance().init();
 	}
-	private void initializeFieldConfiguration(ActionServlet servlet) throws HibernateProcessException, ApplicationException{
-		FieldConfigItf fieldConfigItf=FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();
-		//TODO Remove this code after M1 code migration.
-		servlet.getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,fieldConfigItf.getEntityMandatoryFieldMap());
-	}
 
+	private void initializeFieldConfiguration(ActionServlet servlet)
+			throws HibernateProcessException, ApplicationException {
+		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
+		fieldConfigItf.init();
+		// TODO Remove this code after M1 code migration.
+		servlet.getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,
+				fieldConfigItf.getEntityMandatoryFieldMap());
+	}
 
 	private void setAttribute(ServletContext servletContext, String key) {
 		servletContext.setAttribute(getKey(key), key);
 	}
-
 
 	private String getKey(String key) {
 		return "LABEL_" + key.toUpperCase();

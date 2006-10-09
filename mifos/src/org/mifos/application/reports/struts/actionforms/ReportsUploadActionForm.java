@@ -37,19 +37,13 @@
  */
 package org.mifos.application.reports.struts.actionforms;
 
-import javax.servlet.http.HttpServletRequest;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionMapping;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.struts.actionforms.MifosActionForm;
-import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class is the ActionForm associated with the Reports Upload Action.
  */
-public class ReportsUploadActionForm extends MifosActionForm {
+public class ReportsUploadActionForm extends BaseActionForm {
 	
 	/**
 	 * Default constructor

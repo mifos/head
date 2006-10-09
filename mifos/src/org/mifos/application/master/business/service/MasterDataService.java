@@ -9,7 +9,6 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.dao.MasterDAO;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
@@ -43,13 +42,13 @@ public class MasterDataService extends BusinessService {
 
 	public EntityMaster retrieveMasterData(String entityName, Short localeId)
 			throws SystemException, ApplicationException {
-		return new MasterDAO().getLookUpEntity(entityName, localeId);
+		return new MasterPersistence().getLookUpEntity(entityName, localeId);
 	}
 
 	public EntityMaster retrieveMasterData(String entityName, Short localeId,
 			String classPath, String column) throws SystemException,
 			ApplicationException {
-		return new MasterDAO().getLookUpEntity(entityName, localeId, classPath,
+		return new MasterPersistence().getLookUpEntity(entityName, localeId, classPath,
 				column);
 	}
 

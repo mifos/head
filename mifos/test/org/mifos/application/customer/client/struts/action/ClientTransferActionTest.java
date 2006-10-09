@@ -9,8 +9,8 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerSearchInputView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
-import org.mifos.application.customer.util.valueobjects.CustomerSearchInput;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -150,7 +150,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.loadParents_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		CustomerSearchInput clientSearchInput = (CustomerSearchInput)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_SEARCH_INPUT,request.getSession());
+		CustomerSearchInputView clientSearchInput = (CustomerSearchInputView)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_SEARCH_INPUT,request.getSession());
 		assertNotNull(clientSearchInput);
 		assertEquals(TestObjectFactory.getUserContext().getBranchId(),clientSearchInput.getOfficeId());
 	}

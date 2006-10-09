@@ -8,12 +8,12 @@
  <tiles:put name="body" type="string">
 <script language="javascript">
   function goToCancelPage(){
-	personnelActionForm.action="PersonnelAction.do?method=cancel";
-	personnelActionForm.submit();
+	personActionForm.action="PersonAction.do?method=cancel";
+	personActionForm.submit();
   }
  
 </script>
-<html-el:form action="PersonnelAction.do?method=load">
+<html-el:form action="PersonAction.do?method=load">
     <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center" class="heading">&nbsp;</td>

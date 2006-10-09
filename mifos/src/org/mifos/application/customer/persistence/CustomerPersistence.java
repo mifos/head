@@ -798,7 +798,7 @@ public class CustomerPersistence extends Persistence {
 
 	public void updateLOsForAllChildren(Short parentLO, String parentSearchId,
 			Short parentOfficeId) {
-		String hql = "update Customer customer set customer.personnelId="
+		String hql = "update CustomerBO customer set customer.personnel="
 				+ parentLO + " where customer.searchId like '" + parentSearchId
 				+ ".%' and customer.office.officeId=" + parentOfficeId;
 		Session session = HibernateUtil.getSessionTL();

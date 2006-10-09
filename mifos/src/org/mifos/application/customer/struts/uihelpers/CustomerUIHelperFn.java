@@ -44,8 +44,6 @@ import java.util.Set;
 
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPositionEntity;
-import org.mifos.application.customer.util.valueobjects.CustomerMaster;
-import org.mifos.application.customer.util.valueobjects.CustomerPositionDisplay;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -58,69 +56,10 @@ import org.mifos.framework.security.util.UserContext;
  */
 public class CustomerUIHelperFn {
 
-	/**
-	 * Simple Constructor
-	 */
+	
 	public CustomerUIHelperFn() {
 		super();
 
-	}
-
-	/**
-	 * It returns a comma seperated string of titles a client is assigned to in
-	 * the group.
-	 * 
-	 * @param object
-	 *            list of CustomerPositionDisplay
-	 * @param object
-	 *            instance of customermaster
-	 * @return String
-	 */
-	public static String getClientPositions(Object customerPositions,
-			Object customerMaster) {
-		MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug(
-				"Inside UI helper function getClientPositions");
-		StringBuilder stringBuilder = new StringBuilder();
-		if (customerPositions != null && customerMaster != null) {
-			MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER).debug(
-					"Iterating over customerPositions list");
-			List customerPositionList = (List) customerPositions;
-			String positionNames[] = new String[customerPositionList.size()];
-			int i = 0;
-			for (Iterator<CustomerPositionDisplay> iter = customerPositionList
-					.iterator(); iter.hasNext();) {
-				CustomerPositionDisplay custpos = iter.next();
-				CustomerMaster custMast = (CustomerMaster) customerMaster;
-				if (null != custpos && custpos.getCustomerId() != null
-						&& custMast.getCustomerId() != null) {
-					if (custpos.getCustomerId().intValue() == (custMast)
-							.getCustomerId().intValue()) {
-						String posName = custpos.getPositionName();
-						MifosLogManager.getLogger(LoggerConstants.GROUP_LOGGER)
-								.debug("The position name is " + posName);
-						positionNames[i] = posName;
-						i++;
-					}
-				}
-			}
-			for (; i < positionNames.length; i++) {
-				positionNames[i] = null;
-			}
-			stringBuilder.append("(");
-			for (int j = 0; j < positionNames.length; j++) {
-				if (positionNames[j] != null && positionNames[j] != "")
-					stringBuilder.append(positionNames[j]);
-				if (j + 1 < positionNames.length
-						&& positionNames[j + 1] != null
-						&& positionNames[j + 1] != "")
-					stringBuilder.append(",");
-			}
-			stringBuilder.append(")");
-		}
-		if (stringBuilder.toString().equals("()"))
-			return "";
-		else
-			return stringBuilder.toString();
 	}
 
 	public static String getClientPosition(Object customerPositions,

@@ -1,5 +1,6 @@
 package org.mifos.framework.persistence;
 
+import java.sql.Connection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,10 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public abstract class Persistence {
+
+	public Connection getConnection() {
+		return HibernateUtil.getSessionTL().connection();
+	}
 
 	protected Session openSession() throws PersistenceException {
 		try {
@@ -36,7 +41,7 @@ public abstract class Persistence {
 		try {
 			HibernateUtil.startTransaction();
 			session.saveOrUpdate(object);
-			if(HibernateUtil.getInterceptor().isAuditLogRequired()){
+			if (HibernateUtil.getInterceptor().isAuditLogRequired()) {
 				HibernateUtil.getInterceptor().createChangeValueMap(object);
 			}
 		} catch (Exception he) {

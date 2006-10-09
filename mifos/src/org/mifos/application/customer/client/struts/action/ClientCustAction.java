@@ -40,6 +40,7 @@ package org.mifos.application.customer.client.struts.action;
 
 import java.io.BufferedOutputStream;
 import java.io.InputStream;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +72,6 @@ import org.mifos.application.customer.client.struts.actionforms.ClientCustAction
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.customer.util.helpers.CustomerHelper;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -185,9 +185,8 @@ public class ClientCustAction extends CustAction {
 			SessionUtils.setAttribute(
 					CustomerConstants.PENDING_APPROVAL_DEFINED,
 					CustomerConstants.NO, request);
-		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
-				.getLocaleDate(getUserContext(request).getPereferedLocale(),
-						actionForm.getDateOfBirth())));
+		actionForm.setAge(calculateAge(DateHelper.getLocaleDate(getUserContext(
+				request).getPereferedLocale(), actionForm.getDateOfBirth())));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
@@ -221,7 +220,9 @@ public class ClientCustAction extends CustAction {
 		} else
 			officeId = actionForm.getParentGroup().getOffice().getOfficeId();
 		loadFormedByPersonnel(officeId, request);
-		SessionUtils.setAttribute(ClientConstants.SAVINGS_OFFERING_LIST, getClientBusinessService().retrieveOfferingsApplicableToClient(), request);
+		SessionUtils.setAttribute(ClientConstants.SAVINGS_OFFERING_LIST,
+				getClientBusinessService()
+						.retrieveOfferingsApplicableToClient(), request);
 	}
 
 	private void loadMasterDataEntities(ClientCustActionForm actionForm,
@@ -296,9 +297,8 @@ public class ClientCustAction extends CustAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
-				.getLocaleDate(getUserContext(request).getPereferedLocale(),
-						actionForm.getDateOfBirth())));
+		actionForm.setAge(calculateAge(DateHelper.getLocaleDate(getUserContext(
+				request).getPereferedLocale(), actionForm.getDateOfBirth())));
 		return mapping.findForward(ActionForwards.previewPersonalInfo_success
 				.toString());
 
@@ -365,7 +365,8 @@ public class ClientCustAction extends CustAction {
 			checkPermissionForCreate(actionForm.getStatusValue().getValue(),
 					getUserContext(request), null, officeId, getUserContext(
 							request).getId());
-		List<SavingsOfferingBO> selectedOfferings = getSelectedOfferings(actionForm, request);
+		List<SavingsOfferingBO> selectedOfferings = getSelectedOfferings(
+				actionForm, request);
 		try {
 			if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 				client = new ClientBO(userContext, actionForm.getClientName()
@@ -374,8 +375,8 @@ public class ClientCustAction extends CustAction {
 								actionForm.getMfiJoiningDate(), userContext
 										.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
-								.getFeesToApply(), selectedOfferings, actionForm
-								.getFormedByPersonnelValue(), actionForm
+								.getFeesToApply(), selectedOfferings,
+						actionForm.getFormedByPersonnelValue(), actionForm
 								.getOfficeIdValue(), meeting, actionForm
 								.getLoanOfficerIdValue(), getDateFromString(
 								actionForm.getDateOfBirth(), userContext
@@ -389,19 +390,22 @@ public class ClientCustAction extends CustAction {
 						actionForm.getClientDetailView(), actionForm
 								.getCustomerPicture());
 			} else {
-				CustomerBO parentCustomer =getCustomerBusinessService().getCustomer(actionForm.getParentGroup().getCustomerId());
-				parentCustomer.setVersionNo(actionForm.getParentGroup().getVersionNo());
+				CustomerBO parentCustomer = getCustomerBusinessService()
+						.getCustomer(
+								actionForm.getParentGroup().getCustomerId());
+				parentCustomer.setVersionNo(actionForm.getParentGroup()
+						.getVersionNo());
 				client = new ClientBO(userContext, actionForm.getClientName()
 						.getDisplayName(), actionForm.getStatusValue(),
 						actionForm.getExternalId(), getDateFromString(
 								actionForm.getMfiJoiningDate(), userContext
 										.getPereferedLocale()), actionForm
 								.getAddress(), customFields, actionForm
-								.getFeesToApply(), selectedOfferings, actionForm
-								.getFormedByPersonnelValue(), parentCustomer.getOffice().getOfficeId(),
-								parentCustomer, getDateFromString(
-								actionForm.getDateOfBirth(), userContext
-										.getPereferedLocale()), actionForm
+								.getFeesToApply(), selectedOfferings,
+						actionForm.getFormedByPersonnelValue(), parentCustomer
+								.getOffice().getOfficeId(), parentCustomer,
+						getDateFromString(actionForm.getDateOfBirth(),
+								userContext.getPereferedLocale()), actionForm
 								.getGovernmentId(), actionForm
 								.getTrainedValue(), getDateFromString(
 								actionForm.getTrainedDate(), userContext
@@ -427,19 +431,23 @@ public class ClientCustAction extends CustAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
-	private List<SavingsOfferingBO> getSelectedOfferings(ClientCustActionForm actionForm, HttpServletRequest request)throws Exception{
-		List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>(ClientConstants.MAX_OFFERINGS_SIZE);
-		List<SavingsOfferingBO> offeringsList = (List<SavingsOfferingBO>)SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
-		for(Short offeringId: actionForm.getSelectedOfferings()){
-			if(offeringId!=null){
-				for(SavingsOfferingBO savingsOffering:offeringsList)
-					if(offeringId.equals(savingsOffering.getPrdOfferingId()))
+	private List<SavingsOfferingBO> getSelectedOfferings(
+			ClientCustActionForm actionForm, HttpServletRequest request)
+			throws Exception {
+		List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>(
+				ClientConstants.MAX_OFFERINGS_SIZE);
+		List<SavingsOfferingBO> offeringsList = (List<SavingsOfferingBO>) SessionUtils
+				.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
+		for (Short offeringId : actionForm.getSelectedOfferings()) {
+			if (offeringId != null) {
+				for (SavingsOfferingBO savingsOffering : offeringsList)
+					if (offeringId.equals(savingsOffering.getPrdOfferingId()))
 						selectedOfferings.add(savingsOffering);
 			}
 		}
 		return selectedOfferings;
 	}
-	
+
 	private void doCleanUp(ClientCustActionForm actionForm,
 			HttpServletRequest request) {
 		clearActionForm(actionForm);
@@ -466,8 +474,8 @@ public class ClientCustAction extends CustAction {
 		actionForm.setSpouseName(new ClientNameDetailView());
 		actionForm.setClientDetailView(new ClientDetailView());
 		actionForm.setNextOrPreview("next");
-		for(int i = 0;i< actionForm.getSelectedOfferings().size();i++)
-			actionForm.getSelectedOfferings().set(i,null);
+		for (int i = 0; i < actionForm.getSelectedOfferings().size(); i++)
+			actionForm.getSelectedOfferings().set(i, null);
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -524,9 +532,8 @@ public class ClientCustAction extends CustAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
-				.getLocaleDate(getUserContext(request).getPereferedLocale(),
-						actionForm.getDateOfBirth())));
+		actionForm.setAge(calculateAge(DateHelper.getLocaleDate(getUserContext(
+				request).getPereferedLocale(), actionForm.getDateOfBirth())));
 		return mapping
 				.findForward(ActionForwards.previewEditPersonalInfo_success
 						.toString());
@@ -537,9 +544,8 @@ public class ClientCustAction extends CustAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		actionForm.setAge(new CustomerHelper().calculateAge(DateHelper
-				.getLocaleDate(getUserContext(request).getPereferedLocale(),
-						actionForm.getDateOfBirth())));
+		actionForm.setAge(calculateAge(DateHelper.getLocaleDate(getUserContext(
+				request).getPereferedLocale(), actionForm.getDateOfBirth())));
 		return mapping.findForward(ActionForwards.prevEditPersonalInfo_success
 				.toString());
 	}
@@ -549,37 +555,35 @@ public class ClientCustAction extends CustAction {
 	public ActionForward updatePersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws ApplicationException {
-		
+
 		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
+		ClientBO client = getClientBusinessService().getClient(
+				clientInSession.getCustomerId());
 		client.setVersionNo(clientInSession.getVersionNo());
-		clientInSession=null;
+		clientInSession = null;
 		client.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(client);
-		
+
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		client.updateAddress(actionForm.getAddress());
-		convertCustomFieldDateToUniformPattern(
-				actionForm.getCustomFields(), getUserContext(request)
-						.getPereferedLocale());
+		convertCustomFieldDateToUniformPattern(actionForm.getCustomFields(),
+				getUserContext(request).getPereferedLocale());
 		for (CustomFieldView fieldView : actionForm.getCustomFields())
 			for (CustomerCustomFieldEntity fieldEntity : client
 					.getCustomFields())
 				if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
 					fieldEntity.setFieldValue(fieldView.getFieldValue());
-		client.getClientName()
-				.updateNameDetails(actionForm.getClientName());
-		client.getSpouseName()
-				.updateNameDetails(actionForm.getSpouseName());
+		client.getClientName().updateNameDetails(actionForm.getClientName());
+		client.getSpouseName().updateNameDetails(actionForm.getSpouseName());
 		client.setDisplayName(actionForm.getClientName().getDisplayName());
 		client.setFirstName(actionForm.getClientName().getFirstName());
 		client.setLastName(actionForm.getClientName().getLastName());
-		client.setSecondLastName(actionForm.getClientName()
-				.getSecondLastName());
-		client.setDateOfBirth(getDateFromString(
-				actionForm.getDateOfBirth(), getUserContext(request)
-						.getPereferedLocale()));
+		client
+				.setSecondLastName(actionForm.getClientName()
+						.getSecondLastName());
+		client.setDateOfBirth(getDateFromString(actionForm.getDateOfBirth(),
+				getUserContext(request).getPereferedLocale()));
 		client.setGovernmentId(actionForm.getGovernmentId());
 
 		if (actionForm.getPicture() != null
@@ -590,7 +594,7 @@ public class ClientCustAction extends CustAction {
 		client.setUserContext(getUserContext(request));
 		client.updateClientDetails(actionForm.getClientDetailView());
 		client.updatePersonalInfo();
-		
+
 		return mapping.findForward(ActionForwards.updatePersonalInfo_success
 				.toString());
 	}
@@ -635,30 +639,30 @@ public class ClientCustAction extends CustAction {
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward updateMfiInfo(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {	
+			throws Exception {
 		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
+		ClientBO client = getClientBusinessService().getClient(
+				clientInSession.getCustomerId());
 		client.setVersionNo(clientInSession.getVersionNo());
-		clientInSession=null;
+		clientInSession = null;
 		client.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(client);
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		client.setExternalId(actionForm.getExternalId());
 		if (actionForm.getTrainedValue() != null
-				&& actionForm.getTrainedValue().equals(
-						YesNoFlag.YES.getValue()))
+				&& actionForm.getTrainedValue()
+						.equals(YesNoFlag.YES.getValue()))
 			client.setTrained(true);
 		else
 			client.setTrained(false);
 
-		client.setTrainedDate(getDateFromString(
-				actionForm.getTrainedDate(), getUserContext(request)
-						.getPereferedLocale()));
+		client.setTrainedDate(getDateFromString(actionForm.getTrainedDate(),
+				getUserContext(request).getPereferedLocale()));
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 			if (actionForm.getLoanOfficerIdValue() != null) {
-				client.setPersonnel(getPersonnelBusinessService()
-						.getPersonnel(actionForm.getLoanOfficerIdValue()));
+				client.setPersonnel(getPersonnelBusinessService().getPersonnel(
+						actionForm.getLoanOfficerIdValue()));
 			} else
 				client.setPersonnel(null);
 		}
@@ -776,8 +780,8 @@ public class ClientCustAction extends CustAction {
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			ClientBO clientBO) throws ApplicationException {
 		Short localeId = getUserContext(request).getLocaleId();
-		SessionUtils.setAttribute(ClientConstants.AGE, new CustomerHelper()
-				.calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
+		SessionUtils.setAttribute(ClientConstants.AGE,
+				calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
 						.getTime())), request);
 		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
 				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
@@ -885,5 +889,10 @@ public class ClientCustAction extends CustAction {
 			throws ServiceException {
 		return (PersonnelBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Personnel);
+	}
+
+	public int calculateAge(Date date) {
+		int age = DateHelper.DateDiffInYears(date);
+		return age;
 	}
 }

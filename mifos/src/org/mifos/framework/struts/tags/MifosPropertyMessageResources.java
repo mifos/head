@@ -5,12 +5,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.application.master.dao.MasterDAO;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.framework.util.helpers.BundleKey;
 import org.mifos.framework.util.helpers.MifosSelectHelper;
@@ -21,7 +20,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
 	private Map dbMap_labels = new ConcurrentHashMap();
 	private Map dbMap_Values = new ConcurrentHashMap();
 	//private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER);
-	private MasterDAO dao = new MasterDAO();
+	private MasterPersistence dao = new MasterPersistence();
 	
 	public MifosPropertyMessageResources(MessageResourcesFactory factory,
 			String config, boolean returnNull) {

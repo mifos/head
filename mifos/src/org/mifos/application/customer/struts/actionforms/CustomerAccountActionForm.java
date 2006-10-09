@@ -1,8 +1,8 @@
 package org.mifos.application.customer.struts.actionforms;
 
-import org.mifos.framework.struts.actionforms.MifosActionForm;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 
-public class CustomerAccountActionForm extends MifosActionForm{
+public class CustomerAccountActionForm extends BaseActionForm{
 	
 	private String globalCustNum;
 

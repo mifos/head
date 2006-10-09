@@ -37,13 +37,14 @@
  */
 package org.mifos.application.reports.struts.actionforms;
 
-import org.mifos.framework.struts.actionforms.MifosActionForm;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
+
 
 
 /**
  * This class is the ActionForm associated with the ReportParamsMap Action.
  */
-public class ReportsParamsMapActionForm extends MifosActionForm {
+public class ReportsParamsMapActionForm extends BaseActionForm {
 	
 	
 	

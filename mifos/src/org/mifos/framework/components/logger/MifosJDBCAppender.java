@@ -30,7 +30,7 @@ import java.util.regex.PatternSyntaxException;
 import org.apache.log4j.jdbc.JDBCAppender;
 import org.apache.log4j.spi.ErrorCode;
 import org.apache.log4j.spi.LoggingEvent;
-import org.mifos.framework.dao.DAO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.exceptions.DBConnectionFailedException;
 
 /**
@@ -50,7 +50,7 @@ public class MifosJDBCAppender extends JDBCAppender {
 	public Connection getConnection(){
 		Connection con = null;
 		try{
-			con = DAO.getConnection();	
+			con = new PersonnelPersistence().getConnection();	
 		}
 		catch (DBConnectionFailedException dbcfe) {
 			dbcfe.printStackTrace();

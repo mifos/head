@@ -43,13 +43,12 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.struts.actionforms.MifosActionForm;
-import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 /**
  * This class is the ActionForm associated with the ReportParams Action.
  */
-public class ReportsUserParamsActionForm extends MifosActionForm {
+public class ReportsUserParamsActionForm extends BaseActionForm {
 	
 	public ReportsUserParamsActionForm() {
 		super();
