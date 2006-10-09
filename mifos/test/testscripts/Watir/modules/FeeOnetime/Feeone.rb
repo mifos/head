@@ -22,10 +22,17 @@ class FeeOnetime < TestClass
          dbquery("select account_id,global_account_num from account where account_type_id=1 and account_state_id < 5")
 		@@account_num=dbresult[0]
 		@@global_account_num=dbresult[1]
-		dbquery("SELECT fees.fee_name,fees.rate_or_amount,fees.fee_id FROM fees,fee_frequency where fee_frequency.fee_id=fees.fee_id and fee_frequency.fee_frequencytype_id=2  and fee_frequency.frequency_payment_id ="+@@fee_type+" and fees.status=1 and fees.category_id=5")
+		dbquery("SELECT fees.fee_name,fees.rate,fees.fee_amount,fees.fee_id,fees.discriminator FROM fees,fee_frequency where fee_frequency.fee_id=fees.fee_id and fee_frequency.fee_frequencytype_id=2  and fee_frequency.frequency_payment_id ="+@@fee_type+" and fees.status=1 and fees.category_id=5")
 		@@fee_name=dbresult[0]
-		@@fee_ammount=dbresult[1]
-		@@fee_id=dbresult[2]
+		@@feerate=dbresult[1]
+		@@feeamnt=dbresult[2]
+      	@@fee_id=dbresult[3]
+		discriminator=dbresult[4]
+		if(discriminator.to_s=="AMOUNT") then
+		@@fee_ammount=@@feeamnt.to_f
+		elsif(discriminator.to_s=="RATE")
+		@@fee_ammount=@@feerate.to_f
+		end
 		dbquery("SELECT A1.PRINCIPAL, A1.INTEREST, A1.PENALTY, A1.MISC_FEES, (SELECT SUM(A3.AMOUNT) FROM loan_fee_schedule A3, ACCOUNT_FEES A2 WHERE (A2.ACCOUNT_FEE_ID = A3.ACCOUNT_FEE_ID) AND A2.ACCOUNT_ID ="+@@account_num+" AND INSTALLMENT_ID = 1)'FEES' FROM loan_schedule A1 WHERE (A1.INSTALLMENT_ID = 1) AND (A1.ACCOUNT_ID ="+@@account_num+")")
 		@@principal=dbresult[0]
 		@@interest=dbresult[1]
@@ -64,7 +71,8 @@ class FeeOnetime < TestClass
     begin
       
       #puts "Global"+ @@global_account_num
-      $ie.text_field(:name,"searchNode(searchString)").set(@@global_account_num)
+      $ie.text_field(:name,"searchString").set(@@global_account_num)
+   #   $ie.text_field(:name,"searchNode(searchString)").set(@@global_account_num)
       $ie.button(:value,"Search").click
       assert($ie.contains_text(@@global_account_num))
       $logger.log_results("Searching","Account","Display","Passed")
