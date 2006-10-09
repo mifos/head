@@ -244,7 +244,7 @@ class LoanAccountCreateEdit<TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Cancel button not working","N/A","N/A","Failed")
     rescue =>excp
-      quit_on_error(excp)
+    quit_on_error(excp)
     end
   end
   
@@ -815,7 +815,7 @@ class LoanAccountCreateEdit<TestClass
         global_account_number=dbresult[0]
       end
       $ie.link(:text,"Clients & Accounts").click
-      $ie.text_field(:name,"searchNode(searchString)").set(global_account_number)
+      $ie.text_field(:name,"searchString").set(global_account_number)
       $ie.button(@@loanprop['loan.search']).click
       search_name="Account # "+global_account_number
       $ie.link(:text,search_name).click
