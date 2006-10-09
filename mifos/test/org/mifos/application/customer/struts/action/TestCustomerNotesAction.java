@@ -49,6 +49,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
@@ -56,7 +57,6 @@ import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.framework.util.valueobjects.Context;
 
 public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 
@@ -328,10 +328,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testSearch() throws Exception {
-		Context context = new Context();
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(Constants.CONTEXT, context, request
-				.getSession());
 		createInitialObjects();
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "load");
@@ -369,10 +366,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 
-		context = (Context) SessionUtils.getAttribute(Constants.CONTEXT,
-				request.getSession());
-		assertEquals("Size of the search result should be 1", 1, context
-				.getSearchResult().getSize());
+		assertEquals("Size of the search result should be 1", 1, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
 		HibernateUtil.closeSession();
 		
 		getobjects();
@@ -484,9 +478,6 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testSearchForGroup() throws Exception {
-		Context context = new Context();
-		SessionUtils.setAttribute(Constants.CONTEXT, context, request
-				.getSession());
 		createInitialObjects();
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "load");
@@ -524,10 +515,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 
-		context = (Context) SessionUtils.getAttribute(Constants.CONTEXT,
-				request.getSession());
-		assertEquals("Size of the search result should be 1", 1, context
-				.getSearchResult().getSize());
+		assertEquals("Size of the search result should be 1", 1,((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
 		HibernateUtil.closeSession();
 		getobjects();
 	}

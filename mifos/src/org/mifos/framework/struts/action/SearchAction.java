@@ -14,8 +14,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.util.valueobjects.Context;
 
 public class SearchAction extends BaseAction {
 	
@@ -63,15 +61,8 @@ public class SearchAction extends BaseAction {
 		
 	}
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
-		Context context = (Context)SessionUtils.getAttribute(Constants.CONTEXT, request.getSession());
-		if(context != null)
-		{
-			cleanUpSearch(request);
-			context.setSearchResult(getSearchResult(form));
-		}
-		else{
-			cleanUpSearch(request);
-		}
+		cleanUpSearch(request);
+		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,getSearchResult(form),request);
 		return mapping.findForward(ActionForwards.search_success.toString());
 	}
 	

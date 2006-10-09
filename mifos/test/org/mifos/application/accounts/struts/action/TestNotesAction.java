@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -18,8 +17,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -28,7 +27,6 @@ import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.framework.util.valueobjects.Context;
 
 public class TestNotesAction extends MifosMockStrutsTestCase {
 
@@ -184,9 +182,6 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 
 	public void testSearch_Savings() throws Exception {
 		savingsBO = getSavingsAccount("fsaf6", "ads6");
-		Context context = new Context();
-		SessionUtils.setAttribute(Constants.CONTEXT, context, request
-				.getSession());
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "load");
@@ -227,10 +222,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 
-		context = (Context) SessionUtils.getAttribute(Constants.CONTEXT,
-				request.getSession());
-		assertEquals("Size of the search result should be 1", 1, context
-				.getSearchResult().getSize());
+		assertEquals("Size of the search result should be 1", 1, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
 		HibernateUtil.closeSession();
 		savingsBO = (SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savingsBO.getAccountId());
 		getobjects();
@@ -319,11 +311,8 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 	}
 
-	public void testSearch_Loan() throws HibernateSearchException {
+	public void testSearch_Loan() throws Exception {
 		loanBO = getLoanAccount();
-		Context context = new Context();
-		SessionUtils.setAttribute(Constants.CONTEXT, context, request
-				.getSession());
 
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "load");
@@ -362,10 +351,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 
-		context = (Context) SessionUtils.getAttribute(Constants.CONTEXT,
-				request.getSession());
-		assertEquals("Size of the search result should be 1", 1, context
-				.getSearchResult().getSize());
+		assertEquals("Size of the search result should be 1", 1, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
 		HibernateUtil.closeSession();
 		loanBO = (LoanBO)TestObjectFactory.getObject(LoanBO.class,loanBO.getAccountId());
 

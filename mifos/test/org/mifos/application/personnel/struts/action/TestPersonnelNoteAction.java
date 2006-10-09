@@ -16,6 +16,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -24,7 +25,6 @@ import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.framework.util.valueobjects.Context;
 
 public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 
@@ -180,9 +180,6 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testSuccessSearch() throws Exception {
-		Context context = new Context();
-		SessionUtils.setAttribute(Constants.CONTEXT, context, request
-				.getSession());
 		createPersonnelAndSetInSession(getBranchOffice(),
 				PersonnelLevel.LOAN_OFFICER);
 		setRequestPathInfo("/personnelNoteAction.do");
@@ -223,10 +220,7 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 
-		context = (Context) SessionUtils.getAttribute(Constants.CONTEXT,
-				request.getSession());
-		assertEquals("Size of the search result should be 1", 1, context
-				.getSearchResult().getSize());
+		assertEquals("Size of the search result should be 1", 1,((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
 		HibernateUtil.closeSession();
 		
 		personnel = (PersonnelBO)TestObjectFactory.getObject(PersonnelBO.class,personnel.getPersonnelId());
