@@ -687,18 +687,24 @@ public class ActivityMapper {
 		activityMap.put("/chkListAction-load",
 				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
 		activityMap.put("/chkListAction-getStates", SecurityConstants.VIEW);
-		activityMap.put("/chkListAction-cancelCreate", SecurityConstants.VIEW);
 		activityMap.put("/chkListAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/chkListAction-manage",
-				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
-		activityMap.put("/chkListAction-create",
-				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
-		activityMap.put("/chkListAction-update",
-				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
-		activityMap.put("/chkListAction-loadAllChecklist",
-				SecurityConstants.VIEW);
 		activityMap.put("/chkListAction-previous",
 				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		activityMap.put("/chkListAction-create",
+				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		activityMap.put("/chkListAction-cancelCreate", SecurityConstants.VIEW);
+		activityMap.put("/chkListAction-cancelManage", SecurityConstants.VIEW);
+		
+		activityMap.put("/chkListAction-manage",
+				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
+		activityMap.put("/chkListAction-getEditStates", SecurityConstants.VIEW);
+		activityMap.put("/chkListAction-managePreview", SecurityConstants.VIEW);
+		activityMap.put("/chkListAction-managePrevious", SecurityConstants.VIEW);
+		activityMap.put("/chkListAction-update",
+				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
+		
+		activityMap.put("/chkListAction-loadAllChecklist",
+				SecurityConstants.VIEW);
 		activityMap.put("/chkListAction-get", SecurityConstants.VIEW);
 
 

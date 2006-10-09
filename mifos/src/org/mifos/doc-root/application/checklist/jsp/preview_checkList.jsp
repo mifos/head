@@ -193,12 +193,12 @@
 
 										<mifos:mifoslabel name="checklist.button_submit" />
 
-									</html-el:submit> &nbsp; <html-el:cancel style="width:70px"
+									</html-el:submit> &nbsp; <html-el:button style="width:70px" property="cancelButton"
 										styleClass="cancelbuttn" onclick="javascript:fnCancel(this.form)">
 
 										<mifos:mifoslabel name="checklist.button_cancel" />
 
-									</html-el:cancel>								
+									</html-el:button>								
 									
 									</td>
 								</tr>

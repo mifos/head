@@ -1,7 +1,7 @@
 <!--
 /**
 
-* addNewChecklists.jsp    version: 1.0
+* manageCheckList.jsp    version: 1.0
 
 
 
@@ -39,344 +39,262 @@
  -->
 
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ taglib uri="/tags/struts-html" prefix="html"%>
-<%@ taglib uri="/tags/struts-bean" prefix="bean"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
-<%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
+<%@taglib uri="/tags/struts-html" prefix="html"%>
+<%@taglib uri="/tags/struts-bean" prefix="bean"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="/tags/mifos-html" prefix="mifos"%>
+<%@taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
 <%@ taglib uri="/tags/date" prefix="date"%>
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
-<tiles:insert definition=".create">
+<tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-
 		<script language="JavaScript"
 			src="pages/application/checklist/js/validator.js"
 			type="text/javascript">
-	</script>
+</script>
 
-		<html-el:form action="/chkListAction.do?method=preview" focus="checklistName" >
-			<html-el:hidden property="typeName" value="" />
-			<html-el:hidden property="displayedStatus" value="" />
-
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		
+		<html-el:form action="/chkListAction.do?method=managePreview">
+			<c:set var="checkList" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<html-el:hidden property="checkListId" value="${sessionScope.ChkListActionForm.checkListId}" />
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
-					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
-					<table width="90%" border="0" align="center" cellpadding="0"
-						cellspacing="0">
-						<tr>
-							<td align="center" class="heading">&nbsp;</td>
-						</tr>
-					</table>
+					<td class="bluetablehead05">
+					<span class="fontnormal8pt">
+						<html-el:link action="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+							<mifos:mifoslabel name="checklist.admin" />
+						</html-el:link> /
+						<html-el:link action="chkListAction.do?method=loadAllChecklist&randomNUm=${sessionScope.randomNUm}">	
+							<mifos:mifoslabel name="checklist.view_checklists" />
+						</html-el:link> / 
+					</span>
+					<span class="fontnormal8pt">
+						<html-el:link href="chkListAction.do?method=get&checkListId=${sessionScope.ChkListActionForm.checkListId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">	
+							${sessionScope.ChkListActionForm.checklistName}
+						</html-el:link>				
+					</span></td>
+				</tr>
+			</table>
 
-					<table width="90%" border="0" align="center" cellpadding="0"
-						cellspacing="0">
+			<table width="95%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+					<td width="70%" align="left" valign="top" class="paddingL15T15">
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td class="bluetablehead">
-							<table width="100%" border="0" cellspacing="0" cellpadding="0">
-								<tr>
-									<td>
-									<table border="0" cellspacing="0" cellpadding="0">
-										<tr>
-											<td><img src="pages/framework/images/timeline/bigarrow.gif"
-												width="17" height="17"></td>
-											<td class="timelineboldorange"><mifos:mifoslabel
-												name="checklist.checklist_info" /></td>
-										</tr>
-									</table>
-									</td>
-									<td align="right">
-									<table border="0" cellspacing="0" cellpadding="0">
-										<tr>
-											<td><img
-												src="pages/framework/images/timeline/orangearrow.gif"
-												width="17" height="17"></td>
-											<td class="timelineboldorangelight"><mifos:mifoslabel
-												name="checklist.reviewandsubmit" /></td>
-										</tr>
-									</table>
-									</td>
-								</tr>
-							</table>
+							<td width="50%" height="23" class="headingorange">
+								<span class="heading">${sessionScope.ChkListActionForm.checklistName} -</span>
+								<mifos:mifoslabel name="checklist.edit_checklist" />
+							</td>
+						</tr>
+						<tr>
+							<td height="23" class="fontnormal"><span class="fontnormal"> </span>
+								<mifos:mifoslabel name="checklist.edit_checklist_info" /> <br>
+								<mifos:mifoslabel name="checklist.enter_Info_two" mandatory="yes" />
 							</td>
 						</tr>
 					</table>
-					<table width="90%" border="0" align="center" cellpadding="0"
-						cellspacing="0" class="bluetableborder">
+					<br>
+					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td align="left" valign="top" class="paddingleftCreates">
-
-							<table width="93%" border="0" cellpadding="3" cellspacing="0">
-								<tr>
-									<td class="headingorange"><span class="heading"> <mifos:mifoslabel
-										name="checklist.addnewchecklist" /> - </span> <mifos:mifoslabel
-										name="checklist.enterchecklist_Info" /></td>
-								</tr>
-								<tr>
-									<td class="fontnormal"><mifos:mifoslabel
-										name="checklist.enter_Info_one" /> <br>
-									<mifos:mifoslabel name="checklist.enter_Info_two"
-										mandatory="yes" /></td>
-								</tr>
-							</table>
-							<br>
-							<table width="96%" border="0" cellpadding="3" cellspacing="0">
-								<tr>
-									<font class="fontnormalRedBold"> <html-el:errors
-										bundle="checklistUIResources" /> </font>
-									<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
-										name="checklist.checklistdetails" /> <br>
-									<br>
-									</td>
-								</tr>
-								<tr class="fontnormal">
-									<td align="right" valign="top"><mifos:mifoslabel
-										name="checklist.name" mandatory="yes" /></td>
-									<td valign="top"><c:choose>
-										<c:when test='${param.method=="load"}'>
-											<html-el:text property="checklistName" value="" />
-										</c:when>
-										<c:otherwise>
-											<html-el:text property="checklistName" />
-										</c:otherwise>
-									</c:choose></td>
-								</tr>
-
-								<tr class="fontnormal">
-									<td align="right" valign="top"><mifos:mifoslabel
-										name="checklist.type" mandatory="yes" /></td>
-									<td valign="top"><mifos:select property="type"
-										style="width:136px;"
-										onchange="populateStates(this.form,this);">
-										<c:forEach var="item" items="${checkList_masterData}" varStatus="loop">
+							<font class="fontnormalRedBold"> 
+								<html-el:errors	bundle="checklistUIResources" /> 
+							</font>
+							<td colspan="2" class="fontnormalbold">
+								<mifos:mifoslabel name="checklist.checklistdetails" /><br>
+								<br>
+							</td>
+						</tr>
+						<tr class="fontnormal">
+							<td align="right" valign="top">
+								<mifos:mifoslabel name="checklist.name" mandatory="yes" />
+							</td>
+							<td valign="top">
+								<html-el:text property="checklistName" />
+							</td>
+						</tr>
+						<tr class="fontnormal">
+							<td align="right" valign="top">
+								<mifos:mifoslabel name="checklist.type" mandatory="yes" />
+							</td>
+							<td valign="top">
+								<mifos:select property="type" style="width:136px;" onchange="populateStatesEdit(this.form,this);" disabled="true">
+								<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
 											<html-el:option value="${loop.index}">${item.masterTypeName}</html-el:option>
-										</c:forEach>
-									</mifos:select> 
-									<html-el:hidden property="isCust" value="" />
-									<html-el:hidden property="masterId" value="" />
-									<html-el:hidden property="masterName" value="" /> 
-									<c:forEach
-										var="item" items="${checkList_masterData}" varStatus="loop">
-										<html-el:hidden property="isCust"
+								</c:forEach>
+								</mifos:select> 
+							<html-el:hidden property="isCustomers" value="" />
+							<html-el:hidden property="masterIds" value="" />
+							<html-el:hidden property="masterNames" value="" /> 
+						<c:forEach
+									
+										var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
+										<html-el:hidden property="isCustomers"
 											value="${item.isCustomer}" />
-										<html-el:hidden property="masterId"
-											value="${item.masterTypeId}" />
-										<html-el:hidden property="masterName"
+										<html-el:hidden property="masterIds"
+											value="${item.masterTypeId}" />	
+										<html-el:hidden property="masterNames"
 											value="${item.masterTypeName}" />
-									</c:forEach></td>
-								</tr>
-								<tr class="fontnormal">
-									<td align="right" valign="top"><mifos:mifoslabel
-										name="checklist.displayed_status" mandatory="yes" /></td>
-									<td valign="top">
-
-									<html-el:select property="stateId" 
-										
-										style="width:136px;">
-										<c:choose>
-											<c:when test="${not empty states}">
-												<c:forEach var="item" items="${states}" varStatus="loop">
-												
-												<c:if test='${loop.index=="0"}'>
-												<html-el:option value="">--Select--</html-el:option>
-												</c:if>
-												
-												<html-el:option	value="${item.stateId}" >${item.stateName}</html-el:option>
-												
-												</c:forEach>
-											</c:when>
-											<c:otherwise>
-												<html-el:option value="">--Select--</html-el:option>
-											</c:otherwise>
-										</c:choose>
-									</html-el:select>
-									<c:forEach var="item" items="${states}" varStatus="loop">
-										<html-el:hidden property="customerLevelId"
-												value="${item.stateId}" />
-										<html-el:hidden property="accountStateId"
-												value="${item.stateId}" />
 									</c:forEach>
-													</td>
+							</td>
+						</tr>
+
+						<tr class="fontnormal">
+							<td align="right" valign="top">
+								<mifos:mifoslabel name="checklist.displayed_status" mandatory="yes" />
+							</td>
+							<td valign="top">
+								<mifos:select property="stateId" style="width:136px;"
+									onchange="populateStateName(this.form,this);">
+												<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}" varStatus="loop">
+												<html-el:option	value="${item.stateId}" >${item.stateName}</html-el:option>
+												</c:forEach>
+									</mifos:select>
+									<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}" varStatus="loop">
+										
+										<html-el:hidden property="stateName"
+												value="${item.stateName}" />
+										<html-el:hidden property="stateNames"
+												value="${item.stateName}" />
+									</c:forEach>
+								</td>
+						</tr>
+						
+						 <tr class="fontnormal">
+                  <td align="right" valign="top">
+					<mifos:mifoslabel name="checklist.status_checklist" />
+				  </td>
+                  <td valign="top">
+                 	 <html-el:select property="checklistStatus"  style="width:136px;">
+	                 	 <c:choose>
+							<c:when test='${sessionScope.ChkListActionForm.checklistStatus=="1"}'>								
+								<option value="1" selected><mifos:mifoslabel name="checklist.active" /></option>
+								<option value="0"><mifos:mifoslabel name="checklist.inactive" /></option>
+							</c:when>
+							<c:otherwise>
+								<option value="0" selected><mifos:mifoslabel name="checklist.inactive" /></option>
+								<option value="1"><mifos:mifoslabel name="checklist.active" /></option>
+							</c:otherwise>
+						</c:choose>	                 
+                 	 </html-el:select>
+					</td>
+                	</tr>
+						<tr class="fontnormal">
+							<td width="29%" align="right" valign="top">
+								<mifos:mifoslabel name="checklist.items" mandatory="yes" />
+							</td>
+							<td width="71%" valign="top">
+							<table width="80%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td class="fontnormal">
+										<mifos:mifoslabel name="checklist.items_info" />
+									</td>
 								</tr>
-
-								<tr class="fontnormal">
-									<td width="29%" align="right" valign="top"><mifos:mifoslabel
-										name="checklist.items" mandatory="yes" /></td>
-									<td width="71%" valign="top">
-									<table width="80%" border="0" cellspacing="0" cellpadding="0">
-										<tr>
-											<td class="fontnormal"><mifos:mifoslabel
-												name="checklist.items_info" /></td>
-										</tr>
-										<tr>
-											<td><img src="pages/framework/images/trans.gif" width="1"
-												height="1"></td>
-										</tr>
-									</table>
-
-									<table width="86%" border="0" cellspacing="0" cellpadding="0">
-										<tr>
-											<td width="34%" valign="top"><html-el:textarea
-												property="text" value="" cols="50" rows="5">
-											</html-el:textarea></td>
-
-											<td width="66%" valign="top" class="paddingleft05notop"><html-el:button
-												property="button" styleClass="insidebuttn"
-												style="width:65px"
-												onclick="createCheckList();isButtonRequired()">
-												<mifos:mifoslabel name="checklist.button_add" />
-											</html-el:button></td>
-										</tr>
-									</table>
-									<br>
-									<table width="100%" border="0" cellspacing="0" cellpadding="0">
-										<tr class="fontnormal">
-											<c:choose>
-												<c:when test='${param.method=="previous"}'>
-													<br>
-													<c:forEach var="item"
-														items="${requestScope.Context.valueObject.checklistDetailSet}"
-														varStatus="loop">
-														<tr id="myvalue${loop.index}div">
-															<input name='mycheckBOx' type="checkbox"
-																value="${item.detailText}" />${item.detailText}
-															<input name='myvalue(${loop.index})' type="hidden"
-																value="${item.detailText}" />
-														</tr>
-													</c:forEach>
-													<div id="myDiv">
-													</div>
-												</c:when>
-												<c:otherwise>
-												<div id="myDiv">
-													<c:if test='${param.method=="loadParent"}'>
-														<br>
-														<c:forEach var="item"
-															items="${requestScope.Context.valueObject.checklistDetailSet}"
-															varStatus="loop">
-															<tr id="myvalue${loop.index}div">
-																<input name='mycheckBOx' type="checkbox"
-																	value="${item.detailText}" />${item.detailText}
-																<input name='myvalue(${loop.index})' type="hidden"
-																	value="${item.detailText}" />
-															</tr>
-														</c:forEach>
-													</c:if>
-													<c:if test='${param.method=="validate"}'>
-														<br>
-														<c:forEach var="item"
-															items="${requestScope.Context.valueObject.checklistDetailSet}"
-															varStatus="loop">
-															<tr id="myvalue${loop.index}div">
-																<input name='mycheckBOx' type="checkbox"
-																	value="${item.detailText}" />${item.detailText}
-																<input name='myvalue(${loop.index})' type="hidden"
-																	value="${item.detailText}" />
-															</tr>
-														</c:forEach>
-													</c:if>
-													<c:if test='${param.method=="preview"}'>
-														<br>
-														<c:forEach var="item"
-															items="${requestScope.Context.valueObject.checklistDetailSet}"
-															varStatus="loop">
-															<tr id="myvalue${loop.index}div">
-																<input name='mycheckBOx' type="checkbox"
-																	value="${item.detailText}" />${item.detailText}
-																<input name='myvalue(${loop.index})' type="hidden"
-																	value="${item.detailText}" />
-															</tr>
-														</c:forEach>
-													</c:if>
-													 </div>
-												</c:otherwise>
-											</c:choose>
-											<br>
-										</tr>
-										<tr valign="top" class="fontnormal">
-											<td colspan="2"><html-el:hidden
-												property="numberOfPreviousItems" value="0" /> 
-												
-													<c:if test='${param.method=="loadParent"}'>
-												<c:forEach var="item"
-													items="${requestScope.Context.valueObject.checklistDetailSet}"
-													varStatus="loop">
-													<input name="numberOfPreviousItems" type="hidden"
-														value='${loop.index}' />
-												</c:forEach>
-											</c:if> <c:if test='${param.method=="validate"}'>
-												<c:forEach var="item"
-													items="${requestScope.Context.valueObject.checklistDetailSet}"
-													varStatus="loop">
-													<input name="numberOfPreviousItems" type="hidden"
-														value='${loop.index}' />
-												</c:forEach>
-											</c:if> <c:if test='${param.method=="previous"}'>
-												<c:forEach var="item"
-													items="${requestScope.Context.valueObject.checklistDetailSet}"
-													varStatus="loop">
-													<input name="numberOfPreviousItems" type="hidden"
-														value='${loop.index}' />
-												</c:forEach>
-											</c:if> <c:if test='${param.method=="preview"}'>
-												<c:forEach var="item"
-													items="${requestScope.Context.valueObject.checklistDetailSet}"
-													varStatus="loop">
-													<input name="numberOfPreviousItems" type="hidden"
-														value='${loop.index}' />
-												</c:forEach>
-											</c:if>
-											<div id="removeButton" style="display:none"><html-el:button
-												property="removeSelected" styleClass="insidebuttn"
-												value="Remove Selected" style="width:120px"
-												onclick="RemoveSelected();isButtonRequired() ">
-												<mifos:mifoslabel name="checklist.button_removeselected" />
-											</html-el:button></div>
-											<script>										
-										setNumberOfPreviousItems();	
-										isButtonRequired();									
-									</script></td>
-										</tr>
-									</table>
+								<tr>
+									<td><img src="../images/trans.gif" width="1" height="1"></td>
+								</tr>
+							</table>
+							<table width="86%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td width="34%" valign="top">
+										<html-el:textarea property="text" value="" cols="50" rows="5"></html-el:textarea>
+									</td>
+									<td width="66%" valign="top" class="paddingleft05notop">
+									<html-el:button	property="button" styleClass="insidebuttn" style="width:65px" onclick="createCheckList();isButtonRequired()">
+										<mifos:mifoslabel name="checklist.button_add" />
+									</html-el:button>
 									</td>
 								</tr>
 							</table>
-							<input name="totalDetails" type="hidden"
+							<br>
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr valign="top" class="fontnormal">
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								
+								<tr valign="top" class="fontnormal">
+								<br> 
+									<td colspan="2">									
+									
+									
+										<c:forEach var="item"
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
+											varStatus="loop">
+												<tr id="myvalue${loop.index}div">
+													<input name='mycheckBOx' type="checkbox"
+														value="${item}" />${item}
+													<input name='myvalue(${loop.index})' type="hidden"
+														value="${item}" />
+																
+												</tr>
+												
+										</c:forEach>
+										
+										<div id="myDiv">
+										</div>
+										<br>
+									<html-el:hidden property="numberOfPreviousItems" value="0"/>
+									
+										<c:forEach var="item"
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
+											varStatus="loop">
+												<input name="numberOfPreviousItems" type="hidden"
 														value='${loop.index}' />
-							<table width="93%" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-									<td align="center" class="blueline">&nbsp;</td>
+										</c:forEach>
+											
+									<div id="removeButton" style="display:none">								
+										<html-el:button property="removeSelected" styleClass="insidebuttn" value="Remove Selected" style="width:120px" onclick="RemoveSelected();isButtonRequired() ">
+											<mifos:mifoslabel name="checklist.button_removeselected" />
+										</html-el:button>
+									</div>
+									
+										<script>	
+																				
+											setNumberOfPreviousItems();	
+											isButtonRequired();									
+										</script>									
+									</td>
 								</tr>
 							</table>
-							<br>
-							<table width="93%" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-									<td align="center"><html-el:submit style="width:70px"
-										property="button" styleClass="buttn"
-										onclick="showPreview();">
-										<mifos:mifoslabel name="checklist.button_preview" />
-									</html-el:submit> &nbsp; <html-el:cancel style="width:70px"
-										styleClass="cancelbuttn"
-										onclick="javascript:fnCancel(this.form)">
-										<mifos:mifoslabel name="checklist.button_cancel" />
-									</html-el:cancel></td>
-								</tr>
-								<html-el:hidden property="method" value="" />
-								<html-el:hidden property="categoryId" value="" />
-								<html-el:hidden property="input" value="create" />
-								<html-el:hidden property="typeId" value="create" />
-
-							</table>
-							<br>
 							</td>
-						</tr>  
+						</tr>
+					</table>
+					<table width="93%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td align="center" class="blueline">&nbsp;</td>
+						</tr>
+					</table>
+					<br>
+					<c:if test='${param.method=="previous"}'>
+						<html-el:hidden property="previousStatusId" value="" />
+						<script>
+							setPreviousStatusId('${param.method}');
+						</script>
+					</c:if>
+					<table width="93%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td align="center">
+								<html-el:submit style="width:70px"	styleClass="buttn">
+								<mifos:mifoslabel name="checklist.button_preview" />
+								</html-el:submit> &nbsp;							
+						
+								<html-el:button property="cancelBttn" style="width:70px"	styleClass="cancelbuttn" onclick="javascript:getChklist(this.form)">
+										<mifos:mifoslabel name="checklist.button_cancel" />		
+								</html-el:button>									
+							
+							</td>
+						</tr>
 					</table>
 					<br>
 					</td>
 				</tr>
 			</table>
+			<br>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

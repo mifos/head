@@ -136,4 +136,18 @@ public abstract class CheckListBO extends BusinessObject {
 		this.checklistStatus = checkListStatus;
 		this.supportedLocales = new SupportedLocalesEntity(localeId);
 	}
+
+	protected void validateCheckListState(Short masterTypeId, Short stateId,
+			boolean isCustomer) throws CheckListException {
+		Integer records;
+		try {
+			records = new CheckListPersistence().isValidCheckListState(
+					masterTypeId, stateId, isCustomer);
+			if (records.intValue() != 0)
+				throw new CheckListException(
+						CheckListConstants.EXCEPTION_STATE_ALREADY_EXIST);
+		} catch (PersistenceException pe) {
+			throw new CheckListException(pe);
+		}
+	}
 }

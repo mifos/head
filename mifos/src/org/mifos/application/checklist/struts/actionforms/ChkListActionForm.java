@@ -131,34 +131,42 @@ public class ChkListActionForm extends BaseActionForm {
 	public void setStateName(String stateName) {
 		this.stateName = stateName;
 	}
-
+	
 	@Override
 	public ActionErrors validate(ActionMapping mappping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		String method = request.getParameter("method");
-		if (method.equals(Methods.preview.toString())) {
-			if (StringUtils.isNullOrEmpty(getChecklistName()))
-				addError(errors, "checklistName", CheckListConstants.MANDATORY,
-						CheckListConstants.CHECKLIST_NAME);
-			if (getChecklistName().length() > 200)
-				addError(errors, "checklistName",
-						CheckListConstants.MAX_LENGTH,
-						CheckListConstants.CHECKLIST_NAME, "500");
-			if (StringUtils.isNullOrEmpty(getMasterTypeId()))
-				addError(errors, "masterTypeId", CheckListConstants.MANDATORY,
-						CheckListConstants.TYPE_COMBO);
-			if (StringUtils.isNullOrEmpty(getStateId()))
-				addError(errors, "masterTypeId", CheckListConstants.MANDATORY,
-						CheckListConstants.STATE_COMBO);
-			if (getDetailsList().size() == 0)
-				addError(errors, "detailsList", CheckListConstants.MANDATORY,
-						CheckListConstants.DETAILS);
+		if (method.equals(Methods.preview.toString()))
+			errors = validateFields();
+		if (method.equals(Methods.managePreview.toString())) {
+			errors = validateFields();
+			if(StringUtils.isNullOrEmpty(getChecklistStatus()))
+				addError(errors, "checklistStatus", CheckListConstants.MANDATORY,
+						CheckListConstants.CHECKLIST_STATUS);
 		}
-		if (!method.equals(Methods.validate.toString())) {
+		if (!method.equals(Methods.validate.toString())) 
 			request.setAttribute("methodCalled", method);
-		}
 		return errors;
 	}
-
+	private ActionErrors validateFields(){
+		ActionErrors errors = new ActionErrors();
+		if (StringUtils.isNullOrEmpty(getChecklistName()))
+			addError(errors, "checklistName", CheckListConstants.MANDATORY,
+					CheckListConstants.CHECKLIST_NAME);
+		if (getChecklistName().length() > 200)
+			addError(errors, "checklistName",
+					CheckListConstants.MAX_LENGTH,
+					CheckListConstants.CHECKLIST_NAME, "500");
+		if (StringUtils.isNullOrEmpty(getMasterTypeId()))
+			addError(errors, "masterTypeId", CheckListConstants.MANDATORY,
+					CheckListConstants.TYPE_COMBO);
+		if (StringUtils.isNullOrEmpty(getStateId()))
+			addError(errors, "stateId", CheckListConstants.MANDATORY,
+					CheckListConstants.STATE_COMBO);
+		if (getDetailsList().size() == 0)
+			addError(errors, "detailsList", CheckListConstants.MANDATORY,
+					CheckListConstants.DETAILS);
+		return errors;
+	}
 }

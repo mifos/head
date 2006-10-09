@@ -55,7 +55,7 @@
 
 		<script language="JavaScript" src="pages/application/checklist/js/validator.js" type="text/javascript">
 </script>
-
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<c:set var="checkList" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<tr>
@@ -77,7 +77,7 @@
 								${checkList.checklistName}
 							</td>
 							<td width="50%" align="right">
-								<html-el:link href="chkListAction.do?method=manage&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<html-el:link href="chkListAction.do?method=manage&checkListId=${checkList.checklistId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="checklist.edit_checklist" />
 								</html-el:link>
 							</td>

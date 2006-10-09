@@ -89,5 +89,8 @@ public interface CheckListConstants {
 	public final String LOAN_CHECKLIST="loanchecklist";
 	public final String SAVINGS_CHECKLIST="savingschecklist";
 	public final String CREATED_BY_NAME="createdname";
+	public final String ACTIVE = "active";
+	public final String INACTIVE = "inactive";
+	public final String CHECKLIST_STATUS="checklist status";
 	
 }

@@ -53,6 +53,10 @@ public class CustomerCheckListBO extends CheckListBO {
 			Short checkListStatus, List<String> details, Short prefferedLocale,
 			Short userId) throws CheckListException {
 		super.update(name, checkListStatus, details, prefferedLocale, userId);
+		if (!this.customerLevel.getId().equals(customerLevel.getId())
+				|| !this.customerStatus.getId().equals(customerStatus.getId()))
+			validateCheckListState(customerLevel.getId(), customerStatus
+					.getId(), true);
 		this.customerLevel = customerLevel;
 		this.customerStatus = customerStatus;
 		try {
@@ -61,4 +65,5 @@ public class CustomerCheckListBO extends CheckListBO {
 			throw new CheckListException(e);
 		}
 	}
+
 }

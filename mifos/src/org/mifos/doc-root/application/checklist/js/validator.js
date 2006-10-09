@@ -128,10 +128,15 @@ function validateFields(form)
 *  fnEdit function sets the hidden variable method to go to edit page
 *******************************************************************************/
 
+function fnManageEdit(form)
+{
+	form.action="chkListAction.do?method=managePrevious";
+	form.submit();
+}
+
 function fnEdit(form)
 {
-	form.method.value="previous";
-	form.action="chkListAction.do";
+	form.action="chkListAction.do?method=previous";
 	form.submit();
 }
 /****************************************************************************
@@ -155,8 +160,8 @@ function fnUpdate(form)
 function fnCancel(form)
 {
 	flag=1;
-	var flowKey = form.currentFlowKey.value
-	form.action="chkListAction.do?method=cancelCreate&currentFlowKey="+flowKey;
+
+	form.action="chkListAction.do?method=cancelCreate";
 	form.submit();
 }
 
@@ -259,4 +264,24 @@ function manage(id,type,status,categoryId)
 }
 
 
+function populateStatesEdit(form,selectBox)
+{
+		var isCustIndex=document.getElementsByName("isCustomers");
+		var masterIdIndex=document.getElementsByName("masterIds");
+		var masterNameIndex = document.getElementsByName("masterNames");
+		
+		var isCust=isCustIndex[selectBox.selectedIndex].value;
+		var masterId=masterIdIndex[selectBox.selectedIndex].value;
+		var masterName=masterNameIndex[selectBox.selectedIndex].value;
+		
+		form.action="chkListAction.do?method=getEditStates&isCustomer="+isCust+"&masterTypeName="+masterName+"&masterTypeId="+masterId;
+		form.submit();		
+}
 
+	
+function getChklist(form)
+{ 		
+		flag=1;
+ 		form.action="chkListAction.do?method=cancelManage";
+		form.submit();	 		
+}

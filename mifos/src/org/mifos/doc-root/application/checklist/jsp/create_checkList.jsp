@@ -246,7 +246,12 @@
 											<td colspan="2"><html-el:hidden
 												property="numberOfPreviousItems" value="0" /> 
 												
-												
+												<c:forEach var="item"
+													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
+													varStatus="loop">
+													<input name="numberOfPreviousItems" type="hidden"
+														value='${loop.index}' />
+												</c:forEach>
 											<div id="removeButton" style="display:none"><html-el:button
 												property="removeSelected" styleClass="insidebuttn"
 												value="Remove Selected" style="width:120px"
@@ -272,17 +277,14 @@
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center"><html-el:submit style="width:70px"
-										property="button" styleClass="buttn"
-										onclick="showPreview();">
+										property="button" styleClass="buttn">
 										<mifos:mifoslabel name="checklist.button_preview" />
-									</html-el:submit> &nbsp; <html-el:cancel style="width:70px"
+									</html-el:submit> &nbsp; <html-el:button style="width:70px" property="cancelBttn"
 										styleClass="cancelbuttn"
 										onclick="javascript:fnCancel(this.form)">
 										<mifos:mifoslabel name="checklist.button_cancel" />
-									</html-el:cancel></td>
+									</html-el:button></td>
 								</tr>
-								
-
 							</table>
 							<br>
 							</td>
