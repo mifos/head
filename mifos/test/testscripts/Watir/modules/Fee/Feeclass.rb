@@ -575,7 +575,7 @@ class Feeclass<TestClass
     end
   end
   
-  #clicking on submit after editing the fee data
+  #clicking on edit_fee_infomration_link
   def edit_fee_information_submit()
     begin
       $ie.link(:text,@edit_fees_link).click
@@ -589,11 +589,10 @@ class Feeclass<TestClass
     begin
       dbquery("select status from fees where fee_name='"+feename+"'")
       status_id=dbresult[0]
-      if status_id=="1" then
-        status_change_inactive(feename)
-      elsif status_id=="2" then
-        status_change_active(feename)
-      end
+      status_change_inactive(feename)
+      edit_fee_information_submit()
+      status_change_active(feename)
+     
     rescue =>excp
       quit_on_error(excp)
     end
@@ -602,7 +601,7 @@ class Feeclass<TestClass
   #status change to active
   def status_change_active(feename)
     begin
-      $ie.select_list(:name,"status").select_value("1")
+      $ie.select_list(:name,"feeStatus").select_value("1")
       $ie.button(:value,@preview_button).click
       assert($ie.contains_text(feename))and assert($ie.contains_text(@@feeprop['Fees.previewfeeinformation']))
       $logger.log_results("Status Changed","Should redirect to Preview page","preview page","passed")
