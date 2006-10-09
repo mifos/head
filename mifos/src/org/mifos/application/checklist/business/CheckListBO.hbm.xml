@@ -40,17 +40,12 @@
 	</class>
 
 	<query name="account.statusChecklist">
-		<![CDATA[select new org.mifos.application.checklist.util.helpers.CheckListMasterView(accountCheckList.checklistId ,checkListDetail.detailText) 
-   	       from  
-   	       org.mifos.application.checklist.business.CheckListDetailEntity checkListDetail, 
-   	       org.mifos.application.checklist.business.AccountCheckListBO  accountCheckList 
-   	       
+   	       <![CDATA[from org.mifos.application.checklist.business.AccountCheckListBO  accountCheckList 
    	       where accountCheckList.checklistStatus=:checklistStatus 
    	       and accountCheckList.accountStateEntity.id=:accountStatus 
    	       and accountCheckList.productTypeEntity.productTypeID=:accountTypeId
-   	       and accountCheckList.checklistId=checkListDetail.checkListBO.checklistId
    	       ]]>
-	</query>
+    </query>
 	<query name="customer.checklist">
 		<![CDATA[from org.mifos.application.checklist.business.CustomerCheckListBO customerChecklist 
     	       			where customerChecklist.checklistStatus =:CHECKLIST_STATUS and customerChecklist.customerStatus.id=:STATUS_ID and customerChecklist.customerLevel.id =:LEVEL_ID

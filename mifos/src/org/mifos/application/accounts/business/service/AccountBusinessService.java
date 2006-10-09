@@ -18,7 +18,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
-import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
+import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -104,7 +104,7 @@ public class AccountBusinessService extends BusinessService {
 		}
 	}
 
-	public List<CheckListMaster> getStatusChecklist(Short accountStatusId,
+	public List<AccountCheckListBO> getStatusChecklist(Short accountStatusId,
 			Short accountTypeId) throws ServiceException {
 		try {
 			return new AccountPersistence().getStatusChecklist(accountStatusId,

@@ -96,8 +96,8 @@
 					 <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
 						<table width="95%" border="0" cellpadding="3" cellspacing="0">
 							<c:forEach var="chklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
-								<c:forEach var="chklistDetail" items="${chklist.checklistDetailSet}"> 
-									<bean:size collection="${chklist.checklistDetailSet}" id="listSize" />
+								<c:forEach var="chklistDetail" items="${chklist.checklistDetails}"> 
+									<bean:size collection="${chklist.checklistDetails}" id="listSize" />
 									<html-el:hidden property="chklistSize"	value="${pageScope.listSize}" />
 								<tr class="fontnormal">
 									<html-el:multibox name="editCustomerStatusActionForm"

@@ -14,7 +14,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
-import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
+import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
@@ -133,7 +133,7 @@ public class AccountPersistence extends Persistence {
 		return queryResult;
 	}
 
-	public List<CheckListMaster> getStatusChecklist(Short accountStatusId,
+	public List<AccountCheckListBO> getStatusChecklist(Short accountStatusId,
 			Short accountTypeId) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("accountTypeId", accountTypeId);

@@ -50,6 +50,7 @@
 	<tiles:put name="body" type="string">
 		<html-el:form method="post" action="/loanAccountAction.do">
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'lastPaymentAction')}" var="lastPaymentAction" />
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -124,7 +125,7 @@
 									<mifos:mifoslabel name="loan.acc_summary" />
 								</td>
 								<td width="33%" align="right" class="fontnormal">
-									<html-el:link href="loanAccountAction.do?method=getLoanRepaymentSchedule&input=reviewTransactionPage&accountId=${BusinessKey.accountId}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountStateId=${BusinessKey.accountState.id}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&lastPaymentAction=${sessionScope.lastPaymentAction}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									<html-el:link href="loanAccountAction.do?method=getLoanRepaymentSchedule&input=reviewTransactionPage&accountId=${BusinessKey.accountId}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountStateId=${BusinessKey.accountState.id}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&lastPaymentAction=${lastPaymentAction}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="loan.view_schd" />
 									</html-el:link>
 								</td>
@@ -166,7 +167,7 @@
 				            	<tr>		                
 				                	<td width="42%" align="right" class="fontnormal">
 				                		<span class="fontnormal">
-						                  	<html-el:link href="loanAccountAction.do?method=getInstallmentDetails&accountId=${BusinessKey.accountId}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountStateId=${BusinessKey.accountState.id}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&lastPaymentAction=${sessionScope.lastPaymentAction}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"> 
+						                  	<html-el:link href="loanAccountAction.do?method=getInstallmentDetails&accountId=${BusinessKey.accountId}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountStateId=${BusinessKey.accountState.id}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&lastPaymentAction=${lastPaymentAction}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"> 
 												<mifos:mifoslabel name="loan.view_installment_details" />								
 											</html-el:link>
 										</span>
@@ -248,7 +249,7 @@
 								<td width="35%" class="headingorange"><mifos:mifoslabel
 									name="loan.recentActivity" /></td>
 								<td width="65%" align="right" class="fontnormal">&nbsp; <html-el:link
-									href="loanAccountAction.do?method=getAllActivity&accountId=${BusinessKey.accountId}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&accountStateId=${BusinessKey.accountState.id}&globalAccountNum=${BusinessKey.globalAccountNum}&lastPaymentAction=${sessionScope.lastPaymentAction}&accountType=${BusinessKey.accountType.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="loanAccountAction.do?method=getAllActivity&accountId=${BusinessKey.accountId}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&accountStateId=${BusinessKey.accountState.id}&globalAccountNum=${BusinessKey.globalAccountNum}&lastPaymentAction=${lastPaymentAction}&accountType=${BusinessKey.accountType.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="loan.view_acc_activity" />
 								</html-el:link></td>
 							</tr>
@@ -438,7 +439,7 @@
 									<c:choose>
 										<c:when
 											test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9') }">
-											<c:if test="${sessionScope.lastPaymentAction != '10'}">
+											<c:if test="${lastPaymentAction != '10'}">
 												<html-el:link
 													href="applyAdjustment.do?method=loadAdjustment&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 													<mifos:mifoslabel name="loan.apply_adjustment" />

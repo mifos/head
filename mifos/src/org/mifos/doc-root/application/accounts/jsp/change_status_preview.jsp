@@ -66,7 +66,7 @@
 								value="${sessionScope.UserContext.name}" /></em>
 							</td>
 						</tr>
-						<c:if test="${!empty sessionScope.checklist}">
+						<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
 							<tr>
 								<td class="blueline"><img src="pages/framework/images/trans.gif"
 									width="10" height="12"></td>
@@ -92,23 +92,24 @@
 						</c:if>
 					</table>
 					<br>
-					<c:if test="${!empty sessionScope.checklist}">
+					<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
 						<table width="95%" border="0" cellpadding="3" cellspacing="0">
-							<bean:size collection="${sessionScope.checklist}" id="listSize" />
-							<html-el:hidden property="chklistSize"
-								value="${pageScope.listSize}" />
 							<c:forEach var="chklist" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checklist')}">
+								<c:forEach var="chklistDetail" items="${chklist.checklistDetails}">
+									<bean:size collection="${chklist.checklistDetails}" id="listSize" />
+									<html-el:hidden property="chklistSize"	value="${pageScope.listSize}" />
 								<tr class="fontnormal">
 									<html-el:multibox name="editStatusActionForm"
 										property="selectedItems">
 										<td width="2%" valign="top"><c:out
-											value="${chklist.checkListId}" /></td>
+											value="${chklistDetail.detailId}" /></td>
 									</html-el:multibox>
-									<c:out value="${chklist.checkListName}" />
+									<c:out value="${chklistDetail.detailText}" />
 								</tr>
+								</c:forEach>
 							</c:forEach>
 						</table>
-					</c:if> 
+					</c:if>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td style="padding-top:5px;"><html-el:button property="editInfo"

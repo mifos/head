@@ -18,7 +18,7 @@ import org.mifos.application.accounts.struts.actionforms.EditStatusActionForm;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.checklist.util.valueobjects.CheckListMaster;
+import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -182,7 +182,7 @@ public class EditStatusAction extends BaseAction {
 				.getCurrentDate(userContext.getPereferedLocale()));
 		String newStatusName = null;
 		String flagName = null;
-		List<CheckListMaster> checklist = getAccountBusinessService()
+		List<AccountCheckListBO> checklist = getAccountBusinessService()
 				.getStatusChecklist(
 						Short.valueOf(editStatusActionForm.getNewStatusId()),
 						Short.valueOf(editStatusActionForm.getAccountTypeId()));
