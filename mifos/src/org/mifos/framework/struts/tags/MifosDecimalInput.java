@@ -131,7 +131,7 @@ public class MifosDecimalInput extends ELTextTag {
         // TODO Auto-generated method stub
     	String preferredUserLocale=LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
     	if ( this.decimalFmt==null||this.decimalFmt=="")
-    		decimalFmt = "10."+Configuration.getInstance().getSystemConfig().getCurrency().getDefaultDigitsAfterDecimal();
+    		decimalFmt = "7."+Configuration.getInstance().getSystemConfig().getCurrency().getDefaultDigitsAfterDecimal();
     	this.setOnblur("if( false == doValidation(this,"+getMin()+","+getMax()+","+getDecimalFmt()+")) this.focus();");
     	this.setOnkeyup("return chekDecimal("+getDecimalFmt()+",this, event); ");
     	this.setOnkeydown("saveText(this);this.focus();");

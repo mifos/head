@@ -108,7 +108,7 @@
 								<td width="73%" valign="top">
 									<c:choose>
 										<c:when test="${BusinessKey.feeType.value==RateAmountFlag.RATE.value}">
-											<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="10.5" />
+											<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="3.5" />
 											<mifos:mifoslabel name="Fees.percentof" />
 											<c:out value="${BusinessKey.feeFormula.name}" />
 										</c:when>

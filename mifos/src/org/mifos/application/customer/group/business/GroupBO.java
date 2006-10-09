@@ -249,14 +249,26 @@ public class GroupBO extends CustomerBO {
 	}
 	
 	@Override
+	public void changeStatus(Short newStatusId, Short flagId, String comment) throws CustomerException {
+		Short oldStatusId = getCustomerStatus().getId();
+		super.changeStatus(newStatusId, flagId, comment);
+		if(oldStatusId.equals(CustomerStatus.GROUP_PENDING.getValue()) && newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue()) && getChildren()!=null){
+			for(CustomerBO client: getChildren()){
+				if(client.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_PENDING.getValue())){
+					client.setUserContext(getUserContext());
+					client.changeStatus(CustomerStatus.CLIENT_PARTIAL.getValue(), null, comment);
+				}
+			}
+		}
+	}
+	
+	@Override
 	protected void validateStatusChange(Short newStatusId)
 			throws CustomerException {
 		logger.debug("In GroupBO::validateStatusChange(), customerId: "
 				+ getCustomerId());
 		if (newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue()))
 			checkIfGroupCanBeClosed();
-		if (newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue()))
-			checkIfGroupCanBeCancelled();
 		if (newStatusId.equals(CustomerStatus.GROUP_ACTIVE.getValue()))
 			checkIfGroupCanBeActive(newStatusId);
 		if (getCustomerStatus().getId().equals(
@@ -411,20 +423,6 @@ public class GroupBO extends CustomerBO {
 			}
 		} catch (PersistenceException e) {
 			throw new CustomerException(e);
-		}
-	}
-
-	private void checkIfGroupCanBeCancelled() throws CustomerException {
-		try {
-			if (getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED)
-					.size() > 0)
-				throw new CustomerException(
-						GroupConstants.GROUP_CLIENTS_ARE_ACTIVE,
-						new Object[] { MifosConfiguration.getInstance()
-								.getLabel(ConfigurationConstants.GROUP,
-										getUserContext().getPereferedLocale()) });
-		} catch (ConfigurationException ce) {
-			throw new CustomerException(ce);
 		}
 	}
 

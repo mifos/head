@@ -297,7 +297,7 @@
 														</tr>
 														<tr class="fontnormal">
 															<td width="16%">
-																<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="10.5"></mifos:mifosdecimalinput>
+																<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="3.5"></mifos:mifosdecimalinput>
 																<mifos:mifoslabel name="Fees.percentof" />
 																<mifos:select property="feeFormula" style="width:136px;">
 																	<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'FormulaList')}" var="formula">

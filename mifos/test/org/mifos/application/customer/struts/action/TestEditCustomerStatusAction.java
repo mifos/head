@@ -1030,21 +1030,6 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyActionErrors(new String[] { CustomerConstants.ERROR_STATE_CHANGE_EXCEPTION });
 	}
 
-	public void testUpdateStatusFailureWhenGroupHasActiveClientsWhileChangingStatusCancel()
-			throws CustomerException {
-		createInitialObjects();
-		invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_CANCELLED,
-				CustomerStatusFlag.GROUP_CANCEL_OTHER);
-		setRequestPathInfo("/editCustomerStatusAction.do");
-		addRequestParameter("method", "updateStatus");
-		addRequestParameter("input", "group");
-		getRequest().getSession().setAttribute("security_param", "Group");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		verifyActionErrors(new String[] { GroupConstants.GROUP_CLIENTS_ARE_ACTIVE });
-	}
-
 	public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenOfficeInactiveWhileChangingStatusCancelToPartial()
 			throws NumberFormatException, Exception {
 		createInitialObjectsOfficeInactive(CustomerStatus.GROUP_CANCELLED,

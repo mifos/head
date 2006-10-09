@@ -5,14 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Set;
 
-import org.hibernate.EntityMode;
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.proxy.LazyInitializer;
-import org.hibernate.type.AbstractComponentType;
-import org.hibernate.type.Type;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -23,7 +16,6 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMovementEntity;
-import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -53,7 +45,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -114,6 +105,27 @@ public class GroupBOTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 	
+	public void testChangeStatus_UpdatePendingClientToPartial_OnGroupCancelled() throws Exception {
+		group = TestObjectFactory.createGroupUnderBranch("MyGroup", CustomerStatus.GROUP_PENDING,
+				Short.valueOf("3"), meeting, personnel,null);
+		client1 = createClient(group, CustomerStatus.CLIENT_PENDING);
+		client2 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
+		HibernateUtil.closeSession();
+		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group.setUserContext(TestObjectFactory.getContext());
+		group.changeStatus(CustomerStatus.GROUP_CANCELLED.getValue(), null, "Group Cancelled");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		client1 = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
+		
+		assertEquals(CustomerStatus.GROUP_CANCELLED.getValue(),group.getCustomerStatus().getId());
+		assertEquals(CustomerStatus.CLIENT_PARTIAL.getValue(),client1.getCustomerStatus().getId());
+		assertEquals(CustomerStatus.CLIENT_PARTIAL.getValue(),client2.getCustomerStatus().getId());
+	}
 	
 	public void testSuccessfulUpdate_Group_UnderBranchForLoggig() throws Exception {
 			String name = "Group_underBranch";
