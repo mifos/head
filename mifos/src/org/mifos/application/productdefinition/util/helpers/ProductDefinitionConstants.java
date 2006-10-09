@@ -178,7 +178,7 @@ public interface ProductDefinitionConstants {
 	public String ERRORFEEFREQUENCY="errors.feefrequency";
 	public String ERRORMANDAMOUNT="errors.mandAmount";
 	public String INVALIDFIELD="exceptions.application.productDef.invalidfield";
-	public String ERRORMANDATORY = "error.mandatory";
+	public String ERRORMANDATORY = "errors.mandatory";
 	
 	//GLcodes
 	public String PRICIPALGLCODE="principal";
