@@ -303,6 +303,11 @@ public class SavingsPrdAction extends BaseAction {
 				.getInstance().getBusinessService(
 						BusinessServiceName.SavingsProduct);
 		prdDefLogger.debug("start Load method of Savings Product Action");
+		List <SavingsOfferingBO>savingsOfferingList = service.getAllSavingsProducts();
+		for(SavingsOfferingBO savingsOffering : savingsOfferingList ){
+			savingsOffering.getPrdStatus().getPrdState().setLocaleId(
+					getUserContext(request).getLocaleId());
+		}
 		SessionUtils.setAttribute(
 				ProductDefinitionConstants.SAVINGSPRODUCTLIST, service
 						.getAllSavingsProducts(), request);

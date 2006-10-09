@@ -51,8 +51,9 @@
 								<tr>
 									<td><img src="pages/framework/images/timeline/orangearrow.gif"
 										width="17" height="17"></td>
-									<td class="timelineboldorangelight"><mifos:mifoslabel
-										name="client.UserInformation" bundle="ClientUIResources"></mifos:mifoslabel></td>
+									<td class="timelineboldorangelight">
+									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
+									<mifos:mifoslabel name="client.Information" bundle="ClientUIResources"></mifos:mifoslabel></td>
 								</tr>
 							</table>
 							</td>

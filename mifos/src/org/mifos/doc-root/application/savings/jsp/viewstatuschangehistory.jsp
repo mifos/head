@@ -12,6 +12,8 @@
 	<tiles:put name="body" type="string">
 	<SCRIPT SRC="pages/application/savings/js/CreateSavingsAccount.js"></SCRIPT>
 		<html-el:form method="post" action="/savingsAction.do?method=editPreview" >
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
@@ -30,7 +32,7 @@
 						<tr>
 							<td class="headingorange">
 							<span class="heading">
-		                	<c:out value="${sessionScope.BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${sessionScope.BusinessKey.globalAccountNum}"/> - 
+		                	<c:out value="${BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${BusinessKey.globalAccountNum}"/> - 
 		                	</span> 
 							<mifos:mifoslabel name="Account.StatusHistory"	bundle="accountsUIResources" /></td>
 						</tr>

@@ -982,8 +982,55 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		List<SavingsOfferingBO> savingsProducts = (List<SavingsOfferingBO>) SessionUtils
 				.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTLIST,
 						request);
-		assertEquals("The size of savigns products", 1, savingsProducts.size());
+		assertEquals("The size of savings products", 1, savingsProducts.size());
+		
 	}
+	
+	public void testSearch_Inactive() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createSavingsOfferingAndPutInSession();
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "manage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.manage_success.toString());
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "previewManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("status", "5");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.previewManage_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.update_success.toString());
+		assertEquals(PrdStatus.SAVINGSINACTIVE.getValue().shortValue(),
+				savingsOffering.getPrdStatus().getOfferingStatusId()
+						.shortValue());
+		setRequestPathInfo("/savingsproductaction.do");
+		addRequestParameter("method", "search");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.search_success.toString());
+		List<SavingsOfferingBO> savingsProducts = (List<SavingsOfferingBO>) SessionUtils
+				.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTLIST,
+						request);
+		assertEquals("The size of savings products", 1, savingsProducts.size());
+		assertEquals("Inactive", savingsProducts.get(0).getPrdStatus().getPrdState().getName());
+		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
+				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
+	}
+
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {
 		Calendar currentDateCalendar = new GregorianCalendar();
