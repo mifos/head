@@ -171,8 +171,10 @@ class GroupCreateEdit < TestClass
     @@menuprop=load_properties("modules/propertis/MenuResources.properties")
     @@custprop=load_properties("modules/propertis/CustomerUIResources.properties")
     @@centerprop=load_properties("modules/propertis/CenterUIResources.properties")
+    @@accountprop=load_properties("modules/propertis/accountsUIResources.properties")
   end
   #Getting the lables from properties file
+  
   def geting_lables_from_proprtis()
     @@createcenterlabel=@@menuprop['label.createnew']+' '+@@lookup_name_center
     @@creategrouplabel=@@menuprop['label.createnew']+' '+@@lookup_name_group
@@ -200,6 +202,13 @@ class GroupCreateEdit < TestClass
     @@button_preview=@@groupprop['button.preview']
     @@button_submit=@@groupprop['button.submit']
     @@button_search=@@groupprop['button.search']
+    @@view_details=@@groupprop['Group.viewdetails']
+    @@group_applypayment=@@groupprop['group.applypayment']
+    @@view_all_account_activities=@@groupprop['Group.viewallactivities']
+    @@mandatory_feeamount_error=@@groupprop['errors.Customer.specifyFeeAmount']
+    @@miscchargeapplicable=@@accountprop['error.miscchargenotapplicable']
+    @@group_applycharges=@@groupprop['group.applycharges']
+    @@group_amountdue=@@groupprop['Group.amountdue']
   end
   #checking for the link Create new group in Clients&Accounts page 
   
@@ -211,6 +220,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Link Check",@@creategrouplabel,"exists","failed")
     rescue =>excp
+    puts "excep=>"+excp.to_s
       quit_on_error(excp)	
     end
   end
@@ -225,6 +235,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("link Create new group","working","N/A","failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -238,6 +249,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Mandatory Check When no data in search",@@mandatory_search_client,"Not Displaying","Failed") 
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -246,13 +258,14 @@ class GroupCreateEdit < TestClass
   
   def check_center_not_existed_in_db()
     begin
-      $ie.text_field(:name,"searchNode(searchString)").set("%^")
+      $ie.text_field(:name,"searchString").set("%^")
       $ie.button(:value,@@button_search).click
       assert($ie.contains_text("No results found"))
       $logger.log_results("Displaying No results when there is no Center Names in database","N/A","N/A","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Displaying results when there is no Center Names in database","N/A","N/A","Failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -268,6 +281,7 @@ class GroupCreateEdit < TestClass
         $logger.log_results("No of Centers are less than 10","N/A","N/A","Passed")
       end
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)
     end    
   end
@@ -276,7 +290,7 @@ class GroupCreateEdit < TestClass
   
   def check_next_link_exist_while_search()
     begin
-      $ie.text_field(:name,"searchNode(searchString)").set("%")
+      $ie.text_field(:name,"searchString").set("%")
       $ie.button(:value,@@button_search).click
       assert($ie.contains_text("Next"))
       $logger.log_results("Next link existed when there is more than 10 centers in Db","N/A","N/A","Passed")
@@ -284,13 +298,14 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Next link existed when there is more than 10 centers in Db","N/A","N/A","Failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
   #Clicking and checking for the next link functionality in search center page
   def click_next_link_in_search_page()
     begin
-      $ie.text_field(:name,"searchNode(searchString)").set("%")
+      $ie.text_field(:name,"searchString").set("%")
       $ie.button(:value,@@button_search).click 
       $ie.link(:text,"Next").click
       assert($ie.contains_text("Results 11"))
@@ -299,6 +314,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Next Button","Should Work","Working","Failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -311,6 +327,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Previous Button","Should Work","Working","Failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -327,6 +344,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Cancel button","working properly","N/A","Passed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -348,7 +366,7 @@ class GroupCreateEdit < TestClass
       dbquery("select customer_id,display_name,branch_id from customer where customer_level_id=3 and status_id=13 and branch_id="+@@office_id+" order by display_name")
       @@cdisplay_name=dbresult[1]  
       @@customer_id=dbresult[0]
-      $ie.text_field(:name,"searchNode(searchString)").set(@@cdisplay_name)        
+      $ie.text_field(:name,"searchString").set(@@cdisplay_name)        
       $ie.button(:value,@@button_search).click
       $ie.link(:text,@@cdisplay_name).click
       $ie.wait
@@ -357,6 +375,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Page Enter Group Information","Should appear","not appeared","failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end      
   end
@@ -371,6 +390,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("all mandatory check ","NA","NA","failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -385,6 +405,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("mandatory checks when Group name entered ","NA","NA","failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -400,15 +421,32 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("mandatory checks when group name,additional information entered","NA","NA","failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
+  end
+  #added by Dilip as part of Bug#727 
+  def mandatory_with_feesselected()
+   $ie.text_field(:name,"displayName").set("aaa")
+   $ie.text_field(:name,"customField[0].fieldValue").set("111")
+   feearr=$ie.select_list(:name,"selectedFee[0].feeId").getAllContents()
+   $ie.select_list(:name,"selectedFee[0].feeId").select(feearr[1].to_s)
+   $ie.text_field(:name,"selectedFee[0].amount").set("")
+   $ie.button(:value,@@button_preview).click 
+    assert($ie.contains_text(@@mandatory_feeamount_error)) 
+        $logger.log_results("Bug#727-Mandatory checks when fee selected","Remove the Fee amount","NA","passed")
+    rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Bug#727-Mandatory checks when fee selected","Remove the Fee amount","NA","failed")
+    rescue =>excp
+        puts "excep=>"+excp.to_s
+        quit_on_error(excp)  
+   
   end
   
   #checking the mandatory after entering group name, custom field data and selecting Loan officer
   def review_group_with_mandatory(gname,customfield,status)
     begin
       select_center 
-      puts @@office_id
       if ($validname=="mifos") then
         dbquery("select personnel_id,display_name from personnel where office_id="+@@office_id)
         @@personnel_id=dbresult[0]
@@ -428,6 +466,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("mandatory checks when group name,Formed by,additional information entered","NA","NA","failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -447,6 +486,7 @@ class GroupCreateEdit < TestClass
         rowc+=1
       end
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)        
     end
   end
@@ -455,6 +495,7 @@ class GroupCreateEdit < TestClass
     begin
       $ie.text_field(:name,"customField[0].fieldValue").set(ncustom)
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)
     end    
   end
@@ -469,6 +510,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Cancel Funcationality from Review&amp;submit","working properly","N/A","failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -483,7 +525,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Group created successfully","N/A","N/A","Failed")
     rescue =>excp
-     #puts excp.to_s
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -491,7 +533,6 @@ class GroupCreateEdit < TestClass
  #this function creates a group with a pending status
   def create_group_with_mandatory_forfees(gname,customfield,status)
       begin
-      puts "inside my function"
       review_group_with_mandatory(gname,customfield,status)
       $ie.button(:value,status).click
       assert($ie.contains_text(@@group_success))
@@ -502,8 +543,8 @@ class GroupCreateEdit < TestClass
       rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Group created successfully","N/A","N/A","Failed")
       rescue =>excp
-      #puts excp.to_s
-      quit_on_error(excp)    
+       puts "excep=>"+excp.to_s
+       quit_on_error(excp)    
       end
   end #end of function
   
@@ -517,6 +558,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Opened Edit group details page","N/A","N/A","passed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -531,6 +573,7 @@ class GroupCreateEdit < TestClass
         change_status_active()
       end
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)
     end
   end
@@ -552,6 +595,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Pending","NA","NA","failed") 
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end 
@@ -573,6 +617,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Active","NA","NA","failed") 
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end    
@@ -599,6 +644,7 @@ class GroupCreateEdit < TestClass
       fee_select_one_by_one()
       create_preview(gname,gdate,gmonth,gyear,externalid,address1,address2,address3,city,state,country,pcode,phone,custom1,status)
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)
     end
   end
@@ -614,6 +660,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Create Group Revie&amp;submit page diaplayed","N/A","N/A","Failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -628,6 +675,7 @@ class GroupCreateEdit < TestClass
     rescue  Test::Unit::AssertionFailedError=>e
       $logger.log_results("Group Creation","Review&amp;submit page","opened","failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -641,6 +689,7 @@ class GroupCreateEdit < TestClass
     rescue  Test::Unit::AssertionFailedError=>e
       $logger.log_results("Group Creation","successfull page","opened","failed")
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -655,6 +704,7 @@ class GroupCreateEdit < TestClass
         $logger.log_results("Data Base Check","NA","NA","passed")  
       end
     rescue =>excp
+        puts "excep=>"+excp.to_s
       quit_on_error(excp)      
     end   
   end
@@ -665,16 +715,18 @@ class GroupCreateEdit < TestClass
       dbquery("select global_cust_num from customer where display_name='"+gname+"'")
       global_account_number=dbresult[0]
       $ie.link(:text,"Clients & Accounts").click
-      $ie.text_field(:name,"searchNode(searchString)").set(global_account_number)
+      $ie.text_field(:name,"searchString").set(global_account_number)
       $ie.button(@@button_search).click
-      search_name=gname+": ID "+global_account_number
+      $ie.button(@@button_search).click
+      search_name=gname+": ID "+global_account_number.to_s
       $ie.link(:text,search_name).click
       assert($ie.contains_text(@@performance_history))
       $logger.log_results("Group Details page","Open","opened","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Group Details page","Open","not opened","failed")
     rescue =>excp
-      quit_on_error(excp)    
+    puts "excep=>"+excp.to_s
+     quit_on_error(excp)    
     end
   end
   
@@ -687,7 +739,8 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Edit Group Details Page","Open","Not Opened","Failed")
     rescue =>excp
-      quit_on_error(excp)    
+        puts "excep=>"+excp.to_s
+    quit_on_error(excp)    
     end
   end
   
@@ -707,7 +760,8 @@ class GroupCreateEdit < TestClass
       custom_config(custom1)
       click_preview(gname,externalid,address1,address2,address3,city,state,country,pcode,phone,custom1)
     rescue =>excp
-      quit_on_error(excp) 
+        puts "excep=>"+excp.to_s
+     quit_on_error(excp) 
     end   
   end
   
@@ -737,6 +791,7 @@ class GroupCreateEdit < TestClass
         end
       end
     rescue =>excp
+      puts "excep=>"+excp.to_s
       quit_on_error(excp)
     end     
   end
@@ -754,6 +809,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Edit Group Review&amp;submit page diaplayed","N/A","N/A","Failed")
     rescue =>excp
+      puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -766,6 +822,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
     rescue =>excp
+      puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -778,6 +835,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
     rescue =>excp
+      puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -791,6 +849,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Change Center Membership details page","N/A","N/A","Failed")    
     rescue =>excp
+      puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -808,6 +867,7 @@ class GroupCreateEdit < TestClass
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Center Membership","Should Change Successfully","Changed","Failed")
     rescue =>excp
+      puts "excep=>"+excp.to_s
       quit_on_error(excp)    
     end
   end
@@ -829,6 +889,7 @@ class GroupCreateEdit < TestClass
         $logger.log_results("View all closed accounts link working","NA","NA","failed")   
       end
     rescue =>excp
+      puts "excep=>"+excp.to_s
       quit_on_error(excp)        
     end
   end
@@ -858,7 +919,7 @@ class GroupCreateEdit < TestClass
         groupstatus=dbresult1[3]
         groupname=dbresult1[2]
         $ie.link(:text,"Clients & Accounts").click
-        $ie.text_field(:name,"searchNode(searchString)").set(global_acct_num)
+        $ie.text_field(:name,"searchString").set(global_acct_num)
         $ie.button(:value,"Search").click
         search_name=groupname+": ID "+global_acct_num
         $ie.link(:text,search_name).click
@@ -873,6 +934,7 @@ class GroupCreateEdit < TestClass
         rowc+=1
       end
     rescue =>excp
+      puts "excep=>"+excp.to_s
       quit_on_error(excp)
     end
   end
@@ -881,9 +943,10 @@ class GroupCreateEdit < TestClass
   def check_feeApplied_status()
     
     count=count_records("Select count(global_cust_num) from Customer where Status_ID in (8)")
-    #puts "count "+count.to_s
+
     if(count.to_i==0) # if  there are not groups with status pending then create one
       create_group_with_mandatory_forfees(@groupname+Time.now.strftime("%d%m%Y%H%M%S"),"351",@statusname)
+      #create_group_with_mandatory_forfees("group"+Time.now.strftime("%d%m%Y%H%M%S"),"351","Submit for approval")
       apply_feestogroup
     else
       apply_feestogroup
@@ -901,19 +964,22 @@ class GroupCreateEdit < TestClass
         @@customer_id=dbresult[3]
         search_client(@@global_cust_num) 
         $ie.link(:text,@@Display_name.strip()+": ID "+@@global_cust_num).click
-        $ie.link(:text,"View details").click
-        $ie.link(:text,"Apply charges").click
+        $ie.link(:text,@@view_details).click
+        $ie.link(:text,@@group_applycharges).click
+
+        #added as part of Bug#802
+        apply_Miscfees_to_inactivecustomer()
         feetypearr=$ie.select_list(:name,"chargeType").getAllContents()
         $ie.select_list(:name,"chargeType").select(feetypearr[1].to_s)
         #    arr=$ie.select_list(:name,"chargeType").getSelectedItems()
-        $ie.button(:value,"Submit").click
+        $ie.button(:value,@@button_submit).click
         search_client(@@global_cust_num) 
         $ie.link(:text,@@Display_name.strip()+": ID "+@@global_cust_num).click
         table_obj=$ie.table(:index,15)
-        puts table_obj[2][0].text
         begin
-        assert(table_obj[2][0].text=="Amount due: 0.0")
+        assert(table_obj[2][0].text==@@group_amountdue+" 0.0")
         $logger.log_results("Bug#397-Fee applied to a customer","Fee applied a group which is not active","Fee should not be applied till the group is active","passed")
+        
         rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Bug#397-Fee applied to a customer","Fee applied a group which is not active","Fee displayed for inactive group","failed")
         end
@@ -922,17 +988,45 @@ class GroupCreateEdit < TestClass
          search_client(@@global_cust_num) 
         $ie.link(:text,@@Display_name.strip()+": ID "+@@global_cust_num).click
         table_obj=$ie.table(:index,15)
-        puts table_obj[2][0].text
          chargeamount=gettotalfeesapplied(@@customer_id)
-       # puts chargeamount.to_f
         begin
-        assert(table_obj[2][0].text=="Amount due: "+chargeamount.to_f.to_s+"")
+        assert(table_obj[2][0].text==@@group_amountdue+" "+chargeamount.to_f.to_s+"")
         $logger.log_results("Bug#397-Fee applied to a customer","Customer is made Active","Fee applied should be displayed","passed")
+
+        #added by Dilip as part of bug#716
+         check_applypayment_cancel()
+
         rescue Test::Unit::AssertionFailedError=>e
         $logger.log_results("Bug#397-Fee applied to a customer","fees is not displayed for active group","","failed")
         end
   end # end of funtion apply_feestogroup
+ 
+ #added by Dilip as part of the bug# 802
+  def apply_Miscfees_to_inactivecustomer()
+        $ie.select_list(:name,"chargeType").select_value("-1")
+        $ie.text_field(:name,"chargeAmount").set("34")
+        $ie.button(:value,@@button_submit).click
+       assert($ie.contains_text(@@miscchargeapplicable))
+        $logger.log_results("Bug#802-Misc Fee applied to a inactive customer","Misc Fee applied to a group which is not active","Should be not allowed to apply fees","passed")
+        rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Bug#802-Misc Fee applied to a inactive customer","Misc Fee applied to a group which is not active","Allowed to apply fees","failed")
+        rescue=>excp
+        quit_on_error(excp)
+  end
   
+  #added by Dilip on 3/10/2006 as part of bug 716
+  def check_applypayment_cancel()
+      $ie.link(:text,@@view_details).click
+      $ie.link(:text,@@group_applypayment).click
+      $ie.button(:value,@@button_cancel).click
+      assert($ie.contains_text(@@view_all_account_activities))
+      $logger.log_results("Bug#716-Click Cancel on Apply Payment","Cancel clicked","The Group charges page should be displayed","passed")
+      rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Bug#716-Click Cancel on Apply Payment","Cancel clicked","The Group charges page not displayed","failed")
+      rescue =>excp
+      puts "excp ->"+excp.to_s
+      quit_on_error(excp)
+  end
   #added by Dilip.This function returns the count for any query.
   def count_records(query)
     dbquery(query)
@@ -940,7 +1034,8 @@ class GroupCreateEdit < TestClass
     return count.to_i
   end
 
-#to get the  total fees applied to a customer added by Dilip as part of bug#397
+#To get the  total fees applied to a customer added by Dilip as part of bug#397
+
 def gettotalfeesapplied(customerid)
   dbquery("select sum(account_fee_amnt) from account a,account_fees af where a.account_id=af.account_id and a.customer_id="+customerid+" group by a.account_id")
   totalfees=dbresult[0]
@@ -950,8 +1045,11 @@ end
  #added by Dilip. This function searches for any customer number given as input 
    def search_client(custnum)
     $ie.link(:text,"Clients & Accounts").click
-    $ie.text_field(:name,"searchNode(searchString)").set(custnum)
+    $ie.text_field(:name,"searchString").set(custnum)
     $ie.button(:value,"Search").click
+    #workaround  will be removed
+    $ie.button(:value,"Search").click
+    #***End***
     assert($ie.contains_text(custnum))
     $logger.log_results("Search results","Should work","Working","Passed")
     rescue Test::Unit::AssertionFailedError=>e
@@ -979,6 +1077,8 @@ class GroupTest
   groupobject.mandatory_all
   groupobject.mandatory_with_groupname
   groupobject.mandatory_with_gname_addInformation
+  #added as part of bug#727
+  groupobject.mandatory_with_feesselected
   
   filename=File.expand_path(File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
   groupobject.open(filename,1)
@@ -1019,7 +1119,8 @@ class GroupTest
     rowid+=$maxcol
   end
   groupobject.Activate_Group
+
   #added by Dilip as part of bug#397
-  groupobject.check_feeApplied_status
+  groupobject.check_feeApplied_status()
   groupobject.mifos_logout()
 end
