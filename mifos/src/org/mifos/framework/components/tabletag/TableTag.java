@@ -62,6 +62,7 @@ import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Cache;
 import org.mifos.framework.util.helpers.Constants;
@@ -255,6 +256,9 @@ public class TableTag extends BodyTagSupport {
 		} catch (HibernateSearchException hse) {
 			new JspException(hse);
 		}
+		catch (PageExpiredException e) {
+			new JspException(e);
+		}
 		return super.doStartTag();
 
 	}
@@ -417,40 +421,57 @@ public class TableTag extends BodyTagSupport {
 			.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
 		}
 	}
-	//TODO rename once all seach is gigrated to m2
-	private void createStartTable_M2(StringBuilder result, boolean headingRequired, boolean topBlueLineRequired) {
+	// TODO rename once all seach is gigrated to m2
+	private void createStartTable_M2(StringBuilder result,
+			boolean headingRequired, boolean topBlueLineRequired)
+			throws PageExpiredException {
 		if (headingRequired) {
-			result.append("<table width=\"96%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">")
-				  .append("<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\"><span class=\"headingorange\">")
-				  .append(size + " results for </span>");
-			
-			CustSearchActionForm custSearchActionForm = 
-				(CustSearchActionForm) SessionUtils.getAttribute(
-						"custSearchActionForm", pageContext.getSession());
-				result.append("<span class=\"heading\">"+ custSearchActionForm.getSearchString() + " </span>");
-			
-			
-			if(custSearchActionForm.getOfficeId()!=null && custSearchActionForm.getOfficeId().equals("0"))
-			{			
-					result.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
-							+ "All Branches"+ "</span>");			
+
+			String searchString = (String) SessionUtils.getAttribute(
+					Constants.SEARCH_STRING, (HttpServletRequest) pageContext
+							.getRequest());
+			String officeName = (String) SessionUtils.getAttribute(
+					Constants.OFFICE_NAME, (HttpServletRequest) pageContext
+							.getRequest());
+			result
+					.append(
+							"<table width=\"96%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">")
+					.append(
+							"<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\"><span class=\"headingorange\">")
+					.append(size + " results for </span>");
+			result.append("<span class=\"heading\">"
+					+ MifosTagUtils.xmlEscape(searchString) + " </span>");
+			String officeId = (String) SessionUtils.getAttribute(
+					Constants.BRANCH_ID, (HttpServletRequest) pageContext
+							.getRequest());
+			if (officeId != null && officeId.equals("0")) {
+				result
+						.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
+								+ "All Branches" + "</span>");
 			}
-							
-				else
-				{					
-					result.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
-							+ custSearchActionForm.getOfficeName()+ "</span>");
-				}
-						
+
+			else {
+				result
+						.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
+								+ MifosTagUtils.xmlEscape(officeName)
+								+ "</span>");
+			}
+
 			result.append("</td></tr></table>");
-			result.append("<tr><td colspan=\"2\" valign=\"top\">")
-			.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
+			result
+					.append("<tr><td colspan=\"2\" valign=\"top\">")
+					.append(
+							"<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
 		}
 		result.append("<table width=" + width + "border=" + border
-				+ "cellspacing=" + cellspacing + "cellpadding=" + cellpadding+" >");
-		if(topBlueLineRequired) {
-			result.append("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">")
-			.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
+				+ "cellspacing=" + cellspacing + "cellpadding=" + cellpadding
+				+ " >");
+		if (topBlueLineRequired) {
+			result
+					.append(
+							"<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">")
+					.append(
+							"<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
 		}
 	}
 	/**
@@ -541,7 +562,7 @@ public class TableTag extends BodyTagSupport {
 	}
 
 	private void getTableData(List list) throws TableTagException, TableTagParseException,
-			JspException, TableTagTypeParserException, IOException {
+			JspException, TableTagTypeParserException, IOException, PageExpiredException {
 		Locale locale = getLocale();
 		ResourceBundle resource = ResourceBundle
 		.getBundle(TableTagConstants.PROPERTIESFILE);
@@ -554,7 +575,7 @@ public class TableTag extends BodyTagSupport {
 	}
 
 	private void getSingleData(List list,Locale locale) throws TableTagParseException, TableTagException,
-			JspException, IOException {
+			JspException, IOException, PageExpiredException {
 		String xmlFilePath = getSingleFile();
 		Table table = helperCache(xmlFilePath, name);
 		ResourceBundle resource = ResourceBundle
@@ -572,7 +593,7 @@ public class TableTag extends BodyTagSupport {
 	}
 
 	private void getMultipleData(List list,Locale locale) throws TableTagTypeParserException,
-			TableTagParseException, TableTagException, JspException,IOException {
+			TableTagParseException, TableTagException, JspException,IOException, PageExpiredException {
 		StringBuilder result = new StringBuilder();
 		JspWriter out = pageContext.getOut();
 		createStartTable_M2(result,true,false);

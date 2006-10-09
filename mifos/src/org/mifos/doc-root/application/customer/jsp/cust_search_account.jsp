@@ -10,8 +10,9 @@
 		<script>
 				function fun_cancel(form)
 					{
-						form.method.value="load";
-						form.action="CustomerSearchAction.do";
+						
+						form.action="custSearchAction.do";
+						form.method.value="loadMainSearch";
 						form.submit();
 					}
 		</script>
@@ -201,6 +202,7 @@
 				</tr>
 			</table>
 			<html:hidden property="method" value="search" />
+			
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>

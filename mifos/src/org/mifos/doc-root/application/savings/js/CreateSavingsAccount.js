@@ -46,7 +46,7 @@
 		}  
  		function fun_createCancel(form)
 		{
-			form.action="CustomerSearchAction.do?method=load";
+			form.action="custSearchAction.do?method=loadMainSearch";
 			form.submit();
 		}
 		function fun_editCancel(form)

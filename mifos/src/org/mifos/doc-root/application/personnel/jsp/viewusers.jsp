@@ -43,7 +43,7 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
  <tiles:put name="body" type="string">
-<html-el:form action="PersonAction.do?method=search" focus="input">
+<html-el:form action="PersonAction.do?method=search" focus="searchString">
 
        <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>

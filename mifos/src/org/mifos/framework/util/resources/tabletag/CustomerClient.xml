@@ -3,7 +3,7 @@
 		xmlns="http://www.aditi.com" 
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
-  <path key="customersearch" forwardkey="search_sucess" action="custSearchAction.do"/> 
+  <path key="customersearch" forwardkey="mainSearch_success" action="custSearchAction.do"/> 
   <pagerequirements numbersrequired="true" bluelinerequired="false"  blanklinerequired="true" headingrequired="true"/>  
   <row>
     <column label="Client" labeltype="key" boldlabel="false" type="link" action="clientCustAction.do" styleClass="headingblue">

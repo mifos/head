@@ -333,8 +333,8 @@ public class GroupCustAction extends CustAction {
 		
 		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,new GroupBusinessService().search(searchString,userContext.getId()),request);
 		
-		if ( actionForm.getInput()!=null && actionForm.equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
-			return mapping.findForward(ActionForwards.loadTransferSearch_success.toString());
+		if ( actionForm.getInput()!=null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
+			return mapping.findForward(ActionForwards.transferSearch_success.toString());
 		else
 
 	 return actionForward;

@@ -42,8 +42,8 @@
 	*/
  				function fun_cancel(form)
 					{
-						form.method.value="load";
-						form.action="CustomerSearchAction.do";
+						form.method.value="loadMainSearch";
+						form.action="custSearchAction.do";
 						form.submit();
 					}
 	
