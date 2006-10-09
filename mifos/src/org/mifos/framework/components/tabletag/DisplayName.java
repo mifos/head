@@ -44,6 +44,7 @@ import java.util.Locale;
 import javax.servlet.jsp.PageContext;
 
 import org.mifos.framework.exceptions.TableTagException;
+import org.mifos.framework.struts.tags.MifosTagUtils;
 
 /**
  * This class renders the display name
@@ -205,14 +206,14 @@ public class DisplayName {
 			if(fragment.getItalic().equalsIgnoreCase("true")) {
 				stringBuilder.append("<em>");
 			}
-			stringBuilder.append(value);
+			stringBuilder.append(MifosTagUtils.xmlEscape( value));
 			stringBuilder.append("</span>");
 			if(fragment.getItalic().equalsIgnoreCase("true")) {
 				stringBuilder.append("</em>");
 			}
 		}
 		else {
-			stringBuilder.append(value);
+			stringBuilder.append(MifosTagUtils.xmlEscape(value));
 		}
 		return stringBuilder.toString();
 	}

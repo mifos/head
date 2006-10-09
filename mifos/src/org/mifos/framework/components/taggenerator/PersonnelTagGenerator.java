@@ -2,6 +2,7 @@ package org.mifos.framework.components.taggenerator;
 
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.struts.tags.MifosTagUtils;
 
 public class PersonnelTagGenerator extends TagGenerator {
 	
@@ -32,7 +33,7 @@ public class PersonnelTagGenerator extends TagGenerator {
 		if(selfLinkRequired){
 			createPersonnelLink(strBuilder, personnel,randomNum);
 		}else{
-			strBuilder.append("<b>"+getPersonnelName(personnel)+"</b>"); 
+			strBuilder.append("<b>"+MifosTagUtils.xmlEscape(getPersonnelName(personnel))+"</b>"); 
 		}
 	}
 	
@@ -43,7 +44,7 @@ public class PersonnelTagGenerator extends TagGenerator {
 		strBuilder.append("&randomNum=");
 		strBuilder.append(randomNum);
 		strBuilder.append("\">");
-		strBuilder.append(getPersonnelName(personnel));
+		strBuilder.append(MifosTagUtils.xmlEscape( getPersonnelName(personnel)));
 		strBuilder.append("</a>");
 	}
 	

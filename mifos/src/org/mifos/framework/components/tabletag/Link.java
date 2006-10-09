@@ -44,6 +44,7 @@ import java.util.Locale;
 import javax.servlet.jsp.PageContext;
 
 import org.mifos.framework.exceptions.TableTagException;
+import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.util.helpers.Constants;
 
 /**
@@ -104,7 +105,7 @@ public class Link {
 					stringbuilder.append("&"+Constants.CURRENTFLOWKEY+"="+flowKey);
 				stringbuilder.append("&"+Constants.RANDOMNUM+"="+randomNumber);
 				stringbuilder.append("\">");
-				stringbuilder.append(" " + name[i] + "</a></span>");
+				stringbuilder.append(" " + MifosTagUtils.xmlEscape( name[i]) + "</a></span>");
 			}
 			else if(styleClass != null && styleClass.equals("headingblue") && bold.equalsIgnoreCase("true"))
 			{			
@@ -117,7 +118,7 @@ public class Link {
 				stringbuilder.append("&"+Constants.RANDOMNUM+"="+randomNumber);
 				stringbuilder.append("class=\""+styleClass+"\"");
 				stringbuilder.append(">");
-				stringbuilder.append(" " + name[i] + "</a></span>");
+				stringbuilder.append(" " + MifosTagUtils.xmlEscape(name[i]) + "</a></span>");
 			}
 			else
 			{			
@@ -130,7 +131,7 @@ public class Link {
 				//stringbuilder.append("class=");
 				//stringbuilder.append(bold.equalsIgnoreCase("true")?"\"headingblue\">" :"\"\">");
 				stringbuilder.append("\">");
-				stringbuilder.append(" " + name[i] + "</a></span>");					
+				stringbuilder.append(" " + MifosTagUtils.xmlEscape(name[i]) + "</a></span>");					
 			}
 			stringbuilder.append((i == (name.length - 1)) ? "" : ",");			
 		}

@@ -43,6 +43,7 @@ import java.util.Locale;
 import javax.servlet.jsp.PageContext;
 
 import org.mifos.framework.exceptions.TableTagException;
+import org.mifos.framework.struts.tags.MifosTagUtils;
 
 /**
  * This class renders the columns.

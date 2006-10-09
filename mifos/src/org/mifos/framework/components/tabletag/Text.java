@@ -46,6 +46,7 @@ import java.util.ResourceBundle;
 import javax.servlet.jsp.PageContext;
 
 import org.mifos.framework.exceptions.TableTagException;
+import org.mifos.framework.struts.tags.MifosTagUtils;
 
 /**
  * This class renders text if display name is text only.

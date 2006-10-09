@@ -39,6 +39,7 @@ package org.mifos.framework.components.taggenerator;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.struts.tags.MifosTagUtils;
 
 public class OfficeTagGenerator extends TagGenerator{
 	
@@ -57,11 +58,11 @@ public class OfficeTagGenerator extends TagGenerator{
 		strBuilder.append("<a href=\"custSearchAction.do?method=getOfficeHomePage&officeId=");
 		strBuilder.append(office.getOfficeId());
 		strBuilder.append("&officeName=");
-		strBuilder.append(office.getOfficeName());
+		strBuilder.append(MifosTagUtils.xmlEscape( office.getOfficeName()));
 		strBuilder.append("&randomNum=");
 		strBuilder.append(randomNum);
 		strBuilder.append("\">");
-		strBuilder.append(office.getOfficeName());
+		strBuilder.append(MifosTagUtils.xmlEscape(office.getOfficeName()));
 		strBuilder.append("</a>");
 		return strBuilder;
 	}

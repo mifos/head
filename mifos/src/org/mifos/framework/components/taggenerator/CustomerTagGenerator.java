@@ -40,6 +40,7 @@ package org.mifos.framework.components.taggenerator;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.struts.tags.MifosTagUtils;
 
 public class CustomerTagGenerator extends TagGenerator{
 	public CustomerTagGenerator(){
@@ -79,7 +80,7 @@ public class CustomerTagGenerator extends TagGenerator{
 			strBuilder.append("&randomNum=");
 			strBuilder.append(randomNum);
 			strBuilder.append("\">");
-			strBuilder.append(customer.getDisplayName());
+			strBuilder.append(MifosTagUtils.xmlEscape( customer.getDisplayName()));
 			strBuilder.append("</a>");
 		}else if(selfLinkRequired){
 			strBuilder.append("<a href=\"");
@@ -88,10 +89,10 @@ public class CustomerTagGenerator extends TagGenerator{
 			strBuilder.append("&randomNum=");
 			strBuilder.append(randomNum);
 			strBuilder.append("\">");
-			strBuilder.append(customer.getDisplayName());
+			strBuilder.append(MifosTagUtils.xmlEscape(customer.getDisplayName()));
 			strBuilder.append("</a>");
 		}else if(!selfLinkRequired){
-			strBuilder.append("<b>"+customer.getDisplayName()+"</b>");
+			strBuilder.append("<b>"+MifosTagUtils.xmlEscape(customer.getDisplayName())+"</b>");
 		}
 		
 	}

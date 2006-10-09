@@ -83,8 +83,9 @@ function goToCancelPage()
                   <mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" /> - </span><mifos:mifoslabel name="Group.select" />  <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /></td>
 				</tr>
 				<tr>
-					<td class="fontnormalbold"><span class="fontnormal"><mifos:mifoslabel name="Group.searchmsg1" />
-					<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" /><mifos:mifoslabel name="Group.searchmsg2" />
+					<td class="fontnormalbold">
+					<span class="fontnormal"><mifos:mifoslabel name="Group.searchmsg1" />
+					<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 					<mifos:mifoslabel name="Group.createpagehead3" /></span>
 					</td>
 				</tr>
