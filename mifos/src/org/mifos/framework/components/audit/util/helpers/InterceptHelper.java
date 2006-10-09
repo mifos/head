@@ -272,7 +272,7 @@ public class InterceptHelper {
 	
 	
 	
-	public void readFurtherMeta(Object obj,String firstName,String state) {
+	private void readFurtherMeta(Object obj,String firstName,String state) {
 		Class clazz = getClazz(obj);
 
 		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
@@ -505,7 +505,7 @@ public class InterceptHelper {
 
 
 	
-	public void readFurtherMetaForCollectionType(Object obj,String firstName,String state) {
+	private void readFurtherMetaForCollectionType(Object obj,String firstName,String state) {
 		Class l = getClazz(obj);
 
 		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
@@ -518,7 +518,6 @@ public class InterceptHelper {
 		setPrimaryKeyValueForCollectionType(customMeta,obj,firstName.concat(customMeta.getIdentifierPropertyName()),state);
 		
 		for (int i = 0; i < propertyNames.length; i++) {
-			logger.debug("readFurtherMetaForCollectionType : "+propertyNames[i]+ " : " + propertyValues[i]);
 			if (!propertyTypes[i].isEntityType() 
 					&& !propertyTypes[i].isComponentType() && !propertyTypes[i].isCollectionType()) {
 				 if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
@@ -676,7 +675,7 @@ public class InterceptHelper {
 	}
 	
 	
-	public void readAndMergeCollectionTypes(Object obj,String firstName,String parentName,String state) {
+	private void readAndMergeCollectionTypes(Object obj,String firstName,String parentName,String state) {
 		Class l = getClazz(obj);
 
 		ClassMetadata customMeta = HibernateUtil.getSessionFactory()

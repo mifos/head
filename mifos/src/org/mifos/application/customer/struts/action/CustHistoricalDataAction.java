@@ -213,8 +213,13 @@ public class CustHistoricalDataAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		CustHistoricalDataActionForm historicalActionForm = (CustHistoricalDataActionForm) form;
-		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
+		CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
+		CustomerBO customerBO = getCustomerBusinessService().getCustomer(customerBOInSession.getCustomerId());
+		customerBO.setVersionNo(customerBOInSession.getVersionNo());
+		customerBO.setUserContext(getUserContext(request));
+		customerBOInSession = null;
+		setInitialObjectForAuditLogging(customerBO);
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO
 				.getHistoricalData();
 		Integer oldLoanCycleNo = 0;
