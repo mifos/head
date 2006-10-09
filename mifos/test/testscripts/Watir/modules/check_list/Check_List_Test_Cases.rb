@@ -545,6 +545,6 @@ class Check_List
     count = 1
     rowid+=$maxcol
   end
-  #checklist_obj.delete_all_checklist()
+  checklist_obj.delete_all_checklist()
   checklist_obj.checklist_logout()
 end
