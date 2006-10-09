@@ -364,7 +364,6 @@ public class LoanPrdAction extends BaseAction {
 						BusinessServiceName.LoanProduct)).getLoanOffering(
 				loanPrdActionForm.getPrdOfferingIdValue(), getUserContext(
 						request).getLocaleId());
-		request.setAttribute(Constants.BUSINESS_KEY, loanOffering);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanOffering,request);
 		loanPrdActionForm.clear();
 		loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering

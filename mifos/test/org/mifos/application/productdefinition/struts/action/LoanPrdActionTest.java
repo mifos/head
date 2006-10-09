@@ -986,7 +986,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(fee);
 	}
 
-	public void testGet() {
+	public void testGet() throws PageExpiredException {
 		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/loanproductaction.do");
@@ -998,8 +998,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.get_success.toString());
 
-		LoanOfferingBO loanOffering1 = (LoanOfferingBO) request
-				.getAttribute(Constants.BUSINESS_KEY);
+		LoanOfferingBO loanOffering1 = (LoanOfferingBO) SessionUtils
+				.getAttribute(Constants.BUSINESS_KEY,request);
 		assertNotNull(loanOffering1.getPrdOfferingId());
 		assertNotNull(loanOffering1.getPrdOfferingName());
 		assertNotNull(loanOffering1.getPrdOfferingShortName());

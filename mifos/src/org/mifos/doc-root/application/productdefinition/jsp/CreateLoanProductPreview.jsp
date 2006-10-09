@@ -280,7 +280,9 @@
 													</c:forEach> </span>
 												<br>
 												<mifos:mifoslabel name="product.graceperdur" bundle="ProductDefUIResources" />
-												: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.gracePeriodDuration}" /> <mifos:mifoslabel name="product.installments" bundle="ProductDefUIResources" /></span>
+												: <span class="fontnormal"><c:out value="${sessionScope.loanproductactionform.gracePeriodDuration}" /> <c:if test="${not empty sessionScope.loanproductactionform.gracePeriodDuration }">
+														<mifos:mifoslabel name="product.installments" bundle="ProductDefUIResources" />
+													</c:if> </span>
 												<br>
 												<mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.deductedatdis" bundle="ProductDefUIResources" />
