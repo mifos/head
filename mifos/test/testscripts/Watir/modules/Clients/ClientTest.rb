@@ -20,8 +20,17 @@ class ClientCreateEdit<TestClass
     @@lookup_name_client=dbresult[0]
     dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=83 and locale_id=1")
     @@lookup_name_group=dbresult[0]
-
-    
+    dbquery("select office_id,display_name from office where status_id=1 and office_level_id=5 and search_id like '"+@@search_id+"%'")
+    @@office_id=dbresult[0]
+       if ($validname=="mifos") then
+        dbquery("select personnel_id,display_name from personnel where level_id=1 and office_id="+@@office_id)
+        @@personnel_id=dbresult[0]
+        @@loan_officer=dbresult[1]
+      else
+        dbquery("select personnel_id,display_name from personnel where level_id=1 and login_name='"+$validname+"'")
+        @@personnel_id=dbresult[0]
+        @@loan_officer=dbresult[1]
+      end
   end
   def read_client_values(rowid,sheetid)
     if sheetid==1 then
@@ -351,6 +360,7 @@ class ClientCreateEdit<TestClass
       @@lookup_name_group=dbresult[0]
       dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=84 and locale_id=1")
       @@lookup_name_center=dbresult[0]
+      
       rescue =>excp
       quit_on_error(excp) 
       
@@ -383,10 +393,13 @@ class ClientCreateEdit<TestClass
     @@change_group_membership=@@groupprop['Group.change']+" "+@@groupprop['Group.group']+" "+@@groupprop['Group.membership']
     @@view_all_account_activity=@@clientprop['client.viewallactivities']
     @@member_applycharges1=@@clientprop['client.ApplyCharges']
-    @@member_applycharges2=@@clientprop['client.applycharges']
+    @@member_applycharges2=@@clientprop['clinet.applycharges']
     @@view_details=@@clientprop['client.viewdetails']
     @@member_applypayment=@@clientprop['client.apply_payment']
     @@active_members_forGroup=@@clientprop['client.NoOfActive']+" "+@@lookup_name_client+"s"
+    @@createclient=@@clientprop['client.CreateTitle']+" "+@@lookup_name_client
+    @@client_mfi_page_msg=(@@createclient+" "+@@clientprop['client.CreateMfiInformationTitle']).squeeze(" ")
+    @@client_review=@@createclient+" "+@@clientprop['client.CreatePreviewReviewSubmitTitle'].squeeze(" ")    
   end
   
   #checking for the link Create new client in clients&accounts section
@@ -1820,7 +1833,7 @@ def check_blueband_links
     $ie.link(:text,@membername).click
     
     assert($ie.contains_text("Edit Member status"))
-    $logger.log_results("Bug#577- Issue3-Click on Member link","should work","should not work","passed")            
+    $logger.log_results("Bug#577- Issue3-Click on Member link","should work","should work","passed")            
     rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Bug#577- Issue3-Click on Member link","should work","should not work","failed")
     rescue =>excp
@@ -1936,7 +1949,7 @@ def apply_miscfees(fee_type)
     noofactivemembers=count_records("select count(global_cust_num) from customer where customer_level_id=1 and parent_customer_id="+customerid+" and status_id=3")
     search_client(globalcustnum)
     $ie.link(:text,display_name.strip()+": ID "+globalcustnum).click
-    table_obj=$ie.table(:index,29) 
+    table_obj=$ie.table(:index,23) 
     stractivemembers=@@active_members_forGroup+": "+noofactivemembers.to_s
     assert(stractivemembers==table_obj[3][1].text.strip())
     $logger.log_results("Bug#727-Group Performance Metrics","Should display no of active members","displayed","Passed")
@@ -2071,8 +2084,6 @@ class ClientTest
     clientobject.enter_data_in_add_note
     clientobject.check_for_see_all_notes_link
     clientobject.click_see_all_notes_link        
-    
-    
     rowid+=$maxcol
   end 
   
