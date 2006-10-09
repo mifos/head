@@ -19,9 +19,11 @@ import org.mifos.application.customer.struts.actionforms.CustHistoricalDataActio
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -31,7 +33,7 @@ public class CustHistoricalDataAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() {
-		return new CustomerBusinessService();
+		return getCustomerBusinessService();
 	}
 
 	@Override
@@ -104,8 +106,13 @@ public class CustHistoricalDataAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CustHistoricalDataActionForm historicalActionForm = (CustHistoricalDataActionForm) form;
-		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
+		CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request.getSession());
+		CustomerBO customerBO = getCustomerBusinessService().getCustomer(customerBOInSession.getCustomerId());
+		customerBO.setVersionNo(customerBOInSession.getVersionNo());
+		customerBO.setUserContext(getUserContext(request));
+		customerBOInSession = null;
+		setInitialObjectForAuditLogging(customerBO);
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO
 				.getHistoricalData();
 		Integer oldLoanCycleNo = 0;
@@ -314,5 +321,10 @@ public class CustHistoricalDataAction extends BaseAction {
 		historicalDataEntity.setMfiJoiningDate(getDateFromString(
 				historicalActionForm.getMfiJoiningDate(), customerBO
 						.getUserContext().getPereferedLocale()));
+	}
+	
+	private CustomerBusinessService getCustomerBusinessService() {
+		return (CustomerBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Customer);
 	}
 }

@@ -238,9 +238,45 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		assertEquals(1,auditLogList.get(0).getAuditLogRecords().size());
 		
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
-			if(auditLogRecord.getFieldName().equalsIgnoreCase("Kendra Name"))
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Group Name"))
 				matchValues(auditLogRecord,"Group", "Group2");
 		}
+		TestObjectFactory.cleanUpChangeLog();
+	}
+	
+	public void testSuccessful_transferToBranch_AuditLog() throws Exception {
+		createObjectsForClientTransfer();
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
+		setRequestPathInfo("/clientTransferAction.do");
+		addRequestParameter("method", "transferToBranch");
+		addRequestParameter("officeId", office.getOfficeId().toString());
+		addRequestParameter("officeName", office.getOfficeName());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward(ActionForwards.update_success.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		assertEquals(client.getOffice().getOfficeId(), office.getOfficeId());
+		assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
+		office = client.getOffice();
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());
+		
+		assertEquals(3,auditLogList.get(0).getAuditLogRecords().size());
+		
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned"))
+				matchValues(auditLogRecord,"mifos", "-");
+			else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status"))
+				matchValues(auditLogRecord,"Active", "On Hold");
+			else if(auditLogRecord.getFieldName().equalsIgnoreCase("Branch Office Name"))
+				matchValues(auditLogRecord,"TestBranchOffice", "customer_office");
+		}
+		TestObjectFactory.cleanUpChangeLog();
 	}
 	
 	private void createObjectsForClientTransfer()throws Exception{
@@ -270,7 +306,6 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		//meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 }

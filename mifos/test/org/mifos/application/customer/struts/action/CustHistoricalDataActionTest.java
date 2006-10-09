@@ -3,6 +3,7 @@ package org.mifos.application.customer.struts.action;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.mifos.application.customer.business.CustomerHistoricalDataEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -13,7 +14,10 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -199,6 +203,33 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 				.intValue());
 		assertEquals(1, client.getHistoricalData().getLoanCycleNumber()
 				.intValue());
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());
+		
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Product name")){
+				matchValues(auditLogRecord,"-", "Test");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Number of missed payments")){
+				matchValues(auditLogRecord,"-", "1");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Total number of payments")){
+				matchValues(auditLogRecord,"-", "2");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Amount of loan")){
+				matchValues(auditLogRecord,"-", "100.0");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Loan Cycle per Product")){
+				matchValues(auditLogRecord,"-", "1");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Notes")){
+				matchValues(auditLogRecord,"-", "Test notes");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Service Charge Paid")){
+				matchValues(auditLogRecord,"-", "10.0");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Total amount paid")){
+				matchValues(auditLogRecord,"-", "50.0");
+			}
+		}
+				
+		TestObjectFactory.cleanUpChangeLog();
 	}
 
 	public void testUpdateWhenCustHistoricalDataIsNotNull()
@@ -209,6 +240,14 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 				client);
 		Integer oldHistoricalLoanCycleNo = customerHistoricalDataEntity.getLoanCycleNumber();
 		customerHistoricalDataEntity.setLoanCycleNumber(5);
+		customerHistoricalDataEntity.setProductName("prd1");
+		customerHistoricalDataEntity.setLoanAmount(new Money("100"));
+		customerHistoricalDataEntity.setTotalAmountPaid(new Money("50"));
+		customerHistoricalDataEntity.setMissedPaymentsCount(1);
+		customerHistoricalDataEntity.setNotes("comment1");
+		customerHistoricalDataEntity.setTotalPaymentsCount(1);
+		customerHistoricalDataEntity.setInterestPaid(new Money("10"));
+		
 		client.updateHistoricalData(customerHistoricalDataEntity,oldHistoricalLoanCycleNo);
 		client.update();
 		HibernateUtil.commitTransaction();
@@ -250,6 +289,31 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 				.intValue());
 		assertEquals(2, client.getHistoricalData().getLoanCycleNumber()
 				.intValue());
+
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());
+		
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Product name")){
+				matchValues(auditLogRecord,"prd1", "Test");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Number of missed payments")){
+				matchValues(auditLogRecord,"1", "2");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Total number of payments")){
+				matchValues(auditLogRecord,"1", "3");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Amount of loan")){
+				matchValues(auditLogRecord,"100.0", "200.0");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Loan Cycle per Product")){
+				matchValues(auditLogRecord,"5", "2");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Notes")){
+				matchValues(auditLogRecord,"comment1", "Test notes");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Service Charge Paid")){
+				matchValues(auditLogRecord,"10.0", "50.0");
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Total amount paid")){
+				matchValues(auditLogRecord,"50.0", "150.0");
+			}
+		}
 	}
 	
 	//TODO
