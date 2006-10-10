@@ -525,6 +525,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		savings = new SavingsBusinessService().findBySystemId(savings
 				.getGlobalAccountNum());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testWaiveAmountOverDue() throws Exception {
@@ -548,6 +549,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		savings = new SavingsBusinessService().findBySystemId(savings
 				.getGlobalAccountNum());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testSuccessfulGetStatusHistory() throws Exception {

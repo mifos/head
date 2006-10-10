@@ -565,6 +565,7 @@ public class SavingsAction extends AccountAppAction {
 		return mapping.findForward("depositduedetails_success");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward waiveAmountDue(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -580,6 +581,7 @@ public class SavingsAction extends AccountAppAction {
 		return mapping.findForward("waiveAmount_success");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward waiveAmountOverDue(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

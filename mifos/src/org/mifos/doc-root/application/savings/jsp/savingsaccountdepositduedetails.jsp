@@ -112,7 +112,7 @@
 								<td align="right" class="drawtablerow">
 									<c:choose>
 										<c:when test="${BusinessKey.totalAmountDueForNextInstallment.amount > 0}">
-											<html-el:link action="/savingsAction.do?method=waiveAmountDue">
+											<html-el:link action="/savingsAction.do?method=waiveAmountDue&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="Savings.waive" />
 											</html-el:link>
 										</c:when>
@@ -144,7 +144,7 @@
 								<td align="right" class="drawtablerow">
 									<c:choose>
 										<c:when test="${BusinessKey.totalAmountInArrears.amount > 0}">
-											<html-el:link action="/savingsAction.do?method=waiveAmountOverDue">
+											<html-el:link action="/savingsAction.do?method=waiveAmountOverDue&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="Savings.waive" />
 											</html-el:link>
 										</c:when>
@@ -186,6 +186,7 @@
 						<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
 						<html-el:hidden property="recordOfficeId" value="${param.recordOfficeId}" />
 						<html-el:hidden property="recordLoanOfficerId" value="${param.recordLoanOfficerId}" />
+    					 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 					</td>
 				</tr>
 				<tr>
