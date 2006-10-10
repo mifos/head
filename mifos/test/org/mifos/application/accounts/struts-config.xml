@@ -125,6 +125,7 @@
 			<forward name="loan_detail_page" path="/loanAccountAction.do?method=get" />
 			<forward name="viewLoanChangeLog" path="/pages/application/accounts/loan/jsp/viewChangeLog.jsp" />
 			<forward name="cancelLoanChangeLog" path="/loanAccountAction.do?method=get" />
+			<forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>
 
 		</action>
 		<!-- Loan Disbursment-->

@@ -1,8 +1,10 @@
 package org.mifos.application.accounts.loan.struts.action;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -11,8 +13,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountNotesEntity;
+import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -23,19 +28,33 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.fees.business.AmountFeeBO;
+import org.mifos.application.fees.business.CategoryTypeEntity;
 import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
+import org.mifos.application.fees.business.FeePaymentEntity;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.master.business.FundCodeEntity;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
+import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.application.productdefinition.business.ProductCategoryBO;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
@@ -104,6 +123,75 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 		super.tearDown();
+	}
+	
+	
+	
+
+	
+	public void testGetForCancelledLoanAccount()
+			throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);	
+		accountBO.changeStatus(AccountState.LOANACC_CANCEL.getValue(),AccountStateFlag.LOAN_WITHDRAW.getValue(),
+				"status changed");
+		accountBO.update();
+		HibernateUtil.commitTransaction();
+		LoanBO loan = (LoanBO) accountBO;
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
+		actionPerform();
+		verifyForward("get_success");
+
+		assertEquals(0, loan.getPerformanceHistory().getNoOfPayments()
+				.intValue());
+		assertEquals(((LoanBO) accountBO).getTotalAmountDue()
+				.getAmountDoubleValue(), 212.0);
+		modifyActionDateForFirstInstallment();
+		assertEquals("Total no. of notes should be 6", 6, accountBO
+				.getAccountNotes().size());
+		assertEquals("Total no. of recent notes should be 3", 3,
+				((List<AccountNotesEntity>) SessionUtils.getAttribute(
+						LoanConstants.NOTES, request)).size());
+		assertEquals("Total no. of flags should be 1", 1, accountBO.getAccountFlags().size());
+	}
+	
+	public void testPrevious(){
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("method","previous");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward("load_success");
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+		
+	
+	public void testPreview(){
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("method","preview");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward("preview_success");
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+	
+	public void testforwardWaiveCharge(){
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("method","forwardWaiveCharge");
+		addRequestParameter("type", "LoanAccount");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward("waiveLoanAccountCharges_Success");
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
 	public void testLoadChangeLog() {
@@ -397,8 +485,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testLoadForMasterData() throws Exception {
 		createInitialObjects();
-		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
+		LoanOfferingBO loanOffering = getCompleteLoanOfferingObject();
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
@@ -693,6 +780,42 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getObject(LoanOfferingBO.class, loanOffering
 						.getPrdOfferingId()));
 	}
+	
+	public void testSchedulePreviewWithLoanOfferingFundsData() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getCompleteLoanOfferingObject();
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request);
+		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+				new ArrayList<FundBO>(), request);
+		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
+				request);
+		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
+				new ArrayList<MasterDataEntity>(), request);
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("loanAmount", loanOffering.getDefaultLoanAmount()
+				.toString());
+		addRequestParameter("interestRate", loanOffering.getDefInterestRate()
+				.toString());
+		addRequestParameter("noOfInstallments", loanOffering
+				.getDefNoInstallments().toString());
+		addRequestParameter("disbursementDate", DateHelper
+				.getCurrentDate(((UserContext) request.getSession()
+						.getAttribute("UserContext")).getPereferedLocale()));
+		addRequestParameter("gracePeriodDuration", "1");
+		addRequestParameter("method", "schedulePreview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.schedulePreview_success.toString());
+		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
+				.getObject(LoanOfferingBO.class, loanOffering
+						.getPrdOfferingId()));
+	}
+
 
 	public void testSchedulePreviewWithDataForIntDedAtDisb() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -863,7 +986,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(
 				MasterConstants.BUSINESS_ACTIVITIE_NAME, request));
 	}
-
+	
 	public void testManagePrevious() {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/loanAccountAction.do");
@@ -943,6 +1066,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = getLoanAccount();
 		LoanBO loan = (LoanBO) accountBO;
+		Date firstInstallmentDate=loan.getDetailsOfNextInstallment().getActionDate();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 		String newDate = offSetCurrentDate(6, userContext.getPereferedLocale());
 		setRequestPathInfo("/loanAccountAction.do");
@@ -957,11 +1081,22 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getDefNoInstallments().toString());
 		addRequestParameter("disbursementDate", newDate);
 		addRequestParameter("businessActivityId", "1");
-		addRequestParameter("intDedDisbursement", "1");
+		addRequestParameter("intDedDisbursement", "0");
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter("collateralNote", "test");
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
+		
+		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+				.getAccountId());
+		assertEquals("test", loan.getCollateralNote());
+		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
+		assertFalse(loan.isInterestDeductedAtDisbursement());
+		assertEquals(1, loan.getGracePeriodDuration().intValue());
+		assertEquals(newDate, DateHelper.getUserLocaleDate(TestObjectFactory
+				.getContext().getPereferedLocale(), DateHelper
+				.toDatabaseFormat(loan.getDisbursementDate())));
+		assertEquals(firstInstallmentDate,loan.getAccountActionDate(Short.valueOf("1")).getActionDate());
 	}
 
 	private void modifyActionDateForFirstInstallment() throws Exception {
@@ -1140,5 +1275,35 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		return TestObjectFactory.createLoanAccount("42423142341", client, Short
 				.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
+	}
+	
+	private LoanOfferingBO getCompleteLoanOfferingObject() throws Exception{
+		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
+				PrdApplicableMaster.GROUPS);
+		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL()
+				.get(GLCodeEntity.class, (short) 7);
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL().get(
+				GLCodeEntity.class, (short) 7);
+		ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
+		InterestTypesEntity interestTypes = new InterestTypesEntity(
+				InterestTypeConstants.FLATINTERST);
+		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
+				GraceTypeConstants.GRACEONALLREPAYMENTS);
+		Date startDate = offSetCurrentDate(0);
+		List<FeeBO> fees = new ArrayList<FeeBO>();
+		List<FundBO> funds = new ArrayList<FundBO>();
+		FundBO fundBO =(FundBO)HibernateUtil.getSessionTL().get(FundBO.class,Short.valueOf("2"));
+		funds.add(fundBO);
+		LoanOfferingBO loanOfferingBO=new  LoanOfferingBO(TestObjectFactory
+				.getContext(), "Loan Offering", "LOAP", productCategory,
+				prdApplicableMaster, startDate, null, null, gracePeriodType,
+				(short) 2, interestTypes, new Money("1000"), new Money("3000"),
+				new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
+				(short) 17, false, false, false, funds, fees, frequency,
+				principalglCodeEntity, intglCodeEntity);
+		loanOfferingBO.save();
+		return loanOfferingBO;
 	}
 }

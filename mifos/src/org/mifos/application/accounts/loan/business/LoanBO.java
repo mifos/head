@@ -1174,7 +1174,10 @@ public class LoanBO extends AccountBO {
 			int totalInstallmentDatesToBeChanged = installmentSize
 					- nextInstallmentId + 1;
 			try {
-				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
+				MeetingBO meeting = buildLoanMeeting(customer.getCustomerMeeting()
+						.getMeeting(), loanOffering.getLoanOfferingMeeting()
+						.getMeeting(), disbursementDate);
+				meetingDates = meeting
 						.getAllDates(totalInstallmentDatesToBeChanged + 1);
 				if (meetingDates.get(0).compareTo(
 						DateUtils.getCurrentDateWithoutTimeStamp()) == 0) {

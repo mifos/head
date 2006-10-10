@@ -47,7 +47,9 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -1569,6 +1571,68 @@ public class TestLoanBO extends MifosTestCase {
 								.getActionDate().getTime()));
 		}
 	}
+	
+	public void testRegenerateFutureWhenDayScheduleChanges() throws Exception {
+		createInitialCustomers();
+		MeetingBO loanOfferingMeeting = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 2, 4, 2));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), loanOfferingMeeting);
+		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
+				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				loanOffering);
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
+		AccountActionDateEntity accountActionDateEntity = accountBO
+				.getDetailsOfNextInstallment();
+		MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting()
+				.getMeeting();
+
+		Short weekDay = null;
+		if (meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay()
+				.getId().equals(WeekDay.SATURDAY.getValue()))
+			weekDay = WeekDay.SUNDAY.getValue();
+		else
+			weekDay = (short) (meeting.getMeetingDetails()
+					.getMeetingRecurrence().getWeekDay().getId() + 1);
+
+		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
+				new WeekDaysEntity(WeekDay.getWeekDay(weekDay)));
+
+		meeting.setMeetingStartDate(DateUtils
+				.getCalendarDate(accountActionDateEntity.getActionDate()
+						.getTime()));
+		((LoanBO) accountBO)
+				.regenerateFutureInstallments((short) (accountActionDateEntity
+						.getInstallmentId().intValue() + 1));
+		HibernateUtil.commitTransaction();
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+				accountBO.getAccountId());
+		assertEquals(Short.valueOf("1"), accountBO.getCustomer()
+				.getCustomerMeeting().getMeeting().getMeetingDetails()
+				.getRecurAfter());
+		assertEquals(Short.valueOf("2"), ((LoanBO) accountBO).getLoanOffering()
+				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
+				.getRecurAfter());
+		for (AccountActionDateEntity actionDateEntity : accountBO
+				.getAccountActionDates()) {
+			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
+				assertEquals(DateUtils
+						.getDateWithoutTimeStamp(incrementCurrentDate(1)
+								.getTime()), DateUtils
+						.getDateWithoutTimeStamp(actionDateEntity
+								.getActionDate().getTime()));
+
+		}
+	}
+
+	
 
 	public void testRegenerateFutureInstallmentsWithCancelState()
 			throws Exception {
