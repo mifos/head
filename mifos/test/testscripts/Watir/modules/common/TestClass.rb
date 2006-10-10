@@ -1,12 +1,15 @@
 #this is the ruby file which has common methods like login,dbconnection
 require 'mysql'
-require 'test/unit'
 require 'modules/logger/example_logger1'
-require 'test/unit/ui/console/testrunner'
 require 'test/unit/assertions'
-include Test::Unit::Assertions
 require 'watir'
+require 'win32ole'
+require 'English'
+require 'modules/common/inputs'
+#include module watir
 include Watir
+include Test::Unit::Assertions
+
 class TestClass 
     #creates ie object and loggerobject
 	def start()
@@ -81,22 +84,22 @@ class TestClass
 	#end
 	#Method to read lables and error messages from properties file
 	def load_properties(properties_filename)
-	    properties = {}
-        File.open(properties_filename, 'r') do |properties_file|
-        properties_file.read.each_line do |line|
-        line.strip!
-        if (line[0] != ?# 	and line[0] != ?=)
-          i = line.index('=')
-          if (i)
-            properties[line[0..i - 1].strip] = line[i + 1..-1].strip
-          else
-            properties[line] = ''
-          end
-        end
-      end      
+	   properties = {}
+	   File.open(properties_filename, 'r') do |properties_file|
+       properties_file.read.each_line do |line|
+       line.strip!
+         if (line[0] != ?# 	and line[0] != ?=)
+           i = line.index('=')
+           if (i)
+             properties[line[0..i - 1].strip] = line[i + 1..-1].strip
+           else
+             properties[line] = ''
+           end
+         end
+        end      
+      end
+      properties
     end
-    properties
-  end
 	#clicks the Clients & Accounts link
 	def click_clientslink
 		$ie.link(:text,"Clients & Accounts").click

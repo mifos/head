@@ -1,15 +1,7 @@
 #this class calls all the testcases from the CenterCreateEdit class
-require 'watir'
-require 'English'
-require 'modules/common/inputs'
-require 'win32ole'
-require 'modules/common/TestClass'
-require 'modules/logger/example_logger1'
-require 'mysql'
-require 'test/unit/assertions'
 
-#include module watir
-include Watir
+require 'modules/common/TestClass'
+
 class CenterCreateEdit < TestClass
   
   def read_center_values(rowid,sheetid)
