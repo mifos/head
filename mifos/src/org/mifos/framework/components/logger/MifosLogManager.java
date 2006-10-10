@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.varia.NullAppender;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
 import org.mifos.framework.util.helpers.ResourceLoader;
@@ -51,19 +53,29 @@ public class MifosLogManager {
 	 * @throws  LoggerConfigurationException
 	 */
 	public static void configure(String fileName)throws LoggerConfigurationException{
-		//Initialises a logger with the name com.mifos which acts as the ancestor for all the other loggers
+		//Initialises a logger with the name com.mifos which acts as the 
+		// ancestor for all the other loggers
 		try {
 			readConfiguration(fileName);
-			MifosLogger logger = new Log4jLogger(LoggerConstants.ROOTLOGGER , getResourceBundle(LoggerConstants.LOGGERRESOURCEBUNDLE));
+			MifosLogger logger = 
+				new Log4jLogger(
+					LoggerConstants.ROOTLOGGER, 
+					getResourceBundle(LoggerConstants.LOGGERRESOURCEBUNDLE));
 			loggerRepository=new HashMap<String, MifosLogger>(20);
 			loggerRepository.put(LoggerConstants.ROOTLOGGER, logger);
 
-		}catch (ResourceBundleNotFoundException rbnfe) {
-			throw new LoggerConfigurationException(rbnfe);
-		}catch(URISyntaxException urise){
-			throw new LoggerConfigurationException(urise);
-		}catch(MalformedURLException mfue){
-			throw new LoggerConfigurationException(mfue);
+			// For Hibernate, and anything else outside org.mifos.
+			// TODO: Figure out how to make this more specific to
+			// org.hibernate, and/or set the level to WARN, and/or
+			// send the output somewhere.  The way it is now makes
+			// it too easy to lose messages, perhaps.
+			Logger.getRootLogger().addAppender(new NullAppender());
+		}catch (ResourceBundleNotFoundException e) {
+			throw new LoggerConfigurationException(e);
+		}catch(URISyntaxException e){
+			throw new LoggerConfigurationException(e);
+		}catch(MalformedURLException e){
+			throw new LoggerConfigurationException(e);
 		}
 	}
 

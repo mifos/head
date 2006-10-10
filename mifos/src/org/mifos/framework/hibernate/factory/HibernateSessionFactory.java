@@ -43,7 +43,11 @@ import org.hibernate.cfg.*;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 
 /**
- *  HibernateSessionFactory is used to get the hibernate session factory.Hibernate session factory is configured with mapping configuration files.Hibernate sessions are got using this session factory. Hibernate uses this configuration information to perform all its activities when apis are invoked on the hibernate session object.
+ *  HibernateSessionFactory is used to get the hibernate session factory.
+ *  Hibernate session factory is configured with mapping configuration files.
+ *  Hibernate sessions are got using this session factory. 
+ *  Hibernate uses this configuration information to perform all its 
+ *  activities when apis are invoked on the hibernate session object.
  */
 public class HibernateSessionFactory
 {

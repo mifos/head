@@ -74,10 +74,9 @@ public class CenterBO extends CustomerBO {
 			Short personnel, Short officeId) throws CustomerException {
 		try {
 			if (new CenterPersistence().isCenterExists(displayName)) {
-				Object[] values = new Object[1];
-				values[0] = displayName;
 				throw new CustomerException(
-						CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, values);
+					CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, 
+					new Object[] { displayName });
 			}
 		} catch (PersistenceException e) {
 			throw new CustomerException(e);

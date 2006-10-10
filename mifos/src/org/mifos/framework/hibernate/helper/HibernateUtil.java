@@ -78,12 +78,8 @@ public class HibernateUtil {
 		}
 	}
 
-	/**
-	 * Method that closes the hibernate session object passed to it as parameter
-	 * @param Session
-	 * @throws HibernateProcessException
-	 */
-	public static void closeSession(Session session) throws HibernateProcessException
+	public static void closeSession(Session session) 
+	throws HibernateProcessException
 	{
 		try
 		{
@@ -172,6 +168,7 @@ public class HibernateUtil {
 		}
 		
 	}
+
 	private static SessionHolder getSessionHolder() {
 		if (null == threadLocal.get()) {
 			// need to log to indicate that the session is being invoked when not present

@@ -38,8 +38,12 @@
 
 package org.mifos.application.master.util.valueobjects;
 
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.valueobjects.ValueObject;
 
+/**
+ * Replaced by {@link MifosCurrency}.
+ */
 public class Currency extends ValueObject {
 	
 	public Currency() {
@@ -65,86 +69,50 @@ public class Currency extends ValueObject {
 	/** The value of the simple defaultCurrency property. */
 	private java.lang.Short defaultCurrency;
 
-	/**
-	 * @return Returns the currencyId}.
-	 */
 	public java.lang.Short getCurrencyId() {
 		return currencyId;
 	}
 
-	/**
-	 * @param currencyId The currencyId to set.
-	 */
 	public void setCurrencyId(java.lang.Short currencyId) {
 		this.currencyId = currencyId;
 	}
 
-	/**
-	 * @return Returns the currencyName}.
-	 */
 	public java.lang.String getCurrencyName() {
 		return currencyName;
 	}
 
-	/**
-	 * @param currencyName The currencyName to set.
-	 */
 	public void setCurrencyName(java.lang.String currencyName) {
 		this.currencyName = currencyName;
 	}
 
-	/**
-	 * @return Returns the defaultCurrency}.
-	 */
 	public java.lang.Short getDefaultCurrency() {
 		return defaultCurrency;
 	}
 
-	/**
-	 * @param defaultCurrency The defaultCurrency to set.
-	 */
 	public void setDefaultCurrency(java.lang.Short defaultCurrency) {
 		this.defaultCurrency = defaultCurrency;
 	}
 
-	/**
-	 * @return Returns the displaySymbol}.
-	 */
 	public java.lang.String getDisplaySymbol() {
 		return displaySymbol;
 	}
 
-	/**
-	 * @param displaySymbol The displaySymbol to set.
-	 */
 	public void setDisplaySymbol(java.lang.String displaySymbol) {
 		this.displaySymbol = displaySymbol;
 	}
 
-/**
-	 * @return Returns the roundingAmount.
-	 */
 	public Float getRoundingAmount() {
 		return roundingAmount;
 	}
 
-	/**
-	 * @param roundingAmount The roundingAmount to set.
-	 */
 	public void setRoundingAmount(Float roundingAmount) {
 		this.roundingAmount = roundingAmount;
 	}
 
-	/**
-	 * @return Returns the roundUpDown}.
-	 */
 	public java.lang.Short getRoundingMode() {
 		return roundingMode;
 	}
 
-	/**
-	 * @param roundUpDown The roundUpDown to set.
-	 */
 	public void setRoundingMode(java.lang.Short roundingMode) {
 		this.roundingMode = roundingMode;
 	}

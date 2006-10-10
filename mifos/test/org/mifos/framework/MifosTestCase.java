@@ -63,8 +63,8 @@ public class MifosTestCase extends TestCase {
 		 throw new ComparisonFailure(s,one.toString(),two.toString());
 	}
 	
-	public Date getDate(String date)throws ParseException{
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		return df.parse(date);
+	public Date getDate(String date) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		return format.parse(date);
 	}
 }
