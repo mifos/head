@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
@@ -13,6 +14,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -54,8 +56,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testGetSavingProducts() throws Exception {
 		createInitialObjects();
-		savingsOffering1 = createSavingsOffering("SavingPrd1","cadf");
-		savingsOffering2 = createSavingsOffering("SavingPrd2","a1lt");
+		savingsOffering1 = createSavingsOffering("SavingPrd1", "cadf");
+		savingsOffering2 = createSavingsOffering("SavingPrd2", "a1lt");
 		List<PrdOfferingView> products = service.getSavingProducts(null, group
 				.getCustomerLevel(), CustomerConstants.GROUP_LEVEL_ID);
 		assertEquals(Integer.valueOf("2").intValue(), products.size());
@@ -63,6 +65,22 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				products.get(0).getPrdOfferingName(), "SavingPrd1");
 		assertEquals("Offerng name for the second product do not match.",
 				products.get(1).getPrdOfferingName(), "SavingPrd2");
+	}
+
+	public void testGetSavingProductsForInvalidConnection() {
+		createInitialObjects();
+		savingsOffering1 = createSavingsOffering("SavingPrd1", "cadf");
+		savingsOffering2 = createSavingsOffering("SavingPrd2", "a1lt");
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			List<PrdOfferingView> products = service.getSavingProducts(null,
+					group.getCustomerLevel(), CustomerConstants.GROUP_LEVEL_ID);
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
 	}
 
 	public void testRetrieveCustomFieldsDefinition() throws Exception {
@@ -73,23 +91,119 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.size());
 	}
 
+	public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			List<CustomFieldDefinitionEntity> customFields = service
+					.retrieveCustomFieldsDefinition();
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+
+	}
+
 	public void testFindById() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1","kh6y");
+		savingsOffering = createSavingsOffering("SavingPrd1", "kh6y");
 		savings = createSavingsAccount("FFFF", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		SavingsBO savings1 = service.findById(savings.getAccountId());
 		assertEquals("FFFF", savings1.getGlobalAccountNum());
 	}
 
+	public void testFindByIdForInvalidConnection() throws Exception {
+		createInitialObjects();
+		savingsOffering = createSavingsOffering("SavingPrd1", "kh6y");
+		savings = createSavingsAccount("FFFF", savingsOffering,
+				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			SavingsBO savings1 = service.findById(savings.getAccountId());
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+
+	}
+
 	public void testFindBySystemId() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1","cadf");
+		savingsOffering = createSavingsOffering("SavingPrd1", "cadf");
 		savings = createSavingsAccount("YYYY", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		SavingsBO savings1 = service.findBySystemId("YYYY");
 		assertEquals("YYYY", savings1.getGlobalAccountNum());
 		assertEquals(savings.getAccountId(), savings1.getAccountId());
+	}
+
+	public void testFindBySystemIdForInvalidConnection() throws Exception {
+		createInitialObjects();
+		savingsOffering = createSavingsOffering("SavingPrd1", "cadf");
+		savings = createSavingsAccount("YYYY", savingsOffering,
+				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			SavingsBO savings1 = service.findBySystemId("YYYY");
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public void testGetAllClosedAccounts() throws Exception {
+		createInitialObjects();
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+
+		Date startDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
+				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
+						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
+				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
+				meetingIntPost);
+		savings = TestObjectFactory.createSavingsAccount("432434", center,
+				AccountState.SAVINGS_ACC_CLOSED.getValue(), startDate,
+				savingsOffering);
+		List<SavingsBO> savingsAccounts = service.getAllClosedAccounts(center
+				.getCustomerId());
+		assertEquals(1, savingsAccounts.size());
+	}
+
+	public void testGetAllClosedAccountsForInvalidConnection() throws Exception {
+		createInitialObjects();
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+
+		Date startDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
+				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
+						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
+				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
+				meetingIntPost);
+		savings = TestObjectFactory.createSavingsAccount("432434", center,
+				AccountState.SAVINGS_ACC_CLOSED.getValue(), startDate,
+				savingsOffering);
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			List<SavingsBO> savingsAccounts = service
+					.getAllClosedAccounts(center.getCustomerId());
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
 	}
 
 	private void createInitialObjects() {
@@ -103,20 +217,22 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.currentTimeMillis()));
 	}
 
-	private SavingsOfferingBO createSavingsOffering(String offeringName,String shortName) {
+	private SavingsOfferingBO createSavingsOffering(String offeringName,
+			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createSavingsOffering(offeringName,shortName, Short
-				.valueOf("2"), new Date(System.currentTimeMillis()), Short
-				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,
-				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
+				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
+						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
+				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
 				meetingIntPost);
 	}
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,
-			SavingsOfferingBO savingsOffering, short accountStateId) throws Exception {
+			SavingsOfferingBO savingsOffering, short accountStateId)
+			throws Exception {
 		UserContext userContext = new UserContext();
 		userContext.setId(new Short("1"));
 		userContext.setBranchGlobalNum("1001");

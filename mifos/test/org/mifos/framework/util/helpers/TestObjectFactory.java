@@ -103,6 +103,7 @@ import org.mifos.application.customer.client.business.ClientInitialSavingsOfferi
 import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -1705,7 +1706,7 @@ public class TestObjectFactory {
 
 	public static List<AccountActionDateEntity> getDueActionDatesForAccount(
 			Integer accountId, java.sql.Date transactionDate) throws Exception{
-		List<AccountActionDateEntity> dueActionDates = new BulkEntryBusinessService()
+		List<AccountActionDateEntity> dueActionDates = new CustomerPersistence()
 				.retrieveCustomerAccountActionDetails(accountId,
 						transactionDate);
 		for (AccountActionDateEntity accountActionDate : dueActionDates) {

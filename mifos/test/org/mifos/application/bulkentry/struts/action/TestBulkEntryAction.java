@@ -79,6 +79,7 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -180,21 +181,19 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				request);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "create");
-        
+
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        
-        Calendar meetinDateCalendar = new GregorianCalendar();
-        //meetinDateCalendar.setTime(getMeetingDates(meeting));
-        int year = meetinDateCalendar.get(Calendar.YEAR);
-        int month = meetinDateCalendar.get(Calendar.MONTH);
-        int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
-        meetinDateCalendar = new GregorianCalendar(year, month, day);
-        //SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
-        //        meetinDateCalendar.getTimeInMillis()), request);
-        addRequestParameter("attendenceSelected[0]", "2");
-        addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
-                + year);
-        
+
+		Calendar meetinDateCalendar = new GregorianCalendar();
+
+		int year = meetinDateCalendar.get(Calendar.YEAR);
+		int month = meetinDateCalendar.get(Calendar.MONTH);
+		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
+		meetinDateCalendar = new GregorianCalendar(year, month, day);
+		addRequestParameter("attendenceSelected[0]", "2");
+		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+				+ year);
+
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -204,31 +203,35 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				groupAccount.getAccountId());
 		clientAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
 				clientAccount.getAccountId());
+		centerSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+				SavingsBO.class, centerSavingsAccount.getAccountId());
+		clientSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+				SavingsBO.class, clientSavingsAccount.getAccountId());
+		groupSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+				SavingsBO.class, groupSavingsAccount.getAccountId());
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
-				client.getCustomerId());
-        
-        
-        assertEquals(client.getClientAttendances().size(), 1);
-        
-        // TODO: This should be replaced by asserts, it would seem
-//        for (ClientAttendanceBO attendance: client.getClientAttendances()){
-//            System.out.println("$$$ "+ attendance.getMeetingDate());
-//            System.out.println("$$$ " +attendance.getAttendance());
-//        }
-        
-        assertEquals(
-        	"2",
-            client.getClientAttendanceForMeeting(
-            	new java.sql.Date(meetinDateCalendar.getTimeInMillis()))
-            	    .getAttendance().toString());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+
+		assertEquals(client.getClientAttendances().size(), 1);
+
+		// TODO: This should be replaced by asserts, it would seem
+		// for (ClientAttendanceBO attendance: client.getClientAttendances()){
+		// System.out.println("$$$ "+ attendance.getMeetingDate());
+		// System.out.println("$$$ " +attendance.getAttendance());
+		// }
+
+		assertEquals("2", client.getClientAttendanceForMeeting(
+				new java.sql.Date(meetinDateCalendar.getTimeInMillis()))
+				.getAttendance().toString());
 
 	}
 
-	public void testFailureCreate() throws PageExpiredException {
+	public void testFailureCreate() throws Exception {
+		
 		BulkEntryBO bulkEntry = getFailureBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
@@ -236,20 +239,18 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "create");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        
-        Calendar meetinDateCalendar = new GregorianCalendar();
-        //meetinDateCalendar.setTime(getMeetingDates(meeting));
-        int year = meetinDateCalendar.get(Calendar.YEAR);
-        int month = meetinDateCalendar.get(Calendar.MONTH);
-        int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
-        meetinDateCalendar = new GregorianCalendar(year, month, day);
-        //SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
-        //        meetinDateCalendar.getTimeInMillis()), request);
-        addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
-                + year);
-        
+
+		Calendar meetinDateCalendar = new GregorianCalendar();
+
+		int year = meetinDateCalendar.get(Calendar.YEAR);
+		int month = meetinDateCalendar.get(Calendar.MONTH);
+		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
+		meetinDateCalendar = new GregorianCalendar(year, month, day);
+		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+				+ year);
+		TestObjectFactory.simulateInvalidConnection();
 		actionPerform();
-		
+		HibernateUtil.closeSession();
 
 		groupAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
 				groupAccount.getAccountId());
@@ -259,9 +260,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				center.getCustomerId());
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
-				client.getCustomerId());
-		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+
 		verifyActionErrors(new String[] { "errors.update" });
 	}
 
@@ -282,7 +283,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("depositAmountEntered[2][2]", "100.0");
 		addRequestParameter("withDrawalAmountEntered[0][0]", "100.0");
 		addRequestParameter("depositAmountEntered[0][0]", "100.0");
-        //addRequestParameter("transactionDate", "preview"); //transaction date
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -291,7 +291,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testFailurePreview() throws Exception {
-		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		BulkEntryBO bulkEntry = getFailureBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
 				request);
@@ -301,10 +301,13 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("customerAccountAmountEntered[0][6]", "");
 		addRequestParameter("customerAccountAmountEntered[1][6]", "abc");
 		actionPerform();
+		
 		verifyActionErrors(new String[] { "errors.invalidamount",
 				"errors.invalidamount" });
+		
+		
 	}
-	
+
 	public void testLoad() throws PageExpiredException {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "load");
@@ -433,9 +436,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		account = getLoanAccount(group, meeting);
-		SavingsOfferingBO savingsOffering1 = createSavingsOffering("SavingPrd1","ased");
-		SavingsOfferingBO savingsOffering2 = createSavingsOffering("SavingPrd2","cvdf");
-		SavingsOfferingBO savingsOffering3 = createSavingsOffering("SavingPrd3","zxsd");
+		SavingsOfferingBO savingsOffering1 = createSavingsOffering(
+				"SavingPrd1", "ased");
+		SavingsOfferingBO savingsOffering2 = createSavingsOffering(
+				"SavingPrd2", "cvdf");
+		SavingsOfferingBO savingsOffering3 = createSavingsOffering(
+				"SavingPrd3", "zxsd");
 
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43244334", center, Short.valueOf("16"), startDate,
@@ -488,8 +494,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		verifyForward("get_success");
 	}
 
-	
-
 	public void testFailureGet() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -505,9 +509,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"errors.mandatoryselect", "errors.mandatoryselect",
 				"errors.mandatoryselect", "errors.mandatoryselect" });
 	}
-	
+
 	public void testFailurePreviewForEmptyAmount() throws Exception {
-		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		BulkEntryBO bulkEntry = getFailureBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
 				request);
@@ -522,7 +526,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testFailurePreviewForCharAmount() throws Exception {
-		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		BulkEntryBO bulkEntry = getFailureBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
 				request);
@@ -536,8 +540,159 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"errors.invalidamount" });
 	}
 
+	public void testValidateForLoadMethod() {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "validate");
+		addRequestParameter("input", "load");
+
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.load_success.toString());
+
+	}
+
+	public void testValidateForGetMethod() {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "validate");
+		addRequestParameter("input", "get");
+
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.get_success.toString());
+
+	}
+
+	public void testValidateForPreviewMethod() {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "validate");
+		addRequestParameter("input", "preview");
+
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.preview_success.toString());
+
+	}
 
 	private BulkEntryBO getSuccessfulBulkEntry() throws Exception {
+
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		Date startDate = new Date(System.currentTimeMillis());
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
+				"Loan2345", "313f", Short.valueOf("2"), new Date(System
+						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
+				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				meeting);
+		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
+				group, Short.valueOf("5"),
+				new Date(System.currentTimeMillis()), loanOffering1);
+		clientAccount = getLoanAccount(Short.valueOf("3"), startDate, 1,
+				loanOffering2);
+		SavingsOfferingBO savingsOffering1 = createSavingsOffering(
+				"SavingPrd1", "ased");
+		SavingsOfferingBO savingsOffering2 = createSavingsOffering(
+				"SavingPrd2", "cvdf");
+		SavingsOfferingBO savingsOffering3 = createSavingsOffering(
+				"SavingPrd3", "zxsd");
+
+		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
+				"43244334", center, Short.valueOf("16"), startDate,
+				savingsOffering1);
+		groupSavingsAccount = TestObjectFactory.createSavingsAccount(
+				"43234434", group, Short.valueOf("16"), startDate,
+				savingsOffering2);
+		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
+				"43245434", client, Short.valueOf("16"), startDate,
+				savingsOffering3);
+
+		BulkEntryBO bulkEntry = new BulkEntryBO();
+
+		BulkEntryView bulkEntryParent = new BulkEntryView(
+				getCusomerView(center));
+		SavingsAccountView centerSavingsAccountView = getSavingsAccountView(centerSavingsAccount);
+		centerSavingsAccountView.setDepositAmountEntered("100");
+		centerSavingsAccountView.setWithDrawalAmountEntered("10");
+		bulkEntryParent.addSavingsAccountDetail(centerSavingsAccountView);
+		bulkEntryParent
+				.setCustomerAccountDetails(getCustomerAccountView(center));
+
+		BulkEntryView bulkEntryChild = new BulkEntryView(getCusomerView(group));
+		LoanAccountView groupLoanAccountView = getLoanAccountView(groupAccount);
+		SavingsAccountView groupSavingsAccountView = getSavingsAccountView(groupSavingsAccount);
+		groupSavingsAccountView.setDepositAmountEntered("100");
+		groupSavingsAccountView.setWithDrawalAmountEntered("10");
+		bulkEntryChild.addLoanAccountDetails(groupLoanAccountView);
+		bulkEntryChild.addSavingsAccountDetail(groupSavingsAccountView);
+		bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
+
+		BulkEntryView bulkEntrySubChild = new BulkEntryView(
+				getCusomerView(client));
+		LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
+		clientLoanAccountView.setAmountPaidAtDisbursement(0.0);
+		SavingsAccountView clientSavingsAccountView = getSavingsAccountView(clientSavingsAccount);
+		clientSavingsAccountView.setDepositAmountEntered("100");
+		clientSavingsAccountView.setWithDrawalAmountEntered("10");
+		bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);
+		bulkEntrySubChild.setAttendence(new Short("2"));
+		bulkEntrySubChild.addSavingsAccountDetail(clientSavingsAccountView);
+		bulkEntrySubChild
+				.setCustomerAccountDetails(getCustomerAccountView(client));
+
+		bulkEntryChild.addChildNode(bulkEntrySubChild);
+		bulkEntryParent.addChildNode(bulkEntryChild);
+
+		bulkEntryChild.getLoanAccountDetails().get(0).setPrdOfferingId(
+				groupLoanAccountView.getPrdOfferingId());
+		bulkEntryChild.getLoanAccountDetails().get(0).setEnteredAmount("100.0");
+		bulkEntrySubChild.getLoanAccountDetails().get(0)
+		.setDisBursementAmountEntered(
+				clientAccount.getLoanAmount().toString());
+		bulkEntrySubChild.getLoanAccountDetails().get(0).setPrdOfferingId(
+				clientLoanAccountView.getPrdOfferingId());
+		List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
+		loanProducts.add(loanOffering1);
+		loanProducts.add(loanOffering2);
+		List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
+		savingsProducts.add(savingsOffering1);
+		savingsProducts.add(savingsOffering2);
+		savingsProducts.add(savingsOffering3);
+		bulkEntry.setLoanProducts(loanProducts);
+		bulkEntry.setSavingsProducts(savingsProducts);
+		bulkEntry.setTotalCustomers(3);
+		bulkEntry.setBulkEntryParent(bulkEntryParent);
+		bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
+		bulkEntry.setReceiptId("324343242");
+		bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
+		bulkEntry.setPaymentType(getPaymentTypeView());
+		bulkEntry.setTransactionDate(new java.sql.Date(System
+				.currentTimeMillis()));
+
+		return bulkEntry;
+	}
+
+	private BulkEntryBO getFailureBulkEntry() throws  Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -607,7 +762,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				getCusomerView(client));
 		LoanAccountView clientLoanAccountView = getLoanAccountView(clientAccount);
 		bulkEntrySubChild.addLoanAccountDetails(clientLoanAccountView);
-		bulkEntrySubChild.setAttendence(new Short("2"));
 		bulkEntrySubChild
 				.addSavingsAccountDetail(getSavingsAccountView(clientSavingsAccount));
 		bulkEntrySubChild
@@ -630,68 +784,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		bulkEntry.setLoanProducts(loanProducts);
 		bulkEntry.setSavingsProducts(savingsProducts);
 		bulkEntry.setTotalCustomers(3);
-		bulkEntry.setBulkEntryParent(bulkEntryParent);
-		bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
-		bulkEntry.setReceiptId("324343242");
-		bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
-		bulkEntry.setPaymentType(getPaymentTypeView());
-		bulkEntry.setTransactionDate(new java.sql.Date(System
-				.currentTimeMillis()));
-
-		return bulkEntry;
-	}
-
-	private BulkEntryBO getFailureBulkEntry() {
-
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
-				"Loanwdfty","1sw3", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
-		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loanwerffg","3r4t", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
-		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, Short.valueOf("5"),
-				new Date(System.currentTimeMillis()), loanOffering1);
-		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
-				loanOffering2);
-
-		BulkEntryBO bulkEntry = new BulkEntryBO();
-
-		BulkEntryView bulkEntryParent = new BulkEntryView(
-				getCusomerView(center));
-		bulkEntryParent
-				.setCustomerAccountDetails(getCustomerAccountView(center));
-		BulkEntryView bulkEntryChild = new BulkEntryView(getCusomerView(group));
-		LoanAccountView loanAccountView = getLoanAccountView(groupAccount);
-		bulkEntryChild.addLoanAccountDetails(loanAccountView);
-		bulkEntryChild.setCustomerAccountDetails(getCustomerAccountView(group));
-		BulkEntryView bulkEntrySubChild = new BulkEntryView(
-				getCusomerView(client));
-		bulkEntrySubChild.addLoanAccountDetails(loanAccountView);
-		bulkEntrySubChild.setAttendence(new Short("2"));
-		bulkEntrySubChild
-				.setCustomerAccountDetails(getCustomerAccountView(group));
-		bulkEntryChild.addChildNode(bulkEntrySubChild);
-		bulkEntryParent.addChildNode(bulkEntryChild);
-
-		bulkEntryChild.getLoanAccountDetails().get(0).setEnteredAmount("100.0");
-		bulkEntrySubChild.getLoanAccountDetails().get(0).setEnteredAmount(
-				"100.0");
 		bulkEntry.setBulkEntryParent(bulkEntryParent);
 		bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
 		bulkEntry.setReceiptId("324343242");
@@ -767,16 +859,14 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return customerAccountView;
 	}
 
-	
-
 	private AccountBO getLoanAccount(CustomerBO group, MeetingBO meeting) {
 
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				Short.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), startDate, loanOffering);
 	}
@@ -792,15 +882,16 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return dates.get(dates.size() - 1);
 	}
 
-	private SavingsOfferingBO createSavingsOffering(String offeringName,String shortName) {
+	private SavingsOfferingBO createSavingsOffering(String offeringName,
+			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createSavingsOffering(offeringName,shortName, Short
-				.valueOf("2"), new Date(System.currentTimeMillis()), Short
-				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,
-				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
+				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
+						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
+				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
 				meetingIntPost);
 	}
 
@@ -827,7 +918,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
 				customerList, request);
 	}
-	
+
 	private Locale getUserLocale(HttpServletRequest request) {
 		Locale locale = null;
 		HttpSession session = request.getSession();
@@ -843,43 +934,13 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		}
 		return locale;
 	}
-    
-    /*
-    public void testSetClientAttendance() throws PageExpiredException{
-        BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-                request);
-        setRequestPathInfo("/bulkentryaction.do");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        addRequestParameter("method", "create");
-        addRequestParameter("attendenceSelected[0]", "1");
-        addRequestParameter("enteredAmount[0][0]", "212.0");
-        addRequestParameter("enteredAmount[1][1]", "212.0");
-        addRequestParameter("enteredAmount[0][1]", "212.0");
-        addRequestParameter("enteredAmount[1][0]", "212.0");
-        addRequestParameter("withDrawalAmountEntered[2][2]", "100.0");
-        addRequestParameter("depositAmountEntered[2][2]", "100.0");
-        addRequestParameter("withDrawalAmountEntered[0][0]", "100.0");
-        addRequestParameter("depositAmountEntered[0][0]", "100.0");
-        
-        Calendar meetinDateCalendar = new GregorianCalendar();
-        //meetinDateCalendar.setTime(getMeetingDates(meeting));
-        int year = meetinDateCalendar.get(Calendar.YEAR);
-        int month = meetinDateCalendar.get(Calendar.MONTH);
-        int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
-        meetinDateCalendar = new GregorianCalendar(year, month, day);
-        //SessionUtils.setAttribute("LastMeetingDate", new java.sql.Date(
-        //        meetinDateCalendar.getTimeInMillis()), request);
-        addRequestParameter("transactionDate", (month + 1) + "/" + day + "/"
-                + year);
-        
-        actionPerform();
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        verifyForward("create_success");
-        
-       
-    }
-    */
+
+	private LoanBO getLoanAccount(Short accountSate, Date startDate,
+			int disbursalType, LoanOfferingBO loanOfferingBO) {
+		return TestObjectFactory.createLoanAccountWithDisbursement(
+				"99999999999", group, accountSate, startDate, loanOfferingBO,
+				disbursalType);
+
+	}
+
 }

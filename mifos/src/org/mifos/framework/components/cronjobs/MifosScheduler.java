@@ -38,8 +38,10 @@
 
 package org.mifos.framework.components.cronjobs;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -53,18 +55,22 @@ import org.w3c.dom.Text;
 
 public class MifosScheduler extends Timer {
 
+	
 	Timer timer = null;
+	
+	List<String> taskNames = new ArrayList<String>();
 
 	public MifosScheduler() {
 		timer = new Timer();
 	}
-
+	
 	/**
 	 * This method schedules a specified task to run at a specified time afer a
 	 * specified delay
 	 */
 	public void schedule(MifosTask task, Date initial, long delay) {
 		timer.schedule(task, initial, delay);
+		taskNames.add(task.name);
 	}
 
 	/**
@@ -132,6 +138,7 @@ public class MifosScheduler extends Timer {
 	 */
 	public void schedule(MifosTask task, Date initial) {
 		timer.schedule(task, initial);
+		taskNames.add(task.name);
 	}
 
 	/**
@@ -152,6 +159,10 @@ public class MifosScheduler extends Timer {
 		time.set(Calendar.MINUTE, minutes);
 		time.set(Calendar.SECOND, seconds);
 		return time.getTime();
+	}
+	
+	public List<String> getTaskNames() {
+		return taskNames;
 	}
 
 }

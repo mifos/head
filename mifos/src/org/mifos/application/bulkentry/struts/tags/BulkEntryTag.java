@@ -64,6 +64,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 
 public class BulkEntryTag extends BodyTagSupport {
 
+	@Override
 	public int doStartTag() throws JspException {
 
 		HttpServletRequest request = (HttpServletRequest) pageContext

@@ -171,7 +171,9 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		Calendar cal = Calendar.getInstance(Configuration.getInstance()
 				.getSystemConfig().getMifosTimeZone());
 		cal.setTime(helper.getDate("01/05/2006"));
-		new SavingsIntCalcHelper(new SavingsIntCalcTask()).execute(cal.getTimeInMillis());
+		SavingsIntCalcTask savingsIntCalcTask = new SavingsIntCalcTask();
+		((SavingsIntCalcHelper) savingsIntCalcTask.getTaskHelper()).execute(cal
+				.getTimeInMillis());
 
 		savings1 = persistence.findById(savings1.getAccountId());
 		savings4 = persistence.findById(savings4.getAccountId());

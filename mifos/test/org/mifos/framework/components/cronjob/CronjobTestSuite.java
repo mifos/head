@@ -9,6 +9,7 @@ import org.mifos.framework.components.cronjob.helpers.TestCustomerFeeHelper;
 import org.mifos.framework.components.cronjob.helpers.TestLoanArrearsAgingHelper;
 import org.mifos.framework.components.cronjob.helpers.TestLoanArrearsHelper;
 import org.mifos.framework.components.cronjob.helpers.TestLoanArrearsTask;
+import org.mifos.framework.components.cronjob.helpers.TestPortfolioAtRiskHelper;
 import org.mifos.framework.components.cronjob.helpers.TestProductStatusHelper;
 import org.mifos.framework.components.cronjob.helpers.TestRegenerateScheduleHelper;
 import org.mifos.framework.components.cronjob.helpers.TestSavingsIntCalcHelper;
@@ -31,6 +32,7 @@ public class CronjobTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestApplyCustomerFeeChangesHelper.class);
 		testSuite.addTestSuite(TestProductStatusHelper.class);
 		testSuite.addTestSuite(TestLoanArrearsAgingHelper.class);
+		testSuite.addTestSuite(TestPortfolioAtRiskHelper.class);
 		return testSuite;
 	}
 }

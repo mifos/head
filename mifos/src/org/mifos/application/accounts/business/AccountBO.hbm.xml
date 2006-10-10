@@ -144,31 +144,6 @@
 			</set>
 		</joined-subclass>
 	</class>
-	<!--Finds by global account num-->
-	<query name="accounts.findByCustomerId">
-		<![CDATA[select new org.mifos.application.accounts.business.LoanAccountView
-			(loanAccount.accountId,loanAccount.loanOffering.prdOfferingShortName,
-			loanAccount.accountType.accountTypeId,loanAccount.loanOffering.prdOfferingId,
-			loanAccount.accountState.id,loanAccount.intrestAtDisbursement,
-			loanAccount.loanAmount) 
-			from org.mifos.application.accounts.loan.business.LoanBO loanAccount 
-			where loanAccount.customer.customerId = :CUSTOMER_ID 
-			and ((loanAccount.accountState.id in (5,9)) 
-			or (loanAccount.accountState.id in (3,4) 
-			and  loanAccount.disbursementDate <= :DISBURSEMENT_DATE)) order by loanAccount.accountId]]>
-	</query>
-	<query name="accounts.getPrdofferingsForloans">
-		<![CDATA[select distinct loanAccount.loanOffering 
-			from org.mifos.application.accounts.loan.business.LoanBO loanAccount 
-			where loanAccount.customer.searchId = :CUSTOMER_SEARCH_ID and 
-			(loanAccount.accountState.id in (5,9) or (loanAccount.accountState.id in (3,4) and  
-			loanAccount.disbursementDate <= :DISBURSEMENT_DATE))]]>
-	</query>
-	<query name="accounts.getAccountTrxnsForAccountId">
-		<![CDATA[from org.mifos.application.accounts.loan.business.LoanScheduleEntity accountTrxn 
-			where accountTrxn.account.accountId = :ACCOUNT_ID and accountTrxn.actionDate <= :ACTION_DATE and 
-			accountTrxn.paymentStatus = :PAYMENT_STATUS ]]>
-	</query>
 	<query name="accounts.getLastMeetingDateforCustomer">
 		<![CDATA[from org.mifos.application.customer.business.CustomerScheduleEntity accountTrxn 
 			where accountTrxn.customer.customerId = :CUSTOMER_ID and accountTrxn.actionDate <= :ACTION_DATE  
@@ -187,27 +162,6 @@
 	<!-- The following query is to  obtain the max account id in the system-->
 	<query name="accounts.getMaxAccountId">
 		<![CDATA[select max(account.accountId)	from AccountBO account 	]]>
-	</query>
-	<query name="accounts.findSavingsAccountByCustomerId">
-		<![CDATA[select new org.mifos.application.accounts.business.SavingsAccountView(
-			savingsAccount.accountId,savingsAccount.accountType.accountTypeId,savingsAccount.savingsOffering) 
-			from org.mifos.application.accounts.savings.business.SavingsBO savingsAccount 
-			where savingsAccount.customer.customerId = :CUSTOMER_ID and savingsAccount.accountState.id = 16 
-			order by savingsAccount.accountId]]>
-	</query>
-	<query name="accounts.getAccountActionsForMandSavingsAccount">
-		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsScheduleEntity accountTrxn 
-			where accountTrxn.account.accountId = :ACCOUNT_ID and accountTrxn.actionDate <= :ACTION_DATE and 
-			accountTrxn.paymentStatus = :PAYMENT_STATUS and accountTrxn.customer.customerId = :CUSTOMER_ID ]]>
-	</query>
-	<query name="accounts.getAccountActionsForVolSavingsAccount">
-		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsScheduleEntity accountTrxn 
-			where accountTrxn.account.accountId = :ACCOUNT_ID and accountTrxn.paymentStatus = :PAYMENT_STATUS and 
-			accountTrxn.customer.customerId = :CUSTOMER_ID and accountTrxn.installmentId=
-			(select max(actionDate.installmentId) 
-			from org.mifos.application.accounts.savings.business.SavingsScheduleEntity actionDate 
-			where actionDate.account.accountId = :ACCOUNT_ID and actionDate.customer.customerId = :CUSTOMER_ID and 
-			actionDate.actionDate <= :ACTION_DATE)]]>
 	</query>
 	<query name="accounts.findBySystemId">
 		<![CDATA[from org.mifos.application.accounts.business.AccountBO account 

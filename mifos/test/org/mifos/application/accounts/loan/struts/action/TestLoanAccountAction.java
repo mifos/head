@@ -124,18 +124,13 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-	
-	
-	
 
-	
-	public void testGetForCancelledLoanAccount()
-			throws Exception {
+	public void testGetForCancelledLoanAccount() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);	
-		accountBO.changeStatus(AccountState.LOANACC_CANCEL.getValue(),AccountStateFlag.LOAN_WITHDRAW.getValue(),
-				"status changed");
+		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		accountBO.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+				AccountStateFlag.LOAN_WITHDRAW.getValue(), "status changed");
 		accountBO.update();
 		HibernateUtil.commitTransaction();
 		LoanBO loan = (LoanBO) accountBO;
@@ -156,36 +151,36 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		assertEquals("Total no. of recent notes should be 3", 3,
 				((List<AccountNotesEntity>) SessionUtils.getAttribute(
 						LoanConstants.NOTES, request)).size());
-		assertEquals("Total no. of flags should be 1", 1, accountBO.getAccountFlags().size());
+		assertEquals("Total no. of flags should be 1", 1, accountBO
+				.getAccountFlags().size());
 	}
-	
-	public void testPrevious(){
+
+	public void testPrevious() {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("method","previous");
+		addRequestParameter("method", "previous");
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward("load_success");
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-		
-	
-	public void testPreview(){
+
+	public void testPreview() {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("method","preview");
+		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward("preview_success");
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
-	public void testforwardWaiveCharge(){
+
+	public void testforwardWaiveCharge() {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("method","forwardWaiveCharge");
+		addRequestParameter("method", "forwardWaiveCharge");
 		addRequestParameter("type", "LoanAccount");
 		actionPerform();
 		verifyNoActionErrors();
@@ -248,6 +243,21 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
+		for (AccountActionDateEntity accountActionDateEntity : loan
+				.getAccountActionDates()) {
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1")))
+				accountActionDateEntity.setActionDate(offSetDate(
+						accountActionDateEntity.getActionDate(), -14));
+			else if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("2")))
+				accountActionDateEntity.setActionDate(offSetDate(
+						accountActionDateEntity.getActionDate(), -7));
+		}
+		TestObjectFactory.updateObject(loan);
+		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+				.getAccountId());
+
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getInstallmentDetails");
 		addRequestParameter("accountId", String.valueOf(loan.getAccountId()));
@@ -780,7 +790,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getObject(LoanOfferingBO.class, loanOffering
 						.getPrdOfferingId()));
 	}
-	
+
 	public void testSchedulePreviewWithLoanOfferingFundsData() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
@@ -815,7 +825,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getObject(LoanOfferingBO.class, loanOffering
 						.getPrdOfferingId()));
 	}
-
 
 	public void testSchedulePreviewWithDataForIntDedAtDisb() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -986,7 +995,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(
 				MasterConstants.BUSINESS_ACTIVITIE_NAME, request));
 	}
-	
+
 	public void testManagePrevious() {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/loanAccountAction.do");
@@ -1066,7 +1075,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = getLoanAccount();
 		LoanBO loan = (LoanBO) accountBO;
-		Date firstInstallmentDate=loan.getDetailsOfNextInstallment().getActionDate();
+		Date firstInstallmentDate = loan.getDetailsOfNextInstallment()
+				.getActionDate();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 		String newDate = offSetCurrentDate(6, userContext.getPereferedLocale());
 		setRequestPathInfo("/loanAccountAction.do");
@@ -1086,7 +1096,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("collateralNote", "test");
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
-		
+
 		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		assertEquals("test", loan.getCollateralNote());
@@ -1096,7 +1106,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		assertEquals(newDate, DateHelper.getUserLocaleDate(TestObjectFactory
 				.getContext().getPereferedLocale(), DateHelper
 				.toDatabaseFormat(loan.getDisbursementDate())));
-		assertEquals(firstInstallmentDate,loan.getAccountActionDate(Short.valueOf("1")).getActionDate());
+		assertEquals(firstInstallmentDate, loan.getAccountActionDate(
+				Short.valueOf("1")).getActionDate());
 	}
 
 	private void modifyActionDateForFirstInstallment() throws Exception {
@@ -1241,6 +1252,16 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 						.toPattern());
 		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
+	
+	private java.sql.Date offSetDate(Date date , int noOfDays){
+		Calendar dateCalendar = new GregorianCalendar();
+		dateCalendar.setTimeInMillis(date.getTime());
+		int year = dateCalendar.get(Calendar.YEAR);
+		int month = dateCalendar.get(Calendar.MONTH);
+		int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
+		dateCalendar = new GregorianCalendar(year, month, day + noOfDays);
+		return new java.sql.Date(dateCalendar.getTime().getTime());
+	}
 
 	private Date incrementCurrentDate(int noOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();
@@ -1276,17 +1297,18 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 	}
-	
-	private LoanOfferingBO getCompleteLoanOfferingObject() throws Exception{
+
+	private LoanOfferingBO getCompleteLoanOfferingObject() throws Exception {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.GROUPS);
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL()
-				.get(GLCodeEntity.class, (short) 7);
-		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, (short) 7);
-		ProductCategoryBO productCategory = TestObjectFactory.getLoanPrdCategory();
+		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil
+				.getSessionTL().get(GLCodeEntity.class, (short) 7);
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+				.getSessionTL().get(GLCodeEntity.class, (short) 7);
+		ProductCategoryBO productCategory = TestObjectFactory
+				.getLoanPrdCategory();
 		InterestTypesEntity interestTypes = new InterestTypesEntity(
 				InterestTypeConstants.FLATINTERST);
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
@@ -1294,9 +1316,10 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		Date startDate = offSetCurrentDate(0);
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		List<FundBO> funds = new ArrayList<FundBO>();
-		FundBO fundBO =(FundBO)HibernateUtil.getSessionTL().get(FundBO.class,Short.valueOf("2"));
+		FundBO fundBO = (FundBO) HibernateUtil.getSessionTL().get(FundBO.class,
+				Short.valueOf("2"));
 		funds.add(fundBO);
-		LoanOfferingBO loanOfferingBO=new  LoanOfferingBO(TestObjectFactory
+		LoanOfferingBO loanOfferingBO = new LoanOfferingBO(TestObjectFactory
 				.getContext(), "Loan Offering", "LOAP", productCategory,
 				prdApplicableMaster, startDate, null, null, gracePeriodType,
 				(short) 2, interestTypes, new Money("1000"), new Money("3000"),

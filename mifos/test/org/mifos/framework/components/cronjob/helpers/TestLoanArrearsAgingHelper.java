@@ -43,8 +43,8 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		loanArrearsAgingHelper = new LoanArrearsAgingHelper(
-				new LoanArrearsAgingTask());
+		LoanArrearsAgingTask loanArrearsAgingTask = new LoanArrearsAgingTask();
+		loanArrearsAgingHelper = (LoanArrearsAgingHelper)loanArrearsAgingTask.getTaskHelper();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(RecurrenceType.WEEKLY.getValue(), recurAfter,
 						4, 2));

@@ -13,9 +13,9 @@ import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
-import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -23,8 +23,11 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestBulkEntryBusinessService extends MifosTestCase {
@@ -106,19 +109,17 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	}
 
 	public void testSuccessfulSaveLoanAccount() throws Exception {
-		try {
-			createLoanAccount();
 
-			bulkEntryBusinessService.saveLoanAccount(getAccountView(account),
-					(short) 1, "324423", (short) 1, null, new java.sql.Date(
-							System.currentTimeMillis()));
+		createLoanAccount();
 
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		account = (LoanBO) accountPersistence.getAccount(account
-				.getAccountId());
+		bulkEntryBusinessService.saveLoanAccount(getAccountView(account),
+				(short) 1, "324423", (short) 1, null, new java.sql.Date(System
+						.currentTimeMillis()));
+
+		HibernateUtil.commitTransaction();
+
+		account = (LoanBO) accountPersistence
+				.getAccount(account.getAccountId());
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		assertEquals(account.getLoanOffering().getPrdOfferingName(), "Loan");
@@ -137,7 +138,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 							.currentTimeMillis()), new java.sql.Date(System
 							.currentTimeMillis()));
 			assertTrue("A paid installment can be paid again", false);
-		} catch (BulkEntryAccountUpdateException be) {
+		} catch (ServiceException be) {
 			HibernateUtil.getTransaction().rollback();
 			account.getAccountPayments().clear();
 			assertNotNull(be);
@@ -146,46 +147,12 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		}
 	}
 
-	public void testRetrieveSavingsAccountInformationForCustomer() throws Exception{
-		createCenter();
-		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
-				center, Short.valueOf("16"), new Date(System
-						.currentTimeMillis()),
-				createSavingsOffering("SavingPrd1wa","qads"));
-
-		List<SavingsAccountView> savingsAccounts = bulkEntryBusinessService
-				.retrieveSavingsAccountInformationForCustomer(center
-						.getCustomerId());
-		assertEquals("The number of savings account", 1, savingsAccounts.size());
-
-	}
-
-	public void testRetrieveSavingsAccountTransactionDetail() throws Exception{
-		createInitialObjects();
-		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
-				"43244334", center, Short.valueOf("16"), currentDate,
-				createSavingsOffering("Center12","q1se"));
-		groupSavingsAccount = TestObjectFactory.createSavingsAccount(
-				"43234434", group, Short.valueOf("16"), currentDate,
-				createSavingsOffering("Group23","cvxs"));
-		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
-				"43245434", client, Short.valueOf("16"), currentDate,
-				createSavingsOffering("Clienta1","qase"));
-
-		List<AccountActionDateEntity> centerActions = bulkEntryBusinessService
-				.retrieveSavingsAccountTransactionDetail(centerSavingsAccount
-						.getAccountId(), center.getCustomerId(),
-						new java.sql.Date(System.currentTimeMillis()), true);
-		assertEquals("The number of installments due for account", 1,
-				centerActions.size());
-
-	}
-
 	public void testSuccessfulSavingsAccountDeposit() throws Exception {
 		createInitialObjects();
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43245434", client, Short.valueOf("16"), new Date(System
-						.currentTimeMillis()), createSavingsOffering("Client21","ased"));
+						.currentTimeMillis()), createSavingsOffering(
+						"Client21", "ased"));
 		HibernateUtil.closeSession();
 
 		bulkEntryBusinessService.saveSavingsDepositAccount(
@@ -202,9 +169,8 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		assertEquals(1, clientSavingsAccount.getSavingsActivityDetails().size());
 	}
 
-	public void testSuccessfulSavingsAccountWithdrawal()
-			throws Exception{
-		createSavingsAccountWithBal("100","Dfre1qw","xzsc");
+	public void testSuccessfulSavingsAccountWithdrawal() throws Exception {
+		createSavingsAccountWithBal("100", "Dfre1qw", "xzsc");
 		bulkEntryBusinessService.saveSavingsWithdrawalAccount(
 				getSavingsAccountView(clientSavingsAccount, "0", "100"), Short
 						.valueOf("1"), "3424", (short) 1, new java.sql.Date(
@@ -217,33 +183,6 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		assertEquals("The balance for account", clientSavingsAccount
 				.getSavingsBalance().getAmountDoubleValue(), 0.0);
 		assertEquals(2, clientSavingsAccount.getSavingsActivityDetails().size());
-	}
-
-	public void testGetFeeAmountAtDisbursement() throws Exception {
-		createInitialObjects();
-		account = createLoanAccountForDisb(group, center.getCustomerMeeting()
-				.getMeeting(), Short.valueOf("3"));
-
-		assertEquals(30.0, bulkEntryBusinessService.getFeeAmountAtDisbursement(
-				account.getAccountId(), new java.sql.Date(System
-						.currentTimeMillis())));
-
-	}
-
-	public void testRetrieveCustomerAccountActionDetails() throws Exception {
-		createCenter();
-
-		assertNotNull(center.getCustomerAccount());
-		List<AccountActionDateEntity> actionDates = bulkEntryBusinessService
-				.retrieveCustomerAccountActionDetails(center
-						.getCustomerAccount().getAccountId(),
-						new java.sql.Date(System.currentTimeMillis()));
-		assertEquals("The size of the due insallments is ", actionDates.size(),
-				1);
-
-		HibernateUtil.closeSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
 	}
 
 	public void testSuccesulSaveCustomerAccount() throws Exception {
@@ -279,12 +218,97 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 							.valueOf("1"), null, new Date(System
 							.currentTimeMillis()));
 			assertTrue("A paid installment can be paid again", false);
-		} catch (BulkEntryAccountUpdateException e) {
+		} catch (ServiceException e) {
 			assertTrue("A paid installment cannot be paid again", true);
 		}
 		HibernateUtil.closeSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
+	}
+
+	public void testGetLastMeetingDateForCustomer() throws ServiceException {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active", Short
+				.valueOf("13"), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		java.util.Date lastMeetingDate = bulkEntryBusinessService
+				.getLastMeetingDateForCustomer(center.getCustomerId());
+		assertEquals(DateHelper.toDatabaseFormat(
+				DateUtils.getCurrentDateWithoutTimeStamp()).toString(),
+				lastMeetingDate.toString());
+	}
+
+	public void testGetLastMeetingDateForCustomerForInvalidConnection() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center_Active", Short
+				.valueOf("13"), "1.1", meeting, new Date(System
+				.currentTimeMillis()));
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			bulkEntryBusinessService.getLastMeetingDateForCustomer(center
+					.getCustomerId());
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+
+	}
+
+	public void testSaveCustomerAccountForInvalidConnection() throws Exception {
+		createCenter();
+
+		CustomerAccountBO customerAccount = center.getCustomerAccount();
+		assertNotNull(customerAccount);
+		CustomerAccountView customerAccountView = TestObjectFactory
+				.getCustomerAccountView(center);
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			bulkEntryBusinessService.saveCustomerAccountCollections(
+					customerAccountView,
+					center.getPersonnel().getPersonnelId(), "65463", Short
+							.valueOf("1"), null, currentDate);
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public void testSaveAttendanceForInvalidConnection() throws Exception {
+		createInitialObjects();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
+					currentDate, (short) 1);
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public void testDisburseLoanWithFeeAtDisbursement() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
+
+		account = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		HibernateUtil.closeSession();
+		LoanAccountsProductView loanAccountsProductView = getAccountView(account);
+		loanAccountsProductView.setDisBursementAmountEntered(account.getLoanAmount().toString());
+		bulkEntryBusinessService.saveLoanAccount(loanAccountsProductView,
+				(short) 1, "324423", (short) 1, null, startDate);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		account = (LoanBO) TestObjectFactory.getObject(LoanBO.class, account
+				.getAccountId());
+		assertEquals(AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue(),
+				account.getAccountState().getId());
 	}
 
 	private void createCenter() {
@@ -337,18 +361,6 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	private LoanBO createLoanAccountForDisb(CustomerBO customer,
-			MeetingBO meeting, Short accountSate) {
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), currentDate, (short) 1, 300.0, 1.2,
-				Short.valueOf("3"), (short) 1, Short.valueOf("1"), (short) 1,
-				(short) 1, (short) 1, meeting);
-		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"42423142341", customer, accountSate, currentDate,
-				loanOffering, 1);
-
-	}
-
 	private SavingsAccountView getSavingsAccountView(SavingsBO account,
 			String depAmount, String withAmount) {
 		SavingsAccountView accountView = new SavingsAccountView(account
@@ -362,23 +374,24 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		return accountView;
 	}
 
-	private SavingsOfferingBO createSavingsOffering(String offeringName,String shortName) {
+	private SavingsOfferingBO createSavingsOffering(String offeringName,
+			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName,Short
-				.valueOf("2"), currentDate, Short.valueOf("2"), 300.0,
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
+				Short.valueOf("2"), currentDate, Short.valueOf("2"), 300.0,
 				(short) 1, 1.2, 200.0, 200.0, Short.valueOf("2"), (short) 1,
 				meetingIntCalc, meetingIntPost);
 	}
 
-	private void createSavingsAccountWithBal(String amount,String OfferingName,String shortName)
-			throws Exception {
+	private void createSavingsAccountWithBal(String amount,
+			String OfferingName, String shortName) throws Exception {
 		createInitialObjects();
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43245434", client, Short.valueOf("16"), currentDate,
-				createSavingsOffering(OfferingName,shortName));
+				createSavingsOffering(OfferingName, shortName));
 		HibernateUtil.closeSession();
 
 		bulkEntryBusinessService.saveSavingsDepositAccount(
@@ -404,7 +417,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		return customerAccountView;
 	}
 
-	private void makePaymentForallInstallments()throws Exception {
+	private void makePaymentForallInstallments() throws Exception {
 		for (AccountActionDateEntity actionDate : account
 				.getAccountActionDates()) {
 			actionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
@@ -412,4 +425,24 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 		TestObjectFactory.updateObject(account);
 	}
+
+	private LoanBO getLoanAccount(Short accountSate, Date startDate,
+			int disbursalType) {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccountWithDisbursement(
+				"99999999999", group, accountSate, startDate, loanOffering,
+				disbursalType);
+
+	}
+
 }

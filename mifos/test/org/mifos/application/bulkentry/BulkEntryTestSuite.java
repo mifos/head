@@ -8,6 +8,7 @@ import org.mifos.application.bulkentry.business.service.TestBulkEntryBusinessSer
 import org.mifos.application.bulkentry.persistance.TestBulkEntryPersistance;
 import org.mifos.application.bulkentry.persistance.service.TestBulkEntryPersistanceService;
 import org.mifos.application.bulkentry.struts.action.TestBulkEntryAction;
+import org.mifos.application.bulkentry.struts.uihelpers.BulkEntryDisplayHelperTest;
 import org.mifos.framework.MifosTestSuite;
 
 public class BulkEntryTestSuite extends MifosTestSuite {
@@ -23,6 +24,7 @@ public class BulkEntryTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestBulkEntryBusinessService.class);
 		testSuite.addTestSuite(TestBulkEntryAction.class);
 		testSuite.addTestSuite(TestBulkEntryView.class);
+		testSuite.addTestSuite(BulkEntryDisplayHelperTest.class);
 		return testSuite;
 	}
 

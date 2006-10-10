@@ -30,7 +30,8 @@ public class TestProductStatusHelper extends MifosTestCase {
 		super.setUp();
 		ProductStatus productStatus = new ProductStatus();
 		productStatus.name = "ProductStatus";
-		productStatusHelper = new ProductStatusHelper(productStatus);
+		productStatusHelper = (ProductStatusHelper) productStatus
+				.getTaskHelper();
 	}
 
 	@Override

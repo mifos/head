@@ -79,8 +79,9 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
 		trainingFee.save();
 		TestObjectFactory.flushandCloseSession();
-		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
-				.execute(System.currentTimeMillis());
+		ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
+		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
+				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
@@ -125,8 +126,9 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		trainingFee.update();
 		TestObjectFactory.flushandCloseSession();
-		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
-				.execute(System.currentTimeMillis());
+		ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
+		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
+				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
@@ -170,8 +172,9 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		trainingFee.updateStatus(FeeStatus.INACTIVE);
 		trainingFee.update();
 		TestObjectFactory.flushandCloseSession();
-		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
-				.execute(System.currentTimeMillis());
+		ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
+		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
+				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());
@@ -216,8 +219,9 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		trainingFee.updateStatus(FeeStatus.ACTIVE);
 		trainingFee.update();
 		TestObjectFactory.flushandCloseSession();
-		new ApplyCustomerFeeChangesHelper(new ApplyCustomerFeeChangesTask())
-				.execute(System.currentTimeMillis());
+		ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
+		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
+				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
 				CustomerBO.class, center.getCustomerId());

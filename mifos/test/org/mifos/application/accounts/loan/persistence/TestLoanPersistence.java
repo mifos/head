@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -65,25 +64,30 @@ public class TestLoanPersistence extends MifosTestCase {
 
 	public void testGetLoanAccountsInArrears() throws Exception {
 		Calendar currentDate = new GregorianCalendar();
-		Calendar twoDaysBack = new GregorianCalendar(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH)-2,0,0,0);
+		Calendar twoDaysBack = new GregorianCalendar(currentDate
+				.get(Calendar.YEAR), currentDate.get(Calendar.MONTH),
+				currentDate.get(Calendar.DAY_OF_MONTH) - 2, 0, 0, 0);
 
 		for (AccountActionDateEntity accountAction : loanAccount
 				.getAccountActionDates()) {
-			if(accountAction.getInstallmentId().equals(Short.valueOf("1")))
-				accountAction.setActionDate(new Date(twoDaysBack.getTimeInMillis()));
+			if (accountAction.getInstallmentId().equals(Short.valueOf("1")))
+				accountAction.setActionDate(new Date(twoDaysBack
+						.getTimeInMillis()));
 		}
-		
+
 		TestObjectFactory.updateObject(loanAccount);
 		HibernateUtil.closeSession();
-		loanAccount = new AccountPersistence().getAccount(loanAccount.getAccountId());
-		
-		List<Integer> list = loanPersistence.getLoanAccountsInArrears(Short.valueOf("1"));
-		assertEquals(1,list.size());
+		loanAccount = new AccountPersistence().getAccount(loanAccount
+				.getAccountId());
+
+		List<Integer> list = loanPersistence.getLoanAccountsInArrears(Short
+				.valueOf("1"));
+		assertEquals(1, list.size());
 
 		list = loanPersistence.getLoanAccountsInArrears(Short.valueOf("2"));
-		assertEquals(1,list.size());
+		assertEquals(1, list.size());
 		HibernateUtil.closeSession();
-		
+
 		LoanBO testBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, list
 				.get(0));
 		assertEquals(Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING),
@@ -92,15 +96,16 @@ public class TestLoanPersistence extends MifosTestCase {
 				.valueOf("1"));
 		assertEquals(PaymentStatus.UNPAID.getValue(), actionDate
 				.getPaymentStatus());
-		
+
 		HibernateUtil.closeSession();
 		list = loanPersistence.getLoanAccountsInArrears(Short.valueOf("3"));
-		assertEquals(0,list.size());
-		
+		assertEquals(0, list.size());
+
 		HibernateUtil.closeSession();
-		loanAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanAccount.getAccountId());
+		loanAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				loanAccount.getAccountId());
 	}
-	
+
 	public void testFindBySystemId() throws Exception {
 		LoanPersistance loanPersistance = new LoanPersistance();
 		LoanBO loanBO = loanPersistance.findBySystemId(loanAccount
@@ -108,25 +113,6 @@ public class TestLoanPersistence extends MifosTestCase {
 		assertEquals(loanBO.getGlobalAccountNum(), loanAccount
 				.getGlobalAccountNum());
 		assertEquals(loanBO.getAccountId(), loanAccount.getAccountId());
-	}
-
-	public void testGetLoanAccountsForCustomer() throws Exception {
-
-		List<LoanAccountView> loanAccounts = loanPersistence
-				.getLoanAccountsForCustomer(group.getCustomerId(), new Date(
-						System.currentTimeMillis()));
-		assertEquals(1, loanAccounts.size());
-
-	}
-
-	public void testGetLoanAccountTransactionDetail() throws Exception {
-
-		Date transactionDate = new Date(System.currentTimeMillis());
-		List<AccountActionDateEntity> details = loanPersistence
-				.getLoanAccountTransactionDetail(loanAccount.getAccountId(),
-						transactionDate);
-		assertEquals(1, details.size());
-
 	}
 
 	public void testGetFeeAmountAtDisbursement() throws Exception {
@@ -137,7 +123,8 @@ public class TestLoanPersistence extends MifosTestCase {
 						.getAccountId()));
 	}
 
-	public void testGetLoanAccountsInArrearsInGoodStanding() throws PersistenceException {
+	public void testGetLoanAccountsInArrearsInGoodStanding()
+			throws PersistenceException {
 		Short latenessDays = 1;
 		Calendar actionDate = new GregorianCalendar();
 		int year = actionDate.get(Calendar.YEAR);
@@ -172,7 +159,6 @@ public class TestLoanPersistence extends MifosTestCase {
 				.getPaymentStatus());
 	}
 
-	
 	public void testGetAccount() throws Exception {
 		LoanBO loanBO = loanPersistence.getAccount(loanAccount.getAccountId());
 		assertEquals(loanBO.getAccountId(), loanAccount.getAccountId());

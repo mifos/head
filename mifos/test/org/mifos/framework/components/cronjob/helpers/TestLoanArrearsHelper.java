@@ -34,7 +34,8 @@ public class TestLoanArrearsHelper extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		loanArrearHelper = new LoanArrearsHelper(new LoanArrearsTask());
+		LoanArrearsTask arrearsTask = new LoanArrearsTask();
+		loanArrearHelper = (LoanArrearsHelper)arrearsTask.getTaskHelper();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		Date startDate = new Date(System.currentTimeMillis());

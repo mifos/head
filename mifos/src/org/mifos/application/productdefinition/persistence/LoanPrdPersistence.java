@@ -114,17 +114,6 @@ public class LoanPrdPersistence extends Persistence {
 		return loanOfferings;
 	}
 
-	public List<PrdOfferingBO> getLoanOfferingForCustomer(
-			String customerSearchId, Date disbursmentDate)
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("CUSTOMER_SEARCH_ID", customerSearchId);
-		queryParameters.put("DISBURSEMENT_DATE", disbursmentDate);
-		return executeNamedQuery(
-				NamedQueryConstants.GET_LOANOFFERINGLIST_FOR_LOANS,
-				queryParameters);
-	}
-
 	public List<LoanOfferingBO> getApplicablePrdOfferings(
 			CustomerLevelEntity customerLevel) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();

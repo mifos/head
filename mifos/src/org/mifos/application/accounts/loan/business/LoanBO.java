@@ -164,7 +164,7 @@ public class LoanBO extends AccountBO {
 	private String stateSelected;
 
 	private Set<LoanActivityEntity> loanActivityDetails;
-	
+
 	private LoanArrearsAgingEntity loanArrearsAgingEntity;
 
 	protected LoanBO() {
@@ -500,7 +500,7 @@ public class LoanBO extends AccountBO {
 		}
 		return amount;
 	}
-	
+
 	@Override
 	public final void removeFees(Short feeId, Short personnelId)
 			throws AccountException {
@@ -963,10 +963,6 @@ public class LoanBO extends AccountBO {
 		} catch (PersistenceException e) {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION, e);
-		} catch (AccountException e) {
-			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTION, e);
-
 		}
 	}
 
@@ -991,29 +987,40 @@ public class LoanBO extends AccountBO {
 		Short daysInArrears = 0;
 		if (getAccountState().getId().equals(
 				AccountStates.LOANACC_ACTIVEINGOODSTANDING)
-				|| getAccountState().getId().equals( AccountStates.LOANACC_BADSTANDING)) {
+				|| getAccountState().getId().equals(
+						AccountStates.LOANACC_BADSTANDING)) {
 			if (!getDetailsOfInstallmentsInArrears().isEmpty()) {
 				AccountActionDateEntity accountActionDateEntity = getDetailsOfInstallmentsInArrears()
 						.get(0);
-				daysInArrears = Short.valueOf(new Long(calculateDays(accountActionDateEntity.getActionDate(), DateUtils.getCurrentDateWithoutTimeStamp())).toString());
+				daysInArrears = Short.valueOf(new Long(calculateDays(
+						accountActionDateEntity.getActionDate(), DateUtils
+								.getCurrentDateWithoutTimeStamp())).toString());
 			}
 		}
 		return daysInArrears;
 	}
-	
-	public void handleArrearsAging()throws AccountException{
-		if(this.loanArrearsAgingEntity == null)
-			this.loanArrearsAgingEntity = new LoanArrearsAgingEntity(this, getDaysInArrears(), getLoanSummary().getPrincipalDue(), getLoanSummary().getInterestDue(), getTotalPrincipalAmountInArrears(), getTotalInterestAmountInArrears());
+
+	public void handleArrearsAging() throws AccountException {
+		if (this.loanArrearsAgingEntity == null)
+			this.loanArrearsAgingEntity = new LoanArrearsAgingEntity(this,
+					getDaysInArrears(), getLoanSummary().getPrincipalDue(),
+					getLoanSummary().getInterestDue(),
+					getTotalPrincipalAmountInArrears(),
+					getTotalInterestAmountInArrears());
 		else
-			this.loanArrearsAgingEntity.update(getDaysInArrears(), getLoanSummary().getPrincipalDue(), getLoanSummary().getInterestDue(), getTotalPrincipalAmountInArrears(), getTotalInterestAmountInArrears(), getCustomer());
-		
-		try {			
+			this.loanArrearsAgingEntity.update(getDaysInArrears(),
+					getLoanSummary().getPrincipalDue(), getLoanSummary()
+							.getInterestDue(),
+					getTotalPrincipalAmountInArrears(),
+					getTotalInterestAmountInArrears(), getCustomer());
+
+		try {
 			new LoanPersistance().createOrUpdate(this);
 		} catch (PersistenceException pe) {
 			throw new AccountException(pe);
-		}	
+		}
 	}
-	
+
 	@Override
 	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {
 		if (getPerformanceHistory() != null) {
@@ -1238,7 +1245,7 @@ public class LoanBO extends AccountBO {
 		return date.getTime() + cal1.get(Calendar.ZONE_OFFSET)
 				+ cal1.get(Calendar.DST_OFFSET);
 	}
-	
+
 	private Money getAccountFeeAmount(AccountFeesEntity accountFees,
 			Money loanInterest) {
 		Money accountFeeAmount = new Money();

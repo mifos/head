@@ -6,19 +6,15 @@ import java.util.GregorianCalendar;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
-import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.helpers.PortfolioAtRiskHelper;
 import org.mifos.framework.components.cronjobs.helpers.PortfolioAtRiskTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPortfolioAtRiskHelper extends MifosTestCase {
@@ -51,20 +47,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 
 	public void testExecute() throws Exception {
 		createInitialObject();
-		TestObjectFactory.flushandCloseSession();
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
-		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = new GroupPerformanceHistoryEntity(
-				0, new Money(), new Money(), ((LoanBO) account1)
-						.getLoanSummary().getOriginalPrincipal().add(
-								((LoanBO) account2).getLoanSummary()
-										.getOriginalPrincipal()), new Money(),
-				new Money());
-		((GroupBO) group).setPerformanceHistory(groupPerformanceHistoryEntity);
-		TestObjectFactory.updateObject(group);
-		TestObjectFactory.flushandCloseSession();
+
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
@@ -72,21 +55,24 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		for (AccountBO account : group.getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
 					AccountTypes.LOANACCOUNT.getValue())) {
-				changeFirstInstallmentDate(account, 31);
+				changeFirstInstallmentDate(account, 7);
 			}
 		}
 		for (AccountBO account : client.getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
 					AccountTypes.LOANACCOUNT.getValue())) {
-				changeFirstInstallmentDate(account, 31);
+				changeFirstInstallmentDate(account, 7);
 			}
 		}
 		TestObjectFactory.updateObject(client);
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
-		PortfolioAtRiskHelper portfolioAtRiskHelper = new PortfolioAtRiskHelper(
-				new PortfolioAtRiskTask());
+
+		PortfolioAtRiskTask portfolioAtRiskTask = new PortfolioAtRiskTask();
+		PortfolioAtRiskHelper portfolioAtRiskHelper = (PortfolioAtRiskHelper) portfolioAtRiskTask
+				.getTaskHelper();
 		portfolioAtRiskHelper.execute(System.currentTimeMillis());
+		HibernateUtil.closeSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
@@ -97,8 +83,6 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				account1.getAccountId());
 		account2 = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				account2.getAccountId());
-		assertEquals(new Money("1"), ((GroupBO) group).getPerformanceHistory()
-				.getPortfolioAtRisk());
 	}
 
 	private void createInitialObject() {
@@ -112,19 +96,19 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loan", "LOAN", Short.valueOf("2"), new Date(System
+						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
+				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
-		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
-				.valueOf("1"), new Date(System.currentTimeMillis()), Short
-				.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-				.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), Short
-				.valueOf("1"), Short.valueOf("1"), meeting);
+		loanOffering = TestObjectFactory.createLoanOffering("Loan123", "LOAP",
+				Short.valueOf("1"), new Date(System.currentTimeMillis()), Short
+						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), Short.valueOf("1"), meeting);
 		account2 = TestObjectFactory.createLoanAccount("42427777341", client,
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);

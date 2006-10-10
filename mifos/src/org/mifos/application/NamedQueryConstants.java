@@ -335,10 +335,9 @@ public interface NamedQueryConstants {
 	/*Office Queries*/
 	public String OFFICE_GET_SEARCHID="office.getOfficeSearchId";
 	public String OFFICE_GET_HEADOFFICE="office.getHeadOffice";
+	
 	/**Account*/
-	public String GET_LISTOFACCOUNTS_FOR_CUSTOMER = "accounts.findByCustomerId";
 	public String GET_CUSTOMER_STATE_CHECKLIST = "customer.checklist";
-	public String GET_LISTOFACCOUNTSTRXNS_FOR_LOAN = "accounts.getAccountTrxnsForAccountId";
 	public String BULKENTRYPRODUCTS = "Customer.getLoanProductForCustomer";
 	public String GET_LAST_MEETINGDATE_FOR_CUSTOMER="accounts.getLastMeetingDateforCustomer";
 	
@@ -375,13 +374,8 @@ public interface NamedQueryConstants {
 	public String GET_LOOKUPVALUES="lookupvalues";
 	public String SUPPORTED_LOCALE_LIST="supportedlocales";
 	
-	//	BulkEntry Savings Products
+	//	BulkEntry 
 	public String BULKENTRYSAVINGSPRODUCTS = "Customer.getSavingsProductForCustomer";
-	public String BULKENTRYSAVINGSACCOUNTS = "accounts.findSavingsAccountByCustomerId";
-	public String GET_LISTOFACCOUNTSACTIONS_FOR_SAVINGS_MANDATORY = "accounts.getAccountActionsForMandSavingsAccount";
-	public String GET_LISTOFACCOUNTSACTIONS_FOR_SAVINGS_VOLUNTORY = "accounts.getAccountActionsForVolSavingsAccount";
-	
-	public String GET_LOANOFFERINGLIST_FOR_LOANS="accounts.getPrdofferingsForloans";
 	public String GET_FEE_AMOUNT_AT_DISBURSEMENT="accounts.getFeeAmountAtDisbursement";
 
 	/*custom fields*/

@@ -33,28 +33,6 @@ import org.mifos.framework.util.helpers.Money;
 
 public class LoanPersistance extends Persistence {
 
-	public List<LoanAccountView> getLoanAccountsForCustomer(Integer customerId,
-			Date disbursmentDate) throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("CUSTOMER_ID", customerId);
-		queryParameters.put("DISBURSEMENT_DATE", disbursmentDate);
-		return executeNamedQuery(
-				NamedQueryConstants.GET_LISTOFACCOUNTS_FOR_CUSTOMER,
-				queryParameters);
-	}
-
-	public List<AccountActionDateEntity> getLoanAccountTransactionDetail(
-			Integer accountId, Date transactionDate)
-			throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("ACCOUNT_ID", accountId);
-		queryParameters.put("ACTION_DATE", transactionDate);
-		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
-		return executeNamedQuery(
-				NamedQueryConstants.GET_LISTOFACCOUNTSTRXNS_FOR_LOAN,
-				queryParameters);
-	}
-
 	public Double getFeeAmountAtDisbursement(Integer accountId)
 			throws PersistenceException {
 		Money amount = new Money();

@@ -272,26 +272,6 @@ public class TestSavingsPersistence extends MifosTestCase {
 		}
 	}
 
-	public void testGetSavingsAccountsForCustomer() throws Exception {
-		createInitialObjects();
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-
-		Date startDate = new Date(System.currentTimeMillis());
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
-				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
-				meetingIntPost);
-		savings = TestObjectFactory.createSavingsAccount("432434", center,
-				Short.valueOf("16"), startDate, savingsOffering);
-		List<SavingsAccountView> savingsAccounts = savingsPersistence
-				.getSavingsAccountsForCustomer(center.getCustomerId());
-		assertEquals(1, savingsAccounts.size());
-	}
-
 	public void testGetAccountsPendingForIntCalc() throws Exception {
 		SavingsTestHelper helper = new SavingsTestHelper();
 		createInitialObjects();

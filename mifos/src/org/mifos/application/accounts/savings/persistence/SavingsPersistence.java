@@ -92,35 +92,6 @@ public class SavingsPersistence extends Persistence {
 
 	}
 
-	public List<SavingsAccountView> getSavingsAccountsForCustomer(
-			Integer customerId) throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("CUSTOMER_ID", customerId);
-		return (List<SavingsAccountView>) executeNamedQuery(
-				NamedQueryConstants.BULKENTRYSAVINGSACCOUNTS, queryParameters);
-	}
-
-	public List<AccountActionDateEntity> getSavingsAccountTransactionDetail(
-			Integer accountId, Integer customerId, Date transactionDate,
-			boolean isMandatory) throws PersistenceException {
-		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("ACCOUNT_ID", accountId);
-		queryParameters.put("CUSTOMER_ID", customerId);
-		queryParameters.put("ACTION_DATE", transactionDate);
-		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
-		List<AccountActionDateEntity> queryResult = null;
-		if (isMandatory) {
-			queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_LISTOFACCOUNTSACTIONS_FOR_SAVINGS_MANDATORY,
-					queryParameters);
-		} else {
-			queryResult = executeNamedQuery(
-					NamedQueryConstants.GET_LISTOFACCOUNTSACTIONS_FOR_SAVINGS_VOLUNTORY,
-					queryParameters);
-		}
-		return queryResult;
-	}
-
 	public SavingsTrxnDetailEntity retrieveLastTransaction(Integer accountId,
 			Date date) throws PersistenceException {
 

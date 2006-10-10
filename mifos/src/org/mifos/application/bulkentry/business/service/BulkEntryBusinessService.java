@@ -41,7 +41,6 @@ package org.mifos.application.bulkentry.business.service;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.LoanAccountView;
@@ -49,24 +48,19 @@ import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
-import org.mifos.application.bulkentry.exceptions.BulkEntryAccountUpdateException;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.productdefinition.business.PrdOfferingBO;
-import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -81,88 +75,14 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	private CustomerPersistence customerPersistence;
 
-	private LoanPersistance loanPersistence;
-
-	private SavingsPersistence savingsPersistence;
-
 	public BulkEntryBusinessService() {
 		bulkEntryPersistanceService = new BulkEntryPersistanceService();
 		customerPersistence = new CustomerPersistence();
-		loanPersistence = new LoanPersistance();
-		savingsPersistence = new SavingsPersistence();
 	}
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return new BulkEntryBO(userContext);
-	}
-
-	public List<LoanAccountView> retrieveAccountInformationForCustomer(
-			Integer customerId, Date disbursementDate) throws ServiceException {
-		try {
-			return loanPersistence.getLoanAccountsForCustomer(customerId,
-					disbursementDate);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
-	public List<AccountActionDateEntity> retrieveLoanAccountTransactionDetail(
-			Integer accountId, Date transactionDate) throws ServiceException {
-		try {
-			return loanPersistence.getLoanAccountTransactionDetail(accountId,
-					transactionDate);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
-	public List<SavingsAccountView> retrieveSavingsAccountInformationForCustomer(
-			Integer customerId) throws ServiceException {
-		try {
-			return savingsPersistence.getSavingsAccountsForCustomer(customerId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
-	public List<AccountActionDateEntity> retrieveSavingsAccountTransactionDetail(
-			Integer accountId, Integer customerId, Date transactionDate,
-			boolean isMandatory) throws ServiceException {
-		try {
-			return savingsPersistence.getSavingsAccountTransactionDetail(
-					accountId, customerId, transactionDate, isMandatory);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
-	public Double getFeeAmountAtDisbursement(Integer accountId,
-			Date transactionDate) throws ServiceException {
-		try {
-			return loanPersistence.getFeeAmountAtDisbursement(accountId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
-	public CustomerBO retrieveCustomerAccountInfo(Integer customerId)
-			throws ServiceException {
-		try {
-			return customerPersistence.getCustomer(customerId);
-		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
-		}
-	}
-
-	public List<AccountActionDateEntity> retrieveCustomerAccountActionDetails(
-			Integer accountId, Date transactionDate) throws ServiceException {
-		try {
-			return customerPersistence.retrieveCustomerAccountActionDetails(
-					accountId, transactionDate);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
 	}
 
 	public Date getLastMeetingDateForCustomer(Integer customerId)
@@ -175,21 +95,10 @@ public class BulkEntryBusinessService extends BusinessService {
 		}
 	}
 
-	public List<PrdOfferingBO> getLoanOfferingBOForCustomer(
-			String customerSearchId, Date trxnDate) throws ServiceException {
-		try {
-			return new LoanPrdPersistence().getLoanOfferingForCustomer(
-					customerSearchId, trxnDate);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
-		}
-	}
-
 	public void saveLoanAccount(
 			LoanAccountsProductView loanAccountsProductView, Short personnelId,
 			String recieptId, Short paymentId, Date receiptDate,
-			Date transactionDate) throws BulkEntryAccountUpdateException,
-			ServiceException {
+			Date transactionDate) throws ServiceException {
 		for (LoanAccountView accountView : loanAccountsProductView
 				.getLoanAccountViews()) {
 			Integer accountId = accountView.getAccountId();
@@ -209,7 +118,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			Short personnelId, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate,
 			boolean isCenterGroupIndvAccount, Integer customerId)
-			throws BulkEntryAccountUpdateException, ServiceException {
+			throws ServiceException {
 		Integer accountId = accountView.getAccountId();
 		PaymentData accountPaymentDataView = getSavingsAccountPaymentData(
 				accountView, customerId, personnelId, recieptId, paymentId,
@@ -220,7 +129,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	public void saveSavingsWithdrawalAccount(SavingsAccountView accountView,
 			Short personnelId, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate, Integer customerId)
-			throws BulkEntryAccountUpdateException, ServiceException {
+			throws ServiceException {
 		if (null != accountView) {
 			Integer accountId = accountView.getAccountId();
 			if (null != accountId) {
@@ -235,8 +144,7 @@ public class BulkEntryBusinessService extends BusinessService {
 	public void saveCustomerAccountCollections(
 			CustomerAccountView customerAccountView, Short personnelId,
 			String recieptId, Short paymentId, Date receiptDate,
-			Date transactionDate) throws BulkEntryAccountUpdateException,
-			ServiceException {
+			Date transactionDate) throws ServiceException {
 		Integer accountId = customerAccountView.getAccountId();
 		PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(
 				customerAccountView.getAccountActionDates(),
@@ -247,25 +155,18 @@ public class BulkEntryBusinessService extends BusinessService {
 			account = getAccount(accountId, AccountTypes.CUSTOMERACCOUNT);
 			account.applyPayment(accountPaymentDataView);
 		} catch (AccountException ae) {
-			throw new BulkEntryAccountUpdateException("errors.update", ae,
-					new String[] { account.getGlobalAccountNum() });
-		} catch (ServiceException se) {
-			throw new BulkEntryAccountUpdateException("errors.update", se,
+			throw new ServiceException("errors.update", ae,
 					new String[] { account.getGlobalAccountNum() });
 		}
 	}
 
 	public void saveAttendance(Integer customerId, Date meetingDate,
-			Short attendance) throws BulkEntryAccountUpdateException,
-			ServiceException {
+			Short attendance) throws ServiceException {
 		ClientBO client = (ClientBO) getCustomer(customerId);
 		try {
 			client.handleAttendance(meetingDate, attendance);
-		} catch (ServiceException se) {
-			throw new BulkEntryAccountUpdateException("errors.update", se,
-					new String[] { client.getGlobalCustNum() });
 		} catch (CustomerException e) {
-			throw new BulkEntryAccountUpdateException("errors.update", e,
+			throw new ServiceException("errors.update", e,
 					new String[] { client.getGlobalCustNum() });
 		}
 	}
@@ -286,7 +187,8 @@ public class BulkEntryBusinessService extends BusinessService {
 						.getCustomerAccountWithAccountActionsInitialized(accountId);
 			return null;
 		} catch (PersistenceException e) {
-			throw new ServiceException(e);
+			throw new ServiceException("errors.update", e,
+					new String[] { accountId.toString() });
 		}
 	}
 
@@ -294,18 +196,24 @@ public class BulkEntryBusinessService extends BusinessService {
 		try {
 			return bulkEntryPersistanceService.getCustomer(customerId);
 		} catch (PersistenceException pe) {
-			throw new ServiceException(pe);
+			throw new ServiceException("errors.update", pe,
+					new String[] { customerId.toString() });
 		}
 	}
 
 	private PersonnelBO getPersonnel(Short personnelId) throws ServiceException {
-		return bulkEntryPersistanceService.getPersonnel(personnelId);
+		try {
+			return bulkEntryPersistanceService.getPersonnel(personnelId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException("errors.update", pe,
+					new String[] { personnelId.toString() });
+		}
 	}
 
 	private void saveLoanDisbursement(Integer accountId, Short personnelId,
 			String recieptId, Short paymentId, Date transactionDate,
 			String disbursementAmountEntered, Date receiptDate)
-			throws BulkEntryAccountUpdateException {
+			throws ServiceException {
 		if (Double.valueOf(disbursementAmountEntered).doubleValue() > 0) {
 			LoanBO account = null;
 			try {
@@ -314,10 +222,7 @@ public class BulkEntryBusinessService extends BusinessService {
 				account.disburseLoan(recieptId, transactionDate, paymentId,
 						getPersonnel(personnelId), receiptDate, paymentId);
 			} catch (AccountException ae) {
-				throw new BulkEntryAccountUpdateException("errors.update", ae,
-						new String[] { account.getGlobalAccountNum() });
-			} catch (ServiceException se) {
-				throw new BulkEntryAccountUpdateException("errors.update", se,
+				throw new ServiceException("errors.update", ae,
 						new String[] { account.getGlobalAccountNum() });
 			}
 		}
@@ -327,8 +232,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			String recieptId, Short paymentId, Date receiptDate,
 			Date transactionDate,
 			LoanAccountsProductView loanAccountsProductView,
-			LoanAccountView loanAccountView)
-			throws BulkEntryAccountUpdateException, ServiceException {
+			LoanAccountView loanAccountView) throws ServiceException {
 		Double amount = Double.valueOf(loanAccountsProductView
 				.getEnteredAmount());
 		if (amount > 0.0) {
@@ -349,10 +253,7 @@ public class BulkEntryBusinessService extends BusinessService {
 				account = getAccount(accountId, AccountTypes.LOANACCOUNT);
 				account.applyPayment(paymentData);
 			} catch (AccountException ae) {
-				throw new BulkEntryAccountUpdateException("errors.update", ae,
-						new String[] { account.getGlobalAccountNum() });
-			} catch (ServiceException se) {
-				throw new BulkEntryAccountUpdateException("errors.update", se,
+				throw new ServiceException("errors.update", ae,
 						new String[] { account.getGlobalAccountNum() });
 			}
 		}
@@ -370,17 +271,13 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	private void saveSavingsAccountPayment(Integer accountId,
-			PaymentData accountPaymentDataView)
-			throws BulkEntryAccountUpdateException {
+			PaymentData accountPaymentDataView) throws ServiceException {
 		AccountBO account = null;
 		try {
 			account = getAccount(accountId, AccountTypes.SAVINGSACCOUNT);
 			account.applyPayment(accountPaymentDataView);
 		} catch (AccountException ae) {
-			throw new BulkEntryAccountUpdateException("errors.update", ae,
-					new String[] { account.getGlobalAccountNum() });
-		} catch (ServiceException se) {
-			throw new BulkEntryAccountUpdateException("errors.update", se,
+			throw new ServiceException("errors.update", ae,
 					new String[] { account.getGlobalAccountNum() });
 		}
 	}
@@ -416,18 +313,14 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	private void saveSavingsWithdrawal(Integer accountId,
-			PaymentData accountPaymentDataView)
-			throws BulkEntryAccountUpdateException {
+			PaymentData accountPaymentDataView) throws ServiceException {
 		SavingsBO account = null;
 		try {
 			account = (SavingsBO) getAccount(accountId,
 					AccountTypes.SAVINGSACCOUNT);
 			account.withdraw(accountPaymentDataView);
 		} catch (AccountException ae) {
-			throw new BulkEntryAccountUpdateException("errors.update", ae,
-					new String[] { account.getGlobalAccountNum() });
-		} catch (ServiceException se) {
-			throw new BulkEntryAccountUpdateException("errors.update", se,
+			throw new ServiceException("errors.update", ae,
 					new String[] { account.getGlobalAccountNum() });
 		}
 	}

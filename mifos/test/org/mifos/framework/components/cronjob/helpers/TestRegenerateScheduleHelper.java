@@ -65,8 +65,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		regenerateScheduleHelper = new RegenerateScheduleHelper(
-				new RegenerateScheduleTask());
+		RegenerateScheduleTask regenerateScheduleTask = new RegenerateScheduleTask();
+		regenerateScheduleHelper = (RegenerateScheduleHelper) regenerateScheduleTask
+				.getTaskHelper();
 		userContext = new UserContext();
 		userContext.setId(new Short("1"));
 		userContext.setLocaleId(new Short("1"));

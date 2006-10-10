@@ -60,7 +60,6 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -137,19 +136,14 @@ public class BulkEntryPersistanceService extends PersistenceService {
 		return bulkEntryCache.getCustomer(customerId);
 	}
 
-	public PersonnelBO getPersonnel(Short personnelId) throws ServiceException {
-
-		try {
-			if (!bulkEntryCache.isPersonnelPresent(personnelId)) {
-				PersonnelBO personnel = new PersonnelPersistence()
-						.getPersonnel(personnelId);
-				bulkEntryCache.addPersonnel(personnelId, personnel);
-			}
-			return bulkEntryCache.getPersonnel(personnelId);
-		} catch (PersistenceException e) {
-			throw new ServiceException(e);
+	public PersonnelBO getPersonnel(Short personnelId)
+			throws PersistenceException {
+		if (!bulkEntryCache.isPersonnelPresent(personnelId)) {
+			PersonnelBO personnel = new PersonnelPersistence()
+					.getPersonnel(personnelId);
+			bulkEntryCache.addPersonnel(personnelId, personnel);
 		}
-
+		return bulkEntryCache.getPersonnel(personnelId);
 	}
 
 }

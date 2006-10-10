@@ -4,8 +4,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Query;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
@@ -21,8 +23,13 @@ import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.cronjobs.SchedulerConstants;
+import org.mifos.framework.components.cronjobs.business.Task;
+import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
 import org.mifos.framework.components.cronjobs.helpers.ApplyCustomerFeeHelper;
 import org.mifos.framework.components.cronjobs.helpers.ApplyCustomerFeeTask;
+import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -87,8 +94,9 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
 				center.getCustomerId());
-		ApplyCustomerFeeHelper customerFeeHelper = new ApplyCustomerFeeHelper(
-				new ApplyCustomerFeeTask());
+		ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
+		ApplyCustomerFeeHelper customerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask
+				.getTaskHelper();
 		customerFeeHelper.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
@@ -186,6 +194,45 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 						.getDateWithoutTimeStamp(periodicFees
 								.getLastAppliedDate().getTime()));
 		}
+	}
+
+	public void testExecuteTask() throws PersistenceException, CronJobException {
+		ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
+		applyCustomerFeeTask.name = "ApplyCustomerFeeTask";
+		ApplyCustomerFeeHelper applyCustomerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask
+				.getTaskHelper();
+		applyCustomerFeeHelper.executeTask();
+
+		Query query = HibernateUtil.getSessionTL().createQuery(
+				"from org.mifos.framework.components.cronjobs.business.Task");
+		List<Task> tasks = query.list();
+		assertNotNull(tasks);
+		assertEquals(1, tasks.size());
+		for (Task task : tasks) {
+			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task
+					.getStatus());
+			assertEquals("ApplyCustomerFeeTask", task.getTask());
+			assertEquals(SchedulerConstants.FINISHEDSUCCESSFULLY, task
+					.getDescription());
+			TestObjectFactory.removeObject(task);
+		}
+
+	}
+
+	public void testExecuteFailure() {
+		ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
+		applyCustomerFeeTask.name = "ApplyCustomerFeeTask";
+		ApplyCustomerFeeHelper applyCustomerFeeHelper = new ApplyCustomerFeeHelper(
+				applyCustomerFeeTask);
+		TestObjectFactory.simulateInvalidConnection();
+		applyCustomerFeeHelper.executeTask();
+		HibernateUtil.closeSession();
+
+		Query query = HibernateUtil.getSessionTL().createQuery(
+				"from org.mifos.framework.components.cronjobs.business.Task");
+		List<Task> tasks = query.list();
+		assertEquals(0, tasks.size());
+
 	}
 
 	private java.sql.Date offSetDate(Date date, int noOfDays) {

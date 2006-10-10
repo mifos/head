@@ -25,6 +25,7 @@ public class SavingsBusinessService extends BusinessService {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
+	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
