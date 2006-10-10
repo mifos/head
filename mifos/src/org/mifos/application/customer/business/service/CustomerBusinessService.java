@@ -470,7 +470,7 @@ public class CustomerBusinessService extends BusinessService {
 			Short recordLoanOfficerId) throws ServiceException {
 		if (!isPermissionAllowed(newState, userContext, flagSelected,
 				recordOfficeId, recordLoanOfficerId))
-			throw new SecurityException(
+			throw new ServiceException(
 					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
 	}
 

@@ -44,14 +44,7 @@ import org.mifos.framework.exceptions.ApplicationException;
  */
 public class CustomerException extends ApplicationException{
 	
-	public CustomerException(String key, Throwable cause, Object[] values) {
-		super(key, cause, values);
-		// TODO Auto-generated constructor stub
-	}
-	/** Simple Constructor for CustomerException*/
-	public CustomerException() {
-		super();
-	}
+	
 	/** Constructor for CustomerException
 	 * @param key
 	 */
@@ -74,13 +67,8 @@ public class CustomerException extends ApplicationException{
 		super(cause);
 	}
 	
+	
 	/** Constructor for CustomerException
-	 * @param values
-	 */
-	public CustomerException(Object[] values) {
-		super(values);
-	}
-/** Constructor for CustomerException
 	 * @param cause
 	 */
 	public CustomerException(String key ,Throwable cause) {

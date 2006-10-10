@@ -41,6 +41,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -589,7 +590,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
-		savings.generateAndUpdateDepositActionsForClient(client1);
+		savings.generateAndUpdateDepositActionsForClient(new ClientPersistence().getClient(client1.getCustomerId()));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 		assertEquals(10, savings.getAccountActionDates().size());

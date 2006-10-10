@@ -102,8 +102,7 @@
                   <mifos:mifoslabel name="Group.createpagehead3" bundle="GroupUIResources"/> </td>
                 </tr>
               </table>
-             <office:listOffices methodName="load" actionName="groupCustAction.do" onlyBranchOffices="yes"/>
-
+              <office:OfficeListTag methodName="load" actionName="groupCustAction.do" flowKey="${requestScope.currentFlowKey}" onlyBranchOffices="yes"/>
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" class="blueline">&nbsp;</td>

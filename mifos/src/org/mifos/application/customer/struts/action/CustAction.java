@@ -62,6 +62,7 @@ import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.PositionEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.struts.actionforms.CustActionForm;
 import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
@@ -273,7 +274,7 @@ public class CustAction extends SearchAction {
 			Short recordLoanOfficerId) throws ApplicationException {
 		if (!isPermissionAllowed(newState, userContext, flagSelected,
 				recordOfficeId, recordLoanOfficerId))
-			throw new SecurityException(
+			throw new CustomerException(
 					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
 	}
 

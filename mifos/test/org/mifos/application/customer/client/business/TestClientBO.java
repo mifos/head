@@ -6,9 +6,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
@@ -89,6 +91,87 @@ public class TestClientBO extends MifosTestCase {
 		super.tearDown();
 	}
 
+	public void testGenerateScheduleForClient_CenterSavingsAccount_OnChangeStatus()throws Exception{
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CENTERS);
+		createParentObjects(CustomerStatus.GROUP_ACTIVE);
+		accountBO = TestObjectFactory.createSavingsAccount("globalNum", center, AccountState.SAVINGS_ACC_APPROVED.getValue(), new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
+		client = createClient(CustomerStatus.CLIENT_PENDING);
+		HibernateUtil.closeSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertEquals(0,accountBO.getAccountActionDates().size());
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		client.setUserContext(TestObjectFactory.getContext());
+		client.changeStatus(CustomerStatus.CLIENT_ACTIVE.getValue(), null, "clientActive");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertNotNull(accountBO.getAccountActionDates());
+
+		assertEquals(10,accountBO.getAccountActionDates().size());
+		for(AccountActionDateEntity actionDate: accountBO.getAccountActionDates()){
+			assertEquals(client.getCustomerId(),actionDate.getCustomer().getCustomerId());
+			assertTrue(true);
+		}
+		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());		
+	}
+	
+	public void testGenerateScheduleForClient_GroupSavingsAccount_OnChangeStatus()throws Exception{
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.GROUPS);
+		createParentObjects(CustomerStatus.GROUP_ACTIVE);
+		accountBO = TestObjectFactory.createSavingsAccount("globalNum", group, AccountState.SAVINGS_ACC_APPROVED.getValue(), new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
+		client = createClient(CustomerStatus.CLIENT_PENDING);
+		HibernateUtil.closeSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertEquals(0,accountBO.getAccountActionDates().size());
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		client.setUserContext(TestObjectFactory.getContext());
+		client.changeStatus(CustomerStatus.CLIENT_ACTIVE.getValue(), null, "clientActive");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertNotNull(accountBO.getAccountActionDates());
+
+		assertEquals(10,accountBO.getAccountActionDates().size());
+		for(AccountActionDateEntity actionDate: accountBO.getAccountActionDates()){
+			assertEquals(client.getCustomerId(),actionDate.getCustomer().getCustomerId());
+			assertTrue(true);
+		}
+		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());		
+	}
+	
+	public void testGenerateScheduleForClient_OnClientCreate()throws Exception{
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.GROUPS);
+		createParentObjects(CustomerStatus.GROUP_ACTIVE);
+		accountBO = TestObjectFactory.createSavingsAccount("globalNum", center, AccountState.SAVINGS_ACC_APPROVED.getValue(), new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
+		assertEquals(0,accountBO.getAccountActionDates().size());
+		client = createClient(CustomerStatus.CLIENT_ACTIVE);
+		HibernateUtil.closeSession();
+
+		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+				accountBO.getAccountId());
+		assertEquals(10,accountBO.getAccountActionDates().size());
+		for(AccountActionDateEntity actionDate: accountBO.getAccountActionDates()){
+			assertEquals(client.getCustomerId(),actionDate.getCustomer().getCustomerId());
+			assertTrue(true);
+		}
+		
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());		
+	}
+	
 	public void testFailure_InitialSavingsOfferingAtCreate()throws Exception{
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		String name = "client1";
@@ -265,7 +348,6 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testSuccessfulCreateInActiveState_WithAssociatedSavingsOffering() throws Exception {
-		try{
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("offering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		HibernateUtil.closeSession();
 		List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
@@ -280,27 +362,21 @@ public class TestClientBO extends MifosTestCase {
 				null, null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
 		HibernateUtil.commitTransaction();
-		System.out.println("---after comit");
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		assertEquals(name, client.getDisplayName());
 		assertEquals(1, client.getOfferingsAssociatedInCreate().size());
 		assertEquals(2, client.getAccounts().size());
-		System.out.println("-client.getAccounts().size(): "+ client.getAccounts().size());
 		for(AccountBO account: client.getAccounts()){
 			if(account instanceof SavingsBO){
 				assertEquals(savingsOffering1.getPrdOfferingId(), ((SavingsBO)account).getSavingsOffering().getPrdOfferingId());
-				System.out.println("-----account.getGlobalAccountNum(): "+ account.getGlobalAccountNum());
 				assertNotNull(account.getGlobalAccountNum());
 				assertTrue(true);
 			}
 		}
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		savingsOffering1 = null;
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+		savingsOffering1 = null;		
 	}
 	
 	public void testSavingsAccountOnChangeStatusToActive() throws Exception {
@@ -349,7 +425,7 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-		createParentObjects(); 
+		createParentObjects(CustomerStatus.GROUP_PARTIAL); 
 		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
@@ -366,7 +442,7 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			createParentObjects(); 
+			createParentObjects(CustomerStatus.GROUP_PARTIAL); 
 			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("2")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			assertFalse("Client Created", true);
@@ -382,7 +458,7 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			createParentObjects(); 
+			createParentObjects(CustomerStatus.GROUP_PARTIAL); 
 			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("3")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			assertFalse("Client Created", true);
@@ -920,17 +996,21 @@ public class TestClientBO extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE.getValue(),
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+		client = createClient(CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.closeSession();
 	}
 	
-	private void createParentObjects() {
+	private ClientBO createClient(CustomerStatus clientStatus){
+		return TestObjectFactory.createClient("Client", clientStatus.getValue(),
+				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+	}
+	
+	private void createParentObjects(CustomerStatus groupStatus) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("7"),
+		group = TestObjectFactory.createGroup("Group", groupStatus.getValue(),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		HibernateUtil.closeSession();
 	}

@@ -42,7 +42,10 @@
                     <table border="0" cellspacing="0" cellpadding="0">
                       <tr>
                         <td><img src="pages/framework/images/timeline/orangearrow.gif" width="17" height="17"></td>
-                        <td class="timelineboldorangelight"><mifos:mifoslabel name="Center.UserInformation" bundle="CenterUIResources"></mifos:mifoslabel></td>
+                        <td class="timelineboldorangelight">
+                        	<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
+							<mifos:mifoslabel name="Center.Information" bundle="CenterUIResources" />
+                        </td>
                       </tr>
                     </table>
                   </td>

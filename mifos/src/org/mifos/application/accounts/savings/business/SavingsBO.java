@@ -33,6 +33,7 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -850,7 +851,7 @@ public class SavingsBO extends AccountBO {
 		return interestAmount;
 	}
 
-	public void generateAndUpdateDepositActionsForClient(CustomerBO client)
+	public void generateAndUpdateDepositActionsForClient(ClientBO client)
 			throws AccountException {
 		if (client.getCustomerMeeting().getMeeting() != null) {
 			if (!(getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.GROUP_LEVEL_ID && getRecommendedAmntUnit()
@@ -872,7 +873,6 @@ public class SavingsBO extends AccountBO {
 			MeetingBO depositSchedule = getCustomer().getCustomerMeeting()
 					.getMeeting();
 
-			depositSchedule.setMeetingStartDate(Calendar.getInstance());
 			if (getCustomer().getCustomerLevel().getId().equals(
 					CustomerConstants.CLIENT_LEVEL_ID)
 					|| (getCustomer().getCustomerLevel().getId().equals(
@@ -885,7 +885,7 @@ public class SavingsBO extends AccountBO {
 				List<CustomerBO> children;
 				try {
 					children = getCustomer().getChildren(CustomerLevel.CLIENT,
-							ChildrenStateType.OTHER_THAN_CLOSED);
+							ChildrenStateType.ACTIVE_AND_ONHOLD);
 				} catch (CustomerException ce) {
 					throw new AccountException(ce);
 				}
@@ -898,13 +898,16 @@ public class SavingsBO extends AccountBO {
 
 	private void generateDepositAccountActions(CustomerBO customer,
 			MeetingBO meeting) throws AccountException {
+		Date oldMeetingStartDate = meeting.getStartDate();
+		meeting.setStartDate(DateUtils.getCurrentDateWithoutTimeStamp());
+		
 		List<Date> depositDates = null;
 		try {
 			depositDates = meeting.getAllDates((short) 10);
 		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}
-
+		meeting.setStartDate(oldMeetingStartDate);
 		short installmentNumber = 1;
 		for (Date dt : depositDates) {
 			AccountActionDateEntity actionDate = helper.createActionDateObject(

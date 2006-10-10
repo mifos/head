@@ -60,10 +60,12 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
+	@Override
 	protected BusinessService getService() throws ServiceException {
 		return getSavingsService();
 	}
 
+	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
@@ -115,8 +117,11 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 	public ActionForward reLoad(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
+		SavingsBO savingsInSession = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
+		SavingsBO savings = getSavingsService().findById(savingsInSession.getAccountId());
+		savings.setVersionNo(savingsInSession.getVersionNo());
+		savingsInSession=null;
 		logger.debug("In SavingsDepositWithdrawalAction::reload(), accountId: "
 				+ savings.getAccountId());
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
@@ -178,6 +183,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				Constants.BUSINESS_KEY, request);
 		SavingsBO savings = getSavingsService().findById(
 				savedAccount.getAccountId());
+		savings.setVersionNo(savedAccount.getVersionNo());
 		logger
 				.debug("In SavingsDepositWithdrawalAction::makePayment(), accountId: "
 						+ savings.getAccountId());

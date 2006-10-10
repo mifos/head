@@ -172,6 +172,7 @@ public class ClientBO extends CustomerBO {
 			validateFieldsForActiveClient(loanOfficerId, meeting);
 			this.setCustomerActivationDate(this.getCreatedDate());
 			createAccountsForClient();
+			createDepositSchedule();
 		}
 		generateSearchId();
 	}
@@ -379,6 +380,7 @@ public class ClientBO extends CustomerBO {
 			this.setCustomerActivationDate(new Date());
 			createAccountsForClient();
 			persistSavingAccounts();
+			createDepositSchedule();
 		}
 	}
 	
@@ -670,7 +672,7 @@ public class ClientBO extends CustomerBO {
 							values);
 				}
 			} catch (ConfigurationException ce) {
-				throw new CustomerException();
+				throw new CustomerException(ce);
 			} catch (PersistenceException e) {
 				throw new CustomerException(e);
 			}
@@ -844,4 +846,22 @@ public class ClientBO extends CustomerBO {
 				.getLoanCycleNumber()
 				+ difference);
 	}
+	
+	private void createDepositSchedule() throws CustomerException{
+		try{
+			if(getParentCustomer()!=null){
+				List<SavingsBO> savingsList = new CustomerPersistence().retrieveSavingsAccountForCustomer(getParentCustomer().getCustomerId());
+				if(getParentCustomer().getParentCustomer()!=null)
+					savingsList.addAll(new CustomerPersistence().retrieveSavingsAccountForCustomer(getParentCustomer().getParentCustomer().getCustomerId()));
+				for(SavingsBO savings : savingsList){
+					savings.setUserContext(getUserContext());
+					savings.generateAndUpdateDepositActionsForClient(this);				
+				}
+			}
+		}catch(PersistenceException pe){
+			throw new CustomerException(pe);
+		}catch(AccountException ae){
+			throw new CustomerException(ae);
+		}
+	}	
 }

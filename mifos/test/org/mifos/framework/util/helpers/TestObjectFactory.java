@@ -710,7 +710,7 @@ public class TestObjectFactory {
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		return createSavingsOffering(offeringName, shortName, applicableTo.getValue(),
 						new Date(System.currentTimeMillis()), Short
-								.valueOf("2"), 300.0, Short.valueOf("1"), 24.0,
+								.valueOf("2"), 300.0, RecommendedAmountUnit.PERINDIVIDUAL.getValue(), 24.0,
 						200.0, 200.0, savingsTypeId.getValue(), InterestCalcType.MINIMUM_BALANCE.getValue(),
 						meetingIntCalc, meetingIntPost);
 	}
