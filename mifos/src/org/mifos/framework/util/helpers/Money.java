@@ -58,18 +58,6 @@ public final class Money implements Serializable {
 
 	private final BigDecimal amount;
 
-	/**
-	 * In the constructor we are not creating a new MifosCurrency object because
-	 * even MifosCurrency is immutable.
-	 * 
-	 */
-	@Deprecated
-	public Money(MifosCurrency currency, double amount) {
-		this.currency = currency;
-		this.amount = setScale(new BigDecimal(amount));
-
-	}
-
 	public Money(MifosCurrency currency, String amount) {
 		this.currency = currency;
 		if (amount == null || "".equals(amount.trim()))
@@ -79,7 +67,8 @@ public final class Money implements Serializable {
 	}
 
 	public Money(String amount) {
-		this.currency = Configuration.getInstance().getSystemConfig().getCurrency();
+		this.currency = Configuration.getInstance().getSystemConfig()
+				.getCurrency();
 		if (amount == null || "".equals(amount.trim()))
 			this.amount = null;
 
@@ -96,20 +85,21 @@ public final class Money implements Serializable {
 		this.currency = currency;
 		this.amount = setScale(amount);
 	}
-	
+
 	public Money(BigDecimal amount) {
-		this.currency = Configuration.getInstance().getSystemConfig().getCurrency();
+		this.currency = Configuration.getInstance().getSystemConfig()
+				.getCurrency();
 		this.amount = amount;
 
 	}
-
 
 	/**
 	 * This creates a Money object with currency set to MFICurrency and amount
 	 * set to zero.
 	 */
 	public Money() {
-		this.currency = Configuration.getInstance().getSystemConfig().getCurrency();
+		this.currency = Configuration.getInstance().getSystemConfig()
+				.getCurrency();
 		this.amount = setScale(new BigDecimal(0));
 
 	}
@@ -225,7 +215,6 @@ public final class Money implements Serializable {
 	 * will round this to a whole number using ceil mode which will result in
 	 * 285 and then multiply 285 by 0.5 resulting in 142.5.
 	 * 
-	 * @return
 	 */
 	public static Money round(Money money) {
 		if (null != money) {
@@ -253,7 +242,6 @@ public final class Money implements Serializable {
 	 * method of BigDecimal because it would return false for numbers like 10.0
 	 * and 10.00 instead we should use compareTo.
 	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -275,24 +263,16 @@ public final class Money implements Serializable {
 
 	private BigDecimal setScale(BigDecimal amount) {
 		if (null != amount && null != currency) {
-			/*
-			 * if(this.currency.getRoundingMode().equals(MifosCurrency.CIEL_MODE) )
-			 * amount = amount.setScale(currency.getDefaultDigitsAfterDecimal(),
-			 * RoundingMode.CEILING); else
-			 * if(this.currency.getRoundingMode().equals(MifosCurrency.FLOOR_MODE) )
-			 * amount = amount.setScale(currency.getDefaultDigitsAfterDecimal(),
-			 * RoundingMode.FLOOR); else amount = amount;
-			 */
 			amount = amount.setScale(currency.getDefaultDigitsAfterDecimal(),
 					RoundingMode.HALF_UP);
 		}
 
 		return amount;
 	}
-	
+
 	@Override
 	public String toString() {
-		if(amount != null && currency != null)
+		if (amount != null && currency != null)
 			return amount.toString();
 		return "0";
 	}
