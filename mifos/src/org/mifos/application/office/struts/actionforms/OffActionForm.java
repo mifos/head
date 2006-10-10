@@ -16,6 +16,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.exceptions.OfficeException;
+import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
@@ -154,10 +155,15 @@ public class OffActionForm extends BaseActionForm {
 			actionErrors.add(OfficeConstants.OFFICETYPE, new ActionMessage(
 					OfficeConstants.ERRORMANDATORYFIELD, getLocaleString(
 							OfficeConstants.OFFICETYPE, userContext)));
-		if (StringUtils.isNullOrEmpty(parentOfficeId))
-			actionErrors.add(OfficeConstants.PARENTOFFICE, new ActionMessage(
+		 if(!StringUtils.isNullOrEmpty(officeLevel)&&officeLevel.equals("1"));
+		 else 
+			 {
+			 
+			 		if (StringUtils.isNullOrEmpty(parentOfficeId))
+				 	actionErrors.add(OfficeConstants.PARENTOFFICE, new ActionMessage(
 					OfficeConstants.ERRORMANDATORYFIELD, getLocaleString(
 							OfficeConstants.PARENTOFFICE, userContext)));
+			 }
 	}
 
 	private String getLocaleString(String key, UserContext userContext) {

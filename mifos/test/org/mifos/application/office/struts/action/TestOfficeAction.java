@@ -1,4 +1,4 @@
-package org.mifos.application.office.struts;
+package org.mifos.application.office.struts.action;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -227,6 +227,27 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(officeBO);
 	}
 
+	public void testEditPreviewHO()throws Exception{
+		
+		addActionMethod( Methods.editpreview.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		OfficeBO headoffice = TestObjectFactory.getOffice(Short.valueOf("1"));
+		addRequestParameter("officeName","RAJOFFICE");
+		addRequestParameter("shortName",headoffice.getShortName());
+		addRequestParameter("officeLevel",headoffice.getOfficeLevel().getValue().toString());
+		addRequestParameter("parentOfficeId","");
+		addRequestParameter("officeStatus",headoffice.getOfficeStatus().getValue().toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.editpreview_success.toString());		
+		
+	}
+	
+	private void addActionMethod( String method){
+		setRequestPathInfo("/offAction.do");
+		addRequestParameter("method",method);
+	}
 	private OfficeBO createLoadOffice() throws Exception{
 		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,

@@ -100,14 +100,40 @@ function getOffice(officeid){
 								maxlength="4" name="offActionForm"></mifos:mifosalphanumtext></td>
 						</tr>
 						<tr class="fontnormal">
-							<td align="right"><mifos:mifoslabel name="Office.labelOfficeType"
-								mandatory="yes" /></td>
-							<td><mifos:select name="offActionForm" property="officeLevel"
+							<td align="right">
+							<c:choose>
+							<c:when test="${offActionForm.officeLevel eq OfficeLevel.HEADOFFICE.value}">
+							<mifos:mifoslabel name="Office.labelOfficeType"
+								 />
+							</c:when>
+							<c:otherwise>  
+							<mifos:mifoslabel name="Office.labelOfficeType"
+								mandatory="yes" />
+							</c:otherwise>
+							
+							</c:choose>
+								</td>
+							<td>
+							
+							<c:choose>
+							<c:when test="${offActionForm.officeLevel eq OfficeLevel.HEADOFFICE.value ||offActionForm.officeLevel eq OfficeLevel.BRANCHOFFICE.value}">
+							  <mifos:select name="offActionForm" property="officeLevel" disabled="true"
+								size="1" >
+									<html-el:option value="${BusinessKey.level.id}">${BusinessKey.level.name}</html-el:option>
+							</mifos:select>
+							
+							</c:when>
+							<c:otherwise>
+							<mifos:select name="offActionForm" property="officeLevel"
 								size="1" onchange="papulateParent()">
 								<c:forEach var="levelList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficeLevelList')}" >
 									<html-el:option value="${levelList.levelId}">${levelList.levelName}</html-el:option>
 								</c:forEach>
-							</mifos:select></td>
+							</mifos:select>
+							</c:otherwise>
+							</c:choose>
+							
+							</td>
 						</tr>
 						<tr class="fontnormal">
 							<td align="right"><mifos:mifoslabel
@@ -138,7 +164,7 @@ function getOffice(officeid){
 								name="Office.labelChangeStatus" /></td>
 							<td width="80%"><c:choose>
 								<c:when
-									test='${offActionForm.officeLevel==OfficeLevel.HEADOFFICE}'>
+									test='${offActionForm.officeLevel eq OfficeLevel.HEADOFFICE.value}'>
 									<html-el:select name="offActionForm" disabled="true"
 										property="officeStatus" size="1"
 										value="${offActionForm.officeStatus}">

@@ -425,7 +425,8 @@ public class OfficeBO extends BusinessObject {
 		changeOfficeName(newName);
 		changeOfficeShortName(newShortName);
 		changeStatus(newStatus);
-		updateParent(newParent);
+		if(! this.getOfficeLevel().equals(OfficeLevel.HEADOFFICE))
+			updateParent(newParent);
 		updateLevel(newLevel);
 		updateAddress(address);
 		updateCustomFields(customFileds);
