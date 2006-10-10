@@ -39,8 +39,11 @@ package org.mifos.application.office.business.service;
 
 import java.util.List;
 
+import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -61,5 +64,19 @@ public class OfficeHierarchyBusinessServiceTest extends MifosTestCase {
 			assertTrue(officeLevelEntity.isConfigured());
 		}
 	}
+	public void testGetOfficeLevelsFailure() throws Exception{
+		UserContext userContext = TestObjectFactory.getUserContext();
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			new OfficeHierarchyBusinessService()
+			.getOfficeLevels(userContext.getLocaleId());
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
 
+	}
 }

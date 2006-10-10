@@ -189,10 +189,10 @@ public abstract class FeeBO extends BusinessObject {
 
 	public abstract RateAmountFlag getFeeType();
 
-	public void save() throws ApplicationException, FeeException {
+	public void save() throws  FeeException {
 		try {
 			new FeePersistence().createOrUpdate(this);
-		} catch (HibernateException he) {
+		} catch (PersistenceException he) {
 			throw new FeeException(FeeConstants.FEE_CREATE_ERROR, he);
 		}
 	}

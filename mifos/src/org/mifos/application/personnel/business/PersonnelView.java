@@ -17,16 +17,9 @@ public class PersonnelView extends View {
 		return displayName;
 	}
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
 
 	public Short getPersonnelId() {
 		return personnelId;
-	}
-
-	public void setPersonnelId(Short personnelId) {
-		this.personnelId = personnelId;
 	}
 
 }

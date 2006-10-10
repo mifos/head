@@ -149,8 +149,6 @@
 											<html-el:hidden property="officeId" value="0" />
 										</c:otherwise>
 									</c:choose>
-
-
 									<div id="Layer2"
 										style="border: 1px solid #CECECE; height:100px; width:100%; overflow: auto; padding:6px; margin-top:5px;">
 									<c:forEach items='${LoanOfficerslist}' var="loanOfficer">

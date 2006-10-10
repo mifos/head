@@ -40,6 +40,7 @@ package org.mifos.application.fees.business;
 import java.util.Date;
 import java.util.Set;
 
+import org.hibernate.usertype.UserCollectionType;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -53,6 +54,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class FeeBOTest extends MifosTestCase {
@@ -215,7 +217,37 @@ public class FeeBOTest extends MifosTestCase {
 		assertEquals(true, fee.isCustomerDefaultFee());
 		assertTrue(vaidateDefaultCustomerFee(fee.getFeeLevels(), fee.getCategoryType().getFeeCategory()));
 	}
-	
+	public void testSaveFailure() throws Exception {
+		
+		try{
+		FeeFormulaEntity feeFormula = new FeeFormulaEntity(FeeFormula.AMOUNT);
+
+		FeeBO fees = new RateFeeBO(TestObjectFactory.getUserContext(),"Customer Fee",
+				new CategoryTypeEntity(FeeCategory.CENTER), new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+				getGLCode("7"), 2.0, feeFormula,  false ,new FeePaymentEntity(FeePayment.UPFRONT));;
+		TestObjectFactory.simulateInvalidConnection();
+		fees.save();
+		fail();
+		}
+		catch (FeeException e) {
+			assertTrue(true);
+		}
+	}
+	public void testCreateFeeFailure() throws Exception {
+		
+		try{
+		FeeFormulaEntity feeFormula = new FeeFormulaEntity(FeeFormula.AMOUNT);
+		UserContext uc = TestObjectFactory.getUserContext();
+		TestObjectFactory.simulateInvalidConnection();
+		 new RateFeeBO(uc,"Customer Fee",
+				new CategoryTypeEntity(FeeCategory.CENTER), new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+				getGLCode("7"), 2.0, feeFormula,  false ,new FeePaymentEntity(FeePayment.UPFRONT));;
+		fail();
+		}
+		catch (FeeException e) {
+			assertTrue(true);
+		}
+	}	
 	private boolean vaidateDefaultCustomerFee(Set<FeeLevelEntity> defaultCustomers, FeeCategory feeCategory){
 		boolean bCenter = false;
 		boolean bGroup = false;

@@ -582,6 +582,12 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
   
+		public void testCreateOfficeView(){
+			
+			OfficeView officeView = new OfficeView(Short.valueOf("1"),"headOffice",Integer.valueOf("1"));
+			assertEquals("headOffice",officeView.getOfficeName());
+			assertEquals(Integer.valueOf("1"),officeView.getVersionNo());
+		}
 		private void  resetOffices() throws Exception{
 			OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
 			OfficeBO	areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));

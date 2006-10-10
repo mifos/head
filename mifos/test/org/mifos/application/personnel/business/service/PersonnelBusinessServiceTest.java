@@ -7,6 +7,7 @@ import java.util.List;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.MifosTestCase;
@@ -62,12 +63,25 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 
 	public void testSearch()throws Exception{
 		personnel = createPersonnel();
-		QueryResult queryResult=personnelBusinessService.search(personnel.getUserName(),Short.valueOf("1"),Short.valueOf("1")				);
+		QueryResult queryResult=personnelBusinessService.search(personnel.getUserName(),Short.valueOf("1"),Short.valueOf("1"));
 		
 		assertNotNull(queryResult);
 		assertEquals(1,queryResult.getSize());
 		assertEquals(1,queryResult.get(0,10).size());
 	}
+	public void testSearchFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			personnelBusinessService.search("Raj",Short.valueOf("1"),Short.valueOf("1"));
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
+	}	
 	public void  testGetActiveLoUnderUser()throws Exception{
 		office = TestObjectFactory.getOffice(Short.valueOf("3"));
 		personnel = createPersonnel(office, PersonnelLevel.NON_LOAN_OFFICER);
@@ -76,6 +90,19 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 		assertEquals(1,loanOfficers.size());
 		
 	}
+	public void testGetActiveLoUnderUserFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			personnelBusinessService.getActiveLoUnderUser(Short.valueOf("3"));
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
+	}		
 	private PersonnelBO createPersonnel(OfficeBO office,
 			PersonnelLevel personnelLevel) throws Exception {
 		UserContext userContext = TestObjectFactory.getUserContext();

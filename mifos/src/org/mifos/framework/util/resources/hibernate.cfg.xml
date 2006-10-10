@@ -46,7 +46,6 @@
 
 		<mapping resource="org/mifos/application/office/business/OfficeBO.hbm.xml" />
 		<mapping resource="org/mifos/application/office/business/OfficeAddressEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/office/business/OfficeHierarchyEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/office/business/OfficeLevelEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/office/business/OfficeStatusEntity.hbm.xml" />
 

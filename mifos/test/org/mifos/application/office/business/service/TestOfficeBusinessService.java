@@ -6,7 +6,9 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestOfficeBusinessService extends MifosTestCase {
@@ -25,33 +27,107 @@ public class TestOfficeBusinessService extends MifosTestCase {
 		}
 	}
 
+	public void testGetActiveParentsFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+		 officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE, Short.valueOf("1"));
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
+	}
+
 	public void testGetActiveLevels() throws NumberFormatException,
 			ServiceException {
-
 		assertEquals(4, officeBusinessService.getConfiguredLevels(
 				Short.valueOf("1")).size());
+	}
+	public void testGetActiveLevelsFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			officeBusinessService.getConfiguredLevels(
+					Short.valueOf("1"));
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
 
 	}
 
 	public void testGetOffice() throws Exception {
 		assertNotNull(officeBusinessService.getOffice(Short.valueOf("1")));
 	}
+	public void testGetOfficeFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			officeBusinessService.getOffice(Short.valueOf("1"));
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
 
+	}
 	public void testGetStatusList() throws NumberFormatException,
 			ServiceException {
 		assertEquals(2, officeBusinessService.getStatusList(Short.valueOf("1"))
 				.size());
 	}
+	public void testGetStatusListFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			officeBusinessService.getStatusList(Short.valueOf("1"));
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
 
+	}
 	public void testGetBranchOffices() throws ServiceException {
 		assertEquals(1, officeBusinessService.getBranchOffices().size());
 	}
+	public void testGetBranchOfficesFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			officeBusinessService.getBranchOffices();
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
 
+	}
 	public void testGetOfficesTillBranchOffice() throws ServiceException {
 		assertEquals(2, officeBusinessService.getOfficesTillBranchOffice()
 				.size());
 	}
+	public void testGetOfficesTillBranchOfficeFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			officeBusinessService.getOfficesTillBranchOffice();
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
 
+	}
 	public void testGetChildOffices() throws ServiceException {
 		OfficeBO headOffice = TestObjectFactory.getOffice(Short.valueOf("1"));
 		List<OfficeView> officeList = officeBusinessService
@@ -60,10 +136,40 @@ public class TestOfficeBusinessService extends MifosTestCase {
 		officeList = null;
 		headOffice = null;
 	}
-	public void testGetBranchesUnderUser()throws Exception{
-		
-		List<OfficeBO> officeList =officeBusinessService.getActiveBranchesUnderUser("1.1");
+	public void testGetChildOfficesFailure() throws Exception{
+		OfficeBO headOffice = TestObjectFactory.getOffice(Short.valueOf("1"));
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			 officeBusinessService
+				.getChildOffices(headOffice.getSearchId());
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
+	}
+	public void testGetBranchesUnderUser() throws Exception {
+
+		List<OfficeBO> officeList = officeBusinessService
+				.getActiveBranchesUnderUser("1.1");
 		assertNotNull(officeList);
-		assertEquals(1,officeList.size());
+		assertEquals(1, officeList.size());
+	}
+	public void testGetBranchesUnderUserFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			officeBusinessService
+			.getActiveBranchesUnderUser("1.1");
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
 	}
 }

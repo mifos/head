@@ -30,6 +30,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -717,7 +718,31 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertFalse(personnel.isLocked());
 		assertEquals(0,personnel.getNoOfTries().intValue());
 	}
-	
+
+	public void testUnlockPersonnelFailure() throws Exception{
+		
+		try{
+			personnel = createPersonnel();
+			String password = "WRONG_PASSWORD";
+			login(password);
+			login(password);
+			login(password);
+			login(password);
+			login(password);
+			HibernateUtil.commitTransaction();
+			HibernateUtil.closeSession();
+			personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
+			TestObjectFactory.simulateInvalidConnection();
+			personnel.unlockPersonnel(Short.valueOf("1"));
+		fail();
+		}
+		catch (PersonnelException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
+	}
 	public void testReLoginAfterUnlock() throws Exception {
 		personnel = createPersonnel();
 		String password = "WRONG_PASSWORD";
@@ -742,6 +767,11 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals(0,personnel.getNoOfTries().intValue());
 	}
 
+	public void testPersonnelView() throws Exception{
+		PersonnelView personnelView = new PersonnelView(Short.valueOf("1"),"Raj");
+		assertEquals(Short.valueOf("1"),personnelView.getPersonnelId());
+		assertEquals("Raj",personnelView.getDisplayName());
+	}
 	private PersonnelNotesEntity createNotes(String comment) throws Exception{
 		return new PersonnelNotesEntity(comment, new PersonnelPersistence()
 				.getPersonnel(userContext.getId()), personnel);

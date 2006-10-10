@@ -110,7 +110,7 @@
 										style="border: 1px solid #CECECE; height:100px; width:100%; overflow: auto; padding:6px; margin-top:5px;">
 									<c:forEach items='${LoanOfficerslist}' var="loanOfficer">
 										<html-el:link
-											action="custSearchAction.do?method=get&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
+											action="custSearchAction.do?method=get&officeId=${custSearchActionForm.officeId}&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 											<c:out value="${loanOfficer.displayName}" />
 										</html-el:link>
 										<br>

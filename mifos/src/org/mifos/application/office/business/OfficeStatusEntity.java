@@ -19,7 +19,7 @@ public class OfficeStatusEntity extends MasterDataEntity {
 		try {
 		return  	OfficeStatus.getOfficeStatus(this.getId());
 		} catch (PropertyNotFoundException e) {
-			throw new OfficeException();
+			throw new OfficeException(e);
 		}
 		
 	}

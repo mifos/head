@@ -109,7 +109,7 @@ public class CustSearchAction extends SearchAction {
 				.isCenterHierarchyExists(),
 				request);
 		
-		loadMasterData(userContext.getId(),request);
+		loadMasterData(userContext.getId(),request,actionForm);
 		return mapping
 		.findForward(CustomerSearchConstants.LOADALLBRANCHES_SUCCESS);
 		
@@ -128,7 +128,7 @@ public class CustSearchAction extends SearchAction {
 				.getCustomerConfig(userContext.getBranchId())
 				.isCenterHierarchyExists(),
 				request);
-		loadMasterData(userContext.getId(),request);
+		loadMasterData(userContext.getId(),request,actionForm);
 		return mapping.findForward(CustomerConstants.GETHOMEPAGE_SUCCESS);
 	}
 	@TransactionDemarcate(saveToken = true)
@@ -157,7 +157,7 @@ public class CustSearchAction extends SearchAction {
 					.isCenterHierarchyExists(),
 					request);
 
-		forward =loadMasterData(userContext.getId(),request);
+		forward =loadMasterData(userContext.getId(),request,actionForm);
 		return mapping.findForward(forward);
 	}
 
@@ -202,7 +202,7 @@ public class CustSearchAction extends SearchAction {
 		}
 
 	}
-	private String loadMasterData(Short userId,HttpServletRequest request) throws Exception{
+	private String loadMasterData(Short userId,HttpServletRequest request,CustSearchActionForm form) throws Exception{
 		PersonnelBO personnel = new PersonnelBusinessService()
 		.getPersonnel(userId);
 		SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, personnel
@@ -211,7 +211,7 @@ public class CustSearchAction extends SearchAction {
 		PersonnelLevel.LOAN_OFFICER.getValue()))
 	return  loadLoanOfficer(personnel, request);
 		else
-	return  loadNonLoanOfficer(personnel, request);
+	return  loadNonLoanOfficer(personnel, request,form);
 
 	}
 	private String loadLoanOfficer(PersonnelBO personnel,
@@ -239,7 +239,7 @@ public class CustSearchAction extends SearchAction {
 	}
 
 	private String loadNonLoanOfficer(PersonnelBO personnel,
-			HttpServletRequest request) throws Exception {
+			HttpServletRequest request,CustSearchActionForm form) throws Exception {
 		if (personnel.getOffice().getOfficeLevel().equals(
 				OfficeLevel.BRANCHOFFICE)) {
 			List<PersonnelBO> personnelList = new PersonnelBusinessService()
@@ -247,7 +247,7 @@ public class CustSearchAction extends SearchAction {
 			SessionUtils.setAttribute(CustomerSearchConstants.LOANOFFICERSLIST,
 					personnelList, request);
 			SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD,CustomerSearchConstants.LOADFORWARDNONLOANOFFICER,request);
-
+			form.setOfficeId(personnel.getOffice().getOfficeId().toString());
 			return CustomerSearchConstants.LOADFORWARDNONLOANOFFICER_SUCCESS;
 		} else {
 			SessionUtils.setAttribute(CustomerSearchConstants.OFFICESLIST,

@@ -44,13 +44,6 @@ import org.mifos.framework.exceptions.ApplicationException;
  */
 public class PersonnelException extends ApplicationException{
 	
-	/** Simple Constructor for PersonnelException*/
-	public PersonnelException() {
-		super();
-	}
-	/** Constructor for PersonnelException
-	 * @param key
-	 */
 	public PersonnelException(String key) {
 		super(key);
 	}
@@ -70,12 +63,7 @@ public class PersonnelException extends ApplicationException{
 		super(cause);
 	}
 	
-	/** Constructor for PersonnelException
-	 * @param values
-	 */
-	public PersonnelException(Object[] values) {
-		super(values);
-	}
+
 /** Constructor for PersonnelException
 	 * @param cause
 	 */

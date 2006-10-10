@@ -680,6 +680,18 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		assertFalse(fee.isActive());
 		assertEquals(new Money("200.0"), ((AmountFeeBO) fee).getFeeAmount());
 	}
+	public void testSuccessfulGetFee() throws Exception {
+		fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee",
+				FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/feeaction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("feeId",fee.getFeeId().toString());
+		actionPerform();
+		fee = (FeeBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
+		assertNotNull(fee);
+	}
 
 	public void testSuccessfulUpdate_RateFee() throws Exception {
 		fee = TestObjectFactory.createOneTimeRateFee("One Time Fee",

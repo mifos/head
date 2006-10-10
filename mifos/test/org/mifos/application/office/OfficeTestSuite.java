@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.office.business.TestOfficeBO;
+import org.mifos.application.office.business.TestOfficeStatusEntity;
 import org.mifos.application.office.business.service.OfficeHierarchyBusinessServiceTest;
 import org.mifos.application.office.business.service.TestOfficeBusinessService;
 import org.mifos.application.office.persistence.OfficeHierarchyPersistenceTest;
@@ -26,6 +27,7 @@ public class OfficeTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(OfficeHierarchyPersistenceTest.class);
 		testSuite.addTestSuite(OfficeHierarchyBusinessServiceTest.class);
 		testSuite.addTestSuite(OffHierarchyActionTest.class);
+		testSuite.addTestSuite(TestOfficeStatusEntity.class);
 		return testSuite;
 	}
 }

@@ -46,47 +46,15 @@ import org.mifos.framework.exceptions.ApplicationException;
  */
 public class OfficeException extends ApplicationException {
 	private static final long serialVersionUID=0l;
-	/**
-	 * Dafault constructor
-	 *
-	 */
-	public OfficeException() {
-		super();
-		
-	}
 
-	/**
-	 * Constructor taking message arguments
-	 * @param values array of values
-	 */
-	public OfficeException(Object[] values) {
-		super(values);
-		
-	}
-
-	/**
-	 * Constructor taking key and list of message arguments
-	 * @param key
-	 * @param values
-	 */
 	public OfficeException(String key, Object[] values) {
 		super(key, values);
 		
 	}
-
-	/**
-	 * Constructor taking key
-	 * @param key the key to message resource
-	 */
 	public OfficeException(String key) {
 		super(key);
 		
 	}
-
-	/**
-	 * Constructor taking Throwable as argument
-	 * @param cause
-	 */
 	public OfficeException(Throwable cause) {
 		super(cause);
 		
