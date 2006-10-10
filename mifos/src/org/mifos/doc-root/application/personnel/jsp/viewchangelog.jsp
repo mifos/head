@@ -71,7 +71,7 @@
 		             <mifos:mifoslabel name="Personnel.Admin" bundle="PersonnelUIResources"></mifos:mifoslabel>
 	           	  </a>
 			   /
-			  	  <a href="PersonnelAction.do?method=loadSearch">
+			  	  <a href="PersonAction.do?method=loadSearch">
 			  	  <mifos:mifoslabel name="Personnel.ViewUsers" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			  	  </a> /
 				  <a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${BusinessKey.globalPersonnelNum}"/>">
