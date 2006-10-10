@@ -40,19 +40,46 @@ public class TestMasterBusinessService extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testGetListOfActiveLoanOfficers() throws NumberFormatException, ServiceException {
+	public void testGetListOfActiveLoanOfficers() throws Exception {
 		List loanOfficers = masterService.getListOfActiveLoanOfficers(
 				PersonnelConstants.LOAN_OFFICER, Short.valueOf("3"), Short
 						.valueOf("3"), PersonnelConstants.LOAN_OFFICER);
 		assertEquals(1, loanOfficers.size());
 	}
 
-	public void testGetActiveBranches() throws NumberFormatException, ServiceException {
+	public void testGetListOfActiveLoanOfficersForInvalidConnection()
+			throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.getListOfActiveLoanOfficers(
+					PersonnelConstants.LOAN_OFFICER, Short.valueOf("3"), Short
+							.valueOf("3"), PersonnelConstants.LOAN_OFFICER);
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public void testGetActiveBranches() throws Exception {
 		List branches = masterService.getActiveBranches(Short.valueOf("1"));
 		assertEquals(1, branches.size());
 	}
 
-	public void testGetListOfActiveParentsUnderLoanOfficer() throws NumberFormatException, ServiceException {
+	public void testGetActiveBranchesForInvalidConnection() throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.getActiveBranches(Short.valueOf("1"));
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public void testGetListOfActiveParentsUnderLoanOfficer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		CustomerBO center = TestObjectFactory.createCenter("Center_Active",
@@ -62,6 +89,27 @@ public class TestMasterBusinessService extends MifosTestCase {
 				.getListOfActiveParentsUnderLoanOfficer(Short.valueOf("1"),
 						CustomerConstants.CENTER_LEVEL_ID, Short.valueOf("3"));
 		assertEquals(1, customers.size());
+		TestObjectFactory.cleanUp(center);
+	}
+
+	public void testGetListOfActiveParentsUnderLoanOfficerForInvalidConnection()
+			throws Exception {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		CustomerBO center = TestObjectFactory.createCenter("Center_Active",
+				Short.valueOf("13"), "1.1", meeting, new Date(System
+						.currentTimeMillis()));
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.getListOfActiveParentsUnderLoanOfficer(Short
+					.valueOf("1"), CustomerConstants.CENTER_LEVEL_ID, Short
+					.valueOf("3"));
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
 		TestObjectFactory.cleanUp(center);
 	}
 
@@ -76,7 +124,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 		assertEquals(TestConstants.PAYMENTTYPES_NUMBER, paymentValues.size());
 
 	}
-
+	
 	public void testGetSavingsProductsAsOfMeetingDate() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -105,17 +153,96 @@ public class TestMasterBusinessService extends MifosTestCase {
 		TestObjectFactory.cleanUp(center);
 	}
 
-	public void testRetrievePaymentTypes()throws Exception{
-		List<PaymentTypeEntity> paymentTypeList = masterService.retrievePaymentTypes(Short.valueOf("1"));
-		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
+	public void testGetSavingsProductsAsOfMeetingDateForInvalidConnection()
+			throws Exception {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntCalc = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meetingIntPost = TestObjectFactory
+				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+
+		Date startDate = new Date(System.currentTimeMillis());
+		CustomerBO center = TestObjectFactory.createCenter("Center", Short
+				.valueOf("13"), "1.1", meeting, startDate);
+		SavingsOfferingBO savingsOffering = TestObjectFactory
+				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
+						new Date(System.currentTimeMillis()), Short
+								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
+						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
+						meetingIntCalc, meetingIntPost);
+		AccountBO account = TestObjectFactory.createSavingsAccount("432434",
+				center, Short.valueOf("16"), startDate, savingsOffering);
+
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.getSavingsProductsAsOfMeetingDate(startDate, "1.1",
+					center.getPersonnel().getPersonnelId());
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+
+			HibernateUtil.closeSession();
+		}
+		TestObjectFactory.cleanUp(account);
+		TestObjectFactory.cleanUp(center);
 	}
-	
-	public void testGetSupportedPaymentModes()throws Exception{
-		List<PaymentTypeEntity> paymentTypeList = masterService.getSupportedPaymentModes(Short.valueOf("1"),Short.valueOf("1"));
-		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
+
+	public void testRetrievePaymentTypes() throws Exception {
+		List<PaymentTypeEntity> paymentTypeList = masterService
+				.retrievePaymentTypes(Short.valueOf("1"));
+		assertEquals(TestConstants.PAYMENTTYPES_NUMBER, paymentTypeList.size());
 	}
-	
-	public void testGetMasterEntityName() throws NumberFormatException, PersistenceException, ServiceException {
-		assertEquals("Partial Application",masterService.retrieveMasterEntities(1,Short.valueOf("1")));
+
+	public void testRetrievePaymentTypesForInvalidConnection() throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.retrievePaymentTypes(Short.valueOf("1"));
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public void testGetSupportedPaymentModes() throws Exception {
+		List<PaymentTypeEntity> paymentTypeList = masterService
+				.getSupportedPaymentModes(Short.valueOf("1"), Short
+						.valueOf("1"));
+		assertEquals(TestConstants.PAYMENTTYPES_NUMBER, paymentTypeList.size());
+	}
+
+	public void testGetSupportedPaymentModesForInvalidConnection()
+			throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.getSupportedPaymentModes(Short.valueOf("1"), Short
+					.valueOf("1"));
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public void testGetMasterEntityName() throws NumberFormatException,
+			PersistenceException, ServiceException {
+		assertEquals("Partial Application", masterService
+				.retrieveMasterEntities(1, Short.valueOf("1")));
+	}
+
+	public void testGetMasterEntityNameForInvalidConnection() throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.retrieveMasterEntities(1, Short.valueOf("1"));
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
 	}
 }

@@ -40,18 +40,6 @@ public class MasterDataService extends BusinessService {
 		return null;
 	}
 
-	public EntityMaster retrieveMasterData(String entityName, Short localeId)
-			throws SystemException, ApplicationException {
-		return new MasterPersistence().getLookUpEntity(entityName, localeId);
-	}
-
-	public EntityMaster retrieveMasterData(String entityName, Short localeId,
-			String classPath, String column) throws SystemException,
-			ApplicationException {
-		return new MasterPersistence().getLookUpEntity(entityName, localeId, classPath,
-				column);
-	}
-
 	public List<PersonnelView> getListOfActiveLoanOfficers(Short levelId,
 			Short officeId, Short userId, Short userLevelId)
 			throws ServiceException {
@@ -82,13 +70,6 @@ public class MasterDataService extends BusinessService {
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
-
-	}
-
-	public EntityMaster getMasterData(String entityName, Short localeId)
-			throws ApplicationException, SystemException {
-		return masterPersistenceService
-				.retrieveMasterData(entityName, localeId);
 
 	}
 

@@ -46,20 +46,6 @@ public class MeetingException extends ApplicationException {
 	private static final long   serialVersionUID=000l;
 
 	/**
-	 * Default constructor
-	 */
-	public MeetingException() {
-	}
-
-	/**
-	 * Constructor taking values array as message parameters
-	 * @param values array of objects 
-	 */
-	public MeetingException(Object[] values) {
-		super(values);
-	}
-
-	/**
 	 * Constructor taking cause as parameter
 	 * @param cause Throwable object
 	 */
@@ -75,22 +61,5 @@ public class MeetingException extends ApplicationException {
 		super(key);
 	}
 
-	/**
-	 * Constructor taking the key and values as parameter
-	 * @param key key to message
-	 * @param values array of object to be used in formatting the message 
-	 */
-	public MeetingException(String key, Object[] values) {
-		super(key, values);
-	}
-
-	/**
-	 * Constructor  taking the key and Throwable object as argument
-	 * @param key key to message
-	 * @param cause Throwable object
-	 */
-	public MeetingException(String key, Throwable cause) {
-		super(key, cause);
-	}
-
+		
 }

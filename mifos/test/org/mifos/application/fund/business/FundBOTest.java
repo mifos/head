@@ -4,6 +4,7 @@ import org.mifos.application.fund.exception.FundException;
 import org.mifos.application.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -56,6 +57,24 @@ public class FundBOTest extends MifosTestCase {
 			assertTrue(true);
 			assertEquals(FundConstants.DUPLICATE_FUNDNAME_EXCEPTION,fe.getKey());
 		}
+	}
+	
+	public void testBuildFundForInvalidConnection() throws Exception{
+		
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			fundBO = new FundBO(fundCodeEntity,"Fund-1");
+			fundBO.save();
+			fail();
+		} catch (FundException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+		
+				
+		
 	}
 	
 	public void testBuildFund() throws Exception{

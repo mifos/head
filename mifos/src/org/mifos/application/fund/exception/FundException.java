@@ -4,16 +4,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 public class FundException extends ApplicationException {
 
-	public FundException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public FundException(Object[] values) {
-		super(values);
-		
-	}
-
 	public FundException(Throwable cause) {
 		super(cause);
 		
@@ -24,14 +14,8 @@ public class FundException extends ApplicationException {
 		
 	}
 
-	public FundException(String key, Object[] values) {
-		super(key, values);
-		
-	}
+	
 
-	public FundException(String key, Throwable cause) {
-		super(key, cause);
-		
-	}
+	
 
 }

@@ -165,15 +165,12 @@ public class MasterPersistence extends Persistence {
 
 	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(
 			EntityType entityType) throws PersistenceException {
-		try {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put(MasterConstants.ENTITY_TYPE, entityType
 					.getValue());
 			return (List<CustomFieldDefinitionEntity>) executeNamedQuery(
 					NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
+		
 	}
 	
 	public List<BusinessActivityEntity> retrieveMasterEntities(
@@ -182,13 +179,9 @@ public class MasterPersistence extends Persistence {
 		queryParameters.put("entityType", entityName);
 		queryParameters.put("localeId", localeId);
 		List<BusinessActivityEntity> queryResult = null;
-		try {
-			queryResult = executeNamedQuery(
+		queryResult = executeNamedQuery(
 					NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_VALUE,
 					queryParameters);
-		} catch (Exception he) {
-			throw new PersistenceException(he);
-		}
 		return queryResult;
 	}
 
@@ -198,13 +191,9 @@ public class MasterPersistence extends Persistence {
 		queryParameters.put("lookUpId", entityId);
 		queryParameters.put("localeId", localeId);
 		List queryResult = null;
-		try {
-			queryResult = executeNamedQuery(
+		queryResult = executeNamedQuery(
 					NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_NAME,
 					queryParameters);
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
-		}
 		return (String) queryResult.get(0);
 	}
 	

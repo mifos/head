@@ -22,13 +22,15 @@ public class FundBusinessServiceTest extends MifosTestCase {
 		super.tearDown();
 	}
 	
-	public void testGetFundCodesForInvalidConnection() {
+	public void testGetFundCodesForInvalidConnection() throws Exception {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			assertEquals(5, new FundBusinessService().getFundCodes().size());
 			assertTrue(false);
 		} catch (ServiceException e) {
 			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
 		}
 	}
 
@@ -43,10 +45,37 @@ public class FundBusinessServiceTest extends MifosTestCase {
 		assertEquals(5, funds.size());
 	}
 	
+	public void testGetSourcesOfFundForInvalidConnection() {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			new FundBusinessService().getSourcesOfFund();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+	
 	public void testGetFund() throws Exception {
 		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
 		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
 		assertEquals("Fund1", new FundBusinessService().getFund("Fund1").getFundName());
+		TestObjectFactory.removeObject(fund);
+	}
+	
+	public void testGetFundForInvalidConnection() throws Exception {
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			new FundBusinessService().getFund("Fund1").getFundName();
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
 		TestObjectFactory.removeObject(fund);
 	}
 	
@@ -59,6 +88,21 @@ public class FundBusinessServiceTest extends MifosTestCase {
 		assertNotNull(fund);
 		assertEquals("Fund1", fund.getFundName());
 		assertEquals(1, fund.getFundCode().getFundCodeId().intValue());
+		TestObjectFactory.removeObject(fund);
+	}
+	
+	public void testGetFundByIdForInvalidConnection() throws Exception {
+		FundCodeEntity fundCodeEntity = (FundCodeEntity) HibernateUtil.getSessionTL().get(FundCodeEntity.class, (short) 1);
+		FundBO fund = TestObjectFactory.createFund(fundCodeEntity,"Fund1");
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			new FundBusinessService().getFund(fund.getFundId());
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
 		TestObjectFactory.removeObject(fund);
 	}
 }

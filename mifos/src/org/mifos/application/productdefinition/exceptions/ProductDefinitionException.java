@@ -39,28 +39,12 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 public class ProductDefinitionException extends ApplicationException {
 
-	public ProductDefinitionException() {
-		super();
-	}
-
-	public ProductDefinitionException(Object[] values) {
-		super(values);
-	}
-
 	public ProductDefinitionException(Throwable cause) {
 		super(cause);
 	}
 
 	public ProductDefinitionException(String key) {
 		super(key);
-	}
-
-	public ProductDefinitionException(String key, Object[] values) {
-		super(key, values);
-	}
-
-	public ProductDefinitionException(String key, Throwable cause) {
-		super(key, cause);
 	}
 
 	private static final long serialVersionUID = 6223987933034497348L;

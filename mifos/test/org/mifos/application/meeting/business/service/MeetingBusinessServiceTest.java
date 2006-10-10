@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosTestCase;
@@ -49,6 +50,19 @@ public class MeetingBusinessServiceTest extends MifosTestCase{
 		assertNotNull(meeting);
 		assertEquals(Short.valueOf("5"), meeting.getMeetingDetails().getRecurAfter());
 		assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
+	}
+	
+	public void testGetMeetingForInvalidConnection() throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			MeetingBO meeting  = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+			meeting.save();
+			fail();
+		} catch (MeetingException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
 	}
 	
 	public void testFailureGetMeeting() throws Exception {

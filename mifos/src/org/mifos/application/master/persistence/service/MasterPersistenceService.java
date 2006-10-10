@@ -15,28 +15,7 @@ public class MasterPersistenceService extends PersistenceService {
 
 	private MasterPersistence serviceImpl = new MasterPersistence();
 
-	/**
-	 * This method obtains a the values corresponding to a locale for a
-	 * particular entity. Eg: If entity is Salutation Then this method retrieves
-	 * values Mr, Mrs, Ms for locale english and Monsieur, Madame for french
-	 * locale
-	 * 
-	 * @param entityId
-	 *            Id denoting the entity(Eg: Salutation)
-	 * @param localeId
-	 *            The locale for which values have to be obtained
-	 * @param searchResultName
-	 *            The name under which it will be put into the search results
-	 * @return Search Result object
-	 * @throws SystemException
-	 * @throws ApplicationException
-	 */
-	public EntityMaster retrieveMasterData(String entityName, Short localeId)
-			throws SystemException, ApplicationException {
-		EntityMaster entityMaster = null;
-		entityMaster = serviceImpl.getLookUpEntity(entityName, localeId);
-		return entityMaster;
-	}
+	
 
 	public EntityMaster retrieveMasterData(String entityName, Short localeId,
 			String classPath, String column) throws SystemException,
