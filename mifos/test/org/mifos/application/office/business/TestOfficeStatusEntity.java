@@ -11,5 +11,10 @@ public class TestOfficeStatusEntity extends MifosTestCase {
 		
 		assertEquals(OfficeStatus.ACTIVE,officeStatus.getStatus());
 	}
-
+	public void testGetOfficeStatusFailure()throws Exception{
+		
+		OfficeStatusEntity officeStatus = new OfficeStatusEntity(OfficeStatus.ACTIVE);
+		
+		assertEquals(OfficeStatus.ACTIVE,officeStatus.getStatus());
+	}
 }

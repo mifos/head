@@ -3,7 +3,6 @@ package org.mifos.application.office.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Session;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.office.exceptions.OfficeException;
@@ -75,6 +74,27 @@ public class TestOfficeBO extends MifosTestCase {
 		assertEquals(OperationMode.REMOTE_SERVER, officeBO.getMode());
 		assertTrue(officeBO.isActive());
 		TestObjectFactory.cleanUp(officeBO);
+	}
+
+	public void testCreateSucessFailure() throws Exception {
+
+		try {
+			OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+			List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
+			CustomFieldView customFieldView2 = new CustomFieldView();
+			customFieldView2.setFieldId(Short.valueOf("1"));
+			customFieldView2.setFieldValue("123456");
+			customFieldView.add(customFieldView2);
+			OfficeBO officeBO = new OfficeBO(userContext,
+					OfficeLevel.AREAOFFICE, parent, customFieldView, "abcd",
+					"abcd", null, OperationMode.REMOTE_SERVER);
+			TestObjectFactory.simulateInvalidConnection();
+			officeBO.save();
+			fail();
+		} catch (OfficeException e) {
+
+			assertTrue(true);
+		}
 	}
 
 	public void testCreateWithNoName() throws Exception { // check short name
@@ -464,10 +484,13 @@ public class TestOfficeBO extends MifosTestCase {
 
 	public void testUpdateParentSucess() throws Exception {
 		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
-		OfficeBO regionalOffice = TestObjectFactory.createOffice(OfficeLevel.REGIONALOFFICE, parent,  "abcd", "abcd");
+		OfficeBO regionalOffice = TestObjectFactory.createOffice(
+				OfficeLevel.REGIONALOFFICE, parent, "abcd", "abcd");
 		// createChild also
-		OfficeBO areaOffice =TestObjectFactory.createOffice(OfficeLevel.AREAOFFICE, regionalOffice,  "2", "2");
-		OfficeBO branchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, areaOffice,  "3", "3");
+		OfficeBO areaOffice = TestObjectFactory.createOffice(
+				OfficeLevel.AREAOFFICE, regionalOffice, "2", "2");
+		OfficeBO branchOffice = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, areaOffice, "3", "3");
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		parent = TestObjectFactory.getOffice(Short.valueOf("1"));
@@ -493,16 +516,20 @@ public class TestOfficeBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(areaOffice);
 		TestObjectFactory.cleanUp(regionalOffice);
 		resetOffices();
-		//this may have updated the existing office searchId's so reset them beak
-		
+		// this may have updated the existing office searchId's so reset them
+		// beak
+
 	}
 
 	public void testUpdateParentFromHoToArea() throws Exception {
 		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
-		OfficeBO regionalOffice = TestObjectFactory.createOffice(OfficeLevel.REGIONALOFFICE, ho,  "abcd", "abcd");
+		OfficeBO regionalOffice = TestObjectFactory.createOffice(
+				OfficeLevel.REGIONALOFFICE, ho, "abcd", "abcd");
 		// createChild also
-		OfficeBO areaOffice =TestObjectFactory.createOffice(OfficeLevel.AREAOFFICE, regionalOffice,  "2", "2");
-		OfficeBO branchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, ho,  "3", "3");
+		OfficeBO areaOffice = TestObjectFactory.createOffice(
+				OfficeLevel.AREAOFFICE, regionalOffice, "2", "2");
+		OfficeBO branchOffice = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, ho, "3", "3");
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
@@ -515,8 +542,9 @@ public class TestOfficeBO extends MifosTestCase {
 				.getOfficeId());
 		areaOffice = TestObjectFactory.getOffice(areaOffice.getOfficeId());
 		branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
-		
-		assertEquals(areaOffice.getOfficeId(),branchOffice.getParentOffice().getOfficeId());
+
+		assertEquals(areaOffice.getOfficeId(), branchOffice.getParentOffice()
+				.getOfficeId());
 		if (areaOffice.getSearchId().equalsIgnoreCase("1.1.2.1")) {
 			assertEquals("1.1.2.1.1", branchOffice.getSearchId());
 		} else if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1.1")) {
@@ -530,89 +558,100 @@ public class TestOfficeBO extends MifosTestCase {
 		resetOffices();
 	}
 
-	public void testUpdateParentHoToRegional()throws Exception{
+	public void testUpdateParentHoToRegional() throws Exception {
 		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
 		//
-		OfficeBO branchOffice =  TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, ho,  "3", "3");
+		OfficeBO branchOffice = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, ho, "3", "3");
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
-		OfficeBO areaOffice=TestObjectFactory.getOffice(Short.valueOf("2"));
+		OfficeBO areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));
 		branchOffice.setUserContext(userContext);
 		branchOffice.update("3", "3", branchOffice.getOfficeStatus(),
 				branchOffice.getOfficeLevel(), areaOffice, null, null);
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		if (areaOffice.getSearchId().equalsIgnoreCase("1.1.1")) {
-			if ( "1.1.1.1".equals(branchOffice.getSearchId())||"1.1.1.2".equals(branchOffice.getSearchId()))
-			assertEquals(true,true);
+			if ("1.1.1.1".equals(branchOffice.getSearchId())
+					|| "1.1.1.2".equals(branchOffice.getSearchId()))
+				assertEquals(true, true);
 
 		} else
 			assertEquals(true, false);
 		TestObjectFactory.cleanUp(branchOffice);
 		resetOffices();
-		
+
 	}
-		public void testUpdateParentAreaToHo()throws Exception{
+
+	public void testUpdateParentAreaToHo() throws Exception {
 		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
-		OfficeBO	branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
-		OfficeBO areaOffice=TestObjectFactory.getOffice(Short.valueOf("2"));
+		OfficeBO branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		OfficeBO areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));
 		branchOffice.setUserContext(userContext);
-		branchOffice.update(branchOffice.getOfficeName(), branchOffice.getShortName(), branchOffice.getOfficeStatus(),
-				branchOffice.getOfficeLevel(), ho, branchOffice.getAddress().getAddress(), null);
+		branchOffice.update(branchOffice.getOfficeName(), branchOffice
+				.getShortName(), branchOffice.getOfficeStatus(), branchOffice
+				.getOfficeLevel(), ho, branchOffice.getAddress().getAddress(),
+				null);
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
-		if ( "1.1.1".equals(branchOffice.getSearchId())||"1.1.2".equals(branchOffice.getSearchId()))
-			assertEquals(true,true);
-		 else
+		if ("1.1.1".equals(branchOffice.getSearchId())
+				|| "1.1.2".equals(branchOffice.getSearchId()))
+			assertEquals(true, true);
+		else
 			assertEquals(true, false);
 
-		//update it back
-		
-		areaOffice=TestObjectFactory.getOffice(Short.valueOf("2"));
+		// update it back
+
+		areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));
 		branchOffice.setUserContext(userContext);
-		branchOffice.update(branchOffice.getOfficeName(), branchOffice.getShortName(), branchOffice.getOfficeStatus(),
-				branchOffice.getOfficeLevel(), areaOffice, branchOffice.getAddress().getAddress(), null);
+		branchOffice.update(branchOffice.getOfficeName(), branchOffice
+				.getShortName(), branchOffice.getOfficeStatus(), branchOffice
+				.getOfficeLevel(), areaOffice, branchOffice.getAddress()
+				.getAddress(), null);
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
-		
+
 		resetOffices();
-		
+
 	}
 
-  
-		public void testCreateOfficeView(){
-			
-			OfficeView officeView = new OfficeView(Short.valueOf("1"),"headOffice",Integer.valueOf("1"));
-			assertEquals("headOffice",officeView.getOfficeName());
-			assertEquals(Integer.valueOf("1"),officeView.getVersionNo());
-		}
-		private void  resetOffices() throws Exception{
-			OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
-			OfficeBO	areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));
-			
-			areaOffice.setParentOffice(ho);
-			areaOffice.setSearchId("1.1.1");
-			HibernateUtil.getSessionTL().saveOrUpdate(areaOffice);
-			HibernateUtil.commitTransaction();
-			TestObjectFactory.flushandCloseSession();
-			
-			OfficeBO areaOffice1 = TestObjectFactory.getOffice(Short.valueOf("2"));
-			OfficeBO	branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
-			branchOffice.setParentOffice(areaOffice1);
-			branchOffice.setSearchId("1.1.1.1");
-			branchOffice.setUserContext(userContext);
-			branchOffice.update(branchOffice.getOfficeName(), branchOffice.getShortName(), branchOffice.getOfficeStatus(),
-					branchOffice.getOfficeLevel(), areaOffice1, branchOffice.getAddress().getAddress(), null);
-			HibernateUtil.commitTransaction();
-			TestObjectFactory.flushandCloseSession();
-		}
+	public void testCreateOfficeView() {
 
-		@Override
-		protected void tearDown() throws Exception {
-			HibernateUtil.closeSession();
-			super.tearDown();
-		}
+		OfficeView officeView = new OfficeView(Short.valueOf("1"),
+				"headOffice", Integer.valueOf("1"));
+		assertEquals("headOffice", officeView.getOfficeName());
+		assertEquals(Integer.valueOf("1"), officeView.getVersionNo());
+	}
+
+	private void resetOffices() throws Exception {
+		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));
+
+		areaOffice.setParentOffice(ho);
+		areaOffice.setSearchId("1.1.1");
+		HibernateUtil.getSessionTL().saveOrUpdate(areaOffice);
+		HibernateUtil.commitTransaction();
+		TestObjectFactory.flushandCloseSession();
+
+		OfficeBO areaOffice1 = TestObjectFactory.getOffice(Short.valueOf("2"));
+		OfficeBO branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		branchOffice.setParentOffice(areaOffice1);
+		branchOffice.setSearchId("1.1.1.1");
+		branchOffice.setUserContext(userContext);
+		branchOffice.update(branchOffice.getOfficeName(), branchOffice
+				.getShortName(), branchOffice.getOfficeStatus(), branchOffice
+				.getOfficeLevel(), areaOffice1, branchOffice.getAddress()
+				.getAddress(), null);
+		HibernateUtil.commitTransaction();
+		TestObjectFactory.flushandCloseSession();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		HibernateUtil.closeSession();
+		super.tearDown();
+	}
 
 }

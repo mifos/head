@@ -9,10 +9,13 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -60,7 +63,33 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 		}
 
 	}
+	
+	public void testFailureGetOffice() throws Exception {
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			personnelBusinessService.getOffice(Short.valueOf("1"));
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
 
+	}
+	public void testSearchFailureWithNoConn() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			personnelBusinessService.getPersonnel("WRONG_USERNAME");
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
+	}	
 	public void testSearch()throws Exception{
 		personnel = createPersonnel();
 		QueryResult queryResult=personnelBusinessService.search(personnel.getUserName(),Short.valueOf("1"),Short.valueOf("1"));
@@ -102,7 +131,60 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 			HibernateUtil.closeSession();
 		}
 
+	}	
+	public void testGetRolesFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			personnelBusinessService.getRoles();
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
+	}	
+	
+	public void testGetPersonnelByGlobalPersonnelNumFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			personnelBusinessService.getPersonnelByGlobalPersonnelNum("12345678");
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
+	}	
+	public void testGetPersonnelFailure() throws Exception{
+		TestObjectFactory.simulateInvalidConnection();
+		try{
+			personnelBusinessService.getPersonnel("12345678");
+		fail();
+		}
+		catch (ServiceException e) {
+			assertTrue(true);
+		}finally {
+			HibernateUtil.closeSession();
+		}
+
 	}		
+	
+	public void  testGetActiveLoanOfficersInBranch()
+			throws ServiceException {
+		try {
+			TestObjectFactory.simulateInvalidConnection();
+			personnelBusinessService.getActiveLoanOfficersInBranch(	PersonnelLevel.LOAN_OFFICER.getValue(), Short.valueOf("1"),
+					Short.valueOf("1"));
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+			
+		}
+	}
 	private PersonnelBO createPersonnel(OfficeBO office,
 			PersonnelLevel personnelLevel) throws Exception {
 		UserContext userContext = TestObjectFactory.getUserContext();
