@@ -168,7 +168,7 @@ public class MasterPersistence extends Persistence {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put(MasterConstants.ENTITY_TYPE, entityType
 					.getValue());
-			return (List<CustomFieldDefinitionEntity>) executeNamedQuery(
+			return executeNamedQuery(
 					NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
 		
 	}

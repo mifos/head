@@ -50,20 +50,11 @@
 	<taskdef  name="junit" classpathref="class.path" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
 
 	<!--<echo level="debug">CLASSPATH - ${java.class.path}</echo>-->
-
-        <echo>ant.java.version = ${ant.java.version} </echo> 
-        <echo>java.version = ${java.version}</echo> 
-        <echo>env.JAVA_HOME = ${env.JAVA_HOME}</echo> 
-        <echo>env.COBERTURA_HOME = ${env.COBERTURA_HOME}</echo> 
-        <echo>env.ANT_HOME = ${env.ANT_HOME}</echo> 
-        <echo>env.CLASSPATH = ${env.CLASSPATH}</echo>  
-
   
 	<target name="init">
 		<tstamp>
 			<format property="BUILD_ID" pattern="MMM-dd-yyyy hh:mm aa z" locale="en"/>
 		</tstamp>
-		<echo message="Build started at - ${BUILD_ID}"/>
 	</target>
 
 	<target name="check_config">
@@ -113,6 +104,7 @@
 		       debug="${debug.flag}"
 		       deprecation="on"
 		       includes="**/*.java"
+			
 		       excludes="${global.exclude}">
 			<classpath refid="class.path"/>
 		</javac>
