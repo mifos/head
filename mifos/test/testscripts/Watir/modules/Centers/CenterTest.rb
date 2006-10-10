@@ -185,6 +185,7 @@ class CenterCreateEdit < TestClass
     @@view_office=@@officeprop['Office.labelLinkViewOffices']
     @@edit_office=@@officeprop['Office.labelEditOfficeInfo']
     @@edit_office_error=@@officeprop['Office.error.hasActivePersonnel']
+    @@back_to_details_page=@@centerprop['Center.backtodetailspage']
   end
   #checking for the link Create new center in clients&Accounts section
   def check_center()
@@ -520,7 +521,7 @@ class CenterCreateEdit < TestClass
       assert($ie.contains_text(@@performance_history)) and assert($ie.contains_text(@@lookup_active))
       $logger.log_results("Status changed to active","NA","NA","passed")
       #commented :currently change log link is removed
-      #view_change_log_active_or_inactive() 
+      view_change_log_active_or_inactive() 
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to active","NA","NA","failed") 
     rescue =>excp
@@ -538,7 +539,7 @@ class CenterCreateEdit < TestClass
       assert($ie.contains_text(@@performance_history)) and assert($ie.contains_text(@@lookup_inactive))
       $logger.log_results("Status changed to inactive","NA","NA","passed")
       #commented because change log link is currently removed
-      #view_change_log_active_or_inactive()
+      view_change_log_active_or_inactive()
       status_active()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to inactive","NA","NA","failed") 
@@ -572,7 +573,7 @@ class CenterCreateEdit < TestClass
       assert($ie.contains_text(@@lookup_inactive)) and \
       assert($ie.contains_text(@@lookup_active))
       $logger.log_results("View change log link working","NA","NA","passed")
-      $ie.button(:value,"Return to details page").click
+      $ie.button(:value,@@back_to_details_page).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View change log link working","NA","NA","failed")   
     rescue =>excp

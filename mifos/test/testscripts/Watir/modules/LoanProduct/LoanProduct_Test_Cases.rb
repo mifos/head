@@ -1587,11 +1587,11 @@ class LoanProduct_Test_Cases < TestClass
       #puts "in check status"
       edit_loanproduct_status(prd_inst_name, @inactive_label)
       #commented as change log link has been removed currently
-      #change_log(prd_inst_name,"1","4",rowcount)
+      change_log(prd_inst_name,"1","4",rowcount)
       #$ie.button(:value,@back_ro_details_page_button).click 
       rowcount+=1
       edit_loanproduct_status(prd_inst_name, @active_label)  
-      #change_log(prd_inst_name,"4","1",rowcount)
+      change_log(prd_inst_name,"4","1",rowcount)
       rowcount+=1
       #$ie.button(:value,@back_ro_details_page_button).click
       $ie.link(:text,@admin_link).click

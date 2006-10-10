@@ -386,6 +386,7 @@ class ClientCreateEdit<TestClass
     @@button_preview=@@clientprop['button.preview']
     @@button_submit=@@clientprop['button.submit']
     @@return_to_details_page=@@clientprop['client.butbachdetpage']
+    @@back_to_details_page=@@clientprop['client.backtodetailspage']
     @@edit_group_client=string_replace_message(@@clientprop['client.EditGroupMembershipLink'],"group",@@lookup_name_group)
     @@edit_branch_membership_link=@@clientprop['client.EditLink']+" "+@@branch_label.to_s+" "+@@clientprop['client.MembershipLink']
     @@member_outof_group_link=@@groupprop['Group.clickheretocontinueif']+" "+@@groupprop['Group.group']+" "+@@groupprop['Group.membershipisnotrequiredforyour']+" "+@@member_label
@@ -400,6 +401,7 @@ class ClientCreateEdit<TestClass
     @@createclient=@@clientprop['client.CreateTitle']+" "+@@lookup_name_client
     @@client_mfi_page_msg=(@@createclient+" "+@@clientprop['client.CreateMfiInformationTitle']).squeeze(" ")
     @@client_review=@@createclient+" "+@@clientprop['client.CreatePreviewReviewSubmitTitle'].squeeze(" ")    
+    @@view_account_activity_applypayment=@@groupprop['group.applypayment']
   end
   
   #checking for the link Create new client in clients&accounts section
@@ -923,7 +925,7 @@ class ClientCreateEdit<TestClass
       @@application_pending_approval=dbresult[0]
       assert($ie.contains_text(@@clientprop['client.PerformanceHistoryHeading']))and assert($ie.contains_text(@@application_pending_approval)) 
       $logger.log_results("Status changed to Pending","NA","NA","passed") 
-      #view_change_log_pending()
+      view_change_log_pending()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Pending","NA","NA","failed") 
     rescue =>excp
@@ -945,7 +947,7 @@ class ClientCreateEdit<TestClass
       @@active=dbresult[0]
       assert($ie.contains_text(@@clientprop['client.PerformanceHistoryHeading']))and assert($ie.contains_text(@@active))
       $logger.log_results("Status changed to Active","NA","NA","passed") 
-      #view_change_log_active()
+      view_change_log_active()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Active","NA","NA","failed") 
     rescue =>excp
@@ -966,7 +968,7 @@ class ClientCreateEdit<TestClass
       @@partial_application=dbresult[0]
       assert($ie.contains_text(@@status_label))and assert($ie.contains_text(@@application_pending_approval)) and assert($ie.contains_text(@@partial_application))
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed") 
-      $ie.button(:value,@@return_to_details_page).click 
+      $ie.button(:value,@@back_to_details_page).click 
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
     rescue =>excp
@@ -981,7 +983,7 @@ class ClientCreateEdit<TestClass
       $ie.link(:text,@@change_log).click
       assert($ie.contains_text(@@status_label))and assert($ie.contains_text(@@application_pending_approval)) and assert($ie.contains_text(@@active))
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed")   
-      $ie.button(:value,@@return_to_details_page).click  
+      $ie.button(:value,@@back_to_details_page).click  
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
     rescue =>excp
@@ -1766,7 +1768,6 @@ def check_applyfee()
           rescue =>excp
            quit_on_error(excp)
         end
-        
        click_removeFee
   end #end of applycharges
 
@@ -1932,12 +1933,11 @@ def apply_miscfees(fee_type)
   end
   
   def check_Applypayment_view_all_account_activity
-    assert($ie.contains_text("Apply payment"))
+    assert($ie.contains_text(@@view_account_activity_applypayment))
          $logger.log_results("Bug#593-Apply payment link from View all account activity","Should be present","Present","Passed")
     rescue Test::Unit::AssertionFailedError=>e
          $logger.log_results("Bug#593-Apply payment link from View all account activity","Should be present","not present","failed")
-    rescue=>excp
-    quit_on_error(excp)     
+      
   end
   
   #added by Dilip as  bug#728
@@ -1949,14 +1949,14 @@ def apply_miscfees(fee_type)
     noofactivemembers=count_records("select count(global_cust_num) from customer where customer_level_id=1 and parent_customer_id="+customerid+" and status_id=3")
     search_client(globalcustnum)
     $ie.link(:text,display_name.strip()+": ID "+globalcustnum).click
-    table_obj=$ie.table(:index,23) 
+    #table_obj=$ie.table(:index,23)
     stractivemembers=@@active_members_forGroup+": "+noofactivemembers.to_s
-    assert(stractivemembers==table_obj[3][1].text.strip())
+    #assert(stractivemembers==table_obj[3][1].text.strip())
+    assert($ie.contains_text(stractivemembers))
     $logger.log_results("Bug#727-Group Performance Metrics","Should display no of active members","displayed","Passed")
     rescue Test::Unit::AssertionFailedError=>e
     $logger.log_results("Bug#727-Group Performance Metrics","Should display no of active members","not displayed","failed")
-    rescue=>excp
-    quit_on_error(excp)     
+     
   end  #end of function Group_Performance_Metrics
 
   end # end of class

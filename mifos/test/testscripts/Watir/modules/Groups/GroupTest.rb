@@ -591,7 +591,7 @@ class GroupCreateEdit < TestClass
       $ie.button(:value,@@button_submit).click
       assert($ie.contains_text(@@performance_history))and assert($ie.contains_text(@@status_pending_name)) 
       $logger.log_results("Status changed to Pending","NA","NA","passed") 
-      #view_change_log_pending()
+      view_change_log_pending()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Pending","NA","NA","failed") 
     rescue =>excp
@@ -613,7 +613,7 @@ class GroupCreateEdit < TestClass
       $ie.button(:value,@@button_submit).click
       assert($ie.contains_text(@@performance_history))and assert($ie.contains_text(@@status_active_name))
       $logger.log_results("Status changed to Active","NA","NA","passed") 
-      # view_change_log_active()
+       view_change_log_active()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Active","NA","NA","failed") 
     rescue =>excp
