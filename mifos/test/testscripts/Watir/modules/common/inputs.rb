@@ -34,7 +34,7 @@ $center_success="You have successfully created a new Kendra"
 #meeting start
 $reccur_week_msg="Please ensure that the recurrence pattern has both week and day specified"
 $location_msg="Please specify a Meeting location"
-$month_msg="Please select the day of month or rank of day if month is selected"
+
 #meeting end
 
 #Group start

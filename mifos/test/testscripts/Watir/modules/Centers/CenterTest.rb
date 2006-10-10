@@ -1,28 +1,16 @@
 #this class calls all the testcases from the CenterCreateEdit class
 require 'watir'
 require 'English'
-include Watir
 require 'modules/common/inputs'
 require 'win32ole'
 require 'modules/common/TestClass'
 require 'modules/logger/example_logger1'
 require 'mysql'
-#require 'test/unit/ui/console/testrunner'
 require 'test/unit/assertions'
+
+#include module watir
+include Watir
 class CenterCreateEdit < TestClass
-  #connecting to database
-  def database_connection()
-    start()
-    db_connect()
-    dbquery("select o.search_id from office o,personnel p where o.office_id=p.office_id and p.login_name='"+$validname+"'")
-    @@search_id=dbresult[0]
-    dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=82 and locale_id=1")
-    @@lookup_name_client=dbresult[0]
-    dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=83 and locale_id=1")
-    @@lookup_name_group=dbresult[0]
-    dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=84 and locale_id=1")
-    @@lookup_name_center=dbresult[0]
-  end
   
   def read_center_values(rowid,sheetid)
     if sheetid==1 then
@@ -135,68 +123,100 @@ class CenterCreateEdit < TestClass
   def Notes()
     @notes
   end
-  #logining into Mifos
-  def center_login()
-		#start
-		login($validname,$validpwd)
-		
+  
+  #connecting to database
+  def database_connection()
+    begin
+      start()
+      db_connect()
+      dbquery("select o.search_id from office o,personnel p where o.office_id=p.office_id and p.login_name='"+$validname+"'")
+      @@search_id=dbresult[0]
+      dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=82 and locale_id=1")
+      @@lookup_name_client=dbresult[0]
+      dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=83 and locale_id=1")
+      @@lookup_name_group=dbresult[0]
+      dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=84 and locale_id=1")
+      @@lookup_name_center=dbresult[0]
+    rescue =>excp
+      quit_on_error(excp)
+    end
   end
   
-   #calling the method load_properties from test class to read properties from properties file
+  #logining into Mifos
+  def center_login()
+    begin
+      login($validname,$validpwd)
+    rescue =>excp
+      quit_on_error(excp)
+    end
+  end
+  
+  #calling the method load_properties from test class to read properties from properties file
   def properties_load()
-    @@groupprop=load_properties("modules/propertis/GroupUIResources.properties")
-    @@meetingprop=load_properties("modules/propertis/Meeting.properties")
-    @@adminprop=load_properties("modules/propertis/adminUIResources.properties")
-    @@menuprop=load_properties("modules/propertis/MenuResources.properties")
-    @@custprop=load_properties("modules/propertis/CustomerUIResources.properties")
-    @@centerprop=load_properties("modules/propertis/CenterUIResources.properties")
-    @@officeprop=load_properties("modules/propertis/OfficeUIResources.properties")
+    begin
+      @@groupprop=load_properties("modules/propertis/GroupUIResources.properties")
+      @@meetingprop=load_properties("modules/propertis/Meeting.properties")
+      @@adminprop=load_properties("modules/propertis/adminUIResources.properties")
+      @@menuprop=load_properties("modules/propertis/MenuResources.properties")
+      @@custprop=load_properties("modules/propertis/CustomerUIResources.properties")
+      @@centerprop=load_properties("modules/propertis/CenterUIResources.properties")
+      @@officeprop=load_properties("modules/propertis/OfficeUIResources.properties")
+    rescue =>excp
+     quit_on_error(excp)
+    end
   end
   
   #Getting the lables from properties file
   def geting_lables_from_proprtis()
-    @@createcenterlabel=@@menuprop['label.createnew']+' '+@@lookup_name_center
-    @@creategrouplabel=@@menuprop['label.createnew']+' '+@@lookup_name_group
-    @@createclientlabel=@@menuprop['label.createnew']+' '+@@lookup_name_client
-    @@center_center_information=@@centerprop['Center.CreateNew']+" "+@@lookup_name_center+" - "+@@centerprop['Center.Enter']+" "+@@lookup_name_center+" "+@@centerprop['Center.Information']
-    @@additional_information_msg=remove_li_tag(@@centerprop['errors.Customer.specifyCustomFieldValue'])
-    @@center_name_msg=remove_li_tag(@@centerprop['errors.Customer.specifyName'])
-    @@meeting_msg=remove_li_tag(@@centerprop['errors.Customer.specifyMeeting'])
-    @@Loan_officer_msg=remove_li_tag(@@centerprop['errors.Customer.specifyLoanOfficer'])
-    @@edit_center_information=@@centerprop['Center.Edit']+" "+@@lookup_name_center+" "+@@centerprop['Center.Information']
-    @@center_review=@@centerprop['Center.CreateNew']+" "+@@lookup_name_center+" - "+@@centerprop['Center.ReviewSubmit']
-    @@center_success=@@centerprop['Center.ConfirmationMessage']+" "+@@lookup_name_center
-    @@meetin_msg=@@meetingprop['meeting.labelMeetingScheduleFor']+" "+@@lookup_name_center
-    @@schedule_meeting_link=@@centerprop['Center.MeetingScheduleLink']
-    @@reccur_week_msg=@@meetingprop['errors.Meeting.specifyWeekDayAndRecurAfter']
-    @@location_msg=@@meetingprop['errors.Meeting.invalidMeetingPlace']
-    @@view_all_closed_accounts=@@centerprop['Center.ClosedAccountsLink']
-    @@account_information_label=@@centerprop['Center.AccountHeading']
-    @@edit_center_status=@@centerprop['Center.Edit']+" "+@@lookup_name_center+" "+@@centerprop['Center.Status1']
-    @@performance_history=@@centerprop['Center.PerformanceHistoryHeading']
-    @@view_change_log=@@centerprop['center.ChangeLogLink']
-    @@edit_center_details=@@centerprop['Center.Edit']+" "+@@lookup_name_center+" "+@@centerprop['Center.GroupsLink3']
-    @@button_preview=@@centerprop['button.preview']
-    @@button_submit=@@centerprop['button.submit']
-    @@button_search=@@centerprop['button.Search']
-    @@button_cancel=@@centerprop['button.cancel']
-    @@button_save=@@meetingprop['meeting.button.save']
-    @@admin_link=@@officeprop['Office.labelLinkAdmin']
-    @@view_office=@@officeprop['Office.labelLinkViewOffices']
-    @@edit_office=@@officeprop['Office.labelEditOfficeInfo']
-    @@edit_office_error=@@officeprop['Office.error.hasActivePersonnel']
-    @@back_to_details_page=@@centerprop['Center.backtodetailspage']
+    begin
+      @@createcenterlabel=@@menuprop['label.createnew']+' '+@@lookup_name_center
+      @@creategrouplabel=@@menuprop['label.createnew']+' '+@@lookup_name_group
+      @@createclientlabel=@@menuprop['label.createnew']+' '+@@lookup_name_client
+      @@center_center_information=@@centerprop['Center.CreateNew']+" "+@@lookup_name_center+" - "+@@centerprop['Center.Enter']+" "+@@lookup_name_center+" "+@@centerprop['Center.Information']
+      @@additional_information_msg=remove_li_tag(@@centerprop['errors.Customer.specifyCustomFieldValue'])
+      @@center_name_msg=remove_li_tag(@@centerprop['errors.Customer.specifyName'])
+      @@meeting_msg=remove_li_tag(@@centerprop['errors.Customer.specifyMeeting'])
+      @@Loan_officer_msg=remove_li_tag(@@centerprop['errors.Customer.specifyLoanOfficer'])
+      @@edit_center_information=@@centerprop['Center.Edit']+" "+@@lookup_name_center+" "+@@centerprop['Center.Information']
+      @@center_review=@@centerprop['Center.CreateNew']+" "+@@lookup_name_center+" - "+@@centerprop['Center.ReviewSubmit']
+      @@center_success=@@centerprop['Center.ConfirmationMessage']+" "+@@lookup_name_center
+      @@meetin_msg=@@meetingprop['meeting.labelMeetingScheduleFor']+" "+@@lookup_name_center
+      @@schedule_meeting_link=@@centerprop['Center.MeetingScheduleLink']
+      @@reccur_week_msg=@@meetingprop['errors.Meeting.specifyWeekDayAndRecurAfter']
+      @@location_msg=@@meetingprop['errors.Meeting.invalidMeetingPlace']
+      @@view_all_closed_accounts=@@centerprop['Center.ClosedAccountsLink']
+      @@account_information_label=@@centerprop['Center.AccountHeading']
+      @@edit_center_status=@@centerprop['Center.Edit']+" "+@@lookup_name_center+" "+@@centerprop['Center.Status1']
+      @@performance_history=@@centerprop['Center.PerformanceHistoryHeading']
+      @@view_change_log=@@centerprop['Center.ChangeLogLink']
+      @@edit_center_details=@@centerprop['Center.Edit']+" "+@@lookup_name_center+" "+@@centerprop['Center.GroupsLink3']
+      @@button_preview=@@centerprop['button.preview']
+      @@button_submit=@@centerprop['button.submit']
+      @@button_search=@@centerprop['button.Search']
+      @@button_cancel=@@centerprop['button.cancel']
+      @@button_save=@@meetingprop['meeting.button.save']
+      @@admin_link=@@officeprop['Office.labelLinkAdmin']
+      @@view_office=@@officeprop['Office.labelLinkViewOffices']
+      @@edit_office=@@officeprop['Office.labelEditOfficeInfo']
+      @@edit_office_error=@@officeprop['Office.error.hasActivePersonnel']
+      @view_center_details=@@centerprop['Center.View']+" "+@@lookup_name_center+" "+@@centerprop['Center.DetailsNow']
+      @month_msg=@@meetingprop['errors.Meeting.specifyDayNumAndRecurAfter']
+      @@back_to_details_page=@@centerprop['Center.backtodetailspage']
+    rescue =>excp
+      quit_on_error(excp)
+    end
   end
+  
   #checking for the link Create new center in clients&Accounts section
   def check_center()
-	begin
-	 $ie.link(:text,"Clients & Accounts").click
-	 assert($ie.contains_text(@@createcenterlabel))
-	 $logger.log_results("Link Check","Create New Kendra","Create New Kendra","passed")
-	rescue Test::Unit::AssertionFailedError=>e
-	 $logger.log_results("Link Check","Create New Kendra","exists","failed")
+    begin
+      $ie.link(:text,"Clients & Accounts").click
+      assert($ie.contains_text(@@createcenterlabel))
+      $logger.log_results("Link Check","Create New Kendra","Create New Kendra","passed")
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Link Check","Create New Kendra","exists","failed")
     rescue =>excp
-     quit_on_error(excp) 
+      quit_on_error(excp) 
     end
   end
   #select the office while creating center in select office page
@@ -207,20 +227,20 @@ class CenterCreateEdit < TestClass
       @@office_id=dbresult[0]
       display_name=dbresult[1]
       if (display_name=="Mifos HO") then
-          get_next_data
-          @@office_id=dbresult[0]
-          display_name=dbresult[1]
+        get_next_data
+        @@office_id=dbresult[0]
+        display_name=dbresult[1]
       end      
       $ie.link(:text,display_name).click
       assert($ie.contains_text(@@center_center_information))
       $logger.log_results("Page Enter Kendra Information","Should appear","appeared","passed")
     rescue Test::Unit::AssertionFailedError=>e
-        $logger.log_results("Page Enter Kendra Information","Should appear","not appeared","failed")
+      $logger.log_results("Page Enter Kendra Information","Should appear","not appeared","failed")
     rescue =>excp
       quit_on_error(excp) 
     end      
   end
- # checking all the mandatory fields in center creation page
+  # checking all the mandatory fields in center creation page
   def check_mandatory_all()
     begin
       $ie.button(:value,@@button_preview).click
@@ -245,7 +265,7 @@ class CenterCreateEdit < TestClass
       quit_on_error(excp)     
     end
   end
-    #checking the mandatory after entering center name and custom filed data
+  #checking the mandatory after entering center name and custom filed data
   def check_mandatory_with_cname_addInformation()
     begin
       $ie.text_field(:name,"displayName").set("aaa")
@@ -259,18 +279,18 @@ class CenterCreateEdit < TestClass
       quit_on_error(excp)     
     end
   end
-    #checking the mandatory after entering center name, custom field data and selecting Loan officer
+  #checking the mandatory after entering center name, custom field data and selecting Loan officer
   def check_mandatory_with_cname_addInformation_LO()
     begin
-     if ($validname=="mifos") then
-      dbquery("select personnel_id,display_name from personnel where level_id=1 and office_id="+@@office_id)
-      @@personnel_id=dbresult[0]
-      @@loan_officer=dbresult[1]
-     else
-      dbquery("select personnel_id,display_name from personnel where level_id=1 and login_name='"+$validname+"'")
-      @@personnel_id=dbresult[0]
-      @@loan_officer=dbresult[1]
-     end
+      if ($validname=="mifos") then
+        dbquery("select personnel_id,display_name from personnel where level_id=1 and office_id="+@@office_id)
+        @@personnel_id=dbresult[0]
+        @@loan_officer=dbresult[1]
+      else
+        dbquery("select personnel_id,display_name from personnel where level_id=1 and login_name='"+$validname+"'")
+        @@personnel_id=dbresult[0]
+        @@loan_officer=dbresult[1]
+      end
       $ie.text_field(:name,"displayName").set("aaa")
       $ie.text_field(:name,"customField[1].fieldValue").set("111")
       $ie.select_list(:name,"loanOfficerId").select_value(@@personnel_id)
@@ -331,7 +351,7 @@ class CenterCreateEdit < TestClass
       $ie.button(:value,@@button_submit).click
       assert($ie.contains_text(@@center_success)) and assert($ie.contains_text(@@name_center))
       $logger.log_results("Kendra Creation","successfull page","opened","passed")
-      $ie.link(:text,"View Kendra details now").click
+      $ie.link(:text,@view_center_details).click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Kendra Creation","successfull page","opened","failed")
     rescue =>excp
@@ -362,15 +382,16 @@ class CenterCreateEdit < TestClass
       $logger.log_results("all mandatory check for week","NA","NA","failed");
       meeting_mandatory_month()
     rescue =>excp
-     quit_on_error(excp)     
+      quit_on_error(excp)     
     end
   end
-    #checking mandatory for meeting month
+  #checking mandatory for meeting month
   def meeting_mandatory_month()
     begin
       $ie.radio(:name,"frequency","2").set
       $ie.button(:value,@@button_save).click
-      assert($ie.contains_text($month_msg))and assert($ie.contains_text(@@location_msg))
+      #assert($ie.contains_text($month_msg))and assert($ie.contains_text(@@location_msg))
+      assert($ie.contains_text(@month_msg))and assert($ie.contains_text(@@location_msg))
       $logger.log_results("all mandatory check for month ","NA","NA","passed");
       meeting_cancel()
     rescue Test::Unit::AssertionFailedError=>e
@@ -384,10 +405,10 @@ class CenterCreateEdit < TestClass
   def meeting_cancel()
     begin
       $ie.button(:value,@@button_cancel).click
-      assert($ie.contains_text("Administrative set fees"))
-      $logger.log_results("Meetin cancel","NA","NA","passed");
+      assert($ie.contains_text(@@centerprop['Center.AdministrativeFeesHeading']))
+      $logger.log_results("Meeting cancel","NA","NA","passed");
     rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Meetin cancel","NA","NA","failed");
+      $logger.log_results("Meeting cancel","NA","NA","failed");
     rescue =>excp
       quit_on_error(excp)     
     end
@@ -417,11 +438,12 @@ class CenterCreateEdit < TestClass
       quit_on_error(excp)     
     end
   end
-    #checking the functionality what if you enter duplicate centers 
+  #checking the functionality what if you enter duplicate centers 
   def center_duplicate(centername,external_id,mfi_date,mfi_month,mfi_year,address1,address2,address3,city,state,country,postal_code,telephone,custom1,frequncymeeting,monthtype,reccurweek,weekweekday,monthday,monthmonth,monthrank,monthweek,monthmonthrank,meetingplace)
     begin
       center_create(centername,external_id,mfi_date,mfi_month,mfi_year,address1,address2,address3,city,state,country,postal_code,telephone,custom1,frequncymeeting,monthtype,reccurweek,weekweekday,monthday,monthmonth,monthrank,monthweek,monthmonthrank,meetingplace)
-      error_message="The entered name, "+centername+" already exists in the system. Please enter a different name"
+      #error_message="The entered name, "+centername+" already exists in the system. Please enter a different name"
+      error_message=string_replace(@@centerprop['Customer.DuplicateCustomerName'],"{0}",centername)
       assert($ie.contains_text(@@center_review)) 
       $logger.log_results("duplicate check","NA","NA","passed")
     rescue Test::Unit::AssertionFailedError=>e
@@ -538,7 +560,7 @@ class CenterCreateEdit < TestClass
       $ie.button(:value,@@button_submit).click
       assert($ie.contains_text(@@performance_history)) and assert($ie.contains_text(@@lookup_inactive))
       $logger.log_results("Status changed to inactive","NA","NA","passed")
-      #commented because change log link is currently removed
+      
       view_change_log_active_or_inactive()
       status_active()
     rescue Test::Unit::AssertionFailedError=>e
@@ -547,26 +569,29 @@ class CenterCreateEdit < TestClass
       quit_on_error(excp)     
     end
   end
- #checking the functionality of View All closed accounts link
+  #checking the functionality of View All closed accounts link
   def view_all_closed_accounts()
     begin
-      assert($ie.contains_text(@@view_all_closed_accounts))
-      $logger.log_results("View all closed accounts link existed","NA","NA","passed")
+      begin
+        assert($ie.link(:text,@@view_all_closed_accounts).exists?())
+        $logger.log_results("View all closed accounts link existed","NA","NA","passed")
+      rescue Test::Unit::AssertionFailedError=>e 
+        $logger.log_results("View all closed accounts link existed","NA","NA","failed")
+      end
       $ie.link(:text,@@view_all_closed_accounts).click
-      $ie.button(:value,"Return to details page").click
-       if($ie.contains_text(@@account_information_label))
-          $logger.log_results("View all closed accounts link working","NA","NA","passed")
-       else 
-          $logger.log_results("View all closed accounts link working","NA","NA","failed")
-       end
-    rescue Test::Unit::AssertionFailedError=>e 
-      $logger.log_results("View all closed accounts link existed","NA","NA","failed")    
+      $ie.button(:value,@@custprop['label.backtodetailspage']).click
+      if($ie.contains_text(@@account_information_label))
+        $logger.log_results("View all closed accounts link working","NA","NA","passed")
+      else 
+        $logger.log_results("View all closed accounts link working","NA","NA","failed")
+      end
+        
     rescue =>excp
       quit_on_error(excp)    
     end
-   
+    
   end
-   #checking the functionality of View change log link
+  #checking the functionality of View change log link
   def view_change_log_active_or_inactive()
     begin
       $ie.link(:text,@@view_change_log).click
@@ -593,8 +618,8 @@ class CenterCreateEdit < TestClass
     rescue =>excp
       quit_on_error(excp)   
     end
-   end
-     #Editing the center details form center details page
+  end
+  #Editing the center details form center details page
   def enter_data_edit_page(external_id,mfi_date,mfi_month,mfi_year,address1,address2,address3,city,state,country,postal_code,telephone, custom1)
     begin
       $ie.link(:text,@@edit_center_details).click
@@ -604,12 +629,12 @@ class CenterCreateEdit < TestClass
       $ie.text_field(:name,"mfiJoiningDateYY").set(mfi_year)
       $ie.text_field(:name,"address.line1").set(address1)
       $ie.text_field(:name,"address.line2").set(address2)
-    #$ie.text_field(:name,"customerAddressDetail.line3").set(address3)
+      #$ie.text_field(:name,"customerAddressDetail.line3").set(address3)
       $ie.text_field(:name,"address.city").set(city)
       $ie.text_field(:name,"address.state").set(state)
-    #$ie.text_field(:name,"customerAddressDetail.country").set(country)
+      #$ie.text_field(:name,"customerAddressDetail.country").set(country)
       $ie.text_field(:name,"address.zip").set(postal_code)
-    #$ie.text_field(:name,"customerAddressDetail.phoneNumber").set(telephone)
+      #$ie.text_field(:name,"customerAddressDetail.phoneNumber").set(telephone)
       $ie.text_field(:name,"customField[1].fieldValue").set(custom1)
       $ie.text_field(:name,"customField[0].fieldValue").set(custom1) 
       $ie.button(:value,@@button_preview).click
@@ -622,24 +647,24 @@ class CenterCreateEdit < TestClass
       quit_on_error(excp)      
     end
   end 
-   #Checking for add notes link
+  #Checking for add notes link
   def check_add_notes_link()
     begin
       @@notes=@@centerprop['Center.NotesLink'].squeeze(" ")
       assert($ie.contains_text(@@notes))
       $logger.log_results("Link "+@@centerprop['Center.NotesLink'],"Should Exist","Existed","passed")
-     rescue Test::Unit::AssertionFailedError=>e
+    rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Link "+@@centerprop['Center.NotesLink'],"Should Exist","Not Existed","Failed")
-     rescue =>excp
+    rescue =>excp
       quit_on_error(excp)    
     end
   end
- 
- #Clicking on Add notes link
+  
+  #Clicking on Add notes link
   def click_add_notes_link()
     begin
       $ie.link(:text,@@notes).click
-      assert($ie.contains_text(@@name_center+" - Add note"))
+      assert($ie.contains_text(@@name_center+" - "+@@custprop['Customer.addnoteheading']))
       $logger.log_results("Link "+@@centerprop['Center.NotesLink'],"Should Work","Working","passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Link "+@@centerprop['Center.NotesLink'],"Should Work","Not Working","Failed")
@@ -647,12 +672,12 @@ class CenterCreateEdit < TestClass
       quit_on_error(excp)    
     end
   end
- 
- #Checking for the mandatory fields in add notes page
+  
+  #Checking for the mandatory fields in add notes page
   def check_mandatory_in_add_notes_page()
     begin
       $ie.button(:value,@@button_preview).click
-      assert($ie.contains_text("Please enter some notes before continuing"))
+      assert($ie.contains_text(@@custprop['errors.mandatorytextarea']))
       $logger.log_results("Mandatory Check when you don't enter any note","N/A","N/A","Passed")
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Mandatory Check when you don't enter any note","N/A","N/A","Failed")
@@ -660,58 +685,62 @@ class CenterCreateEdit < TestClass
       quit_on_error(excp)    
     end
   end
- #Checking for boundary condition for the field notes
- 
- def enter_more_data_in_notes_field(nnotes)
-  begin
-    $ie.text_field(:name,"comment").set(nnotes)
-    $ie.button(:value,@@button_preview).click
-    @@center_note_error_message="The maximum length for Note field is"+" 500"
-    assert($ie.contains_text(@@center_note_error_message))
-    $logger.log_results("Bundaory Check for Notes ","Should display Proper Error Message","Displaying","Passed")
-  rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("Bundaory Check for Notes ","Should display Proper Error Message","Not Displaying","Failed")    
-  rescue =>excp
-    quit_on_error(excp)  
-  end
- end
- #Adding a note to the customer record
-  def enter_data_in_add_note()
-   begin
-    $ie.text_field(:name,"comment").set("Adding A note")
-    $ie.button(:value,@@button_preview).click
-    assert($ie.contains_text(@@name_center+" - Preview Note"))
-    $logger.log_results("Page Redirected to Preview page","N/A","N/A","Passed")
-    $ie.button(:value,@@button_submit).click
-   rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("Page not Redirected to Preview page","N/A","N/A","Failed")
-   rescue =>excp
-    quit_on_error(excp)  
-   end
- end
- 
- #Check for see all notes link
- def check_for_see_all_notes_link
-  begin
-    $ie.wait(10)
-    assert($ie.contains_text(@@centerprop['center.SeeAllNotesLink']))
-    $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Existed","Passed")
+  
+  #Checking for boundary condition for the field notes
+  
+  def enter_more_data_in_notes_field(nnotes)
+    begin
+      $ie.text_field(:name,"comment").set(nnotes)
+      $ie.button(:value,@@button_preview).click
+      @@center_note_error_message="The maximum length for Note field is"+" 500"
+      assert($ie.contains_text(@@center_note_error_message))
+      $logger.log_results("Boundary Check for Notes ","Should display Proper Error Message","Displaying","Passed")
     rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Not Existed","Failed")
+      $logger.log_results("Boundary Check for Notes ","Should display Proper Error Message","Not Displaying","Failed")    
     rescue =>excp
-    quit_on_error(excp)  
+      quit_on_error(excp)  
+    end
   end
- end
-
-#Click on see all notes link and check the functionality
+  #Adding a note to the customer record
+  def enter_data_in_add_note()
+    begin
+      $ie.text_field(:name,"comment").set("Adding A note")
+      $ie.button(:value,@@button_preview).click
+      assert($ie.contains_text(@@name_center+" - "+@@custprop['Customer.PreviewNote']))
+      $logger.log_results("Page Redirected to Preview page","N/A","N/A","Passed")
+      $ie.button(:value,@@button_submit).click
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Page not Redirected to Preview page","N/A","N/A","Failed")
+    rescue =>excp
+      quit_on_error(excp)  
+    end
+  end
+  
+  #Check for see all notes link
+  def check_for_see_all_notes_link
+    begin
+      $ie.wait(10)
+      assert($ie.contains_text(@@centerprop['center.SeeAllNotesLink']))
+      $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Existed","Passed")
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Exist","Not Existed","Failed")
+    rescue =>excp
+      quit_on_error(excp)  
+    end
+  end
+  
+  #Click on see all notes link and check the functionality
   def click_see_all_notes_link()
     begin 
       $ie.link(:text,@@centerprop['center.SeeAllNotesLink']).click
-      assert($ie.contains_text(@@name_center+" - Notes "))
-      $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Work","Working","Passed")
+        begin
+          assert($ie.contains_text(@@name_center+"  - "+@@custprop['Customer.addnoteheading'] ))
+          $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Work","Working","Passed")
+        rescue Test::Unit::AssertionFailedError=>e
+          $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Work","Not Working","Failed")
+        end
       $ie.link(:text,@@name_center).click
-    rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results(@@centerprop['center.SeeAllNotesLink'],"Link should Work","Not Working","Failed")
+
     rescue =>excp
       quit_on_error(excp)    
     end
@@ -729,11 +758,11 @@ class CenterCreateEdit < TestClass
     $ie.button(:value,@@button_preview).click 
     $ie.button(:value,@@button_submit).click
     assert($ie.contains_text(@@edit_office_error))
-      $logger.log_results("Bug#830-Change the status of office","Change the status of an office to inactive having active customers","Should not allow to make inactive","Passed")
-    rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Bug#830-Change the status of office","Change the status of an office to inactive having active customers","Allowed to make inactive","failed")
-    rescue =>excp
-      quit_on_error(excp)    
+    $logger.log_results("Bug#830-Change the status of office","Change the status of an office to inactive having active customers","Should not allow to make inactive","Passed")
+  rescue Test::Unit::AssertionFailedError=>e
+    $logger.log_results("Bug#830-Change the status of office","Change the status of an office to inactive having active customers","Allowed to make inactive","failed")
+  rescue =>excp
+    quit_on_error(excp)    
   end
 end
 
@@ -759,29 +788,28 @@ class CenterTest
     centerobject.select_office
     centerobject.read_center_values(rowid,1)
     centerobject.center_create_test_duplicate(centerobject.Centername,centerobject.External_id,centerobject.Mfi_date,\
-                                              centerobject.Mfi_month,centerobject.Mfi_year,centerobject.Address1,centerobject.Address2,\
-                                              centerobject.Address3,centerobject.City,centerobject.State,centerobject.Country,centerobject.Postal_code,\
-                                              centerobject.Telephone,centerobject.Customfield,centerobject.Frequncymeeting,centerobject.Monthtype,\
-                                              centerobject.Reccurweek,centerobject.Weekweekday,centerobject.Monthday,centerobject.Monthmonth,\
-                                              centerobject.Monthrank,centerobject.Monthweek,centerobject.Monthmonthrank,centerobject.Meetingplace)
+    centerobject.Mfi_month,centerobject.Mfi_year,centerobject.Address1,centerobject.Address2,\
+    centerobject.Address3,centerobject.City,centerobject.State,centerobject.Country,centerobject.Postal_code,\
+    centerobject.Telephone,centerobject.Customfield,centerobject.Frequncymeeting,centerobject.Monthtype,\
+    centerobject.Reccurweek,centerobject.Weekweekday,centerobject.Monthday,centerobject.Monthmonth,\
+    centerobject.Monthrank,centerobject.Monthweek,centerobject.Monthmonthrank,centerobject.Meetingplace)
     centerobject.editi_center_from_details_page(centerobject.Flag,centerobject.Centername,centerobject.External_id,centerobject.Mfi_date,\
-                                              centerobject.Mfi_month,centerobject.Mfi_year,centerobject.Address1,centerobject.Address2,\
-                                              centerobject.Address3,centerobject.City,centerobject.State,centerobject.Country,centerobject.Postal_code,\
-                                              centerobject.Telephone,centerobject.Customfield,centerobject.Frequncymeeting,centerobject.Monthtype,\
-                                              centerobject.Reccurweek,centerobject.Weekweekday,centerobject.Monthday,centerobject.Monthmonth,\
-                                              centerobject.Monthrank,centerobject.Monthweek,centerobject.Monthmonthrank,centerobject.Meetingplace)
+    centerobject.Mfi_month,centerobject.Mfi_year,centerobject.Address1,centerobject.Address2,\
+    centerobject.Address3,centerobject.City,centerobject.State,centerobject.Country,centerobject.Postal_code,\
+    centerobject.Telephone,centerobject.Customfield,centerobject.Frequncymeeting,centerobject.Monthtype,\
+    centerobject.Reccurweek,centerobject.Weekweekday,centerobject.Monthday,centerobject.Monthmonth,\
+    centerobject.Monthrank,centerobject.Monthweek,centerobject.Monthmonthrank,centerobject.Meetingplace)
     centerobject.db_check(centerobject.Centername)
     centerobject.edit_center_details(centerobject.External_id,centerobject.Mfi_date,\
-                                              centerobject.Mfi_month,centerobject.Mfi_year,centerobject.Address1,centerobject.Address2,\
-                                              centerobject.Address3,centerobject.City,centerobject.State,centerobject.Country,centerobject.Postal_code,\
-                                              centerobject.Telephone,centerobject.Customfield)
+    centerobject.Mfi_month,centerobject.Mfi_year,centerobject.Address1,centerobject.Address2,\
+    centerobject.Address3,centerobject.City,centerobject.State,centerobject.Country,centerobject.Postal_code,\
+    centerobject.Telephone,centerobject.Customfield)
     centerobject.edit_status(centerobject.Centername)
-#Adding a note
+    #Adding a note
     centerobject.check_add_notes_link
     centerobject.click_add_notes_link
     centerobject.check_mandatory_in_add_notes_page
-    centerobject.enter_more_data_in_notes_field(centerobject.Notes)
-#Checking for the Add notes and see all notes links    
+    #Checking for the Add notes and see all notes links    
     centerobject.enter_data_in_add_note
     centerobject.check_for_see_all_notes_link
     centerobject.click_see_all_notes_link     
