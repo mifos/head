@@ -40,4 +40,12 @@ public class TestConfiguration extends MifosTestCase {
 
 	}
 
+	public void testLabelKey() {
+		LabelKey labelKey = new LabelKey("key", (short)1);
+		assertEquals("[localeId=1][key=key]", labelKey.toString());
+		assertEquals(false, labelKey.equals(null));
+		LabelKey labelKeyToCompare = new LabelKey("key", (short)2);
+		assertEquals(false, labelKey.equals(labelKeyToCompare));
+	}
+
 }
