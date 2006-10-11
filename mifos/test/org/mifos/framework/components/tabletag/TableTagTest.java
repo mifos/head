@@ -11,11 +11,9 @@ import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 public class TableTagTest extends TestCase {
 	
 	public void testNoResults() throws Exception {
-		SearchObject searchObject = new SearchObject();
-		searchObject.addSearchTermAndOffice("Rock&Roll", TableTag.ALL_BRANCHES);
 		String html =
 			new TableTag("single")
-				.noResults("default-office", searchObject)
+				.noResults("default-office", TableTag.ALL_BRANCHES, "Rock&Roll")
 				.getOutput();
 		assertContains("No results found", html);
 		assertContains("Rock&amp;Roll", html);
@@ -32,29 +30,29 @@ public class TableTagTest extends TestCase {
 			CustomerSearchConstants.CUSTOMER_SEARCH_OFFICE_ID, "office-one");
 		String html =
 			new TableTag("multiple")
-				.noResults("default-office", searchObject)
+				.noResults("the-office-name", "office-one", "Rock")
 				.getOutput();
 		assertContains("No results found", html);
 		assertContains("Rock", html);
 		assertNotContains("All Branches", html);
-		assertContains("office-one", html);
-		assertNotContains("default-office", html);
+		assertContains("the-office-name", html);
+		assertNotContains("office-one", html);
 		assertWellFormedFragment(html);
 	}
 
-	public void testNoResultsDefaultName() throws Exception {
+	public void testNoResultsNotAllBranches() throws Exception {
 		SearchObject searchObject = new SearchObject();
 		searchObject.addToSearchNodeMap("dummy-search-term-key", "Rock");
 		searchObject.addToSearchNodeMap(
 			CustomerSearchConstants.CUSTOMER_SEARCH_OFFICE_ID, "");
 		String html =
 			new TableTag("multiple")
-				.noResults("default-office", searchObject)
+				.noResults("the-office-name", "", "Rock")
 				.getOutput();
 		assertContains("No results found", html);
 		assertContains("Rock", html);
 		assertNotContains("All Branches", html);
-		assertContains("default-office", html);
+		assertContains("the-office-name", html);
 		assertWellFormedFragment(html);
 	}
 

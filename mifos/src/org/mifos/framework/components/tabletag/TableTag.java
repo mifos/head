@@ -52,7 +52,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.mifos.application.customer.struts.actionforms.CustSearchActionForm;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -67,7 +66,6 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Cache;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FileCacheRep;
-import org.mifos.framework.util.helpers.SearchObject;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.valueobjects.Context;
 
@@ -263,67 +261,6 @@ public class TableTag extends BodyTagSupport {
 
 	}
 
-	XmlBuilder noResults(
-		String defaultOfficeName, SearchObject searchObject) {
-		XmlBuilder html = new XmlBuilder();
-		html.startTag("table", "width", "96%", "border", "0", 
-			"cellpadding", "0", "cellspacing", "0");
-		html.startTag("tr", "class", "fontnormal");
-		html.startTag("td", "colspan", "2", "valign", "top");
-		html.singleTag("br");
-		html.startTag("span", "class", "headingorange");
-		html.text("No results found");
-		if (searchObject != null) {
-			String officeId = searchObject
-					.getFromSearchNodeMap(
-							CustomerSearchConstants.CUSTOMER_SEARCH_OFFICE_ID);
-
-			if (officeId != null) {
-				Map map = searchObject.getSearchNodeMap();
-				Set set = map.keySet();
-				Iterator iterator = set.iterator();
-				if (iterator.hasNext()) {
-					html.text(" for ");
-					html.startTag("span", "class", "heading");
-					html.text(map.get(iterator.next()).toString());
-					html.text(" ");
-					html.endTag("span");
-				}
-				if (officeId.equals(ALL_BRANCHES)) {
-					renderInClause(html, "All Branches");
-				} else if (iterator.hasNext()) {
-					String officeName = map.get(iterator.next())
-							.toString();
-					if (!officeName.equals("")) {
-						renderInClause(html, officeName);
-					} else {
-						renderInClause(html, defaultOfficeName);
-					}
-				}
-
-				html.endTag("span");
-				html.endTag("td");
-				html.endTag("tr");
-				if (type.equalsIgnoreCase("single")) {
-					html.startTag("tr");
-					html.startTag("td", 
-						"colspan", "2", "valign", "top", "class", "blueline");
-					html.singleTag("br");
-					html.singleTag("img", 
-						"src", "pages/framework/images/trans.gif",
-						"width", "5",
-						"height", "3");
-					html.endTag("td");
-					html.endTag("tr");
-				}
-			}
-		}
-		html.endTag("table");
-		return html;
-	}
-
-	
-	//TODO one overloaded method will go 
 	XmlBuilder noResults(String officeName, String officeId, String searchString) {
 		XmlBuilder html = new XmlBuilder();
 		html.startTag("table", "width", "96%", "border", "0", "cellpadding",
@@ -476,8 +413,6 @@ public class TableTag extends BodyTagSupport {
 	}
 	/**
 	 * Function used to create end part of the table.
-	 *
-	 * @param result
 	 */
 	private void createEndTable(StringBuilder result,boolean bottomBlueLineRequired) {
 		if(bottomBlueLineRequired) {
@@ -545,7 +480,6 @@ public class TableTag extends BodyTagSupport {
 	 *            for type=single name is simple xml file name.for type=multiple
 	 *            we are taking last substring of name attribut of the tag.
 	 * @return table object.
-	 * @throws TableTagParseException
 	 */
 	private Table helperCache(String xmlFilePath, String key)
 			throws TableTagParseException {
