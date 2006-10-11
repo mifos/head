@@ -28,7 +28,9 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -205,6 +207,27 @@ public class CenterBOTest extends MifosTestCase {
 			assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, e.getKey());
 		}			
 		removeFees(fees);
+	}
+	
+	public void testFailureDuplicateName() throws Exception {
+		String name = "Center1";
+		center = TestObjectFactory.createCenter(name, CustomerStatus.CENTER_ACTIVE.getValue(), "", getMeeting(), new Date());
+		HibernateUtil.closeSession();
+		
+		String externalId = "12345";
+		Date mfiJoiningDate = getDate("11/12/2005");
+		meeting = getMeeting();
+		UserContext userContext =TestObjectFactory.getUserContext();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			center = new CenterBO(userContext, name, null,
+					null, null, externalId,mfiJoiningDate ,  officeId, meeting,
+					personnel);
+		} catch (CustomerException e) {
+			assertTrue(true);
+		}finally{
+		HibernateUtil.closeSession();
+		}
 	}
 	
 	public void testSuccessfulCreate() throws Exception {

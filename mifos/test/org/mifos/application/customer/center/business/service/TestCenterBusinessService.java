@@ -93,15 +93,43 @@ public class TestCenterBusinessService extends MifosTestCase {
 			assertTrue(false);
 		} catch (ServiceException e) {
 			assertTrue(true);
-		}
+		}finally{
+			HibernateUtil.closeSession();
+			}
+	}
+	
+	public void testFailureFindBySystemId() throws Exception {
+		center = createCenter("Center1");
 		HibernateUtil.closeSession();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			service.findBySystemId(center.getGlobalCustNum());
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}finally{
+		HibernateUtil.closeSession();
+		}
 	}
 	
 	public void testSearch() throws Exception{
-	center = createCenter("center1");
+		center = createCenter("center1");
 	  QueryResult queryResult = 	service.search("center1",Short.valueOf("1"));
 	  assertEquals(1,queryResult.getSize());
 	  assertEquals(1,queryResult.get(0,10).size());	
+	}
+	
+	public void testFailureSearch() throws Exception {
+		center = createCenter("Center1");
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			service.search("center1",Short.valueOf("1"));
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}finally{
+		HibernateUtil.closeSession();
+		}
 	}
 	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) throws Exception {
 		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
