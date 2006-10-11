@@ -163,7 +163,6 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 
 	public void addFinancialTransction(
 			FinancialTransactionBO financialTransaction) {
-		financialTransaction.setAccountTrxn(this);
 		this.financialTransactions.add(financialTransaction);
 	}
 

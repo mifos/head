@@ -41,24 +41,27 @@ package org.mifos.application.accounts.financial.business;
 import org.mifos.framework.business.PersistentObject;
 
 public class COAIDMapperEntity extends PersistentObject {
-	private short constantId;
+	private final Short constantId;
 
-	private COABO coa;
+	private final COABO coa;
+
+	protected COAIDMapperEntity() {
+		super();
+		constantId = null;
+		coa = null;
+	}
+
+	public COAIDMapperEntity(Short constantId, COABO coa) {
+		this.constantId = constantId;
+		this.coa = coa;
+	}
 
 	public COABO getCoa() {
 		return coa;
 	}
 
-	public void setCoa(COABO coa) {
-		this.coa = coa;
-	}
-
-	public short getConstantId() {
+	public Short getConstantId() {
 		return constantId;
-	}
-
-	public void setConstantId(short constantId) {
-		this.constantId = constantId;
 	}
 
 }

@@ -183,8 +183,7 @@
 												<mifos:mifoslabel name="product.inclin" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.cyclecounter" bundle="ProductDefUIResources" />
-
-												<span class="fontnormal"> <c:choose>
+												: <span class="fontnormal"> <c:choose>
 														<c:when test="${sessionScope.loanproductactionform.loanCounter==1}">
 															<mifos:mifoslabel name="product.yes" bundle="ProductDefUIResources" />
 														</c:when>

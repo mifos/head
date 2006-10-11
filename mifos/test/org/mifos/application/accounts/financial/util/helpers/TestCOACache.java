@@ -41,10 +41,8 @@ public class TestCOACache extends MifosTestCase {
 		Hibernate.initialize(coaAssets.getCOAHead());
 		Hibernate.initialize(coaAssets.getAssociatedGlcode());
 		Hibernate.initialize(coaAssets.getSubCategory());
-		COAIDMapperEntity mapperEntity = new COAIDMapperEntity();
-		mapperEntity.setConstantId(CategoryConstants.ASSETS);
-		mapperEntity.setCoa(coaAssets);
-
+		COAIDMapperEntity mapperEntity = new COAIDMapperEntity(
+				CategoryConstants.ASSETS, coaAssets);
 		return mapperEntity;
 
 	}

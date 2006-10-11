@@ -855,7 +855,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 				&& StringUtils.isNullAndEmptySafe(getMinInterestRate())) {
 			double maximumInterestRate = Double.valueOf(getMaxInterestRate());
 			double minimumInterestRate = Double.valueOf(getMinInterestRate());
-			if (maximumInterestRate < 999.0 && minimumInterestRate < 999.0
+			if (maximumInterestRate <= 999.0 && minimumInterestRate <= 999.0
 					&& maximumInterestRate < minimumInterestRate)
 				addError(errors, "MinMaxInterestRate",
 						ProductDefinitionConstants.ERRORSMINMAXINTCONFIG,
@@ -884,8 +884,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 			double maximumInterestRate = Double.valueOf(getMaxInterestRate());
 			double minimumInterestRate = Double.valueOf(getMinInterestRate());
 			double defaultInterestRate = Double.valueOf(getDefInterestRate());
-			if (maximumInterestRate < 999.0 && minimumInterestRate < 999.0
-					&& defaultInterestRate < 999.0) {
+			if (maximumInterestRate <= 999.0 && minimumInterestRate <= 999.0
+					&& defaultInterestRate <= 999.0) {
 				if (defaultInterestRate < minimumInterestRate
 						|| defaultInterestRate > maximumInterestRate)
 					addError(errors, "DefInterestRate",

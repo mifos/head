@@ -1,3 +1,4 @@
+/* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 INSERT INTO CURRENCY(CURRENCY_ID,CURRENCY_NAME,DISPLAY_SYMBOL,ROUNDING_MODE,ROUNDING_AMOUNT,DEFAULT_CURRENCY,DEFAULT_DIGITS_AFTER_DECIMAL)
 VALUES(1,'DOLLAR','$',1,.5,0,1);
 INSERT INTO CURRENCY(CURRENCY_ID,CURRENCY_NAME,DISPLAY_SYMBOL,ROUNDING_MODE,ROUNDING_AMOUNT,DEFAULT_CURRENCY,DEFAULT_DIGITS_AFTER_DECIMAL)	
@@ -12,6 +13,7 @@ VALUES(5,'CENT','',1,.5,0,1);
 
 
 /* Updated lookup_entity */
+/* The table LOOKUP_ENTITY will contain the entry for entities which need to be configured like center to be called kendra by mfi,ethenicity to be called something by the MFI, salutation to be called something by the MFI etc - Configuration */
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(1,'Client Status','Client Status');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
@@ -205,6 +207,7 @@ INSERT INTO FEE_TYPE(FEE_TYPE_ID,FEE_LOOKUP_ID,FLAT_OR_RATE,FORMULA)
 VALUES(5,3,NULL,NULL);
 
 /* MEETING_TYPE */
+/* The table MEETING_TYPE indicates to what the meeting is associated against like loan,customer etc - System */
 INSERT INTO MEETING_TYPE(MEETING_TYPE_ID,MEETING_PURPOSE,DESCRIPTION)
 VALUES(1,'LOANFREQUENCYOFINSTALLMENTS','Loan Frequency of istalments');
 INSERT INTO MEETING_TYPE(MEETING_TYPE_ID,MEETING_PURPOSE,DESCRIPTION) 
@@ -217,6 +220,7 @@ INSERT INTO MEETING_TYPE(MEETING_TYPE_ID,MEETING_PURPOSE,DESCRIPTION)
 VALUES(5,'FEEMEETING','Fees Meetings');
 
 /*recurrence_type*/
+/* The table RECURRENCE_TYPE indicates the type of meeting like daily,weekly,monthly - System */
 INSERT INTO RECURRENCE_TYPE(RECURRENCE_ID,RECURRENCE_NAME,DESCRIPTION)
 VALUES(1,'Week(s)','Weekly Recurrence');
 INSERT INTO RECURRENCE_TYPE(RECURRENCE_ID,RECURRENCE_NAME,DESCRIPTION)
@@ -224,6 +228,7 @@ VALUES(2,'Month(s)','Monthly Recurrence');
 INSERT INTO RECURRENCE_TYPE(RECURRENCE_ID,RECURRENCE_NAME,DESCRIPTION)
 VALUES(3,'Day(s)','Daily Recurrence');
 
+/* The table COUNTRY will contain information related to the country like country name etc - Configuration */
 INSERT INTO COUNTRY(COUNTRY_ID,COUNTRY_NAME,COUNTRY_SHORT_NAME)
 VALUES(1,'America','US');
 INSERT INTO COUNTRY(COUNTRY_ID,COUNTRY_NAME,COUNTRY_SHORT_NAME)
@@ -237,7 +242,7 @@ VALUES(5,'South Africa','SA');
 INSERT INTO COUNTRY(COUNTRY_ID,COUNTRY_NAME,COUNTRY_SHORT_NAME)
 VALUES(6,'United Kingdom','GB');
 
-
+/* The table Office_Level contains the differnt levels supported by the MFI like HeadOffice,RegionalOffice etc  - Configuration */
 INSERT INTO OFFICE_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,CONFIGURED)
 VALUES(1,NULL,104,0,1);
 INSERT INTO OFFICE_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,CONFIGURED)
@@ -251,7 +256,7 @@ VALUES(5,4,108,1,1);
 
 
 
-
+/* The table LOOKUP_VALUE will contain the entity described in LOOKUP_ENTITY for a given locale - Configuration */
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME)
 VALUES(1,1,' ');
 INSERT INTO LOOKUP_VALUE(LOOKUP_ID,ENTITY_ID,LOOKUP_NAME)
@@ -1246,18 +1251,21 @@ INSERT INTO LOOKUP_VALUE VALUES(558,90,' ');
 INSERT INTO LOOKUP_VALUE VALUES(559,90,' ');
 INSERT INTO LOOKUP_VALUE VALUES(560,87,' ');
 /*Personnel Level*/
+/* The table personnel level will contain the personnel hierarchy supported by the MFI(This feature is currently not supported) - Configuration */
 INSERT INTO PERSONNEL_LEVEL(LEVEL_ID, PARENT_LEVEL_ID, LEVEL_NAME_ID, INTERACTION_FLAG)
 VALUES(1,1,60,0);
 INSERT INTO PERSONNEL_LEVEL(LEVEL_ID, PARENT_LEVEL_ID, LEVEL_NAME_ID, INTERACTION_FLAG)
 VALUES(2,1,61,0);
 
+/* The table Language will contain the language specific attributes like language name etc--Configuration */
 INSERT INTO LANGUAGE(LANG_ID,LANG_NAME,LANG_SHORT_NAME,LOOKUP_ID)
 VALUES(1,'English','EN',189);
 
-
+/* The table Supported Locale will contain the locales supported by the MFI like English , french etc - Configuration */
 INSERT INTO SUPPORTED_LOCALE(LOCALE_ID,COUNTRY_ID,LANG_ID,LOCALE_NAME,DEFAULT_LOCALE)
 VALUES(1,6,1,'EN',1);
 
+/* The table LOOKUP_LABEL will contain the configuration information for the LOOKUP_ENTITY defined,like salutation entity could have mr,mrs etc - Configuration */
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
 VALUES(1,1,1,'Client Status');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
@@ -1437,6 +1445,7 @@ INSERT INTO LOOKUP_LABEL
 VALUES(172,88,1,'Service Charge');
 
 /**LOOKUP_VALUE_LOCALE table*/
+/* The table LOOKUP_VALUE_LOCALE will contain the description for a locale for the attributes defined in LOOKUP_LABEL  - Configuration */
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(1,1,1,'Partial Application');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
@@ -2392,6 +2401,7 @@ INSERT INTO LOOKUP_VALUE_LOCALE VALUES(708,1,370,'Voluntory Withdrawal Adjustmen
 
 
 /*Category Types*/
+/*The table CATEGORY_TYPE is Used for defining applicablity of the fees--System */
 INSERT INTO CATEGORY_TYPE(CATEGORY_ID,CATEGORY_LOOKUP_ID)
 VALUES(1,81);
 INSERT INTO CATEGORY_TYPE(CATEGORY_ID,CATEGORY_LOOKUP_ID)
@@ -2403,13 +2413,13 @@ VALUES(4,84);
 INSERT INTO CATEGORY_TYPE(CATEGORY_ID,CATEGORY_LOOKUP_ID)
 VALUES(5,86);
 
-
+/* The table PRD_TYPE will contain the configuration of lateness days, dormancy days associated to loan/saving product of the MFI - Configuration */
 INSERT INTO PRD_TYPE(PRD_TYPE_ID,PRD_TYPE_LOOKUP_ID,LATENESS_DAYS,DORMANCY_DAYS,VERSION_NO)
 VALUES(1,54,10,1,1);
 INSERT INTO PRD_TYPE(PRD_TYPE_ID,PRD_TYPE_LOOKUP_ID,LATENESS_DAYS,DORMANCY_DAYS,VERSION_NO)
 VALUES(2,55,12,30,1);
 
-
+/* The Table PRD_CATEGORY contains the differnt product categories like loan , savings supported by the system - System */
 INSERT INTO PRD_CATEGORY(PRD_CATEGORY_ID,PRD_TYPE_ID,GLOBAL_PRD_OFFERING_NUM,PRD_CATEGORY_NAME ,CREATED_DATE,CREATED_BY,OFFICE_ID,UPDATED_BY,UDPATED_DATE,STATE,DESCRIPTION,VERSION_NO)
 VALUES(1,1,'1-1','Other',NULL,NULL,NULL,NULL,NULL,1,NULL,1);
 INSERT INTO PRD_CATEGORY(PRD_CATEGORY_ID,PRD_TYPE_ID,GLOBAL_PRD_OFFERING_NUM,PRD_CATEGORY_NAME ,CREATED_DATE,CREATED_BY,OFFICE_ID,UPDATED_BY,UDPATED_DATE,STATE,DESCRIPTION,VERSION_NO)
@@ -2421,28 +2431,32 @@ VALUES(1,111);
 INSERT INTO OFFICE_CODE(CODE_ID,LOOKUP_ID)
 VALUES(2,112);
 
+/* The PRD_CATEGORY_STATUS table contains the different product category status supported by the product category like active,inactive etc - System */
 INSERT INTO PRD_CATEGORY_STATUS(PRD_CATEGORY_STATUS_ID,LOOKUP_ID) 
 VALUES(0,113);
 UPDATE PRD_CATEGORY_STATUS SET PRD_CATEGORY_STATUS_ID=0 WHERE LOOKUP_ID=113;
 INSERT INTO PRD_CATEGORY_STATUS(PRD_CATEGORY_STATUS_ID,LOOKUP_ID)
 VALUES(1,114);
 
+/* The PRD_STATE table contains the different states supported for the product types like active,inactive etc - System */
 INSERT INTO PRD_STATE(PRD_STATE_ID,PRD_STATE_LOOKUP_ID)
 VALUES(1,115);
 INSERT INTO PRD_STATE(PRD_STATE_ID,PRD_STATE_LOOKUP_ID)
 VALUES(2,116);
 
-
+/* The table Savings type contains information like Mandatory, Voluntary related to savings - System */
 INSERT INTO SAVINGS_TYPE(SAVINGS_TYPE_ID ,LOOKUP_ID)
 VALUES(1,118);
 INSERT INTO SAVINGS_TYPE(SAVINGS_TYPE_ID ,LOOKUP_ID)
 VALUES(2,119);
 
+/* The table Recommended Amount which contains information used in group savings account holding values like complete group , per individual - System */
 INSERT INTO RECOMMENDED_AMNT_UNIT(RECOMMENDED_AMNT_UNIT_ID,LOOKUP_ID)
 VALUES(1,120); 
 INSERT INTO RECOMMENDED_AMNT_UNIT(RECOMMENDED_AMNT_UNIT_ID,LOOKUP_ID)
 VALUES(2,121);
 
+/* The table Interest Calculation Types contains calculation types for savings like minimum balance , average balance - System */
 INSERT INTO INTEREST_CALCULATION_TYPES(INTEREST_CALCULATION_TYPE_ID,INTEREST_CALCULATION_LOOKUP_ID,DESCRIPTION)
 VALUES(1,122,NULL);
 INSERT INTO INTEREST_CALCULATION_TYPES(INTEREST_CALCULATION_TYPE_ID,INTEREST_CALCULATION_LOOKUP_ID,DESCRIPTION)
@@ -2453,6 +2467,7 @@ VALUES(1,124);
 INSERT INTO YES_NO_MASTER(YES_NO_MASTER_ID,LOOKUP_ID )
 VALUES(2,125); 
 
+/* The table account type contains the account types supported by the system like Loan , savings, customer - System */
 INSERT INTO ACCOUNT_TYPE(ACCOUNT_TYPE_ID,LOOKUP_ID,DESCRIPTION)
 VALUES(1,126,'Loan Account');
 INSERT INTO ACCOUNT_TYPE(ACCOUNT_TYPE_ID,LOOKUP_ID,DESCRIPTION)
@@ -2460,12 +2475,13 @@ VALUES(2,127,'Savings Account');
 INSERT INTO ACCOUNT_TYPE(ACCOUNT_TYPE_ID,LOOKUP_ID,DESCRIPTION)
 VALUES(3,140,'Customer Account');
 
+/* The table SPOUSE_FATHER_LOOKUP contains the spouse father data which is used in display - System */ 
 INSERT INTO SPOUSE_FATHER_LOOKUP(SPOUSE_FATHER_ID,LOOKUP_ID)
 VALUES(1,128);
 INSERT INTO SPOUSE_FATHER_LOOKUP(SPOUSE_FATHER_ID,LOOKUP_ID)
 VALUES(2,129);
 
-
+/* The table Fee Payment Type contains the applicability of fee like time of disburesement,time of first installment etc - System */
 INSERT INTO FEE_PAYMENT(FEE_PAYMENT_ID,FEE_PAYMENT_LOOKUP_ID)
 VALUES(1,146);
 INSERT INTO FEE_PAYMENT(FEE_PAYMENT_ID,FEE_PAYMENT_LOOKUP_ID)
@@ -2473,7 +2489,7 @@ VALUES(2,147);
 INSERT INTO FEE_PAYMENT(FEE_PAYMENT_ID,FEE_PAYMENT_LOOKUP_ID)
 VALUES(3,148);
 
-
+/* The table Fee Status contains the fee status supported by the system like active, inactive etc - System */
 INSERT INTO FEE_STATUS(STATUS_ID,STATUS_LOOKUP_ID)
 VALUES(1,165);
 INSERT INTO FEE_STATUS(STATUS_ID,STATUS_LOOKUP_ID)
@@ -2486,6 +2502,7 @@ VALUES(2,1,1,1);
 INSERT INTO FEE_PAYMENTS_CATEGORIES_TYPE(FEE_PAYMENTS_CATEGORY_TYPE_ID,FEE_PAYMENT_ID,CATEGORY_ID,FEE_TYPE_ID) 
 VALUES(3,1,1,1);
 
+/* The table Fee Formula master contains the formula for calculating fee amount like % of Interest, %of Principal etc - System */
 INSERT INTO FEE_FORMULA_MASTER(FORMULAId,FORUMLA_LOOKUP_ID)
 VALUES(1,149);
 INSERT INTO FEE_FORMULA_MASTER(FORMULAId,FORUMLA_LOOKUP_ID)
@@ -2493,12 +2510,14 @@ VALUES(2,150);
 INSERT INTO FEE_FORMULA_MASTER(FORMULAId,FORUMLA_LOOKUP_ID)
 VALUES(3,151);
 
+
+/* The table PERSONNEL_STATUS contains the different status that will be associated to a personnel like active, inactive etc. - System */ 
 INSERT INTO PERSONNEL_STATUS(PERSONNEL_STATUS_ID,LOOKUP_ID)
 VALUES(1,152);
 INSERT INTO PERSONNEL_STATUS(PERSONNEL_STATUS_ID,LOOKUP_ID)
 VALUES(2,153);
 
-
+/* The table Customer Addendence Types will contain the different attendence types supported by the MFI like present,absent etc - Configuration */
 INSERT INTO CUSTOMER_ATTENDANCE_TYPES 
 VALUES(1,194,'Present');
 INSERT INTO CUSTOMER_ATTENDANCE_TYPES 
@@ -2508,6 +2527,7 @@ VALUES(3,196,'Approved leave');
 INSERT INTO CUSTOMER_ATTENDANCE_TYPES 
 VALUES(4,197,'Late');
 
+/* The table Customer level will contain the different levels supported by the system like center,group etc - System */
 INSERT INTO CUSTOMER_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,MAX_CHILD_COUNT,MAX_INSTANCE_COUNT)
 VALUES(3,NULL,11,NULL,4,10);
 INSERT INTO CUSTOMER_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,MAX_CHILD_COUNT,MAX_INSTANCE_COUNT)
@@ -2515,7 +2535,7 @@ VALUES(2,3,12,NULL,2,12);
 INSERT INTO CUSTOMER_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,MAX_CHILD_COUNT,MAX_INSTANCE_COUNT)
 VALUES(1,2,13,NULL,1,30);
 
-
+/* The table Customer State contains the different states supported at each level of customer, like Center could have Partial, Pending state etc - System */
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
 VALUES(1,1,1,'Customer Was Partial',1);
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
@@ -2545,7 +2565,7 @@ VALUES(13,3,13,'Customer Was Active',1);
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
 VALUES(14,3,14,'Customer Was Inactive',1);
 
-
+/* The table Customer State Flag contains the different flags associated at the various customer states - System */
 INSERT INTO CUSTOMER_STATE_FLAG(FLAG_ID,FLAG_LOOKUP_ID,STATUS_ID,FLAG_DESCRIPTION,ISBLACKLISTED)
 VALUES(1,28,5,'Withdraw',0);
 INSERT INTO CUSTOMER_STATE_FLAG(FLAG_ID,FLAG_LOOKUP_ID,STATUS_ID,FLAG_DESCRIPTION,ISBLACKLISTED)
@@ -2589,7 +2609,7 @@ VALUES(20,34,12,'Other',0);
 
 
 
-
+/* The table PRD_STATUS contains the different status that would be associated to a product like loan active, savings active etc - System */
 INSERT INTO PRD_STATUS(OFFERING_STATUS_ID,PRD_STATE_ID,PRD_TYPE_ID,CURRENTLY_IN_USE,VERSION_NO)
 VALUES(1,1,1,1,1);
 INSERT INTO PRD_STATUS(OFFERING_STATUS_ID,PRD_STATE_ID,PRD_TYPE_ID,CURRENTLY_IN_USE,VERSION_NO)
@@ -2599,7 +2619,7 @@ VALUES(4,2,1,1,1);
 INSERT INTO PRD_STATUS(OFFERING_STATUS_ID,PRD_STATE_ID,PRD_TYPE_ID,CURRENTLY_IN_USE,VERSION_NO)
 VALUES(5,2,2,1,1);
 
-
+/* The table PRD_APPLICABLE_MASTER indicates to which type a product is being associated like client, group , center etc - System */
 INSERT INTO PRD_APPLICABLE_MASTER(PRD_APPLICABLE_MASTER_ID,LOOKUP_ID) 
 VALUES(1,68);
 INSERT INTO PRD_APPLICABLE_MASTER(PRD_APPLICABLE_MASTER_ID,LOOKUP_ID) 
@@ -2608,7 +2628,7 @@ INSERT INTO PRD_APPLICABLE_MASTER(PRD_APPLICABLE_MASTER_ID,LOOKUP_ID)
 VALUES(3,70);
 
 
-
+/* The table Account State contains the different states supported at each level of account, like Loan could have Partial, Pending state etc - System */
 INSERT INTO ACCOUNT_STATE(ACCOUNT_STATE_ID,LOOKUP_id,PRD_TYPE_ID,CURRENTLY_IN_USE)
 VALUES(1,17,1,1);
 INSERT INTO ACCOUNT_STATE(ACCOUNT_STATE_ID,LOOKUP_id,PRD_TYPE_ID,CURRENTLY_IN_USE)
@@ -2646,6 +2666,7 @@ VALUES(17,185,2,1);
 INSERT INTO ACCOUNT_STATE(ACCOUNT_STATE_ID,LOOKUP_id,PRD_TYPE_ID,CURRENTLY_IN_USE)
 VALUES(18,210,2,1);
 
+/* The table Account State Flag contains the different flags associated at the various account states - System */
 INSERT INTO ACCOUNT_STATE_FLAG(FLAG_ID,LOOKUP_ID,STATUS_ID,FLAG_DESCRIPTION,RETAIN_FLAG)
 VALUES(1,174,10,'Withdraw',0);
 INSERT INTO ACCOUNT_STATE_FLAG(FLAG_ID,LOOKUP_ID,STATUS_ID,FLAG_DESCRIPTION,RETAIN_FLAG)
@@ -2661,8 +2682,11 @@ VALUES(5,212,15,'Rejected',0);
 INSERT INTO ACCOUNT_STATE_FLAG(FLAG_ID,LOOKUP_ID,STATUS_ID,FLAG_DESCRIPTION,RETAIN_FLAG)
 VALUES(6,213,15,'Blacklisted',1);
 
+/* The table PAYMENT_TYPE contains the different payment types associated like cash,etc - System */
 INSERT INTO PAYMENT_TYPE(PAYMENT_TYPE_ID,PAYMENT_TYPE_LOOKUP_ID)
 VALUES(1,177);
+
+/* The table ACCOUNT_ACTION contains the different account actions that can be performed like deposit,withdraw,etc - System */
 INSERT INTO ACCOUNT_ACTION(ACCOUNT_ACTION_ID,LOOKUP_ID)
 VALUES(1,167);
 INSERT INTO ACCOUNT_ACTION(ACCOUNT_ACTION_ID,LOOKUP_ID)
@@ -2698,6 +2722,8 @@ VALUES(16,548);
 INSERT INTO ACCOUNT_ACTION(ACCOUNT_ACTION_ID,LOOKUP_ID)
 VALUES(17,549);
 /*Postion Table */
+
+/* The table Position contains the position values that can be associated to a client like President etc. - Configuration */
 INSERT INTO POSITION (POSITION_ID,LOOKUP_ID)
 VALUES(1,186);
 INSERT INTO POSITION (POSITION_ID,LOOKUP_ID)
@@ -2718,15 +2744,17 @@ VALUES(NULL,NULL,4,NULL);
 INSERT INTO OFFICE_ACTION_PAYMENT_TYPE(OFFICE_ID,PRD_TYPE_ID,ACCOUNT_ACTION_ID,PAYMENT_TYPE_ID)
 VALUES(NULL,NULL,5,NULL);
 
+/* The table Office Status contains the status that can be associated to a office like active,inactive etc - System */
 INSERT INTO OFFICE_STATUS(STATUS_ID,LOOKUP_ID)
 VALUES(1,15);
 INSERT INTO OFFICE_STATUS(STATUS_ID,LOOKUP_ID)
 VALUES(2,16);
 
+/* The table Office will contain the default Head office information of the MFI like officename etc - Configuration */
 INSERT INTO OFFICE( PARENT_OFFICE_ID, GLOBAL_OFFICE_NUM, STATUS_ID, OFFICE_CODE_ID, OFFICE_LEVEL_ID,  SEARCH_ID, OFFICE_SHORT_NAME, MAX_CHILD_COUNT,LOCAL_REMOTE_FLAG, DISPLAY_NAME, CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE, VERSION_NO)
 VALUES(NULL,'0001',1,NULL,1,'1.1','MIF1',2,1,'Mifos HO ',NULL,NULL,NULL,NULL,1);
 
-
+/* The table Office Address will contain the address information of the head office of the MFI - Configuration */
 INSERT INTO OFFICE_ADDRESS(OFFICE_ADDRESS_ID ,OFFICE_ID ,ADDRESS_1 ,ADDRESS_2 ,ADDRESS_3 ,CITY ,STATE ,COUNTRY, ZIP ,TELEPHONE )
 VALUES(1,1,'V-nagar','713/A','8th Cross','Bangalore','Karnataka','India','560017','9845241646');
 
@@ -2742,6 +2770,7 @@ VALUES(4,1,'CENTER','GROUP');
 INSERT INTO MFI_ATTRIBUTE(ATTRIBUTE_ID, OFFICE_ID, ATTRIBUTE_NAME, ATTRIBUTE_VALUE)
 VALUES(5,1,'CENTER','GROUP');
 
+/* The table Holiday will contain the list of holidays associated to an office - Configuration */
 INSERT INTO HOLIDAY(OFFICE_ID, HOLIDAY_DATE, HOLIDATY_NAME)
 VALUES(1,'2005-12-20','Chrismass');
 INSERT INTO HOLIDAY(OFFICE_ID, HOLIDAY_DATE, HOLIDATY_NAME)
@@ -2760,14 +2789,17 @@ VALUES(1,'2005-12-20');
 
 /* DONT EDIT THE LOGIN_NAME COLUMN VALUE IN THE FOLLOWING ROW BECAUSE IT WOULD BE USED AS DEFAULT USER
    PASSWORD FOR THE SAME IS BEING GENERATED BY INITIALIZER PLUGIN*/
-INSERT INTO PERSONNEL(PERSONNEL_ID,LEVEL_ID,GLOBAL_PERSONNEL_NUM,OFFICE_ID,TITLE,PERSONNEL_STATUS,PREFERRED_LOCALE,SEARCH_ID,MAX_CHILD_COUNT,PASSWORD,LOGIN_NAME,EMAIL_ID,PASSWORD_CHANGED,DISPLAY_NAME,CREATED_BY,
+ 
+/* The table Personnel contains the default user of the system with information like login name etc - Configuration */
+ INSERT INTO PERSONNEL(PERSONNEL_ID,LEVEL_ID,GLOBAL_PERSONNEL_NUM,OFFICE_ID,TITLE,PERSONNEL_STATUS,PREFERRED_LOCALE,SEARCH_ID,MAX_CHILD_COUNT,PASSWORD,LOGIN_NAME,EMAIL_ID,PASSWORD_CHANGED,DISPLAY_NAME,CREATED_BY,
 CREATED_DATE,UPDATED_BY,UPDATED_DATE,NO_OF_TRIES,LAST_LOGIN,LOCKED,VERSION_NO)
 VALUES(1,2,1,1,1,1,1,NULL,1,1,'mifos',NULL,1,'mifos',1,NULL,1,NULL,4,NULL,0,0);
 
+/* The table Personnel Details contains the address information of the default user  - Configuration */
 INSERT INTO PERSONNEL_DETAILS 
 VALUES(1,'Mifos',NULL,NULL,'MFI',123,'1979-12-12',NULL,50,NULL,NULL,NULL,'Bangalore',NULL,NULL,'Bangalore','Bangalore','Bangalore',1234,NULL);
 
-/* master data for table ENTITY_MASTER */
+/* the table ENTITY_MASTER is used for field configuration -- Configuration*/
 INSERT INTO ENTITY_MASTER(ENTITY_TYPE_ID,ENTITY_TYPE)
 VALUES(1,'Client');
 INSERT INTO ENTITY_MASTER(ENTITY_TYPE_ID,ENTITY_TYPE)
@@ -2821,6 +2853,7 @@ VALUES(23,'BulkEntry');
 
 /*Custom fields customized for GK
 Client*/
+/* The table Custom Field Definition will contain the additional information that will be required to be shown for a client , group etc for the MFI - Configuration */
 INSERT INTO CUSTOM_FIELD_DEFINITION(FIELD_ID,ENTITY_ID,FIELD_TYPE,ENTITY_TYPE,MANDATORY_FLAG,LEVEL_ID,DEFAULT_VALUE) 
 VALUES (1,10,2,1,1,1,NULL);
 INSERT INTO CUSTOM_FIELD_DEFINITION(FIELD_ID,ENTITY_ID,FIELD_TYPE,ENTITY_TYPE,MANDATORY_FLAG,LEVEL_ID,DEFAULT_VALUE) 
@@ -2853,6 +2886,7 @@ VALUES (7,66,2,22,0,1,NULL);
 INSERT INTO CUSTOM_FIELD_DEFINITION(FIELD_ID,ENTITY_ID,FIELD_TYPE,ENTITY_TYPE,MANDATORY_FLAG,LEVEL_ID,DEFAULT_VALUE)
 VALUES (8,67,2,21,0,1,NULL);
 
+/* The table Activity will contain all the activities supported by the system - System */
 INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
 VALUES(1,NULL,371,371 );
 INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
@@ -3210,9 +3244,11 @@ INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_L
 VALUES(191,136,555,555 );
 INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) VALUES(192,113,560,560 );
 
+/* The table Role will contain the default admin role required for the MFI - System */
 INSERT INTO ROLE(ROLE_ID,ROLE_NAME,VERSION_NO,CREATED_BY,CREATED_DATE,UPDATED_BY,UPDATED_DATE)
 VALUES(1,'Admin',1,NULL,NULL,NULL,NULL);
 
+/* The table Role Activity will contain the mapping between the role created for the mfi admin against the activities he can perform which could typically be all - System */
 INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID)
 VALUES(3,1);
 INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID)
@@ -3530,6 +3566,7 @@ VALUES(191,1);
 INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID) 
 VALUES(192,1);
 
+/* The table WEEK Days contains the week days information like Monday,Tuesday etc used by the system, it also contain the working day attribute against the same which can be configured by the MFI to indicate Monday is an offday - Configuration */
 INSERT INTO WEEK_DAYS_MASTER(WEEK_DAYS_MASTER_ID,LOOKUP_ID,WORKING_DAY,START_OF_FISCAL_WEEK)
 VALUES(1,72,0,0);
 INSERT INTO WEEK_DAYS_MASTER(WEEK_DAYS_MASTER_ID,LOOKUP_ID,WORKING_DAY,START_OF_FISCAL_WEEK)
@@ -3546,6 +3583,7 @@ INSERT INTO WEEK_DAYS_MASTER(WEEK_DAYS_MASTER_ID,LOOKUP_ID,WORKING_DAY,START_OF_
 VALUES(7,78,1,0);
 
 /* inserting VALUES in interest_type table*/
+/* The table Interest Types contains the different interest types supported by the system like Flat etc - System */
 INSERT INTO INTEREST_TYPES (INTEREST_TYPE_ID, LOOKUP_ID, CATEGORY_ID, DESCRIPTON) 
 VALUES(1,79,1,'Flat');
 
@@ -3555,6 +3593,7 @@ INSERT INTO INTEREST_CALC_RULE (INTEREST_CALC_RULE_ID, LOOKUP_ID)
 VALUES(2,89);
 
 /* Grace period types*/
+/* The table GRACE_PERIOD_TYPE contains the different grace types supported by the system like principal only grace,interest only grace etc - System */ 
 INSERT INTO GRACE_PERIOD_TYPE (GRACE_PERIOD_TYPE_ID, LOOKUP_ID) 
 VALUES(1,96);
 INSERT INTO GRACE_PERIOD_TYPE (GRACE_PERIOD_TYPE_ID, LOOKUP_ID) 
@@ -3562,7 +3601,7 @@ VALUES(2,97);
 INSERT INTO GRACE_PERIOD_TYPE (GRACE_PERIOD_TYPE_ID, LOOKUP_ID) 
 VALUES(3,98);
 
-
+/* The table Rank Days contains data like first,second,third,fourth,last which will be used in meeting -System */
 INSERT INTO RANK_DAYS_MASTER(RANK_DAYS_MASTER_ID,LOOKUP_ID)
 VALUES(1,99);
 INSERT INTO RANK_DAYS_MASTER(RANK_DAYS_MASTER_ID,LOOKUP_ID)
@@ -3575,6 +3614,7 @@ INSERT INTO RANK_DAYS_MASTER(RANK_DAYS_MASTER_ID,LOOKUP_ID)
 VALUES(5,103);
 
 /* master data for table collateral_type*/
+/* The table COLLATERAL_TYPE contains the collateral types used in the system - System */ 
 INSERT INTO COLLATERAL_TYPE (COLLATERAL_TYPE_ID, LOOKUP_ID) 
 VALUES(1,109);
 INSERT INTO COLLATERAL_TYPE (COLLATERAL_TYPE_ID, LOOKUP_ID) 
@@ -3582,11 +3622,13 @@ VALUES(2,110);
 
 
 /* master data for table fee_frequency_type*/
+/* The table Fee Frequency contains type of fees like periodic, one time - System */
 INSERT INTO FEE_FREQUENCY_TYPE(FEE_FREQUENCY_ID,LOOKUP_ID) VALUES(1,558);
 INSERT INTO FEE_FREQUENCY_TYPE(FEE_FREQUENCY_ID,LOOKUP_ID) VALUES(2,559);
 
 /*master data for table FIELD_CONFIGURATION */
 /*Middle Name for client and personnel*/
+/* The table Field Configuration will contain the MFI configuration related to fields being mandatory , hidden etc - Configuration */
 INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)
 VALUES(1,'MiddleName',1,0,0);
 INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)
@@ -3755,6 +3797,7 @@ VALUES(72,'ReceiptDate',23,0,0);
 
 
 /*Master data for table SYSTEM_CONFIGURATION */
+/* The table System Configuration will contain the different configuration items required for MFI like CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS etc - Configuration */
 INSERT INTO SYSTEM_CONFIGURATION(OFFICE_ID,SESSION_TIME_OUT,SCHEDULE_MEETING_ON_HOLIDAY,DAYS_FOR_CAL_DEFINITION,NAME_SEQUENCE,BACK_DATED_TXN_ALLOWED,CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS,CLIENT_CAN_EXIST_OUTSIDE_GROUP,NO_OF_INTEREST_DAYS)
 
 
@@ -3765,16 +3808,21 @@ INSERT INTO SYSTEM_CONFIGURATION(OFFICE_ID,SESSION_TIME_OUT,SCHEDULE_MEETING_ON_
 VALUES(1,1,'same_day',30,'first_name,middle_name,last_name,second_last_name',1,1,1,1,365);
 
 /*Added Table Personnel_Role */
+/* The table Personnel role will contain the role associated to the Admin user of the MFI - Configuration */
 INSERT INTO PERSONNEL_ROLE(PERSONNEL_ROLE_ID, ROLE_ID, PERSONNEL_ID)VALUES(1,1,1);
 
 
 /*Added for financials*/
+/* The table GLCODE will contain the different glcodes supported by the MFI, used in financial transactions - Configuration */
 INSERT INTO GL_CODE(GLCODE_ID,GLCODE_VALUE) 
 VALUES(1,10000);
+/* The table COA will contain the different Chart Of Accounts supported by MFI, like assets etc linked to a corrosponding glcode - Configuration */
 INSERT INTO COA(COA_ID,COA_NAME,GLCODE_ID) 
 VALUES(1,'ASSETS',1);
+/* The table COAHIERARCHY will contain the Chart of account linkages, like cash balance is under assets etc - Configuration */
 INSERT INTO COAHIERARCHY(COA_ID,PARENT_COAID) 
 VALUES(1,null);
+/* The table COA_IDMPPER will be used internally by the system, it is used to denote the associaton of a coa with the internal id used by the system for that COA */
 INSERT INTO COA_IDMAPPER(CONSTANT_ID,COA_ID,DESCRIPTION)
 VALUES(1,1,'');
 
@@ -4234,7 +4282,7 @@ INSERT INTO COAHIERARCHY VALUES(57,55);
 INSERT INTO COA_IDMAPPER VALUES(57,57,'');
 
 
-
+/* The table Financial Action will contain the different financial actions supported by the system like Payment , Adjutment etc - System */
 INSERT INTO FINANCIAL_ACTION
 VALUES(1,198);
 INSERT INTO FINANCIAL_ACTION
@@ -4290,6 +4338,7 @@ VALUES(4,'global_num','type4',1,1,1,94,99,'formula');
 INSERT INTO PENALTY (PENALTY_ID, GLOBAL_PENALTY_NUM, PENALTY_TYPE, OFFICE_ID, CATEGORY_ID, GLCODE_ID, LOOKUP_ID, RATE, FORMULA)
 VALUES(5,'global_num','type5',1,1,1,95,99,'formula');
 
+/* The table Report Category will contain the different report category supported by the MFI like Performance, Client Detail etc - Configuration */
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(1,'Client Detail');
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(2,'Performance');
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(3,'Kendra');
@@ -4298,6 +4347,7 @@ INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(5,'
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(6,'Analysis');
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(7,'Miscellaneous');
 
+/* The table Report will contain the different reports supported by the MFI like Client Summary etc. The report will be linked to the category under which it belongs - Configuration */
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(1,1,'Client Summary & History Report','report_designer');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(2,1,'Client Product Wise History Report','product_history');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(3,1,'Clients Settlement info Report',null);
@@ -4331,12 +4381,14 @@ INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(3,'Savings
 INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(4,'Savings Withdrawals');
 INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(5,'Fees/penalty payments');
 
+/* The table Supported Modes will contain the different payment modes supported by the system - System*/
 INSERT INTO SUPPORTED_MODES (MODE_ID,TRANSACTION_ID,PAYMENT_TYPE_ID) VALUES (1,1,1);
 INSERT INTO SUPPORTED_MODES (MODE_ID,TRANSACTION_ID,PAYMENT_TYPE_ID) VALUES (2,2,1);
 INSERT INTO SUPPORTED_MODES (MODE_ID,TRANSACTION_ID,PAYMENT_TYPE_ID) VALUES (3,3,1);
 INSERT INTO SUPPORTED_MODES (MODE_ID,TRANSACTION_ID,PAYMENT_TYPE_ID) VALUES (4,4,1);
 INSERT INTO SUPPORTED_MODES (MODE_ID,TRANSACTION_ID,PAYMENT_TYPE_ID) VALUES (5,5,1);
 
+/* The table FEE_UPDATE_TYPE indicates what in fee is changed like amount changed, status changed etc - System */ 
 INSERT INTO FEE_UPDATE_TYPE(LOOKUP_ID) VALUES(556);
 INSERT INTO FEE_UPDATE_TYPE(LOOKUP_ID) VALUES(557);
 

@@ -41,34 +41,29 @@ package org.mifos.application.accounts.financial.business;
 import org.mifos.framework.business.PersistentObject;
 
 public class COAHierarchyEntity extends PersistentObject {
-	private Short categoryId;
+	private final Short categoryId;
 
-	private COABO coa;
+	private final COABO coa;
 
-	private COAHierarchyEntity parentCategory;
+	private final COAHierarchyEntity parentCategory;
+
+	protected COAHierarchyEntity() {
+		super();
+		categoryId = null;
+		coa = null;
+		parentCategory = null;
+	}
 
 	public COABO getCoa() {
 		return coa;
-	}
-
-	public void setCoa(COABO coa) {
-		this.coa = coa;
 	}
 
 	public Short getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(Short categoryId) {
-		this.categoryId = categoryId;
-	}
-
 	public COAHierarchyEntity getParentCategory() {
 		return parentCategory;
-	}
-
-	public void setParentCategory(COAHierarchyEntity parentCategory) {
-		this.parentCategory = parentCategory;
 	}
 
 }

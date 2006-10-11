@@ -41,19 +41,21 @@ package org.mifos.application.accounts.financial.business;
 import org.mifos.framework.business.PersistentObject;
 
 public class GLCodeEntity extends PersistentObject {
-	private Short glcodeId;
+	private final Short glcodeId;
 
-	private String glcode;
-	
-	private COABO associatedCOA;
+	private final String glcode;
+
+	private final COABO associatedCOA;
+
+	protected GLCodeEntity() {
+		super();
+		glcodeId = null;
+		glcode = null;
+		associatedCOA = null;
+	}
 
 	public String getGlcode() {
 		return glcode;
-	}
-
-	public void setGlcode(String glcode) {
-
-		this.glcode = glcode;
 	}
 
 	public Short getGlcodeId() {
@@ -61,16 +63,7 @@ public class GLCodeEntity extends PersistentObject {
 		return glcodeId;
 	}
 
-	public void setGlcodeId(Short glcodeId){
-		this.glcodeId = glcodeId;
+	public COABO getAssociatedCOA() {
+		return associatedCOA;
 	}
-
-	public COABO getAssociatedCOA(){
-          return associatedCOA;
-	}
-
-	public void setAssociatedCOA(COABO associatedCOA){
-       this.associatedCOA = associatedCOA;
-	}
-
 }

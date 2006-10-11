@@ -68,15 +68,13 @@ public abstract class BaseAccountingEntry {
 			postedMoney = getAmountToPost(postedMoney, financialAction, glcode,
 					debitCreditFlag);
 			FinancialTransactionBO financialTransaction = new FinancialTransactionBO(
-					financialAction, postedMoney, glcode, financialActivity
-							.getAccountTrxn().getActionDate(),
+					financialActivity.getAccountTrxn(), null, financialAction,
+					glcode, financialActivity.getAccountTrxn().getActionDate(),
 					financialActivity.getAccountTrxn().getPersonnel(),
-					debitCreditFlag);
-			financialTransaction.setNotes(financialActivity.getAccountTrxn()
-					.getComments());
+					(short) 1, postedMoney, financialActivity.getAccountTrxn()
+							.getComments(), debitCreditFlag);
 			financialActivity.addFinancialTransaction(financialTransaction);
 		}
-
 	}
 
 	protected abstract void getSpecificAccountActionEntry()

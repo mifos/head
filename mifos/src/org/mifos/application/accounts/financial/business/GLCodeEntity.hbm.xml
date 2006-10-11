@@ -3,13 +3,13 @@
                             "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                             "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-    <class name="org.mifos.application.accounts.financial.business.GLCodeEntity" table="GL_CODE">
-        <id name="glcodeId" column="GLCODE_ID" >
-            <generator class="native"/>
-        </id>
-        
-        <property name="glcode" column="GLCODE_VALUE"/>
-        <one-to-one name="associatedCOA" class="org.mifos.application.accounts.financial.business.COABO" cascade="none" lazy="true" property-ref="associatedGlcode" />
-        
-    </class>
+	<class name="org.mifos.application.accounts.financial.business.GLCodeEntity" table="GL_CODE">
+		<id name="glcodeId" column="GLCODE_ID" access="field">
+			<generator class="native" />
+		</id>
+
+		<property name="glcode" column="GLCODE_VALUE" access="field" />
+		<one-to-one name="associatedCOA" class="org.mifos.application.accounts.financial.business.COABO" cascade="none" lazy="true" property-ref="associatedGlcode" access="field" />
+
+	</class>
 </hibernate-mapping>

@@ -45,58 +45,43 @@ import java.util.Set;
 import org.mifos.framework.business.BusinessObject;
 
 public class COABO extends BusinessObject {
-	private Short categoryId;
+	private final Short categoryId;
 
-	private String categoryName;
+	private final String categoryName;
 
-	private Set subCategory;
+	private final Set subCategory;
 
-	private GLCodeEntity associatedGlcode;
+	private final GLCodeEntity associatedGlcode;
 
-	private COAHierarchyEntity coaHierarchy;
+	private final COAHierarchyEntity coaHierarchy;
 
-	public COABO() {
-		super(null);
+	protected COABO() {
+		super();
+		categoryId = null;
+		categoryName = null;
+		subCategory = new HashSet();
+		associatedGlcode = null;
+		coaHierarchy = null;
 	}
 
 	public Short getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(Short categoryId) {
-		this.categoryId = categoryId;
-	}
-
 	public String getCategoryName() {
 		return categoryName;
-	}
-
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
 	}
 
 	public Set getSubCategory() {
 		return subCategory;
 	}
 
-	public void setSubCategory(Set subCategory) {
-		this.subCategory = subCategory;
-	}
-
 	public GLCodeEntity getAssociatedGlcode() {
 		return associatedGlcode;
 	}
 
-	public void setAssociatedGlcode(GLCodeEntity glcode) {
-		this.associatedGlcode = glcode;
-	}
-
 	public COAHierarchyEntity getCoaHierarchy() {
 		return coaHierarchy;
-	}
-
-	public void setCoaHierarchy(COAHierarchyEntity coaHierarchy) {
-		this.coaHierarchy = coaHierarchy;
 	}
 
 	public Set<COABO> getCurrentSubCategory() {
@@ -137,6 +122,7 @@ public class COABO extends BusinessObject {
 
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 
 		COABO coaIncomming = (COABO) obj;
@@ -145,6 +131,5 @@ public class COABO extends BusinessObject {
 			return true;
 		return false;
 	}
-
 
 }
