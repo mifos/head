@@ -40,15 +40,7 @@ public class NotesAction extends SearchAction {
 
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		if (method.equals(Methods.previous.toString())
-				|| method.equals(Methods.load.toString())
-				|| method.equals(Methods.preview.toString())
-				|| method.equals(Methods.cancel.toString())
-				|| method.equals(Methods.create.toString())
-				|| method.equals(Methods.search.toString())) {
-			return true;
-		} else
-			return false;
+		return true;
 	}
 
 	@TransactionDemarcate (joinToken = true)

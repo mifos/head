@@ -83,7 +83,7 @@
 		</state>
 		<state>
 			<statename>ActiveInBadStanding</statename>
-			<stateid>3</stateid>
+			<stateid>9</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>Rescheduled</statename>
@@ -156,7 +156,7 @@
 		</state>
 		<state>
 			<statename>ActiveInBadStanding</statename>
-			<stateid>3</stateid>
+			<stateid>9</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>Rescheduled</statename>
@@ -232,7 +232,7 @@
 		</state>
 		<state>
 			<statename>ActiveInBadStanding</statename>
-			<stateid>3</stateid>
+			<stateid>9</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>Rescheduled</statename>
@@ -290,7 +290,7 @@
 		</state>
 		<state>
 			<statename>ActiveInBadStanding</statename>
-			<stateid>3</stateid>
+			<stateid>9</stateid>
 			<possiblestates>
 				<possiblestate>
 					<statename>Rescheduled</statename>
