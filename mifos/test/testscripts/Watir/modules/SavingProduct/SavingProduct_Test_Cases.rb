@@ -1185,11 +1185,11 @@ class SavingProduct_Test_Cases < TestClass
     edit_savingproduct_status(prd_inst_name, @inactive_label)
     change_log(prd_inst_name,"2","5",rowcount) #change log shows 2 for active and 5 for inactive
     rowcount+=1
-    #$ie.button(:value,@savingprd_properties['product.back']).click
+    $ie.button(:value,@savingprd_properties['product.back']).click
     edit_savingproduct_status(prd_inst_name, @active_label)  
     change_log(prd_inst_name,"5","2",rowcount)
     rowcount+=1
-    #$ie.button(:value,@savingprd_properties['product.back']).click   
+    $ie.button(:value,@savingprd_properties['product.back']).click   
     $ie.link(:text,@savingprd_properties['product.admin']).click
   end
   
