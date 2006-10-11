@@ -543,9 +543,26 @@ public class PersonActionForm extends BaseActionForm {
 	}
 	private void handleManagePreviewValidations(ActionErrors errors,
 			HttpServletRequest request) {
+		validateNameDetail(errors);
+		validateEmail(errors);
+		validateDateOfBirth(errors);
+		validateGender(errors);
+		validateStatus(errors);
 		validateOffice(errors);
-		handleCreatePreviewValidations(errors,request);
+		validateUserHirerchy(errors);
+		validateloginName(errors);
+		checkForPassword(errors);
+		validateCustomFields(request, errors);
+		validateConfigurableMandatoryFields(request, errors,EntityType.PERSONNEL);
+	}
 
+	private void validateStatus(ActionErrors errors) {
+		if (StringUtils.isNullOrEmpty(status)) {
+			errors.add(PersonnelConstants.STATUS, new ActionMessage(
+					CustomerConstants.ERRORS_MANDATORY,
+					PersonnelConstants.STATUS));
+		}
+		
 	}
 
 	private void validateOffice(ActionErrors errors) {

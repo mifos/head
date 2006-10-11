@@ -127,10 +127,9 @@
 									<br>
 									<mifos:mifoslabel name="product.desc" bundle="ProductDefUIResources" />
 									<br>
-									<span class="fontnormal"> <c:if test="${!empty BusinessKey.description}">
-											<c:out value="${sessionScope.savingsproductactionform.description}" />
-											<br>
-										</c:if> </span>
+									<span class="fontnormal"> <c:out value="${sessionScope.savingsproductactionform.description}" />
+									<br>
+									</span>
 									<br>
 									<mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" />
 									: <span class="fontnormal"> 

@@ -212,14 +212,14 @@
             	<table width="95%" border="0" cellpadding="3" cellspacing="0">
               <tr>
                 <td colspan="2" class="fontnormalbold">
-			<mifos:mifoslabel name="Personnel.Status"  bundle="PersonnelUIResources"></mifos:mifoslabel>
+			<mifos:mifoslabel name="Personnel.Status" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			<br>
                     <br>
                 </td>
               </tr>
               <tr class="fontnormal">
                 <td width="22%" align="right">
-				<mifos:mifoslabel name="Personnel.ChangeStatus"  bundle="PersonnelUIResources"></mifos:mifoslabel>
+				<mifos:mifoslabel name="Personnel.ChangeStatus" mandatory="yes"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 				</td>
                 <td width="78%">
 					<mifos:select name="personActionForm" property="status">

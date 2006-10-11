@@ -618,11 +618,8 @@ public class PersonnelBO extends BusinessObject {
 					&& newLevel.equals(PersonnelLevel.NON_LOAN_OFFICER)) {
 				if (new PersonnelPersistence().getAllChildrenForLoanOfficer(
 						personnelId, getOffice().getOfficeId())) {
-					Object values[] = new Object[1];
-					values[0] = globalPersonnelNum;
 					throw new PersonnelException(
-							PersonnelConstants.HIERARCHY_CHANGE_EXCEPTION,
-							values);
+							PersonnelConstants.HIERARCHY_CHANGE_EXCEPTION);
 				}
 			} else if (level.getId().equals(
 					PersonnelLevel.NON_LOAN_OFFICER.getValue())

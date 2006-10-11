@@ -383,6 +383,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(1, getErrrorSize(PersonnelConstants.PASSWORD));
 		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_DOB));
 		assertEquals(1, getErrrorSize(PersonnelConstants.OFFICE));
+		assertEquals(1, getErrrorSize(PersonnelConstants.STATUS));
 		verifyInputForward();
 	}
 
