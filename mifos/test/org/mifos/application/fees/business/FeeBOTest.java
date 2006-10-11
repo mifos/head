@@ -248,6 +248,11 @@ public class FeeBOTest extends MifosTestCase {
 			assertTrue(true);
 		}
 	}	
+	
+	public void testFeeLevel(){
+		assertEquals(FeeLevel.CENTERLEVEL,FeeLevel.getFeeLevel(FeeLevel.CENTERLEVEL.getValue()));
+		assertEquals(null,FeeLevel.getFeeLevel(Short.valueOf("99")));
+	}
 	private boolean vaidateDefaultCustomerFee(Set<FeeLevelEntity> defaultCustomers, FeeCategory feeCategory){
 		boolean bCenter = false;
 		boolean bGroup = false;

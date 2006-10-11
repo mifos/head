@@ -38,7 +38,6 @@
 
 package org.mifos.framework.struts.plugin;
 
-import java.io.File;
 import java.net.URISyntaxException;
 
 import javax.servlet.ServletContext;
@@ -81,8 +80,6 @@ import org.mifos.framework.security.util.PersonRoles;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.InitializationReader;
-import org.mifos.framework.util.helpers.MifosNode;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.StringToMoneyConverter;
@@ -233,30 +230,9 @@ public class InitializerPlugin implements PlugIn {
 	private void configureAdminUser() throws XMLReaderException,
 			URISyntaxException, EncryptionException, HibernateProcessException,
 			SystemException {
-		MifosNode algorithmNode = null;
 		Session session = null;
-		String algorithm;
 		byte[] password;
 
-		MifosLogManager
-				.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-				.debug(
-						"Inside configureAdminUser method trying to read the algorithm for encryption");
-		InitializationReader initializationReader = new InitializationReader();
-		algorithmNode = initializationReader.getElement(new File(ResourceLoader
-				.getURI(FilePaths.INITIALIZATIONFILE)), Constants.ALGORITHM);
-		algorithm = algorithmNode.getElement(Constants.ALGORITHM);
-		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
-				"The algorithm for encrypting the password is : " + algorithm);
-
-		// setting the alogithm in the encryption factory
-		// EncryptionFactory encryptionFactory =
-		// EncryptionFactory.getInstance();
-		// encryptionFactory.setAlgorithm(algorithm);
-
-		// getting the encrypted password
-		// Encryptor encryptor = encryptionFactory.createEncryptor();
-		// password= encryptor.encrypt("mifos", "mifos");
 		password = EncryptionService.getInstance().createEncryptedPassword(
 				"mifos");
 		try {

@@ -131,10 +131,10 @@
 						</c:if> <!-- Link to create a new group -->
 						<c:choose>
 						<c:when test="${sessionScope.clientCustActionForm.groupFlag eq '1'}">
-						<a	href="GroupAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&office.officeId=<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeId}"/>">
+						<a	href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=<c:out value="${sessionScope.clientCustActionForm.parentGroup.office.officeId}"/>">
 						</c:when>
 						<c:otherwise>
-						<a	href="GroupAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&office.officeId=<c:out value="${sessionScope.clientCustActionForm.officeId}"/>">
+						<a	href="groupCustAction.do?method=hierarchyCheck&randomNUm=${sessionScope.randomNUm}&input=createGroup&office.officeId=<c:out value="${sessionScope.clientCustActionForm.officeId}"/>">
 						</c:otherwise>
 						</c:choose>
 
@@ -142,7 +142,7 @@
 							bundle="ClientUIResources" /> <mifos:mifoslabel
 							name="${ConfigurationConstants.GROUP}" /> </a> <br>
 						<!-- Link to create a new client --> <a
-							href="clientCreationAction.do?method=preLoad&recordOfficeId=0&recordLoanOfficerId=0" />
+							href="groupCustAction.do?method=loadSearch&input=createClient&recordOfficeId=0&recordLoanOfficerId=0" />
 						<mifos:mifoslabel name="client.CreateNewClientLink"
 							bundle="ClientUIResources" /> <mifos:mifoslabel
 							name="${ConfigurationConstants.CLIENT}" /> </a></span></td>

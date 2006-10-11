@@ -46,7 +46,7 @@ public class TestFeeBusinessService extends MifosTestCase {
 	public void testRetrieveFeesForCustomerFailure()throws Exception{
 		TestObjectFactory.simulateInvalidConnection();
 		try{
-		List<FeeBO> feeList = new FeeBusinessService().retrieveCustomerFees();
+		 new FeeBusinessService().retrieveCustomerFees();
 		fail();
 
 		} catch (ServiceException e) {
@@ -68,7 +68,7 @@ public class TestFeeBusinessService extends MifosTestCase {
 	public void testRetrieveFeesForProductFailure()throws Exception{
 		TestObjectFactory.simulateInvalidConnection();
 		try{
-		List<FeeBO> feeList = new FeeBusinessService().retrieveProductFees();
+		 new FeeBusinessService().retrieveProductFees();
 		fail();
 
 		} catch (ServiceException e) {
@@ -92,7 +92,7 @@ public class TestFeeBusinessService extends MifosTestCase {
 	public void testRetrieveCustomerFeesByCategaroyTypeFailure()throws Exception{
 		TestObjectFactory.simulateInvalidConnection();
 		try{
-		List<FeeBO> feeList = new FeeBusinessService().retrieveCustomerFeesByCategaroyType(FeeCategory.ALLCUSTOMERS);
+		 new FeeBusinessService().retrieveCustomerFeesByCategaroyType(FeeCategory.ALLCUSTOMERS);
 		fail();
 
 		} catch (ServiceException e) {
