@@ -327,8 +327,9 @@ class TestClass
   # To log out from the application 
   def mifos_logout()
     begin
-      $ie.link(:text,"Logout").click
-      $logger.log_results("Clicked Logout link","NA","NA","NA")
+      #$ie.link(:text,"Logout").click
+      $ie.goto($test_site+"/loginAction.do?method=logout")
+      $logger.log_results("Logging out of the application","NA","NA","NA")
 	  #$ie.close
 	  clean_up()
 	  exit

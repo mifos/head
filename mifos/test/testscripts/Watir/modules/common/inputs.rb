@@ -37,26 +37,6 @@ $location_msg="Please specify a Meeting location"
 
 #meeting end
 
-#Group start
-$group_name_msg="Please specify Name"
-$group_LO_msg="Please select Formed By"
-$group_custom_msg="Please specify additional information"
-$group_review="Review the information below. Click Submit if you are satisfied or click Edit to make changes. Click Cancel to return to Clients & Accounts without submitting information"
-$group_select_center="Create a new Group - Select a Kendra"
-$clicnts_Accounts_msg="To review or edit a Member, Group,  Kendra, or account"
-$group_success="You have successfully created a new Group"
-$group_select_group="Create new Group - Enter Group information" 
-$group_edit="Edit Group information"
-$group_edit_message_check="Edit Group information" 
-$group_edit_review="Preview Group information"
-$change_log="View change log"
-$center_membership="Edit Kendra membership"
-$center_membership_select_center="Change Kendramembership"
-$center_membership_select_center_confirm="Change Kendra membership" 
-$group_loan="Create Loan Account -  Enter loan account information"
-$view_all_closed_accounts_group="View all closed accounts"
-#Group end
-
 #Client start
 $Member_select_group="Create new Member - Select Group"
 $Member_select_Member="Create New Member - Enter personal information"
