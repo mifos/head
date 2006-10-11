@@ -97,6 +97,7 @@ public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
 		this.lastPaymentAmountOption = lastPaymentAmountOption;
 	}
 	
+	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String method = request.getParameter("method");
 		ActionErrors errors = null;

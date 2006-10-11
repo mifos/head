@@ -54,6 +54,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class SavingsClosureActionForm extends ValidatorActionForm{
 	private String receiptId;
@@ -127,21 +128,20 @@ public class SavingsClosureActionForm extends ValidatorActionForm{
 			UserContext userContext= (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 			ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.accounts.savings.util.resources.SavingsUIResources", userContext.getPereferedLocale());
 			errors = new ActionErrors();
-			if( this.paymentTypeId==null||this.paymentTypeId.equals("")){
+			if( StringUtils.isNullOrEmpty(getPaymentTypeId()))
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("Savings.paymentType")));
-			}
 			
-			if(this.receiptDate!=null && !this.receiptDate.equals("")){
-				ActionErrors dateError = validateDate(this.receiptDate,resources.getString("Savings.receiptDate"),userContext);
+			if(this.getReceiptDate()!=null && !this.getReceiptDate().equals("")){
+				ActionErrors dateError = validateDate(this.getReceiptDate(),resources.getString("Savings.receiptDate"),userContext);
 				if( dateError!=null &&!dateError.isEmpty())
 					errors.add(dateError);
 			}
 
-			if( this.customerId==null||this.customerId.equals("")){
+			if(StringUtils.isNullOrEmpty(getCustomerId())){
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY, resources.getString("Savings.ClientName")));
 			}
 			
-			if( this.notes==null||this.notes.equals("")){
+			if( StringUtils.isNullOrEmpty(getNotes())){
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY, resources.getString("Savings.notes")));
 			}
 		}

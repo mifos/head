@@ -49,9 +49,6 @@ import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.components.logger.LoggerConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
@@ -59,8 +56,6 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class MeetingActionForm extends BaseActionForm {
 	private static final long serialVersionUID = 44l;
-
-	 MifosLogger meetingLogger = MifosLogManager.getLogger(LoggerConstants.MEETINGLOGGER);
 
 	private String meetingId;
 
@@ -84,8 +79,6 @@ public class MeetingActionForm extends BaseActionForm {
 	
 	private String meetingPlace;
 	
-	private String  customerId;
-
 	private String customerLevel;
 	
 	private String input;
@@ -112,14 +105,6 @@ public class MeetingActionForm extends BaseActionForm {
 
 	public void setFrequency(String frequency) {
 		this.frequency = frequency;
-	}
-
-	public MifosLogger getMeetingLogger() {
-		return meetingLogger;
-	}
-
-	public void setMeetingLogger(MifosLogger meetingLogger) {
-		this.meetingLogger = meetingLogger;
 	}
 
 	public String getMeetingPlace() {
@@ -195,43 +180,43 @@ public class MeetingActionForm extends BaseActionForm {
 	}
 
 	public CustomerLevel getCustomerLevelValue() {
-		return CustomerLevel.getLevel(Short.valueOf(customerLevel));
+		return CustomerLevel.getLevel(Short.valueOf(getCustomerLevel()));
 	}
 	
 	public WeekDay getWeekDayValue() {
-		return StringUtils.isNullAndEmptySafe(weekDay)?WeekDay.getWeekDay(Short.valueOf(weekDay)):null;
+		return StringUtils.isNullAndEmptySafe(getWeekDay())?WeekDay.getWeekDay(Short.valueOf(getWeekDay())):null;
 	}
 	
 	public RecurrenceType getRecurrenceType() {
-		return StringUtils.isNullAndEmptySafe(frequency)?RecurrenceType.getRecurrenceType(Short.valueOf(frequency)):null;
+		return StringUtils.isNullAndEmptySafe(getFrequency())?RecurrenceType.getRecurrenceType(Short.valueOf(getFrequency())):null;
 	}
 	
 	public boolean isMonthlyOnDate() {
-		return getRecurrenceType().equals(RecurrenceType.MONTHLY) && monthType.equals(MeetingConstants.MONTHLY_ON_DATE); 
+		return getRecurrenceType().equals(RecurrenceType.MONTHLY) && getMonthType().equals(MeetingConstants.MONTHLY_ON_DATE); 
 	}
 	
 	public Short getRecurWeekValue() {
-		return getShortValue(recurWeek);
+		return getShortValue(getRecurWeek());
 	}
 	
 	public Short getRecurMonthValue() {
-		return getShortValue(recurMonth);
+		return getShortValue(getRecurMonth());
 	}
 	
 	public Short getDayRecurMonthValue() {
-		return getShortValue(dayRecurMonth);
+		return getShortValue(getDayRecurMonth());
 	}
 	
 	public Short getMonthDayValue() {
-		return getShortValue(monthDay);
+		return getShortValue(getMonthDay());
 	}
 	
 	public RankType getMonthRankValue() {
-		return StringUtils.isNullAndEmptySafe(monthRank)?RankType.getRankType(Short.valueOf(monthRank)):null;
+		return StringUtils.isNullAndEmptySafe(getMonthRank())?RankType.getRankType(Short.valueOf(getMonthRank())):null;
 	}
 	
 	public WeekDay getMonthWeekValue() {
-		return StringUtils.isNullAndEmptySafe(monthWeek)?WeekDay.getWeekDay(Short.valueOf(monthWeek)):null;
+		return StringUtils.isNullAndEmptySafe(getMonthWeek())?WeekDay.getWeekDay(Short.valueOf(getMonthWeek())):null;
 	}
 	
 	public Integer getMeetingIdValue() {
@@ -292,53 +277,12 @@ public class MeetingActionForm extends BaseActionForm {
 				errors.add(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY, new ActionMessage(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
 	}
 	
-	/**
-	 * This function returns the meetingId
-	 * @return Returns the meetingId.
-	 */
-	
+
 	public String getMeetingId() {
 		return meetingId;
 	}
-
-	/**
-	 * This function sets the meetingId
-	 * @param meetingId the meetingId to set.
-	 */
 	
 	public void setMeetingId(String meetingId) {
 		this.meetingId = meetingId;
 	}
-
-	/**
-	 * This function returns the customerId
-	 * @return Returns the customerId.
-	 */
-	
-	public String getCustomerId() {
-		return customerId;
-	}
-
-	/**
-	 * This function sets the customerId
-	 * @param customerId the customerId to set.
-	 */
-	
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
-
-   public void clearForm()
-   {
-	   this.customerId="";
-	   this.frequency="";
-	   this.meetingId="";
-	   this.meetingPlace="";
-	   this.monthDay="";
-	   this.monthRank="";
-	   this.monthType="";
-	   this.monthWeek="";
-	   this.recurWeek="";
-	   this.weekDay="";
-   }
 }

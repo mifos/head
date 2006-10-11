@@ -10,7 +10,6 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.security.util.UserContext;
@@ -104,14 +103,14 @@ public class SavingsDepositWithdrawalActionForm  extends BaseActionForm{
 		if(method!=null && method.equals(Methods.preview.toString())){
 			errors = new ActionErrors();
 			
-			if( this.trxnTypeId==null||this.trxnTypeId.equals("")){
+			if( StringUtils.isNullOrEmpty(getTrxnTypeId())){
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("Savings.paymentType")));
 			}
 			
-			if(amount==null || getAmountValue().getAmountDoubleValue()<=0.0)
+			if(getAmount()==null || getAmountValue().getAmountDoubleValue()<=0.0)
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("Savings.amount")));
 			
-			if( this.paymentTypeId==null||this.paymentTypeId.equals("")){
+			if(StringUtils.isNullOrEmpty(getPaymentTypeId())){
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("Savings.modeOfPayment")));
 			}
 			
@@ -119,12 +118,12 @@ public class SavingsDepositWithdrawalActionForm  extends BaseActionForm{
 			if( dateError != null && !dateError.isEmpty())
 				errors.add(dateError);
 			
-			if(this.receiptDate!=null && !this.receiptDate.equals("")){
-				dateError = validateDate(this.receiptDate,resources.getString("Savings.receiptDate"),userContext);
+			if(this.getReceiptDate()!=null && !this.getReceiptDate().equals("")){
+				dateError = validateDate(getReceiptDate(),resources.getString("Savings.receiptDate"),userContext);
 				if( dateError!=null &&!dateError.isEmpty())
 					errors.add(dateError);
 			}
-			if(StringUtils.isNullOrEmpty(this.customerId)){
+			if(StringUtils.isNullOrEmpty(getCustomerId())){
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY, resources.getString("Savings.ClientName")));
 			}
 		}
