@@ -16,6 +16,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -26,6 +27,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -108,6 +111,42 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
+	public void testSuccessfullLoad_Client() throws Exception {
+		createInitialObjects();
+		createClients();
+		savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savings = createSavingsAccount("000X00000000017", savingsOffering,
+				client1, AccountStates.SAVINGS_ACC_APPROVED);
+		HibernateUtil.closeSession();
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsClosureAction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		verifyForward("load_success");
+		savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY,request);
+		Hibernate.initialize(savings.getAccountPayments());
+		Hibernate.initialize(savings.getAccountFees());
+		Hibernate.initialize(savings.getAccountActionDates());
+		assertNotNull(SessionUtils.getAttribute(
+				MasterConstants.PAYMENT_TYPE,request));
+		List<CustomerBO> clientList = (List<CustomerBO>)SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,request);
+		assertNull(clientList);
+
+		group = new CustomerPersistence().getCustomer(group
+				.getCustomerId());
+		center = new CustomerPersistence().getCustomer(center
+				.getCustomerId());
+		client1 = new CustomerPersistence()
+				.getCustomer(client1.getCustomerId());
+		client2 = new CustomerPersistence()
+				.getCustomer(client2.getCustomerId());
+		client3 = new CustomerPersistence()
+				.getCustomer(client3.getCustomerId());
+		client4 = new CustomerPersistence()
+				.getCustomer(client4.getCustomerId());
+	}
+	
 	public void testSuccessfullLoad() throws Exception {
 		createInitialObjects();
 		createClients();
@@ -150,9 +189,8 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		addRequestParameter("receiptId", "101");
-		String currentDate = DateHelper.getCurrentDate(userContext
-				.getPereferedLocale());
-		addRequestParameter("receiptDate", currentDate);
+		addRequestParameter("receiptDate", DateHelper.getCurrentDate(userContext
+				.getPereferedLocale()));
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("customerId", "1");
 		addRequestParameter("notes", "notes");
@@ -162,6 +200,23 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		verifyForward("preview_success");
 	}
 
+	public void testSuccessfullPreview_withoutReceipt()throws Exception {
+		AccountPaymentEntity payment = new AccountPaymentEntity(null,
+				new Money(Configuration.getInstance().getSystemConfig()
+						.getCurrency(), "500"), null, null, null);
+		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
+				request);
+		addRequestParameter("receiptId", "");
+		addRequestParameter("receiptDate", "");
+		addRequestParameter("paymentTypeId", "1");
+		addRequestParameter("customerId", "1");
+		addRequestParameter("notes", "notes");
+		setRequestPathInfo("/savingsClosureAction.do");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyForward("preview_success");
+	}
+	
 	public void testSuccessfullPrevious() {
 		setRequestPathInfo("/savingsClosureAction.do");
 		addRequestParameter("method", "previous");
@@ -169,8 +224,16 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		verifyForward("previous_success");
 	}
 
+	public void testSuccessfullCancel() throws Exception {
+		setRequestPathInfo("/savingsClosureAction.do");
+		addRequestParameter("method", "cancel");
+		actionPerform();
+		verifyForward("close_success");
+	}
+	
 	public void testSuccessfullCloseAccount() throws Exception {
 		createInitialObjects();
+		createClients();
 		savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
 		savings = helper.createSavingsAccount("000X00000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
@@ -213,43 +276,38 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		savings.setUserContext(userContext);
-		Money interestAtClosure = savings
-				.calculateInterestForClosure(new SavingsHelper()
-						.getCurrentDate());
 
-		group = savings.getCustomer();
-		center = group.getParentCustomer();
-		savings.getSavingsOffering().getDescription();
-		savings.getCustomer().getPersonnel();
-
-		AccountPaymentEntity payment = new AccountPaymentEntity(savings,
-				balanceAmount.add(interestAtClosure), null, null,
-				new PaymentTypeEntity(Short.valueOf("1")));
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsClosureAction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		verifyForward("load_success");
 
-		for (AccountPaymentEntity acPayment : savings.getAccountPayments())
-			acPayment.getAccountTrxns();
-		for (AccountActionDateEntity actionDate : savings
-				.getAccountActionDates())
-			actionDate.getActionDate();
-		for (AccountFeesEntity fee : savings.getAccountFees())
-			fee.getAccountFeeAmount();
-		for (AccountNotesEntity notes : savings.getAccountNotes())
-			notes.getCommentDate();
+		addRequestParameter("receiptId", "101");
+		addRequestParameter("receiptDate", DateHelper.getCurrentDate(userContext
+				.getPereferedLocale()));
+		addRequestParameter("paymentTypeId", "1");
+		addRequestParameter("customerId", "1");
+		addRequestParameter("notes", "closing account");
+		setRequestPathInfo("/savingsClosureAction.do");
+		addRequestParameter("method", "preview");
+		actionPerform();
 
-		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
-				request);
-		addRequestParameter("notes", "this is the notes added");
 		setRequestPathInfo("/savingsClosureAction.do");
 		addRequestParameter("method", "close");
 		actionPerform();
+		
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward("close_success");
 		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
+		
+		assertEquals(new Money(), savings.getSavingsBalance());
+		assertEquals(AccountState.SAVINGS_ACC_CLOSED.getValue(), savings.getAccountState().getId());
 	}
 
+	
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

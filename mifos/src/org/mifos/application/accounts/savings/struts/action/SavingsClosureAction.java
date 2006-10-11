@@ -239,15 +239,18 @@ public class SavingsClosureAction extends BaseAction {
 			String customerId) throws Exception {
 		Object obj = SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
 				request);
+		CustomerBO client = null;
 		if (obj != null && customerId != null && customerId != "") {
 			List<CustomerBO> customerList = (List<CustomerBO>) obj;
 			for (CustomerBO customer : customerList) {
 				if (customer.getCustomerId()
-						.equals(Integer.valueOf(customerId)))
-					return customer;
+						.equals(Integer.valueOf(customerId))){
+					client = customer;
+					break;
+				}
 			}
 		}
-		return null;
+		return client;
 	}
 
 	@TransactionDemarcate(validateAndResetToken = true)

@@ -213,7 +213,7 @@ function goToCancelPage(){
 										name="meeting.labelThe" bundle="MeetingResources" /> </span>
 
 
-									<mifos:select	property="monthRank" onfocus="checkMonthType2()">
+									<mifos:select	property="monthRank" >
 										<c:forEach var="weekRank" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'WeekRankList')}" >
 												<html-el:option value="${weekRank.id}">${weekRank.name}</html-el:option>
 										</c:forEach>

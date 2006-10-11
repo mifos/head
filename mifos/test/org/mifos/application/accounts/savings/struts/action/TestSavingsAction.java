@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsRecentActivityView;
@@ -16,6 +17,8 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
@@ -32,6 +35,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -228,6 +232,15 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	}
 
+	public void testSuccessfulEditPreview() throws Exception {
+		createAndAddObjectsForCreate();
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "editPreview");
+		actionPerform();
+		verifyForward("editPreview_success");
+
+	}
+	
 	public void testSuccessfulPrevious() throws Exception {
 		createAndAddObjects();
 		setRequestPathInfo("/savingsAction.do");
@@ -459,15 +472,30 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering("sav prd1", "prd1");
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountStates.SAVINGS_ACC_APPROVED);
 		savingsOffering = null;
+		
+		Money enteredAmount = new Money(TestObjectFactory.getMFICurrency(), "100.0");
+		PaymentData paymentData = new PaymentData(enteredAmount, savings
+				.getPersonnel(), Short.valueOf("1"), new Date(System
+				.currentTimeMillis()));
+		paymentData.setCustomer(group);
+		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
+		paymentData.setRecieptNum("34244");
+		AccountActionDateEntity accountActionDate = savings
+				.getAccountActionDate(Short.valueOf("1"));
+
+		SavingsPaymentData savingsPaymentData = new SavingsPaymentData(accountActionDate);
+		paymentData.addAccountPaymentData(savingsPaymentData);
+		
+		savings.applyPayment(paymentData);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		savings.setUserContext(userContext);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		try {
-			SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
-					TestObjectFactory.getUserContext(), request.getSession());
-		} catch (Exception e) {
-			assertEquals(e.getMessage(), false);
-		}
+				
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "getTransactionHistory");
 		addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());
@@ -475,8 +503,12 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("getTransactionHistory_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(((List<SavingsTransactionHistoryView>)SessionUtils.getAttribute(SavingsConstants.TRXN_HISTORY_LIST,request))
-				.size(), 0);
+		assertEquals(2, ((List<SavingsTransactionHistoryView>)SessionUtils.getAttribute(SavingsConstants.TRXN_HISTORY_LIST,request))
+				.size());
+		HibernateUtil.closeSession();	
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
 	}
 
 	public void testGetDepositDueDetails() throws Exception {

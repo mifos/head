@@ -71,7 +71,6 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -93,7 +92,6 @@ import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -296,18 +294,16 @@ public class SavingsAction extends AccountAppAction {
 
 	private List<CustomFieldView> getAccountCustomFieldView(
 			SavingsActionForm savingsActionForm) {
+		List<CustomFieldView> customfield = null;
 		if (savingsActionForm.getAccountCustomFieldSet() != null) {
-			List<CustomFieldView> customfield = new ArrayList<CustomFieldView>();
+			customfield = new ArrayList<CustomFieldView>();
 			for (AccountCustomFieldEntity entity : savingsActionForm
 					.getAccountCustomFieldSet()) {
 				customfield.add(new CustomFieldView(entity.getFieldId(), entity
 						.getFieldValue(), null));
 			}
-
-			return customfield;
-
 		}
-		return null;
+		return customfield;
 	}
 
 	@TransactionDemarcate(saveToken = true)
@@ -446,7 +442,6 @@ public class SavingsAction extends AccountAppAction {
 			for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntitySet) {
 				Set<FinancialTransactionBO> financialTransactionBOSet = accountTrxnEntity
 						.getFinancialTransactions();
-
 				for (FinancialTransactionBO financialTransactionBO : financialTransactionBOSet) {
 					SavingsTransactionHistoryView savingsTransactionHistoryView = new SavingsTransactionHistoryView();
 					savingsTransactionHistoryView

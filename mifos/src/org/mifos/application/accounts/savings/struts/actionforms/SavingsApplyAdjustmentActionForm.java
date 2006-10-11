@@ -49,10 +49,12 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
 
@@ -100,7 +102,7 @@ public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
 	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String method = request.getParameter("method");
-		ActionErrors errors = null;
+		ActionErrors errors = new ActionErrors();
 		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
 			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 		try{
@@ -114,9 +116,12 @@ public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
 					SavingsBO savings = (SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
 					AccountPaymentEntity payment = savings.getLastPmnt();
 					if(payment==null || savings.getLastPmntAmnt()==0 || !(new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL) || new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))){
-						if(errors==null)
-							errors = new ActionErrors();
 						errors.add(SavingsConstants.INVALID_LAST_PAYMENT,new ActionMessage(SavingsConstants.INVALID_LAST_PAYMENT));
+					}
+					
+					if (StringUtils.isNullAndEmptySafe(getNote())&& getNote().length() > CustomerConstants.COMMENT_LENGTH) {
+						errors.add(AccountConstants.MAX_NOTE_LENGTH, new ActionMessage(
+								AccountConstants.MAX_NOTE_LENGTH, AccountConstants.COMMENT_LENGTH));
 					}
 				}
 				if(errors==null){

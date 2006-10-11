@@ -4,6 +4,8 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -239,9 +241,30 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "preview");
 		actionPerform();
-		verifyActionErrors(new String[] { "errors.invalidlastpayment" });
+		verifyActionErrors(new String[] { SavingsConstants.INVALID_LAST_PAYMENT });
 	}
 
+	public void testSuccessfullPreviewFailure_LongNotes() throws Exception {
+		createInitialObjects();
+		savingsOffering = createSavingsOffering();
+		savings = createSavingsAccount("000X00000000017", savingsOffering,
+				group, AccountStates.SAVINGS_ACC_APPROVED);
+		HibernateUtil.closeSession();
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("note", "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" +
+				"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" +
+				"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" +
+				"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" +
+				"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" +
+				"abcdefghijklmnopqrstuvwxyz");
+		actionPerform();
+		assertEquals(2, getErrrorSize());
+		assertEquals(1, getErrrorSize(AccountConstants.MAX_NOTE_LENGTH));
+		assertEquals(1, getErrrorSize(SavingsConstants.INVALID_LAST_PAYMENT));		
+	}
+	
 	public void testSuccessfullPrevious() {
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "previous");

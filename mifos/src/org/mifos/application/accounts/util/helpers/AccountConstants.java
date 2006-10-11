@@ -205,7 +205,7 @@ public interface AccountConstants {
 	
 	public static final String NOT_SUPPORTED_DURATION_TYPE = "errors.not_supported_durationtype";
 	public static final String NOT_SUPPORTED_INTEREST_DAYS = "errors.not_supported_interestdays";
-	
+	public static final String MAX_NOTE_LENGTH ="errors.maximumlengthForNotes";
 	public String CLOSEDLOANACCOUNTSLIST="ClosedLoanAccountsList";
 	public String CLOSEDSAVINGSACCOUNTSLIST="ClosedSavingsAccountsList";
 }

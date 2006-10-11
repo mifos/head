@@ -18,12 +18,17 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -82,6 +87,43 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		super.tearDown();
 	}
 	
+	public void testSuccessfullLoad_ForClientAccount() throws Exception {
+		createCenterAndGroup();
+		createClients();
+		savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, client1, AccountStates.SAVINGS_ACC_APPROVED, userContext);
+		HibernateUtil.closeSession();
+		
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		verifyForward("load_success");
+
+		List<AccountActionEntity> trxnTypes = (List<AccountActionEntity>)SessionUtils.getAttribute(AccountConstants.TRXN_TYPES,request);
+		assertNotNull(trxnTypes);
+		assertEquals(2, trxnTypes.size());
+		
+		List<CustomerBO> clientList = (List<CustomerBO>)SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,request);
+		assertNull(clientList);
+		
+		Boolean isBackDatedAllowed = (Boolean)SessionUtils.getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,request);
+		assertNotNull(isBackDatedAllowed);
+		group = new CustomerPersistence().getCustomer(group
+				.getCustomerId());
+		center = new CustomerPersistence().getCustomer(center
+				.getCustomerId());
+		client1 = new CustomerPersistence().getCustomer(client1
+				.getCustomerId());
+		client2 = new CustomerPersistence().getCustomer(client2
+				.getCustomerId());
+		client3 = new CustomerPersistence().getCustomer(client3
+				.getCustomerId());
+		client4 = new CustomerPersistence().getCustomer(client4
+				.getCustomerId());
+	}
+	
 	public void testSuccessfullLoad() throws Exception {
 		createCenterAndGroup();
 		createClients();
@@ -134,6 +176,23 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request));
 	}
 	
+	public void testSuccessfullReLoad_Deposit() throws Exception {
+		createCenterAndGroup();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
+		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
+		HibernateUtil.closeSession();
+		
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "reLoad");
+		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_DEPOSIT));
+		actionPerform();
+		verifyForward("load_success");
+		
+		assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request));
+	}
+	
 	public void testFailurePreview() throws Exception {
 		createCenterAndGroup();
 		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
@@ -153,6 +212,92 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		assertEquals(3,getErrrorSize(AccountConstants.ERROR_MANDATORY));
 	}
 	
+	public void testSuccessfulPreview() throws Exception {
+		createCenterAndGroup();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
+		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("amount", "200");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
+		addRequestParameter("paymentTypeId", "1");
+		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_DEPOSIT));
+		actionPerform();
+		verifyForward(ActionForwards.preview_success.toString());
+	}
+	
+	public void testSuccessfulMakePayment_Deposit() throws Exception {
+		createCenterAndGroup();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
+		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+				
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("amount", "200");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
+		addRequestParameter("paymentTypeId", "1");
+		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_DEPOSIT));
+		actionPerform();
+		
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "makePayment");
+		actionPerform();
+		verifyForward(ActionForwards.account_details_page.toString());
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		assertEquals(new Money("200"),savings.getSavingsBalance());
+	}
+	
+	public void testSuccessfulMakePayment_Withdrawal() throws Exception {
+		createCenterAndGroup();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
+		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		
+		savings.setSavingsBalance(new Money("500"));
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("amount", "30");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
+		addRequestParameter("paymentTypeId", "1");
+		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_WITHDRAWAL));
+		actionPerform();
+		
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "makePayment");
+		actionPerform();
+		verifyForward(ActionForwards.account_details_page.toString());
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		assertEquals(new Money("470"),savings.getSavingsBalance());
+	}
+	
 	public void testSuccessfullPrevious() throws Exception {
 		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
 		addRequestParameter("method", "previous");
@@ -160,6 +305,13 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		verifyForward("previous_success");
 	}
 
+	public void testSuccessfullCancel() throws Exception {
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "cancel");
+		actionPerform();
+		verifyForward(ActionForwards.account_details_page.toString());
+	}
+	
 	private void createCenterAndGroup() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
