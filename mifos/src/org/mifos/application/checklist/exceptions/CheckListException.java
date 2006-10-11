@@ -43,45 +43,15 @@ public class CheckListException extends ApplicationException {
 		super();
 	}
 
-	/**
-	 * @param values
-	 */
-	public CheckListException(Object[] values) {
-		super(values);
-	}
-
-	/**
-	 * @param cause
-	 */
 	public CheckListException(Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param key
-	 */
 	public CheckListException(String key) {
 		super(key);
 	}
 
-	/**
-	 * @param key
-	 * @param values
-	 */
-	public CheckListException(String key, Object[] values) {
-		super(key, values);
-	}
-
-	/**
-	 * @param key
-	 * @param cause
-	 */
 	public CheckListException(String key, Throwable cause) {
 		super(key, cause);
 	}
-	
-	/**
-	 * serial version UID for serialization.
-	 */
-	private static final long serialVersionUID = 6223987933034497348L;
 }

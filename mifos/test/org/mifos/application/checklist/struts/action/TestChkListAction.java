@@ -4,7 +4,11 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListBO;
+import org.mifos.application.checklist.business.CustomerCheckListBO;
+import org.mifos.application.checklist.persistence.CheckListPersistence;
+import org.mifos.application.checklist.util.helpers.CheckListStatesView;
 import org.mifos.application.checklist.util.helpers.CheckListType;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -144,4 +148,294 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 
 	}
 
+	public void testLoad() throws Exception {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "load");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.load_success.toString());
+		assertNotNull(SessionUtils.getAttribute(
+				CheckListConstants.CHECKLIST_MASTERDATA, request));
+	}
+
+	public void testGetStates() throws Exception {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "getStates");
+		addRequestParameter("masterTypeId", "1");
+		addRequestParameter("isCustomer", "true");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.load_success.toString());
+		assertNotNull(SessionUtils.getAttribute(CheckListConstants.STATES,
+				request));
+		assertEquals(6, ((List<CheckListStatesView>) SessionUtils.getAttribute(
+				CheckListConstants.STATES, request)).size());
+	}
+
+	public void testPreviewNoChecklistName() {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyInputForward();
+	}
+
+	public void testPreview() {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "preview");
+		addRequestParameter("masterTypeId", "3");
+		addRequestParameter("isCustomer", "true");
+		addRequestParameter("stateId", "13");
+		addRequestParameter("checklistName", "checkListname");
+		addRequestParameter("detailsList[0]", "newdetails");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.preview_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+
+	public void testPrevious() throws Exception {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "previous");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.previous_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+
+	public void testCreate_customer() throws Exception {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "create");
+		addRequestParameter("masterTypeId", "1");
+		addRequestParameter("masterTypeName", "kendra");
+		addRequestParameter("isCustomer", "true");
+		addRequestParameter("type", "1");
+		addRequestParameter("stateId", "13");
+		addRequestParameter("stateName", "active");
+		addRequestParameter("checklistName", "new checklistName");
+		addRequestParameter("detailsList[0]", "newdetails");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward(ActionForwards.create_success.toString());
+
+		List<CustomerCheckListBO> customerCheckLists = new CheckListPersistence()
+				.retreiveAllCustomerCheckLists();
+		assertNotNull(customerCheckLists);
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		assertEquals(1, customerCheckLists.size());
+		for (CustomerCheckListBO checkList : customerCheckLists) {
+			assertEquals("new checklistName", checkList.getChecklistName());
+			assertEquals("1", checkList.getCustomerLevel().getId().toString());
+			assertEquals("13", checkList.getCustomerStatus().getId().toString());
+			assertEquals("1", checkList.getChecklistStatus().toString());
+			assertEquals(1, checkList.getChecklistDetails().size());
+			TestObjectFactory.cleanUp(checkList);
+		}
+	}
+
+	public void testCreate_product() throws Exception {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "create");
+		addRequestParameter("masterTypeId", "1");
+		addRequestParameter("isCustomer", "false");
+		addRequestParameter("stateId", "13");
+		addRequestParameter("checklistName", "new checklistName");
+		addRequestParameter("detailsList[0]", "newdetails");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward(ActionForwards.create_success.toString());
+
+		List<AccountCheckListBO> accountCheckLists = new CheckListPersistence()
+				.retreiveAllAccountCheckLists();
+		assertNotNull(accountCheckLists);
+		assertEquals(1, accountCheckLists.size());
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		for (AccountCheckListBO checkList : accountCheckLists) {
+			assertEquals("new checklistName", checkList.getChecklistName());
+			assertEquals("1", checkList.getProductTypeEntity()
+					.getProductTypeID().toString());
+			assertEquals("1", checkList.getChecklistStatus().toString());
+			assertEquals(1, checkList.getChecklistDetails().size());
+			TestObjectFactory.cleanUp(checkList);
+		}
+	}
+
+	public void testCancelCreate() throws Exception {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "cancelCreate");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyForward(ActionForwards.cancelCreate_success.toString());
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+
+	public void testManage_customerCenter() throws Exception {
+		CheckListBO checkList = TestObjectFactory.createCustomerChecklist(
+				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
+						.getValue(), (short) 1);
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "manage");
+		addRequestParameter("checkListId", checkList.getChecklistId()
+				.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.manage_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		HibernateUtil.closeSession();
+		checkList = (CheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, checkList.getChecklistId());
+		TestObjectFactory.cleanUp(checkList);
+	}
+
+	public void testManage_customerGroup() throws Exception {
+		CheckListBO checkList = TestObjectFactory.createCustomerChecklist(
+				CustomerLevel.GROUP.getValue(), CustomerStatus.GROUP_ACTIVE
+						.getValue(), (short) 1);
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "manage");
+		addRequestParameter("checkListId", checkList.getChecklistId()
+				.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.manage_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		HibernateUtil.closeSession();
+		checkList = (CheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, checkList.getChecklistId());
+		TestObjectFactory.cleanUp(checkList);
+	}
+
+	public void testManage_customerClient() throws Exception {
+		CheckListBO checkList = TestObjectFactory.createCustomerChecklist(
+				CustomerLevel.CLIENT.getValue(), CustomerStatus.CLIENT_ACTIVE
+						.getValue(), (short) 1);
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "manage");
+		addRequestParameter("checkListId", checkList.getChecklistId()
+				.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.manage_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		HibernateUtil.closeSession();
+		checkList = (CheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, checkList.getChecklistId());
+		TestObjectFactory.cleanUp(checkList);
+	}
+
+	public void testManage_accountLoan() throws Exception {
+		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
+				ProductType.LOAN.getValue(),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "manage");
+		addRequestParameter("checkListId", checkList.getChecklistId()
+				.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.manage_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		HibernateUtil.closeSession();
+		checkList = (CheckListBO) TestObjectFactory.getObject(
+				AccountCheckListBO.class, checkList.getChecklistId());
+		TestObjectFactory.cleanUp(checkList);
+	}
+
+	public void testManage_accountSaving() throws Exception {
+		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
+				ProductType.SAVINGS.getValue(),
+				AccountState.SAVINGS_ACC_APPROVED, (short) 1);
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "manage");
+		addRequestParameter("checkListId", checkList.getChecklistId()
+				.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.manage_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		HibernateUtil.closeSession();
+		checkList = (CheckListBO) TestObjectFactory.getObject(
+				AccountCheckListBO.class, checkList.getChecklistId());
+		TestObjectFactory.cleanUp(checkList);
+	}
+
+	public void testGetEditStates() throws Exception {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "getEditStates");
+		addRequestParameter("masterTypeId", "1");
+		addRequestParameter("isCustomer", "false");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.manage_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		assertNotNull(SessionUtils.getAttribute(CheckListConstants.STATES,
+				request));
+		assertEquals(12, ((List<CheckListStatesView>) SessionUtils
+				.getAttribute(CheckListConstants.STATES, request)).size());
+	}
+
+	public void testManagePreviewValidate() {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "managePreview");
+		addRequestParameter("masterTypeId", "3");
+		addRequestParameter("isCustomer", "true");
+		addRequestParameter("stateId", "13");
+		addRequestParameter("detailsList[0]", "newdetails");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyActionErrors(new String[] { CheckListConstants.MANDATORY,
+				CheckListConstants.MANDATORY });
+		verifyInputForward();
+	}
+
+	public void testManagePreview() {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "managePreview");
+		addRequestParameter("masterTypeId", "3");
+		addRequestParameter("isCustomer", "true");
+		addRequestParameter("stateId", "13");
+		addRequestParameter("checklistName", "checkListname");
+		addRequestParameter("checklistStatus", CheckListConstants.STATUS_ACTIVE
+				.toString());
+		addRequestParameter("detailsList[0]", "newdetails");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.managepreview_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+
+	public void testManagePrevious() {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "managePrevious");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.manageprevious_success.toString());
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+
+	public void testCancelManage() {
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "cancelManage");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.cancelEdit_success.toString());
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
 }

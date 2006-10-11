@@ -13,154 +13,145 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 public class AccountStatusActionForm extends BaseActionForm {
-    private String personnelId;
-    private String officeId;
-    private String officeName;
-    private String loadOfficer;
-    private String type;
-    private String currentStatus;
-    private String newStatus;
-    private String comments;
-    private List<String> accountRecords;
+	private String personnelId;
 
-    public AccountStatusActionForm() {
-        accountRecords = new ArrayList<String>();
-    }
+	private String officeId;
 
-    public List<String> getAccountRecords() {
-        return accountRecords;
-    }
+	private String officeName;
 
-    public String getAccountRecords(int i) {
-        while (i >= accountRecords.size()) {
-            accountRecords.add("");
-        }
+	private String loadOfficer;
 
-        return accountRecords.get(i).toString();
-    }
+	private String type;
 
-    public void setAccountRecords(int i, String string) {
-        this.accountRecords.set(i, string);
-    }
+	private String currentStatus;
 
-    public void setAccountRecords(List<String> accountRecords) {
-        this.accountRecords = accountRecords;
-    }
+	private String newStatus;
 
-    public String getComments() {
-        return comments;
-    }
+	private String comments;
 
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
+	private List<String> accountRecords;
 
-    public String getCurrentStatus() {
-        return currentStatus;
-    }
+	public AccountStatusActionForm() {
+		accountRecords = new ArrayList<String>();
+	}
 
-    public void setCurrentStatus(String currentStatus) {
-        this.currentStatus = currentStatus;
-    }
+	public List<String> getAccountRecords() {
+		return accountRecords;
+	}
 
-    public String getLoadOfficer() {
-        return loadOfficer;
-    }
+	public String getAccountRecords(int i) {
+		while (i >= accountRecords.size())
+			accountRecords.add("");
+		return accountRecords.get(i).toString();
+	}
 
-    public void setLoadOfficer(String loadOfficer) {
-        this.loadOfficer = loadOfficer;
-    }
+	public void setAccountRecords(int i, String string) {
+		if (this.accountRecords.size() <= i)
+			this.accountRecords.add(new String());
+		this.accountRecords.set(i, string);
+	}
 
-    public String getOfficeId() {
-        return officeId;
-    }
+	public void setAccountRecords(List<String> accountRecords) {
+		this.accountRecords = accountRecords;
+	}
 
-    public void setOfficeId(String officeId) {
-        this.officeId = officeId;
-    }
+	public String getComments() {
+		return comments;
+	}
 
-    public String getOfficeName() {
-        return officeName;
-    }
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
 
-    public void setOfficeName(String officeName) {
-        this.officeName = officeName;
-    }
+	public String getCurrentStatus() {
+		return currentStatus;
+	}
 
-    public String getPersonnelId() {
-        return personnelId;
-    }
+	public void setCurrentStatus(String currentStatus) {
+		this.currentStatus = currentStatus;
+	}
 
-    public void setPersonnelId(String personnelId) {
-        this.personnelId = personnelId;
-    }
+	public String getLoadOfficer() {
+		return loadOfficer;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public void setLoadOfficer(String loadOfficer) {
+		this.loadOfficer = loadOfficer;
+	}
 
-    public void setType(String type) {
-        this.type = type;
-    }
+	public String getOfficeId() {
+		return officeId;
+	}
 
-    public String getNewStatus() {
-        return newStatus;
-    }
+	public void setOfficeId(String officeId) {
+		this.officeId = officeId;
+	}
 
-    public void setNewStatus(String newStatus) {
-        this.newStatus = newStatus;
-    }
+	public String getOfficeName() {
+		return officeName;
+	}
 
-    private List<String> getApplicableAccountRecords() {
-        List<String> applicableRecords = new ArrayList<String>();
+	public void setOfficeName(String officeName) {
+		this.officeName = officeName;
+	}
 
-        for (String accountId : getAccountRecords()) {
-            if (accountId != "") {
-                applicableRecords.add(accountId);
-            }
-        }
+	public String getPersonnelId() {
+		return personnelId;
+	}
 
-        return applicableRecords;
-    }
+	public void setPersonnelId(String personnelId) {
+		this.personnelId = personnelId;
+	}
 
-    @Override
-    public ActionErrors validate(ActionMapping mapping,
-        HttpServletRequest request) {
-        ActionErrors errors = new ActionErrors();
-        String method = request.getParameter("method");
+	public String getType() {
+		return type;
+	}
 
-        if (method.equals(Methods.searchResults.toString())) {
-            if (StringUtils.isNullOrEmpty(getOfficeId())) {
-                addError(errors, "officeId", "errors.mandatoryselect", "Branch");
-            }
+	public void setType(String type) {
+		this.type = type;
+	}
 
-            if (StringUtils.isNullOrEmpty(getPersonnelId())) {
-                addError(errors, "loanOfficer", "errors.mandatoryselect",
-                    "Loan Officer");
-            }
-        }
+	public String getNewStatus() {
+		return newStatus;
+	}
 
-        if (method.equals(Methods.update.toString())) {
-            if (getApplicableAccountRecords().size() == 0) {
-                addError(errors, "records", "errors.alleastonerecord", "account");
-            }
+	public void setNewStatus(String newStatus) {
+		this.newStatus = newStatus;
+	}
 
-            if (StringUtils.isNullOrEmpty(getComments())) {
-                addError(errors, "comments", "errors.mandatory", "notes");
-            } else {
-                if (getComments().length() > 500) {
-                    addError(errors, "comments", "errors.maximumlength",
-                        "note", "500");
-                }
-            }
-        }
+	private List<String> getApplicableAccountRecords() {
+		List<String> applicableRecords = new ArrayList<String>();
+		for (String accountId : getAccountRecords())
+			if (accountId != "")
+				applicableRecords.add(accountId);
+		return applicableRecords;
+	}
 
-        if (!method.equals(Methods.validate.toString())) {
-            request.setAttribute("methodCalled", method);
-        }
-
-        return errors;
-    }
+	@Override
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
+		ActionErrors errors = new ActionErrors();
+		String method = request.getParameter("method");
+		if (method.equals(Methods.searchResults.toString())) {
+			if (StringUtils.isNullOrEmpty(getOfficeId()))
+				addError(errors, "officeId", "errors.mandatoryselect", "Branch");
+			if (StringUtils.isNullOrEmpty(getPersonnelId()))
+				addError(errors, "loanOfficer", "errors.mandatoryselect",
+						"Loan Officer");
+		}
+		if (method.equals(Methods.update.toString())) {
+			if (getApplicableAccountRecords().size() == 0)
+				addError(errors, "records", "errors.alleastonerecord",
+						"account");
+			if (StringUtils.isNullOrEmpty(getComments()))
+				addError(errors, "comments", "errors.mandatory", "notes");
+			else if (getComments().length() > 500)
+				addError(errors, "comments", "errors.maximumlength", "note",
+						"500");
+		}
+		if (!method.equals(Methods.validate.toString()))
+			request.setAttribute("methodCalled", method);
+		return errors;
+	}
 }

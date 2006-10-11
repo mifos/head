@@ -13,9 +13,9 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class ChkListActionForm extends BaseActionForm {
-	
+
 	private String checkListId;
-	
+
 	private boolean isCustomer;
 
 	private String masterTypeId;
@@ -31,13 +31,13 @@ public class ChkListActionForm extends BaseActionForm {
 	private List<String> detailsList;
 
 	private String checklistStatus;
-	
+
 	private String type;
 
 	public ChkListActionForm() {
 		detailsList = new ArrayList<String>();
 	}
-	
+
 	public String getCheckListId() {
 		return checkListId;
 	}
@@ -62,9 +62,8 @@ public class ChkListActionForm extends BaseActionForm {
 	}
 
 	public void setDetailsList(int i, String string) {
-		if (detailsList.size() - 1 < i) {
-			getDetailsList(i);
-		}
+		if (this.detailsList.size() <= i)
+			this.detailsList.add(new String());
 		this.detailsList.set(i, string);
 	}
 
@@ -83,7 +82,7 @@ public class ChkListActionForm extends BaseActionForm {
 	public void setType(String type) {
 		this.type = type;
 	}
-	
+
 	public String getChecklistName() {
 		return checklistName;
 	}
@@ -131,7 +130,7 @@ public class ChkListActionForm extends BaseActionForm {
 	public void setStateName(String stateName) {
 		this.stateName = stateName;
 	}
-	
+
 	@Override
 	public ActionErrors validate(ActionMapping mappping,
 			HttpServletRequest request) {
@@ -141,23 +140,25 @@ public class ChkListActionForm extends BaseActionForm {
 			errors = validateFields();
 		if (method.equals(Methods.managePreview.toString())) {
 			errors = validateFields();
-			if(StringUtils.isNullOrEmpty(getChecklistStatus()))
-				addError(errors, "checklistStatus", CheckListConstants.MANDATORY,
+			if (StringUtils.isNullOrEmpty(getChecklistStatus()))
+				addError(errors, "checklistStatus",
+						CheckListConstants.MANDATORY,
 						CheckListConstants.CHECKLIST_STATUS);
 		}
-		if (!method.equals(Methods.validate.toString())) 
+		if (!method.equals(Methods.validate.toString()))
 			request.setAttribute("methodCalled", method);
 		return errors;
 	}
-	private ActionErrors validateFields(){
+
+	private ActionErrors validateFields() {
 		ActionErrors errors = new ActionErrors();
 		if (StringUtils.isNullOrEmpty(getChecklistName()))
 			addError(errors, "checklistName", CheckListConstants.MANDATORY,
 					CheckListConstants.CHECKLIST_NAME);
-		if (getChecklistName().length() > 200)
-			addError(errors, "checklistName",
-					CheckListConstants.MAX_LENGTH,
-					CheckListConstants.CHECKLIST_NAME, "500");
+		else if(getChecklistName().length() > 200)
+				addError(errors, "checklistName",
+						CheckListConstants.MAX_LENGTH,
+						CheckListConstants.CHECKLIST_NAME, "500");
 		if (StringUtils.isNullOrEmpty(getMasterTypeId()))
 			addError(errors, "masterTypeId", CheckListConstants.MANDATORY,
 					CheckListConstants.TYPE_COMBO);

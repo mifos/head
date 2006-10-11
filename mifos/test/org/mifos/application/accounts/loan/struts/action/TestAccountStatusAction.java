@@ -1,0 +1,207 @@
+package org.mifos.application.accounts.loan.struts.action;
+
+import java.util.Date;
+import java.util.List;
+
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TestObjectFactory;
+
+public class TestAccountStatusAction extends MifosMockStrutsTestCase {
+
+	private UserContext userContext;
+
+	protected AccountBO account;
+
+	protected CenterBO center;
+
+	protected GroupBO group;
+
+	private ClientBO client;
+
+	private MeetingBO meeting;
+
+	private String flowKey;
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/accounts/struts-config.xml").getPath());
+		userContext = TestObjectFactory.getContext();
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+		addRequestParameter("recordLoanOfficerId", "1");
+		addRequestParameter("recordOfficeId", "1");
+		request.getSession(false).setAttribute("ActivityContext",
+				TestObjectFactory.getActivityContext());
+		Flow flow = new Flow();
+		flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow);
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
+
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(account);
+		TestObjectFactory.cleanUp(client);
+		TestObjectFactory.cleanUp(group);
+		TestObjectFactory.cleanUp(center);
+		HibernateUtil.closeSession();
+		super.tearDown();
+	}
+
+	public void testLoad() {
+		setRequestPathInfo("/ChangeAccountStatus.do");
+		addRequestParameter("method", Methods.load.toString());
+		actionPerform();
+		verifyForward(ActionForwards.changeAccountStatus_success.toString());
+	}
+
+	public void testSearchResults() throws Exception {
+		createCustomers();
+		account = getLoanAccount(group);
+		setRequestPathInfo("/ChangeAccountStatus.do");
+		addRequestParameter("method", Methods.searchResults.toString());
+		addRequestParameter("officeId", account.getOffice().getOfficeId()
+				.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("personnelId", account.getPersonnel()
+				.getPersonnelId().toString());
+		addRequestParameter("type", "loan");
+		addRequestParameter("currentStatus", account.getAccountState().getId()
+				.toString());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.changeAccountStatusSearch_success
+				.toString());
+		assertNotNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));
+		assertEquals(1,((List<PersonnelView>)SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request)).size());
+	}
+
+	public void testSearchResults_noresults_forvalidate() throws Exception {
+		createCustomers();
+		account = getLoanAccount(group);
+		setRequestPathInfo("/ChangeAccountStatus.do");
+		addRequestParameter("method", Methods.searchResults.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("personnelId", account.getPersonnel()
+				.getPersonnelId().toString());
+		addRequestParameter("currentStatus",
+				AccountState.LOANACC_PARTIALAPPLICATION.getValue().toString());
+		actionPerform();
+		verifyInputForward();
+	}
+	
+	public void testSearchResults_noresults() throws Exception {
+		createCustomers();
+		account = getLoanAccount(group);
+		setRequestPathInfo("/ChangeAccountStatus.do");
+		addRequestParameter("method", Methods.searchResults.toString());
+		addRequestParameter("officeId", account.getOffice().getOfficeId()
+				.toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("personnelId", account.getPersonnel()
+				.getPersonnelId().toString());
+		addRequestParameter("type", "loan");
+		addRequestParameter("currentStatus",
+				AccountState.LOANACC_PARTIALAPPLICATION.getValue().toString());
+		actionPerform();
+		verifyForward(ActionForwards.noresultfound.toString());
+		assertNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));
+	}
+
+	public void testSearchResults_exception() {
+		createCustomers();
+		account = getLoanAccount(group);
+		setRequestPathInfo("/ChangeAccountStatus.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("method", Methods.searchResults.toString());
+		actionPerform();
+		verifyInputForward();
+	}
+	
+	public void testGetLoanOfficers() throws Exception{
+		createCustomers();
+		account = getLoanAccount(group);
+		setRequestPathInfo("/ChangeAccountStatus.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("method", "getLoanOfficers");
+		addRequestParameter("officeId",account.getOffice().getOfficeId().toString());
+		actionPerform();
+		verifyForward(ActionForwards.changeAccountStatus_success.toString());
+		assertNotNull(SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request));
+		assertEquals(1,((List<PersonnelView>)SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request)).size());
+	}
+	
+	public void testUpdate() throws Exception{
+		createCustomers();
+		account = getLoanAccount(group);
+		setRequestPathInfo("/ChangeAccountStatus.do");
+		addRequestParameter("method", "update");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("accountRecords[0]", account.getAccountId().toString());
+		addRequestParameter("newStatus", "3");	
+		addRequestParameter("comments", "comments");
+		actionPerform();
+		verifyForward(ActionForwards.changeAccountStatusConfirmation_success.toString());
+	}
+	
+	private void createParentCustomer() {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center",
+				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
+				new Date(System.currentTimeMillis()));
+
+	}
+
+	private void createCustomers() {
+		createParentCustomer();
+		group = TestObjectFactory.createGroup("group",
+				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
+						+ ".1", center, new Date());
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1", group,
+				new Date(System.currentTimeMillis()));
+		HibernateUtil.closeSession();
+	}
+
+	private LoanBO getLoanAccount(CustomerBO customerBO) {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanAccount("42423142341", customerBO,
+				AccountState.LOANACC_PENDINGAPPROVAL.getValue(), startDate,
+				loanOffering);
+
+	}
+
+}

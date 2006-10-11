@@ -24,6 +24,7 @@
 		<form-bean name="loanDisbursmentActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm"></form-bean>
 		<!-- Repay Loan -->
 		<form-bean name="repayLoanActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.RepayLoanActionForm"></form-bean>
+		<form-bean name="accountStatusActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.AccountStatusActionForm"></form-bean>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
@@ -147,7 +148,18 @@
 			<forward name="update_success" path="/loanAccountAction.do?method=get" />
 
 		</action>
-
+		<action path="/ChangeAccountStatus"
+				type="org.mifos.application.accounts.loan.struts.action.AccountStatusAction"
+				name="accountStatusActionForm"
+				parameter="method"
+				validate="true"
+				input="/ChangeAccountStatus.do?method=validate"
+				scope="session">
+			<forward name="changeAccountStatus_success" path="/pages/application/loan/jsp/changeaccountstatus.jsp" />
+			<forward name="changeAccountStatusSearch_success" path="/pages/application/loan/jsp/statussearchresults.jsp" />
+			<forward name="changeAccountStatusConfirmation_success" path="/pages/application/loan/jsp/confirmation.jsp" />
+			<forward name="noresultfound" path="/pages/application/loan/jsp/nosearchresult.jsp" />
+		</action>
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
 		<set-property property="pathnames" value="org/mifos/application/accounts/validation.xml,org/mifos/application/accounts/validator-rules.xml" />
