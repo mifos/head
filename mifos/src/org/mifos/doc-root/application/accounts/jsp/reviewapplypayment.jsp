@@ -190,6 +190,7 @@
 							</c:choose></td>
 				</tr>
 			</table>
+						<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}" />
 						<html-el:hidden property="input" value="${param.input}" />
 						<html-el:hidden property="accountId" value="${BusinessKey.accountId}" />
 						<html-el:hidden property="globalCustNum" value="${param.globalCustNum}" />

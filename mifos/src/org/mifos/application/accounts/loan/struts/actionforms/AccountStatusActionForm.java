@@ -47,7 +47,7 @@ public class AccountStatusActionForm extends BaseActionForm {
 	}
 
 	public void setAccountRecords(int i, String string) {
-		if (this.accountRecords.size() <= i)
+		while (this.accountRecords.size() <= i)
 			this.accountRecords.add(new String());
 		this.accountRecords.set(i, string);
 	}

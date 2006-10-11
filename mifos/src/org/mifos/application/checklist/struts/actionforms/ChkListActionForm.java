@@ -62,7 +62,7 @@ public class ChkListActionForm extends BaseActionForm {
 	}
 
 	public void setDetailsList(int i, String string) {
-		if (this.detailsList.size() <= i)
+		while (this.detailsList.size() <= i)
 			this.detailsList.add(new String());
 		this.detailsList.set(i, string);
 	}
@@ -155,10 +155,13 @@ public class ChkListActionForm extends BaseActionForm {
 		if (StringUtils.isNullOrEmpty(getChecklistName()))
 			addError(errors, "checklistName", CheckListConstants.MANDATORY,
 					CheckListConstants.CHECKLIST_NAME);
-		else if(getChecklistName().length() > 200)
-				addError(errors, "checklistName",
-						CheckListConstants.MAX_LENGTH,
-						CheckListConstants.CHECKLIST_NAME, "500");
+		else if (getChecklistName().length() > 50)
+			addError(errors, "checklistName", CheckListConstants.MAX_LENGTH,
+					CheckListConstants.CHECKLIST_NAME, "500");
+		for (String items : getDetailsList())
+			if (items.length() > 250)
+				addError(errors, "details", CheckListConstants.MAX_LENGTH,
+						CheckListConstants.CHECKLIST_ITEMS, "250");
 		if (StringUtils.isNullOrEmpty(getMasterTypeId()))
 			addError(errors, "masterTypeId", CheckListConstants.MANDATORY,
 					CheckListConstants.TYPE_COMBO);

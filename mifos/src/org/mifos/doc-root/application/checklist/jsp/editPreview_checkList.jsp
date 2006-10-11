@@ -71,7 +71,7 @@
 						<html-el:link action="AdminAction.do?method=load">
 							<mifos:mifoslabel name="checklist.admin" />
 						</html-el:link> / 
-						<html-el:link action="checkListAction.do?method=loadall">
+						<html-el:link action="chkListAction.do?method=loadAllChecklist&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="checklist.view_checklists" />
 						</html-el:link> / 
 					</span>
@@ -90,7 +90,7 @@
 						<tr>
 							<td class="headingorange">
 								<span class="heading">
-									<mifos:mifoslabel name="checklist.addnewchecklist" /> - 
+									${sessionScope.ChkListActionForm.checklistName} - 
 								</span> 
 								<mifos:mifoslabel name="checklist.reviewchecklist_Info" />
 							</td>

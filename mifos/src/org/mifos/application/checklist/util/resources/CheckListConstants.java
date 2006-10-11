@@ -92,5 +92,6 @@ public interface CheckListConstants {
 	public final String ACTIVE = "active";
 	public final String INACTIVE = "inactive";
 	public final String CHECKLIST_STATUS="checklist status";
+	public final String CHECKLIST_ITEMS="items";
 	
 }
