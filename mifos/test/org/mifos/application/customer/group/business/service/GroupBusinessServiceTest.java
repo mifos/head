@@ -91,7 +91,22 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,	client.getCustomerId());
 	}
-
+	
+	public void testFailureGetGroupBySystemId() throws Exception {
+		center = createCenter("Center_Active_test");
+		String groupName = "Group_Active_test";
+		group = createGroup(groupName);
+		HibernateUtil.closeSession();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			groupBusinessService.findBySystemId(group.getGlobalCustNum());
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
+	}
+	
 	public void testSuccessfulGet() throws Exception {
 		center = createCenter("Center_Active_test");
 		String groupName = "Group_Active_test";
@@ -140,6 +155,21 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 		assertNotNull(queryResult);
 		assertEquals(1,queryResult.getSize());
 		assertEquals(1,queryResult.get(0,10).size());
+	}
+	
+	public void testFailureSearch() throws Exception {
+		center = createCenter("Center_Active_test");
+		String groupName = "Group_Active_test";
+		group = createGroup(groupName);
+		HibernateUtil.closeSession();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			groupBusinessService.search(group.getDisplayName(),Short.valueOf("1"));
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
 	}
 	
 	private GroupBO createGroup(String groupName){

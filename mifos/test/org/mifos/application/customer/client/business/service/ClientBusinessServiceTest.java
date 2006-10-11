@@ -50,6 +50,19 @@ public class ClientBusinessServiceTest extends MifosTestCase{
 		assertEquals("abc", client.getClientName().getName().getLastName());
 	}
 	
+	public void testFailureGetClient() throws Exception {
+		client = createClient("abc");
+		HibernateUtil.closeSession();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			client = service.getClient(client.getCustomerId());
+			assertTrue(false);
+		} catch (ServiceException e) {
+			assertTrue(true);
+		}
+		HibernateUtil.closeSession();
+	}
+	
 	public void testFailureRetrieveOfferings() throws Exception {
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		HibernateUtil.closeSession();

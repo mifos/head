@@ -29,6 +29,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fund.business.service.FundBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -45,6 +46,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -1025,6 +1027,31 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(recurAfter, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
 	}
 	
+	public void testFailureCreate_Group_UnderCenter() throws Exception {
+		createCenter();
+		String name = "GroupTest";
+		Date trainedDate = getDate("11/12/2005");
+		String externalId = "1234";
+		HibernateUtil.closeSession();
+		
+		
+		try {
+			group = new GroupBO(TestObjectFactory.getUserContext(), name,
+					CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
+					getAddress(), null, null, personnel, center);
+			TestObjectFactory.simulateInvalidConnection();
+			group.save();
+			assertTrue(false);
+		} catch (CustomerException ce) {
+			assertTrue(true);
+		}finally {
+			group=null;
+			HibernateUtil.closeSession();
+		}
+	}
+
+		
+
 	private GroupBO createGroupUnderBranchWithoutMeeting(String name) {
 		return TestObjectFactory.createGroupUnderBranch(name, CustomerStatus.GROUP_PENDING,
 				office, null, personnel);
