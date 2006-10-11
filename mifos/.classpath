@@ -38,6 +38,6 @@
 	<classpathentry kind="lib" path="lib/jasperreports-1.2.1.jar"/>
 	<classpathentry kind="lib" path="lib/junit-addons-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-1.3.jar"/>
-	<classpathentry kind="lib" path="lib/mayfly-20061009.jar"/>
+	<classpathentry kind="lib" path="lib/mayfly-20061011.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

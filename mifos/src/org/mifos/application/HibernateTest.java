@@ -76,8 +76,7 @@ public class HibernateTest extends TestCase {
         assertFalse(results.next());
     }
     
-    // Not yet passing.
-    public void xtestMayflyAndHibernate() throws Exception {
+    public void testMayflyAndHibernate() throws Exception {
 		MifosLogManager.configure(FilePaths.LOGFILE);
 		
 		String url = JdbcDriver.create(STANDARD_STORE);
