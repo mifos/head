@@ -179,6 +179,8 @@ public interface ProductDefinitionConstants {
 	public String ERRORMANDAMOUNT="errors.mandAmount";
 	public String INVALIDFIELD="exceptions.application.productDef.invalidfield";
 	public String ERROR_MANDATORY = "errors.mandatory";
+	public String DECLINEINTERESTDISBURSEMENTDEDUCTION =
+		"exceptions.declineinterestdisbursementdeduction";
 	public String ERROR_SELECT = "errors.select";
 	public String ERROR_CREATE = "errors.create";
 	public String ERRORSSELECTCONFIG="errors.selectconfig";

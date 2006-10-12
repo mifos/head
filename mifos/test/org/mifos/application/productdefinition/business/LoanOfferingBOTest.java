@@ -1104,6 +1104,50 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertNotNull(loanOffering.getInterestGLcode());
 	}
 
+        
+	public void testLoanOfferingWithDecliningInterestDeductionAtDisbursement() {
+	    try {
+	        createIntitalObjects();
+	        interestTypes = new InterestTypesEntity(
+	                InterestTypeConstants.DECLININGINTEREST);
+	        Date startDate = offSetCurrentDate(0);
+	        Date endDate = offSetCurrentDate(2);
+	        LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+	                .getContext(), "Loan Offering", "LOAP", productCategory,
+	                prdApplicableMaster, startDate, endDate, null, null, null,
+	                interestTypes, new Money("1000"), new Money("3000"), new Money(
+	                "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
+	                (short) 17, false, true, false, null, null, frequency,
+	                principalglCodeEntity, intglCodeEntity);
+	        assertTrue(false);
+	    } catch (ProductDefinitionException e) {
+	        assertTrue(true);
+	    }
+	}
+	
+	public void testLoanOfferingWithDecliningInterestNoDeductionAtDisbursement() {
+	    try {
+	        createIntitalObjects();
+	        interestTypes = new InterestTypesEntity(
+	                InterestTypeConstants.DECLININGINTEREST);
+	        Date startDate = offSetCurrentDate(0);
+	        Date endDate = offSetCurrentDate(2);
+	        LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+	                .getContext(), "Loan Offering", "LOAP", productCategory,
+	                prdApplicableMaster, startDate, endDate, null, null, null,
+	                interestTypes, new Money("1000"), new Money("3000"), new Money(
+	                "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
+	                (short) 17, false, false, false, null, null, frequency,
+	                principalglCodeEntity, intglCodeEntity);
+	        assertTrue(true);
+	    } catch (ProductDefinitionException e) {
+	        assertTrue(false);
+	    }
+	}
+	
+       
+       
+    
 	private MeetingBO getMeeting() {
 		return TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

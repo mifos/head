@@ -55,6 +55,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -493,6 +494,13 @@ public class LoanOfferingBO extends PrdOfferingBO {
 								GraceTypeConstants.NONE.getValue()) && gracePeriodDuration == null)) {
 			throw new ProductDefinitionException("errors.create");
 		}
+                
+		if (interestTypes.getId().equals(InterestTypeConstants.DECLININGINTEREST.getValue())
+		        && intDedDisbursement  ){
+		    throw new ProductDefinitionException(
+		            ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION);
+		}
+        
 	}
 
 	private void setGracePeriodTypeAndDuration(boolean intDedDisbursement,

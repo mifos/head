@@ -4501,6 +4501,249 @@ public class TestLoanBO extends MifosTestCase {
 		loan.setDisbursementDate(disbursmentDate);
 	}
 
+    
+	public void testCreateLoanAccountWithDecliningInterestNoGracePeriod()
+	    throws NumberFormatException, InvalidUserException,
+	    PropertyNotFoundException, SystemException, ApplicationException {
+	    MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+	            .getMeetingHelper(1, 2, 4, 2));  //every 2 weeks
+	    center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+	            "1.1", meeting, new Date(System.currentTimeMillis()));
+	    group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+	            "1.1.1", center, new Date(System.currentTimeMillis()));
+	    LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+	            "Loan", Short.valueOf("2"),
+	            new Date(System.currentTimeMillis()), Short.valueOf("1"),
+	            300.0, 1.2, Short.valueOf("3"), Short.valueOf("2"), Short
+	            .valueOf("0"), Short.valueOf("0"), Short.valueOf("0"),  //penalty grace, intDebAtDisb, princDueLastInst
+	            Short.valueOf("1"), center.getCustomerMeeting().getMeeting(), GraceTypeConstants.NONE
+	            .getValue());
+           
+	    List<FeeView> feeViewList = new ArrayList<FeeView>();
+           
+	    accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+	            loanOffering, group,
+	            AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+	            Short.valueOf("6"), new Date(System.currentTimeMillis()), false,  // 6 installments
+	            1.2, (short) 0, new FundBO(), feeViewList);
+	    new TestObjectPersistence().persist(accountBO);
+	    assertEquals(6, accountBO.getAccountActionDates().size());
+        
+        HashMap fees0 = new HashMap();
+        
+        Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+        
+        checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 1), "50.9", "0.1", fees0, paymentsArray[0]);
+        
+        checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 2), "50.9", "0.1", fees0, paymentsArray[1]);
+        
+        checkLoanScheduleEntity(
+            incrementCurrentDate(14 * 3), "50.9", "0.1", fees0, paymentsArray[2]);
+        
+        checkLoanScheduleEntity(
+            incrementCurrentDate(14 * 4), "50.9", "0.1", fees0, paymentsArray[3] );
+        
+        checkLoanScheduleEntity(
+            incrementCurrentDate(14 * 5), "51.0", "0.0", fees0, paymentsArray[4]);
+        
+        checkLoanScheduleEntity(
+            incrementCurrentDate(14 * 6), "45.6", "0.0", fees0, paymentsArray[5]);
+           
+        LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+            .getLoanSummary();
+        
+        assertEquals(new Money("300.0"), loanSummaryEntity.getOriginalPrincipal());
+              
+	}
+       
+    
+        
+        
+	public void testCreateLoanAccountWithDecliningInterestGraceAllRepayments()
+        throws NumberFormatException, InvalidUserException,
+        PropertyNotFoundException, SystemException, ApplicationException {
+            
+	    short graceDuration = (short) 2;
+	    MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+	            .getMeetingHelper(1, 2, 4, 2));  //every 2 weeks
+	    center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+	            "1.1", meeting, new Date(System.currentTimeMillis()));
+	    group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+	            "1.1.1", center, new Date(System.currentTimeMillis()));
+	    LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+	            "Loan", Short.valueOf("2"),
+	            new Date(System.currentTimeMillis()), Short.valueOf("1"),
+	            300.0, 1.2, Short.valueOf("3"), Short.valueOf("2"), Short
+	            .valueOf("0"), Short.valueOf("0"), Short.valueOf("0"),  //penalty grace, intDebAtDisb, princDueLastInst
+	            Short.valueOf("1"), center.getCustomerMeeting().getMeeting(),GraceTypeConstants.GRACEONALLREPAYMENTS
+	            .getValue());
+            
+	    List<FeeView> feeViewList = new ArrayList<FeeView>();
+            
+	    accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+	            loanOffering, group,
+	            AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+	            Short.valueOf("6"), new Date(System.currentTimeMillis()), false,  // 6 installments
+	            1.2, graceDuration, new FundBO(), feeViewList);
+	    new TestObjectPersistence().persist(accountBO);
+	    assertEquals(6, accountBO.getAccountActionDates().size());
+        HashMap fees0 = new HashMap();
+        
+        Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+        
+        checkLoanScheduleEntity(
+                incrementCurrentDate(14 * (1+ graceDuration)), "50.9", "0.1", fees0, paymentsArray[0]);
+        
+        checkLoanScheduleEntity(
+                incrementCurrentDate(14 * (2+ graceDuration)), "50.9", "0.1", fees0, paymentsArray[1]);
+        
+        checkLoanScheduleEntity(
+            incrementCurrentDate(14 * (3+ graceDuration)), "50.9", "0.1", fees0, paymentsArray[2]);
+        
+        checkLoanScheduleEntity(
+            incrementCurrentDate(14 * (4+ graceDuration)), "50.9", "0.1", fees0, paymentsArray[3] );
+        
+        checkLoanScheduleEntity(
+            incrementCurrentDate(14 * (5+ graceDuration)), "51.0", "0.0", fees0, paymentsArray[4]);
+        
+        checkLoanScheduleEntity(
+            incrementCurrentDate(14 * (6+ graceDuration)), "45.6", "0.0", fees0, paymentsArray[5]);
+                
+        LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
+        assertEquals(new Money("300.0"), loanSummaryEntity.getOriginalPrincipal());
+
+	}
+        
+        public void testCreateLoanAccountWithDecliningInterestGracePrincipalOnly()
+        throws NumberFormatException, InvalidUserException,
+        PropertyNotFoundException, SystemException, ApplicationException {
+            
+            short graceDuration = (short) 2;
+            MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+                    .getMeetingHelper(1, 2, 4, 2));  //every 2 weeks
+            center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+                    "1.1", meeting, new Date(System.currentTimeMillis()));
+            group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+                    "1.1.1", center, new Date(System.currentTimeMillis()));
+            LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+                    "Loan", Short.valueOf("2"),
+                    new Date(System.currentTimeMillis()), Short.valueOf("1"),
+                    300.0, 1.2, Short.valueOf("3"), Short.valueOf("2"), Short
+                    .valueOf("0"), Short.valueOf("0"), Short.valueOf("0"),  //penalty grace, intDebAtDisb, princDueLastInst
+                    Short.valueOf("1"), center.getCustomerMeeting().getMeeting(),GraceTypeConstants.PRINCIPALONLYGRACE
+                    .getValue());
+            
+            
+            List<FeeView> feeViewList = new ArrayList<FeeView>();
+            
+            accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+                    loanOffering, group,
+                    AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+                    Short.valueOf("6"), new Date(System.currentTimeMillis()), false,  // 6 installments
+                    1.2, graceDuration, new FundBO(), feeViewList);
+            new TestObjectPersistence().persist(accountBO);
+            assertEquals(6, accountBO.getAccountActionDates().size());
+            
+            HashMap fees0 = new HashMap();
+            
+            Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+            LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+            
+            checkLoanScheduleEntity(
+                    incrementCurrentDate(14 * 1), "0.0", "0.1", fees0, paymentsArray[0]);
+            
+            checkLoanScheduleEntity(
+                    incrementCurrentDate(14 * 2), "0.0", "0.1", fees0, paymentsArray[1]);
+            
+            checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 3), "75.0", "0.1", fees0, paymentsArray[2]);
+            
+            checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 4), "75.0", "0.1", fees0, paymentsArray[3] );
+            
+            checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 5), "75.0", "0.1", fees0, paymentsArray[4]);
+            
+            checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 6), "75.1", "0.0", fees0, paymentsArray[5]);
+            
+           
+            LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+            .getLoanSummary();
+            assertEquals(new Money("300.0"), loanSummaryEntity.getOriginalPrincipal());
+                
+             
+            
+        }
+        
+        public void testCreateLoanAccountWithDecliningInterestPrincipalDueOnLastInstallment()
+        throws NumberFormatException, InvalidUserException,
+        PropertyNotFoundException, SystemException, ApplicationException {
+            
+            short graceDuration = (short) 2;
+            MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+                    .getMeetingHelper(1, 2, 4, 2));  //every 2 weeks
+            center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+                    "1.1", meeting, new Date(System.currentTimeMillis()));
+            group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+                    "1.1.1", center, new Date(System.currentTimeMillis()));
+            LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+                    "Loan", Short.valueOf("2"),
+                    new Date(System.currentTimeMillis()), Short.valueOf("1"),
+                    300.0, 1.2, Short.valueOf("3"), Short.valueOf("2"), Short
+                    .valueOf("0"), Short.valueOf("0"), Short.valueOf("1"),  //penalty grace, intDebAtDisb, princDueLastInst
+                    Short.valueOf("1"), center.getCustomerMeeting().getMeeting(),GraceTypeConstants.NONE
+                    .getValue());
+            
+            
+            List<FeeView> feeViewList = new ArrayList<FeeView>();
+            
+            accountBO = new LoanBO(TestObjectFactory.getUserContext(),
+                    loanOffering, group,
+                    AccountState.getStatus(Short.valueOf("5")), new Money("300.0"),
+                    Short.valueOf("6"), new Date(System.currentTimeMillis()), false,  // 6 installments
+                    1.2, graceDuration, new FundBO(), feeViewList);
+            new TestObjectPersistence().persist(accountBO);
+            assertEquals(6, accountBO.getAccountActionDates().size());
+            
+            HashMap fees0 = new HashMap();
+            
+            Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+            LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+            
+            checkLoanScheduleEntity(
+                    incrementCurrentDate(14 * 1), "0.0", "0.1", fees0, paymentsArray[0]);
+            
+            checkLoanScheduleEntity(
+                    incrementCurrentDate(14 * 2), "0.0", "0.1", fees0, paymentsArray[1]);
+            
+            checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 3), "0.0", "0.1", fees0, paymentsArray[2]);
+            
+            checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 4), "0.0", "0.1", fees0, paymentsArray[3] );
+            
+            checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 5), "0.0", "0.1", fees0, paymentsArray[4]);
+            
+            checkLoanScheduleEntity(
+                incrementCurrentDate(14 * 6), "300.0", "0.1", fees0, paymentsArray[5]);
+            
+         
+            LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
+                .getLoanSummary();
+            assertEquals(new Money("300.0"), loanSummaryEntity.getOriginalPrincipal());
+                
+               
+        }
+        
+        
+       
+    
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments, Double interestRate)

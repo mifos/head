@@ -40,7 +40,6 @@ package org.mifos.application.fees.persistence;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;

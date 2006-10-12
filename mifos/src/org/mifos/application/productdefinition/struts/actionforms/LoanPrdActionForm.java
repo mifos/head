@@ -46,10 +46,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -574,6 +576,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 							ConfigurationConstants.INTEREST, request),
 					ProductDefinitionConstants.RATETYPE);
 		validateMinMaxDefInterestRates(errors, request);
+        vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
 		setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
 		prdDefLogger
 				.debug("validateForPreview method of Loan Product Action form method called :"
@@ -598,6 +601,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 					ProductDefinitionConstants.ERROR_SELECT,
 					ProductDefinitionConstants.STATUS);
 		validateMinMaxDefInterestRates(errors, request);
+        vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
 		setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
 		prdDefLogger
 				.debug("validateForEditPreview method of Loan Product Action form method called :"
@@ -931,4 +935,32 @@ public class LoanPrdActionForm extends BaseActionForm {
 		} catch (Exception ne) {
 		}
 	}
+    
+            
+	private void vaildateDecliningInterestSvcChargeDeductedAtDisbursement(ActionErrors errors,
+	        HttpServletRequest request) {
+	    prdDefLogger
+	        .debug("start Loan prd Action Form vaildateDecliningInterestSvcChargeDeductedAtDisbursement :"
+	                + getInterestTypes()
+	                + "---"
+	                + getIntDedDisbursementFlag());
+               
+               
+	    if(getInterestTypes()!= null && getInterestTypes().equals(
+	            InterestTypeConstants.DECLININGINTEREST.getValue().toString())){
+                   
+	        if (null != getIntDedDisbursementFlag() && getIntDedDisbursementFlag().equals("1")){
+	            errors.add(
+	                    ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION,
+	                    new ActionMessage(
+	                            ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION));
+	        }
+	    }
+               
+               
+	    prdDefLogger
+	        .debug("Loan prd Action Form vaildateDecliningInterestSvcChargeDeductedAtDisbursement called " );
+	}
+        
+    
 }

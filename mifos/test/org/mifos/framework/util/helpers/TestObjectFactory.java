@@ -839,43 +839,37 @@ public class TestObjectFactory {
 	public static FeeBO createPeriodicAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt,
 			RecurrenceType meetingFrequency, Short recurAfter) {
-		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, Short.valueOf("24"));
-		MeetingBO meeting = null;
 		try {
-			meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(),
+			GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
+					GLCodeEntity.class, Short.valueOf("24"));
+			MeetingBO meeting = 
+				new MeetingBO(meetingFrequency, recurAfter, new Date(),
 					MeetingType.FEEMEETING);
-		} catch (MeetingException me) {
-		}
-		FeeBO fee = null;
-		// TODO: throw exception
-		try {
-			fee = new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
+			FeeBO fee = new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
 					new CategoryTypeEntity(feeCategory),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 					glCode, getMoneyForMFICurrency(feeAmnt), false, meeting);
-
+			return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-		return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 	}
 
 	public static FeeBO createOneTimeAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt, FeePayment feePayment) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
 				GLCodeEntity.class, Short.valueOf("24"));
-		FeeBO fee = null;
-		// TODO: throw exception
 		try {
-			fee = new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
+			FeeBO fee = 
+				new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
 					new CategoryTypeEntity(feeCategory),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 					glCode, getMoneyForMFICurrency(feeAmnt), false,
 					new FeePaymentEntity(feePayment));
-
+			return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-		return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 	}
 
 	public static FeeBO createOneTimeRateFee(String feeName,
