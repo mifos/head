@@ -240,7 +240,7 @@
 		description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Does not rebuild the production database"
 	/>
 
-	<target name="dist_ddl" 
+	<target name="dist_build_db" 
 		depends="clean,compile,copy_files,compile_test,copy_test_files,run_test,war,deploy,build_db" 
 		description="Compiles, runs test, builds a distributable war and places in the dist directory. Copies to the web server in use. Rebuilds the production database"
 	/>
@@ -248,7 +248,8 @@
 	<!--<target name="test_dist" depends="compile" description="Compiles, runs test cass and prepares the final war for distribution">
 	</target>-->
 
-	<target name="clean_build" depends="check_config,clean_all,dist_ddl" description="Initates a clean build, cleaning all directories and getting a fresh copy from source control"/>
+	<target name="clean_build" depends="check_config,clean_all,dist_build_db" 
+		description="Initates a clean build, cleaning all directories and getting a fresh copy from source control"/>
 
 	<target name="build_db" description="Builds the application database">
 		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" userid="${db.user}" password="${db.pwd}"
