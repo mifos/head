@@ -98,13 +98,13 @@ function  submitAdminLink()
 								class="fontnormal"> <c:out value="${offActionForm.shortName}"></c:out><br>
 							</span> <mifos:mifoslabel name="Office.labelOfficeType" /> <span
 								class="fontnormal"> <c:forEach var="level"
-								items="${OfficeLevelList}">
+								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'OfficeLevelList')}">
 								<c:if test="${level.levelId == offActionForm.officeLevel }">
 									<c:out value="${level.levelName}"></c:out>
 								</c:if>
 							</c:forEach> </span> <br>
 							<mifos:mifoslabel name="Office.labelParentOffice" /><span
-								class="fontnormal"> <c:forEach var="parent" items="${Parents}">
+								class="fontnormal"> <c:forEach var="parent" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Parents')}">
 								<c:if test="${parent.officeId == offActionForm.parentOfficeId }">
 									<c:out value="${parent.displayName}"></c:out>
 								</c:if>

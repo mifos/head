@@ -8,17 +8,19 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.MifosMockStrutsTestCase;
 
 public class TestConstPlugin extends MifosMockStrutsTestCase{
+
+	@Override
 	public void setUp()throws Exception{
 		super.setUp();
 		try {
 			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
-			setConfigFile(ResourceLoader.getURI("org/mifos/framework/util/helpers/struts-config.xml").getPath());
+			setConfigFile(ResourceLoader.getURI("org/mifos/framework/struts/util/helpers/struts-config.xml").getPath());
 		} catch (URISyntaxException e) {
 
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 *This method performs an action to load Plugins defined in struts-config.xml.
 	 */
@@ -33,7 +35,7 @@ public class TestConstPlugin extends MifosMockStrutsTestCase{
 		assertEquals("PaymentType",constantMap.get("PAYMENT_TYPE"));
 		assertEquals(Short.valueOf("1"),constantMap.get("CUSTOMFIELD_NUMBER"));
 	}
-	
+
 	public void testIfAllConstantFilesAreLoaded(){
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method","load");
@@ -46,5 +48,5 @@ public class TestConstPlugin extends MifosMockStrutsTestCase{
 		assertNotNull(context.getAttribute("AccountStates"));
 		assertNotNull(context.getAttribute("SavingsConstants"));
 	}
-	
+
 }

@@ -6,12 +6,12 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.struts.actionforms.SearchActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public class PersonnelNoteActionForm extends SearchActionForm {
+public class PersonnelNoteActionForm extends ValidatorActionForm {
 	private String personnelId;
 
 	private String personnelName;
@@ -21,7 +21,7 @@ public class PersonnelNoteActionForm extends SearchActionForm {
 	private String comment;
 
 	private String commentDate;
-	
+
 	private String globalPersonnelNum;
 
 	public String getCommentDate() {
@@ -63,7 +63,7 @@ public class PersonnelNoteActionForm extends SearchActionForm {
 	public void setPersonnelName(String personnelName) {
 		this.personnelName = personnelName;
 	}
-	
+
 	public String getGlobalPersonnelNum() {
 		return globalPersonnelNum;
 	}
@@ -85,9 +85,9 @@ public class PersonnelNoteActionForm extends SearchActionForm {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", methodCalled);
 		}
-		return errors;	
+		return errors;
 	}
-	
+
 	private ActionErrors handlePreviewValidations(HttpServletRequest request,ActionErrors errors) {
 		if (!StringUtils.isNullAndEmptySafe(getComment())) {
 			if (null == errors) {

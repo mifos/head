@@ -36,7 +36,7 @@ public class PersonActionForm extends BaseActionForm {
 	private String input;
 
 	private String searchString;
-	
+
 	private String personnelId;
 
 	private String level;
@@ -74,7 +74,7 @@ public class PersonActionForm extends BaseActionForm {
 	private String governmentIdNumber;
 
 	private String dob;
-	
+
 	private int age;
 
 	private String maritalStatus;
@@ -374,20 +374,20 @@ public class PersonActionForm extends BaseActionForm {
 		if (method.equals(Methods.previewManage.toString())) {
 			handleManagePreviewValidations(errors, request);
 		}
-		
+
 		if (method.equals(Methods.search.toString())) {
 			if( StringUtils.isNullOrEmpty(searchString))
 			{
 				try {
 				cleanUpSearch(request);
 				} catch (PageExpiredException e) {
-					
+
 					errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
 				}
 				errors.add(PersonnelConstants.NO_SEARCH_STRING,new ActionMessage(PersonnelConstants.NO_SEARCH_STRING));
 			}
 		}
-		
+
 		if (null != errors && !errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
@@ -466,7 +466,14 @@ public class PersonActionForm extends BaseActionForm {
 				errors.add(PersonnelConstants.ERROR_PASSWORD_LENGTH, new ActionMessage(
 						PersonnelConstants.ERROR_PASSWORD_LENGTH));
 		}
-		
+
+		if (input.equals(PersonnelConstants.MANAGE_USER)) {
+			if(userPassword.length()>0 && userPassword.length()<6){
+				errors.add(PersonnelConstants.ERROR_PASSWORD_LENGTH, new ActionMessage(
+						PersonnelConstants.ERROR_PASSWORD_LENGTH));
+			}
+		}
+
 		return errors;
 	}
 
@@ -481,7 +488,7 @@ public class PersonActionForm extends BaseActionForm {
 			checkForPassword(errors);
 			validateCustomFields(request, errors);
 			validateConfigurableMandatoryFields(request, errors,EntityType.PERSONNEL);
-			
+
 	}
 
 	private void validateNameDetail(ActionErrors errors) {
@@ -527,19 +534,19 @@ public class PersonActionForm extends BaseActionForm {
 		if (!StringUtils.isNullOrEmpty(emailId)&&!GenericValidator.isEmail(emailId)) {
 			errors.add(PersonnelConstants.ERROR_VALID_EMAIL, new ActionMessage(
 					PersonnelConstants.ERROR_VALID_EMAIL));
-		} 
+		}
 	}
 	private void validateUserHirerchy(ActionErrors errors) {
 		if (StringUtils.isNullOrEmpty(level)) {
 			errors.add(PersonnelConstants.ERROR_LEVEL, new ActionMessage(
 					PersonnelConstants.ERROR_LEVEL));
-		} 
+		}
 	}
 	private void validateloginName(ActionErrors errors){
 		if (StringUtils.isNullOrEmpty(loginName)) {
 			errors.add(PersonnelConstants.ERROR_USER_NAME, new ActionMessage(
 					PersonnelConstants.ERROR_USER_NAME));
-		} 
+		}
 	}
 	private void handleManagePreviewValidations(ActionErrors errors,
 			HttpServletRequest request) {
@@ -562,7 +569,7 @@ public class PersonActionForm extends BaseActionForm {
 					CustomerConstants.ERRORS_MANDATORY,
 					PersonnelConstants.STATUS));
 		}
-		
+
 	}
 
 	private void validateOffice(ActionErrors errors) {

@@ -6,21 +6,21 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.struts.actionforms.SearchActionForm;
 import org.mifos.framework.util.helpers.Constants;
 
-public class NotesActionForm extends SearchActionForm {
-	
+public class NotesActionForm extends ValidatorActionForm {
+
 	private String accountId;
 	private String accountTypeId;
 	private String prdOfferingName;
 	private String comment;
 	private String globalAccountNum;
 	private String securityParamInput;
-	
+
 	public String getAccountId() {
 		return accountId;
 	}
@@ -57,15 +57,15 @@ public class NotesActionForm extends SearchActionForm {
 	public void setSecurityParamInput(String securityParamInput) {
 		this.securityParamInput = securityParamInput;
 	}
-	
+
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String methodCalled = request.getParameter(Methods.method.toString());
 		ActionErrors errors = null;
 		if(null !=methodCalled) {
-			if(Methods.cancel.toString().equals(methodCalled) || 
+			if(Methods.cancel.toString().equals(methodCalled) ||
 			  Methods.searchNext.toString().equals(methodCalled)||
 			  Methods.search.toString().equals(methodCalled)||
-			  Methods.searchPrev.toString().equals(methodCalled)||	 
+			  Methods.searchPrev.toString().equals(methodCalled)||
 			  Methods.load.toString().equals(methodCalled) ||
 			  Methods.create.toString().equals(methodCalled)){
 				request.setAttribute(Constants.SKIPVALIDATION, Boolean.valueOf(true));
@@ -77,9 +77,9 @@ public class NotesActionForm extends SearchActionForm {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", methodCalled);
 		}
-		return errors;	
+		return errors;
 	}
-	
+
 	private ActionErrors handlePreviewValidations(HttpServletRequest request,ActionErrors errors) {
 		if (ValidateMethods.isNullOrBlank(getComment())) {
 			if (null == errors) {

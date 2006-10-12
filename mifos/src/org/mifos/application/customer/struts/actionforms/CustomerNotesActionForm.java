@@ -44,12 +44,12 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.struts.actionforms.SearchActionForm;
 
-public class CustomerNotesActionForm extends SearchActionForm {
+public class CustomerNotesActionForm extends ValidatorActionForm {
 
 	private String customerId;
 	private String levelId;
@@ -59,7 +59,7 @@ public class CustomerNotesActionForm extends SearchActionForm {
 	private String globalCustNum;
 	private String securityParamInput;
 	private String input;
-	
+
 	public String getCommentDate() {
 		return commentDate;
 	}
@@ -90,7 +90,7 @@ public class CustomerNotesActionForm extends SearchActionForm {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 	public String getGlobalCustNum() {
 		return globalCustNum;
 	}
@@ -103,7 +103,7 @@ public class CustomerNotesActionForm extends SearchActionForm {
 	public void setSecurityParamInput(String securityParamInput) {
 		this.securityParamInput = securityParamInput;
 	}
-	
+
 	public String getInput() {
 		return input;
 	}
@@ -123,9 +123,9 @@ public class CustomerNotesActionForm extends SearchActionForm {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", methodCalled);
 		}
-		return errors;	
+		return errors;
 	}
-	
+
 	private ActionErrors handlePreviewValidations(HttpServletRequest request,ActionErrors errors) {
 		if (ValidateMethods.isNullOrBlank(getComment())) {
 			if (null == errors) {
