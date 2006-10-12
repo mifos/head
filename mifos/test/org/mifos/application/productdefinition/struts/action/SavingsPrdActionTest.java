@@ -12,12 +12,10 @@ import java.util.Locale;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -140,11 +138,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				"Please select the Product category.",
 				"Please specify the Start date.",
 				"Please select the Applicable for.",
-				"Please select the Type of deposits.",
-				"Please specify the Interest rate.",
-				"Please select the Balance used for Interest calculation.",
-				"Please specify the Time period for interest calculation.",
-				"Please specify the Frequency of interest posting to accounts.",
+				"Please select the Type of deposits.", "errors.mandatory",
+				"errors.select", "errors.mandatory", "errors.mandatory",
 				"Please select the GL code for deposits.",
 				"Please select the GL code for interest." });
 		verifyInputForward();
@@ -642,7 +637,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals("savingsType", 1, getErrrorSize("savingsType"));
 		assertEquals("interestRate", 1, getErrrorSize("interestRate"));
 		assertEquals("interestCalcType", 1, getErrrorSize("interestCalcType"));
-		assertEquals("timeForInterestCacl", 1, getErrrorSize("freqOfInterest"));
+		assertEquals("timeForInterestCacl", 1, getErrrorSize("timeForInterestCacl"));
 		assertEquals("freqOfInterest", 1, getErrrorSize("freqOfInterest"));
 		assertEquals("depositGLCode", 1, getErrrorSize("depositGLCode"));
 		assertEquals("interestGLCode", 1, getErrrorSize("interestGLCode"));
@@ -983,9 +978,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTLIST,
 						request);
 		assertEquals("The size of savings products", 1, savingsProducts.size());
-		
+
 	}
-	
+
 	public void testSearch_Inactive() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createSavingsOfferingAndPutInSession();
@@ -1026,11 +1021,11 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				.getAttribute(ProductDefinitionConstants.SAVINGSPRODUCTLIST,
 						request);
 		assertEquals("The size of savings products", 1, savingsProducts.size());
-		assertEquals("Inactive", savingsProducts.get(0).getPrdStatus().getPrdState().getName());
+		assertEquals("Inactive", savingsProducts.get(0).getPrdStatus()
+				.getPrdState().getName());
 		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
 				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
 	}
-
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {
 		Calendar currentDateCalendar = new GregorianCalendar();

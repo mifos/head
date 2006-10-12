@@ -166,7 +166,7 @@ public interface ProductDefinitionConstants {
 	public String ERRORDEFLOANAMOUNT="errors.defLoanAmount";
 	public String ERRORMAXMININTRATE="errors.maxminIntRate";
 	public String ERRORDEFINTRATE="errors.defIntRate";
-	public String ERRORINTRATE="errors.intRate";
+	public String ERRORINTRATE="errors.intRateValue";
 	public String PRDINVALID="errors.invalid";
 	public String DUPLCATEGORYNAME="errors.duplcategoryname";
 	public String DUPLPRDINSTNAME="errors.duplprdinstname";
@@ -178,46 +178,45 @@ public interface ProductDefinitionConstants {
 	public String ERRORFEEFREQUENCY="errors.feefrequency";
 	public String ERRORMANDAMOUNT="errors.mandAmount";
 	public String INVALIDFIELD="exceptions.application.productDef.invalidfield";
-	public String ERRORMANDATORY = "errors.mandatory";
+	public String ERROR_MANDATORY = "errors.mandatory";
+	public String ERROR_SELECT = "errors.select";
+	public String ERROR_CREATE = "errors.create";
+	public String ERRORSSELECTCONFIG="errors.selectconfig";
+	public String ERRORSENTERCONFIG="errors.mandatoryconfig";
+	public String ERRORSDEFMINMAXCONFIG="errors.defMinMaxconfig";
+	public String ERRORSMINMAXINTCONFIG="errors.maxminIntRateconfig";
+	public String ERRORSDEFINTCONFIG="errors.defIntRateconfig";
+	public String ERRORS_RANGE="errors.defMinMax";
+
+	public String BALANCE_INTEREST = "Balance used for ";
+	public String CALCULATION = "calculation";
+	public String TIME_PERIOD = "Time period for ";
+	public String FREQUENCY = "Frequency of ";
+	public String POSTING_ACCOUNTS = "posting to accounts";
+	public String RECUR_AFTER = "Recur every";
 	
 	//GLcodes
 	public String PRICIPALGLCODE="principal";
 	public String INTERESTGLCODE="interest";
 	public String PENALTYGLCODE="penalty";
 	public String DEPOSITGLCODE="deposit";
-	
-	
 	public String SAVINGSPRODUCTACTIONFORM="savingsproductactionform";
 	public String SAVINGSDEPOSITGLCODELIST="depositGLCodes";
 	public String SAVINGSINTERESTGLCODELIST="interestGLCodes";
 	public String SAVINGSPRDGLOBALOFFERINGNUM="savingsprdglobalofferingnum";
-
-	public String ERROR_CREATE = "errors.create";
-
 	public String LOANPRICIPALGLCODELIST="principalGLCodes";
 	public String LOANINTERESTGLCODELIST="interestGLCodes";
 	public String LOANPRODUCTACTIONFORM="loanproductactionform";
 	public String LOANPRDGLOBALOFFERINGNUM="loanprdglobalofferingnum";
-	public String ERROR_MANDATORY = "errors.mandatory";
-	public String ERROR_SELECT = "errors.select";
-	
 	public String LOANPRDFEESELECTEDLIST="loanprdfeeselectedlist";
 	public String LOANPRDFUNDSELECTEDLIST="loanprdfundselectedlist";
 	public String LOANPRDFEE="loanprdfee";
-	
 	public String RATETYPE="rate type";
 	public String RATE="rate";
 	public String MAX="Max";
 	public String MIN="Min";
 	public String DEFAULT="Default ";
 	public String LOANPRDSTARTDATE="LoanPrdstartDate";
-
-	public String ERRORSSELECTCONFIG="errors.selectconfig";
-	public String ERRORSENTERCONFIG="errors.mandatoryconfig";
-	public String ERRORSDEFMINMAXCONFIG="errors.defMinMaxconfig";
-	public String ERRORSMINMAXINTCONFIG="errors.maxminIntRateconfig";
-	public String ERRORSDEFINTCONFIG="errors.defIntRateconfig";
-	
 	//product configuration
 	public String LATENESS_DAYS = "lateness_days";
 	public String DORMANCY_DAYS = "dormancy_days";

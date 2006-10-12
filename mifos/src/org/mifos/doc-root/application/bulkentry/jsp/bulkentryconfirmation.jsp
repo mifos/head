@@ -48,42 +48,34 @@
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-		<html-el:form action="/bulkentryaction">
-			<table width="95%" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td align="left" valign="top" class="paddingL15T15">
+		<table width="95%" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td align="left" valign="top" class="paddingL15T15">
 					<table width="98%" border="0" cellspacing="0" cellpadding="3">
 						<tr>
-							<td class="headingorange"><mifos:mifoslabel
-								name="bulkEntry.entersucc" /> <br>
-							<br>
+							<td class="headingorange">
+								<mifos:mifoslabel name="bulkEntry.entersucc" />
+								<br>
+								<br>
 							</td>
 						</tr>
 						<tr>
-							<td class="fontnormalbold"><mifos:mifoslabel
-								name="bulkEntry.plsnote" />: <span class="fontnormal"> <mifos:mifoslabel
-								name="bulkEntry.datafor" />&nbsp; <c:out
-								value="${sessionScope.BulkEntry.bulkEntryParent.customerDetail.displayName}" />
-							</span> <span class="fontnormal"><mifos:mifoslabel
-								name="bulkEntry.hasenter" /><br>
-							<br>
-							<font class="fontnormalRedBold">
-							<html-el:messages id="abc" bundle="bulkEntryUIResources"/>
-							 <html-el:errors
-								bundle="bulkEntryUIResources" /> </font> </span> <html-el:link
-								href="bulkentryaction.do?method=load">
-								<mifos:mifoslabel name="bulkEntry.entercollsheetdata" />
-							</html-el:link> <span class="fontnormal"><br>
-							<br>
-							</span></td>
+							<td class="fontnormalbold">
+								<mifos:mifoslabel name="bulkEntry.plsnote" />
+								: <span class="fontnormal"> <mifos:mifoslabel name="bulkEntry.datafor" />&nbsp; <c:out value="${requestScope.Center}" /> </span> <span class="fontnormal"><mifos:mifoslabel name="bulkEntry.hasenter" /><br> <br> <font class="fontnormalRedBold"> <html-el:messages
+											id="abc" bundle="bulkEntryUIResources" /> <html-el:errors bundle="bulkEntryUIResources" /> </font> </span>
+								<html-el:link href="bulkentryaction.do?method=load">
+									<mifos:mifoslabel name="bulkEntry.entercollsheetdata" />
+								</html-el:link>
+								<span class="fontnormal"><br> <br> </span>
+							</td>
 						</tr>
 					</table>
 					<br>
 					<br>
-					</td>
-				</tr>
-			</table>
-			<br>
-		</html-el:form>
+				</td>
+			</tr>
+		</table>
+		<br>
 	</tiles:put>
 </tiles:insert>

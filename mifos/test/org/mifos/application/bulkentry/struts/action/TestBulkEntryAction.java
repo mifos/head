@@ -198,6 +198,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward("create_success");
+		assertNotNull(request.getAttribute(BulkEntryConstants.CENTER));
+		assertEquals(request.getAttribute(BulkEntryConstants.CENTER), center
+				.getDisplayName());
 
 		groupAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
 				groupAccount.getAccountId());
@@ -217,21 +220,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				.getCustomerId());
 
 		assertEquals(client.getClientAttendances().size(), 1);
-
-		// TODO: This should be replaced by asserts, it would seem
-		// for (ClientAttendanceBO attendance: client.getClientAttendances()){
-		// System.out.println("$$$ "+ attendance.getMeetingDate());
-		// System.out.println("$$$ " +attendance.getAttendance());
-		// }
-
 		assertEquals("2", client.getClientAttendanceForMeeting(
 				new java.sql.Date(meetinDateCalendar.getTimeInMillis()))
 				.getAttendance().toString());
-
 	}
 
 	public void testFailureCreate() throws Exception {
-		
 		BulkEntryBO bulkEntry = getFailureBulkEntry();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
@@ -287,7 +281,6 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward("preview_success");
-
 	}
 
 	public void testFailurePreview() throws Exception {
@@ -301,11 +294,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("customerAccountAmountEntered[0][6]", "");
 		addRequestParameter("customerAccountAmountEntered[1][6]", "abc");
 		actionPerform();
-		
+
 		verifyActionErrors(new String[] { "errors.invalidamount",
 				"errors.invalidamount" });
-		
-		
+
 	}
 
 	public void testLoad() throws PageExpiredException {
@@ -667,8 +659,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				groupLoanAccountView.getPrdOfferingId());
 		bulkEntryChild.getLoanAccountDetails().get(0).setEnteredAmount("100.0");
 		bulkEntrySubChild.getLoanAccountDetails().get(0)
-		.setDisBursementAmountEntered(
-				clientAccount.getLoanAmount().toString());
+				.setDisBursementAmountEntered(
+						clientAccount.getLoanAmount().toString());
 		bulkEntrySubChild.getLoanAccountDetails().get(0).setPrdOfferingId(
 				clientLoanAccountView.getPrdOfferingId());
 		List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
@@ -692,7 +684,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return bulkEntry;
 	}
 
-	private BulkEntryBO getFailureBulkEntry() throws  Exception {
+	private BulkEntryBO getFailureBulkEntry() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -709,11 +701,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loan2345","313f", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loan2345", "313f", Short.valueOf("2"), new Date(System
+						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
+				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, Short.valueOf("5"),
 				new Date(System.currentTimeMillis()), loanOffering1);
@@ -725,15 +717,15 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering("SavingPrd123c", "ased",Short.valueOf("2"),
-						new Date(System.currentTimeMillis()), Short
-								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
+				.createSavingsOffering("SavingPrd123c", "ased", Short
+						.valueOf("2"), new Date(System.currentTimeMillis()),
+						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
 		SavingsOfferingBO savingsOffering1 = TestObjectFactory
-				.createSavingsOffering("SavingPrd1we","vbgr", Short.valueOf("2"),
-						new Date(System.currentTimeMillis()), Short
-								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
+				.createSavingsOffering("SavingPrd1we", "vbgr", Short
+						.valueOf("2"), new Date(System.currentTimeMillis()),
+						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
@@ -742,9 +734,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
 				client, Short.valueOf("16"), new Date(System
 						.currentTimeMillis()), savingsOffering1);
-        
-        //java.sql.Date transactionDate = new Date(System.currentTimeMillis());
-        
+
+		// java.sql.Date transactionDate = new Date(System.currentTimeMillis());
+
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 
 		BulkEntryView bulkEntryParent = new BulkEntryView(

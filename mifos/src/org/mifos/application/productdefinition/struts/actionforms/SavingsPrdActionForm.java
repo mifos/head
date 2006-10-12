@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -26,6 +27,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class SavingsPrdActionForm extends BaseActionForm {
 	private MifosLogger prdDefLogger = MifosLogManager
@@ -365,7 +367,8 @@ public class SavingsPrdActionForm extends BaseActionForm {
 							&& ((DateUtils.getDateWithoutTimeStamp(
 									startingDate.getTime()).compareTo(
 									DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils
-									.getDateWithoutTimeStamp(startingDate.getTime())
+									.getDateWithoutTimeStamp(
+											startingDate.getTime())
 									.compareTo(
 											DateUtils
 													.getCurrentDateOfNextYearWithOutTimeStamp()) > 0)))
@@ -382,14 +385,11 @@ public class SavingsPrdActionForm extends BaseActionForm {
 									.getAmountDoubleValue() <= 0.0)
 						addError(errors, "recommendedAmount",
 								ProductDefinitionConstants.ERRORMANDAMOUNT);
-					Double intRate = getInterestRateValue();
-					if (intRate != null && intRate > 100)
-						addError(errors, "interestRate",
-								ProductDefinitionConstants.ERRORINTRATE);
+					validateInterestRate(errors, request);
 				} else if (method.equals(Methods.previewManage.toString())) {
 					errors.add(super.validate(mapping, request));
 					validateMandatoryAmount(errors);
-					validateInterestRate(errors);
+					validateInterestRate(errors, request);
 					Date startingDate = getStartDateValue(getUserContext(
 							request).getPereferedLocale());
 					Date endingDate = getEndDateValue(getUserContext(request)
@@ -417,11 +417,65 @@ public class SavingsPrdActionForm extends BaseActionForm {
 		return errors;
 	}
 
-	private void validateInterestRate(ActionErrors errors) {
-		Double intRate = getInterestRateValue();
-		if (intRate != null && intRate > 100)
+	private void validateInterestRate(ActionErrors errors,
+			HttpServletRequest request) {
+		if (StringUtils.isNullOrEmpty(getInterestRate())) {
 			addError(errors, "interestRate",
-					ProductDefinitionConstants.ERRORINTRATE);
+					ProductDefinitionConstants.ERROR_MANDATORY, getLabel(
+							ConfigurationConstants.INTEREST, request)
+							+ " " + ProductDefinitionConstants.RATE);
+		} else {
+			Double intRate = getInterestRateValue();
+			if (intRate != null && intRate > 100)
+				addError(errors, "interestRate",
+						ProductDefinitionConstants.ERRORINTRATE, getLabel(
+								ConfigurationConstants.INTEREST, request)
+								+ " " + ProductDefinitionConstants.RATE);
+		}
+		if (StringUtils.isNullOrEmpty(getInterestCalcType()))
+			addError(
+					errors,
+					"interestCalcType",
+					ProductDefinitionConstants.ERROR_SELECT,
+					ProductDefinitionConstants.BALANCE_INTEREST
+							+ getLabel(ConfigurationConstants.INTEREST, request)
+							+ " " + ProductDefinitionConstants.CALCULATION);
+		if (StringUtils.isNullOrEmpty(getTimeForInterestCacl())) {
+			addError(
+					errors,
+					"timeForInterestCacl",
+					ProductDefinitionConstants.ERROR_MANDATORY,
+					ProductDefinitionConstants.TIME_PERIOD
+							+ getLabel(ConfigurationConstants.INTEREST, request)
+							+ " " + ProductDefinitionConstants.CALCULATION);
+		} else {
+			int timePeriod = getTimeForInterestCalcValue();
+			if (timePeriod <= 0 || timePeriod > 32767)
+				addError(errors, "timeForInterestCacl",
+						ProductDefinitionConstants.ERRORINTRATE,
+						ProductDefinitionConstants.TIME_PERIOD
+								+ getLabel(ConfigurationConstants.INTEREST,
+										request) + " "
+								+ ProductDefinitionConstants.CALCULATION);
+		}
+		if (StringUtils.isNullOrEmpty(getFreqOfInterest())) {
+			addError(
+					errors,
+					"freqOfInterest",
+					ProductDefinitionConstants.ERROR_MANDATORY,
+					ProductDefinitionConstants.FREQUENCY
+							+ getLabel(ConfigurationConstants.INTEREST, request)
+							+ " " + ProductDefinitionConstants.POSTING_ACCOUNTS);
+		} else {
+			int frequency = getFreqOfInterestValue();
+			if (frequency <= 0 || frequency > 32767)
+				addError(errors, "freqOfInterest",
+						ProductDefinitionConstants.ERRORINTRATE,
+						ProductDefinitionConstants.FREQUENCY
+								+ getLabel(ConfigurationConstants.INTEREST,
+										request) + " "
+								+ ProductDefinitionConstants.POSTING_ACCOUNTS);
+		}
 
 	}
 
@@ -486,9 +540,9 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	private void validateEndDateAgainstCurrentDate(ActionErrors errors,
 			Date startDate, java.util.Date oldEndDate, Date endDate)
 			throws ProductDefinitionException {
-		if ((oldEndDate==null && endDate!=null )||(oldEndDate != null
-				&& endDate != null
-				&& DateUtils.getDateWithoutTimeStamp(oldEndDate.getTime())
+		if ((oldEndDate == null && endDate != null)
+				|| (oldEndDate != null && endDate != null && DateUtils
+						.getDateWithoutTimeStamp(oldEndDate.getTime())
 						.compareTo(
 								DateUtils.getDateWithoutTimeStamp(endDate
 										.getTime())) != 0)) {

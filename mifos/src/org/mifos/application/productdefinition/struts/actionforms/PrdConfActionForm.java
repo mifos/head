@@ -49,11 +49,11 @@ public class PrdConfActionForm extends BaseActionForm {
 		if (method.equals(Methods.update.toString())) {
 			if (StringUtils.isNullOrEmpty(getLatenessDays()))
 				addError(errors, "latenessDays",
-						ProductDefinitionConstants.ERRORMANDATORY,
+						ProductDefinitionConstants.ERROR_MANDATORY,
 						ProductDefinitionConstants.LATENESSDAYS);
 			if (StringUtils.isNullOrEmpty(getDormancyDays()))
 				addError(errors, "dormancyDays",
-						ProductDefinitionConstants.ERRORMANDATORY,
+						ProductDefinitionConstants.ERROR_MANDATORY,
 						ProductDefinitionConstants.DORMANCYDAYS);
 		}
 		if (!method.equals(Methods.validate.toString()))

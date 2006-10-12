@@ -372,6 +372,8 @@ public class BulkEntryAction extends BaseAction {
 		saveData(bulkEntry, personnelId, meetingDate, loanAccountNums,
 				savingsDepositAccountNums, savingsWithdrawalsAccountNums,
 				customerAccountNums, bulkEntryService);
+		request.setAttribute(BulkEntryConstants.CENTER, bulkEntry
+				.getBulkEntryParent().getCustomerDetail().getDisplayName());
 		if (loanAccountNums.size() > 0 || savingsDepositAccountNums.size() > 0
 				|| savingsWithdrawalsAccountNums.size() > 0
 				|| customerAccountNums.size() > 0) {

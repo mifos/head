@@ -394,7 +394,7 @@
 								</td>
 								<!--bug id 25496  added maxValue -->
 								<td valign="top">
-									<mifos:mifosnumbertext property="timeForInterestCacl" size="3" maxValue="32767" minValue="1" />
+									<mifos:mifosnumbertext property="timeForInterestCacl" size="3" maxlength="3" />
 									<html-el:select property="recurTypeFortimeForInterestCacl" style="width:80px;">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsRecurrenceTypeList')}" var="recType">
 											<html-el:option value="${recType.recurrenceId}">${recType.recurrenceName}</html-el:option>
@@ -411,7 +411,7 @@
 								</td>
 								<!--bug id 25496  added maxValue -->
 								<td valign="top">
-									<mifos:mifosnumbertext property="freqOfInterest" size="3" maxValue="32767" minValue="1" />
+									<mifos:mifosnumbertext property="freqOfInterest" size="3" maxlength="3" />
 									<mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" />
 								</td>
 							</tr>
