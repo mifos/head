@@ -21,6 +21,7 @@ import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.ViewInstallmentDetails;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
@@ -55,7 +56,12 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.util.ActivityContext;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -207,6 +213,8 @@ public class LoanAccountAction extends AccountAppAction {
 
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
 		CustomerBO customer = getCustomer(loanActionForm.getCustomerIdValue());
+		customer.getOffice().getOfficeId();
+		customer.getPersonnel().getPersonnelId();
 
 		doCleanUp(request.getSession());
 		List<LoanOfferingBO> loanOfferings = ((LoanPrdBusinessService) ServiceFactory
@@ -310,13 +318,17 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		LoanBO loan = (LoanBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request);
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-		loan.setAccountState(new AccountStateEntity(loanActionForm.getState()));
-		loan.save();
 		CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
 				LoanConstants.LOANACCOUNTOWNER, request);
+		checkPermissionForCreate(loanActionForm.getState().getValue(),
+				getUserContext(request), null, customer.getOffice()
+						.getOfficeId(), customer.getPersonnel()
+						.getPersonnelId());
+		LoanBO loan = (LoanBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		loan.setAccountState(new AccountStateEntity(loanActionForm.getState()));
+		loan.save();
 		loanActionForm.setAccountId(loan.getAccountId().toString());
 		request.setAttribute("customer", customer);
 		request.setAttribute("globalAccountNum", loan.getGlobalAccountNum());
@@ -694,4 +706,21 @@ public class LoanAccountAction extends AccountAppAction {
 				penaltyDue);
 	}
 
+	protected void checkPermissionForCreate(Short newState,
+			UserContext userContext, Short flagSelected, Short officeId,
+			Short loanOfficerId) throws ApplicationException {
+		if (!isPermissionAllowed(newState, userContext, officeId,
+				loanOfficerId, true))
+			throw new AccountException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowed(Short newSate, UserContext userContext,
+			Short officeId, Short loanOfficerId, boolean saveFlag) {
+		return AuthorizationManager.getInstance().isActivityAllowed(
+				userContext,
+				new ActivityContext(ActivityMapper.getInstance()
+						.getActivityIdForState(newSate), officeId,
+						loanOfficerId));
+	}
 }

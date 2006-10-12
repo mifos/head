@@ -411,7 +411,6 @@ public class BulkEntryDisplayHelper {
 			builder.append("<td class=\"drawtablerow\">");
 			builder.append("<select name=\"attendenceSelected[" + rows
 					+ "]\"  style=\"width:40px;\" class=\"fontnormal8pt\">");
-            builder.append("<option value= \"\"></option>)");
 			for (LookUpMaster attendence : custAttTypes) {
 				builder.append("<option value=\"" + attendence.getId() + "\"");
                 if (bulkEntryView.getAttendence() != null && (attendence.getId().intValue()== bulkEntryView.getAttendence().intValue()))

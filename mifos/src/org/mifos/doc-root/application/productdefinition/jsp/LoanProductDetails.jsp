@@ -127,7 +127,9 @@
 												</c:choose> <br> <mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"
 													bundle="ProductDefUIResources" />: <c:out value="${loanPrd.maxLoanAmount}" /> <br> <mifos:mifoslabel name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 												<mifos:mifoslabel name="product.amount" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.minLoanAmount}" /> <br> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.amount"
-													bundle="ProductDefUIResources" />: <c:out value="${loanPrd.defaultLoanAmount}" /></span>
+													bundle="ProductDefUIResources" />: <c:if test="${loanPrd.defaultLoanAmount.amountDoubleValue > 0.0 || loanPrd.minLoanAmount.amountDoubleValue == 0.0}">
+													<c:out value="${loanPrd.defaultLoanAmount}" />
+												</c:if> </span>
 										</td>
 									</tr>
 								</table>

@@ -112,7 +112,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private List<FeeView> additionalFees;
 
 	private String stateSelected;
-	
+
 	private String gracePeriod;
 
 	public String getGracePeriod() {
@@ -330,11 +330,11 @@ public class LoanAccountActionForm extends BaseActionForm {
 	public Short getCollateralTypeIdValue() {
 		return getShortValue(getCollateralTypeId());
 	}
-	
+
 	public Money getLoanAmountValue() {
 		return getMoney(loanAmount);
 	}
-	
+
 	public Double getInterestRateValue() {
 		return getDoubleValue(interestRate);
 	}
@@ -376,7 +376,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 					defaultFees.get(i).setFeeRemoved(YesNoFlag.NO.getValue());
 				}
 			}
-		}else if (method.equals(Methods.managePreview.toString())) {
+		} else if (method.equals(Methods.managePreview.toString())) {
 			intDedDisbursement = "0";
 		}
 
@@ -388,17 +388,18 @@ public class LoanAccountActionForm extends BaseActionForm {
 		String method = request.getParameter(Methods.method.toString());
 		ActionErrors errors = new ActionErrors();
 		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
-			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
-		try{
-		if (method.equals(Methods.getPrdOfferings.toString()))
-			checkValidationForGetPrdOfferings(errors);
-		else if (method.equals(Methods.load.toString()))
-			checkValidationForLoad(errors);
-		else if (method.equals(Methods.schedulePreview.toString()))
-			checkValidationForSchedulePreview(errors, request);
-		else if (method.equals(Methods.managePreview.toString()))
-			checkValidationForSchedulePreview(errors, request);
-		}catch(ApplicationException ae){
+			request.setAttribute(Constants.CURRENTFLOWKEY, request
+					.getParameter(Constants.CURRENTFLOWKEY));
+		try {
+			if (method.equals(Methods.getPrdOfferings.toString()))
+				checkValidationForGetPrdOfferings(errors);
+			else if (method.equals(Methods.load.toString()))
+				checkValidationForLoad(errors);
+			else if (method.equals(Methods.schedulePreview.toString()))
+				checkValidationForSchedulePreview(errors, request);
+			else if (method.equals(Methods.managePreview.toString()))
+				checkValidationForSchedulePreview(errors, request);
+		} catch (ApplicationException ae) {
 			errors = new ActionErrors();
 			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
 					.getValues()));
@@ -425,21 +426,21 @@ public class LoanAccountActionForm extends BaseActionForm {
 	}
 
 	private void checkValidationForSchedulePreview(ActionErrors errors,
-			HttpServletRequest request) throws ApplicationException{
-		LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils.getAttribute(LoanConstants.LOANOFFERING,request);
-		checkForMinMax(errors, getLoanAmount(),
-				loanOffering.getMaxLoanAmount().getAmountDoubleValue(), loanOffering
-						.getMinLoanAmount().getAmountDoubleValue(), LoanConstants.LOANAMOUNT);
+			HttpServletRequest request) throws ApplicationException {
+		LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils
+				.getAttribute(LoanConstants.LOANOFFERING, request);
+		checkForMinMax(errors, getLoanAmount(), loanOffering.getMaxLoanAmount()
+				.getAmountDoubleValue(), loanOffering.getMinLoanAmount()
+				.getAmountDoubleValue(), LoanConstants.LOANAMOUNT);
 		checkForMinMax(errors, getInterestRate(), loanOffering
 				.getMaxInterestRate(), loanOffering.getMinInterestRate(),
 				LoanConstants.INTERESTRATE);
 		checkForMinMax(errors, getNoOfInstallments(), loanOffering
-				.getMaxNoInstallments().doubleValue(), loanOffering
-				.getMinNoInstallments().doubleValue(), LoanConstants.NO_OF_INST);
+				.getMaxNoInstallments(), loanOffering.getMinNoInstallments(),
+				LoanConstants.NO_OF_INST);
 		if (StringUtils.isNullOrEmpty(getDisbursementDate())) {
 			addError(errors, "Proposed/Actual disbursal date",
-					"errors.validandmandatory",
-					"disbursal date");
+					"errors.validandmandatory", "disbursal date");
 		}
 		if (((!isInterestDedAtDisbValue()) && StringUtils
 				.isNullOrEmpty(getGracePeriodDuration()))
@@ -454,6 +455,18 @@ public class LoanAccountActionForm extends BaseActionForm {
 	}
 
 	private void checkForMinMax(ActionErrors errors, String currentValue,
+			Short maxValue, Short minValue, String field) {
+		if (StringUtils.isNullOrEmpty(currentValue)
+				|| getDoubleValue(currentValue).doubleValue() > maxValue
+						.doubleValue()
+				|| getDoubleValue(currentValue).doubleValue() < minValue
+						.doubleValue()) {
+			addError(errors, field, LoanExceptionConstants.INVALIDMINMAX,
+					field, getStringValue(minValue), getStringValue(maxValue));
+		}
+	}
+
+	private void checkForMinMax(ActionErrors errors, String currentValue,
 			Double maxValue, Double minValue, String field) {
 		if (StringUtils.isNullOrEmpty(currentValue)
 				|| getDoubleValue(currentValue).doubleValue() > maxValue
@@ -465,7 +478,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 		}
 	}
 
-	protected void validateFees(HttpServletRequest request, ActionErrors errors) throws ApplicationException{
+	protected void validateFees(HttpServletRequest request, ActionErrors errors)
+			throws ApplicationException {
 		validateForFeeAmount(errors);
 		validateForDuplicatePeriodicFee(request, errors);
 	}

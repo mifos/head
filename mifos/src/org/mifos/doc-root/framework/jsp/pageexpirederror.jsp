@@ -43,7 +43,9 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 
 <tiles:insert definition=".view">
+	<tiles:put name="header" value="/pages/framework/jsp/plainheader.jsp" />
 	<tiles:put name="body" type="string">
+
 		<font class="fontnormalRedBold"> <html-el:errors bundle="LoggerResources" /> </font>
 	</tiles:put>
 </tiles:insert>

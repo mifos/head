@@ -268,6 +268,40 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyInputForward();
 	}
 
+	public void testPreviewWithImproperMinMaxInterestRates()
+			throws Exception {
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
+		addRequestParameter("prdCategory", "1");
+		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("minLoanAmount", "2000");
+		addRequestParameter("maxLoanAmount", "11000");
+		addRequestParameter("interestTypes", "1");
+		addRequestParameter("maxInterestRate", "99");
+		addRequestParameter("minInterestRate", "999");
+		addRequestParameter("defInterestRate", "999");
+		addRequestParameter("freqOfInstallments", "2");
+
+		addRequestParameter("recurAfter", "1");
+		addRequestParameter("maxNoInstallments", "10");
+		addRequestParameter("minNoInstallments", "2");
+		addRequestParameter("defNoInstallments", "4");
+		addRequestParameter("intDedDisbursementFlag", "1");
+		addRequestParameter("principalGLCode", "7");
+		addRequestParameter("interestGLCode", "7");
+
+		actionPerform();
+		verifyActionErrors(new String[] { "errors.defIntRateconfig",
+				"errors.maxminIntRateconfig" });
+		verifyInputForward();
+	}
+
 	public void testPreviewWithImproperMinMaxDefInstallments() throws Exception {
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "preview");
@@ -999,7 +1033,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.get_success.toString());
 
 		LoanOfferingBO loanOffering1 = (LoanOfferingBO) SessionUtils
-				.getAttribute(Constants.BUSINESS_KEY,request);
+				.getAttribute(Constants.BUSINESS_KEY, request);
 		assertNotNull(loanOffering1.getPrdOfferingId());
 		assertNotNull(loanOffering1.getPrdOfferingName());
 		assertNotNull(loanOffering1.getPrdOfferingShortName());
@@ -1043,9 +1077,10 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.viewAllLoanProducts_success.toString());
-		
+
 		List<LoanOfferingBO> loanOfferings = (List<LoanOfferingBO>) SessionUtils
-				.getAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,request);
+				.getAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,
+						request);
 		assertNotNull(loanOfferings);
 		assertEquals(2, loanOfferings.size());
 		for (LoanOfferingBO loanOfferingBO : loanOfferings) {

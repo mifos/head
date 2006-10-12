@@ -37,26 +37,25 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	private CustomerBO client;
 
 	private AccountBO account;
-    
-    private ClientAttendanceBO clientAttendance;
-    
-    private BulkEntryPersistance bulkEntryPersistance;
-    
-    private CustomerPersistence customerPersistence;
-    
+
+	private ClientAttendanceBO clientAttendance;
+
+	private BulkEntryPersistance bulkEntryPersistance;
+
+	private CustomerPersistence customerPersistence;
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		accountPersistence = new AccountPersistence();
-        bulkEntryPersistance = new BulkEntryPersistance();  
-        customerPersistence = new CustomerPersistence();  
+		bulkEntryPersistance = new BulkEntryPersistance();
+		customerPersistence = new CustomerPersistence();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(account);
-        //TestObjectFactory.deleteClientAttendence(client);
+		// TestObjectFactory.deleteClientAttendence(client);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
@@ -64,7 +63,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	public void testGetAccount() throws Exception{
+	public void testGetAccount() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -115,8 +114,8 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
-						"100.0"), null, account.getPersonnel(), "423423",
-				Short.valueOf("1"), currentDate, currentDate);
+						"100.0"), null, account.getPersonnel(), "423423", Short
+						.valueOf("1"), currentDate, currentDate);
 		try {
 			account.applyPayment(paymentData);
 			assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid()
@@ -156,8 +155,8 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
-						"100.0"), null, account.getPersonnel(), "423423",
-				Short.valueOf("1"), currentDate, currentDate);
+						"100.0"), null, account.getPersonnel(), "423423", Short
+						.valueOf("1"), currentDate, currentDate);
 
 		account.applyPayment(paymentData);
 		HibernateUtil.commitTransaction();
@@ -205,47 +204,50 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 			assertTrue(false);
 		} catch (AccountException be) {
 			assertNotNull(be);
-			assertEquals(be.getKey(), "errors.update");
+			assertEquals(be.getKey(), "errors.makePayment");
 			assertTrue(true);
 		}
-		
+
 	}
-       
-    public void testGetBulkEntryClientAttendanceActionView() throws PersistenceException{
-        
-        createInitialObjects();
-        java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
-        
-        clientAttendance = new ClientAttendanceBO();
-        clientAttendance.setAttendance(new Short("1"));
-        clientAttendance.setMeetingDate(meetingDate);
-        ((ClientBO)client).addClientAttendance(clientAttendance );
-        customerPersistence.createOrUpdate(client);
-        HibernateUtil.commitTransaction();
-        HibernateUtil.closeSession();
-        
-        List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceView = 
-            bulkEntryPersistance.getBulkEntryClientAttendanceActionView(
-                meetingDate, client.getOffice().getOfficeId());    
-        
-        assertEquals(bulkEntryClientAttendanceView.size(),1);
-        
-    }
-    
-    private void createInitialObjects() {
-        
-            MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-        
-                .getMeetingHelper(1, 1, 4, 2));
-            center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
-                    "1.1", meeting, new Date(System.currentTimeMillis()));
-            group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
-                    "1.1.1", center, new Date(System.currentTimeMillis()));
-            client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE.getValue(),
-                    "1.1.1.1", group, new Date(System.currentTimeMillis()));
-                        
-            HibernateUtil.closeSession();
-        
-        
-    }
+
+	public void testGetBulkEntryClientAttendanceActionView()
+			throws PersistenceException {
+
+		createInitialObjects();
+		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
+
+		clientAttendance = new ClientAttendanceBO();
+		clientAttendance.setAttendance(new Short("1"));
+		clientAttendance.setMeetingDate(meetingDate);
+		((ClientBO) client).addClientAttendance(clientAttendance);
+		customerPersistence.createOrUpdate(client);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceView = bulkEntryPersistance
+				.getBulkEntryClientAttendanceActionView(meetingDate, client
+						.getOffice().getOfficeId());
+
+		assertEquals(bulkEntryClientAttendanceView.size(), 1);
+
+	}
+
+	private void createInitialObjects() {
+
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+
+		.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center",
+				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
+				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group",
+				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1.1", group,
+				new Date(System.currentTimeMillis()));
+
+		HibernateUtil.closeSession();
+
+	}
 }

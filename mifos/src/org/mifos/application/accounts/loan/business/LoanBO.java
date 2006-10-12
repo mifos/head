@@ -1036,7 +1036,7 @@ public class LoanBO extends AccountBO {
 		LoanPaymentTypes loanPaymentTypes = getLoanPaymentType(paymentData
 				.getTotalAmount());
 		if (loanPaymentTypes == null)
-			throw new AccountException("errors.update",
+			throw new AccountException("errors.makePayment",
 					new String[] { getGlobalAccountNum() });
 		else if (loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
 			handlePartialPayment(paymentData);

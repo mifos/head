@@ -230,7 +230,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		}
 		globalPrdOfferingNum.append(StringUtils.lpad(String
 				.valueOf(maxPrdID != null ? maxPrdID + 1
-						: ProductDefinitionConstants.DEFAULTMAX), '0', 3));
+						: ProductDefinitionConstants.DEFAULTMAX+ 1) , '0', 3));
 		prdLogger.debug("Generation of new product Offering global number done"
 				+ globalPrdOfferingNum);
 		return globalPrdOfferingNum.toString();

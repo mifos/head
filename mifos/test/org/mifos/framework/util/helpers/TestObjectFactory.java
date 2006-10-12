@@ -64,9 +64,8 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
@@ -79,7 +78,6 @@ import org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallm
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
-import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CheckListDetailEntity;
@@ -119,7 +117,6 @@ import org.mifos.application.fees.util.helpers.FeeFormula;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -186,8 +183,7 @@ import org.mifos.framework.security.util.UserContext;
  */
 public class TestObjectFactory {
 
-	private static TestObjectPersistence testObjectPersistence = 
-		new TestObjectPersistence();
+	private static TestObjectPersistence testObjectPersistence = new TestObjectPersistence();
 
 	/**
 	 * @return - Returns the office created by test data scripts. If the row
@@ -195,7 +191,7 @@ public class TestObjectFactory {
 	 *         created are 1- Head Office , 2 - Area Office , 3 - BranchOffice.
 	 */
 	public static OfficeBO getOffice(Short officeId) {
-		return (OfficeBO)addObject(testObjectPersistence.getOffice(officeId));
+		return (OfficeBO) addObject(testObjectPersistence.getOffice(officeId));
 	}
 
 	public static void removeObject(PersistentObject obj) {
@@ -213,7 +209,8 @@ public class TestObjectFactory {
 	 */
 
 	public static PersonnelBO getPersonnel(Short personnelId) {
-		return (PersonnelBO)addObject(testObjectPersistence.getPersonnel(personnelId));
+		return (PersonnelBO) addObject(testObjectPersistence
+				.getPersonnel(personnelId));
 	}
 
 	public static CenterBO createCenter(String customerName, Short statusId,
@@ -221,72 +218,79 @@ public class TestObjectFactory {
 		CenterBO center = null;
 		try {
 			Short officeId = new Short("3");
-			Short personnel = new Short("1");		
-			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  null, null, officeId, meeting, personnel);
+			Short personnel = new Short("1");
+			center = new CenterBO(getUserContext(), customerName, null, null,
+					getFees(), null, null, officeId, meeting, personnel);
 			center.save();
 			HibernateUtil.commitTransaction();
-			//TODO: throw Exception
-		}catch(Exception e){
+			// TODO: throw Exception
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		addObject(center);
 		return center;
 	}
-	
-	//TODO: remove extra parameters from references
+
+	// TODO: remove extra parameters from references
 	public static CenterBO createCenter(String customerName, Short statusId,
-			String searchId, MeetingBO meeting, Short officeId, Short personnelId, Date startDate) {
+			String searchId, MeetingBO meeting, Short officeId,
+			Short personnelId, Date startDate) {
 		return createCenter(customerName, meeting, officeId, personnelId);
 	}
-	
-	public static CenterBO createCenter(String customerName, MeetingBO meeting, Short officeId, Short personnelId) {
+
+	public static CenterBO createCenter(String customerName, MeetingBO meeting,
+			Short officeId, Short personnelId) {
 		CenterBO center = null;
 		try {
-			center = new CenterBO(getUserContext(), customerName, null, null, getFees(),  null, null, officeId, meeting, personnelId);
+			center = new CenterBO(getUserContext(), customerName, null, null,
+					getFees(), null, null, officeId, meeting, personnelId);
 			center.save();
 			HibernateUtil.commitTransaction();
-			//TODO: throw Exception
-		}catch(Exception e){
+			// TODO: throw Exception
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		addObject(center);
 		return center;
 	}
-	
+
 	public static CenterBO createCenter(String customerName, Short statusId,
-			String searchId, MeetingBO meeting, Date startDate,List<FeeView> fees) {
+			String searchId, MeetingBO meeting, Date startDate,
+			List<FeeView> fees) {
 		CenterBO center = null;
 		try {
 			Short officeId = new Short("3");
-			Short personnel = new Short("1");		
-			center = new CenterBO(getUserContext(), customerName, null, null, fees,  null, null, officeId, meeting, personnel);
+			Short personnel = new Short("1");
+			center = new CenterBO(getUserContext(), customerName, null, null,
+					fees, null, null, officeId, meeting, personnel);
 			center.save();
 			HibernateUtil.commitTransaction();
-			//TODO: throw Exception
-		}catch(Exception e){
+			// TODO: throw Exception
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		addObject(center);
 		return center;
 	}
-		
-	private static List<FeeView> getFees(){
-		List<FeeView> fees = new ArrayList<FeeView>();		
-		AmountFeeBO maintanenceFee = (AmountFeeBO)createPeriodicAmountFee("Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",RecurrenceType.WEEKLY,
-				Short.valueOf("1"));
-		FeeView fee = new FeeView(getContext(),maintanenceFee);
+
+	private static List<FeeView> getFees() {
+		List<FeeView> fees = new ArrayList<FeeView>();
+		AmountFeeBO maintanenceFee = (AmountFeeBO) createPeriodicAmountFee(
+				"Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
+		FeeView fee = new FeeView(getContext(), maintanenceFee);
 		fees.add(fee);
 		return fees;
 	}
-	
-	public static List<CustomFieldView> getCustomFields(){
-		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();		
-		CustomFieldView fee = new CustomFieldView(Short.valueOf("4"),"Custom",Short.valueOf("1"));
+
+	public static List<CustomFieldView> getCustomFields() {
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+		CustomFieldView fee = new CustomFieldView(Short.valueOf("4"), "Custom",
+				Short.valueOf("1"));
 		customFields.add(fee);
 		return customFields;
 	}
-	
-	
+
 	/**
 	 * This is just a helper method which returns a address object , this is
 	 * just a helper it does not persist any data.
@@ -299,70 +303,92 @@ public class TestObjectFactory {
 		return address;
 	}
 
-	//TODO: change references and remove this method
+	// TODO: change references and remove this method
 	public static GroupBO createGroup(String customerName, Short statusId,
 			String searchId, CustomerBO parentCustomer, Date startDate) {
-		return createGroupUnderCenter(customerName, CustomerStatus.getStatus(statusId), parentCustomer);
+		return createGroupUnderCenter(customerName, CustomerStatus
+				.getStatus(statusId), parentCustomer);
 	}
 
-	public static GroupBO createGroupUnderCenter(String customerName, CustomerStatus customerStatus, CustomerBO parentCustomer){
-		Short formedBy = new Short("1");	
-		return createGroupUnderCenter(customerName, customerStatus, null, false, null, null, getCustomFields(), getFees(), formedBy, parentCustomer);
+	public static GroupBO createGroupUnderCenter(String customerName,
+			CustomerStatus customerStatus, CustomerBO parentCustomer) {
+		Short formedBy = new Short("1");
+		return createGroupUnderCenter(customerName, customerStatus, null,
+				false, null, null, getCustomFields(), getFees(), formedBy,
+				parentCustomer);
 	}
-	
-	public static GroupBO createGroupUnderCenter(String customerName, CustomerStatus customerStatus, String externalId, boolean trained, Date trainedDate, Address address,
+
+	public static GroupBO createGroupUnderCenter(String customerName,
+			CustomerStatus customerStatus, String externalId, boolean trained,
+			Date trainedDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
-			Short formedById, CustomerBO parentCustomer){
+			Short formedById, CustomerBO parentCustomer) {
 		GroupBO group = null;
 		try {
-			group = new GroupBO(getUserContext(), customerName, customerStatus, externalId, trained, trainedDate, address, customFields, fees, formedById, parentCustomer);
+			group = new GroupBO(getUserContext(), customerName, customerStatus,
+					externalId, trained, trainedDate, address, customFields,
+					fees, formedById, parentCustomer);
 			group.save();
 			HibernateUtil.commitTransaction();
-			//TODO: throw Exception
-		}catch(Exception e){
+			// TODO: throw Exception
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		addObject(group);
 		return group;
 	}
-	
+
 	public static GroupBO createGroupUnderBranch(String customerName,
 			CustomerStatus customerStatus, Short officeId, MeetingBO meeting,
-			Short loanOfficerId){
+			Short loanOfficerId) {
 		Short formedBy = new Short("1");
-		return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, null, getFees(), formedBy, officeId, meeting, loanOfficerId);
+		return createGroupUnderBranch(customerName, customerStatus, null,
+				false, null, null, null, getFees(), formedBy, officeId,
+				meeting, loanOfficerId);
 	}
-	
+
 	public static GroupBO createGroupUnderBranch(String customerName,
 			CustomerStatus customerStatus, String externalId, boolean trained,
 			Date trainedDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, MeetingBO meeting,
-			Short loanOfficerId){
+			Short loanOfficerId) {
 		GroupBO group = null;
 		try {
-			group = new GroupBO(getUserContext(), customerName, customerStatus, externalId, trained, trainedDate, address, customFields, fees, formedById, officeId, meeting, loanOfficerId);
+			group = new GroupBO(getUserContext(), customerName, customerStatus,
+					externalId, trained, trainedDate, address, customFields,
+					fees, formedById, officeId, meeting, loanOfficerId);
 			group.save();
 			HibernateUtil.commitTransaction();
-			//TODO: throw Exception
-		}catch(Exception e){
+			// TODO: throw Exception
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		addObject(group);
 		return group;
 	}
-	
-	public static ClientBO createClient(String customerName, Short statusId,String searchId,
-			CustomerBO parentCustomer, Date startDate) {
+
+	public static ClientBO createClient(String customerName, Short statusId,
+			String searchId, CustomerBO parentCustomer, Date startDate) {
 		ClientBO client = null;
 		try {
 			Short office = new Short("3");
-			Short personnel = new Short("1");	
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder("testClientName"),customerName,"middle",customerName,"secondLast");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
-			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			client = new ClientBO(getUserContext(), customerName, CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), null, personnel, office, parentCustomer, null,
-					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+			Short personnel = new Short("1");
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
+					Short.valueOf("1"), 1, new StringBuilder("testClientName"),
+					customerName, "middle", customerName, "secondLast");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
+					Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
+					customerName, "middle", customerName, "secondLast");
+			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
+					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
+							.valueOf("41"));
+			client = new ClientBO(getUserContext(), customerName,
+					CustomerStatus.getStatus(statusId), null, null, null, null,
+					getFees(), null, personnel, office, parentCustomer, null,
+					null, null, null, YesNoFlag.YES.getValue(),
+					clientNameDetailView, spouseNameDetailView,
+					clientDetailView, null);
 			client.save();
 			HibernateUtil.commitTransaction();
 			// TODO: throw Exception
@@ -372,17 +398,28 @@ public class TestObjectFactory {
 		addObject(client);
 		return client;
 	}
-	
-	public static ClientBO createClient(String customerName, MeetingBO meeting , Short statusId, Date startDate) {
+
+	public static ClientBO createClient(String customerName, MeetingBO meeting,
+			Short statusId, Date startDate) {
 		ClientBO client = null;
 		try {
 			Short office = new Short("3");
-			Short personnel = new Short("1");	
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("3"),1,new StringBuilder(customerName),customerName,"middle",customerName,"secondLast");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
-			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			client = new ClientBO(getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), null, personnel, office,meeting,personnel, new Date(),
-					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+			Short personnel = new Short("1");
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
+					Short.valueOf("3"), 1, new StringBuilder(customerName),
+					customerName, "middle", customerName, "secondLast");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
+					Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
+					customerName, "middle", customerName, "secondLast");
+			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
+					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
+							.valueOf("41"));
+			client = new ClientBO(getUserContext(), clientNameDetailView
+					.getDisplayName(), CustomerStatus.getStatus(statusId),
+					null, null, null, null, getFees(), null, personnel, office,
+					meeting, personnel, new Date(), null, null, null,
+					YesNoFlag.NO.getValue(), clientNameDetailView,
+					spouseNameDetailView, clientDetailView, null);
 			client.save();
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
@@ -391,20 +428,32 @@ public class TestObjectFactory {
 		addObject(client);
 		return client;
 	}
-	
-	public static ClientBO createClient(String customerName, Short statusId,CustomerBO parentCustomer, Date startDate) {
+
+	public static ClientBO createClient(String customerName, Short statusId,
+			CustomerBO parentCustomer, Date startDate) {
 		ClientBO client = null;
-		Short personnel = new Short("1");	
+		Short personnel = new Short("1");
 		try {
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(customerName+customerName),customerName,"",customerName,"");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),customerName,"middle",customerName,"secondLast");
-			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			client = new ClientBO(getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(statusId), null, null, null, null, getFees(), null, personnel, parentCustomer.getOffice().getOfficeId(), parentCustomer, null,
-					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
-			
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
+					Short.valueOf("1"), 1, new StringBuilder(customerName
+							+ customerName), customerName, "", customerName, "");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
+					Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
+					customerName, "middle", customerName, "secondLast");
+			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
+					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
+							.valueOf("41"));
+			client = new ClientBO(getUserContext(), clientNameDetailView
+					.getDisplayName(), CustomerStatus.getStatus(statusId),
+					null, null, null, null, getFees(), null, personnel,
+					parentCustomer.getOffice().getOfficeId(), parentCustomer,
+					null, null, null, null, YesNoFlag.YES.getValue(),
+					clientNameDetailView, spouseNameDetailView,
+					clientDetailView, null);
+
 			client.save();
 			HibernateUtil.commitTransaction();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -417,70 +466,73 @@ public class TestObjectFactory {
 			Double defLnAmnt, Double defIntRate, Short defInstallments,
 			Short interestTypeId, Short penaltyGrace, Short intDedAtDisb,
 			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting) {
-		return createLoanOffering(name, name.substring(0, 1),applicableTo, startDate,
+		return createLoanOffering(name, name.substring(0, 1), applicableTo,
+				startDate, offeringStatusId, defLnAmnt, defIntRate,
+				defInstallments, interestTypeId, penaltyGrace, intDedAtDisb,
+				princDueLastInst, intCalcRuleId, meeting,
+				GraceTypeConstants.GRACEONALLREPAYMENTS.getValue());
+	}
+
+	public static LoanOfferingBO createLoanOffering(String name,
+			String shortName, Short applicableTo, Date startDate,
+			Short offeringStatusId, Double defLnAmnt, Double defIntRate,
+			Short defInstallments, Short interestTypeId, Short penaltyGrace,
+			Short intDedAtDisb, Short princDueLastInst, Short intCalcRuleId,
+			MeetingBO meeting) {
+		return createLoanOffering(name, shortName, applicableTo, startDate,
 				offeringStatusId, defLnAmnt, defIntRate, defInstallments,
 				interestTypeId, penaltyGrace, intDedAtDisb, princDueLastInst,
 				intCalcRuleId, meeting, GraceTypeConstants.GRACEONALLREPAYMENTS
 						.getValue());
 	}
-	
-	public static LoanOfferingBO createLoanOffering(String name,String shortName,
-			Short applicableTo, Date startDate, Short offeringStatusId,
-			Double defLnAmnt, Double defIntRate, Short defInstallments,
-			Short interestTypeId, Short penaltyGrace, Short intDedAtDisb,
-			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting) {
-		return createLoanOffering(name,shortName,applicableTo, startDate,
-				offeringStatusId, defLnAmnt, defIntRate, defInstallments,
-				interestTypeId, penaltyGrace, intDedAtDisb, princDueLastInst,
-				intCalcRuleId, meeting, GraceTypeConstants.GRACEONALLREPAYMENTS
-						.getValue());
-	}
-	
+
 	public static LoanOfferingBO createLoanOffering(String name,
 			Short applicableTo, Date startDate, Short offeringStatusId,
 			Double defLnAmnt, Double defIntRate, Short defInstallments,
 			Short interestTypeId, Short penaltyGrace, Short intDedAtDisb,
-			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting,Short graceType) {
-		return createLoanOffering(name, name.substring(0, 1),applicableTo, startDate,
-				offeringStatusId, defLnAmnt, defIntRate, defInstallments,
-				interestTypeId, penaltyGrace, intDedAtDisb, princDueLastInst,
-				intCalcRuleId, meeting,graceType);
+			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting,
+			Short graceType) {
+		return createLoanOffering(name, name.substring(0, 1), applicableTo,
+				startDate, offeringStatusId, defLnAmnt, defIntRate,
+				defInstallments, interestTypeId, penaltyGrace, intDedAtDisb,
+				princDueLastInst, intCalcRuleId, meeting, graceType);
 	}
-	
-/**
- * @param name -
- *            name of the prd offering
- * @param applicableTo -
- * @param startDate -
- *            start date of the product
- * @param offeringStatusId -
- *            primary key of prd_status table
- * @param defLnAmnt -
- *            same would be set as min and max amounts
- * @param defIntRate -
- *            same would be set as min and max amounts
- * @param defInstallments-be
- *            set as min and max amounts
- * @param interestTypeId -
- *            primary key of interest types table
- * @param penaltyGrace -
- *            installments for penalty grace
- * @param intDedAtDisb -
- *            flag
- * @param princDueLastInst -
- *            flag
- * @param intCalcRuleId -
- *            primary key of int calc rule table
- * @param meeting -
- *            meeting associated with the product offering
- * @param graceType -
- *            grace period Type associated with the product offering         
- */
-	public static LoanOfferingBO createLoanOffering(String name,String shortName,
-			Short applicableTo, Date startDate, Short offeringStatusId,
-			Double defLnAmnt, Double defIntRate, Short defInstallments,
-			Short interestTypeId, Short penaltyGrace, Short intDedAtDisb,
-			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting,Short graceType) {
+
+	/**
+	 * @param name -
+	 *            name of the prd offering
+	 * @param applicableTo -
+	 * @param startDate -
+	 *            start date of the product
+	 * @param offeringStatusId -
+	 *            primary key of prd_status table
+	 * @param defLnAmnt -
+	 *            same would be set as min and max amounts
+	 * @param defIntRate -
+	 *            same would be set as min and max amounts
+	 * @param defInstallments-be
+	 *            set as min and max amounts
+	 * @param interestTypeId -
+	 *            primary key of interest types table
+	 * @param penaltyGrace -
+	 *            installments for penalty grace
+	 * @param intDedAtDisb -
+	 *            flag
+	 * @param princDueLastInst -
+	 *            flag
+	 * @param intCalcRuleId -
+	 *            primary key of int calc rule table
+	 * @param meeting -
+	 *            meeting associated with the product offering
+	 * @param graceType -
+	 *            grace period Type associated with the product offering
+	 */
+	public static LoanOfferingBO createLoanOffering(String name,
+			String shortName, Short applicableTo, Date startDate,
+			Short offeringStatusId, Double defLnAmnt, Double defIntRate,
+			Short defInstallments, Short interestTypeId, Short penaltyGrace,
+			Short intDedAtDisb, Short princDueLastInst, Short intCalcRuleId,
+			MeetingBO meeting, Short graceType) {
 
 		LoanOfferingBO loanOffering = null;
 		PrdApplicableMasterEntity prdApplicableMaster = null;
@@ -539,70 +591,16 @@ public class TestObjectFactory {
 				.persist(loanOffering));
 	}
 
-
 	public static ProductCategoryBO getLoanPrdCategory() {
-		return (ProductCategoryBO) addObject(testObjectPersistence.getLoanPrdCategory());
+		return (ProductCategoryBO) addObject(testObjectPersistence
+				.getLoanPrdCategory());
 	}
 
-	/**
-	 * This method is incomplete.
-	 * 
-	 * @param globalNum
-	 * @param accountStateId
-	 * @throws Exception
-	 */
 	public static LoanBO createLoanAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering) {
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(startDate);
-		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
-				.getMeeting());
-		List<Date> meetingDates = getMeetingDates(meeting, 6);
-		
-		LoanBO loan = null;
-		MifosCurrency currency = testObjectPersistence.getCurrency();
-		try {
-			loan = new LoanBO(TestObjectFactory.getUserContext(), loanOfering, customer,
-						AccountState.getStatus(accountStateId),	new Money(currency, "300.0"),
-						Short.valueOf("6"),meetingDates.get(0),true,0.0,(short) 0,
-						new FundBO(),new ArrayList<FeeView>());
-			
-		} catch (NumberFormatException e) {
-		} catch (AccountException e) {
-			e.printStackTrace();
-		} catch (InvalidUserException e) {
-		} catch (PropertyNotFoundException e) {
-		} catch (SystemException e) {
-		} catch (ApplicationException e) {
-		}
-		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
-				FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short
-						.valueOf("1"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan,maintanenceFee,((AmountFeeBO)maintanenceFee).getFeeAmount().getAmountDoubleValue());	
-		loan.addAccountFees(accountPeriodicFee);
-		loan.setLoanMeeting(meeting);
-		short i = 0;
-		for (Date date : meetingDates) {
-			LoanScheduleEntity actionDate = (LoanScheduleEntity)loan.getAccountActionDate(++i);
-			actionDate.setPrincipal(new Money(currency, "100.0"));
-			actionDate.setInterest(new Money(currency, "12.0"));
-			actionDate.setActionDate(new java.sql.Date(date.getTime()));
-			actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
-			loan.addAccountActionDate(actionDate);
-
-			AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
-					actionDate, maintanenceFee, accountPeriodicFee,
-					new Money(currency, "100.0"));
-			accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
-			actionDate.addAccountFeesAction(accountFeesaction);
-		}
-		loan.setCreatedBy(Short.valueOf("1"));
-		loan.setCreatedDate(new Date(System.currentTimeMillis()));
-
-		LoanSummaryEntity loanSummary = loan.getLoanSummary();
-		loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
-		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
+		LoanBO loan = TestLoanBO.createLoanAccount(globalNum, customer,
+				accountStateId, startDate, loanOfering);
 		try {
 			loan.save();
 		} catch (AccountException e) {
@@ -618,30 +616,32 @@ public class TestObjectFactory {
 			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
 			Short intCalTypeId, MeetingBO intCalcMeeting,
 			MeetingBO intPostMeeting) {
-		return createSavingsOffering(name,name.substring(0, 1), applicableTo, startDate,
-				offeringStatusId, recommenededAmt, recomAmtUnitId, intRate,
-				maxAmtWithdrawl, minAmtForInt, savingsTypeId, intCalTypeId,
-				intCalcMeeting, intPostMeeting, (short) 7, (short) 7);
+		return createSavingsOffering(name, name.substring(0, 1), applicableTo,
+				startDate, offeringStatusId, recommenededAmt, recomAmtUnitId,
+				intRate, maxAmtWithdrawl, minAmtForInt, savingsTypeId,
+				intCalTypeId, intCalcMeeting, intPostMeeting, (short) 7,
+				(short) 7);
 	}
-	
-	public static SavingsOfferingBO createSavingsOffering(String name,String shortName,
-			Short applicableTo, Date startDate, Short offeringStatusId,
-			Double recommenededAmt, Short recomAmtUnitId, Double intRate,
-			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
-			Short intCalTypeId, MeetingBO intCalcMeeting,
-			MeetingBO intPostMeeting) {
-		return createSavingsOffering(name,shortName, applicableTo, startDate,
+
+	public static SavingsOfferingBO createSavingsOffering(String name,
+			String shortName, Short applicableTo, Date startDate,
+			Short offeringStatusId, Double recommenededAmt,
+			Short recomAmtUnitId, Double intRate, Double maxAmtWithdrawl,
+			Double minAmtForInt, Short savingsTypeId, Short intCalTypeId,
+			MeetingBO intCalcMeeting, MeetingBO intPostMeeting) {
+		return createSavingsOffering(name, shortName, applicableTo, startDate,
 				offeringStatusId, recommenededAmt, recomAmtUnitId, intRate,
 				maxAmtWithdrawl, minAmtForInt, savingsTypeId, intCalTypeId,
 				intCalcMeeting, intPostMeeting, (short) 7, (short) 7);
 	}
 
-	public static SavingsOfferingBO createSavingsOffering(String name,String shortName,
-			Short applicableTo, Date startDate, Short offeringStatusId,
-			Double recommenededAmt, Short recomAmtUnitId, Double intRate,
-			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
-			Short intCalTypeId, MeetingBO intCalcMeeting,
-			MeetingBO intPostMeeting, Short depGLCode, Short withGLCode) {
+	public static SavingsOfferingBO createSavingsOffering(String name,
+			String shortName, Short applicableTo, Date startDate,
+			Short offeringStatusId, Double recommenededAmt,
+			Short recomAmtUnitId, Double intRate, Double maxAmtWithdrawl,
+			Double minAmtForInt, Short savingsTypeId, Short intCalTypeId,
+			MeetingBO intCalcMeeting, MeetingBO intPostMeeting,
+			Short depGLCode, Short withGLCode) {
 		PrdApplicableMasterEntity prdApplicableMaster = null;
 		try {
 			prdApplicableMaster = new PrdApplicableMasterEntity(
@@ -681,11 +681,13 @@ public class TestObjectFactory {
 		SavingsOfferingBO savingsOffering = null;
 		try {
 			savingsOffering = new SavingsOfferingBO(getUserContext(), name,
-					shortName, productCategory, prdApplicableMaster,
-					startDate, null,null,amountUnit,savingsType, intCalType, intCalcMeeting,
-					intPostMeeting, new Money(recommenededAmt.toString()),new Money(maxAmtWithdrawl
-							.toString()),new Money(minAmtForInt.toString()),
-					intRate, depglCodeEntity, intglCodeEntity);
+					shortName, productCategory, prdApplicableMaster, startDate,
+					null, null, amountUnit, savingsType, intCalType,
+					intCalcMeeting, intPostMeeting, new Money(recommenededAmt
+							.toString()),
+					new Money(maxAmtWithdrawl.toString()), new Money(
+							minAmtForInt.toString()), intRate, depglCodeEntity,
+					intglCodeEntity);
 		} catch (InvalidUserException e1) {
 			e1.printStackTrace();
 		} catch (ProductDefinitionException e1) {
@@ -702,31 +704,36 @@ public class TestObjectFactory {
 		return (SavingsOfferingBO) addObject(testObjectPersistence
 				.persist(savingsOffering));
 	}
-	
-	public static SavingsOfferingBO createSavingsOffering(String offeringName, String shortName, 
-			SavingsType savingsTypeId,PrdApplicableMaster applicableTo) {
+
+	public static SavingsOfferingBO createSavingsOffering(String offeringName,
+			String shortName, SavingsType savingsTypeId,
+			PrdApplicableMaster applicableTo) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
-		return createSavingsOffering(offeringName, shortName, applicableTo.getValue(),
-						new Date(System.currentTimeMillis()), Short
-								.valueOf("2"), 300.0, RecommendedAmountUnit.PERINDIVIDUAL.getValue(), 24.0,
-						200.0, 200.0, savingsTypeId.getValue(), InterestCalcType.MINIMUM_BALANCE.getValue(),
-						meetingIntCalc, meetingIntPost);
+		return createSavingsOffering(offeringName, shortName, applicableTo
+				.getValue(), new Date(System.currentTimeMillis()), Short
+				.valueOf("2"), 300.0, RecommendedAmountUnit.PERINDIVIDUAL
+				.getValue(), 24.0, 200.0, 200.0, savingsTypeId.getValue(),
+				InterestCalcType.MINIMUM_BALANCE.getValue(), meetingIntCalc,
+				meetingIntPost);
 	}
-	
+
 	public static SavingsBO createSavingsAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			SavingsOfferingBO savingsOffering) throws Exception {
 		UserContext userContext = null;
-			userContext = getUserContext();
+		userContext = getUserContext();
 		MifosCurrency currency = testObjectPersistence.getCurrency();
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
-		SavingsBO savings = new SavingsBO(userContext,savingsOffering,customer,AccountState.SAVINGS_ACC_PARTIALAPPLICATION,new Money(currency, "300.0"),null);
+		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
+				customer, AccountState.SAVINGS_ACC_PARTIALAPPLICATION,
+				new Money(currency, "300.0"), null);
 		savings.save();
-		savings.setAccountState(new AccountStateEntity(AccountState.getStatus(accountStateId)));
+		savings.setAccountState(new AccountStateEntity(AccountState
+				.getStatus(accountStateId)));
 		savings.setGlobalAccountNum(globalNum);
 		savings.setActivationDate(new Date(System.currentTimeMillis()));
 		List<Date> meetingDates = getMeetingDates(meeting, 3);
@@ -738,53 +745,78 @@ public class TestObjectFactory {
 			savings.addAccountActionDate(actionDate);
 		}
 		HibernateUtil.commitTransaction();
-		return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
+		return (SavingsBO) addObject(getObject(SavingsBO.class, savings
+				.getAccountId()));
 	}
-	private static List<CustomFieldView> getCustomFieldView(){
+
+	private static List<CustomFieldView> getCustomFieldView() {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-		customFields.add(new CustomFieldView(new Short("8"),"custom field value",null));
+		customFields.add(new CustomFieldView(new Short("8"),
+				"custom field value", null));
 		return customFields;
 
 	}
+
 	public static SavingsBO createSavingsAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
-			SavingsOfferingBO savingsOffering, UserContext userContext) throws Exception{
-			userContext = getUserContext();
-			SavingsBO savings = new SavingsBO(userContext,savingsOffering,customer,AccountState.getStatus(accountStateId),savingsOffering.getRecommendedAmount(),getCustomFieldView());
-			savings.save();
-			savings.setGlobalAccountNum(globalNum);
-			savings.setActivationDate(new Date(System.currentTimeMillis()));
-			HibernateUtil.commitTransaction();
-		return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
+			SavingsOfferingBO savingsOffering, UserContext userContext)
+			throws Exception {
+		userContext = getUserContext();
+		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
+				customer, AccountState.getStatus(accountStateId),
+				savingsOffering.getRecommendedAmount(), getCustomFieldView());
+		savings.save();
+		savings.setGlobalAccountNum(globalNum);
+		savings.setActivationDate(new Date(System.currentTimeMillis()));
+		HibernateUtil.commitTransaction();
+		return (SavingsBO) addObject(getObject(SavingsBO.class, savings
+				.getAccountId()));
 	}
 
 	public static MeetingBO createLoanMeeting(MeetingBO customerMeeting) {
 		MeetingBO meetingToReturn = null;
-		try{			
-			RecurrenceType recurrenceType = RecurrenceType.getRecurrenceType(customerMeeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
-			MeetingType meetingType =  MeetingType.getMeetingType(customerMeeting.getMeetingType().getMeetingTypeId());
-			Short recurAfter = customerMeeting.getMeetingDetails().getRecurAfter();
-			
-			if(recurrenceType.equals(RecurrenceType.MONTHLY)){
-				if(customerMeeting.isMonthlyOnDate())
-					meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getMeetingRecurrence().getDayNumber(),
-							recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType,"meetingPlace");
+		try {
+			RecurrenceType recurrenceType = RecurrenceType
+					.getRecurrenceType(customerMeeting.getMeetingDetails()
+							.getRecurrenceType().getRecurrenceId());
+			MeetingType meetingType = MeetingType
+					.getMeetingType(customerMeeting.getMeetingType()
+							.getMeetingTypeId());
+			Short recurAfter = customerMeeting.getMeetingDetails()
+					.getRecurAfter();
+
+			if (recurrenceType.equals(RecurrenceType.MONTHLY)) {
+				if (customerMeeting.isMonthlyOnDate())
+					meetingToReturn = new MeetingBO(customerMeeting
+							.getMeetingDetails().getMeetingRecurrence()
+							.getDayNumber(), recurAfter, customerMeeting
+							.getMeetingStartDate().getTime(), meetingType,
+							"meetingPlace");
 				else
-					meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getWeekDay(),customerMeeting.getMeetingDetails().getWeekRank(),
-							recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType,"meetingPlace");
-			}				
-			else if(recurrenceType.equals(RecurrenceType.WEEKLY))
-				meetingToReturn = new MeetingBO(WeekDay.getWeekDay(customerMeeting.getMeetingDetails()
-						.getMeetingRecurrence().getWeekDayValue().getValue()), recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType ,"meetingPlace");
+					meetingToReturn = new MeetingBO(customerMeeting
+							.getMeetingDetails().getWeekDay(), customerMeeting
+							.getMeetingDetails().getWeekRank(), recurAfter,
+							customerMeeting.getMeetingStartDate().getTime(),
+							meetingType, "meetingPlace");
+			} else if (recurrenceType.equals(RecurrenceType.WEEKLY))
+				meetingToReturn = new MeetingBO(WeekDay
+						.getWeekDay(customerMeeting.getMeetingDetails()
+								.getMeetingRecurrence().getWeekDayValue()
+								.getValue()), recurAfter, customerMeeting
+						.getMeetingStartDate().getTime(), meetingType,
+						"meetingPlace");
 			else
-				meetingToReturn = new MeetingBO(recurrenceType, recurAfter, customerMeeting.getMeetingStartDate().getTime(), meetingType);
-			
+				meetingToReturn = new MeetingBO(recurrenceType, recurAfter,
+						customerMeeting.getMeetingStartDate().getTime(),
+						meetingType);
+
 			meetingToReturn.setMeetingPlace(customerMeeting.getMeetingPlace());
-		}catch(MeetingException me){}
+		} catch (MeetingException me) {
+		}
 		return meetingToReturn;
 	}
 
-	private static List<Date> getMeetingDates(MeetingBO meeting, int occurrences) {
+	public static List<Date> getMeetingDates(MeetingBO meeting, int occurrences) {
 		List<Date> dates = new ArrayList<Date>();
 		try {
 			dates = meeting.getAllDates(occurrences);
@@ -804,17 +836,17 @@ public class TestObjectFactory {
 		return dates;
 	}
 
-
-
 	public static FeeBO createPeriodicAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt,
 			RecurrenceType meetingFrequency, Short recurAfter) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
 				GLCodeEntity.class, Short.valueOf("24"));
 		MeetingBO meeting = null;
-		try{
-			meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(),MeetingType.FEEMEETING);
-		}catch(MeetingException me){}
+		try {
+			meeting = new MeetingBO(meetingFrequency, recurAfter, new Date(),
+					MeetingType.FEEMEETING);
+		} catch (MeetingException me) {
+		}
 		FeeBO fee = null;
 		// TODO: throw exception
 		try {
@@ -825,7 +857,7 @@ public class TestObjectFactory {
 
 		} catch (Exception e) {
 		}
-		return (FeeBO)addObject(testObjectPersistence.createFee(fee));
+		return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 	}
 
 	public static FeeBO createOneTimeAmountFee(String feeName,
@@ -843,7 +875,7 @@ public class TestObjectFactory {
 
 		} catch (Exception e) {
 		}
-		return (FeeBO)addObject(testObjectPersistence.createFee(fee));
+		return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 	}
 
 	public static FeeBO createOneTimeRateFee(String feeName,
@@ -862,7 +894,7 @@ public class TestObjectFactory {
 
 		} catch (Exception e) {
 		}
-		return (FeeBO)addObject(testObjectPersistence.createFee(fee));
+		return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 	}
 
 	/**
@@ -880,10 +912,12 @@ public class TestObjectFactory {
 	public static MeetingBO getMeetingHelper(int frequency, int recurAfter,
 			int meetingTypeId) {
 		MeetingBO meeting = null;
-		try{
-		 meeting = getMeeting(Integer.toString(frequency), Integer
-				.toString(recurAfter), new Integer(meetingTypeId).shortValue());
-		}catch(Exception e){}
+		try {
+			meeting = getMeeting(Integer.toString(frequency), Integer
+					.toString(recurAfter), new Integer(meetingTypeId)
+					.shortValue());
+		} catch (Exception e) {
+		}
 		return meeting;
 	}
 
@@ -906,8 +940,8 @@ public class TestObjectFactory {
 		MeetingBO meeting = getMeetingHelper(frequency, recurAfter,
 				meetingTypeId);
 		Calendar cal = new GregorianCalendar();
-		WeekDaysEntity weekDays = new WeekDaysEntity(WeekDay.getWeekDay(Short.valueOf(Integer.toString(cal
-				.get(Calendar.DAY_OF_WEEK)))));		
+		WeekDaysEntity weekDays = new WeekDaysEntity(WeekDay.getWeekDay(Short
+				.valueOf(Integer.toString(cal.get(Calendar.DAY_OF_WEEK)))));
 		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDays);
 		return meeting;
 	}
@@ -920,54 +954,61 @@ public class TestObjectFactory {
 	 * This is a helper method to return MeetingBO object.
 	 */
 	public static MeetingBO getMeeting(String frequency, String recurAfter,
-			Short meetingTypeId) throws Exception{
-		MeetingBO meeting  = new MeetingBO(RecurrenceType.getRecurrenceType(Short.valueOf(frequency)), 
-				Short.valueOf(recurAfter), new Date(), MeetingType.getMeetingType(meetingTypeId));
+			Short meetingTypeId) throws Exception {
+		MeetingBO meeting = new MeetingBO(RecurrenceType
+				.getRecurrenceType(Short.valueOf(frequency)), Short
+				.valueOf(recurAfter), new Date(), MeetingType
+				.getMeetingType(meetingTypeId));
 		meeting.setMeetingPlace("Loan Meeting Place");
 		return meeting;
 	}
 
-	public static MeetingBO getMeeting(RecurrenceType recurrenceType, Short dayNumber, Short weekDay, Short dayRank, Short recurAfter,	MeetingType meetingType)throws Exception {
+	public static MeetingBO getMeeting(RecurrenceType recurrenceType,
+			Short dayNumber, Short weekDay, Short dayRank, Short recurAfter,
+			MeetingType meetingType) throws Exception {
 		MeetingBO meeting = null;
-		if(recurrenceType.equals(RecurrenceType.WEEKLY))
-		  meeting =  new MeetingBO(WeekDay.getWeekDay(weekDay), recurAfter, new Date(), meetingType, "meetingPlace");
+		if (recurrenceType.equals(RecurrenceType.WEEKLY))
+			meeting = new MeetingBO(WeekDay.getWeekDay(weekDay), recurAfter,
+					new Date(), meetingType, "meetingPlace");
+		else if (recurrenceType.equals(RecurrenceType.MONTHLY)
+				&& dayNumber != null)
+			meeting = new MeetingBO(dayNumber, recurAfter, new Date(),
+					meetingType, "meetingPlace");
 		else
-			if(recurrenceType.equals(RecurrenceType.MONTHLY) && dayNumber!=null)
-				meeting =  new MeetingBO(dayNumber, recurAfter, new Date(), meetingType, "meetingPlace");
-			else
-				meeting = new MeetingBO(recurrenceType, recurAfter, new Date(), meetingType);
-		
+			meeting = new MeetingBO(recurrenceType, recurAfter, new Date(),
+					meetingType);
+
 		meeting.setMeetingPlace("Loan Meeting Place");
 		return meeting;
 	}
-	
+
 	public static void cleanUp(CustomerBO customer) {
-		
+
 		if (null != customer) {
 			deleteCustomer(customer);
-			customer=null;
+			customer = null;
 		}
-		
+
 	}
 
 	public static void cleanUp(List<CustomerBO> customerList) {
 		if (null != customerList) {
 			deleteCustomers(customerList);
-			customerList =null;
+			customerList = null;
 		}
 	}
 
 	public static void cleanUp(FeeBO fee) {
 		if (null != fee) {
 			deleteFee(fee);
-			fee=null;
+			fee = null;
 		}
 	}
 
 	public static void cleanUp(AccountBO account) {
 		if (null != account) {
 			deleteAccount(account, null);
-			account=null;
+			account = null;
 		}
 	}
 
@@ -1174,7 +1215,7 @@ public class TestObjectFactory {
 		deleteClientAttendence(customer);
 		deleteCustomerNotes(customer);
 		deleteClientOfferings(customer);
-		
+
 		List<FeeBO> feeList = new ArrayList<FeeBO>();
 		for (AccountBO account : customer.getAccounts()) {
 			if (null != account) {
@@ -1185,30 +1226,31 @@ public class TestObjectFactory {
 			}
 		}
 		session.delete(customer);
-		deleteFees(feeList);		
+		deleteFees(feeList);
 		transaction.commit();
 	}
 
-	private static void deleteClientOfferings(CustomerBO customer){
+	private static void deleteClientOfferings(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
-		if(customer instanceof ClientBO){
-			Set<ClientInitialSavingsOfferingEntity> clientOfferings = ((ClientBO)customer).getOfferingsAssociatedInCreate();
-			if(clientOfferings!=null){
-				for(ClientInitialSavingsOfferingEntity clientOffering: clientOfferings)
+		if (customer instanceof ClientBO) {
+			Set<ClientInitialSavingsOfferingEntity> clientOfferings = ((ClientBO) customer)
+					.getOfferingsAssociatedInCreate();
+			if (clientOfferings != null) {
+				for (ClientInitialSavingsOfferingEntity clientOffering : clientOfferings)
 					session.delete(clientOffering);
 			}
 		}
 	}
-	
+
 	private static void deleteCustomerNotes(CustomerBO customer) {
 		Session session = HibernateUtil.getSessionTL();
 		Set<CustomerNoteEntity> customerNotes = customer.getCustomerNotes();
-		if (customerNotes != null && customerNotes.size() > 0){
+		if (customerNotes != null && customerNotes.size() > 0) {
 			for (CustomerNoteEntity customerNote : customerNotes) {
 				session.delete(customerNote);
 			}
 		}
-		
+
 	}
 
 	private static void deleteCenterMeeting(CustomerBO customer) {
@@ -1239,6 +1281,10 @@ public class TestObjectFactory {
 		return testObjectPersistence.getCurrency(currencyId);
 	}
 
+	public static MifosCurrency getCurrency() {
+		return testObjectPersistence.getCurrency();
+	}
+
 	public static Money getMoneyForMFICurrency(double amnt) {
 		return new Money(String.valueOf(amnt));
 	}
@@ -1256,68 +1302,60 @@ public class TestObjectFactory {
 	}
 
 	private static UserContext userContext;
-	public static UserContext getContext()
-	{
-		try
-		{
-			if(userContext == null)
-			{
+
+	public static UserContext getContext() {
+		try {
+			if (userContext == null) {
 				userContext = getUserContext();
 			}
 			return userContext;
-		}
-		catch(Exception e)
-		{
-			
+		} catch (Exception e) {
+
 		}
 		return null;
 	}
-	
+
 	private static ActivityContext ac;
-	public  static ActivityContext getActivityContext()
-	{
-		if(ac == null)
-		{
+
+	public static ActivityContext getActivityContext() {
+		if (ac == null) {
 			UserContext uc = getContext();
-			 ac = new ActivityContext((short) 0, uc
-				.getBranchId().shortValue(), uc.getId().shortValue());
+			ac = new ActivityContext((short) 0, uc.getBranchId().shortValue(),
+					uc.getId().shortValue());
 		}
 		return ac;
 
 	}
 
 	private static final ThreadLocal<TestObjectsHolder> threadLocal = new ThreadLocal<TestObjectsHolder>();
-	
-	public static Object addObject(Object obj)
-	{
-		TestObjectsHolder holder   = threadLocal.get();
-		if(holder == null)
-		{
+
+	public static Object addObject(Object obj) {
+		TestObjectsHolder holder = threadLocal.get();
+		if (holder == null) {
 			holder = new TestObjectsHolder();
 			threadLocal.set(holder);
 		}
 		holder.addObject(obj);
-		
+
 		return obj;
 	}
-	
-	public static void cleanUpTestObjects()
-	{
-		TestObjectsHolder holder   = threadLocal.get();
-		if(holder != null)
-		   holder.removeObjects();
-		
+
+	public static void cleanUpTestObjects() {
+		TestObjectsHolder holder = threadLocal.get();
+		if (holder != null)
+			holder.removeObjects();
+
 		holder = null;
 		threadLocal.set(null);
-		
+
 	}
 
 	/**
-	 * Also see {@link TestUtils#makeUser(int)} which should be
-	 * faster (this method involves several database accesses).
+	 * Also see {@link TestUtils#makeUser(int)} which should be faster (this
+	 * method involves several database accesses).
 	 */
-	public static UserContext getUserContext() 
-	throws SystemException, InvalidUserException, ApplicationException  {
+	public static UserContext getUserContext() throws SystemException,
+			InvalidUserException, ApplicationException {
 		byte[] password = EncryptionService.getInstance()
 				.createEncryptedPassword("mifos");
 		PersonnelBO personnel = getPersonnel(Short.valueOf("1"));
@@ -1346,8 +1384,10 @@ public class TestObjectFactory {
 			throws Exception {
 		List<String> details = new ArrayList<String>();
 		details.add("item1");
-		CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.getLevel(customerLevel));
-		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.getStatus(customerStatus));
+		CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(
+				CustomerLevel.getLevel(customerLevel));
+		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
+				CustomerStatus.getStatus(customerStatus));
 		CustomerCheckListBO customerChecklist = new CustomerCheckListBO(
 				customerLevelEntity, customerStatusEntity, "productchecklist",
 				checklistStatus, details, Short.valueOf("1"), TestObjectFactory
@@ -1357,13 +1397,14 @@ public class TestObjectFactory {
 		return customerChecklist;
 	}
 
-	public static AccountCheckListBO createAccountChecklist(
-			Short prdTypeId, AccountState accountState, Short checklistStatus)
-			throws Exception {
+	public static AccountCheckListBO createAccountChecklist(Short prdTypeId,
+			AccountState accountState, Short checklistStatus) throws Exception {
 		List<String> details = new ArrayList<String>();
 		details.add("item1");
-		ProductTypeEntity productTypeEntity =(ProductTypeEntity) HibernateUtil.getSessionTL().get(ProductTypeEntity.class,prdTypeId);
-		AccountStateEntity accountStateEntity = new AccountStateEntity(accountState);
+		ProductTypeEntity productTypeEntity = (ProductTypeEntity) HibernateUtil
+				.getSessionTL().get(ProductTypeEntity.class, prdTypeId);
+		AccountStateEntity accountStateEntity = new AccountStateEntity(
+				accountState);
 		AccountCheckListBO accountChecklist = new AccountCheckListBO(
 				productTypeEntity, accountStateEntity, "productchecklist",
 				checklistStatus, details, Short.valueOf("1"), TestObjectFactory
@@ -1372,36 +1413,35 @@ public class TestObjectFactory {
 		HibernateUtil.commitTransaction();
 		return accountChecklist;
 	}
-	
+
 	public static void cleanUp(CheckListBO checkListBO) {
 		if (null != checkListBO) {
 			deleteChecklist(checkListBO);
-			checkListBO=null;
+			checkListBO = null;
 		}
 	}
 
-	public static void deleteChecklist(CheckListBO checkListBO ) {
-			Session session = HibernateUtil.getSessionTL();
-			Transaction	transaction = HibernateUtil.startTransaction();
-				
-			
-			if (checkListBO.getChecklistDetails() != null) {
-				for (CheckListDetailEntity checklistDetail : checkListBO.getChecklistDetails()) {
-					if (null != checklistDetail) {
-						session.delete(checklistDetail);
-					}
+	public static void deleteChecklist(CheckListBO checkListBO) {
+		Session session = HibernateUtil.getSessionTL();
+		Transaction transaction = HibernateUtil.startTransaction();
+
+		if (checkListBO.getChecklistDetails() != null) {
+			for (CheckListDetailEntity checklistDetail : checkListBO
+					.getChecklistDetails()) {
+				if (null != checklistDetail) {
+					session.delete(checklistDetail);
 				}
 			}
-			session.delete(checkListBO);
-			transaction.commit();
-		
 		}
+		session.delete(checkListBO);
+		transaction.commit();
 
+	}
 
 	public static void cleanUp(ReportsCategoryBO reportsCategoryBO) {
 		if (null != reportsCategoryBO) {
 			deleteReportCategory(reportsCategoryBO);
-			reportsCategoryBO=null;
+			reportsCategoryBO = null;
 		}
 	}
 
@@ -1416,7 +1456,7 @@ public class TestObjectFactory {
 	public static void cleanUp(ReportsBO reportsBO) {
 		if (null != reportsBO) {
 			deleteReportCategory(reportsBO);
-			reportsBO=null;
+			reportsBO = null;
 		}
 	}
 
@@ -1431,165 +1471,9 @@ public class TestObjectFactory {
 	public static LoanBO createLoanAccountWithDisbursement(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering, int disbursalType) {
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(startDate);
-		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
-				.getMeeting());
-		List<Date> meetingDates = getMeetingDates(meeting, 6);
-		LoanBO loan = null;
-		MifosCurrency currency = testObjectPersistence.getCurrency();
-			try {
-				loan = new LoanBO(TestObjectFactory.getUserContext(), loanOfering, customer,
-						AccountState.getStatus(accountStateId),new Money(currency, "300.0"),
-						Short.valueOf("6"),meetingDates.get(0),false,10.0,
-						(short)0,new FundBO(),new ArrayList<FeeView>());
-			} catch (NumberFormatException e) {
-			} catch (AccountException e) {
-				e.printStackTrace();
-			} catch (InvalidUserException e) {
-			} catch (PropertyNotFoundException e) {
-			} catch (SystemException e) {
-			} catch (ApplicationException e) {
-			}
-		FeeBO maintanenceFee = createPeriodicAmountFee("Mainatnence Fee",
-				FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short
-						.valueOf("1"));
-		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(loan,maintanenceFee,new Double("10.0"));
-		loan.addAccountFees(accountPeriodicFee);
-		AccountFeesEntity accountDisbursementFee = null;
-		FeeBO disbursementFee = null;
-		AccountFeesEntity accountDisbursementFee2 = null;
-		FeeBO disbursementFee2 = null;
-
-		if (disbursalType == 1 || disbursalType == 2) {
-			disbursementFee = createOneTimeAmountFee("Disbursement Fee 1",
-					FeeCategory.LOAN, "10", FeePayment.TIME_OF_DISBURSMENT);
-			accountDisbursementFee = new AccountFeesEntity(loan,disbursementFee,new Double("10.0"));
-			loan.addAccountFees(accountDisbursementFee);
-
-			disbursementFee2 = createOneTimeAmountFee("Disbursement Fee 2",
-					FeeCategory.LOAN, "20", FeePayment.TIME_OF_DISBURSMENT);
-			accountDisbursementFee2 = new AccountFeesEntity(loan,disbursementFee2,new Double("20.0"));
-			loan.addAccountFees(accountDisbursementFee2);
-		}
-		loan.setLoanMeeting(meeting);
-
-		if (disbursalType == 2)// 2-Interest At Disbursment
-		{
-			loan.setInterestDeductedAtDisbursement(true);
-			meetingDates = getMeetingDates(loan.getLoanMeeting(), 6);
-			short i = 0;
-			for (Date date : meetingDates) {
-				if (i == 0) {
-					i++;
-					loan.setDisbursementDate(date);
-					LoanScheduleEntity actionDate = (LoanScheduleEntity)loan.getAccountActionDate(i);
-					actionDate.setActionDate(new java.sql.Date(date.getTime()));
-					actionDate.setInterest(new Money(currency, "12.0"));
-					actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
-					loan.addAccountActionDate(actionDate);
-
-					// periodic fee
-					AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
-							actionDate,  maintanenceFee, accountPeriodicFee,
-							new Money(currency, "10.0"));
-					accountFeesaction.setFeeAmountPaid(new Money(currency,
-							"0.0"));
-					actionDate.addAccountFeesAction(accountFeesaction);
-
-					// dibursement fee one
-					AccountFeesActionDetailEntity accountFeesaction1 = new LoanFeeScheduleEntity(
-							actionDate,  disbursementFee,
-							accountDisbursementFee, new Money(currency, "10.0"));
-
-					accountFeesaction1.setFeeAmountPaid(new Money(currency,
-							"0.0"));
-					actionDate.addAccountFeesAction(accountFeesaction1);
-
-					// disbursementfee2
-					AccountFeesActionDetailEntity accountFeesaction2 = new LoanFeeScheduleEntity(
-							actionDate, disbursementFee2,
-							accountDisbursementFee2,
-							new Money(currency, "20.0"));
-					accountFeesaction2.setFeeAmountPaid(new Money(currency,
-							"0.0"));
-					actionDate.addAccountFeesAction(accountFeesaction2);
-
-					continue;
-				}
-				i++;
-				LoanScheduleEntity actionDate = (LoanScheduleEntity)loan.getAccountActionDate(i);
-				actionDate.setActionDate(new java.sql.Date(date.getTime()));
-				actionDate.setPrincipal(new Money(currency, "100.0"));
-				actionDate.setInterest(new Money(currency, "12.0"));
-				actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
-				loan.addAccountActionDate(actionDate);
-				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
-						actionDate, maintanenceFee, accountPeriodicFee,
-						new Money(currency, "100.0"));
-				accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
-				actionDate.addAccountFeesAction(accountFeesaction);
-			}
-
-		} else if (disbursalType == 1 || disbursalType == 3) {
-			loan.setInterestDeductedAtDisbursement(false);
-			meetingDates = getMeetingDates(loan.getLoanMeeting(), 6);
-
-			short i = 0;
-			for (Date date : meetingDates) {
-
-				if (i == 0) {
-					i++;
-					loan.setDisbursementDate(date);
-					continue;
-				} 
-					LoanScheduleEntity actionDate = (LoanScheduleEntity)loan.getAccountActionDate(i++);
-					actionDate.setActionDate(new java.sql.Date(date.getTime()));
-					actionDate.setPrincipal(new Money(currency, "100.0"));
-					actionDate.setInterest(new Money(currency, "12.0"));
-					actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
-					loan.addAccountActionDate(actionDate);
-					
-/*				
-				LoanScheduleEntity actionDate = new LoanScheduleEntity(loan,
-						customer, i++, new java.sql.Date(date.getTime()),
-						PaymentStatus.UNPAID, new Money(currency, "100.0"),
-						new Money(currency, "12.0"));
-				loan.addAccountActionDate(actionDate);
-*/
-				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
-						actionDate,maintanenceFee, accountPeriodicFee,
-						new Money(currency, "100.0"));
-				accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
-				actionDate.addAccountFeesAction(accountFeesaction);
-			}
-		}
-		GracePeriodTypeEntity gracePeriodType=null;
-		try {
-			gracePeriodType = new GracePeriodTypeEntity(GraceTypeConstants.getGraceTypeConstants(Short.valueOf("1")));
-		}catch (PropertyNotFoundException e) {
-			e.printStackTrace();
-		}
-		loan.setGracePeriodType(gracePeriodType);
-		loan.setCreatedBy(Short.valueOf("1"));
-		
-		CollateralTypeEntity collateralType = new CollateralTypeEntity(Short.valueOf("1"));
-		loan.setCollateralType(collateralType);
-
-		InterestTypesEntity interestTypes =null;
-		try {
-			interestTypes = new InterestTypesEntity(InterestTypeConstants.getInterestTypeConstants(Short.valueOf("1")));
-		}catch (PropertyNotFoundException e) {
-			e.printStackTrace();
-		}
-		loan.setInterestType(interestTypes);
-		loan.setInterestRate(10.0);
-		loan.setCreatedDate(new Date(System.currentTimeMillis()));
-
-		LoanSummaryEntity loanSummary = loan.getLoanSummary();
-		loanSummary.setOriginalPrincipal(new Money(currency, "300.0"));
-		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
-		
+		LoanBO loan = TestLoanBO
+				.createLoanAccountWithDisbursement(globalNum, customer,
+						accountStateId, startDate, loanOfering, disbursalType);
 		try {
 			loan.save();
 		} catch (AccountException e) {
@@ -1671,7 +1555,7 @@ public class TestObjectFactory {
 	public static void cleanUpWithoutDeletetingProduct(AccountBO account) {
 		if (null != account) {
 			deleteAccountWithoutDeletetingProduct(account, null);
-			account=null;
+			account = null;
 		}
 	}
 
@@ -1693,7 +1577,8 @@ public class TestObjectFactory {
 		return paymentData;
 	}
 
-	public static CustomerAccountView getCustomerAccountView(CustomerBO customer) throws Exception {
+	public static CustomerAccountView getCustomerAccountView(CustomerBO customer)
+			throws Exception {
 		CustomerAccountView customerAccountView = new CustomerAccountView(
 				customer.getCustomerAccount().getAccountId());
 		List<AccountActionDateEntity> accountAction = getDueActionDatesForAccount(
@@ -1705,7 +1590,7 @@ public class TestObjectFactory {
 	}
 
 	public static List<AccountActionDateEntity> getDueActionDatesForAccount(
-			Integer accountId, java.sql.Date transactionDate) throws Exception{
+			Integer accountId, java.sql.Date transactionDate) throws Exception {
 		List<AccountActionDateEntity> dueActionDates = new CustomerPersistence()
 				.retrieveCustomerAccountActionDetails(accountId,
 						transactionDate);
@@ -1734,7 +1619,7 @@ public class TestObjectFactory {
 	public static void cleanUp(CollectionSheetBO collSheet) {
 		if (null != collSheet) {
 			deleteCollectionSheet(collSheet, null);
-			collSheet=null;
+			collSheet = null;
 		}
 	}
 
@@ -1799,51 +1684,57 @@ public class TestObjectFactory {
 	}
 
 	public static LoanAccountView getLoanAccountView(LoanBO loan) {
-		Short interestDedAtDisb = loan.isInterestDeductedAtDisbursement() ? 
-				LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT : (short)0;
+		Short interestDedAtDisb = loan.isInterestDeductedAtDisbursement() ? LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT
+				: (short) 0;
 		return new LoanAccountView(loan.getAccountId(), loan.getLoanOffering()
 				.getPrdOfferingName(),
 				loan.getAccountType().getAccountTypeId(), loan
 						.getLoanOffering().getPrdOfferingId(), loan
-						.getAccountState().getId(), interestDedAtDisb, loan.getLoanBalance());
+						.getAccountState().getId(), interestDedAtDisb, loan
+						.getLoanBalance());
 
 	}
 
 	public static BulkEntryInstallmentView getBulkEntryAccountActionView(
 			AccountActionDateEntity accountActionDateEntity) {
-		BulkEntryInstallmentView bulkEntryAccountActionView =null;
-		if(accountActionDateEntity instanceof LoanScheduleEntity) {
-			LoanScheduleEntity actionDate = (LoanScheduleEntity)accountActionDateEntity;
+		BulkEntryInstallmentView bulkEntryAccountActionView = null;
+		if (accountActionDateEntity instanceof LoanScheduleEntity) {
+			LoanScheduleEntity actionDate = (LoanScheduleEntity) accountActionDateEntity;
 			BulkEntryLoanInstallmentView installmentView = new BulkEntryLoanInstallmentView(
 					actionDate.getAccount().getAccountId(), actionDate
 							.getCustomer().getCustomerId(), actionDate
-							.getInstallmentId(), actionDate.getActionDateId(),actionDate.getActionDate(),
-					actionDate.getPrincipal(), actionDate.getPrincipalPaid(),
-					actionDate.getInterest(), actionDate.getInterestPaid(),
-					actionDate.getMiscFee(), actionDate.getMiscFeePaid(),
-					actionDate.getPenalty(), actionDate.getPenaltyPaid(),
-					actionDate.getMiscPenalty(), actionDate.getMiscPenaltyPaid());
-			installmentView.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
+							.getInstallmentId(), actionDate.getActionDateId(),
+					actionDate.getActionDate(), actionDate.getPrincipal(),
+					actionDate.getPrincipalPaid(), actionDate.getInterest(),
+					actionDate.getInterestPaid(), actionDate.getMiscFee(),
+					actionDate.getMiscFeePaid(), actionDate.getPenalty(),
+					actionDate.getPenaltyPaid(), actionDate.getMiscPenalty(),
+					actionDate.getMiscPenaltyPaid());
+			installmentView
+					.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
 			bulkEntryAccountActionView = installmentView;
-		} else if(accountActionDateEntity instanceof SavingsScheduleEntity) {
-			SavingsScheduleEntity actionDate = (SavingsScheduleEntity)accountActionDateEntity;
+		} else if (accountActionDateEntity instanceof SavingsScheduleEntity) {
+			SavingsScheduleEntity actionDate = (SavingsScheduleEntity) accountActionDateEntity;
 			BulkEntrySavingsInstallmentView installmentView = new BulkEntrySavingsInstallmentView(
 					actionDate.getAccount().getAccountId(), actionDate
 							.getCustomer().getCustomerId(), actionDate
-							.getInstallmentId(), actionDate.getActionDateId(),actionDate.getActionDate(),
-							actionDate.getDeposit(), actionDate.getDepositPaid());
+							.getInstallmentId(), actionDate.getActionDateId(),
+					actionDate.getActionDate(), actionDate.getDeposit(),
+					actionDate.getDepositPaid());
 			bulkEntryAccountActionView = installmentView;
-			
-		}else if(accountActionDateEntity instanceof CustomerScheduleEntity) {
-			CustomerScheduleEntity actionDate = (CustomerScheduleEntity)accountActionDateEntity;
+
+		} else if (accountActionDateEntity instanceof CustomerScheduleEntity) {
+			CustomerScheduleEntity actionDate = (CustomerScheduleEntity) accountActionDateEntity;
 			BulkEntryCustomerAccountInstallmentView installmentView = new BulkEntryCustomerAccountInstallmentView(
 					actionDate.getAccount().getAccountId(), actionDate
 							.getCustomer().getCustomerId(), actionDate
-							.getInstallmentId(), actionDate.getActionDateId(),actionDate.getActionDate(),
-							actionDate.getMiscFee(), actionDate.getMiscFeePaid(),
-							actionDate.getMiscPenalty(), actionDate.getMiscPenaltyPaid());
-			installmentView.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
-			bulkEntryAccountActionView = installmentView;				
+							.getInstallmentId(), actionDate.getActionDateId(),
+					actionDate.getActionDate(), actionDate.getMiscFee(),
+					actionDate.getMiscFeePaid(), actionDate.getMiscPenalty(),
+					actionDate.getMiscPenaltyPaid());
+			installmentView
+					.setBulkEntryAccountFeeActions(getBulkEntryAccountFeeActionViews(accountActionDateEntity));
+			bulkEntryAccountActionView = installmentView;
 		}
 		return bulkEntryAccountActionView;
 	}
@@ -1860,14 +1751,17 @@ public class TestObjectFactory {
 			AccountActionDateEntity accountActionDateEntity) {
 		List<BulkEntryAccountFeeActionView> bulkEntryFeeViews = new ArrayList<BulkEntryAccountFeeActionView>();
 		Set<AccountFeesActionDetailEntity> feeActions = null;
-		if(accountActionDateEntity instanceof LoanScheduleEntity) {
-			feeActions = ((LoanScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails();
-		} else if(accountActionDateEntity instanceof CustomerScheduleEntity) {
-			feeActions = ((CustomerScheduleEntity)accountActionDateEntity).getAccountFeesActionDetails();
+		if (accountActionDateEntity instanceof LoanScheduleEntity) {
+			feeActions = ((LoanScheduleEntity) accountActionDateEntity)
+					.getAccountFeesActionDetails();
+		} else if (accountActionDateEntity instanceof CustomerScheduleEntity) {
+			feeActions = ((CustomerScheduleEntity) accountActionDateEntity)
+					.getAccountFeesActionDetails();
 		}
-		if (feeActions != null	&& feeActions.size() > 0) {
+		if (feeActions != null && feeActions.size() > 0) {
 			for (AccountFeesActionDetailEntity accountFeesActionDetail : feeActions) {
-				bulkEntryFeeViews.add(getBulkEntryAccountFeeActionView(accountFeesActionDetail));
+				bulkEntryFeeViews
+						.add(getBulkEntryAccountFeeActionView(accountFeesActionDetail));
 			}
 		}
 		return bulkEntryFeeViews;
@@ -1886,85 +1780,90 @@ public class TestObjectFactory {
 		return bulkEntryActionViews;
 
 	}
-	
-	public static CustomerNoteEntity getCustomerNote (String comment , CustomerBO customer){
-		java.sql.Date commentDate = new java.sql.Date(System.currentTimeMillis());
-		CustomerNoteEntity notes = new CustomerNoteEntity(comment, commentDate , customer.getPersonnel() , customer );
-		return (CustomerNoteEntity)addObject(notes);
+
+	public static CustomerNoteEntity getCustomerNote(String comment,
+			CustomerBO customer) {
+		java.sql.Date commentDate = new java.sql.Date(System
+				.currentTimeMillis());
+		CustomerNoteEntity notes = new CustomerNoteEntity(comment, commentDate,
+				customer.getPersonnel(), customer);
+		return (CustomerNoteEntity) addObject(notes);
 	}
-	
-	public static OfficeBO createOffice(OfficeLevel level, OfficeBO parentOffice, String officeName, String shortName)throws Exception{
-		OfficeBO officeBO=	new OfficeBO(TestObjectFactory.getUserContext(), level, parentOffice , null, officeName, shortName, null,
+
+	public static OfficeBO createOffice(OfficeLevel level,
+			OfficeBO parentOffice, String officeName, String shortName)
+			throws Exception {
+		OfficeBO officeBO = new OfficeBO(TestObjectFactory.getUserContext(),
+				level, parentOffice, null, officeName, shortName, null,
 				OperationMode.REMOTE_SERVER);
 		officeBO.save();
 		HibernateUtil.commitTransaction();
-		return (OfficeBO)addObject(officeBO);
+		return (OfficeBO) addObject(officeBO);
 	}
-	
-	public static void cleanUp(OfficeBO office){
-		if(office!=null){
-			Session session= HibernateUtil.getSessionTL();
+
+	public static void cleanUp(OfficeBO office) {
+		if (office != null) {
+			Session session = HibernateUtil.getSessionTL();
 			Transaction transaction = HibernateUtil.startTransaction();
 			session.lock(office, LockMode.NONE);
 			session.delete(office);
 			transaction.commit();
 		}
 	}
-	
-	public static void removeCustomerFromPosition(CustomerBO customer) throws CustomerException {
-		if(customer != null) {
-			for(CustomerPositionEntity customerPositionEntity : customer.getCustomerPositions())
+
+	public static void removeCustomerFromPosition(CustomerBO customer)
+			throws CustomerException {
+		if (customer != null) {
+			for (CustomerPositionEntity customerPositionEntity : customer
+					.getCustomerPositions())
 				customerPositionEntity.setCustomer(null);
 			customer.update();
 			HibernateUtil.commitTransaction();
 		}
 	}
-	public static void cleanUp(PersonnelBO personnel){
-		if(personnel!=null){
-			Session session= HibernateUtil.getSessionTL();
+
+	public static void cleanUp(PersonnelBO personnel) {
+		if (personnel != null) {
+			Session session = HibernateUtil.getSessionTL();
 			Transaction transaction = HibernateUtil.startTransaction();
 			session.lock(personnel, LockMode.NONE);
 			session.delete(personnel);
 			transaction.commit();
 		}
 	}
-	
+
 	public static PersonnelBO createPersonnel(PersonnelLevel level,
 			OfficeBO office, Integer title, Short preferredLocale,
 			String password, String userName, String emailId,
-			List<RoleBO> personnelRoles,
-			List<CustomFieldView> customFields, Name name,
-			String governmentIdNumber, Date dob, Integer maritalStatus,
-			Integer gender, Date dateOfJoiningMFI, Date dateOfJoiningBranch,
-			Address address) throws Exception{
-		PersonnelBO personnelBO = new  PersonnelBO(level,  office,
-				title,preferredLocale,password,
-				userName,emailId,personnelRoles,
-				customFields,
-				name,governmentIdNumber,
-				dob,maritalStatus,gender,
-				dateOfJoiningMFI,dateOfJoiningBranch,address,
-				Short.valueOf("1"));
-		
+			List<RoleBO> personnelRoles, List<CustomFieldView> customFields,
+			Name name, String governmentIdNumber, Date dob,
+			Integer maritalStatus, Integer gender, Date dateOfJoiningMFI,
+			Date dateOfJoiningBranch, Address address) throws Exception {
+		PersonnelBO personnelBO = new PersonnelBO(level, office, title,
+				preferredLocale, password, userName, emailId, personnelRoles,
+				customFields, name, governmentIdNumber, dob, maritalStatus,
+				gender, dateOfJoiningMFI, dateOfJoiningBranch, address, Short
+						.valueOf("1"));
+
 		personnelBO.save();
 		HibernateUtil.commitTransaction();
 		return personnelBO;
 	}
-	
+
 	public static void simulateInvalidConnection() {
 		HibernateUtil.getSessionTL().close();
 	}
-	
-	public static void cleanUp(RoleBO roleBO){
-		if(roleBO!=null){
-			Session session= HibernateUtil.getSessionTL();
+
+	public static void cleanUp(RoleBO roleBO) {
+		if (roleBO != null) {
+			Session session = HibernateUtil.getSessionTL();
 			Transaction transaction = HibernateUtil.startTransaction();
 			session.lock(roleBO, LockMode.NONE);
 			session.delete(roleBO);
 			transaction.commit();
 		}
 	}
-	
+
 	public static RoleBO createRole(UserContext context, String roleName,
 			List<ActivityEntity> activities) throws Exception {
 		RoleBO roleBO = new RoleBO(context, roleName, activities);
@@ -1972,31 +1871,33 @@ public class TestObjectFactory {
 		HibernateUtil.commitTransaction();
 		return roleBO;
 	}
-	
-	public static void cleanUp(FundBO fundBO){
-		if(fundBO!=null){
-			Session session= HibernateUtil.getSessionTL();
+
+	public static void cleanUp(FundBO fundBO) {
+		if (fundBO != null) {
+			Session session = HibernateUtil.getSessionTL();
 			Transaction transaction = HibernateUtil.startTransaction();
 			session.lock(fundBO, LockMode.NONE);
 			session.delete(fundBO);
 			transaction.commit();
 		}
 	}
-	
-	public static FundBO createFund(FundCodeEntity fundCode, String fundName) throws Exception {
-		FundBO fundBO = new FundBO(fundCode,fundName);
+
+	public static FundBO createFund(FundCodeEntity fundCode, String fundName)
+			throws Exception {
+		FundBO fundBO = new FundBO(fundCode, fundName);
 		fundBO.save();
 		HibernateUtil.commitTransaction();
 		return fundBO;
 	}
-	
+
 	public static GroupBO createGroupUnderBranch(String customerName,
 			CustomerStatus customerStatus, Short officeId, MeetingBO meeting,
-			Short loanOfficerId,List<CustomFieldView> customFields){
+			Short loanOfficerId, List<CustomFieldView> customFields) {
 		Short formedBy = new Short("1");
-		return createGroupUnderBranch(customerName, customerStatus, null, false, null, null, customFields, getFees(), formedBy, officeId, meeting, loanOfficerId);
+		return createGroupUnderBranch(customerName, customerStatus, null,
+				false, null, null, customFields, getFees(), formedBy, officeId,
+				meeting, loanOfficerId);
 	}
-
 
 	public static void cleanUpChangeLog() {
 		Session session = HibernateUtil.getSessionTL();
@@ -2013,7 +1914,7 @@ public class TestObjectFactory {
 		}
 		transaction.commit();
 	}
-	
+
 	public static List<AuditLog> getChangeLog(Short entityType, Integer entityId) {
 		return HibernateUtil
 				.getSessionTL()
@@ -2022,15 +1923,15 @@ public class TestObjectFactory {
 								+ entityType + " and al.entityId=" + entityId)
 				.list();
 	}
-	
-	public static void  cleanUp(AuditLog auditLog) {
+
+	public static void cleanUp(AuditLog auditLog) {
 		Session session = HibernateUtil.getSessionTL();
 		Transaction transaction = HibernateUtil.startTransaction();
 		session.lock(auditLog, LockMode.NONE);
 		session.delete(auditLog);
 		transaction.commit();
 	}
-	
+
 	public static Calendar getCalendar(Date date) {
 		Calendar dateCalendar = new GregorianCalendar();
 		dateCalendar.setTimeInMillis(date.getTime());
@@ -2040,6 +1941,5 @@ public class TestObjectFactory {
 		dateCalendar = new GregorianCalendar(year, month, day);
 		return dateCalendar;
 	}
-    
-   
+
 }

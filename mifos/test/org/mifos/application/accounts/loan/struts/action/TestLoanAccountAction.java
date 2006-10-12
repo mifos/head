@@ -69,6 +69,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -917,6 +918,33 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(loan);
 	}
 
+	public void testCreateWithoutPermission() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		UserContext userContext = TestObjectFactory.getUserContext();
+		userContext.setRoles(new HashSet());
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request);
+		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+				new ArrayList<FundBO>(), request);
+		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, group,
+				request);
+		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
+				new ArrayList<MasterDataEntity>(), request);
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter("stateSelected", "1");
+		actionPerform();
+		verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
+		verifyForward(ActionForwards.create_failure.toString());
+		TestObjectFactory.removeObject(loanOffering);
+	}
+
 	public void testManage() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
@@ -1252,8 +1280,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 						.toPattern());
 		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
-	
-	private java.sql.Date offSetDate(Date date , int noOfDays){
+
+	private java.sql.Date offSetDate(Date date, int noOfDays) {
 		Calendar dateCalendar = new GregorianCalendar();
 		dateCalendar.setTimeInMillis(date.getTime());
 		int year = dateCalendar.get(Calendar.YEAR);
