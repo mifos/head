@@ -25,6 +25,7 @@ import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
+import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -986,6 +987,27 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	}
 
+	public void testSearchWithCancelLoanAccounts()throws Exception{
+		groupAccount = getLoanAccount();
+		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+				AccountStateFlag.LOAN_WITHDRAW.getValue(),
+				"WITHDRAW LOAN ACCOUNT");
+		TestObjectFactory.updateObject(groupAccount);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		groupAccount =(LoanBO) TestObjectFactory.getObject(LoanBO.class,groupAccount.getAccountId());
+		center = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		QueryResult queryResult = new CustomerPersistence().search(group
+				.getGlobalCustNum(), Short.valueOf("3"), Short.valueOf("1"),
+				Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1, queryResult.getSize());
+		List results = queryResult.get(0, 10);
+		assertEquals(1, results.size());
+		CustomerSearch customerSearch =(CustomerSearch) results.get(0);
+		assertEquals(0,customerSearch.getLoanGlobalAccountNum().size());
+	}
 	public void testSearchWithAccountGlobalNo() throws Exception {
 		getCustomer();
 		HibernateUtil.commitTransaction();
@@ -998,6 +1020,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	}
 
+	
 	public void testSearchGropAndClient() throws Exception {
 		createCustomers(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
@@ -1145,7 +1168,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getValue(), group.getSearchId() + ".1", group, new Date(System
 				.currentTimeMillis()));
 	}
-
+	
 	private static java.util.Date getMeetingDates(MeetingBO meeting) {
 		List<java.util.Date> dates = new ArrayList<java.util.Date>();
 		try {

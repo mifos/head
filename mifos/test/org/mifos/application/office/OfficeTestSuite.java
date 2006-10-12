@@ -11,6 +11,7 @@ import org.mifos.application.office.persistence.OfficeHierarchyPersistenceTest;
 import org.mifos.application.office.persistence.TestOfficePersistence;
 import org.mifos.application.office.struts.action.OffHierarchyActionTest;
 import org.mifos.application.office.struts.action.TestOfficeAction;
+import org.mifos.application.office.struts.tag.OfficeListTagTest;
 import org.mifos.framework.MifosTestSuite;
 
 public class OfficeTestSuite extends MifosTestSuite {
@@ -28,6 +29,7 @@ public class OfficeTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(OfficeHierarchyBusinessServiceTest.class);
 		testSuite.addTestSuite(OffHierarchyActionTest.class);
 		testSuite.addTestSuite(TestOfficeStatusEntity.class);
+		testSuite.addTestSuite(OfficeListTagTest.class);
 		return testSuite;
 	}
 }

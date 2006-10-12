@@ -175,6 +175,11 @@ public class CustSearchAction extends SearchAction {
 		if (searchString == null )
 			throw new CustomerException(
 					CustomerSearchConstants.NAMEMANDATORYEXCEPTION);
+		
+		  if (officeId!=null &&officeId!=0) 
+			  addSeachValues(searchString,officeId.toString(),new OfficeBusinessService().getOffice(officeId).getOfficeName(),request);
+		  else
+			  addSeachValues(searchString,officeId.toString(),new OfficeBusinessService().getOffice(userContext.getBranchId()).getOfficeName(),request);
 		searchString = StringUtils.normalizeSearchString(searchString);
 		if (searchString.equals(""))
 			throw new CustomerException(
@@ -182,10 +187,6 @@ public class CustSearchAction extends SearchAction {
 		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
 				getCustomerBusinessService().search(
 						searchString, officeId,userContext.getId(),userContext.getBranchId()), request);
-		  if (officeId!=null &&officeId!=0) 
-			  addSeachValues(searchString,officeId.toString(),new OfficeBusinessService().getOffice(officeId).getOfficeName(),request);
-		  else
-			  addSeachValues(searchString,officeId.toString(),new OfficeBusinessService().getOffice(userContext.getBranchId()).getOfficeName(),request);
 		  return mapping.findForward(ActionForwards.mainSearch_success.toString());
 		  
 	}
@@ -267,15 +268,14 @@ public class CustSearchAction extends SearchAction {
 			throws Exception {
 		ActionForward actionForward =  super.search(mapping, form, request, response);;
 		CustSearchActionForm actionForm = (CustSearchActionForm) form;
-
+		UserContext userContext = getUserContext(request);
 		String searchString = actionForm.getSearchString();
 		if (searchString == null)
 			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+		  addSeachValues(searchString,userContext.getBranchId().toString(),new OfficeBusinessService().getOffice(userContext.getBranchId()).getOfficeName(),request);
 		searchString = StringUtils.normalizeSearchString(searchString);
 		if (searchString.equals(""))
 			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
 		if (actionForm.getInput() != null
 				&& actionForm.getInput().equals("loan"))
 			SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
@@ -286,7 +286,6 @@ public class CustSearchAction extends SearchAction {
 			SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
 					getCustomerBusinessService().searchCustForSavings(
 							searchString, userContext.getId()), request);
-			  addSeachValues(searchString,userContext.getBranchId().toString(),new OfficeBusinessService().getOffice(userContext.getBranchId()).getOfficeName(),request);
 		return actionForward;
 
 	}

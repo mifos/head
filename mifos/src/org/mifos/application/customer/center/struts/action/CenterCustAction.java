@@ -371,39 +371,26 @@ public class CenterCustAction extends CustAction {
 		ActionForward actionForward = super.search(mapping, form, request,
 				response);
 		String searchString = actionForm.getSearchString();
-
-		if (searchString == null)checkSearchString(actionForm,request);
-			
-		searchString = StringUtils.normalizeSearchString(searchString);
-		if (searchString.equals(""))
-			checkSearchString(actionForm,request);
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
-		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
-				new CenterBusinessService().search(searchString, userContext
-						.getId()), request);
+		UserContext userContext = getUserContext(request);
+		if (searchString == null)
+			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
 		addSeachValues(searchString, userContext.getBranchId().toString(),
 				new OfficeBusinessService()
 						.getOffice(userContext.getBranchId()).getOfficeName(),
-				request);
+				request);			
+		searchString = StringUtils.normalizeSearchString(searchString);
+		if (searchString.equals(""))
+			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
+				new CenterBusinessService().search(searchString, userContext
+						.getId()), request);
+
 		if (actionForm.getInput().equals(
 				CenterConstants.INPUT_SEARCH_TRANSFERGROUP))
 			actionForward = mapping.findForward(ActionForwards.transferSearch_success
-					.toString());;
+					.toString());
 		return actionForward;
 	}
-	
-	private void checkSearchString(CenterCustActionForm actionForm,HttpServletRequest request) throws CustomerException{
-		if (actionForm.getInput()!=null&&actionForm.getInput().equals(
-				CenterConstants.INPUT_SEARCH_TRANSFERGROUP))
-			request.setAttribute(Constants.INPUT,CenterConstants.INPUT_SEARCH_TRANSFERGROUP);
-		else {
-			request.setAttribute(Constants.INPUT,null);
-		}
-		throw new CustomerException(CenterConstants.NO_SEARCH_STING);
-
-	}
-
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			CenterBO centerBO, Short localeId) throws Exception {
 		List<SavingsBO> savingsAccounts = centerBO.getOpenSavingAccounts();

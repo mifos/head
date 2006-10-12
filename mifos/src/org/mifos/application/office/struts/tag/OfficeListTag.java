@@ -40,7 +40,11 @@ public class OfficeListTag extends BodyTagSupport {
 	@Override
 	public int doStartTag() throws JspException {
 		try {
-			TagUtils.getInstance().write(pageContext, getOfficeList());
+			UserContext userContext = (UserContext) pageContext.getSession()
+			.getAttribute(Constants.USERCONTEXT);
+
+			TagUtils.getInstance().write(pageContext, getOfficeList(userContext));
+			
 		} catch (Exception e) {
 			/**
 			    This turns into a (rather ugly) error 500.
@@ -75,10 +79,8 @@ public class OfficeListTag extends BodyTagSupport {
 		this.onlyBranchOffices = onlyBranchOffices;
 	}
 
-	private String getOfficeList() throws Exception {
+	 String getOfficeList(UserContext userContext) throws Exception {
 
-		UserContext userContext = (UserContext) pageContext.getSession()
-				.getAttribute(Constants.USERCONTEXT);
 		OfficePersistence officePersistence = new OfficePersistence();
 		OfficeBO officeBO = officePersistence.getOffice(userContext
 				.getBranchId());
@@ -86,8 +88,11 @@ public class OfficeListTag extends BodyTagSupport {
 		List<OfficeView> levels = officePersistence.getActiveLevels(userContext
 				.getLocaleId());
 
-		// let make all levels name as locle variables
-		String termForBranch = "", regional = "", subregional = "", area = "";
+		
+		String termForBranch = "";
+		String regional = "";
+		String subregional = "";
+		String area = "";
 		for (OfficeView level : levels) {
 			if (level.getLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue()))
 				termForBranch = MifosTagUtils.xmlEscape(level.getLevelName());

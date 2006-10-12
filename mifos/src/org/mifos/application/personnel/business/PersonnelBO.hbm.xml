@@ -122,7 +122,7 @@
 	          <![CDATA[from  org.mifos.application.personnel.business.PersonnelBO personnel 
 	        	   			where personnel.level.id=:personnelLevelId and 
 	        	   			personnel.office.officeId=:officeId and personnel.status.id=:ACTIVE
-	         ]]>
+	         order by personnel.displayName]]>
         </query>
 	 	
 </hibernate-mapping>

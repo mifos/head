@@ -623,6 +623,14 @@ public class TestOfficeBO extends MifosTestCase {
 				"headOffice", Integer.valueOf("1"));
 		assertEquals("headOffice", officeView.getOfficeName());
 		assertEquals(Integer.valueOf("1"), officeView.getVersionNo());
+		assertEquals(Short.valueOf("1"), officeView.getOfficeId());
+		
+		
+		OfficeView officeView2 = new OfficeView(Short.valueOf("1"),
+				"headOffice",Short.valueOf("1") ,"Hifos HO",Integer.valueOf("1"));
+		
+		assertEquals("Hifos HO", officeView2.getLevelName());
+		assertEquals("Hifos HO(headOffice)", officeView2.getDisplayName());
 	}
 
 	private void resetOffices() throws Exception {

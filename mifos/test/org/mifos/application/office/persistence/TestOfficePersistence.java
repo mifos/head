@@ -149,10 +149,19 @@ public class TestOfficePersistence extends MifosTestCase {
 		headOffice = null;
 	}
 	public void testGetBranchesUnderUser()throws Exception{
-		
+		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO branchOffice = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, parent, "abcd", "abcd");
+
 		List<OfficeBO> officeList =officePersistence.getActiveBranchesUnderUser("1.1");
 		assertNotNull(officeList);
-		assertEquals(1,officeList.size());
+		assertEquals(2,officeList.size());
+		assertEquals(branchOffice.getOfficeName(),officeList.get(0).getOfficeName());
+		assertEquals("TestBranchOffice",officeList.get(1).getOfficeName());
+		TestObjectFactory.cleanUp(branchOffice);
+
+		
+		
 	}
 	
 }

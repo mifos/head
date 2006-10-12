@@ -68,10 +68,10 @@ public class QueryResultIdSearch extends QueryResultSearchDTOImpl {
 			    		  Object record = buildDTO((Object[])list.get(i));
 			    		  CustomerSearch cs = ((CustomerSearch)record);
 			    		  Integer customerId = cs.getCustomerId();
-			    		  query= session.createQuery("select account.globalAccountNum from org.mifos.application.accounts.business.AccountBO account where account.customer.customerId=:customerId and account.accountType.accountTypeId=:accountTypeId");
+			    		  query= session.createQuery("select account.globalAccountNum from org.mifos.application.accounts.business.AccountBO account where account.customer.customerId=:customerId and account.accountType.accountTypeId=:accountTypeId and  account.accountState.id not in (7,9,10,15,17)");
 			    		  query.setInteger("customerId",customerId).setShort("accountTypeId",(short)1);
 			    		  List lst = query.list();			    		  
-			    		  query= session.createQuery("select account.globalAccountNum from org.mifos.application.accounts.business.AccountBO  account where account.customer.customerId=:customerId and account.accountType.accountTypeId=:accountTypeId");
+			    		  query= session.createQuery("select account.globalAccountNum from org.mifos.application.accounts.business.AccountBO  account where account.customer.customerId=:customerId and account.accountType.accountTypeId=:accountTypeId and  account.accountState.id not in (7,9,10,15,17)");
 			    		  query.setInteger("customerId",customerId).setShort("accountTypeId",(short)2);
 			    		  List listOfSavingAccounts = query.list();			    		  
 			    		  cs.setSavingsGlobalAccountNum(listOfSavingAccounts);
