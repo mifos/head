@@ -5,6 +5,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.TestLoanBusinessService;
 import org.mifos.application.accounts.loan.persistence.TestLoanPersistence;
 import org.mifos.application.accounts.loan.struts.action.TestAccountStatusAction;
@@ -32,6 +33,7 @@ public class LoanTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestLoanActivityAction.class);
 		testSuite.addTestSuite(TestLoanAccountAction.class);
 		testSuite.addTestSuite(TestAccountStatusAction.class);
+		testSuite.addTestSuite(TestLoanScheduleEntity.class);
 		return testSuite;
 		
 	}

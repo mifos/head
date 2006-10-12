@@ -22,6 +22,7 @@ import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -1141,9 +1142,10 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	private void modifyActionDateForFirstInstallment() throws Exception {
 		LoanScheduleEntity installment = (LoanScheduleEntity) accountBO
 				.getAccountActionDate((short) 1);
-		installment.setPrincipal(new Money("20.0"));
-		installment.setPenalty(new Money("5.0"));
-		installment.setInterest(new Money("10.0"));
+		TestLoanScheduleEntity.modifyData(installment,new Money("5.0"),installment.getPenaltyPaid(),
+				installment.getMiscPenalty(),
+				installment.getMiscPenaltyPaid(),installment.getMiscFee(),installment.getMiscFeePaid(),
+				new Money("20.0"),installment.getPrincipalPaid(),new Money("10.0"),installment.getInterestPaid());
 		installment.setActionDate(offSetCurrentDate(1));
 		accountBO = saveAndFetch(accountBO);
 	}

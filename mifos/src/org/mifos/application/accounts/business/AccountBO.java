@@ -659,7 +659,7 @@ public class AccountBO extends BusinessObject {
 		return AccountState.getStatus(getAccountState().getId());
 	}
 
-	public void updateAccountActivity(Money principal, Money interest,
+	protected void updateAccountActivity(Money principal, Money interest,
 			Money fee, Money penalty, Short personnelId, String description)
 			throws AccountException {
 	}

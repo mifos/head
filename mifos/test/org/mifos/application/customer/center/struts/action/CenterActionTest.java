@@ -560,6 +560,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
+		assertEquals(0,center.getCustomerPositions().size());
 		assertEquals("12", center.getExternalId());
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());

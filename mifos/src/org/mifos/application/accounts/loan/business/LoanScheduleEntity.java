@@ -101,7 +101,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return interest;
 	}
 
-	public void setInterest(Money interest) {
+	void setInterest(Money interest) {
 		this.interest = interest;
 	}
 
@@ -109,11 +109,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return interestPaid;
 	}
 
-	public void setInterestPaid(Money interestPaid) {
+	void setInterestPaid(Money interestPaid) {
 		this.interestPaid = interestPaid;
 	}
 
-	public void setPenalty(Money penalty) {
+	void setPenalty(Money penalty) {
 		this.penalty = penalty;
 	}
 
@@ -121,7 +121,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return penaltyPaid;
 	}
 
-	public void setPenaltyPaid(Money penaltyPaid) {
+	void setPenaltyPaid(Money penaltyPaid) {
 		this.penaltyPaid = penaltyPaid;
 	}
 
@@ -129,7 +129,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return principal;
 	}
 
-	public void setPrincipal(Money principal) {
+	void setPrincipal(Money principal) {
 		this.principal = principal;
 	}
 
@@ -137,7 +137,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return principalPaid;
 	}
 
-	public void setPrincipalPaid(Money principalPaid) {
+	void setPrincipalPaid(Money principalPaid) {
 		this.principalPaid = principalPaid;
 	}
 
@@ -166,7 +166,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return miscFee;
 	}
 
-	public void setMiscFee(Money miscFee) {
+	void setMiscFee(Money miscFee) {
 		this.miscFee = miscFee;
 	}
 
@@ -174,7 +174,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return miscFeePaid;
 	}
 
-	public void setMiscFeePaid(Money miscFeePaid) {
+	void setMiscFeePaid(Money miscFeePaid) {
 		this.miscFeePaid = miscFeePaid;
 	}
 
@@ -182,7 +182,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return miscPenalty;
 	}
 
-	public void setMiscPenalty(Money miscPenalty) {
+	void setMiscPenalty(Money miscPenalty) {
 		this.miscPenalty = miscPenalty;
 	}
 
@@ -194,7 +194,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return getMiscPenalty().subtract(getMiscPenaltyPaid());
 	}
 
-	public void setMiscPenaltyPaid(Money miscPenaltyPaid) {
+	void setMiscPenaltyPaid(Money miscPenaltyPaid) {
 		this.miscPenaltyPaid = miscPenaltyPaid;
 	}
 
@@ -228,7 +228,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 						getMiscPenalty()));
 	}
 
-	public void setPaymentDetails(LoanPaymentData loanPaymentData,
+	void setPaymentDetails(LoanPaymentData loanPaymentData,
 			Date paymentDate) {
 		this.principalPaid = this.principalPaid.add(loanPaymentData
 				.getPrincipalPaid());
@@ -262,7 +262,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return overDueAmounts;
 	}
 
-	public void makeEarlyRepaymentEnteries(String payFullOrPartial) {
+	void makeEarlyRepaymentEnteries(String payFullOrPartial) {
 		if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
 			setPrincipalPaid(getPrincipalPaid().add(getPrincipalDue()));
 			setInterestPaid(getInterestPaid().add(getInterestDue()));
@@ -294,7 +294,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		}
 	}
 
-	public void updatePaymentDetails(Money principal, Money interest,
+	void updatePaymentDetails(Money principal, Money interest,
 			Money penalty, Money miscPenalty, Money miscFee) {
 		principalPaid = principalPaid.add(principal);
 		interestPaid = interestPaid.add(interest);
@@ -303,7 +303,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		miscFeePaid = miscFeePaid.add(miscFee);
 	}
 
-	public Money waiveCharges() {
+	Money waiveCharges() {
 		Money chargeWaived = new Money();
 		chargeWaived = chargeWaived.add(getMiscFee()).add(getMiscPenalty());
 		setMiscFee(new Money());
@@ -315,7 +315,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return chargeWaived;
 	}
 
-	public Money waiveFeeCharges() {
+	Money waiveFeeCharges() {
 		Money chargeWaived = new Money();
 		chargeWaived = chargeWaived.add(getMiscFeeDue());
 		setMiscFee(new Money());
@@ -326,7 +326,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return chargeWaived;
 	}
 
-	public void removeAccountFeesActionDetailEntity(
+	void removeAccountFeesActionDetailEntity(
 			AccountFeesActionDetailEntity accountFeesActionDetailEntity) {
 		accountFeesActionDetails.remove(accountFeesActionDetailEntity);
 	}
@@ -369,7 +369,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return getMiscFeeDue().add(getTotalFeeDue());
 	}
 
-	public Money removeFees(Short feeId) {
+	Money removeFees(Short feeId) {
 		Money feeAmount = null;
 		AccountFeesActionDetailEntity objectToRemove = null;
 		Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
@@ -421,14 +421,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return null;
 	}
 
-	public Money waivePenaltyCharges() {
+	Money waivePenaltyCharges() {
 		Money chargeWaived = new Money();
 		chargeWaived = chargeWaived.add(getMiscPenalty());
 		setMiscPenalty(new Money());
 		return chargeWaived;
 	}
 
-	public void applyPeriodicFees(Short feeId) {
+	void applyPeriodicFees(Short feeId) {
 		AccountFeesEntity accountFeesEntity = account.getAccountFees(feeId);
 		AccountFeesActionDetailEntity accountFeesActionDetailEntity = new LoanFeeScheduleEntity(
 				this, accountFeesEntity.getFees(), accountFeesEntity,
@@ -436,7 +436,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		addAccountFeesAction(accountFeesActionDetailEntity);
 	}
 
-	public void applyMiscCharge(Short chargeType, Money charge) {
+	void applyMiscCharge(Short chargeType, Money charge) {
 		if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
 			setMiscFee(getMiscFee().add(charge));
 		else if (chargeType

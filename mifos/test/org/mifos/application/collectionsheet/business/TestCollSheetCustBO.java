@@ -43,6 +43,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -109,17 +110,19 @@ public class TestCollSheetCustBO extends MifosTestCase {
 		accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
 				.getMoneyForMFICurrency(3));
 		accountActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
+		
 
-		accountActionDate.setPenalty(TestObjectFactory
-				.getMoneyForMFICurrency(10));
-		accountActionDate.setMiscPenalty(TestObjectFactory
-				.getMoneyForMFICurrency(3));
-		accountActionDate.setPenaltyPaid(TestObjectFactory
-				.getMoneyForMFICurrency(5));
-		accountActionDate.setMiscFee(TestObjectFactory
-				.getMoneyForMFICurrency(5));
-		accountActionDate.setMiscFeePaid(TestObjectFactory
-				.getMoneyForMFICurrency(5));
+		TestLoanScheduleEntity.modifyData(accountActionDate,
+				TestObjectFactory.getMoneyForMFICurrency(10),
+				TestObjectFactory.getMoneyForMFICurrency(5),
+				TestObjectFactory.getMoneyForMFICurrency(3),
+				TestObjectFactory.getMoneyForMFICurrency(0),
+				TestObjectFactory.getMoneyForMFICurrency(5),
+				TestObjectFactory.getMoneyForMFICurrency(5),
+				accountActionDate.getPrincipal(),
+				accountActionDate.getPrincipalPaid(),
+				accountActionDate.getInterest(),
+				accountActionDate.getInterestPaid());
 
 		collSheetCustBO.populateAccountDetails(accountActionDate);
 

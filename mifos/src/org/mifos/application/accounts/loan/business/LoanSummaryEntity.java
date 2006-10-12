@@ -90,7 +90,7 @@ public class LoanSummaryEntity extends PersistentObject {
 		return feesPaid;
 	}
 
-	public void setFeesPaid(Money feesPaid) {
+	void setFeesPaid(Money feesPaid) {
 		this.feesPaid = feesPaid;
 	}
 
@@ -98,7 +98,7 @@ public class LoanSummaryEntity extends PersistentObject {
 		return interestPaid;
 	}
 
-	public void setInterestPaid(Money interestPaid) {
+	void setInterestPaid(Money interestPaid) {
 		this.interestPaid = interestPaid;
 	}
 
@@ -106,7 +106,7 @@ public class LoanSummaryEntity extends PersistentObject {
 		return originalFees;
 	}
 
-	public void setOriginalFees(Money originalFees) {
+	void setOriginalFees(Money originalFees) {
 		this.originalFees = originalFees;
 	}
 
@@ -114,7 +114,7 @@ public class LoanSummaryEntity extends PersistentObject {
 		return originalInterest;
 	}
 
-	public void setOriginalInterest(Money originalInterest) {
+	void setOriginalInterest(Money originalInterest) {
 		this.originalInterest = originalInterest;
 	}
 
@@ -122,7 +122,7 @@ public class LoanSummaryEntity extends PersistentObject {
 		return originalPenalty;
 	}
 
-	public void setOriginalPenalty(Money originalPenalty) {
+	void setOriginalPenalty(Money originalPenalty) {
 		this.originalPenalty = originalPenalty;
 	}
 
@@ -130,7 +130,7 @@ public class LoanSummaryEntity extends PersistentObject {
 		return originalPrincipal;
 	}
 
-	public void setOriginalPrincipal(Money originalPrincipal) {
+	void setOriginalPrincipal(Money originalPrincipal) {
 		this.originalPrincipal = originalPrincipal;
 	}
 
@@ -138,7 +138,7 @@ public class LoanSummaryEntity extends PersistentObject {
 		return penaltyPaid;
 	}
 
-	public void setPenaltyPaid(Money penaltyPaid) {
+	void setPenaltyPaid(Money penaltyPaid) {
 		this.penaltyPaid = penaltyPaid;
 	}
 
@@ -146,11 +146,11 @@ public class LoanSummaryEntity extends PersistentObject {
 		return principalPaid;
 	}
 
-	public void setPrincipalPaid(Money principalPaid) {
+	void setPrincipalPaid(Money principalPaid) {
 		this.principalPaid = principalPaid;
 	}
 
-	public void updateFeePaid(Money totalPayment) {
+	void updateFeePaid(Money totalPayment) {
 		feesPaid = feesPaid.add(totalPayment);
 	}
 	
@@ -195,7 +195,7 @@ public class LoanSummaryEntity extends PersistentObject {
 		return totalAmount;
 	}
 
-	public void updatePaymentDetails(Money principal, Money interest,
+	void updatePaymentDetails(Money principal, Money interest,
 			Money penalty, Money fees) {
 		principalPaid = principalPaid.add(principal);
 		interestPaid = interestPaid.add(interest);
@@ -203,7 +203,7 @@ public class LoanSummaryEntity extends PersistentObject {
 		feesPaid = feesPaid.add(fees);
 	}
 
-	public void decreaseBy(Money principal, Money interest, Money penalty,
+	void decreaseBy(Money principal, Money interest, Money penalty,
 			Money fees) {
 		originalPrincipal = originalPrincipal.subtract(principal);
 		originalFees = originalFees.subtract(fees);
@@ -211,11 +211,11 @@ public class LoanSummaryEntity extends PersistentObject {
 		originalInterest = originalInterest.subtract(interest);
 	}
 	
-	public void updateOriginalFees(Money charge){
+	void updateOriginalFees(Money charge){
 		setOriginalFees(getOriginalFees().add(charge));
 	}
 	
-	public void updateOriginalPenalty(Money charge){
+	void updateOriginalPenalty(Money charge){
 		setOriginalPenalty(getOriginalPenalty().add(charge));
 	}
 }

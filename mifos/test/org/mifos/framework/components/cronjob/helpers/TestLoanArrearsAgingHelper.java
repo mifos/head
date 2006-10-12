@@ -8,6 +8,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
@@ -179,8 +180,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 	private void setDisbursementDateAsOldDate(LoanBO account, int days, Short installmentSize) {
 		Date startDate = offSetCurrentDate(days);
 		LoanBO loan = account;
-		loan.setDisbursementDate(startDate);
-		
+		TestLoanBO.modifyDisbursmentDate(loan,startDate);
 		for (AccountActionDateEntity actionDate : loan.getAccountActionDates()){
 			if(actionDate.getInstallmentId().shortValue()<=installmentSize.shortValue())
 				actionDate.setActionDate(offSetGivenDate(

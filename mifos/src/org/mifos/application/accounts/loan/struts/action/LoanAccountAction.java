@@ -409,50 +409,35 @@ public class LoanAccountAction extends AccountAppAction {
 		loanBO.setVersionNo(loanBOInSession.getVersionNo());
 		loanBO.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(loanBO);
-		updateBusinessData(loanBO, form, request);
-		loanBO.updateLoan();
+		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
+		loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(),
+				loanAccountActionForm.getLoanAmountValue(),
+				loanAccountActionForm.getInterestDoubleValue(),
+				loanAccountActionForm.getNoOfInstallmentsValue(),
+				loanAccountActionForm.getDisbursementDateValue(getUserContext(
+						request).getPereferedLocale()), loanAccountActionForm
+						.getGracePeriodDurationValue(), loanAccountActionForm
+						.getBusinessActivityIdValue(), loanAccountActionForm
+						.getCollateralNote(), getCollateralTypeEntity(form,
+						request));
 		loanBOInSession = null;
-
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
-	private void updateBusinessData(LoanBO loanBO, ActionForm form,
-			HttpServletRequest request) throws Exception {
+	private CollateralTypeEntity getCollateralTypeEntity(ActionForm form,
+			HttpServletRequest request) throws Exception{
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
-		if (loanAccountActionForm.getIntDedDisbursement().equals("1"))
-			loanBO
-					.setGracePeriodType((GracePeriodTypeEntity) getMasterEntities(
-							GraceTypeConstants.NONE.getValue(),
-							GracePeriodTypeEntity.class,
-							getUserContext(request).getLocaleId()));
-		else
-			loanBO.setGracePeriodType(loanBO.getLoanOffering()
-					.getGracePeriodType());
-		loanBO.setLoanAmount(loanAccountActionForm.getLoanAmountValue());
-		loanBO.setInterestRate(loanAccountActionForm.getInterestRateValue());
-		loanBO.setNoOfInstallments(loanAccountActionForm
-				.getNoOfInstallmentsValue());
-		loanBO.setDisbursementDate(loanAccountActionForm
-				.getDisbursementDateValue(getUserContext(request)
-						.getPereferedLocale()));
-		loanBO.setGracePeriodDuration(loanAccountActionForm
-				.getGracePeriodDurationValue());
-		loanBO.setInterestDeductedAtDisbursement(loanAccountActionForm
-				.getIntDedDisbursement().equals("1") ? true : false);
-		loanBO.setBusinessActivityId(loanAccountActionForm
-				.getBusinessActivityIdValue());
-		loanBO.setCollateralNote(loanAccountActionForm.getCollateralNote());
-		CollateralTypeEntity collateralTypeEntity = null;
-		if (loanAccountActionForm.getCollateralTypeIdValue() != null) {
-			collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
+		if(loanAccountActionForm.getCollateralTypeIdValue() != null) {
+			CollateralTypeEntity collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
 					request, MasterConstants.COLLATERAL_TYPES,
 					loanAccountActionForm.getCollateralTypeIdValue());
 			collateralTypeEntity.setLocaleId(getUserContext(request)
 					.getLocaleId());
+			return collateralTypeEntity;
 		}
-		loanBO.setCollateralType(collateralTypeEntity);
+		return null;
 	}
 
 	private void setLocaleForMasterEntities(LoanBO loanBO, Short localeId) {

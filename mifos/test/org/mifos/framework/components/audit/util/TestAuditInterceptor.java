@@ -71,13 +71,11 @@ protected AccountBO accountBO = null;
 		accountBO.setUserContext(TestObjectFactory.getUserContext());
 		HibernateUtil.getInterceptor().createInitialValueMap(accountBO);
 
-		((LoanBO) accountBO).setDisbursementDate(newDate);
-		((LoanBO) accountBO).setCollateralNote("Added note");
-		((LoanBO) accountBO).setInterestDeductedAtDisbursement(false);
-		((LoanBO) accountBO).setGracePeriodDuration(Short.valueOf("2"));
-		((LoanBO) accountBO).setBusinessActivityId(Integer.valueOf("2"));
+		LoanBO loanBO = ((LoanBO) accountBO);
+		((LoanBO) accountBO).updateLoan(false, loanBO.getLoanAmount(), loanBO
+				.getInterestRate(), loanBO.getNoOfInstallments(), newDate,
+				Short.valueOf("2"), Integer.valueOf("2"), "Added note", null);
 
-		((LoanBO) accountBO).updateLoan();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,

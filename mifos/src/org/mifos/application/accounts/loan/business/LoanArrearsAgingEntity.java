@@ -43,34 +43,47 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
-public class LoanArrearsAgingEntity extends PersistentObject{
+public class LoanArrearsAgingEntity extends PersistentObject {
 	@SuppressWarnings("unused")
 	// see .hbm.xml file
 	private final Integer id;
-	
+
 	@SuppressWarnings("unused")
 	// see .hbm.xml file
 	private final LoanBO loan;
+
 	private final CustomerBO customer;
+
 	private String customerName;
+
 	private CustomerBO parentCustomer;
+
 	private final OfficeBO office;
+
 	private Short daysInArrears;
+
 	private Money overduePrincipal;
+
 	private Money overdueInterest;
+
 	private Money overdueBalance;
+
 	private Money unpaidPrincipal;
+
 	private Money unpaidInterest;
+
 	private Money unpaidBalance;
-	
-	protected LoanArrearsAgingEntity(){
+
+	protected LoanArrearsAgingEntity() {
 		this.id = null;
 		this.loan = null;
 		this.customer = null;
 		this.office = null;
 	}
-	
-	public LoanArrearsAgingEntity(LoanBO loan, Short daysInArrears, Money unpaidPrincipal, Money unpaidInterest, Money overduePrincipal, Money overdueInterest){
+
+	public LoanArrearsAgingEntity(LoanBO loan, Short daysInArrears,
+			Money unpaidPrincipal, Money unpaidInterest,
+			Money overduePrincipal, Money overdueInterest) {
 		this.id = null;
 		this.loan = loan;
 		this.customer = loan.getCustomer();
@@ -94,7 +107,7 @@ public class LoanArrearsAgingEntity extends PersistentObject{
 		return customerName;
 	}
 
-	public void setCustomerName(String customerName) {
+	void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
 
@@ -102,7 +115,7 @@ public class LoanArrearsAgingEntity extends PersistentObject{
 		return daysInArrears;
 	}
 
-	public void setDaysInArrears(Short daysInArrears) {
+	void setDaysInArrears(Short daysInArrears) {
 		this.daysInArrears = daysInArrears;
 	}
 
@@ -114,7 +127,7 @@ public class LoanArrearsAgingEntity extends PersistentObject{
 		return parentCustomer;
 	}
 
-	public void setParentCustomer(CustomerBO parentCustomer) {
+	void setParentCustomer(CustomerBO parentCustomer) {
 		this.parentCustomer = parentCustomer;
 	}
 
@@ -122,7 +135,7 @@ public class LoanArrearsAgingEntity extends PersistentObject{
 		return overdueBalance;
 	}
 
-	public void setOverdueBalance(Money overdueBalance) {
+	void setOverdueBalance(Money overdueBalance) {
 		this.overdueBalance = overdueBalance;
 	}
 
@@ -130,7 +143,7 @@ public class LoanArrearsAgingEntity extends PersistentObject{
 		return overdueInterest;
 	}
 
-	public void setOverdueInterest(Money overdueInterest) {
+	void setOverdueInterest(Money overdueInterest) {
 		this.overdueInterest = overdueInterest;
 	}
 
@@ -138,7 +151,7 @@ public class LoanArrearsAgingEntity extends PersistentObject{
 		return overduePrincipal;
 	}
 
-	public void setOverduePrincipal(Money overduePrincipal) {
+	void setOverduePrincipal(Money overduePrincipal) {
 		this.overduePrincipal = overduePrincipal;
 	}
 
@@ -146,7 +159,7 @@ public class LoanArrearsAgingEntity extends PersistentObject{
 		return unpaidBalance;
 	}
 
-	public void setUnpaidBalance(Money unpaidBalance) {
+	void setUnpaidBalance(Money unpaidBalance) {
 		this.unpaidBalance = unpaidBalance;
 	}
 
@@ -154,7 +167,7 @@ public class LoanArrearsAgingEntity extends PersistentObject{
 		return unpaidInterest;
 	}
 
-	public void setUnpaidInterest(Money unpaidInterest) {
+	void setUnpaidInterest(Money unpaidInterest) {
 		this.unpaidInterest = unpaidInterest;
 	}
 
@@ -162,19 +175,21 @@ public class LoanArrearsAgingEntity extends PersistentObject{
 		return unpaidPrincipal;
 	}
 
-	public void setUnpaidPrincipal(Money unpaidPrincipal) {
+	void setUnpaidPrincipal(Money unpaidPrincipal) {
 		this.unpaidPrincipal = unpaidPrincipal;
 	}
-	
-	public void update(Short daysInArrears, Money unpaidPrincipal, Money unpaidInterest, Money overduePrincipal, Money overdueInterest, CustomerBO customer){
-		this.customerName = customer.getDisplayName();
-		this.parentCustomer = customer.getParentCustomer();
-		this.daysInArrears = daysInArrears;
-		this.unpaidPrincipal = unpaidPrincipal;
-		this.unpaidInterest = unpaidInterest;
-		this.unpaidBalance = unpaidPrincipal.add(unpaidInterest);
-		this.overduePrincipal = overduePrincipal;
-		this.overdueInterest = overdueInterest;
-		this.overdueBalance = overduePrincipal.add(overdueInterest);
+
+	public void update(Short daysInArrears, Money unpaidPrincipal,
+			Money unpaidInterest, Money overduePrincipal,
+			Money overdueInterest, CustomerBO customer) {
+		setCustomerName(customer.getDisplayName());
+		setParentCustomer(customer.getParentCustomer());
+		setDaysInArrears(daysInArrears);
+		setUnpaidPrincipal(unpaidPrincipal);
+		setUnpaidInterest(unpaidInterest);
+		setUnpaidBalance(unpaidPrincipal.add(unpaidInterest));
+		setOverduePrincipal(overduePrincipal);
+		setOverdueInterest(overdueInterest);
+		setOverdueBalance(overduePrincipal.add(overdueInterest));
 	}
 }

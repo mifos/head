@@ -15,6 +15,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -88,24 +89,6 @@ public class TestCollSheetBO extends MifosTestCase {
 		assertEquals(collSheet.getCollectionSheetCustomerForCustomerId(
 				Integer.valueOf("1")).getCustId(), Integer.valueOf("1"));
 
-	}
-
-	public void testAddLoanDetailsForDisbursal() {
-		LoanBO loan = (LoanBO) createLoanAccount();
-		loan.setLoanAmount(TestObjectFactory.getMoneyForMFICurrency(100));
-		loan.setNoOfInstallments(Short.valueOf("5"));
-		InterestTypesEntity interestType = new InterestTypesEntity(InterestTypeConstants.FLATINTERST);
-		loan.setInterestType(interestType);
-		List<LoanBO> loanWithDisbursalDate = new ArrayList<LoanBO>();
-		loanWithDisbursalDate.add(loan);
-		CollectionSheetBO collSheet = new CollectionSheetBO();
-		collSheet.addLoanDetailsForDisbursal(loanWithDisbursalDate);
-		CollSheetCustBO collectionSheetCustomer = collSheet
-				.getCollectionSheetCustomerForCustomerId(group.getCustomerId());
-		assertNotNull(collectionSheetCustomer);
-		assertEquals(collectionSheetCustomer.getLoanDetailsForAccntId(
-				loan.getAccountId()).getTotalNoOfInstallments(), Short
-				.valueOf("5"));
 	}
 
 	public void testCollSheetForLoanDisbursal() throws Exception {
@@ -418,19 +401,17 @@ public class TestCollSheetBO extends MifosTestCase {
 					.getMoneyForMFICurrency(3));
 
 			accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
-
-			accntActionDate.setPenalty(TestObjectFactory
-					.getMoneyForMFICurrency(10));
-			accntActionDate.setMiscPenalty(TestObjectFactory
-					.getMoneyForMFICurrency(3));
-			accntActionDate.setMiscPenaltyPaid(TestObjectFactory
-					.getMoneyForMFICurrency(0));
-			accntActionDate.setPenaltyPaid(TestObjectFactory
-					.getMoneyForMFICurrency(5));
-			accntActionDate.setMiscFee(TestObjectFactory
-					.getMoneyForMFICurrency(5));
-			accntActionDate.setMiscFeePaid(TestObjectFactory
-					.getMoneyForMFICurrency(5));
+			TestLoanScheduleEntity.modifyData(accntActionDate,
+					TestObjectFactory.getMoneyForMFICurrency(10),
+					TestObjectFactory.getMoneyForMFICurrency(5),
+					TestObjectFactory.getMoneyForMFICurrency(3),
+					TestObjectFactory.getMoneyForMFICurrency(0),
+					TestObjectFactory.getMoneyForMFICurrency(5),
+					TestObjectFactory.getMoneyForMFICurrency(5),
+					accntActionDate.getPrincipal(), accntActionDate
+							.getPrincipalPaid(), accntActionDate.getInterest(),
+					accntActionDate.getInterestPaid());
+		
 		}
 
 		return accntActionDates;
@@ -453,24 +434,17 @@ public class TestCollSheetBO extends MifosTestCase {
 
 			accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
 
-			accntActionDate.setPenalty(TestObjectFactory
-					.getMoneyForMFICurrency(10));
-			accntActionDate.setMiscPenalty(TestObjectFactory
-					.getMoneyForMFICurrency(3));
-			accntActionDate.setPenaltyPaid(TestObjectFactory
-					.getMoneyForMFICurrency(5));
-			accntActionDate.setMiscFee(TestObjectFactory
-					.getMoneyForMFICurrency(5));
-			accntActionDate.setMiscFeePaid(TestObjectFactory
-					.getMoneyForMFICurrency(4));
-			accntActionDate.setPrincipal(TestObjectFactory
-					.getMoneyForMFICurrency(10));
-			accntActionDate.setPrincipalPaid(TestObjectFactory
-					.getMoneyForMFICurrency(5));
-			accntActionDate.setInterest(TestObjectFactory
-					.getMoneyForMFICurrency(2));
-			accntActionDate.setInterestPaid(TestObjectFactory
-					.getMoneyForMFICurrency(1));
+			TestLoanScheduleEntity.modifyData(accntActionDate,
+					TestObjectFactory.getMoneyForMFICurrency(10),
+					TestObjectFactory.getMoneyForMFICurrency(5),
+					TestObjectFactory.getMoneyForMFICurrency(3),
+					TestObjectFactory.getMoneyForMFICurrency(0),
+					TestObjectFactory.getMoneyForMFICurrency(5),
+					TestObjectFactory.getMoneyForMFICurrency(4),
+					TestObjectFactory.getMoneyForMFICurrency(10),
+					TestObjectFactory.getMoneyForMFICurrency(5),
+					TestObjectFactory.getMoneyForMFICurrency(2),
+					TestObjectFactory.getMoneyForMFICurrency(1));
 			accntActionDates.add(accntActionDate);
 		}
 		return accntActionDates;

@@ -196,24 +196,6 @@ public class TestCustomerBO extends MifosTestCase {
 				.getDelinquentPortfolioAmount());
 	}
 
-	public void testLoanPerfObject() throws PersistenceException {
-		Date currentDate = new Date(System.currentTimeMillis());
-		createInitialObjects();
-		accountBO = getLoanAccount(client, meeting);
-		LoanBO loanBO = (LoanBO) accountBO;
-		LoanPerformanceHistoryEntity loanPerformanceHistory = loanBO
-				.getPerformanceHistory();
-		loanPerformanceHistory.setNoOfPayments(Integer.valueOf("3"));
-		loanPerformanceHistory.setLoanMaturityDate(currentDate);
-		TestObjectFactory.updateObject(loanBO);
-		loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO
-				.getAccountId());
-		assertEquals(Integer.valueOf("3"), loanBO.getPerformanceHistory()
-				.getNoOfPayments());
-		assertEquals(currentDate, loanBO.getPerformanceHistory()
-				.getLoanMaturityDate());
-	}
-
 	public void testGetBalanceForAccountsAtRisk() throws PersistenceException {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);

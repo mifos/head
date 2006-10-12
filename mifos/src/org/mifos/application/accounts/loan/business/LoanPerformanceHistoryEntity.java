@@ -40,7 +40,7 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 		return loanMaturityDate;
 	}
 
-	public void setLoanMaturityDate(Date loanMaturityDate) {
+	void setLoanMaturityDate(Date loanMaturityDate) {
 		this.loanMaturityDate = loanMaturityDate;
 	}
 
@@ -48,7 +48,7 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 		return noOfPayments;
 	}
 
-	public void setNoOfPayments(Integer noOfPayments) {
+	void setNoOfPayments(Integer noOfPayments) {
 		this.noOfPayments = noOfPayments;
 	}
 	

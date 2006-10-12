@@ -50,6 +50,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionForm;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -63,6 +66,7 @@ import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
@@ -100,6 +104,7 @@ import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -235,7 +240,7 @@ public class LoanBO extends AccountBO {
 		return gracePeriodType;
 	}
 
-	public void setGracePeriodType(GracePeriodTypeEntity gracePeriodType) {
+	void setGracePeriodType(GracePeriodTypeEntity gracePeriodType) {
 		this.gracePeriodType = gracePeriodType;
 	}
 
@@ -243,7 +248,7 @@ public class LoanBO extends AccountBO {
 		return disbursementDate;
 	}
 
-	public void setDisbursementDate(Date disbursementDate) {
+	void setDisbursementDate(Date disbursementDate) {
 		this.disbursementDate = disbursementDate;
 	}
 
@@ -259,7 +264,7 @@ public class LoanBO extends AccountBO {
 		return gracePeriodDuration;
 	}
 
-	public void setGracePeriodDuration(Short gracePeriodDuration) {
+	void setGracePeriodDuration(Short gracePeriodDuration) {
 		this.gracePeriodDuration = gracePeriodDuration;
 	}
 
@@ -267,7 +272,7 @@ public class LoanBO extends AccountBO {
 		return gracePeriodPenalty;
 	}
 
-	public void setGracePeriodPenalty(Short gracePeriodPenalty) {
+	void setGracePeriodPenalty(Short gracePeriodPenalty) {
 		this.gracePeriodPenalty = gracePeriodPenalty;
 	}
 
@@ -283,7 +288,7 @@ public class LoanBO extends AccountBO {
 		return interestRate;
 	}
 
-	public void setInterestRate(Double interestRate) {
+	void setInterestRate(Double interestRate) {
 		this.interestRate = interestRate;
 	}
 
@@ -291,7 +296,7 @@ public class LoanBO extends AccountBO {
 		return interestType;
 	}
 
-	public void setInterestType(InterestTypesEntity interestType) {
+	void setInterestType(InterestTypesEntity interestType) {
 		this.interestType = interestType;
 	}
 
@@ -301,7 +306,7 @@ public class LoanBO extends AccountBO {
 				.shortValue()) ? true : false;
 	}
 
-	public void setInterestDeductedAtDisbursement(boolean interestDedAtDisb) {
+	void setInterestDeductedAtDisbursement(boolean interestDedAtDisb) {
 		this.intrestAtDisbursement = interestDedAtDisb ? Constants.YES
 				: Constants.NO;
 	}
@@ -310,7 +315,7 @@ public class LoanBO extends AccountBO {
 		return loanAmount;
 	}
 
-	public void setLoanAmount(Money loanAmount) {
+	void setLoanAmount(Money loanAmount) {
 		this.loanAmount = loanAmount;
 	}
 
@@ -318,7 +323,7 @@ public class LoanBO extends AccountBO {
 		return loanBalance;
 	}
 
-	public void setLoanBalance(Money loanBalance) {
+	void setLoanBalance(Money loanBalance) {
 		this.loanBalance = loanBalance;
 	}
 
@@ -326,7 +331,7 @@ public class LoanBO extends AccountBO {
 		return loanMeeting;
 	}
 
-	public void setLoanMeeting(MeetingBO loanMeeting) {
+	void setLoanMeeting(MeetingBO loanMeeting) {
 		this.loanMeeting = loanMeeting;
 	}
 
@@ -342,7 +347,7 @@ public class LoanBO extends AccountBO {
 		return noOfInstallments;
 	}
 
-	public void setNoOfInstallments(Short noOfInstallments) {
+	void setNoOfInstallments(Short noOfInstallments) {
 		this.noOfInstallments = noOfInstallments;
 	}
 
@@ -392,14 +397,14 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void updateTotalFeeAmount(Money totalFeeAmount) {
+	protected void updateTotalFeeAmount(Money totalFeeAmount) {
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
 		loanSummaryEntity.setOriginalFees(loanSummaryEntity.getOriginalFees()
 				.subtract(totalFeeAmount));
 	}
 
 	@Override
-	public void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
+	protected void updateTotalPenaltyAmount(Money totalPenaltyAmount) {
 		LoanSummaryEntity loanSummaryEntity = this.getLoanSummary();
 		loanSummaryEntity.setOriginalPenalty(loanSummaryEntity
 				.getOriginalPenalty().subtract(totalPenaltyAmount));
@@ -440,7 +445,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public void updateAccountActivity(Money principal, Money interest,
+	protected void updateAccountActivity(Money principal, Money interest,
 			Money fee, Money penalty, Short personnelId, String description)
 			throws AccountException {
 		try {
@@ -528,7 +533,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	public Money updateAccountActionDateEntity(List<Short> intallmentIdList,
+	protected Money updateAccountActionDateEntity(List<Short> intallmentIdList,
 			Short feeId) {
 		Money totalFeeAmount = new Money();
 		Set<AccountActionDateEntity> accountActionDateEntitySet = this
@@ -836,7 +841,7 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	public void waiveFeeAmountDue() throws AccountException {
+	private void waiveFeeAmountDue() throws AccountException {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
 				.get(accountActionDateList.size() - 1);
@@ -853,7 +858,7 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	public void waivePenaltyAmountDue() throws AccountException {
+	private void waivePenaltyAmountDue() throws AccountException {
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDateList
 				.get(accountActionDateList.size() - 1);
@@ -870,7 +875,7 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	public void waiveFeeAmountOverDue() throws AccountException {
+	private void waiveFeeAmountOverDue() throws AccountException {
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
@@ -891,7 +896,7 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	public void waivePenaltyAmountOverDue() throws AccountException {
+	private void waivePenaltyAmountOverDue() throws AccountException {
 		Money chargeWaived = new Money();
 		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
 		accountActionDateList.remove(accountActionDateList.size() - 1);
@@ -966,7 +971,30 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	public void updateLoan() throws AccountException {
+	public void updateLoan(Boolean interestDeductedAtDisbursment,Money loanAmount,
+			Double interestRate,Short noOfInstallments,Date disbursmentDate,
+			Short gracePeriodDuration,Integer businessActivityId,String collateralNote,
+			CollateralTypeEntity collateralTypeEntity) throws AccountException {
+		if (interestDeductedAtDisbursment){
+			try {
+				setGracePeriodType((GracePeriodTypeEntity) new MasterPersistence().retrieveMasterEntity(				
+								GraceTypeConstants.NONE.getValue(),
+								GracePeriodTypeEntity.class,getUserContext().getLocaleId()));
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}
+		}else
+			setGracePeriodType(getLoanOffering()
+					.getGracePeriodType());
+		setLoanAmount(loanAmount);
+		setInterestRate(interestRate);
+		setNoOfInstallments(noOfInstallments);
+		setDisbursementDate(disbursmentDate);
+		setGracePeriodDuration(gracePeriodDuration);
+		setInterestDeductedAtDisbursement(interestDeductedAtDisbursment);
+		setBusinessActivityId(businessActivityId);
+		setCollateralNote(collateralNote);
+		setCollateralType(collateralTypeEntity);
 		if (getAccountState().getId().equals(
 				AccountState.LOANACC_APPROVED.getValue())
 				|| getAccountState().getId().equals(
@@ -982,7 +1010,7 @@ public class LoanBO extends AccountBO {
 		}
 		update();
 	}
-
+	
 	public Short getDaysInArrears() {
 		Short daysInArrears = 0;
 		if (getAccountState().getId().equals(

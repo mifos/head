@@ -345,6 +345,12 @@ public class LoanAccountActionForm extends BaseActionForm {
 		}
 		return (FeeView) (defaultFees.get(i));
 	}
+	
+	public Boolean isInterestDeductedAtDisbursment(){
+		if(getIntDedDisbursement().equals("1"))
+			return true;
+		return false;
+	}
 
 	public List<FeeView> getFeesToApply() {
 		List<FeeView> feesToApply = new ArrayList<FeeView>();

@@ -79,65 +79,7 @@ public class TestAccountBO extends TestAccount {
 	public TestAccountBO() {
 	}
 
-	public void testSuccessRemoveFees() throws Exception {
-		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
-				accountBO.getAccountId());
-		UserContext uc = TestObjectFactory.getUserContext();
-		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
-				.getAccountFees();
-		((LoanBO) accountBO).getLoanOffering().setPrinDueLastInst(false);
-		for (AccountActionDateEntity accountActionDateEntity : accountBO
-				.getAccountActionDates()) {
-			if (accountActionDateEntity.getInstallmentId().equals(
-					Short.valueOf("2")))
-				((LoanScheduleEntity) accountActionDateEntity)
-						.setMiscFee(new Money("20.3"));
-		}
-		Iterator itr = accountFeesEntitySet.iterator();
-		while (itr.hasNext())
-			accountBO.removeFees(((AccountFeesEntity) itr.next()).getFees()
-					.getFeeId(), uc.getId());
-
-		HibernateUtil.getTransaction().commit();
-		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
-			assertEquals(accountFeesEntity.getFeeStatus(),
-					AccountConstants.INACTIVE_FEES);
-		}
-		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
-				.getLoanSummary();
-		for (LoanActivityEntity accountNonTrxnEntity : ((LoanBO) accountBO)
-				.getLoanActivityDetails()) {
-			assertEquals(loanSummaryEntity.getOriginalFees().subtract(
-					loanSummaryEntity.getFeesPaid()), accountNonTrxnEntity
-					.getFeeOutstanding());
-			assertEquals(loanSummaryEntity.getOriginalPrincipal().subtract(
-					loanSummaryEntity.getPrincipalPaid()), accountNonTrxnEntity
-					.getPrincipalOutstanding());
-			assertEquals(loanSummaryEntity.getOriginalInterest().subtract(
-					loanSummaryEntity.getInterestPaid()), accountNonTrxnEntity
-					.getInterestOutstanding());
-			assertEquals(loanSummaryEntity.getOriginalPenalty().subtract(
-					loanSummaryEntity.getPenaltyPaid()), accountNonTrxnEntity
-					.getPenaltyOutstanding());
-			break;
-		}
-		for (AccountActionDateEntity accountActionDate : accountBO
-				.getAccountActionDates()) {
-			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-			if (accountActionDate.getInstallmentId().equals(Short.valueOf("2")))
-				assertEquals(new Money("133.0"), loanScheduleEntity
-						.getTotalDueWithFees());
-			else if (loanScheduleEntity.getInstallmentId().equals(
-					Short.valueOf("6")))
-				assertEquals(new Money("111.3"), loanScheduleEntity
-						.getTotalDueWithFees());
-			else 
-				assertEquals(new Money("112.0"), loanScheduleEntity
-						.getTotalDueWithFees());
-		}
-
-	}
+	
 
 	public void testFailureRemoveFees() {
 		try {
@@ -157,15 +99,7 @@ public class TestAccountBO extends TestAccount {
 		}
 	}
 
-	public void testSuccessUpdateTotalFeeAmount() {
-		LoanBO loanBO = (LoanBO) accountBO;
-		LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
-		Money orignalFeesAmount = loanSummaryEntity.getOriginalFees();
-		loanBO.updateTotalFeeAmount(new Money(TestObjectFactory
-				.getMFICurrency(), "20"));
-		assertEquals(loanSummaryEntity.getOriginalFees(), (orignalFeesAmount
-				.subtract(new Money(TestObjectFactory.getMFICurrency(), "20"))));
-	}
+	
 
 	public void testSuccessUpdateAccountActionDateEntity() {
 		List<Short> installmentIdList;

@@ -8,6 +8,8 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.business.CustomerAccountBO;
+import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -19,10 +21,13 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;
 import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -180,8 +185,15 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 		nextInstallment.addAccountFeesAction(accountFeesaction);
 		String description = fee.getFees().getFeeName() + " "
 				+ AccountConstants.FEES_APPLIED;
-		accountBO.updateAccountActivity(null, null, fee.getAccountFeeAmount(),
-				null, Short.valueOf("1"), description);
-
+		try {
+			((CustomerAccountBO) accountBO)
+					.addCustomerActivity(new CustomerActivityEntity(
+							(CustomerAccountBO) accountBO,
+							new PersonnelPersistence().getPersonnel(Short
+									.valueOf("1")), fee.getAccountFeeAmount(),
+							description, new Date(System.currentTimeMillis())));
+		}catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 }
