@@ -1,1 +1,1 @@
-insert into interest_types values (2, 80, 1, 'Declining')
+insert into INTEREST_TYPES values (2, 80, 1, 'Declining')
