@@ -17,6 +17,8 @@ import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -130,6 +132,16 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		
+	}
+	
+	public void testValidate() throws Exception {
+		setRequestPathInfo("/applyChargeAction.do");
+		addRequestParameter("method", "validate");
+		request.setAttribute("methodCalled", "update");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.update_failure.toString());
 	}
 	
 	private void createInitialObjects() {
