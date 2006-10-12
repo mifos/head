@@ -222,5 +222,7 @@ public interface ProductDefinitionConstants {
 	public String DORMANCY_DAYS = "dormancy_days";
 	public String DORMANCYDAYS ="dormancy days";
 	public String LATENESSDAYS = "lateness days";
+	public String MAX_DAYS="product.maxDays";
+	public String ERROR_MAX_DAYS="errors.maxValue";
 }
 

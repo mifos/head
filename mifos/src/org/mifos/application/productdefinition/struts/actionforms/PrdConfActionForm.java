@@ -51,10 +51,20 @@ public class PrdConfActionForm extends BaseActionForm {
 				addError(errors, "latenessDays",
 						ProductDefinitionConstants.ERROR_MANDATORY,
 						ProductDefinitionConstants.LATENESSDAYS);
+			else if (getIntegerValue(getLatenessDays()) > 32767)
+				addError(errors, "latenessDays",
+						ProductDefinitionConstants.ERROR_MAX_DAYS,
+						ProductDefinitionConstants.LATENESSDAYS,
+						ProductDefinitionConstants.MAX_DAYS);
 			if (StringUtils.isNullOrEmpty(getDormancyDays()))
 				addError(errors, "dormancyDays",
 						ProductDefinitionConstants.ERROR_MANDATORY,
 						ProductDefinitionConstants.DORMANCYDAYS);
+			else if (getIntegerValue(getDormancyDays()) > 32767)
+				addError(errors, "dormancyDays",
+						ProductDefinitionConstants.ERROR_MAX_DAYS,
+						ProductDefinitionConstants.DORMANCYDAYS,
+						ProductDefinitionConstants.MAX_DAYS);
 		}
 		if (!method.equals(Methods.validate.toString()))
 			request.setAttribute("methodCalled", method);

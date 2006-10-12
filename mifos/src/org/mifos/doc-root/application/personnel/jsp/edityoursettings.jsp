@@ -100,7 +100,7 @@
 									<td width="68%"><mifos:mifosalphanumtext
 										name="PersonnelSettingsActionForm"
 										property="firstName"
-										
+										maxlength="100"
 										value="${form.firstName}" />
 									</td>
 								</tr>
@@ -108,7 +108,7 @@
 									<td align="right"><mifos:mifoslabel name="Personnel.MiddleName" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="middleName"
-              									 
+              							maxlength="100"
 										value="${form.middleName}" />
 									</td>
 								</tr>
@@ -117,6 +117,7 @@
 										name="Personnel.SecondLastName" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="secondLastName"
+										maxlength="100"
 										value="${form.secondLastName}" />
 									</td>
 								</tr>
@@ -126,6 +127,7 @@
 										mandatory="yes" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="lastName"
+										maxlength="100"
 										value="${form.lastName}" />
 									</td>
 								</tr>
@@ -142,6 +144,7 @@
 									<td align="right"><mifos:mifoslabel name="Personnel.Email" /></td>
 									<td><mifos:mifosalphanumtext property="emailId"
 										name="PersonnelSettingsActionForm"
+										maxlength="255"
 										value="${form.emailId}" /></td>
 								</tr>
 								<tr class="fontnormal">
@@ -219,7 +222,8 @@
 									<td width="68%"><mifos:mifosalphanumtext
 										name="PersonnelSettingsActionForm"
 										property="address.line1"
-										value="${form.address.line1}" />
+										value="${form.address.line1}" 
+										maxlength="200" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -227,7 +231,8 @@
 										name="${ConfigurationConstants.ADDRESS2}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.line2"
-										value="${form.address.line2}" />
+										value="${form.address.line2}" 
+										maxlength="200" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -235,7 +240,8 @@
 										name="${ConfigurationConstants.ADDRESS3}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.line3"
-										value="${form.address.line3}" />
+										value="${form.address.line3}" 
+										maxlength="200" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -243,21 +249,24 @@
 										name="${ConfigurationConstants.CITY}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.city"
-										value="${form.address.city}" /></td>
+										value="${form.address.city}" 
+										maxlength="100" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="${ConfigurationConstants.STATE}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.state"
-										value="${form.address.state}" />
+										value="${form.address.state}" 
+										maxlength="100" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.Country" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.country"
-										value="${form.address.country}" />
+										value="${form.address.country}" 
+										maxlength="100" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
@@ -265,14 +274,16 @@
 										name="${ConfigurationConstants.POSTAL_CODE}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.zip"
-										value="${form.address.zip}" />
+										value="${form.address.zip}" 
+										maxlength="100" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.Telephone" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.phoneNumber"
-										value="${form.address.phoneNumber}" />
+										value="${form.address.phoneNumber}" 
+										maxlength="20" />
 									</td>
 								</tr>
 							</table>
