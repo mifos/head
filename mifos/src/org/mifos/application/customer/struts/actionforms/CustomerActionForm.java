@@ -427,7 +427,6 @@ public abstract class CustomerActionForm extends BaseActionForm{
 
 	protected void validateForFeeRecurrence(HttpServletRequest request, ActionErrors errors)throws ApplicationException{
 		MeetingBO meeting = getCustomerMeeting(request);
-
 		if(meeting!=null){
 			List<FeeView> feeList = getDefaultFees();
 			for(FeeView fee: feeList){
@@ -456,6 +455,12 @@ public abstract class CustomerActionForm extends BaseActionForm{
 
 	}
 	private void validateForFeeAssignedWithoutMeeting(HttpServletRequest request , ActionErrors errors)throws ApplicationException{
+		for(int i=0; i < defaultFees.size();i++){
+			//if an already checked fee is unchecked then the value set to 0
+			if(request.getParameter("defaultFee["+i+"].feeRemoved")==null){
+				defaultFees.get(i).setFeeRemoved(YesNoFlag.NO.getValue());
+			}
+		}
 		MeetingBO meeting = getCustomerMeeting(request);
 		if(meeting==null && getFeesToApply().size() > 0){
 			errors.add(CustomerConstants.MEETING_REQUIRED_EXCEPTION,new ActionMessage(CustomerConstants.MEETING_REQUIRED_EXCEPTION));

@@ -564,10 +564,7 @@ public class PersonnelBO extends BusinessObject {
 					&& newLevel.equals(PersonnelLevel.LOAN_OFFICER)) {
 				if (new PersonnelPersistence().getActiveChildrenForLoanOfficer(
 						personnelId, office.getOfficeId())) {
-					Object values[] = new Object[1];
-					values[0] = globalPersonnelNum;
-					throw new PersonnelException(
-							PersonnelConstants.STATUS_CHANGE_EXCEPTION, values);
+					throw new PersonnelException(PersonnelConstants.STATUS_CHANGE_EXCEPTION);
 				}
 			} else if (status.getId().equals(
 					PersonnelStatus.INACTIVE.getValue())
