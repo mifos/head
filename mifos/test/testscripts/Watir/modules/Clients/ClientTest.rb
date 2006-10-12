@@ -864,7 +864,7 @@ class ClientCreateEdit<TestClass
   
   def submit_data(nstatus)
     begin
-     # puts "nstatus=>"+nstatus.to_s
+
       $ie.button(:value,nstatus).click
       @@client_success=@@clientprop['client.ConfirmationMessage']+" "+@@lookup_name_client
       assert($ie.contains_text(@@client_success))
@@ -1099,6 +1099,7 @@ class ClientCreateEdit<TestClass
   
   def fee_select_one_by_one()
     begin
+
       #search_res=$dbh.real_query("select * from fees where category_id=2 and default_admin_fee='no' and status=1")
       search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=(select recurrence_id from recurrence_detail a ,customer_meeting cm where a.meeting_id=cm.meeting_id and customer_id = "+@@customer_id+") and a.fee_id not in (select fee_id from feelevel) and a.category_id in (1,2) and status=1 group by a.fee_id")
       dbresult1=search_res.fetch_row.to_a
@@ -1527,11 +1528,7 @@ class ClientCreateEdit<TestClass
       select_office()
       client_create_with_all_data(nsalutation,nfname,nmname,nsname,nlname,ngovtid,ndate,nmonth,nyear,ngender,npovertystatus,nmstatus,nnoofchildren,nreligion,neducation,nsorftype,nsorffname,nsorfmname,nsorfsname,nsorflname,naddress1,naddress2,naddress3,ncity,nstate,ncountry,npcode,nphone,ncustom)
       click_continue() 
-      if(@frequncymeeting.to_i==2) then # for month
-        client_create_enter_all_data_mfi(nexternalid,ntdate,ntmonth,ntyear)
-      elsif(@frequncymeeting.to_i==1) then # for week
-        client_create_enter_all_data_mfi_outofgroup(nexternalid,ntdate,ntmonth,ntyear)
-      end
+    client_create_enter_all_data_mfi_outofgroup(nexternalid,ntdate,ntmonth,ntyear)
     rescue =>excp
       quit_on_error(excp)   
     end
@@ -1548,7 +1545,7 @@ class ClientCreateEdit<TestClass
       $ie.text_field(:name,"trainedDateMM").set(ntmonth)      
       $ie.text_field(:name,"trainedDateYY").set(ntyear)
       fee_select_one_by_one_outofgroup()
-    rescue =>excp
+      rescue =>excp
       quit_on_error(excp) 
     end
   end
@@ -1566,7 +1563,8 @@ class ClientCreateEdit<TestClass
   # selecting fee for clients out of group
   def   fee_select_one_by_one_outofgroup()
     begin
-      search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=1 and a.fee_id not in (select fee_id from feelevel) and category_id in (1,2) and status=1 group by a.fee_id")
+  
+    search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id="+@frequncymeeting+" and a.fee_id not in (select fee_id from feelevel) and category_id in (1,2) and status=1 group by a.fee_id")
       dbresult1=search_res.fetch_row.to_a
       row1=search_res.num_rows()
       rowf=0
@@ -1620,8 +1618,10 @@ class ClientCreateEdit<TestClass
   #Checking that create client with out admin fee
   def client_create_remove_admin_fee_from_review_page()
     begin
+
       $ie.button(:value,@@clientprop['button.previousMFIInfo']).click
-      search_fee=$dbh.real_query("select * from fees where category_id=2 and default_admin_fee='yes' and status=1")
+      #search_fee=$dbh.real_query("select * from fees where category_id=2 and default_admin_fee='yes' and status=1")
+      search_fee=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id="+@frequncymeeting+" and a.fee_id not in (select fee_id from feelevel) and a.category_id in (1,2) and status=1 group by a.fee_id")
       dbresult1=search_fee.fetch_row.to_a
       no_of_fee=search_fee.num_rows()
       rowf=0
@@ -1631,7 +1631,7 @@ class ClientCreateEdit<TestClass
         while (rowf < no_of_fee)
           fee_id=dbresult1[0]
           $ie.checkbox(:name,"adminFee["+String(rowf)+"].checkedFee")
-          dbresult1=search_res.fetch_row.to_a
+          dbresult1=search_fee.fetch_row.to_a
           rowf+=1
         end
       end     
@@ -1728,11 +1728,11 @@ def check_applyfee()
     count=count_records("select count(global_cust_num) from customer where customer_id in (select distinct customer_id from account a, customer_account ca where a.account_id=ca.account_id and a.account_id   in (select distinct account_id from account_fees where fee_status=2)) and CUSTOMER_LEVEL_ID = 1 and status_id in (1,2,3,4)")
     if(count.to_i>0) then
       applycharges()
-      check_blueband_links
+      check_blueband_links("Client-Apply Charges")
     else
     applycustomerfee()
     applycharges()
-    check_blueband_links
+    check_blueband_links("Client-Apply Charges")
     end #end if    
     
   end # end of check_applyfee function
@@ -1768,7 +1768,7 @@ def check_applyfee()
           rescue =>excp
            quit_on_error(excp)
         end
-       click_removeFee
+      # click_removeFee
   end #end of applycharges
 
 # function to apply fees to a cutomer in this case its a member added by Dilip on 1/10/2006
@@ -1802,8 +1802,7 @@ def check_applyfee()
   end
   
   #function added as part of bug#577 by Dilip on 1/10/2006
-def check_blueband_links
-
+def check_blueband_links(section)
     #query which retreives the group/center of the given client.
     dbquery("select ch1.display_name as kendra,ch2.display_name as grp,ch3.display_name as member from customer ch3 join customer ch2 on ch3.parent_customer_id=ch2.customer_id join  customer ch1 on ch2.parent_customer_id=ch1.customer_id where ch3.global_cust_num='"+@@global_cust_num+"'")
     @kendraname=dbresult[0]
@@ -1811,32 +1810,35 @@ def check_blueband_links
     @membername=dbresult[2]
     
     begin
+     testCase="Center name check-"+section.to_s
       assert($ie.contains_text(@kendraname))
-      $logger.log_results("Bug#577- Issue3-Center name check","Center name to be present on the blue band","Center name present on the blue band","passed")
+      $logger.log_results(testCase,"Center name to be present on the blue band","Center name present on the blue band","passed")
       rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Bug#577- Issue3-Center name check","Center name to be present on the blue band","Center name not present on the blue band","failed")
+      $logger.log_results(testCase,"Center name to be present on the blue band","Center name not present on the blue band","failed")
     end
     
-    begin    
+    begin  
+     testCase="Group name check-"+section.to_s
       assert($ie.contains_text(@groupname))
-      $logger.log_results("Bug#577- Issue3-Group name check","Group name to be present on the blue band","Group name present on the blue band","passed")
+      $logger.log_results(testCase,"Group name to be present on the blue band","Group name present on the blue band","passed")
       rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Bug#577- Issue3-Group name check","Group name to be present on the blue band","Group name not present on the blue band","failed")
+      $logger.log_results(testCase,"Group name to be present on the blue band","Group name not present on the blue band","failed")
     end
     
     begin
+      testCase="Member name check-"+section.to_s
       assert($ie.contains_text(@membername))
-      $logger.log_results("Bug#577- Issue3-Member name check","Member name to be present on the blue band","Member name present on the blue band","passed")
+      $logger.log_results(testCase,"Member name to be present on the blue band","Member name present on the blue band","passed")
       rescue Test::Unit::AssertionFailedError=>e
-      $logger.log_results("Bug#577- Issue3-Member name check","Member name to be present on the blue band","Member name not present on the blue band","failed")
+      $logger.log_results(testCase,"Member name to be present on the blue band","Member name not present on the blue band","failed")
     end
-    
+
+   testCase="Member name link check-"+section.to_s    
     $ie.link(:text,@membername).click
-    
     assert($ie.contains_text("Edit Member status"))
-    $logger.log_results("Bug#577- Issue3-Click on Member link","should work","should work","passed")            
+    $logger.log_results(testCase,"should work","should work","passed")            
     rescue Test::Unit::AssertionFailedError=>e
-    $logger.log_results("Bug#577- Issue3-Click on Member link","should work","should not work","failed")
+    $logger.log_results(testCase,"should work","should not work","failed")
     rescue =>excp
     quit_on_error(excp)
     
@@ -1888,7 +1890,7 @@ def apply_miscfees(fee_type)
       display_name=dbresult[3]
       customerid=dbresult[1]
       #To get all periodic  fees
-      dbquery("select  a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id=(select recurrence_id from recurrence_detail a ,customer_meeting cm where a.meeting_id=cm.meeting_id and customer_id = "+customerid+") and a.fee_id not in (select fee_id from feelevel) and a.category_id in (1,2) and status=1 group by a.fee_id")
+      dbquery("select  a.fee_id,a.fee_name,c.recurrence_id from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and b.fee_frequencytype_id=1 and c.recurrence_id=(select recurrence_id from recurrence_detail a ,customer_meeting cm where a.meeting_id=cm.meeting_id and customer_id = "+customerid+") and a.fee_id not in (select fee_id from feelevel) and a.category_id in (1,2) and status=1 group by a.fee_id")
       periodicfeeid=dbresult[0]
       search_client(newmemberCustomerNum) 
       $ie.link(:text,display_name+": ID "+newmemberCustomerNum).click
@@ -1928,7 +1930,7 @@ def apply_miscfees(fee_type)
       quit_on_error(excp)
       end
     
-    check_blueband_links
+    check_blueband_links("Client-Apply Charges-View all account activity")
     
   end
   
@@ -1959,6 +1961,17 @@ def apply_miscfees(fee_type)
      
   end  #end of function Group_Performance_Metrics
 
+def check_bluebandlink_view_all_account_activity()
+  dbquery("select global_cust_num,display_name from customer where parent_customer_id is not null and customer_level_id=1")
+  @@global_cust_num=dbresult[0]
+  display_name=dbresult[1]
+  search_client(@@global_cust_num)
+ $ie.link(:text,display_name.strip()+": ID "+@@global_cust_num).click  
+ $ie.link(:text,@@view_details).click
+ $ie.link(:text,@@view_all_account_activity).click
+ check_blueband_links("Client-View all account activity")
+ 
+end
   end # end of class
 
 
@@ -1977,7 +1990,7 @@ class ClientTest
   clientobject.select_grouppage_check
   clientobject.click_cancel_from_group_select
   clientobject.no_groups_while_search
- clientobject.check_next_link_in_search_group_page
+  clientobject.check_next_link_in_search_group_page
   clientobject.check_previous_link_in_search_group_page
   clientobject.select_group
   clientobject.check_all_mandatory_fields_for_client
@@ -2139,6 +2152,9 @@ class ClientTest
    clientobject.click_Applycharges_View_all_account_activity()
    #added by Dilip as part of Bug#728
    clientobject.check_Group_Performance_Metrics()
+   
+   #added as part of bug#631
+   clientobject.check_bluebandlink_view_all_account_activity()
    
   clientobject.mifos_logout
 end
