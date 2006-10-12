@@ -1,12 +1,14 @@
 package org.mifos.application.accounts.loan.persistence;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -15,11 +17,22 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.application.productdefinition.business.ProductCategoryBO;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanPersistence extends MifosTestCase {
@@ -174,6 +187,14 @@ public class TestLoanPersistence extends MifosTestCase {
 						.getLastPaymentAction(loanAccountForDisbursement
 								.getAccountId()));
 	}
+	
+	public void testGetLoanOffering() throws Exception {
+		LoanOfferingBO loanOffering = getCompleteLoanOfferingObject();
+		LoanOfferingBO loanOfferingBO = loanPersistence.getLoanOffering(loanOffering.getPrdOfferingId(),
+				TestObjectFactory.getUserContext().getLocaleId());
+		assertEquals(loanOfferingBO.getPrdOfferingId(),loanOffering.getPrdOfferingId());
+		TestObjectFactory.removeObject(loanOfferingBO);
+	}
 
 	private void disburseLoan(Date startDate) throws Exception {
 		((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate,
@@ -218,6 +239,37 @@ public class TestLoanPersistence extends MifosTestCase {
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				Short.valueOf("5"), startDate, loanOffering);
 
+	}
+	
+	private LoanOfferingBO getCompleteLoanOfferingObject() throws Exception {
+		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
+				PrdApplicableMaster.GROUPS);
+		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil
+				.getSessionTL().get(GLCodeEntity.class, (short) 7);
+		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
+				.getSessionTL().get(GLCodeEntity.class, (short) 7);
+		ProductCategoryBO productCategory = TestObjectFactory
+				.getLoanPrdCategory();
+		InterestTypesEntity interestTypes = new InterestTypesEntity(
+				InterestTypeConstants.FLATINTERST);
+		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
+				GraceTypeConstants.GRACEONALLREPAYMENTS);
+		List<FeeBO> fees = new ArrayList<FeeBO>();
+		List<FundBO> funds = new ArrayList<FundBO>();
+		FundBO fundBO = (FundBO) HibernateUtil.getSessionTL().get(FundBO.class,
+				Short.valueOf("2"));
+		funds.add(fundBO);
+		LoanOfferingBO loanOfferingBO = new LoanOfferingBO(TestObjectFactory
+				.getContext(), "Loan Offering", "LOAP", productCategory,
+				prdApplicableMaster, new Date(System.currentTimeMillis()), null, null, gracePeriodType,
+				(short) 2, interestTypes, new Money("1000"), new Money("3000"),
+				new Money("2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
+				(short) 17, false, false, false, funds, fees, frequency,
+				principalglCodeEntity, intglCodeEntity);
+		loanOfferingBO.save();
+		return loanOfferingBO;
 	}
 
 }

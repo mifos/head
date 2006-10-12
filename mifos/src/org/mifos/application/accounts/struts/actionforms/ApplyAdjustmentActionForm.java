@@ -43,6 +43,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
+import org.mifos.framework.util.helpers.Constants;
 
 /**
  * This class is the action form for Applying adjustments.
@@ -95,7 +96,8 @@ public class ApplyAdjustmentActionForm extends ValidatorActionForm {
 	}
 	
 	public ActionErrors validate(ActionMapping actionMapping,HttpServletRequest request){
-		
+		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 		ActionErrors actionErrors = new ActionErrors();
 		if(null != request.getParameter("method") && request.getParameter("method").equals("previewAdjustment")){
 			if(!adjustcheckbox){

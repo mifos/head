@@ -1071,7 +1071,9 @@ public class AccountBO extends BusinessObject {
 
 	private void setFinancialEntries(FinancialTransactionBO financialTrxn,
 			TransactionHistoryView transactionHistory) {
-		String debit = "-", credit = "-", notes = "-";
+		String debit = "-";
+		String credit = "-";
+		String notes = "-";
 		if (financialTrxn.isDebitEntry()) {
 			debit = String.valueOf(removeSign(financialTrxn.getPostedAmount()));
 		} else if (financialTrxn.isCreditEntry()) {
@@ -1084,7 +1086,11 @@ public class AccountBO extends BusinessObject {
 		if (financialTrxn.getAccountTrxn().getAccountActionEntity().getId()
 				.equals(
 						AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT
-								.getValue()))
+								.getValue()) || 
+					financialTrxn.getAccountTrxn().getAccountActionEntity().getId()
+								.equals(
+										AccountActionTypes.LOAN_REPAYMENT
+												.getValue()))
 			notes = "-";
 		transactionHistory.setFinancialEnteries(financialTrxn.getTrxnId(),
 				financialTrxn.getActionDate(), financialTrxn

@@ -40,7 +40,6 @@ public class AuditPersistence extends Persistence {
 		Map<Object, Object> queryParameter = new HashMap<Object, Object>();
 		queryParameter.put("entityType", entityType);
 		queryParameter.put("entityId", entityId);
-		queryParameter.put("updatedDate", new Date(System.currentTimeMillis()));
 		return (List<AuditLog>) executeNamedQuery(
 				NamedQueryConstants.RETRIEVE_AUDIT_LOG_RECORD, queryParameter);
 	}

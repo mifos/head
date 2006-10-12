@@ -2,6 +2,7 @@ package org.mifos.application.customer.group.struts.action;
 
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.List;
 
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMovementEntity;
@@ -16,7 +17,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.components.audit.business.AuditLog;
+import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -68,7 +72,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-
+	
 	public void testLoad_transferToBranch() throws Exception {
 		loadOffices();
 		verifyForward(ActionForwards.loadBranches_success.toString());
@@ -191,6 +195,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testSuccessful_transferToCenter() throws Exception {
+		TestObjectFactory.cleanUpChangeLog();
 		loadParents();
 		HibernateUtil.closeSession();
 		
@@ -219,6 +224,16 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		CustomerHierarchyEntity customerHierarchy = group.getActiveCustomerHierarchy();
 		assertEquals(center1.getCustomerId(), customerHierarchy.getParentCustomer().getCustomerId());
 		assertEquals(group.getCustomerId(), customerHierarchy.getCustomer().getCustomerId());
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),new Integer(group.getCustomerId().toString()));
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Kendra Name")){
+				matchValues(auditLogRecord,"Center","MyCenter");
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
+
 	}
 	
 	public void testCancel() throws Exception {

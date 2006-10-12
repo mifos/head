@@ -66,18 +66,20 @@
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
-			<tr>
-				<td class="bluetablehead05">
-					<span class="fontnormal8pt"> <html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-							<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-						</html-el:link> / <html-el:link href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
-							<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
-							<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
-						</html-el:link> / </span> <span class="fontnormal8ptbold"><c:out value="${BusinessKey.prdOfferingName}" /></span>
-				</td>
-			</tr>
-		</table>
+				<tr>
+					<td class="bluetablehead05">
+						<span class="fontnormal8pt"> <html-el:link href="loanproductaction.do?method=cancelCreate&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
+							</html-el:link> / <html-el:link href="loanproductaction.do?method=viewAllLoanProducts&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
+								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
+								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
+							</html-el:link> / <html-el:link href="loanproductaction.do?method=get&prdOfferingId=${sessionScope.loanproductactionform.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
+								<c:out value="${prdOfferName}" />
+							</html-el:link></span>
+					</td>
+				</tr>
+			</table>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" height="24" align="left" valign="top"

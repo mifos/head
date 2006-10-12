@@ -52,6 +52,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
@@ -176,6 +177,19 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
 		verifyForward("previewadj_success");
+	}
+	
+	public void testPreviewAdjustment_failure()throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		loan =(LoanBO)getLoanAccount();
+		applyPayment(loan,700);
+		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
+		setRequestPathInfo("/applyAdjustment");
+		addRequestParameter("method", "previewAdjustment");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
+		verifyForward("previewAdjustment_failure");
 	}
 
 	public void testApplyAdjustment()throws Exception{

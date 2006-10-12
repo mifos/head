@@ -25,7 +25,7 @@
     </class>
    <query name="retrieveAuditLogRecords">
             <![CDATA[from org.mifos.framework.components.audit.business.AuditLog al where 
-           			 	al.entityType=:entityType and al.entityId=:entityId and al.updatedDate=:updatedDate]]>
+           			 	al.entityType=:entityType and al.entityId=:entityId order by al.id desc]]>
     </query>
    
 </hibernate-mapping>

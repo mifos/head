@@ -163,7 +163,7 @@
 		<propertyName name="customerFlagId" doNotLog="Yes" />
 		<propertyName name="meetingPlace" parentName="meeting" displayKey="Client.meeting.meetingPlace" />
 
-		<propertyName name="customerActivationDate"  displayKey="Client,Client.clientApprovalDate" />
+		<propertyName name="customerActivationDate"  doNotLog="yes" displayKey="Client,Client.clientApprovalDate" />
 
 		<propertyName name="searchId" doNotLog="yes" />
 		<propertyName name="maxChildCount" doNotLog="yes" />
@@ -292,7 +292,7 @@
 		<propertyName name="addressName" parentName="customerAddressDetail" doNotLog="yes"  />
 		<propertyName name="displayAddress"  doNotLog="yes"  />
 
-		<propertyName name="customerActivationDate"  displayKey="Group,Group.groupApprovalDate" />
+		<propertyName name="customerActivationDate" doNotLog="yes" displayKey="Group,Group.groupApprovalDate" />
 		<propertyName name="meetingStartDate" parentName="meeting" displayKey="Group.meeting.meetingPlace" />
 
 		<propertyName name="line2" parentName="address" displayKey="Address2" />
@@ -424,7 +424,7 @@
 		<propertyName name="addressName" parentName="customerAddressDetail" doNotLog="yes"  />
 		<propertyName name="displayAddress"  doNotLog="yes"  />
 
-		<propertyName name="customerActivationDate"  displayKey="Group,Group.groupApprovalDate" />
+		<propertyName name="customerActivationDate" doNotLog="yes" displayKey="Group,Group.groupApprovalDate" />
 		<propertyName name="meetingStartDate" parentName="meeting" displayKey="Group.meeting.meetingPlace" />
 
 		<propertyName name="line2" parentName="address" displayKey="Address2" />
@@ -466,7 +466,7 @@
 		<propertyName name="clientConfidential" parentName="customer" doNotLog="yes" />
 		<propertyName name="personnelId" parentName="customer" doNotLog="yes" />
 
-		<propertyName name="displayName" parentName="parentCustomer" displayKey="Group,Group.parentCustomer.displayName" />
+		<propertyName name="displayName" parentName="parentCustomer" displayKey="Center,Group.parentCustomer.displayName" />
 
 		<propertyName name="governmentId" parentName="parentCustomer" doNotLog="yes" />
 		<propertyName name="customerId" parentName="parentCustomer" doNotLog="yes" />

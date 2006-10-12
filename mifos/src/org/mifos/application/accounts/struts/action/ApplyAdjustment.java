@@ -84,7 +84,7 @@ public class ApplyAdjustment extends BaseAction {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
 		request.setAttribute("method", "loadAdjustment");
 		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
-
+			request.setAttribute("isDisabled", "true");
 			throw new ApplicationException(
 					AccountExceptionConstants.ZEROAMNTADJUSTMENT);
 		}

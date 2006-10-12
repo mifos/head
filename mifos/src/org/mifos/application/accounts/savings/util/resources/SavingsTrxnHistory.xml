@@ -25,9 +25,9 @@
     <column label="Credit" value="credit" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="8" align="right"/>
     </column>
-    <column label="Balance" value="balance" valueType="method" columnType="text">
+    <!-- <column label="Balance" value="balance" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="8" align="right"/>
-    </column>
+    </column>-->
     <column label="Clientname" value="clientName" valueType="method" columnType="text">
          <columnDetails  rowStyle="drawtablerow" colWidth="11"/>
     </column>

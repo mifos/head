@@ -117,6 +117,7 @@ public class GroupTransferAction extends BaseAction {
 				groupInSession.getCustomerId());
 		group.setUserContext(getUserContext(request));
 		group.setVersionNo(groupInSession.getVersionNo());
+		setInitialObjectForAuditLogging(group);
 		group.transferToCenter(transferToCenter);
 		groupInSession = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);

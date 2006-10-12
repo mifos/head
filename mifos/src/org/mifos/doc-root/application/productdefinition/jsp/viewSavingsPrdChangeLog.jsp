@@ -70,12 +70,13 @@
 					<td class="bluetablehead05">
 						<span class="fontnormal8pt"> <html-el:link href="AdminAction.do?method=load">
 								<mifos:mifoslabel name="product.admin" bundle="ProductDefUIResources" />
-							</html-el:link> / 
-							<a	href="savingsproductaction.do?method=search">
+							</html-el:link> / <html-el:link href="savingsproductaction.do?method=search">
 								<mifos:mifoslabel name="product.savingsview" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
-							</a> / </span><span class="fontnormal8ptbold"><c:out value="${BusinessKey.prdOfferingName}" /></span>
+							</html-el:link> / <html-el:link href="savingsproductaction.do?method=get&prdOfferingId=${BusinessKey.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
+								<c:out value="${BusinessKey.prdOfferingName}" />
+							</html-el:link></span>
 					</td>
 				</tr>
 			</table>

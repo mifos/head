@@ -53,6 +53,7 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 import org.hibernate.type.AbstractComponentType;
 import org.hibernate.type.Type;
+import org.mifos.application.customer.business.CustomerMeetingEntity;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.framework.business.BusinessObject;
@@ -351,21 +352,26 @@ public class InterceptHelper {
 	private void readFurtherMoneyType(Object obj,String name,String state){
 		 if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
 			logger.debug("i readFurtherMoneyType "+name+ " : " + obj);
-			initialValues.put(name, obj.toString());
+			if(obj.toString().equalsIgnoreCase("0.0"))
+				initialValues.put(name, "");
+			else
+				initialValues.put(name, obj.toString());
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
 			if(columnName!=null && !columnName.equals(""))
 				columnNames.put(name,columnName);
 			else
 				columnNames.put(name,name);
     	 }else{
-    		 logger.debug("c readFurtherMoneyType "+name+ " : " + obj); 
-		 	changedValues.put(name, obj.toString());
+    		logger.debug("c readFurtherMoneyType "+name+ " : " + obj);
+    		if(obj.toString().equalsIgnoreCase("0.0"))
+    			changedValues.put(name, "");
+    		else
+    			changedValues.put(name, obj.toString());
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
 			if(columnName!=null && !columnName.equals(""))
 				columnNames.put(name,columnName);
 			else
 				columnNames.put(name,name);
-				
     	 }
 	}
 
@@ -652,14 +658,14 @@ public class InterceptHelper {
 			}
 			
 			//Reading further Money type
-			if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
+			/*if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
 					!(propertyValues[i] instanceof MasterDataEntity) && 
 					(propertyValues[i] instanceof Money)) {
 				Object obj1 = propertyValues[i];
 				if (obj1 != null) {
 					readFurtherMoneyType(obj1, firstName.concat(propertyNames[i]),state);
 				}
-			}
+			}*/
 			
 			//Reading further component type
 			if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
@@ -748,14 +754,14 @@ public class InterceptHelper {
 					}
 				}
 				//Reading further Money type
-				if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
+				/*if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&
 						!(propertyValues[i] instanceof MasterDataEntity) && 
 						(propertyValues[i] instanceof Money)) {
 					Object obj1 = propertyValues[i];
 					if (obj1 != null) {
 						readFurtherMoneyType(obj1, firstName.concat(propertyNames[i]),state);
 					}
-				}
+				}*/
 				
 				//Reading further component type
 				if (!propertyTypes[i].isEntityType() && propertyTypes[i].isComponentType() &&

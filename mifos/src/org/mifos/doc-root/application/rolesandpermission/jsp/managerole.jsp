@@ -58,6 +58,9 @@
 </script>
 
 		<html-el:form action="/rolesPermission.do?method=update">
+			<c:set
+				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+				var="BusinessKey" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -81,7 +84,11 @@
 
 
 
-							</html-el:link> </span></td>
+							</html-el:link> </span>/<span class="fontnormal8ptbold"> </span><span
+								class="fontnormal8pt"> 
+								<c:out value="${BusinessKey.name}"></c:out>
+							 </span>
+							</td>
 						</tr>
 					</table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">

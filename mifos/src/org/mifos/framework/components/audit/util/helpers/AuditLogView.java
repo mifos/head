@@ -3,6 +3,7 @@ package org.mifos.framework.components.audit.util.helpers;
 import java.util.Locale;
 
 import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.struts.tags.MifosTagUtils;
 
 public class AuditLogView {
 
@@ -39,13 +40,13 @@ public class AuditLogView {
 		this.mfiLocale = mfiLocale;
 	}
 	public String getNewValue() {
-		return newValue;
+		return MifosTagUtils.xmlEscape(newValue);
 	}
 	public void setNewValue(String newValue) {
 		this.newValue = newValue;
 	}
 	public String getOldValue() {
-		return oldValue;
+		return MifosTagUtils.xmlEscape(oldValue);
 	}
 	public void setOldValue(String oldValue) {
 		this.oldValue = oldValue;
