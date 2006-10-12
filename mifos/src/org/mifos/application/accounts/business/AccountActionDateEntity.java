@@ -67,8 +67,9 @@ public abstract class AccountActionDateEntity extends PersistentObject {
 		this.customer = customer;
 		this.installmentId = installmentId;
 		this.actionDate = actionDate;
-		if (paymentStatus != null)
+		if (paymentStatus != null) {
 			this.paymentStatus = paymentStatus.getValue();
+		}
 	}
 
 	public Integer getActionDateId() {

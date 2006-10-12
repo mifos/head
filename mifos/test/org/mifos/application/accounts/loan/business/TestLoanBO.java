@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.PropertyNotFoundException;
@@ -357,7 +358,9 @@ public class TestLoanBO extends MifosTestCase {
 						loanSummaryEntity.getInterestPaid()).add(
 						loanSummaryEntity.getPenaltyPaid()));
 		assertEquals(1, accountBO.getAccountPayments().size());
-		//candidate for refactor?
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountPaymentEntity accountPaymentEntity : accountBO
 				.getAccountPayments()) {
 			assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
@@ -436,7 +439,9 @@ public class TestLoanBO extends MifosTestCase {
 						loanSummaryEntity.getInterestPaid()).add(
 						loanSummaryEntity.getPenaltyPaid()));
 		assertEquals(1, accountBO.getAccountPayments().size());
-        //candidate for refactoring?
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountPaymentEntity accountPaymentEntity : accountBO
 				.getAccountPayments()) {
 			assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
@@ -558,7 +563,9 @@ public class TestLoanBO extends MifosTestCase {
 		AccountPaymentEntity accountPaymentEntity = (AccountPaymentEntity) Arrays
 				.asList(accountBO.getAccountPayments().toArray()).get(0);
 		
-        //can be refactored?
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
 				.getAccountTrxns()) {
 			if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
@@ -683,7 +690,9 @@ public class TestLoanBO extends MifosTestCase {
 		AccountPaymentEntity accountPaymentEntity = (AccountPaymentEntity) Arrays
 				.asList(accountBO.getAccountPayments().toArray()).get(0);
 		assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
-        //can be refactored?
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
 				.getAccountTrxns()) {
 			if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
@@ -984,14 +993,12 @@ public class TestLoanBO extends MifosTestCase {
 				.valueOf("1"), accountBO.getPersonnel(), startDate, Short
 				.valueOf("1"));
         
-         //amt, principal, interest, misc fee, misc penalty, penalty, fees array, total fees, total amount
-        Object testValues[][] = {{ null, null, null, "20", "30", null, null, null, null, null},
-                { null, null, null, null, null, null, null, null, null, null},
-                { null, null, null, null, null, null, null, null, null, null},
-                { null, null, null, null, null, null, null, null, null, null},
-                { null, null, null, null, null, null, null, null, null, null},
-                { null, null, null, null, null, null, null, null, null, null}};
-        validatePayments(testValues, accountBO.getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkLoanScheduleEntity(
+			null, null, null, "20", "30", null, null, null, null, null,
+			paymentsArray[0]);
                        
 		Session session = HibernateUtil.getSessionTL();
 		HibernateUtil.startTransaction();
@@ -1316,13 +1323,11 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccount();
 		for (AccountActionDateEntity accountAction : ((LoanBO) accountBO)
 				.getAccountActionDates()) {
-			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
-			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
-					.getAccountFeesActionDetails()) {
-				if (accountActionDateEntity.getInstallmentId().equals(
-						Short.valueOf("1"))) {
-					accountActionDateEntity.setMiscPenalty(new Money("100"));
-				}
+			LoanScheduleEntity accountActionDateEntity = 
+				(LoanScheduleEntity) accountAction;
+			if (accountActionDateEntity.getInstallmentId().equals(
+					Short.valueOf("1"))) {
+				accountActionDateEntity.setMiscPenalty(new Money("100"));
 			}
 		}
 		((LoanBO) accountBO).getLoanSummary().setOriginalPenalty(
@@ -1447,7 +1452,9 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
-        //requires refactoring?
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountActionDateEntity accountAction : loanBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -1516,7 +1523,9 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
-        //refactor?
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountActionDateEntity accountAction : loanBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -1571,7 +1580,9 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
-        //refactor?
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
@@ -1674,8 +1685,6 @@ public class TestLoanBO extends MifosTestCase {
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));
-		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
-				.getApplicableIdsForFutureInstallments().size() + 1);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountState.LOANACC_CANCEL);
 		accountBO.setAccountState(accountStateEntity);
@@ -1686,7 +1695,9 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
-        //refactor?
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
@@ -1870,7 +1881,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		LoanBO loan = (LoanBO) accountBO;
-		clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
+		clientPerfHistory = (ClientPerformanceHistoryEntity) (loan)
 				.getCustomer().getPerformanceHistory();
 		assertEquals(loanCycleNumber - 1, clientPerfHistory
 				.getLoanCycleNumber().intValue());
@@ -1929,7 +1940,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 		LoanBO loan = (LoanBO) accountBO;
-		clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
+		clientPerfHistory = (ClientPerformanceHistoryEntity) loan
 				.getCustomer().getPerformanceHistory();
 		assertEquals(noOfActiveLoans + 1, clientPerfHistory
 				.getNoOfActiveLoans().intValue());
@@ -2015,22 +2026,22 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
         
-           //amt, principal, interest, misc fee, misc penalty, penalty, fees array, ..., getTotalDueWithFees
-        Object testValues[][] = {{ null, null, null, null, null, null, null, null, null, "233.0" } ,
-                { null, null, null, null, null, null, null, null, null, "212.0" },
-                { null, null, null, null, null, null, null, null, null, "212.0" },
-                { null, null, null, null, null, null, null, null, null, "212.0" },
-                { null, null, null, null, null, null, null, null, null, "212.0" },
-                { null, null, null, null, null, null, null, null, null, "211.3" }};
-        validatePayments(testValues, accountBO.getAccountActionDates());
-       
+		Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkTotalDueWithFees("233.0", paymentsArray[0]);
+		checkTotalDueWithFees("212.0", paymentsArray[1]);
+		checkTotalDueWithFees("212.0", paymentsArray[2]);
+		checkTotalDueWithFees("212.0", paymentsArray[3]);
+		checkTotalDueWithFees("212.0", paymentsArray[4]);
+		checkTotalDueWithFees("211.3", paymentsArray[5]);
 	}
 
 	public void testBuildLoanWithoutLoanOffering()
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(), null,
+			new LoanBO(TestObjectFactory.getUserContext(), null,
 					group, AccountState.LOANACC_APPROVED, new Money("300.0"),
 					Short.valueOf("6"), new Date(System.currentTimeMillis()),
 					false, 10.0, (short) 0, new FundBO(),
@@ -2050,14 +2061,12 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = createLoanOffering(false,
 				PrdStatus.LOANINACTIVE.getValue());
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+			new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, group, AccountState.LOANACC_APPROVED,
 					new Money("300.0"), Short.valueOf("6"), new Date(System
 							.currentTimeMillis()), false, 10.0, (short) 0,
 					new FundBO(), new ArrayList<FeeView>());
-			assertFalse(
-					"The Loan object is created for inactive loan offering",
-					true);
+			fail("The Loan object is created for inactive loan offering");
 		} catch (AccountException ae) {
 			assertTrue(
 					"The Loan object is not created for inactive loan offering",
@@ -2071,7 +2080,7 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+			new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, null, AccountState.LOANACC_APPROVED,
 					new Money("300.0"), Short.valueOf("6"), new Date(System
 							.currentTimeMillis()), false, 10.0, (short) 0,
@@ -2094,7 +2103,7 @@ public class TestLoanBO extends MifosTestCase {
 
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+			new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, null, AccountState.LOANACC_APPROVED,
 					new Money("300.0"), Short.valueOf("6"), new Date(System
 							.currentTimeMillis()), false, 10.0, (short) 0,
@@ -2122,7 +2131,7 @@ public class TestLoanBO extends MifosTestCase {
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("0"), Short.valueOf("1"), meeting);
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+			new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, null, AccountState.LOANACC_APPROVED,
 					new Money("300.0"), Short.valueOf("6"), new Date(System
 							.currentTimeMillis()), false, 10.0, (short) 0,
@@ -2150,7 +2159,7 @@ public class TestLoanBO extends MifosTestCase {
 						.getValue(), 300.0, 1.2, Short.valueOf("3"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("0"), Short.valueOf("1"), meeting);
-		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+		new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, 10.0, (short) 0,
@@ -2166,7 +2175,7 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+			new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, group, AccountState.LOANACC_APPROVED, null,
 					Short.valueOf("6"), new Date(System.currentTimeMillis()),
 					false, 10.0, (short) 0, new FundBO(),
@@ -2184,7 +2193,7 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+			new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, group, AccountState.LOANACC_APPROVED, null,
 					Short.valueOf("6"), new Date(System.currentTimeMillis()),
 					false, 10.0, (short) 5, new FundBO(),
@@ -2249,7 +2258,7 @@ public class TestLoanBO extends MifosTestCase {
 		Date disbursementDate = new Date(System.currentTimeMillis());
 
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+			new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, group, AccountState.LOANACC_APPROVED,
 					new Money("300.0"), Short.valueOf("6"), disbursementDate,
 					false, 10.0, (short) 0, new FundBO(),
@@ -2272,7 +2281,7 @@ public class TestLoanBO extends MifosTestCase {
 		Date disbursementDate = incrementCurrentDate(3);
 
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+			new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, group, AccountState.LOANACC_APPROVED,
 					new Money("300.0"), Short.valueOf("6"), disbursementDate,
 					false, 10.0, (short) 0, new FundBO(),
@@ -2295,7 +2304,7 @@ public class TestLoanBO extends MifosTestCase {
 		Date disbursementDate = offSetCurrentDate(15);
 
 		try {
-			LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
+			new LoanBO(TestObjectFactory.getUserContext(),
 					loanOffering, group, AccountState.LOANACC_APPROVED,
 					new Money("300.0"), Short.valueOf("6"), disbursementDate,
 					false, 10.0, (short) 0, new FundBO(),
@@ -2340,14 +2349,16 @@ public class TestLoanBO extends MifosTestCase {
         HashMap fees2 = new HashMap();
         fees2.put("Periodic Fee","10.0" );
         
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, fees paid, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, null, null, null, null, null, fees1, null, "130.0", null } ,
-                { null, null, null, null, null, null, fees2, null, "10.0" , null},
-                { null, null, null, null, null, null, fees2, null, "10.0", null},
-                { null, null, null, null, null, null, fees2, null, "10.0", null },
-                { null, null, null, null, null, null, fees2, null, "10.0" , null},
-                { null, null, null, null, null, null, fees2, null, "10.0", null}};
-        validatePayments(testValues, loan.getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
+        assertEquals(6, actionDateEntities.size());
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkFees(fees1, "130.0", paymentsArray[0]);
+		checkFees(fees2, "10.0", paymentsArray[1]);
+		checkFees(fees2, "10.0", paymentsArray[2]);
+		checkFees(fees2, "10.0", paymentsArray[3]);
+		checkFees(fees2, "10.0", paymentsArray[4]);
+		checkFees(fees2, "10.0", paymentsArray[5]);
         
       
 		deleteFee(feeViews);
@@ -2401,15 +2412,15 @@ public class TestLoanBO extends MifosTestCase {
 				assertEquals(new Double("10.0"), accountFees.getFeeAmount());
 		}
         
-         //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, "50.5", "0.5", null, null, null, null, null, null, null } ,
-                { null, "50.5", "0.5", null, null, null, null, null, null, null},
-                { null, "50.5", "0.5", null, null, null, null, null, null, null},
-                { null, "50.5", "0.5", null, null, null, null, null, null, null },
-                { null, "50.5", "0.5", null, null, null, null, null, null, null},
-                { null, "47.5", "0.5", null, null, null, null, null, null, null}};
-
-        validatePayments(testValues, loan.getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkPrincipalAndInterest("50.5", "0.5", paymentsArray[0]);
+		checkPrincipalAndInterest("50.5", "0.5", paymentsArray[1]);
+		checkPrincipalAndInterest("50.5", "0.5", paymentsArray[2]);
+		checkPrincipalAndInterest("50.5", "0.5", paymentsArray[3]);
+		checkPrincipalAndInterest("50.5", "0.5", paymentsArray[4]);
+		checkPrincipalAndInterest("47.5", "0.5", paymentsArray[5]);
         
 		
 		assertNotNull(loan.getLoanSummary());
@@ -2442,16 +2453,16 @@ public class TestLoanBO extends MifosTestCase {
 				assertEquals(new Double("10.0"), accountFees.getFeeAmount());
 		}
 		
-        
-        
-         //date, principal, interest, misc fee, misc penalty, penalty, fees array, fees paid getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, "0.0", "3.0", null, null, null, null, null, null, null } ,
-                { null, "60.0", "0.0", null, null, null, null, null, null, null},
-                { null, "60.0", "0.0", null, null, null, null, null, null, null},
-                { null, "60.0", "0.0", null, null, null, null, null, null, null },
-                { null, "60.0", "0.0", null, null, null, null, null, null, null},
-                { null, "60.0", "0.0", null, null, null, null, null, null, null}};
-        validatePayments(testValues, loan.getAccountActionDates());
+
+		Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkPrincipalAndInterest("0.0", "3.0", paymentsArray[0]);
+		checkPrincipalAndInterest("60.0", "0.0", paymentsArray[1]);
+		checkPrincipalAndInterest("60.0", "0.0", paymentsArray[2]);
+		checkPrincipalAndInterest("60.0", "0.0", paymentsArray[3]);
+		checkPrincipalAndInterest("60.0", "0.0", paymentsArray[4]);
+		checkPrincipalAndInterest("60.0", "0.0", paymentsArray[5]);
         
        
 		assertNotNull(loan.getLoanSummary());
@@ -2485,14 +2496,15 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		
          
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, fees paid, getTotalFeeDue(), getTotalDueWithFees
-       Object testValues[][] = {{ null, "0.0", "0.5", null, null, null, null, null, null, null },
-               { null, "0.0", "0.5", null, null, null, null, null, null, null},
-               { null, "0.0", "0.5", null, null, null, null, null, null, null},
-               { null, "0.0", "0.5", null, null, null, null, null, null, null },
-               { null, "0.0", "0.5", null, null, null, null, null, null , null},
-               { null, "300.0", "0.5", null, null, null, null, null, null, null}};
-       validatePayments(testValues, loan.getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkPrincipalAndInterest("0.0", "0.5", paymentsArray[0]);
+		checkPrincipalAndInterest("0.0", "0.5", paymentsArray[1]);
+		checkPrincipalAndInterest("0.0", "0.5", paymentsArray[2]);
+		checkPrincipalAndInterest("0.0", "0.5", paymentsArray[3]);
+		checkPrincipalAndInterest("0.0", "0.5", paymentsArray[4]);
+		checkPrincipalAndInterest("300.0", "0.5", paymentsArray[5]);
        
        
 		assertNotNull(loan.getLoanSummary());
@@ -2526,14 +2538,15 @@ public class TestLoanBO extends MifosTestCase {
 				assertEquals(new Double("10.0"), accountFees.getFeeAmount());
 		}
         
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, fees paid, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, "0.0", "3.0", null, null, null, null, null, null, null } ,
-                   { null, "0.0", "0.0", null, null, null, null, null, null, null},
-                   { null, "0.0", "0.0", null, null, null, null, null, null, null},
-                   { null, "0.0", "0.0", null, null, null, null, null, null, null },
-                   { null, "0.0", "0.0", null, null, null, null, null, null , null},
-                   { null, "300.0", "0.0", null, null, null, null, null, null, null}};
-        validatePayments(testValues, loan.getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = loan.getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkPrincipalAndInterest("0.0", "3.0", paymentsArray[0]);
+		checkPrincipalAndInterest("0.0", "0.0", paymentsArray[1]);
+		checkPrincipalAndInterest("0.0", "0.0", paymentsArray[2]);
+		checkPrincipalAndInterest("0.0", "0.0", paymentsArray[3]);
+		checkPrincipalAndInterest("0.0", "0.0", paymentsArray[4]);
+		checkPrincipalAndInterest("300.0", "0.0", paymentsArray[5]);
       
 		assertNotNull(loan.getLoanSummary());
 		assertNotNull(loan.getPerformanceHistory());
@@ -2581,7 +2594,9 @@ public class TestLoanBO extends MifosTestCase {
 		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
 				isInterestDedAtDisb, null, noOfinstallments, 0.0);
 
-        //candidate for refactoring
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountActionDateEntity accountActionDate : loan
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
@@ -2642,7 +2657,9 @@ public class TestLoanBO extends MifosTestCase {
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
 		accountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
-        //refactor?
+		/* Change this to more clearly separate what we are testing
+		   for from the machinery needed to get that data?
+		 */
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
@@ -2685,15 +2702,14 @@ public class TestLoanBO extends MifosTestCase {
         fees1.put("Periodic Fee", "200.0");//missing an entry
         fees1.put("Mainatnence Fee", "100.0");
         
-         //date, principal, interest, misc fee, misc penalty, penalty, fees array, fees paid getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, null, null, null, null, null, fees1, null, null, null } ,
-                { null, null, null, null, null, null, null, null, null , null},
-                { null, null, null, null, null, null, fees1, null, null,  null},
-                { null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, fees1, null, null,  null},
-                { null, null, null, null, null, null, null, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
+		LoanScheduleEntity[] paymentsArray = 
+			getSortedAccountActionDateEntity(
+				((LoanBO)accountBO).getAccountActionDates());
+        assertEquals(6, paymentsArray.length);
         
+        checkFees(fees1, paymentsArray[0], false);
+        checkFees(fees1, paymentsArray[2], false);
+        checkFees(fees1, paymentsArray[4], false);
         
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
@@ -2750,15 +2766,14 @@ public class TestLoanBO extends MifosTestCase {
         fees2.put("Upfront Fee", "60.0");
         fees2.put("Mainatnence Fee", "100.0");
         
-         //date, principal, interest, misc fee, misc penalty, penalty, fees array, fees paid, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, null, null, null, null, null, fees2, null, null, null } ,
-                { null, null, null, null, null, null, null, null, null , null},
-                { null, null, null, null, null, null, null, null, null, null},
-                { null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null , null},
-                { null, null, null, null, null, null, null, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
-        //setting of values here 
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+        assertEquals(6, actionDateEntities.size());
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkFees(fees2, paymentsArray[0], false);
+
+
+		//setting of values here 
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
@@ -2796,7 +2811,6 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testUpdateLoanSuccessWithRegeneratingNewRepaymentSchedule()
 			throws ApplicationException, SystemException {
-		Date startDate = new Date(System.currentTimeMillis());
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();
 		accountBO.setAccountState(new AccountStateEntity(
@@ -2819,7 +2833,6 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testUpdateLoanWithoutRegeneratingNewRepaymentSchedule()
 			throws ApplicationException, SystemException {
-		Date startDate = new Date(System.currentTimeMillis());
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();
 		Date oldActionDate = DateUtils.getDateWithoutTimeStamp(accountBO
@@ -2890,14 +2903,31 @@ public class TestLoanBO extends MifosTestCase {
         fees2.put("Periodic Fee", "100.0");
         fees2.put("Upfront Fee", "60.0");
         
-         //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, "0.0", "0.1", null, null, null, fees2, null, null, null } ,
-                { null, "0.0", "0.1", null, null, null, fees0, null, null , null},
-                { null, "0.0", "0.1", null, null, null, fees1, null, null, null},
-                { null, "0.0", "0.1", null, null, null, fees1, null, null, null },
-                { null, "0.0", "0.1", null, null, null, fees0, null, null , null},
-                { incrementCurrentDate(14 * 6), "300.0", "0.1", null, null, null, fees1, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkLoanScheduleEntity(null, "0.0", "0.1", fees2,
+			paymentsArray[0]);
+		checkLoanScheduleEntity(
+			null, "0.0", "0.1", fees0, 
+			paymentsArray[1]
+		);
+		checkLoanScheduleEntity(
+			null, "0.0", "0.1", fees1,
+			paymentsArray[2]
+		);
+		checkLoanScheduleEntity(
+			null, "0.0", "0.1", fees1, 
+			paymentsArray[3]
+		);
+		checkLoanScheduleEntity(
+			null, "0.0", "0.1", fees0, 
+			paymentsArray[4]
+		);
+		checkLoanScheduleEntity(
+			incrementCurrentDate(14 * 6), "300.0", "0.1", fees1,
+			paymentsArray[5]
+		);
         
                 
 		assertEquals(3, accountBO.getAccountFees().size());
@@ -2978,15 +3008,32 @@ public class TestLoanBO extends MifosTestCase {
         HashMap fees1 = new HashMap();
         fees1.put("Periodic Fee", "100.0");
         
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = 
-               {{ incrementCurrentDate(0), "0.0", "0.6", null, null, null, fees3, null, null, null } ,
-                { null, "60.0", "0.0", null, null, null, fees0, null, null , null},
-                { null, "60.0", "0.0", null, null, null, fees1, null, null, null},
-                { null, "60.0", "0.0", null, null, null, fees1, null, null, null },
-                { null, "60.0", "0.0", null, null, null, fees0, null,null, null},
-                { incrementCurrentDate(14 * 5), "60.0", "0.0", null, null,null, fees1, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkLoanScheduleEntity(incrementCurrentDate(0), "0.0", "0.6", fees3,
+			paymentsArray[0]);
+		checkLoanScheduleEntity(
+			null, "60.0", "0.0", fees0, 
+			paymentsArray[1]
+		);
+		checkLoanScheduleEntity(
+			null, "60.0", "0.0", fees1,
+			paymentsArray[2]
+		);
+		checkLoanScheduleEntity(
+			null, "60.0", "0.0", fees1, 
+			paymentsArray[3]
+		);
+		checkLoanScheduleEntity(
+			null, "60.0", "0.0", fees0, 
+			paymentsArray[4]
+		);
+		checkLoanScheduleEntity(
+			incrementCurrentDate(14 * 5), "60.0", "0.0", 
+			fees1,
+			paymentsArray[5]
+		);
         
        
 		assertEquals(3, accountBO.getAccountFees().size());
@@ -3067,15 +3114,37 @@ public class TestLoanBO extends MifosTestCase {
         fees3.put("Disbursment Fee", "30.0");
         fees3.put("Upfront Fee", "60.0");
         
-          //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ incrementCurrentDate(0), "0.0", "0.6", null, null, null, fees3, null, null, null } ,
-                { null, "0.0", "0.0", null, null, null, fees0, null, null , null},
-                { null, "0.0", "0.0", null, null, null, fees1, null, null, null},
-                { null, "0.0", "0.0", null, null, null, fees1, null, null, null },
-                { null, "0.0", "0.0", null, null, null, fees0, null, null , null},
-                { incrementCurrentDate(14 * 5), "300.0", "0.0", null, null, null, fees1, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
-       
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkLoanScheduleEntity(
+			incrementCurrentDate(0), "0.0", "0.6", null, null, null, 
+			fees3, null, null, null,
+			paymentsArray[0]
+		);
+		checkLoanScheduleEntity(
+			null, "0.0", "0.0", null, null, null, fees0, null, null, null,
+			paymentsArray[1]
+		);
+		checkLoanScheduleEntity(
+			null, "0.0", "0.0", null, null, null, fees1, null, null, null,
+			paymentsArray[2]
+		);
+		checkLoanScheduleEntity(
+			null, "0.0", "0.0", null, null, null, fees1, null, null, null,
+			paymentsArray[3]
+		);
+		checkLoanScheduleEntity(
+			null, "0.0", "0.0", null, null, null, fees0, null, null , null,
+			paymentsArray[4]
+		);
+		checkLoanScheduleEntity(
+			incrementCurrentDate(14 * 5), "300.0", "0.0", null, null, null, 
+			fees1, null, null, null,
+			paymentsArray[5]
+		);
+
+		
 		assertEquals(3, accountBO.getAccountFees().size());
 		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
 			if (accountFeesEntity.getFees().getFeeName().equals("Upfront Fee")) {
@@ -3152,14 +3221,19 @@ public class TestLoanBO extends MifosTestCase {
         fees2.put("Periodic Fee", "100.0");
         fees2.put("Upfront Fee", "60.0");
         
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ incrementCurrentDate(14), "50.9", "0.1", null, null, null, fees2, null, null, null } ,
-                { null, "50.9", "0.1", null, null, null, fees0, null, null , null},
-                { null, "50.9", "0.1", null, null, null, fees1, null, null, null},
-                { null, "50.9", "0.1", null, null, null, fees1, null, null, null },
-                { null, "50.9", "0.1", null, null, null, fees0, null, null , null},
-                { incrementCurrentDate( 14 * 6), "45.5", "0.1", null, null, null, fees1, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkLoanScheduleEntity(incrementCurrentDate(14), "50.9", "0.1", fees2,
+			paymentsArray[0]);
+		checkLoanScheduleEntity(null, "50.9", "0.1", fees0, paymentsArray[1]);
+		checkLoanScheduleEntity(null, "50.9", "0.1", fees1, paymentsArray[2]);
+		checkLoanScheduleEntity(null, "50.9", "0.1", fees1, paymentsArray[3]);
+		checkLoanScheduleEntity(null, "50.9", "0.1", fees0, paymentsArray[4]);
+		checkLoanScheduleEntity(
+			incrementCurrentDate(14 * 6), "45.5", "0.1", fees1,
+			paymentsArray[5]);
+	        
         
 		assertEquals(3, accountBO.getAccountFees().size());
 		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
@@ -3240,15 +3314,18 @@ public class TestLoanBO extends MifosTestCase {
         fees2.put("Upfront Fee", "60.0");
         
         
-          //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ incrementCurrentDate(14), "0.0", "0.1", null, null, null, fees2, null, null, null } ,
-                { null, "60.0", "0.1", null, null, null, fees0, null, null , null},
-                { null, "60.0", "0.1", null, null, null, fees1, null, null, null},
-                { null, "60.0", "0.1", null, null, null, fees1, null, null, null },
-                { null, "60.0", "0.1", null, null, null, fees0, null, null , null},
-                { incrementCurrentDate(14 * 6), "60.0", "0.1", null, null, null, fees1, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
-        
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkLoanScheduleEntity(incrementCurrentDate(14), "0.0", "0.1", fees2,
+			paymentsArray[0]);
+		checkLoanScheduleEntity(null, "60.0", "0.1", fees0, paymentsArray[1]);
+		checkLoanScheduleEntity(null, "60.0", "0.1", fees1, paymentsArray[2]);
+		checkLoanScheduleEntity(null, "60.0", "0.1", fees1, paymentsArray[3]);
+		checkLoanScheduleEntity(null, "60.0", "0.1", fees0, paymentsArray[4]);
+		checkLoanScheduleEntity(
+			incrementCurrentDate(14 * 6), "60.0", "0.1", fees1,
+			paymentsArray[5]);
 
 		
 		assertEquals(3, accountBO.getAccountFees().size());
@@ -3336,8 +3413,6 @@ public class TestLoanBO extends MifosTestCase {
 		new TestObjectPersistence().persist(accountBO);
         
         
-        HashMap fees0= new HashMap();
-            
         HashMap fees1 = new HashMap();
         fees1.put("Periodic Fee", "200.0");
           
@@ -3347,14 +3422,15 @@ public class TestLoanBO extends MifosTestCase {
         fees3.put("First Repayment Fee", "1.4");
           
         
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, "50.0", "0.6", null, null, null, fees3, null, null, null } ,
-                { null, "50.4", "0.6", null, null, null, fees1, null, null , null},
-                { null, "50.4", "0.6", null, null, null, fees1, null, null, null},
-                { null, "50.4", "0.6", null, null, null, fees1, null, null, null },
-                { null, "50.4", "0.6", null, null, null, fees1, null, null , null},
-                { null, "48.4", "0.6", null, null, null, fees1, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkLoanScheduleEntity(null, "50.0", "0.6", fees3, paymentsArray[0]);
+		checkLoanScheduleEntity(null, "50.4", "0.6", fees1, paymentsArray[1]);
+		checkLoanScheduleEntity(null, "50.4", "0.6", fees1, paymentsArray[2]);
+		checkLoanScheduleEntity(null, "50.4", "0.6", fees1, paymentsArray[3]);
+		checkLoanScheduleEntity(null, "50.4", "0.6", fees1, paymentsArray[4]);
+		checkLoanScheduleEntity(null, "48.4", "0.6", fees1, paymentsArray[5]);
         
     	
 		assertEquals(4, accountBO.getAccountFees().size());
@@ -3518,20 +3594,15 @@ public class TestLoanBO extends MifosTestCase {
 				accountBO.getAccountId());
         
         
-        HashMap fees0= new HashMap(0);
-       
         HashMap fees2 = new HashMap();
         fees2.put("Onetime Fee", "0.3");
         fees2.put("Mainatnence Fee", "100.0");
         
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, fees paid getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, null, null, null, null, null, fees2, null, null, null } ,
-                { null, null, null, null, null, null, null, null, null, null},
-                { null, null, null, null, null, null, null, null, null, null},
-                { null, null, null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null, null, null},
-                { null, null, null, null, null, null, null, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+        assertEquals(6, actionDateEntities.size());
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkFees(fees2, paymentsArray[0], false);
             
                 
 		assertEquals(intialTotalFeeAmount.add(new Money("0.3")),
@@ -3778,15 +3849,16 @@ public class TestLoanBO extends MifosTestCase {
         HashMap fees1 = new HashMap();
         fees1.put("Periodic Fee", "60");
         
-        
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, null, null, null, null, null, fees1, null, null, null } ,
-                { null, null, null, null, null, null, fees0, null, null, null},
-                { null, null, null, null, null, null, fees0, null, null, null},
-                { null, null, null, null, null, null, fees0, null, null, null },
-                { null, null, null, null, null, null, fees0, null, null, null},
-                { null, null, null, null, null, null, fees0, null, null, null}};
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
+		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO)accountBO).getAccountActionDates();
+        assertEquals(6, actionDateEntities.size());
+		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		
+		checkFees(fees1, paymentsArray[0], false);
+		checkFees(fees0, paymentsArray[1], false);
+		checkFees(fees0, paymentsArray[2], false);
+		checkFees(fees0, paymentsArray[3], false);
+		checkFees(fees0, paymentsArray[4], false);
+		checkFees(fees0, paymentsArray[5], false);
         
 
 		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
@@ -3863,15 +3935,29 @@ public class TestLoanBO extends MifosTestCase {
         HashMap feesPaid1 = new HashMap();
         feesPaid1.put("Periodic Fee", "60");
         
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues[][] = {{ null, null, null, null, null, null, fees1, feesPaid1, null, null } ,
-                { null, null, null, null, null, null, fees0, null, null , null},
-                { null, null, null, null, null, null, fees0, null, null, null},
-                { null, null, null, null, null, null, fees0, null, null, null },
-                { null, null, null, null, null, null, fees0, null, null , null},
-                { null, null, null, null, null, null, fees0, null, null, null}};
-        
-        validatePayments(testValues, ((LoanBO)accountBO).getAccountActionDates());
+		LoanScheduleEntity[] paymentsArray = 
+			getSortedAccountActionDateEntity(
+				((LoanBO)accountBO).getAccountActionDates());
+		
+        assertEquals(6, paymentsArray.length);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fees1, feesPaid1, null, null,
+				paymentsArray[0]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fees0, null, null, null,
+				paymentsArray[1]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fees0, null, null, null,
+				paymentsArray[2]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fees0, null, null, null,
+				paymentsArray[3]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fees0, null, null, null,
+				paymentsArray[4]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fees0, null, null, null,
+				paymentsArray[5]);
 
 		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
 			assertEquals(AccountConstants.INACTIVE_FEES, accountFeesEntity
@@ -3902,21 +3988,38 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 
           
-        HashMap fees11 = new HashMap();
-        fees11.put("Periodic Fee", "260");
+        Map fee260 = new HashMap();
+        fee260.put("Periodic Fee", "260");
         
-        HashMap fees12 = new HashMap();
-        fees12.put("Periodic Fee", "400");
+        Map fee400 = new HashMap();
+        fee400.put("Periodic Fee", "400");
         
-        //date, principal, interest, misc fee, misc penalty, penalty, fees array, getTotalFeeDue(), getTotalDueWithFees
-        Object testValues1[][] = {{ null, null, null, null, null, null, fees11, null, null, null } ,
-                { null, null, null, null, null, null, fees12, null, null , null},
-                { null, null, null, null, null, null, fees12, null, null, null},
-                { null, null, null, null, null, null, fees12, null, null, null },
-                { null, null, null, null, null, null, fees12, null, null , null},
-                { null, null, null, null, null, null, fees12, null, null, null}};
-        validatePayments(testValues1, ((LoanBO)accountBO).getAccountActionDates());
-        //not sure if the remaining is being handled by refactored validation
+		Set<AccountActionDateEntity> actionDateEntities1 = 
+			((LoanBO)accountBO).getAccountActionDates();
+        assertEquals(6, actionDateEntities1.size());
+		LoanScheduleEntity[] paymentsArray1 = 
+			getSortedAccountActionDateEntity(actionDateEntities1);
+		
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fee260, null, null, null,
+				paymentsArray1[0]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fee400, null, null, null,
+				paymentsArray1[1]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fee400, null, null, null,
+				paymentsArray1[2]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fee400, null, null, null,
+				paymentsArray1[3]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fee400, null, null, null,
+				paymentsArray1[4]);
+		checkLoanScheduleEntity(
+				null, null, null, null, null, null, fee400, null, null, null,
+				paymentsArray1[5]);
+
+		//not sure if the remaining is being handled by validatePayments
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
@@ -4432,127 +4535,137 @@ public class TestLoanBO extends MifosTestCase {
 				.getTimeInMillis());
 	}
     
-    /**
-     * 
-     * @param testValues  Each row represents values to be validated in an instance of AccountActionDateEntity.  
-     *                   The following is the ordering of attributes per row:
-     *                   action date, principal, interest, misc fee, misc penalty, penalty, 
-     *                   hashmap of fee amounts, hashmap of fees paid, Total Fee Due, total due with fees
-     * @param actionDateEntities
-     */
+	private void checkLoanScheduleEntity(Date date, 
+		String principal, String interest, String miscFee, String miscPenalty, 
+		String penalty, Map fees, Map feesPaid, 
+		String totalFeeDue, String totalDueWithFees, 
+		LoanScheduleEntity entity) {
+		if (date != null){
+			assertDate(date, entity);
+		}    
+		
+		if (principal != null){
+			assertEquals(new Money(principal), entity.getPrincipal());
+		}
+		if (interest != null){
+			assertEquals(new Money(interest), entity.getInterest());
+		}    
+		
+		if (miscFee != null){
+			assertEquals(new Money(miscFee),
+		            entity
+		                    .getMiscFee());
+		}
+		
+		if (miscPenalty != null){
+			assertEquals(new Money(miscPenalty),
+		            entity
+		                    .getMiscPenalty());
+		}
+		
+		if (penalty != null){
+			assertEquals(new Money(penalty),
+		             entity
+		                     .getPenalty());
+		}  
+		
+		if (fees != null) {
+		    checkFees(fees, entity, false);
+		}
+		
+		if (feesPaid != null) {
+			checkFees(feesPaid, entity, true);
+		}    
+		
+		if (totalFeeDue != null){
+			checkTotalDue(totalFeeDue, entity);
+		}
+		
+		if (totalDueWithFees != null){
+			checkTotalDueWithFees(totalDueWithFees, entity);
+		}
+	}
+
+	private void checkTotalDueWithFees(
+		String totalDueWithFees, LoanScheduleEntity entity) {
+		assertEquals(new Money(totalDueWithFees), entity.getTotalDueWithFees());
+	}
+
+	private void checkTotalDue(String totalFeeDue, LoanScheduleEntity entity) {
+		assertEquals(new Money(totalFeeDue), entity.getTotalFeeDue());
+	}
+
+	private void checkLoanScheduleEntity(Date date, 
+			String principal, String interest, Map fees, 
+			LoanScheduleEntity entity) {
+		if (date != null){
+			assertDate(date, entity);
+		}    
+		
+		assertEquals(new Money(principal), entity.getPrincipal());
+		assertEquals(new Money(interest), entity.getInterest());
+		
+	    checkFees(fees, entity, false);
+	}
+
+	private void assertDate(Date date, LoanScheduleEntity entity) {
+		assertEquals(
+		        DateUtils.getDateWithoutTimeStamp(date.getTime()),
+		        DateUtils
+		                .getDateWithoutTimeStamp(entity
+		                        .getActionDate().getTime()));
+	}
+
+	private void checkFees(
+		Map expectedFess, String totalFeeDue, LoanScheduleEntity entity) {
+		checkFees(expectedFess, entity, false);
+		assertEquals(new Money(totalFeeDue), entity.getTotalFeeDue());
+	}
+
+	private void checkPrincipalAndInterest(
+		String principal, String interest, LoanScheduleEntity entity) {
+		assertEquals(new Money(principal), entity.getPrincipal());
+		assertEquals(new Money(interest), entity.getInterest());
+	}
+
+	private void checkFees(Map expected, LoanScheduleEntity loanScheduleEntity, 
+		boolean checkPaid) {
+		assertEquals(expected.size(), loanScheduleEntity
+		        .getAccountFeesActionDetails().size());
+		
+		
+		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
+		        .getAccountFeesActionDetails()) {
+		  
+		    if (expected.get(accountFeesActionDetailEntity
+		            .getFee().getFeeName())!= null){
+		        assertEquals(new Money((String)expected.get(accountFeesActionDetailEntity
+		                        .getFee().getFeeName())),
+	                checkPaid ?
+		                accountFeesActionDetailEntity.getFeeAmountPaid() :
+		                accountFeesActionDetailEntity.getFeeAmount()
+		        );
+		    } else {
+		        
+		        assertFalse("Fee amount not found for " + accountFeesActionDetailEntity
+		                .getFee().getFeeName(), true);
+		    }
+		}
+	}
     
-    protected void validatePayments(Object [][] testValues, Set<AccountActionDateEntity> actionDateEntities){
-        
-       assertEquals(testValues.length, actionDateEntities.size());  //this one should move
-       Object[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
-      
-        for (int i = 0; i < testValues.length; i++)
-        {
-            
-            
-            AccountActionDateEntity accountActionDateEntity = (AccountActionDateEntity)paymentsArray[i];
-            Object[] installmentTestValues= testValues[i];
-           
-              
-            if (installmentTestValues[0] != null){
-                assertEquals(
-                        DateUtils.getDateWithoutTimeStamp(((Date)installmentTestValues[0]).getTime()),
-                        DateUtils
-                                .getDateWithoutTimeStamp(((LoanScheduleEntity) accountActionDateEntity)
-                                        .getActionDate().getTime()));
-            }    
-            
-            if (installmentTestValues[1] != null){
-                assertEquals(new Money((String)installmentTestValues[1]),
-                        ((LoanScheduleEntity) accountActionDateEntity)
-                                .getPrincipal());
-            }
-            if (installmentTestValues[2] != null){
-                assertEquals(new Money((String)installmentTestValues[2]),
-                        ((LoanScheduleEntity) accountActionDateEntity)
-                                .getInterest());
-            }    
-            
-            if (installmentTestValues[3] != null){
-                assertEquals(new Money((String)installmentTestValues[3]),
-                        ((LoanScheduleEntity) accountActionDateEntity)
-                                .getMiscFee());
-            }
-            
-            if (installmentTestValues[4] != null){
-               assertEquals(new Money((String)installmentTestValues[4]),
-                        ((LoanScheduleEntity) accountActionDateEntity)
-                                .getMiscPenalty());
-            }  
-            
-            if (installmentTestValues[5] != null){
-                assertEquals(new Money((String)installmentTestValues[5]),
-                         ((LoanScheduleEntity) accountActionDateEntity)
-                                 .getPenalty());
-             }  
-            
-            if (installmentTestValues[6] != null){
-            
-                HashMap fees = (HashMap)installmentTestValues[6] ;   
-                assertEquals(fees.size(), ((LoanScheduleEntity)accountActionDateEntity)
-                        .getAccountFeesActionDetails().size());
-                
-                
-                for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
-                        .getAccountFeesActionDetails()) {
-                  
-                    if (fees.get(accountFeesActionDetailEntity
-                            .getFee().getFeeName())!= null){
-                        assertEquals(new Money((String)fees.get(accountFeesActionDetailEntity
-                                        .getFee().getFeeName())),
-                                accountFeesActionDetailEntity.getFeeAmount());
-                    } else {
-                        
-                        assertFalse("Fee amount not found for " + accountFeesActionDetailEntity
-                                .getFee().getFeeName(), true);
-                    }
-                }
-                
-            }    
-            
-            if (installmentTestValues[7] != null){
-                HashMap feesPaid = (HashMap)installmentTestValues[7] ;   
-                assertEquals(feesPaid.size(), ((LoanScheduleEntity)accountActionDateEntity)
-                        .getAccountFeesActionDetails().size());
-                for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
-                        .getAccountFeesActionDetails()) {
-                    if (feesPaid.get(accountFeesActionDetailEntity
-                            .getFee().getFeeName())!= null){
-                        assertEquals(new Money((String)feesPaid.get(accountFeesActionDetailEntity
-                                .getFee().getFeeName())),
-                        accountFeesActionDetailEntity.getFeeAmountPaid());
-                    } else {
-                        assertFalse("Fee amount paid not found for " + accountFeesActionDetailEntity
-                                .getFee().getFeeName(), true);
-                    }
-                }
-            }    
-            
-            if (installmentTestValues[8] != null){
-                assertEquals(new Money((String)installmentTestValues[8]), ((LoanScheduleEntity)accountActionDateEntity)
-                        .getTotalFeeDue());
-            }
-            
-            if (installmentTestValues[9] != null){
-                assertEquals(new Money((String)installmentTestValues[9]), ((LoanScheduleEntity)accountActionDateEntity)
-                        .getTotalDueWithFees());
-            }   
-        }
-        
-    }
     
-    
-    protected Object[] getSortedAccountActionDateEntity(Set<AccountActionDateEntity> actionDateCollection){
+    protected LoanScheduleEntity[] getSortedAccountActionDateEntity(Set<AccountActionDateEntity> actionDateCollection){
         
-        Object[] sortedList = new Object[actionDateCollection.size()];
+    	LoanScheduleEntity[] sortedList = 
+    		new LoanScheduleEntity[actionDateCollection.size()];
+    	
+    	// Don't know whether it will always be 6 for future tests, but
+    	// right now it is...
+    	assertEquals(6, actionDateCollection.size());
         
         for (AccountActionDateEntity actionDateEntity:actionDateCollection ){
-            sortedList[actionDateEntity.getInstallmentId().intValue() - 1] = actionDateEntity;
+            sortedList[actionDateEntity.getInstallmentId().intValue() - 1] = 
+            	(LoanScheduleEntity) actionDateEntity;
         }
         
         return sortedList;
