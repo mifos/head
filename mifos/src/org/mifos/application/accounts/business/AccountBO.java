@@ -83,9 +83,7 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -349,20 +347,11 @@ public class AccountBO extends BusinessObject {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"In the change status method of AccountBO:: new StatusId= "
 							+ newStatusId);
-			if (null != getCustomer().getPersonnel().getPersonnelId())
-				checkPermissionForStatusChange(newStatusId, this
-						.getUserContext(), flagId, getOffice().getOfficeId(),
-						getCustomer().getPersonnel().getPersonnelId());
-			else
-				checkPermissionForStatusChange(newStatusId, this
-						.getUserContext(), flagId, getOffice().getOfficeId(),
-						this.getUserContext().getId());
 			activationDateHelper(newStatusId);
 			MasterPersistence masterPersistence = new MasterPersistence();
 			AccountStateEntity accountStateEntity;
 			accountStateEntity = (AccountStateEntity) masterPersistence
 					.getPersistentObject(AccountStateEntity.class, newStatusId);
-			// checkStatusChangeAllowed(accountStateEntity);
 			accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
 			AccountStateFlagEntity accountStateFlagEntity = null;
 			if (flagId != null) {
@@ -389,6 +378,8 @@ public class AccountBO extends BusinessObject {
 					|| newStatusId.equals(AccountState.LOANACC_RESCHEDULED
 							.getValue())
 					|| newStatusId.equals(AccountState.LOANACC_WRITTENOFF
+							.getValue())
+					|| newStatusId.equals(AccountState.SAVINGS_ACC_CANCEL
 							.getValue()))
 				this.setClosedDate(new Date(System.currentTimeMillis()));
 			MifosLogManager
@@ -1157,24 +1148,6 @@ public class AccountBO extends BusinessObject {
 				|| accountState == null)
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION);
-	}
-
-	private void checkPermissionForStatusChange(Short newState,
-			UserContext userContext, Short flagSelected, Short recordOfficeId,
-			Short recordLoanOfficerId) {
-		if (!isPermissionAllowed(newState, userContext, flagSelected,
-				recordOfficeId, recordLoanOfficerId))
-			throw new SecurityException(
-					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-	}
-
-	private boolean isPermissionAllowed(Short newState,
-			UserContext userContext, Short flagSelected, Short recordOfficeId,
-			Short recordLoanOfficerId) {
-		return ActivityMapper.getInstance().isStateChangePermittedForAccount(
-				newState.shortValue(),
-				null != flagSelected ? flagSelected.shortValue() : 0,
-				userContext, recordOfficeId, recordLoanOfficerId);
 	}
 
 	private void setFlag(AccountStateFlagEntity accountStateFlagEntity) {

@@ -199,6 +199,7 @@ public interface CustomerConstants {
 	public static final String ERROR_ADJUSTMENT_NOTE_TOO_BIG = "errors.adjustmentNoteTooBig";
 	
 	public static final String ERROR_STATE_CHANGE_EXCEPTION = "Customer.StateChangeException";
+	public String CENTER_STATE_CHANGE_EXCEPTION = "Customer.CenterStateChangeException";
 	public static final String CUSTOMER_ACTIVE_LOAN_ACCOUNTS = "CustomerActiveLoanAccounts";
 	public static final String CUSTOMER_ACTIVE_SAVINGS_ACCOUNTS = "CustomerActiveSavingsAccounts";
 //	number of meetings attended and missed

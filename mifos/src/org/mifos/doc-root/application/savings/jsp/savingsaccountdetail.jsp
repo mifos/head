@@ -90,13 +90,18 @@
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td class="fontnormalbold">
-									<%--<span class="fontnormal"><img src="pages/framework/images/status_activegreen.gif" width="8" height="9"> Active</span>--%>
-									<span class="fontnormal"> <mifoscustom:MifosImage id="${BusinessKey.accountState.id}" moduleName="accounts.savings" /> <c:out value="${BusinessKey.accountState.name}" />&nbsp; <c:forEach var="flagSet"
-											items="${BusinessKey.accountFlags}">
-											<span class="fontnormal"> <c:if test="${flagSet.flag.id == 6}">
-													<mifos:MifosImage id="blackflag" moduleName="accounts.savings" />
-												</c:if><c:out value="${flagSet.flag.name}" /> </span>
-										</c:forEach> </span>
+									<span class="fontnormal">
+										<mifoscustom:MifosImage	id="${BusinessKey.accountState.id}" moduleName="accounts" />
+										<c:out value="${BusinessKey.accountState.name}" />&nbsp; 
+										<c:forEach var="flagSet" items="${BusinessKey.accountFlags}">
+											<span class="fontnormal">
+												<c:if test="${flagSet.flag.id == 6}">
+													<mifos:MifosImage id="blackflag" moduleName="accounts" />
+												</c:if>
+												<c:out value="${flagSet.flag.name}" />
+											</span>
+										</c:forEach> 
+									</span>
 								</td>
 							</tr>
 							<tr>

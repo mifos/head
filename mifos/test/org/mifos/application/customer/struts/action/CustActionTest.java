@@ -187,7 +187,7 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 	
 	private void createAccounts() throws Exception  {
 		savings1 = getSavingsAccount(group,"fsaf6","ads6");
-		savings1.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),AccountStateFlag.SAVINGS_OTHER.getValue(),"status changed for savings");
+		savings1.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),AccountStateFlag.SAVINGS_BLACKLISTED.getValue(),"status changed for savings");
 		savings1.update();
 		loan1 = getLoanAccount(group,"fdsfsdf","2cvs");
 		loan1.update();

@@ -38,7 +38,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 
 public class AccountBusinessService extends BusinessService {
 
@@ -319,5 +321,23 @@ public class AccountBusinessService extends BusinessService {
 			}
 		}
 		return statusList;
+	}
+	
+	public void checkPermissionForStatusChange(Short newState,
+			UserContext userContext, Short flagSelected, Short recordOfficeId,
+			Short recordLoanOfficerId) throws ServiceException {
+		if (!isPermissionAllowed(newState, userContext, flagSelected,
+				recordOfficeId, recordLoanOfficerId))
+			throw new ServiceException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	public boolean isPermissionAllowed(Short newState,
+			UserContext userContext, Short flagSelected, Short recordOfficeId,
+			Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isStateChangePermittedForAccount(
+				newState.shortValue(),
+				null != flagSelected ? flagSelected.shortValue() : 0,
+				userContext, recordOfficeId, recordLoanOfficerId);
 	}
 }

@@ -93,7 +93,7 @@ public class CenterBO extends CustomerBO {
 		if (newStatusId.equals(CustomerStatus.CENTER_INACTIVE.getValue())) {
 			if (isAnySavingsAccountOpen()) {
 				throw new CustomerException(
-						CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+						CustomerConstants.CENTER_STATE_CHANGE_EXCEPTION);
 			}
 			try {
 				if (getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED).size() > 0) {

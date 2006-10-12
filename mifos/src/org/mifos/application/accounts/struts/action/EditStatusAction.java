@@ -23,7 +23,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -36,11 +35,8 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class EditStatusAction extends BaseAction {
 
-	public EditStatusAction() throws ServiceException {
-	}
-
 	@Override
-	protected BusinessService getService() throws ServiceException {
+	protected BusinessService getService() {
 		return getAccountBusinessService();
 	}
 
@@ -49,15 +45,15 @@ public class EditStatusAction extends BaseAction {
 		return true;
 	}
 
-	@TransactionDemarcate(joinToken=true)
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		doCleanUp(request.getSession(), form);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+				Constants.USERCONTEXT, request.getSession());
 		AccountBO accountBO = getAccountBusinessService().getAccount(
-				Integer.valueOf(((EditStatusActionForm) form).getAccountId()));
+				getIntegerValue(((EditStatusActionForm) form).getAccountId()));
 		getAccountBusinessService().initializeStateMachine(
 				userContext.getLocaleId(),
 				accountBO.getOffice().getOfficeId(),
@@ -77,61 +73,60 @@ public class EditStatusAction extends BaseAction {
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
-	@TransactionDemarcate(joinToken=true)
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
 		AccountBO accountBO = (AccountBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+				Constants.USERCONTEXT, request.getSession());
 		getMasterData(form, accountBO, request, userContext);
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
-	@TransactionDemarcate(joinToken=true)
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previous(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
 
-	@TransactionDemarcate(validateAndResetToken=true)
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return mapping.findForward(getDetailAccountPage(form));
 	}
-	
-	@TransactionDemarcate(validateAndResetToken=true)
+
+	@TransactionDemarcate(validateAndResetToken = true)
 	@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+				Constants.USERCONTEXT, request.getSession());
 		AccountBO accountBO = getAccountBusinessService().getAccount(
-				Integer.valueOf(editStatusActionForm.getAccountId()));
+				getIntegerValue(editStatusActionForm.getAccountId()));
 		accountBO.setUserContext(userContext);
 		accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
 		setInitialObjectForAuditLogging(accountBO);
 		Short flagId = null;
 		Short newStatusId = null;
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm.getFlagId()))
-			flagId = Short.valueOf(editStatusActionForm.getFlagId());
+			flagId = getShortValue(editStatusActionForm.getFlagId());
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
 				.getNewStatusId()))
-			newStatusId = Short.valueOf(editStatusActionForm.getNewStatusId());
+			newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
+		checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
 		accountBO.changeStatus(newStatusId, flagId, editStatusActionForm
 				.getNotes());
 		accountBO.update();
-		SessionUtils.setAttribute(SavingsConstants.NEW_FLAG_NAME,
-				SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request), request);
+		accountBO = null;
 		return mapping.findForward(getDetailAccountPage(form));
 	}
-	
+
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -149,8 +144,7 @@ public class EditStatusAction extends BaseAction {
 		return mapping.findForward(forward);
 	}
 
-	private AccountBusinessService getAccountBusinessService()
-			throws ServiceException {
+	private AccountBusinessService getAccountBusinessService() {
 		return (AccountBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Accounts);
 	}
@@ -176,7 +170,8 @@ public class EditStatusAction extends BaseAction {
 	}
 
 	private void getMasterData(ActionForm form, AccountBO accountBO,
-			HttpServletRequest request, UserContext userContext) throws Exception {
+			HttpServletRequest request, UserContext userContext)
+			throws Exception {
 		EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
 		editStatusActionForm.setCommentDate(DateHelper
 				.getCurrentDate(userContext.getPereferedLocale()));
@@ -184,8 +179,8 @@ public class EditStatusAction extends BaseAction {
 		String flagName = null;
 		List<AccountCheckListBO> checklist = getAccountBusinessService()
 				.getStatusChecklist(
-						Short.valueOf(editStatusActionForm.getNewStatusId()),
-						Short.valueOf(editStatusActionForm.getAccountTypeId()));
+						getShortValue(editStatusActionForm.getNewStatusId()),
+						getShortValue(editStatusActionForm.getAccountTypeId()));
 		SessionUtils.setAttribute(SavingsConstants.STATUS_CHECK_LIST,
 				checklist, request);
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
@@ -200,7 +195,7 @@ public class EditStatusAction extends BaseAction {
 				newStatusName, request);
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
 				.getNewStatusId())
-				&& isNewStatusIsCancel(Short.valueOf(editStatusActionForm
+				&& isNewStatusIsCancel(getShortValue(editStatusActionForm
 						.getNewStatusId())))
 			flagName = getAccountBusinessService().getFlagName(
 					userContext.getLocaleId(),
@@ -236,5 +231,18 @@ public class EditStatusAction extends BaseAction {
 					.getSavingsOffering().getPrdOfferingName());
 			editStatusActionForm.setInput("savings");
 		}
+	}
+
+	private void checkPermission(AccountBO accountBO, UserContext userContext,
+			Short newStatusId, Short flagId) throws Exception {
+		if (null != accountBO.getPersonnel())
+			getAccountBusinessService().checkPermissionForStatusChange(
+					newStatusId, userContext, flagId,
+					accountBO.getOffice().getOfficeId(),
+					accountBO.getPersonnel().getPersonnelId());
+		else
+			getAccountBusinessService().checkPermissionForStatusChange(
+					newStatusId, userContext, flagId,
+					accountBO.getOffice().getOfficeId(), userContext.getId());
 	}
 }

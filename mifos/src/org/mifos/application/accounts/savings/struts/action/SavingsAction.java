@@ -322,6 +322,9 @@ public class SavingsAction extends AccountAppAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		savings.getAccountState().setLocaleId(uc.getLocaleId());
+		for (AccountFlagMapping accountFlagMapping : savings.getAccountFlags()) {
+			accountFlagMapping.getFlag().setLocaleId(uc.getLocaleId());
+		}
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 

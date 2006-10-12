@@ -113,24 +113,6 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	private SavingsBO createSavingAccount() throws Exception {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test", Short
-				.valueOf("9"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
-		savingsOffering = helper.createSavingsOffering("dfasdasd", "sadd");
-		savings = new SavingsBO(userContext, savingsOffering, group,
-				AccountState.SAVINGS_ACC_APPROVED,
-				new Money(currency, "500.0"), getCustomFieldView());
-		savings.save();
-		HibernateUtil.getTransaction().commit();
-		return savings;
-	}
-
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -850,27 +832,6 @@ public class TestSavingsBO extends MifosTestCase {
 
 	}
 
-	public void testChangeStatusPermissionToPendingApprovalFailure()
-			throws Exception {
-		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-		savings = helper.createSavingsAccount("000100000000017",
-				savingsOffering, group,
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, createUser());
-
-		try {
-			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-					AccountTypes.SAVINGSACCOUNT, null);
-
-			savings.changeStatus(AccountState.SAVINGS_ACC_PENDINGAPPROVAL
-					.getValue(), null, "notes");
-			assertEquals(true, false);
-		} catch (Exception se) {
-			assertTrue(true);
-		}
-
-	}
-
 	public void testChangeStatusPermissionToCancelBlacklistedSucess()
 			throws Exception {
 		createInitialObjects();
@@ -887,27 +848,6 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(AccountStates.SAVINGS_ACC_CANCEL, savings
 				.getAccountState().getId().shortValue());
 
-	}
-
-	public void testChangeStatusPermissionToCancelBlacklistedFailure()
-			throws Exception {
-		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-		savings = helper.createSavingsAccount("000100000000017",
-				savingsOffering, group,
-				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, createUser());
-
-		try {
-			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-					AccountTypes.SAVINGSACCOUNT, null);
-			// 6 is blacklisted
-
-			savings.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(),
-					Short.valueOf("6"), "notes");
-			assertEquals(true, false);
-		} catch (Exception se) {
-			assertTrue(true);
-		}
 	}
 
 	public void testIsAdjustPossibleOnLastTrxn_OnPartialAccount()
@@ -4061,12 +4001,4 @@ public class TestSavingsBO extends MifosTestCase {
 				.get(Calendar.DATE), 0, 0, 0)));
 		TestObjectFactory.cleanUp(savingsBO);
 	}
-
-	private UserContext createUser() throws Exception {
-		this.userContext = TestUtils.makeUser(2);
-		createdBy = new PersonnelPersistence()
-				.getPersonnel(userContext.getId());
-		return userContext;
-	}
-
 }

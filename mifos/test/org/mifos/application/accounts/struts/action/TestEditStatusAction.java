@@ -1,11 +1,7 @@
 package org.mifos.application.accounts.struts.action;
 
-import java.net.URISyntaxException;
 import java.sql.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -13,6 +9,8 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -23,12 +21,12 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -52,31 +50,28 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 	private SavingsOfferingBO savingsOffering;
 
 	private String flowKey;
-	
+
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/accounts/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/accounts/struts-config.xml").getPath());
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		request.getSession(false).setAttribute("ActivityContext",
+				TestObjectFactory.getActivityContext());
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
 		flowManager.addFLow(flowKey, flow);
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);	
+				flowManager);
 	}
 
+	@Override
 	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(client);
@@ -86,15 +81,17 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
-	public void testLoad() throws Exception{
+	public void testLoad() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
-		accountBO = getLoanAccount(client, meeting);
+		accountBO = getLoanAccount(client, meeting,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("input", "loan");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("load_success");
 		verifyNoActionErrors();
@@ -104,31 +101,32 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 				request));
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
-						SavingsConstants.STATUS_LIST, request))
-						.size());
+						SavingsConstants.STATUS_LIST, request)).size());
 	}
 
-	public void testPreviewSuccess() throws Exception{
+	public void testPreviewSuccess() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
-		accountBO = getLoanAccount(client, meeting);
+		accountBO = getLoanAccount(client, meeting,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING);
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("input", "loan");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("load_success");
 		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,
 				request));
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
-						SavingsConstants.STATUS_LIST, request))
-						.size());
+						SavingsConstants.STATUS_LIST, request)).size());
 
 		setRequestPathInfo("/editStatusAction.do");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("method", "preview");
 		addRequestParameter("input", "loan");
 		addRequestParameter("notes", "Test");
@@ -147,24 +145,25 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 						.getSession()));
 	}
 
-	public void testPreviewFailure() throws Exception{
+	public void testPreviewFailure() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
-		accountBO = getLoanAccount(client, meeting);
+		accountBO = getLoanAccount(client, meeting,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING);
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("input", "loan");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("load_success");
 		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,
 				request));
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
-						SavingsConstants.STATUS_LIST, request))
-						.size());
+						SavingsConstants.STATUS_LIST, request)).size());
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "preview");
@@ -173,58 +172,63 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 				.getAccountTypeId().toString());
 		addRequestParameter("newStatusId", "8");
 		addRequestParameter("flagId", "1");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		assertEquals(1, getErrrorSize());
 		verifyActionErrors(new String[] { LoanConstants.MANDATORY_TEXTBOX });
 	}
 
-	public void testPrevious() throws Exception{
+	public void testPrevious() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
-		accountBO = getLoanAccount(client, meeting);
+		accountBO = getLoanAccount(client, meeting,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "previous");
 		addRequestParameter("input", "loan");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("previous_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
 
-	public void testCancel() throws Exception{
+	public void testCancel() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "cancel");
 		addRequestParameter("input", "loan");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("loan_detail_page");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 	}
 
-	public void testUpdateSuccessForLoan()throws Exception{
+	public void testUpdateSuccessForLoan() throws Exception {
 		TestObjectFactory.cleanUpChangeLog();
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
-		accountBO = getLoanAccount(client, meeting);
+		accountBO = getLoanAccount(client, meeting,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING);
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("input", "loan");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("load_success");
 		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,
 				request));
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
-						SavingsConstants.STATUS_LIST, request))
-						.size());
+						SavingsConstants.STATUS_LIST, request)).size());
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "preview");
@@ -234,7 +238,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 				.getAccountTypeId().toString());
 		addRequestParameter("newStatusId", "8");
 		addRequestParameter("flagId", "1");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("preview_success");
 
@@ -245,28 +250,58 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 				.getAccountTypeId().toString());
 		addRequestParameter("newStatusId", "8");
 		addRequestParameter("flagId", "1");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward(ActionForwards.loan_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.LOAN.getValue(),accountBO.getAccountId());
-		assertEquals(1,auditLogList.size());
-		assertEquals(EntityType.LOAN.getValue(),auditLogList.get(0).getEntityType());
-		assertEquals(3,auditLogList.get(0).getAuditLogRecords().size());
-		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
-			if(auditLogRecord.getFieldName().equalsIgnoreCase("Explanation")){
-				assertEquals("-",auditLogRecord.getOldValue());
-				assertEquals("Withdraw",auditLogRecord.getNewValue());
-			}else if(auditLogRecord.getFieldName().equalsIgnoreCase(" Note")){
-				assertEquals("-",auditLogRecord.getOldValue());
-				assertEquals("Test",auditLogRecord.getNewValue());
-			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
-				assertEquals("Active in Good Standing",auditLogRecord.getOldValue());
-				assertEquals("Closed- Rescheduled",auditLogRecord.getNewValue());
+		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
+				EntityType.LOAN.getValue(), accountBO.getAccountId());
+		assertEquals(1, auditLogList.size());
+		assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0)
+				.getEntityType());
+		assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
+		for (AuditLogRecord auditLogRecord : auditLogList.get(0)
+				.getAuditLogRecords()) {
+			if (auditLogRecord.getFieldName().equalsIgnoreCase("Explanation")) {
+				assertEquals("-", auditLogRecord.getOldValue());
+				assertEquals("Withdraw", auditLogRecord.getNewValue());
+			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(" Note")) {
+				assertEquals("-", auditLogRecord.getOldValue());
+				assertEquals("Test", auditLogRecord.getNewValue());
+			} else if (auditLogRecord.getFieldName().equalsIgnoreCase("Status")) {
+				assertEquals("Active in Good Standing", auditLogRecord
+						.getOldValue());
+				assertEquals("Closed- Rescheduled", auditLogRecord
+						.getNewValue());
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();
+	}
+
+	public void testUpdateStatusForLoanToCancel() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createInitialObjects();
+		accountBO = getLoanAccount(client, meeting,
+				AccountState.LOANACC_PARTIALAPPLICATION);
+		setRequestPathInfo("/editStatusAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter("accountId", accountBO.getAccountId().toString());
+		addRequestParameter("notes", "Test");
+		addRequestParameter("accountTypeId", accountBO.getAccountType()
+				.getAccountTypeId().toString());
+		addRequestParameter("newStatusId", AccountState.LOANACC_CANCEL
+				.getValue().toString());
+		addRequestParameter("flagId", AccountStateFlag.LOAN_WITHDRAW.getValue()
+				.toString());
+		addRequestParameter("input", "loan");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyForward(ActionForwards.loan_detail_page.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
 	}
 
 	public void testUpdateSuccessForSavings() throws Exception {
@@ -280,15 +315,15 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("input", "savings");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("load_success");
 		assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST,
 				request));
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
-						SavingsConstants.STATUS_LIST, request))
-						.size());
+						SavingsConstants.STATUS_LIST, request)).size());
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "preview");
@@ -298,7 +333,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 				.getAccountTypeId().toString());
 		addRequestParameter("newStatusId", "15");
 		addRequestParameter("flagId", "4");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("preview_success");
 
@@ -309,11 +345,64 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 				.getAccountTypeId().toString());
 		addRequestParameter("newStatusId", "15");
 		addRequestParameter("flagId", "4");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward(ActionForwards.savings_details_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+	}
+
+	public void testUpdateStatusForSavingsToCancel() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createInitialObjects();
+		savingsOffering = createSavingsOffering();
+		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue());
+		setRequestPathInfo("/editStatusAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter("accountId", accountBO.getAccountId().toString());
+		addRequestParameter("notes", "Test");
+		addRequestParameter("accountTypeId", accountBO.getAccountType()
+				.getAccountTypeId().toString());
+		addRequestParameter("input", "savings");
+		addRequestParameter("newStatusId", AccountState.SAVINGS_ACC_CANCEL
+				.getValue().toString());
+		addRequestParameter("flagId", AccountStateFlag.SAVINGS_BLACKLISTED
+				.getValue().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyForward(ActionForwards.savings_details_page.toString());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+	}
+
+	public void testUpdateStatusFailureNoPermission() throws Exception {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createInitialObjects();
+		savingsOffering = createSavingsOffering();
+		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue());
+		SessionUtils.setAttribute(Constants.USERCONTEXT, createUser(), request
+				.getSession());
+		setRequestPathInfo("/editStatusAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter("accountId", accountBO.getAccountId().toString());
+		addRequestParameter("notes", "Test");
+		addRequestParameter("accountTypeId", accountBO.getAccountType()
+				.getAccountTypeId().toString());
+		addRequestParameter("newStatusId", "15");
+		addRequestParameter("flagId", "4");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
+	}
+
+	private UserContext createUser() throws Exception {
+		this.userContext = TestUtils.makeUser(2);
+		return userContext;
 	}
 
 	private void createInitialObjects() {
@@ -328,7 +417,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 						System.currentTimeMillis()));
 	}
 
-	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
+	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
+			AccountState accountState) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
@@ -336,7 +426,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				Short.valueOf("5"), startDate, loanOffering);
+				accountState.getValue(), startDate, loanOffering);
 
 	}
 

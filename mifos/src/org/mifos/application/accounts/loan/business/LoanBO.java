@@ -385,7 +385,7 @@ public class LoanBO extends AccountBO {
 		return !(getAccountState().getId().equals(
 				AccountState.LOANACC_CANCEL.getValue())
 				|| getAccountState().getId().equals(
-						AccountState.LOANACC_BADSTANDING.getValue())
+						AccountState.LOANACC_RESCHEDULED.getValue())
 				|| getAccountState().getId().equals(
 						AccountState.LOANACC_OBLIGATIONSMET.getValue()) || getAccountState()
 				.getId().equals(AccountState.LOANACC_WRITTENOFF.getValue()));
