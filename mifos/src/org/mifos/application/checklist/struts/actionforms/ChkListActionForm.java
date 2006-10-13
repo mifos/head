@@ -62,6 +62,8 @@ public class ChkListActionForm extends BaseActionForm {
 	}
 
 	public void setDetailsList(int i, String string) {
+		if(StringUtils.isNullOrEmpty(string))
+			return;
 		while (this.detailsList.size() <= i)
 			this.detailsList.add(new String());
 		this.detailsList.set(i, string);
@@ -131,6 +133,14 @@ public class ChkListActionForm extends BaseActionForm {
 		this.stateName = stateName;
 	}
 
+	public List<String> getValidCheckListDetails(){
+		List<String> validCheckList = new ArrayList<String>();
+		for(String detail : getDetailsList())
+			if(!StringUtils.isNullOrEmpty(detail))
+				validCheckList.add(detail);
+		return validCheckList;
+	}
+	
 	@Override
 	public ActionErrors validate(ActionMapping mappping,
 			HttpServletRequest request) {
@@ -155,9 +165,9 @@ public class ChkListActionForm extends BaseActionForm {
 		if (StringUtils.isNullOrEmpty(getChecklistName()))
 			addError(errors, "checklistName", CheckListConstants.MANDATORY,
 					CheckListConstants.CHECKLIST_NAME);
-		else if (getChecklistName().length() > 50)
+		else if (getChecklistName().length() > 100)
 			addError(errors, "checklistName", CheckListConstants.MAX_LENGTH,
-					CheckListConstants.CHECKLIST_NAME, "500");
+					CheckListConstants.CHECKLIST_NAME, "100");
 		for (String items : getDetailsList())
 			if (items.length() > 250)
 				addError(errors, "details", CheckListConstants.MAX_LENGTH,
@@ -168,9 +178,17 @@ public class ChkListActionForm extends BaseActionForm {
 		if (StringUtils.isNullOrEmpty(getStateId()))
 			addError(errors, "stateId", CheckListConstants.MANDATORY,
 					CheckListConstants.STATE_COMBO);
-		if (getDetailsList().size() == 0)
+		if (getValidCheckListDetails().size() == 0)
 			addError(errors, "detailsList", CheckListConstants.MANDATORY,
 					CheckListConstants.DETAILS);
 		return errors;
+	}
+
+	@Override
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		super.reset(mapping, request);
+		String method = request.getParameter("method");
+		if (method.equals(Methods.preview.toString()) || method.equals(Methods.managePreview.toString()))
+			detailsList = new ArrayList<String>();
 	}
 }

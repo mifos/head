@@ -227,13 +227,10 @@
 													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
 
 														varStatus="loop">
-														<bean:define id="ctr1" toScope="request">
-															<c:out value="${loop.index}" />
-														</bean:define>
 														<tr id="myvalue${loop.index}div">
 															<input name='mycheckBOx' type="checkbox"
 																value="${item}" />${item}
-															<input name='myvalue(${loop.index})' type="hidden"
+															<input name='detailsList[${loop.index}]' type="hidden"
 																value="${item}" />
 														</tr>
 													</c:forEach>

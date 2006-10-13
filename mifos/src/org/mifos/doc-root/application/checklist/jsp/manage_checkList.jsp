@@ -228,7 +228,7 @@
 												<tr id="myvalue${loop.index}div">
 													<input name='mycheckBOx' type="checkbox"
 														value="${item}" />${item}
-													<input name='myvalue(${loop.index})' type="hidden"
+													<input name='detailsList[${loop.index}]' type="hidden"
 														value="${item}" />
 																
 												</tr>

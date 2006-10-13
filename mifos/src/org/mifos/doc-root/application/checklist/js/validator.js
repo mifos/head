@@ -42,24 +42,20 @@ function createCheckList()
 	if(document.getElementsByName('text')[0].value)	
 	{
 		var para = document.getElementById("myDiv");								
-		var newtd  = document.createElement("TD"); 			
 		var detailsTxt  = document.createElement("TD");
 		var divIdName = "my"+i+"Div";		
-		newtd.setAttribute("id",divIdName);			
+		detailsTxt.setAttribute("id",divIdName);
 		var textArea=document.getElementsByName('text')[0].value;		
-		newtd.innerHTML +="<input type='checkbox'  name='checkBox("+i+")' value='"+document.getElementsByName('text')[0].value+"'>";		
+		detailsTxt.innerHTML +="<input type='checkbox'  name='checkBox("+i+")' value='"+document.getElementsByName('text')[0].value+"'>";
 		var incrementer=0;		
 		while(incrementer<textArea.length)
 		{
 			var temp=incrementer;
-			newtd.innerHTML+=textArea.substr(temp,80);
-			newtd.innerHTML+="<br>";		
+			detailsTxt.innerHTML+=textArea.substr(temp,80);
+			detailsTxt.innerHTML+="<br>";
 			incrementer=incrementer+80;
 		}		
-		detailTxt += document.getElementsByName('text')[0].value + "^";
-		newtd.innerHTML +="<input type='hidden'  name='value("+i+")' value='"+document.getElementsByName('text')[0].value+"' >";
 		detailsTxt.innerHTML +="<input type='hidden'  name='detailsList["+i+"]' value='"+document.getElementsByName('text')[0].value+"' >";
-		para.appendChild(newtd);				
 		para.appendChild(detailsTxt);
 		i++;
 		numberOfItems++;	

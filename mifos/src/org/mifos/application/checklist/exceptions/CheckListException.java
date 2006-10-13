@@ -51,7 +51,4 @@ public class CheckListException extends ApplicationException {
 		super(key);
 	}
 
-	public CheckListException(String key, Throwable cause) {
-		super(key, cause);
-	}
 }

@@ -92,6 +92,7 @@
 										<mifos:mifoslabel name="product.loanaccountchanged" bundle="ProductDefUIResources" />:</span></td>
 										<td width="53%" valign="top" class="fontnormal"><mifos:mifosnumbertext
 											property="latenessDays" maxValue="32767"
+											maxlength="4"
 											value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'lateness_days')}" size="4"/> <mifos:mifoslabel
 											name="product.days" bundle="ProductDefUIResources" /></td>
 									</tr>
@@ -123,6 +124,7 @@
 											:</span></td>
 										<td width="53%" valign="top" class="fontnormal"><mifos:mifosnumbertext
 											property="dormancyDays" maxValue="32767"
+											maxlength="4"
 											value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'dormancy_days')}" size="4"/> <mifos:mifoslabel
 											name="product.days" bundle="ProductDefUIResources" /></td>
 									</tr>

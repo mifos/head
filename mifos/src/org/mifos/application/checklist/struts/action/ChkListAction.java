@@ -74,7 +74,7 @@ public class ChkListAction extends BaseAction {
 			throws Exception {
 
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
-		List<String> details = chkListActionForm.getDetailsList();
+		List<String> details = chkListActionForm.getValidCheckListDetails();
 		List<CheckListStatesView> states = getStates(chkListActionForm, request);
 		SessionUtils.setAttribute(CheckListConstants.STATES, states, request);
 		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
@@ -86,7 +86,7 @@ public class ChkListAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
-		List<String> details = chkListActionForm.getDetailsList();
+		List<String> details = chkListActionForm.getValidCheckListDetails();
 		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
 		isValidCheckListState(
 				getShortValue(chkListActionForm.getMasterTypeId()),
@@ -102,7 +102,7 @@ public class ChkListAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
-		List<String> details = chkListActionForm.getDetailsList();
+		List<String> details = chkListActionForm.getValidCheckListDetails();
 		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request
 				.getSession());
 		return mapping.findForward(ActionForwards.previous_success.toString());
@@ -123,7 +123,7 @@ public class ChkListAction extends BaseAction {
 					customerLevelEntity, customerStatusEntity,
 					chkListActionForm.getChecklistName(),
 					CheckListConstants.STATUS_ACTIVE, chkListActionForm
-							.getDetailsList(), getUserContext(request)
+							.getValidCheckListDetails(), getUserContext(request)
 							.getLocaleId(), getUserContext(request).getId());
 			customerCheckListBO.save();
 		} else {
@@ -143,7 +143,7 @@ public class ChkListAction extends BaseAction {
 					productTypeEntity, accountStateEntity, chkListActionForm
 							.getChecklistName(),
 					CheckListConstants.STATUS_ACTIVE, chkListActionForm
-							.getDetailsList(), getUserContext(request)
+							.getValidCheckListDetails(), getUserContext(request)
 							.getLocaleId(), getUserContext(request).getId());
 			accountCheckListBO.save();
 		}
@@ -250,7 +250,7 @@ public class ChkListAction extends BaseAction {
 				masterData, request);
 		List<CheckListStatesView> states = getStates(chkListActionForm, request);
 		SessionUtils.setAttribute(CheckListConstants.STATES, states, request);
-		List<String> details = chkListActionForm.getDetailsList();
+		List<String> details = chkListActionForm.getValidCheckListDetails();
 		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
@@ -261,7 +261,7 @@ public class ChkListAction extends BaseAction {
 			throws Exception {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
 
-		List<String> details = chkListActionForm.getDetailsList();
+		List<String> details = chkListActionForm.getValidCheckListDetails();
 		List<CheckListStatesView> states = getStates(chkListActionForm, request);
 		SessionUtils.setAttribute(CheckListConstants.STATES, states, request);
 		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
@@ -273,7 +273,7 @@ public class ChkListAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
-		List<String> details = chkListActionForm.getDetailsList();
+		List<String> details = chkListActionForm.getValidCheckListDetails();
 		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
 		return mapping.findForward(ActionForwards.managepreview_success
 				.toString());
@@ -301,11 +301,10 @@ public class ChkListAction extends BaseAction {
 					getShortValue(chkListActionForm.getStateId()));
 			CustomerCheckListBO customerCheckList = (CustomerCheckListBO) SessionUtils
 					.getAttribute(Constants.BUSINESS_KEY, request);
-
 			customerCheckList.update(customerLevelEntity, customerStatusEntity,
 					chkListActionForm.getChecklistName(),
 					getShortValue(chkListActionForm.getChecklistStatus()),
-					chkListActionForm.getDetailsList(), getUserContext(request)
+					chkListActionForm.getValidCheckListDetails(), getUserContext(request)
 							.getLocaleId(), getUserContext(request).getId());
 		} else {
 			ProductTypeEntity productTypeEntity = null;
@@ -326,7 +325,7 @@ public class ChkListAction extends BaseAction {
 			accountCheckList.update(productTypeEntity, accountStateEntity,
 					chkListActionForm.getChecklistName(),
 					getShortValue(chkListActionForm.getChecklistStatus()),
-					chkListActionForm.getDetailsList(), getUserContext(request)
+					chkListActionForm.getValidCheckListDetails(), getUserContext(request)
 							.getLocaleId(), getUserContext(request).getId());
 		}
 		return mapping.findForward(ActionForwards.update_success.toString());

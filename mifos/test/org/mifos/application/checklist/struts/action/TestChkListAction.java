@@ -429,6 +429,72 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
+	public void testUpdate_customer() throws Exception{
+		CheckListBO checkList = TestObjectFactory.createCustomerChecklist(
+				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
+						.getValue(), (short) 1);
+		HibernateUtil.closeSession();
+		checkList = (CheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, checkList.getChecklistId());
+		
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "update");
+		addRequestParameter("checklistName", checkList.getChecklistName());
+		addRequestParameter("isCustomer", "true");
+		addRequestParameter("detailsList[0]", "newdetails");
+		addRequestParameter("masterTypeId", ((CustomerCheckListBO)checkList).getCustomerLevel()
+				.getId().toString());
+		addRequestParameter("stateId", ((CustomerCheckListBO)checkList).getCustomerStatus()
+				.getId().toString());
+		addRequestParameter("checklistStatus", CheckListConstants.STATUS_INACTIVE.toString());
+		
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,checkList,request);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.update_success.toString());
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		HibernateUtil.closeSession();
+		checkList = (CheckListBO) TestObjectFactory.getObject(
+				CustomerCheckListBO.class, checkList.getChecklistId());
+		assertEquals(1,checkList.getChecklistDetails().size());
+		TestObjectFactory.cleanUp(checkList);
+	}
+	
+	public void testUpdate_product() throws Exception{
+		CheckListBO checkList = TestObjectFactory.createAccountChecklist(
+				ProductType.LOAN.getValue(),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, (short) 1);
+		HibernateUtil.closeSession();
+		checkList = (CheckListBO) TestObjectFactory.getObject(
+				AccountCheckListBO.class, checkList.getChecklistId());
+		
+		setRequestPathInfo("/chkListAction");
+		addRequestParameter("method", "update");
+		addRequestParameter("checklistName", checkList.getChecklistName());
+		addRequestParameter("isCustomer", "false");
+		addRequestParameter("detailsList[0]", "newdetails");
+		addRequestParameter("masterTypeId", ((AccountCheckListBO)checkList).getProductTypeEntity()
+				.getProductTypeID().toString());
+		addRequestParameter("stateId", ((AccountCheckListBO)checkList).getAccountStateEntity()
+				.getId().toString());
+		addRequestParameter("checklistStatus", CheckListConstants.STATUS_INACTIVE.toString());
+		
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,checkList,request);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyForward(ActionForwards.update_success.toString());
+		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+		HibernateUtil.closeSession();
+		checkList = (CheckListBO) TestObjectFactory.getObject(
+				AccountCheckListBO.class, checkList.getChecklistId());
+		assertEquals(1,checkList.getChecklistDetails().size());
+		TestObjectFactory.cleanUp(checkList);
+	}
+	
 	public void testCancelManage() {
 		setRequestPathInfo("/chkListAction");
 		addRequestParameter("method", "cancelManage");
