@@ -398,7 +398,7 @@
 														<tr class="fontnormal">
 															<td colspan="3">
 																<mifos:mifoslabel name="product.recur" bundle="ProductDefUIResources" />
-																<mifos:mifosnumbertext property="recurAfter" size="3" maxValue="3" />
+																<mifos:mifosnumbertext property="recurAfter" size="3" maxlength="3" />
 															</td>
 															<td>
 																<span id="week"> <mifos:mifoslabel name="product.week" bundle="ProductDefUIResources" /> </span> <span id="month"> <mifos:mifoslabel name="product.month" bundle="ProductDefUIResources" /> </span>
