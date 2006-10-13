@@ -48,6 +48,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
@@ -72,9 +73,10 @@ public class StateXMLParser {
 		return instance;
 	}
 
-	public Map<StateEntity,List<StateEntity>> loadMapFromXml(String filename, String configurationName) {
+	public Map<StateEntity, List<StateEntity>> loadMapFromXml(String filename,
+			String configurationName) {
 
-		Map<StateEntity,List<StateEntity>> transitionMap = new HashMap<StateEntity,List<StateEntity>>();
+		Map<StateEntity, List<StateEntity>> transitionMap = new HashMap<StateEntity, List<StateEntity>>();
 
 		try {
 
@@ -98,20 +100,21 @@ public class StateXMLParser {
 			Document document = builder.parse(new File(ResourceLoader
 					.getURI(filename)));
 			Node mapToprocess = null;
-			/*String configurationName = "";
-			if (stateConfiguration=="configuration1")
-				configurationName = "1";
-			else
-				configurationName = "2";*/
+			/*
+			 * String configurationName = ""; if
+			 * (stateConfiguration=="configuration1") configurationName = "1";
+			 * else configurationName = "2";
+			 */
 
-			NodeList configMaps = document.getElementsByTagName("stateConfiguration");
+			NodeList configMaps = document
+					.getElementsByTagName("stateConfiguration");
 			// NodeList configMaps = firstChild.getChildNodes();
 
 			for (int m = 0; m < configMaps.getLength(); m++) {
 
 				Node stateConfiguration = configMaps.item(m);
-				if (configurationName.equals(stateConfiguration.getAttributes().getNamedItem("configurationName")
-						.getNodeValue())) {
+				if (configurationName.equals(stateConfiguration.getAttributes()
+						.getNamedItem("configurationName").getNodeValue())) {
 					mapToprocess = stateConfiguration;
 				}
 
@@ -132,8 +135,9 @@ public class StateXMLParser {
 
 					if ("stateid".equals(info.getLocalName())) {
 						Element ele = (Element) info;
-						currentState = new StateEntity(Short.valueOf(((Text) ele
-								.getFirstChild()).getData()));
+						currentState = new StateEntity(
+								Short.valueOf(((Text) ele.getFirstChild())
+										.getData()));
 					}
 					if ("possiblestates".equals(info.getLocalName())) {
 						// get all the childern
@@ -154,7 +158,8 @@ public class StateXMLParser {
 									Short possibleTrantionId = Short
 											.valueOf(((Text) element
 													.getFirstChild()).getData());
-									 currntPossibleStates.add(new StateEntity(possibleTrantionId));
+									currntPossibleStates.add(new StateEntity(
+											possibleTrantionId));
 
 								}
 							}
@@ -167,31 +172,12 @@ public class StateXMLParser {
 				if (currentState != null)
 					transitionMap.put(currentState, currntPossibleStates);
 			}
-
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-
 		} catch (IOException e) {
-			e.printStackTrace();
-
 		} catch (SAXParseException e) {
-			e.printStackTrace();
-
 		} catch (SAXException e) {
-			e.printStackTrace();
-
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
-
 		}
 		return transitionMap;
 	}
-
-	public static void main(String[] arg) {
-		StateXMLParser.getInstance().loadMapFromXml(
-				"org/mifos/framework/util/resources/stateMachine/StateMachine_saving.xml",
-				"configuration 1");
-	}
-
-
 }

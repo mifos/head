@@ -141,10 +141,14 @@ public abstract class BaseAction extends DispatchAction {
 		}
 	}
 
-	private void createToken(HttpServletRequest request){
+	private void createToken(HttpServletRequest request) throws PageExpiredException{
 		String flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = (FlowManager) request.getSession()
 				.getAttribute(Constants.FLOWMANAGER);
+		if(flowManager == null) {
+			flowManager = new FlowManager();
+			request.getSession(false).setAttribute(Constants.FLOWMANAGER,flowManager);
+		}
 		flowManager.addFLow(flowKey, new Flow());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 

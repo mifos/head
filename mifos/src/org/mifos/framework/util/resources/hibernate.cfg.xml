@@ -33,7 +33,6 @@
 		<mapping resource="org/mifos/framework/security/util/PersonalRoles.hbm.xml" />
 		<!-- Product Definition -->
 		<mapping resource="org/mifos/application/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PrdType.hbm.xml" />
 		<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PaymentType.hbm.xml" />
 		<!-- Audit Log -->
 		<mapping resource="org/mifos/framework/struts/plugin/valueObjects/EntityMaster.hbm.xml" />
