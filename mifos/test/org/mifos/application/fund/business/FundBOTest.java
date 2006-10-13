@@ -4,7 +4,6 @@ import org.mifos.application.fund.exception.FundException;
 import org.mifos.application.fund.util.helpers.FundConstants;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

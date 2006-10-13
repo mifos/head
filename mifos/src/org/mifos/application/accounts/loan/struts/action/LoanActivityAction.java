@@ -41,7 +41,6 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 
 public class LoanActivityAction extends AccountAppAction {

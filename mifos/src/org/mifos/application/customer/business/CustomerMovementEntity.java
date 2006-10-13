@@ -58,7 +58,7 @@ public class CustomerMovementEntity extends PersistentObject {
 
 	private final OfficeBO office;
 
-	public CustomerMovementEntity(CustomerBO customer, Date startDate){
+	public CustomerMovementEntity(CustomerBO customer, Date startDate) {
 		this.customer = customer;
 		this.office = customer.getOffice();
 		this.startDate = startDate;

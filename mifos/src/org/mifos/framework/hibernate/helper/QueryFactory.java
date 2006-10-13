@@ -39,8 +39,6 @@ package org.mifos.framework.hibernate.helper;
 
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.exceptions.HibernateProcessException;
 
 
 /**

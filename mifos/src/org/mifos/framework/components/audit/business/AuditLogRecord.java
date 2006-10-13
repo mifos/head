@@ -50,6 +50,7 @@ public class AuditLogRecord extends PersistentObject {
 
 	private final String newValue;
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final AuditLog auditLog;
 
 	protected AuditLogRecord() {

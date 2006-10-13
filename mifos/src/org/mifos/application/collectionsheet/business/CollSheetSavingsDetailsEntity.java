@@ -44,7 +44,6 @@ import org.mifos.application.collectionsheet.persistence.service.CollectionSheet
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
@@ -67,11 +66,11 @@ public class CollSheetSavingsDetailsEntity extends PersistentObject {
 	
 	private Money recommendedAmntDue ;
 	
-	private Money amntOverDue ;
+	private Money amntOverDue;
 	
 	private Short installmentId;
 	
-	private Money totalSavingsAmntDue ;
+	private Money totalSavingsAmntDue;
 
 	public Money getAccountBalance() {
 		return accountBalance;

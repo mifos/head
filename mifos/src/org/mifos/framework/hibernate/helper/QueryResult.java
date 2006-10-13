@@ -38,9 +38,9 @@
 package org.mifos.framework.hibernate.helper;
 
 import java.util.List;
-import org.mifos.framework.util.valueobjects.ValueObject;
-import org.hibernate.Session;
+
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 

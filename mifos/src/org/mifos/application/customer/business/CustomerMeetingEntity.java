@@ -48,6 +48,7 @@ import org.mifos.framework.business.PersistentObject;
  */
 public class CustomerMeetingEntity extends PersistentObject {
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final Integer custMeetingId;
 
 	private MeetingBO meeting;

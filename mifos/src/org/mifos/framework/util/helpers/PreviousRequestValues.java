@@ -38,8 +38,8 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.util.HashMap;
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * This class stores previous request values and is used to dump request values

@@ -15,7 +15,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -110,7 +109,6 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 	public void testMakeRepaymentForCurrentDateSameAsInstallmentDate(){
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Money amount=((LoanBO)accountBO).getTotalEarlyRepayAmount();
-		String accountGlobalNum=request.getParameter("globalAccountNum");
 		setRequestPathInfo("/repayLoanAction");
 		addRequestParameter("method", "makeRepayment");
 		addRequestParameter("globalAccountNum",accountBO.getGlobalAccountNum());
@@ -132,7 +130,6 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		
 		Money amount=((LoanBO)accountBO).getTotalEarlyRepayAmount();
 	
-		String accountGlobalNum=request.getParameter("globalAccountNum");
 		setRequestPathInfo("/repayLoanAction");
 		addRequestParameter("method", "makeRepayment");
 		addRequestParameter("globalAccountNum",accountBO.getGlobalAccountNum());

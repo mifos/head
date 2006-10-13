@@ -1,17 +1,15 @@
 package org.mifos.application.accounts.loan.struts.actionforms;
 
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionMapping;
-
-import org.mifos.application.util.helpers.Methods;
-
-import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
+import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class AccountStatusActionForm extends BaseActionForm {
 	private String personnelId;

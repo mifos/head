@@ -40,13 +40,12 @@ package org.mifos.application.reports.business.dao;
 
 
 import java.sql.Connection;
-import java.util.List;
-import java.util.ArrayList;
-import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mifos.application.reports.business.ReportsDataSource;
 import org.mifos.application.reports.business.ReportsParamQuery;

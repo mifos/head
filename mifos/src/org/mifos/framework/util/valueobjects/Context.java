@@ -1,12 +1,10 @@
 package org.mifos.framework.util.valueobjects;
 
 import java.io.Serializable;
-import java.lang.String;
 import java.util.HashMap;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-
 
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;

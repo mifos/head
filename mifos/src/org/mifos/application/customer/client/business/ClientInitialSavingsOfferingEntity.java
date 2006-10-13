@@ -40,8 +40,10 @@ package org.mifos.application.customer.client.business;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.business.PersistentObject;
 
-public class ClientInitialSavingsOfferingEntity extends PersistentObject{
+public class ClientInitialSavingsOfferingEntity extends PersistentObject {
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final Integer clientOfferingId; 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final ClientBO client;
 	private final SavingsOfferingBO savingsOffering;
 	

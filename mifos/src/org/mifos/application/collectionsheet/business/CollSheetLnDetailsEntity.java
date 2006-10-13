@@ -45,7 +45,6 @@ import org.mifos.application.collectionsheet.persistence.service.CollectionSheet
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -323,6 +322,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 	 *            Object to be compared for equality.
 	 * @return - Returns true if the objects are equal else returns false.
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		CollSheetLnDetailsEntity collectionSheetLoanDetailsObj = (CollSheetLnDetailsEntity) obj;
 		if (null != loanDetailsId
@@ -343,6 +343,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 
 	}
 
+	@Override
 	public int hashCode() {
 		return this.accountId.hashCode();
 	}
@@ -350,10 +351,8 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 	/**
 	 * This sets accountId,amntToBeDisbursed and sets installment id to null
 	 * because installments haven't begun yet.
-	 * 
-	 * @param loan
 	 */
-public void addDisbursalDetails(LoanBO loan) {
+    public void addDisbursalDetails(LoanBO loan) {
 		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("inside add disbursaldetails");
 		
 		this.accountId = loan.getAccountId();

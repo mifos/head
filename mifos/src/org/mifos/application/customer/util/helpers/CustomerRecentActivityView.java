@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import org.mifos.framework.business.View;
 import org.mifos.framework.struts.tags.DateHelper;
-import org.mifos.framework.util.helpers.Money;
 
 public class CustomerRecentActivityView extends View {
 

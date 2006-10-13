@@ -19,19 +19,10 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountActionDateEntity extends TestAccount {
-
-	private TestObjectPersistence testObjectPersistence;
-
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		testObjectPersistence = new TestObjectPersistence();
-	}
 
 	public static void addAccountActionDate(
 			AccountActionDateEntity accountAction, AccountBO account) {

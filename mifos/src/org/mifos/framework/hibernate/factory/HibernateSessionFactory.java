@@ -38,8 +38,8 @@
 package org.mifos.framework.hibernate.factory;
 
 
-import org.hibernate.*;
-import org.hibernate.cfg.*;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 
 /**

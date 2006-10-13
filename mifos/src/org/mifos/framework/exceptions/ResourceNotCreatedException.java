@@ -38,7 +38,6 @@
 
 package org.mifos.framework.exceptions;
 
-import org.mifos.framework.exceptions.SystemException;
 
 /**
  * This exception is thrown whenever we try to create an instance of a resource 

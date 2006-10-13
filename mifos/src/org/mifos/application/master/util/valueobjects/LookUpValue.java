@@ -39,7 +39,7 @@
 package org.mifos.application.master.util.valueobjects;
 
 import java.util.Set;
-import java.io.Serializable;
+
 import org.mifos.framework.util.valueobjects.ValueObject;
 
 public class LookUpValue extends ValueObject{

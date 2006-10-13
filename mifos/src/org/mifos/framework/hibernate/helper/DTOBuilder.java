@@ -38,11 +38,12 @@
 package org.mifos.framework.hibernate.helper;
 
 
+import java.lang.reflect.Method;
+
+import org.hibernate.type.Type;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateSearchException;
-import org.hibernate.type.Type;
-import java.lang.reflect.Method;
 
 
 /**

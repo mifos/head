@@ -6,9 +6,8 @@
  */
 package org.mifos.api;
 
-import org.mifos.www.services.FindLoanResponse;
-import org.mifos.www.services.Loan;
 import org.apache.log4j.Logger;
+import org.mifos.www.services.FindLoanResponse;
 
 /**
  * MifosServiceSkeleton java skeleton for the axisService

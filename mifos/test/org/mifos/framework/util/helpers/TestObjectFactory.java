@@ -608,7 +608,7 @@ public class TestObjectFactory {
 		try {
 			loan.save();
 		} catch (AccountException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		HibernateUtil.commitTransaction();
 		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));

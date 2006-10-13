@@ -76,7 +76,8 @@ public class MoneyCompositeUserType implements CompositeUserType {
 		return new Type[] { Hibernate.SHORT, Hibernate.BIG_DECIMAL };
 	}
 
-	public Object getPropertyValue(Object component, int property) throws HibernateException {
+	public Object getPropertyValue(Object component, int property) 
+	throws HibernateException {
 		Money money = (Money) component;
 		if (property == 0)
 			return money.getCurrency();

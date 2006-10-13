@@ -37,7 +37,7 @@
  */
 package org.mifos.framework.exceptions;
 
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.struts.plugin.InitializerPlugin;
 
 /**
  * This Exception is thrown from the {@link InitializerPlugin} when 

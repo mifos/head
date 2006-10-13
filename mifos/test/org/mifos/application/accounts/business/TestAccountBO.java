@@ -416,7 +416,7 @@ public class TestAccountBO extends TestAccount {
 		for (AccountNotesEntity accountNotes : accountBO
 				.getRecentAccountNotes()) {
 			assertEquals("Last note added is account updated",
-					"account updated", accountNotesEntity.getComment());
+					"account updated", accountNotes.getComment());
 			break;
 		}
 	}

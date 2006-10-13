@@ -38,8 +38,6 @@
 
 package org.mifos.application.reports.business;
 
-import java.util.Set;
-
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.security.util.UserContext;
 

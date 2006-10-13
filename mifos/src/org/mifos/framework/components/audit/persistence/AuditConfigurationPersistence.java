@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
@@ -14,8 +13,6 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.util.valueobjects.LookUpEntity;
 import org.mifos.application.master.util.valueobjects.LookUpLabel;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
-import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 

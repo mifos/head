@@ -9,27 +9,35 @@
 		</id>
 		<property name="accountId" column="ACCNT_ID" type="integer"/>
 		
-		<property name="accountBalance" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+		<property name="accountBalance" 
+		    type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
 			<column name="ACCNT_BALANCE_CURRENCY" />	
 			<column name="ACCNT_BALANCE" />
 		</property>
 		
-		<property name="recommendedAmntDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+		<property name="recommendedAmntDue" 
+		    type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
 			<column name="RECOMMENDED_AMNT_DUE_CURRENCY" />
 			<column name="RECOMMENDED_AMNT_DUE" />
 		</property>
 		
-		<property name="amntOverDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+		<property name="amntOverDue" 
+		    type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
 			<column name="AMNT_OVERDUE_CURRENCY" />	
 			<column name="AMNT_OVERDUE" />
 		</property>
 		<property name="installmentId" column="INSTALLMENT_ID" type="short"/>
 		
-		<property name="totalSavingsAmntDue" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
+		<property name="totalSavingsAmntDue" 
+		    type="org.mifos.framework.util.helpers.MoneyCompositeUserType" >
 			<column name="TOTAL_SAVINGS_AMNT_DUE_CURRENCY" />	
 			<column name="TOTAL_SAVINGS_AMNT_DUE" />
 		</property>
-		<many-to-one name="collectionSheetCustomer" column="COLL_SHEET_CUST_ID" class="org.mifos.application.collectionsheet.business.CollSheetCustBO" unique="true" />
+
+		<many-to-one name="collectionSheetCustomer" 
+		    column="COLL_SHEET_CUST_ID" 
+		    class="org.mifos.application.collectionsheet.business.CollSheetCustBO" 
+		    unique="true" />
 		
 	</class>
 </hibernate-mapping>

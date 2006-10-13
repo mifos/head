@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.mifos.application.checklist.business.CheckListBO;
-import org.mifos.application.checklist.business.CheckListDetailEntity;
 import org.mifos.application.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;

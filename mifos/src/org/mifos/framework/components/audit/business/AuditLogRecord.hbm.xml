@@ -13,7 +13,9 @@
   		<property name="fieldName" column="FIELD_NAME" type="string" access="field"/>
         <property name="oldValue" column="OLD_VALUE" type="string" access="field"/>
         <property name="newValue" column="NEW_VALUE" type="string" access="field"/>
-        <many-to-one  name="auditLog" column="CHANGE_LOG_ID" class="org.mifos.framework.components.audit.business.AuditLog"  access="field"/>
+        <many-to-one  name="auditLog" column="CHANGE_LOG_ID" 
+            class="org.mifos.framework.components.audit.business.AuditLog"
+            access="field"/>
       
     </class>
     

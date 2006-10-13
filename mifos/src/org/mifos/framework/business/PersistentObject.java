@@ -3,7 +3,7 @@ package org.mifos.framework.business;
 import java.io.Serializable;
 import java.util.Date;
 
-public abstract class PersistentObject implements Serializable{
+public abstract class PersistentObject implements Serializable {
 	
 	protected Date createdDate;
 	protected Short createdBy;

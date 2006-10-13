@@ -1,12 +1,12 @@
 package org.mifos.framework.components.tabletag;
 
-import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
-import org.mifos.framework.util.helpers.SearchObject;
-
-import junit.framework.TestCase;
 import static junitx.framework.StringAssert.assertContains;
 import static junitx.framework.StringAssert.assertNotContains;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
+import junit.framework.TestCase;
+
+import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
+import org.mifos.framework.util.helpers.SearchObject;
 
 public class TableTagTest extends TestCase {
 	

@@ -1,9 +1,9 @@
 
    package org.mifos.application.master.util.valueobjects;
 
-    import org.mifos.framework.util.valueobjects.ValueObject;
-    import java.util.Set;
     import java.util.List;
+
+import org.mifos.framework.util.valueobjects.ValueObject;
 
     public class StatusMaster extends ValueObject
     {

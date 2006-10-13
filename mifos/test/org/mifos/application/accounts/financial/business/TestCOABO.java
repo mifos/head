@@ -2,12 +2,11 @@ package org.mifos.application.accounts.financial.business;
 
 import java.util.Set;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.COACache;
 import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.TestConstants;
 
 public class TestCOABO extends MifosTestCase {

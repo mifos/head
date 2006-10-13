@@ -40,7 +40,6 @@ package org.mifos.application.fees.business.service;
 import java.util.List;
 
 import org.mifos.application.fees.business.FeeBO;
-import org.mifos.application.fees.exceptions.FeeException;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.framework.business.BusinessObject;

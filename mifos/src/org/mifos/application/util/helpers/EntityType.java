@@ -1,6 +1,5 @@
 package org.mifos.application.util.helpers;
 
-import org.mifos.application.customer.util.helpers.CustomerStatus;
 
 public enum EntityType {
 

@@ -25,7 +25,6 @@
 package org.mifos.framework.components.logger;
 import java.util.ResourceBundle;
 
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 

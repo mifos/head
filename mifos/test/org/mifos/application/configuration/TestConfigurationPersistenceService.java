@@ -37,9 +37,8 @@
  */
 package org.mifos.application.configuration;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.mifos.application.configuration.persistence.service.ConfigurationPersistenceService;
+import org.mifos.framework.MifosTestCase;
 
 public class TestConfigurationPersistenceService extends MifosTestCase {
 

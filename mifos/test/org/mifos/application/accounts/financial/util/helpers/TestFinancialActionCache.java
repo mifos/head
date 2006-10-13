@@ -1,16 +1,9 @@
 package org.mifos.application.accounts.financial.util.helpers;
 
-import org.hibernate.Session;
 import org.mifos.application.accounts.financial.business.FinancialActionBO;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
-import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.HibernateStartUp;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.FilePaths;
-
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class TestFinancialActionCache extends MifosTestCase {
 	

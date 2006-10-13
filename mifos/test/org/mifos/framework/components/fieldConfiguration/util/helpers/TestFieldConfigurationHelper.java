@@ -1,19 +1,7 @@
 package org.mifos.framework.components.fieldConfiguration.util.helpers;
 
-import java.util.Locale;
-import java.util.PropertyResourceBundle;
-
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.HibernateStartUp;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.TestObjectFactory;
-
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 
 public class TestFieldConfigurationHelper extends MifosTestCase {

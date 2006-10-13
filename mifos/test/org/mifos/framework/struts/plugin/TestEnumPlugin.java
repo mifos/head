@@ -3,9 +3,8 @@ package org.mifos.framework.struts.plugin;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import org.mifos.framework.util.helpers.ResourceLoader;
-
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class TestEnumPlugin extends MifosMockStrutsTestCase{
 

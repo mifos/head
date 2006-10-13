@@ -46,15 +46,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.reports.business.dao.ReportsParamQueryDAO;
-import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsParamsMap;
+import org.mifos.application.reports.business.dao.ReportsParamQueryDAO;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
+import org.mifos.application.reports.struts.actionforms.ReportsUserParamsActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -64,8 +63,6 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
-
-import org.mifos.application.reports.struts.actionforms.ReportsUserParamsActionForm;
 
 
 /**

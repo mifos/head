@@ -42,8 +42,8 @@ import java.util.Map;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 
 public class BulkEntryCache {
 

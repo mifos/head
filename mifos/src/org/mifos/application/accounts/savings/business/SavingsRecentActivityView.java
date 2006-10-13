@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.framework.struts.tags.DateHelper;
-import org.mifos.framework.util.helpers.Money;
 
 public class SavingsRecentActivityView {
 	

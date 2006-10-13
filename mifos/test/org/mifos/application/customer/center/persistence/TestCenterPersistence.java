@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.persistence.CenterPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;

@@ -40,7 +40,6 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
-import org.mifos.application.master.util.valueobjects.LookUpValueLocale;
 import org.mifos.framework.business.PersistentObject;
 
 public class LookUpValueEntity extends PersistentObject {

@@ -41,7 +41,6 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.struts.taglib.TagUtils;
 import org.apache.strutsel.taglib.html.ELTextTag;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 

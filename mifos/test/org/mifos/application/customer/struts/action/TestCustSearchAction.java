@@ -2,7 +2,6 @@ package org.mifos.application.customer.struts.action;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;

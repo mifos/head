@@ -45,7 +45,6 @@ import org.apache.struts.taglib.TagUtils;
 import org.apache.strutsel.taglib.html.ELTextTag;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**

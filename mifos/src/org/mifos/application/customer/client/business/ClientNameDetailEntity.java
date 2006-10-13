@@ -131,7 +131,7 @@ public class ClientNameDetailEntity extends PersistentObject {
 	public void updateNameDetails(ClientNameDetailView nameView) {
 		this.nameType = nameView.getNameType();
 		this.salutation = nameView.getSalutation();
-		this.secondMiddleName = secondMiddleName;
+		//this.secondMiddleName = what?;
 		this.displayName = nameView.getDisplayName();
 		this.name = new Name(nameView.getFirstName(),nameView.getMiddleName(),nameView.getSecondLastName(),nameView.getLastName());
 

@@ -1,32 +1,29 @@
 package org.mifos.framework.components.customTableTag;
 
-import org.mifos.framework.exceptions.TableTagParseException;
-import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.ResourceLoader;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import java.io.IOException;
+import org.mifos.framework.exceptions.TableTagParseException;
+import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
-
-import java.io.File;
-import java.net.URISyntaxException;
 
 
 

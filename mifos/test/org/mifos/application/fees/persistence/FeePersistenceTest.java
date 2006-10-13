@@ -2,8 +2,8 @@ package org.mifos.application.fees.persistence;
 
 import java.util.List;
 
-import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;

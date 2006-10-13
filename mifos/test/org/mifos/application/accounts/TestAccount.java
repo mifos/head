@@ -15,22 +15,23 @@ public class TestAccount extends MifosTestCase {
 	protected CustomerBO center=null;
 	protected CustomerBO group=null;
 	protected AccountPersistence accountPersistence;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+
 		accountBO=getLoanAccount();
 		accountPersistence = new AccountPersistence();
 	}
 
-
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		accountPersistence = null;
+
+		super.tearDown();
 	}
 
 	public AccountBO getLoanAccount()

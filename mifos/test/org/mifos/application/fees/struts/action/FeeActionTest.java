@@ -41,8 +41,6 @@ package org.mifos.application.fees.struts.action;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.RateFeeBO;

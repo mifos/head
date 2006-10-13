@@ -5,9 +5,8 @@ import java.util.Date;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
-import org.mifos.framework.util.helpers.TestObjectFactory;
-
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsHelper extends MifosTestCase{
 	SavingsHelper helper = new SavingsHelper(); 

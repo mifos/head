@@ -2,7 +2,6 @@ package org.mifos.application.master.persistence;
 
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;

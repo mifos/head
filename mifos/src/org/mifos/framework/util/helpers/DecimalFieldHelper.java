@@ -38,8 +38,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.text.DecimalFormat;
-
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 

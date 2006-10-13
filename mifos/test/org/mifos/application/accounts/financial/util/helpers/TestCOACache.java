@@ -1,13 +1,10 @@
 package org.mifos.application.accounts.financial.util.helpers;
 
-import org.mifos.framework.MifosTestCase;
-
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.financial.business.COABO;
 import org.mifos.application.accounts.financial.business.COAIDMapperEntity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.util.helpers.COACache;
-import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestConstants;
 

@@ -39,7 +39,6 @@
 package org.mifos.application.accounts.savings.struts.actionforms;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -7,10 +7,8 @@ import java.util.Map;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;

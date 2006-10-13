@@ -3,7 +3,7 @@ package org.mifos.framework.hibernate;
 
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.configuration.ConfigureSession;
-import  org.mifos.framework.hibernate.factory.HibernateSessionFactory;
+import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 import org.mifos.framework.hibernate.helper.HibernateConstants;
 
 /**

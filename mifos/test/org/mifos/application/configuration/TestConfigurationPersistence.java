@@ -1,7 +1,6 @@
 package org.mifos.application.configuration;
 
 import org.mifos.application.configuration.persistence.ConfigurationPersistence;
-
 import org.mifos.framework.MifosTestCase;
 
 

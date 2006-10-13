@@ -5,8 +5,6 @@ package org.mifos.application.customer.util.helpers;
 
 import java.io.Serializable;
 
-import org.mifos.framework.util.valueobjects.ReturnType;
-
 public class LoanCycleCounter  implements Serializable{
 
 	private String offeringName;

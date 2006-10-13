@@ -43,9 +43,6 @@ import org.mifos.application.configuration.persistence.ConfigurationPersistence;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.master.util.valueobjects.LookUpEntity;
-import org.mifos.application.master.util.valueobjects.LookUpValue;
-import org.mifos.application.master.util.valueobjects.SupportedLocales;
 
 /**
  * 

@@ -39,7 +39,6 @@ package org.mifos.application.office.business.service;
 
 import java.util.List;
 
-import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ServiceException;

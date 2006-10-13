@@ -1,13 +1,13 @@
 package org.mifos.framework.struts;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.struts.actionforms.TestBaseActionForm;
 import org.mifos.framework.struts.plugin.TestConstPlugin;
 import org.mifos.framework.struts.plugin.TestEnumPlugin;
 import org.mifos.framework.struts.plugin.TestInitializerPlugin;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 public class StrutsTestSuite extends MifosTestSuite {
 

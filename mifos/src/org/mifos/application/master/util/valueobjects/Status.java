@@ -1,8 +1,9 @@
 
    package org.mifos.application.master.util.valueobjects;
 
-    import org.mifos.framework.util.valueobjects.ValueObject;
     import java.util.Set;
+
+import org.mifos.framework.util.valueobjects.ValueObject;
 
     public class Status extends ValueObject
     {
@@ -68,13 +69,11 @@
 
 	        public void setStatusDescription(String description)
 	        {
-
-				this.statusDescription = statusDescription;
+				this.statusDescription = description;
 			}
 
 	        public String getStatusDescription()
 	        {
-
 				return statusDescription;
 			}
 

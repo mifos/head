@@ -4,9 +4,8 @@ import java.util.List;
 
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class TestConfiguration extends MifosTestCase{
 	private Configuration configuration ;

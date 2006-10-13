@@ -12,7 +12,6 @@ public class AuditLogView {
 	private String oldValue;
 	private String newValue;
 	private String user;
-	private String mfiDate;
 	private Locale mfiLocale;
 	
 	public String getDate() {
@@ -30,9 +29,7 @@ public class AuditLogView {
 	public String getMfiDate() {
 		return DateHelper.getUserLocaleDate(getMfiLocale(),getDate().toString());
 	}
-	public void setMfiDate(String mfiDate) {
-		this.mfiDate = mfiDate;
-	}
+
 	public Locale getMfiLocale() {
 		return mfiLocale;
 	}

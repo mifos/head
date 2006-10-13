@@ -37,6 +37,8 @@
  */
 package org.mifos.framework.exceptions;
 
+import org.mifos.framework.util.helpers.MethodInvoker;
+
 
 /**
  * This exception is thrown by {@link MethodInvoker} when it attempts to invoke any method which is not present or is inaccessible. 

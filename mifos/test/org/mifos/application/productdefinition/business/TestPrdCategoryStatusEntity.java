@@ -7,7 +7,6 @@ import org.hibernate.Session;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.TestConstants;
 
 public class TestPrdCategoryStatusEntity extends MifosTestCase {
 	

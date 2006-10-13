@@ -38,7 +38,6 @@
 
 package org.mifos.framework.components.audit.util.helpers;
 
-import java.lang.String;
 
 /** 
  *   This interface stores contants required for the audit component.

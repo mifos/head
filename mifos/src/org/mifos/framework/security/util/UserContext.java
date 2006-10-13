@@ -38,10 +38,10 @@
 
 package org.mifos.framework.security.util;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
-import java.io.Serializable;
 
 /**
  * Information about a user, including ID's of their roles.

@@ -39,8 +39,6 @@ package org.mifos.framework.components.tabletag;
 
 import java.util.ResourceBundle;
 
-import javax.servlet.jsp.PageContext;
-
 /**
  * This class renders the page scroll property of the page like previous and next links.
  */

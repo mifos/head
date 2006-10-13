@@ -37,12 +37,12 @@
  */
 package org.mifos.framework.hibernate.helper;
 
-import org.hibernate.Session;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.ScrollableResults;
+import org.hibernate.Session;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
-import org.hibernate.Query;
-import org.hibernate.HibernateException;
 
 /**
  *  This is the class that is returned on a search operation. Search would typically result in a set of search result objects , these search result objects would be obtained through hibernate scroll for pagination in the front end , the associate hibernate session would be held in this object , a call to close from the front end on this interface would result in the hibernate session object getting closed.

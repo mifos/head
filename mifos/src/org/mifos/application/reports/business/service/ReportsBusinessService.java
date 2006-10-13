@@ -39,8 +39,6 @@
 package org.mifos.application.reports.business.service;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,29 +46,28 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-import net.sf.jasperreports.view.JasperViewer;
-import net.sf.jasperreports.engine.JasperExportManager;
 
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
-import org.mifos.application.reports.business.ReportsParams;
-import org.mifos.application.reports.business.ReportsParamsValue;
-import org.mifos.application.reports.business.ReportsParamsMap;
-import org.mifos.application.reports.business.ReportsParamsMapValue;
 import org.mifos.application.reports.business.ReportsDataSource;
 import org.mifos.application.reports.business.ReportsJasperMap;
+import org.mifos.application.reports.business.ReportsParams;
+import org.mifos.application.reports.business.ReportsParamsMap;
+import org.mifos.application.reports.business.ReportsParamsMapValue;
+import org.mifos.application.reports.business.ReportsParamsValue;
 import org.mifos.application.reports.persistence.service.ReportsPersistenceService;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 

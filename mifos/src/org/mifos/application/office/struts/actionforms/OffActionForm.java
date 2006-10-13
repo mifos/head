@@ -16,7 +16,6 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.exceptions.OfficeException;
-import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;

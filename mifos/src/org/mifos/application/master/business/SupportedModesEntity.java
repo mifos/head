@@ -1,6 +1,5 @@
 package org.mifos.application.master.business;
 
-import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.framework.business.PersistentObject;
 
 public class SupportedModesEntity extends PersistentObject{
