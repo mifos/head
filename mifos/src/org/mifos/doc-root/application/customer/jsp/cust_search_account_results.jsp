@@ -203,10 +203,10 @@
 												name="accounts.or" />
 										<mifos:mifoslabel
 												name="${ConfigurationConstants.GROUP}" />
-										<mifos:mifoslabel
-												name="accounts.or" />
-										<mifos:mifoslabel
-												name="${ConfigurationConstants.CENTER}" />
+										<c:if test="${custSearchActionForm.input == 'savings'}">
+											<mifos:mifoslabel name="accounts.or" />
+											<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
+										</c:if>
 									    <mifos:mifoslabel
 										name="accounts.select_click2" />
 												</span></td>

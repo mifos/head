@@ -324,6 +324,8 @@ public class FeeActionForm extends BaseActionForm {
 			addError(errors, FeeConstants.AMOUNT,
 					FeeConstants.ERRORS_SPECIFY_VALUE);
 		}
+		if(getGlCodeValue()==null)
+			addError(errors, FeeConstants.INVALID_GLCODE, FeeConstants.INVALID_GLCODE);
 	}
 
 	private void validateForPreviewLoanCategory(ActionErrors errors) {

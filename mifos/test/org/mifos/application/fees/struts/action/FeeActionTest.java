@@ -41,6 +41,8 @@ package org.mifos.application.fees.struts.action;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.RateFeeBO;
@@ -153,7 +155,6 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-
 		assertEquals(5, getErrrorSize());
 		assertEquals("Fee Name", 1, getErrrorSize("feeName"));
 		assertEquals("Fee Applies to Product/Customer", 1,
@@ -161,7 +162,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Periodic or OneTime Fee", 1,
 				getErrrorSize("feeFrequencyType"));
 		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));
+		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -179,7 +180,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Periodic or OneTime Fee", 1,
 				getErrrorSize("feeFrequencyType"));
 		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));
+		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -196,7 +197,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Periodic or OneTime Fee", 1,
 				getErrrorSize("feeFrequencyType"));
 		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));
+		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -215,7 +216,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 
 		assertEquals(2, getErrrorSize());
 		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));
+		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -235,7 +236,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 
 		assertEquals(2, getErrrorSize());
 		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));
+		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -256,7 +257,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 
 		assertEquals(2, getErrrorSize());
-		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));
+		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
 		assertEquals("Fee Rate or Formula", 1, getErrrorSize("RateAndFormula"));
 		verifyInputForward();
 	}
@@ -300,7 +301,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 
 		assertEquals(1, getErrrorSize());
-		assertEquals("Fee GlCode", 1, getErrrorSize("glCode"));
+		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 

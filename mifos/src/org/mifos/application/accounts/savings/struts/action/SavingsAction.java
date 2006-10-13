@@ -352,7 +352,10 @@ public class SavingsAction extends AccountAppAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("In SavingsAction::edit()");
-
+		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		SavingsActionForm actionForm = (SavingsActionForm) form;
+		actionForm.setRecommendedAmount(savings.getRecommendedAmount().toString());
 		return mapping.findForward("edit_success");
 	}
 

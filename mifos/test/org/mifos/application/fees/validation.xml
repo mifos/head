@@ -90,13 +90,6 @@
 				    <var-value>(13,4)</var-value>
 			    </var>
 			</field>
-			
-			
-			<field property="glCode" depends="required">
-				<msg name="required" key="errors.mandatory_selectbox"  bundle="FeesUIResources"/>
-				<arg key="Fees.mandatory_glCode"/>
-			</field>
-			
 					
 		</form>	
 		<!-- Fee Action Ends -->		

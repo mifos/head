@@ -12,6 +12,7 @@ import org.mifos.application.accounts.savings.business.SavingsRecentActivityView
 import org.mifos.application.accounts.savings.business.SavingsTransactionHistoryView;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.application.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -378,6 +379,9 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("edit_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+		SavingsActionForm actionForm = (SavingsActionForm) request.getSession()
+		.getAttribute("savingsActionForm");
+		assertEquals(new Money("300"), actionForm.getRecommendedAmntValue());
 	}
 
 	public void testSuccessfulEditPrevious() throws Exception {

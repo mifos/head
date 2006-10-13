@@ -160,8 +160,11 @@
 										<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
 										<mifos:mifoslabel name="accounts.or" />
 										<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
-										<mifos:mifoslabel name="accounts.or" />
-										<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /><c:out value=" "/><mifos:mifoslabel
+										<c:if test="${custSearchActionForm.input == 'savings'}">
+											<mifos:mifoslabel name="accounts.or" />
+											<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
+										</c:if>
+										<c:out value=" "/><mifos:mifoslabel
 										name="accounts.enter_client_details2" /></span></td>
 								</tr>
 								<tr>

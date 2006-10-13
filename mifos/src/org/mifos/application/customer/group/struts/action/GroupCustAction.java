@@ -166,6 +166,7 @@ public class GroupCustAction extends CustAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		
 		boolean isPendingApprovalDefined = Configuration.getInstance().getCustomerConfig(getUserContext(request).getBranchId()).isPendingApprovalStateDefinedForGroup();
 		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, isPendingApprovalDefined, request);
 		return mapping.findForward(ActionForwards.preview_success.toString());
@@ -485,7 +486,8 @@ public class GroupCustAction extends CustAction {
 		actionForm.setTrainedDate(null);
 		actionForm.setFormedByPersonnel(null);
 	}
-
+	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
