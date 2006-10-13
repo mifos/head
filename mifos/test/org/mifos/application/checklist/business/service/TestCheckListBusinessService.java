@@ -210,7 +210,7 @@ public class TestCheckListBusinessService extends MifosTestCase {
 				.getAccountStates(Short.valueOf("2"), Short
 						.valueOf("1"));
 		assertNotNull(accountStates);
-		assertEquals(6, accountStates.size());
+		assertEquals(4, accountStates.size());
 		for (CheckListStatesView state : accountStates){
 			if(state.getStateId().equals("2")){
 				assertEquals(state.getStateName(),"Active");

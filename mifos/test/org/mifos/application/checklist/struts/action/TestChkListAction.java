@@ -169,7 +169,7 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.load_success.toString());
 		assertNotNull(SessionUtils.getAttribute(CheckListConstants.STATES,
 				request));
-		assertEquals(6, ((List<CheckListStatesView>) SessionUtils.getAttribute(
+		assertEquals(5, ((List<CheckListStatesView>) SessionUtils.getAttribute(
 				CheckListConstants.STATES, request)).size());
 	}
 
@@ -384,7 +384,7 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		assertNotNull(SessionUtils.getAttribute(CheckListConstants.STATES,
 				request));
-		assertEquals(12, ((List<CheckListStatesView>) SessionUtils
+		assertEquals(6, ((List<CheckListStatesView>) SessionUtils
 				.getAttribute(CheckListConstants.STATES, request)).size());
 	}
 

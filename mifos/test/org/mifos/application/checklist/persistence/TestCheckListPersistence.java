@@ -41,11 +41,11 @@ public class TestCheckListPersistence extends MifosTestCase {
 	public void testGetCustomerStates() throws Exception {
 		List<CheckListStatesView> customerStates = new CheckListPersistence()
 				.retrieveAllCustomerStatusList(Short.valueOf("1"), (short) 1);
-		assertEquals(customerStates.size(), 6);
+		assertEquals(customerStates.size(), 5);
 		customerStates = new CheckListPersistence()
 				.retrieveAllCustomerStatusList(Short.valueOf("2"), (short) 1);
 		assertNotNull(customerStates);
-		assertEquals(customerStates.size(), 6);
+		assertEquals(customerStates.size(), 5);
 		customerStates = new CheckListPersistence()
 				.retrieveAllCustomerStatusList(Short.valueOf("3"), (short) 1);
 		assertNotNull(customerStates);
@@ -57,11 +57,11 @@ public class TestCheckListPersistence extends MifosTestCase {
 		List<CheckListStatesView> accountStates = new CheckListPersistence()
 				.retrieveAllAccountStateList(Short.valueOf("1"), (short) 1);
 		assertNotNull(accountStates);
-		assertEquals(accountStates.size(), 12);
+		assertEquals(6,accountStates.size());
 		accountStates = new CheckListPersistence().retrieveAllAccountStateList(
 				Short.valueOf("2"), (short) 1);
 		assertNotNull(accountStates);
-		assertEquals(accountStates.size(), 6);
+		assertEquals(accountStates.size(), 4);
 
 	}
 

@@ -52,7 +52,7 @@ public class CheckListPersistence extends MasterPersistence {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("LEVEL_ID", levelId);
 		List<CustomerStatusEntity> queryResult = executeNamedQuery(
-				NamedQueryConstants.GET_CUSTOMER_STATUS_LIST, queryParameters);
+				NamedQueryConstants.CHECKLIST_GET_VALID_CUSTOMER_STATES, queryParameters);
 		for (CustomerStatusEntity customerStatus : queryResult) {
 			checkListStatesView.add(new CheckListStatesView(customerStatus
 					.getId(), customerStatus.getName(localeId), customerStatus
@@ -67,7 +67,7 @@ public class CheckListPersistence extends MasterPersistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("prdTypeId", prdTypeId);
 		List<AccountStateEntity> queryResult = executeNamedQuery(
-				NamedQueryConstants.RETRIEVEALLACCOUNTSTATES, queryParameters);
+				NamedQueryConstants.CHECKLIST_GET_VALID_ACCOUNT_STATES, queryParameters);
 		for (AccountStateEntity accountStatus : queryResult) {
 			checkListStatesView.add(new CheckListStatesView(accountStatus
 					.getId(), accountStatus.getName(localeId), accountStatus

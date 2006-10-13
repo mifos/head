@@ -71,5 +71,12 @@
 	<query name="checklist.loadAllAccountCheckLists">
 		<![CDATA[from org.mifos.application.checklist.business.AccountCheckListBO checkList ]]>
 	</query>
+	 <query name="checklist.getStatusForCustomer">
+		<![CDATA[from org.mifos.application.customer.business.CustomerStatusEntity customerState where customerState.customerLevel.id=:LEVEL_ID and customerState.id not in (1,7)]]>
+	</query>
+	<query name="checklist.getStatusForAccount">
+		<![CDATA[from org.mifos.application.accounts.business.AccountStateEntity accountStateEntity 
+    	where  accountStateEntity.prdType.productTypeID = :prdTypeId and accountStateEntity.id not in (1,5,6,9,11,12,13,17)]]>
+	</query>
 
 </hibernate-mapping>
