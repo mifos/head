@@ -167,26 +167,44 @@
 
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
 					<c:if
-						test='${!empty custAccount.upcomingInstallment.accountFeesActionDetails}'>
+						test='${!empty custAccount.upcomingInstallment.accountFeesActionDetails or (!empty custAccount.upcomingInstallment.miscFeeDue) and (custAccount.upcomingInstallment.miscFeeDue.amountDoubleValue!=0.0) or (!empty custAccount.upcomingInstallment.miscPenaltyDue) and (custAccount.upcomingInstallment.miscPenaltyDue.amountDoubleValue!=0.0)}'>
 						<tr>
 							<td width="19%" class="drawtablerowboldnoline"><mifos:mifoslabel
 								name="Group.feetype" bundle="GroupUIResources" /></td>
 							<td width="49%" align="right" class="drawtablerowboldnoline"><mifos:mifoslabel
-								name="Group.amount" bundle="GroupUIResources" /></td>
+								name="Customer.Amount" bundle="CustomerUIResources" /></td>
 							<td width="32%" class="drawtablerowboldnoline">&nbsp;</td>
 						</tr>
 
 						<c:forEach
-							items="${custAccount.detailsOfNextInstallment.accountFeesActionDetails}"
+							items="${custAccount.upcomingInstallment.accountFeesActionDetails}"
 							var="upcomingCharges">
-							<tr>
-								<td width="19%" class="drawtablerow"><c:out
-									value="${upcomingCharges.fee.feeName}" /></td>
-								<td width="49%" align="right" class="drawtablerow"><c:out
-									value="${upcomingCharges.feeDue}" /></td>
-								<td width="32%" class="drawtablerow">&nbsp;</td>
-							</tr>
+							<c:if test='${upcomingCharges.feeAmount.amountDoubleValue!=0.0}'>
+								<tr>
+									<td width="19%" class="drawtablerow"><c:out
+										value="${upcomingCharges.fee.feeName}" /></td>
+									<td width="49%" align="right" class="drawtablerow"><c:out
+										value="${upcomingCharges.feeAmount}" /></td>
+									<td width="32%" class="drawtablerow">&nbsp;</td>
+								</tr>
+							</c:if>
 						</c:forEach>
+						<c:if test='${(!empty custAccount.upcomingInstallment.miscFeeDue) and (custAccount.upcomingInstallment.miscFeeDue.amountDoubleValue!=0.0)}'>
+								<tr>
+									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscfee" bundle="CustomerUIResources" /></td>
+									<td width="49%" align="right" class="drawtablerow"><c:out
+										value="${custAccount.upcomingInstallment.miscFeeDue}" /></td>
+									<td width="32%" class="drawtablerow">&nbsp;</td>
+								</tr>
+						</c:if>
+						<c:if test='${(!empty custAccount.upcomingInstallment.miscPenaltyDue) and (custAccount.upcomingInstallment.miscPenaltyDue.amountDoubleValue!=0.0)}'>
+								<tr>
+									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscpenalty" bundle="CustomerUIResources" /></td>
+									<td width="49%" align="right" class="drawtablerow"><c:out
+										value="${custAccount.upcomingInstallment.miscPenaltyDue}" /></td>
+									<td width="32%" class="drawtablerow">&nbsp;</td>
+								</tr>
+						</c:if>
 						<tr>
 							<td width="19%" class="drawtablerow">&nbsp;</td>
 							<td width="49%" align="right" class="drawtablerow">&nbsp;</td>
@@ -215,7 +233,7 @@
 							<td width="35%" class="drawtablerowboldnoline"><mifos:mifoslabel
 								name="Group.description" bundle="GroupUIResources" /></td>
 							<td width="27%" align="right" class="drawtablerowboldnoline"><mifos:mifoslabel
-								name="Group.amount" bundle="GroupUIResources" /></td>
+								name="Customer.Amount" bundle="CustomerUIResources" /></td>
 							<td width="6%" class="drawtablerowboldnoline">&nbsp;</td>
 							<td width="21%" class="drawtablerowboldnoline"><mifos:mifoslabel
 								name="Group.postedby" bundle="GroupUIResources" /></td>
