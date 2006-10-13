@@ -147,34 +147,35 @@
 									<date:datetag keyhm="Savings.ReceiptDate" property="receiptDate" />
 								</td>
 							</tr>
-							<c:choose>
-								<c:when test="${!empty clientList}">
-									<tr>
-										<td align="right" class="fontnormal">
-											<span class="fontnormalRed">*</span>
-											<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
-											<mifos:mifoslabel name="Savings.clientName" />
-											:
-										</td>
-										<td>
-											<mifos:select name="savingsClosureForm" property="customerId">
-												<c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
-													<html-el:option value="${client.customerId}">
-														<c:out value="${client.displayName}" />
-													</html-el:option>
-												</c:forEach>
-												<html-el:option value="${BusinessKey.customer.customerId}">
-													<mifos:mifoslabel name="Savings.nonSpecified" />
+							<c:set var="customerLevel" value="${BusinessKey.customer.customerLevel.id}" />
+					  		<c:choose>
+						  		<c:when test="${customerLevel==CustomerLevel.CENTER.value or 
+						  				(customerLevel==CustomerLevel.GROUP.value and 
+						  				BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
+								<tr>
+					                <td align="right" class="fontnormal"><span class="fontnormalRed">*</span>
+			            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
+										<mifos:mifoslabel name="Savings.clientName" isColonRequired="yes"/>
+									</td>
+					                <td>				  				
+							  			<mifos:select name="savingsClosureForm" property="customerId">
+											<c:forEach var="client" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientList')}">
+												<html-el:option value="${client.customerId}">
+													<c:out value="${client.displayName}" />
 												</html-el:option>
-											</mifos:select>
-										</td>
-									</tr>
-								</c:when>
-								<c:otherwise>
-									<html-el:hidden property="customerId" value="${BusinessKey.customer.customerId}" />
-								</c:otherwise>
-							</c:choose>
-							<tr>
+											</c:forEach>
+											<html-el:option value="${BusinessKey.customer.customerId}">
+												<mifos:mifoslabel name="Savings.nonSpecified" />
+											</html-el:option>
+										</mifos:select>
+									</td>
+								</tr>
+						  		</c:when>
+						  		<c:otherwise>
+							  		<html-el:hidden property="customerId" value="${BusinessKey.customer.customerId}" />
+						  		</c:otherwise>
+					  		</c:choose>
+						<tr>
 								<td align="right" valign="top" class="fontnormal">
 									<span class="fontnormalRed">*</span>
 									<mifos:mifoslabel name="Savings.notes" />

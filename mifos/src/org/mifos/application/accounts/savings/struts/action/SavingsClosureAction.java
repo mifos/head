@@ -95,20 +95,14 @@ public class SavingsClosureAction extends BaseAction {
 				.getBusinessService(BusinessServiceName.MasterDataService);
 	}
 
+	@Override
 	protected BusinessService getService() {
 		return savingsService;
 	}
 
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {
-		if (method.equals("load") || method.equals("preview")
-				|| method.equals("previous") || method.equals("close")
-				|| method.equals("cancel") || method.equals("closeAccount")) {
-			logger
-					.debug("In SavingsClosureAction::skipActionFormToBusinessObjectConversion(), Skipping for Method: "
-							+ method);
-			return true;
-		}
-		return false;
+	@Override
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {		
+		return true;
 	}
 
 	@TransactionDemarcate(joinToken = true)
