@@ -26,11 +26,11 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 
 	UserContext userContext = null;
-	
+
 	private String flowKey;
-	
+
 	private RoleBO role=null;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -57,14 +57,14 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(role);
 		super.tearDown();
 	}
 
-	
+
 	public void testViewRoles() throws Exception{
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "viewRoles");
@@ -76,7 +76,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		assertEquals(2,roles.size());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	public void testLoad() throws Exception{
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "load");
@@ -86,12 +86,12 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
 		List<ActivityEntity> activities=(List<ActivityEntity>)SessionUtils.getAttribute(RolesAndPermissionConstants.ACTIVITYLIST,request);
-		assertEquals(175,activities.size());
+		assertEquals(180,activities.size());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	public void testCreate() throws Exception{
-		
+
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "load");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -99,7 +99,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
-		
+
 		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
@@ -112,11 +112,11 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.create_success.toString());
-		
+
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		role = rolesPermissionsPersistence.getRole("New Role");
 		assertEquals(2,role.getActivities().size());
-		
+
 		UserContext userContext = TestObjectFactory.getUserContext();
 		Set<Short> roles=new HashSet<Short>();
 		roles.add(role.getId());
@@ -127,9 +127,9 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		assertTrue(AuthorizationManager.getInstance().isActivityAllowed(userContext,activityContext));
 		activityContext = new ActivityContext((short)5,(short)1,(short)0);
 		assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext,activityContext));
-		
+
 	}
-	
+
 	public void testCreateFailureWhenNameIsNull() throws Exception{
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "load");
@@ -138,7 +138,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
-		
+
 		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
@@ -149,7 +149,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward(ActionForwards.create_failure.toString());
 	}
-	
+
 	public void testCreateFailureWhenNameIsEmpty() throws Exception{
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "load");
@@ -158,7 +158,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
-		
+
 		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
@@ -170,7 +170,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward(ActionForwards.create_failure.toString());
 	}
-	
+
 	public void testCreateFailureActivitiesAreNull() throws Exception{
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "load");
@@ -179,7 +179,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
-		
+
 		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
@@ -188,7 +188,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward(ActionForwards.create_failure.toString());
 	}
-	
+
 	public void testCreateFailureActivitiesAreEmpty() throws Exception{
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "load");
@@ -197,7 +197,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
-		
+
 		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
@@ -209,7 +209,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward(ActionForwards.create_failure.toString());
 	}
-		
+
 	public void testManage() throws Exception{
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		role=TestObjectFactory.createRole(TestObjectFactory.getUserContext(),"New Role",rolesPermissionsPersistence.getActivities());
@@ -223,7 +223,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.manage_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	public void testUpdateSuccess() throws Exception{
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		role=TestObjectFactory.createRole(TestObjectFactory.getUserContext(),"New Role",rolesPermissionsPersistence.getActivities());
@@ -236,7 +236,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.manage_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "update");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -249,10 +249,10 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		role=rolesPermissionsPersistence.getRole(role.getId());
 		assertEquals(2,role.getActivities().size());
-		
+
 		UserContext userContext = TestObjectFactory.getUserContext();
 		Set<Short> roles=new HashSet<Short>();
 		roles.add(role.getId());
@@ -263,9 +263,9 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		assertTrue(AuthorizationManager.getInstance().isActivityAllowed(userContext,activityContext));
 		activityContext = new ActivityContext((short)5,(short)1,(short)0);
 		assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext,activityContext));
-		
+
 	}
-	
+
 	public void testUpdateFailureWhenNameIsNull() throws Exception{
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		role=TestObjectFactory.createRole(TestObjectFactory.getUserContext(),"New Role",rolesPermissionsPersistence.getActivities());
@@ -278,7 +278,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.manage_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "update");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -290,7 +290,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.update_failure.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	public void testUpdateFailureWhenNameIsEmpty() throws Exception{
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		role=TestObjectFactory.createRole(TestObjectFactory.getUserContext(),"New Role",rolesPermissionsPersistence.getActivities());
@@ -303,7 +303,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.manage_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "update");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -316,7 +316,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.update_failure.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	public void testUpdateFailureForDuplicateName() throws Exception{
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		role=TestObjectFactory.createRole(TestObjectFactory.getUserContext(),"New Role",rolesPermissionsPersistence.getActivities());
@@ -329,7 +329,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.manage_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "update");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -342,7 +342,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.update_failure.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	public void testUpdateFailureWhenActivitiesAreNull() throws Exception{
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		role=TestObjectFactory.createRole(TestObjectFactory.getUserContext(),"New Role",rolesPermissionsPersistence.getActivities());
@@ -355,7 +355,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.manage_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "update");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -365,7 +365,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.update_failure.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	public void testUpdateFailureWhenActivitiesAreEmpty() throws Exception{
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		role=TestObjectFactory.createRole(TestObjectFactory.getUserContext(),"New Role",rolesPermissionsPersistence.getActivities());
@@ -378,7 +378,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.manage_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "update");
 		addRequestParameter("activity(1)", "checkbox");
@@ -391,7 +391,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.update_failure.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	public void testPreview() throws Exception{
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		role=TestObjectFactory.createRole(TestObjectFactory.getUserContext(),"New Role",rolesPermissionsPersistence.getActivities());
@@ -405,7 +405,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.preview_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	public void testDelete() throws Exception{
 		Short roleId = null;
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
@@ -426,7 +426,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.preview_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "delete");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -435,10 +435,10 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.delete_success.toString());
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		role=rolesPermissionsPersistence.getRole("New Role");
 		assertNull(role);
-		
+
 
 		UserContext userContext = TestObjectFactory.getUserContext();
 		Set<Short> roles=new HashSet<Short>();
@@ -454,9 +454,9 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext,activityContext));
 		activityContext = new ActivityContext(activityEntity_4.getId(),(short)1,(short)0);
 		assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext,activityContext));
-		
+
 	}
-	
+
 	public void testDeleteFailure() throws Exception{
 		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 		RoleBO roleBO=rolesPermissionsPersistence.getRole("Admin");
@@ -469,7 +469,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.preview_success.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		
+
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "delete");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -477,10 +477,10 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyActionErrors(new String[] { RolesAndPermissionConstants.KEYROLEASSIGNEDTOPERSONNEL });
 		verifyForward(ActionForwards.delete_failure.toString());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-			
+
 	}
 
-	
+
 	public void testCancel(){
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "cancel");
@@ -492,6 +492,6 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
-	
-		
+
+
 }

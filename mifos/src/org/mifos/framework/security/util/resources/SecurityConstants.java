@@ -2,7 +2,7 @@
 
  * SecurityConstants.java    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -10,27 +10,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -103,10 +103,14 @@ public interface SecurityConstants {
 
 	public final short OFFICE_EDIT_OFFICE = 16;
 
+	public final short OFFICE_HIERATCHY_UPDATE = 193;
+
 	// User management
 	public final short PERSONNEL_CREATE_PERSONNEL = 19;
 
 	public final short PERSONNEL_EDIT_PERSONNEL = 20;
+
+	public final short PERSONNEL_NOTE_CREATE = 194;
 
 	public final short PERSONNEL_UNLOCK_PERSONNEL = 21;
 
@@ -243,6 +247,8 @@ public interface SecurityConstants {
 
 	public final short EDIT_PRODUCT_CATEGORIES = 92;
 
+	public final short UPDATE_LATENESS_DORMANCY = 195;
+
 	// loan product
 	public final short DEFINE_NEW_LOAN_PRODUCT_INSTANCE = 94;
 
@@ -280,7 +286,7 @@ public interface SecurityConstants {
 
 	// savings
 	public final short SAVINGS_APPLY_ADJUSTMENT = 186;
-	
+
 	// Loan Transactions
 	public final short LOAN_CAN_ADD_NOTES_TO_LOAN = 179;
 
@@ -377,14 +383,16 @@ public interface SecurityConstants {
 	public final short SAVINGS_CANWAIVE_DUEAMOUNT = 187;
 
 	public final short SAVINGS_CANWAIVE_OVERDUEAMOUNT = 188;
-	
+
 	public final short LOAN_CAN_DISBURSE_LOAN = 189;
-	
+
 	public final short SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL = 190;
-	
+
 	public final short SAVINGS_CAN_ADD_NOTES_TO_SAVINGS = 191;
-	
+
 	public final short CAN_APPROVE_LOANS_IN_BULK = 192;
+
+	public final short CAN_ENTER_COLLECTION_SHEET_DATA = 197;
 		//ADDED BY MFTECH
 	public final short ADMINISTER_REPORTPARAMS = 142;
     public final short ADMINISTER_REPORTDS = 142;

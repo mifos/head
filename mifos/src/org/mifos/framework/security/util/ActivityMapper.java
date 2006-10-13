@@ -163,7 +163,7 @@ public class ActivityMapper {
 
 		activityMap.put("/offhierarchyaction-cancel", SecurityConstants.VIEW);
 		activityMap.put("/offhierarchyaction-load", SecurityConstants.VIEW);
-		activityMap.put("/offhierarchyaction-update",SecurityConstants.OFFICE_EDIT_OFFICE);
+		activityMap.put("/offhierarchyaction-update",SecurityConstants.OFFICE_HIERATCHY_UPDATE);
 
 		//m2 office action
 		activityMap.put("/offAction-load",
@@ -399,10 +399,10 @@ public class ActivityMapper {
 
 		//M2 personnel notes
 
-		activityMap.put("/personnelNoteAction-load",SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
+		activityMap.put("/personnelNoteAction-load",SecurityConstants.PERSONNEL_NOTE_CREATE);
 		activityMap.put("/personnelNoteAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/personnelNoteAction-previous",SecurityConstants.VIEW);
-		activityMap.put("/personnelNoteAction-create",SecurityConstants.VIEW);
+		activityMap.put("/personnelNoteAction-create",SecurityConstants.PERSONNEL_NOTE_CREATE);
 		activityMap.put("/personnelNoteAction-search", SecurityConstants.VIEW);
 
 		// center ralated mappings
@@ -623,7 +623,7 @@ public class ActivityMapper {
 		activityMap.put("/prdconfaction-load",
 				SecurityConstants.VIEW);
 		activityMap.put("/prdconfaction-update",
-				SecurityConstants.EDIT_PRODUCT_CATEGORIES);
+				SecurityConstants.UPDATE_LATENESS_DORMANCY);
 		// loan product categories
 
 		activityMap.put("/loanprdaction-load",
@@ -694,7 +694,7 @@ public class ActivityMapper {
 				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
 		activityMap.put("/chkListAction-cancelCreate", SecurityConstants.VIEW);
 		activityMap.put("/chkListAction-cancelManage", SecurityConstants.VIEW);
-		
+
 		activityMap.put("/chkListAction-manage",
 				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
 		activityMap.put("/chkListAction-getEditStates", SecurityConstants.VIEW);
@@ -702,7 +702,7 @@ public class ActivityMapper {
 		activityMap.put("/chkListAction-managePrevious", SecurityConstants.VIEW);
 		activityMap.put("/chkListAction-update",
 				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
-		
+
 		activityMap.put("/chkListAction-loadAllChecklist",
 				SecurityConstants.VIEW);
 		activityMap.put("/chkListAction-get", SecurityConstants.VIEW);
@@ -825,7 +825,7 @@ public class ActivityMapper {
 		activityMap.put("/fundAction-viewAllFunds", SecurityConstants.VIEW);
 
 		// mapping for bulk entry
-		activityMap.put("/bulkentryaction-load", SecurityConstants.VIEW);
+		activityMap.put("/bulkentryaction-load", SecurityConstants.CAN_ENTER_COLLECTION_SHEET_DATA);
 		activityMap.put("/bulkentryaction-preview", SecurityConstants.VIEW);
 		activityMap.put("/bulkentryaction-previous", SecurityConstants.VIEW);
 		activityMap.put("/bulkentryaction-get", SecurityConstants.VIEW);

@@ -7,9 +7,9 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestRolesPermissionsBusinessService extends MifosTestCase {
-	
+
 	RolesPermissionsBusinessService rolesPermissionsBusinessService = new RolesPermissionsBusinessService();
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
@@ -19,7 +19,7 @@ public class TestRolesPermissionsBusinessService extends MifosTestCase {
 	public void testGetRoles() throws Exception{
 		assertEquals(2,rolesPermissionsBusinessService.getRoles().size());
 	}
-	
+
 	public void testGetRolesFailure() {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -31,9 +31,9 @@ public class TestRolesPermissionsBusinessService extends MifosTestCase {
 	}
 
 	public void testGetActivities() throws Exception{
-		assertEquals(175,rolesPermissionsBusinessService.getActivities().size());
+		assertEquals(180,rolesPermissionsBusinessService.getActivities().size());
 	}
-	
+
 	public void testGetActivitiesFailure() {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -43,11 +43,11 @@ public class TestRolesPermissionsBusinessService extends MifosTestCase {
 			assertTrue(true);
 		}
 	}
-	
+
 	public void testGetRoleForGivenId() throws Exception{
 		RoleBO role = rolesPermissionsBusinessService.getRole(Short.valueOf("1"));
 		assertNotNull(role);
-		assertEquals(155,role.getActivities().size());
+		assertEquals(159,role.getActivities().size());
 	}
 
 	public void testGetRoleForGivenIdFailure() {
@@ -59,5 +59,5 @@ public class TestRolesPermissionsBusinessService extends MifosTestCase {
 			assertTrue(true);
 		}
 	}
-	
+
 }

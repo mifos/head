@@ -106,22 +106,22 @@ function getOffice(officeid){
 							<mifos:mifoslabel name="Office.labelOfficeType"
 								 />
 							</c:when>
-							<c:otherwise>  
+							<c:otherwise>
 							<mifos:mifoslabel name="Office.labelOfficeType"
 								mandatory="yes" />
 							</c:otherwise>
-							
+
 							</c:choose>
 								</td>
 							<td>
-							
+
 							<c:choose>
 							<c:when test="${offActionForm.officeLevel eq OfficeLevel.HEADOFFICE.value or BusinessKey.level.id eq OfficeLevel.BRANCHOFFICE.value}">
 							  <mifos:select name="offActionForm" property="officeLevel" disabled="true"
 								size="1" >
 									<html-el:option value="${BusinessKey.level.id}">${BusinessKey.level.name}</html-el:option>
 							  </mifos:select>
-							
+
 							</c:when>
 							<c:otherwise>
 							<mifos:select name="offActionForm" property="officeLevel"
@@ -132,7 +132,7 @@ function getOffice(officeid){
 							</mifos:select>
 							</c:otherwise>
 							</c:choose>
-							
+
 							</td>
 						</tr>
 						<tr class="fontnormal">
@@ -141,7 +141,7 @@ function getOffice(officeid){
 							<td>
 							<c:if test="${not empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Parents')}">
 								<mifos:select name="officeActionForm"
-									property="formParentOffice" size="1"
+									property="parentOfficeId" size="1"
 									value="${offActionForm.parentOfficeId}">
 									<c:forEach var="parentList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Parents')}" >
 										<html-el:option value="${parentList.officeId}">${parentList.displayName}</html-el:option>
