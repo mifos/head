@@ -32,7 +32,7 @@ import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 public class OfficeBO extends BusinessObject {
 
-	private Short officeId;
+	private final Short officeId;
 
 	private final Short operationMode;
 
@@ -163,7 +163,7 @@ public class OfficeBO extends BusinessObject {
 		return officeName;
 	}
 
-	public void setOfficeName(String officeName) {
+	void setOfficeName(String officeName) {
 		this.officeName = officeName;
 	}
 
@@ -183,7 +183,7 @@ public class OfficeBO extends BusinessObject {
 		return parentOffice;
 	}
 
-	public void setParentOffice(OfficeBO parentOffice) {
+	void setParentOffice(OfficeBO parentOffice) {
 		this.parentOffice = parentOffice;
 	}
 
@@ -195,7 +195,7 @@ public class OfficeBO extends BusinessObject {
 		return shortName;
 	}
 
-	public void setShortName(String shortName) {
+	void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
 
@@ -221,23 +221,23 @@ public class OfficeBO extends BusinessObject {
 		this.address = address;
 	}
 
-	public void setChildren(Set<OfficeBO> children) {
+	void setChildren(Set<OfficeBO> children) {
 		this.children = children;
 	}
 
-	public void setGlobalOfficeNum(String globalOfficeNum) {
+	void setGlobalOfficeNum(String globalOfficeNum) {
 		this.globalOfficeNum = globalOfficeNum;
 	}
 
-	public void setLevel(OfficeLevelEntity level) {
+	void setLevel(OfficeLevelEntity level) {
 		this.level = level;
 	}
 
-	public void setSearchId(String searchId) {
+	void setSearchId(String searchId) {
 		this.searchId = searchId;
 	}
 
-	public void setStatus(OfficeStatusEntity status) {
+	void setStatus(OfficeStatusEntity status) {
 		this.status = status;
 	}
 
@@ -555,10 +555,6 @@ public class OfficeBO extends BusinessObject {
 						.getFieldValue(), view.getFieldId(), this));
 			}
 		}
-	}
-
-	public void setOfficeId(Short officeId) {
-		this.officeId = officeId;
 	}
 
 	public Set<OfficeBO> getBranchOnlyChildren() throws OfficeException {

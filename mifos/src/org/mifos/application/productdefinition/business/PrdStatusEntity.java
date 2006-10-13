@@ -68,7 +68,7 @@ public class PrdStatusEntity extends PersistentObject {
 		return this.status;
 	}
 
-	public void setStatus(Short status) {
+	void setStatus(Short status) {
 		this.status = status;
 	}
 

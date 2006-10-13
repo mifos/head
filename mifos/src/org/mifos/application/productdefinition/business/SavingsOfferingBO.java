@@ -193,7 +193,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		return recommendedAmount;
 	}
 
-	public void setRecommendedAmount(Money recommendedAmount) {
+	void setRecommendedAmount(Money recommendedAmount) {
 		this.recommendedAmount = recommendedAmount;
 	}
 
@@ -209,7 +209,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		return recommendedAmntUnit;
 	}
 
-	public void setRecommendedAmntUnit(
+	void setRecommendedAmntUnit(
 			RecommendedAmntUnitEntity recommendedAmntUnit) {
 		this.recommendedAmntUnit = recommendedAmntUnit;
 	}
@@ -218,7 +218,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		return savingsType;
 	}
 
-	public void setSavingsType(SavingsTypeEntity savingsType) {
+	void setSavingsType(SavingsTypeEntity savingsType) {
 		this.savingsType = savingsType;
 	}
 

@@ -183,11 +183,11 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		return description;
 	}
 
-	public void setPrdOfferingName(String prdOfferingName) {
+	void setPrdOfferingName(String prdOfferingName) {
 		this.prdOfferingName = prdOfferingName;
 	}
 
-	public void setPrdOfferingShortName(String prdOfferingShortName) {
+	void setPrdOfferingShortName(String prdOfferingShortName) {
 		this.prdOfferingShortName = prdOfferingShortName;
 	}
 
@@ -195,7 +195,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		this.prdCategory = prdCategory;
 	}
 
-	public void setPrdStatus(PrdStatusEntity prdStatus) {
+	void setPrdStatus(PrdStatusEntity prdStatus) {
 		this.prdStatus = prdStatus;
 	}
 
@@ -204,11 +204,11 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		this.prdApplicableMaster = prdApplicableMaster;
 	}
 
-	public void setStartDate(Date startDate) {
+	void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 

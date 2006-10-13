@@ -131,10 +131,12 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.TestPersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
@@ -143,6 +145,7 @@ import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
+import org.mifos.application.productdefinition.business.TestSavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
@@ -586,8 +589,8 @@ public class TestObjectFactory {
 
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(offeringStatusId);
-		loanOffering.setPrdStatus(prdStatus);
-		loanOffering.setGracePeriodType(gracePeriodType);
+		LoanOfferingBOTest.setStatus(loanOffering,prdStatus);
+		LoanOfferingBOTest.setGracePeriodType(loanOffering,gracePeriodType);
 		return (LoanOfferingBO) addObject(testObjectPersistence
 				.persist(loanOffering));
 	}
@@ -701,7 +704,7 @@ public class TestObjectFactory {
 
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(offeringStatusId);
-		savingsOffering.setPrdStatus(prdStatus);
+		TestSavingsOfferingBO.setStatus(savingsOffering,prdStatus);
 		return (SavingsOfferingBO) addObject(testObjectPersistence
 				.persist(savingsOffering));
 	}
@@ -1352,7 +1355,7 @@ public class TestObjectFactory {
 		byte[] password = EncryptionService.getInstance()
 				.createEncryptedPassword("mifos");
 		PersonnelBO personnel = getPersonnel(Short.valueOf("1"));
-		personnel.setEncriptedPassword(password);
+		TestPersonnelBO.setEncriptedPassword(password,personnel);
 		updateObject(personnel);
 		return personnel.login("mifos");
 

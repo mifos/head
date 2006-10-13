@@ -123,7 +123,7 @@ public class ProductCategoryBO extends BusinessObject {
 		return productCategoryName;
 	}
 
-	public void setProductCategoryName(String productCategoryName) {
+	void setProductCategoryName(String productCategoryName) {
 		this.productCategoryName = productCategoryName;
 	}
 
@@ -131,7 +131,7 @@ public class ProductCategoryBO extends BusinessObject {
 		return prdCategoryStatus;
 	}
 
-	public void setPrdCategoryStatus(PrdCategoryStatusEntity prdCategoryStatus) {
+	void setPrdCategoryStatus(PrdCategoryStatusEntity prdCategoryStatus) {
 		this.prdCategoryStatus = prdCategoryStatus;
 	}
 

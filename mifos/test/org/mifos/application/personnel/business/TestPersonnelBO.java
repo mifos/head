@@ -30,14 +30,11 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class TestPersonnelBO extends MifosTestCase {
 
@@ -83,6 +80,10 @@ public class TestPersonnelBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(createdBranchOffice);
 		HibernateUtil.closeSession();
 		super.tearDown();
+	}
+	
+	public static void setEncriptedPassword(byte[] password,PersonnelBO personnel) {
+		personnel.setEncriptedPassword(password);
 	}
 
 	public void testCreateFailureWithNullName() {

@@ -213,7 +213,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		return maxLoanAmount;
 	}
 
-	public void setMinLoanAmount(Money minLoanAmount) {
+	void setMinLoanAmount(Money minLoanAmount) {
 		this.minLoanAmount = minLoanAmount;
 	}
 
@@ -277,7 +277,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		return interestGLcode;
 	}
 
-	public void setGracePeriodType(GracePeriodTypeEntity gracePeriodType) {
+	void setGracePeriodType(GracePeriodTypeEntity gracePeriodType) {
 		this.gracePeriodType = gracePeriodType;
 	}
 
@@ -285,11 +285,11 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		this.interestTypes = interestTypes;
 	}
 
-	public void setGracePeriodDuration(Short gracePeriodDuration) {
+	void setGracePeriodDuration(Short gracePeriodDuration) {
 		this.gracePeriodDuration = gracePeriodDuration;
 	}
 
-	public void setMaxLoanAmount(Money maxLoanAmount) {
+	void setMaxLoanAmount(Money maxLoanAmount) {
 		this.maxLoanAmount = maxLoanAmount;
 	}
 
@@ -297,35 +297,35 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		return minLoanAmount;
 	}
 
-	public void setDefaultLoanAmount(Money defaultLoanAmount) {
+	void setDefaultLoanAmount(Money defaultLoanAmount) {
 		this.defaultLoanAmount = defaultLoanAmount;
 	}
 
-	public void setMaxInterestRate(Double maxInterestRate) {
+	void setMaxInterestRate(Double maxInterestRate) {
 		this.maxInterestRate = maxInterestRate;
 	}
 
-	public void setMinInterestRate(Double minInterestRate) {
+	void setMinInterestRate(Double minInterestRate) {
 		this.minInterestRate = minInterestRate;
 	}
 
-	public void setDefInterestRate(Double defInterestRate) {
+	void setDefInterestRate(Double defInterestRate) {
 		this.defInterestRate = defInterestRate;
 	}
 
-	public void setMaxNoInstallments(Short maxNoInstallments) {
+	void setMaxNoInstallments(Short maxNoInstallments) {
 		this.maxNoInstallments = maxNoInstallments;
 	}
 
-	public void setMinNoInstallments(Short minNoInstallments) {
+	void setMinNoInstallments(Short minNoInstallments) {
 		this.minNoInstallments = minNoInstallments;
 	}
 
-	public void setDefNoInstallments(Short defNoInstallments) {
+	void setDefNoInstallments(Short defNoInstallments) {
 		this.defNoInstallments = defNoInstallments;
 	}
 
-	public void setIntDedDisbursement(boolean intDedDisbursementFlag) {
+	void setIntDedDisbursement(boolean intDedDisbursementFlag) {
 		this.intDedDisbursement = intDedDisbursementFlag ? YesNoFlag.YES
 				.getValue() : YesNoFlag.NO.getValue();
 	}
@@ -350,8 +350,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			this.loanOfferingFees.add(prdOfferingFeesEntity);
 	}
 
-	public void setLoanOfferingMeeting(
-			PrdOfferingMeetingEntity prdOfferingMeeting) {
+	void setLoanOfferingMeeting(PrdOfferingMeetingEntity prdOfferingMeeting) {
 		this.loanOfferingMeeting = prdOfferingMeeting;
 	}
 
@@ -494,13 +493,14 @@ public class LoanOfferingBO extends PrdOfferingBO {
 								GraceTypeConstants.NONE.getValue()) && gracePeriodDuration == null)) {
 			throw new ProductDefinitionException("errors.create");
 		}
-                
-		if (interestTypes.getId().equals(InterestTypeConstants.DECLININGINTEREST.getValue())
-		        && intDedDisbursement  ){
-		    throw new ProductDefinitionException(
-		            ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION);
+
+		if (interestTypes.getId().equals(
+				InterestTypeConstants.DECLININGINTEREST.getValue())
+				&& intDedDisbursement) {
+			throw new ProductDefinitionException(
+					ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION);
 		}
-        
+
 	}
 
 	private void setGracePeriodTypeAndDuration(boolean intDedDisbursement,

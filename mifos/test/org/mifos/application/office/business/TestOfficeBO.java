@@ -2,6 +2,7 @@ package org.mifos.application.office.business;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
@@ -28,6 +29,10 @@ public class TestOfficeBO extends MifosTestCase {
 		userContext = TestObjectFactory.getUserContext();
 	}
 
+	public static void setChildren(Set<OfficeBO> children,OfficeBO office) {
+		office.setChildren(children);
+	}
+	
 	public void testCreateFailureDuplicateName() throws Exception {
 		try {
 

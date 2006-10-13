@@ -1632,7 +1632,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanBO loanBO = (LoanBO) accountBO;
 		UserContext uc = TestObjectFactory.getUserContext();
 		loanBO.setUserContext(uc);
-		loanBO.writeOff("Loan Written Off");
+		loanBO.writeOff();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
@@ -1647,8 +1647,6 @@ public class TestLoanBO extends MifosTestCase {
 					loanActivityEntity.getTrxnCreatedDate());
 			break;
 		}
-		assertEquals(accountBO.getAccountState().getId(), new Short(
-				AccountStates.LOANACC_WRITTENOFF));
 	}
 
 	public void testGetAmountTobePaidAtdisburtail() throws Exception {
@@ -2214,7 +2212,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getCustomer().getPerformanceHistory();
 		Integer noOfActiveLoans = clientPerfHistory.getNoOfActiveLoans();
 		Integer loanCycleNumber = clientPerfHistory.getLoanCycleNumber();
-		loanBO.writeOff("Loan Written Off");
+		loanBO.writeOff();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();

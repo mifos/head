@@ -349,8 +349,7 @@ public class AccountBO extends BusinessObject {
 							+ newStatusId);
 			activationDateHelper(newStatusId);
 			MasterPersistence masterPersistence = new MasterPersistence();
-			AccountStateEntity accountStateEntity;
-			accountStateEntity = (AccountStateEntity) masterPersistence
+			AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistence
 					.getPersistentObject(AccountStateEntity.class, newStatusId);
 			accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
 			AccountStateFlagEntity accountStateFlagEntity = null;
@@ -382,6 +381,10 @@ public class AccountBO extends BusinessObject {
 					|| newStatusId.equals(AccountState.SAVINGS_ACC_CANCEL
 							.getValue()))
 				this.setClosedDate(new Date(System.currentTimeMillis()));
+			if(newStatusId.equals(AccountState.LOANACC_WRITTENOFF
+					.getValue())) {
+				writeOff();
+			}
 			MifosLogManager
 					.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 					.debug(
@@ -391,6 +394,8 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
+	protected void writeOff() throws AccountException {}
+	
 	protected void updateAccountFeesEntity(Short feeId) {
 		AccountFeesEntity accountFees = getAccountFees(feeId);
 		if (accountFees != null) {

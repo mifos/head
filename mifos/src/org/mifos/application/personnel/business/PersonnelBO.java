@@ -1,8 +1,6 @@
 package org.mifos.application.personnel.business;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -269,7 +267,7 @@ public class PersonnelBO extends BusinessObject {
 		return searchId;
 	}
 
-	public void setSearchId(String searchId) {
+	void setSearchId(String searchId) {
 		this.searchId = searchId;
 	}
 
@@ -285,15 +283,15 @@ public class PersonnelBO extends BusinessObject {
 		this.emailId = emailId;
 	}
 
-	public void setGlobalPersonnelNum(String globalPersonnelNum) {
+	void setGlobalPersonnelNum(String globalPersonnelNum) {
 		this.globalPersonnelNum = globalPersonnelNum;
 	}
 
-	public void setLastLogin(Date lastLogin) {
+	void setLastLogin(Date lastLogin) {
 		this.lastLogin = lastLogin;
 	}
 
-	public void setLevel(PersonnelLevelEntity level) {
+	void setLevel(PersonnelLevelEntity level) {
 		this.level = level;
 	}
 
@@ -301,7 +299,7 @@ public class PersonnelBO extends BusinessObject {
 		this.maxChildCount = maxChildCount;
 	}
 
-	public void setOffice(OfficeBO office) {
+	void setOffice(OfficeBO office) {
 		this.office = office;
 	}
 	public void setPersonnelMovements(
@@ -317,7 +315,7 @@ public class PersonnelBO extends BusinessObject {
 		this.preferredLocale = preferredLocale;
 	}
 
-	public void setStatus(PersonnelStatusEntity status) {
+	void setStatus(PersonnelStatusEntity status) {
 		this.status = status;
 	}
 
@@ -334,7 +332,7 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 
-	public void setEncriptedPassword(byte[] encriptedPassword) {
+	void setEncriptedPassword(byte[] encriptedPassword) {
 		this.encriptedPassword = encriptedPassword;
 	}
 

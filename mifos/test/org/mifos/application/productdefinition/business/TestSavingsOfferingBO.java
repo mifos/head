@@ -50,6 +50,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
@@ -57,8 +58,6 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidUserException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
@@ -80,6 +79,18 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		super.tearDown();
 		TestObjectFactory.removeObject(savingsOffering);
 		TestObjectFactory.removeObject(savingsOffering1);
+	}
+
+	public static void setStatus(SavingsOfferingBO savingsOffering,
+			PrdStatusEntity prdStatus) {
+		savingsOffering.setPrdStatus(prdStatus);
+	}
+
+	public static void setRecommendedAmntUnit(
+			SavingsOfferingBO savingsOffering,
+			RecommendedAmountUnit recommendedAmountUnit) {
+		savingsOffering.setRecommendedAmntUnit(new RecommendedAmntUnitEntity(
+				recommendedAmountUnit));
 	}
 
 	public void testUpdateSavingsOfferingForLogging() throws Exception {
@@ -518,7 +529,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		}
 	}
 
-	public void testCreateSavingsOfferingForInvalidConnection() throws Exception {
+	public void testCreateSavingsOfferingForInvalidConnection()
+			throws Exception {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -538,14 +550,14 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date endDate = offSetCurrentDate(7);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-		savingsOffering = new SavingsOfferingBO(TestObjectFactory
-				.getUserContext(), "Savings Offering", "Savi", productCategory,
-				prdApplicableMaster, startDate, endDate, "dssf", null,
-				savingsType, intCalType, intCalcMeeting, intPostMeeting,
-				new Money("10"), new Money(), new Money(), 10.0,
-				depglCodeEntity, intglCodeEntity);
-		savingsOffering.save();
-		fail();
+			savingsOffering = new SavingsOfferingBO(TestObjectFactory
+					.getUserContext(), "Savings Offering", "Savi",
+					productCategory, prdApplicableMaster, startDate, endDate,
+					"dssf", null, savingsType, intCalType, intCalcMeeting,
+					intPostMeeting, new Money("10"), new Money(), new Money(),
+					10.0, depglCodeEntity, intglCodeEntity);
+			savingsOffering.save();
+			fail();
 		} catch (Exception e) {
 			assertTrue(true);
 		} finally {

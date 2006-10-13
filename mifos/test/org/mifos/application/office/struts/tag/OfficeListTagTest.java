@@ -10,6 +10,7 @@ import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.TestOfficeBO;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
@@ -44,7 +45,7 @@ public class OfficeListTagTest extends MifosTestCase {
 				OfficeLevel.BRANCHOFFICE, head, null, "Trinidad&Tobago",
 				"Trinidad&Tobago", null, OperationMode.LOCAL_SERVER,
 				OfficeStatus.ACTIVE);
-		head.setChildren(Collections.singleton(branch));
+		TestOfficeBO.setChildren(Collections.singleton(branch),head);
 		assertEquals(1, head.getBranchOnlyChildren().size());
 
 		List<OfficeBO> officeList = new ArrayList<OfficeBO>();

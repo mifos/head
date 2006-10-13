@@ -124,7 +124,11 @@
 								<br>
 								<mifos:mifoslabel name="checklist.displayed_status"  />
 								<span class="fontnormal">
-								<c:out value="${sessionScope.ChkListActionForm.stateName}"></c:out>
+								<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}" varStatus="loop">
+										<c:if test="${sessionScope.ChkListActionForm.stateId==item.stateId}">
+												<c:out value="${item.stateName}"></c:out>
+										</c:if>
+									</c:forEach>
 								</span>
 								<br>
 								<mifos:mifoslabel name="checklist.status_checklist" />

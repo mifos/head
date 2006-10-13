@@ -107,6 +107,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		super.tearDown();
 	}
 	
+	public static void setStatus(LoanOfferingBO loanOffering,PrdStatusEntity prdStatus) {
+		loanOffering.setPrdStatus(prdStatus);
+	}
+	
+	public static void setGracePeriodType(LoanOfferingBO loanOffering,GracePeriodTypeEntity gracePeriodType) {
+		loanOffering.setGracePeriodType(gracePeriodType);
+	}
+	
 	public void testUpdateLoanOfferingForLogging() throws ProductDefinitionException,
 			FeeException {
 		createIntitalObjects();

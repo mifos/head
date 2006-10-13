@@ -35,7 +35,7 @@ public class PersonnelMovementEntity extends PersistentObject {
 		this.startDate = null;
 	}
 
-	public void updateStatus(Status status) {
+	void updateStatus(Status status) {
 		this.status = status.getValue();
 	}
 
@@ -47,7 +47,7 @@ public class PersonnelMovementEntity extends PersistentObject {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 
@@ -59,7 +59,7 @@ public class PersonnelMovementEntity extends PersistentObject {
 		return startDate;
 	}
 
-	public void makeInActive(Short updatedBy) {
+	void makeInActive(Short updatedBy) {
 		updateStatus(Status.INACTIVE);
 		setUpdatedBy(updatedBy);
 		setUpdatedDate(new Date());

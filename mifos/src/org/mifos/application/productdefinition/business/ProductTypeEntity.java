@@ -87,7 +87,7 @@ public class ProductTypeEntity extends BusinessObject {
 		return dormancyDays;
 	}
 
-	public void setDormancyDays(Short dormancyDays) {
+	 void setDormancyDays(Short dormancyDays) {
 		this.dormancyDays = dormancyDays;
 	}
 
@@ -95,7 +95,7 @@ public class ProductTypeEntity extends BusinessObject {
 		return latenessDays;
 	}
 
-	public void setLatenessDays(Short latenessDays) {
+	void setLatenessDays(Short latenessDays) {
 		this.latenessDays = latenessDays;
 	}
 

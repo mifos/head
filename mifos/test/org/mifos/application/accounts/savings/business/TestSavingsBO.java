@@ -58,6 +58,7 @@ import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
+import org.mifos.application.productdefinition.business.TestSavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
@@ -3961,8 +3962,8 @@ public class TestSavingsBO extends MifosTestCase {
 
 		SavingsOfferingBO savingsOfferingBO = SavingsTestHelper
 				.createSavingsOffering("dfasdasd1", "sad1");
-		savingsOfferingBO.setRecommendedAmntUnit(new RecommendedAmntUnitEntity(
-				RecommendedAmountUnit.COMPLETEGROUP));
+		TestSavingsOfferingBO.setRecommendedAmntUnit(savingsOfferingBO,
+				RecommendedAmountUnit.COMPLETEGROUP);
 		SavingsBO savingsBO = SavingsTestHelper.createSavingsAccount(
 				savingsOfferingBO, group, Short.valueOf("16"),
 				TestObjectFactory.getUserContext());

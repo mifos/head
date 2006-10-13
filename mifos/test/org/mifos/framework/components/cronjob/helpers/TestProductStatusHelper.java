@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
@@ -193,7 +194,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
 				Short.valueOf("1"), frequency);
-		loanOffering.setPrdStatus(new PrdOfferingPersistence()
+		LoanOfferingBOTest.setStatus(loanOffering,new PrdOfferingPersistence()
 				.getPrdStatus(PrdStatus.LOANINACTIVE));
 		TestObjectFactory.updateObject(loanOffering);
 		HibernateUtil.closeSession();
