@@ -69,6 +69,7 @@ import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
@@ -860,7 +861,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testCreateSuccessUnderGroup() throws Exception {
-		try {
 			createParentCustomer();
 			setRequestPathInfo("/clientCustAction.do");
 			addRequestParameter("method", "load");
@@ -923,11 +923,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 					.getSession().getAttribute("clientCustActionForm");
 			client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
 					new Integer(actionForm.getCustomerId()).intValue());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
-
+	
 	public void testGet() throws Exception {
 		createInitialCustomers();
 		accountBO = getLoanAccount(client, meeting);
@@ -1441,6 +1438,75 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				.getCustomerId());
 	}
 	
+	public void testCreateSuccessUnderGroupInBranch() throws Exception {
+		try {
+			createParentGroup();
+			setRequestPathInfo("/clientCustAction.do");
+			addRequestParameter("method", "load");
+			addRequestParameter("parentGroupId", group.getCustomerId()
+					.toString());
+			addRequestParameter("groupFlag", "1");
+			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.load_success.toString());
+			List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+			List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+					.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+			setRequestPathInfo("/clientCustAction.do");
+			addRequestParameter("method", "next");
+			addRequestParameter("officeId", "3");
+			addRequestParameter("clientName.salutation", "1");
+			addRequestParameter("clientName.firstName", "Client");
+			addRequestParameter("clientName.lastName", "LastName");
+			addRequestParameter("spouseName.firstName", "Spouse");
+			addRequestParameter("spouseName.lastName", "LastName");
+			addRequestParameter("spouseName.nameType", "1");
+			addRequestParameter("dateOfBirth", "03/20/2006");
+			addRequestParameter("clientDetailView.gender", "1");
+			addRequestParameter("input", "personalInfo");
+			addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
+			int i = 0;
+			for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+				addRequestParameter("customField[" + i + "].fieldId",
+						customFieldDef.getFieldId().toString());
+				addRequestParameter("customField[" + i + "].fieldValue", "Req");
+				i++;
+			}
+			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.next_success.toString());
+
+			setRequestPathInfo("/clientCustAction.do");
+			addRequestParameter("method", "preview");
+			addRequestParameter("input", "mfiInfo");
+			addRequestParameter("formedByPersonnel", "1");
+			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.preview_success.toString());
+			setRequestPathInfo("/clientCustAction.do");
+			addRequestParameter("method", "create");
+			addRequestParameter("input", "create");
+			addRequestParameter("status", "1");
+			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+			actionPerform();
+			verifyNoActionErrors();
+			verifyNoActionMessages();
+			verifyForward(ActionForwards.create_success.toString());
+			ClientCustActionForm actionForm = (ClientCustActionForm) request
+					.getSession().getAttribute("clientCustActionForm");
+			client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+					new Integer(actionForm.getCustomerId()).intValue());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void createAndSetClientInSession() throws Exception {
 		String name = "Client 1";
 		Short officeId = 1;
@@ -1524,7 +1590,17 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
 						+ ".1", center, new Date());
 	}
-
+	
+	private void createParentGroup() {
+		Short officeId = 3;
+		Short personnel = 3;
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		group = TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_ACTIVE,
+				officeId, meeting, personnel);
+		
+	}
+	
 	private java.sql.Date offSetCurrentDate(int noOfyears) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);

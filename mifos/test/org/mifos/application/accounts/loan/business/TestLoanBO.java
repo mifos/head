@@ -26,6 +26,7 @@ import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -1700,6 +1701,7 @@ public class TestLoanBO extends MifosTestCase {
 				.toArray());
 		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList
 				.get(0);
+		assertEquals(LoanConstants.PENALTY_WAIVED, loanActivityEntity.getComments());
 		assertEquals(new Money("100"), loanActivityEntity.getPenalty());
 		assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp()
 				.getTime()), loanActivityEntity.getTrxnCreatedDate());
@@ -1818,6 +1820,7 @@ public class TestLoanBO extends MifosTestCase {
 				.toArray());
 		LoanActivityEntity loanActivityEntity = (LoanActivityEntity) objectList
 				.get(0);
+		assertEquals(LoanConstants.FEE_WAIVED, loanActivityEntity.getComments());
 		assertEquals(new Money("100"), loanActivityEntity.getFee());
 		assertEquals(new Timestamp(DateUtils.getCurrentDateWithoutTimeStamp()
 				.getTime()), loanActivityEntity.getTrxnCreatedDate());

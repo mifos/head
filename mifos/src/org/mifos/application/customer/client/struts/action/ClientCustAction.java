@@ -170,7 +170,7 @@ public class ClientCustAction extends CustAction {
 		if (actionForm.getParentGroupId() != null) {
 			CustomerBO parent = getCustomerBusinessService().getCustomer(
 					Integer.valueOf(actionForm.getParentGroupId()));
-			if (null != parent)
+			if (null != parent && null!=parent.getParentCustomer())
 				parent.getParentCustomer().getDisplayName();
 			actionForm.setParentGroup(parent);
 		}
@@ -367,8 +367,7 @@ public class ClientCustAction extends CustAction {
 							request).getId());
 		List<SavingsOfferingBO> selectedOfferings = getSelectedOfferings(
 				actionForm, request);
-		try {
-			if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
+		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 				client = new ClientBO(userContext, actionForm.getClientName()
 						.getDisplayName(), actionForm.getStatusValue(),
 						actionForm.getExternalId(), getDateFromString(
@@ -419,15 +418,6 @@ public class ClientCustAction extends CustAction {
 			actionForm.setCustomerId(client.getCustomerId().toString());
 			actionForm.setGlobalCustNum(client.getGlobalCustNum());
 			client = null;
-		} catch (ApplicationException ae) {
-			ae.printStackTrace();
-			ActionErrors errors = new ActionErrors();
-			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
-					.getValues()));
-			request.setAttribute(Globals.ERROR_KEY, errors);
-			return mapping
-					.findForward(ActionForwards.create_failure.toString());
-		}
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 

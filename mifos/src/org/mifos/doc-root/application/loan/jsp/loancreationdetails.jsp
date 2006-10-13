@@ -241,8 +241,7 @@
 											<td width="30%" align="right" class="fontnormal">
 												<span class="mandatorytext"></span>
 												<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" mandatory="yes" />
-												<mifos:mifoslabel name="loan.instancename" />
-												:
+												<mifos:mifoslabel name="loan.instancename" />:
 											</td>
 											<td width="70%">
 												<html-el:select onchange="javascript:fun_refresh(this.form)" property="prdOfferingId" style="width:136px;">
@@ -265,8 +264,7 @@
 										</tr>
 										<tr class="fontnormal">
 											<td align="right" valign="top">
-												<mifos:mifoslabel name="loan.description" />
-												:
+												<mifos:mifoslabel name="loan.description" />:
 											</td>
 											<td valign="top">
 												<c:out value="${LoanOffering.description}" />
@@ -276,8 +274,7 @@
 										<tr class="fontnormal">
 											<td width="30%" align="right">
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
-												<mifos:mifoslabel name="loan.interest_type" />
-												:
+												<mifos:mifoslabel name="loan.interest_type" />:
 											</td>
 											<td width="70%" valign="top">
 												<c:out value="${LoanOffering.interestTypes.name}" />
@@ -285,8 +282,7 @@
 										</tr>
 										<tr class="fontnormal">
 											<td align="right">
-												<mifos:mifoslabel name="loan.freq_of_inst" />
-												:
+												<mifos:mifoslabel name="loan.freq_of_inst" />:
 											</td>
 											<td valign="top">
 												<c:out value="${LoanOffering.loanOfferingMeeting.meeting.meetingDetails.recurAfter}" />
@@ -304,8 +300,7 @@
 
 										<tr class="fontnormal">
 											<td align="right">
-												<mifos:mifoslabel name="loan.principle_due" />
-												:
+												<mifos:mifoslabel name="loan.principle_due" />:
 											</td>
 											<td valign="top">
 												<c:choose>
@@ -330,8 +325,7 @@
 										</tr>
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal" width="30%">
-												<mifos:mifoslabel name="loan.amount" mandatory="yes" />
-												:
+												<mifos:mifoslabel name="loan.amount" mandatory="yes" />:
 											</td>
 											<td valign="top">
 												<mifos:mifosdecimalinput property="loanAmount" />
@@ -347,8 +341,7 @@
 											<td width="30%" align="right" class="fontnormal">
 												<span class="mandatorytext"></span>
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" mandatory="yes" />
-												<mifos:mifoslabel name="loan.interest_rate" />
-												:
+												<mifos:mifoslabel name="loan.interest_rate" />:
 											</td>
 											<td width="70%" valign="top">
 												<mifos:mifosdecimalinput property="interestRate" decimalFmt="10.5" />
@@ -365,8 +358,7 @@
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
 												<span class="mandatorytext"></span>
-												<mifos:mifoslabel name="loan.no_of_inst" mandatory="yes" />
-												:
+												<mifos:mifoslabel name="loan.no_of_inst" mandatory="yes" />:
 											</td>
 											<td valign="top">
 												<mifos:mifosnumbertext property="noOfInstallments" />
@@ -382,8 +374,7 @@
 
 											<td align="right" class="fontnormal">
 												<span class="mandatorytext"></span>
-												<mifos:mifoslabel name="loan.proposed_date" mandatory="yes" />
-												:
+												<mifos:mifoslabel name="loan.proposed_date" mandatory="yes" />:
 											</td>
 											<td valign="top">
 												<date:datetag property="disbursementDate" />
@@ -393,8 +384,7 @@
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
-												<mifos:mifoslabel name="loan.interest_disb" />
-												:
+												<mifos:mifoslabel name="loan.interest_disb" />:
 											</td>
 											<td valign="top">
 												<html-el:checkbox property="intDedDisbursement" value="1" onclick="intDedAtDisb()" />
@@ -403,8 +393,7 @@
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
 												<span class="mandatorytext"></span>
-												<mifos:mifoslabel name="loan.grace_period" mandatory="yes" />
-												:
+												<mifos:mifoslabel name="loan.grace_period" mandatory="yes" />:
 											</td>
 											<td valign="top">
 												<mifos:mifosnumbertext property="gracePeriodDuration" />
@@ -415,8 +404,7 @@
 										<tr class="fontnormal">
 											<td align="right" class="fontnormal">
 												<span class="mandatorytext"></span>
-												<mifos:mifoslabel name="loan.source_fund" />
-												:
+												<mifos:mifoslabel name="loan.source_fund" />:
 											</td>
 											<td valign="top">
 												<mifos:select property="loanOfferingFund" style="width:136px;">
@@ -479,15 +467,14 @@
 												<c:out value="${loopStatus1.index}" />
 											</bean:define>
 											<tr>
-												<td width="21%" align="right" class="fontnormal">
-													<c:out value="${adminFees.feeName}" />
-													:
+												<td width="30%" align="right" class="fontnormal">
+													<c:out value="${adminFees.feeName}" />:
 												</td>
-												<td width="79%" class="fontnormal">
-													<table width="500" border="0" cellspacing="0" cellpadding="0">
+												<td width="70%" class="fontnormal">
+													<table width="420" border="0" cellspacing="0" cellpadding="0">
 														<!-- Fee amount display as label or text field -->
 														<tr class="fontnormal">
-															<td width="148">
+															<td width="140">
 																<c:choose>
 																	<c:when test="${adminFees.periodic == true}">
 																		<c:out value="${adminFees.amount}" />
@@ -498,7 +485,7 @@
 																</c:choose>
 																<c:out value="${adminFees.feeFormula}" />
 															</td>
-															<td width="182">
+															<td width="140">
 																&nbsp;
 																<mifos:mifoslabel name="loan.periodicity" />
 																<c:choose>
@@ -510,7 +497,7 @@
 																	</c:otherwise>
 																</c:choose>
 															</td>
-															<td width="170">
+															<td width="140">
 																<html-el:checkbox property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox>
 																<mifos:mifoslabel name="loan.checkToRemove" />
 															</td>
@@ -537,8 +524,8 @@
 												<bean:define id="ctr2" toScope="request">
 													<c:out value="${loopStatus2.index}" />
 												</bean:define>
-												<td width="21%" align="right" class="fontnormal">
-													<mifos:mifoslabel name="loan.fee_type" />
+												<td width="30%" align="right" class="fontnormal">
+													<mifos:mifoslabel name="loan.fee_type" />:
 												</td>
 												<td width="17%" class="fontnormal">
 													<mifos:select name="loanAccountActionForm" property='selectedFee[${ctr2}].feeId' onchange="displayAmount('selectedFee[${ctr2}].feeId', 'selectedFee[${ctr2}].amount',${loopStatus2.index} )">
@@ -548,16 +535,13 @@
 													</mifos:select>
 												</td>
 												<td width="12%" align="right" class="fontnormal">
-													<mifos:mifoslabel name="loan.amount" />
+													<mifos:mifoslabel name="loan.amount" />:
 												</td>
 												<td width="50%" class="fontnormal">
 													<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' decimalFmt="10.5"/>
 													<SPAN id="feeFormulaSpan${loopStatus2.index}" class="fontnormal"></SPAN>
 
 												</td>
-
-
-
 												<c:if test="${ctr2 == 0}">
 													<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" varStatus="loopStatus3">
 														<bean:define id="ctr3" toScope="request">

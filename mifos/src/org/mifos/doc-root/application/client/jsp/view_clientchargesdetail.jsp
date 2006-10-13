@@ -73,12 +73,15 @@
 				<td width="70%" height="24" align="left" valign="top"
 					class="paddingL15T15">
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
-					<font class="fontnormalRedBold"><html-el:errors
-						bundle="ClientUIResources" /></font>
+					
 					<tr>
 						<td width="70%" class="headingorange"><mifos:mifoslabel
 							name="${ConfigurationConstants.CLIENT}" /> <mifos:mifoslabel
 							name="client.clientcharges" bundle="ClientUIResources" /></td>
+					</tr>
+					<tr>
+						<td width="70%" class="headingorange"><font class="fontnormalRedBold"><html-el:errors
+						bundle="ClientUIResources" /></font></td>
 					</tr>
 					<tr>
 						<td align="right" class="headingorange"><img

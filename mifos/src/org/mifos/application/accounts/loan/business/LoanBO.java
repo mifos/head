@@ -830,7 +830,7 @@ public class LoanBO extends AccountBO {
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
 			updateTotalFeeAmount(chargeWaived);
 			updateAccountActivity(null, null, chargeWaived, null, userContext
-					.getId(), "Amnt " + chargeWaived + " waived");
+					.getId(), LoanConstants.FEE_WAIVED);
 		}
 		try {
 			new LoanPersistance().createOrUpdate(this);
@@ -847,7 +847,7 @@ public class LoanBO extends AccountBO {
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
 			updateTotalPenaltyAmount(chargeWaived);
 			updateAccountActivity(null, null, null, chargeWaived, userContext
-					.getId(), "Amnt " + chargeWaived + " waived");
+					.getId(), LoanConstants.PENALTY_WAIVED);
 		}
 		try {
 			new LoanPersistance().createOrUpdate(this);
