@@ -99,7 +99,14 @@
               <tr>
                 <td width="83%" class="headingorange">
                 	<span class="heading">
-                	<c:out value="${BusinessKey.displayName}"></c:out> # <c:out value="${BusinessKey.customerAccount.globalAccountNum}"></c:out> - 
+                	<c:choose>
+			          	<c:when test="${param.input == 'LoanDetails'}">
+	    	            	<c:out value="${param.prdOfferingName}"></c:out> # <c:out value="${param.globalAccountNum}"></c:out> - 			          	
+			          	</c:when>
+			          	<c:otherwise
+	    	            	<c:out value="${BusinessKey.displayName}"></c:out> # <c:out value="${BusinessKey.customerAccount.globalAccountNum}"></c:out> - 
+	   	            	</c:otherwise>
+	   	            </c:choose>
                 	</span> 
                 	<mifos:mifoslabel name="Savings.Transactionhistory"/>
 	            </td>

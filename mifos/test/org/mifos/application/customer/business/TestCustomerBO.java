@@ -10,8 +10,6 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -393,6 +391,28 @@ public class TestCustomerBO extends MifosTestCase {
 		}
 	}
 
+	public void testValidateStatusForClientWithCancelledGroups() throws Exception {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
+				"1.4", meeting, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroup("Group",
+				CustomerStatus.GROUP_CANCELLED.getValue(), "1.4.1", center,
+				new Date(System.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_PARTIAL.getValue(), "1.4.1.1", group,
+				new Date(System.currentTimeMillis()));
+		Short newStatusId = CustomerStatus.CLIENT_ACTIVE.getValue();
+		try {
+			client.changeStatus(newStatusId, null, "Test");
+			assertFalse(true);
+		} catch (CustomerException sce) {
+			assertTrue(true);
+			assertEquals(sce.getKey(),ClientConstants.ERRORS_GROUP_CANCELLED);
+			assertEquals(CustomerStatus.CLIENT_PARTIAL.getValue(),client.getCustomerStatus().getId());
+		}
+	}
+	
 	public void testValidateStatusForClientWithPartialGroups() throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

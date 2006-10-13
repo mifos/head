@@ -4,8 +4,6 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;

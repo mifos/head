@@ -245,14 +245,11 @@ public class GroupBO extends CustomerBO {
 				this.setCustomerMeeting(createCustomerMeeting(meeting));
 				updateMeetingForClients(meeting);
 			}
-			else if(getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue()) ||
-				getCustomerStatus().getId().equals(CustomerStatus.GROUP_HOLD.getValue())){
+			else
 				saveUpdatedMeeting(meeting);
-			 }else
-				 super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
-			this.update();
 		}else
 			saveUpdatedMeeting(meeting);
+		this.update();
 	}
 	
 	private void updateMeetingForClients(MeetingBO meeting)throws CustomerException{
@@ -334,7 +331,7 @@ public class GroupBO extends CustomerBO {
 			throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
 		
 		if(!toCenter.isActive())
-			throw new CustomerException(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE);		
+			throw new CustomerException(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE);
 	}
 	
 	private boolean isSameCenter(CenterBO center){
@@ -398,7 +395,7 @@ public class GroupBO extends CustomerBO {
 				throw new CustomerException(
 						GroupConstants.CENTER_INACTIVE,
 						new Object[] { MifosConfiguration.getInstance()
-								.getLabel(ConfigurationConstants.GROUP,
+								.getLabel(ConfigurationConstants.CENTER,
 										getUserContext().getPereferedLocale()) });
 			} catch (ConfigurationException ce) {
 				throw new CustomerException(ce);

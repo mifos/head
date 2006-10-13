@@ -116,11 +116,11 @@ function getOffice(officeid){
 							<td>
 							
 							<c:choose>
-							<c:when test="${offActionForm.officeLevel eq OfficeLevel.HEADOFFICE.value ||offActionForm.officeLevel eq OfficeLevel.BRANCHOFFICE.value}">
+							<c:when test="${offActionForm.officeLevel eq OfficeLevel.HEADOFFICE.value or BusinessKey.level.id eq OfficeLevel.BRANCHOFFICE.value}">
 							  <mifos:select name="offActionForm" property="officeLevel" disabled="true"
 								size="1" >
 									<html-el:option value="${BusinessKey.level.id}">${BusinessKey.level.name}</html-el:option>
-							</mifos:select>
+							  </mifos:select>
 							
 							</c:when>
 							<c:otherwise>

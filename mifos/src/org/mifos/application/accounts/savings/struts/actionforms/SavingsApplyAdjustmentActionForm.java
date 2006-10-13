@@ -123,11 +123,8 @@ public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
 						errors.add(AccountConstants.MAX_NOTE_LENGTH, new ActionMessage(
 								AccountConstants.MAX_NOTE_LENGTH, AccountConstants.COMMENT_LENGTH));
 					}
-				}
-				if(errors==null){
-					errors = new ActionErrors();
-					errors.add(super.validate(mapping,request));
-				}
+				}				
+				errors.add(super.validate(mapping,request));
 			}
 		}catch(ApplicationException ae){
 			errors = new ActionErrors();

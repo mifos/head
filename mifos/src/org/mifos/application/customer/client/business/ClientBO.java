@@ -340,13 +340,8 @@ public class ClientBO extends CustomerBO {
 	public void updateMeeting(MeetingBO meeting) throws CustomerException {
 		if (getCustomerMeeting() == null)
 			this.setCustomerMeeting(createCustomerMeeting(meeting));
-		else if(getParentCustomer()!=null)
-				saveUpdatedMeeting(meeting);
-		else if(getCustomerStatus().getId().equals(CustomerStatus.CLIENT_HOLD.getValue()) ||
-				getCustomerStatus().getId().equals(CustomerStatus.CLIENT_ACTIVE.getValue())){
-				saveUpdatedMeeting(meeting);
-			 }else
-				 super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
+		else
+			saveUpdatedMeeting(meeting);
 		this.update();
 	}
 
@@ -372,7 +367,7 @@ public class ClientBO extends CustomerBO {
 
 		if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
 			checkIfClientCanBeActive(newStatusId);
-
+		
 		logger
 				.debug("In ClientBO::validateStatusChange(), successfully validated status, customerId: "
 						+ getCustomerId());
@@ -486,7 +481,7 @@ public class ClientBO extends CustomerBO {
 		setSearchId(getParentCustomer().getSearchId()
 				+ getSearchId().substring(getSearchId().lastIndexOf(".")));
 		if (getParentCustomer().getParentCustomer() != null)
-			super.handleParentTransfer();
+			handleParentTransfer();
 
 		this.update();
 	}
@@ -732,23 +727,31 @@ public class ClientBO extends CustomerBO {
 		if ((clientStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()) || clientStatusId
 				.equals(CustomerStatus.CLIENT_PENDING.getValue()))
 				&& this.isClientUnderGroup()) {
-			if (isGroupStatusLower(clientStatusId, groupStatus)) {
-				try {
-					throw new CustomerException(
-							ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION,
-							new Object[] {
-									MifosConfiguration.getInstance().getLabel(
-											ConfigurationConstants.GROUP,
-											this.getUserContext()
-													.getPereferedLocale()),
-									MifosConfiguration.getInstance().getLabel(
-											ConfigurationConstants.CLIENT,
-											this.getUserContext()
-													.getPereferedLocale()) });
+			try {
+					if(groupStatus.equals(CustomerStatus.GROUP_CANCELLED.getValue()))
+						throw new CustomerException(ClientConstants.ERRORS_GROUP_CANCELLED, new Object[] {
+								MifosConfiguration.getInstance().getLabel(
+										ConfigurationConstants.GROUP,
+										this.getUserContext()
+												.getPereferedLocale())});
+					
+					if (isGroupStatusLower(clientStatusId, groupStatus)) {
+						
+							throw new CustomerException(
+									ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION,
+									new Object[] {
+											MifosConfiguration.getInstance().getLabel(
+													ConfigurationConstants.GROUP,
+													this.getUserContext()
+															.getPereferedLocale()),
+											MifosConfiguration.getInstance().getLabel(
+													ConfigurationConstants.CLIENT,
+													this.getUserContext()
+															.getPereferedLocale()) });
+					}
 				} catch (ConfigurationException ce) {
 					throw new CustomerException(ce);
-				}
-			}
+				}			
 		}
 	}
 

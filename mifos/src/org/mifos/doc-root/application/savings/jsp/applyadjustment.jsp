@@ -108,18 +108,18 @@
 						<mifos:mifosdecimalinput name="savingsApplyAdjustmentActionForm" property="lastPaymentAmount"/>
 					</c:if>
 				   	<c:if test="${isLastPaymentValid == 1}">
-                    &nbsp;( <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
+                    &nbsp; <c:if test="${(!empty clientName) or (BusinessKey.customer.customerLevel.id!=1)}"><mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/>
                   	<mifos:mifoslabel name="Savings.clientName"/>:</c:if>
                   	<c:choose>
 	              		<c:when test="${!empty clientName}">
-							<c:out value="${clientName}"/>
+							(<c:out value="${clientName}"/>)
 	                	</c:when>
                   	<c:otherwise>
 	                  	<c:if test="${BusinessKey.customer.customerLevel.id!=1}">
-		                  	<mifos:mifoslabel name="Savings.nonSpecified"/>
+		                  	(<mifos:mifoslabel name="Savings.nonSpecified"/>)
 	                  	</c:if>
                   	</c:otherwise>
-                  </c:choose>)
+                  </c:choose>
                 </c:if>
 				</td>
                 </tr>

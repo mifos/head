@@ -690,17 +690,17 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		assertTrue(client1.getCustomerMeeting().getMeeting().isWeekly());
 		assertTrue(client2.getCustomerMeeting().getMeeting().isWeekly());
 
-		assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.MONDAY, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.MONDAY, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.MONDAY, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
 
-		assertEquals(meetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
-		assertEquals(meetingPlace, client1.getCustomerMeeting().getMeeting().getMeetingPlace());
-		assertEquals(meetingPlace, client2.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
 
-		assertEquals(recurAfter, group.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
-		assertEquals(recurAfter, client1.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
-		assertEquals(recurAfter, client2.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
+		assertEquals(recurAfter, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getRecurAfter());
+		assertEquals(recurAfter, client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getRecurAfter());
+		assertEquals(recurAfter, client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getRecurAfter());
 	}
 
 	public void testSuccessfulEditCancel()throws Exception{
@@ -804,7 +804,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		
 		client1 = (ClientBO)TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
 		
-		MeetingBO updatedMeeting = client1.getCustomerMeeting().getMeeting();
+		MeetingBO updatedMeeting = client1.getCustomerMeeting().getUpdatedMeeting();
 		assertTrue(updatedMeeting.isWeekly());
 		assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
 		assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails().getRecurAfter());

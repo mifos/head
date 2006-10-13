@@ -401,11 +401,7 @@ public class CustomerAccountBO extends AccountBO {
 	protected void regenerateFutureInstallments(Short nextInstallmentId)
 			throws AccountException {
 		if (!this.getCustomer().getCustomerStatus().getId().equals(
-				ClientConstants.STATUS_CANCELLED)
-				&& !this.getCustomer().getCustomerStatus().getId().equals(
 						ClientConstants.STATUS_CLOSED)
-				&& !this.getCustomer().getCustomerStatus().getId().equals(
-						GroupConstants.CANCELLED)
 				&& !this.getCustomer().getCustomerStatus().getId().equals(
 						GroupConstants.CLOSED)) {
 

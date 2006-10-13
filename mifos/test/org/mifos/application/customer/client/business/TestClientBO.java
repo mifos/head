@@ -893,8 +893,9 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+
+		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
 	}
 	
 	public void testUpdateMonthlyMeeting()throws Exception{
@@ -907,8 +908,8 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
 	}
 	
 	public void testUpdateMonthlyMeetingOnDate()throws Exception{
@@ -921,7 +922,7 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
 	}
 	public void testCreateMeeting()throws Exception{
 		client = TestObjectFactory.createClient("clientname",null,CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());
