@@ -49,10 +49,7 @@ import org.hibernate.HibernateException;
 import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
-import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -79,7 +76,10 @@ public class TestAccountBO extends TestAccount {
 	public TestAccountBO() {
 	}
 
-	
+	public static void addAccountFlag(AccountStateFlagEntity flagDetail,
+			AccountBO account) {
+		account.addAccountFlag(flagDetail);
+	}
 
 	public void testFailureRemoveFees() {
 		try {
@@ -98,8 +98,6 @@ public class TestAccountBO extends TestAccount {
 			assertTrue(true);
 		}
 	}
-
-	
 
 	public void testSuccessUpdateAccountActionDateEntity() {
 		List<Short> installmentIdList;
@@ -150,8 +148,8 @@ public class TestAccountBO extends TestAccount {
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
-				accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(700), null, loan
+				accntActionDates,
+				TestObjectFactory.getMoneyForMFICurrency(700), null, loan
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
 		loan.applyPayment(paymentData);
@@ -168,7 +166,8 @@ public class TestAccountBO extends TestAccount {
 	public void testLoanAdjustment() throws Exception {
 		HibernateUtil.closeSession();
 		Date currentDate = new Date(System.currentTimeMillis());
-		LoanBO loan = (LoanBO)TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		LoanBO loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				accountBO.getAccountId());
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.add(loan.getAccountActionDate(Short.valueOf("1")));
@@ -180,16 +179,17 @@ public class TestAccountBO extends TestAccount {
 		loan.applyPayment(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		loan = (LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+				.getAccountId());
 		loan.setUserContext(TestObjectFactory.getUserContext());
-		loan.applyPayment(TestObjectFactory
-				.getLoanAccountPaymentData(null, TestObjectFactory
-						.getMoneyForMFICurrency(600), null,
-						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
-						currentDate, currentDate));
+		loan.applyPayment(TestObjectFactory.getLoanAccountPaymentData(null,
+				TestObjectFactory.getMoneyForMFICurrency(600), null, loan
+						.getPersonnel(), "receiptNum", Short.valueOf("1"),
+				currentDate, currentDate));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		loan = (LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+				.getAccountId());
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		loan.adjustPmnt("loan account has been adjusted by test code");
 		TestObjectFactory.updateObject(loan);
@@ -220,8 +220,8 @@ public class TestAccountBO extends TestAccount {
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(712), null, loan
-						.getPersonnel(), "receiptNum", Short.valueOf("1"),
+						.getMoneyForMFICurrency(712), null,
+						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
 						currentDate, currentDate);
 		loan.applyPayment(accountPaymentDataView);
 
@@ -270,17 +270,20 @@ public class TestAccountBO extends TestAccount {
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData accountPaymentDataView = TestObjectFactory
 				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(100), null, loan.getPersonnel(),
-						"receiptNum", Short.valueOf("1"), currentDate,
-						currentDate);
+						.getMoneyForMFICurrency(100), null,
+						loan.getPersonnel(), "receiptNum", Short.valueOf("1"),
+						currentDate, currentDate);
 		loan.applyPayment(accountPaymentDataView);
 		TestObjectFactory.flushandCloseSession();
 		loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());
-		List<Integer> ids=new ArrayList<Integer>();
-		for(AccountPaymentEntity accountPaymentEntity : loan.getAccountPayments()){
-			for(AccountTrxnEntity accountTrxnEntity : accountPaymentEntity.getAccountTrxns()){
-				for(FinancialTransactionBO financialTransactionBO : accountTrxnEntity.getFinancialTransactions()){
+		List<Integer> ids = new ArrayList<Integer>();
+		for (AccountPaymentEntity accountPaymentEntity : loan
+				.getAccountPayments()) {
+			for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
+					.getAccountTrxns()) {
+				for (FinancialTransactionBO financialTransactionBO : accountTrxnEntity
+						.getFinancialTransactions()) {
 					ids.add(financialTransactionBO.getTrxnId());
 				}
 			}
@@ -293,10 +296,10 @@ public class TestAccountBO extends TestAccount {
 		assertTrue(
 				"Account TrxnHistoryView list object Size should be greater than zero",
 				trxnHistlist.size() > 0);
-		assertEquals(ids.size(),trxnHistlist.size());
+		assertEquals(ids.size(), trxnHistlist.size());
 		int i = 0;
-		for(TransactionHistoryView transactionHistoryView :  trxnHistlist){
-			assertEquals(ids.get(i),transactionHistoryView.getAccountTrxnId());
+		for (TransactionHistoryView transactionHistoryView : trxnHistlist) {
+			assertEquals(ids.get(i), transactionHistoryView.getAccountTrxnId());
 			i++;
 		}
 		TestObjectFactory.flushandCloseSession();
@@ -308,7 +311,8 @@ public class TestAccountBO extends TestAccount {
 		FeeBO oneTimeFee = TestObjectFactory.createOneTimeAmountFee(
 				"One Time Fee", FeeCategory.LOAN, "20",
 				FeePayment.TIME_OF_DISBURSMENT);
-		AccountFeesEntity accountOneTimeFee = new AccountFeesEntity(accountBO,oneTimeFee,new Double("1.0"));
+		AccountFeesEntity accountOneTimeFee = new AccountFeesEntity(accountBO,
+				oneTimeFee, new Double("1.0"));
 		accountBO.addAccountFees(accountOneTimeFee);
 		accountPersistence.createOrUpdate(accountBO);
 		TestObjectFactory.flushandCloseSession();
@@ -331,7 +335,8 @@ public class TestAccountBO extends TestAccount {
 
 	}
 
-	public void testHandleChangeInMeetingSchedule() throws ApplicationException,SystemException {
+	public void testHandleChangeInMeetingSchedule()
+			throws ApplicationException, SystemException {
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -399,9 +404,10 @@ public class TestAccountBO extends TestAccount {
 
 		java.sql.Date currentDate = new java.sql.Date(System
 				.currentTimeMillis());
-		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(TestObjectFactory.getUserContext().getId());
+		PersonnelBO personnelBO = new PersonnelPersistence()
+				.getPersonnel(TestObjectFactory.getUserContext().getId());
 		AccountNotesEntity accountNotesEntity = new AccountNotesEntity(
-				currentDate, "account updated", personnelBO,accountBO);
+				currentDate, "account updated", personnelBO, accountBO);
 		accountBO.addAccountNotes(accountNotesEntity);
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
@@ -419,8 +425,8 @@ public class TestAccountBO extends TestAccount {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active", Short
-				.valueOf("13"), "1.1", meeting, new java.util.Date());
+		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
+				Short.valueOf("13"), "1.1", meeting, new java.util.Date());
 		HibernateUtil.closeSession();
 		centerBO = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
 				centerBO.getCustomerId());
@@ -444,8 +450,8 @@ public class TestAccountBO extends TestAccount {
 
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
-				accntActionDates, TestObjectFactory
-						.getMoneyForMFICurrency(212), null, accountBO
+				accntActionDates,
+				TestObjectFactory.getMoneyForMFICurrency(212), null, accountBO
 						.getPersonnel(), "receiptNum", Short.valueOf("1"),
 				currentDate, currentDate);
 		accountBO.applyPayment(paymentData);

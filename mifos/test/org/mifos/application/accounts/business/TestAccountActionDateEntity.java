@@ -5,17 +5,12 @@ package org.mifos.application.accounts.business;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.util.helpers.OverDueAmounts;
-import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -38,7 +33,11 @@ public class TestAccountActionDateEntity extends TestAccount {
 		testObjectPersistence = new TestObjectPersistence();
 	}
 
-	
+	public static void addAccountActionDate(
+			AccountActionDateEntity accountAction, AccountBO account) {
+		account.addAccountActionDate(accountAction);
+	}
+
 	public void testGetPrincipal() {
 		Set<AccountActionDateEntity> accountActionDates = accountBO
 				.getAccountActionDates();
@@ -49,7 +48,6 @@ public class TestAccountActionDateEntity extends TestAccount {
 		}
 	}
 
-	
 	public void testWaiveCharges() {
 		HibernateUtil.closeSession();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
@@ -134,5 +132,4 @@ public class TestAccountActionDateEntity extends TestAccount {
 				.getCustomerId());
 	}
 
-	
 }

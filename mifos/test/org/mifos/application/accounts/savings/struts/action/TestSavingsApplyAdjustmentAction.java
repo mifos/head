@@ -8,6 +8,7 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
+import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -103,7 +104,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 						.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
-		savings.addAccountPayment(payment);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.setSavingsBalance(depositAmount);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
@@ -146,7 +147,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 						.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
-		savings.addAccountPayment(payment);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.setSavingsBalance(balance);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
@@ -214,7 +215,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 						.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
-		savings.addAccountPayment(payment);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.update();
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
@@ -295,7 +296,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 						.getDate("20/05/2006"),
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
-		savings.addAccountPayment(payment);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.setSavingsBalance(depositAmount);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();

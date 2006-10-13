@@ -60,6 +60,7 @@ import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
+import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
@@ -732,9 +733,8 @@ public class TestObjectFactory {
 				customer, AccountState.SAVINGS_ACC_PARTIALAPPLICATION,
 				new Money(currency, "300.0"), null);
 		savings.save();
-		savings.setAccountState(new AccountStateEntity(AccountState
-				.getStatus(accountStateId)));
-		savings.setGlobalAccountNum(globalNum);
+		savings.setUserContext(TestObjectFactory.getContext());
+		savings.changeStatus(accountStateId, null, "");
 		savings.setActivationDate(new Date(System.currentTimeMillis()));
 		List<Date> meetingDates = getMeetingDates(meeting, 3);
 		short i = 0;
@@ -742,7 +742,7 @@ public class TestObjectFactory {
 			SavingsScheduleEntity actionDate = new SavingsScheduleEntity(
 					savings, customer, ++i, new java.sql.Date(date.getTime()),
 					PaymentStatus.UNPAID, new Money(currency, "200.0"));
-			savings.addAccountActionDate(actionDate);
+			TestAccountActionDateEntity.addAccountActionDate(actionDate,savings);
 		}
 		HibernateUtil.commitTransaction();
 		return (SavingsBO) addObject(getObject(SavingsBO.class, savings
@@ -766,7 +766,6 @@ public class TestObjectFactory {
 				customer, AccountState.getStatus(accountStateId),
 				savingsOffering.getRecommendedAmount(), getCustomFieldView());
 		savings.save();
-		savings.setGlobalAccountNum(globalNum);
 		savings.setActivationDate(new Date(System.currentTimeMillis()));
 		HibernateUtil.commitTransaction();
 		return (SavingsBO) addObject(getObject(SavingsBO.class, savings

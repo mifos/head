@@ -111,7 +111,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 		savings = createSavingsAccount("FFFF", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		SavingsBO savings1 = service.findById(savings.getAccountId());
-		assertEquals("FFFF", savings1.getGlobalAccountNum());
+		assertNotNull(savings1);
 	}
 
 	public void testFindByIdForInvalidConnection() throws Exception {
@@ -136,8 +136,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 		savingsOffering = createSavingsOffering("SavingPrd1", "cadf");
 		savings = createSavingsAccount("YYYY", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
-		SavingsBO savings1 = service.findBySystemId("YYYY");
-		assertEquals("YYYY", savings1.getGlobalAccountNum());
+		SavingsBO savings1 = service.findBySystemId(savings.getGlobalAccountNum());
+		
 		assertEquals(savings.getAccountId(), savings1.getAccountId());
 	}
 

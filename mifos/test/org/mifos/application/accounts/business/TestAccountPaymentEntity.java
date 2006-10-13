@@ -43,6 +43,9 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
+	public static void addAccountPayment(AccountPaymentEntity payment,AccountBO account) {
+		account.addAccountPayment(payment);
+	}
 	public void testReversalAdjustment() throws Exception {
 		userContext = TestObjectFactory.getUserContext();
 		createInitialObjects();

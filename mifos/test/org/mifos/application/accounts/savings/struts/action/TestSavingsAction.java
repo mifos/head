@@ -341,7 +341,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 	public void testSuccessfulGetBySystemId() throws Exception {
 
 		createAndAddObjects(AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
-		addRequestParameter("globalAccountNum", "000X00000000013");
+		addRequestParameter("globalAccountNum",savings.getGlobalAccountNum());
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "get");
 		actionPerform();

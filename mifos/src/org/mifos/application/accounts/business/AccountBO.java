@@ -219,7 +219,7 @@ public class AccountBO extends BusinessObject {
 		return closedDate;
 	}
 
-	public void setGlobalAccountNum(String globalAccountNum) {
+	protected void setGlobalAccountNum(String globalAccountNum) {
 		this.globalAccountNum = globalAccountNum;
 	}
 
@@ -227,31 +227,31 @@ public class AccountBO extends BusinessObject {
 		this.accountPayments = accountPayments;
 	}
 
-	public void setAccountState(AccountStateEntity accountState) {
+	protected void setAccountState(AccountStateEntity accountState) {
 		this.accountState = accountState;
 	}
 
-	public void setClosedDate(Date closedDate) {
+	protected void setClosedDate(Date closedDate) {
 		this.closedDate = closedDate;
 	}
 
-	public void addAccountStatusChangeHistory(
+	protected void addAccountStatusChangeHistory(
 			AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
 		this.accountStatusChangeHistory.add(accountStatusChangeHistoryEntity);
 	}
 
-	public void addAccountFees(AccountFeesEntity fees) {
+	protected void addAccountFees(AccountFeesEntity fees) {
 		accountFees.add(fees);
 	}
 
-	public void addAccountActionDate(AccountActionDateEntity accountAction) {
+	protected void addAccountActionDate(AccountActionDateEntity accountAction) {
 		if (accountAction == null) {
 			throw new NullPointerException();
 		}
 		accountActionDates.add(accountAction);
 	}
 
-	public void addAccountPayment(AccountPaymentEntity payment) {
+	protected void addAccountPayment(AccountPaymentEntity payment) {
 		if (accountPayments == null)
 			accountPayments = new HashSet<AccountPaymentEntity>();
 		accountPayments.add(payment);
@@ -261,7 +261,7 @@ public class AccountBO extends BusinessObject {
 		accountNotes.add(notes);
 	}
 
-	public void addAccountFlag(AccountStateFlagEntity flagDetail) {
+	protected void addAccountFlag(AccountStateFlagEntity flagDetail) {
 		AccountFlagMapping flagMap = new AccountFlagMapping();
 		flagMap.setCreatedBy(this.getUserContext().getId());
 		flagMap.setCreatedDate(new Date());
@@ -391,7 +391,7 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-	public void updateAccountFeesEntity(Short feeId) {
+	protected void updateAccountFeesEntity(Short feeId) {
 		AccountFeesEntity accountFees = getAccountFees(feeId);
 		if (accountFees != null) {
 			accountFees.changeFeesStatus(AccountConstants.INACTIVE_FEES,

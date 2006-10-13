@@ -179,7 +179,7 @@ public class LoanArrearsAgingEntity extends PersistentObject {
 		this.unpaidPrincipal = unpaidPrincipal;
 	}
 
-	public void update(Short daysInArrears, Money unpaidPrincipal,
+	void update(Short daysInArrears, Money unpaidPrincipal,
 			Money unpaidInterest, Money overduePrincipal,
 			Money overdueInterest, CustomerBO customer) {
 		setCustomerName(customer.getDisplayName());

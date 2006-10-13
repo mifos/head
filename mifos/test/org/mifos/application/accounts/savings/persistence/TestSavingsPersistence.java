@@ -12,6 +12,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.SavingsAccountView;
+import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
@@ -133,7 +134,6 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savings = createSavingsAccount("FFFF", savingsOffering);
 		SavingsBO savings1 = savingsPersistence
 				.findById(savings.getAccountId());
-		assertEquals("FFFF", savings1.getGlobalAccountNum());
 		assertEquals(savingsOffering.getRecommendedAmount()
 				.getAmountDoubleValue(), savings1.getRecommendedAmount()
 				.getAmountDoubleValue());
@@ -171,8 +171,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering("SavingPrd1", "v1ws");
 		savings = createSavingsAccount("kkk", savingsOffering);
-		SavingsBO savings1 = savingsPersistence.findBySystemId("kkk");
-		assertEquals("kkk", savings1.getGlobalAccountNum());
+		SavingsBO savings1 = savingsPersistence.findBySystemId(savings.getGlobalAccountNum());
 		assertEquals(savings.getAccountId(), savings1.getAccountId());
 		assertEquals(savingsOffering.getRecommendedAmount()
 				.getAmountDoubleValue(), savings1.getRecommendedAmount()
@@ -199,7 +198,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							.getDate("15/01/2006"),
 							AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
 							createdBy, group);
-			savings.addAccountPayment(payment);
+			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.save();
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
@@ -211,7 +210,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							"2700.0"), helper.getDate("20/02/2006"),
 					AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
 					createdBy, group);
-			savings.addAccountPayment(payment);
+			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
@@ -225,7 +224,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							"2200.0"), helper.getDate("10/03/2006"),
 					AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings,
 					createdBy, group);
-			savings.addAccountPayment(payment);
+			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
@@ -239,7 +238,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							"3400.0"), helper.getDate("15/03/2006"),
 					AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
 					createdBy, group);
-			savings.addAccountPayment(payment);
+			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
@@ -253,7 +252,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							"900.0"), helper.getDate("25/03/2006"),
 					AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings,
 					createdBy, group);
-			savings.addAccountPayment(payment);
+			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
 			HibernateUtil.getSessionTL().flush();
 			HibernateUtil.closeSession();
@@ -281,8 +280,10 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000021",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-		savings.setAccountState(new AccountStateEntity(
-				AccountState.SAVINGS_ACC_INACTIVE));
+		savings.setUserContext(TestObjectFactory.getContext());
+		savings.changeStatus(AccountState.SAVINGS_ACC_INACTIVE.getValue(),
+				null, "");
+
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -320,8 +321,9 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000021",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-		savings.setAccountState(new AccountStateEntity(
-				AccountState.SAVINGS_ACC_INACTIVE));
+		savings.setUserContext(TestObjectFactory.getContext());
+		savings.changeStatus(AccountState.SAVINGS_ACC_INACTIVE.getValue(),
+				null, "");
 		savings1 = helper.createSavingsAccount("000100000000022",
 				savingsOffering1, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);

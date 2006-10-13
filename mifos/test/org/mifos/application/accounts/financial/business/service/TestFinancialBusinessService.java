@@ -12,6 +12,7 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
+import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -21,6 +22,8 @@ import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -92,7 +95,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				.getBusinessService(BusinessServiceName.Financial);
 		AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
 		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
-		loan.addAccountPayment(accountPaymentEntity);
+		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
+		
 
 		financialBusinessService.buildAccountingEntries(accountTrxnEntity);
 
@@ -189,7 +193,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				savings, depositAmount, balanceAmount, trxnDate,
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
-		savings.addAccountPayment(payment);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
@@ -266,7 +271,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				savings, withdrawalAmount, balanceAmount, trxnDate,
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
-		savings.addAccountPayment(payment);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		savings.setSavingsBalance(balanceAmount);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
@@ -347,12 +352,13 @@ public class TestFinancialBusinessService extends MifosTestCase {
 			FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
 					.getInstance().getBusinessService(
 							BusinessServiceName.Financial);
-			savings.addAccountPayment(payment);
+			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			SavingsTrxnDetailEntity accountTrxn = null;
 			for (AccountTrxnEntity trxn : payment.getAccountTrxns())
 				accountTrxn = (SavingsTrxnDetailEntity) trxn;
-			savings.setAccountState(new SavingsPersistence()
-					.getAccountStatusObject(AccountStates.SAVINGS_ACC_CLOSED));
+			savings.setUserContext(TestObjectFactory.getContext());
+			savings.changeStatus(AccountState.SAVINGS_ACC_CLOSED.getValue(),
+					AccountStateFlag.SAVINGS_REJECTED.getValue(), "");
 			financialBusinessService.buildAccountingEntries(accountTrxn);
 			Set<FinancialTransactionBO> financialTrxns = accountTrxn
 					.getFinancialTransactions();
@@ -430,7 +436,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				new Money(), new Money(), new Money(), new Money(), null);
 
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
-		loan.addAccountPayment(accountPaymentEntity);
+		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
 		financialBusinessService.buildAccountingEntries(loanTrxnDetailEntity);
 		TestObjectFactory.updateObject(loan);
 		Set<FinancialTransactionBO> finTrxnSet = loanTrxnDetailEntity

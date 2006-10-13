@@ -221,8 +221,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyForward("search_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-
-		assertEquals("Size of the search result should be 1", 1, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
+		assertEquals("Size of the search result should be 2", 2, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
 		HibernateUtil.closeSession();
 		savingsBO = (SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savingsBO.getAccountId());
 		getobjects();

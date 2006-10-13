@@ -156,7 +156,9 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	public void testApplyPaymentForLoan()throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = createLoanAccount();
-		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_BADSTANDING));
+		accountBO.setUserContext(TestObjectFactory.getContext());
+		accountBO.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));
@@ -182,7 +184,9 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	public void testApplyPaymentAndRetrievalForLoanWhenStatusIsChanged()throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = createLoanAccount();
-		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_BADSTANDING));
+		accountBO.setUserContext(TestObjectFactory.getContext());
+		accountBO.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));
@@ -221,7 +225,9 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	public void testApplyPaymentForLoanWhenReceiptDateisNull()throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		accountBO = createLoanAccount();
-		accountBO.setAccountState(new AccountStateEntity(AccountState.LOANACC_BADSTANDING));
+		accountBO.setUserContext(TestObjectFactory.getContext());
+		accountBO.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+				null, "");
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
 		accountApplyPaymentActionForm.setAmount(new Money("212"));

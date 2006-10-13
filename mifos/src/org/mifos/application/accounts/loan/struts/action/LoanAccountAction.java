@@ -327,8 +327,7 @@ public class LoanAccountAction extends AccountAppAction {
 						.getPersonnelId());
 		LoanBO loan = (LoanBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		loan.setAccountState(new AccountStateEntity(loanActionForm.getState()));
-		loan.save();
+		loan.save(loanActionForm.getState());
 		loanActionForm.setAccountId(loan.getAccountId().toString());
 		request.setAttribute("customer", customer);
 		request.setAttribute("globalAccountNum", loan.getGlobalAccountNum());
@@ -427,9 +426,9 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private CollateralTypeEntity getCollateralTypeEntity(ActionForm form,
-			HttpServletRequest request) throws Exception{
+			HttpServletRequest request) throws Exception {
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
-		if(loanAccountActionForm.getCollateralTypeIdValue() != null) {
+		if (loanAccountActionForm.getCollateralTypeIdValue() != null) {
 			CollateralTypeEntity collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
 					request, MasterConstants.COLLATERAL_TYPES,
 					loanAccountActionForm.getCollateralTypeIdValue());

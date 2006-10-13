@@ -12,6 +12,8 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.CustomerAccountBO;
+import org.mifos.application.accounts.business.TestAccountFeesEntity;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -449,7 +451,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				client.getCustomerId());
 	}
 
-	public void testLastLoanAmount() throws PersistenceException {
+	public void testLastLoanAmount() throws PersistenceException, AccountException {
 		center = createCenter();
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
@@ -470,11 +472,9 @@ public class TestCustomerPersistence extends MifosTestCase {
 				loanBO.getAccountId());
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountState.LOANACC_OBLIGATIONSMET);
-		AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = new AccountStatusChangeHistoryEntity(
-				account.getAccountState(), accountStateEntity, center
-						.getPersonnel(), account);
-		account.addAccountStatusChangeHistory(accountStatusChangeHistoryEntity);
-		account.setAccountState(accountStateEntity);
+		account.setUserContext(TestObjectFactory.getContext());
+		account.changeStatus(accountStateEntity.getId(),
+				null, "");
 		TestObjectFactory.updateObject(account);
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence
@@ -1068,7 +1068,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getCustomerAccount(), periodicFee, ((AmountFeeBO) periodicFee)
 				.getFeeAmount().getAmountDoubleValue());
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
-		customerAccount.addAccountFees(accountFee);
+		TestAccountFeesEntity.addAccountFees(accountFee, customerAccount);
 		TestObjectFactory.updateObject(customerAccount);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

@@ -40,6 +40,12 @@ public class TestAccountFeesEntity extends MifosTestCase {
 		accountPersistence = null;
 		HibernateUtil.closeSession();
 	}
+	
+	public static void addAccountFees(AccountFeesEntity fees,AccountBO account) {
+		account.addAccountFees(fees);
+	}
+
+	
 
 	public AccountBO getLoanAccount()
 	{ 

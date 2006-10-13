@@ -970,6 +970,11 @@ public class LoanBO extends AccountBO {
 					AccountExceptionConstants.CREATEEXCEPTION, e);
 		}
 	}
+	
+	public void save(AccountState accountState) throws AccountException {
+		this.setAccountState(new AccountStateEntity(accountState));
+		save();
+	}
 
 	public void updateLoan(Boolean interestDeductedAtDisbursment,Money loanAmount,
 			Double interestRate,Short noOfInstallments,Date disbursmentDate,
