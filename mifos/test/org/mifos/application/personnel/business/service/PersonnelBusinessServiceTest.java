@@ -185,6 +185,10 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 			
 		}
 	}
+	public void testGetSupportedLocale()throws Exception{
+		//asserting only on not null as suppored locales can be added by user 
+		assertNotNull(personnelBusinessService.getSupportedLocales());
+	}
 	private PersonnelBO createPersonnel(OfficeBO office,
 			PersonnelLevel personnelLevel) throws Exception {
 		UserContext userContext = TestObjectFactory.getUserContext();

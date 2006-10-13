@@ -38,51 +38,24 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.framework.business.PersistentObject;
+public class LanguageEntity extends MasterDataEntity {
 
-public class LanguageEntity extends PersistentObject {
+	private final String languageName;
 
-	private Short languageId;
-
-	private String languageName;
-
-	private String languageShortName;
-
-	private Integer lookUpId;
+	private final String languageShortName;
 
 	public LanguageEntity() {
 		super();
-	}
-
-	public Short getLanguageId() {
-		return languageId;
-	}
-
-	public void setLanguageId(Short languageId) {
-		this.languageId = languageId;
+		languageName=null;
+		languageShortName=null;
 	}
 
 	public String getLanguageName() {
 		return languageName;
 	}
 
-	public void setLanguageName(String languageName) {
-		this.languageName = languageName;
-	}
-
 	public String getLanguageShortName() {
 		return languageShortName;
 	}
 
-	public void setLanguageShortName(String languageShortName) {
-		this.languageShortName = languageShortName;
-	}
-
-	public Integer getLookUpId() {
-		return lookUpId;
-	}
-
-	public void setLookUpId(Integer lookUpId) {
-		this.lookUpId = lookUpId;
-	}
 }

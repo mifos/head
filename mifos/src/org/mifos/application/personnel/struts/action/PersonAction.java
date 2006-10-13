@@ -86,7 +86,6 @@ public class PersonAction extends SearchAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		PersonActionForm personActionForm = (PersonActionForm) form;
-
 		OfficeBO office = ((PersonnelBusinessService) getService())
 				.getOffice(getShortValue(personActionForm.getOfficeId()));
 		SessionUtils.setAttribute(PersonnelConstants.OFFICE, office, request);
@@ -127,16 +126,14 @@ public class PersonAction extends SearchAction {
 	public ActionForward create(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = getUserContext(request);
 		PersonActionForm personActionForm = (PersonActionForm) form;
 		PersonnelLevel level = PersonnelLevel
 				.getPersonnelLevel(getShortValue(personActionForm.getLevel()));
 		OfficeBO office = (OfficeBO) SessionUtils.getAttribute(
 				PersonnelConstants.OFFICE, request);
 		Integer title = getIntegerValue(personActionForm.getTitle());
-		Short perefferedLocale = getLocaleId(getShortValue(personActionForm
-				.getPreferredLocale()));
+		Short perefferedLocale =getPerefferedLocale(personActionForm,userContext);
 		Date dob = null;
 		if (personActionForm.getDob() != null
 				&& !personActionForm.getDob().equals(""))
@@ -164,6 +161,16 @@ public class PersonAction extends SearchAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
+	private Short getPerefferedLocale(PersonActionForm personActionForm,UserContext userContext)
+	{
+		if (StringUtils.isNullAndEmptySafe(personActionForm
+				.getPreferredLocale()))
+			return  getShortValue(personActionForm
+				.getPreferredLocale());
+		else
+			return userContext.getMfiLocaleId();
+
+	}
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -206,8 +213,7 @@ public class PersonAction extends SearchAction {
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = getUserContext(request);
 		PersonActionForm actionForm = (PersonActionForm) form;
 		PersonnelLevel level = PersonnelLevel
 				.getPersonnelLevel(getShortValue(actionForm.getLevel()));
@@ -218,8 +224,7 @@ public class PersonAction extends SearchAction {
 		OfficeBO office = officeService.getOffice(getShortValue(actionForm
 				.getOfficeId()));
 		Integer title = getIntegerValue(actionForm.getTitle());
-		Short perefferedLocale = getLocaleId(getShortValue(actionForm
-				.getPreferredLocale()));
+		Short perefferedLocale = getPerefferedLocale(actionForm,userContext);
 
 		PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
@@ -335,8 +340,7 @@ public class PersonAction extends SearchAction {
 
 	private void loadMasterData(HttpServletRequest request,
 			PersonActionForm personActionForm) throws Exception {
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
+		UserContext userContext = getUserContext(request);
 		MasterPersistence masterPersistence = new MasterPersistence();
 
 		SessionUtils.setAttribute(PersonnelConstants.TITLE_LIST,
@@ -358,12 +362,7 @@ public class PersonAction extends SearchAction {
 				masterPersistence.retrieveMasterEntities(
 						MasterConstants.MARITAL_STATUS, userContext
 								.getLocaleId()), request);
-
-		SessionUtils.setAttribute(PersonnelConstants.LANGUAGE_LIST,
-				masterPersistence.retrieveMasterEntities(
-						MasterConstants.LANGUAGE, userContext.getLocaleId()),
-				request);
-
+		loadLanguageList(request);
 		SessionUtils.setAttribute(PersonnelConstants.ROLES_LIST,
 				((PersonnelBusinessService) getService()).getRoles(), request);
 
@@ -376,6 +375,15 @@ public class PersonAction extends SearchAction {
 				customFieldDefs, request);
 	}
 
+	private void loadLanguageList(HttpServletRequest request)throws Exception{
+		
+		List <SupportedLocalesEntity> locales= getPersonnelBusinessService().getSupportedLocales();
+		UserContext userContext = getUserContext(request);
+		for (SupportedLocalesEntity entity : locales) {
+			entity.getLanguage().setLocaleId(userContext.getLocaleId());
+		}
+		SessionUtils.setAttribute(PersonnelConstants.LANGUAGE_LIST,locales,request);
+	}
 	private void updatePersonnelLevelList(HttpServletRequest request)
 			throws PageExpiredException {
 		List<MasterDataEntity> levelList = (List<MasterDataEntity>) SessionUtils
@@ -391,12 +399,10 @@ public class PersonAction extends SearchAction {
 
 	private void loadCreateMasterData(HttpServletRequest request,
 			PersonActionForm personActionForm) throws Exception {
-		UserContext userContext = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
 		loadMasterData(request, personActionForm);
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-		loadCreateCustomFields(personActionForm, customFieldDefs, userContext);
+		loadCreateCustomFields(personActionForm, customFieldDefs, getUserContext(request));
 	}
 
 	private void loadUpdateMasterData(HttpServletRequest request,
@@ -484,9 +490,7 @@ public class PersonAction extends SearchAction {
 
 		}
 		actionForm.setEmailId(personnel.getEmailId());
-		if (personnel.getPreferredLocale() != null)
-			actionForm.setPreferredLocale(getStringValue(personnel
-					.getPreferredLocale().getLanguage().getLookUpId()));
+		if (personnel.getPreferredLocale() != null)actionForm.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLocaleId()));
 		List<RoleBO> selectList = new ArrayList<RoleBO>();
 		for (PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()) {
 			selectList.add(personnelRole.getRole());
@@ -576,7 +580,7 @@ public class PersonAction extends SearchAction {
 					null, request);
 	}
 
-	private Short getLocaleId(Short lookUpId) throws ServiceException {
+/*	private Short getLocaleId(Short lookUpId) throws ServiceException {
 		if (lookUpId != null)
 			for (SupportedLocalesEntity locale : ((PersonnelBusinessService) getService())
 					.getAllLocales()) {
@@ -587,7 +591,7 @@ public class PersonAction extends SearchAction {
 			}
 		return Short.valueOf("1");
 
-	}
+	}*/
 
 	protected Locale getUserLocale(HttpServletRequest request) {
 		Locale locale = null;

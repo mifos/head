@@ -543,6 +543,8 @@ public interface NamedQueryConstants {
 	public String CUSTOMER_ID_SEARCH="Customer.cust_idsearch";
 	public String ACCOUNT_ID_SEARCH="accounts.account_IdSearch";
 	public String ACCOUNT_ID_SEARCH_NOOFFICEID="accounts.account_IdSearch_withoutoffice";
+	public String ACCOUNT_ID_SEARCH_COUNT="accounts.account_IdSearch_withoffice_count";
+	public String ACCOUNT_ID_SEARCH_NOOFFICEID_COUNT="accounts.account_IdSearch_withoutoffice_count";
 	public String ACCOUNT_LIST_ID_SEARCH="accounts.account_list_IdSearch";
 	public String PERSONNEL_SEARCH_COUNT="count_search_Personnel";
 	public String PERSONNEL_SEARCH="search_Personnel";

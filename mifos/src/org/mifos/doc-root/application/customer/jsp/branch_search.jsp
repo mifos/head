@@ -98,7 +98,11 @@
 									</table>
 
 									<c:choose>
-										<c:when test='${sessionScope.UserContext.officeLevelId==5}'>
+									     <c:when test="${custSearchActionForm.officeId != null && custSearchActionForm.officeId > 0}">
+									     <html-el:hidden property="officeId"
+												value="${custSearchActionForm.officeId}" />
+									     </c:when>
+										<c:when test='${sessionScope.UserContext.officeLevelId==5 && custSearchActionForm.officeId == null}'>
 											<html-el:hidden property="officeId"
 												value="${sessionScope.UserContext.branchId}" />
 										</c:when>

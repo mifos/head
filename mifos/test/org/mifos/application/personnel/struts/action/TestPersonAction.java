@@ -240,7 +240,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("emailId", "1@1.com");
 		addRequestParameter("dob", "20/03/76");
 		addRequestParameter("loginName", "tarzen");
-		addRequestParameter("preferredLocale","189");
+		addRequestParameter("preferredLocale","1");
 		addRequestParameter("userPassword", "XXXXXXXX");
 		addRequestParameter("passwordRepeat", "XXXXXXXX");
 		actionPerform();
@@ -443,7 +443,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		assertEquals(1, personnel.getPersonnelDetails().getGender().intValue());
+		assertEquals(2, personnel.getPersonnelDetails().getGender().intValue());
 		personnel = (PersonnelBO)TestObjectFactory.getObject(PersonnelBO.class,personnel.getPersonnelId());
 	}
 
@@ -502,7 +502,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("dob", "20/03/76");
 		addRequestParameter("loginName", "tarzen");
 		addRequestParameter("personnelRoles", "1");
-		addRequestParameter("preferredLocale","189");
+		addRequestParameter("preferredLocale","1");
 	}
 
 	public void testLoadChangeLog() throws Exception {

@@ -2,6 +2,7 @@ package org.mifos.application.personnel.business.service;
 
 import java.util.List;
 
+import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.configuration.persistence.ConfigurationPersistence;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -117,6 +118,13 @@ public class PersonnelBusinessService extends BusinessService {
 			throws ServiceException {
 		try {
 			return new PersonnelPersistence().getActiveLoUnderUser(officeId);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
+	public List<SupportedLocalesEntity> getSupportedLocales()throws ServiceException{
+		try {
+		return new PersonnelPersistence().getSupportedLocales();
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

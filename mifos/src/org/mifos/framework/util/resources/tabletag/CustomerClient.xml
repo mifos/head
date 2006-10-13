@@ -70,7 +70,8 @@
 			<fragment-name name="branchName" type="method"/>
 		</displayname>
 		<parameters>
-			<parameter name="method" value="loadMainSearch" valuetype="string"/>
+			<parameter name="method" value="preview" valuetype="string"/>
+			<parameter name="officeId" value="branchGlobalNum" valuetype="method"/>
 		</parameters>
 	</column>
 	

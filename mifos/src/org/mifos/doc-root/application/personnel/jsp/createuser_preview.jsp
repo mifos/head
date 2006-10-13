@@ -228,8 +228,8 @@
 										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"
 										var="item">
 
-										<c:if test="${personActionForm.preferredLocale == item.id}">
-											${item.name}
+										<c:if test="${personActionForm.preferredLocale == item.localeId}">
+											${item.language.name}
 								</c:if>
 									</c:forEach>  </span><br>
 									</td>

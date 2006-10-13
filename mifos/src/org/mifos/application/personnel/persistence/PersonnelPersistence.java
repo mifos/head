@@ -13,6 +13,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
@@ -224,5 +225,9 @@ public class PersonnelPersistence extends Persistence {
 		queryParameters.put(PersonnelConstants.LOANOFFICERACTIVE,PersonnelStatus.ACTIVE.getValue());
 		return (List<PersonnelBO>) executeNamedQuery(
 				NamedQueryConstants.GET_ACTIVE_LOAN_OFFICER_UNDER_USER, queryParameters);
+	}
+	
+	public List<SupportedLocalesEntity> getSupportedLocales()throws PersistenceException{
+		return executeNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST,null);
 	}
 }

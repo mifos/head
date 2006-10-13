@@ -65,7 +65,7 @@ public class CustSearchAction extends SearchAction {
 
 		
 	}	
-	@TransactionDemarcate(joinToken = true)
+	@TransactionDemarcate(conditionToken = true)
 	public ActionForward preview(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

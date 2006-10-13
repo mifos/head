@@ -13,6 +13,7 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SearchAction extends BaseAction {
@@ -27,20 +28,27 @@ public class SearchAction extends BaseAction {
 	}
 	
 	public ActionForward searchPrev(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int current=Integer.valueOf((Integer)SessionUtils.getAttribute("current",request.getSession()));
-		SessionUtils.setRemovableAttribute("current",Integer.valueOf(current-1),TableTagConstants.PATH,request.getSession());
+		
+		Integer current = (Integer)SessionUtils.getAttribute("current",request.getSession());
+		
+		if( current ==null) throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		SessionUtils.setRemovableAttribute("current",current-1,TableTagConstants.PATH,request.getSession());
 		SessionUtils.setRemovableAttribute("meth","previous",TableTagConstants.PATH,request.getSession());
-		return mapping.findForward((String)SessionUtils.getAttribute("forwardkey",request.getSession()));
+		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
+		if( forwardkey ==null)throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		return mapping.findForward(forwardkey);
 	}
 	
 	public ActionForward searchNext(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int current=1;
+		Integer current=1;
 		if(null !=SessionUtils.getAttribute("current",request.getSession())) {
-		  current=Integer.valueOf((Integer)SessionUtils.getAttribute("current",request.getSession()));
+		  current=(Integer)SessionUtils.getAttribute("current",request.getSession());
 		}
-		SessionUtils.setRemovableAttribute("current",Integer.valueOf(current+1),TableTagConstants.PATH,request.getSession());
+		SessionUtils.setRemovableAttribute("current",current+1,TableTagConstants.PATH,request.getSession());
 		SessionUtils.setRemovableAttribute("meth","next",TableTagConstants.PATH,request.getSession());
-		return mapping.findForward((String)SessionUtils.getAttribute("forwardkey",request.getSession()));
+		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
+		if( forwardkey ==null)throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		return mapping.findForward(forwardkey);
 	}
 	
 	protected void cleanUpSearch(HttpServletRequest request) throws PageExpiredException

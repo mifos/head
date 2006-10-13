@@ -191,7 +191,7 @@
 										property="preferredLocale">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}" 
 											var="languagelist">
-											<html-el:option value="${languagelist.id}">${languagelist.name}</html-el:option>
+											<html-el:option value="${languagelist.localeId}">${languagelist.language.name}</html-el:option>
 											</c:forEach>
 									</mifos:select></td>
 								</tr>

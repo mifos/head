@@ -216,6 +216,12 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	  assertEquals("loan officer",loanOfficers.get(0).getDisplayName());
 	  assertEquals("XYZ",loanOfficers.get(1).getDisplayName());	
 	}
+	
+	
+	public void testGetSupportedLocale()throws Exception{
+		//asserting only on not null as suppored locales can be added by user 
+		assertNotNull(persistence.getSupportedLocales());
+	}
 	private void createInitialObjects(Short officeId, Short personnelId) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

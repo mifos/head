@@ -37,7 +37,12 @@
 								</c:when>
 								<c:otherwise>
 								<c:choose>
-								<c:when test='${sessionScope.UserContext.branchId == 1}'>
+								<c:when test="${custSearchActionForm.officeId != null && custSearchActionForm.officeId >1}" >
+										<html-el:option value="${custSearchActionForm.officeId}">
+									<c:out value='${Office}' />
+									</html-el:option>
+								</c:when>
+								<c:when test='${sessionScope.UserContext.branchId == 1 && custSearchActionForm.officeId == null}'>
 								<html-el:option value="0">
 									<mifos:mifoslabel name="CustomerSearch.all"/><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/><mifos:mifoslabel name="CustomerSearch.s"/>
 								</html-el:option>	

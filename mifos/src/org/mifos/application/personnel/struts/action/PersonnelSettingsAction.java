@@ -217,7 +217,7 @@ public class PersonnelSettingsAction extends BaseAction {
 		if (lookUpId != null)
 			for (SupportedLocalesEntity locale : ((PersonnelBusinessService) getService())
 					.getAllLocales()) {
-				if (locale.getLanguage().getLookUpId().intValue() == lookUpId
+				if (locale.getLanguage().getLookUpValue().getLookUpId().intValue() == lookUpId
 						.intValue())
 					return locale.getLocaleId();
 				break;
