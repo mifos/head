@@ -566,13 +566,13 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
 		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 
-		MeetingBO updatedMeeting = center.getCustomerMeeting().getMeeting();
+		MeetingBO updatedMeeting = center.getCustomerMeeting().getUpdatedMeeting();
 		assertTrue(updatedMeeting.isWeekly());
 		assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
 		assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails().getRecurAfter());
 		assertEquals(WeekDay.MONDAY,updatedMeeting.getMeetingDetails().getWeekDay());
 
-		updatedMeeting = group.getCustomerMeeting().getMeeting();
+		updatedMeeting = group.getCustomerMeeting().getUpdatedMeeting();
 		assertTrue(updatedMeeting.isWeekly());
 		assertEquals(meetingPlace, updatedMeeting.getMeetingPlace());
 		assertEquals(meeting.getMeetingDetails().getRecurAfter(), updatedMeeting.getMeetingDetails().getRecurAfter());

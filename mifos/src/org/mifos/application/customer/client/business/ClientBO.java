@@ -340,11 +340,24 @@ public class ClientBO extends CustomerBO {
 	public void updateMeeting(MeetingBO meeting) throws CustomerException {
 		if (getCustomerMeeting() == null)
 			this.setCustomerMeeting(createCustomerMeeting(meeting));
-		else
-			super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
+		else if(getParentCustomer()!=null)
+				saveUpdatedMeeting(meeting);
+		else if(getCustomerStatus().getId().equals(CustomerStatus.CLIENT_HOLD.getValue()) ||
+				getCustomerStatus().getId().equals(CustomerStatus.CLIENT_ACTIVE.getValue())){
+				saveUpdatedMeeting(meeting);
+			 }else
+				 super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
 		this.update();
 	}
 
+	@Override
+	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
+		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
+		super.saveUpdatedMeeting(meeting);
+		if(getParentCustomer()==null)
+			deleteMeeting(newMeeting);
+	}
+	
 	@Override
 	protected void validateStatusChange(Short newStatusId)
 			throws CustomerException {

@@ -73,6 +73,7 @@ import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.LoanCycleCounter;
 import org.mifos.application.customer.util.helpers.Param;
+import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
@@ -95,7 +96,6 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultIdSearch;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.struts.tags.DateHelper;
-import org.mifos.framework.util.helpers.StringUtils;
 
 public class CustomerPersistence extends Persistence {
 
@@ -805,11 +805,16 @@ public class CustomerPersistence extends Persistence {
 		session.createQuery(hql).executeUpate();
 	}
 
-	public void deleteMeeting(CustomerBO customer) throws PersistenceException {
+	public void deleteCustomerMeeting(CustomerBO customer) throws PersistenceException {
 		delete(customer.getCustomerMeeting());
 		customer.setCustomerMeeting(null);
 	}
 
+	public void deleteMeeting(MeetingBO meeting) throws PersistenceException {
+		if(meeting!=null)
+			delete(meeting);
+	}
+	
 	public List<Integer> getCustomerAccountsForFee(Short feeId)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();

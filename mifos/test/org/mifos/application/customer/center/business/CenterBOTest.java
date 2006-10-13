@@ -17,6 +17,7 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -27,8 +28,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -346,28 +345,65 @@ public class CenterBOTest extends MifosTestCase {
 		assertEquals(newLO.getPersonnelId(), client.getPersonnel().getPersonnelId());
 	}
 	
-	public void testUpdateMeeting()throws Exception{
+	public void testUpdateMeeting_SaveToUpdateLater()throws Exception{
 		createCustomers();
+		String oldMeetingPlace = "Delhi";
 		MeetingBO centerMeeting = center.getCustomerMeeting().getMeeting();
 		String meetingPlace = "Bangalore";
-		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, centerMeeting.getMeetingDetails().getRecurAfter(), centerMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		MeetingBO newMeeting = new MeetingBO(WeekDay.MONDAY, centerMeeting.getMeetingDetails().getRecurAfter(), centerMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		HibernateUtil.closeSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center.setUserContext(TestObjectFactory.getContext());
 		center.updateMeeting(newMeeting);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		
+		assertEquals(WeekDay.THURSDAY, center.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		
+		assertEquals(WeekDay.MONDAY, center.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		
+		assertEquals(oldMeetingPlace, center.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(oldMeetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
+		assertEquals(oldMeetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+		
+		assertEquals(meetingPlace, center.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, group.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+		assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+	}
+	
+	public void testUpdateMeeting_updateWithSaveMeeting()throws Exception{
+		testUpdateMeeting_SaveToUpdateLater();
+		Integer oldMeeting = center.getCustomerMeeting().getUpdatedMeeting().getMeetingId();
+		center.changeUpdatedMeeting();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		assertEquals(WeekDay.THURSDAY, center.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.THURSDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(meetingPlace, center.getCustomerMeeting().getMeeting().getMeetingPlace());
-		assertEquals(meetingPlace, group.getCustomerMeeting().getMeeting().getMeetingPlace());
-		assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+		
+		assertEquals(WeekDay.MONDAY, center.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.MONDAY, group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		
+		assertNull(center.getCustomerMeeting().getUpdatedMeeting());
+		assertNull(group.getCustomerMeeting().getUpdatedMeeting());
+		assertNull(client.getCustomerMeeting().getUpdatedMeeting());
+		
+		MeetingBO meeting  = new MeetingPersistence().getMeeting(oldMeeting);
+		assertNull(meeting);
 	}
 	
-	private void createCustomers() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+	private void createCustomers() throws Exception{
+		meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
 		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId() + ".1", center,

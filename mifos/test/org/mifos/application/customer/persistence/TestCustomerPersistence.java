@@ -42,6 +42,7 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -936,7 +937,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getPersonnelId());
 	}
 
-	public void testDeleteMeeting() throws Exception {
+	public void testCustomerDeleteMeeting() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		client = TestObjectFactory.createClient("myClient", meeting,
@@ -944,7 +945,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		customerPersistence.deleteMeeting(client);
+		customerPersistence.deleteCustomerMeeting(client);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
@@ -952,6 +953,20 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertNull(client.getCustomerMeeting());
 	}
 
+	public void testDeleteMeeting() throws Exception {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		HibernateUtil.closeSession();
+		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+		
+		customerPersistence.deleteMeeting(meeting);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+		assertNull(meeting);
+	}
+	
 	public void testSearchWithOfficeId() throws Exception {
 		createCustomers(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);

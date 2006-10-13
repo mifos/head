@@ -46,6 +46,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -134,8 +135,10 @@ public class MeetingAction extends BaseAction {
 			throws Exception {
 		MeetingActionForm actionForm = (MeetingActionForm) form;
 		MeetingBO meeting = createMeeting(actionForm);
-		CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
+		CustomerBO customerInSession = (CustomerBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
+		CustomerBO customer = getCustomerBusinessService().getCustomer(customerInSession.getCustomerId());
+		customer.setVersionNo(customerInSession.getVersionNo());		
 		customer.setUserContext(getUserContext(request));
 		customer.updateMeeting(meeting);
 		ActionForwards forward = forwardForUpdate(actionForm
@@ -274,5 +277,10 @@ public class MeetingAction extends BaseAction {
 		form.setRecurMonth(null);
 		form.setMeetingPlace(null);
 		form.setInput(null);
+	}
+	
+	private CustomerBusinessService getCustomerBusinessService() {
+		return (CustomerBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Customer);
 	}
 }

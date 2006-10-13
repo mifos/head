@@ -66,7 +66,7 @@ public class CenterBO extends CustomerBO {
 
 	@Override
 	public void updateMeeting(MeetingBO meeting) throws CustomerException{
-		super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
+		saveUpdatedMeeting(meeting);
 		this.update();
 	}
 	
@@ -139,5 +139,12 @@ public class CenterBO extends CustomerBO {
 	@Override
 	public CustomerPerformanceHistory getPerformanceHistory() {
 		return null;
+	}
+		
+	@Override
+	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{	
+		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
+		super.saveUpdatedMeeting(meeting);
+		deleteMeeting(newMeeting);
 	}
 }

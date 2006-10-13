@@ -47,8 +47,6 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -92,6 +90,26 @@ public class TestClientBO extends MifosTestCase {
 		super.tearDown();
 	}
 
+	public void testUpdateWeeklyMeeting_SavedToUpdateLater()throws Exception{
+		String oldMeetingPlace = "Delhi";
+		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, oldMeetingPlace);
+		client = TestObjectFactory.createClient("clientname",weeklyMeeting,CustomerStatus.CLIENT_ACTIVE.getValue(), new java.util.Date());
+		MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
+		String meetingPlace = "Bangalore";
+		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, clientMeeting.getMeetingDetails().getRecurAfter(), clientMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		client.updateMeeting(newMeeting);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		
+		assertEquals(WeekDay.FRIDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(oldMeetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
+		
+		assertEquals(YesNoFlag.YES.getValue(), client.getCustomerMeeting().getUpdatedFlag());
+		assertEquals(WeekDay.THURSDAY, client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
+	}	
+	
 	public void testGenerateScheduleForClient_CenterSavingsAccount_OnChangeStatus()throws Exception{
 		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CENTERS);
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
@@ -220,7 +238,7 @@ public class TestClientBO extends MifosTestCase {
 		savingsOffering2 = (SavingsOfferingBO)TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering2.getPrdOfferingId());
 	}		
 	
-	public void testAddClientAttendance() throws PersistenceException {
+	public void testAddClientAttendance() throws Exception {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		client.addClientAttendance(getClientAttendance(meetingDate));
@@ -233,7 +251,7 @@ public class TestClientBO extends MifosTestCase {
 				.getClientAttendances().size(), 1);
 	}
 
-	public void testGetClientAttendanceForMeeting() throws PersistenceException {
+	public void testGetClientAttendanceForMeeting() throws Exception {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		client.addClientAttendance(getClientAttendance(meetingDate));
@@ -249,8 +267,7 @@ public class TestClientBO extends MifosTestCase {
 						.getAttendance(), Short.valueOf("1"));
 	}
 
-	public void testHandleAttendance() throws NumberFormatException,
-			ServiceException, CustomerException {
+	public void testHandleAttendance() throws Exception{
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		client.handleAttendance(meetingDate, Short.valueOf("1"));
@@ -272,8 +289,7 @@ public class TestClientBO extends MifosTestCase {
 				.getCustomerId());
 	}
 
-	public void testHandleAttendanceForDifferentDates()
-			throws NumberFormatException, ServiceException, CustomerException {
+	public void testHandleAttendanceForDifferentDates()	throws Exception {
 		createInitialObjects();
 		java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		client.handleAttendance(meetingDate, Short.valueOf("1"));
@@ -471,8 +487,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testFailureCreateActiveClientWithoutLO() throws Exception {
 		List<FeeView> fees = getFees();
-		try {
-			
+		try {			
 			meeting = getMeeting();
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder("firstlast"),"first","","last","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
@@ -485,7 +500,6 @@ public class TestClientBO extends MifosTestCase {
 			assertNull(client);
 			assertEquals(ce.getKey(), CustomerConstants.INVALID_LOAN_OFFICER);
 		}
-		TestObjectFactory.removeObject(meeting);
 		removeFees(fees);
 	}
 	
@@ -663,7 +677,7 @@ public class TestClientBO extends MifosTestCase {
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
-		
+		assertEquals(client.getCustomerMeeting().getMeeting().getMeetingId(),group1.getCustomerMeeting().getMeeting().getMeetingId());
 		assertEquals(group1.getCustomerId(),client.getParentCustomer().getCustomerId());
 		assertEquals(0, group.getMaxChildCount().intValue());
 		assertEquals(1, group1.getMaxChildCount().intValue());
@@ -678,7 +692,10 @@ public class TestClientBO extends MifosTestCase {
 		client.transferToGroup(group1);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-
+		
+		assertEquals(WeekDay.MONDAY, client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertNull(client.getCustomerMeeting().getUpdatedMeeting());
+		
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
@@ -956,8 +973,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	private void createObjectsForTranferToGroup_SameBranch(CustomerStatus groupStatus)throws Exception{
 		createInitialObjects();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+		MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Bangalore");
 		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group1 = TestObjectFactory.createGroup("Group2", groupStatus.getValue(),
@@ -1016,9 +1032,8 @@ public class TestClientBO extends MifosTestCase {
 			return fields;
 	}
 	
-	private void createInitialObjects() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+	private void createInitialObjects() throws Exception{
+		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Delhi");
 		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
@@ -1059,9 +1074,8 @@ public class TestClientBO extends MifosTestCase {
 		return new Date(currentDateCalendar.getTimeInMillis());
 	}
 
-	private MeetingBO getMeeting() {
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+	private MeetingBO getMeeting() throws Exception{
+		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Delhi");
 		return meeting;
 	}
 }

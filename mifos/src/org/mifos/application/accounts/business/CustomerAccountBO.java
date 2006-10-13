@@ -414,6 +414,7 @@ public class CustomerAccountBO extends AccountBO {
 			int totalInstallmentDatesToBeChanged = installmentSize
 					- nextInstallmentId + 1;
 			try {
+				getCustomer().changeUpdatedMeeting();
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
 						.getAllDates(totalInstallmentDatesToBeChanged + 1);
 				if (meetingDates.get(0).compareTo(
@@ -424,6 +425,8 @@ public class CustomerAccountBO extends AccountBO {
 				}
 			} catch (MeetingException me) {
 				throw new AccountException(me);
+			} catch (CustomerException ce) {
+				throw new AccountException(ce);
 			}
 			for (int count = 0; count < meetingDates.size(); count++) {
 				short installmentId = (short) (nextInstallmentId.intValue() + count);

@@ -447,6 +447,15 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
+	protected void persist() throws CustomerException {
+		try {
+			new CustomerPersistence().createOrUpdate(this);
+		} catch (PersistenceException e) {
+			throw new CustomerException(
+					CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+		}
+	}
+	
 	public void update(UserContext userContext, String externalId,
 			Address address, List<CustomFieldView> customFields,
 			List<CustomerPositionView> customerPositions)
@@ -710,25 +719,61 @@ public abstract class CustomerBO extends BusinessObject {
 	public abstract void updateMeeting(MeetingBO meeting)
 			throws CustomerException;
 
-	protected void updateMeeting(MeetingBO oldMeeting, MeetingBO meeting)
-			throws CustomerException {
+	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
+		getCustomerMeeting().setUpdatedMeeting(meeting);
+		setUpdatedMeetingForChildren(meeting);
+		getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		this.persist();
+	}
+	
+	private void setUpdatedMeetingForChildren(MeetingBO meeting) throws CustomerException{
+		Set<CustomerBO> childList = getChildren();
+		if(childList!=null){
+			for(CustomerBO child : childList){
+				child.setUserContext(getUserContext());
+				child.updateMeeting(meeting);
+			}
+		}	
+	}
+	
+	public void changeUpdatedMeeting()throws CustomerException {
+		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
+		if(newMeeting!=null){
+			updateMeeting(getCustomerMeeting().getMeeting(), newMeeting);		
+			setUpdatedMeetingForChildren(null);
+			getCustomerMeeting().setUpdatedMeeting(null);
+			if(getParentCustomer()==null)
+				deleteMeeting(newMeeting);
+			this.persist();			
+		}				
+	}
+
+	protected void deleteMeeting(MeetingBO meeting)throws CustomerException{
+		try{
+			if(meeting!=null)
+				new CustomerPersistence().deleteMeeting(meeting);
+		}catch(PersistenceException pe){
+			throw new CustomerException(pe);
+		}
+	}
+	
+	protected void updateMeeting(MeetingBO oldMeeting, MeetingBO newMeeting)throws CustomerException {
 		try {
 			if (oldMeeting.isWeekly())
-				oldMeeting.update(meeting.getMeetingDetails().getWeekDay(),
-						meeting.getMeetingPlace());
+				oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(),
+						newMeeting.getMeetingPlace());
 			else if (oldMeeting.isMonthlyOnDate())
-				oldMeeting.update(meeting.getMeetingDetails().getDayNumber(),
-						meeting.getMeetingPlace());
+				oldMeeting.update(newMeeting.getMeetingDetails().getDayNumber(),
+						newMeeting.getMeetingPlace());
 			else if (oldMeeting.isMonthly())
-				oldMeeting.update(meeting.getMeetingDetails().getWeekDay(),
-						meeting.getMeetingDetails().getWeekRank(), meeting
+				oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(),
+						newMeeting.getMeetingDetails().getWeekRank(), newMeeting
 								.getMeetingPlace());
-			customerMeeting.setUpdatedFlag(YesNoFlag.YES.getValue());
 		} catch (MeetingException me) {
 			throw new CustomerException(me);
 		}
 	}
-
+	
 	private void validateLoanOfficerAssigned() throws CustomerException {
 		logger.debug("In CustomerBO::validateLoanOfficerAssigned()");
 		if (!(personnel.isActive())
@@ -965,17 +1010,16 @@ public abstract class CustomerBO extends BusinessObject {
 	protected void handleParentTransfer() throws CustomerException {
 		setPersonnel(getParentCustomer().getPersonnel());
 		if (getParentCustomer().getCustomerMeeting() != null) {
-			if (getCustomerMeeting() != null)
-				getCustomerMeeting().setMeeting(
-						getParentCustomer().getCustomerMeeting().getMeeting());
+			if (getCustomerMeeting() != null){
+				getCustomerMeeting().setMeeting(getParentCustomer().getCustomerMeeting().getMeeting());
+			}
 			else
 				setCustomerMeeting(createCustomerMeeting(getParentCustomer()
 						.getCustomerMeeting().getMeeting()));
-			getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
 		} else {
 			if (getCustomerMeeting() != null) {
 				try {
-					new CustomerPersistence().deleteMeeting(this);
+					new CustomerPersistence().deleteCustomerMeeting(this);
 				} catch (PersistenceException pe) {
 					new CustomerException(pe);
 				}

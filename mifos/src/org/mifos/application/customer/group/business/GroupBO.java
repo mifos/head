@@ -222,28 +222,45 @@ public class GroupBO extends CustomerBO {
 		
 		this.addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));		
 		super.update();
-		
-		for(CustomerBO client: getChildren()){
-			client.setUserContext(getUserContext());
-			((ClientBO)client).handleGroupTransfer();
+		if(getChildren()!=null){
+			for(CustomerBO client: getChildren()){
+				client.setUserContext(getUserContext());
+				((ClientBO)client).handleGroupTransfer();
+			}
 		}
 	}
 	
 	@Override
+	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
+		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
+		super.saveUpdatedMeeting(meeting);
+		if(getParentCustomer()==null)
+			deleteMeeting(newMeeting);
+	}
+	
+	@Override
 	public void updateMeeting(MeetingBO meeting) throws CustomerException{
-		if(getParentCustomer()==null){
-			if(getCustomerMeeting()==null)
+		if(getParentCustomer()==null){			
+			if(getCustomerMeeting()==null){
 				this.setCustomerMeeting(createCustomerMeeting(meeting));
-			else
-				super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
+				updateMeetingForClients(meeting);
+			}
+			else if(getCustomerStatus().getId().equals(CustomerStatus.GROUP_ACTIVE.getValue()) ||
+				getCustomerStatus().getId().equals(CustomerStatus.GROUP_HOLD.getValue())){
+				saveUpdatedMeeting(meeting);
+			 }else
+				 super.updateMeeting(getCustomerMeeting().getMeeting(), meeting);
 			this.update();
-			Set<CustomerBO> clients = getChildren();
-			
-			if(clients!=null){
-				for(CustomerBO client : clients){
-					client.setUserContext(getUserContext());
-					client.updateMeeting(meeting);
-				}
+		}else
+			saveUpdatedMeeting(meeting);
+	}
+	
+	private void updateMeetingForClients(MeetingBO meeting)throws CustomerException{
+		Set<CustomerBO> clients = getChildren();			
+		if(clients!=null){
+			for(CustomerBO client : clients){
+				client.setUserContext(getUserContext());
+				client.updateMeeting(meeting);
 			}
 		}
 	}
@@ -327,9 +344,11 @@ public class GroupBO extends CustomerBO {
 	private void validateForActiveAccounts()throws CustomerException{
 		if(this.isAnyLoanAccountOpen() || this.isAnySavingsAccountOpen())
 			throw new CustomerException(CustomerConstants.ERRORS_HAS_ACTIVE_ACCOUNT);
-		for(CustomerBO client: getChildren())
-			if(client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen())
-				throw new CustomerException(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT);		
+		if(getChildren()!=null){
+			for(CustomerBO client: getChildren())
+				if(client.isAnyLoanAccountOpen() || client.isAnySavingsAccountOpen())
+					throw new CustomerException(CustomerConstants.ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT);
+		}
 	}
 	
 	private void validateNewOffice(OfficeBO officeToTransfer)throws CustomerException{
@@ -517,7 +536,5 @@ public class GroupBO extends CustomerBO {
 			this.setTrainedDate(trainedDate);
 		if (getStatus().equals(CustomerStatus.GROUP_ACTIVE))
 			this.setCustomerActivationDate(this.getCreatedDate());
-	}
-
-	
+	}	
 }

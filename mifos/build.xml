@@ -291,6 +291,7 @@
 			<transaction src="./sql/mifosdbcreationscript.sql" />
 			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
 			<transaction src="./sql/Iteration14-DDL-DBScripts10102006.sql" />
+			<transaction src="./sql/Iteration15-DDL-DBScripts24102006.sql" />
 			<transaction src="./sql/mifosmasterdata.sql" />
 			<transaction src="./sql/Iteration14-DML-DBScripts10102006.sql" />
 			<transaction src="./sql/Iteration15-DBScripts20061012.sql" />
