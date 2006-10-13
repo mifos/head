@@ -65,7 +65,6 @@
           <td class="bluetablehead05">
 			  <span class="fontnormal8pt">
 	          	<customtags:headerLink/> 
-	          	
 	          	<c:choose>
 	          	<c:when test="${param.input == 'LoanDetails'}">
 	          	  <html-el:link action="loanAccountAction.do?globalAccountNum=${param.globalAccountNum}&method=get&randomNUm=${sessionScope.randomNUm}"> /
@@ -103,7 +102,7 @@
 			          	<c:when test="${param.input == 'LoanDetails'}">
 	    	            	<c:out value="${param.prdOfferingName}"></c:out> # <c:out value="${param.globalAccountNum}"></c:out> - 			          	
 			          	</c:when>
-			          	<c:otherwise
+			          	<c:otherwise>
 	    	            	<c:out value="${BusinessKey.displayName}"></c:out> # <c:out value="${BusinessKey.customerAccount.globalAccountNum}"></c:out> - 
 	   	            	</c:otherwise>
 	   	            </c:choose>
