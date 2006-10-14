@@ -46,13 +46,18 @@ public class MifosLogManager {
 	 */
 	private static HashMap <String, MifosLogger> loggerRepository;
 
+	public static boolean isConfigured() {
+		return loggerRepository != null;
+	}
+
 	/**
 	 * Method to initialize the loggerRepository and configure the root logger from the loggerconfiguration.xml
 	 * A root logger instance is also created and the resource bundle for the locale of the MFI is associated with the logger
 	 * @param fileName The loggerconfiguration xml file
 	 * @throws  LoggerConfigurationException
 	 */
-	public static void configure(String fileName)throws LoggerConfigurationException{
+	public static void configure(String fileName)
+	throws LoggerConfigurationException {
 		//Initialises a logger with the name com.mifos which acts as the 
 		// ancestor for all the other loggers
 		try {

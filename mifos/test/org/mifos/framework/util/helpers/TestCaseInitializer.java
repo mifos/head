@@ -40,16 +40,25 @@ package org.mifos.framework.util.helpers;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
 
+/**
+ * Many tests initialize themselves via this class.
+ * 
+ * However, the fact that it is a static block, and initializes
+ * more than it may need to for a given test, means that it might 
+ * be desirable
+ * to call {@link DatabaseSetup} directly in some cases,
+ * or to avoid everything here in others (that is, those
+ * tests written to not need the database).
+ */
 public class TestCaseInitializer {
 	static {
 		try {
-			MifosLogManager.configure(FilePaths.LOGFILE);
-			HibernateStartUp.initialize("conf/HibernateTest.properties");
+			DatabaseSetup.configureLogging();
+			DatabaseSetup.initializeHibernate();
+
 			FinancialInitializer.initialize();
 			AuthorizationManager.getInstance().init();
 			HierarchyManager.getInstance().init();

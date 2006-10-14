@@ -30,7 +30,6 @@ public class XMLParser {
 	ColumnPropertyMapping columnPropertyMapping = null;
 
 	public ColumnPropertyMapping parser() throws SystemException {
-		Table table = null;
 		Document document = null;
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory

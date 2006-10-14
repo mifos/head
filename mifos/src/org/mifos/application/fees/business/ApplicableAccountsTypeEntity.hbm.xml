@@ -6,7 +6,10 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.fees.business.ApplicableAccountsTypeEntity" table="FEE_UPDATE_TYPE">
+    <!-- Seems not to be used by anything -->
+
+    <class name="org.mifos.application.fees.business.ApplicableAccountsTypeEntity" 
+        table="FEE_UPDATE_TYPE">
         <id name="id" column="FEE_UPDATE_TYPE_ID" >
             <generator class="native"/>
         </id>

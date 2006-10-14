@@ -52,13 +52,15 @@ public class HibernateUtil {
 
 	private static final SessionFactory sessionFactory;
 	
-	private static final ThreadLocal<SessionHolder> threadLocal = new ThreadLocal<SessionHolder>();
+	private static final ThreadLocal<SessionHolder> threadLocal = 
+		new ThreadLocal<SessionHolder>();
 	
 	static {
 		try {
 			sessionFactory = HibernateSessionFactory.getSessionFactory();
 		} catch (Throwable ex) {
-			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("Initial SessionFactory creation failed.", false, null, ex);
+			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
+			    .error("Initial SessionFactory creation failed.", false, null, ex);
 
 			throw new ExceptionInInitializerError(ex);
 		}
@@ -111,10 +113,10 @@ public class HibernateUtil {
 		try {
 			if (threadLocal.get() == null) {
 				AuditInterceptor auditInterceptor = new AuditInterceptor();
-				SessionHolder sessionHolder = new SessionHolder(sessionFactory.openSession(auditInterceptor));
+				SessionHolder sessionHolder = 
+					new SessionHolder(sessionFactory.openSession(auditInterceptor));
 				sessionHolder.setInterceptor(auditInterceptor);
-				threadLocal
-						.set(sessionHolder);
+				threadLocal.set(sessionHolder);
 			}
 		} catch (HibernateException he) {
 			throw new ConnectionNotFoundException(he);

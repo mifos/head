@@ -60,21 +60,21 @@ public class FeePersistence extends Persistence {
 
 	public List<FeeBO> getUpdatedFeesForCustomer() throws PersistenceException {
 		return executeNamedQuery(
-				NamedQueryConstants.GET_UPDATED_FEES_FOR_CUSTOMERS, null);
+			NamedQueryConstants.GET_UPDATED_FEES_FOR_CUSTOMERS, null);
 	}
 
-	public ApplicableAccountsTypeEntity getUpdateTypeEntity(Short id) throws PersistenceException {
+	// Seems not to be used by anything
+	public ApplicableAccountsTypeEntity getUpdateTypeEntity(Short id) 
+	throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("ID", id);
 		return (ApplicableAccountsTypeEntity) executeNamedQuery(
-				NamedQueryConstants.GET_FEE_UPDATETYPE, queryParameters).get(0);
+			NamedQueryConstants.GET_FEE_UPDATETYPE, queryParameters).get(0);
 	}
 
 	public List<FeeBO> retrieveCustomerFees() throws PersistenceException {
-		
-			return executeNamedQuery(
-					NamedQueryConstants.RETRIEVE_CUSTOMER_FEES, null);
-		
+		return executeNamedQuery(
+			NamedQueryConstants.RETRIEVE_CUSTOMER_FEES, null);
 	}
 
 	public List<FeeBO> retrieveProductFees() throws PersistenceException {

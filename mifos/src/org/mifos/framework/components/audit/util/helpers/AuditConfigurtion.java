@@ -98,7 +98,8 @@ public class AuditConfigurtion {
 	
 
 	private void createEntityValueMap() throws SystemException{
-		ColumnPropertyMapping columnPropertyMapping =XMLParser.getInstance().parser();
+		ColumnPropertyMapping columnPropertyMapping =
+			XMLParser.getInstance().parser();
 		EntityType[] entityTypes = columnPropertyMapping.getEntityTypes();
 		for(int i=0;i<entityTypes.length;i++){
 			entityToClassPath.put(entityTypes[i].getClassPath(),entityTypes[i].getName());

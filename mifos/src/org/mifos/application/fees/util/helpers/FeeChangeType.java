@@ -4,7 +4,10 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum FeeChangeType {
 
-	NOT_UPDATED ((short)0), AMOUNT_UPDATED((short) 1), STATUS_UPDATED((short) 2), AMOUNT_AND_STATUS_UPDATED((short) 3);
+	NOT_UPDATED ((short)0), 
+	AMOUNT_UPDATED((short) 1), 
+	STATUS_UPDATED((short) 2), 
+	AMOUNT_AND_STATUS_UPDATED((short) 3);
 
 	Short value;
 
@@ -22,4 +25,5 @@ public enum FeeChangeType {
 				return changeType;
 		throw new PropertyNotFoundException("FeeChangeType");
 	}
+
 }

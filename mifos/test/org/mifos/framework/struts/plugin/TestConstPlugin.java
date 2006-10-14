@@ -1,6 +1,5 @@
 package org.mifos.framework.struts.plugin;
 
-import java.net.URISyntaxException;
 import java.util.Map;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -8,16 +7,15 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class TestConstPlugin extends MifosMockStrutsTestCase{
 
-	@Override
-	public void setUp()throws Exception{
-		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
-			setConfigFile(ResourceLoader.getURI("org/mifos/framework/struts/util/helpers/struts-config.xml").getPath());
-		} catch (URISyntaxException e) {
+	// TODO: This test is spewing 
+	// org.mifos.framework.exceptions.PageExpiredException
+	// to standard output/error when it runs.
 
-			e.printStackTrace();
-		}
+	@Override
+	public void setUp()throws Exception {
+		super.setUp();
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
+		setConfigFile(ResourceLoader.getURI("org/mifos/framework/struts/util/helpers/struts-config.xml").getPath());
 	}
 
 	/**

@@ -842,7 +842,8 @@ public class TestObjectFactory {
 			FeeCategory feeCategory, String feeAmnt,
 			RecurrenceType meetingFrequency, Short recurAfter) {
 		try {
-			GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
+			GLCodeEntity glCode = (GLCodeEntity) 
+				HibernateUtil.getSessionTL().get(
 					GLCodeEntity.class, Short.valueOf("24"));
 			MeetingBO meeting = 
 				new MeetingBO(meetingFrequency, recurAfter, new Date(),

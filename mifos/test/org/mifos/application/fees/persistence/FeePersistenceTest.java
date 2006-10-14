@@ -34,48 +34,54 @@ public class FeePersistenceTest extends MifosTestCase {
 		
 		// crate periodic fee
 		periodicFee = TestObjectFactory.createPeriodicAmountFee(
-				"ClientPeridoicFee", FeeCategory.CLIENT, "5", RecurrenceType.WEEKLY, Short.valueOf("1"));
+				"ClientPeridoicFee", FeeCategory.CLIENT, "5", 
+				RecurrenceType.WEEKLY, Short.valueOf("1"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
+		assertEquals(0, feePersistence.getUpdatedFeesForCustomer().size());
+		
 		//get fee from db 
-		periodicFee =(FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,periodicFee.getFeeId());
+		periodicFee =(FeeBO) HibernateUtil.getSessionTL().get(
+			FeeBO.class, periodicFee.getFeeId());
 		periodicFee.setUserContext(TestObjectFactory.getUserContext());
 		periodicFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
 		periodicFee.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		List fees = feePersistence.getUpdatedFeesForCustomer();
-		assertNotNull(fees);
-		assertEquals(1,fees.size());
+		assertEquals(1, feePersistence.getUpdatedFeesForCustomer().size());
 
 		//cleanup
-		periodicFee =(FeeBO) TestObjectFactory.getObject(FeeBO.class,periodicFee.getFeeId());
+		periodicFee =(FeeBO) TestObjectFactory.getObject(
+			FeeBO.class, periodicFee.getFeeId());
 	}
-	
-	public void testGetUpdateTypeEntity() throws NumberFormatException, PersistenceException{
-		
-	  ApplicableAccountsTypeEntity feeUpdateType=	feePersistence.getUpdateTypeEntity(Short.valueOf("1"));
-	  assertNotNull(feeUpdateType);
-	  assertEquals(1,feeUpdateType.getId().intValue());
-		
+
+	// Tests behavior which seems not to be used by anything.
+	public void testGetUpdateTypeEntity() 
+	throws NumberFormatException, PersistenceException {
+		ApplicableAccountsTypeEntity feeUpdateType =
+			feePersistence.getUpdateTypeEntity(Short.valueOf("1"));
+		assertEquals(1, feeUpdateType.getId().intValue());
 	}
 	
 	public void testRetrieveFeesForCustomer()throws Exception{
-		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200", RecurrenceType.MONTHLY,Short.valueOf("2"));
-		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400", RecurrenceType.MONTHLY,Short.valueOf("2"));
+		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", 
+			FeeCategory.CENTER, "200", RecurrenceType.MONTHLY, Short.valueOf("2"));
+		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", 
+			FeeCategory.LOAN, "400", RecurrenceType.MONTHLY, Short.valueOf("2"));
 		List<FeeBO> feeList = feePersistence.retrieveCustomerFees();
-		assertNotNull(feeList);
 		assertEquals(1, feeList.size());
-		assertEquals("CustomerFee1",feeList.get(0).getFeeName());
+		assertEquals("CustomerFee1", feeList.get(0).getFeeName());
 	}
 	
 	public void testRetrieveFeesForProduct()throws Exception{
-		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", FeeCategory.CENTER, "200", RecurrenceType.MONTHLY,Short.valueOf("2"));
-		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", FeeCategory.LOAN, "400", RecurrenceType.MONTHLY,Short.valueOf("2"));
+		fee1 = TestObjectFactory.createPeriodicAmountFee("CustomerFee1", 
+			FeeCategory.CENTER, "200", RecurrenceType.MONTHLY, Short.valueOf("2"));
+		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", 
+			FeeCategory.LOAN, "400", RecurrenceType.MONTHLY, Short.valueOf("2"));
 		List<FeeBO> feeList = feePersistence.retrieveProductFees();
-		assertNotNull(feeList);
 		assertEquals(1, feeList.size());
-		assertEquals("ProductFee1",feeList.get(0).getFeeName());
+		assertEquals("ProductFee1", feeList.get(0).getFeeName());
 	}
+
 }

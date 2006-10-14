@@ -445,6 +445,8 @@ public interface NamedQueryConstants {
 	//fee related m2
 	public String GET_UPDATED_FEES_FOR_CUSTOMERS="getUpdatedFeesForCustomers";
 	public String GET_CUSTOMER_ACCOUNTS_FOR_FEE="getCustomerAccountsForFee";
+	
+	// Seems not to be used by anything
 	public String GET_FEE_UPDATETYPE="getFeeUpdateType";
 	
 	public String GET_ACTIVE_CUSTOMER__AND_SAVINGS_ACCOUNTS="getActiveCustomerAndSavingsAccounts";

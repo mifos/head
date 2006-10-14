@@ -55,12 +55,27 @@ public class HibernateSessionFactory
     private static SessionFactory sessionFactory;
 
     /**
-	 * The call to setconfiguration , builds the hibernate session factory from
-	 * the hibernate configuration object
+	 * Set the static hibernate session factory from
+	 * the hibernate configuration passed as a parameter.
 	 */
     public static void setConfiguration(Configuration config)
 	throws HibernateStartUpException {
 		try {
+			/** Throwing HibernateStartUpException
+			    seems to cause somewhat mysterious failures
+			    in {@link TestConstPlugin}.
+			    
+			    Why?
+			    
+			    And shouldn't we at least call .close()
+			    on the old sessionFactory, if nothing else?
+			*/
+//			if (sessionFactory != null) {
+//				/* Re-opening the sesssion factory on every test
+//				 * seems to be too slow.  */
+//				throw new HibernateStartUpException(
+//					"Session factory is already open");
+//			}
 			sessionFactory = config.buildSessionFactory();
 		} catch (Exception e) {
 			throw new HibernateStartUpException(e);
