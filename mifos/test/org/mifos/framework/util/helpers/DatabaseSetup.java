@@ -88,7 +88,7 @@ public class DatabaseSetup {
 	}
 
 	public static void executeScript(Database database, String name) {
-	    try {
+	    /*try {
 	        Reader sql = new FileReader(
                 "c:/Documents and Settings/jkingdon/" +
                 "workspace/mifos/" +
@@ -104,7 +104,7 @@ public class DatabaseSetup {
 	        );
 	    } catch (FileNotFoundException e) {
 	    	throw new RuntimeException(e);
-		}
+		}*/
 	}
 
 }
