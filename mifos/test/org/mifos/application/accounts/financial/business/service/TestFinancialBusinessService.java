@@ -19,6 +19,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -195,7 +196,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		
-		savings.setSavingsBalance(balanceAmount);
+		TestSavingsBO.setBalance(savings,balanceAmount);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
@@ -210,7 +211,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				AccountConstants.ACTION_SAVINGS_ADJUSTMENT, savings, createdBy,
 				group, "", null);
 		payment.addAcountTrxn(accountTrxn);
-		savings.setSavingsBalance(balanceAmount);
+		TestSavingsBO.setBalance(savings,balanceAmount);
 
 		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
 				.getInstance()
@@ -272,7 +273,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
-		savings.setSavingsBalance(balanceAmount);
+		TestSavingsBO.setBalance(savings,balanceAmount);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
@@ -287,7 +288,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				AccountConstants.ACTION_SAVINGS_ADJUSTMENT, savings, createdBy,
 				group, "correction entry", null);
 		payment.addAcountTrxn(accountTrxn);
-		savings.setSavingsBalance(balanceAmount);
+		TestSavingsBO.setBalance(savings,balanceAmount);
 
 		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
 				.getInstance()

@@ -70,6 +70,7 @@ import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -738,7 +739,7 @@ public class TestObjectFactory {
 		savings.save();
 		savings.setUserContext(TestObjectFactory.getContext());
 		savings.changeStatus(accountStateId, null, "");
-		savings.setActivationDate(new Date(System.currentTimeMillis()));
+		TestSavingsBO.setActivationDate(savings,new Date(System.currentTimeMillis()));
 		List<Date> meetingDates = getMeetingDates(meeting, 3);
 		short i = 0;
 		for (Date date : meetingDates) {
@@ -769,7 +770,7 @@ public class TestObjectFactory {
 				customer, AccountState.getStatus(accountStateId),
 				savingsOffering.getRecommendedAmount(), getCustomFieldView());
 		savings.save();
-		savings.setActivationDate(new Date(System.currentTimeMillis()));
+		TestSavingsBO.setActivationDate(savings,new Date(System.currentTimeMillis()));
 		HibernateUtil.commitTransaction();
 		return (SavingsBO) addObject(getObject(SavingsBO.class, savings
 				.getAccountId()));

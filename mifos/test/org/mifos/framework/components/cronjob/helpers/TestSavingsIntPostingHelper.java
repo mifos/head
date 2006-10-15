@@ -9,6 +9,7 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsActivityEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -86,16 +87,17 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 
 	public void testInterestPosting() throws Exception {
 		createInitialObjects();
-		savings1.setNextIntPostDate(helper.getDate("31/03/2006"));
-		savings1.setActivationDate(helper.getDate("05/03/2006"));
-		savings1.setInterestToBePosted(new Money(currency, "500"));
-		savings1.setSavingsBalance(new Money(currency, "250"));
+		TestSavingsBO.setNextIntPostDate(savings1,helper.getDate("31/03/2006"));
+		TestSavingsBO.setActivationDate(savings1,helper.getDate("05/03/2006"));
+		TestSavingsBO.setInterestToBePosted(savings1,new Money(currency, "500"));
+		TestSavingsBO.setBalance(savings1,new Money("250"));
+		
 		savings1.update();
 
-		savings4.setNextIntPostDate(helper.getDate("31/03/2006"));
-		savings4.setActivationDate(helper.getDate("15/03/2006"));
-		savings4.setInterestToBePosted(new Money(currency, "800.40"));
-		savings4.setSavingsBalance(new Money(currency, "250"));
+		TestSavingsBO.setNextIntPostDate(savings4,helper.getDate("31/03/2006"));
+		TestSavingsBO.setActivationDate(savings4,helper.getDate("15/03/2006"));
+		TestSavingsBO.setInterestToBePosted(savings4,new Money(currency, "800.40"));
+		TestSavingsBO.setBalance(savings4,new Money("250"));
 		savings4.update();
 
 		HibernateUtil.commitTransaction();

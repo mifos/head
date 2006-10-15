@@ -858,9 +858,10 @@ public class ClientBO extends CustomerBO {
 		if (oldHistoricalLoanCycleNo == null)
 			oldHistoricalLoanCycleNo = 0;
 		Integer difference = historicalLoanCycleNo - oldHistoricalLoanCycleNo;
-		performanceHistory.setLoanCycleNumber(performanceHistory
-				.getLoanCycleNumber()
-				+ difference);
+		if(performanceHistory != null)
+			performanceHistory.setLoanCycleNumber(performanceHistory
+					.getLoanCycleNumber()
+					+ difference);
 	}
 	
 	private void createDepositSchedule() throws CustomerException{

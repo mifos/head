@@ -116,6 +116,31 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
+	public static void setBalance(SavingsBO savings,Money balanceAmount) {
+		savings.setSavingsBalance(balanceAmount);	
+	}
+	
+	public static void setNextIntCalcDate(SavingsBO savings,Date nextDate) {
+		savings.setNextIntCalcDate(nextDate);	
+	}
+	
+	public static void setActivationDate(SavingsBO savings,Date nextDate) {
+		savings.setActivationDate(nextDate);	
+	}
+	
+	public static void setNextIntPostDate(SavingsBO savings,Date nextDate) {
+		savings.setNextIntPostDate(nextDate);	
+	}
+	
+	public static void setInterestToBePosted(SavingsBO savings,Money interest) {
+		savings.setInterestToBePosted(interest);	
+	}
+	
+	public static void setDepositPaid(SavingsScheduleEntity actionDate,Money depositPaid) {
+		actionDate.setDepositPaid(depositPaid);	
+	}
+	
+	
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

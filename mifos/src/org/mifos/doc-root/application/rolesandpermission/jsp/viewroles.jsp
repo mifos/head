@@ -133,10 +133,10 @@
 								<tr>
 									<td width="39%" class="blueline"><span class="fontnormalbold">
 									<html-el:link
-										href="javascript:manageRole(${item.id},'${item.name}')">${item.name}</html-el:link>
+										href="rolesPermission.do?method=manage&id=${item.id}&currentFlowKey=${requestScope.currentFlowKey}"><c:out value="${item.name}"/></html-el:link>
 									</span></td>
 									<td width="61%" class="blueline"><span class="fontnormal"> <html-el:link
-										href="javascript:deleteRole(${item.id},'${item.name}')">
+										href="rolesPermission.do?method=preview&id=${item.id}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="roleandpermission.labelDeleteRole"
 											bundle="RolesAndPermissionResources"></mifos:mifoslabel>
 									</html-el:link> </span></td>

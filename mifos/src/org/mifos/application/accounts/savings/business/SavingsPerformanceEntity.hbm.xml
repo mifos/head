@@ -6,24 +6,24 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.accounts.savings.business.SavingsPerformanceEntity" table="SAVINGS_PERFORMANCE">
-       <id name="id" column="ID" type="integer" access="field">
-            <generator class="native"/>
-	   </id>
+	<class name="org.mifos.application.accounts.savings.business.SavingsPerformanceEntity" table="SAVINGS_PERFORMANCE">
+		<id name="id" column="ID" type="integer" access="field">
+			<generator class="native" />
+		</id>
 		<property name="totalDeposits" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			 <column name="TOTAL_DEPOSITS_CURRENCY_ID" /> 
-			 <column name="TOTAL_DEPOSITS" />
+			<column name="TOTAL_DEPOSITS_CURRENCY_ID" />
+			<column name="TOTAL_DEPOSITS" />
 		</property>
 		<property name="totalWithdrawals" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			 <column name="TOTAL_WITHDRAWALS_CURRENCY_ID" /> 
-			 <column name="TOTAL_WITHDRAWALS" />
+			<column name="TOTAL_WITHDRAWALS_CURRENCY_ID" />
+			<column name="TOTAL_WITHDRAWALS" />
 		</property>
 		<property name="totalInterestEarned" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
-			 <column name="TOTAL_INTEREST_EARNED_CURRENCY_ID" /> 
-			 <column name="TOTAL_INTEREST_EARNED" />
-		</property>			
-		<property name="missedDeposits" column="MISSED_DEPOSITS"  />
-   
-    <many-to-one name="savings" column="ACCOUNT_ID" class="org.mifos.application.accounts.savings.business.SavingsBO" lazy="true" unique="true" />
-     </class>
+			<column name="TOTAL_INTEREST_EARNED_CURRENCY_ID" />
+			<column name="TOTAL_INTEREST_EARNED" />
+		</property>
+		<property name="missedDeposits" column="MISSED_DEPOSITS" />
+
+		<many-to-one name="savings" column="ACCOUNT_ID" class="org.mifos.application.accounts.savings.business.SavingsBO" lazy="true" unique="true" access="field"/>
+	</class>
 </hibernate-mapping>

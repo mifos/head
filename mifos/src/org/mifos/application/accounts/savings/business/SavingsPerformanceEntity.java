@@ -1,37 +1,43 @@
 package org.mifos.application.accounts.savings.business;
+
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsPerformanceEntity extends PersistentObject {
 
-	@SuppressWarnings("unused") // See Hibernate mapping
-	private Integer id;
+	@SuppressWarnings("unused")
+	// See Hibernate mapping
+	private final Integer id;
 
-	private Integer accountId;
-    private Money totalDeposits;
-    private Money totalWithdrawals;
-    private Money totalInterestEarned;
-    private Integer missedDeposits;
-    private SavingsBO savings;
-    
-    
-    public SavingsBO getSavings() {
-		return savings;
+	private Money totalDeposits;
+
+	private Money totalWithdrawals;
+
+	private Money totalInterestEarned;
+
+	private Integer missedDeposits;
+
+	private final SavingsBO savings;
+
+	protected SavingsPerformanceEntity() {
+		id = null;
+		savings = null;
 	}
 
-	public void setSavings(SavingsBO savings) {
+	protected SavingsPerformanceEntity(SavingsBO savings) {
+		id = null;
 		this.savings = savings;
 	}
 
-	public SavingsPerformanceEntity(){
-       
+	public SavingsBO getSavings() {
+		return savings;
 	}
 
 	public Integer getMissedDeposits() {
 		return missedDeposits;
 	}
 
-	public void setMissedDeposits(Integer missedDeposits) {
+	void setMissedDeposits(Integer missedDeposits) {
 		this.missedDeposits = missedDeposits;
 	}
 
@@ -39,7 +45,7 @@ public class SavingsPerformanceEntity extends PersistentObject {
 		return totalDeposits;
 	}
 
-	public void setTotalDeposits(Money totalDeposits) {
+	void setTotalDeposits(Money totalDeposits) {
 		this.totalDeposits = totalDeposits;
 	}
 
@@ -47,7 +53,7 @@ public class SavingsPerformanceEntity extends PersistentObject {
 		return totalInterestEarned;
 	}
 
-	public void setTotalInterestEarned(Money totalInterstEarned) {
+	void setTotalInterestEarned(Money totalInterstEarned) {
 		this.totalInterestEarned = totalInterstEarned;
 	}
 
@@ -55,42 +61,33 @@ public class SavingsPerformanceEntity extends PersistentObject {
 		return totalWithdrawals;
 	}
 
-	public void setTotalWithdrawals(Money totalWithdrawals) {
+	void setTotalWithdrawals(Money totalWithdrawals) {
 		this.totalWithdrawals = totalWithdrawals;
 	}
 
-	public Integer getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(Integer accountId) {
-		this.accountId = accountId;
-	}
-	
-	public void setPaymentDetails(Money totalAmount) {
-		if(totalDeposits==null)
+	void setPaymentDetails(Money totalAmount) {
+		if (totalDeposits == null)
 			totalDeposits = new Money();
 		totalDeposits = totalDeposits.add(totalAmount);
 	}
 
-	public void setWithdrawDetails(Money totalAmount) {
-		if(totalWithdrawals==null)
+	void setWithdrawDetails(Money totalAmount) {
+		if (totalWithdrawals == null)
 			totalWithdrawals = new Money();
 		totalWithdrawals = totalWithdrawals.add(totalAmount);
 	}
-	
-	public void setTotalInterestDetails(Money totalAmount) {
-		if(totalInterestEarned==null)
+
+	void setTotalInterestDetails(Money totalAmount) {
+		if (totalInterestEarned == null)
 			totalInterestEarned = new Money();
 		totalInterestEarned = totalInterestEarned.add(totalAmount);
 	}
-	
-	public void addMissedDeposits(int missedDeposits) {
-		if(this.missedDeposits == null){
+
+	void addMissedDeposits(int missedDeposits) {
+		if (this.missedDeposits == null) {
 			this.missedDeposits = new Integer(0);
 		}
 		this.missedDeposits = this.missedDeposits + missedDeposits;
 	}
 
-	
 }

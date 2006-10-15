@@ -38,7 +38,12 @@ function createCheckList()
 		event.returnValue = false;		
 		return false;
 	} 	
-	
+	var val = document.getElementsByName("text")[0].value;
+    var qt = "'";
+    var value = val.replace(qt, "&#39;");
+    for (i = 0; i < val.length; i++) {
+        value = value.replace(qt, "&#39;");
+    }
 	if(document.getElementsByName('text')[0].value)	
 	{
 		var para = document.getElementById("myDiv");								
@@ -46,7 +51,7 @@ function createCheckList()
 		var divIdName = "my"+i+"Div";		
 		detailsTxt.setAttribute("id",divIdName);
 		var textArea=document.getElementsByName('text')[0].value;		
-		detailsTxt.innerHTML +="<input type='checkbox'  name='checkBox("+i+")' value='"+document.getElementsByName('text')[0].value+"'>";
+		detailsTxt.innerHTML +="<input type='checkbox'  name='checkBox("+i+")' value='"+value+"'>";
 		var incrementer=0;		
 		while(incrementer<textArea.length)
 		{
@@ -55,7 +60,7 @@ function createCheckList()
 			detailsTxt.innerHTML+="<br>";
 			incrementer=incrementer+80;
 		}		
-		detailsTxt.innerHTML +="<input type='hidden'  name='detailsList["+i+"]' value='"+document.getElementsByName('text')[0].value+"' >";
+		detailsTxt.innerHTML +="<input type='hidden'  name='detailsList["+i+"]' value='"+value+"' >";
 		para.appendChild(detailsTxt);
 		i++;
 		numberOfItems++;	

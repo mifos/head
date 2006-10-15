@@ -7,6 +7,7 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -266,8 +267,8 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());
+		TestSavingsBO.setBalance(savings,new Money("500"));
 		
-		savings.setSavingsBalance(new Money("500"));
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

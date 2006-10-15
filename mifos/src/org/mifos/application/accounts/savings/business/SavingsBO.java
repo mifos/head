@@ -147,7 +147,7 @@ public class SavingsBO extends AccountBO {
 		return savingsBalance;
 	}
 
-	public void setSavingsBalance(Money savingsBalance) {
+	void setSavingsBalance(Money savingsBalance) {
 		this.savingsBalance = savingsBalance;
 	}
 
@@ -155,7 +155,7 @@ public class SavingsBO extends AccountBO {
 		return savingsOffering;
 	}
 
-	public void setSavingsOffering(SavingsOfferingBO savingsOffering) {
+	void setSavingsOffering(SavingsOfferingBO savingsOffering) {
 		this.savingsOffering = savingsOffering;
 	}
 
@@ -167,7 +167,7 @@ public class SavingsBO extends AccountBO {
 		return activationDate;
 	}
 
-	public void setActivationDate(Date activationDate) {
+	void setActivationDate(Date activationDate) {
 		this.activationDate = activationDate;
 	}
 
@@ -175,7 +175,7 @@ public class SavingsBO extends AccountBO {
 		return recommendedAmntUnit;
 	}
 
-	public void setRecommendedAmntUnit(
+	void setRecommendedAmntUnit(
 			RecommendedAmntUnitEntity recommendedAmntUnit) {
 		this.recommendedAmntUnit = recommendedAmntUnit;
 	}
@@ -184,7 +184,7 @@ public class SavingsBO extends AccountBO {
 		return savingsType;
 	}
 
-	public void setSavingsType(SavingsTypeEntity savingsType) {
+	void setSavingsType(SavingsTypeEntity savingsType) {
 		this.savingsType = savingsType;
 	}
 
@@ -192,7 +192,7 @@ public class SavingsBO extends AccountBO {
 		return interestToBePosted;
 	}
 
-	public void setInterestToBePosted(Money interestToBePosted) {
+	void setInterestToBePosted(Money interestToBePosted) {
 		this.interestToBePosted = interestToBePosted;
 	}
 
@@ -200,7 +200,7 @@ public class SavingsBO extends AccountBO {
 		return interIntCalcDate;
 	}
 
-	public void setInterIntCalcDate(Date interIntCalcDate) {
+	void setInterIntCalcDate(Date interIntCalcDate) {
 		this.interIntCalcDate = interIntCalcDate;
 	}
 
@@ -208,7 +208,7 @@ public class SavingsBO extends AccountBO {
 		return lastIntCalcDate;
 	}
 
-	public void setLastIntCalcDate(Date lastIntCalcDate) {
+	void setLastIntCalcDate(Date lastIntCalcDate) {
 		this.lastIntCalcDate = lastIntCalcDate;
 	}
 
@@ -216,7 +216,7 @@ public class SavingsBO extends AccountBO {
 		return lastIntPostDate;
 	}
 
-	public void setLastIntPostDate(Date lastIntPostDate) {
+	void setLastIntPostDate(Date lastIntPostDate) {
 		this.lastIntPostDate = lastIntPostDate;
 	}
 
@@ -224,7 +224,7 @@ public class SavingsBO extends AccountBO {
 		return nextIntCalcDate;
 	}
 
-	public void setNextIntCalcDate(Date nextIntCalcDate) {
+	void setNextIntCalcDate(Date nextIntCalcDate) {
 		this.nextIntCalcDate = nextIntCalcDate;
 	}
 
@@ -232,7 +232,7 @@ public class SavingsBO extends AccountBO {
 		return nextIntPostDate;
 	}
 
-	public void setNextIntPostDate(Date nextIntPostDate) {
+	void setNextIntPostDate(Date nextIntPostDate) {
 		this.nextIntPostDate = nextIntPostDate;
 	}
 
@@ -324,13 +324,11 @@ public class SavingsBO extends AccountBO {
 
 	private void setSavingsPerformance(
 			SavingsPerformanceEntity savingsPerformance) {
-		if (savingsPerformance != null)
-			savingsPerformance.setSavings(this);
 		this.savingsPerformance = savingsPerformance;
 	}
 
 	private SavingsPerformanceEntity createSavingsPerformance() {
-		SavingsPerformanceEntity savingsPerformance = new SavingsPerformanceEntity();
+		SavingsPerformanceEntity savingsPerformance = new SavingsPerformanceEntity(this);
 		logger
 				.info("In SavingsBO::createSavingsPerformance(), SavingsPerformanceEntity created successfully ");
 		return savingsPerformance;
@@ -411,7 +409,7 @@ public class SavingsBO extends AccountBO {
 						+ getAccountId());
 	}
 
-	public void updateAndGenerateSchedule() throws AccountException {
+	private void updateAndGenerateSchedule() throws AccountException {
 		logger.debug("In SavingsBO::updateSchedule(), accountId: "
 				+ getAccountId());
 		for (AccountActionDateEntity accountDate : this.getAccountActionDates()) {
@@ -1922,7 +1920,7 @@ public class SavingsBO extends AccountBO {
 	}
 
 	@Override
-	public void regenerateFutureInstallments(Short nextInstallmentId)
+	protected void regenerateFutureInstallments(Short nextInstallmentId)
 			throws AccountException {
 		if (!this.getAccountState().getId().equals(
 				AccountStates.SAVINGS_ACC_CANCEL)

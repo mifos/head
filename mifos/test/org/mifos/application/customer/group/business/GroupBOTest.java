@@ -9,6 +9,7 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -660,10 +661,11 @@ public class GroupBOTest extends MifosTestCase {
 	public void testGetTotalSavingsBalance() throws Exception {
 		createInitialObjects();
 		SavingsBO savings1 = getSavingsAccount(group, "fsaf6", "ads6");
-		savings1.setSavingsBalance(new Money("1000"));
+		TestSavingsBO.setBalance(savings1,new Money("1000"));
+		
 		savings1.update();
 		SavingsBO savings2 = getSavingsAccount(client, "fsaf5", "ads5");
-		savings2.setSavingsBalance(new Money("2000"));
+		TestSavingsBO.setBalance(savings2,new Money("2000"));
 		savings1.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

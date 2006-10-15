@@ -15,6 +15,7 @@ import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -289,9 +290,11 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savings2 = helper.createSavingsAccount("000100000000023",
 				savingsOffering2, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		savings.setNextIntCalcDate(helper.getDate("01/07/2006"));
-		savings1.setNextIntCalcDate(helper.getDate("01/07/2006"));
-		savings2.setNextIntCalcDate(helper.getDate("01/08/2006"));
+		TestSavingsBO.setNextIntCalcDate(savings,helper.getDate("01/07/2006"));
+		TestSavingsBO.setNextIntCalcDate(savings1,helper.getDate("01/07/2006"));
+		TestSavingsBO.setNextIntCalcDate(savings2,helper.getDate("01/08/2006"));
+		
+		
 		savings.update();
 		savings1.update();
 		savings2.update();
@@ -329,10 +332,9 @@ public class TestSavingsPersistence extends MifosTestCase {
 		savings2 = helper.createSavingsAccount("000100000000023",
 				savingsOffering2, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-
-		savings.setNextIntPostDate(helper.getDate("31/07/2006"));
-		savings1.setNextIntPostDate(helper.getDate("31/07/2006"));
-		savings2.setNextIntPostDate(helper.getDate("31/08/2006"));
+		TestSavingsBO.setNextIntPostDate(savings,helper.getDate("31/07/2006"));
+		TestSavingsBO.setNextIntPostDate(savings1,helper.getDate("31/07/2006"));
+		TestSavingsBO.setNextIntPostDate(savings2,helper.getDate("31/08/2006"));
 		savings.update();
 		savings1.update();
 		savings2.update();

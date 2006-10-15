@@ -8,6 +8,7 @@ import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -103,7 +104,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
-		savings.setSavingsBalance(depositAmount);
+		TestSavingsBO.setBalance(savings,depositAmount);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
@@ -146,7 +147,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
-		savings.setSavingsBalance(balance);
+		TestSavingsBO.setBalance(savings,balance);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
@@ -295,7 +296,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
-		savings.setSavingsBalance(depositAmount);
+		TestSavingsBO.setBalance(savings,depositAmount);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();

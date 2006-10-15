@@ -10,6 +10,7 @@ import java.util.Set;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.application.rolesandpermission.struts.actionforms.RolesPermissionsActionForm;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -221,6 +222,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.manage_success.toString());
+		assertEquals("New Role",((RolesPermissionsActionForm)request.getSession().getAttribute("rolesPermissionsActionForm")).getName());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
@@ -285,6 +287,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		addRequestParameter("activity(1)", "checkbox");
 		addRequestParameter("activity(2)", "3");
 		addRequestParameter("activity(3)", "4");
+		addRequestParameter("name", "");
 		actionPerform();
 		verifyActionErrors(new String[] { RolesAndPermissionConstants.KEYROLENAMENOTSPECIFIED });
 		verifyForward(ActionForwards.update_failure.toString());

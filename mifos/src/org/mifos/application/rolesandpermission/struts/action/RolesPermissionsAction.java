@@ -83,9 +83,10 @@ public class RolesPermissionsAction extends BaseAction {
 		SessionUtils.setAttribute(RolesAndPermissionConstants.ACTIVITYLIST,
 				((RolesPermissionsBusinessService) getService())
 						.getActivities(), request);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,
-				((RolesPermissionsBusinessService) getService()).getRole(Short
-						.valueOf(rolesPermissionsActionForm.getId())), request);
+		RoleBO role = ((RolesPermissionsBusinessService) getService()).getRole(Short
+				.valueOf(rolesPermissionsActionForm.getId()));
+		rolesPermissionsActionForm.setName(role.getName());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,role, request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 

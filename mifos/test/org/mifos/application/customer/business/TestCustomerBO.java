@@ -11,6 +11,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -354,7 +355,7 @@ public class TestCustomerBO extends MifosTestCase {
 
 	public void testgetSavingsBalance() throws Exception {
 		SavingsBO savings = getSavingsAccount("fsaf4", "ads4");
-		savings.setSavingsBalance(new Money("1000"));
+		TestSavingsBO.setBalance(savings,new Money("1000"));
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

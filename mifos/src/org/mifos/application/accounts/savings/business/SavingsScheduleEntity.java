@@ -28,7 +28,7 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
 		return deposit;
 	}
 
-	public void setDeposit(Money deposit) {
+	void setDeposit(Money deposit) {
 		this.deposit = deposit;
 	}
 
@@ -36,7 +36,7 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
 		return depositPaid;
 	}
 
-	public void setDepositPaid(Money depositPaid) {
+	void setDepositPaid(Money depositPaid) {
 		this.depositPaid = depositPaid;
 	}
 
@@ -44,14 +44,14 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
 		return getDeposit().subtract(getDepositPaid());
 	}
 
-	public void setPaymentDetails(Money depositAmount,
+	void setPaymentDetails(Money depositAmount,
 			PaymentStatus paymentStatus, Date paymentDate) {
 		this.depositPaid = this.depositPaid.add(depositAmount);
 		this.paymentStatus = paymentStatus.getValue();
 		this.paymentDate = paymentDate;
 	}
 
-	public void waiveDepositDue() {
+	void waiveDepositDue() {
 		Money depositDue = getTotalDepositDue();
 		deposit = deposit.subtract(depositDue);
 		setPaymentStatus(PaymentStatus.PAID.getValue());

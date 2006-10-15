@@ -14,6 +14,7 @@ import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
@@ -983,7 +984,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		HibernateUtil.closeSession();
 		savingsBO = (SavingsBO) (new AccountPersistence().getAccount(savingsBO
 				.getAccountId()));
-		savingsBO.setSavingsBalance(new Money());
+		TestSavingsBO.setBalance(savingsBO,new Money());
 		Money enteredAmount = new Money(currency, "100.0");
 		PaymentData paymentData = new PaymentData(enteredAmount, savingsBO
 				.getPersonnel(), Short.valueOf("1"), new Date(System

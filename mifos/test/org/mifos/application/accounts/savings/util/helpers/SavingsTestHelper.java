@@ -14,6 +14,7 @@ import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
@@ -201,7 +202,7 @@ public class SavingsTestHelper {
 		SavingsScheduleEntity actionDate = new SavingsScheduleEntity(account,
 				customer, installmentId, new java.sql.Date(dueDate.getTime()),
 				paymentStatus, deposit);
-		actionDate.setDepositPaid(depositPaid);
+		TestSavingsBO.setDepositPaid(actionDate,depositPaid);
 		if (paymentDate != null)
 			actionDate.setPaymentDate(new java.sql.Date(paymentDate.getTime()));
 		return actionDate;

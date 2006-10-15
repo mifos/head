@@ -9,6 +9,7 @@ import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -234,7 +235,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		savings = helper.createSavingsAccount("000X00000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		savings.setActivationDate(helper.getDate("20/05/2006"));
+		TestSavingsBO.setActivationDate(savings,helper.getDate("20/05/2006"));
 		PersonnelBO createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 		AccountPaymentEntity payment1 = helper.createAccountPaymentToPersist(
@@ -264,8 +265,8 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 
 		Money interestAmount = new Money(TestObjectFactory.getMFICurrency(),
 				"40");
-		savings.setInterestToBePosted(interestAmount);
-		savings.setSavingsBalance(balanceAmount);
+		TestSavingsBO.setInterestToBePosted(savings,interestAmount);
+		TestSavingsBO.setBalance(savings,balanceAmount);
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
