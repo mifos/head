@@ -196,6 +196,37 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 
+	public void testUpdatePasswordWithSameOldAndNewPassword() throws Exception {
+		loadLoginPage();
+		assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
+		personnel = createPersonnel();
+
+		setRequestPathInfo("/loginAction.do");
+		addRequestParameter("method", Methods.login.toString());
+		addRequestParameter("userName", personnel.getUserName());
+		addRequestParameter("password", "PASSWORD");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.loadChangePassword_success.toString());
+		assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+
+		setRequestPathInfo("/loginAction.do");
+		addRequestParameter("method", Methods.updatePassword.toString());
+		addRequestParameter("userName", personnel.getUserName());
+		addRequestParameter("oldPassword", "oldPassword");
+		addRequestParameter("newPassword", "oldPassword");
+		addRequestParameter("confirmPassword", "oldPassword");
+		addRequestParameter("input", "LoginChangePW");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyActionErrors(new String[] { LoginConstants.SAME_OLD_AND_NEW_PASSWORD});
+		verifyInputForward();
+		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
+	}
+
 	public void testLoginForRegularUser() throws Exception {
 		loadLoginPage();
 		assertNotNull(request.getSession().getAttribute(Constants.FLOWMANAGER));
@@ -368,7 +399,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		MifosTask.cronJobFinished();
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
-	
+
 	private PersonnelBO createPersonnel() throws Exception {
 		office = TestObjectFactory.getOffice(Short.valueOf("1"));
 		Name name = new Name("XYZ", null, null, null);

@@ -32,9 +32,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class LoginAction extends BaseAction {
-	
+
 	private MifosLogger loginLogger = MifosLogManager.getLogger(LoggerConstants.LOGINLOGGER);
-	
+
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
@@ -51,7 +51,7 @@ public class LoginAction extends BaseAction {
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,new FlowManager());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
-	
+
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward login(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside login of LoginAction");
@@ -69,7 +69,7 @@ public class LoginAction extends BaseAction {
 		personnelBO = null;
 		return mapping.findForward(getLoginForward(userContext.getPasswordChanged()));
 	}
-	
+
 	public ActionForward logout(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside logout of LoginAction");
 		UserContext userContext =(UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
@@ -80,7 +80,7 @@ public class LoginAction extends BaseAction {
 		request.setAttribute(Globals.ERROR_KEY, error);
 		return mapping.findForward(ActionForwards.logout_success.toString());
 	}
-	
+
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward updatePassword(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside updatePassword of LoginAction");
@@ -95,21 +95,21 @@ public class LoginAction extends BaseAction {
 		PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(userName);
 		if(personnelBO.isPasswordChanged())
 			userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
-		else 
+		else
 			userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
 		personnelBO.updatePassword(oldPassword,newpassword, userContext.getId());
 		setUserContextInSession(userContext, request);
 		personnelBO = null;
 		return mapping.findForward(ActionForwards.updatePassword_success.toString());
 	}
-	
+
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancel(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(((LoginActionForm) form).getUserName());
 		return mapping.findForward(getCancelForward(personnelBO.getPasswordChanged()));
 	}
-	
+
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse httpservletresponse)
 			throws Exception {
@@ -122,31 +122,31 @@ public class LoginAction extends BaseAction {
 		}
 		return null;
 	}
-	
+
 	private PersonnelBusinessService getPersonnelBizService() {
 		return (PersonnelBusinessService)ServiceFactory.getInstance().getBusinessService(
 				BusinessServiceName.Personnel);
 	}
-	
+
 	private void setAttributes(UserContext userContext, HttpServletRequest request) {
-		ActivityContext activityContext = new ActivityContext((short)0,userContext.getBranchId().shortValue(),userContext.getId().shortValue());		
+		ActivityContext activityContext = new ActivityContext((short)0,userContext.getBranchId().shortValue(),userContext.getId().shortValue());
 		request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT,activityContext);
 	}
-	
+
 	private void setUserContextInSession(UserContext userContext, HttpServletRequest request) {
 		request.getSession(false).setAttribute(Constants.USERCONTEXT,userContext);
 	}
-	
+
 	private String getLoginForward(Short passwordChanged) {
 		return (null == passwordChanged || LoginConstants.FIRSTTIMEUSER.equals(passwordChanged))?
 				ActionForwards.loadChangePassword_success.toString():ActionForwards.login_success.toString();
 	}
-	
+
 	private String getCancelForward(Short passwordChanged) {
 		return (null == passwordChanged || LoginConstants.FIRSTTIMEUSER.equals(passwordChanged))?
 				ActionForwards.cancel_success.toString():ActionForwards.updateSettings_success.toString();
 	}
-	
+
 	private void setFlow(Short passwordChanged, HttpServletRequest request) {
 		if (null != passwordChanged && LoginConstants.PASSWORDCHANGEDFLAG.equals(passwordChanged)) {
 			FlowManager flowManager = (FlowManager) request.getSession()
