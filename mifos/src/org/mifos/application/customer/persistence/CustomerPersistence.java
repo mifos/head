@@ -93,7 +93,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.hibernate.helper.QueryResultIdSearch;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.struts.tags.DateHelper;
 
@@ -276,8 +275,8 @@ public class CustomerPersistence extends Persistence {
 		return queryResult;
 	}
 
-	public QueryResult searchGroupClient(String searchString,
-			Short userId) throws PersistenceException {
+	public QueryResult searchGroupClient(String searchString, Short userId)
+			throws PersistenceException {
 		String[] namedQuery = new String[2];
 		List<Param> paramList = new ArrayList<Param>();
 		QueryInputs queryInputs = new QueryInputs();
@@ -296,13 +295,14 @@ public class CustomerPersistence extends Persistence {
 
 		}
 
-		paramList.add(typeNameValue("String", "SEARCH_ID",
-				personnel.getOffice().getSearchId()
-						+ "%"));
+		paramList.add(typeNameValue("String", "SEARCH_ID", personnel
+				.getOffice().getSearchId()
+				+ "%"));
 		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
 				+ "%"));
 		paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED",
-				Configuration.getInstance().getCustomerConfig(personnel.getOffice().getOfficeId())
+				Configuration.getInstance().getCustomerConfig(
+						personnel.getOffice().getOfficeId())
 						.canGroupApplyForLoan() == true ? new Boolean(true)
 						: new Boolean(true)));
 
@@ -323,8 +323,7 @@ public class CustomerPersistence extends Persistence {
 
 	}
 
-	public QueryResult searchCustForSavings(String searchString,
-			 Short userId)
+	public QueryResult searchCustForSavings(String searchString, Short userId)
 			throws PersistenceException {
 		String[] namedQuery = new String[2];
 		List<Param> paramList = new ArrayList<Param>();
@@ -414,10 +413,13 @@ public class CustomerPersistence extends Persistence {
 
 	}
 
-	private QueryResult idSearch(String searchSting, Short officeId)
-			throws HibernateSearchException, SystemException {
-
-		List searchResults = null;
+	private QueryResult idSearch(String searchString, Short officeId)
+			throws HibernateSearchException, SystemException,
+			PersistenceException {
+		if (!isCustomerExist(searchString))
+			return null;
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
 		QueryInputs queryInputs = new QueryInputs();
 		String[] Names = { "customerId", "centerName", "centerGlobalCustNum",
 				"customerType", "branchGlobalNum", "branchName",
@@ -425,19 +427,39 @@ public class CustomerPersistence extends Persistence {
 				"groupName", "groupGlobalCustNum", "clientName",
 				"clientGlobalCustNum", "loanGlobalAccountNumber" };
 		QueryResult queryResult = QueryFactory
-				.getQueryResult(CustomerSearchConstants.IDSEARCH);
+				.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
 		queryInputs
 				.setPath("org.mifos.application.customer.business.CustomerSearch");
 		queryInputs.setAliasNames(Names);
 		queryResult.setQueryInputs(queryInputs);
-		if (officeId != null) {
-			searchResults = ((QueryResultIdSearch) queryResult)
-					.customerIdSearch(searchSting, officeId);
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs.setParamList(paramList);
+
+		if (officeId != null && officeId.shortValue() == 0) {
+			namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID_COUNT;
+			namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID;
+		} else {
+			namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_COUNT;
+			namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH;
+			paramList.add(typeNameValue("Short", "OFFICEID", officeId));
+
 		}
-		return searchResults != null && searchResults.size() > 0 ? queryResult
-				: null;
+		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString));
+
+		return queryResult;
+
 	}
 
+	private boolean isCustomerExist(String globalCustNum) throws PersistenceException{
+		
+		Map<String, String> queryParameters = new HashMap<String, String>();
+		queryParameters.put("globalCustNum", globalCustNum);
+		Integer count =(Integer) execUniqueResultNamedQuery(
+				NamedQueryConstants.CUSTOMER_FIND_COUNT_BY_SYSTEM_ID,
+				queryParameters);
+		return count!=null&&count>0?true:false;
+		
+	}
 	private void initializeCustomer(CustomerBO customer) {
 		customer.getGlobalCustNum();
 		customer.getOffice().getOfficeId();
@@ -805,16 +827,17 @@ public class CustomerPersistence extends Persistence {
 		session.createQuery(hql).executeUpate();
 	}
 
-	public void deleteCustomerMeeting(CustomerBO customer) throws PersistenceException {
+	public void deleteCustomerMeeting(CustomerBO customer)
+			throws PersistenceException {
 		delete(customer.getCustomerMeeting());
 		customer.setCustomerMeeting(null);
 	}
 
 	public void deleteMeeting(MeetingBO meeting) throws PersistenceException {
-		if(meeting!=null)
+		if (meeting != null)
 			delete(meeting);
 	}
-	
+
 	public List<Integer> getCustomerAccountsForFee(Short feeId)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -846,26 +869,38 @@ public class CustomerPersistence extends Persistence {
 				NamedQueryConstants.CUSTOMER_ACCOUNT_ACTIONS_DATE,
 				queryParameters);
 	}
-	
-	public List<CustomerBO> getActiveCentersUnderUser( PersonnelBO personnel)throws PersistenceException{
+
+	public List<CustomerBO> getActiveCentersUnderUser(PersonnelBO personnel)
+			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(CustomerSearchConstants.PERSONNELID,personnel.getPersonnelId());
-		queryParameters.put(CustomerSearchConstants.OFFICEID,personnel.getOffice().getOfficeId());
-		queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID,CustomerLevel.CENTER.getValue());	
-		queryParameters.put(CustomerSearchConstants.CENTER_ACTIVE,CustomerStatus.CENTER_ACTIVE.getValue());			
+		queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel
+				.getPersonnelId());
+		queryParameters.put(CustomerSearchConstants.OFFICEID, personnel
+				.getOffice().getOfficeId());
+		queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID,
+				CustomerLevel.CENTER.getValue());
+		queryParameters.put(CustomerSearchConstants.CENTER_ACTIVE,
+				CustomerStatus.CENTER_ACTIVE.getValue());
 		return executeNamedQuery(
 				NamedQueryConstants.SEARCH_CENTERS_FOR_LOAN_OFFICER,
 				queryParameters);
 	}
-	public List<CustomerBO> getGroupsUnderUser( PersonnelBO personnel)throws PersistenceException{
+
+	public List<CustomerBO> getGroupsUnderUser(PersonnelBO personnel)
+			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(CustomerSearchConstants.PERSONNELID,personnel.getPersonnelId());
-		queryParameters.put(CustomerSearchConstants.OFFICEID,personnel.getOffice().getOfficeId());
-		queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID,CustomerLevel.GROUP.getValue());	
-		queryParameters.put(CustomerSearchConstants.GROUP_ACTIVE,CustomerStatus.GROUP_ACTIVE.getValue());
-		queryParameters.put(CustomerSearchConstants.GROUP_ONHOLD,CustomerStatus.GROUP_HOLD);				
+		queryParameters.put(CustomerSearchConstants.PERSONNELID, personnel
+				.getPersonnelId());
+		queryParameters.put(CustomerSearchConstants.OFFICEID, personnel
+				.getOffice().getOfficeId());
+		queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID,
+				CustomerLevel.GROUP.getValue());
+		queryParameters.put(CustomerSearchConstants.GROUP_ACTIVE,
+				CustomerStatus.GROUP_ACTIVE.getValue());
+		queryParameters.put(CustomerSearchConstants.GROUP_ONHOLD,
+				CustomerStatus.GROUP_HOLD);
 		return executeNamedQuery(
 				NamedQueryConstants.SEARCH_GROUPS_FOR_LOAN_OFFICER,
 				queryParameters);
-	}	
+	}
 }

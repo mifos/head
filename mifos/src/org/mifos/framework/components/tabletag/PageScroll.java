@@ -49,7 +49,7 @@ public class PageScroll {
 	 * @param current	value of the current page.
 	 * @param pageSize	no of data in a single page.
 	 * @param size		size of the data.
-	 * @param currentFlowKey TODO
+	 * @param currentFlowKey 
 	 * @param prev		boolean value to find out whether previous is clicked or not.
 	 * @param next		boolean value to find out whether next is clicked or not.
 	 * @param jsp		name of the jsp to which this previous or next click will take you to.
@@ -99,7 +99,7 @@ public class PageScroll {
 	 * Function to get the link property on previous and next.
 	 * @param hRef			page to which it is going on click.
 	 * @param text			text to be displayed.
-	 * @param currentFlowKey TODO
+	 * @param currentFlowKey 
 	 * @param paramName1	current. 
 	 * @param paramvalue1	current page number.
 	 * @param paramName2	method name.

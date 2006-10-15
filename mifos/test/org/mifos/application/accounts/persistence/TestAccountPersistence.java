@@ -89,10 +89,20 @@ public class TestAccountPersistence extends TestAccount {
 				savingsBO.getGlobalAccountNum(), Short.valueOf("3"));
 		assertNotNull(queryResult);
 		assertEquals(1, queryResult.getSize());
+		assertEquals(1, queryResult.get(0,10).size());
 		TestObjectFactory.cleanUp(savingsBO);
 
 	}
 
+	public void testSearchCustomerAccount() throws Exception {
+		QueryResult queryResult = null;
+		queryResult = accountPersistence.search(
+				center.getCustomerAccount().getGlobalAccountNum(), Short.valueOf("3"));
+		assertNull(queryResult);
+
+	}	
+	
+	
 	private SavingsBO getSavingsAccount() throws Exception {
 		return TestObjectFactory.createSavingsAccount("12345678910", group,
 				new Short("16"), new Date(), createSavingsOffering("qqqqq"),

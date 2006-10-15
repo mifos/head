@@ -165,6 +165,10 @@
 	<query name="customer.findBySystemId">
 		<![CDATA[from org.mifos.application.customer.business.CustomerBO customer where customer.globalCustNum = :globalCustNum ]]>
 	</query>
+	<query name="customer.findCountBySystemId">
+		<![CDATA[select count(*) from org.mifos.application.customer.business.CustomerBO customer where customer.globalCustNum = :globalCustNum ]]>
+	</query>
+	
 	<query name="customer.findCenterSystemId">
 		<![CDATA[from org.mifos.application.customer.center.business.CenterBO as center where center.globalCustNum = :globalCustNum ]]>
 	</query>
@@ -325,6 +329,27 @@
 	        	   left join c.office as off  
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING ]]>
         </query>
+
+         <query name="Customer.cust_idsearch_withoutoffice_count">
+	        	   <![CDATA[select count(*)
+	        	   from org.mifos.application.customer.business.CustomerBO as c 
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING ]]>
+        </query>
+        <query name="Customer.cust_idsearch_count">
+	        	   <![CDATA[select count(*)  
+	        	   from org.mifos.application.customer.business.CustomerBO as c 
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING ]]>
+        </query>
+
+
+
+        
          <query name="search_Centers">
 	        	   <![CDATA[select  customer.office.officeId, customer.office.officeName,customer.globalCustNum,customer.displayName 
 	        	   from org.mifos.application.customer.business.CustomerBO customer 

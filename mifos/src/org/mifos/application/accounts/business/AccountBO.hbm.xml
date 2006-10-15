@@ -313,6 +313,18 @@
 	        	   left join c.office as off  
 	        	   left join c.personnel as per where a.globalAccountNum =:SEARCH_STRING ]]>
 	</query>
+	<query name="accounts.account_IdSearch_withoutoffice_count">
+		<![CDATA[select count(*) 
+	        	   from org.mifos.application.accounts.business.AccountBO account  where
+	        	   account.globalAccountNum =:SEARCH_STRING and account.accountType.accountTypeId !=3 ]]>
+	</query>
+	<query name="accounts.account_IdSearch_count">
+		<![CDATA[
+		select count(*) 	   from org.mifos.application.accounts.business.AccountBO account  where  
+	        	   account.globalAccountNum =:SEARCH_STRING and account.accountType.accountTypeId !=3 
+	        	   and account.customer.office.officeId=:OFFICEID ]]>
+	</query>	
+		
 	<query name="accounts.account_list_IdSearch">
 		<![CDATA[select account.globalAccountNum,account.accountType.accountTypeId 
 		from org.mifos.application.accounts.business.AccountBO account 

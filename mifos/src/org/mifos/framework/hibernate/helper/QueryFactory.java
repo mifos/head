@@ -53,13 +53,9 @@ public class QueryFactory
      */
     public static QueryResult getQueryResult(String searchName)
     {
-    	if(searchName.equals(CustomerSearchConstants.IDSEARCH))
+    	if(searchName.equals(CustomerSearchConstants.LOANACCOUNTIDSEARCH))
     	{
-    		return new QueryResultIdSearch();
-    	}
-    	else if(searchName.equals(CustomerSearchConstants.LOANACCOUNTIDSEARCH))
-    	{
-    		return new QueryResultLoanAccountIdSearch();
+    		return new QueryResultAccountIdSearch();
     	}
     	else if(searchName.equals(CustomerSearchConstants.CUSTOMERSEARCHRESULTS)){
     		return new QueryResultsMainSearchImpl();

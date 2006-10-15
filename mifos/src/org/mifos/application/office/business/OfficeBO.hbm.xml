@@ -25,7 +25,7 @@
 		 <many-to-one name="level" class="org.mifos.application.office.business.OfficeLevelEntity" column="OFFICE_LEVEL_ID" unique="true" insert="true" update="true" />
 		<many-to-one name="parentOffice"  class="org.mifos.application.office.business.OfficeBO"	column="PARENT_OFFICE_ID"  insert="true" update="true"	lazy="true" cascade="none" />
 		<many-to-one name="status"	class="org.mifos.application.office.business.OfficeStatusEntity" column="STATUS_ID" unique="true" insert="true" update="true"	lazy="true" />
-		<set name="customFields" cascade="all" inverse="true"  table="OFFICE_CUSTOM_FIELD">
+		<set name="customFields" cascade="all" inverse="true"  table="OFFICE_CUSTOM_FIELD" order-by="FIELD_ID">
 			<key column="OFFICE_ID" />
 			<one-to-many class="org.mifos.application.office.business.OfficeCustomFieldEntity" />
 		</set>

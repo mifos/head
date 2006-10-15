@@ -392,6 +392,7 @@ public interface NamedQueryConstants {
 	public String CUSTOMER_ACTIVE_LOAN_ACCOUNTS="Customer.getActiveLoanAccounts";
 	public String CUSTOMER_ACTIVE_SAVINGS_ACCOUNTS="Customer.getActiveSavingsAccounts";
 	public String CUSTOMER_FIND_ACCOUNT_BY_SYSTEM_ID="customer.findBySystemId";
+	public String CUSTOMER_FIND_COUNT_BY_SYSTEM_ID="customer.findCountBySystemId";
 	public String GET_CUSTOMER_STATUS_LIST = "customer.getStatusForCustomer";
 	public String GET_CENTER_BY_SYSTEMID="customer.findCenterSystemId";
 	public String GET_GROUP_BY_SYSTEMID="customer.findGroupSystemId";
@@ -541,12 +542,19 @@ public interface NamedQueryConstants {
 	public String CUSTOMER_SEARCH="Customer.cust_search";
 	public String CUSTOMER_SEARCH_NOOFFICEID="Customer.cust_search_noofficeid";
 	public String CUSTOMER_SEARCH_COUNT_NOOFFICEID="Customer.cust_count_search_noofficeid";
+	
 	public String CUSTOMER_ID_SEARCH_NOOFFICEID="Customer.cust_idsearch_withoutoffice";
+	public String CUSTOMER_ID_SEARCH_NOOFFICEID_COUNT="Customer.cust_idsearch_withoutoffice_count";
+	
 	public String CUSTOMER_ID_SEARCH="Customer.cust_idsearch";
+	public String CUSTOMER_ID_SEARCH_COUNT="Customer.cust_idsearch_count";
+	
+	
 	public String ACCOUNT_ID_SEARCH="accounts.account_IdSearch";
 	public String ACCOUNT_ID_SEARCH_NOOFFICEID="accounts.account_IdSearch_withoutoffice";
-	public String ACCOUNT_ID_SEARCH_COUNT="accounts.account_IdSearch_withoffice_count";
+	public String ACCOUNT_ID_SEARCH_COUNT="accounts.account_IdSearch_count";
 	public String ACCOUNT_ID_SEARCH_NOOFFICEID_COUNT="accounts.account_IdSearch_withoutoffice_count";
+	
 	public String ACCOUNT_LIST_ID_SEARCH="accounts.account_list_IdSearch";
 	public String PERSONNEL_SEARCH_COUNT="count_search_Personnel";
 	public String PERSONNEL_SEARCH="search_Personnel";

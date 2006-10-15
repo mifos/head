@@ -159,7 +159,10 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.mainSearch_success.toString());
 		veryfyResults();
-
+/*		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+*/
 	}
 	public void testMainAccountIdSearch()throws Exception{
 		userContext.setId(Short.valueOf("1"));
@@ -172,7 +175,10 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.mainSearch_success.toString());
 		veryfyResults();
-
+/*		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+*/
 	}
 	private void veryfyResults() throws Exception{
 		QueryResult queryResult = (QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request);
@@ -193,7 +199,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 	private void createGroupWithCenter()throws Exception{
 		createParentCustomer();
 		group = TestObjectFactory.createGroupUnderCenter("group",CustomerStatus.GROUP_ACTIVE, center);
-		HibernateUtil.closeSession();
+		//HibernateUtil.closeSession();
 	}
 	private LoanBO getLoanAccount() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory

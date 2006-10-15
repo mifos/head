@@ -244,18 +244,18 @@ public class TableTag extends BodyTagSupport {
 			}
 			getTableData(list);
 		} catch (TableTagException tte) {
-			new JspException(tte);
+			throw new JspException(tte);
 		} catch (TableTagParseException ttpe) {
-			new JspException(ttpe);
+			throw new JspException(ttpe);
 		} catch (TableTagTypeParserException tttpe) {
-			new JspException(tttpe);
+			throw new JspException(tttpe);
 		} catch (IOException ioe) {
-			new JspException(ioe);
+			throw new JspException(ioe);
 		} catch (HibernateSearchException hse) {
-			new JspException(hse);
+			throw new JspException(hse);
 		}
 		catch (PageExpiredException e) {
-			new JspException(e);
+			throw new JspException(e);
 		}
 		return super.doStartTag();
 

@@ -1,5 +1,6 @@
 package org.mifos.application.accounts.persistence;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -14,21 +15,22 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStateFlagEntity;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
+import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.hibernate.helper.QueryResultLoanAccountIdSearch;
+import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.persistence.Persistence;
 
 public class AccountPersistence extends Persistence {
@@ -167,38 +169,49 @@ public class AccountPersistence extends Persistence {
 
 	public QueryResult search(String queryString, Short officeId)
 			throws PersistenceException {
-		List searchResults = null;
+
+		AccountBO accountBO = findBySystemId(queryString);
+
+		if ( accountBO==null) return null;
+		if (accountBO != null
+				&& accountBO.getAccountType().getAccountTypeId().equals(
+						AccountTypes.CUSTOMERACCOUNT.getValue()))
+			return null;
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.LOANACCOUNTIDSEARCH);
-		try {
-
-			QueryInputs queryInputs = new QueryInputs();
-			String[] aliasNames = { "customerId", "centerName",
-					"centerGlobalCustNum", "customerType", "branchGlobalNum",
-					"branchName", "loanOfficerName", "loanOffcerGlobalNum",
-					"customerStatus", "groupName", "groupGlobalCustNum",
-					"clientName", "clientGlobalCustNum",
-					"loanGlobalAccountNumber" };
-			queryInputs
-					.setPath("org.mifos.application.customer.business.CustomerSearch");
-			queryInputs.setAliasNames(aliasNames);
-			queryResult.setQueryInputs(queryInputs);
-			if (officeId != null) {
-
-				searchResults = ((QueryResultLoanAccountIdSearch) queryResult)
-						.accountIdSearch(queryString, officeId);
+		((QueryResultAccountIdSearch)queryResult).setSearchString(queryString);
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
+		QueryInputs queryInputs = new QueryInputs();
+		String[] aliasNames = { "customerId", "centerName",
+				"centerGlobalCustNum", "customerType", "branchGlobalNum",
+				"branchName", "loanOfficerName", "loanOffcerGlobalNum",
+				"customerStatus", "groupName", "groupGlobalCustNum",
+				"clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
+		queryInputs
+				.setPath("org.mifos.application.customer.business.CustomerSearch");
+		queryInputs.setAliasNames(aliasNames);
+		if (officeId != null) {
+			if (officeId.shortValue() == 0) {
+				namedQuery[0] = NamedQueryConstants.ACCOUNT_ID_SEARCH_NOOFFICEID_COUNT;
+				namedQuery[1] = NamedQueryConstants.ACCOUNT_ID_SEARCH_NOOFFICEID;
+			} else {
+				namedQuery[0] = NamedQueryConstants.ACCOUNT_ID_SEARCH_COUNT;
+				namedQuery[1] = NamedQueryConstants.ACCOUNT_ID_SEARCH;
+				paramList.add(typeNameValue("Short", "OFFICEID", officeId));
 			}
-
-		} catch (HibernateSearchException e) {
-
-			throw new PersistenceException(e);
-		} catch (SystemException e) {
-
-			throw new PersistenceException(e);
-
+			paramList
+					.add(typeNameValue("String", "SEARCH_STRING", queryString));
 		}
-		return searchResults != null && searchResults.size() > 0 ? queryResult
-				: null;
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs.setParamList(paramList);
+		try {
+			queryResult.setQueryInputs(queryInputs);
+		} catch (HibernateSearchException e) {
+			throw new PersistenceException(e);
+		}
+		return queryResult;
 
 	}
+
 }

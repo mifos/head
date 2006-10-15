@@ -49,10 +49,10 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.SystemException;
 
-public class QueryResultLoanAccountIdSearch extends QueryResultIdSearch{
+public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl{
 	
 
-		java.util.List list = null ;
+
 		String searchString = null;
 		
 		public List get(int position, int noOfObjects) throws HibernateSearchException {
@@ -65,6 +65,10 @@ public class QueryResultLoanAccountIdSearch extends QueryResultIdSearch{
 	    	try
 	    	{
 	    		session=QuerySession.getSession();	
+	    		  query =prepareQuery(session,queryInputs.getQueryStrings()[1]);
+	    		  list = query.list();
+	    		  this.queryInputs.setTypes(query.getReturnTypes());
+	          	dtoBuilder.setInputs(queryInputs);	
 				if(list!=null)
 	 		   	{		    			
 		    	   for(int i=0;i < list.size(); i++)	  	     
@@ -75,7 +79,6 @@ public class QueryResultLoanAccountIdSearch extends QueryResultIdSearch{
 				    		  CustomerSearch cs = ((CustomerSearch)record);				    						    		 
 				    		  Integer customerId = cs.getCustomerId();	
 				    		  short customerLevel = cs.getCustomerType();				    		  
-				    		  //query= session.createQuery("select account.globalAccountNum,account.accountTypeId from Account account left join account.customer where account.customer.customerId=:customerId and (account.accountTypeId=:loanAccountTypeId or account.accountTypeId=:savingsAccountTypeId) and account.globalAccountNum=:searchString");
 				    		  query =  session.getNamedQuery(NamedQueryConstants.ACCOUNT_LIST_ID_SEARCH);
 				    		  query.setInteger("customerId",customerId).setShort("loanAccountTypeId",CustomerSearchConstants.LOAN_TYPE);
 				    		  query.setShort("savingsAccountTypeId",CustomerSearchConstants.SAVINGS_TYPE);
@@ -117,7 +120,7 @@ public class QueryResultLoanAccountIdSearch extends QueryResultIdSearch{
 		   }
 		   return returnList;
 		}
-		
+/*		
 		public List accountIdSearch(String searchString,Short officeId) throws SystemException
 		{
 			this.searchString = searchString;
@@ -150,6 +153,35 @@ public class QueryResultLoanAccountIdSearch extends QueryResultIdSearch{
 			}
 			return list;
 		}
-	
+	*/
 
+		@Override
+		public int getSize() throws HibernateSearchException {
+		   	Session session = null;
+	    	try
+	    	{
+	    		session=QuerySession.getSession();
+		   		if(this.queryInputs == null)
+		   		{
+		   			  throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
+		   		}	   			   		
+		   		Query query=prepareQuery(session,queryInputs.getQueryStrings()[0]);	   		
+		   		Integer resultSetCount=(Integer) query.uniqueResult();
+		   		this.queryInputs.setTypes(query.getReturnTypes());
+		   		dtoBuilder.setInputs(queryInputs);	   		
+		   		if(resultSetCount!=null && resultSetCount>0)
+				size= resultSetCount;
+		   		QuerySession.closeSession(session);	     
+	 	   }
+	 	   catch(Exception e)
+	 	   {		   
+	 		   throw new HibernateSearchException(HibernateConstants.SEARCH_FAILED,e);
+	 	   }	   
+	 	   return size;
+		}
+
+		public void setSearchString(String searchString){
+			
+			this.searchString = searchString;
+		}
 }

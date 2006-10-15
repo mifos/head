@@ -174,7 +174,6 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl
 			for(int i=0;i<paramList.size();i++){
 				if(paramList.get(i)!=null)
 				{
-					System.out.println("");
 					query.setParameter(paramList.get(i).getParamName(),paramList.get(i).getValue());
 				}
 			}
