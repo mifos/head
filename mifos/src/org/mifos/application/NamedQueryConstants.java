@@ -285,7 +285,7 @@ public interface NamedQueryConstants {
 	
 	public String GROUP_SEARCH_WITH_CENTER="groupSearchWithCenter";
 	public String COUNT_GROUP_SEARCH_WITH_CENTER="count_groupSearchWithCenter";
-	public String GROUP_SEARCH_WITHOUT_CENTER="groupSearchWithoutCenter";
+	public String GROUP_SEARCH_WITHOUT_CENTER="group_SearchWithoutCenter";
 	public String COUNT_GROUP_SEARCH_WITHOUT_CENTER="count_groupSearchWithoutCenter";
 	
 	public String ACCOUNTSEARCH ="accounts.accountSearch";

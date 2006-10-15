@@ -91,11 +91,11 @@
 							else
 							{
 								span.style.display="block";
-								if ( formulaId != null  && periodicity != null)
+								if ( formulaId != null  && periodicity != null && periodicity!="")
 								{
 				                    span.innerHTML = periodicity +"<br>"+formulaId;
 								}
-								else if ( formulaId != null  && periodicity == null)
+								else if ( formulaId != null  && periodicity == null || periodicity=="")
 								{
 									span.innerHTML = formulaId;
 								}

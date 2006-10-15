@@ -274,7 +274,7 @@
 	        	              or c.lastName like :SEARCH_STRING 
 	        	              or c.secondLastName like :SEARCH_STRING)
 	        	               )
-	        	         ) order by c.customerLevel.id,c.lastName,c.firstName,c.displayName]]>
+	        	         ) order by c.customerLevel.id,c.lastName,c.firstName]]>
         </query> 
         <query name="Customer.cust_search_noofficeid">
 	        	   <![CDATA[select   c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from 
@@ -291,7 +291,7 @@
                     		   or (c.customerLevel.id =:LEVELID and (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING ))
                     		   )
                     		 ) 
-                    order by c.customerLevel.id,c.lastName,c.firstName,c.displayName]]>
+                    order by c.customerLevel.id,c.lastName,c.firstName]]>
         </query>
         <query name="Customer.cust_count_search_noofficeid">
 	        	   <![CDATA[select  count(c.customerId) from  

@@ -58,7 +58,7 @@ function  submitAdminLink()
 
 					</html-el:link> / <html-el:link
 						href="javascript:getOffice(${BusinessKey.officeId})">
-						<c:out value="${offActionForm.officeName}"></c:out>
+						<c:out value="${BusinessKey.officeName}"></c:out>
 					</html-el:link> </span></td>
 				</tr>
 			</table>
@@ -69,7 +69,7 @@ function  submitAdminLink()
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td class="headingorange"><span class="heading"> <c:out
-								value="${offActionForm.officeName}"></c:out> </span> - <mifos:mifoslabel
+								value="${BusinessKey.officeName}"></c:out> </span> - <mifos:mifoslabel
 								name="Office.labelPreviewOfficeInformation" /></td>
 						</tr>
 						<tr>

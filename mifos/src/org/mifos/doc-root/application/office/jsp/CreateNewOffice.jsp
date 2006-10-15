@@ -33,11 +33,6 @@ function goToCancelPage(){
 		  document.offActionForm.method.value="loadParent";
 		  offActionForm.submit();
 		}
-		else
-		{
-		   alert("Please select some value");
-		   return false ;
-		}
   }
 </script>
 		<html-el:form action="/offAction.do">
