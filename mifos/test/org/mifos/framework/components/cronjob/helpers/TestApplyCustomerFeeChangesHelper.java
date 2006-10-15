@@ -1,7 +1,9 @@
 package org.mifos.framework.components.cronjob.helpers;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -102,6 +104,14 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 	public void testExecuteStatusUpdatedToInactive() throws Exception {
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
+		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
+		.getAccountActionDate(Short.valueOf("1"));
+		accountActionDate.setActionDate(offSetDate(accountActionDate.getActionDate(),-1));
+		TestObjectFactory.updateObject(center);
+		TestObjectFactory.flushandCloseSession();
+		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+				CustomerBO.class, center.getCustomerId());
+		customerAccount = center.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
@@ -109,8 +119,8 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
 				.getCustomerAccount(), trainingFee, new Double("10.0"));
 		accountFeeSet.add(accountPeriodicFee);
-		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
-				.getAccountActionDate(Short.valueOf("1"));
+		accountActionDate = (CustomerScheduleEntity) customerAccount
+				.getAccountActionDate(Short.valueOf("2"));
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
 				accountActionDate, trainingFee, accountPeriodicFee, new Money(
 						"10.0"));
@@ -134,17 +144,24 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 				CustomerBO.class, center.getCustomerId());
 
 		AccountActionDateEntity installment = center.getCustomerAccount()
-				.getAccountActionDate(Short.valueOf("1"));
+				.getAccountActionDate(Short.valueOf("2"));
 
 		AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
 				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
 		assertNull(accountFeesAction);
-		assertEquals(1, ((CustomerScheduleEntity) installment)
-				.getAccountFeesActionDetails().size());
 	}
 
 	public void testExecuteStatusInactiveAndAmountUpdated() throws Exception {
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
+		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
+		.getAccountActionDate(Short.valueOf("1"));
+		accountActionDate.setActionDate(offSetDate(accountActionDate.getActionDate(),-1));
+		TestObjectFactory.updateObject(center);
+		HibernateUtil.closeSession();
+		
+		center = (CustomerBO) HibernateUtil.getSessionTL().get(
+				CustomerBO.class, center.getCustomerId());
+		customerAccount = center.getCustomerAccount();
 		Set<AccountFeesEntity> accountFeeSet = customerAccount.getAccountFees();
 		FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee(
 				"Training_Fee", FeeCategory.ALLCUSTOMERS, "10",
@@ -153,14 +170,15 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
 				.getFeeAmount().getAmountDoubleValue());
 		accountFeeSet.add(accountPeriodicFee);
-		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
-				.getAccountActionDate(Short.valueOf("1"));
+		accountActionDate = (CustomerScheduleEntity) customerAccount
+				.getAccountActionDate(Short.valueOf("2"));
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
 				accountActionDate, trainingFee, accountPeriodicFee, new Money(
 						"10.0"));
 		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
 		accountActionDate.addAccountFeesAction(accountFeesaction);
-		TestObjectFactory.flushandCloseSession();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 
 		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
@@ -180,13 +198,11 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 				CustomerBO.class, center.getCustomerId());
 
 		AccountActionDateEntity installment = center.getCustomerAccount()
-				.getAccountActionDate(Short.valueOf("1"));
+				.getAccountActionDate(Short.valueOf("2"));
 
 		AccountFeesActionDetailEntity accountFeesAction = ((CustomerScheduleEntity) installment)
 				.getAccountFeesAction(accountPeriodicFee.getAccountFeeId());
 		assertNull(accountFeesAction);
-		assertEquals(1, ((CustomerScheduleEntity) installment)
-				.getAccountFeesActionDetails().size());
 
 		AccountFeesEntity accountFee = center.getCustomerAccount()
 				.getAccountFees(trainingFee.getFeeId());
@@ -353,4 +369,15 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		assertEquals(5.0, groupaccountFeesAction.getFeeAmount()
 				.getAmountDoubleValue());
 	}
+	
+	private java.sql.Date offSetDate(Date date , int noOfDays) {
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		calendar = new GregorianCalendar(year, month, day + noOfDays);
+		return new java.sql.Date(calendar.getTimeInMillis());
+	}
+
 }

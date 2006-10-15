@@ -276,9 +276,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	@Override
 	public void waiveAmountDue(WaiveEnum chargeType) throws AccountException {
-		List<AccountActionDateEntity> accountActionDateList = getApplicableIdsForDueInstallments();
-		AccountActionDateEntity accountActionDateEntity = accountActionDateList
-				.get(accountActionDateList.size() - 1);
+		AccountActionDateEntity accountActionDateEntity = getUpcomingInstallment();
 		Money chargeWaived = ((CustomerScheduleEntity) accountActionDateEntity)
 				.waiveCharges();
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {

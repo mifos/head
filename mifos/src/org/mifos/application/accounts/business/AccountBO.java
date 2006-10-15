@@ -1058,8 +1058,13 @@ public class AccountBO extends BusinessObject {
 		for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForFutureInstallments()) {
 			installmentIdList.add(accountActionDateEntity.getInstallmentId());
 		}
-		if (getDetailsOfNextInstallment() != null) {
-			installmentIdList.add(getDetailsOfNextInstallment()
+		AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment(); 
+		if (accountActionDateEntity != null && !DateUtils
+						.getDateWithoutTimeStamp(
+								accountActionDateEntity.getActionDate()
+										.getTime()).equals(
+								DateUtils.getCurrentDateWithoutTimeStamp())) {
+			installmentIdList.add(accountActionDateEntity
 					.getInstallmentId());
 		}
 		return installmentIdList;

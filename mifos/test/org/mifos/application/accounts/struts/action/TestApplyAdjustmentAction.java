@@ -39,16 +39,23 @@ package org.mifos.application.accounts.struts.action;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.application.accounts.business.TestAccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -189,12 +196,21 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testApplyAdjustment()throws Exception{
+		PersonnelBO personnel = new PersonnelPersistence()
+		.getPersonnel(TestObjectFactory.getUserContext().getId());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan,212);
 		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,
 				loan.getAccountId());
 		applyPayment(loan,700);
+		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,
+				loan.getAccountId());
+		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
+				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
+				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
+				personnel, loan);
+		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
 		setRequestPathInfo("/applyAdjustment");
@@ -206,6 +222,45 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 		actionPerform();
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
+		verifyForward("applyadj_success");
+	}
+	
+	public void testApplyAdjustmentWhenAccountsSecondLastStateWasBadStanding()throws Exception{
+		PersonnelBO personnel = new PersonnelPersistence()
+		.getPersonnel(TestObjectFactory.getUserContext().getId());
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		loan =(LoanBO)getLoanAccount();
+		applyPayment(loan,212);
+		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,
+				loan.getAccountId());
+		applyPayment(loan,700);
+		loan=(LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
+				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
+				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
+				personnel, loan);
+		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
+		TestObjectFactory.updateObject(loan);
+		TestObjectFactory.flushandCloseSession();
+		loan=(LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());		
+		historyEntity = new AccountStatusChangeHistoryEntity(
+				new AccountStateEntity(AccountState.LOANACC_BADSTANDING),
+				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
+				personnel, loan);
+		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
+		TestObjectFactory.updateObject(loan);
+		HibernateUtil.closeSession();
+		loan=(LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		setRequestPathInfo("/applyAdjustment");
+		addRequestParameter("method", "applyAdjustment");
+		addRequestParameter("adjustmentNote", "Loan adjustment testing");
+		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		getRequest().getSession().setAttribute(Constants.USERCONTEXT, TestObjectFactory.getUserContext());
+
+		actionPerform();
+		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
+		assertEquals(AccountState.LOANACC_BADSTANDING.getValue(),loan.getAccountState().getId());
 		verifyForward("applyadj_success");
 	}
 

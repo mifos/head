@@ -483,6 +483,11 @@ public class TestAccountBO extends TestAccount {
 				.getNoOfPayments().intValue());
 
 	}
+	
+	public static void addToAccountStatusChangeHistory(LoanBO loan,
+			AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
+		loan.addAccountStatusChangeHistory(accountStatusChangeHistoryEntity);
+	}
 
 	private java.sql.Date offSetCurrentDate(int noOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();

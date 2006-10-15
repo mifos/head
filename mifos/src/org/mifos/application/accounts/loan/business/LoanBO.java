@@ -1162,6 +1162,18 @@ public class LoanBO extends AccountBO {
 					}
 				}
 			}
+			if (getAccountStatusChangeHistory() != null
+					&& getAccountStatusChangeHistory().size() > 0) {
+				List<Object> objectList = Arrays
+						.asList(getAccountStatusChangeHistory().toArray());
+				AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = (AccountStatusChangeHistoryEntity) objectList
+						.get(objectList.size() - 1);
+				if (accountStatusChangeHistoryEntity.getOldStatus().getId()
+						.equals(AccountState.LOANACC_BADSTANDING.getValue())) {
+					setAccountState(new AccountStateEntity(
+							AccountState.LOANACC_BADSTANDING));
+				}
+			}
 			PersonnelBO personnel;
 			try {
 				personnel = new PersonnelPersistence()

@@ -207,7 +207,11 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity accountActionDate : accountBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-			if (accountActionDate.getInstallmentId().equals(Short.valueOf("2")))
+			if (accountActionDate.getInstallmentId().equals(Short.valueOf("1")))
+				assertEquals(new Money("212.0"), loanScheduleEntity
+						.getTotalDueWithFees());
+			else if (loanScheduleEntity.getInstallmentId().equals(
+					Short.valueOf("2")))
 				assertEquals(new Money("133.0"), loanScheduleEntity
 						.getTotalDueWithFees());
 			else if (loanScheduleEntity.getInstallmentId().equals(
@@ -695,10 +699,9 @@ public class TestLoanBO extends MifosTestCase {
 						loanSummaryEntity.getInterestPaid()).add(
 						loanSummaryEntity.getPenaltyPaid()));
 		assertEquals(1, accountBO.getAccountPayments().size());
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		/// Change this to more clearly separate what we are testing for from the
+		 // machinery needed to get that data?
+		 //
 		for (AccountPaymentEntity accountPaymentEntity : accountBO
 				.getAccountPayments()) {
 			assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
@@ -777,10 +780,10 @@ public class TestLoanBO extends MifosTestCase {
 						loanSummaryEntity.getInterestPaid()).add(
 						loanSummaryEntity.getPenaltyPaid()));
 		assertEquals(1, accountBO.getAccountPayments().size());
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		
+		 //Change this to more clearly separate what we are testing for from the
+		 //machinery needed to get that data?
+		 
 		for (AccountPaymentEntity accountPaymentEntity : accountBO
 				.getAccountPayments()) {
 			assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
@@ -902,10 +905,9 @@ public class TestLoanBO extends MifosTestCase {
 		AccountPaymentEntity accountPaymentEntity = (AccountPaymentEntity) Arrays
 				.asList(accountBO.getAccountPayments().toArray()).get(0);
 
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		//Change this to more clearly separate what we are testing for from the
+		// machinery needed to get that data?
+		
 		for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
 				.getAccountTrxns()) {
 			if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
@@ -1030,10 +1032,10 @@ public class TestLoanBO extends MifosTestCase {
 		AccountPaymentEntity accountPaymentEntity = (AccountPaymentEntity) Arrays
 				.asList(accountBO.getAccountPayments().toArray()).get(0);
 		assertEquals(6, accountPaymentEntity.getAccountTrxns().size());
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		
+		 //Change this to more clearly separate what we are testing for from the
+		 //machinery needed to get that data?
+		 
 		for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
 				.getAccountTrxns()) {
 			if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
@@ -1791,10 +1793,10 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		
+		 //Change this to more clearly separate what we are testing for from the
+		 //machinery needed to get that data?
+		 
 		for (AccountActionDateEntity accountAction : loanBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -1864,10 +1866,10 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		
+		 //Change this to more clearly separate what we are testing for from the
+		 //machinery needed to get that data?
+		 
 		for (AccountActionDateEntity accountAction : loanBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -1922,10 +1924,10 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		
+		 //Change this to more clearly separate what we are testing for from the
+		 //machinery needed to get that data?
+		 
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
@@ -2036,10 +2038,10 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		
+		 //Change this to more clearly separate what we are testing for from the
+		 //machinery needed to get that data?
+		 
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
@@ -4764,7 +4766,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getOriginalPrincipal());
 
 	}
-
+	
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments, Double interestRate)

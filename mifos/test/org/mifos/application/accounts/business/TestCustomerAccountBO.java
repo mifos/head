@@ -242,6 +242,69 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				installment.getPaymentStatus(), PaymentStatus.UNPAID.getValue());
 
 	}
+	
+	public void testWaiveForIntallmentOncePaid() throws Exception {
+		createCenter();
+		CustomerAccountBO customerAccount = center.getCustomerAccount();
+		assertNotNull(customerAccount);
+		Date transactionDate = new Date(System.currentTimeMillis());
+		List<AccountActionDateEntity> dueActionDates = TestObjectFactory
+		.getDueActionDatesForAccount(customerAccount.getAccountId(),
+				transactionDate);
+		assertEquals(1,dueActionDates.size());
+		CustomerScheduleEntity customerScheduleEntity =(CustomerScheduleEntity) customerAccount.getAccountActionDate(Short.valueOf("1"));
+		PaymentData accountPaymentDataView = TestObjectFactory
+				.getCustomerAccountPaymentDataView(dueActionDates, customerScheduleEntity.getTotalFeeDueWithMiscFee(), null,
+						center.getPersonnel(), "3424324", Short.valueOf("1"),
+						transactionDate, transactionDate);
+		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				center.getCustomerId());
+		customerAccount = center.getCustomerAccount();
+		customerAccount.applyPayment(accountPaymentDataView);
+		HibernateUtil.commitTransaction();
+		assertEquals("The size of the payments done is", customerAccount
+				.getAccountPayments().size(), 1);
+		assertEquals(
+				"The size of the due insallments after payment is",
+				TestObjectFactory.getDueActionDatesForAccount(
+						customerAccount.getAccountId(), transactionDate).size(),
+				0);
+		assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
+		for (CustomerActivityEntity activity : customerAccount
+				.getCustomerActivitDetails()) {
+			assertEquals(transactionDate, activity.getCreatedDate());
+		}
+		TestObjectFactory.flushandCloseSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		UserContext uc = TestObjectFactory.getUserContext();
+		customerAccount = center.getCustomerAccount();
+		customerAccount.setUserContext(uc);
+		customerAccount.applyCharge(Short.valueOf("-1"), new Double("33"));
+		Money amount = new Money();
+		for (AccountActionDateEntity accountActionDateEntity : customerAccount
+				.getAccountActionDates()) {
+			CustomerScheduleEntity customerSchEntity = (CustomerScheduleEntity) accountActionDateEntity;
+			if (customerSchEntity.getInstallmentId().equals(
+					Short.valueOf("2"))) {
+				amount = customerSchEntity.getMiscFee();
+				assertEquals(new Money("33.0"), customerSchEntity
+						.getMiscFee());
+			}
+		}
+		TestObjectFactory.flushandCloseSession();
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		customerAccount = center.getCustomerAccount();
+		customerAccount.setUserContext(uc);
+		customerAccount.waiveAmountDue(WaiveEnum.ALL);
+		for (AccountActionDateEntity accountAction : customerAccount
+				.getAccountActionDates()) {
+			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
+			assertEquals(new Money(), accountActionDateEntity.getTotalFeeDueWithMiscFee());
+		}
+	}
+
 
 	public void testWaiveChargeDue() throws Exception {
 		createInitialObjects();

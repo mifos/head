@@ -53,6 +53,9 @@
 		<html-el:form method="post" action="/loanAccountAction.do?method=update"
 			onsubmit="func_disableSubmitBtn('previewDetailsBtn')">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+			<c:set
+				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+				var="BusinessKey" />
 			<td height="822" align="left" valign="top" bgcolor="#FFFFFF"
 				class="paddingleftmain">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -93,7 +96,7 @@
 						<tr>
 							<td colspan="2"><span class="fontnormalbold"> <mifos:mifoslabel
 								name="loan.acc_owner" />:&nbsp; </span><span class="fontnormal"> <c:out
-								value='${sessionScope.BusinessKey.customer.displayName}' /></span></td>
+								value='${BusinessKey.customer.displayName}' /></span></td>
 						</tr>
 						<tr>
 							<td width="100%" colspan="2" class="fontnormalbold"><mifos:mifoslabel
