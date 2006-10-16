@@ -35,7 +35,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 public class HibernateTest extends TestCase {
 	
     public void testMayflyNoHibernate() throws Exception {
-		Database database = new Database(DatabaseSetup.STANDARD_STORE);
+		Database database = new Database(DatabaseSetup.getStandardStore());
         ResultSet results = database.query("select * from logmessages");
         assertFalse(results.next());
         
@@ -65,7 +65,7 @@ public class HibernateTest extends TestCase {
     }
     
     public void xtestBringToKnees2() throws Exception {
-		Database database = new Database(DatabaseSetup.STANDARD_STORE);
+		Database database = new Database(DatabaseSetup.getStandardStore());
 		System.out.println(database.rowCount("lookup_entity")); // 89
 		System.out.println(database.rowCount("lookup_value")); // 555
 		System.out.println(database.rowCount("lookup_value_locale")); // 546

@@ -38,7 +38,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.customer.business.CustomFieldViewTest;
-import org.mifos.application.office.struts.tag.OfficeListTagTest;
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.struts.tags.DateHelperTest;
@@ -60,7 +59,9 @@ public class FastTests extends MifosTestSuite {
 		suite.addTestSuite(CustomFieldViewTest.class);
 		suite.addTestSuite(MifosTagUtilsTest.class);
 
-		suite.addTestSuite(OfficeListTagTest.class);
+		//Currently this one is slow (extends MifosTestCase).
+		//suite.addTestSuite(OfficeListTagTest.class);
+
 		suite.addTestSuite(TableTagTest.class);
 		suite.addTestSuite(XmlBuilderTest.class);
 		return suite;

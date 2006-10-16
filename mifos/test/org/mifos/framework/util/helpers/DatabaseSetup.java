@@ -16,6 +16,8 @@ import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 
 public class DatabaseSetup {
+	
+	private static DataStore standardMayflyStore;
 
 	/**
 	 * Set up log4j (this is required for hibernate, as well as perhaps
@@ -59,7 +61,7 @@ public class DatabaseSetup {
 	}
 
 	public static Configuration mayflyConfiguration() {
-		String url = JdbcDriver.create(DatabaseSetup.STANDARD_STORE);
+		String url = JdbcDriver.create(DatabaseSetup.getStandardStore());
 
 		Configuration configuration = getHibernateConfiguration();
 		configuration.setProperty(
@@ -76,7 +78,12 @@ public class DatabaseSetup {
 		HibernateSessionFactory.setConfiguration(mayflyConfiguration());
 	}
 
-	public static final DataStore STANDARD_STORE = createStandardStore();
+	public static synchronized DataStore getStandardStore() {
+		if (standardMayflyStore == null) {
+			standardMayflyStore = createStandardStore();
+		}
+		return standardMayflyStore;
+	}
 
 	private static DataStore createStandardStore() {
 		Database database = new Database();
@@ -88,12 +95,8 @@ public class DatabaseSetup {
 	}
 
 	public static void executeScript(Database database, String name) {
-	    /*try {
-	        Reader sql = new FileReader(
-                "c:/Documents and Settings/jkingdon/" +
-                "workspace/mifos/" +
-                name
-            );
+	    try {
+	        Reader sql = new FileReader(name);
 	
 	        database.executeScript(sql);
 	    } catch (MayflySqlException e) {
@@ -104,7 +107,7 @@ public class DatabaseSetup {
 	        );
 	    } catch (FileNotFoundException e) {
 	    	throw new RuntimeException(e);
-		}*/
+		}
 	}
 
 }

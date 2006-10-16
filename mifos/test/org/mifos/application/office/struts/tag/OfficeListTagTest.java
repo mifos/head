@@ -3,16 +3,12 @@ package org.mifos.application.office.struts.tag;
 import static org.mifos.framework.TestUtils.assertWellFormedFragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import junitx.framework.StringAssert;
 
 import org.dom4j.DocumentException;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.business.TestOfficeBO;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
