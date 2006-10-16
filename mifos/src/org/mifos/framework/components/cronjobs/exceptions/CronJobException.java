@@ -18,6 +18,7 @@ public class CronJobException extends ApplicationException {
 	}
 
 	public CronJobException(String key, List<String> values) {
+		super(key);
 		this.key = key;
 		this.values = values;
 	}

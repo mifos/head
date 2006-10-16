@@ -39,34 +39,18 @@ package org.mifos.framework.exceptions;
 
 import org.mifos.framework.util.helpers.MethodInvoker;
 
-
 /**
- * This exception is thrown by {@link MethodInvoker} when it attempts to invoke any method which is not present or is inaccessible. 
+ * This exception is thrown by {@link MethodInvoker} when it attempts to invoke
+ * any method which is not present or is inaccessible.
  */
 public class MethodInvocationException extends SystemException {
 
-	public MethodInvocationException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public MethodInvocationException(Object[] values, Throwable cause) {
-		super(values, cause);
-		// TODO Auto-generated constructor stub
-	}
-
-	public MethodInvocationException(Object[] values) {
-		super(values);
-		// TODO Auto-generated constructor stub
-	}
-
 	public MethodInvocationException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
-	public String getKey(){
+	public String getKey() {
 		return "exception.framework.SystemException.MethodInvocationException";
 	}
 

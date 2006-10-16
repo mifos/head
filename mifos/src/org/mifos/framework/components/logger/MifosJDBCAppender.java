@@ -31,7 +31,7 @@ import org.apache.log4j.jdbc.JDBCAppender;
 import org.apache.log4j.spi.ErrorCode;
 import org.apache.log4j.spi.LoggingEvent;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.exceptions.DBConnectionFailedException;
+import org.mifos.framework.exceptions.ConnectionNotFoundException;
 
 /**
  *  Enable the logger to log to a database (by
@@ -52,7 +52,7 @@ public class MifosJDBCAppender extends JDBCAppender {
 		try{
 			con = new PersonnelPersistence().getConnection();	
 		}
-		catch (DBConnectionFailedException dbcfe) {
+		catch (ConnectionNotFoundException dbcfe) {
 			dbcfe.printStackTrace();
 		}
 		return con;

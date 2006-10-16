@@ -300,10 +300,15 @@
 
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td width="69%" align="right" class="fontnormal"><span
-								class="fontnormal"> <a
-								href="custAction.do?method=getClosedAccounts&customerId=<c:out value="${BusinessKey.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-                  <mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" /></a> </span></td>
+							<td width="69%" align="right" class="fontnormal">
+							<span class="fontnormal"> 
+								<c:if test="${BusinessKey.customerStatus.id !=1 && BusinessKey.customerStatus.id !=2}">
+									<html-el:link href="custAction.do?method=getClosedAccounts&customerId=${BusinessKey.customerId}&input=client&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+                  						<mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" />
+                  					</html-el:link>
+                  				</c:if> 
+                  			</span>
+                  			</td>
 						</tr>
 					</table>
 

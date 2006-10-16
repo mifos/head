@@ -39,28 +39,12 @@ package org.mifos.framework.exceptions;
 
 public class MenuParseException extends SystemException {
 
-	public MenuParseException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public MenuParseException(Object[] values, Throwable cause) {
-		super(values, cause);
-		// TODO Auto-generated constructor stub
-	}
-
-	public MenuParseException(Object[] values) {
-		super(values);
-		// TODO Auto-generated constructor stub
-	}
-
 	public MenuParseException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
-	public String getKey(){
+	public String getKey() {
 		return "exception.framework.SystemException.MenuParseException";
 	}
 

@@ -57,7 +57,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
@@ -170,7 +169,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithoutName()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -199,7 +198,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithoutSavingsType()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
@@ -226,7 +225,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithoutGLCode()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
@@ -251,7 +250,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithShortNameGreaterThanFourDig()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -281,7 +280,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithStartDateLessThanCurrentDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -311,7 +310,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithStartDateEqualToCurrentDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -340,7 +339,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithStartDateGreaterThanCurrentDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -369,7 +368,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithEndDateLessThanStartDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -402,7 +401,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithDuplicatePrdOfferingName()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		savingsOffering = createSavingsOfferingBO("Savings Product", "SAVP");
 
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
@@ -436,7 +435,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithDuplicatePrdOfferingShortName()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		savingsOffering = createSavingsOfferingBO("Savings Product", "SAVP");
 
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
@@ -470,7 +469,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithNoRecommendedAmountForMandatoryOffering()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -500,7 +499,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	public void testBuildSavingsOfferingWithNoRecommendedAmountUnitForGroupOffering()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.GROUPS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(

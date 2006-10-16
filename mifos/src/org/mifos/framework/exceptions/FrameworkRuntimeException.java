@@ -44,76 +44,62 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
  */
 public class FrameworkRuntimeException extends SystemException {
 
-	/** 
-	 * This is a string which points to the actual message in the 
-	 * resource bundle.
-	 * So the exception message to be shown to the user would be taken 
+	/**
+	 * This is a string which points to the actual message in the resource
+	 * bundle. So the exception message to be shown to the user would be taken
 	 * from the resource bundle and hence could be localized.
 	 */
 	protected String key = null;
-	
-	/** 
-	 * This is an array of object which might be needed to pass 
-	 * certain parameters to the string in the resource bundle. 
+
+	/**
+	 * This is an array of object which might be needed to pass certain
+	 * parameters to the string in the resource bundle.
 	 */
 	protected Object[] values = null;
-	
-	public FrameworkRuntimeException() {
-	}
-	
-	public FrameworkRuntimeException(Object[] values) {
-		this.values = values;
-	}
-	
+
 	public FrameworkRuntimeException(Throwable cause) {
 		super(cause);
 	}
-	
+
 	/**
-	 * @param key A key for looking up the message in 
-	 * ExceptionResources.properties, or null to specify a generic message.
-	 * @param internalMessage A message which is just intended for
-	 * developers; the user will not see this message but
-	 * instead the message corresponding to key.
-	 * Because the message is only for developers, it is not
-	 * translated into different languages.
+	 * @param key
+	 *            A key for looking up the message in
+	 *            ExceptionResources.properties, or null to specify a generic
+	 *            message.
+	 * @param internalMessage
+	 *            A message which is just intended for developers; the user will
+	 *            not see this message but instead the message corresponding to
+	 *            key. Because the message is only for developers, it is not
+	 *            translated into different languages.
 	 */
 	public FrameworkRuntimeException(String key, String internalMessage) {
 		super(internalMessage);
 		this.key = key;
 	}
-	
-	public FrameworkRuntimeException(String key, Object[] values) {
-		this.key = key;
-		this.values = values;
-	}
-	
-	public FrameworkRuntimeException(String key, Throwable cause) {
-		super(cause);
-		this.key = key;
-	}
-	
+
 	/**
-	 * Returns the key which maps to an entry in ExceptionResources file.
-	 * The message corresponding to this key is used for logging purposes
-	 * as well as for displaying message to the user 
+	 * Returns the key which maps to an entry in ExceptionResources file. The
+	 * message corresponding to this key is used for logging purposes as well as
+	 * for displaying message to the user
 	 */
+	@Override
 	public String getKey() {
-		if (null == key){
+		if (null == key) {
 			return ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION;
 		} else {
 			return this.key;
 		}
 	}
-	
+
+	@Override
 	public Object[] getValues() {
 		return values;
 	}
-	
+
 	public void setValues(Object[] values) {
 		this.values = values;
 	}
-	
+
 	public void setKey(String key) {
 		this.key = key;
 	}

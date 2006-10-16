@@ -115,7 +115,7 @@ public class Column {
 		} else {
 			if (getColumnType().equalsIgnoreCase(TableTagConstants.TEXT)) {
 				// ColumnType should be link
-				throw new TableTagParseException();
+				throw new TableTagParseException(getColumnType());
 			}
 
 			getLinkWithoutName(tableInfo, obj);
@@ -136,10 +136,10 @@ public class Column {
 					tableInfo.append(methods[i].invoke(obj, new Object[] {}));
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
-					throw new TableTagParseException();
+					throw new TableTagParseException(e);
 				} catch (InvocationTargetException ex) {
 					ex.printStackTrace();
-					throw new TableTagParseException();
+					throw new TableTagParseException(ex);
 				}
 			}
 			if (methods[i].getName().equalsIgnoreCase("setLocale")
@@ -149,10 +149,10 @@ public class Column {
 					methods[i].invoke(obj, argumentLocale);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
-					throw new TableTagParseException();
+					throw new TableTagParseException(e);
 				} catch (InvocationTargetException ex) {
 					ex.printStackTrace();
-					throw new TableTagParseException();
+					throw new TableTagParseException(ex);
 				}
 			}
 			if (methods[i].getName().equalsIgnoreCase("setMfiLocale")
@@ -162,10 +162,10 @@ public class Column {
 					methods[i].invoke(obj, argumentLocale);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
-					throw new TableTagParseException();
+					throw new TableTagParseException(e);
 				} catch (InvocationTargetException ex) {
 					ex.printStackTrace();
-					throw new TableTagParseException();
+					throw new TableTagParseException(ex);
 				}
 			}
 		}

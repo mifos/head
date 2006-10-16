@@ -31,7 +31,6 @@ import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.IllegalStateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SearchObjectNotCreatedException;
@@ -188,10 +187,7 @@ public abstract class BaseAction extends DispatchAction {
 			} catch (HibernateException he) {
 				HibernateUtil.rollbackTransaction();
 				throw new ApplicationException(he);
-			} catch (IllegalStateException ise) {
-				HibernateUtil.rollbackTransaction();
-				throw new ApplicationException(ise);
-			}
+			} 
 		} else {
 			postHandleTransaction(request, annotation);
 		}

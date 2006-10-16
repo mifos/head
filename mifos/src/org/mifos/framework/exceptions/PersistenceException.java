@@ -39,10 +39,6 @@
 package org.mifos.framework.exceptions;
 
 public class PersistenceException extends ApplicationException {
-	
-	public PersistenceException() {
-		super();
-	}
 
 	public PersistenceException(Throwable cause) {
 		super(cause);
@@ -50,10 +46,6 @@ public class PersistenceException extends ApplicationException {
 
 	public PersistenceException(String key) {
 		super(key);
-	}
-
-	public PersistenceException(String key ,Throwable cause) {
-		super(key , cause);
 	}
 
 }

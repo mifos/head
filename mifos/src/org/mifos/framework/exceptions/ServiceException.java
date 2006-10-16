@@ -40,20 +40,12 @@ package org.mifos.framework.exceptions;
 
 public class ServiceException extends ApplicationException {
 
-	public ServiceException() {
-		super();
-	}
-
 	public ServiceException(Throwable cause) {
 		super(cause);
 	}
 
-	public ServiceException(String key, Throwable cause) {
-		super(key, cause);
-	}
-	
-	public ServiceException(String key ,Throwable cause,Object[] values) {
-		super(key,cause,values);
+	public ServiceException(String key, Throwable cause, Object[] values) {
+		super(key, cause, values);
 	}
 
 	public ServiceException(String key) {

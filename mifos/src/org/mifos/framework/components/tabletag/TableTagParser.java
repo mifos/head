@@ -124,7 +124,7 @@ public class TableTagParser {
 		NodeList rowNodeList = ((Element) table)
 				.getElementsByTagName(TableTagConstants.ROW);
 		if (rowNodeList.getLength() == 0) {
-			throw new TableTagParseException();
+			throw new TableTagParseException(rowNodeList.toString());
 		}
 		Row row[] = new Row[rowNodeList.getLength()];
 		for (int i = 0; i < rowNodeList.getLength(); i++) {

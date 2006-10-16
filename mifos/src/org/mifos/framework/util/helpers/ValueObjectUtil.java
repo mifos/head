@@ -91,7 +91,7 @@ public class ValueObjectUtil {
 				
 				MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Convertion valueObject to action form using bean utils", false, null);
 			}else{
-				throw new ValueObjectConversionException();
+				throw new ValueObjectConversionException("Convertion valueObject to action form using bean utils");
 			}
 		}catch(InvocationTargetException ite){
 			ite.printStackTrace();
@@ -197,7 +197,7 @@ public class ValueObjectUtil {
 				
 				//MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("Convertion valueObject to action form using bean utils", false, null);
 			}else{
-				throw new ValueObjectConversionException();
+				throw new ValueObjectConversionException("");
 			}
 		}catch(InvocationTargetException ite){
 			ite.printStackTrace();

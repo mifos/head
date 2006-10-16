@@ -64,10 +64,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.EncryptionException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateStartUpException;
-import org.mifos.framework.exceptions.HibernateSystemException;
 import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
@@ -203,13 +201,9 @@ public class InitializerPlugin implements PlugIn {
 		} catch (XMLReaderException e) {
 
 			throw new AppNotConfiguredException(e);
-		} catch (EncryptionException e) {
-			throw new AppNotConfiguredException(e);
-		} catch (HibernateSystemException e) {
-			throw new AppNotConfiguredException(e);
 		} catch (ApplicationException ae) {
 			throw new AppNotConfiguredException(ae);
-		} catch (org.mifos.framework.exceptions.SystemException se) {
+		} catch (SystemException se) {
 			throw new AppNotConfiguredException(se);
 		}
 
@@ -228,8 +222,7 @@ public class InitializerPlugin implements PlugIn {
 	 * @throws HibernateProcessException
 	 */
 	private void configureAdminUser() throws XMLReaderException,
-			URISyntaxException, EncryptionException, HibernateProcessException,
-			SystemException {
+			URISyntaxException, HibernateProcessException, SystemException {
 		Session session = null;
 		byte[] password;
 

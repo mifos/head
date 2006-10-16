@@ -77,7 +77,7 @@ public class TableTagParser {
         NodeList tableNode = document.getChildNodes();
 
         if (tableNode.getLength() ==0)
-          throw new TableTagParseException();
+          throw new TableTagParseException(tableNode.toString());
 
         Table  table = new Table();
         table.setHeaderDetails(createHeaderDetails(tableNode.item(0)));
@@ -92,7 +92,7 @@ public class TableTagParser {
                        .getElementsByTagName(TableTagConstants.HEADERDETAILS);
 
      if (headerNodeList.getLength()==0)
-       throw new TableTagParseException();
+       throw new TableTagParseException(headerNodeList.toString());
 
      HeaderDetails headerDetails=new HeaderDetails();
 
@@ -109,7 +109,7 @@ public class TableTagParser {
        NodeList rowNodeList = ((Element) table)
                        .getElementsByTagName(TableTagConstants.ROW);
        if (rowNodeList.getLength() == 0) {
-                 throw new TableTagParseException();
+                 throw new TableTagParseException(rowNodeList.toString());
       }
        Row row = new Row();
 
@@ -127,7 +127,7 @@ public class TableTagParser {
        NodeList columnNodeList =((Element) row).getElementsByTagName(TableTagConstants.COLUMN);
 
        if (columnNodeList.getLength() ==0)
-             throw new TableTagParseException();
+             throw new TableTagParseException(columnNodeList.toString());
 
        Column[] column= new Column[columnNodeList.getLength()];
 
@@ -156,7 +156,7 @@ public class TableTagParser {
        NodeList columnDetailsNodeList = ((Element) column).getElementsByTagName(TableTagConstants.COLUMNDETAILS);
 
        if (columnDetailsNodeList.getLength()==0)
-         throw new TableTagParseException();
+         throw new TableTagParseException(columnDetailsNodeList.toString());
 
        ColumnDetails columnDetails=new ColumnDetails();
 
@@ -176,12 +176,12 @@ public class TableTagParser {
        NodeList linkDetailsNodeList = ((Element) column).getElementsByTagName(TableTagConstants.LINKDETAILS);
 
        if (linkDetailsNodeList.getLength()==0)
-         throw new TableTagParseException();
+         throw new TableTagParseException(linkDetailsNodeList.toString());
 
        LinkDetails linkDetails=new LinkDetails();
 
        if(linkDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.ACTION).getNodeValue()==null)
-         throw new TableTagParseException();
+         throw new TableTagParseException(linkDetailsNodeList.toString());
 
     
        linkDetails.setAction(linkDetailsNodeList.item(0).getAttributes().getNamedItem(TableTagConstants.ACTION).getNodeValue());
@@ -196,7 +196,7 @@ public class TableTagParser {
        NodeList actionParamNodeList =((Element) linkDetail).getElementsByTagName(TableTagConstants.ACTIONPARAM);
 
        if (actionParamNodeList.getLength() == 0)
-         throw new TableTagParseException();
+         throw new TableTagParseException(actionParamNodeList.toString());
 
        ActionParam[] actionParam=new ActionParam[actionParamNodeList.getLength()];
 

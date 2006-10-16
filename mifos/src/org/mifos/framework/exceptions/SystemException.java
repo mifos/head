@@ -58,9 +58,6 @@ public class SystemException extends RuntimeException {
 	 */
 	protected Object[] values = null;
 
-	public SystemException() {
-	}
-
 	public SystemException(Throwable cause) {
 		this.initCause(cause);
 	}
@@ -93,6 +90,6 @@ public class SystemException extends RuntimeException {
 	}
 
 	public Object[] getValues() {
-		return null;
+		return values;
 	}
 }

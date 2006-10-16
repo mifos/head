@@ -77,7 +77,7 @@ public class TypeParser {
 		NodeList fileNameNodeList = ((Element) file)
 				.getElementsByTagName(TableTagConstants.FILENAME);
 		if (fileNameNodeList.getLength() == 0) {
-			throw new TableTagTypeParserException();
+			throw new TableTagTypeParserException(fileNameNodeList.toString());
 		}
 		FileName fileName[] = new FileName[fileNameNodeList.getLength()];
 		for (int i = 0; i < fileNameNodeList.getLength(); i++) {

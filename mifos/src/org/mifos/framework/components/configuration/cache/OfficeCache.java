@@ -56,14 +56,4 @@ public class OfficeCache implements OfficeCacheIntf {
 	  public Object getElement(Key key) {
 		  return (key!=null)?cache.get(key):null;
 	  }
-
-	  public void putElement(Key key, Object value) {
-		  synchronized (cache) {
-			cache.put(key, value);
-		  }
-	  }
-	  
-	  public boolean isKeyPresent(Key key){
-		  return cache.containsKey(key);
-	  }
 }

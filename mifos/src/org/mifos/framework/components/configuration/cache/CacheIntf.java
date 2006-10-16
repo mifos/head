@@ -44,6 +44,4 @@ package org.mifos.framework.components.configuration.cache;
  */
 public interface CacheIntf {
 	  public Object getElement(String key);    
-	  public void putElement(String key, Object value);  
-	  public boolean isKeyPresent(String key);
 }

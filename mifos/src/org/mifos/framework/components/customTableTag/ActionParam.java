@@ -44,10 +44,10 @@ public class ActionParam {
 				  tableInfo.append(methods[i].invoke(obj,new Object[]{}));
 			  }catch(IllegalAccessException e){
 				  e.printStackTrace();
-				  throw new TableTagParseException();
+				  throw new TableTagParseException(e);
 			  }catch(InvocationTargetException ex){
 				  ex.printStackTrace();
-				  throw new TableTagParseException();
+				  throw new TableTagParseException(ex);
 			  }
 		  }
 	  }

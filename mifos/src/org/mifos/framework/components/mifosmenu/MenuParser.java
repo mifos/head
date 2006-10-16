@@ -176,7 +176,7 @@ public class MenuParser {
 				new MenuParseException(ite);
 			}
 			catch(IllegalAccessException iae){
-				new MenuParseException();
+				new MenuParseException(iae);
 			}
 		}
 		return true;

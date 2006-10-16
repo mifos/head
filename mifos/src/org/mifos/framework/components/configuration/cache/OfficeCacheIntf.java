@@ -44,6 +44,4 @@ package org.mifos.framework.components.configuration.cache;
  */
 public interface OfficeCacheIntf {
 	  public Object getElement(Key key);
-	  public void putElement(Key key, Object value);
-	  public boolean isKeyPresent(Key key);
 }

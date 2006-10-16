@@ -38,33 +38,22 @@
 
 package org.mifos.framework.exceptions;
 
-
 /**
- * This Exception is thrown when we try to convert action form to a value object.
+ * This Exception is thrown when we try to convert action form to a value
+ * object.
  */
 public class ValueObjectConversionException extends SystemException {
 
-	public ValueObjectConversionException(Object[] values, Throwable cause) {
-		super(values, cause);
-		// TODO Auto-generated constructor stub
-	}
-
 	public ValueObjectConversionException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
+	}
+	
+	public ValueObjectConversionException(String key) {
+		super(key);
 	}
 
-	public ValueObjectConversionException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public ValueObjectConversionException(Object[] values) {
-		super(values);
-		// TODO Auto-generated constructor stub
-	}
-
-	public String getKey(){
+	@Override
+	public String getKey() {
 		return "exception.framework.SystemException.ValueObjectConversionException";
 	}
 

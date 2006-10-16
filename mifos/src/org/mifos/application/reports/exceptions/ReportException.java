@@ -46,10 +46,6 @@ import org.mifos.framework.exceptions.ApplicationException;
  */
 public class ReportException extends ApplicationException{
 	
-	/** Simple Constructor for ReportException*/
-	public ReportException() {
-		super();
-	}
 	/** Constructor for ReportException
 	 * @param key
 	 */

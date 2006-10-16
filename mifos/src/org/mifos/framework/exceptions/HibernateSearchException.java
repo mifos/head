@@ -38,41 +38,26 @@
 package org.mifos.framework.exceptions;
 
 /**
- * This Exception is thrown when any hibernate execptions are encountered in the application
- *
- *
+ * This Exception is thrown when any hibernate execptions are encountered in the
+ * application
+ * 
+ * 
  */
 
-public class HibernateSearchException extends ApplicationException
-{
+public class HibernateSearchException extends ApplicationException {
 
 	public HibernateSearchException(Throwable cause) {
 		super(cause);
-		
+
 	}
 
-	public HibernateSearchException(String key)
-	{
-			super(key);
+	public HibernateSearchException(String key) {
+		super(key);
 	}
 
-	public HibernateSearchException() {
-		super();
-		
-	}
+	public HibernateSearchException(String key, Throwable cause) {
+		super(key, cause);
 
-	public HibernateSearchException(Object[] values) {
-		super(values);
-		
 	}
-	public HibernateSearchException(String key,Throwable cause)
-	{
-		super(key,cause);
-		
-	}
-
-	
-
 
 }
-

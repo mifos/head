@@ -38,50 +38,32 @@
 package org.mifos.framework.exceptions;
 
 /**
- * This Exception is thrown when any hibernate execptions are encountered during the initialization process for hibernate during start up
- *
- *
+ * This Exception is thrown when any hibernate execptions are encountered during
+ * the initialization process for hibernate during start up
+ * 
+ * 
  */
-public class HibernateStartUpException extends SystemException
-{
+public class HibernateStartUpException extends SystemException {
 	private String key = "exception.framework.SystemException.HibernateStartUpException";
-
-	public HibernateStartUpException() {
-		super();
-		
-	}
-
-	public HibernateStartUpException(Object[] values, Throwable cause) {
-		super(values, cause);
-		
-	}
 
 	public HibernateStartUpException(Object[] values) {
 		super(values);
-		
+
 	}
 
 	public HibernateStartUpException(Throwable cause) {
 		super(cause);
-		
-	}
-	public HibernateStartUpException(String key,Throwable cause)
-	{
-		super(key,cause);
-		
-	}
-	public HibernateStartUpException(String key)
-	{
-
-		this.key = key;
 
 	}
 
-	public String getKey(){
-		return key; 
+	public HibernateStartUpException(String key, Throwable cause) {
+		super(key, cause);
+
 	}
 
-
-
+	@Override
+	public String getKey() {
+		return key;
+	}
 
 }

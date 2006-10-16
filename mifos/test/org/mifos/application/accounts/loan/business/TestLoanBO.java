@@ -72,7 +72,6 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -274,7 +273,6 @@ public class TestLoanBO extends MifosTestCase {
 		} catch (NumberFormatException e) {
 		} catch (AccountException e) {
 			e.printStackTrace();
-		} catch (InvalidUserException e) {
 		} catch (PropertyNotFoundException e) {
 		} catch (SystemException e) {
 		} catch (ApplicationException e) {
@@ -331,7 +329,6 @@ public class TestLoanBO extends MifosTestCase {
 		} catch (NumberFormatException e) {
 		} catch (AccountException e) {
 			e.printStackTrace();
-		} catch (InvalidUserException e) {
 		} catch (PropertyNotFoundException e) {
 		} catch (SystemException e) {
 		} catch (ApplicationException e) {
@@ -2429,7 +2426,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testBuildForInactiveLoanOffering()
-			throws NumberFormatException, InvalidUserException,
+			throws NumberFormatException, 
 			SystemException, ApplicationException {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false,
@@ -2467,7 +2464,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testBuildForInactiveCustomer() throws NumberFormatException,
-			InvalidUserException, SystemException, ApplicationException {
+			 SystemException, ApplicationException {
 		createInitialCustomers();
 		TestCustomerBO.setCustomerStatus(group,new CustomerStatusEntity(
 				CustomerStatus.GROUP_CLOSED));
@@ -2493,7 +2490,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testMeetingNotMatchingForCustomerAndLoanOffering()
-			throws NumberFormatException, InvalidUserException,
+			throws NumberFormatException, 
 			SystemException, ApplicationException {
 		createInitialCustomers();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -2522,7 +2519,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testMeetingRecurrenceOfLoanOfferingInMultipleOfCustomer()
-			throws NumberFormatException, InvalidUserException,
+			throws NumberFormatException, 
 			SystemException, ApplicationException {
 		createInitialCustomers();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -2560,7 +2557,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testGracePeriodGraterThanMaxNoOfInst()
-			throws NumberFormatException, InvalidUserException,
+			throws NumberFormatException, 
 			SystemException, ApplicationException {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false);
@@ -4542,7 +4539,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testCreateLoanAccountWithDecliningInterestNoGracePeriod()
-			throws NumberFormatException, InvalidUserException,
+			throws NumberFormatException, 
 			PropertyNotFoundException, SystemException, ApplicationException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 2, 4, 2)); // every 2 weeks
@@ -4605,7 +4602,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testCreateLoanAccountWithDecliningInterestGraceAllRepayments()
-			throws NumberFormatException, InvalidUserException,
+			throws NumberFormatException, 
 			PropertyNotFoundException, SystemException, ApplicationException {
 
 		short graceDuration = (short) 2;
@@ -4668,7 +4665,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testCreateLoanAccountWithDecliningInterestGracePrincipalOnly()
-			throws NumberFormatException, InvalidUserException,
+			throws NumberFormatException, 
 			PropertyNotFoundException, SystemException, ApplicationException {
 
 		short graceDuration = (short) 2;
@@ -4732,7 +4729,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testCreateLoanAccountWithDecliningInterestPrincipalDueOnLastInstallment()
-			throws NumberFormatException, InvalidUserException,
+			throws NumberFormatException, 
 			PropertyNotFoundException, SystemException, ApplicationException {
 
 		short graceDuration = (short) 2;
@@ -4799,7 +4796,7 @@ public class TestLoanBO extends MifosTestCase {
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments, Double interestRate)
 			throws NumberFormatException, AccountException,
-			InvalidUserException, SystemException, ApplicationException {
+			 SystemException, ApplicationException {
 		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
 						"300.0"), noOfinstallments, new Date(System
@@ -4817,7 +4814,7 @@ public class TestLoanBO extends MifosTestCase {
 	private LoanBO createAndRetrieveLoanAccount(LoanOfferingBO loanOffering,
 			boolean isInterestDedAtDisb, List<FeeView> feeViews,
 			Short noOfinstallments) throws NumberFormatException,
-			AccountException, InvalidUserException, SystemException,
+			AccountException,  SystemException,
 			ApplicationException {
 		return createAndRetrieveLoanAccount(loanOffering, isInterestDedAtDisb,
 				feeViews, noOfinstallments, 10.0);

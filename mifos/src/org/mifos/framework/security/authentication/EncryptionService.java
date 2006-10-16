@@ -41,7 +41,6 @@
  */
 package org.mifos.framework.security.authentication;
 
-import org.mifos.framework.exceptions.EncryptionException;
 import org.mifos.framework.exceptions.SystemException;
 
 /**
@@ -59,13 +58,11 @@ public class EncryptionService {
 		return encryptionService;
 	}
 
-	public byte[] createEncryptedPassword(String password)
-			throws EncryptionException, SystemException {
+	public byte[] createEncryptedPassword(String password) {
 		return new PasswordHashing().createEncryptedPassword(password);
 	}
 
-	public boolean verifyPassword(String password, byte[] encPassword)
-			throws EncryptionException, SystemException {
+	public boolean verifyPassword(String password, byte[] encPassword) {
 		return new PasswordHashing().verifyPassword(password, encPassword);
 	}
 }

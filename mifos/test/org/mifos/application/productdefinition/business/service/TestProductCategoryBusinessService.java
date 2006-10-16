@@ -8,7 +8,6 @@ import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -35,7 +34,7 @@ public class TestProductCategoryBusinessService extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	public void testGetProductTypes() throws NumberFormatException, InvalidUserException, SystemException, ApplicationException{
+	public void testGetProductTypes() throws NumberFormatException,  SystemException, ApplicationException{
 		List<ProductTypeEntity> productTypeList=productCategoryBusinessService.getProductTypes();
 		assertEquals(2,productTypeList.size());
 		for(ProductTypeEntity productTypeEntity : productTypeList){

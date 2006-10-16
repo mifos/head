@@ -165,7 +165,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -693,8 +692,6 @@ public class TestObjectFactory {
 					new Money(maxAmtWithdrawl.toString()), new Money(
 							minAmtForInt.toString()), intRate, depglCodeEntity,
 					intglCodeEntity);
-		} catch (InvalidUserException e1) {
-			e1.printStackTrace();
 		} catch (ProductDefinitionException e1) {
 			e1.printStackTrace();
 		} catch (SystemException e1) {
@@ -1353,7 +1350,7 @@ public class TestObjectFactory {
 	 * method involves several database accesses).
 	 */
 	public static UserContext getUserContext() throws SystemException,
-			InvalidUserException, ApplicationException {
+			 ApplicationException {
 		byte[] password = EncryptionService.getInstance()
 				.createEncryptedPassword("mifos");
 		PersonnelBO personnel = getPersonnel(Short.valueOf("1"));

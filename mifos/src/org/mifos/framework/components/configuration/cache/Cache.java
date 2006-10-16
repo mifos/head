@@ -56,13 +56,4 @@ public class Cache implements CacheIntf {
 	  return (key!=null)?cache.get(key):null;
 	}
 	
-	public void putElement(String key, Object value) {
-		  synchronized (cache) {
-			cache.put(key, value);
-		}
-	}
-	
-	public boolean isKeyPresent(String key){
-	    return cache.containsKey(key);
-	}	  
 }

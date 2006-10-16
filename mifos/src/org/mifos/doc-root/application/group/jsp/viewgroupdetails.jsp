@@ -346,13 +346,16 @@
 					</table>
 
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
-
 						<tr>
-							<td width="38%" align="right" class="fontnormal"><span
-								class="fontnormal"> <a
-								href="custAction.do?method=getClosedAccounts&customerId=<c:out value="${BusinessKey.customerId}"/>&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-							<mifos:mifoslabel name="Group.viewallclosedaccounts"
-								bundle="GroupUIResources"></mifos:mifoslabel> </a> </span></td>
+							<td width="38%" align="right" class="fontnormal">
+							<span class="fontnormal">
+								<c:if test="${BusinessKey.customerStatus.id !=7 && BusinessKey.customerStatus.id !=8}">
+									<html-el:link href="custAction.do?method=getClosedAccounts&customerId=${BusinessKey.customerId}&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+										<mifos:mifoslabel name="Group.viewallclosedaccounts" bundle="GroupUIResources"></mifos:mifoslabel> 
+									</html-el:link> 
+								</c:if>
+							</span>
+							</td>
 						</tr>
 					</table>
 

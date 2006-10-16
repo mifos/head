@@ -31,7 +31,6 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.EncryptionException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authentication.EncryptionService;
@@ -396,8 +395,6 @@ public class PersonnelBO extends BusinessObject {
 
 			encryptedPassword = EncryptionService.getInstance()
 					.createEncryptedPassword(password);
-		} catch (EncryptionException e) {
-			throw new PersonnelException(e);
 		} catch (SystemException e) {
 			throw new PersonnelException(e);
 		}
@@ -753,9 +750,7 @@ public class PersonnelBO extends BusinessObject {
 		logger.info("Checking password valid or not");
 		try {
 			return EncryptionService.getInstance().verifyPassword(password,getEncriptedPassword());
-		} catch (EncryptionException ee) {
-			throw new PersonnelException(ee);
-		} catch (SystemException se) {
+		}  catch (SystemException se) {
 			throw new PersonnelException(se);
 		}
 	}

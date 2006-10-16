@@ -54,6 +54,7 @@ public class TaskPersistenceTest extends MifosTestCase {
 
 	public void testSaveAndCommitForInvalidConnection() {
 		Task task = new Task();
+		task.setId(1);
 		task.setCreatedBy((short) 1);
 		task.setCreatedDate(new Date(System.currentTimeMillis()));
 		task.setDescription(SchedulerConstants.FINISHEDSUCCESSFULLY);
@@ -61,7 +62,6 @@ public class TaskPersistenceTest extends MifosTestCase {
 		task.setEndTime(new Timestamp(System.currentTimeMillis()));
 		task.setStatus(TaskStatus.COMPLETE.getValue());
 		task.setTask("ProductStatus");
-		TestObjectFactory.simulateInvalidConnection();
 		try {
 			new TaskPersistence().saveAndCommitTask(task);
 			fail();

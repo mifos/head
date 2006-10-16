@@ -39,10 +39,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 public class CheckListException extends ApplicationException {
 
-	public CheckListException() {
-		super();
-	}
-
 	public CheckListException(Throwable cause) {
 		super(cause);
 	}

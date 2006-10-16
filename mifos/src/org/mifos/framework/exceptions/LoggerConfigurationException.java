@@ -37,30 +37,18 @@
  */
 package org.mifos.framework.exceptions;
 
-
 /**
- * This Exception is thrown by the logger when it tries to initialize itself using the loggerconfiguration.xml.
+ * This Exception is thrown by the logger when it tries to initialize itself
+ * using the loggerconfiguration.xml.
  */
 public class LoggerConfigurationException extends SystemException {
-
-	public LoggerConfigurationException() {
-		super();
-	}
-
-	public LoggerConfigurationException(Object[] values, Throwable cause) {
-		super(values, cause);
-	}
-
-	public LoggerConfigurationException(Object[] values) {
-		super(values);
-	}
 
 	public LoggerConfigurationException(Throwable cause) {
 		super(cause);
 	}
-	
+
 	@Override
-	public String getKey(){
+	public String getKey() {
 		return "exception.framework.SystemException.LoggerConfigurationException";
 	}
 

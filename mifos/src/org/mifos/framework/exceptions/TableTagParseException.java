@@ -37,48 +37,20 @@
  */
 package org.mifos.framework.exceptions;
 
-public class TableTagParseException  extends ApplicationException {
-
-	private static final long serialVersionUID = 1745657569585623432L;
-
-	public TableTagParseException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public TableTagParseException(String key, Object[] values) {
-		super(key, values);
-		// TODO Auto-generated constructor stub
-	}
-
-	public TableTagParseException(String key, Throwable cause, Object[] values) {
-		super(key, cause, values);
-		// TODO Auto-generated constructor stub
-	}
-
-	public TableTagParseException(String key, Throwable cause) {
-		super(key, cause);
-		// TODO Auto-generated constructor stub
-	}
+public class TableTagParseException extends ApplicationException {
 
 	public TableTagParseException(String key) {
 		super(key);
-		// TODO Auto-generated constructor stub
-	}
 
-	public TableTagParseException(Object[] values) {
-		super(values);
-		// TODO Auto-generated constructor stub
 	}
 
 	public TableTagParseException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
-	}
-	
-	public String getKey(){
-		return "exception.framework.TableTagParseException";
 	}
 
+	@Override
+	public String getKey() {
+		return "exception.framework.TableTagParseException";
+	}
 
 }

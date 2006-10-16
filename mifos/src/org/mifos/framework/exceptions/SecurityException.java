@@ -37,44 +37,14 @@
  */
 package org.mifos.framework.exceptions;
 
-public class SecurityException extends ApplicationException{
+public class SecurityException extends ApplicationException {
 
-	public SecurityException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param values
-	 */
-	public SecurityException(Object[] values) {
-		super(values);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param key
-	 * @param values
-	 */
-	public SecurityException(String key, Object[] values) {
-		super(key, values);
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @param key
-	 */
 	public SecurityException(String key) {
 		super(key);
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @param cause
-	 */
 	public SecurityException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
 
 }

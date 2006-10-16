@@ -67,7 +67,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
@@ -246,7 +245,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		}
 	}
 
-	public void testBuildloanOfferingWithoutName() throws InvalidUserException,
+	public void testBuildloanOfferingWithoutName() throws 
 			SystemException, ApplicationException {
 		createIntitalObjects();
 		try {
@@ -262,7 +261,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithShortNameGreaterThanFourDig()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		try {
 			new LoanOfferingBO(TestObjectFactory
@@ -277,7 +276,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithStartDateLessThanCurrentDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(-2);
 		try {
@@ -293,7 +292,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithStartDateEqualToCurrentDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
@@ -309,7 +308,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithStartDateGreaterThanCurrentDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(2);
 		LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
@@ -325,7 +324,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithDuplicatePrdOfferingName()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
@@ -342,7 +341,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithDuplicatePrdOfferingShortName()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
@@ -359,7 +358,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithEndDateLessThanStartDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(-2);
@@ -377,7 +376,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithNoInterestTypes()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
@@ -393,7 +392,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithNoMaxAmount()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
@@ -409,7 +408,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testBuildloanOfferingWithoutGLCode()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
@@ -728,7 +727,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateloanOfferingWithoutName()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
@@ -745,7 +744,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateloanOfferingWithShortNameGreaterThanFourDig()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
@@ -763,7 +762,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testupdateloanOfferingWithStartDateLessThanCurrentDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
 		Date startDate = offSetCurrentDate(-2);
@@ -781,7 +780,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateloanOfferingWithStartDateEqualToCurrentDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
@@ -800,7 +799,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateloanOfferingWithStartDateGreaterThanCurrentDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(2);
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
@@ -819,7 +818,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateloanOfferingWithDuplicatePrdOfferingName()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
 		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Product1",
 				"LOA1");
@@ -840,7 +839,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateloanOfferingWithDuplicatePrdOfferingShortName()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
 		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Product1",
 				"LOA1");
@@ -861,7 +860,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateloanOfferingWithEndDateLessThanStartDate()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(-2);
@@ -880,7 +879,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testUpdateloanOfferingWithNoInterestTypes()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
@@ -898,7 +897,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 
 	public void testupdateloanOfferingWithNoMaxAmount()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
@@ -916,7 +915,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 	
 	public void testupdateloanOfferingInvalidConnection()
-			throws InvalidUserException, SystemException, ApplicationException {
+			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");

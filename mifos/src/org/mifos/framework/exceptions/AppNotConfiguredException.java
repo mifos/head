@@ -40,32 +40,18 @@ package org.mifos.framework.exceptions;
 import org.mifos.framework.struts.plugin.InitializerPlugin;
 
 /**
- * This Exception is thrown from the {@link InitializerPlugin} when 
- * any of the attempted initializations fail.
+ * This Exception is thrown from the {@link InitializerPlugin} when any of the
+ * attempted initializations fail.
  */
 public class AppNotConfiguredException extends SystemException {
 
-	public AppNotConfiguredException() {
-		super();
-		
-	}
-
-	public AppNotConfiguredException(Object[] values, Throwable cause) {
-		super(values, cause);
-		
-	}
-
-	public AppNotConfiguredException(Object[] values) {
-		super(values);
-		
-	}
-
 	public AppNotConfiguredException(Throwable cause) {
 		super(cause);
-		
+
 	}
-	
-	public String getKey(){
+
+	@Override
+	public String getKey() {
 		return "exception.framework.SystemException.AppNotConfiguredException";
 	}
 

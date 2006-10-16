@@ -42,29 +42,14 @@ package org.mifos.framework.exceptions;
  * This exception is thrown when we try to read the xml files in the System.
  */
 public class XMLReaderException extends SystemException {
-	
-	public XMLReaderException() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	public XMLReaderException(Object[] values, Throwable cause) {
-		super(values, cause);
-		// TODO Auto-generated constructor stub
-	}
-	
-	public XMLReaderException(Object[] values) {
-		super(values);
-		// TODO Auto-generated constructor stub
-	}
-	
+
 	public XMLReaderException(Throwable cause) {
 		super(cause);
-		// TODO Auto-generated constructor stub
 	}
-	
+
+	@Override
 	public String getKey() {
 		return "exception.framework.System.XMLReaderException";
 	}
-	
+
 }

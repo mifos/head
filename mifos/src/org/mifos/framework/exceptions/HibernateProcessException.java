@@ -38,46 +38,24 @@
 package org.mifos.framework.exceptions;
 
 /**
- * This Exception is thrown when any hibernate execptions are encountered in the application
- *
- *
+ * This Exception is thrown when any hibernate execptions are encountered in the
+ * application
+ * 
+ * 
  */
 
-public class HibernateProcessException extends SystemException
-{
+public class HibernateProcessException extends SystemException {
 
 	private String key = "exception.framework.SystemException.HibernateConnectionException";
-	public HibernateProcessException(Throwable cause) {
-		super(cause);
-		
-	}
 
-	public HibernateProcessException(String key)
-	{
-			this.key = key;
-	}
-
-	public HibernateProcessException() {
-		super();
-		
-	}
-	public HibernateProcessException(String key,Throwable cause)
-	{
-		super(key,cause);
-		
-	}
-
-	public HibernateProcessException(Object[] values) {
-		super(values);
+	public HibernateProcessException(String key, Throwable cause) {
+		super(key, cause);
 
 	}
 
-
-	public String getKey(){
-		return key; 
+	@Override
+	public String getKey() {
+		return key;
 	}
-
-
-
 
 }

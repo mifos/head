@@ -57,10 +57,6 @@ public class ApplicationException extends Exception {
 	 */
 	protected final Object[] values;
 	
-	public ApplicationException() {
-		this((String)null, (Object[])null);
-	}
-	
 	/**
 	    Pass arguments, but no key.  I don't think this is ever being
 	    called (and I don't see how it would make sense).

@@ -2,34 +2,21 @@ package org.mifos.framework.exceptions;
 
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
-public class StartUpException extends SystemException{
+public class StartUpException extends SystemException {
 	protected String key = null;
-	
-	public StartUpException() {
-	}
-	
-	public StartUpException(String key ) {
-		this.key = key;
-	}
-	
+
 	public StartUpException(Throwable cause) {
+		super(cause);
 		super.initCause(cause);
 	}
-	
-	public StartUpException(String key ,Throwable cause) {
-		this.key = key;
-		super.initCause(cause);
-	}
-	
+
+	@Override
 	public String getKey() {
-		if(null == key){
+		if (null == key) {
 			return ExceptionConstants.STARTUP_EXCEPTION;
-		}else{
+		} else {
 			return this.key;
-		}		
+		}
 	}
-	
-	public void setKey(String key) {
-		this.key = key;
-	}
+
 }

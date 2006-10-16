@@ -8,7 +8,6 @@ import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidUserException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -41,7 +40,7 @@ public class TestProductCategoryPersistence extends MifosTestCase {
 		assertEquals(Integer.valueOf("0"),productCategoryPersistence.getProductCategory("product"));
 	}
 	
-	public void testGetProductTypes() throws InvalidUserException, SystemException, ApplicationException{
+	public void testGetProductTypes() throws  SystemException, ApplicationException{
 		List<ProductTypeEntity> productTypeList=productCategoryPersistence.getProductTypes();
 		assertEquals(2,productTypeList.size());
 		for(ProductTypeEntity productTypeEntity : productTypeList){
