@@ -370,13 +370,11 @@ public class TableTag extends BodyTagSupport {
 	/**
 	 * Function to get single xml file.
 	 */
-	private String getSingleFile() throws TableTagParseException,
-			TableTagException, JspException {
+	 String getSingleFile() throws  JspException {
 		ResourceBundle resource = ResourceBundle
 				.getBundle(TableTagConstants.PROPERTIESFILE);
 		String xmlPath = resource.getString(name + "_xml");
 		if (xmlPath != null) {
-			// return getTableObject(object,xmlName,className).getTable(object);
 			return xmlPath;
 		} else
 			throw new JspException(resource.getString(TableTagConstants.NOXMLFILE_ERROR));

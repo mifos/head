@@ -290,10 +290,7 @@ public class TestOfficeBO extends MifosTestCase {
 		}
 		TestObjectFactory.cleanUp(savbedChild);
 		TestObjectFactory.cleanUp(savbedOffice);
-	} // TODO : this test case is
-
-	// incosistance
-
+	} 
 	public void testUpdateOfficelevel() throws Exception {
 		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,

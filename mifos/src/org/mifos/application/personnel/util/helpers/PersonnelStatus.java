@@ -20,8 +20,7 @@ public enum PersonnelStatus {
 			if (status.value.equals(id))
 				return status;
 		}
-		// TODO: give proper message
-		throw new PropertyNotFoundException("PersonnelStatus");
+		throw new PropertyNotFoundException(PersonnelConstants.ERROR_STATUS);
 	}
 
 }

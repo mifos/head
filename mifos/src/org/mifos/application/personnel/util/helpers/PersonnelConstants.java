@@ -189,4 +189,7 @@ public interface PersonnelConstants {
 	public static final String ERROR_DOB="error.dob";
 	public static final String ERROR_PASSWORD_LENGTH="error.passwordLength";
 	
+	public static final String ERROR_STATUS="errors.status";
+	public static final String ERROR_NO_LEVEL="error.nolevel";
+	
 }

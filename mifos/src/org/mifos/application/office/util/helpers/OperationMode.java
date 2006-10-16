@@ -37,6 +37,7 @@
  */
 package org.mifos.application.office.util.helpers;
 
+import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 /**
@@ -62,7 +63,7 @@ public enum OperationMode {
 			if (operationMode.value.equals( id))
 				return operationMode;
 		}
-		//TODO : replace this with proper key
-		throw new PropertyNotFoundException("CustomerLevel");
+		
+		throw new PropertyNotFoundException(OfficeConstants.ERROR_OPERATION_MODE);
 	}
 }

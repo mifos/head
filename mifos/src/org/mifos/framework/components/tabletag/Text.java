@@ -83,7 +83,7 @@ public class Text {
 	}
 	
 	//to get Image
-	private static String getImage(Object obj, String name) throws TableTagException{
+	 static String getImage(Object obj, String name) throws TableTagException{
 		StringBuilder stringbuilder = new StringBuilder();
 		Method method = null;
 		Object customerType = null;
@@ -132,7 +132,7 @@ public class Text {
 	} 
 	
 	//to get Text
-	private static String getDisplayText(String[] name,String bold) {
+	 static String getDisplayText(String[] name,String bold) {
 		StringBuilder stringbuilder = new StringBuilder();
 		for(int i=0;i<name.length;i++) {
 			if (name[i] == null || name[i].trim().equals("")

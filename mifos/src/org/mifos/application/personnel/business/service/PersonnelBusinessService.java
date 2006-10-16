@@ -56,8 +56,6 @@ public class PersonnelBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
-
-	// TODO: modify this function once roles and permission migrated to m2
 	public List<RoleBO> getRoles() throws ServiceException {
 		try {
 			return new RolesPermissionsPersistence().getRoles();

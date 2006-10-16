@@ -22,7 +22,6 @@ public enum PersonnelLevel {
 			if (level.value.equals(id))
 				return level;
 		}
-		// TODO: give proper message
-		throw new PropertyNotFoundException("CustomerLevel");
+		throw new PropertyNotFoundException(PersonnelConstants.ERROR_NO_LEVEL);
 	}
 }

@@ -1,5 +1,6 @@
 package org.mifos.application.office.util.helpers;
 
+import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum OfficeLevel {
@@ -22,6 +23,6 @@ public enum OfficeLevel {
 		for (OfficeLevel level : OfficeLevel.values())
 			if (level.value.equals(id))
 				return level;
-		throw new PropertyNotFoundException("CustomerLevel");
+		throw new PropertyNotFoundException(OfficeConstants.ERROR_LEVEL);
 	}
 }
