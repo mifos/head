@@ -6,9 +6,9 @@
 
 
 /****************************************************************************
-*  createCheckList function dynamically creates check boxes with values 
+*  createCheckList function dynamically creates check boxes with values
 *******************************************************************************/
-
+var k=0;
 var i=0;
 var numberOfItems=0;
 var count=0;
@@ -17,60 +17,60 @@ var totalDetails = 0;
 var detailTxt="";
 
 function createCheckList()
-{		
+{
 	var arr=document.getElementsByName("mycheckBOx");
 	if(arr)
-	{	
+	{
 		for(;count<arr.length;)
-		{	
-			count++;		
+		{
+			count++;
 			i=count;
 			numberOfItems=i;
 		}
-		
-	}	
-	var re = /\s/g;; //Match any white space including space, tab, form-feed, etc. 
+		k = numberOfItems;
+	}
+	var re = /\s/g;; //Match any white space including space, tab, form-feed, etc.
 	var aTextArea=document.getElementsByName('text')[0].value;
 	var str = aTextArea.replace(re, "");
-	if (str.length == 0 ) 
+	if (str.length == 0 )
 	{
 		//alert("Items are Mandatory");
-		event.returnValue = false;		
+		event.returnValue = false;
 		return false;
-	} 	
+	}
 	var val = document.getElementsByName("text")[0].value;
     var qt = "'";
     var value = val.replace(qt, "&#39;");
     for (i = 0; i < val.length; i++) {
         value = value.replace(qt, "&#39;");
     }
-	if(document.getElementsByName('text')[0].value)	
+	if(document.getElementsByName('text')[0].value)
 	{
-		var para = document.getElementById("myDiv");								
+		var para = document.getElementById("myDiv");
 		var detailsTxt  = document.createElement("TD");
-		var divIdName = "my"+i+"Div";		
+		var divIdName = "my"+k+"Div";
 		detailsTxt.setAttribute("id",divIdName);
-		var textArea=document.getElementsByName('text')[0].value;		
-		detailsTxt.innerHTML +="<input type='checkbox'  name='checkBox("+i+")' value='"+value+"'>";
-		var incrementer=0;		
+		var textArea=document.getElementsByName('text')[0].value;
+		detailsTxt.innerHTML +="<input type='checkbox'  name='checkBox("+k+")' value='"+value+"'>";
+		var incrementer=0;
 		while(incrementer<textArea.length)
 		{
 			var temp=incrementer;
 			detailsTxt.innerHTML+=textArea.substr(temp,80);
 			detailsTxt.innerHTML+="<br>";
 			incrementer=incrementer+80;
-		}		
-		detailsTxt.innerHTML +="<input type='hidden'  name='detailsList["+i+"]' value='"+value+"' >";
+		}
+		detailsTxt.innerHTML +="<input type='hidden'  name='detailsList["+k+"]' value='"+value+"' >";
 		para.appendChild(detailsTxt);
-		i++;
-		numberOfItems++;	
-		document.getElementsByName('text')[0].value="";	
+		k++;
+		numberOfItems++;
+		document.getElementsByName('text')[0].value="";
 	}
 
 }
 
 /****************************************************************************
-*  RemoveSelected function removes the selected dynamically created check boxes 
+*  RemoveSelected function removes the selected dynamically created check boxes
 *******************************************************************************/
 
 
@@ -78,29 +78,29 @@ function RemoveSelected()
 {
 	var arr=document.getElementsByName("mycheckBOx");
 	if(arr)
-	{	
+	{
 		for(;count<arr.length;)
-		{	
-			count++;		
+		{
+			count++;
 			i=count;
 			numberOfItems=count;
 		}
-		
-	}	
-	arrElements = document.getElementsByTagName("input");	
+
+	}
+	arrElements = document.getElementsByTagName("input");
 	var iterator=i;
 	for( x = 0; x < arrElements.length ;x++)
-	{	
+	{
 		element = arrElements[x];
 		if(element.checked)
 		{
 			element.parentNode.parentNode.removeChild(element.parentNode);
 			x--;
-			iterator--;	
-			numberOfItems--;		
-		}		
+			iterator--;
+			numberOfItems--;
+		}
 	}
-	
+
 }
 
 
@@ -109,20 +109,20 @@ function RemoveSelected()
 *******************************************************************************/
 
 function validateFields(form)
-{		
-		if(flag!=1){			
+{
+		if(flag!=1){
 			var selectBox = document.getElementsByName("type")[0];
-			var indexArray = document.getElementsByName("indexOfLevel");		
+			var indexArray = document.getElementsByName("indexOfLevel");
 			var typeArray=document.getElementsByName("typeOfLevel");
-			document.CheckListForm.typeId.value=typeArray[selectBox.selectedIndex].value;		
+			document.CheckListForm.typeId.value=typeArray[selectBox.selectedIndex].value;
 			document.CheckListForm.categoryId.value=indexArray[selectBox.selectedIndex].value;
-			document.CheckListForm.typeName.value=selectBox.options[selectBox.selectedIndex].text;		
-			var displayedStatusBox=document.getElementsByName("status")[0];		
-			document.CheckListForm.displayedStatus.value=displayedStatusBox.options[displayedStatusBox.selectedIndex].text;		
+			document.CheckListForm.typeName.value=selectBox.options[selectBox.selectedIndex].text;
+			var displayedStatusBox=document.getElementsByName("status")[0];
+			document.CheckListForm.displayedStatus.value=displayedStatusBox.options[displayedStatusBox.selectedIndex].text;
 			document.CheckListForm.method.value="preview";
 			return true;
 		}
-	
+
 }
 
 /****************************************************************************
@@ -141,18 +141,18 @@ function fnEdit(form)
 	form.submit();
 }
 /****************************************************************************
-*  fnUpdate function sets the hidden variable 'method' to update 
+*  fnUpdate function sets the hidden variable 'method' to update
 *******************************************************************************/
 function fnUpdate(form)
 {
-	
-	document.CheckListForm.categoryId.value=document.getElementsByName("categoryId")[0].value;	
-	document.CheckListForm.typeId.value=document.getElementsByName("typeId")[0].value;     		
-	document.CheckListForm.checklistId.value=document.getElementsByName("checklistId")[0].value;		
-	document.CheckListForm.statusOfCheckList.value=document.getElementsByName("statusOfCheckList")[0].value;	
+
+	document.CheckListForm.categoryId.value=document.getElementsByName("categoryId")[0].value;
+	document.CheckListForm.typeId.value=document.getElementsByName("typeId")[0].value;
+	document.CheckListForm.checklistId.value=document.getElementsByName("checklistId")[0].value;
+	document.CheckListForm.statusOfCheckList.value=document.getElementsByName("statusOfCheckList")[0].value;
 	form.method.value="update";
-	form.action="checkListAction.do";		
-	func_disableSubmitBtn("submitbutton");	
+	form.action="checkListAction.do";
+	func_disableSubmitBtn("submitbutton");
 	form.submit();
 }
 /****************************************************************************
@@ -174,13 +174,13 @@ function populateStates(form,selectBox)
 		var isCustIndex=document.getElementsByName("isCustomers");
 		var masterIdIndex=document.getElementsByName("masterIds");
 		var masterNameIndex = document.getElementsByName("masterNames");
-		
+
 		var isCust=isCustIndex[selectBox.selectedIndex].value;
 		var masterId=masterIdIndex[selectBox.selectedIndex].value;
 		var masterName=masterNameIndex[selectBox.selectedIndex].value;
-		
+
 		form.action="chkListAction.do?method=getStates&isCustomer="+isCust+"&masterTypeName="+masterName+"&masterTypeId="+masterId;
-		form.submit();		
+		form.submit();
 }
 
 function populateStateName(form,selectBox)
@@ -198,38 +198,38 @@ function populateStateName(form,selectBox)
 *******************************************************************************/
 
 function getChecklist(id,type,status,categoryId)
-{ 		
+{
 		flag=1;
 		document.CheckListForm.categoryId.value=categoryId;
-		document.CheckListForm.typeId.value=type;     	
-		document.CheckListForm.checklistId.value=id;		
+		document.CheckListForm.typeId.value=type;
+		document.CheckListForm.checklistId.value=id;
 		document.CheckListForm.statusOfCheckList.value=status;
- 		document.CheckListForm.method.value="get"; 		
+ 		document.CheckListForm.method.value="get";
  		document.CheckListForm.submit();
- 		
+
 }
 
 /****************************************************************************
 *  setPreviousStatusId function sets the previous status id when the incoming page is previous
 *******************************************************************************/
 function setPreviousStatusId(pre)
-{	
+{
 	var status="previous"
 	if(pre == status)
 	{
-		var displayedStatusBox=document.getElementsByName("status")[0];	
-		document.CheckListForm.previousStatusId.value=displayedStatusBox.options[displayedStatusBox.selectedIndex].value;		
-	}	
+		var displayedStatusBox=document.getElementsByName("status")[0];
+		document.CheckListForm.previousStatusId.value=displayedStatusBox.options[displayedStatusBox.selectedIndex].value;
+	}
 }
 
 /****************************************************************************
-*  isButtonRequired function check if the Remove Selected is required or not 
+*  isButtonRequired function check if the Remove Selected is required or not
 *  if there are no items button is not shown to the user
 *******************************************************************************/
 function isButtonRequired()
 {
 	if(numberOfItems>0)
-	{	
+	{
 	document.getElementById("removeButton").style.display = "block";
 	}
 	else if(numberOfItems==0)
@@ -239,30 +239,30 @@ function isButtonRequired()
 }
 
 /****************************************************************************
-*  setNumberOfPreviousItems function checks number of previous items 
+*  setNumberOfPreviousItems function checks number of previous items
 *******************************************************************************/
 function setNumberOfPreviousItems()
 {
-	var array=document.getElementsByName("numberOfPreviousItems");	
+	var array=document.getElementsByName("numberOfPreviousItems");
 	var counter;
 	if(array!=null)
 	for(counter=0;counter<array.length-1;counter++)
 	{}
 	i=i+counter;
-	numberOfItems=i;		
+	numberOfItems=i;
 }
 /****************************************************************************
 *  manage function gets a particular checklist record based on checklist id ,type and status
 *******************************************************************************/
 function manage(id,type,status,categoryId)
-{ 		
+{
 		document.CheckListForm.categoryId.value=categoryId;
-		document.CheckListForm.typeId.value=type;     	
+		document.CheckListForm.typeId.value=type;
 		document.CheckListForm.checklistId.value=id;
 		document.CheckListForm.statusOfCheckList.value=status;
- 		document.CheckListForm.method.value="manage"; 		
+ 		document.CheckListForm.method.value="manage";
  		document.CheckListForm.submit();
- 		
+
 }
 
 
@@ -271,19 +271,19 @@ function populateStatesEdit(form,selectBox)
 		var isCustIndex=document.getElementsByName("isCustomers");
 		var masterIdIndex=document.getElementsByName("masterIds");
 		var masterNameIndex = document.getElementsByName("masterNames");
-		
+
 		var isCust=isCustIndex[selectBox.selectedIndex].value;
 		var masterId=masterIdIndex[selectBox.selectedIndex].value;
 		var masterName=masterNameIndex[selectBox.selectedIndex].value;
-		
+
 		form.action="chkListAction.do?method=getEditStates&isCustomer="+isCust+"&masterTypeName="+masterName+"&masterTypeId="+masterId;
-		form.submit();		
+		form.submit();
 }
 
-	
+
 function getChklist(form)
-{ 		
+{
 		flag=1;
  		form.action="chkListAction.do?method=cancelManage";
-		form.submit();	 		
+		form.submit();
 }

@@ -9,7 +9,10 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class ChkListActionForm extends BaseActionForm {
@@ -140,7 +143,7 @@ public class ChkListActionForm extends BaseActionForm {
 				validCheckList.add(detail);
 		return validCheckList;
 	}
-	
+
 	@Override
 	public ActionErrors validate(ActionMapping mappping,
 			HttpServletRequest request) {
@@ -188,7 +191,16 @@ public class ChkListActionForm extends BaseActionForm {
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		super.reset(mapping, request);
 		String method = request.getParameter("method");
-		if (method.equals(Methods.preview.toString()) || method.equals(Methods.managePreview.toString()))
+		if (method.equals(Methods.preview.toString()) || method.equals(Methods.managePreview.toString())) {
+			detailsList.clear();
+			detailsList = null;
 			detailsList = new ArrayList<String>();
+		}
+		try {
+			if (null != request.getParameter(Constants.CURRENTFLOWKEY))
+				request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
+			SessionUtils.setAttribute(CheckListConstants.DETAILS, detailsList, request);
+		} catch (PageExpiredException pee) {
+		}
 	}
 }

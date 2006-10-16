@@ -8,6 +8,7 @@ import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.business.PrdCategoryStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.ProductCategoryPersistence;
 import org.mifos.application.productdefinition.struts.actionforms.PrdCategoryActionForm;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -245,6 +246,18 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 		assertEquals(3,((List<ProductCategoryBO>)SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTCATEGORYLIST,request)).size());
 		deleteProductCategory(productCategoryBO);
 	}
+
+	public void testPrdDefException() throws Exception {
+		ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext,
+				getProductTypes(userContext).get(0),"product category","created a category");
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			productCategoryBO.save();
+			fail();
+		} catch (ProductDefinitionException pde) {
+		}
+	}
+
 
 	private List<ProductTypeEntity> getProductTypes(UserContext userContext)
 			throws PersistenceException {

@@ -392,7 +392,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		setRequestData();
 		addRequestParameter("userPassword", "XXX");
 		actionPerform();
-		assertEquals(1, getErrrorSize("password"));
+		assertEquals(2, getErrrorSize("password"));
 		verifyInputForward();
 	}
 

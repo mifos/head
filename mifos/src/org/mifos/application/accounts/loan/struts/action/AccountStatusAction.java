@@ -224,7 +224,7 @@ public class AccountStatusAction extends BaseAction {
 		List accountNumbers = new ArrayList();
 
 		for (String accountId : accountList) {
-			if (accountId != "") {
+			if (!accountId.equals("")) {
 				LoanBO loanBO = loanService.getAccount(Integer
 						.parseInt(accountId));
 

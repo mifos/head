@@ -455,6 +455,14 @@ public class PersonActionForm extends BaseActionForm {
 					PersonnelConstants.VALID_PASSWORD,
 					PersonnelConstants.PASSWORD));
 		}
+		if ((StringUtils.isNullAndEmptySafe(passwordRepeat)
+				&& !StringUtils.isNullAndEmptySafe(userPassword))
+				|| ((!StringUtils.isNullAndEmptySafe(passwordRepeat)
+				&& StringUtils.isNullAndEmptySafe(userPassword)))) {
+			errors.add(PersonnelConstants.PASSWORD, new ActionMessage(
+					PersonnelConstants.VALID_PASSWORD,
+					PersonnelConstants.PASSWORD));
+		}
 		if (input.equals(PersonnelConstants.CREATE_USER)
 				&& (StringUtils.isNullOrEmpty(userPassword) || StringUtils
 						.isNullOrEmpty(passwordRepeat)))

@@ -152,4 +152,15 @@ public class AccountStatusActionForm extends BaseActionForm {
 			request.setAttribute("methodCalled", method);
 		return errors;
 	}
+
+	@Override
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		super.reset(mapping, request);
+		String method = request.getParameter("method");
+		if (method.equals(Methods.update.toString())) {
+			accountRecords.clear();
+			accountRecords = null;
+			accountRecords = new ArrayList<String>();
+		}
+	}
 }
