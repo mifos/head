@@ -115,6 +115,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	public void testSuccessful_transferToBranch() throws Exception {
+		TestObjectFactory.cleanUpChangeLog();
 		office = createOffice();
 		loadOffices();		
 		HibernateUtil.closeSession();
@@ -142,6 +143,18 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		assertNotNull(customerMovement);
 		assertEquals(office.getOfficeId(), customerMovement.getOffice().getOfficeId());
 		office = group.getOffice();
+		
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),group.getCustomerId());
+		assertEquals(1,auditLogList.size());
+		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
+		assertEquals(3,auditLogList.get(0).getAuditLogRecords().size());
+		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Branch Office Name")){
+				assertEquals("TestBranchOffice",auditLogRecord.getOldValue());
+				assertEquals("customer_office",auditLogRecord.getNewValue());
+			}
+		}
+		TestObjectFactory.cleanUpChangeLog();
 	}
 	
 	public void testLoad_updateParent() throws Exception {

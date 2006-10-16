@@ -39,8 +39,10 @@
 package org.mifos.application.accounts.business;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -74,7 +76,7 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 
 	private final Timestamp trxnCreatedDate;
 
-	private final Set<FinancialTransactionBO> financialTransactions;
+	private final List<FinancialTransactionBO> financialTransactions;
 
 	private final Short installmentId;
 
@@ -83,7 +85,7 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 	protected AccountTrxnEntity() {
 		createdDate = new Date(System.currentTimeMillis());
 		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
-		financialTransactions = new HashSet<FinancialTransactionBO>();
+		financialTransactions = new ArrayList<FinancialTransactionBO>();
 		accountActionEntity = null;
 		installmentId = null;
 		dueDate = null;
@@ -104,7 +106,7 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 			AccountTrxnEntity relatedTrxn) {
 		createdDate = new Date(System.currentTimeMillis());
 		trxnCreatedDate = new Timestamp(System.currentTimeMillis());
-		financialTransactions = new HashSet<FinancialTransactionBO>();
+		financialTransactions = new ArrayList<FinancialTransactionBO>();
 		this.account = accountPayment.getAccount();
 		this.accountActionEntity = accountActionEntity;
 		this.installmentId = installmentId;
@@ -166,8 +168,17 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 		this.financialTransactions.add(financialTransaction);
 	}
 
-	public Set<FinancialTransactionBO> getFinancialTransactions() {
-		return financialTransactions;
+	public List<FinancialTransactionBO> getFinancialTransactions() {
+		List<FinancialTransactionBO> financialTrxnList = null;
+		if(financialTransactions!=null){
+			financialTrxnList=new ArrayList<FinancialTransactionBO>();
+			for(int i = financialTransactions.size()-1; i>=0 ; i--){
+				FinancialTransactionBO financialTransactionBO = financialTransactions.get(i);
+				if(financialTransactionBO!=null)
+					financialTrxnList.add(financialTransactionBO);
+			}
+		}
+		return financialTrxnList;
 	}
 
 	public Short getInstallmentId() {

@@ -181,6 +181,16 @@ public class EditCustomerStatusActionForm extends BaseActionForm {
 	public void setSelectedItems(String[] selectedItems) {
 		this.selectedItems = selectedItems;
 	}
+	
+	@Override
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		String methodCalled = request.getParameter(Methods.method.toString());
+		if (null != methodCalled) {
+			if ((Methods.preview.toString()).equals(methodCalled)) {
+				this.flagId = null;
+			}
+		}
+	}
 
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {

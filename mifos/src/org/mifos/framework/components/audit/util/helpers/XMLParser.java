@@ -188,13 +188,6 @@ public class XMLParser {
 		return classPath;
 	}
 
-	public PkColumn getPkColumn(NodeList elements) {
-		PkColumn pkColumn = new PkColumn();
-		pkColumn.setName(elements.item(0).getAttributes().getNamedItem(
-				XMLConstants.NAME).getNodeValue());
-		return pkColumn;
-	}
-
 	public static void main(String args[]) {
 		XMLParser ttp = new XMLParser();
 		try {

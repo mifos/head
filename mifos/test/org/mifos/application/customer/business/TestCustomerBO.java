@@ -132,12 +132,9 @@ public class TestCustomerBO extends MifosTestCase {
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CENTER.getValue(),center.getCustomerId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.CENTER.getValue(),auditLogList.get(0).getEntityType());
-		assertEquals(2,auditLogList.get(0).getAuditLogRecords().size());
+		assertEquals(1,auditLogList.get(0).getAuditLogRecords().size());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
-			if(auditLogRecord.getFieldName().equalsIgnoreCase("Note")){
-				assertEquals("-",auditLogRecord.getOldValue());
-				assertEquals("comment",auditLogRecord.getNewValue());
-			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
 				assertEquals("Active",auditLogRecord.getOldValue());
 				assertEquals("Inactive",auditLogRecord.getNewValue());
 			}
@@ -157,12 +154,9 @@ public class TestCustomerBO extends MifosTestCase {
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),group.getCustomerId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
-		assertEquals(3,auditLogList.get(0).getAuditLogRecords().size());
+		assertEquals(2,auditLogList.get(0).getAuditLogRecords().size());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
-			if(auditLogRecord.getFieldName().equalsIgnoreCase("Note")){
-				assertEquals("-",auditLogRecord.getOldValue());
-				assertEquals("comment",auditLogRecord.getNewValue());
-			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
+			if(auditLogRecord.getFieldName().equalsIgnoreCase("Status")){
 				assertEquals("Active",auditLogRecord.getOldValue());
 				assertEquals("Cancelled",auditLogRecord.getNewValue());
 			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Status Change Explanation")){

@@ -5,7 +5,7 @@
 		<entitiesToLog>
 			<entity name="collateralType"/>
 			<entity name="accountState"/>
-			<entity name="accountNotes"/>
+			<!-- <entity name="accountNotes"/>-->
 			<entity name="accountFlags"/>
 			<entity name="flag"  parentName="accountFlags"/>
 		</entitiesToLog>
@@ -48,7 +48,7 @@
 			<entity name="customerStatus"/>
 			<entity name="customerFlags"/>
 			<entity name="statusFlag"  parentName="customerFlags"/>
-			<entity name="customerNotes"/>
+			<!--<entity name="customerNotes"/>-->
 			<entity name="customerAddressDetail"/>
 			<entity name="address" parentName="customerAddressDetail"/>
 			<entity name="customFields" mergeProperties="yes"  displayKey="Customer.customField.displayName"/>
@@ -245,7 +245,7 @@
 			<entity name="customerStatus"/>
 			<entity name="customerFlags"/>
 			<entity name="statusFlag"  parentName="customerFlags"/>
-			<entity name="customerNotes"/>
+			<!-- <entity name="customerNotes"/>-->
 
 			<entity name="customerMeeting"/>
 			<entity  name="meeting"  parentName="customerMeeting"/>
@@ -375,14 +375,15 @@
 			<entity name="customerStatus"/>
 			<entity name="customerFlags"/>
 			<entity name="statusFlag"  parentName="customerFlags"/>
-			<entity name="customerNotes"/>
+			<!-- <entity name="customerNotes"/>-->
 
 			<entity  name="customerMeeting"/>
 			<entity  name="meeting"  parentName="customerMeeting"/>
 			<entity  name="meetingDetails"  parentName="meeting"/>
 			<entity  name="meetingRecurrence"  parentName="meetingDetails"/>
 			<entity  name="weekDay"  parentName="meetingRecurrence"/>
-
+			
+			<entity  name="personnel"/>
 			<entity name="historicalData"/>
 			<entity name="office"></entity>
 		</entitiesToLog>
@@ -512,13 +513,25 @@
 		<propertyName name="searchId" parentName="office" doNotLog="yes" />
 		<propertyName name="operationMode" parentName="office" doNotLog="yes" />
 		
+		<propertyName name="personnelId" parentName="personnel" doNotLog="yes" />
+		<propertyName name="globalPersonnelNum" parentName="personnel" doNotLog="yes" />
+		<propertyName name="userName" parentName="personnel" doNotLog="yes" />
+		<propertyName name="encriptedPassword" parentName="personnel" doNotLog="yes" />
+		<propertyName name="locked" parentName="personnel" doNotLog="yes" />
+		<propertyName name="passwordChanged" parentName="personnel" doNotLog="yes" />
+		<propertyName name="title" parentName="personnel" doNotLog="yes" />
+		<propertyName name="noOfTries" parentName="personnel" doNotLog="yes" />
+		<propertyName name="lastLogin" parentName="personnel" doNotLog="yes" />
+		<propertyName name="maxChildCount" parentName="personnel" doNotLog="yes" />
+		<propertyName name="displayName" parentName="personnel" displayKey="Center.personnel.displayName" />
+		
 	 </entityType>
 
 	<entityType name="Savings" classPath="org.mifos.application.accounts.savings.business.SavingsBO">
 
 		<entitiesToLog>
 			<entity name="accountState"/>
-			<entity name="accountNotes"/>
+			<!-- <entity name="accountNotes"/>-->
 			<entity name="accountFlags"/>
 			<entity name="flag"  parentName="accountFlags"/>
 			<entity name="accountCustomFields" mergeProperties="yes"  displayKey="Account.customField.displayName"/>

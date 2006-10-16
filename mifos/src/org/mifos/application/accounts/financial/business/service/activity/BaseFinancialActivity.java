@@ -38,6 +38,7 @@
 
 package org.mifos.application.accounts.financial.business.service.activity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -51,7 +52,7 @@ import org.mifos.application.accounts.financial.exceptions.FinancialException;
 public abstract class BaseFinancialActivity {
 	private AccountTrxnEntity accountTrxn;
 
-	private Set<FinancialTransactionBO> financialTransactions = new HashSet<FinancialTransactionBO>();
+	private List<FinancialTransactionBO> financialTransactions = new ArrayList<FinancialTransactionBO>();
 
 	public BaseFinancialActivity(AccountTrxnEntity accountTrxn) {
 		this.accountTrxn = accountTrxn;
@@ -86,7 +87,7 @@ public abstract class BaseFinancialActivity {
 		financialTransactions.add(financialTransaction);
 	}
 
-	public Set<FinancialTransactionBO> getFinanacialTransaction() {
+	public List<FinancialTransactionBO> getFinanacialTransaction() {
 		return financialTransactions;
 	}
 

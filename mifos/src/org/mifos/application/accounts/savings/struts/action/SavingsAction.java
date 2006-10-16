@@ -446,7 +446,7 @@ public class SavingsAction extends AccountAppAction {
 			Set<AccountTrxnEntity> accountTrxnEntitySet = accountPaymentEntity
 					.getAccountTrxns();
 			for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntitySet) {
-				Set<FinancialTransactionBO> financialTransactionBOSet = accountTrxnEntity
+				List<FinancialTransactionBO> financialTransactionBOSet = accountTrxnEntity
 						.getFinancialTransactions();
 				for (FinancialTransactionBO financialTransactionBO : financialTransactionBOSet) {
 					SavingsTransactionHistoryView savingsTransactionHistoryView = new SavingsTransactionHistoryView();

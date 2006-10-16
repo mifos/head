@@ -261,16 +261,13 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		assertEquals(1, auditLogList.size());
 		assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0)
 				.getEntityType());
-		assertEquals(3, auditLogList.get(0).getAuditLogRecords().size());
+		assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
 		for (AuditLogRecord auditLogRecord : auditLogList.get(0)
 				.getAuditLogRecords()) {
 			if (auditLogRecord.getFieldName().equalsIgnoreCase("Explanation")) {
 				assertEquals("-", auditLogRecord.getOldValue());
 				assertEquals("Withdraw", auditLogRecord.getNewValue());
-			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(" Note")) {
-				assertEquals("-", auditLogRecord.getOldValue());
-				assertEquals("Test", auditLogRecord.getNewValue());
-			} else if (auditLogRecord.getFieldName().equalsIgnoreCase("Status")) {
+			}else if (auditLogRecord.getFieldName().equalsIgnoreCase("Status")) {
 				assertEquals("Active in Good Standing", auditLogRecord
 						.getOldValue());
 				assertEquals("Closed- Rescheduled", auditLogRecord

@@ -68,6 +68,7 @@ public class GroupTransferAction extends BaseAction {
 				groupInSession.getCustomerId());
 		group.setVersionNo(groupInSession.getVersionNo());
 		group.setUserContext(getUserContext(request));
+		setInitialObjectForAuditLogging(group);
 		group.transferToBranch(officeToTransfer);
 		groupInSession = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);

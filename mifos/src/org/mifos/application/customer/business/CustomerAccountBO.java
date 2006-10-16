@@ -535,10 +535,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	public Date getUpcomingChargesDate() {
-		AccountActionDateEntity nextAccountAction = null;
-		if (getTotalDueInstallments().size() > 0) {
-			nextAccountAction = getTotalDueInstallments().get(0);
-		}
+		AccountActionDateEntity nextAccountAction = getDetailsOfNextInstallment();
 		return nextAccountAction != null ? nextAccountAction.getActionDate()
 				: new java.sql.Date(System.currentTimeMillis());
 	}
