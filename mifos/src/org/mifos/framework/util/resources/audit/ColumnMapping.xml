@@ -171,6 +171,7 @@
 		<propertyName name="meetingPlace" parentName="meeting" displayKey="Group.meeting.meetingPlace" />
 		<propertyName name="customerCustomFieldId" parentName="customFieldSet" doNotLog="yes" />
 
+		<propertyName name="customFieldId" parentName="customFields" doNotLog="yes" />
 		<propertyName name="fieldId" parentName="customFields" displayKey="Customer.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
 		<propertyName name="fieldValue" parentName="customFields" displayKey="Customer.customField.feildValue" />
 
@@ -251,14 +252,9 @@
 			<entity  name="meetingDetails"  parentName="meeting"/>
 			<entity  name="meetingRecurrence"  parentName="meetingDetails"/>
 			<entity  name="weekDay"  parentName="meetingRecurrence"/>
+			<entity  name="rankOfDays"  parentName="meetingRecurrence"/>
 
 		</entitiesToLog>
-
-		<propertyName name="weekDay" parentName="meetingRecurrence" displayKey="Center.meetingRecurrence.weekDay" doNotLog="No" lookUp="yes">
-			<entityName name="WeekDays">
-				<classPath  path="org.mifos.application.meeting.business.WeekDaysEntity"/>
-			</entityName>
-		</propertyName>
 
 		<propertyName name="commentId" parentName="customerNotes" doNotLog="yes" />
  		<propertyName name="_customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
@@ -275,6 +271,7 @@
 		</propertyName>
 		<propertyName name="comment" displayKey="Group.comment" parentName="customerNotes" />
 
+		<propertyName name="customFieldId" parentName="customFields" doNotLog="yes" />
 		<propertyName name="fieldId" parentName="customFields" displayKey="Customer.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
 		<propertyName name="fieldValue" parentName="customFields" displayKey="Customer.customField.feildValue" />
 		<propertyName name="position" parentName="customerPositions" displayKey="Group.Position.displayName" doNotLog="No" lookUp="yes">
@@ -283,6 +280,7 @@
 			</entityName>
 		</propertyName>
 
+		<propertyName name="customerPositionId" parentName="customerPositions" doNotLog="yes" />
 		<propertyName name="trained" displayKey="Group.trained" doNotLog="No" />
 		<propertyName name="trainedDate" displayKey="Group.trainedDate"  />
 		<propertyName name="displayName" displayKey="Group.displayName"  />
@@ -355,7 +353,11 @@
 		<propertyName name="dateOfBirth" parentName="customer" doNotLog="yes" />
 		<propertyName name="clientConfidential" parentName="customer" doNotLog="yes" />
 		<propertyName name="personnelId" parentName="customer" doNotLog="yes" />
-
+		
+		<propertyName name="meetingPlace" parentName="meeting" displayKey="Center.meeting.meetingPlace" />
+		<propertyName name="recurAfter" parentName="meetingDetails" displayKey="LoanProduct.meetingDetails.recurAfter"/>
+		<propertyName name="recurrenceId" parentName="recurrenceType" displayKey="LoanProduct.recurrenceType.recurrenceName" methodName="retrieveRecurrenceTypes" lookUp="yes"/>
+		
 	</entityType>
 
 
@@ -391,6 +393,8 @@
 			</entityName>
 		</propertyName>
 
+		<propertyName name="customerPositionId" parentName="customerPositions" doNotLog="yes" />
+
 		<propertyName name="commentId" parentName="customerNotes" doNotLog="yes" />
  		<propertyName name="_customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
  		<propertyName name="commentDate" parentName="customerNotes" doNotLog="yes" />
@@ -407,6 +411,7 @@
 		<propertyName name="comment" displayKey="Group.comment" parentName="customerNotes" />
 
 		<propertyName name="updatedFlag" parentName="customerMeeting" doNotLog="yes" />
+		<propertyName name="customFieldId" parentName="customFields" doNotLog="yes" />
 		<propertyName name="fieldId" parentName="customFields" displayKey="Customer.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
 		<propertyName name="fieldValue" parentName="customFields" displayKey="Customer.customField.feildValue" />
 		<propertyName name="position" parentName="customerPositions" displayKey="Group.Position.displayName" doNotLog="No" lookUp="yes">
@@ -542,6 +547,7 @@
 		<propertyName name="_accountFlagsBackref" parentName="accountFlags" doNotLog="yes"/>
 		<propertyName name="fieldId" parentName="accountCustomFields" displayKey="Account.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
 		<propertyName name="fieldValue" parentName="accountCustomFields" displayKey="Account.customField.feildValue" />
+		<propertyName name="accountCustomFieldId" parentName="accountCustomFields" doNotLog="yes" />
 
 	</entityType>
 
@@ -551,10 +557,12 @@
 			<entity name="prdCategory"/>
 			<entity name="prdApplicableMaster"/>
 			<entity name="prdStatus"/>
+			
 			<entity name="loanOfferingMeeting"/>
 			<entity name="meeting" parentName="loanOfferingMeeting"/>
 			<entity name="meetingDetails" parentName="meeting"/>
 			<entity name="recurrenceType" parentName="meetingDetails"/>
+			
 			<entity name="gracePeriodType"/>
 			<entity name="loanOfferingFees"/>
 			<entity name="fees" parentName="loanOfferingFees"/>
@@ -652,8 +660,8 @@
 		<propertyName name="meetingId" parentName="meeting" doNotLog="Yes" />
 		<propertyName name="meetingStartDate" parentName="meeting" doNotLog="Yes" />
 		<propertyName name="recurAfter" parentName="meetingDetails" displayKey="LoanProduct.meetingDetails.recurAfter"/>
-		<propertyName name="recurrenceName" parentName="recurrenceType" displayKey="LoanProduct.recurrenceType.recurrenceName"/>
-		<propertyName name="recurrenceId" parentName="recurrenceType" doNotLog="Yes" />
+		<propertyName name="recurrenceId" parentName="recurrenceType" displayKey="LoanProduct.recurrenceType.recurrenceName" methodName="retrieveRecurrenceTypes" lookUp="yes"/>
+		<propertyName name="recurrenceName" parentName="recurrenceType" doNotLog="Yes" />
 		<propertyName name="description" parentName="recurrenceType" doNotLog="Yes" />
 
 	</entityType>
@@ -668,7 +676,7 @@
 			<entity name="recommendedAmntUnit"/>
 			<entity name="interestCalcType"/>
 
-			<entity name="savingsOfferingMeetings"/>
+			<entity name="savingsOfferingMeetings" mergeProperties="yes" displayKey="SavingsProduct.meetingDetails.recurAfter"/>
 			<entity name="meeting" parentName="savingsOfferingMeetings"/>
 			<entity name="meetingDetails" parentName="meeting"/>
 			<entity name="recurrenceType" parentName="meetingDetails"/>
@@ -721,7 +729,8 @@
 		<propertyName name="minAmntForInt" displayKey="LoanProduct.Min,SavingsProduct.interestCalcType.interestCalculationTypeID1,Interest,SavingsProduct.interestCalcType.interestCalculationTypeID2" />
 		<propertyName name="recurAfter" parentName="meetingDetails" displayKey="SavingsProduct.meetingDetails.recurAfter"/>
 		<propertyName name="prdOfferingMeetingId" parentName="savingsOfferingMeetings" doNotLog="yes" />
-		<propertyName name="recurrenceId" parentName="recurrenceType" doNotLog="yes" />
+		<propertyName name="meetingType" parentName="savingsOfferingMeetings" doNotLog="yes" />
+		<propertyName name="recurrenceId" parentName="recurrenceType" displayKey="LoanProduct.recurrenceType.recurrenceName" methodName="retrieveRecurrenceTypes" lookUp="yes"/>
 		<propertyName name="meetingPlace" parentName="meeting" doNotLog="yes" />
 		<propertyName name="dayNumber" parentName="meetingRecurrence" doNotLog="yes" />
 		<propertyName name="meetingStartDate" parentName="meeting" doNotLog="yes" />

@@ -589,5 +589,6 @@ public interface NamedQueryConstants {
 	public String LOAD_ALL_ACCOUNT_CHECKLISTS="checklist.loadAllAccountCheckLists";
 	public String CHECKLIST_GET_VALID_CUSTOMER_STATES="checklist.getStatusForCustomer";
 	public String CHECKLIST_GET_VALID_ACCOUNT_STATES="checklist.getStatusForAccount";
+	public String FETCH_ALL_RECURRENCE_TYPES="meeting.fetchAllReccurenceTypes";
 	
 }

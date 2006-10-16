@@ -12,6 +12,7 @@ import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.util.valueobjects.LookUpEntity;
 import org.mifos.application.master.util.valueobjects.LookUpLabel;
+import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
@@ -65,6 +66,23 @@ public class AuditConfigurationPersistence extends Persistence {
 						valueMap.put(prdStatusEntity.getOfferingStatusId().toString(), lookUpValueLocaleEntity.getLookUpValue());
 					}
 				}
+			}
+		} catch (HibernateException he) {
+			throw new PersistenceException(he);
+		}
+		return valueMap;
+	}
+	
+	public Map<String, String>  retrieveRecurrenceTypes(Short localeId) throws PersistenceException{
+		Map<String, String> valueMap = new HashMap<String, String>();
+		try {
+			List<RecurrenceTypeEntity> recurrenceTypes = (List<RecurrenceTypeEntity>) executeNamedQuery(
+					NamedQueryConstants.FETCH_ALL_RECURRENCE_TYPES, null);
+			for (Iterator<RecurrenceTypeEntity> iter = recurrenceTypes
+					.iterator(); iter.hasNext();) {
+				RecurrenceTypeEntity recurrenceTypeEntity = iter
+						.next();
+				valueMap.put(recurrenceTypeEntity.getRecurrenceId().toString(), recurrenceTypeEntity.getRecurrenceName());
 			}
 		} catch (HibernateException he) {
 			throw new PersistenceException(he);

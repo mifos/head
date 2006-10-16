@@ -47,12 +47,17 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.EntityMode;
+import org.hibernate.Session;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 import org.hibernate.type.AbstractComponentType;
 import org.hibernate.type.Type;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.RecurrenceTypeEntity;
+import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
+import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -222,7 +227,16 @@ public class InterceptHelper {
 				Iterator iterator = ((Set) propertyValues[i]).iterator();
 				while (iterator.hasNext()) {
 					Object obj = iterator.next();
-					readFurtherMetaForCollectionType(obj, propertyNames[i],state);
+					if(obj!=null){
+						if(obj instanceof LoanOfferingFeesEntity){
+							LoanOfferingFeesEntity loanOfferingFeesEntity = (LoanOfferingFeesEntity)obj;
+							if(propertyNames[i].equalsIgnoreCase("loanOfferingFees") && loanOfferingFeesEntity.getPrdOfferingFeeId()!=null){
+								readLoanOfferingFeesCollection(loanOfferingFeesEntity,state);
+							}else
+								readFurtherMetaForCollectionType(obj, propertyNames[i],state);
+						}else
+							readFurtherMetaForCollectionType(obj, propertyNames[i],state);
+					}
 				}
 			}
 			if (propertyTypes[i].isEntityType() &&
@@ -318,7 +332,14 @@ public class InterceptHelper {
 					AuditConfigurtion.isObjectToBeLogged(entityName,propertyNames[i],firstName)) {
 				Object obj1 = propertyValues[i];
 				if (obj1 != null) {
-					readFurtherMeta(obj1, propertyNames[i],state);
+					if(obj1 instanceof MeetingBO){
+						MeetingBO meeting = (MeetingBO)obj1;
+						if(propertyNames[i].equalsIgnoreCase("meeting") && meeting.getMeetingId()!=null){
+							readMeetingEntity(meeting, propertyNames[i],state);
+						}else
+							readFurtherMeta(obj1, propertyNames[i],state);
+					}else
+						readFurtherMeta(obj1, propertyNames[i],state);
 				}
 			}
 			
@@ -343,6 +364,84 @@ public class InterceptHelper {
 			}
 			
 		}
+	}
+	
+	private void readMeetingEntity(MeetingBO meeting,String firstName,String state){
+		if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
+			 //Logggig meeting place
+			 String name=firstName.concat("meetingPlace");
+			 logger.debug("i readMeetingEntity "+name+ " : " + meeting.getMeetingPlace());
+			 initialValues.put(name, meeting.getMeetingPlace());
+			  String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"meetingPlace");
+			 }
+			 
+			 //Logging meeting recurrence type
+			 name="recurrenceTyperecurrenceId";
+			 logger.debug("i readMeetingEntity "+name+ " : " + meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId(),localeId);
+			 if(!value.equals(""))
+				 initialValues.put(name,value);
+			 else
+				 initialValues.put(name, meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			 columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"recurrenceId");
+			 }
+			 
+			 //Logging recur after
+			 name="meetingDetailsrecurAfter";
+			 logger.debug("i readMeetingEntity "+name+ " : " + meeting.getMeetingDetails().getRecurAfter());
+			 initialValues.put(name, meeting.getMeetingDetails().getRecurAfter());
+			 columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"recurrenceId");
+			 }
+		 }else{
+			 //Logggig meeting place
+			 String name=firstName.concat("meetingPlace");
+			 logger.debug("c readMeetingEntity "+name+ " : " + meeting.getMeetingPlace());
+			 changedValues.put(name,  meeting.getMeetingPlace());
+			 String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"meetingPlace");
+			 }
+			 
+			 //Logging meeting recurrence type
+			 name="recurrenceTyperecurrenceId";
+			 logger.debug("i readMeetingEntity "+name+ " : " + meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId(),localeId);
+			 if(!value.equals(""))
+				 changedValues.put(name,value);
+			 else
+				 changedValues.put(name, meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			 columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"recurrenceId");
+			 }
+			 
+			 //Logging recur after
+			 name="meetingDetailsrecurAfter";
+			 logger.debug("i readMeetingEntity "+name+ " : " + meeting.getMeetingDetails().getRecurAfter());
+			 changedValues.put(name, meeting.getMeetingDetails().getRecurAfter());
+			 columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"recurrenceId");
+			 }
+		 }
 	}
 	
 	private void readFurtherMoneyType(Object obj,String name,String state){
@@ -506,6 +605,41 @@ public class InterceptHelper {
 	}
 
 
+	private void readLoanOfferingFeesCollection(LoanOfferingFeesEntity loanOfferingFeesEntity,String state){
+	 	if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
+			String name="feesfeeName";
+			logger.debug("i readFurtherMetaForCollectionType : "+name+ " : " + loanOfferingFeesEntity.getFees().getFeeName());
+			String oldValue=getOldValueToKey(initialValues,name);
+			String value = loanOfferingFeesEntity.getFees().getFeeName();
+			if(!oldValue.equals("")){
+				 initialValues.put(name, value.concat(",").concat(oldValue));
+			}else{
+				 initialValues.put(name, value);
+			}
+			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			if(columnName!=null && !columnName.equals("")){
+				columnNames.put(name,columnName);
+			}else{
+			    columnNames.put(name,"feeName");
+			}
+	 	}else{
+	 		String name="feesfeeName";
+			logger.debug("c readFurtherMetaForCollectionType : "+name+ " : " + loanOfferingFeesEntity.getFees().getFeeName());
+			String oldValue=getOldValueToKey(changedValues,name);
+			String value = loanOfferingFeesEntity.getFees().getFeeName();
+			if(!value.equals("")){
+				changedValues.put(name, value.concat(",").concat(oldValue));
+			}else{
+				 changedValues.put(name, oldValue);
+			}
+			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			}else{
+				 columnNames.put(name,"feeName");
+			}
+		 }
+	}
 	
 	private void readFurtherMetaForCollectionType(Object obj,String firstName,String state) {
 		Class l = getClazz(obj);
@@ -648,7 +782,14 @@ public class InterceptHelper {
 					AuditConfigurtion.isObjectToBeLogged(entityName,propertyNames[i],firstName)) {
 				Object object = propertyValues[i];
 				if (object != null) {
-					readFurtherMetaForCollectionType(object,propertyNames[i],state);
+					if(object instanceof MeetingBO){
+						MeetingBO meeting = (MeetingBO)object;
+						if(propertyNames[i].equalsIgnoreCase("meeting") && meeting.getMeetingId()!=null){
+							readMeetingCollection(meeting, propertyNames[i],state);
+						}else
+							readFurtherMetaForCollectionType(object,propertyNames[i],state);
+					}else
+						readFurtherMetaForCollectionType(object,propertyNames[i],state);
 				}
 
 			}
@@ -676,6 +817,112 @@ public class InterceptHelper {
 		}
 	}
 	
+	private void readMeetingCollection(MeetingBO meeting,String firstName,String state){
+		if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
+			 //Logggig meeting place
+			 String name=firstName.concat("meetingPlace");
+			 logger.debug("i readMeetingCollection "+name+ " : " + meeting.getMeetingPlace());
+			 String oldValue=getOldValueToKey(initialValues,name);
+			 String value=meeting.getMeetingPlace();
+			 if(!oldValue.equals("")){
+				 initialValues.put(name, value.concat(",").concat(oldValue));
+			 }else{
+				 initialValues.put(name, value);
+			 }
+			 String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"meetingPlace");
+			 }
+			 
+			 //Logging meeting recurrence type
+			 name="recurrenceTyperecurrenceId";
+			 logger.debug("i readMeetingCollection "+name+ " : " + meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			 value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId(),localeId);
+			 oldValue=getOldValueToKey(initialValues,name);
+			 if(!oldValue.equals("")){
+				 initialValues.put(name, value.concat(",").concat(oldValue));
+			 }else{
+				 initialValues.put(name, value);
+			 }
+			 columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"recurrenceId");
+			 }
+			 
+			 //Logging recur after
+			 name="meetingDetailsrecurAfter";
+			 logger.debug("i readMeetingCollection "+name+ " : " + meeting.getMeetingDetails().getRecurAfter());
+			 value=meeting.getMeetingDetails().getRecurAfter().toString();
+			 oldValue=getOldValueToKey(initialValues,name);
+			 if(!oldValue.equals("")){
+				 initialValues.put(name, value.concat(",").concat(oldValue));
+			 }else{
+				 initialValues.put(name, value);
+			 }
+			 columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"recurrenceId");
+			 }
+		 }else{
+			 //Logggig meeting place
+			 String name=firstName.concat("meetingPlace");
+			 logger.debug("i readMeetingCollection "+name+ " : " + meeting.getMeetingPlace());
+			 String oldValue=getOldValueToKey(initialValues,name);
+			 String value=value=meeting.getMeetingPlace();
+			 if(!oldValue.equals("")){
+				 changedValues.put(name, value.concat(",").concat(oldValue));
+			 }else{
+				 changedValues.put(name, value);
+			 }
+			 String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"meetingPlace");
+			 }
+			 
+			 //Logging meeting recurrence type
+			 name="recurrenceTyperecurrenceId";
+			 logger.debug("i readMeetingCollection "+name+ " : " + meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			 value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId(),localeId);
+			 oldValue=getOldValueToKey(initialValues,name);
+			 if(!oldValue.equals("")){
+				 changedValues.put(name, value.concat(",").concat(oldValue));
+			 }else{
+				 changedValues.put(name, value);
+			 }
+			 columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"recurrenceId");
+			 }
+			 
+			 //Logging recur after
+			 name="meetingDetailsrecurAfter";
+			 logger.debug("i readMeetingCollection "+name+ " : " + meeting.getMeetingDetails().getRecurAfter());
+			 value=meeting.getMeetingDetails().getRecurAfter().toString();
+			 oldValue=getOldValueToKey(initialValues,name);
+			 if(!oldValue.equals("")){
+				 changedValues.put(name, value.concat(",").concat(oldValue));
+			 }else{
+				 changedValues.put(name, value);
+			 }
+			 columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			 if(columnName!=null && !columnName.equals("")){
+				 columnNames.put(name,columnName);
+			 }else{
+				 columnNames.put(name,"recurrenceId");
+			 }
+		 }
+	}
+	
 	
 	private void readAndMergeCollectionTypes(Object obj,String firstName,String parentName,String state) {
 		Class l = getClazz(obj);
@@ -687,7 +934,7 @@ public class InterceptHelper {
 		String[] propertyNames = customMeta.getPropertyNames();
 		Type[] propertyTypes = customMeta.getPropertyTypes();
 		
-		//setPrimaryKeyValueForCollectionTypeAndMerge(customMeta,obj,firstName.concat(customMeta.getIdentifierPropertyName()),state);
+		setPrimaryKeyValueForCollectionTypeAndMerge(customMeta,obj,firstName.concat(customMeta.getIdentifierPropertyName()),state);
 		
 		for (int i = 0; i < propertyNames.length; i++) {
 			logger.debug("property Name : " + propertyNames[i] + " value : " + propertyValues[i]);
@@ -745,7 +992,14 @@ public class InterceptHelper {
 						AuditConfigurtion.isObjectToBeLogged(entityName,propertyNames[i],firstName)) {
 					Object object = propertyValues[i];
 					if (object != null) {
-						readAndMergeCollectionTypes(object,propertyNames[i],firstName,state);
+						if(object instanceof MeetingBO){
+							MeetingBO meeting = (MeetingBO)object;
+							if(propertyNames[i].equalsIgnoreCase("meeting") && meeting.getMeetingId()!=null){
+								readAndMergeMeetingCollection(meeting, propertyNames[i],state);
+							}else
+								readAndMergeCollectionTypes(object,propertyNames[i],firstName,state);
+						}else
+							readAndMergeCollectionTypes(object,propertyNames[i],firstName,state);
 						
 					}
 				}
@@ -770,6 +1024,130 @@ public class InterceptHelper {
 				}
 		}
 	}
+	
+	
+	private void readAndMergeMeetingCollection(MeetingBO meeting,String firstName,String state){
+		if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
+			//Logggig meeting place
+			 String name=firstName.concat("meetingPlace");
+			 logger.debug("i readAndMergeMeetingCollection "+name+ " : " + meeting.getMeetingPlace());
+			 if(isValueLoggable("meetingPlace",firstName)){
+				 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+					 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingPlace(),localeId);
+					 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
+						 initialArray.append(value);
+					 else if(value.trim().length()!=0)
+						 initialArray.append("-").append(value);	 
+				 }else{
+					 if(meeting.getMeetingPlace()!= null)
+						 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
+							 initialArray.append(meeting.getMeetingPlace());
+						 else if(meeting.getMeetingPlace().toString().trim().length()!=0)
+							 initialArray.append("-").append(meeting.getMeetingPlace());
+						 
+				 }
+			 }
+			 
+			 //Logggig reccurence
+			 name="recurrenceTyperecurrenceId";
+			 logger.debug("i readAndMergeMeetingCollection "+name+ " : " +meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+			 if(isValueLoggable("recurrenceId","recurrenceType")){
+				 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+					 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId(),localeId);
+					 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
+						 initialArray.append(value);
+					 else if(value.trim().length()!=0)
+						 initialArray.append("-").append(value);	 
+				 }else{
+					 if(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId()!= null)
+						 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
+							 initialArray.append(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+						 else if(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().toString().trim().length()!=0)
+							 initialArray.append("-").append(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+						 
+				 }
+			 }
+			 //Logggig recur after
+			 name="meetingDetailsrecurAfter";
+			 if(isValueLoggable("recurAfter","meetingDetails")){
+				 logger.debug("i readAndMergeMeetingCollection "+name+ " : " +meeting.getMeetingDetails().getRecurAfter());
+				 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+					 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingDetails().getRecurAfter(),localeId);
+					 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
+						 initialArray.append(value);
+					 else if(value.trim().length()!=0)
+						 initialArray.append("-").append(value);	 
+				 }else{
+					 if(meeting.getMeetingDetails().getRecurAfter()!= null)
+						 if(initialArray.toString().trim().length()==0 || initialArray.toString().endsWith(","))
+							 initialArray.append(meeting.getMeetingDetails().getRecurAfter());
+						 else if(meeting.getMeetingDetails().getRecurAfter().toString().trim().length()!=0)
+							 initialArray.append("-").append(meeting.getMeetingDetails().getRecurAfter());
+						 
+				 }
+			 }
+		}else{
+			//Logggig meeting place
+			 String name=firstName.concat("meetingPlace");
+			 if(isValueLoggable("meetingPlace",firstName)){
+				 logger.debug("c readAndMergeMeetingCollection "+name+ " : " + meeting.getMeetingPlace());
+				 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+					 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingPlace(),localeId);
+					 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
+						 changeArray.append(value);
+					 else if(value.trim().length()!=0)
+						 changeArray.append("-").append(value);	 
+				 }else{
+					 if(meeting.getMeetingPlace()!= null)
+						 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
+							 changeArray.append(meeting.getMeetingPlace());
+						 else if(meeting.getMeetingPlace().toString().trim().length()!=0)
+							 changeArray.append("-").append(meeting.getMeetingPlace());
+						 
+				 }
+			 }
+			 //Logggig reccurence
+			 name="recurrenceTyperecurrenceId";
+			 if(isValueLoggable("recurrenceId","recurrenceType")){
+				 logger.debug("c readAndMergeMeetingCollection "+name+ " : " +meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+				 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+					 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId(),localeId);
+					 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
+						 changeArray.append(value);
+					 else if(value.trim().length()!=0)
+						 changeArray.append("-").append(value);	 
+				 }else{
+					 if(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId()!= null)
+						 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
+							 changeArray.append(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+						 else if(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId().toString().trim().length()!=0)
+							 changeArray.append("-").append(meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());
+						 
+				 }
+			 }
+			 //Logggig recur after
+			 name="meetingDetailsrecurAfter";
+			 if(isValueLoggable("recurAfter","meetingDetails")){
+				 logger.debug("c  readAndMergeMeetingCollection "+name+ " : " +meeting.getMeetingDetails().getRecurAfter());
+				 if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+					 String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,meeting.getMeetingDetails().getRecurAfter(),localeId);
+					 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
+						 changeArray.append(value);
+					 else if(value.trim().length()!=0)
+						 changeArray.append("-").append(value);	 
+				 }else{
+					 if(meeting.getMeetingDetails().getRecurAfter()!= null)
+						 if(changeArray.toString().trim().length()==0 || changeArray.toString().endsWith(","))
+							 changeArray.append(meeting.getMeetingDetails().getRecurAfter());
+						 else if(meeting.getMeetingDetails().getRecurAfter().toString().trim().length()!=0)
+							 changeArray.append("-").append(meeting.getMeetingDetails().getRecurAfter());
+						 
+				 }
+			 }
+		}
+
+	}
+
 	
 	private void readComponenetTypeInCollectionTypeWithMerge(Object obj,String firstName,String state,Type propertyType){
 		
@@ -1070,7 +1448,6 @@ public class InterceptHelper {
 				changedValues.put(name,customMeta.getIdentifier(obj,EntityMode.POJO));
 			}
 			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
-			logger.debug("c setPrimaryKeyValues "+name+ " value : " + customMeta.getIdentifier(obj,EntityMode.POJO));
 			if(columnName!=null && !columnName.equals("")){
 				columnNames.put(name,columnName);
 			}else{

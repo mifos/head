@@ -168,7 +168,7 @@ public class AuditConfigurtion {
 		String propName=propertyName+"_"+localeId;
 		Map<String,String> valueMap=propertyMap.get(propName);
 		String value=null;
-		if(id==null){
+		if(id==null || valueMap==null){
 			return "";
 		}
 		value=valueMap.get(id.toString());

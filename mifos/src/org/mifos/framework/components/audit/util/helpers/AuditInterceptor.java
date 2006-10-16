@@ -40,8 +40,11 @@ package org.mifos.framework.components.audit.util.helpers;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.EntityMode;
@@ -244,15 +247,25 @@ public class AuditInterceptor implements Interceptor {
 		if(initialCollectionOfStrings.length!=changedCollectionOfStrings.length){
 			return false;
 		}
-	    int initialCollectionCount=0;
+		int initialCollectionCount=0;
 	    int changedCollectionCount=0;
-		if(initialCollectionOfStrings.length == changedCollectionOfStrings.length){
-			for(int i=0;i<initialCollectionOfStrings.length;i++){
-				initialCollectionCount++;
-				for(int j=0;j<changedCollectionOfStrings.length;j++){
-					if(initialCollectionOfStrings[i].equals(changedCollectionOfStrings[j])){
-						changedCollectionCount++;
-					}
+		List<String> initialList = new ArrayList<String>();
+		for (int i = 0; i < initialCollectionOfStrings.length; i++) {
+			initialList.add(initialCollectionOfStrings[i]);
+		}
+		List<String> changeList =  new ArrayList<String>();
+		for (int i = 0; i < changedCollectionOfStrings.length; i++) {
+			changeList.add(changedCollectionOfStrings[i]);
+		}
+		
+	    for (Iterator<String> iter = initialList.iterator(); iter.hasNext();) {
+			String  initialValue =  iter.next();
+			initialCollectionCount++;
+			for (Iterator<String> iterator = changeList.iterator(); iterator.hasNext();) {
+				String  changeValue =  iterator.next();
+				if(changeValue.equals(initialValue)){
+					iterator.remove();
+					changedCollectionCount++;
 				}
 			}
 		}

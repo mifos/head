@@ -126,8 +126,11 @@ public class RolesPermissionsAction extends BaseAction {
 		RolesPermissionsActionForm rolesPermissionsActionForm = (RolesPermissionsActionForm) form;
 		RoleBO role = (RoleBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		role.delete();
-		AuthorizationManager.getInstance().deleteRole(role);
+		RoleBO roleBO =((RolesPermissionsBusinessService) getService()).getRole(role.getId());
+		roleBO.setVersionNo(role.getVersionNo());
+		roleBO.delete();
+		AuthorizationManager.getInstance().deleteRole(roleBO);
+		role=null;
 		return mapping.findForward(ActionForwards.delete_success.toString());
 	}
 

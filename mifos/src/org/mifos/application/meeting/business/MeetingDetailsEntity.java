@@ -128,5 +128,11 @@ public class MeetingDetailsEntity extends PersistentObject {
 		if(recurAfter == null || recurAfter<1)
 			throw new MeetingException(MeetingConstants.INVALID_RECURAFTER);
 	}
+
+	public Integer getDetailsId() {
+		return detailsId;
+	}
+	
+	
 		
 }
