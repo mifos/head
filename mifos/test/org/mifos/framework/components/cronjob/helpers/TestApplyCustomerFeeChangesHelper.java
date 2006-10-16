@@ -14,6 +14,7 @@ import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.customer.business.TestCustomerAccountBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -69,7 +70,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
 				accountActionDate, trainingFee, accountPeriodicFee, new Money(
 						"10.0"));
-		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
+		TestCustomerAccountBO.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction,new Money("0.0"));
 		accountActionDate.addAccountFeesAction(accountFeesaction);
 		TestObjectFactory.flushandCloseSession();
 
@@ -106,7 +107,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
 		.getAccountActionDate(Short.valueOf("1"));
-		accountActionDate.setActionDate(offSetDate(accountActionDate.getActionDate(),-1));
+		TestCustomerAccountBO.setActionDate(accountActionDate,offSetDate(accountActionDate.getActionDate(),-1));
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(
@@ -124,7 +125,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
 				accountActionDate, trainingFee, accountPeriodicFee, new Money(
 						"10.0"));
-		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
+		TestCustomerAccountBO.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction,new Money("0.0"));
 		accountActionDate.addAccountFeesAction(accountFeesaction);
 		TestObjectFactory.flushandCloseSession();
 
@@ -155,7 +156,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) customerAccount
 		.getAccountActionDate(Short.valueOf("1"));
-		accountActionDate.setActionDate(offSetDate(accountActionDate.getActionDate(),-1));
+		TestCustomerAccountBO.setActionDate(accountActionDate,offSetDate(accountActionDate.getActionDate(),-1));
 		TestObjectFactory.updateObject(center);
 		HibernateUtil.closeSession();
 		
@@ -175,7 +176,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
 				accountActionDate, trainingFee, accountPeriodicFee, new Money(
 						"10.0"));
-		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
+		TestCustomerAccountBO.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction,new Money("0.0"));
 		accountActionDate.addAccountFeesAction(accountFeesaction);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -326,14 +327,14 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
 				accountActionDate, trainingFee, accountPeriodicFee, new Money(
 						"10.0"));
-		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
+		TestCustomerAccountBO.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesaction,new Money("0.0"));
 		accountActionDate.addAccountFeesAction(accountFeesaction);
 		CustomerScheduleEntity groupaccountActionDate = (CustomerScheduleEntity) groupAccount
 				.getAccountActionDate(Short.valueOf("1"));
 		AccountFeesActionDetailEntity groupaccountFeesaction = new CustomerFeeScheduleEntity(
 				groupaccountActionDate, trainingFee, groupaccountPeriodicFee,
 				new Money("10.0"));
-		groupaccountFeesaction.setFeeAmountPaid(new Money("0.0"));
+		TestCustomerAccountBO.setFeeAmountPaid((CustomerFeeScheduleEntity) groupaccountFeesaction,new Money("0.0"));
 		groupaccountActionDate.addAccountFeesAction(groupaccountFeesaction);
 
 		TestObjectFactory.flushandCloseSession();

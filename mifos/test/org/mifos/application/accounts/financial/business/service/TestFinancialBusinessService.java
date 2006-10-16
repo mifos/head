@@ -17,6 +17,7 @@ import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
@@ -146,7 +147,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction
 				.getAccountFeesActionDetails()) {
-			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
+			TestLoanBO.setFeeAmountPaid(accountFeesActionDetailEntity,TestObjectFactory
 					.getMoneyForMFICurrency(100));
 			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
 					accountTrxnEntity, accountFeesActionDetailEntity

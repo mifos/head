@@ -204,7 +204,7 @@ public class SavingsTestHelper {
 				paymentStatus, deposit);
 		TestSavingsBO.setDepositPaid(actionDate,depositPaid);
 		if (paymentDate != null)
-			actionDate.setPaymentDate(new java.sql.Date(paymentDate.getTime()));
+			TestSavingsBO.setPaymentDate(actionDate,new java.sql.Date(paymentDate.getTime()));
 		return actionDate;
 	}
 

@@ -373,7 +373,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(7));
+		TestSavingsBO.setActionDate(accountActionDateEntity,offSetCurrentDate(7));
 
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
@@ -407,13 +407,13 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(7));
-		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+		TestSavingsBO.setActionDate(accountActionDateEntity,offSetCurrentDate(7));
+		TestSavingsBO.setPaymentStatus(accountActionDateEntity,PaymentStatus.PAID.getValue());
 		Calendar currentDateCalendar = new GregorianCalendar();
 		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar
 				.getTimeInMillis());
 
-		accountActionDateEntity.setPaymentDate(currentDate);
+		TestSavingsBO.setPaymentDate(accountActionDateEntity,currentDate);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();

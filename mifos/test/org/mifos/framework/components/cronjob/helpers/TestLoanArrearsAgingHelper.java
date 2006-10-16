@@ -183,7 +183,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 		TestLoanBO.modifyDisbursmentDate(loan,startDate);
 		for (AccountActionDateEntity actionDate : loan.getAccountActionDates()){
 			if(actionDate.getInstallmentId().shortValue()<=installmentSize.shortValue())
-				actionDate.setActionDate(offSetGivenDate(
+				TestLoanBO.setActionDate(actionDate,offSetGivenDate(
 						actionDate.getActionDate(), days));
 		}
 	}

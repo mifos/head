@@ -94,7 +94,7 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		
 		
 		for(AccountFeesActionDetailEntity accountFeesActionDetailEntity:accountAction.getAccountFeesActionDetails()) {
-			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory.getMoneyForMFICurrency(100));
+			TestCustomerAccountBO.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,TestObjectFactory.getMoneyForMFICurrency(100));
 			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
 					accountTrxnEntity, accountFeesActionDetailEntity.getAccountFee(),
 					accountFeesActionDetailEntity.getFeeAmount());

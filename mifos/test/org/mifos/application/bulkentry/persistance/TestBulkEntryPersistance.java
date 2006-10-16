@@ -8,6 +8,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -188,7 +189,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		for (AccountActionDateEntity actionDate : account
 				.getAccountActionDates()) {
 			if (actionDate.getInstallmentId().equals(Short.valueOf("1"))) {
-				actionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
+				TestLoanBO.setPaymentStatus(actionDate,PaymentStatus.PAID.getValue());
 			}
 		}
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();

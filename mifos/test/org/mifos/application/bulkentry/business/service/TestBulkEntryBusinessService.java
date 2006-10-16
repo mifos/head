@@ -10,6 +10,7 @@ import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -420,7 +421,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	private void makePaymentForallInstallments() throws Exception {
 		for (AccountActionDateEntity actionDate : account
 				.getAccountActionDates()) {
-			actionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
+			TestLoanBO.setPaymentStatus(actionDate,PaymentStatus.PAID.getValue());
 		}
 
 		TestObjectFactory.updateObject(account);

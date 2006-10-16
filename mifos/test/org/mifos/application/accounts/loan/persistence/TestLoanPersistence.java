@@ -10,6 +10,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
@@ -83,7 +84,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		for (AccountActionDateEntity accountAction : loanAccount
 				.getAccountActionDates()) {
 			if (accountAction.getInstallmentId().equals(Short.valueOf("1")))
-				accountAction.setActionDate(new Date(twoDaysBack
+				TestLoanBO.setActionDate(accountAction,new Date(twoDaysBack
 						.getTimeInMillis()));
 		}
 
@@ -149,7 +150,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		Date startDate = new Date(checkDate.getTimeInMillis());
 		for (AccountActionDateEntity accountAction : loanAccount
 				.getAccountActionDates()) {
-			accountAction.setActionDate(startDate);
+			TestLoanBO.setActionDate(accountAction,startDate);
 		}
 		TestObjectFactory.updateObject(loanAccount);
 		loanAccount = new AccountPersistence().getAccount(loanAccount

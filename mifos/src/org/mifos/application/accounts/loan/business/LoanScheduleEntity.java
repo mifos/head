@@ -228,8 +228,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 						getMiscPenalty()));
 	}
 
-	void setPaymentDetails(LoanPaymentData loanPaymentData,
-			Date paymentDate) {
+	void setPaymentDetails(LoanPaymentData loanPaymentData, Date paymentDate) {
 		this.principalPaid = this.principalPaid.add(loanPaymentData
 				.getPrincipalPaid());
 		this.interestPaid = this.interestPaid.add(loanPaymentData
@@ -245,8 +244,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		for (AccountFeesActionDetailEntity accountFeesActionDetail : getAccountFeesActionDetails()) {
 			if (loanPaymentData.getFeesPaid().containsKey(
 					accountFeesActionDetail.getFee().getFeeId())) {
-				accountFeesActionDetail.makePayment(loanPaymentData
-						.getFeesPaid().get(
+				((LoanFeeScheduleEntity) accountFeesActionDetail)
+						.makePayment(loanPaymentData.getFeesPaid().get(
 								accountFeesActionDetail.getFee().getFeeId()));
 			}
 		}
@@ -274,7 +273,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
 					.getAccountFeesActionDetails();
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
-				accountFeesActionDetailEntity
+				((LoanFeeScheduleEntity) accountFeesActionDetailEntity)
 						.makeRepaymentEnteries(payFullOrPartial);
 			}
 		} else {
@@ -288,14 +287,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
 					.getAccountFeesActionDetails();
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetailSet) {
-				accountFeesActionDetailEntity
+				((LoanFeeScheduleEntity) accountFeesActionDetailEntity)
 						.makeRepaymentEnteries(payFullOrPartial);
 			}
 		}
 	}
 
-	void updatePaymentDetails(Money principal, Money interest,
-			Money penalty, Money miscPenalty, Money miscFee) {
+	void updatePaymentDetails(Money principal, Money interest, Money penalty,
+			Money miscPenalty, Money miscFee) {
 		principalPaid = principalPaid.add(principal);
 		interestPaid = interestPaid.add(interest);
 		penaltyPaid = penaltyPaid.add(penalty);
@@ -309,8 +308,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		setMiscFee(new Money());
 		setMiscPenalty(new Money());
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
-			chargeWaived = chargeWaived.add(accountFeesActionDetailEntity
-					.waiveCharges());
+			chargeWaived = chargeWaived
+					.add(((LoanFeeScheduleEntity) accountFeesActionDetailEntity)
+							.waiveCharges());
 		}
 		return chargeWaived;
 	}
@@ -320,8 +320,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		chargeWaived = chargeWaived.add(getMiscFeeDue());
 		setMiscFee(new Money());
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
-			chargeWaived = chargeWaived.add(accountFeesActionDetailEntity
-					.waiveCharges());
+			chargeWaived = chargeWaived
+					.add(((LoanFeeScheduleEntity) accountFeesActionDetailEntity)
+							.waiveCharges());
 		}
 		return chargeWaived;
 	}
@@ -390,7 +391,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 						.subtract(
 								accountFeesActionDetailEntity
 										.getFeeAmountPaid());
-				accountFeesActionDetailEntity
+				((LoanFeeScheduleEntity) accountFeesActionDetailEntity)
 						.setFeeAmount(accountFeesActionDetailEntity
 								.getFeeAmountPaid());
 				break;
@@ -455,6 +456,21 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 				return true;
 		}
 		return false;
+	}
+
+	@Override
+	protected void setActionDate(Date actionDate) {
+		super.setActionDate(actionDate);
+	}
+
+	@Override
+	protected void setPaymentDate(Date paymentDate) {
+		super.setPaymentDate(paymentDate);
+	}
+
+	@Override
+	protected void setPaymentStatus(Short paymentStatus) {
+		super.setPaymentStatus(paymentStatus);
 	}
 
 }

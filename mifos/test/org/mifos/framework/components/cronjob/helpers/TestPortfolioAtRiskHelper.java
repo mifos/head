@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -124,7 +125,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				- numberOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(new java.sql.Date(
+			TestLoanBO.setActionDate(accountActionDateEntity,new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}

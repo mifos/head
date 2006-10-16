@@ -3,6 +3,7 @@ package org.mifos.application.accounts.business;
 import java.sql.Date;
 import java.util.List;
 
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;
@@ -49,6 +50,14 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 	public static void addAccountPayment(AccountPaymentEntity payment,AccountBO account) {
 		account.addAccountPayment(payment);
 	}
+	
+	public static List<AccountTrxnEntity> reversalAdjustment(
+			String adjustmentComment, AccountPaymentEntity lastPayment)
+			throws AccountException {
+		return lastPayment.reversalAdjustment(adjustmentComment);
+
+	}
+	
 	public void testReversalAdjustment() throws Exception {
 		userContext = TestObjectFactory.getUserContext();
 		createInitialObjects();
@@ -60,8 +69,8 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		CustomerScheduleEntity accountAction = (CustomerScheduleEntity)customerAccountBO.getAccountActionDate(Short.valueOf("1"));
 		TestCustomerAccountBO.setMiscFeePaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
 		TestCustomerAccountBO.setMiscPenaltyPaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
-		accountAction.setPaymentDate(currentDate);
-		accountAction.setPaymentStatus(PaymentStatus.PAID.getValue());
+		TestCustomerAccountBO.setPaymentDate(accountAction,currentDate);
+		TestCustomerAccountBO.setPaymentStatus(accountAction,PaymentStatus.PAID.getValue());
 		
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.MasterDataService);
 		

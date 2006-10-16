@@ -12,6 +12,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
@@ -209,8 +210,8 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.getMoneyForMFICurrency(100));
 		TestCustomerAccountBO.setMiscPenaltyPaid(accountAction,TestObjectFactory
 				.getMoneyForMFICurrency(100));
-		accountAction.setPaymentDate(currentDate);
-		accountAction.setPaymentStatus(PaymentStatus.PAID.getValue());
+		TestCustomerAccountBO.setPaymentDate(accountAction,currentDate);
+		TestCustomerAccountBO.setPaymentStatus(accountAction,PaymentStatus.PAID.getValue());
 
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(
@@ -234,7 +235,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction
 				.getAccountFeesActionDetails()) {
-			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
+			TestCustomerAccountBO.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,TestObjectFactory
 					.getMoneyForMFICurrency(100));
 			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
 					accountTrxnEntity, accountFeesActionDetailEntity

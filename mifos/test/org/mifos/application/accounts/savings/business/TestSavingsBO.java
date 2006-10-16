@@ -140,6 +140,26 @@ public class TestSavingsBO extends MifosTestCase {
 		actionDate.setDepositPaid(depositPaid);	
 	}
 	
+	public static void setActionDate(
+			AccountActionDateEntity accountActionDateEntity,
+			java.sql.Date actionDate) {
+		((SavingsScheduleEntity) accountActionDateEntity)
+				.setActionDate(actionDate);
+	}
+
+	public static void setPaymentDate(
+			AccountActionDateEntity accountActionDateEntity,
+			java.sql.Date paymentDate) {
+		((SavingsScheduleEntity) accountActionDateEntity)
+				.setPaymentDate(paymentDate);
+	}
+	
+	public static void setPaymentStatus(
+			AccountActionDateEntity accountActionDateEntity, Short paymentStatus) {
+		((SavingsScheduleEntity) accountActionDateEntity)
+				.setPaymentStatus(paymentStatus);
+	}
+	
 	
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -1863,7 +1883,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = getSavingsAccount();
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
 				200.0);
@@ -1875,7 +1895,7 @@ public class TestSavingsBO extends MifosTestCase {
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		accountActionDateEntity.setDepositPaid(new Money("20.0"));
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
@@ -1887,8 +1907,8 @@ public class TestSavingsBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate(Short.valueOf("1"));
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setPaymentStatus(PaymentStatus.PAID.getValue());
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
 				0.0);
@@ -1899,10 +1919,10 @@ public class TestSavingsBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(2));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(2));
 		AccountActionDateEntity accountActionDateEntity2 = savings
 				.getAccountActionDate((short) 2);
-		accountActionDateEntity2.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity2).setActionDate(offSetCurrentDate(1));
 
 		savings = (SavingsBO) saveAndFetch(savings);
 
@@ -1920,7 +1940,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 400.0);
@@ -1933,7 +1953,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAccountActionDate((short) 1);
 
 		accountActionDateEntity.setDepositPaid(new Money("20.0"));
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 380.0);
 	}
@@ -1943,8 +1963,8 @@ public class TestSavingsBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setPaymentStatus(PaymentStatus.PAID.getValue());
 
 		savings = (SavingsBO) saveAndFetch(savings);
 
@@ -1955,11 +1975,11 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = getSavingsAccount();
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(2));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(2));
 		AccountActionDateEntity accountActionDateEntity2 = savings
 				.getAccountActionDate((short) 2);
 
-		accountActionDateEntity2.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity2).setActionDate(offSetCurrentDate(1));
 
 		savings = (SavingsBO) saveAndFetch(savings);
 
@@ -2004,7 +2024,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate(Short.valueOf("1"));
-		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+		((SavingsScheduleEntity)accountActionDateEntity).setPaymentStatus(PaymentStatus.PAID.getValue());
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountDueForNextInstallment()
 				.getAmountDoubleValue(), 0.0);
@@ -2021,7 +2041,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = getSavingsAccount();
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 1);
 	}
@@ -2032,8 +2052,8 @@ public class TestSavingsBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate(Short.valueOf("1"));
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setPaymentStatus(PaymentStatus.PAID.getValue());
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 0);
 	}
@@ -2044,10 +2064,10 @@ public class TestSavingsBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(2));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(2));
 		AccountActionDateEntity accountActionDateEntity2 = savings
 				.getAccountActionDate((short) 2);
-		accountActionDateEntity2.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity2).setActionDate(offSetCurrentDate(1));
 
 		savings = (SavingsBO) saveAndFetch(savings);
 
@@ -2059,7 +2079,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = getSavingsAccount();
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
 				200.0);
@@ -2075,7 +2095,7 @@ public class TestSavingsBO extends MifosTestCase {
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		accountActionDateEntity.setDepositPaid(new Money("20.0"));
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),

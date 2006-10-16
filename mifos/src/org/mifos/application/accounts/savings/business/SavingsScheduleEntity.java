@@ -56,4 +56,19 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
 		deposit = deposit.subtract(depositDue);
 		setPaymentStatus(PaymentStatus.PAID.getValue());
 	}
+	
+	@Override
+	protected void setActionDate(Date actionDate) {
+		super.setActionDate(actionDate);
+	}
+
+	@Override
+	protected void setPaymentDate(Date paymentDate) {
+		super.setPaymentDate(paymentDate);
+	}
+
+	@Override
+	protected void setPaymentStatus(Short paymentStatus) {
+		super.setPaymentStatus(paymentStatus);
+	}
 }

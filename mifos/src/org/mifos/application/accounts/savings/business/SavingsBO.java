@@ -1331,9 +1331,8 @@ public class SavingsBO extends AccountBO {
 			logger
 					.debug("transaction count before adding reversal transactions: "
 							+ lastPayment.getAccountTrxns().size());
-			List<AccountTrxnEntity> newlyAddedTrxns = lastPayment
-					.reversalAdjustment(adjustmentComment);
-
+			List<AccountTrxnEntity> newlyAddedTrxns = reversalAdjustment(
+					adjustmentComment, lastPayment);
 			buildFinancialEntries(new HashSet<AccountTrxnEntity>(
 					newlyAddedTrxns));
 		} catch (PersistenceException e) {
@@ -1953,7 +1952,7 @@ public class SavingsBO extends AccountBO {
 					short installmentId = (short) (nextInstallmentId.intValue() + count);
 					AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
 					if (accountActionDate != null)
-						accountActionDate.setActionDate(new java.sql.Date(
+						((SavingsScheduleEntity)accountActionDate).setActionDate(new java.sql.Date(
 								meetingDates.get(count).getTime()));
 				}
 			} else {
@@ -1970,7 +1969,7 @@ public class SavingsBO extends AccountBO {
 						AccountActionDateEntity accountActionDate = getAccountActionDate(
 								installmentId, customer.getCustomerId());
 						if (accountActionDate != null)
-							accountActionDate.setActionDate(new java.sql.Date(
+							((SavingsScheduleEntity)accountActionDate).setActionDate(new java.sql.Date(
 									meetingDates.get(count).getTime()));
 					}
 				}

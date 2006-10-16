@@ -107,7 +107,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
+		TestSavingsBO.setPaymentStatus(accountActionDate,PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
 		assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue()
@@ -151,7 +151,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
+		TestSavingsBO.setPaymentStatus(accountActionDate,PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
 		assertEquals(200.00, collSheetSavingsDetail.getAmntOverDue()
@@ -194,7 +194,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
+		TestSavingsBO.setPaymentStatus(accountActionDate,PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
 		assertEquals(0.00, collSheetSavingsDetail.getAmntOverDue()
@@ -211,7 +211,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
+		TestSavingsBO.setPaymentStatus(accountActionDate,PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
 		assertEquals(200.00, collSheetSavingsDetail.getTotalSavingsAmntDue()
@@ -226,7 +226,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		TestSavingsBO.setDepositPaid(accountActionDate,new Money("200.00"));
-		accountActionDate.setPaymentStatus(PaymentStatus.PAID.getValue());
+		TestSavingsBO.setPaymentStatus(accountActionDate,PaymentStatus.PAID.getValue());
 		collSheetSavingsDetail.addAccountDetails(savings
 				.getAccountActionDate((short) 3));
 		assertEquals(400.00, collSheetSavingsDetail.getTotalSavingsAmntDue()

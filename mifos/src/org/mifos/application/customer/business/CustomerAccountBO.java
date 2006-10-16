@@ -78,6 +78,7 @@ import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
+import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
@@ -85,9 +86,12 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -266,8 +270,10 @@ public class CustomerAccountBO extends AccountBO {
 						Money feeAmntAdjusted = custTrxn.getFeesTrxn(
 								accntFeesAction.getAccountFee()
 										.getAccountFeeId()).getFeeAmount();
-						accntFeesAction.setFeeAmountPaid(accntFeesAction
-								.getFeeAmountPaid().add(feeAmntAdjusted));
+						((CustomerFeeScheduleEntity) accntFeesAction)
+								.setFeeAmountPaid(accntFeesAction
+										.getFeeAmountPaid()
+										.add(feeAmntAdjusted));
 						totalAmountAdj = totalAmountAdj
 								.add(removeSign(feeAmntAdjusted));
 					}
@@ -403,7 +409,7 @@ public class CustomerAccountBO extends AccountBO {
 	protected void regenerateFutureInstallments(Short nextInstallmentId)
 			throws AccountException {
 		if (!this.getCustomer().getCustomerStatus().getId().equals(
-						ClientConstants.STATUS_CLOSED)
+				ClientConstants.STATUS_CLOSED)
 				&& !this.getCustomer().getCustomerStatus().getId().equals(
 						GroupConstants.CLOSED)) {
 
@@ -412,6 +418,7 @@ public class CustomerAccountBO extends AccountBO {
 			int totalInstallmentDatesToBeChanged = installmentSize
 					- nextInstallmentId + 1;
 			try {
+				getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
 				getCustomer().changeUpdatedMeeting();
 				meetingDates = getCustomer().getCustomerMeeting().getMeeting()
 						.getAllDates(totalInstallmentDatesToBeChanged + 1);
@@ -430,7 +437,7 @@ public class CustomerAccountBO extends AccountBO {
 				short installmentId = (short) (nextInstallmentId.intValue() + count);
 				AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
 				if (accountActionDate != null)
-					accountActionDate.setActionDate(new java.sql.Date(
+					((CustomerScheduleEntity)accountActionDate).setActionDate(new java.sql.Date(
 							meetingDates.get(count).getTime()));
 			}
 		}
@@ -797,6 +804,106 @@ public class CustomerAccountBO extends AccountBO {
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
 						"RepamentSchedular:getRepaymentSchedule , repayment schedule generated  ");
+	}
+
+	public void updateFee(AccountFeesEntity fee, FeeBO feeBO)
+			throws CronJobException {
+		boolean feeApplied = isFeeAlreadyApplied(fee, feeBO);
+		if (!feeApplied) {
+			// update this account fee
+			try {
+				if (feeBO.getFeeChangeType().equals(
+						FeeChangeType.AMOUNT_AND_STATUS_UPDATED)) {
+					if (!feeBO.isActive()) {
+						removeFees(feeBO.getFeeId(), Short.valueOf("1"));
+						updateAccountFee(fee, feeBO);
+					} else {
+						// generate repayment schedule and enable fee
+						updateAccountFee(fee, feeBO);
+						fee.changeFeesStatus(FeeStatus.ACTIVE.getValue(),
+								new Date(System.currentTimeMillis()));
+						addTonextInstallment(fee);
+					}
+
+				} else if (feeBO.getFeeChangeType().equals(
+						FeeChangeType.STATUS_UPDATED)) {
+					if (!feeBO.isActive()) {
+						removeFees(feeBO.getFeeId(), Short.valueOf("1"));
+
+					} else {
+						fee.changeFeesStatus(FeeStatus.ACTIVE.getValue(),
+								new Date(System.currentTimeMillis()));
+						addTonextInstallment(fee);
+					}
+
+				} else if (feeBO.getFeeChangeType().equals(
+						FeeChangeType.AMOUNT_UPDATED)) {
+					updateAccountFee(fee, feeBO);
+					updateNextInstallment(fee);
+				}
+			} catch (PropertyNotFoundException e) {
+				throw new CronJobException(e);
+			} catch (AccountException e) {
+				throw new CronJobException(e);
+			}
+		}
+	}
+
+	private boolean isFeeAlreadyApplied(AccountFeesEntity fee, FeeBO feeBO) {
+		boolean feeApplied = false;
+		if (feeBO.isOneTime()) {
+			for (AccountActionDateEntity accountActionDateEntity : getPastInstallments()) {
+				CustomerScheduleEntity installment = (CustomerScheduleEntity) accountActionDateEntity;
+				if (installment.getAccountFeesAction(fee.getAccountFeeId()) != null) {
+					feeApplied = true;
+					break;
+				}
+			}
+		}
+		return feeApplied;
+
+	}
+
+	private void updateAccountFee(AccountFeesEntity fee, FeeBO feeBO) {
+		fee.changeFeesStatus(FeeStatus.INACTIVE.getValue(), new Date(System
+				.currentTimeMillis()));
+		fee.setFeeAmount(((AmountFeeBO) feeBO).getFeeAmount()
+				.getAmountDoubleValue());
+		fee.setAccountFeeAmount(((AmountFeeBO) feeBO).getFeeAmount());
+	}
+
+	private void updateNextInstallment(AccountFeesEntity fee) {
+		CustomerScheduleEntity installment = (CustomerScheduleEntity) getDetailsOfNextInstallment();
+		AccountFeesActionDetailEntity accountFeesActionDetail = installment
+				.getAccountFeesAction(fee.getAccountFeeId());
+		if (accountFeesActionDetail != null) {
+			((CustomerFeeScheduleEntity) accountFeesActionDetail)
+					.setFeeAmount(fee.getAccountFeeAmount());
+			accountFeesActionDetail.setUpdatedBy(Short.valueOf("1"));
+			accountFeesActionDetail.setUpdatedDate(new Date(System
+					.currentTimeMillis()));
+		}
+	}
+
+	private void addTonextInstallment(AccountFeesEntity fee)
+			throws AccountException {
+		CustomerScheduleEntity nextInstallment = (CustomerScheduleEntity) getDetailsOfNextInstallment();
+		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
+				nextInstallment, fee.getFees(), fee, fee.getAccountFeeAmount());
+		((CustomerFeeScheduleEntity) accountFeesaction)
+				.setFeeAmountPaid(new Money("0.0"));
+		nextInstallment.addAccountFeesAction(accountFeesaction);
+		String description = fee.getFees().getFeeName() + " "
+				+ AccountConstants.FEES_APPLIED;
+		try {
+			addCustomerActivity(new CustomerActivityEntity(
+					this,
+					new PersonnelPersistence().getPersonnel(Short.valueOf("1")),
+					fee.getAccountFeeAmount(), description, new Date(System
+							.currentTimeMillis())));
+		} catch (PersistenceException e) {
+			throw new AccountException(e);
+		}
 	}
 
 }

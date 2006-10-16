@@ -9,6 +9,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
@@ -152,7 +153,7 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH-1);
 		currentDateCalendar = new GregorianCalendar(year, month, day);
 		for(AccountActionDateEntity accountActionDateEntity:accountBO.getAccountActionDates()){
-			accountActionDateEntity.setActionDate(new java.sql.Date(currentDateCalendar.getTimeInMillis()));
+			TestLoanBO.setActionDate(accountActionDateEntity,new java.sql.Date(currentDateCalendar.getTimeInMillis()));
 			break;
 		}
 	}

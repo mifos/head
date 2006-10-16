@@ -1070,6 +1070,13 @@ public class AccountBO extends BusinessObject {
 		return installmentIdList;
 	}
 
+	protected List<AccountTrxnEntity> reversalAdjustment(
+			String adjustmentComment, AccountPaymentEntity lastPayment)
+			throws AccountException {
+		return lastPayment.reversalAdjustment(adjustmentComment);
+
+	}
+	
 	private void setFinancialEntries(FinancialTransactionBO financialTrxn,
 			TransactionHistoryView transactionHistory) {
 		String debit = "-";

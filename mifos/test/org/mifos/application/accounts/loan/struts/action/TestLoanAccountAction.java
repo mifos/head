@@ -19,6 +19,7 @@ import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
@@ -239,11 +240,11 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getAccountActionDates()) {
 			if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("1")))
-				accountActionDateEntity.setActionDate(offSetDate(
+				TestLoanBO.setActionDate(accountActionDateEntity,offSetDate(
 						accountActionDateEntity.getActionDate(), -14));
 			else if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("2")))
-				accountActionDateEntity.setActionDate(offSetDate(
+				TestLoanBO.setActionDate(accountActionDateEntity,offSetDate(
 						accountActionDateEntity.getActionDate(), -7));
 		}
 		TestObjectFactory.updateObject(loan);
@@ -1139,7 +1140,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				installment.getMiscPenalty(),
 				installment.getMiscPenaltyPaid(),installment.getMiscFee(),installment.getMiscFeePaid(),
 				new Money("20.0"),installment.getPrincipalPaid(),new Money("10.0"),installment.getInterestPaid());
-		installment.setActionDate(offSetCurrentDate(1));
+		TestLoanBO.setActionDate(installment,offSetCurrentDate(1));
 		accountBO = saveAndFetch(accountBO);
 	}
 

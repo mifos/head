@@ -12,6 +12,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
@@ -27,9 +28,11 @@ import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
+import org.mifos.application.customer.business.TestCustomerAccountBO;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
@@ -270,8 +273,10 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
 						.getAccountFeesActionDetails();
 				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-					accountFeesActionDetailEntity
-							.setFeeAmount(new Money("100"));
+					TestCustomerAccountBO
+							.setFeeAmount(
+									(CustomerFeeScheduleEntity) accountFeesActionDetailEntity,
+									new Money("100"));
 				}
 			}
 		}
@@ -290,8 +295,10 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
 						.getAccountFeesActionDetails();
 				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-					accountFeesActionDetailEntity
-							.setFeeAmount(new Money("100"));
+					TestCustomerAccountBO
+							.setFeeAmount(
+									(CustomerFeeScheduleEntity) accountFeesActionDetailEntity,
+									new Money("100"));
 				}
 			}
 		}
@@ -310,7 +317,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
 						.getAccountFeesActionDetails();
 				for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-					accountFeesActionDetailEntity.setFeeAmount(new Money("20"));
+					TestCustomerAccountBO
+					.setFeeAmount(
+							(CustomerFeeScheduleEntity) accountFeesActionDetailEntity,new Money("20"));
 				}
 			}
 		}
@@ -1021,7 +1030,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day - 40);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(new java.sql.Date(
+			TestLoanBO.setActionDate(accountActionDateEntity,new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}

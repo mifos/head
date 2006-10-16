@@ -14,6 +14,7 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.customer.business.TestCustomerAccountBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -60,7 +61,7 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(offSetDate(
+			TestCustomerAccountBO.setActionDate(accountActionDateEntity,offSetDate(
 					accountActionDateEntity.getActionDate(), 1));
 		}
 
@@ -127,7 +128,7 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 				.currentTimeMillis()));
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(offSetDate(
+			TestCustomerAccountBO.setActionDate(accountActionDateEntity,offSetDate(
 					accountActionDateEntity.getActionDate(), 1));
 		}
 		meeting = center.getCustomerMeeting().getMeeting();

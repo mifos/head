@@ -92,7 +92,7 @@ public class CustomerMeetingEntity extends PersistentObject {
 		return updatedFlag;
 	}
 
-	public void setUpdatedFlag(Short updatedFlag) {
+	void setUpdatedFlag(Short updatedFlag) {
 		this.updatedFlag = updatedFlag;
 	}
 
@@ -100,7 +100,7 @@ public class CustomerMeetingEntity extends PersistentObject {
 		return updatedMeeting;
 	}
 
-	public void setUpdatedMeeting(MeetingBO updatedMeeting) {
+	void setUpdatedMeeting(MeetingBO updatedMeeting) {
 		this.updatedMeeting = updatedMeeting;
 	}	
 }

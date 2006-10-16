@@ -126,6 +126,33 @@ public class TestLoanBO extends MifosTestCase {
 		super.tearDown();
 	}
 
+	public static void setFeeAmount(
+			AccountFeesActionDetailEntity accountFeesActionDetailEntity,
+			Money feeAmount) {
+		((LoanFeeScheduleEntity) accountFeesActionDetailEntity)
+				.setFeeAmount(feeAmount);
+	}
+
+	public static void setFeeAmountPaid(
+			AccountFeesActionDetailEntity accountFeesActionDetailEntity,
+			Money feeAmountPaid) {
+		((LoanFeeScheduleEntity) accountFeesActionDetailEntity)
+				.setFeeAmountPaid(feeAmountPaid);
+	}
+	
+	public static void setActionDate(
+			AccountActionDateEntity accountActionDateEntity,
+			java.sql.Date actionDate) {
+		((LoanScheduleEntity) accountActionDateEntity)
+				.setActionDate(actionDate);
+	}
+
+	public static void setPaymentStatus(
+			AccountActionDateEntity accountActionDateEntity, Short paymentStatus) {
+		((LoanScheduleEntity) accountActionDateEntity)
+				.setPaymentStatus(paymentStatus);
+	}
+	
 	public void testAddLoanDetailsForDisbursal() {
 		LoanBO loan = (LoanBO) createLoanAccount();
 		loan.setLoanAmount(TestObjectFactory.getMoneyForMFICurrency(100));
@@ -273,7 +300,7 @@ public class TestLoanBO extends MifosTestCase {
 			AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
 					actionDate, maintanenceFee, accountPeriodicFee, new Money(
 							currency, "100.0"));
-			accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
+			setFeeAmountPaid(accountFeesaction,new Money(currency, "0.0"));
 			actionDate.addAccountFeesAction(accountFeesaction);
 		}
 		loan.setCreatedBy(Short.valueOf("1"));
@@ -359,7 +386,7 @@ public class TestLoanBO extends MifosTestCase {
 					AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
 							actionDate, maintanenceFee, accountPeriodicFee,
 							new Money(currency, "10.0"));
-					accountFeesaction.setFeeAmountPaid(new Money(currency,
+					setFeeAmountPaid(accountFeesaction,new Money(currency,
 							"0.0"));
 					actionDate.addAccountFeesAction(accountFeesaction);
 
@@ -368,7 +395,7 @@ public class TestLoanBO extends MifosTestCase {
 							actionDate, disbursementFee,
 							accountDisbursementFee, new Money(currency, "10.0"));
 
-					accountFeesaction1.setFeeAmountPaid(new Money(currency,
+					setFeeAmountPaid(accountFeesaction1,new Money(currency,
 							"0.0"));
 					actionDate.addAccountFeesAction(accountFeesaction1);
 
@@ -377,7 +404,7 @@ public class TestLoanBO extends MifosTestCase {
 							actionDate, disbursementFee2,
 							accountDisbursementFee2,
 							new Money(currency, "20.0"));
-					accountFeesaction2.setFeeAmountPaid(new Money(currency,
+					setFeeAmountPaid(accountFeesaction2,new Money(currency,
 							"0.0"));
 					actionDate.addAccountFeesAction(accountFeesaction2);
 
@@ -394,7 +421,7 @@ public class TestLoanBO extends MifosTestCase {
 				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
 						actionDate, maintanenceFee, accountPeriodicFee,
 						new Money(currency, "100.0"));
-				accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
+				setFeeAmountPaid(accountFeesaction,new Money(currency, "0.0"));
 				actionDate.addAccountFeesAction(accountFeesaction);
 			}
 
@@ -421,7 +448,7 @@ public class TestLoanBO extends MifosTestCase {
 				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
 						actionDate, maintanenceFee, accountPeriodicFee,
 						new Money(currency, "100.0"));
-				accountFeesaction.setFeeAmountPaid(new Money(currency, "0.0"));
+				setFeeAmountPaid(accountFeesaction,new Money(currency, "0.0"));
 				actionDate.addAccountFeesAction(accountFeesaction);
 			}
 		}
@@ -467,7 +494,7 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity installment : accountBO
 				.getAccountActionDates()) {
 			if (installment.getInstallmentId().intValue() == 1) {
-				installment.setActionDate(secondWeekDate);
+				((LoanScheduleEntity)installment).setActionDate(secondWeekDate);
 			}
 		}
 		TestObjectFactory.updateObject(accountBO);
@@ -519,7 +546,7 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity installment : accountBO
 				.getAccountActionDates()) {
 			if (installment.getInstallmentId().intValue() == 2) {
-				installment.setActionDate(lastWeekDate);
+				((LoanScheduleEntity)installment).setActionDate(lastWeekDate);
 			}
 		}
 		TestObjectFactory.updateObject(accountBO);
@@ -1363,7 +1390,7 @@ public class TestLoanBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(((LoanBO) accountBO).getTotalAmountDue()
@@ -1379,7 +1406,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountActionDateEntity.setPrincipalPaid(new Money("20.0"));
 		accountActionDateEntity.setInterestPaid(new Money("10.0"));
 		accountActionDateEntity.setPenaltyPaid(new Money("5.0"));
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(((LoanBO) accountBO).getTotalAmountDue()
 				.getAmountDoubleValue(), 389.0);
@@ -1390,8 +1417,8 @@ public class TestLoanBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		((LoanScheduleEntity)accountActionDateEntity).setPaymentStatus(PaymentStatus.PAID.getValue());
 
 		accountBO = saveAndFetch(accountBO);
 
@@ -1403,11 +1430,11 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccount();
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(2));
+		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(2));
 		AccountActionDateEntity accountActionDateEntity2 = accountBO
 				.getAccountActionDate((short) 2);
 
-		accountActionDateEntity2.setActionDate(offSetCurrentDate(1));
+		((LoanScheduleEntity)accountActionDateEntity2).setActionDate(offSetCurrentDate(1));
 
 		accountBO = saveAndFetch(accountBO);
 
@@ -1485,7 +1512,7 @@ public class TestLoanBO extends MifosTestCase {
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
 		currentDateCalendar = new GregorianCalendar(year, month, day - 1);
-		accountActionDateEntity.setActionDate(new java.sql.Date(
+		((LoanScheduleEntity)accountActionDateEntity).setActionDate(new java.sql.Date(
 				currentDateCalendar.getTimeInMillis()));
 		TestObjectFactory.updateObject(accountBO);
 
@@ -1506,7 +1533,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccount();
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(((LoanBO) accountBO).getTotalAmountInArrears()
 				.getAmountDoubleValue(), 212.0);
@@ -1520,7 +1547,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountActionDateEntity.setPrincipalPaid(new Money("20.0"));
 		accountActionDateEntity.setInterestPaid(new Money("10.0"));
 		accountActionDateEntity.setPenaltyPaid(new Money("5.0"));
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
+		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(((LoanBO) accountBO).getTotalAmountInArrears()
@@ -1532,8 +1559,8 @@ public class TestLoanBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate(Short.valueOf("1"));
-		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID.getValue());
+		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		((LoanScheduleEntity)accountActionDateEntity).setPaymentStatus(PaymentStatus.PAID.getValue());
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(((LoanBO) accountBO).getTotalAmountInArrears()
 				.getAmountDoubleValue(), 0.0);
@@ -1544,10 +1571,10 @@ public class TestLoanBO extends MifosTestCase {
 
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate((short) 1);
-		accountActionDateEntity.setActionDate(offSetCurrentDate(2));
+		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(2));
 		AccountActionDateEntity accountActionDateEntity2 = accountBO
 				.getAccountActionDate((short) 2);
-		accountActionDateEntity2.setActionDate(offSetCurrentDate(1));
+		((LoanScheduleEntity)accountActionDateEntity2).setActionDate(offSetCurrentDate(1));
 
 		accountBO = saveAndFetch(accountBO);
 
@@ -1561,7 +1588,7 @@ public class TestLoanBO extends MifosTestCase {
 		java.sql.Date offSetDate = offSetCurrentDate(1);
 		for (AccountActionDateEntity accountAction : accountBO
 				.getAccountActionDates()) {
-			accountAction.setActionDate(offSetDate);
+			((LoanScheduleEntity)accountAction).setActionDate(offSetDate);
 		}
 		accountBO = saveAndFetch(accountBO);
 
@@ -1747,9 +1774,9 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity installment : loanBO
 				.getAccountActionDates()) {
 			if (installment.getInstallmentId().intValue() == 1) {
-				installment.setActionDate(lastWeekDate);
+				((LoanScheduleEntity)installment).setActionDate(lastWeekDate);
 			} else if (installment.getInstallmentId().intValue() == 2) {
-				installment.setActionDate(twoWeeksBeforeDate);
+				((LoanScheduleEntity)installment).setActionDate(twoWeeksBeforeDate);
 			}
 		}
 		TestObjectFactory.updateObject(loanBO);
@@ -1852,9 +1879,9 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity installment : loanBO
 				.getAccountActionDates()) {
 			if (installment.getInstallmentId().intValue() == 1) {
-				installment.setActionDate(lastWeekDate);
+				((LoanScheduleEntity)installment).setActionDate(lastWeekDate);
 			} else if (installment.getInstallmentId().intValue() == 2) {
-				installment.setActionDate(twoWeeksBeforeDate);
+				((LoanScheduleEntity)installment).setActionDate(twoWeeksBeforeDate);
 			}
 		}
 		TestObjectFactory.updateObject(loanBO);
@@ -4060,8 +4087,8 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO.setUserContext(TestObjectFactory.getContext());
 		accountBO.changeStatus(AccountState.LOANACC_APPROVED.getValue(), null,
 				"");
-		accountActionDate1.setActionDate(offSetCurrentDate(21));
-		accountActionDate2.setActionDate(offSetCurrentDate(14));
+		((LoanScheduleEntity)accountActionDate1).setActionDate(offSetCurrentDate(21));
+		((LoanScheduleEntity)accountActionDate2).setActionDate(offSetCurrentDate(14));
 		loan.setDisbursementDate(disbursementDate);
 		accountBO = saveAndFetch(loan);
 		loan = (LoanBO) accountBO;
@@ -4386,9 +4413,9 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity installment : accountBO
 				.getAccountActionDates()) {
 			if (installment.getInstallmentId().intValue() == 1) {
-				installment.setActionDate(twoWeeksBeforeDate);
+				((LoanScheduleEntity)installment).setActionDate(twoWeeksBeforeDate);
 			} else if (installment.getInstallmentId().intValue() == 2) {
-				installment.setActionDate(lastWeekDate);
+				((LoanScheduleEntity)installment).setActionDate(lastWeekDate);
 			}
 		}
 		TestObjectFactory.updateObject(accountBO);
@@ -4416,13 +4443,13 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity installment : accountBO
 				.getAccountActionDates()) {
 			if (installment.getInstallmentId().intValue() == 1) {
-				installment.setActionDate(lastWeekDate);
+				((LoanScheduleEntity)installment).setActionDate(lastWeekDate);
 				interest = interest.add(((LoanScheduleEntity) installment)
 						.getInterest());
 			} else if (installment.getInstallmentId().intValue() == 2) {
 				interest = interest.add(((LoanScheduleEntity) installment)
 						.getInterest());
-				installment.setActionDate(twoWeeksBeforeDate);
+				((LoanScheduleEntity)installment).setActionDate(twoWeeksBeforeDate);
 			}
 		}
 		TestObjectFactory.updateObject(accountBO);
@@ -4449,9 +4476,9 @@ public class TestLoanBO extends MifosTestCase {
 		for (AccountActionDateEntity installment : accountBO
 				.getAccountActionDates()) {
 			if (installment.getInstallmentId().intValue() == 1) {
-				installment.setActionDate(lastWeekDate);
+				((LoanScheduleEntity)installment).setActionDate(lastWeekDate);
 			} else if (installment.getInstallmentId().intValue() == 2) {
-				installment.setActionDate(twoWeeksBeforeDate);
+				((LoanScheduleEntity)installment).setActionDate(twoWeeksBeforeDate);
 			}
 		}
 		TestObjectFactory.updateObject(accountBO);
@@ -4868,7 +4895,7 @@ public class TestLoanBO extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day + 1);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(new java.sql.Date(
+			((LoanScheduleEntity)accountActionDateEntity).setActionDate(new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}
@@ -4930,7 +4957,7 @@ public class TestLoanBO extends MifosTestCase {
 				int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
 				dateCalendar = new GregorianCalendar(year, month, day
 						- numberOfDays);
-				accountActionDateEntity.setActionDate(new java.sql.Date(
+				((LoanScheduleEntity)accountActionDateEntity).setActionDate(new java.sql.Date(
 						dateCalendar.getTimeInMillis()));
 				break;
 			}
@@ -5033,7 +5060,7 @@ public class TestLoanBO extends MifosTestCase {
 				- numberOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(new java.sql.Date(
+			((LoanScheduleEntity)accountActionDateEntity).setActionDate(new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}
@@ -5047,7 +5074,7 @@ public class TestLoanBO extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day - 1);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(new java.sql.Date(
+			((LoanScheduleEntity)accountActionDateEntity).setActionDate(new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}

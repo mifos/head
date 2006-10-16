@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -1381,7 +1382,7 @@ public class GroupBOTest extends MifosTestCase {
 				- numberOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(new java.sql.Date(
+			TestLoanBO.setActionDate(accountActionDateEntity,new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}

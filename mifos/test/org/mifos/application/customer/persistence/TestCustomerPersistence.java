@@ -519,7 +519,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		center = createCenter();
 		group = TestObjectFactory.createGroup("Group1", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
-		group.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		TestCustomerBO.setUpdatedFlag(group.getCustomerMeeting(),YesNoFlag.YES.getValue());
 		TestObjectFactory.updateObject(group);
 		List<Integer> customerIds = customerPersistence
 				.getCustomersWithUpdatedMeetings();

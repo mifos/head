@@ -133,7 +133,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		setMiscFee(new Money());
 		setMiscPenalty(new Money());
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
-			chargeWaived = chargeWaived.add(accountFeesActionDetailEntity
+			chargeWaived = chargeWaived.add(((CustomerFeeScheduleEntity)accountFeesActionDetailEntity)
 					.waiveCharges());
 		}
 		return chargeWaived;
@@ -144,7 +144,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		chargeWaived = chargeWaived.add(getMiscFee());
 		setMiscFee(new Money());
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
-			chargeWaived = chargeWaived.add(accountFeesActionDetailEntity
+			chargeWaived = chargeWaived.add(((CustomerFeeScheduleEntity)accountFeesActionDetailEntity)
 					.waiveCharges());
 		}
 		return chargeWaived;
@@ -191,6 +191,21 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		else if (chargeType
 				.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
 			setMiscPenalty(getMiscPenalty().add(charge));
+	}
+	
+	@Override
+	protected void setActionDate(Date actionDate) {
+		super.setActionDate(actionDate);
+	}
+
+	@Override
+	protected void setPaymentDate(Date paymentDate) {
+		super.setPaymentDate(paymentDate);
+	}
+
+	@Override
+	protected void setPaymentStatus(Short paymentStatus) {
+		super.setPaymentStatus(paymentStatus);
 	}
 
 }

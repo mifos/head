@@ -1157,7 +1157,7 @@ public class LoanBO extends AccountBO {
 						Money feeAmntAdjusted = loanTrxn.getFeesTrxn(
 								accntFeesAction.getAccountFee()
 										.getAccountFeeId()).getFeeAmount();
-						accntFeesAction.setFeeAmountPaid(accntFeesAction
+						((LoanFeeScheduleEntity)accntFeesAction).setFeeAmountPaid(accntFeesAction
 								.getFeeAmountPaid().add(feeAmntAdjusted));
 					}
 				}
@@ -1220,7 +1220,7 @@ public class LoanBO extends AccountBO {
 				short installmentId = (short) (nextInstallmentId.intValue() + count);
 				AccountActionDateEntity accountActionDate = getAccountActionDate(installmentId);
 				if (accountActionDate != null)
-					accountActionDate.setActionDate(new java.sql.Date(
+					((LoanScheduleEntity)accountActionDate).setActionDate(new java.sql.Date(
 							meetingDates.get(count).getTime()));
 			}
 		}

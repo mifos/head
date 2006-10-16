@@ -47,6 +47,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.framework.util.helpers.Money;
 
@@ -132,25 +133,4 @@ public class CustomerAccountPaymentData extends AccountPaymentData {
 		Money totalAmount = new Money();
 		return totalAmount.add(getMiscFeePaid()).add(getMiscPenaltyPaid());
 	}
-
-	public Money getTotalPaidAmount() {
-		return getTotalPaidAmnt().add(getTotalFees());
-	}
-
-	public Money getTotalFees() {
-		Money totalAmount = new Money();
-		CustomerScheduleEntity customerSchedule = (CustomerScheduleEntity) getAccountActionDate();
-		for (AccountFeesActionDetailEntity accountFeesActionDetail : customerSchedule
-				.getAccountFeesActionDetails()) {
-			if (getFeesPaid().containsKey(
-					accountFeesActionDetail.getFee().getFeeId())) {
-				accountFeesActionDetail.makePayment(getFeesPaid().get(
-						accountFeesActionDetail.getFee().getFeeId()));
-				totalAmount = totalAmount.add(accountFeesActionDetail
-						.getFeeAmountPaid());
-			}
-		}
-		return totalAmount;
-	}
-
 }

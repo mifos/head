@@ -10,6 +10,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -102,6 +103,9 @@ public class TestCustomerBO extends MifosTestCase {
 		customer.setDisplayName(displayName);
 	}
 	
+	public static void setUpdatedFlag(CustomerMeetingEntity customerMeetingEntity,Short updatedFlag) {
+		customerMeetingEntity.setUpdatedFlag(updatedFlag);
+	}
 	public void testStatusChangeForCenterForLogging() throws Exception {
 		OfficeBO office = TestObjectFactory.getOffice(Short.valueOf("1"));
 		createdBranchOffice = TestObjectFactory.createOffice(
@@ -579,7 +583,7 @@ public class TestCustomerBO extends MifosTestCase {
 				- numberOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(new java.sql.Date(
+			TestLoanBO.setActionDate(accountActionDateEntity,new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}
@@ -601,9 +605,9 @@ public class TestCustomerBO extends MifosTestCase {
 		for (AccountActionDateEntity installment : accountBO
 				.getAccountActionDates()) {
 			if (installment.getInstallmentId().intValue() == 1) {
-				installment.setActionDate(lastWeekDate);
+				TestLoanBO.setActionDate(installment,lastWeekDate);
 			} else if (installment.getInstallmentId().intValue() == 2) {
-				installment.setActionDate(twoWeeksBeforeDate);
+				TestLoanBO.setActionDate(installment,twoWeeksBeforeDate);
 			}
 		}
 	}

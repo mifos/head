@@ -21,6 +21,7 @@ import org.mifos.application.accounts.business.TransactionHistoryView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
@@ -475,7 +476,7 @@ public class TestAccountService extends MifosTestCase {
 				int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
 				dateCalendar = new GregorianCalendar(year, month, day
 						+ numberOfDays);
-				accountActionDateEntity.setActionDate(new java.sql.Date(
+				TestLoanBO.setActionDate(accountActionDateEntity,new java.sql.Date(
 						dateCalendar.getTimeInMillis()));
 				break;
 			}

@@ -15,6 +15,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -395,7 +396,7 @@ public class TestCollSheetBO extends MifosTestCase {
 					accntActionDate,null,
 					null, new Money("5"));
 
-			accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
+			TestLoanBO.setFeeAmountPaid(accntFeesActionDetailEntity,TestObjectFactory
 					.getMoneyForMFICurrency(3));
 
 			accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
@@ -427,7 +428,7 @@ public class TestCollSheetBO extends MifosTestCase {
 			AccountFeesActionDetailEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(
 					accntActionDate,  null,
 					null, new Money("5"));
-			accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
+			TestLoanBO.setFeeAmountPaid(accntFeesActionDetailEntity,TestObjectFactory
 					.getMoneyForMFICurrency(3));
 
 			accntActionDate.addAccountFeesAction(accntFeesActionDetailEntity);

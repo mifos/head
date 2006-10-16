@@ -43,6 +43,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
@@ -107,7 +108,7 @@ public class TestCollSheetCustBO extends MifosTestCase {
 		LoanFeeScheduleEntity accntFeesActionDetailEntity = new LoanFeeScheduleEntity(
 				accountActionDate, null, null, TestObjectFactory
 						.getMoneyForMFICurrency(5));
-		accntFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
+		TestLoanBO.setFeeAmountPaid(accntFeesActionDetailEntity,TestObjectFactory
 				.getMoneyForMFICurrency(3));
 		accountActionDate.addAccountFeesAction(accntFeesActionDetailEntity);
 		

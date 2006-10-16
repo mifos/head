@@ -738,7 +738,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public void changeUpdatedMeeting()throws CustomerException {
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		if(newMeeting!=null){
-			updateMeeting(getCustomerMeeting().getMeeting(), newMeeting);		
+			updateMeeting(getCustomerMeeting().getMeeting(), newMeeting);
 			setUpdatedMeetingForChildren(null);
 			getCustomerMeeting().setUpdatedMeeting(null);
 			if(getParentCustomer()==null)

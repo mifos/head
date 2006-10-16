@@ -58,7 +58,6 @@ public class RegenerateScheduleHelper extends TaskHelper {
 			throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		CustomerBO customer = customerPersistence.getCustomer(customerId);
-		customer.getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
 		Set<AccountBO> accounts = customer.getAccounts();
 		if (accounts != null && !accounts.isEmpty())
 			for (AccountBO account : accounts) {

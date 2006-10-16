@@ -93,7 +93,7 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 		return feeAmount;
 	}
 
-	public void setFeeAmount(Money feeAmount) {
+	protected void setFeeAmount(Money feeAmount) {
 		this.feeAmount = feeAmount;
 	}
 
@@ -101,7 +101,7 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 		return feeAmountPaid;
 	}
 
-	public void setFeeAmountPaid(Money feeAmountPaid) {
+	protected void setFeeAmountPaid(Money feeAmountPaid) {
 		this.feeAmountPaid = feeAmountPaid;
 	}
 
@@ -109,7 +109,7 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 		return installmentId;
 	}
 
-	public void makePayment(Money feePaid) {
+	protected void makePayment(Money feePaid) {
 		if(getFeeAmountPaid()==null)
 			setFeeAmountPaid(new Money());
 		this.feeAmountPaid = getFeeAmountPaid().add(feePaid);
@@ -120,7 +120,7 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 		return getFeeAmount().subtract(getFeeAmountPaid());
 	}
 
-	public void makeRepaymentEnteries(String payFullOrPartial) {
+	protected void makeRepaymentEnteries(String payFullOrPartial) {
 		if (payFullOrPartial.equals(LoanConstants.PAY_FEES_PENALTY_INTEREST)) {
 			setFeeAmountPaid(getFeeAmountPaid().add(getFeeDue()));
 		} else {
@@ -128,7 +128,7 @@ public class AccountFeesActionDetailEntity extends PersistentObject {
 		}
 	}
 
-	public Money waiveCharges() {
+	protected Money waiveCharges() {
 		Money chargeWaived = new Money();
 		chargeWaived = chargeWaived.add(getFeeDue());
 		setFeeAmount(getFeeAmountPaid());

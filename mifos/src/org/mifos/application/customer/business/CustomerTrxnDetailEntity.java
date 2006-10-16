@@ -57,7 +57,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 				.getAccountFeesActionDetails()) {
 			if (customerAccountPaymentDataView.getFeesPaid().containsKey(
 					accountFeesActionDetail.getFee().getFeeId())) {
-				accountFeesActionDetail
+				((CustomerFeeScheduleEntity)accountFeesActionDetail)
 						.makePayment(customerAccountPaymentDataView
 								.getFeesPaid().get(
 										accountFeesActionDetail.getFee()

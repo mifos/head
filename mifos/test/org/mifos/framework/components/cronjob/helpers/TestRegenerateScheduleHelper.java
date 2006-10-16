@@ -13,6 +13,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -124,7 +125,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				group1, new Date(System.currentTimeMillis()));
 		center.getCustomerMeeting().getMeeting().getMeetingDetails()
 				.setRecurAfter(Short.valueOf("2"));
-		center.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),YesNoFlag.YES.getValue());
 
 		List<java.util.Date> meetingDates = center.getCustomerMeeting()
 				.getMeeting().getAllDates((short) 10);
@@ -199,7 +200,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 
 		center.getCustomerMeeting().getMeeting().getMeetingDetails()
 				.setRecurAfter(Short.valueOf("2"));
-		center.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),YesNoFlag.YES.getValue());
 
 		Calendar meetingStartDate = center.getCustomerMeeting().getMeeting()
 				.getMeetingStartDate();
@@ -289,7 +290,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 
 		center.getCustomerMeeting().getMeeting().getMeetingDetails()
 				.setRecurAfter(Short.valueOf("1"));
-		center.getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),YesNoFlag.YES.getValue());
 
 		Calendar meetingStartDate = center.getCustomerMeeting().getMeeting()
 				.getMeetingStartDate();

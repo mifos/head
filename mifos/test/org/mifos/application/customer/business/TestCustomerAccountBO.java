@@ -15,7 +15,6 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.TestAccountBO;
 import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -24,11 +23,6 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.customer.business.CustomerAccountBO;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerScheduleEntity;
-import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -80,26 +74,63 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-	
-	public static void setMiscFee(CustomerScheduleEntity customerSchedule,Money miscFee ){
+
+	public static void setMiscFee(CustomerScheduleEntity customerSchedule,
+			Money miscFee) {
 		customerSchedule.setMiscFee(miscFee);
 	}
-	
-	public static void setMiscFeePaid(CustomerScheduleEntity customerSchedule,Money miscFeePaid ){
+
+	public static void setMiscFeePaid(CustomerScheduleEntity customerSchedule,
+			Money miscFeePaid) {
 		customerSchedule.setMiscFeePaid(miscFeePaid);
 	}
-	
-	public static void setMiscPenaltyPaid(CustomerScheduleEntity customerSchedule,Money miscPenaltyPaid ){
+
+	public static void setMiscPenaltyPaid(
+			CustomerScheduleEntity customerSchedule, Money miscPenaltyPaid) {
 		customerSchedule.setMiscPenaltyPaid(miscPenaltyPaid);
 	}
-	
-	public static void applyPeriodicFees(CustomerScheduleEntity customerSchedule,Short feeId, Money totalAmount) {
-		customerSchedule.applyPeriodicFees(feeId,totalAmount);
+
+	public static void applyPeriodicFees(
+			CustomerScheduleEntity customerSchedule, Short feeId,
+			Money totalAmount) {
+		customerSchedule.applyPeriodicFees(feeId, totalAmount);
 	}
-	
+
 	public static Money waiveCharges(CustomerScheduleEntity customerSchedule) {
 		return customerSchedule.waiveCharges();
 	}
+
+	public static void setFeeAmount(
+			CustomerFeeScheduleEntity customerFeeScheduleEntity, Money feeAmount) {
+		customerFeeScheduleEntity.setFeeAmount(feeAmount);
+	}
+
+	public static void setFeeAmountPaid(
+			CustomerFeeScheduleEntity customerFeeScheduleEntity,
+			Money feeAmountPaid) {
+		customerFeeScheduleEntity.setFeeAmountPaid(feeAmountPaid);
+	}
+	
+	public static void setActionDate(
+			AccountActionDateEntity accountActionDateEntity,
+			java.sql.Date actionDate) {
+		((CustomerScheduleEntity) accountActionDateEntity)
+				.setActionDate(actionDate);
+	}
+
+	public static void setPaymentDate(
+			AccountActionDateEntity accountActionDateEntity,
+			java.sql.Date paymentDate) {
+		((CustomerScheduleEntity) accountActionDateEntity)
+				.setPaymentDate(paymentDate);
+	}
+	
+	public static void setPaymentStatus(
+			AccountActionDateEntity accountActionDateEntity, Short paymentStatus) {
+		((CustomerScheduleEntity) accountActionDateEntity)
+				.setPaymentStatus(paymentStatus);
+	}
+	
 
 	public void testSuccessfulMakePayment() throws Exception {
 		createCenter();
@@ -221,8 +252,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				CustomerAccountBO.class, customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer();
 		customerAccountBO.setUserContext(userContext);
-		List<AccountTrxnEntity> reversedTrxns = customerAccountBO.getLastPmnt()
-				.reversalAdjustment("payment adjustment done");
+		List<AccountTrxnEntity> reversedTrxns = TestAccountPaymentEntity
+				.reversalAdjustment("payment adjustment done",
+						customerAccountBO.getLastPmnt());
 		customerAccountBO.updateInstallmentAfterAdjustment(reversedTrxns);
 		for (AccountTrxnEntity accntTrxn : reversedTrxns) {
 			CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
@@ -274,21 +306,23 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				installment.getPaymentStatus(), PaymentStatus.UNPAID.getValue());
 
 	}
-	
+
 	public void testWaiveForIntallmentOncePaid() throws Exception {
 		createCenter();
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
 		assertNotNull(customerAccount);
 		Date transactionDate = new Date(System.currentTimeMillis());
 		List<AccountActionDateEntity> dueActionDates = TestObjectFactory
-		.getDueActionDatesForAccount(customerAccount.getAccountId(),
-				transactionDate);
-		assertEquals(1,dueActionDates.size());
-		CustomerScheduleEntity customerScheduleEntity =(CustomerScheduleEntity) customerAccount.getAccountActionDate(Short.valueOf("1"));
+				.getDueActionDatesForAccount(customerAccount.getAccountId(),
+						transactionDate);
+		assertEquals(1, dueActionDates.size());
+		CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) customerAccount
+				.getAccountActionDate(Short.valueOf("1"));
 		PaymentData accountPaymentDataView = TestObjectFactory
-				.getCustomerAccountPaymentDataView(dueActionDates, customerScheduleEntity.getTotalFeeDueWithMiscFee(), null,
-						center.getPersonnel(), "3424324", Short.valueOf("1"),
-						transactionDate, transactionDate);
+				.getCustomerAccountPaymentDataView(dueActionDates,
+						customerScheduleEntity.getTotalFeeDueWithMiscFee(),
+						null, center.getPersonnel(), "3424324", Short
+								.valueOf("1"), transactionDate, transactionDate);
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
@@ -317,11 +351,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		for (AccountActionDateEntity accountActionDateEntity : customerAccount
 				.getAccountActionDates()) {
 			CustomerScheduleEntity customerSchEntity = (CustomerScheduleEntity) accountActionDateEntity;
-			if (customerSchEntity.getInstallmentId().equals(
-					Short.valueOf("2"))) {
+			if (customerSchEntity.getInstallmentId().equals(Short.valueOf("2"))) {
 				amount = customerSchEntity.getMiscFee();
-				assertEquals(new Money("33.0"), customerSchEntity
-						.getMiscFee());
+				assertEquals(new Money("33.0"), customerSchEntity.getMiscFee());
 			}
 		}
 		TestObjectFactory.flushandCloseSession();
@@ -333,10 +365,10 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		for (AccountActionDateEntity accountAction : customerAccount
 				.getAccountActionDates()) {
 			CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
-			assertEquals(new Money(), accountActionDateEntity.getTotalFeeDueWithMiscFee());
+			assertEquals(new Money(), accountActionDateEntity
+					.getTotalFeeDueWithMiscFee());
 		}
 	}
-
 
 	public void testWaiveChargeDue() throws Exception {
 		createInitialObjects();
@@ -404,7 +436,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getCustomerAccount(), fee, ((AmountFeeBO) fee).getFeeAmount()
 				.getAmountDoubleValue(), null, null, new Date(System
 				.currentTimeMillis()));
-		TestAccountFeesEntity.addAccountFees(accountFeesEntity,group.getCustomerAccount());
+		TestAccountFeesEntity.addAccountFees(accountFeesEntity, group
+				.getCustomerAccount());
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
 
@@ -647,7 +680,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
 				CustomerStatus.GROUP_CLOSED);
-		TestCustomerBO.setCustomerStatus(group,customerStatusEntity);
+		TestCustomerBO.setCustomerStatus(group, customerStatusEntity);
 		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1242,7 +1275,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getAccountActionDates()) {
 			if (accountActionDateEntity.getInstallmentId().equals(
 					Short.valueOf("1"))) {
-				accountActionDateEntity.setActionDate(new java.sql.Date(
+				((CustomerScheduleEntity)accountActionDateEntity).setActionDate(new java.sql.Date(
 						currentDateCalendar.getTimeInMillis()));
 				break;
 			}
@@ -1301,7 +1334,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction
 				.getAccountFeesActionDetails()) {
-			accountFeesActionDetailEntity.setFeeAmountPaid(TestObjectFactory
+			setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,TestObjectFactory
 					.getMoneyForMFICurrency(100));
 			FeesTrxnDetailEntity feeTrxn = new FeesTrxnDetailEntity(
 					accountTrxnEntity, accountFeesActionDetailEntity
@@ -1311,7 +1344,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
 		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
-		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,customerAccountBO);
+		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,
+				customerAccountBO);
 		TestObjectFactory.updateObject(customerAccountBO);
 		TestObjectFactory.flushandCloseSession();
 	}
@@ -1334,7 +1368,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
 		for (AccountActionDateEntity accountActionDateEntity : customerAccountBO
 				.getAccountActionDates()) {
-			accountActionDateEntity.setActionDate(new java.sql.Date(
+			((CustomerScheduleEntity)accountActionDateEntity).setActionDate(new java.sql.Date(
 					currentDateCalendar.getTimeInMillis()));
 		}
 	}
