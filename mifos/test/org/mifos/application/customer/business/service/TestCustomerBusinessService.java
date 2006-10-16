@@ -30,6 +30,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
+import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -487,13 +488,13 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				"a12w");
 		changeFirstInstallmentDateToPastDate(account9);
 		AccountBO account10 = getLoanAccount(group, meeting, "afadsff", "23e");
-
-		client2.setCustomerStatus(new CustomerStatusEntity(
+		TestCustomerBO.setCustomerStatus(client2,new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CLOSED));
+		
 		TestObjectFactory.updateObject(client2);
 		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
 				client2.getCustomerId());
-		client3.setCustomerStatus(new CustomerStatusEntity(
+		TestCustomerBO.setCustomerStatus(client3,new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CANCELLED));
 		TestObjectFactory.updateObject(client3);
 		client3 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,

@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.CustomerAccountView;
 import org.mifos.application.accounts.business.LoanAccountView;
 import org.mifos.application.accounts.business.LoanAccountsProductView;
@@ -52,6 +51,7 @@ import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.master.business.MifosCurrency;

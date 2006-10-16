@@ -830,7 +830,6 @@ public class CustomerPersistence extends Persistence {
 	public void deleteCustomerMeeting(CustomerBO customer)
 			throws PersistenceException {
 		delete(customer.getCustomerMeeting());
-		customer.setCustomerMeeting(null);
 	}
 
 	public void deleteMeeting(MeetingBO meeting) throws PersistenceException {

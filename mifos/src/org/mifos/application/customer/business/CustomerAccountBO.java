@@ -36,7 +36,7 @@
 
  */
 
-package org.mifos.application.accounts.business;
+package org.mifos.application.customer.business;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,6 +48,14 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountActionEntity;
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -61,10 +69,6 @@ import org.mifos.application.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
-import org.mifos.application.customer.business.CustomerScheduleEntity;
-import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;

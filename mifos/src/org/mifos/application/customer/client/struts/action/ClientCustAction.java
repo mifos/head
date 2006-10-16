@@ -80,6 +80,7 @@ import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -566,16 +567,11 @@ public class ClientCustAction extends CustAction {
 					fieldEntity.setFieldValue(fieldView.getFieldValue());
 		client.getClientName().updateNameDetails(actionForm.getClientName());
 		client.getSpouseName().updateNameDetails(actionForm.getSpouseName());
-		client.setDisplayName(actionForm.getClientName().getDisplayName());
 		client.setFirstName(actionForm.getClientName().getFirstName());
 		client.setLastName(actionForm.getClientName().getLastName());
 		client
 				.setSecondLastName(actionForm.getClientName()
 						.getSecondLastName());
-		client.setDateOfBirth(getDateFromString(actionForm.getDateOfBirth(),
-				getUserContext(request).getPereferedLocale()));
-		client.setGovernmentId(actionForm.getGovernmentId());
-
 		if (actionForm.getPicture() != null
 				&& !StringUtils.isNullOrEmpty(actionForm.getPicture()
 						.getFileName())) {
@@ -583,7 +579,8 @@ public class ClientCustAction extends CustAction {
 		}
 		client.setUserContext(getUserContext(request));
 		client.updateClientDetails(actionForm.getClientDetailView());
-		client.updatePersonalInfo();
+		client.updatePersonalInfo(actionForm.getClientName().getDisplayName(),actionForm.getGovernmentId(),getDateFromString(actionForm.getDateOfBirth(),
+				getUserContext(request).getPereferedLocale()));
 
 		return mapping.findForward(ActionForwards.updatePersonalInfo_success
 				.toString());
@@ -649,15 +646,14 @@ public class ClientCustAction extends CustAction {
 
 		client.setTrainedDate(getDateFromString(actionForm.getTrainedDate(),
 				getUserContext(request).getPereferedLocale()));
+		PersonnelBO personnel = null;
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
-			if (actionForm.getLoanOfficerIdValue() != null) {
-				client.setPersonnel(getPersonnelBusinessService().getPersonnel(
-						actionForm.getLoanOfficerIdValue()));
-			} else
-				client.setPersonnel(null);
+			if (actionForm.getLoanOfficerIdValue() != null) 
+				personnel = getPersonnelBusinessService().getPersonnel(
+						actionForm.getLoanOfficerIdValue());
 		}
 		client.setUserContext(getUserContext(request));
-		client.updateMfiInfo();
+		client.updateMfiInfo(personnel);
 		return mapping.findForward(ActionForwards.updateMfiInfo_success
 				.toString());
 	}

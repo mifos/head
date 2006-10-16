@@ -10,7 +10,6 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -23,12 +22,14 @@ import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService
 import org.mifos.application.checklist.business.CheckListBO;
 import org.mifos.application.checklist.business.CustomerCheckListBO;
 import org.mifos.application.checklist.util.resources.CheckListConstants;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -573,13 +574,13 @@ public class TestCustomerPersistence extends MifosTestCase {
 		AccountBO account3 = getLoanAccount(client3, meeting, "fdsgdfgfd",
 				"543g");
 		AccountBO account4 = getLoanAccount(group1, meeting, "fasdf23", "3fds");
-
-		client2.setCustomerStatus(new CustomerStatusEntity(
+		TestCustomerBO.setCustomerStatus(client2,new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CLOSED));
+		
 		TestObjectFactory.updateObject(client2);
 		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
 				client2.getCustomerId());
-		client3.setCustomerStatus(new CustomerStatusEntity(
+		TestCustomerBO.setCustomerStatus(client3,new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CANCELLED));
 		TestObjectFactory.updateObject(client3);
 		client3 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
@@ -945,6 +946,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		customerPersistence.deleteCustomerMeeting(client);
+		TestCustomerBO.setCustomerMeeting(client,null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client

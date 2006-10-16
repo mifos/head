@@ -21,6 +21,7 @@ import org.mifos.application.customer.client.business.ClientPerformanceHistoryEn
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.group.business.GroupBOTest;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -83,6 +84,22 @@ public class TestCustomerBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(createdBranchOffice);
 		HibernateUtil.closeSession();
 		super.tearDown();
+	}
+	
+	public static void setCustomerStatus(CustomerBO customer,CustomerStatusEntity customerStatusEntity) {
+		customer.setCustomerStatus(customerStatusEntity);
+	}
+	
+	public static void setCustomerMeeting(CustomerBO customer,CustomerMeetingEntity customerMeeting) {
+		customer.setCustomerMeeting(customerMeeting);
+	}
+	
+	public static void setPersonnel(CustomerBO customer,PersonnelBO personnel) {
+		customer.setPersonnel(personnel);
+	}
+	
+	public static void setDisplayName(CustomerBO customer,String displayName) {
+		customer.setDisplayName(displayName);
 	}
 	
 	public void testStatusChangeForCenterForLogging() throws Exception {
@@ -156,7 +173,7 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		GroupPerformanceHistoryEntity groupPerformanceHistory = group
 				.getPerformanceHistory();
-		groupPerformanceHistory.setLastGroupLoanAmount(new Money("100"));
+		GroupBOTest.setLastGroupLoanAmount(groupPerformanceHistory,new Money("100"));
 		TestObjectFactory.updateObject(group);
 		HibernateUtil.closeSession();
 		group = (GroupBO) customerPersistence.findBySystemId(group

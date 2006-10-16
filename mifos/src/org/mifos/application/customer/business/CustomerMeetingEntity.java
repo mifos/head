@@ -84,7 +84,7 @@ public class CustomerMeetingEntity extends PersistentObject {
 		return meeting;
 	}
 
-	public void setMeeting(MeetingBO meeting) {
+	void setMeeting(MeetingBO meeting) {
 		this.meeting = meeting;
 	}
 

@@ -118,7 +118,7 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 	}
 
 	@Override
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
+	protected AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
 			throws AccountException {
 		try {
 			MasterPersistence masterPersistence = new MasterPersistence();

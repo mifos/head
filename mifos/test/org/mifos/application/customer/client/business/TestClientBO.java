@@ -89,7 +89,15 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
+	
+	public static void setDateOfBirth(ClientBO client,Date dateofBirth) {
+		client.setDateOfBirth(dateofBirth);
+	}
 
+	public static void setNoOfActiveLoans(ClientPerformanceHistoryEntity clientPerformanceHistoryEntity,Integer noOfActiveLoans) {
+		clientPerformanceHistoryEntity.setNoOfActiveLoans(noOfActiveLoans);
+	}
+ 
 	public void testUpdateWeeklyMeeting_SavedToUpdateLater()throws Exception{
 		String oldMeetingPlace = "Delhi";
 		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, oldMeetingPlace);
@@ -857,8 +865,7 @@ public class TestClientBO extends MifosTestCase {
 	public void testUpdateFailureIfLoanOffcierNotThereInActiveState()throws Exception{
 		createObjectsForClient("Client 1",CustomerStatus.CLIENT_ACTIVE);
 		try{
-			client.setPersonnel(null);
-			client.updateMfiInfo();
+			client.updateMfiInfo(null);
 			assertTrue(false);
 		}catch(CustomerException ce){
 			assertTrue(true);
@@ -871,8 +878,7 @@ public class TestClientBO extends MifosTestCase {
 		
 			createObjectsForClient("Client 1",CustomerStatus.CLIENT_HOLD );
 			try{
-			client.setPersonnel(null);
-			client.updateMfiInfo();
+			client.updateMfiInfo(null);
 			assertTrue(false);
 		}catch(CustomerException ce){
 			assertTrue(true);

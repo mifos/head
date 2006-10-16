@@ -58,7 +58,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -66,7 +66,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return avgLoanForMember;
 	}
 
-	private void setAvgLoanForMember(Money avgLoanForMember) {
+	void setAvgLoanForMember(Money avgLoanForMember) {
 		this.avgLoanForMember = avgLoanForMember;
 	}
 
@@ -74,7 +74,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return clientCount;
 	}
 
-	public void setClientCount(Integer clientCount) {
+	void setClientCount(Integer clientCount) {
 		this.clientCount = clientCount;
 	}
 
@@ -90,7 +90,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return totalOutstandingPortfolio;
 	}
 
-	private void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
+	void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
 		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
 	}
 
@@ -98,7 +98,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return portfolioAtRisk;
 	}
 
-	private void setPortfolioAtRisk(Money portfolioAtRisk) {
+	void setPortfolioAtRisk(Money portfolioAtRisk) {
 		this.portfolioAtRisk = portfolioAtRisk;
 	}
 
@@ -106,7 +106,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return totalSavings;
 	}
 
-	private void setTotalSavings(Money totalSavings) {
+	void setTotalSavings(Money totalSavings) {
 		this.totalSavings = totalSavings;
 	}
 
@@ -114,7 +114,7 @@ public class GroupPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return group;
 	}
 
-	public void setGroup(GroupBO group) {
+	void setGroup(GroupBO group) {
 		this.group = group;
 	}
 

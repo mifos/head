@@ -12,6 +12,7 @@ import org.mifos.application.accounts.TestAccount;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
+import org.mifos.application.customer.business.TestCustomerAccountBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -46,8 +47,8 @@ public class TestAccountActionDateEntity extends TestAccount {
 
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
-		accountActionDate.setMiscFee(new Money("20"));
-		Money chargeWaived = accountActionDate.waiveCharges();
+		TestCustomerAccountBO.setMiscFee(accountActionDate,new Money("20"));
+		Money chargeWaived = TestCustomerAccountBO.waiveCharges(accountActionDate);
 		assertEquals(new Money(), accountActionDate.getMiscFee());
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDate
 				.getAccountFeesActionDetails()) {
@@ -95,7 +96,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 		for (AccountFeesEntity accFeesEntity : accountFeeSet) {
 			if (accFeesEntity.getFees().getFeeName().equalsIgnoreCase(
 					"Periodic Fee")) {
-				accountActionDateEntity.applyPeriodicFees(accFeesEntity
+				TestCustomerAccountBO.applyPeriodicFees(accountActionDateEntity,accFeesEntity
 						.getFees().getFeeId(), new Money("100"));
 				break;
 			}

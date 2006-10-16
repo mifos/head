@@ -18,6 +18,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
 import org.mifos.application.customer.business.CustomerMovementEntity;
 import org.mifos.application.customer.business.CustomerPositionView;
+import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -106,6 +107,12 @@ public class GroupBOTest extends MifosTestCase {
 		TestObjectFactory.cleanUp(center1);
 		TestObjectFactory.cleanUp(officeBO);
 		HibernateUtil.closeSession();
+	}
+	
+	public static void setLastGroupLoanAmount(
+			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity,
+			Money disburseAmount) {
+		groupPerformanceHistoryEntity.setLastGroupLoanAmount(disburseAmount);
 	}
 	
 	public void testChangeUpdatedMeeting()throws Exception{
@@ -202,7 +209,7 @@ public class GroupBOTest extends MifosTestCase {
 			HibernateUtil.getInterceptor().createInitialValueMap(group);
 			
 			List<CustomerPositionView> customerPositionList= new ArrayList<CustomerPositionView>();
-			group.setDisplayName("changed group name");
+			TestCustomerBO.setDisplayName(group,"changed group name");
 			group.update(TestObjectFactory.getUserContext(), group.getDisplayName(), personnel,
 					"ABCD", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getNewCustomFields(),

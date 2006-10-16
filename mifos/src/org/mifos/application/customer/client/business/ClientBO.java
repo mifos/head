@@ -33,6 +33,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -197,7 +198,7 @@ public class ClientBO extends CustomerBO {
 		return this.dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
+	void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -205,7 +206,7 @@ public class ClientBO extends CustomerBO {
 		return governmentId;
 	}
 
-	public void setGovernmentId(String governmentId) {
+	void setGovernmentId(String governmentId) {
 		this.governmentId = governmentId;
 	}
 
@@ -319,13 +320,12 @@ public class ClientBO extends CustomerBO {
 		if (isClientUnderGroup()
 				&& (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
 						.equals(CustomerStatus.CLIENT_CANCELLED.getValue()))) {
-			getParentCustomer().resetPositionsAssignedToClient(
-					this.getCustomerId());
+			resetPositions(getParentCustomer());
 			getParentCustomer().setUserContext(getUserContext());
 			getParentCustomer().update();
 			CustomerBO center = getParentCustomer().getParentCustomer();
 			if (center != null) {
-				center.resetPositionsAssignedToClient(this.getCustomerId());
+				resetPositions(center);
 				center.setUserContext(getUserContext());
 				center.update();
 				center = null;
@@ -406,17 +406,23 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-	public void updatePersonalInfo() throws CustomerException {
-		validateForDuplicateNameOrGovtId(getDisplayName(), this.dateOfBirth,
-				this.governmentId);
+	public void updatePersonalInfo(String displayname, String governmentId,
+			Date dateOfBirth) throws CustomerException {
+		validateForDuplicateNameOrGovtId(displayname, dateOfBirth,
+				governmentId);
+		setDisplayName(displayname);
+		setGovernmentId(governmentId);
+		setDateOfBirth(dateOfBirth);
+		
 		super.update();
 	}
 
-	public void updateMfiInfo() throws CustomerException {
 
+	public void updateMfiInfo(PersonnelBO personnel) throws CustomerException {
 		if (isActive() || isOnHold()) {
-			validateLO(this.getPersonnel());
+			validateLO(personnel);
 		}
+		setPersonnel(personnel);
 		super.update();
 	}
 
@@ -452,12 +458,11 @@ public class ClientBO extends CustomerBO {
 
 		CustomerBO oldParent = getParentCustomer();
 		changeParentCustomer(newParent);
-
-		oldParent.resetPositionsAssignedToClient(this.getCustomerId());
+		resetPositions(oldParent);
 
 		if (oldParent.getParentCustomer() != null) {
 			CustomerBO center = oldParent.getParentCustomer();
-			center.resetPositionsAssignedToClient(this.getCustomerId());
+			resetPositions(center);
 			center.setUserContext(getUserContext());
 			center.update();
 		}
@@ -625,7 +630,7 @@ public class ClientBO extends CustomerBO {
 	private void generateSearchId() throws CustomerException {
 		int count;
 		if (getParentCustomer() != null) {
-			getParentCustomer().incrementChildCount();
+			childAddedForParent(getParentCustomer());
 			this.setSearchId(getParentCustomer().getSearchId() + "."
 					+ getParentCustomer().getMaxChildCount());
 		} else {

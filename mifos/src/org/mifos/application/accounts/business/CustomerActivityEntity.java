@@ -2,6 +2,7 @@ package org.mifos.application.accounts.business;
 
 import java.util.Date;
 
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;

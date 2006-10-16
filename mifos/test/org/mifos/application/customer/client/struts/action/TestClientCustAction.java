@@ -56,6 +56,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
+import org.mifos.application.customer.client.business.TestClientBO;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -928,7 +929,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	public void testGet() throws Exception {
 		createInitialCustomers();
 		accountBO = getLoanAccount(client, meeting);
-		client.setDateOfBirth(offSetCurrentDate(50));
+		TestClientBO.setDateOfBirth(client,offSetCurrentDate(50));
 		TestObjectFactory.updateObject(client);
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/clientCustAction.do");
@@ -1345,6 +1346,9 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "updateMfiInfo");
 		addRequestParameter("externalId", "3");
+		addRequestParameter("loanOfficerId", "3");
+		addRequestParameter("groupFlag", "0");
+		
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
@@ -1397,6 +1401,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("loanOfficerId", "3");
+		addRequestParameter("groupFlag", "0");
 		addRequestParameter("method", "updateMfiInfo");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();

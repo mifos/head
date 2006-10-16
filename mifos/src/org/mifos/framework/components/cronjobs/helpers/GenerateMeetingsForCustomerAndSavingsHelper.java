@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;

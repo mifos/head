@@ -182,7 +182,7 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 		return trxnCreatedDate;
 	}
 
-	public abstract AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
-	throws AccountException;
+	protected abstract AccountTrxnEntity generateReverseTrxn(
+			String adjustmentComment) throws AccountException;
 
 }

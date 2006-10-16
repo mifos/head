@@ -15,7 +15,6 @@ import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.business.TestAccountStateEntity;
 import org.mifos.application.accounts.business.TestAccountStateMachine;
-import org.mifos.application.accounts.business.TestCustomerAccountBO;
 import org.mifos.application.accounts.business.TestLoanTrxnDetailEntity;
 import org.mifos.application.accounts.business.service.TestAccountService;
 import org.mifos.application.accounts.financial.business.service.TestFinancialBusinessService;
@@ -26,6 +25,7 @@ import org.mifos.application.accounts.struts.action.TestApplyChargeAction;
 import org.mifos.application.accounts.struts.action.TestApplyPaymentAction;
 import org.mifos.application.accounts.struts.action.TestEditStatusAction;
 import org.mifos.application.accounts.struts.action.TestNotesAction;
+import org.mifos.application.customer.business.TestCustomerAccountBO;
 import org.mifos.framework.MifosTestSuite;
 
 public class AccountTestSuite extends MifosTestSuite {

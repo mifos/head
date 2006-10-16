@@ -132,7 +132,7 @@
 			</set>
 		</joined-subclass>
 		<!-- This is for customer account-->
-		<joined-subclass name="org.mifos.application.accounts.business.CustomerAccountBO" table="CUSTOMER_ACCOUNT">
+		<joined-subclass name="org.mifos.application.customer.business.CustomerAccountBO" table="CUSTOMER_ACCOUNT">
 			<key column="ACCOUNT_ID" />
 			<set name="customerActivitDetails" cascade="all" inverse="true" table="CUSTOMER_ACCOUNT_ACTIVITY" lazy="true" order-by="CUSTOMER_ACCOUNT_ACTIVITY_ID desc">
 				<key column="ACCOUNT_ID" />
@@ -259,7 +259,7 @@
 	</query>
 
 	<query name="accounts.retrieveCustomerAccountWithAccountActions">
-		<![CDATA[from org.mifos.application.accounts.business.CustomerAccountBO account
+		<![CDATA[from org.mifos.application.customer.business.CustomerAccountBO account
 			left join account.accountActionDates where account.accountId=:accountId ]]>
 	</query>
 

@@ -142,7 +142,7 @@ public class GroupBO extends CustomerBO {
 		return performanceHistory;
 	}
 
-	public void setPerformanceHistory(
+	protected void setPerformanceHistory(
 			GroupPerformanceHistoryEntity performanceHistory) {
 		if (performanceHistory != null)
 			performanceHistory.setGroup(this);
@@ -217,8 +217,7 @@ public class GroupBO extends CustomerBO {
 		}
 		
 		changeParentCustomer(newParent);
-		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
-		currentHierarchy.makeInActive(userContext.getId());
+		makeInactive(newParent);
 		
 		this.addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));		
 		super.update();
@@ -465,7 +464,7 @@ public class GroupBO extends CustomerBO {
 	private String generateSearchId() throws CustomerException {
 		String searchId = null;
 		if (getParentCustomer() != null) {
-			getParentCustomer().incrementChildCount();
+			childAddedForParent(getParentCustomer());
 			searchId = getParentCustomer().getSearchId() + "."
 					+ getParentCustomer().getMaxChildCount();
 		} else {

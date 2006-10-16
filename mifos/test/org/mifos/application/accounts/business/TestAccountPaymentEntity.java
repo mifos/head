@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
+import org.mifos.application.customer.business.TestCustomerAccountBO;
+import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -55,8 +58,8 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		customerAccountBO.setUserContext(userContext);
 		
 		CustomerScheduleEntity accountAction = (CustomerScheduleEntity)customerAccountBO.getAccountActionDate(Short.valueOf("1"));
-		accountAction.setMiscFeePaid(TestObjectFactory.getMoneyForMFICurrency(100));
-		accountAction.setMiscPenaltyPaid(TestObjectFactory.getMoneyForMFICurrency(100));
+		TestCustomerAccountBO.setMiscFeePaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
+		TestCustomerAccountBO.setMiscPenaltyPaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
 		accountAction.setPaymentDate(currentDate);
 		accountAction.setPaymentStatus(PaymentStatus.PAID.getValue());
 		
@@ -82,7 +85,7 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 					accountTrxnEntity, accountFeesActionDetailEntity
 							.getAccountFee(), accountFeesActionDetailEntity
 							.getFeeAmount());
-			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
+			TestCustomerTrxnDetailEntity.addFeesTrxnDetail(accountTrxnEntity,feeTrxn);
 			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
 		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);

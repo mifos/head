@@ -16,7 +16,7 @@
 		</property>
 		<property name="description" column="DESCRIPTION" access="field" />
 		<property name="createdDate" column="CREATED_DATE" access="field" />
-		<many-to-one name="customerAccount" column="ACCOUNT_ID" class="org.mifos.application.accounts.business.CustomerAccountBO" access="field" />
+		<many-to-one name="customerAccount" column="ACCOUNT_ID" class="org.mifos.application.customer.business.CustomerAccountBO" access="field" />
 		<many-to-one name="personnel" column="CREATED_BY" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field" />
 	</class>
 </hibernate-mapping>

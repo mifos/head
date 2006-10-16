@@ -7,7 +7,6 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
@@ -45,6 +44,10 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		TestObjectFactory.cleanUp(center);
 
 		HibernateUtil.closeSession();
+	}
+	
+	public static void addFeesTrxnDetail(CustomerTrxnDetailEntity accountTrxnEntity,FeesTrxnDetailEntity feeTrxn) {
+		accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
 	}
 	
 	private void createInitialObjects() {
@@ -107,7 +110,7 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		client = customerAccountBO.getCustomer();
 		
 		for(AccountTrxnEntity accntTrxn : customerAccountBO.getLastPmnt().getAccountTrxns()){
-			AccountTrxnEntity reverseAccntTrxn = accntTrxn.generateReverseTrxn("adjustment");
+			AccountTrxnEntity reverseAccntTrxn = ((CustomerTrxnDetailEntity)accntTrxn).generateReverseTrxn("adjustment");
 			assertEquals(reverseAccntTrxn.getAmount(),accntTrxn.getAmount().negate());
 		}
 		

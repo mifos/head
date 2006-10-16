@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -230,7 +229,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return this.personnel;
 	}
 
-	public void setPersonnel(PersonnelBO personnel) {
+	protected void setPersonnel(PersonnelBO personnel) {
 		this.personnel = personnel;
 	}
 
@@ -238,7 +237,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return this.displayName;
 	}
 
-	public void setDisplayName(String displayName) {
+	protected void setDisplayName(String displayName) {
 		this.displayName = displayName;
 	}
 
@@ -246,7 +245,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return customerStatus;
 	}
 
-	public void setCustomerStatus(CustomerStatusEntity customerStatus) {
+	protected void setCustomerStatus(CustomerStatusEntity customerStatus) {
 		this.customerStatus = customerStatus;
 	}
 
@@ -306,7 +305,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerActivationDate = customerActivationDate;
 	}
 
-	public void setParentCustomer(CustomerBO parentCustomer) {
+	protected void setParentCustomer(CustomerBO parentCustomer) {
 		this.parentCustomer = parentCustomer;
 	}
 
@@ -331,7 +330,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return office;
 	}
 
-	public void setOffice(OfficeBO office) {
+	protected void setOffice(OfficeBO office) {
 		this.office = office;
 	}
 
@@ -339,7 +338,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return customerMeeting;
 	}
 
-	public void setCustomerMeeting(CustomerMeetingEntity customerMeeting) {
+	protected void setCustomerMeeting(CustomerMeetingEntity customerMeeting) {
 		this.customerMeeting = customerMeeting;
 	}
 
@@ -381,7 +380,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerPositions.add(customerPosition);
 	}
 
-	public void addCustomerMovement(CustomerMovementEntity customerMovement) {
+	protected void addCustomerMovement(CustomerMovementEntity customerMovement) {
 		if (customerMovement != null) {
 			this.customerMovements.add(customerMovement);
 		}
@@ -397,7 +396,7 @@ public abstract class CustomerBO extends BusinessObject {
 		this.customerNotes.add(customerNote);
 	}
 
-	public void addCustomerFlag(
+	protected void addCustomerFlag(
 			CustomerStatusFlagEntity customerStatusFlagEntity) {
 		CustomerFlagDetailEntity customerFlag = new CustomerFlagDetailEntity(
 				this, customerStatusFlagEntity, this.getUserContext().getId(),
@@ -822,7 +821,7 @@ public abstract class CustomerBO extends BusinessObject {
 		return false;
 	}
 
-	public void resetPositionsAssignedToClient(Integer clientId) {
+	void resetPositionsAssignedToClient(Integer clientId) {
 		if (getCustomerPositions() != null) {
 			for (CustomerPositionEntity position : getCustomerPositions())
 				if (position.getCustomer() != null
@@ -832,11 +831,11 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
-	public void incrementChildCount() {
+	void incrementChildCount() {
 		this.maxChildCount = this.getMaxChildCount().intValue() + 1;
 	}
 
-	public void decrementChildCount() {
+	void decrementChildCount() {
 		this.maxChildCount = this.getMaxChildCount().intValue() - 1;
 	}
 
@@ -860,7 +859,7 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	protected void validateLO(PersonnelBO loanOfficer) throws CustomerException {
-		if (getPersonnel() == null || getPersonnel().getPersonnelId() == null) {
+		if (loanOfficer == null || loanOfficer.getPersonnelId() == null) {
 			throw new CustomerException(CustomerConstants.INVALID_LOAN_OFFICER);
 		}
 	}
@@ -984,8 +983,8 @@ public abstract class CustomerBO extends BusinessObject {
 		this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
 
 		this.handleParentTransfer();
-		oldParent.decrementChildCount();
-		newParent.incrementChildCount();
+		childRemovedForParent(oldParent);
+		childAddedForParent(newParent);
 		setSearchId(newParent.getSearchId() + "."
 				+ String.valueOf(newParent.getMaxChildCount()));
 
@@ -1020,6 +1019,7 @@ public abstract class CustomerBO extends BusinessObject {
 			if (getCustomerMeeting() != null) {
 				try {
 					new CustomerPersistence().deleteCustomerMeeting(this);
+					setCustomerMeeting(null);
 				} catch (PersistenceException pe) {
 					new CustomerException(pe);
 				}
@@ -1102,5 +1102,26 @@ public abstract class CustomerBO extends BusinessObject {
 			throw new CustomerException(pe);
 		}
 	}
+	
+	protected void childAddedForParent(CustomerBO parent) {
+		parent.incrementChildCount();
+	}
+	
+	protected void childRemovedForParent(CustomerBO parent) {
+		parent.decrementChildCount();
+	}
+
+	protected void makeInactive(CustomerBO newParent)  {
+		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
+		currentHierarchy.makeInActive(userContext.getId());
+		this.addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));		
+
+	}
+	
+	protected void resetPositions(CustomerBO newParent) {
+		newParent.resetPositionsAssignedToClient(
+				this.getCustomerId());
+	}
+
 
 }

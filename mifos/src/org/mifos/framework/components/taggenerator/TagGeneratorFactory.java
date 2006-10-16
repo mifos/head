@@ -40,9 +40,9 @@ package org.mifos.framework.components.taggenerator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.application.accounts.business.CustomerAccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;

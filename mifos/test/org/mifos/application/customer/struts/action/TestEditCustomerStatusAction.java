@@ -49,6 +49,7 @@ import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.PositionEntity;
+import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -484,7 +485,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 	public void testUpdateStatusForClientForActiveLoanOfficer()
 			throws CustomerException, PageExpiredException {
 		createInitialObjects();
-		client.setCustomerStatus(new CustomerStatusEntity(
+		TestCustomerBO.setCustomerStatus(client,new CustomerStatusEntity(
 				CustomerStatus.CLIENT_PARTIAL.getValue()));
 		client.update();
 		HibernateUtil.commitTransaction();
@@ -688,7 +689,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 
 	public void testChangeStatusToActiveForClient() throws Exception {
 		createObjectsForClient("Client");
-		client.setPersonnel(null);
+		TestCustomerBO.setPersonnel(client,null);
 		client.update();
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.loadStatus.toString());

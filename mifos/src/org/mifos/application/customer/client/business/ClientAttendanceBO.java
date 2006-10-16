@@ -38,6 +38,8 @@
 
 package org.mifos.application.customer.client.business;
 
+import java.util.Date;
+
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.framework.business.BusinessObject;
 
@@ -49,7 +51,7 @@ public class ClientAttendanceBO extends BusinessObject {
 
 	private Integer id;
 
-	private java.util.Date meetingDate;
+	private Date meetingDate;
 
 	private CustomerBO customer;
 

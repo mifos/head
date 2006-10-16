@@ -33,10 +33,10 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 			Short installmentId, Date actionDate, PaymentStatus paymentStatus) {
 		super(account, customer, installmentId, actionDate, paymentStatus);
 		accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
-		miscFee=new Money();
-		miscFeePaid=new Money();
-		miscPenalty=new Money();
-		miscPenaltyPaid=new Money();
+		miscFee = new Money();
+		miscFeePaid = new Money();
+		miscPenalty = new Money();
+		miscPenaltyPaid = new Money();
 	}
 
 	public Set<AccountFeesActionDetailEntity> getAccountFeesActionDetails() {
@@ -52,7 +52,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return miscFee;
 	}
 
-	public void setMiscFee(Money miscFee) {
+	void setMiscFee(Money miscFee) {
 		this.miscFee = miscFee;
 	}
 
@@ -60,7 +60,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return miscFeePaid;
 	}
 
-	public void setMiscFeePaid(Money miscFeePaid) {
+	void setMiscFeePaid(Money miscFeePaid) {
 		this.miscFeePaid = miscFeePaid;
 	}
 
@@ -68,7 +68,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return miscPenalty;
 	}
 
-	public void setMiscPenalty(Money miscPenalty) {
+	void setMiscPenalty(Money miscPenalty) {
 		this.miscPenalty = miscPenalty;
 	}
 
@@ -76,7 +76,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return miscPenaltyPaid;
 	}
 
-	public void setMiscPenaltyPaid(Money miscPenaltyPaid) {
+	void setMiscPenaltyPaid(Money miscPenaltyPaid) {
 		this.miscPenaltyPaid = miscPenaltyPaid;
 	}
 
@@ -101,6 +101,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		totalFees = totalFees.add(getTotalFeeDue()).add(getMiscFeeDue());
 		return totalFees;
 	}
+
 	public Money getTotalFees() {
 		return getMiscFee().add(getTotalFeeDue());
 	}
@@ -109,16 +110,15 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return getMiscPenaltyDue().add(getTotalFeeDueWithMiscFee());
 	}
 
-	public void applyPeriodicFees(Short feeId,Money totalAmount) {
-		AccountFeesEntity accountFeesEntity = account
-				.getAccountFees(feeId);
+	void applyPeriodicFees(Short feeId, Money totalAmount) {
+		AccountFeesEntity accountFeesEntity = account.getAccountFees(feeId);
 		AccountFeesActionDetailEntity accountFeesActionDetailEntity = new CustomerFeeScheduleEntity(
-				this, accountFeesEntity.getFees(),
-				accountFeesEntity, totalAmount);
+				this, accountFeesEntity.getFees(), accountFeesEntity,
+				totalAmount);
 		addAccountFeesAction(accountFeesActionDetailEntity);
 	}
 
-	public void setPaymentDetails(
+	void setPaymentDetails(
 			CustomerAccountPaymentData customerAccountPaymentData,
 			Date paymentDate) {
 		this.miscFeePaid = customerAccountPaymentData.getMiscFeePaid();
@@ -127,7 +127,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		this.paymentDate = paymentDate;
 	}
 
-	public Money waiveCharges() {
+	Money waiveCharges() {
 		Money chargeWaived = new Money();
 		chargeWaived = chargeWaived.add(getMiscFee()).add(getMiscPenalty());
 		setMiscFee(new Money());
@@ -139,7 +139,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return chargeWaived;
 	}
 
-	public Money waiveFeeCharges() {
+	Money waiveFeeCharges() {
 		Money chargeWaived = new Money();
 		chargeWaived = chargeWaived.add(getMiscFee());
 		setMiscFee(new Money());
@@ -150,7 +150,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return chargeWaived;
 	}
 
-	public void removeAccountFeesActionDetailEntity(
+	void removeAccountFeesActionDetailEntity(
 			AccountFeesActionDetailEntity accountFeesActionDetailEntity) {
 		accountFeesActionDetails.remove(accountFeesActionDetailEntity);
 	}
@@ -166,7 +166,7 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 		return null;
 	}
 
-	public Money removeFees(Short feeId) {
+	Money removeFees(Short feeId) {
 		Money feeAmount = null;
 		AccountFeesActionDetailEntity objectToRemove = null;
 		Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
@@ -184,12 +184,13 @@ public class CustomerScheduleEntity extends AccountActionDateEntity {
 
 		return feeAmount;
 	}
-	
-	public void applyMiscCharge(Short chargeType,Money charge){
-		if(chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
+
+	void applyMiscCharge(Short chargeType, Money charge) {
+		if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES)))
 			setMiscFee(getMiscFee().add(charge));
-		else if(chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
+		else if (chargeType
+				.equals(Short.valueOf(AccountConstants.MISC_PENALTY)))
 			setMiscPenalty(getMiscPenalty().add(charge));
 	}
-	
+
 }

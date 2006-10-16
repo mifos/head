@@ -19,7 +19,7 @@ public class CenterPerformanceHistory {
 		return numberOfClients;
 	}
 
-	public void setNumberOfClients(Integer numberOfClients) {
+	void setNumberOfClients(Integer numberOfClients) {
 		this.numberOfClients = numberOfClients;
 	}
 
@@ -27,7 +27,7 @@ public class CenterPerformanceHistory {
 		return numberOfGroups;
 	}
 
-	public void setNumberOfGroups(Integer numberOfGroups) {
+	void setNumberOfGroups(Integer numberOfGroups) {
 		this.numberOfGroups = numberOfGroups;
 	}
 
@@ -35,7 +35,7 @@ public class CenterPerformanceHistory {
 		return totalOutstandingPortfolio;
 	}
 
-	public void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
+	void setTotalOutstandingPortfolio(Money totalOutstandingPortfolio) {
 		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
 	}
 
@@ -43,7 +43,7 @@ public class CenterPerformanceHistory {
 		return totalSavings;
 	}
 
-	public void setTotalSavings(Money totalSavings) {
+	void setTotalSavings(Money totalSavings) {
 		this.totalSavings = totalSavings;
 	}
 
@@ -51,7 +51,7 @@ public class CenterPerformanceHistory {
 		return portfolioAtRisk;
 	}
 
-	public void setPortfolioAtRisk(Money portfolioAtRisk) {
+	void setPortfolioAtRisk(Money portfolioAtRisk) {
 		this.portfolioAtRisk = portfolioAtRisk;
 	}
 

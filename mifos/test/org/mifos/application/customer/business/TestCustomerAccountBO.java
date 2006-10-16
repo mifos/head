@@ -1,4 +1,4 @@
-package org.mifos.application.accounts.business;
+package org.mifos.application.customer.business;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -7,12 +7,24 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountActionEntity;
+import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.business.AccountPaymentEntity;
+import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.business.CustomerActivityEntity;
+import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.application.accounts.business.TestAccountBO;
+import org.mifos.application.accounts.business.TestAccountFeesEntity;
+import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -67,6 +79,26 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
 		super.tearDown();
+	}
+	
+	public static void setMiscFee(CustomerScheduleEntity customerSchedule,Money miscFee ){
+		customerSchedule.setMiscFee(miscFee);
+	}
+	
+	public static void setMiscFeePaid(CustomerScheduleEntity customerSchedule,Money miscFeePaid ){
+		customerSchedule.setMiscFeePaid(miscFeePaid);
+	}
+	
+	public static void setMiscPenaltyPaid(CustomerScheduleEntity customerSchedule,Money miscPenaltyPaid ){
+		customerSchedule.setMiscPenaltyPaid(miscPenaltyPaid);
+	}
+	
+	public static void applyPeriodicFees(CustomerScheduleEntity customerSchedule,Short feeId, Money totalAmount) {
+		customerSchedule.applyPeriodicFees(feeId,totalAmount);
+	}
+	
+	public static Money waiveCharges(CustomerScheduleEntity customerSchedule) {
+		return customerSchedule.waiveCharges();
 	}
 
 	public void testSuccessfulMakePayment() throws Exception {
@@ -372,8 +404,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				.getCustomerAccount(), fee, ((AmountFeeBO) fee).getFeeAmount()
 				.getAmountDoubleValue(), null, null, new Date(System
 				.currentTimeMillis()));
-		group.getCustomerAccount().addAccountFees(accountFeesEntity);
-
+		TestAccountFeesEntity.addAccountFees(accountFeesEntity,group.getCustomerAccount());
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
 
@@ -616,7 +647,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
 		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
 				CustomerStatus.GROUP_CLOSED);
-		group.setCustomerStatus(customerStatusEntity);
+		TestCustomerBO.setCustomerStatus(group,customerStatusEntity);
 		group.getCustomerAccount().regenerateFutureInstallments((short) 2);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1280,9 +1311,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
 		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
-
-		customerAccountBO.addAccountPayment(accountPaymentEntity);
-
+		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,customerAccountBO);
 		TestObjectFactory.updateObject(customerAccountBO);
 		TestObjectFactory.flushandCloseSession();
 	}

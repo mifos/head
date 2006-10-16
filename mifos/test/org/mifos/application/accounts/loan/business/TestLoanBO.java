@@ -37,6 +37,7 @@ import org.mifos.application.collectionsheet.business.CollSheetCustBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerStatusEntity;
+import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -2441,7 +2442,7 @@ public class TestLoanBO extends MifosTestCase {
 	public void testBuildForInactiveCustomer() throws NumberFormatException,
 			InvalidUserException, SystemException, ApplicationException {
 		createInitialCustomers();
-		group.setCustomerStatus(new CustomerStatusEntity(
+		TestCustomerBO.setCustomerStatus(group,new CustomerStatusEntity(
 				CustomerStatus.GROUP_CLOSED));
 		TestObjectFactory.updateObject(group);
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group

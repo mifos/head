@@ -99,7 +99,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 		return feesTrxnDetails;
 	}
 
-	public void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
+	void addFeesTrxnDetail(FeesTrxnDetailEntity feesTrxn) {
 		feesTrxnDetails.add(feesTrxn);
 	}
 
@@ -117,7 +117,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 	}
 
 	@Override
-	public AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
+	protected AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
 			throws AccountException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		MifosLogManager

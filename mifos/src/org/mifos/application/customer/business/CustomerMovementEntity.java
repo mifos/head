@@ -85,7 +85,7 @@ public class CustomerMovementEntity extends PersistentObject {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 
@@ -93,7 +93,7 @@ public class CustomerMovementEntity extends PersistentObject {
 		return office;
 	}
 
-	public void updateStatus(Status status){
+	void updateStatus(Status status){
 		this.status = status.getValue();
 	}
 
@@ -101,7 +101,7 @@ public class CustomerMovementEntity extends PersistentObject {
 		return status.equals(Status.ACTIVE.getValue());
 	}
 	
-	public void makeInActive(Short updatedBy){
+	void makeInActive(Short updatedBy){
 		updateStatus(Status.INACTIVE);
 		setUpdatedBy(updatedBy);
 		setUpdatedDate(new Date());
