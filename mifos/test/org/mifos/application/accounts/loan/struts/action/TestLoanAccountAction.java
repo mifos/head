@@ -313,9 +313,12 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testGetLoanRepaymentSchedule() {
+		Date startDate = new Date(System.currentTimeMillis());
+		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getLoanRepaymentSchedule");
+		addRequestParameter("accountId", accountBO.getAccountId().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();

@@ -373,7 +373,7 @@
                 	<td align="right" class="paddingleft05">
 						<span class="fontnormal8pt">
 							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
-								<html-el:link href="notesAction.do?method=search&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.savingsOffering.prdOfferingName}&securityParamInput=Savings&accountTypeId=${BusinessKey.accountType.accountTypeId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<html-el:link href="notesAction.do?method=search&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.savingsOffering.prdOfferingName}&accountTypeId=${BusinessKey.accountType.accountTypeId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="Savings.seeAllNotes" />
 								</html-el:link>
 							</c:if>
@@ -390,7 +390,6 @@
 					</td>
 				</tr>
 			</table>
-			<mifos:SecurityParam property="Savings" />
 			<html-el:hidden property="accountId" value="${BusinessKey.accountId}" />
 			<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}" />
 			 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

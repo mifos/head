@@ -47,7 +47,8 @@
 		<mifos:mifoslabel name="Account.PreviewNote" bundle="accountsUIResources"></mifos:mifoslabel></td>
             </tr>
           </table>
-            <table width="95%" border="0" cellpadding="3" cellspacing="0">
+            <table width="95%" border="0" cellpadding="0" cellspacing="0">
+            <logic:messagesPresent><tr><td><font class="fontnormalRedBold"><html-el:errors bundle="accountsUIResources" /></font></td></tr></logic:messagesPresent>
                 <tr>
                   <td><br>
                       <span class="fontnormal">
@@ -67,11 +68,6 @@
                 <tr>
                   <td class="blueline"><img src="../images/trans.gif" width="10" height="5"></td>
                 </tr>
-                <tr>
-		   		<td>
-   					<font class="fontnormalRedBold"><html-el:errors bundle="accountsUIResources"/></font>
-				</td>
-				</tr>
               </table>
               <table width="95%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
@@ -119,8 +115,6 @@
         </tr>
       </table>
       <br>
-	  <mifos:SecurityParam property="${param.securityParamInput}" />
-	  <html-el:hidden property="securityParamInput" value="${param.securityParamInput}" />
       <html-el:hidden property="globalAccountNum" value="${sessionScope.notesActionForm.globalAccountNum}"/>
       <html-el:hidden property="accountTypeId" value="${param.accountTypeId}"/>
       <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

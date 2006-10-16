@@ -6,12 +6,19 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.tabletag.TableTagConstants;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.security.util.ActivityMapper;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -76,5 +83,22 @@ public class SearchAction extends BaseAction {
 	
 	protected QueryResult getSearchResult(ActionForm form) throws Exception{
 		return null;
+	}
+	
+	protected void checkPermissionForAddingNotes(AccountTypes accountTypes,CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) throws ApplicationException {
+		if (!isPermissionAllowed(accountTypes, customerLevel, userContext,
+				recordOfficeId, recordLoanOfficerId))
+			throw new CustomerException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowed(AccountTypes accountTypes,CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isAddingNotesPermittedForAccounts(
+				accountTypes, customerLevel, userContext, recordOfficeId,
+				recordLoanOfficerId);
 	}
 }

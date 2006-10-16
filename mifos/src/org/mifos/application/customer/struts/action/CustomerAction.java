@@ -7,7 +7,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
-import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -43,7 +42,7 @@ public class CustomerAction extends AccountAppAction {
 		logger.debug("In CustomerAction::getAllActivity()");
 		String type = request.getParameter("type");
 		String globalCustNum=request.getParameter("globalCustNum");
-		SessionUtils.setAttribute(CustomerConstants.CLIENTRECENTACCACTIVITYLIST,((CustomerBusinessService)getCustomerBusinessService()).getAllActivityView(globalCustNum),request);
+		SessionUtils.setAttribute(CustomerConstants.CLIENTRECENTACCACTIVITYLIST,getCustomerBusinessService().getAllActivityView(globalCustNum),request);
 		return mapping.findForward("view"+type+"Activity");
 	}
 }

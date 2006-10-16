@@ -55,6 +55,8 @@ import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActi
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -62,8 +64,11 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -141,7 +146,16 @@ public class AccountApplyPaymentAction extends BaseAction {
 				Integer.valueOf(actionForm.getAccountId()));
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-
+		CustomerLevel customerLevel = null;
+		if(account.getType().equals(AccountTypes.CUSTOMERACCOUNT))
+			customerLevel = account.getCustomer().getLevel();
+		if (account.getPersonnel() != null)
+			checkPermissionForMakingPayment(account.getType(), customerLevel, uc,
+					account.getOffice().getOfficeId(), account.getPersonnel()
+							.getPersonnelId());
+		else
+			checkPermissionForMakingPayment(account.getType(), customerLevel, uc,
+					account.getOffice().getOfficeId(), uc.getId());
 		Date trxnDate = getDateFromString(actionForm.getTransactionDate(), uc
 				.getPereferedLocale());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
@@ -189,7 +203,6 @@ public class AccountApplyPaymentAction extends BaseAction {
 						.addAccountPaymentData(new CustomerAccountPaymentData(
 								installment));
 			}
-
 		}
 		return paymentData;
 	}
@@ -232,5 +245,22 @@ public class AccountApplyPaymentAction extends BaseAction {
 			forward = method + "_failure";
 		}
 		return mapping.findForward(forward);
+	}
+	
+	private void checkPermissionForMakingPayment(AccountTypes accountTypes,CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) throws ApplicationException {
+		if (!isPermissionAllowed(accountTypes, customerLevel, userContext,
+				recordOfficeId, recordLoanOfficerId))
+			throw new CustomerException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowed(AccountTypes accountTypes,CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isPaymentPermittedForAccounts(
+				accountTypes, customerLevel, userContext, recordOfficeId,
+				recordLoanOfficerId);
 	}
 }

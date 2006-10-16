@@ -142,7 +142,6 @@
 	  <html-el:hidden property="recordLoanOfficerId" value="${param.recordLoanOfficerId}"/>
       <html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}"/>
       <html-el:hidden property="input" value="reviewTransactionPage"/>
-	<mifos:SecurityParam property="Loan" />
 </html-el:form>
 </tiles:put>
 </tiles:insert>        

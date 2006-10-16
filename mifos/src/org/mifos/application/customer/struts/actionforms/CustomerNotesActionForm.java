@@ -57,7 +57,6 @@ public class CustomerNotesActionForm extends ValidatorActionForm {
 	private String comment;
 	private String commentDate;
 	private String globalCustNum;
-	private String securityParamInput;
 	private String input;
 
 	public String getCommentDate() {
@@ -96,12 +95,6 @@ public class CustomerNotesActionForm extends ValidatorActionForm {
 	}
 	public void setGlobalCustNum(String globalCustNum) {
 		this.globalCustNum = globalCustNum;
-	}
-	public String getSecurityParamInput() {
-		return securityParamInput;
-	}
-	public void setSecurityParamInput(String securityParamInput) {
-		this.securityParamInput = securityParamInput;
 	}
 
 	public String getInput() {

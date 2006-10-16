@@ -71,7 +71,7 @@
 							<td width="27%" rowspan="2" align="right" valign="top"
 								class="fontnormal"><c:if
 								test="${BusinessKey.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
-								<a href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&securityParamInput=Group&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<a href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="Group.edit" bundle="GroupUIResources"></mifos:mifoslabel>
 									<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
 									<mifos:mifoslabel name="Group.status1"

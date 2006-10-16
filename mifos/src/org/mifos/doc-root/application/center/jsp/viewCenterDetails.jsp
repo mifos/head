@@ -57,7 +57,7 @@
 								value="${BusinessKey.displayName}" /></td>
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <a
-								href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&securityParamInput=Center&input=center&currentFlowKey=${requestScope.currentFlowKey}">
+								href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=center&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Center.Edit" /> <mifos:mifoslabel
 								name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
 								name="Center.Status1" /> </a><br>

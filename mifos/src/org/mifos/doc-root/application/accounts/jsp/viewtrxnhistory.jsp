@@ -103,7 +103,7 @@
 	    	            	<c:out value="${param.prdOfferingName}"></c:out> # <c:out value="${param.globalAccountNum}"></c:out> - 			          	
 			          	</c:when>
 			          	<c:otherwise>
-	    	            	<c:out value="${BusinessKey.displayName}"></c:out> # <c:out value="${BusinessKey.customerAccount.globalAccountNum}"></c:out> - 
+	    	            	<c:out value="${BusinessKey.customer.displayName}"></c:out> # <c:out value="${BusinessKey.globalAccountNum}"></c:out> - 
 	   	            	</c:otherwise>
 	   	            </c:choose>
                 	</span> 
@@ -147,7 +147,7 @@
 </html-el:form>
 
 <html-el:form action="customerAccountAction.do">
-	<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" /> 
+	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}" /> 
 </html-el:form>
 </tiles:put>
 </tiles:insert>        

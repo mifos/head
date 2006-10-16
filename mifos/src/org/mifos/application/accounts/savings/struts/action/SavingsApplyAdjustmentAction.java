@@ -47,12 +47,14 @@ import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -167,6 +169,13 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY , request);
 		savings = getSavingsService().findById(accountId);
 		savings.setUserContext(uc);
+		if (savings.getPersonnel() != null)
+			getBizService().checkPermissionForAdjustment(AccountTypes.SAVINGSACCOUNT, null, uc,
+					savings.getOffice().getOfficeId(), savings.getPersonnel()
+							.getPersonnelId());
+		else
+			getBizService().checkPermissionForAdjustment(AccountTypes.SAVINGSACCOUNT, null, uc,
+					savings.getOffice().getOfficeId(), uc.getId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
 		savings.adjustLastUserAction(actionForm.getLastPaymentAmount(),
@@ -240,5 +249,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 
 		return clientName;
 	}
-
+	
+	private AccountBusinessService getBizService(){
+		return (AccountBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Accounts);
+	}
 }

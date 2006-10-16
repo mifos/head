@@ -97,59 +97,6 @@ public class EditCustomerStatusAction extends BaseAction {
 
 	}
 
-	public ActionForward load(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		logger.debug("In EditCustomerStatusAction:load()");
-		doCleanUp(form, request);
-		CustomerBO customerBO = customerService
-				.getCustomer(((EditCustomerStatusActionForm) form)
-						.getCustomerIdValue());
-		loadInitialData(form, customerBO, getUserContext(request));
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request
-				.getSession());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request
-				.getSession());
-
-		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST, customerService
-				.getStatusList(customerBO.getCustomerStatus(),
-						customerBO.getLevel(), getUserContext(
-								request).getLocaleId()), request.getSession());
-		return mapping.findForward(ActionForwards.load_success.toString());
-	}
-
-	public ActionForward preview(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception, NumberFormatException {
-		logger.debug("In EditCustomerStatusAction:preview()");
-		CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request.getSession());
-		setStatusDetails(form, customerBO, request, getUserContext(request));
-		return mapping.findForward(ActionForwards.preview_success.toString());
-	}
-
-	public ActionForward previous(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		logger.debug("In EditCustomerStatusAction:previous()");
-		return mapping.findForward(ActionForwards.previous_success.toString());
-	}
-
-	@CloseSession
-	public ActionForward update(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response) throws Exception{
-		logger.debug("In EditCustomerStatusAction:update()");
-		updateStatus(form, request);
-		return mapping.findForward(getDetailAccountPage(form));
-	}
-
-	public ActionForward cancel(ActionMapping mapping, ActionForm form,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		logger.debug("In EditCustomerStatusAction:cancel()");
-		return mapping.findForward(getDetailAccountPage(form));
-	}
-
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadStatus(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)

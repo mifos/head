@@ -99,12 +99,12 @@
 	                	<span class="fontnormalbold">
 	                	<mifos:mifoslabel name="Center.ApplyTransaction" bundle="CenterUIResources"/></span>
 	                &nbsp;&nbsp;&nbsp;&nbsp;
-	                	<html-el:link href="applyPaymentAction.do?method=load&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Group&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                	<html-el:link href="applyPaymentAction.do?method=load&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 	                    	<mifos:mifoslabel name="accounts.apply_payment" />
 	                    </html-el:link>
 	                <c:if test="${param.statusId == 9 || param.statusId == 10}">
 	                	&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="custApplyAdjustment.do?method=loadAdjustment&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Group&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                    <html-el:link href="custApplyAdjustment.do?method=loadAdjustment&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewGroupCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 	                    	<mifos:mifoslabel name="Center.ApplyAdjustment" bundle="CenterUIResources"/>
 	                    </html-el:link>
 	                 </c:if>
@@ -136,7 +136,7 @@
         </tr>
       </table>
 		<html:form action="customerAccountAction.do">
-       		<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" /> 
+       		<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}" /> 
      	</html:form>
 </tiles:put>
 </tiles:insert>      

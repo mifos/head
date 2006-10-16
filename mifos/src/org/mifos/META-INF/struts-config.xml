@@ -47,10 +47,7 @@
 		<form-bean name="groupActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupActionForm"></form-bean>
 		<!-- Customer Search Action Form -->
 		<form-bean name="customerSearchActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerSearchActionForm"></form-bean>
-		<!-- Customer Notes Action Form -->
-		<form-bean name="customerNoteActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerNoteActionForm"></form-bean>
 		<!-- Customer Historical Data Action Form -->
-		<form-bean name="customerHistoricalDataActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerHistoricalDataActionForm"></form-bean>
 		<form-bean name="custHistoricalDataActionForm" type="org.mifos.application.customer.struts.actionforms.CustHistoricalDataActionForm"></form-bean>
 		<!-- roles and permission -->
 		<form-bean name="rolesandPermissionActionForm" type="org.mifos.application.rolesandpermission.struts.actionforms.RolesandPermissionActionForm" />
@@ -498,36 +495,8 @@
 			<!-- <forward name="get_failure" path="/pages/application/group/jsp/clientsaccounts.jsp" />-->
 			<forward name="chooseOffice_success" path="/pages/application/group/jsp/branchlist.jsp" />
 		</action>
-		<!-- CustomerNotes action -->
-		<action path="/CustomerNoteAction" type="org.mifos.application.customer.struts.action.CustomerNoteAction" name="customerNoteActionForm" parameter="method" validate="true" input="/CustomerNoteAction.do?method=validate" scope="session">
-			<forward name="load_success" path="/pages/application/customer/jsp/addnotes.jsp" />
-			<forward name="get_success" path="/CustomerNoteAction.do?method=search" />
-			<forward name="search_success" path="/pages/application/customer/jsp/customernotes.jsp" />
-			<forward name="preview_success" path="/pages/application/customer/jsp/previewnote.jsp" />
-			<forward name="previous_success" path="/pages/application/customer/jsp/addnotes.jsp" />
-			<forward name="group_details_page" path="/GroupAction.do?method=get" />
-			<forward name="center_details_page" path="/centerAction.do?method=get" />
-			<forward name="client_details_page" path="/clientCreationAction.do?method=get" />
-		</action>
-		<!-- CustomerHistoricalData action -->
-		<action path="/CustomerHistoricalDataAction" type="org.mifos.application.customer.struts.action.CustomerHistoricalDataAction" name="customerHistoricalDataActionForm" parameter="method" validate="true"
-			input="/CustomerHistoricalDataAction.do?method=validate" scope="session">
-			<forward name="get_success" path="/pages/application/customer/jsp/customerhistoricaldata.jsp" />
-			<forward name="load_success" path="/pages/application/customer/jsp/edithistoricaldata.jsp" />
-			<forward name="preview_success" path="/pages/application/customer/jsp/previewhistoricaldata.jsp" />
-			<forward name="previous_success" path="/pages/application/customer/jsp/edithistoricaldata.jsp" />
-			<forward name="update_success" path="/CustomerHistoricalDataAction.do?method=get" />
-			<forward name="group_details_page" path="/GroupAction.do?method=get" />
-			<forward name="center_details_page" path="/centerAction.do?method=get" />
-			<forward name="client_details_page" path="/clientCreationAction.do?method=get" />
-		</action>
 		<action path="/custHistoricalDataAction" type="org.mifos.application.customer.struts.action.CustHistoricalDataAction" name="custHistoricalDataActionForm" parameter="method" validate="true"
 			input="/custHistoricalDataAction.do?method=validate" scope="session">
-			<forward name="get_success" path="/pages/application/customer/jsp/customer_historicaldata.jsp" />
-			<forward name="load_success" path="/pages/application/customer/jsp/customer_edithistoricaldata.jsp" />
-			<forward name="preview_success" path="/pages/application/customer/jsp/customer_previewhistoricaldata.jsp" />
-			<forward name="previous_success" path="/pages/application/customer/jsp/customer_edithistoricaldata.jsp" />
-			<forward name="update_success" path="/custHistoricalDataAction.do?method=get" />
 			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
 			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
 			<forward name="getHistoricalData_success" path="/pages/application/customer/jsp/cust_historicaldata.jsp" />
@@ -829,6 +798,10 @@
 			<forward name="remove_center_charges" path="/customerAccountAction.do?method=load" />
 			<forward name="remove_client_charges" path="/customerAccountAction.do?method=load" />
 			<forward name="remove_success" path="/loanAccountAction.do?method=get" />
+			<forward name="removeFees_Client_failure" path="/pages/application/client/jsp/view_clientchargesdetail.jsp"></forward>
+			<forward name="removeFees_Group_failure" path="/pages/application/group/jsp/view_groupchargesdetail.jsp"></forward>
+			<forward name="removeFees_Center_failure" path="/pages/application/center/jsp/view_centerchargesdetail.jsp"></forward>
+			<forward name="removeFees_Loan_failure" path="/pages/application/loan/jsp/loanaccountdetail.jsp" />
 			<forward name="getTransactionHistory_success" path="/pages/application/accounts/jsp/viewtrxnhistory.jsp" />
 		</action>
 		<!-- End -->
@@ -1011,6 +984,12 @@
 		<action path="/customerAction" type="org.mifos.application.customer.struts.action.CustomerAction" parameter="method" scope="session">
 			<forward name="waiveChargesDue_Success" path="/customerAction.do?method=forwardWaiveChargeDue"></forward>
 			<forward name="waiveChargesOverDue_Success" path="/customerAction.do?method=forwardWaiveChargeOverDue"></forward>
+			<forward name="waiveChargeDue_Client_failure" path="/pages/application/client/jsp/view_clientchargesdetail.jsp"></forward>
+			<forward name="waiveChargeOverDue_Client_failure" path="/pages/application/client/jsp/view_clientchargesdetail.jsp"></forward>
+			<forward name="waiveChargeDue_Group_failure" path="/pages/application/group/jsp/view_groupchargesdetail.jsp"></forward>
+			<forward name="waiveChargeOverDue_Group_failure" path="/pages/application/group/jsp/view_groupchargesdetail.jsp"></forward>
+			<forward name="waiveChargeDue_Center_failure" path="/pages/application/center/jsp/view_centerchargesdetail.jsp"></forward>
+			<forward name="waiveChargeOverDue_Center_failure" path="/pages/application/center/jsp/view_centerchargesdetail.jsp"></forward>
 			<forward name="waiveClientCharges_Success" path="/customerAccountAction.do?method=load" />
 			<forward name="waiveGroupCharges_Success" path="/customerAccountAction.do?method=load" />
 			<forward name="waiveCenterCharges_Success" path="/customerAccountAction.do?method=load" />
@@ -1031,9 +1010,12 @@
 		<action path="/loanAccountAction" type="org.mifos.application.accounts.loan.struts.action.LoanAccountAction" name="loanAccountActionForm" parameter="method"
 			input="/loanAccountAction.do?method=validate" scope="session" validate="true">
 			<forward name="viewInstmentDetails_success" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp" />
+			<forward name="getInstallmentDetails_failure" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp" />
 			<forward name="getAllActivity_success" path="/pages/application/loan/jsp/viewloanaccountactivity.jsp" />
 			<forward name="waiveChargesDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
 			<forward name="waiveChargesOverDue_Success" path="/loanAccountAction.do?method=forwardWaiveCharge"></forward>
+			<forward name="waiveChargeDue_LoanAccount_failure" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp"></forward>
+			<forward name="waiveChargeOverDue_LoanAccount_failure" path="/pages/application/loan/jsp/nextPayment_loanAccount.jsp"></forward>
 			<forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>
 			<forward name="get_success" path="/pages/application/loan/jsp/loanaccountdetail.jsp" />
 			<forward name="getLoanRepaymentSchedule" path="/pages/application/loan/jsp/loanRepayment.jsp" />
@@ -1085,13 +1067,8 @@
 			input="/editCustomerStatusAction.do?method=validate"
 			validate="true"
 			scope="session">
-			<forward name="load_success" path="/pages/application/customer/jsp/changeStatus.jsp" />
-			<forward name="preview_success" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
-			<forward name="previous_success" path="/pages/application/customer/jsp/changeStatus.jsp" />
 			<forward name="center_detail_page" path="/centerCustAction.do?method=get" />
 			<forward name="client_detail_page" path="/clientCustAction.do?method=get" />
-			<forward name="update_failure" path="/pages/application/customer/jsp/changeStatusPreview.jsp" />
-			<forward name="preview_failure" path="/pages/application/customer/jsp/changeStatus.jsp" />
 			<forward name="group_detail_page" path="/groupCustAction.do?method=get" />
 			<forward name="loadStatus_success" path="/pages/application/customer/jsp/customerchangeStatus.jsp" />
 			<forward name="previewStatus_success" path="/pages/application/customer/jsp/customerchangeStatusPreview.jsp" />

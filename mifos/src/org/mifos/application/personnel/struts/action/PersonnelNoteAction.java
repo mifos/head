@@ -9,6 +9,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelNotesEntity;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
@@ -20,6 +23,9 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.security.util.ActivityMapper;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -71,6 +77,13 @@ public class PersonnelNoteAction extends SearchAction {
 		PersonnelNoteActionForm actionForm = (PersonnelNoteActionForm) form;
 		PersonnelBO personnel = getPersonnelBizService().getPersonnel(getShortValue(((PersonnelNoteActionForm) form).getPersonnelId()));
 		PersonnelBO officer = getPersonnelBizService().getPersonnel(getUserContext(request).getId());
+		if (personnel != null)
+			checkPermissionForAddingNotesToPersonnel(getUserContext(request), personnel.getOffice()
+							.getOfficeId(), personnel
+							.getPersonnelId());
+		else
+			checkPermissionForAddingNotesToPersonnel(getUserContext(request), personnel.getOffice()
+							.getOfficeId(), getUserContext(request).getId());
 		PersonnelNotesEntity personnelNote = new PersonnelNotesEntity(actionForm.getComment(),officer,personnel);
 		personnel.addNotes(getUserContext(request).getId(),personnelNote);
 		personnel = null;
@@ -113,5 +126,20 @@ public class PersonnelNoteAction extends SearchAction {
 	private PersonnelBusinessService getPersonnelBizService() {
 		return (PersonnelBusinessService)ServiceFactory.getInstance().getBusinessService(
 				BusinessServiceName.Personnel);
+	}
+	
+	private void checkPermissionForAddingNotesToPersonnel(
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) throws ApplicationException {
+		if (!isPermissionAllowed(userContext, recordOfficeId,
+				recordLoanOfficerId))
+			throw new CustomerException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowed(UserContext userContext,
+			Short recordOfficeId, Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isAddingNotesPermittedForPersonnel(
+				userContext, recordOfficeId, recordLoanOfficerId);
 	}
 }

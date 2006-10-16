@@ -381,7 +381,7 @@
 										name="loan.periodicityTypeRate" /> <c:out
 										value="${loanfn:getMeetingRecurrence(feesSet.fees.feeFrequency.feeMeetingFrequency,sessionScope.UserContext)}" />)
 									<html-el:link
-										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}&globalAccountNum=${BusinessKey.globalAccountNum}&accountId=${BusinessKey.accountId}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&createdDate=${BusinessKey.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}"> 
+										href="accountAppAction.do?method=removeFees&feeId=${feesSet.fees.feeId}&globalAccountNum=${BusinessKey.globalAccountNum}&accountId=${BusinessKey.accountId}&recordOfficeId=${BusinessKey.office.officeId}&recordLoanOfficerId=${BusinessKey.personnel.personnelId}&createdDate=${BusinessKey.createdDate}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}&input=Loan"> 
 														<mifos:mifoslabel name="loan.remove" />
 										    </html-el:link> <br>
 									</span>
@@ -554,7 +554,7 @@
 						<tr>
 							<td align="right" class="paddingleft05"><span
 								class="fontnormal8pt"> <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
-								<html-el:link href="notesAction.do?method=search&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&securityParamInput=Loan&accountTypeId=${BusinessKey.accountType.accountTypeId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+								<html-el:link href="notesAction.do?method=search&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&accountTypeId=${BusinessKey.accountType.accountTypeId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 									<mifos:mifoslabel name="loan.seeallnotes" />
 								</html-el:link>
 							</c:if> <br>
@@ -566,7 +566,6 @@
 					</td>
 				</tr>
 			</table>
-			<mifos:SecurityParam property="Loan" />
 			<!-- This hidden variable is being used in the next page -->
 			<html-el:hidden property="accountTypeId" value="${BusinessKey.accountType.accountTypeId}" />
 			<html-el:hidden property="accountId" value="${BusinessKey.accountId}" />

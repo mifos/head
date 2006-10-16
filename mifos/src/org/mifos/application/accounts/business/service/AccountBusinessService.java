@@ -18,8 +18,10 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
+import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
@@ -34,6 +36,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
@@ -326,18 +329,70 @@ public class AccountBusinessService extends BusinessService {
 	public void checkPermissionForStatusChange(Short newState,
 			UserContext userContext, Short flagSelected, Short recordOfficeId,
 			Short recordLoanOfficerId) throws ServiceException {
-		if (!isPermissionAllowed(newState, userContext, flagSelected,
+		if (!isPermissionAllowedForStatusChange(newState, userContext, flagSelected,
 				recordOfficeId, recordLoanOfficerId))
 			throw new ServiceException(
 					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
 	}
 
-	public boolean isPermissionAllowed(Short newState,
+	private boolean isPermissionAllowedForStatusChange(Short newState,
 			UserContext userContext, Short flagSelected, Short recordOfficeId,
 			Short recordLoanOfficerId) {
 		return ActivityMapper.getInstance().isStateChangePermittedForAccount(
 				newState.shortValue(),
 				null != flagSelected ? flagSelected.shortValue() : 0,
 				userContext, recordOfficeId, recordLoanOfficerId);
+	}
+	
+	public void checkPermissionForAdjustment(AccountTypes accountTypes,
+			CustomerLevel customerLevel, UserContext userContext,
+			Short recordOfficeId, Short recordLoanOfficerId)
+			throws ApplicationException {
+		if (!isPermissionAllowedForAdjustment(accountTypes, customerLevel, userContext,
+				recordOfficeId, recordLoanOfficerId))
+			throw new ServiceException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowedForAdjustment(AccountTypes accountTypes,
+			CustomerLevel customerLevel, UserContext userContext,
+			Short recordOfficeId, Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isAdjustmentPermittedForAccounts(
+				accountTypes, customerLevel, userContext, recordOfficeId,
+				recordLoanOfficerId);
+	}
+	
+	public void checkPermissionForWaiveDue(WaiveEnum waiveEnum, AccountTypes accountTypes, CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) throws ApplicationException {
+		if (!isPermissionAllowedForWaiveDue(waiveEnum, accountTypes,customerLevel, userContext,
+				recordOfficeId, recordLoanOfficerId))
+			throw new CustomerException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowedForWaiveDue(WaiveEnum waiveEnum, AccountTypes accountTypes, CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isWaiveDuePermittedForCustomers(waiveEnum, accountTypes,
+				customerLevel, userContext, recordOfficeId,
+				recordLoanOfficerId);
+	}
+	
+	public void checkPermissionForRemoveFees(AccountTypes accountTypes, CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) throws ApplicationException {
+		if (!isPermissionAllowedForRemoveFees(accountTypes, customerLevel, userContext,
+				recordOfficeId, recordLoanOfficerId))
+			throw new CustomerException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowedForRemoveFees(AccountTypes accountTypes, CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isRemoveFeesPermittedForAccounts(accountTypes,
+				customerLevel, userContext, recordOfficeId,
+				recordLoanOfficerId);
 	}
 }

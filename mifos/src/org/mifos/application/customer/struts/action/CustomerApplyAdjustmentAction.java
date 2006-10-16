@@ -6,7 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.struts.actionforms.CustomerApplyAdjustmentActionForm;
@@ -81,6 +83,15 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		UserContext uc = (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 		customerBO.setUserContext(uc);
 		customerBO.getCustomerAccount().setUserContext(uc);
+		if (customerBO.getPersonnel() != null)
+			getAccountBizService().checkPermissionForAdjustment(
+					AccountTypes.CUSTOMERACCOUNT, customerBO.getLevel(), uc,
+					customerBO.getOffice().getOfficeId(),
+					customerBO.getPersonnel().getPersonnelId());
+		else
+			getAccountBizService().checkPermissionForAdjustment(
+					AccountTypes.CUSTOMERACCOUNT, customerBO.getLevel(), uc,
+					customerBO.getOffice().getOfficeId(), uc.getId());
 		try {
 		customerBO.adjustPmnt(applyAdjustmentActionForm.getAdjustmentNote());
 		}catch(ApplicationException ae) {
@@ -134,5 +145,9 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 	private void resetActionFormFields(CustomerApplyAdjustmentActionForm applyAdjustmentActionForm){
 		applyAdjustmentActionForm.setAdjustmentNote(null);
 	}
-
+	
+	private AccountBusinessService getAccountBizService(){
+		return (AccountBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Accounts);
+	}
 }

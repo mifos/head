@@ -82,7 +82,12 @@
 								bundle="PersonnelUIResources"></mifos:mifoslabel></td>
 						</tr>
 					</table>
-					<table width="95%" border="0" cellpadding="3" cellspacing="0">
+					<table width="95%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td>
+								<font class="fontnormalRedBold"><html-el:errors	bundle="PersonnelUIResources" /></font>
+							</td>
+						</tr>
 						<tr>
 							<td><br>
 							<span class="fontnormal"> <mifos:mifoslabel
@@ -96,10 +101,6 @@
 						<tr>
 							<td class="blueline"><img src="pages/framework/images/trans.gif"
 								width="10" height="5"></td>
-						</tr>
-						<tr>
-							<td><font class="fontnormalRedBold"><html-el:errors
-								bundle="PersonnelUIResources" /></font></td>
 						</tr>
 					</table>
 					<table width="95%" border="0" cellpadding="3" cellspacing="0">

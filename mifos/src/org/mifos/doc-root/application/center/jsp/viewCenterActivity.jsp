@@ -99,11 +99,11 @@
 	                	<span class="fontnormalbold">
 	                	<mifos:mifoslabel name="Center.ApplyTransaction" bundle="CenterUIResources"/></span>
 	                	&nbsp;&nbsp;&nbsp;&nbsp;
-	                	<html-el:link href="applyPaymentAction.do?method=load&searchInput=ClientChargesDetails&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Center&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                	<html-el:link href="applyPaymentAction.do?method=load&searchInput=ClientChargesDetails&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 	                    	<mifos:mifoslabel name="accounts.apply_payment" />
 	                    </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	                    <html-el:link href="custApplyAdjustment.do?method=loadAdjustment&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&securityParamInput=Center&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+	                    <html-el:link href="custApplyAdjustment.do?method=loadAdjustment&statusId=${param.statusId}&globalCustNum=${param.globalCustNum}&prdOfferingName=${param.prdOfferingName}&input=ViewCenterCharges&globalAccountNum=${param.globalAccountNum}&accountType=${param.accountType}&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 	                    	<mifos:mifoslabel name="Center.ApplyAdjustment" bundle="CenterUIResources"/>
 	                    </html-el:link>
 	                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -131,8 +131,7 @@
         </tr>
       </table> 
 		<html:form action="customerAccountAction.do">
-        	<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" /> 
+        	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}" /> 
      	</html:form>
-		<mifos:SecurityParam property="Center" />
 </tiles:put>
 </tiles:insert>      

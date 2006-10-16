@@ -49,7 +49,6 @@
 			<key column="ACCOUNT_TRXN_ID"/>
 			<one-to-many class="org.mifos.application.accounts.financial.business.FinancialTransactionBO"/>
 		</set>
-		
 		<joined-subclass
 			name="org.mifos.application.accounts.business.LoanTrxnDetailEntity"
 			table="LOAN_TRXN_DETAIL">

@@ -81,7 +81,7 @@
 							<td rowspan="2" align="right" valign="top" class="headingorange">
 							<span class="fontnormal"> <!-- Edit center status link --> <c:if
 								test="${BusinessKey.customerStatus.id != 6}">
-								<a href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&securityParamInput=Client&input=client&currentFlowKey=${requestScope.currentFlowKey}">
+								<a href="editCustomerStatusAction.do?method=loadStatus&customerId=<c:out value="${BusinessKey.customerId}"/>&input=client&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="client.EditLink"
 										bundle="ClientUIResources"></mifos:mifoslabel>
 									<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" />
@@ -626,7 +626,7 @@
 							</c:forEach> <br>
 							<!-- Bug Id 27210. Added code to pass the created date as parameter-->
 
-							<a href="custHistoricalDataAction.do?method=get&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>"><mifos:mifoslabel
+							<a href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
 								name="client.HistoricalDataLink" bundle="ClientUIResources"></mifos:mifoslabel>
 							</a> <br>
 							<html-el:link href="clientCustAction.do?method=loadChangeLog&entityType=Client&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -751,7 +751,7 @@
 							<td align="right" class="paddingleft05"><span
 								class="fontnormal8pt"> <c:if test="${!empty BusinessKey.customerNotes}">
 								<html-el:link
-									href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&securityParamInput=Client&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="customerNotesAction.do?method=search&customerId=${BusinessKey.customerId}&globalAccountNum=${BusinessKey.globalCustNum}&customerName=${BusinessKey.displayName}&levelId=${BusinessKey.customerLevel.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel
 									name="client.SeeAllNotesLink" bundle="ClientUIResources"></mifos:mifoslabel>
 								</html-el:link>

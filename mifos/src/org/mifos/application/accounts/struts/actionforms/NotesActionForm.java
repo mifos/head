@@ -15,62 +15,71 @@ import org.mifos.framework.util.helpers.Constants;
 public class NotesActionForm extends ValidatorActionForm {
 
 	private String accountId;
+
 	private String accountTypeId;
+
 	private String prdOfferingName;
+
 	private String comment;
+
 	private String globalAccountNum;
-	private String securityParamInput;
 
 	public String getAccountId() {
 		return accountId;
 	}
+
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
+
 	public String getPrdOfferingName() {
 		return prdOfferingName;
 	}
+
 	public void setPrdOfferingName(String prdOfferingName) {
 		this.prdOfferingName = prdOfferingName;
 	}
+
 	public String getAccountTypeId() {
 		return accountTypeId;
 	}
+
 	public void setAccountTypeId(String accountTypeId) {
 		this.accountTypeId = accountTypeId;
 	}
+
 	public String getComment() {
 		return comment;
 	}
+
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
 	public String getGlobalAccountNum() {
 		return globalAccountNum;
 	}
+
 	public void setGlobalAccountNum(String globalAccountNum) {
 		this.globalAccountNum = globalAccountNum;
 	}
-	public String getSecurityParamInput() {
-		return securityParamInput;
-	}
-	public void setSecurityParamInput(String securityParamInput) {
-		this.securityParamInput = securityParamInput;
-	}
 
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+	@Override
+	public ActionErrors validate(ActionMapping mapping,
+			HttpServletRequest request) {
 		String methodCalled = request.getParameter(Methods.method.toString());
 		ActionErrors errors = null;
-		if(null !=methodCalled) {
-			if(Methods.cancel.toString().equals(methodCalled) ||
-			  Methods.searchNext.toString().equals(methodCalled)||
-			  Methods.search.toString().equals(methodCalled)||
-			  Methods.searchPrev.toString().equals(methodCalled)||
-			  Methods.load.toString().equals(methodCalled) ||
-			  Methods.create.toString().equals(methodCalled)){
-				request.setAttribute(Constants.SKIPVALIDATION, Boolean.valueOf(true));
+		if (null != methodCalled) {
+			if (Methods.cancel.toString().equals(methodCalled)
+					|| Methods.searchNext.toString().equals(methodCalled)
+					|| Methods.search.toString().equals(methodCalled)
+					|| Methods.searchPrev.toString().equals(methodCalled)
+					|| Methods.load.toString().equals(methodCalled)
+					|| Methods.create.toString().equals(methodCalled)) {
+				request.setAttribute(Constants.SKIPVALIDATION, Boolean
+						.valueOf(true));
 			} else if (Methods.preview.toString().equals(methodCalled)) {
-				errors = handlePreviewValidations(request,errors);
+				errors = handlePreviewValidations(request, errors);
 			}
 		}
 		if (null != errors && !errors.isEmpty()) {
@@ -80,7 +89,8 @@ public class NotesActionForm extends ValidatorActionForm {
 		return errors;
 	}
 
-	private ActionErrors handlePreviewValidations(HttpServletRequest request,ActionErrors errors) {
+	private ActionErrors handlePreviewValidations(HttpServletRequest request,
+			ActionErrors errors) {
 		if (ValidateMethods.isNullOrBlank(getComment())) {
 			if (null == errors) {
 				errors = new ActionErrors();

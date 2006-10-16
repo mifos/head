@@ -47,6 +47,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.struts.actionforms.ApplyAdjustmentActionForm;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -65,6 +66,7 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
  */
 public class ApplyAdjustment extends BaseAction {
 
+	@Override
 	protected BusinessService getService() throws ServiceException {
 		AccountBusinessService accntBizService = null;
 		accntBizService = (AccountBusinessService) ServiceFactory.getInstance()
@@ -76,11 +78,8 @@ public class ApplyAdjustment extends BaseAction {
 	public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
 		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
-		AccountBO accnt = ((AccountBusinessService) getService())
-				.findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accnt, request);
 		request.setAttribute("method", "loadAdjustment");
 		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
@@ -98,8 +97,7 @@ public class ApplyAdjustment extends BaseAction {
 			HttpServletResponse response) throws Exception {
 		request.setAttribute("method", "previewAdjustment");
 		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
-		AccountBO accnt = ((AccountBusinessService) getService())
-				.findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
 		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
 			request.setAttribute("method", "loadAdjustment");
 			throw new ApplicationException(
@@ -115,8 +113,7 @@ public class ApplyAdjustment extends BaseAction {
 			HttpServletResponse response) throws Exception {
 		request.setAttribute("method", "applyAdjustment");
 		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
-		AccountBO accnt = ((AccountBusinessService) getService())
-				.findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
 		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
 			request.setAttribute("method", "previewAdjustment");
 			throw new ApplicationException(
@@ -125,6 +122,13 @@ public class ApplyAdjustment extends BaseAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		accnt.setUserContext(uc);
+		if (accnt.getPersonnel() != null)
+			getBizService().checkPermissionForAdjustment(AccountTypes.LOANACCOUNT, null, uc,
+					accnt.getOffice().getOfficeId(), accnt.getPersonnel()
+							.getPersonnelId());
+		else
+			getBizService().checkPermissionForAdjustment(AccountTypes.LOANACCOUNT, null, uc,
+					accnt.getOffice().getOfficeId(), uc.getId());
 		try {
 			accnt.adjustPmnt(appAdjustActionForm.getAdjustmentNote());
 		} catch (ApplicationException ae) {
@@ -166,5 +170,9 @@ public class ApplyAdjustment extends BaseAction {
 		}
 		return true;
 	}
-
+	
+	private AccountBusinessService getBizService(){
+		return (AccountBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Accounts);
+	}
 }

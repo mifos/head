@@ -75,16 +75,15 @@ public class CustomerAccountAction extends AccountAppAction {
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String globalCustNum = ((CustomerAccountActionForm) form)
-				.getGlobalCustNum();
+		String globalCustNum = ((CustomerAccountActionForm) form).getGlobalCustNum();
 		CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory
 				.getInstance().getBusinessService(BusinessServiceName.Customer);
 		CustomerBO customerBO = customerService.findBySystemId(globalCustNum);
 		CustomerAccountBO customerAccount = customerBO.getCustomerAccount();
 		List<CustomerRecentActivityView> recentActivities = customerService
 				.getRecentActivityView(customerBO.getCustomerId());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
-		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_ACCOUNT,customerAccount, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerAccount, request);
+		//SessionUtils.setAttribute(CustomerConstants.CUSTOMER_ACCOUNT,customerAccount, request);
 		SessionUtils.setAttribute(CustomerConstants.RECENT_ACTIVITIES,recentActivities, request);
 		ActionForwards forward = getForward(customerBO);
 		return mapping.findForward(forward.toString());

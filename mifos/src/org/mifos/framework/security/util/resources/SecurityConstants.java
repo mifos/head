@@ -150,9 +150,7 @@ public interface SecurityConstants {
 
 	public final short CIENT_MAKE_ADJUSTMENT_ENTRIES_TO_CLIENT_ACCOUNT = 44;
 
-	public final short CIENT_WAIVE_PANALTY = 45;
-
-	public final short CIENT_WAIVE_FEE_INSTALLMENT = 46;
+	public final short CIENT_WAIVE_DUE_AMOUNT = 46;
 
 	public final short CIENT_REMOVE_FEE_TYPE_FROM_CLIENT_ACCOUNT = 47;
 
@@ -195,9 +193,7 @@ public interface SecurityConstants {
 
 	public final short GROUP_MAKE_ADJUSTMENT_ENTRIES_TO_GROUP_ACCOUNT = 66;
 
-	public final short GROUP_WAIVE_PANALTY = 67;
-
-	public final short GROUP_WAIVE_FEE_INSTALLMENT = 68;
+	public final short GROUP_WAIVE_DUE_AMOUNT = 68;
 
 	public final short GROUP_REMOVE_FEE_TYPE_FROM_GROUP_ACCOUNT = 69;
 
@@ -228,9 +224,7 @@ public interface SecurityConstants {
 
 	public final short CENTER_MAKE_ADJUSTMENT_ENTRIES_TO_CENTER_ACCOUNT = 83;
 
-	public final short CENTER_WAIVE_PANALTY = 84;
-
-	public final short CENTER_WAIVE_FEE_INSTALLMENT = 85;
+	public final short CENTER_WAIVE_DUE_AMOUNT = 85;
 
 	public final short CENTER_REMOVE_FEE_TYPE_FROM_CENTER_ACCOUNT = 86;
 

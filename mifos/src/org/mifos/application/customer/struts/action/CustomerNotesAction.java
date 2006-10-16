@@ -45,6 +45,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerNoteEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
@@ -128,6 +129,15 @@ public class CustomerNotesAction extends SearchAction {
 		CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
 		CustomerBO customerBO = getCustomerBusinessService().getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
 		UserContext uc = getUserContext(request);
+		if (customerBO.getPersonnel() != null)
+			checkPermissionForAddingNotes(AccountTypes.CUSTOMERACCOUNT,
+					customerBO.getLevel(), uc, customerBO.getOffice()
+							.getOfficeId(), customerBO.getPersonnel()
+							.getPersonnelId());
+		else
+			checkPermissionForAddingNotes(AccountTypes.CUSTOMERACCOUNT,
+					customerBO.getLevel(), uc, customerBO.getOffice()
+							.getOfficeId(), uc.getId());
 		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc.getId());
 		CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new java.sql.Date(System.currentTimeMillis()),personnelBO,customerBO);
 		customerBO.addCustomerNotes(customerNote);
@@ -169,7 +179,6 @@ public class CustomerNotesAction extends SearchAction {
 	private void clearActionForm(ActionForm form){
 		((CustomerNotesActionForm)form).setComment("");
 		((CustomerNotesActionForm)form).setCommentDate("");
-		((CustomerNotesActionForm)form).setSecurityParamInput("");
 	}
 
 	@Override

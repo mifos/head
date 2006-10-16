@@ -165,6 +165,9 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward getLoanRepaymentSchedule(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		LoanBO loanBO = loanBusinessService.getAccount((getIntegerValue(request.getParameter("accountId"))));
+		loanBO.setUserContext(getUserContext(request));
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
 		return mapping.findForward(ActionForwards.getLoanRepaymentSchedule
 				.toString());
 	}

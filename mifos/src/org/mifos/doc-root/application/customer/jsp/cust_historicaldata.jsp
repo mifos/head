@@ -123,7 +123,6 @@
 			</table>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="globalCustNum" value="${BusinessKey.globalCustNum}" />
-			<mifos:SecurityParam property="${sessionScope.custHistoricalDataActionForm.type}"></mifos:SecurityParam>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

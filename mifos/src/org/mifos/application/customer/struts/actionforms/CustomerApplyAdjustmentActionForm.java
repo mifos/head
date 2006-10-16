@@ -7,16 +7,17 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.framework.util.helpers.Constants;
 
 public class CustomerApplyAdjustmentActionForm extends ValidatorActionForm {
-	
+
 	private String input;
-	
+
 	private String adjustmentNote;
-	
+
 	private String globalCustNum;
-	
-	private boolean adjustcheckbox ;
+
+	private boolean adjustcheckbox;
 
 	public boolean isAdjustcheckbox() {
 		return adjustcheckbox;
@@ -49,34 +50,44 @@ public class CustomerApplyAdjustmentActionForm extends ValidatorActionForm {
 	public void setInput(String input) {
 		this.input = input;
 	}
-	
-	public void reset(ActionMapping actionMapping,HttpServletRequest request){
+
+	@Override
+	public void reset(ActionMapping actionMapping, HttpServletRequest request) {
 		this.adjustcheckbox = false;
 	}
-	
-	public ActionErrors validate(ActionMapping actionMapping,HttpServletRequest request){
+
+	@Override
+	public ActionErrors validate(ActionMapping actionMapping,
+			HttpServletRequest request) {
+		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
+			request.setAttribute(Constants.CURRENTFLOWKEY, request
+					.getParameter(Constants.CURRENTFLOWKEY));
 		ActionErrors actionErrors = new ActionErrors();
-		if(null != request.getParameter(CustomerConstants.METHOD) && request.getParameter(CustomerConstants.METHOD).equals(CustomerConstants.METHOD_PREVIEW_ADJUSTMENT)){
-			if(!adjustcheckbox){
-				request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
-				 actionErrors.add("", new ActionMessage(CustomerConstants.ERROR_MANDATORY_CHECKBOX));
+		if (null != request.getParameter(CustomerConstants.METHOD)
+				&& request.getParameter(CustomerConstants.METHOD).equals(
+						CustomerConstants.METHOD_PREVIEW_ADJUSTMENT)) {
+			if (!adjustcheckbox) {
+				request.setAttribute(CustomerConstants.METHOD,
+						CustomerConstants.METHOD_LOAD_ADJUSTMENT);
+				actionErrors.add("", new ActionMessage(
+						CustomerConstants.ERROR_MANDATORY_CHECKBOX));
 			}
-			if(adjustmentNote == null || adjustmentNote.trim() == ""){
-				request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
-				actionErrors.add("", new ActionMessage(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
-			}else if(adjustmentNote.length()>300){
-				request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
-				actionErrors.add("", new ActionMessage(CustomerConstants.ERROR_ADJUSTMENT_NOTE_TOO_BIG));
+			if (adjustmentNote == null || adjustmentNote.trim() == "") {
+				request.setAttribute(CustomerConstants.METHOD,
+						CustomerConstants.METHOD_LOAD_ADJUSTMENT);
+				actionErrors.add("", new ActionMessage(
+						CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
+			} else if (adjustmentNote.length() > 300) {
+				request.setAttribute(CustomerConstants.METHOD,
+						CustomerConstants.METHOD_LOAD_ADJUSTMENT);
+				actionErrors.add("", new ActionMessage(
+						CustomerConstants.ERROR_ADJUSTMENT_NOTE_TOO_BIG));
 			}
-			if(!actionErrors.isEmpty()){
+			if (!actionErrors.isEmpty()) {
 				return actionErrors;
 			}
-			 
-			
-		
 		}
 		return super.validate(actionMapping, request);
 	}
-	
 
 }

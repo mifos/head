@@ -112,7 +112,6 @@
 					</td>
 				</tr>
 			</table>
-						<mifos:SecurityParam property="Loan" />
 		
 		<html-el:hidden property="input" value="reviewTransactionPage"/>
 		<html-el:hidden property="accountId" value="${BusinessKey.accountId}"/>

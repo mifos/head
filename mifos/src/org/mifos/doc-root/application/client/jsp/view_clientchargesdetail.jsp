@@ -57,8 +57,6 @@
 			   var="BusinessKey" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivities')}"
 			   var="recentActivities" />
-	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customerAccount')}"
-			   var="custAccount" />
 	<tiles:put name="body" type="string">
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
@@ -89,7 +87,7 @@
 					</tr>
 				</table>
 				<c:if
-					test="${BusinessKey.customerStatus.id == 1 || BusinessKey.customerStatus.id == 2 || BusinessKey.customerStatus.id == 3 || BusinessKey.customerStatus.id == 4}">
+					test="${BusinessKey.customer.customerStatus.id == 1 || BusinessKey.customer.customerStatus.id == 2 || BusinessKey.customer.customerStatus.id == 3 || BusinessKey.customer.customerStatus.id == 4}">
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td bgcolor="#F0D4A5"
@@ -97,22 +95,22 @@
 								class="fontnormalbold"> <mifos:mifoslabel
 								name="client.ApplyTransaction" bundle="ClientUIResources" /> </span>
 							&nbsp;&nbsp;&nbsp;&nbsp; <html-el:link
-								href="applyPaymentAction.do?method=load&globalCustNum=${BusinessKey.globalCustNum}&prdOfferingName=${BusinessKey.displayName}&input=ViewClientCharges&globalAccountNum=${BusinessKey.customerAccount.globalAccountNum}&accountType=${BusinessKey.customerAccount.accountType.accountTypeId}&securityParamInput=Client&accountId=${BusinessKey.customerAccount.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="applyPaymentAction.do?method=load&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewClientCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="client.apply_payment"
 									bundle="ClientUIResources" />
 							</html-el:link> <c:if
-								test="${BusinessKey.customerStatus.id == 3 || BusinessKey.customerStatus.id == 4}">
+								test="${BusinessKey.customer.customerStatus.id == 3 || BusinessKey.customer.customerStatus.id == 4}">
 	                &nbsp;&nbsp;&nbsp;&nbsp;
 		                <html-el:link
-									href="custApplyAdjustment.do?method=loadAdjustment&globalCustNum=${BusinessKey.globalCustNum}&prdOfferingName=${BusinessKey.displayName}&globalAccountNum=${BusinessKey.customerAccount.globalAccountNum}&input=ViewClientCharges&securityParamInput=Client&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="custApplyAdjustment.do?method=loadAdjustment&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&globalAccountNum=${BusinessKey.globalAccountNum}&input=ViewClientCharges&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="client.applyadjustment"
 										bundle="ClientUIResources" />
 								</html-el:link>
 							</c:if> <c:if
-								test="${BusinessKey.customerStatus.id == 1 || BusinessKey.customerStatus.id == 2 || BusinessKey.customerStatus.id == 3 || BusinessKey.customerStatus.id == 4}">
+								test="${BusinessKey.customer.customerStatus.id == 1 || BusinessKey.customer.customerStatus.id == 2 || BusinessKey.customer.customerStatus.id == 3 || BusinessKey.customer.customerStatus.id == 4}">
 			             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		                <html-el:link
-									href="applyChargeAction.do?method=load&accountId=${BusinessKey.customerAccount.accountId}&globalCustNum=${BusinessKey.globalCustNum}&input=ViewClientCharges&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&globalCustNum=${BusinessKey.customer.globalCustNum}&input=ViewClientCharges&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="clinet.applycharges"
 										bundle="ClientUIResources" />
 								</html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -129,26 +127,26 @@
 					<tr>
 						<td class="fontnormal"><span class="fontnormal"> <mifos:mifoslabel
 							name="client.amtdue" bundle="ClientUIResources" />: <c:out
-							value='${custAccount.nextDueAmount}' /> </span> <c:if
-							test='${custAccount.nextDueAmount.amountDoubleValue != 0.0}'>
+							value='${BusinessKey.nextDueAmount}' /> </span> <c:if
+							test='${BusinessKey.nextDueAmount.amountDoubleValue != 0.0}'>
 							<html-el:link
-								href="customerAction.do?method=waiveChargeDue&globalCustNum=${BusinessKey.globalCustNum}&accountType=${BusinessKey.customerAccount.accountType.accountTypeId}&prdOfferingName=${BusinessKey.displayName}&statusId=${BusinessKey.customerStatus.id}&type=Client&accountId=${BusinessKey.customerAccount.accountId}&globalAccountNum=${BusinessKey.customerAccount.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="customerAction.do?method=waiveChargeDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Client&input=Client&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="client.waive" bundle="ClientUIResources" />
 							</html-el:link>
 						</c:if> <br>
 						<span class="fontnormal"> <mifos:mifoslabel
 							name="client.amtoverdue" bundle="ClientUIResources" />: <c:out
-							value='${custAccount.totalAmountInArrears}' /> </span> <c:if
-							test='${custAccount.totalAmountInArrears.amountDoubleValue != 0.0}'>
+							value='${BusinessKey.totalAmountInArrears}' /> </span> <c:if
+							test='${BusinessKey.totalAmountInArrears.amountDoubleValue != 0.0}'>
 							<html-el:link
-								href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${BusinessKey.globalCustNum}&accountType=${BusinessKey.customerAccount.accountType.accountTypeId}&prdOfferingName=${BusinessKey.displayName}&statusId=${BusinessKey.customerStatus.id}&type=Client&accountId=${BusinessKey.customerAccount.accountId}&globalAccountNum=${BusinessKey.customerAccount.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+								href="customerAction.do?method=waiveChargeOverDue&globalCustNum=${BusinessKey.customer.globalCustNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&statusId=${BusinessKey.customer.customerStatus.id}&type=Client&input=Client&accountId=${BusinessKey.accountId}&globalAccountNum=${BusinessKey.globalAccountNum}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="client.waive" bundle="ClientUIResources" />
 							</html-el:link>
 						</c:if> <BR>
 						<span class="fontnormalbold"> <mifos:mifoslabel
 							name="client.total" isColonRequired="Yes"
 							bundle="ClientUIResources" /><c:out
-							value='${custAccount.totalAmountDue.amountDoubleValue}'></c:out>
+							value='${BusinessKey.totalAmountDue.amountDoubleValue}'></c:out>
 						</span></td>
 					</tr>
 				</table>
@@ -157,10 +155,10 @@
 					<tr>
 						<td width="70%" class="headingorange"><mifos:mifoslabel
 							name="client.upcomcharges" bundle="ClientUIResources" /> (<c:out
-							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,custAccount.upcomingChargesDate)}' />)
+							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.upcomingChargesDate)}' />)
 						</td>
 						<td width="70%" align="right" class="fontnormal"><html-el:link
-							href="accountAppAction.do?method=getTrxnHistory&statusId=${BusinessKey.customerStatus.id}&globalCustNum=${BusinessKey.globalCustNum}&input=ViewClientCharges&globalAccountNum=${BusinessKey.customerAccount.globalAccountNum}&accountId=${BusinessKey.customerAccount.accountId}&accountType=${BusinessKey.customerAccount.accountType.accountTypeId}&prdOfferingName=${BusinessKey.displayName}&headingInput=ViewClientCharges&searchInput=ClientChargesDetails&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							href="accountAppAction.do?method=getTrxnHistory&statusId=${BusinessKey.customer.customerStatus.id}&globalCustNum=${BusinessKey.customer.globalCustNum}&input=ViewClientCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountId=${BusinessKey.accountId}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&headingInput=ViewClientCharges&searchInput=ClientChargesDetails&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="client.TransactionHistory"
 								bundle="ClientUIResources" />
 						</html-el:link></td>
@@ -170,7 +168,7 @@
 
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
 					<c:if
-						test='${!empty custAccount.upcomingInstallment.accountFeesActionDetails or (!empty custAccount.upcomingInstallment.miscFeeDue) and (custAccount.upcomingInstallment.miscFeeDue.amountDoubleValue!=0.0) or (!empty custAccount.upcomingInstallment.miscPenaltyDue) and (custAccount.upcomingInstallment.miscPenaltyDue.amountDoubleValue!=0.0)}'>
+						test='${!empty BusinessKey.upcomingInstallment.accountFeesActionDetails or (!empty BusinessKey.upcomingInstallment.miscFeeDue) and (BusinessKey.upcomingInstallment.miscFeeDue.amountDoubleValue!=0.0) or (!empty BusinessKey.upcomingInstallment.miscPenaltyDue) and (BusinessKey.upcomingInstallment.miscPenaltyDue.amountDoubleValue!=0.0)}'>
 						<tr>
 							<td width="19%" class="drawtablerowboldnoline"><mifos:mifoslabel
 								name="client.FeeType" bundle="ClientUIResources" /></td>
@@ -180,7 +178,7 @@
 						</tr>
 
 						<c:forEach
-							items="${custAccount.upcomingInstallment.accountFeesActionDetails}"
+							items="${BusinessKey.upcomingInstallment.accountFeesActionDetails}"
 							var="upcomingCharges">
 							<c:if test='${upcomingCharges.feeAmount.amountDoubleValue!=0.0}'>
 								<tr>
@@ -192,19 +190,19 @@
 								</tr>
 							</c:if>
 						</c:forEach>
-						<c:if test='${(!empty custAccount.upcomingInstallment.miscFeeDue) and (custAccount.upcomingInstallment.miscFeeDue.amountDoubleValue!=0.0)}'>
+						<c:if test='${(!empty BusinessKey.upcomingInstallment.miscFeeDue) and (BusinessKey.upcomingInstallment.miscFeeDue.amountDoubleValue!=0.0)}'>
 								<tr>
 									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscfee" bundle="CustomerUIResources" /></td>
 									<td width="49%" align="right" class="drawtablerow"><c:out
-										value="${custAccount.upcomingInstallment.miscFeeDue}" /></td>
+										value="${BusinessKey.upcomingInstallment.miscFeeDue}" /></td>
 									<td width="32%" class="drawtablerow">&nbsp;</td>
 								</tr>
 						</c:if>
-						<c:if test='${(!empty custAccount.upcomingInstallment.miscPenaltyDue) and (custAccount.upcomingInstallment.miscPenaltyDue.amountDoubleValue!=0.0)}'>
+						<c:if test='${(!empty BusinessKey.upcomingInstallment.miscPenaltyDue) and (BusinessKey.upcomingInstallment.miscPenaltyDue.amountDoubleValue!=0.0)}'>
 								<tr>
 									<td width="19%" class="drawtablerow"><mifos:mifoslabel name="Customer.miscpenalty" bundle="CustomerUIResources" /></td>
 									<td width="49%" align="right" class="drawtablerow"><c:out
-										value="${custAccount.upcomingInstallment.miscPenaltyDue}" /></td>
+										value="${BusinessKey.upcomingInstallment.miscPenaltyDue}" /></td>
 									<td width="32%" class="drawtablerow">&nbsp;</td>
 								</tr>
 						</c:if>
@@ -223,7 +221,7 @@
 						<td width="28%" class="headingorange"><mifos:mifoslabel
 							name="client.recaccact" bundle="ClientUIResources" /></td>
 						<td width="72%" align="right" class="fontnormal"><html-el:link
-							href="customerAction.do?method=getAllActivity&statusId=${BusinessKey.customerStatus.id}&type=Client&globalCustNum=${BusinessKey.globalCustNum}&prdOfferingName=${BusinessKey.displayName}&input=ViewClientCharges&globalAccountNum=${BusinessKey.customerAccount.globalAccountNum}&accountType=${BusinessKey.customerAccount.accountType.accountTypeId}&accountId=${BusinessKey.customerAccount.accountId}&securityParamInput=Client&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							href="customerAction.do?method=getAllActivity&statusId=${BusinessKey.customer.customerStatus.id}&type=Client&globalCustNum=${BusinessKey.customer.globalCustNum}&prdOfferingName=${BusinessKey.customer.displayName}&input=ViewClientCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="client.viewallactivities"
 								bundle="ClientUIResources" />
 						</html-el:link></td>
@@ -277,7 +275,7 @@
 				</table>
 				<table width="96%" border="0" cellpadding="3" cellspacing="0">
 
-					<c:forEach items="${custAccount.accountFees}" var="recurrenceFees">
+					<c:forEach items="${BusinessKey.accountFees}" var="recurrenceFees">
 						<c:if test="${recurrenceFees.periodic && recurrenceFees.active}">
 
 							<tr class="fontnormal">
@@ -297,7 +295,7 @@
 										bundle="FeesUIResources" />
 								</c:if> )</td>
 								<td width="55%"><html-el:link
-									href="accountAppAction.do?method=removeFees&statusId=${BusinessKey.customerStatus.id}&globalCustNum=${BusinessKey.globalCustNum}&feeId=${recurrenceFees.fees.feeId}&accountId=${recurrenceFees.account.accountId}&fromPage=client&globalAccountNum=${BusinessKey.customerAccount.globalAccountNum}&accountType=${BusinessKey.customerAccount.accountType.accountTypeId}&prdOfferingName=${BusinessKey.displayName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+									href="accountAppAction.do?method=removeFees&statusId=${BusinessKey.customer.customerStatus.id}&globalCustNum=${BusinessKey.customer.globalCustNum}&feeId=${recurrenceFees.fees.feeId}&accountId=${recurrenceFees.account.accountId}&fromPage=client&input=Client&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="client.remove"
 										bundle="ClientUIResources" />
 								</html-el:link></td>
@@ -311,6 +309,5 @@
 			</tr>
 		</table>
 		
-		<mifos:SecurityParam property="Client" />
 	</tiles:put>
 </tiles:insert>

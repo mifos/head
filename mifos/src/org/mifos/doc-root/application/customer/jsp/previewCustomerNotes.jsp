@@ -44,7 +44,8 @@
 		<mifos:mifoslabel name="Customer.PreviewNote"></mifos:mifoslabel></td>
             </tr>
           </table>
-            <table width="95%" border="0" cellpadding="3" cellspacing="0">
+            <table width="95%" border="0" cellpadding="0" cellspacing="0">
+            <logic:messagesPresent><tr><td><font class="fontnormalRedBold"><html-el:errors bundle="CustomerUIResources" /></font></td></tr></logic:messagesPresent>
                 <tr>
                   <td><br>
                       <span class="fontnormal">
@@ -67,11 +68,6 @@
                 <tr>
                   <td class="blueline"><img src="../images/trans.gif" width="10" height="5"></td>
                 </tr>
-                <tr>
-		   		<td>
-   					<font class="fontnormalRedBold"><html-el:errors bundle="CustomerUIResources"/></font>
-				</td>
-				</tr>
               </table>
               <table width="95%" border="0" cellpadding="3" cellspacing="0">
                 <tr>

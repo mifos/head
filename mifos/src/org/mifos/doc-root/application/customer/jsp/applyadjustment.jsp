@@ -239,9 +239,6 @@
 			<html-el:hidden property="input" value="${param.input}" />
 			<html-el:hidden property="accountId" value="${param.accountId}" />
 			<html-el:hidden property="accountType" value="${param.accountType}" />
-			<html-el:hidden property="securityParamInput"
-				value="${param.securityParamInput}" />
-			<mifos:SecurityParam property="${param.securityParamInput}" />
 		</html-el:form>
 
 	</tiles:put>

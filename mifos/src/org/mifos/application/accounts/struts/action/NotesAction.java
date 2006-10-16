@@ -101,6 +101,13 @@ public class NotesAction extends SearchAction {
 				.getAccount(Integer.valueOf(notesActionForm.getAccountId()));
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
+		if (accountBO.getPersonnel() != null)
+			checkPermissionForAddingNotes(accountBO.getType(), null, uc,
+					accountBO.getOffice().getOfficeId(), accountBO
+							.getPersonnel().getPersonnelId());
+		else
+			checkPermissionForAddingNotes(accountBO.getType(), null, uc,
+					accountBO.getOffice().getOfficeId(), uc.getId());
 		AccountNotesEntity accountNotes = (AccountNotesEntity) SessionUtils
 				.getAttribute(AccountConstants.ACCOUNT_NOTES, request);
 		accountBO.addAccountNotes(accountNotes);
@@ -137,7 +144,6 @@ public class NotesAction extends SearchAction {
 
 	private void clearActionForm(ActionForm form) {
 		((NotesActionForm) form).setComment("");
-		((NotesActionForm) form).setSecurityParamInput("");
 	}
 
 	@Override
@@ -157,11 +163,9 @@ public class NotesAction extends SearchAction {
 		if (accountBO instanceof LoanBO) {
 			notesActionForm.setPrdOfferingName(((LoanBO) accountBO)
 					.getLoanOffering().getPrdOfferingName());
-			notesActionForm.setSecurityParamInput("Loan");
 		} else if (accountBO instanceof SavingsBO) {
 			notesActionForm.setPrdOfferingName(((SavingsBO) accountBO)
 					.getSavingsOffering().getPrdOfferingName());
-			notesActionForm.setSecurityParamInput("Savings");
 		}
 	}
 }

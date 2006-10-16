@@ -106,8 +106,6 @@ function goToCancelPage(){
 				</tr>
 			</table>
 			<br>
-			<mifos:SecurityParam property="${param.securityParamInput}" />
-			<html-el:hidden property="securityParamInput" value="${sessionScope.notesActionForm.securityParamInput}" />
 			<html-el:hidden property="globalAccountNum" value="${sessionScope.notesActionForm.globalAccountNum}"/>
 			<html-el:hidden property="accountTypeId" value="${sessionScope.notesActionForm.accountTypeId}"/>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
