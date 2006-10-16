@@ -271,4 +271,6 @@ public interface CustomerConstants {
 	//Customer Account 
 	public static final String CUSTOMER_ACCOUNT = "customerAccount";	
 	public static final String RECENT_ACTIVITIES = "recentActivities";
+	public int HISTORICALDATA_COMMENT_LENGTH = 500;
+	public String HISTORICALDATA_NOTES = "Notes";
 }

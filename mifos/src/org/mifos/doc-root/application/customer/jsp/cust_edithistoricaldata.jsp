@@ -56,7 +56,7 @@
 							<td><mifos:mifosnumbertext
 								name="customerHistoricalDataActionForm"
 								property="loanCycleNumber"
-								value="${sessionScope.custHistoricalDataActionForm.loanCycleNumber}" />
+								value="${sessionScope.custHistoricalDataActionForm.loanCycleNumber}" maxlength="4"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
@@ -64,7 +64,7 @@
 								bundle="CustomerUIResources"></mifos:mifoslabel></td>
 							<td><mifos:mifosalphanumtext
 								name="customerHistoricalDataActionForm" property="productName"
-								value="${sessionScope.custHistoricalDataActionForm.productName}" />
+								value="${sessionScope.custHistoricalDataActionForm.productName}" maxlength="100"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
@@ -101,7 +101,7 @@
 							<td><mifos:mifosnumbertext
 								name="customerHistoricalDataActionForm"
 								property="missedPaymentsCount"
-								value="${sessionScope.custHistoricalDataActionForm.missedPaymentsCount}" />
+								value="${sessionScope.custHistoricalDataActionForm.missedPaymentsCount}" maxlength="4"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">
@@ -110,7 +110,7 @@
 							<td><mifos:mifosnumbertext
 								name="customerHistoricalDataActionForm"
 								property="totalPaymentsCount"
-								value="${sessionScope.custHistoricalDataActionForm.totalPaymentsCount}" />
+								value="${sessionScope.custHistoricalDataActionForm.totalPaymentsCount}" maxlength="4"/>
 							</td>
 						</tr>
 						<tr class="fontnormal">

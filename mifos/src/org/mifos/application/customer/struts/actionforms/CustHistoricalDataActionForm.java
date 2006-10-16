@@ -1,7 +1,16 @@
 package org.mifos.application.customer.struts.actionforms;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.Globals;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class CustHistoricalDataActionForm extends BaseActionForm {
 	
@@ -127,5 +136,32 @@ public class CustHistoricalDataActionForm extends BaseActionForm {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	@Override
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+		String methodCalled = request.getParameter(Methods.method.toString());
+		ActionErrors errors = new ActionErrors();
+		if(null !=methodCalled) {
+			if (Methods.previewHistoricalData.toString().equals(methodCalled)) {
+				errors = handlePreviewValidations(request,errors);
+			}
+		}
+		if (null != errors && !errors.isEmpty()) {
+			request.setAttribute(Globals.ERROR_KEY, errors);
+			request.setAttribute("methodCalled", methodCalled);
+		}
+		return errors;
+	}
+
+	private ActionErrors handlePreviewValidations(HttpServletRequest request,ActionErrors errors) {
+		if(StringUtils.isNullAndEmptySafe(getCommentNotes())) {
+			if (getCommentNotes().length() > CustomerConstants.HISTORICALDATA_COMMENT_LENGTH) {
+				errors.add(CustomerConstants.MAXIMUM_LENGTH, new ActionMessage(
+						CustomerConstants.MAXIMUM_LENGTH, CustomerConstants.HISTORICALDATA_NOTES,
+						CustomerConstants.HISTORICALDATA_COMMENT_LENGTH));
+			}
+		}
+		return errors;
 	}
 }

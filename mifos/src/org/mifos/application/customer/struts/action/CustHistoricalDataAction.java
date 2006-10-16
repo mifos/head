@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerHistoricalDataEntity;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
@@ -19,6 +20,7 @@ import org.mifos.application.customer.struts.actionforms.CustHistoricalDataActio
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -159,6 +161,19 @@ public class CustHistoricalDataAction extends BaseAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		return mapping.findForward(getDetailAccountPage(form));
+	}
+	
+	@TransactionDemarcate (joinToken = true)
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
+		String forward = null;
+		if (method != null) {
+			if (method.equals(Methods.previewHistoricalData.toString()))
+				forward = ActionForwards.previewHistoricalData_failure.toString();
+		}
+		return mapping.findForward(forward);
 	}
 
 	private void setTypeForGet(CustomerBO customerBO, ActionForm form) {

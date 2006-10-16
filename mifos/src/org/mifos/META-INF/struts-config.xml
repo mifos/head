@@ -502,8 +502,10 @@
 			<forward name="getHistoricalData_success" path="/pages/application/customer/jsp/cust_historicaldata.jsp" />
 			<forward name="loadHistoricalData_success" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
 			<forward name="previewHistoricalData_success" path="/pages/application/customer/jsp/cust_previewhistoricaldata.jsp" />
+			<forward name="previewHistoricalData_failure" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
 			<forward name="previousHistoricalData_success" path="/pages/application/customer/jsp/cust_edithistoricaldata.jsp" />
 			<forward name="updateHistoricalData_success" path="/custHistoricalDataAction.do?method=getHistoricalData" />
+			<forward name="updateHistoricalData_failure" path="/pages/application/customer/jsp/cust_previewhistoricaldata.jsp" />
 		</action>
 		<!--M2 Login Action -->
 		<action path="/loginAction" name="loginActionForm" type="org.mifos.application.login.struts.action.LoginAction" input="/loginAction.do?method=validate" parameter="method" validate="true" scope="session">

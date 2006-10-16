@@ -914,6 +914,28 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		} catch (ProductDefinitionException e) {
 		}
 	}
+	
+	public void testupdateloanOfferingInvalidConnection()
+			throws InvalidUserException, SystemException, ApplicationException {
+		createIntitalObjects();
+		Date startDate = offSetCurrentDate(0);
+		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			loanOffering.update((short) 1, "Loan Product", "LOAN",
+					productCategory, prdApplicableMaster, startDate, null,
+					"Loan Product updated", PrdStatus.LOANACTIVE, null,
+					interestTypes, (short) 0, null, new Money("1000"),
+					new Money("2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1,
+					(short) 12, false, false, false, null, null, (short) 2,
+					RecurrenceType.WEEKLY);
+			fail();
+		} catch (ProductDefinitionException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+}
 
 	public void testUpdateDefAmountNotBetweenMinMaxAmounts() {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
