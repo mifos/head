@@ -203,7 +203,7 @@
 								<tr>
 									<td class="fontnormalbold">
 									 <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'noPicture') eq 'No'}">
-									 	 <img src="/Mifos/clientCustAction.do?method=retrievePictureOnPreview"
+									 	 <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}"
 											height="100" width="150" />
 										<br>
 									</c:if></td></tr>
@@ -410,13 +410,14 @@
 										<span class="fontnormal">
 											<c:out value="${sessionScope.clientCustActionForm.parentGroup.personnel.displayName}" /><br>
 										</span>
-
+										<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
 										<span class="fontnormalbold"> <mifos:mifoslabel
 											name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
 											name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
 										<span class="fontnormal"><c:out
 											value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" /> <br>
 										</span>
+										</c:if>
 										<span class="fontnormalbold"><mifos:mifoslabel
 											name="${ConfigurationConstants.GROUP}" /> <mifos:mifoslabel
 											name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>

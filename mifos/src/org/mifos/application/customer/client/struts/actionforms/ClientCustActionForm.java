@@ -241,8 +241,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 			validateDateOfBirth(request, errors);
 			validateGender(errors);
 			validateSpouseNames(errors);
-			validateConfigurableMandatoryFields(request, errors,
-					EntityType.CLIENT);
+			checkForMandatoryFields(EntityType.CLIENT.getValue(), errors,request);
 			validateCustomFields(request, errors);
 			validatePicture(request, errors);
 		}
@@ -257,8 +256,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 		}
 
 		if (method.equals(Methods.previewEditMfiInfo.toString())) {
-			validateConfigurableMandatoryFields(request, errors,
-					EntityType.CLIENT);
+			checkForMandatoryFields(EntityType.CLIENT.getValue(), errors,request);
 			validateTrained(request, errors);
 		}
 		return errors;
@@ -285,7 +283,6 @@ public class ClientCustActionForm extends CustomerActionForm {
 
 			}
 			if (picture.getFileSize() == 0 || picture.getFileSize() < 0) {
-
 				SessionUtils.setAttribute("noPicture", "Yes", request);
 			} else {
 				SessionUtils.setAttribute("noPicture", "No", request);

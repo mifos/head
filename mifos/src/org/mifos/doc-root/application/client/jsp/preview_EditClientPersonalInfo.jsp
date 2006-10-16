@@ -107,10 +107,10 @@
 						<tr>
 							<td class="fontnormalbold">
 								<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'noPicture') eq 'No'}">
-								<img src="/Mifos/clientCustAction.do?method=retrievePictureOnPreview"
-									height="100" width="150" />
-
-							</c:if> <br>
+									 	 <img src="/mifos/clientCustAction.do?method=retrievePictureOnPreview&currentFlowKey=${requestScope.currentFlowKey}"
+											height="100" width="150" />
+										<br>
+									</c:if> <br>
 							</td></tr>
 						<tr><td class="fontnormalbold">
 							<mifos:mifoslabel name="client.Name" bundle="ClientUIResources"></mifos:mifoslabel>

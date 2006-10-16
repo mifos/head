@@ -54,3 +54,6 @@ DELETE from LOOKUP_VALUE where LOOKUP_ID = 477;
 UPDATE LOOKUP_VALUE_LOCALE SET LOOKUP_VALUE='Can waive a due amount' where LOOKUP_VALUE_ID = 745;
 UPDATE LOOKUP_VALUE_LOCALE SET LOOKUP_VALUE='Can waive a due amount' where LOOKUP_VALUE_ID = 767;
 UPDATE LOOKUP_VALUE_LOCALE SET LOOKUP_VALUE='Can waive a due amount' where LOOKUP_VALUE_ID = 784;
+/* The table Personnelcustom field contains the additional information of the default user  - Configuration */
+INSERT INTO PERSONNEL_CUSTOM_FIELD (FIELD_ID,PERSONNEL_ID,FIELD_VALUE)
+VALUES(9,1,'');

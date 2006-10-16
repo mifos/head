@@ -58,11 +58,11 @@ public class CenterPerformanceHistory {
 	public void setPerformanceHistoryDetails(Integer numberOfGroups,
 			Integer numberOfClients, Money totalOutstandingPortfolio,
 			Money totalSavings, Money portfolioAtRisk) {
-		this.numberOfGroups = numberOfGroups;
-		this.numberOfClients = numberOfClients;
-		this.totalOutstandingPortfolio = totalOutstandingPortfolio;
-		this.totalSavings = totalSavings;
-		this.portfolioAtRisk = portfolioAtRisk;
+		setNumberOfGroups(numberOfGroups);
+		setNumberOfClients(numberOfClients);
+		setTotalOutstandingPortfolio(totalOutstandingPortfolio);
+		setTotalSavings(totalSavings);
+		setPortfolioAtRisk(portfolioAtRisk);
 
 	}
 
