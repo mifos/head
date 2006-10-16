@@ -537,11 +537,17 @@ public interface NamedQueryConstants {
 	public String ALL_PRD_STATES="product.getAllPrdStates";
 	public String PRODUCT_ALL_LOAN_PRODUCTS="product.getAllLoanProducts";
 	//m2 search quaries 
-	
+	public String CUSTOMER_SEARCH_COUNT_FIRST_AND_LAST_NAME="Customer.cust_count_search_first_and_last_name";
 	public String CUSTOMER_SEARCH_COUNT="Customer.cust_count_search";
+	
+	public String CUSTOMER_SEARCH_FIRST_AND_LAST_NAME="Customer.cust_search_first_and_last_name";
 	public String CUSTOMER_SEARCH="Customer.cust_search";
 	public String CUSTOMER_SEARCH_NOOFFICEID="Customer.cust_search_noofficeid";
 	public String CUSTOMER_SEARCH_COUNT_NOOFFICEID="Customer.cust_count_search_noofficeid";
+
+	public String CUSTOMER_SEARCH_NOOFFICEID_FIRST_AND_LAST_NAME="Customer.cust_search_noofficeid_first_and_last_name";
+	public String CUSTOMER_SEARCH_COUNT_NOOFFICEID_FIRST_AND_LAST_NAME="Customer.cust_count_search_noofficeid_first_and_last_name";
+	
 	
 	public String CUSTOMER_ID_SEARCH_NOOFFICEID="Customer.cust_idsearch_withoutoffice";
 	public String CUSTOMER_ID_SEARCH_NOOFFICEID_COUNT="Customer.cust_idsearch_withoutoffice_count";

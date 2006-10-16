@@ -255,14 +255,20 @@ public class CustomerPersistence extends Persistence {
 		QueryResult queryResult = null;
 
 		try {
-			queryResult = new AccountPersistence().search(searchString,
-					officeId);
+			if (searchString.contains(" ")) {
+				String[] searchStrings = searchString.split(" ");
+				queryResult = mainSearch(searchStrings[0], searchStrings[1],
+						officeId, userId, userOfficeId);
+			} else {
 
-			if (queryResult == null) {
-				queryResult = idSearch(searchString, officeId);
+				queryResult = new AccountPersistence().search(searchString,
+						officeId);
 				if (queryResult == null) {
-					queryResult = mainSearch(searchString, officeId, userId,
-							userOfficeId);
+					queryResult = idSearch(searchString, officeId);
+					if (queryResult == null) {
+						queryResult = mainSearch(searchString, officeId,
+								userId, userOfficeId);
+					}
 				}
 			}
 
@@ -370,14 +376,9 @@ public class CustomerPersistence extends Persistence {
 			HibernateSearchException {
 		String[] namedQuery = new String[2];
 		List<Param> paramList = new ArrayList<Param>();
-		QueryInputs queryInputs = new QueryInputs();
+		QueryInputs queryInputs = setQueryInputsValues(namedQuery, paramList);
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
-		String[] aliasNames = { "customerId", "centerName",
-				"centerGlobalCustNum", "customerType", "branchGlobalNum",
-				"branchName", "loanOfficerName", "loanOffcerGlobalNum",
-				"customerStatus", "groupName", "groupGlobalCustNum",
-				"clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
 		if (officeId.shortValue() != 0) {
 			namedQuery[0] = NamedQueryConstants.CUSTOMER_SEARCH_COUNT;
 			namedQuery[1] = NamedQueryConstants.CUSTOMER_SEARCH;
@@ -391,6 +392,16 @@ public class CustomerPersistence extends Persistence {
 							.getSearchId()
 							+ "%"));
 		}
+		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
+				+ "%"));
+		setParams(paramList, userId);
+		queryResult.setQueryInputs(queryInputs);
+		return queryResult;
+
+	}
+
+	private void setParams(List<Param> paramList, Short userId)
+			throws PersistenceException {
 		paramList.add(typeNameValue("Short", "USERID", userId));
 		paramList.add(typeNameValue("Short", "LOID",
 				PersonnelLevel.LOAN_OFFICER.getValue()));
@@ -399,16 +410,58 @@ public class CustomerPersistence extends Persistence {
 		paramList.add(typeNameValue("Short", "USERLEVEL_ID",
 				new PersonnelPersistence().getPersonnel(userId).getLevel()
 						.getId()));
-		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
-				+ "%"));
 
+	}
+
+	private String[] getAliasNames() {
+		String[] aliasNames = { "customerId", "centerName",
+				"centerGlobalCustNum", "customerType", "branchGlobalNum",
+				"branchName", "loanOfficerName", "loanOffcerGlobalNum",
+				"customerStatus", "groupName", "groupGlobalCustNum",
+				"clientName", "clientGlobalCustNum", "loanGlobalAccountNumber" };
+
+		return aliasNames;
+
+	}
+
+	private QueryInputs setQueryInputsValues(String[] namedQuery,
+			List<Param> paramList) {
+		QueryInputs queryInputs = new QueryInputs();
 		queryInputs.setQueryStrings(namedQuery);
 		queryInputs.setParamList(paramList);
 		queryInputs
 				.setPath("org.mifos.application.customer.business.CustomerSearch");
-		queryInputs.setAliasNames(aliasNames);
-		queryResult.setQueryInputs(queryInputs);
+		queryInputs.setAliasNames(getAliasNames());
+		return queryInputs;
 
+	}
+
+	private QueryResult mainSearch(String firstName, String lastName,
+			Short officeId, Short userId, Short userOfficeId)
+			throws PersistenceException, HibernateSearchException {
+
+		String[] namedQuery = new String[2];
+		List<Param> paramList = new ArrayList<Param>();
+		QueryInputs queryInputs = setQueryInputsValues(namedQuery, paramList);
+		QueryResult queryResult = QueryFactory
+				.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
+		if (officeId.shortValue() != 0) {
+			namedQuery[0] = NamedQueryConstants.CUSTOMER_SEARCH_COUNT_FIRST_AND_LAST_NAME;
+			namedQuery[1] = NamedQueryConstants.CUSTOMER_SEARCH_FIRST_AND_LAST_NAME;
+			paramList.add(typeNameValue("Short", "OFFICEID", officeId));
+
+		} else {
+			namedQuery[0] = NamedQueryConstants.CUSTOMER_SEARCH_COUNT_NOOFFICEID_FIRST_AND_LAST_NAME;
+			namedQuery[1] = NamedQueryConstants.CUSTOMER_SEARCH_NOOFFICEID_FIRST_AND_LAST_NAME;
+			paramList.add(typeNameValue("String", "OFFICE_SEARCH_ID",
+					new OfficePersistence().getOffice(userOfficeId)
+							.getSearchId()
+							+ "%"));
+		}
+		paramList.add(typeNameValue("String", "SEARCH_STRING1", firstName));
+		paramList.add(typeNameValue("String", "SEARCH_STRING2", lastName));
+		setParams(paramList, userId);
+		queryResult.setQueryInputs(queryInputs);
 		return queryResult;
 
 	}
@@ -450,16 +503,18 @@ public class CustomerPersistence extends Persistence {
 
 	}
 
-	private boolean isCustomerExist(String globalCustNum) throws PersistenceException{
-		
+	private boolean isCustomerExist(String globalCustNum)
+			throws PersistenceException {
+
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		queryParameters.put("globalCustNum", globalCustNum);
-		Integer count =(Integer) execUniqueResultNamedQuery(
+		Integer count = (Integer) execUniqueResultNamedQuery(
 				NamedQueryConstants.CUSTOMER_FIND_COUNT_BY_SYSTEM_ID,
 				queryParameters);
-		return count!=null&&count>0?true:false;
-		
+		return count != null && count > 0 ? true : false;
+
 	}
+
 	private void initializeCustomer(CustomerBO customer) {
 		customer.getGlobalCustNum();
 		customer.getOffice().getOfficeId();

@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
@@ -25,70 +24,72 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 
 	@Override
 	public int doStartTag() throws JspException {
-		String currentFlowKey = (String) pageContext.getRequest()
-		.getAttribute(Constants.CURRENTFLOWKEY);
-		HttpSession session =  pageContext.getSession();
-		FlowManager flowManager = (FlowManager) session
+		FlowManager flowManager = (FlowManager) pageContext.getSession()
 				.getAttribute(Constants.FLOWMANAGER);
-		try{
-		Object obj = flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
-		
-		if (null != obj) {
-			List<AccountActionDateEntity> installmentsInArrears = ((SavingsBO) obj)
-					.getDetailsOfInstallmentsInArrears();
-			Date actionDate = null;
-			Money totalAmount = new Money();
-			int currentSize = 0;
-			int listSize = installmentsInArrears.size();
-			Locale locale = ((UserContext) pageContext.getSession()
-					.getAttribute(Constants.USERCONTEXT)).getPereferedLocale();
-			StringBuilder builder = new StringBuilder();
-			for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
-				SavingsScheduleEntity installment = (SavingsScheduleEntity) accountActionDate;
-				currentSize++;
-				if (actionDate == null)
-					actionDate = installment.getActionDate();
-				if (actionDate.compareTo(installment.getActionDate()) != 0
-						|| currentSize == listSize) {
-					if (currentSize == listSize
-							&& actionDate
-									.compareTo(installment.getActionDate()) == 0) {
-						builder.append(buildDepositDueUIRow(locale, actionDate,
-								totalAmount.add(installment
-										.getTotalDepositDue())));
-					} else if (actionDate
-							.compareTo(installment.getActionDate()) != 0
-							&& currentSize != listSize) {
-						builder.append(buildDepositDueUIRow(locale, actionDate,
-								totalAmount));
-					} else {
-						builder.append(buildDepositDueUIRow(locale, actionDate,
-								totalAmount));
-						builder.append(buildDepositDueUIRow(locale, installment
-								.getActionDate(), installment
-								.getTotalDepositDue()));
-					}
-					totalAmount = installment.getTotalDepositDue();
-					actionDate = installment.getActionDate();
-				} else
-					totalAmount = totalAmount.add(installment
-							.getTotalDepositDue());
+		try {
+			Object obj = flowManager.getFromFlow((String) pageContext
+					.getRequest().getAttribute(Constants.CURRENTFLOWKEY),
+					Constants.BUSINESS_KEY);
+			if (null != obj) {
+				pageContext.getOut().write(
+						buildUI(
+								((SavingsBO) obj)
+										.getDetailsOfInstallmentsInArrears(),
+								((UserContext) pageContext.getSession()
+										.getAttribute(Constants.USERCONTEXT))
+										.getPereferedLocale()).toString());
 			}
-			try {
-				pageContext.getOut().write(builder.toString());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		}
-		}catch (Exception e) {
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return SKIP_BODY;
 	}
 
-	private StringBuilder buildDateUI(Locale locale, Date actionDate) {
+	StringBuilder buildUI(
+			List<AccountActionDateEntity> installmentsInArrears, Locale locale) {
+		StringBuilder builder = new StringBuilder();
+		Date actionDate = null;
+		Money totalAmount = new Money();
+		int currentSize = 0;
+		int listSize = installmentsInArrears.size();
+
+		for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
+			SavingsScheduleEntity installment = (SavingsScheduleEntity) accountActionDate;
+			currentSize++;
+			if (actionDate == null)
+				actionDate = installment.getActionDate();
+			if (actionDate.compareTo(installment.getActionDate()) != 0
+					|| currentSize == listSize) {
+				if (currentSize == listSize
+						&& actionDate.compareTo(installment.getActionDate()) == 0) {
+					builder.append(buildDepositDueUIRow(locale, actionDate,
+							totalAmount.add(installment.getTotalDepositDue())));
+				} else if (actionDate.compareTo(installment.getActionDate()) != 0
+						&& currentSize != listSize) {
+					builder.append(buildDepositDueUIRow(locale, actionDate,
+							totalAmount));
+				} else {
+					builder.append(buildDepositDueUIRow(locale, actionDate,
+							totalAmount));
+					builder
+							.append(buildDepositDueUIRow(locale, installment
+									.getActionDate(), installment
+									.getTotalDepositDue()));
+				}
+				totalAmount = installment.getTotalDepositDue();
+				actionDate = installment.getActionDate();
+			} else
+				totalAmount = totalAmount.add(installment.getTotalDepositDue());
+		}
+
+		return builder;
+
+	}
+
+	StringBuilder buildDateUI(Locale locale, Date actionDate) {
 		StringBuilder builder = new StringBuilder();
 		builder
 				.append("<td class=\"drawtablerow\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
@@ -98,7 +99,7 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 		return builder;
 	}
 
-	private StringBuilder buildAmountUI(Money amount) {
+	StringBuilder buildAmountUI(Money amount) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<td align=\"right\" class=\"drawtablerow\">");
 		builder.append(amount);
@@ -109,7 +110,7 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 		return builder;
 	}
 
-	private StringBuilder buildDepositDueUIRow(Locale locale, Date actionDate,
+	StringBuilder buildDepositDueUIRow(Locale locale, Date actionDate,
 			Money dueAmount) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<tr>");

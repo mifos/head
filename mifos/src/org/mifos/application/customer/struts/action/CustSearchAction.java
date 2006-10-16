@@ -170,9 +170,11 @@ public class CustSearchAction extends SearchAction {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USERCONTEXT, request.getSession());
 		super.search(mapping, form, request, response);
-		if (searchString == null )
+		if (searchString == null || searchString.equals("") ){
+			loadMasterData(userContext.getId(),request,actionForm);
 			throw new CustomerException(
 					CustomerSearchConstants.NAMEMANDATORYEXCEPTION);
+		}
 		
 		  if (officeId!=null &&officeId!=0) 
 			  addSeachValues(searchString,officeId.toString(),new OfficeBusinessService().getOffice(officeId).getOfficeName(),request);

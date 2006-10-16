@@ -55,5 +55,13 @@ public class TableTagTest extends TestCase {
 		assertContains("the-office-name", html);
 		assertWellFormedFragment(html);
 	}
+	
+	public void testCreateEndTable(){
+		StringBuilder stringBuilder = new StringBuilder();
+			new TableTag("single").createEndTable(stringBuilder,true);
+			assertContains("<img src=\"pages/framework/images/trans.gif \" width=\"10\" height=\"5\"></td></tr>",stringBuilder.toString());
+			new TableTag("single").createEndTable(stringBuilder,false);
+			assertContains("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>",stringBuilder.toString());
+	}
 
 }

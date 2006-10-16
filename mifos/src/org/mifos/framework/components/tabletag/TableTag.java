@@ -219,16 +219,6 @@ public class TableTag extends BodyTagSupport {
 			}
 			if (list.size() == 0) {
 				JspWriter out = pageContext.getOut();
-//				Context context = (Context) SessionUtils.getAttribute("Context", pageContext.getSession());
-//				String defaultOfficeName = (String) context	.getBusinessResults(CustomerSearchConstants.OFFICE);
-//				XmlBuilder result=null;
-//				if (context.getSearchObject() != null)
-//				 result = noResults(
-//					defaultOfficeName, context.getSearchObject()
-//				);
-//				else
-//				{
-					//CustSearchActionForm custSearchActionForm = (CustSearchActionForm) SessionUtils.getAttribute("custSearchActionForm", pageContext.getSession());
 					XmlBuilder result;
 					try {
 						result = noResults((String)SessionUtils.getAttribute(Constants.OFFICE_NAME,(HttpServletRequest) pageContext.getRequest()),
@@ -238,7 +228,6 @@ public class TableTag extends BodyTagSupport {
 						
 						throw new JspException(e);
 					}
-//				}
 				out.write(result.getOutput());
 				return super.doStartTag();
 			}
@@ -310,60 +299,10 @@ public class TableTag extends BodyTagSupport {
 		html.text(myOfficeName);
 		html.endTag("span");
 	}
-
-	/**
-	 * Function used to start table creation.
-	 */
-	private void createStartTable(StringBuilder result, boolean headingRequired, boolean topBlueLineRequired) {
-		if (headingRequired) {
-			result.append("<table width=\"96%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\">")
-				  .append("<tr class=\"fontnormal\"><td colspan=\"2\" valign=\"top\"><span class=\"headingorange\">")
-				  .append(size + " results for </span>");
-			Context context = (Context) SessionUtils.getAttribute("Context",pageContext.getSession());
-			Map map = context.getSearchObject().getSearchNodeMap();
-			Set set = map.keySet();
-			Iterator iterator = set.iterator();			
-			if (iterator.hasNext()) {				
-				result.append("<span class=\"heading\">"+ map.get(iterator.next()) + " </span>");
-			}
-			String officeId=context.getSearchObject().getFromSearchNodeMap(CustomerSearchConstants.CUSTOMER_SEARCH_OFFICE_ID);				
-			
-			/** TODO: unify with corresponding code in {@link #noResults}. */
-			if(officeId!=null && officeId.equals(ALL_BRANCHES))
-			{			
-					result.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
-							+ "All Branches"+ "</span>");			
-			}
-			else if (iterator.hasNext()) {				
-				String officeName = map.get(iterator.next()).toString();				
-				if(!officeName.equals(""))
-				{				
-					result.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
-							+ officeName+ "</span>");
-				}				
-				else
-				{					
-					result.append("<span class=\"headingorange\">in</span> <span class=\"heading\">"
-							+ context.getBusinessResults("Office")+ "</span>");
-				}
-			}			
-			result.append("</td></tr></table>");
-			result.append("<tr><td colspan=\"2\" valign=\"top\">")
-			.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
-		}
-		result.append("<table width=" + width + "border=" + border
-				+ "cellspacing=" + cellspacing + "cellpadding=" + cellpadding+" >");
-		if(topBlueLineRequired) {
-			result.append("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">")
-			.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
-		}
-	}
-	// TODO rename once all seach is gigrated to m2
-	private void createStartTable_M2(StringBuilder result,
+	private void createStartTable(StringBuilder result,
 			boolean headingRequired, boolean topBlueLineRequired)
 			throws PageExpiredException {
 		if (headingRequired) {
-
 			String searchString = (String) SessionUtils.getAttribute(
 					Constants.SEARCH_STRING, (HttpServletRequest) pageContext
 							.getRequest());
@@ -414,7 +353,7 @@ public class TableTag extends BodyTagSupport {
 	/**
 	 * Function used to create end part of the table.
 	 */
-	private void createEndTable(StringBuilder result,boolean bottomBlueLineRequired) {
+	 void createEndTable(StringBuilder result,boolean bottomBlueLineRequired) {
 		if(bottomBlueLineRequired) {
 			result.append("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">")
 			.append("<img src=\"pages/framework/images/trans.gif \" width=\"10\" height=\"5\"></td></tr>")
@@ -519,7 +458,7 @@ public class TableTag extends BodyTagSupport {
 			JspWriter out = pageContext.getOut();
 			boolean headingRequired=table.getPageRequirements().getHeadingRequired().equalsIgnoreCase("true");
 			boolean topBlueLineRequired=table.getPageRequirements().getTopbluelineRequired().equalsIgnoreCase("true");
-			createStartTable_M2(result,  headingRequired,topBlueLineRequired);
+			createStartTable(result,  headingRequired,topBlueLineRequired);
 			out.write(result.toString());
 			displayData(list, table,locale);
 		} else
@@ -530,7 +469,7 @@ public class TableTag extends BodyTagSupport {
 			TableTagParseException, TableTagException, JspException,IOException, PageExpiredException {
 		StringBuilder result = new StringBuilder();
 		JspWriter out = pageContext.getOut();
-		createStartTable_M2(result,true,false);
+		createStartTable(result,true,false);
 		ResourceBundle resource = ResourceBundle
 		.getBundle(TableTagConstants.PROPERTIESFILE);
 		out.write(result.toString());
@@ -650,16 +589,8 @@ public class TableTag extends BodyTagSupport {
 	private List getCacheNullList() throws HibernateSearchException {
 		List list=null;
 		Cache cache=null;
-		
-		//TODO context will go once search is migrated  
-
 		try{
-//		Context context = (Context) SessionUtils.getAttribute(Constants.CONTEXT, pageContext.getSession());
-//		if (context != null) {
-		//	QueryResult query = context.getSearchResult();
-		//	if(query==null ){
 			QueryResult query = (QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,(HttpServletRequest)pageContext.getRequest());
-			//}
 			if(null!= query) {
 				cache=new Cache(query);
 				list = cache.getList(0,"");
@@ -672,8 +603,6 @@ public class TableTag extends BodyTagSupport {
 					size=cache.getSize();
 				}
 			}
-	//	}
-			
 		}catch (PageExpiredException e) {
 
 				throw new HibernateSearchException(e);
