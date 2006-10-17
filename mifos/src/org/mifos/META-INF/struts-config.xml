@@ -3,17 +3,8 @@
 "http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
 <struts-config>
 	<form-beans>
-		<form-bean name="clientActionForm" type="org.mifos.application.client.struts.actionforms.ClientActionForm">
-			<form-property name="resultName" type="java.lang.String" />
-		</form-bean>
-		<!-- Center Action form -->
-		<form-bean name="centerActionForm" type="org.mifos.application.customer.center.struts.actionforms.CenterActionForm"></form-bean>
 		<!-- Center Action form -->
 		<form-bean name="centerCustActionForm" type="org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm"></form-bean>
-		<!-- Client Action form -->
-		<form-bean name="clientCreationActionForm" type="org.mifos.application.customer.client.struts.actionforms.ClientCreationActionForm"></form-bean>
-		<!-- Edit Client Status Action form -->
-		<form-bean name="clientStatusActionForm" type="org.mifos.application.customer.client.struts.actionforms.EditClientStatusActionForm"></form-bean>
 		<!-- Edit Client Transfer Action form -->
 		<form-bean name="clientTransferActionForm" type="org.mifos.application.customer.client.struts.actionforms.ClientTransferActionForm"></form-bean>
 		<!-- Group Transfer Action form -->
@@ -35,16 +26,8 @@
 		<!-- Personnel Notes Action Form -->
 
 		<form-bean name="personnelNoteActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelNoteActionForm"></form-bean>
-		<!-- Personnel Action Form -->
-		<form-bean name="personnelActionForm" type="org.mifos.application.personnel.struts.actionforms.PersonnelActionForm"></form-bean>
-
 		<!-- Person Action Form -->
-		<form-bean name="personActionForm"
-			type="org.mifos.application.personnel.struts.actionforms.PersonActionForm">
-		</form-bean>
-
-		<!-- Group Action Form -->
-		<form-bean name="groupActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupActionForm"></form-bean>
+		<form-bean name="personActionForm"	type="org.mifos.application.personnel.struts.actionforms.PersonActionForm"></form-bean>
 		<!-- Customer Search Action Form -->
 		<form-bean name="customerSearchActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerSearchActionForm"></form-bean>
 		<!-- Customer Historical Data Action Form -->
@@ -57,17 +40,11 @@
 		<form-bean name="offActionForm"	type="org.mifos.application.office.struts.actionforms.OffActionForm" />
 		<!-- meeting form -->
 		<form-bean name="meetingActionForm" type="org.mifos.application.meeting.struts.actionforms.MeetingActionForm" />
-		<!-- AccountSearchActionForm form -->
-		<form-bean name="accountsSearchActionForm" type="org.mifos.application.accounts.struts.actionforms.AccountsSearchActionForm" />
 		<!-- admin action form -->
 		<form-bean name="adminActionForm" type="org.mifos.application.admin.struts.actionforms.AdminActionForm" />
 		<!-- Notes form bean -->
 		<form-bean name="notesActionForm" type="org.mifos.application.accounts.struts.actionforms.NotesActionForm" />
-		<!-- Fees Action Form  -->
-		<form-bean name="FeesActionForm" type="org.mifos.application.fees.struts.actionforms.FeesActionForm" />
 		<form-bean name="feeactionform" type="org.mifos.application.fees.struts.actionforms.FeeActionForm" />
-		<!-- CheckListForm Action Form  -->
-		<form-bean name="CheckListForm" type="org.mifos.application.checklist.struts.actionforms.CheckListActionForm" />
 		<!-- ChkListActionForm Action Form  -->
 		<form-bean name="ChkListActionForm" type="org.mifos.application.checklist.struts.actionforms.ChkListActionForm" />
 		<!--  end -->
@@ -203,64 +180,7 @@
 			<forward name="changeAccountStatusConfirmation_success" path="/pages/application/loan/jsp/confirmation.jsp" />
 			<forward name="noresultfound" path="/pages/application/loan/jsp/nosearchresult.jsp" />
 		</action>
-		<action path="/client_ClientSearchAction" type="org.mifos.application.client.struts.action.ClientSearchAction" name="clientActionForm" parameter="method" input="/client_ClientSearchAction.do?method=validate" validate="true">
-			<forward name="load_success" path="/WEB-INF/pages/application/client/jsp/clientsearch.jsp" />
-			<forward name="failure" path="/error.jsp" />
-		</action>
-		<action path="/CustomerSearchAction" type="org.mifos.application.customer.struts.action.CustomerSearchAction" name="customerSearchActionForm" parameter="method" input="/CustomerSearchAction.do?method=validate" validate="true">
-			<forward name="load_success" path="/pages/application/customer/jsp/clientsaccounts.jsp" />
-			<forward name="load_branch" path="/pages/application/customer/jsp/branchsearchloanofficer.jsp" />
-			<forward name="load_loanofficer" path="/pages/application/customer/jsp/branchsearch.jsp" />
-			<forward name="loadallbranches_success" path="/CustomerSearchAction.do?method=search&amp;searchNode(search_name)=CustomerSearchResults" />
-			<forward name="search_sucess" path="/pages/application/customer/jsp/searchResult.jsp" />
-			<forward name="search_failure" path="/pages/application/customer/jsp/searchResult.jsp" />
-			<forward name="load_failure" path="/pages/framework/jsp/error.jsp" />
-			<forward name="getHomePage_success" path="/pages/application/customer/jsp/home.jsp" />
-		</action>
 		<action path="/home" type="org.apache.struts.actions.ForwardAction" parameter="/login.jsp" />
-		<!-- Center Action -->
-		<action path="/centerAction" type="org.mifos.application.customer.center.struts.action.CenterAction" name="centerActionForm" parameter="method" input="/centerAction.do?method=validate" validate="true" scope="session">
-			<forward name="chooseOffice_success" path="/pages/application/center/jsp/chooseOffice.jsp" />
-			<forward name="load_success" path="/pages/application/center/jsp/createCenter.jsp" />
-			<!-- Preview Page Forwards -->
-			<forward name="preview_success" path="/pages/application/center/jsp/temp.jsp" />
-			<forward name="previewCreate_success" path="/pages/application/center/jsp/previewCenterDetails.jsp" />
-			<forward name="previewCreate_failure" path="/pages/application/center/jsp/createCenter.jsp" />
-			<forward name="previewStatus_success" path="/pages/application/center/jsp/previewCenterStatus.jsp" />
-			<forward name="previewStatus_failure" path="/pages/application/center/jsp/changeCenterStatus.jsp" />
-			<forward name="previewManage_success" path="/pages/application/center/jsp/previewEditCenterDetails.jsp" />
-			<forward name="previewManage_failure" path="/pages/application/center/jsp/editCenterDetails.jsp" />
-			<!-- Preview Page Forwards End -->
-			<!-- Previous Page Forwards -->
-			<forward name="previousCreate_success" path="/pages/application/center/jsp/createCenter.jsp" />
-			<forward name="previousStatus_success" path="/pages/application/center/jsp/changeCenterStatus.jsp" />
-			<forward name="previousManage_success" path="/pages/application/center/jsp/editCenterDetails.jsp" />
-			<forward name="previous_success" path="/pages/application/center/jsp/createCenter.jsp" />
-			<!-- Previous Page Forwards End -->
-			<forward name="get_success" path="/pages/application/center/jsp/centerDetails.jsp" />
-			<forward name="create_success" path="/pages/application/center/jsp/centerConfirmation.jsp" />
-			<forward name="create_failure" path="/pages/application/center/jsp/previewCenterDetails.jsp" />
-			<forward name="loadStatus_success" path="/pages/application/center/jsp/changeCenterStatus.jsp" />
-			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Center" />
-			<forward name="loadEditMeeting_success" path="/MeetingAction.do?method=load&amp;input=CenterDetails" />
-			<forward name="manage_success" path="/pages/application/center/jsp/editCenterDetails.jsp" />
-			<forward name="update_success" path="/centerAction.do?method=get" />
-			<forward name="updateStatus_success" path="/centerAction.do?method=get" />
-			<forward name="updateMeeting_success" path="/centerAction.do?method=get" />
-			<forward name="updateStatus_failure" path="/pages/application/center/jsp/previewCenterStatus.jsp" />
-			<forward name="search_success" path="/pages/application/center/jsp/centerSearchResults.jsp" />
-			<forward name="search_failure" path="/pages/application/center/jsp/centerSearchResults.jsp" />
-			<forward name="search_failure_transfer" path="/pages/application/center/jsp/centerSearch.jsp" />
-			<forward name="loadSearch_success" path="/pages/application/center/jsp/centerSearch.jsp" />
-			<forward name="failure" path="/error.jsp" />
-			<!-- Cancel Page Forwards -->
-			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
-			<forward name="cancelSearch_success" path="/CustomerSearchAction.do?method=load" />
-			<forward name="cancelTransfer_success" path="/GroupAction.do?method=get" />
-			<forward name="cancelManage_success" path="/centerAction.do?method=get" />
-			<forward name="cancelStatus_success" path="/centerAction.do?method=get" />
-		</action>
-
 		<!-- Center Action -->
 		<action path="/centerCustAction" type="org.mifos.application.customer.center.struts.action.CenterCustAction" name="centerCustActionForm" parameter="method"
 		input="/centerCustAction.do?method=validate" validate="true" scope="session">
@@ -290,68 +210,6 @@
 			<forward name="search_CenterSearch_TransferGroup_failure" path="/pages/application/center/jsp/center_search_transfer_group.jsp" />
 			<forward name="viewCenterChangeLog" path="/pages/application/center/jsp/viewChangeLog.jsp" />
 			<forward name="cancelCenterChangeLog" path="/centerCustAction.do?method=get" />
-		</action>
-		<!-- Client Creation Action -->
-		<action path="/clientCreationAction" type="org.mifos.application.customer.client.struts.action.ClientCreationAction" name="clientCreationActionForm" parameter="method" input="/clientCreationAction.do?method=validate" validate="true"
-			scope="session">
-			<!--  Load forwards -->
-			<forward name="preLoad_success" path="/groupCustAction.do?method=loadSearch" />
-			<forward name="load_success" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
-			<!--  Next forwards -->
-			<forward name="next_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
-			<!-- <forward name="previous_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" /> -->
-			<forward name="next_failure" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
-			<!-- Preview Page Forwards -->
-			<forward name="previewCreate_success" path="/pages/application/client/jsp/previewClientDetails.jsp" />
-			<forward name="previewPersonalInfo_failure" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
-			<forward name="previewMfiInfo_failure" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
-			<forward name="previewEditPersonalInfo_success" path="/pages/application/client/jsp/previewEditClientPersonalInfo.jsp" />
-			<forward name="update_failure" path="/pages/application/client/jsp/previewEditClientPersonalInfo.jsp" />
-			<forward name="previewEditPersonalInfo_failure" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
-			<forward name="previewEditMfiInfo_success" path="/pages/application/client/jsp/previewEditClientMfiInfo.jsp" />
-			<forward name="previewEditMfiInfo_failure" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
-			<!-- Preview Page Forwards End -->
-			<!-- Previous Page Forwards -->
-			<forward name="prevPersonalInfo_success" path="/pages/application/client/jsp/createClientPersonalInfo.jsp" />
-			<forward name="prevEditPersonalInfo_success" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
-			<forward name="prevMfiInfo_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" />
-			<forward name="prevEditMfiInfo_success" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
-			<!-- Previous Page Forwards End -->
-			<forward name="get_success" path="/pages/application/client/jsp/clientDetails.jsp" />
-			<forward name="create_success" path="/pages/application/client/jsp/clientCreationConfirmation.jsp" />
-			<forward name="create_failure" path="/pages/application/client/jsp/previewClientDetails.jsp" />
-			<forward name="editPersonalInfo_success" path="/pages/application/client/jsp/editClientPersonalInfo.jsp" />
-			<forward name="editMfiInfo_success" path="/pages/application/client/jsp/editClientMfiInfo.jsp" />
-			<forward name="update_success" path="/clientCreationAction.do?method=get" />
-			<forward name="update_success" path="/clientCreationAction.do?method=get" />
-			<forward name="loadStatus_success" path="/clientStatusAction.do?method=load" />
-			<forward name="loadTransfer_success" path="/clientTransferAction.do?method=loadGroupTransfer" />
-			<forward name="loadBranchTransfer_success" path="/clientTransferAction.do?method=loadTransfer" />
-			<forward name="loadHistoricalData_success" path="/CustomerHistoricalDataAction.do?method=get&amp;input=Client" />
-			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Client" />
-			<forward name="loadEditMeeting_success" path="/MeetingAction.do?method=load&amp;input=ClientDetails" />
-			<forward name="updateMeeting_success" path="/clientCreationAction.do?method=get" />
-			<forward name="retrievePicture_success" path="/pages/application/client/jsp/customerPicture.jsp" />
-			<forward name="chooseOffice_success" path="/pages/application/client/jsp/chooseOffice.jsp" />
-			<forward name="failure" path="/error.jsp" />
-			<!-- Cancel Page Forwards -->
-			<forward name="cancelCreate_success" path="/CustomerSearchAction.do?method=load" />
-			<forward name="cancelEdit_success" path="/clientCreationAction.do?method=get" />
-		</action>
-		<!-- Edit Client Status Action -->
-		<action path="/clientStatusAction" type="org.mifos.application.customer.client.struts.action.EditClientStatusAction" name="clientStatusActionForm" parameter="method" input="/clientStatusAction.do?method=validate" validate="true" scope="session">
-			<!--  Load forwards -->
-			<forward name="load_success" path="/pages/application/client/jsp/changeClientStatus.jsp" />
-			<!-- Preview Page Forwards -->
-			<forward name="preview_success" path="/pages/application/client/jsp/previewClientStatus.jsp" />
-			<forward name="preview_failure" path="/pages/application/client/jsp/changeClientStatus.jsp" />
-			<!-- Previous Page Forwards -->
-			<forward name="previous_success" path="/pages/application/client/jsp/changeClientStatus.jsp" />
-			<!-- Previous Page Forwards End -->
-			<forward name="update_success" path="/clientCreationAction.do?method=get" />
-			<forward name="update_failure" path="/pages/application/client/jsp/previewClientStatus.jsp" />
-			<!-- Cancel Page Forwards -->
-			<forward name="cancel_success" path="/clientCreationAction.do?method=get" />
 		</action>
 		<!-- Edit Client Transfer Action -->
 		<action path="/clientTransferAction" type="org.mifos.application.customer.client.struts.action.ClientTransferAction" name="clientTransferActionForm" parameter="method" input="/clientTransferAction.do?method=validate" validate="false"
@@ -384,30 +242,6 @@
 			<forward name="transferToCenter_failure" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
 			<!-- Cancel Page Forwards -->
 			<forward name="cancel_success" path="/groupCustAction.do?method=get" />
-		</action>
-
-		<!-- Personnel action -->
-		<action path="/PersonnelAction" type="org.mifos.application.personnel.struts.action.PersonnelAction" name="personnelActionForm" parameter="method" validate="true" input="/PersonnelAction.do?method=validate" scope="session">
-			<forward name="getDetails_success" path="/pages/application/personnel/jsp/yoursettings.jsp" />
-			<forward name="editPersonalInfo_success" path="/pages/application/personnel/jsp/edityoursettings.jsp" />
-			<forward name="previewPersonalInfo_success" path="/pages/application/personnel/jsp/previewyoursettings.jsp" />
-			<forward name="previewPersonalInfo_failure" path="/pages/application/personnel/jsp/edityoursettings.jsp" />
-			<forward name="loadChangePassword_success" path="/pages/application/login/jsp/changePassword.jsp" />
-			<forward name="search_success" path="/pages/application/personnel/jsp/viewusers.jsp" />
-			<forward name="loadSearch_success" path="/pages/application/personnel/jsp/viewusers.jsp" />
-			<forward name="loadUnLockUser_success" path="/pages/application/personnel/jsp/unlockuser.jsp" />
-			<forward name="create_success" path="/pages/application/personnel/jsp/createuserconfirmation.jsp" />
-			<forward name="create_failure" path="/pages/application/personnel/jsp/createuserpreview.jsp" />
-			<forward name="update_failure" path="/pages/application/personnel/jsp/userdetailspreview.jsp" />
-			<forward name="PreviewCreateUser" path="/pages/application/personnel/jsp/createuserpreview.jsp" />
-			<forward name="PreviewManageUser" path="/pages/application/personnel/jsp/userdetailspreview.jsp" />
-			<forward name="CreateUserFaliuer" path="/pages/application/personnel/jsp/createuser.jsp" />
-			<forward name="ManageUserFaliuer" path="/pages/application/personnel/jsp/edituser.jsp" />
-			<forward name="UserDetailsPage" path="/PersonnelAction.do?method=get" />
-			<forward name="UserChangeLog" path="/pages/application/personnel/jsp/viewuserchangelog.jsp" />
-			<forward name="AdminPage" path="/AdminAction.do?method=load" />
-			<forward name="chooseOffice_success" path="/pages/application/personnel/jsp/chooseoffice.jsp" />
-			<forward name="search_failure" path="/pages/application/personnel/jsp/viewusers.jsp" />
 		</action>
 		<action path="/PersonAction"	type="org.mifos.application.personnel.struts.action.PersonAction"	name="personActionForm" parameter="method" validate="true"	input="/PersonAction.do?method=validate" scope="session">
 			<forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp" />
@@ -446,54 +280,6 @@
 			<forward name="create_success" path="/PersonAction.do?method=get" />
 			<forward name="cancel_success" path="/PersonAction.do?method=get" />
 			<forward name="create_failure" path="/pages/application/personnel/jsp/previewpersonnelnotes.jsp" />
-		</action>
-
-		<!-- Group action -->
-		<action path="/GroupAction" type="org.mifos.application.customer.group.struts.action.GroupAction" name="groupActionForm" parameter="method" validate="true" input="/GroupAction.do?method=validate" scope="session">
-			<forward name="CreateNewGroup" path="/GroupAction.do?method=chooseOffice" />
-			<forward name="load_success" path="/pages/application/group/jsp/createnewgroup.jsp" />
-			<forward name="PreviewCreateNewGroup" path="/pages/application/group/jsp/creategrouppreview.jsp" />
-			<!-- <forward name="CreateManageGpWithoutCenter" path="/pages/application/group/jsp/EditGroup_wocenter.jsp" />-->
-			<forward name="create_success" path="/pages/application/group/jsp/creategroupconfirmation.jsp" />
-			<forward name="create_failure" path="/pages/application/group/jsp/creategrouppreview.jsp" />
-			<forward name="update_failure" path="/pages/application/group/jsp/groupdetailspreview.jsp" />
-			<forward name="get_success" path="/pages/application/group/jsp/groupdetails.jsp" />
-			<forward name="manage_success" path="/pages/application/group/jsp/editgroupdetails.jsp" />
-			<forward name="loadStatus" path="/pages/application/group/jsp/changegroupstatus.jsp" />
-			<forward name="PreviewManageGroup" path="/pages/application/group/jsp/groupdetailspreview.jsp" />
-			<forward name="update_success" path="/GroupAction.do?method=get" />
-			<forward name="group_details_page" path="/GroupAction.do?method=get" />
-			<forward name="updateStatus_success" path="/GroupAction.do?method=get" />
-			<forward name="updateStatus_failure" path="/pages/application/group/jsp/statuspreviewchecklist.jsp" />
-			<forward name="PreviewChangeGroupStatus" path="/pages/application/group/jsp/statuspreviewchecklist.jsp" />
-			<forward name="loadTransfer_success" path="/pages/application/group/jsp/choosebranch.jsp" />
-			<forward name="loadCenters_success" path="/pages/application/group/jsp/choosecenter.jsp" />
-			<forward name="confirmTransfer_success" path="/pages/application/group/jsp/confirmtransfer.jsp" />
-			<forward name="updateBranch_success" path="/GroupAction.do?method=get" />
-			<forward name="confirmParentTransfer_success" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
-			<forward name="updateParent_success" path="/GroupAction.do?method=get" />
-			<forward name="updateBranch_failure" path="/pages/application/group/jsp/confirmtransfer.jsp" />
-			<forward name="updateParent_failure" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
-			<forward name="loadCenterSearch_success" path="/centerAction.do?method=loadSearch" />
-			<!--Meeting forward-->
-			<forward name="loadMeeting_success" path="/MeetingAction.do?method=load&amp;input=Group" />
-			<!--Search forwards-->
-			<forward name="loadSearch_success" path="/pages/application/group/jsp/groupsearch.jsp" />
-			<forward name="search_success" path="/pages/application/group/jsp/groupsearchresults.jsp" />
-			<forward name="search_failure" path="/pages/application/group/jsp/groupsearchresults.jsp" />
-			<forward name="search_failure_transfer" path="/pages/application/group/jsp/groupsearch.jsp" />
-			<forward name="client_details_page" path="/clientCustAction.do?method=get" />
-			<!--Cancel forwards-->
-			<forward name="cancel_create" path="/CustomerSearchAction.do?method=load" />
-			<forward name="cancel_manage" path="/GroupAction.do?method=get" />
-			<forward name="cancel_status" path="/GroupAction.do?method=get" />
-			<forward name="cancel_transferbranch" path="/GroupAction.do?method=get" />
-			<!--failure forwards-->
-			<forward name="CreateNewGroup_failure" path="/pages/application/group/jsp/createnewgroup.jsp" />
-			<forward name="ManageGroup_failure" path="/pages/application/group/jsp/editgroupdetails.jsp" />
-			<forward name="PreviewCreateNewGroup_failure" path="/pages/application/group/jsp/creategrouppreview.jsp" />
-			<!-- <forward name="get_failure" path="/pages/application/group/jsp/clientsaccounts.jsp" />-->
-			<forward name="chooseOffice_success" path="/pages/application/group/jsp/branchlist.jsp" />
 		</action>
 		<action path="/custHistoricalDataAction" type="org.mifos.application.customer.struts.action.CustHistoricalDataAction" name="custHistoricalDataActionForm" parameter="method" validate="true"
 			input="/custHistoricalDataAction.do?method=validate" scope="session">
@@ -625,12 +411,6 @@
 			<forward name="update_success" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
 			<forward name="update_failure" path="/pages/application/meeting/jsp/updatemeeting.jsp" />
 		</action>
-		<action path="/AccountsSearchAction" type="org.mifos.application.accounts.struts.action.AccountsSearchAction" name="accountsSearchActionForm" parameter="method" input="/AccountsSearchAction.do?method=validate" validate="true">
-			<forward name="load_success" path="/pages/application/accounts/jsp/accountsAccountSearch.jsp" />
-			<forward name="cancel_success" path="/AdminAction.do?method=load" />
-			<forward name="search_success" path="/pages/application/accounts/jsp/accountsSearchSuccess.jsp" />
-			<forward name="search_failure" path="/pages/application/accounts/jsp/accountsSearchSuccess.jsp" />
-		</action>
 		<!-- Notes action -->
 		<action path="/notesAction" type="org.mifos.application.accounts.struts.action.NotesAction" name="notesActionForm" parameter="method" validate="true" input="/notesAction.do?method=validate" scope="session">
 			<forward name="load_success" path="/pages/application/accounts/jsp/account_addnotes.jsp" />
@@ -646,22 +426,6 @@
 		<!-- admin action -->
 		<action path="/AdminAction" type="org.mifos.application.admin.struts.action.AdminAction" name="adminActionForm" parameter="method" input="/AdminAction.do?method=validate" validate="false">
 			<forward name="load_success" path="/pages/application/admin/jsp/admin.jsp" />
-		</action>
-		<!-- Fee Action -->
-		<action path="/feesAction" type="org.mifos.application.fees.struts.action.FeesAction" parameter="method" input="/feesAction.do?method=validate" name="FeesActionForm">
-
-			<forward name="preview_create_failure" path="/pages/application/fees/jsp/CreateFees.jsp" />
-			<forward name="createFees" path="/pages/application/fees/jsp/CreateFees.jsp" />
-			<forward name="createFeesPreview" path="/pages/application/fees/jsp/CreateFeesPreview.jsp" />
-			<forward name="createFeesConfirmation" path="/pages/application/fees/jsp/CreateFeesConfirmation.jsp" />
-			<forward name="create_failure" path="/pages/application/fees/jsp/CreateFeesConfirmation.jsp" />
-			<forward name="feeDetails" path="/pages/application/fees/jsp/FeeDetails.jsp" />
-			<forward name="editFeeDetails" path="/pages/application/fees/jsp/EditFeeDetails.jsp" />
-			<forward name="previewFeeDetails" path="/pages/application/fees/jsp/PreviewFeeDetails.jsp" />
-			<forward name="preview_manage_failure" path="/pages/application/fees/jsp/EditFeeDetails.jsp" />
-			<forward name="viewEditFees" path="/pages/application/fees/jsp/ViewEditFees.jsp" />
-			<forward name="admin" path="/pages/application/fees/jsp/admin.jsp" />
-			<forward name="update_success" path="/feesAction.do?method=get" />
 		</action>
 		<!-- Fee Action -->
 		<action path="/feeaction" type="org.mifos.application.fees.struts.action.FeeAction" parameter="method" input="/feeaction.do?method=validate" name="feeactionform">
@@ -687,26 +451,6 @@
 			<forward name="cancelEdit_success" path="/feeaction.do?method=get" />
 			<forward name="cancelEdit_failure" path="/pages/application/fees/jsp/previewfeesedit.jsp" />
 		</action>
-		<!-- CheckList Action -->
-		<action path="/checkListAction" type="org.mifos.application.checklist.struts.action.CheckListAction" parameter="method" scope="session" name="CheckListForm" validate="true" input="/checkListAction.do?method=validate">
-			<forward name="preview_failure" path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
-			<forward name="preview_create_failure" path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
-			<forward name="preview_manage_failure" path="/pages/application/checklist/jsp/manageCheckList.jsp" />
-			<forward name="manage_failure" path="/pages/application/checklist/jsp/manageCheckList.jsp" />
-			<forward name="preview_success" path="/pages/application/checklist/jsp/addNewChecklistsPreview.jsp" />
-			<forward name="load_success" path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
-			<forward name="previous_success" path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
-			<forward name="loadParent_success" path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
-			<forward name="loadParent_failure" path="/pages/application/checklist/jsp/addNewChecklists.jsp" />
-			<forward name="create_success" path="/pages/application/admin/jsp/admin.jsp" />
-			<forward name="forward_view" path="/pages/application/checklist/jsp/ViewEditChecklists.jsp" />
-			<forward name="get_success" path="/pages/application/checklist/jsp/checklistDetails.jsp" />
-			<forward name="manage_success" path="/pages/application/checklist/jsp/manageCheckList.jsp" />
-			<forward name="manage_preview" path="/pages/application/checklist/jsp/managePreview.jsp" />
-			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
-		</action>
-		<!-- Ends-->
-		<!-- CheckList Action M2-->
 		<!-- CheckList Action M2-->
 		<action path="/chkListAction"
 				type="org.mifos.application.checklist.struts.action.ChkListAction"
@@ -1119,7 +863,6 @@
 			<forward name="load_success" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
 			<!--  Next forwards -->
 			<forward name="next_success" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp" />
-			<!-- <forward name="previous_success" path="/pages/application/client/jsp/createClientMfiInfo.jsp" /> -->
 			<forward name="next_failure" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
 			<!-- Preview Page Forwards -->
 			<forward name="preview_success" path="/pages/application/client/jsp/preview_ClientDetails.jsp" />
