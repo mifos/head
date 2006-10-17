@@ -33,8 +33,10 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
@@ -917,6 +919,77 @@ public class GroupBOTest extends MifosTestCase {
 				account1.getAccountId());
 	}
 
+	public void testUpdateCenterFailure_MeetingFrequencyMismatch()throws Exception {
+		createInitialObjects();
+		center1 = createCenter("newCenter", createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.FIRST, Short.valueOf("1"), new Date()));
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		try {
+			group.transferToCenter(center1);
+			assertTrue(false);
+		} catch (CustomerException ce) {
+			assertTrue(true);
+			assertEquals(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH,
+					ce.getKey());
+		}
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+	}
+	
+   public void testUpdateCenterFailure_MeetingFrequencyMonthly()throws Exception {
+		center = createCenter("Centerold", createMonthlyMeetingOnDate(Short.valueOf("5"), Short.valueOf("1"), new Date()));
+		group = createGroup("groupold", center);
+		client = createClient(group, CustomerStatus.CLIENT_ACTIVE);
+		center1 = createCenter("newCenter", createMonthlyMeetingOnWeekDay(WeekDay.MONDAY, RankType.FIRST, Short.valueOf("1"), new Date()));
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		group.setUserContext(TestObjectFactory.getContext());
+		group.transferToCenter(center1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		
+		assertNotNull(group.getCustomerMeeting().getUpdatedMeeting());
+		assertNotNull(client.getCustomerMeeting().getUpdatedMeeting());
+		assertEquals(WeekDay.MONDAY,group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.MONDAY,client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+	
+		group.changeUpdatedMeeting();
+		client.changeUpdatedMeeting();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		
+		assertNull(group.getCustomerMeeting().getUpdatedMeeting());
+		assertNull(client.getCustomerMeeting().getUpdatedMeeting());
+		
+		assertEquals(WeekDay.MONDAY,group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.MONDAY,client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+	}
+	
 	public void testSuccessfulTransferToCenterInSameBranch() throws Exception {
 		createObjectsForTranferToCenterInSameBranch();
 		String newCenterSearchId = center1.getSearchId();
@@ -943,16 +1016,16 @@ public class GroupBOTest extends MifosTestCase {
 				client1.getCustomerId());
 		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
 				client2.getCustomerId());
-
-		assertEquals(WeekDay.THURSDAY,group.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.THURSDAY,client.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.THURSDAY,client1.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
-		assertEquals(WeekDay.THURSDAY,client2.getCustomerMeeting().getMeeting().getMeetingDetails().getWeekDay());
 		
-		assertNull(group.getCustomerMeeting().getUpdatedMeeting());
-		assertNull(client.getCustomerMeeting().getUpdatedMeeting());
-		assertNull(client1.getCustomerMeeting().getUpdatedMeeting());
-		assertNull(client2.getCustomerMeeting().getUpdatedMeeting());
+		assertNotNull(group.getCustomerMeeting().getUpdatedMeeting());
+		assertNotNull(client.getCustomerMeeting().getUpdatedMeeting());
+		assertNotNull(client1.getCustomerMeeting().getUpdatedMeeting());
+		assertNotNull(client2.getCustomerMeeting().getUpdatedMeeting());
+
+		assertEquals(WeekDay.THURSDAY,group.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.THURSDAY,client.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.THURSDAY,client1.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());
+		assertEquals(WeekDay.THURSDAY,client2.getCustomerMeeting().getUpdatedMeeting().getMeetingDetails().getWeekDay());		
 		
 		assertEquals(center1.getCustomerId(), group.getParentCustomer()
 				.getCustomerId());
@@ -1047,6 +1120,50 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(officeBO.getOfficeId(), client2.getOffice().getOfficeId());
 	}
 
+	public void testSuccessfulTransferToCenterInDifferentBranch_SecondTransfer() throws Exception {
+		createObjectsForTranferToCenterInDifferentBranch();
+		HibernateUtil.closeSession();
+		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		group.setUserContext(TestObjectFactory.getContext());
+		group.transferToCenter(center1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		
+		group.setUserContext(TestObjectFactory.getContext());
+		group.transferToCenter(center);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+				.getCustomerId());
+		center1 = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+				center1.getCustomerId());
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1
+				.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+		client1 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				client1.getCustomerId());
+		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+				client2.getCustomerId());
+		officeBO = new OfficePersistence().getOffice(officeBO.getOfficeId());
+		
+		assertEquals(center.getCustomerId(), group.getParentCustomer()
+				.getCustomerId());
+		assertEquals(1, center.getMaxChildCount().intValue());
+		assertEquals(1, center1.getMaxChildCount().intValue());
+		assertEquals(3, group.getMaxChildCount().intValue());	
+	}
+	
 	public void testUpdateMeeting_SavedToUpdateLater()throws Exception{
 		String oldMeetingPlace = "Delhi";
 		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, oldMeetingPlace);
@@ -1210,6 +1327,8 @@ public class GroupBOTest extends MifosTestCase {
 				personnel);
 	}
 
+	
+	
 	private void createGroup(String name) {
 		group = TestObjectFactory.createGroupUnderCenter(name,
 				CustomerStatus.GROUP_ACTIVE, center);
@@ -1386,5 +1505,18 @@ public class GroupBOTest extends MifosTestCase {
 					currentDateCalendar.getTimeInMillis()));
 			break;
 		}
+	}
+	
+	private CenterBO createCenter(String name, MeetingBO meeting){
+		return TestObjectFactory.createCenter(name, meeting, officeId,
+				personnel);
+	}
+	
+	private MeetingBO createMonthlyMeetingOnDate(Short dayNumber, Short recurAfer, Date startDate) throws MeetingException{
+		return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMERMEETING,"MeetingPlace");	
+	}
+	
+	private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate) throws MeetingException{
+		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMERMEETING, "MeetingPlace");
 	}
 }

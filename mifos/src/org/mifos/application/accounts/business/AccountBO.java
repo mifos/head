@@ -320,6 +320,7 @@ public class AccountBO extends BusinessObject {
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		short installmentId = 0;
 		if (accountActionDateEntity != null) {
+			System.out.println("-------------------------accountActionDateEntity: -");
 			if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
 				installmentId = (short) (accountActionDateEntity
 						.getInstallmentId().intValue() + 1);
@@ -340,12 +341,11 @@ public class AccountBO extends BusinessObject {
 				throw new AccountException(e);
 			}
 		}else{
-			if(getAccountType().getAccountTypeId().equals(AccountTypes.CUSTOMERACCOUNT.getValue()))
-				resetUpdatedFlag();
+			resetUpdatedFlag();
 		}
 	}
 
-	protected void resetUpdatedFlag(){		
+	protected void resetUpdatedFlag()throws AccountException{
 	}
 	
 	public final void changeStatus(Short newStatusId, Short flagId,

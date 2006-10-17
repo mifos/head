@@ -672,6 +672,27 @@ public class TestClientBO extends MifosTestCase {
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 	}
 	
+	public void testUpdateGroupFailure_MeetingFrequencyMismatch()throws Exception{
+		createInitialObjects();
+		MeetingBO meeting = new MeetingBO(Short.valueOf("2"), Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Bangalore");
+		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
+				"1.1", meeting, new Date(System.currentTimeMillis()));
+		group1 = TestObjectFactory.createGroup("Group2", CustomerStatus.GROUP_ACTIVE.getValue(),
+				center1.getSearchId()+".1", center1, new Date(System.currentTimeMillis()));
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		client.setUserContext(TestObjectFactory.getUserContext());
+		try{
+			client.transferToGroup(group1);
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);	
+			assertEquals(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH,ce.getKey());
+		}
+		HibernateUtil.closeSession();
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+	}
+	
 	public void testSuccessfulTransferToGroupInSameBranch()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
 		PositionEntity position  = (PositionEntity) new MasterPersistence().retrieveMasterEntities(PositionEntity.class, Short.valueOf("1")).get(0);
@@ -685,7 +706,7 @@ public class TestClientBO extends MifosTestCase {
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
-		assertEquals(client.getCustomerMeeting().getMeeting().getMeetingId(),group1.getCustomerMeeting().getMeeting().getMeetingId());
+		assertEquals(group1.getCustomerMeeting().getMeeting().getMeetingId(), client.getCustomerMeeting().getUpdatedMeeting().getMeetingId());
 		assertEquals(group1.getCustomerId(),client.getParentCustomer().getCustomerId());
 		assertEquals(0, group.getMaxChildCount().intValue());
 		assertEquals(1, group1.getMaxChildCount().intValue());
@@ -738,10 +759,11 @@ public class TestClientBO extends MifosTestCase {
 		PositionEntity position  = (PositionEntity) new MasterPersistence().retrieveMasterEntities(PositionEntity.class, Short.valueOf("1")).get(0);
 		group.addCustomerPosition(new CustomerPositionEntity(position, client, group));
 		center.addCustomerPosition(new CustomerPositionEntity(position, client, group));
+		
 		client.transferToGroup(group1);
-
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
+		
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
@@ -754,8 +776,20 @@ public class TestClientBO extends MifosTestCase {
 		CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
 		assertEquals(group1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
 		CustomerMovementEntity customerMovementEntity = client.getActiveCustomerMovement();
-		assertEquals(office.getOfficeId(),customerMovementEntity.getOffice().getOfficeId());
-		office = client.getOffice();
+		assertEquals(office.getOfficeId(),customerMovementEntity.getOffice().getOfficeId());		
+		
+		client.setUserContext(TestObjectFactory.getContext());
+		client.transferToGroup((GroupBO)group);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center1 = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center1.getCustomerId());
+		office = new OfficePersistence().getOffice(office.getOfficeId());
 	}
 	
 	public void testUpdateBranchFailure_OfficeNULL()throws Exception{

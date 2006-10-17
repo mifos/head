@@ -338,6 +338,8 @@ public class ClientBO extends CustomerBO {
 	
 	@Override
 	public void updateMeeting(MeetingBO meeting) throws CustomerException {
+		logger.debug("In ClientBO::updateMeeting(), customerId: "
+				+ getCustomerId());
 		if (getCustomerMeeting() == null)
 			this.setCustomerMeeting(createCustomerMeeting(meeting));
 		else
@@ -347,6 +349,8 @@ public class ClientBO extends CustomerBO {
 
 	@Override
 	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
+		logger.debug("In ClientBO::saveUpdatedMeeting(), customerId: "
+				+ getCustomerId());
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		super.saveUpdatedMeeting(meeting);
 		if(getParentCustomer()==null)
@@ -466,9 +470,6 @@ public class ClientBO extends CustomerBO {
 			center.setUserContext(getUserContext());
 			center.update();
 		}
-		oldParent.setUserContext(getUserContext());
-		oldParent.update();
-		newParent.update();
 		this.update();
 		logger
 				.debug("In ClientBO::transferToGroup(), successfully transfered, customerId :"
@@ -485,9 +486,10 @@ public class ClientBO extends CustomerBO {
 		}
 		setSearchId(getParentCustomer().getSearchId()
 				+ getSearchId().substring(getSearchId().lastIndexOf(".")));
-		if (getParentCustomer().getParentCustomer() != null)
-			handleParentTransfer();
-
+		if (getParentCustomer().getParentCustomer() != null){
+			setPersonnel(getParentCustomer().getPersonnel());
+			setUpdatedMeeting(getParentCustomer().getParentCustomer().getCustomerMeeting().getMeeting());
+		}
 		this.update();
 	}
 
@@ -602,6 +604,8 @@ public class ClientBO extends CustomerBO {
 
 		validateForGroupStatus(toGroup.getStatus());
 		validateForActiveAccounts();
+		if(getCustomerMeeting()!=null && toGroup.getCustomerMeeting()!=null)
+			validateMeetingRecurrenceForTransfer(getCustomerMeeting().getMeeting(), toGroup.getCustomerMeeting().getMeeting());
 	}
 
 	private void validateForGroupStatus(CustomerStatus groupStatus)

@@ -442,7 +442,7 @@ public class CenterBOTest extends MifosTestCase {
 
 	public void testUpdateMeeting_updateWithSaveMeeting() throws Exception {
 		testUpdateMeeting_SaveToUpdateLater();
-		Integer oldMeeting = center.getCustomerMeeting().getUpdatedMeeting()
+		Integer updatedMeeting = center.getCustomerMeeting().getUpdatedMeeting()
 				.getMeetingId();
 		center.changeUpdatedMeeting();
 		HibernateUtil.commitTransaction();
@@ -465,7 +465,7 @@ public class CenterBOTest extends MifosTestCase {
 		assertNull(group.getCustomerMeeting().getUpdatedMeeting());
 		assertNull(client.getCustomerMeeting().getUpdatedMeeting());
 
-		MeetingBO meeting = new MeetingPersistence().getMeeting(oldMeeting);
+		MeetingBO meeting = new MeetingPersistence().getMeeting(updatedMeeting);
 		assertNull(meeting);
 	}
 

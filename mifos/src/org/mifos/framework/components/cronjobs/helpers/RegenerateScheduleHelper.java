@@ -7,7 +7,6 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;

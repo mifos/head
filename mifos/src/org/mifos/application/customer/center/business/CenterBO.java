@@ -66,6 +66,8 @@ public class CenterBO extends CustomerBO {
 
 	@Override
 	public void updateMeeting(MeetingBO meeting) throws CustomerException{
+		logger.debug("In CenterBO::updateMeeting(), customerId: "
+				+ getCustomerId());
 		saveUpdatedMeeting(meeting);
 		this.update();
 	}

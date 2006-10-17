@@ -719,6 +719,8 @@ public abstract class CustomerBO extends BusinessObject {
 			throws CustomerException;
 
 	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
+		logger.debug("In CustomerBO::saveUpdatedMeeting(), customerId: "
+				+ getCustomerId());
 		getCustomerMeeting().setUpdatedMeeting(meeting);
 		setUpdatedMeetingForChildren(meeting);
 		getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
@@ -726,6 +728,8 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 	
 	private void setUpdatedMeetingForChildren(MeetingBO meeting) throws CustomerException{
+		logger.debug("In CustomerBO::setUpdatedMeetingForChildren(), customerId: "
+				+ getCustomerId());
 		Set<CustomerBO> childList = getChildren();
 		if(childList!=null){
 			for(CustomerBO child : childList){
@@ -736,21 +740,54 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 	
 	public void changeUpdatedMeeting()throws CustomerException {
+		logger.debug("In CustomerBO::changeUpdatedMeeting(), customerId: "
+				+ getCustomerId());
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
+		MeetingBO oldMeeting = getCustomerMeeting().getMeeting();
 		if(newMeeting!=null){
-			updateMeeting(getCustomerMeeting().getMeeting(), newMeeting);
-			setUpdatedMeetingForChildren(null);
+			if(sameRecurrence(oldMeeting, newMeeting)){
+				logger.debug("In CustomerBO::changeUpdatedMeeting(), Same Recurrence Found, customerId: "
+						+ getCustomerId());
+				updateMeeting(oldMeeting, newMeeting);
+				resetUpdatedMeetingForChildren(oldMeeting);
+				if(getParentCustomer()==null)
+					deleteMeeting(newMeeting);			
+			}else{
+				logger.debug("In CustomerBO::changeUpdatedMeeting(), Different Recurrence Found, customerId: "
+						+ getCustomerId());
+				getCustomerMeeting().setMeeting(newMeeting);
+				resetUpdatedMeetingForChildren(newMeeting);
+				if(getParentCustomer()==null)
+					deleteMeeting(oldMeeting);
+			}			
 			getCustomerMeeting().setUpdatedMeeting(null);
-			if(getParentCustomer()==null)
-				deleteMeeting(newMeeting);
-			this.persist();			
-		}				
+		}
+		this.persist();
+	}
+
+	protected void resetUpdatedMeetingForChildren(MeetingBO currentMeeting) throws CustomerException {
+		logger.debug("In CustomerBO::resetUpdatedMeetingForChildren(), customerId: "
+				+ getCustomerId());
+		Set<CustomerBO> childList = getChildren();
+		if(childList!=null){
+			for(CustomerBO child : childList){
+				child.getCustomerMeeting().setMeeting(currentMeeting);
+				child.getCustomerMeeting().setUpdatedMeeting(null);
+				child.resetUpdatedMeetingForChildren(currentMeeting);
+				child.persist();
+			}
+		}			
 	}
 
 	protected void deleteMeeting(MeetingBO meeting)throws CustomerException{
+		logger.debug("In CustomerBO::deleteMeeting(), customerId: "
+				+ getCustomerId());
 		try{
-			if(meeting!=null)
+			if(meeting!=null){
+				logger.debug("In CustomerBO::deleteMeeting(), customerId: "
+						+ getCustomerId()+" , meetingId: "+ meeting.getMeetingId());
 				new CustomerPersistence().deleteMeeting(meeting);
+			}
 		}catch(PersistenceException pe){
 			throw new CustomerException(pe);
 		}
@@ -767,10 +804,16 @@ public abstract class CustomerBO extends BusinessObject {
 			else if (oldMeeting.isMonthly())
 				oldMeeting.update(newMeeting.getMeetingDetails().getWeekDay(),
 						newMeeting.getMeetingDetails().getWeekRank(), newMeeting
-								.getMeetingPlace());
+							.getMeetingPlace());
+			
 		} catch (MeetingException me) {
 			throw new CustomerException(me);
 		}
+	}
+	
+	private boolean sameRecurrence(MeetingBO oldMeeting, MeetingBO newMeeting){
+		return ((oldMeeting.isWeekly() && newMeeting.isWeekly()) || (oldMeeting.isMonthlyOnDate() && newMeeting.isMonthlyOnDate())
+				|| (oldMeeting.isMonthly() && !oldMeeting.isMonthlyOnDate()&& newMeeting.isMonthly() && !newMeeting.isMonthlyOnDate()));
 	}
 	
 	private void validateLoanOfficerAssigned() throws CustomerException {
@@ -981,7 +1024,6 @@ public abstract class CustomerBO extends BusinessObject {
 		CustomerHierarchyEntity currentHierarchy = getActiveCustomerHierarchy();
 		currentHierarchy.makeInActive(userContext.getId());
 		this.addCustomerHierarchy(new CustomerHierarchyEntity(this, newParent));
-
 		this.handleParentTransfer();
 		childRemovedForParent(oldParent);
 		childAddedForParent(newParent);
@@ -1006,27 +1048,39 @@ public abstract class CustomerBO extends BusinessObject {
 				+ getCustomerId();
 	}
 
-	protected void handleParentTransfer() throws CustomerException {
+	private void handleParentTransfer() throws CustomerException {
 		setPersonnel(getParentCustomer().getPersonnel());
 		if (getParentCustomer().getCustomerMeeting() != null) {
 			if (getCustomerMeeting() != null){
-				getCustomerMeeting().setMeeting(getParentCustomer().getCustomerMeeting().getMeeting());
-			}
-			else
-				setCustomerMeeting(createCustomerMeeting(getParentCustomer()
-						.getCustomerMeeting().getMeeting()));
-		} else {
-			if (getCustomerMeeting() != null) {
-				try {
-					new CustomerPersistence().deleteCustomerMeeting(this);
-					setCustomerMeeting(null);
-				} catch (PersistenceException pe) {
-					new CustomerException(pe);
+			    if(!getCustomerMeeting().getMeeting().getMeetingId().equals(getParentCustomer().getCustomerMeeting().getMeeting().getMeetingId())){
+					setUpdatedMeeting(getParentCustomer().getCustomerMeeting().getMeeting());
 				}
 			}
-		}
+			else{
+				setCustomerMeeting(createCustomerMeeting(getParentCustomer()
+						.getCustomerMeeting().getMeeting()));
+			}
+		} else if (getCustomerMeeting() != null) {
+				deleteCustomerMeeting();							
+			}
 	}
 
+	protected void setUpdatedMeeting(MeetingBO meeting){
+		getCustomerMeeting().setUpdatedMeeting(meeting);
+		getCustomerMeeting().setUpdatedFlag(YesNoFlag.YES.getValue());
+	}
+	
+	protected void deleteCustomerMeeting()throws CustomerException{
+		logger.debug("In CustomerBO::deleteCustomerMeeting(), customerId: "
+				+ getCustomerId());
+		try {
+			new CustomerPersistence().deleteCustomerMeeting(this);
+			setCustomerMeeting(null);
+		} catch (PersistenceException pe) {
+			new CustomerException(pe);
+		}
+	}
+	
 	private void createAddress(Address address) {
 		if (address != null) {
 			this.customerAddressDetail = new CustomerAddressDetailEntity(this,
@@ -1123,5 +1177,9 @@ public abstract class CustomerBO extends BusinessObject {
 				this.getCustomerId());
 	}
 
-
+	protected void validateMeetingRecurrenceForTransfer(MeetingBO meetingFrom, MeetingBO meetingTo) throws CustomerException{
+		if((meetingFrom.isWeekly() && meetingTo.isMonthly()) 
+				|| (meetingFrom.isMonthly() && meetingTo.isWeekly()))
+			throw new CustomerException(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH);
+	}
 }

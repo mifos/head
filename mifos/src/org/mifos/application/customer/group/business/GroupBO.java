@@ -194,7 +194,7 @@ public class GroupBO extends CustomerBO {
 		makeCustomerMovementEntries(officeToTransfer);
 		this.setPersonnel(null);
 		this.setSearchId(generateSearchId());
-		super.update();
+		this.update();
 		if(getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				client.setUserContext(getUserContext());
@@ -220,7 +220,7 @@ public class GroupBO extends CustomerBO {
 		makeInactive(newParent);
 		
 		this.addCustomerHierarchy(new CustomerHierarchyEntity(this,newParent));		
-		super.update();
+		this.update();
 		if(getChildren()!=null){
 			for(CustomerBO client: getChildren()){
 				client.setUserContext(getUserContext());
@@ -231,6 +231,8 @@ public class GroupBO extends CustomerBO {
 	
 	@Override
 	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
+		logger.debug("In GroupBO::saveUpdatedMeeting(), customerId: "
+				+ getCustomerId());
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		super.saveUpdatedMeeting(meeting);
 		if(getParentCustomer()==null)
@@ -239,6 +241,8 @@ public class GroupBO extends CustomerBO {
 	
 	@Override
 	public void updateMeeting(MeetingBO meeting) throws CustomerException{
+		logger.debug("In GroupBO::updateMeeting(), customerId: "
+				+ getCustomerId());
 		if(getParentCustomer()==null){			
 			if(getCustomerMeeting()==null){
 				this.setCustomerMeeting(createCustomerMeeting(meeting));
@@ -331,8 +335,12 @@ public class GroupBO extends CustomerBO {
 		
 		if(!toCenter.isActive())
 			throw new CustomerException(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE);
+		
+		validateMeetingRecurrenceForTransfer(getCustomerMeeting().getMeeting(), toCenter.getCustomerMeeting().getMeeting());
 	}
 	
+	
+
 	private boolean isSameCenter(CenterBO center){
 		return getParentCustomer().getCustomerId().equals(center.getCustomerId());
 	}
