@@ -150,9 +150,9 @@ public class HibernateUtil {
 	public static void closeSession() {
 		SessionHolder sessionHolder = getSessionHolder();
 		if(sessionHolder != null){
-			Session s = sessionHolder.getSession();
-			s.close();
-			s=null;
+			Session session = sessionHolder.getSession();
+			session.close();
+			session = null;
 			getSessionHolder().setInterceptor(null);
 			threadLocal.set(null);
 		}
@@ -161,10 +161,10 @@ public class HibernateUtil {
 	public static void closeandFlushSession() {
 		SessionHolder sessionHolder = getSessionHolder();
 		if(sessionHolder != null){
-			Session s = sessionHolder.getSession();
-			s.flush();
-			s.close();
-			s=null;
+			Session session = sessionHolder.getSession();
+			session.flush();
+			session.close();
+			session = null;
 			getSessionHolder().setInterceptor(null);
 			threadLocal.set(null);
 		}

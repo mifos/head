@@ -37,9 +37,7 @@
  */
 package org.mifos.framework.components.configuration.persistence;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
@@ -56,22 +54,35 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class ConfigurationPersistence extends Persistence{
-	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+	private MifosLogger logger = 
+		MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
 	
-	public MifosCurrency getDefaultCurrency() throws PersistenceException  {
-		MifosCurrency defaultCurrency = null;
-		Map<String , Object> queryParameters = new HashMap<String , Object>();
-		queryParameters.put("DEFAULT_CURRENCY",Short.valueOf("1"));
-		List queryResult = executeNamedQuery(NamedQueryConstants.GET_DEFAULT_CURRENCY, queryParameters);
-		if (null != queryResult && queryResult.size() > 0) {
-			defaultCurrency = (MifosCurrency) queryResult.get(0);
+	public MifosCurrency getDefaultCurrency() throws PersistenceException {
+		List queryResult = executeNamedQuery(
+			NamedQueryConstants.GET_DEFAULT_CURRENCY, null);
+		return defaultCurrencyFromList(queryResult);
+	}
+
+	MifosCurrency defaultCurrencyFromList(List queryResult) {
+		if (queryResult.size() == 1) {
+			return (MifosCurrency) queryResult.get(0);
+		}
+		else if (queryResult.size() > 1) {
+			MifosCurrency candidate0 = (MifosCurrency) queryResult.get(0);
+			MifosCurrency candidate1 = (MifosCurrency) queryResult.get(1);
+
+			throw logAndThrow("Both " + candidate0.getCurrencyName() +
+			    " and " + candidate1.getCurrencyName() + 
+			    " are marked as default currencies");
 		}
 		else {
-			logger.error("No Default Currency Specified");
-			throw new FrameworkRuntimeException(null, "No Default Currency Specified");
+			throw logAndThrow("No Default Currency Specified");
 		}
-		
-		return defaultCurrency;
+	}
+
+	private FrameworkRuntimeException logAndThrow(String message) {
+		logger.error(message);
+		return new FrameworkRuntimeException(null, message);
 	}
 
 	
@@ -81,12 +92,12 @@ public class ConfigurationPersistence extends Persistence{
 			logger.error("No System Configuration Specified");
 			throw new FrameworkRuntimeException(null, "No System Configuration Specified");
 		}
-		return (ConfigEntity)queryResult.get(0);
+		return queryResult.get(0);
 	}
 	
 	public SupportedLocalesEntity getSupportedLocale()throws PersistenceException{
 		  List<SupportedLocalesEntity> supportedLocaleList = HibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_MFI_LOCALE).list();
-		  if (supportedLocaleList==null || supportedLocaleList.size()==0){
+		  if (supportedLocaleList==null || supportedLocaleList.size()==0) {
 			    logger.error("No Default Locale Specified");
 				throw new FrameworkRuntimeException(null, "No Default Locale Specified");
 		  }
@@ -98,7 +109,7 @@ public class ConfigurationPersistence extends Persistence{
 	
 	public List<ConfigEntity> getOfficeConfiguration()throws PersistenceException{
 		List<ConfigEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_OFFICE_CONFIG, null);
-		if (queryResult==null || queryResult.size()==0){
+		if (queryResult==null || queryResult.size()==0) {
 			logger.error("Office Configuration Not Specified");
 			throw new FrameworkRuntimeException(null, "Office Configuration Not Specified");
 		}

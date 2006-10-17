@@ -5,22 +5,23 @@ import java.util.List;
 
 public class TestObjectsHolder {
 
-	List l = new ArrayList();
-	public void addObject(Object obj){
-		if(obj != null)
-		l.add(obj);
+	List testObjects = new ArrayList();
+
+	public void addObject(Object testObject){
+		if (testObject != null) {
+			testObjects.add(testObject);
+		}
 	}
-	
+
 	public void removeObjects()
 	{
-		
-		while(l.size() != 0){
-			Object o = l.get(0);
-			l.remove(0);
-			o = null;
+		while (testObjects.size() != 0){
+			testObjects.remove(0);
 		}
-		l = null;
-		l = new ArrayList();
+		
+		// It is already zero size, so I suspect this
+		// doesn't do anything...
+		testObjects = new ArrayList();
 	}
 
 

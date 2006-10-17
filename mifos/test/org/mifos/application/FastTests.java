@@ -38,6 +38,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.customer.business.CustomFieldViewTest;
+import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.struts.tags.DateHelperTest;
@@ -55,6 +56,7 @@ public class FastTests extends MifosTestSuite {
 	public static Test suite() throws Exception {
 		TestSuite suite = new FastTests();
 		suite.addTestSuite(MoneyTest.class);
+		suite.addTestSuite(MifosCurrencyTest.class);
 		suite.addTestSuite(DateHelperTest.class);
 		suite.addTestSuite(CustomFieldViewTest.class);
 		suite.addTestSuite(MifosTagUtilsTest.class);

@@ -39,27 +39,16 @@ package org.mifos.application.meeting.exceptions;
 
 import org.mifos.framework.exceptions.ApplicationException;
 
-/**
- * This class represent the meeting exception 
- */
 public class MeetingException extends ApplicationException {
-	private static final long   serialVersionUID=000l;
 
-	/**
-	 * Constructor taking cause as parameter
-	 * @param cause Throwable object
-	 */
+	private static final long serialVersionUID = 000l;
+
 	public MeetingException(Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * Constructor taking key as parameter
-	 * @param key key to the message
-	 */
 	public MeetingException(String key) {
 		super(key);
 	}
-
 		
 }

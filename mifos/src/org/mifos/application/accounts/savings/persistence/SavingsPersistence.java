@@ -46,7 +46,7 @@ public class SavingsPersistence extends Persistence {
 				.getValue());
 		queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,
 				customerLevel.getProductApplicableType());
-		return (List<PrdOfferingView>) executeNamedQuery(
+		return executeNamedQuery(
 				NamedQueryConstants.GET_APPLICABLE_SAVINGS_PRODUCT_OFFERINGS,
 				queryParameters);
 	}
@@ -58,7 +58,7 @@ public class SavingsPersistence extends Persistence {
 						+ entityType);
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(AccountConstants.ENTITY_TYPE, entityType);
-		return (List<CustomFieldDefinitionEntity>) executeNamedQuery(
+		return executeNamedQuery(
 				NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
 	}
 

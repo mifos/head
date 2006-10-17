@@ -107,13 +107,13 @@ public class TestSavingsBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		TestObjectFactory.cleanUp(savings);
 		TestObjectFactory.cleanUp(client1);
 		TestObjectFactory.cleanUp(client2);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public static void setBalance(SavingsBO savings,Money balanceAmount) {
@@ -602,7 +602,6 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testGenerateAndUpdateDepositActionsForClient() throws Exception {
-
 		center = helper.createCenter();
 		group = TestObjectFactory.createGroup("Group1", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
@@ -612,8 +611,11 @@ public class TestSavingsBO extends MifosTestCase {
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
-		savings.save();
 		HibernateUtil.closeSession();
+		/*
+		 * TODO: this is throwing org.hibernate.NonUniqueObjectException
+		 * (now bogusly caught in TestObjectFactory).  Why?
+		 */
 		client1 = TestObjectFactory.createClient("client1",
 				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
@@ -1895,7 +1897,7 @@ public class TestSavingsBO extends MifosTestCase {
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		accountActionDateEntity.setDepositPaid(new Money("20.0"));
-		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
 
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
@@ -1953,7 +1955,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAccountActionDate((short) 1);
 
 		accountActionDateEntity.setDepositPaid(new Money("20.0"));
-		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 380.0);
 	}
@@ -2095,7 +2097,7 @@ public class TestSavingsBO extends MifosTestCase {
 		SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
 		accountActionDateEntity.setDepositPaid(new Money("20.0"));
-		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
 
 		savings = (SavingsBO) saveAndFetch(savings);
 		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
@@ -3942,6 +3944,7 @@ public class TestSavingsBO extends MifosTestCase {
 			group = savings.getCustomer();
 			center = group.getParentCustomer();
 		} catch (Exception e) {
+			// TODO: get rid of this try-catch
 			e.printStackTrace();
 		}
 	}

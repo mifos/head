@@ -122,6 +122,7 @@ import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -227,9 +228,8 @@ public class TestObjectFactory {
 					getFees(), null, null, officeId, meeting, personnel);
 			center.save();
 			HibernateUtil.commitTransaction();
-			// TODO: throw Exception
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		addObject(center);
 		return center;
@@ -250,9 +250,8 @@ public class TestObjectFactory {
 					getFees(), null, null, officeId, meeting, personnelId);
 			center.save();
 			HibernateUtil.commitTransaction();
-			// TODO: throw Exception
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		addObject(center);
 		return center;
@@ -269,9 +268,8 @@ public class TestObjectFactory {
 					fees, null, null, officeId, meeting, personnel);
 			center.save();
 			HibernateUtil.commitTransaction();
-			// TODO: throw Exception
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		addObject(center);
 		return center;
@@ -334,9 +332,8 @@ public class TestObjectFactory {
 					fees, formedById, parentCustomer);
 			group.save();
 			HibernateUtil.commitTransaction();
-			// TODO: throw Exception
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		addObject(group);
 		return group;
@@ -364,9 +361,8 @@ public class TestObjectFactory {
 					fees, formedById, officeId, meeting, loanOfficerId);
 			group.save();
 			HibernateUtil.commitTransaction();
-			// TODO: throw Exception
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		addObject(group);
 		return group;
@@ -395,8 +391,12 @@ public class TestObjectFactory {
 					clientDetailView, null);
 			client.save();
 			HibernateUtil.commitTransaction();
-			// TODO: throw Exception
 		} catch (Exception e) {
+			/** TODO: Why are we getting org.hibernate.NonUniqueObjectException
+			    for example in 
+			    {@link TestSavingsBO#testGenerateAndUpdateDepositActionsForClient()}
+			     ? */
+			//throw new RuntimeException(e);
 			e.printStackTrace();
 		}
 		addObject(client);
@@ -405,7 +405,7 @@ public class TestObjectFactory {
 
 	public static ClientBO createClient(String customerName, MeetingBO meeting,
 			Short statusId, Date startDate) {
-		ClientBO client = null;
+		ClientBO client;
 		try {
 			Short office = new Short("3");
 			Short personnel = new Short("1");
@@ -427,7 +427,7 @@ public class TestObjectFactory {
 			client.save();
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		addObject(client);
 		return client;
@@ -435,7 +435,7 @@ public class TestObjectFactory {
 
 	public static ClientBO createClient(String customerName, Short statusId,
 			CustomerBO parentCustomer, Date startDate) {
-		ClientBO client = null;
+		ClientBO client;
 		Short personnel = new Short("1");
 		try {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
@@ -459,7 +459,7 @@ public class TestObjectFactory {
 			HibernateUtil.commitTransaction();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		addObject(client);
 		return client;
@@ -544,7 +544,7 @@ public class TestObjectFactory {
 			prdApplicableMaster = new PrdApplicableMasterEntity(
 					PrdApplicableMaster.getPrdApplicableMaster(applicableTo));
 		} catch (PropertyNotFoundException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		ProductCategoryBO productCategory = TestObjectFactory
 				.getLoanPrdCategory();
@@ -553,15 +553,14 @@ public class TestObjectFactory {
 			gracePeriodType = new GracePeriodTypeEntity(GraceTypeConstants
 					.getGraceTypeConstants(graceType));
 		} catch (PropertyNotFoundException e1) {
-			e1.printStackTrace();
+			throw new RuntimeException(e1);
 		}
 		InterestTypesEntity interestTypes = null;
 		try {
 			interestTypes = new InterestTypesEntity(InterestTypeConstants
 					.getInterestTypeConstants(interestTypeId));
 		} catch (PropertyNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		GLCodeEntity glCodePrincipal = (GLCodeEntity) HibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, Short.valueOf("11"));
@@ -584,7 +583,7 @@ public class TestObjectFactory {
 					new ArrayList<FeeBO>(), meeting, glCodePrincipal,
 					glCodeInterest);
 		} catch (ProductDefinitionException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 		PrdStatusEntity prdStatus = testObjectPersistence
@@ -651,7 +650,7 @@ public class TestObjectFactory {
 			prdApplicableMaster = new PrdApplicableMasterEntity(
 					PrdApplicableMaster.getPrdApplicableMaster(applicableTo));
 		} catch (PropertyNotFoundException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 		SavingsTypeEntity savingsType = null;
@@ -659,7 +658,7 @@ public class TestObjectFactory {
 			savingsType = new SavingsTypeEntity(SavingsType
 					.getSavingsType(savingsTypeId));
 		} catch (PropertyNotFoundException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
 		InterestCalcTypeEntity intCalType = null;
@@ -667,14 +666,14 @@ public class TestObjectFactory {
 			intCalType = new InterestCalcTypeEntity(InterestCalcType
 					.getInterestCalcType(intCalTypeId));
 		} catch (PropertyNotFoundException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		RecommendedAmntUnitEntity amountUnit = null;
 		try {
 			amountUnit = new RecommendedAmntUnitEntity(RecommendedAmountUnit
 					.getRecommendedAmountUnit(recomAmtUnitId));
 		} catch (PropertyNotFoundException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, depGLCode);
@@ -692,12 +691,12 @@ public class TestObjectFactory {
 					new Money(maxAmtWithdrawl.toString()), new Money(
 							minAmtForInt.toString()), intRate, depglCodeEntity,
 					intglCodeEntity);
-		} catch (ProductDefinitionException e1) {
-			e1.printStackTrace();
-		} catch (SystemException e1) {
-			e1.printStackTrace();
-		} catch (ApplicationException e1) {
-			e1.printStackTrace();
+		} catch (ProductDefinitionException e) {
+			throw new RuntimeException(e);
+		} catch (SystemException e) {
+			throw new RuntimeException(e);
+		} catch (ApplicationException e) {
+			throw new RuntimeException(e);
 		}
 
 		PrdStatusEntity prdStatus = testObjectPersistence
@@ -725,8 +724,7 @@ public class TestObjectFactory {
 	public static SavingsBO createSavingsAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			SavingsOfferingBO savingsOffering) throws Exception {
-		UserContext userContext = null;
-		userContext = getUserContext();
+		UserContext userContext = getUserContext();
 		MifosCurrency currency = testObjectPersistence.getCurrency();
 		MeetingBO meeting = createLoanMeeting(customer.getCustomerMeeting()
 				.getMeeting());
@@ -738,10 +736,11 @@ public class TestObjectFactory {
 		savings.changeStatus(accountStateId, null, "");
 		TestSavingsBO.setActivationDate(savings,new Date(System.currentTimeMillis()));
 		List<Date> meetingDates = getMeetingDates(meeting, 3);
-		short i = 0;
+		short installment = 0;
 		for (Date date : meetingDates) {
 			SavingsScheduleEntity actionDate = new SavingsScheduleEntity(
-					savings, customer, ++i, new java.sql.Date(date.getTime()),
+					savings, customer, ++installment, 
+					new java.sql.Date(date.getTime()),
 					PaymentStatus.UNPAID, new Money(currency, "200.0"));
 			TestAccountActionDateEntity.addAccountActionDate(actionDate,savings);
 		}
@@ -755,7 +754,6 @@ public class TestObjectFactory {
 		customFields.add(new CustomFieldView(new Short("8"),
 				"custom field value", null));
 		return customFields;
-
 	}
 
 	public static SavingsBO createSavingsAccount(String globalNum,
@@ -811,7 +809,8 @@ public class TestObjectFactory {
 						meetingType);
 
 			meetingToReturn.setMeetingPlace(customerMeeting.getMeetingPlace());
-		} catch (MeetingException me) {
+		} catch (MeetingException e) {
+			throw new RuntimeException(e);
 		}
 		return meetingToReturn;
 	}
@@ -878,16 +877,15 @@ public class TestObjectFactory {
 			FeePayment feePayment) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
 				GLCodeEntity.class, Short.valueOf("24"));
-		FeeBO fee = null;
-		// TODO: throw exception
+		FeeBO fee;
 		try {
 			fee = new RateFeeBO(TestObjectFactory.getUserContext(), feeName,
 					new CategoryTypeEntity(feeCategory),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 					glCode, rate, new FeeFormulaEntity(feeFormula), false,
 					new FeePaymentEntity(feePayment));
-
 		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 		return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 	}
@@ -978,7 +976,6 @@ public class TestObjectFactory {
 	}
 
 	public static void cleanUp(CustomerBO customer) {
-
 		if (null != customer) {
 			deleteCustomer(customer);
 			customer = null;
@@ -1038,10 +1035,10 @@ public class TestObjectFactory {
 
 	private static void deleteAccountActionDates(AccountBO account) {
 		Session session = HibernateUtil.getSessionTL();
+		AccountType accountType = account.getAccountType();
 		for (AccountActionDateEntity actionDates : account
 				.getAccountActionDates()) {
-			if (account
-					.getAccountType()
+			if (accountType
 					.getAccountTypeId()
 					.equals(
 							org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT)) {
@@ -1051,8 +1048,7 @@ public class TestObjectFactory {
 					session.delete(actionFees);
 				}
 			}
-			if (account
-					.getAccountType()
+			if (accountType
 					.getAccountTypeId()
 					.equals(
 							org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMERACCOUNT)) {
@@ -1310,19 +1306,20 @@ public class TestObjectFactory {
 		return null;
 	}
 
-	private static ActivityContext ac;
+	private static ActivityContext activityContext;
 
 	public static ActivityContext getActivityContext() {
-		if (ac == null) {
+		if (activityContext == null) {
 			UserContext uc = getContext();
-			ac = new ActivityContext((short) 0, uc.getBranchId().shortValue(),
+			activityContext = new ActivityContext(
+					(short) 0, uc.getBranchId().shortValue(),
 					uc.getId().shortValue());
 		}
-		return ac;
-
+		return activityContext;
 	}
 
-	private static final ThreadLocal<TestObjectsHolder> threadLocal = new ThreadLocal<TestObjectsHolder>();
+	private static final ThreadLocal<TestObjectsHolder> threadLocal = 
+		new ThreadLocal<TestObjectsHolder>();
 
 	public static Object addObject(Object obj) {
 		TestObjectsHolder holder = threadLocal.get();
@@ -1337,8 +1334,9 @@ public class TestObjectFactory {
 
 	public static void cleanUpTestObjects() {
 		TestObjectsHolder holder = threadLocal.get();
-		if (holder != null)
+		if (holder != null) {
 			holder.removeObjects();
+		}
 
 		holder = null;
 		threadLocal.set(null);

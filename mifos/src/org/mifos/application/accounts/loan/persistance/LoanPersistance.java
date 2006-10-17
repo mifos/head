@@ -57,8 +57,6 @@ public class LoanPersistance extends Persistence {
 	public List<Integer> getLoanAccountsInArrearsInGoodStanding(Short latenessDays)
 			throws PersistenceException {
 
-		Map<String, Object> queryParameters = new HashMap<String, Object>();
-
 		String systemDate = DateHelper.getCurrentDate(Configuration
 				.getInstance().getSystemConfig().getMFILocale());
 		Date localDate = DateHelper.getLocaleDate(Configuration.getInstance()
@@ -71,6 +69,7 @@ public class LoanPersistance extends Persistence {
 		currentDate = new GregorianCalendar(year, month, day - latenessDays);
 		Date date = new Date(currentDate.getTimeInMillis());
 
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("ACCOUNTTYPE_ID", AccountTypes.LOANACCOUNT
 				.getValue());
 		queryParameters.put("PAYMENTSTATUS", Short.valueOf(PaymentStatus.UNPAID

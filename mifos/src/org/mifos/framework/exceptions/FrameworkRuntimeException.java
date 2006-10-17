@@ -73,7 +73,9 @@ public class FrameworkRuntimeException extends SystemException {
 	 *            translated into different languages.
 	 */
 	public FrameworkRuntimeException(String key, String internalMessage) {
-		super(internalMessage);
+		super(
+			null,
+			internalMessage);
 		this.key = key;
 	}
 
@@ -100,7 +102,4 @@ public class FrameworkRuntimeException extends SystemException {
 		this.values = values;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
-	}
 }

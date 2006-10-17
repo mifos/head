@@ -59,7 +59,7 @@ public class TestLoanTrxnDetailEntity extends MifosTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
-		account = (LoanBO) new AccountPersistence().getAccount(account
+		account = new AccountPersistence().getAccount(account
 				.getAccountId());
 		assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(),
 				"Loan");

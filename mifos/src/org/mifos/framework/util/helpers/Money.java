@@ -222,12 +222,8 @@ public final class Money implements Serializable {
 					.getRoundingAmount().doubleValue());
 			BigDecimal nearestFactor = money.getAmount().divide(roundingAmount);
 
-			if (money.getCurrency().getRoundingMode().equals(
-					MifosCurrency.CIEL_MODE))
-				nearestFactor = nearestFactor.setScale(0, RoundingMode.CEILING);
-			else if (money.getCurrency().getRoundingMode().equals(
-					MifosCurrency.FLOOR_MODE))
-				nearestFactor = nearestFactor.setScale(0, RoundingMode.FLOOR);
+			nearestFactor = nearestFactor.setScale(
+				0, money.getCurrency().getRoundingModeEnum());
 
 			BigDecimal roundedAmount = nearestFactor.multiply(roundingAmount);
 			return new Money(money.getCurrency(), roundedAmount);

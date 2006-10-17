@@ -313,7 +313,8 @@ public interface NamedQueryConstants {
 	public String COUNT_CUSTOMERSEARCH_NOOFFICEID_NOCLIENTS="Customer.count_search_noofficeid_noclients";
 	// for collection sheet
 	
-	public String CUSTOMERS_WITH_SPECIFIED_MEETING_DATE="CollectionSheetCustomer.customersWithSpecifiedMeetingDate";
+	public String CUSTOMERS_WITH_SPECIFIED_MEETING_DATE=
+		"CollectionSheetCustomer.customersWithSpecifiedMeetingDate";
 	public String CUSTOMERS_WITH_SPECIFIED_DISBURSAL_DATE="CollectionSheetCustomer.customersWithSpecifiedDisbursalDate";
 	
 	public String MASTERDATA_ACTIVE_BRANCHES = "masterdata.activeBranches";

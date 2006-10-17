@@ -6,12 +6,15 @@ import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 
 public class SessionHolder {
 
-	private Session session=null;
+	private final Session session;
 	private Transaction transaction=null;
 	private AuditInterceptor interceptor = null;
 	
 	public SessionHolder(Session session) {
-		this.session=session;
+		this.session = session;
+		if (session == null) {
+			throw new NullPointerException("session is required");
+		}
 	}
 	
 	public void setTranasction(Transaction transaction) {

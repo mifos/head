@@ -81,6 +81,22 @@ public class SystemException extends RuntimeException {
 	}
 
 	/**
+	 * @param key
+	 *            A key for looking up the message in
+	 *            ExceptionResources.properties, or null to specify a generic
+	 *            message.
+	 * @param internalMessage
+	 *            A message which is just intended for developers; the user will
+	 *            not see this message but instead the message corresponding to
+	 *            key. Because the message is only for developers, it is not
+	 *            translated into different languages.
+	 */
+	public SystemException(String key, String internalMessage) {
+		super(internalMessage);
+		this.key = key;
+	}
+
+	/**
 	 * Returns the key which maps to an entry in ExceptionResources file. The
 	 * message corresponding to this key is used for logging purposes as well as
 	 * for displaying message to the user

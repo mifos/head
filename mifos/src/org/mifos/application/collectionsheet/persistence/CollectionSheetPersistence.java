@@ -38,10 +38,10 @@
 package org.mifos.application.collectionsheet.persistence;
 
 import java.sql.Date;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -51,49 +51,45 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
-public class CollectionSheetPersistence extends Persistence{
+public class CollectionSheetPersistence extends Persistence {
 	
 	public CollectionSheetPersistence() {
 		super();
 	}
 		
 	/**
-	 * @return - Returs a list of accountActionDate objects,where there objects are obtained by running a query.
-	 * The query returns all rows where meeting date is the same as passed as parameter to the query
+	 * The query returns all rows where meeting date is the same as 
+	 * the date parameter
 	 * and the status of the customer is either active or hold. Also 
-	 * they should have atleast one active loan or Savings or Customer account
-	 * @throws PersistenceException 
+	 * they should have at least one active loan or Savings or Customer account
 	 */
-	public List<AccountActionDateEntity> getCustFromAccountActionsDate(Date date) throws PersistenceException{
-		List<AccountActionDateEntity> accountActionDate = null;
-		HashMap queryParameters = new HashMap();
-		queryParameters.put(CollectionSheetConstants.MEETING_DATE, date);
-		accountActionDate = executeNamedQuery(NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_MEETING_DATE,queryParameters);
-		accountActionDate.addAll(executeNamedQuery("CollectionSheetCustomer.loansWithSpecifiedMeetingDate",queryParameters));
-		accountActionDate.addAll(executeNamedQuery("CollectionSheetCustomer.savingssWithSpecifiedMeetingDate",queryParameters));
+	public List<AccountActionDateEntity> getCustFromAccountActionsDate(Date date) 
+	throws PersistenceException {
+		Map<String, Object> queryParameters = Collections.singletonMap(
+			CollectionSheetConstants.MEETING_DATE, (Object)date);
+		List<AccountActionDateEntity> accountActionDate = 
+			executeNamedQuery(
+				NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_MEETING_DATE,
+				queryParameters);
+		accountActionDate.addAll(executeNamedQuery(
+			"CollectionSheetCustomer.loansWithSpecifiedMeetingDate",
+			queryParameters));
+		accountActionDate.addAll(executeNamedQuery(
+			"CollectionSheetCustomer.savingssWithSpecifiedMeetingDate",
+			queryParameters));
 		return accountActionDate;
 	}
 	
 	/**
-	 * It gets list of account objects which are in the state 
-	 * approved or disbursed to loan officer and have disbursal date same as the date passed.
-	 * It retrieves the list using an named HQL query.
-	 * @throws PersistenceException 
+	 * Get list of account objects which are in the state 
+	 * approved or disbursed to loan officer and have disbursal date 
+	 * same as the date passed.
 	 */
-	public List<LoanBO> getLnAccntsWithDisbursalDate(Date date) throws PersistenceException {
-		
-		List<LoanBO> loans = null;
-		HashMap queryParameters = new HashMap();
-		queryParameters.put(CollectionSheetConstants.MEETING_DATE, date);
-		try {
-			
-			loans = executeNamedQuery(NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_DISBURSAL_DATE,queryParameters);
-			
-		} catch (HibernateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return loans;
+	public List<LoanBO> getLnAccntsWithDisbursalDate(Date date) 
+	throws PersistenceException {
+		return executeNamedQuery(
+			NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_DISBURSAL_DATE,
+			Collections.singletonMap(CollectionSheetConstants.MEETING_DATE, date));
 	}
 
 

@@ -270,7 +270,8 @@
 
 	<query name="accounts.retrieveSavingsAccountWithAccountActions">
 		<![CDATA[from org.mifos.application.accounts.savings.business.SavingsBO account 
-			left join account.accountActionDates as actionDates where account.accountId=:accountId]]>
+			left join account.accountActionDates as actionDates 
+			where account.accountId=:accountId]]>
 	</query>
 
 	<query name="getActiveCustomerAndSavingsAccounts">

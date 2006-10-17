@@ -67,22 +67,15 @@ public abstract class Persistence {
 	public List executeNamedQuery(String queryName, Map queryParameters)
 			throws PersistenceException {
 		try {
-			Query query = null;
 			Session session = HibernateUtil.getSessionTL();
-			List returnList = null;
-			if (null != session) {
-				query = session.getNamedQuery(queryName);
-				MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-						.debug(
-								"The query object for the query with the name  "
-										+ queryName + " has been obtained");
-			}
+			Query query = session.getNamedQuery(queryName);
+			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
+					.debug(
+							"The query object for the query with the name  "
+									+ queryName + " has been obtained");
 
 			setParametersInQuery(query, queryName, queryParameters);
-			if (null != query) {
-				returnList = query.list();
-			}
-			return returnList;
+			return query.list();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new PersistenceException(e);
@@ -119,7 +112,7 @@ public abstract class Persistence {
 				"Check if query object and queryParameters are not null for query with name  "
 						+ queryName);
 		try {
-			if (null != query && null != queryParameters) {
+			if (null != queryParameters) {
 
 				MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
 						.debug(

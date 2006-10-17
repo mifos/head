@@ -85,11 +85,11 @@ public class TestObjectPersistence {
 		session.save(fee);
 		return fee;
 	}
+
 	/**
-	 * This persists any object passed as parameter . It starts a new transaction and commits it
+	 * This persists any object passed as parameter. 
+	 * It starts a new transaction and commits it
 	 * if the insertion was successful.
-	 * @param obj
-	 * @return
 	 */
 	public PersistentObject persist(PersistentObject obj) {
 		Session session = HibernateUtil.getSessionTL();
@@ -100,16 +100,13 @@ public class TestObjectPersistence {
 		
 	}
 	
-	/**
-	 * It returns a loan prd category.
-	 * @return
-	 */
 	public ProductCategoryBO getLoanPrdCategory() {
 		Session session = HibernateUtil.getSessionTL();
 		return (ProductCategoryBO)session.get(ProductCategoryBO.class, new Short("1"));
 	}
+
 	/**
-	 * @return - Returns the  office created by test data scripts.
+	 * @return - Returns the office created by test data scripts.
 	 * If the row does not already exist in the database it returns null.
 	 * defaults created are 1- Head Office , 2 - Area Office , 3 - BranchOffice.
 	 */
@@ -119,27 +116,21 @@ public class TestObjectPersistence {
 		return (OfficeBO)session.get(OfficeBO.class, officeId);
 	}
 
-	/**
-	 * It retrieves a PrdStatus object for the passed offeringStatusId.
-	 * @param offeringStatusId
-	 * @return
-	 */
 	public PrdStatusEntity retrievePrdStatus(Short offeringStatusId) {
 		Session session = HibernateUtil.getSessionTL();
 		return (PrdStatusEntity)session.get(PrdStatusEntity.class, offeringStatusId);
-		
 	}
 	
 	public MifosCurrency getCurrency() {
 		Session session = HibernateUtil.getSessionTL();
-		return (MifosCurrency)session.get(org.mifos.application.master.business.MifosCurrency.class, new Short((short)2));
-		
+		return (MifosCurrency)session.get(
+			MifosCurrency.class, 
+			new Short((short)2));
 	}
 	
 	public MifosCurrency getCurrency(Short currencyId) {
 		Session session = HibernateUtil.getSessionTL();
-		return (MifosCurrency)session.get(org.mifos.application.master.business.MifosCurrency.class, currencyId);
-		
+		return (MifosCurrency)session.get(MifosCurrency.class, currencyId);
 	}
 	
 	public LoanBO getLoanAccount(LoanBO loan) {
@@ -147,13 +138,12 @@ public class TestObjectPersistence {
 		session.save(loan);
 		HibernateUtil.getTransaction().commit();
 		return loan;
-		
 	}
 	
 	public FeeFrequencyTypeEntity getFeeFrequencyType() {
 		Session session = HibernateUtil.getSessionTL();
-		return (FeeFrequencyTypeEntity)session.get(FeeFrequencyTypeEntity.class, Short.valueOf("1"));
-		
+		return (FeeFrequencyTypeEntity)session.get(
+			FeeFrequencyTypeEntity.class, Short.valueOf("1"));
 	}
 	
 	public void removeObject(PersistentObject obj) {
@@ -168,22 +158,18 @@ public class TestObjectPersistence {
 		HibernateUtil.startTransaction();
 		session.saveOrUpdate(obj);
 		HibernateUtil.getTransaction().commit();
-		
 	}
 
 	public void flushandCloseSession() {
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		
 	}
 
 	public Object getObject(Class clazz, Integer pk) {
 		return HibernateUtil.getSessionTL().get(clazz, pk);
-		
 	}
 	
 	public Object getObject(Class clazz, Short pk) {
 		return HibernateUtil.getSessionTL().get(clazz, pk);
-		
 	}
 }

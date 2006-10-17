@@ -38,6 +38,8 @@
 
 package org.mifos.application.master.business;
 
+import java.math.RoundingMode;
+
 import org.mifos.framework.business.PersistentObject;
 /**
  * This class denotes the currency object. It contains information such 
@@ -50,7 +52,7 @@ import org.mifos.framework.business.PersistentObject;
  */
 public final class MifosCurrency extends PersistentObject {
 	
-	public static final short CIEL_MODE = 1;
+	public static final short CEILING_MODE = 1;
 	public static final short FLOOR_MODE = 2;
 	
 	/** The composite primary key value. */
@@ -74,7 +76,8 @@ public final class MifosCurrency extends PersistentObject {
 	private Short defaultDigitsAfterDecimal;
 	
 	/**
-	 * This constructor will be used if the currency has to be created through the UI.
+	 * This constructor will be used if the currency has to be 
+	 * created through the UI.
 	 */
 	public MifosCurrency(Short currencyId, String currencyName, 
 		String displaySymbol, Short roundingMode, Float roundingAmount,
@@ -122,6 +125,7 @@ public final class MifosCurrency extends PersistentObject {
 	public boolean isDefaultCurrency(){
 		return (this.defaultCurrency.shortValue() == 1) ? true : false;
 	}
+
 	public String getDisplaySymbol() {
 		return displaySymbol;
 	}
@@ -131,12 +135,25 @@ public final class MifosCurrency extends PersistentObject {
 		this.displaySymbol = displaySymbol;
 	}
 
-	public Short getRoundingMode() {
+	public RoundingMode getRoundingModeEnum() {
+		if (roundingMode == CEILING_MODE) {
+			return RoundingMode.CEILING;
+		}
+		else if (roundingMode == FLOOR_MODE) {
+			return RoundingMode.FLOOR;
+		}
+		else {
+			throw new IllegalStateException(
+				"bad rounding mode " + roundingMode);
+		}
+	}
+	
+	@SuppressWarnings("unused") // see .hbm.xml file
+	private Short getRoundingMode() {
 		return roundingMode;
 	}
 
-	@SuppressWarnings("unused") // See .hbm.xml file
-	private void setRoundingMode(Short roundingMode) {
+	void setRoundingMode(Short roundingMode) {
 		this.roundingMode = roundingMode;
 	}
 	
@@ -178,5 +195,5 @@ public final class MifosCurrency extends PersistentObject {
 	private void setDefaultDigitsAfterDecimal(Short defaultDigitsAfterDecimal) {
 		 this.defaultDigitsAfterDecimal = defaultDigitsAfterDecimal;
 	}
-	
+
 }

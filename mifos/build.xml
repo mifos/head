@@ -263,6 +263,7 @@
 			<transaction src="./sql/mifosdbcreationscript.sql" />
 			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
 			<transaction src="./sql/Iteration14-DDL-DBScripts10102006.sql" />
+			<transaction src="./sql/Iteration15-DDL-DBScripts24102006.sql" />
 			<transaction src="./sql/mifosmasterdata.sql" />
 			<transaction src="./sql/Iteration14-DML-DBScripts10102006.sql" />
 			<transaction src="./sql/Iteration15-DBScripts20061012.sql" />
@@ -273,8 +274,9 @@
 	</target>
 
 	<target name="build_test_db">
-		<sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" userid="${testdb.user}" password="${testdb.pwd}"
-		     classpath="${database.driver.jar}">
+		<sql driver="${db.driver}" url="jdbc:mysql://${testdb.ip}:${testdb.port}/" 
+			userid="${testdb.user}" password="${testdb.pwd}"
+			classpath="${database.driver.jar}">
 			<!--transaction src="./create.sql"/-->
 			<transaction>
 				Drop database if exists ${testdb.name};
