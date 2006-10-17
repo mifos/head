@@ -123,6 +123,7 @@
         </table>
       <br>
 <html-el:hidden property="input" value="createGroup"/> 
+<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
 
 </tiles:put>
