@@ -105,6 +105,7 @@ public class GroupCustAction extends CustAction {
 		return getGroupBusinessService();
 	}
 	
+	@TransactionDemarcate (saveToken = true)
 	public ActionForward hierarchyCheck(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -122,6 +123,7 @@ public class GroupCustAction extends CustAction {
 		return mapping.findForward(actionForward.toString());
 	}
 	
+	@TransactionDemarcate (saveToken = true)
 	public ActionForward chooseOffice(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

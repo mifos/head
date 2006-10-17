@@ -118,8 +118,7 @@ function meetingpopup(){
                  <span class="fontnormal">
              	 <c:out value="${sessionScope.groupCustActionForm.displayName}"/>  <br>
                   </span><span class="fontnormal"> </span><span class="fontnormal"> </span>
-                  
-                  <c:if test="${sessionScope.CenterHierarchyExist eq 'No'}">
+                  <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist') eq 'No'}">
                   <span class="fontnormalbold">
                   <mifos:mifoslabel name="Group.loanofficerassigned" bundle="GroupUIResources"></mifos:mifoslabel></span>
                   <span class="fontnormal">
@@ -131,11 +130,9 @@ function meetingpopup(){
                  </span><span class="fontnormal"><br>
                     </span>
                    </c:if>
-                  
                   </td>
                   </tr>
-                  
-                <tr id="Group.Trained">
+                  <tr id="Group.Trained">
                 <td class="fontnormalbold">  
                  <mifos:mifoslabel name="Group.grouptrained" bundle="GroupUIResources" keyhm="Group.Trained" isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel>
               		<c:choose>

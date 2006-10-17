@@ -2,8 +2,10 @@ package org.mifos.application.personnel.struts.actionforms;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.validator.GenericValidator;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
@@ -196,9 +198,16 @@ public class PersonnelSettingsActionForm extends BaseActionForm {
 						PersonnelConstants.MAXIMUM_LENGTH,
 						PersonnelConstants.DISPLAY_NAME,
 						PersonnelConstants.PERSONNELDISPLAYLENGTH);
+			validateEmail(errors);
 		}
 		if (!method.equals(Methods.validate.toString()))
 			request.setAttribute("methodCalled", method);
 		return errors;
+	}
+	private void validateEmail(ActionErrors errors) {
+		if (!StringUtils.isNullOrEmpty(emailId)&&!GenericValidator.isEmail(emailId)) {
+			errors.add(PersonnelConstants.ERROR_VALID_EMAIL, new ActionMessage(
+					PersonnelConstants.ERROR_VALID_EMAIL));
+		}
 	}
 }

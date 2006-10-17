@@ -126,6 +126,7 @@
 			<!-- Hidden varaibles for the input page -->
 			<html-el:hidden property="input" value="personalInfo" />
 			<html-el:hidden property="nextOrPreview" value="next" />
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -268,7 +269,7 @@
 												value="${sessionScope.clientCustActionForm.parentGroup.personnel.personnelId}" />
 											</td></tr>
 											<c:choose>
-												<c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
+												<c:when test="${CenterHierarchyExist == true}">
 												<tr>
 											<td>
 													<span class="fontnormalbold">

@@ -161,14 +161,16 @@
 			<mifos:mifoslabel name="Personnel.Email" bundle="PersonnelUIResources"></mifos:mifoslabel>
 		</td>
                 <td>
-                	<mifos:mifosalphanumtext  property="emailId" value="${BusinessKey.emailId}"/>
+                	<mifos:mifosalphanumtext  property="emailId"/>
                 </td>
               </tr>
 			<tr class="fontnormal">
                 <td align="right">
 				<mifos:mifoslabel name="Personnel.DOB"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 				</td>
-                <td> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.personnelDetails.dob)}" />
+                <td> <%--<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.personnelDetails.dob)}" />--%>
+                <c:out value="${sessionScope.personActionForm.dob}" />
+                <html-el:hidden property="dob" value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.personnelDetails.dob)}"/> 
                 </td>
               </tr>
               <tr class="fontnormal">
@@ -377,7 +379,8 @@
 			<mifos:mifoslabel name="Personnel.UserName" bundle="PersonnelUIResources"></mifos:mifoslabel>
 		</td>
         <td width="78%">
-           	<c:out value="${BusinessKey.userName}"/>
+           	<c:out value="${sessionScope.personActionForm.loginName}"/>
+        	<html-el:hidden property="loginName" value="${BusinessKey.userName}"/> 
         </td>
          </tr>
           <tr class="fontnormal">
@@ -433,7 +436,9 @@
 											<mifos:mifosalphanumtext name="personActionForm"
 												property='customField[${ctr}].fieldValue' maxlength="200" />
 
-										</c:if></td>
+										</c:if>
+										<html-el:hidden property='customField[${ctr}].fieldId'	value="${cf.fieldId}"></html-el:hidden>
+										</td>
 									</tr>
 								</c:forEach>
             	</table>

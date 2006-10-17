@@ -138,13 +138,14 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 				.getName().getSecondLastName());
 		addRequestParameter("maritalStatus", personnel.getPersonnelDetails()
 				.getMaritalStatus().toString());
-		addRequestParameter("emailId", personnel.getEmailId());
+		addRequestParameter("emailId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		assertEquals(1, getErrrorSize("firstName"));
 		assertEquals(1, getErrrorSize("lastName"));
 		assertEquals(1, getErrrorSize("gender"));
+		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_VALID_EMAIL));
 		verifyInputForward();
 	}
 

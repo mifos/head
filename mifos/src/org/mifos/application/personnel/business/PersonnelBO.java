@@ -464,8 +464,6 @@ public class PersonnelBO extends BusinessObject {
 
 		if (StringUtils.isNullAndEmptySafe(password)) {
 			this.encriptedPassword = getEncryptedPassword(password);
-			this.unLock();
-			this.noOfTries = YesNoFlag.NO.getValue();
 			this.passwordChanged = YesNoFlag.YES.getValue();
 		}
 		this.emailId = emailId;

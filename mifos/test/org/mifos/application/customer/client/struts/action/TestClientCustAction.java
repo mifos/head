@@ -198,6 +198,54 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		assertEquals(1, savingsOfferingList.size());
 		HibernateUtil.closeSession();
 	}
+	
+	public void testLoadWithGroupHavingNoLoanOfficer() throws Exception {
+		createParentGroup(CustomerStatus.GROUP_PARTIAL,null);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsoffering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("parentGroupId", group.getCustomerId().toString());
+		addRequestParameter("groupFlag", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.load_success.toString());
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.SALUTATION_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.MARITAL_STATUS_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.CITIZENSHIP_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.BUSINESS_ACTIVITIES_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.EDUCATION_LEVEL_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(ClientConstants.GENDER_ENTITY,
+				request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.SPOUSE_FATHER_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.HANDICAPPED_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				ClientConstants.ETHINICITY_ENTITY, request));
+		assertNotNull(SessionUtils.getAttribute(
+				CustomerConstants.CUSTOM_FIELDS_LIST, request));
+		assertNotNull(SessionUtils.getAttribute(
+				CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, request));
+		List<BusinessActivityEntity> povertyStatusList = (List<BusinessActivityEntity>)SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+		assertNotNull(povertyStatusList);
+		List<SavingsOfferingBO> savingsOfferingList = (List<SavingsOfferingBO>)SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
+		assertNotNull(savingsOfferingList);
+		assertEquals(1, savingsOfferingList.size());
+		ClientCustActionForm actionForm = (ClientCustActionForm) request
+		.getSession().getAttribute("clientCustActionForm");
+		assertNull(actionForm.getFormedByPersonnelValue());
+		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+				group.getCustomerId());
+		HibernateUtil.closeSession();
+	}
 
 	public void testLoadClientUnderGroup_FeeDifferentFrequecny() throws Exception {
 		createGroupWithoutFee();
@@ -1435,13 +1483,11 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
 		addRequestParameter("trained", "0");
+		addRequestParameter("externalId", "3");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "updateMfiInfo");
-		addRequestParameter("externalId", "3");
-		addRequestParameter("loanOfficerId", "3");
-		addRequestParameter("groupFlag", "0");
 		
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
@@ -1449,6 +1495,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.updateMfiInfo_success.toString());
 		assertEquals("3", client.getExternalId());
+		assertEquals(group.getPersonnel().getPersonnelId(), client.getPersonnel().getPersonnelId());
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 	}
@@ -1697,6 +1744,15 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		group = TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_ACTIVE,
+				officeId, meeting, personnel);
+		
+	}
+	
+	private void createParentGroup(CustomerStatus status, Short personnel) {
+		Short officeId = 3;
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		group = TestObjectFactory.createGroupUnderBranch("group1", status,
 				officeId, meeting, personnel);
 		
 	}

@@ -77,6 +77,7 @@
 
 </script>
 		<html-el:form action="clientCustAction.do?method=create">
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
 			<html-el:hidden property="input" value="create" />
 			<html-el:hidden property="status" value="" />
 			<!-- Body begins -->
@@ -410,7 +411,7 @@
 										<span class="fontnormal">
 											<c:out value="${sessionScope.clientCustActionForm.parentGroup.personnel.displayName}" /><br>
 										</span>
-										<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isCenterHeirarchyExists')==Constants.YES}">
+										<c:if test="${CenterHierarchyExist == true}">
 										<span class="fontnormalbold"> <mifos:mifoslabel
 											name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
 											name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>

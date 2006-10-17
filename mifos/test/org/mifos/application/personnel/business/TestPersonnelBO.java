@@ -385,12 +385,14 @@ public class TestPersonnelBO extends MifosTestCase {
 
 	public void testUpdateSucess() throws Exception {
 
+		
 		createdBranchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
 		HibernateUtil.closeSession();
 		createdBranchOffice = (OfficeBO) HibernateUtil.getSessionTL().get(
 				OfficeBO.class, createdBranchOffice.getOfficeId());
 		createPersonnel(office, PersonnelLevel.NON_LOAN_OFFICER);
+		Short noOfTries = personnel.getNoOfTries();
 		assertEquals(office.getOfficeId(), personnel.getOffice().getOfficeId());
 		assertEquals("XYZ", personnel.getPersonnelDetails().getName()
 				.getFirstName());
@@ -438,6 +440,7 @@ public class TestPersonnelBO extends MifosTestCase {
 				.getId());
 		assertEquals(2, personnel.getPersonnelMovements().size());
 		assertEquals(1, personnel.getPersonnelRoles().size());
+		assertEquals(noOfTries, personnel.getNoOfTries());
 		
 	}
 	

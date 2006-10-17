@@ -62,6 +62,7 @@
 </script>
 		<html-el:form action="clientCustAction.do?method=updateMfiInfo"
 			onsubmit="func_disableSubmitBtn('submitButton');">
+						<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				   var="BusinessKey" />
 			<html-el:hidden property="input" value="editMfiInfo" />
@@ -123,9 +124,11 @@
 									<br>
 								</span>
 								<span class="fontnormalbold">
+								<c:if test="${CenterHierarchyExist == true}">
 									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
 									<mifos:mifoslabel name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>
 									<span class="fontnormal"><c:out	value="${sessionScope.clientCustActionForm.parentGroup.parentCustomer.displayName}" /><br></span>
+									</c:if>
 									<span class="fontnormalbold">
 									  <mifos:mifoslabel	name="${ConfigurationConstants.GROUP}" />
 									  <mifos:mifoslabel	name="client.Centers" bundle="ClientUIResources"></mifos:mifoslabel></span>

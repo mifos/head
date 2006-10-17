@@ -67,6 +67,7 @@ import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.struts.action.CustAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -146,10 +147,15 @@ public class ClientCustAction extends CustAction {
 			}
 			actionForm.setOfficeId(actionForm.getParentGroup().getOffice()
 					.getOfficeId().toString());
-			actionForm.setFormedByPersonnel(actionForm.getParentGroup()
+			if(actionForm.getParentGroup().getPersonnel()!=null)
+				actionForm.setFormedByPersonnel(actionForm.getParentGroup()
 					.getPersonnel().getPersonnelId().toString());
 		}
 		loadCreateMasterData(actionForm, request);
+		SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
+		Configuration.getInstance().getCustomerConfig(
+						getUserContext(request).getBranchId())
+						.isCenterHierarchyExists(), request);	
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -354,8 +360,10 @@ public class ClientCustAction extends CustAction {
 		Short personnelId = null;
 		Short officeId = null;
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
+			if(actionForm.getParentGroup().getPersonnel()!=null){
 			personnelId = actionForm.getParentGroup().getPersonnel()
 					.getPersonnelId();
+			}
 			officeId = actionForm.getParentGroup().getOffice().getOfficeId();
 		} else {
 			personnelId = actionForm.getLoanOfficerIdValue();
@@ -592,6 +600,10 @@ public class ClientCustAction extends CustAction {
 	public ActionForward editMfiInfo(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
+				Configuration.getInstance().getCustomerConfig(
+								getUserContext(request).getBranchId())
+								.isCenterHierarchyExists(), request);	
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		clearActionForm(actionForm);
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
@@ -650,12 +662,13 @@ public class ClientCustAction extends CustAction {
 				getUserContext(request).getPereferedLocale()));
 		PersonnelBO personnel = null;
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
-			if (actionForm.getLoanOfficerIdValue() != null) 
+			if (actionForm.getLoanOfficerIdValue() != null){ 
 				personnel = getPersonnelBusinessService().getPersonnel(
 						actionForm.getLoanOfficerIdValue());
+			}
+			client.updateMfiInfo(personnel);
 		}
 		client.setUserContext(getUserContext(request));
-		client.updateMfiInfo(personnel);
 		return mapping.findForward(ActionForwards.updateMfiInfo_success
 				.toString());
 	}
