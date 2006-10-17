@@ -235,8 +235,6 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());
 		
-		assertEquals(1,auditLogList.get(0).getAuditLogRecords().size());
-		
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
 			if(auditLogRecord.getFieldName().equalsIgnoreCase("Group Name"))
 				matchValues(auditLogRecord,"Group", "Group2");

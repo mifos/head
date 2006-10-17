@@ -272,7 +272,7 @@ public class CenterCustAction extends CustAction {
 			HttpServletRequest request) throws Exception {
 		loadLoanOfficers(actionForm.getOfficeIdValue(), request);
 		loadCreateCustomFields(actionForm, request);
-		loadFees(actionForm, request, FeeCategory.CENTER);
+		loadFees(actionForm, request, FeeCategory.CENTER, null);
 	}
 
 	private void loadUpdateMasterData(HttpServletRequest request ,CenterBO center)

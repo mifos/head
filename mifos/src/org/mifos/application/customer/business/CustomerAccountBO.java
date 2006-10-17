@@ -412,7 +412,8 @@ public class CustomerAccountBO extends AccountBO {
 				ClientConstants.STATUS_CLOSED)
 				&& !this.getCustomer().getCustomerStatus().getId().equals(
 						GroupConstants.CLOSED)) {
-
+			System.out.println("In CustomerBO::regenerateFutureInstallments(), customerId: "
+					+ getCustomer().getCustomerId());
 			List<Date> meetingDates = null;
 			int installmentSize = getLastInstallmentId();
 			int totalInstallmentDatesToBeChanged = installmentSize
@@ -443,6 +444,11 @@ public class CustomerAccountBO extends AccountBO {
 		}
 	}
 
+	@Override
+	protected void resetUpdatedFlag(){
+		getCustomer().getCustomerMeeting().setUpdatedFlag(YesNoFlag.NO.getValue());
+	}
+	
 	public void generateNextSetOfMeetingDates() throws AccountException {
 		Short lastInstallmentId = getLastInstallmentId();
 		AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);

@@ -208,7 +208,7 @@ public class GroupCustAction extends CustAction {
 		logger.debug("In GroupCustAction get method " );
 		GroupCustActionForm actionForm = (GroupCustActionForm) form;
 		GroupBO groupBO;
-		groupBO = (GroupBO) getGroupBusinessService().findBySystemId(
+		groupBO = getGroupBusinessService().findBySystemId(
 					actionForm.getGlobalCustNum());
 		groupBO.setUserContext(getUserContext(request));
 		groupBO.getCustomerStatus().setLocaleId(
@@ -272,7 +272,7 @@ public class GroupCustAction extends CustAction {
 				.getPereferedLocale());
 
 		GroupBO groupBO;
-		groupBO = (GroupBO) getGroupBusinessService().findBySystemId(
+		groupBO = getGroupBusinessService().findBySystemId(
 				actionForm.getGlobalCustNum());
 		groupBO.setVersionNo(group.getVersionNo());
 		groupBO.setUserContext(getUserContext(request));
@@ -317,6 +317,8 @@ public class GroupCustAction extends CustAction {
 		else
 		return mapping.findForward(ActionForwards.loadSearch_success.toString());
 	}	
+	
+	@Override
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward search(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -383,22 +385,25 @@ public class GroupCustAction extends CustAction {
 	private void loadCreateMasterData(GroupCustActionForm actionForm,
 			HttpServletRequest request, boolean isCenterHierarchyExists) throws Exception {
 		loadCreateCustomFields(actionForm, EntityType.GROUP, request);
-		loadFees(actionForm, request, FeeCategory.GROUP);
-		if(!isCenterHierarchyExists)
-			loadLoanOfficers(actionForm.getOfficeIdValue(), request);		
+		
+		if(!isCenterHierarchyExists){
+			loadLoanOfficers(actionForm.getOfficeIdValue(), request);
+			loadFees(actionForm, request, FeeCategory.GROUP, null);
+		}else
+			loadFees(actionForm, request, FeeCategory.GROUP, actionForm.getParentCustomer().getCustomerMeeting().getMeeting());
 		loadFormedByPersonnel(actionForm.getOfficeIdValue(), request);		
 	}
 	
 	private void setLocaleIdToLoanStatus(List<LoanBO> accountList,
 			Short localeId) {
 		for (LoanBO accountBO : accountList)
-			setLocaleForAccount((AccountBO) accountBO, localeId);
+			setLocaleForAccount(accountBO, localeId);
 	}
 
 	private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList,
 			Short localeId) {
 		for (SavingsBO accountBO : accountList)
-			setLocaleForAccount((AccountBO) accountBO, localeId);
+			setLocaleForAccount(accountBO, localeId);
 	}
 
 	private void setLocaleForAccount(AccountBO account, Short localeId) {

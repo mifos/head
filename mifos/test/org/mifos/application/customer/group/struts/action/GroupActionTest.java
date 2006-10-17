@@ -64,7 +64,9 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -173,8 +175,9 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			verifyForward(ActionForwards.loadCreateGroup.toString());
 	}
 	
-	public void testLoad()throws Exception{
-		createParentCustomer();
+	public void testLoad_FeeDifferentFrequecny()throws Exception{
+		createCenterWithoutFee();
+		List<FeeView> fees = getFees(RecurrenceType.MONTHLY);
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/groupCustAction.do");
 		addRequestParameter("method", "load");
@@ -188,12 +191,44 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		if(!isCenterHierarchyExists){
 			assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));	
 		}
+		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
+		assertNotNull(additionalFees);
+		assertEquals(0, additionalFees.size());
 		assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request));
 		CenterBO oldCenter = center;
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
 		oldCenter =  null;	
+		removeFees(fees);	
+	}
+	
+	public void testLoad_FeeSameFrequecny()throws Exception{
+		createCenterWithoutFee();
+		HibernateUtil.closeSession();
+		List<FeeView> fees = getFees(RecurrenceType.WEEKLY);
+		setRequestPathInfo("/groupCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("centerSystemId", center.getGlobalCustNum());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.load_success.toString());
+		
+		boolean isCenterHierarchyExists = Configuration.getInstance().getCustomerConfig(userContext.getBranchId()).isCenterHierarchyExists();
+		if(!isCenterHierarchyExists){
+			assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));	
+		}
+		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
+		assertNotNull(additionalFees);
+		assertEquals(1, additionalFees.size());
+		assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,request));
+		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request));
+		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request));
+		CenterBO oldCenter = center;
+		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+		oldCenter =  null;	
+		removeFees(fees);
 	}
 	
 	public void testLoadMeeting()throws Exception{
@@ -363,33 +398,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		oldCenter =  null;
 	}
 
-	public void testFailurePreview_FeeFrequencyMismatch() throws Exception{
-		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
-		createParentCustomer();		
-		HibernateUtil.closeSession();
-		setRequestPathInfo("/groupCustAction.do");
-		addRequestParameter("method", "load");
-		addRequestParameter("centerSystemId", center.getGlobalCustNum());
-		actionPerform();
-		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
-		FeeView fee = null;
-		for(FeeView feeView: feeList)
-			if(feeView.getFeeId().equals(feesToRemove.get(0).getFeeId()))
-				fee = feeView;
-		
-		setRequestPathInfo("/groupCustAction.do");
-		addRequestParameter("method", "preview");		
-		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
-		addRequestParameter("selectedFee[0].amount", "200");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
-		removeFees(feesToRemove);
-		CenterBO oldCenter = center;
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
-		oldCenter =  null;
-	}
-	
 	public void testSuccessfulPreview() throws Exception{
 		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		createParentCustomer();		
@@ -979,13 +987,18 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter("Center",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
 				new Date(System.currentTimeMillis()));
-
+	}
+	
+	private void createCenterWithoutFee()throws Exception{
+		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		center  = new CenterBO(userContext, "MyCenter", null, null, null, "1234", null, officeId, meeting, Short.valueOf("3"));
+		center.save();
+		HibernateUtil.commitTransaction();
 	}
 
 	private MeetingBO getMeeting() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		//meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 

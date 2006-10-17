@@ -169,6 +169,8 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY , request);
 		savings = getSavingsService().findById(accountId);
 		savings.setUserContext(uc);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+		
 		if (savings.getPersonnel() != null)
 			getBizService().checkPermissionForAdjustment(AccountTypes.SAVINGSACCOUNT, null, uc,
 					savings.getOffice().getOfficeId(), savings.getPersonnel()
@@ -176,7 +178,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		else
 			getBizService().checkPermissionForAdjustment(AccountTypes.SAVINGSACCOUNT, null, uc,
 					savings.getOffice().getOfficeId(), uc.getId());
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+		
 		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
 		savings.adjustLastUserAction(actionForm.getLastPaymentAmount(),
 				actionForm.getNote());

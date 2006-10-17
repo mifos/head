@@ -199,8 +199,10 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	public void testLoadClientUnderGroup() throws Exception {
-		createParentCustomer();
+	public void testLoadClientUnderGroup_FeeDifferentFrequecny() throws Exception {
+		createGroupWithoutFee();
+		List<FeeView> fees = getFees(RecurrenceType.MONTHLY);
+		HibernateUtil.closeSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("parentGroupId", group.getCustomerId().toString());
@@ -210,13 +212,47 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
+		
 		ClientCustActionForm actionForm = (ClientCustActionForm) request
 				.getSession().getAttribute("clientCustActionForm");
 		assertEquals(actionForm.getFormedByPersonnelValue(), group
 				.getCustomerFormedByPersonnel().getPersonnelId());
-
+		
+		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
+		assertNotNull(additionalFees);
+		assertEquals(0, additionalFees.size());
+		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+				group.getCustomerId());
+		removeFees(fees);	
 	}
 
+	public void testLoadClientUnderGroup_FeeSameFrequecny() throws Exception {
+		createGroupWithoutFee();
+		List<FeeView> fees = getFees(RecurrenceType.WEEKLY);
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("parentGroupId", group.getCustomerId().toString());
+		addRequestParameter("groupFlag", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.load_success.toString());
+		
+		ClientCustActionForm actionForm = (ClientCustActionForm) request
+				.getSession().getAttribute("clientCustActionForm");
+		assertEquals(actionForm.getFormedByPersonnelValue(), group
+				.getCustomerFormedByPersonnel().getPersonnelId());
+		
+		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
+		assertNotNull(additionalFees);
+		assertEquals(1, additionalFees.size());
+		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
+				group.getCustomerId());
+		removeFees(fees);	
+	}
+	
 	public void testFailureNextWithAllValuesNull() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
@@ -595,6 +631,64 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals("Duplicate Offerings", 1, getErrrorSize(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));		
+	}
+	
+	public void testFailurePreview_FeeFrequencyMismatch() throws Exception{
+		List<FeeView> feesToRemove = getFees(RecurrenceType.MONTHLY);
+		
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("groupFlag", "0");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		flowKey =(String) request.getAttribute(Constants.CURRENTFLOWKEY);
+		
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+		.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(ClientConstants.POVERTY_STATUS, request);
+		List<FeeView> feeList = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+		assertEquals(1, feeList.size());
+		FeeView fee = feeList.get(0);
+		
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "next");
+		addRequestParameter("officeId", "3");
+		addRequestParameter("clientName.salutation", "1");
+		addRequestParameter("clientName.firstName", "Client");
+		addRequestParameter("clientName.lastName", "LastName");
+		addRequestParameter("spouseName.firstName", "Spouse");
+		addRequestParameter("spouseName.lastName", "LastName");
+		addRequestParameter("spouseName.nameType", "1");
+		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("clientDetailView.gender", "1");
+		addRequestParameter("input", "personalInfo");
+		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "Req");
+			i++;
+		}
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("input", "mfiInfo");
+		addRequestParameter("formedByPersonnel", "1");
+		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+		addRequestParameter("selectedFee[0].amount", fee.getAmount());
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
+				new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"),
+						new Date(), MeetingType.CUSTOMERMEETING), request);
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+		removeFees(feesToRemove);
 	}
 	
 	public void testPreviewSuccess() throws Exception {
@@ -1646,6 +1740,14 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		return fees;
+	}
+	
+	private void createGroupWithoutFee()throws Exception{
+		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		group = new GroupBO(userContext, "groupName", CustomerStatus.GROUP_PENDING,
+				"1234", false, null, null, null,null, Short.valueOf("3"),Short.valueOf("3"), meeting, Short.valueOf("3"));
+		group.save();
+		HibernateUtil.commitTransaction();
 	}
 
 }

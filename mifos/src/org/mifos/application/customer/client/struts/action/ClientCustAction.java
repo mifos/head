@@ -48,12 +48,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
@@ -214,12 +211,17 @@ public class ClientCustAction extends CustAction {
 		Short officeId = null;
 		loadMasterDataEntities(actionForm, request);
 		loadCreateCustomFields(actionForm, EntityType.CLIENT, request);
-		loadFees(actionForm, request, FeeCategory.CLIENT);
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 			loadLoanOfficers(actionForm.getOfficeIdValue(), request);
 			officeId = actionForm.getOfficeIdValue();
-		} else
+			loadFees(actionForm, request, FeeCategory.CLIENT, null);
+		} else{
 			officeId = actionForm.getParentGroup().getOffice().getOfficeId();
+			if(actionForm.getParentGroup().getCustomerMeeting()!=null)
+				loadFees(actionForm, request, FeeCategory.CLIENT, actionForm.getParentGroup().getCustomerMeeting().getMeeting());
+			else
+				loadFees(actionForm, request, FeeCategory.CLIENT, null);
+		}
 		loadFormedByPersonnel(officeId, request);
 		SessionUtils.setAttribute(ClientConstants.SAVINGS_OFFERING_LIST,
 				getClientBusinessService()

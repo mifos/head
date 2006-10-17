@@ -255,6 +255,7 @@ public interface CustomerConstants {
 	public static final String ERRORS_SAME_PARENT_TRANSFER="errors.Customer.sameParentTransferException";
 	public static final String ERRORS_HAS_ACTIVE_ACCOUNT="errors.Customer.hasActiveAccount";
 	public static final String ERRORS_CHILDREN_HAS_ACTIVE_ACCOUNT="errors.Customer.clientHasActiveAccount";
+	public static final String ERRORS_MEETING_FREQUENCY_MISMATCH="errors.Customer.meetingFrequencyMismatch";
 	public static final String ERRORS_MANDATORY="errors.mandatory";
 	public static final String ERRORS_SELECT="errors.requiredSelect";
 	public static final String SALUTATION = "Salutation";

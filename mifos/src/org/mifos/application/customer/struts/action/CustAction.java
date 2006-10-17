@@ -73,6 +73,8 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -213,12 +215,14 @@ public class CustAction extends SearchAction {
 				customFieldDefs, request);
 	}
 
-	protected void loadFees(CustomerActionForm actionForm, HttpServletRequest request, FeeCategory feeCategory) throws ApplicationException{
+	protected void loadFees(CustomerActionForm actionForm, HttpServletRequest request, FeeCategory feeCategory, MeetingBO meeting) throws ApplicationException{
 		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
 				.getInstance().getBusinessService(
 						BusinessServiceName.FeesService);
 		List<FeeBO> fees = feeService
 				.retrieveCustomerFeesByCategaroyType(feeCategory);
+		if(meeting!=null)
+			fees = removeMismatchPeriodicFee(fees, meeting);
 		List<FeeView> additionalFees = new ArrayList<FeeView>();
 		List<FeeView> defaultFees = new ArrayList<FeeView>();
 		for (FeeBO fee : fees) {
@@ -230,6 +234,20 @@ public class CustAction extends SearchAction {
 		actionForm.setDefaultFees(defaultFees);
 		SessionUtils.setAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
 				additionalFees, request);
+	}
+
+	private List<FeeBO> removeMismatchPeriodicFee(List<FeeBO> feeList, MeetingBO meeting) {
+		List<FeeBO> fees = new ArrayList<FeeBO>();
+		for (FeeBO fee : feeList) {
+			if(fee.isOneTime() || (fee.isPeriodic() && isFrequencyMatches(fee, meeting)))
+				fees.add(fee);
+		}
+		return fees;
+	}
+	
+	private boolean isFrequencyMatches(FeeBO fee, MeetingBO meeting){
+		return (fee.getFeeFrequency().getFeeMeetingFrequency().isMonthly() && meeting.isMonthly()) ||
+					(fee.getFeeFrequency().getFeeMeetingFrequency().isWeekly() && meeting.isWeekly());
 	}
 
 	protected void loadFormedByPersonnel(Short officeId,
