@@ -184,6 +184,7 @@
 		<mapping resource="org/mifos/application/accounts/loan/business/LoanPerformanceHistoryEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/customer/group/business/GroupPerformanceHistoryEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/customer/client/business/ClientPerformanceHistoryEntity.hbm.xml" />
+		<mapping resource="org/mifos/application/customer/client/business/LoanCounter.hbm.xml" />
 
 
 		<mapping resource="org/mifos/application/accounts/loan/business/LoanScheduleEntity.hbm.xml" />

@@ -320,7 +320,6 @@ public class AccountBO extends BusinessObject {
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
 		short installmentId = 0;
 		if (accountActionDateEntity != null) {
-			System.out.println("-------------------------accountActionDateEntity: -");
 			if (accountActionDateEntity.getActionDate().compareTo(currentDate) == 0) {
 				installmentId = (short) (accountActionDateEntity
 						.getInstallmentId().intValue() + 1);
@@ -392,6 +391,9 @@ public class AccountBO extends BusinessObject {
 					.getValue())) {
 				writeOff();
 			}
+			if(newStatusId.equals(AccountState.LOANACC_RESCHEDULED.getValue())) {
+				updateClientPerformanceOnRescheduleLoan();
+			}
 			MifosLogManager
 					.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 					.debug(
@@ -402,6 +404,8 @@ public class AccountBO extends BusinessObject {
 	}
 
 	protected void writeOff() throws AccountException {}
+	
+	protected void updateClientPerformanceOnRescheduleLoan(){}
 	
 	protected void updateAccountFeesEntity(Short feeId) {
 		AccountFeesEntity accountFees = getAccountFees(feeId);

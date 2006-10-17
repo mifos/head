@@ -11,7 +11,6 @@
             <generator class="native"/>
 	   </id>
         
-        <property name="loanCycleNumber" column="LOAN_CYCLE_COUNTER" />
         <property name="noOfActiveLoans" column="TOTAL_ACTIVE_LOANS" />
         <property name="lastLoanAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
 	        <column name="LAST_LOAN_AMNT_CURRENCY_ID" /> 
@@ -27,6 +26,10 @@
 		</property>     
         <many-to-one name="client" column="CUSTOMER_ID"
 			class="org.mifos.application.customer.client.business.ClientBO" lazy="true" unique="true" access="field"/>
+		<set name="loanCounters" cascade="all" table="LOAN_COUNTER" lazy="true" access="field">
+			<key column="CLIENT_PERF_ID" />
+			<one-to-many class="org.mifos.application.customer.client.business.LoanCounter" />
+		</set>
     </class>    
     
 </hibernate-mapping>

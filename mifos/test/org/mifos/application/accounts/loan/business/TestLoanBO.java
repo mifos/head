@@ -67,6 +67,7 @@ import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -2216,7 +2217,6 @@ public class TestLoanBO extends MifosTestCase {
 		loanPerfHistory = ((LoanBO) accountBO).getPerformanceHistory();
 		assertEquals(noOfPayments + 1, loanPerfHistory.getNoOfPayments()
 				.intValue());
-
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
 				.getCustomer().getPerformanceHistory();
 		assertEquals(Integer.valueOf(1), clientPerfHistory.getLoanCycleNumber());
@@ -2224,6 +2224,9 @@ public class TestLoanBO extends MifosTestCase {
 				.getNoOfActiveLoans().intValue());
 		assertEquals(totalRepaymentAmount, clientPerfHistory
 				.getLastLoanAmount());
+		HibernateUtil.closeSession();
+		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,	client.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 	}
 
 	public void testWtiteOffForCustomerPerfHistory() throws Exception {
@@ -2257,7 +2260,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(noOfActiveLoans - 1, clientPerfHistory
 				.getNoOfActiveLoans().intValue());
 	}
-
+	
 	public void testDisbursalLoanForCustomerPerfHistory() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccountWithPerformanceHistory(Short.valueOf("3"),
@@ -2956,10 +2959,9 @@ public class TestLoanBO extends MifosTestCase {
 		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
 				isInterestDedAtDisb, null, noOfinstallments, 0.0);
 
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		
+		 //Change this to more clearly separate what we are testing for from the machinery needed to get that data?
+		 
 		for (AccountActionDateEntity accountActionDate : loan
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
@@ -3020,10 +3022,9 @@ public class TestLoanBO extends MifosTestCase {
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
 		accountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
-		/*
-		 * Change this to more clearly separate what we are testing for from the
-		 * machinery needed to get that data?
-		 */
+		
+		 //Change this to more clearly separate what we are testing for from the machinery needed to get that data?
+		 
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
@@ -4971,8 +4972,8 @@ public class TestLoanBO extends MifosTestCase {
 		client = TestObjectFactory.createClient("Client",
 				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
-		((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
-		TestObjectFactory.updateObject(client);
+		/*((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
+		TestObjectFactory.updateObject(client);*/
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
@@ -4982,6 +4983,8 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", client,
 				Short.valueOf("3"), new Date(System.currentTimeMillis()),
 				loanOffering);
+		((ClientBO) client).getPerformanceHistory().updateLoanCounter(loanOffering,YesNoFlag.YES);
+		TestObjectFactory.updateObject(client);
 		TestObjectFactory.updateObject(accountBO);
 		return accountBO;
 	}
@@ -5002,10 +5005,11 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
-		((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
+		//((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", client, accountSate, startDate, loanOffering,
 				disbursalType);
+		((ClientBO) client).getPerformanceHistory().updateLoanCounter(loanOffering,YesNoFlag.YES);
 		return accountBO;
 
 	}

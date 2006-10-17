@@ -111,6 +111,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -2327,8 +2328,7 @@ public class LoanBO extends AccountBO {
 					.getPerformanceHistory();
 			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
 					.getNoOfActiveLoans() + 1);
-			clientPerfHistory.setLoanCycleNumber(clientPerfHistory
-					.getLoanCycleNumber() + 1);
+			clientPerfHistory.updateLoanCounter(getLoanOffering(),YesNoFlag.YES);
 		} else if (getCustomer().getCustomerLevel().getId().equals(
 				Short.valueOf(CustomerConstants.GROUP_LEVEL_ID))
 				&& getCustomer().getPerformanceHistory() != null) {
@@ -2368,10 +2368,19 @@ public class LoanBO extends AccountBO {
 				&& getCustomer().getPerformanceHistory() != null) {
 			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
 					.getPerformanceHistory();
-			clientPerfHistory.setLoanCycleNumber(clientPerfHistory
-					.getLoanCycleNumber() - 1);
+			clientPerfHistory.updateLoanCounter(getLoanOffering(),YesNoFlag.NO);
 			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
 					.getNoOfActiveLoans() - 1);
+		}
+	}
+	
+	@Override
+	protected void updateClientPerformanceOnRescheduleLoan() {
+		if (getCustomer().getCustomerLevel().getId().equals(
+				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
+				&& getCustomer().getPerformanceHistory() != null) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer().getPerformanceHistory();
+			clientPerfHistory.updateLoanCounter(getLoanOffering(),YesNoFlag.NO);
 		}
 	}
 

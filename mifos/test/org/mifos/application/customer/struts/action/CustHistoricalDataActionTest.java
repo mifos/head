@@ -91,7 +91,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 				group);
 		customerHistoricalDataEntity.setMfiJoiningDate(offSetCurrentDate(10));
 		Date mfiDate = new Date(customerHistoricalDataEntity.getMfiJoiningDate().getTime());
-		group.updateHistoricalData(customerHistoricalDataEntity,0);
+		group.updateHistoricalData(customerHistoricalDataEntity);
 		group.update();
 		HibernateUtil.commitTransaction();
 		assertEquals(mfiDate,new Date(group.getMfiJoiningDate().getTime()));
@@ -230,7 +230,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
 				group);
-		group.updateHistoricalData(customerHistoricalDataEntity,0);
+		group.updateHistoricalData(customerHistoricalDataEntity);
 		group.update();
 		HibernateUtil.commitTransaction();
 

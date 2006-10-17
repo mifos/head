@@ -18,7 +18,6 @@ import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.business.CustomerHistoricalDataEntity;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -299,15 +298,6 @@ public class ClientBO extends CustomerBO {
 		} catch (PersistenceException e) {
 			throw new CustomerException(e);
 		}
-	}
-
-	@Override
-	public void updateHistoricalData(
-			CustomerHistoricalDataEntity historicalData, Integer oldLoanCycleNo) {
-		super.updateHistoricalData(historicalData, oldLoanCycleNo);
-		if (historicalData != null)
-			updateClientPerformanceHistory(historicalData.getLoanCycleNumber(),
-					oldLoanCycleNo);
 	}
 
 	@Override
@@ -858,19 +848,6 @@ public class ClientBO extends CustomerBO {
 					if(offeringsSelected.get(i).getPrdOfferingId().equals(offeringsSelected.get(j).getPrdOfferingId()))
 						throw new CustomerException(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED);
 		}
-	}
-	
-	private void updateClientPerformanceHistory(Integer historicalLoanCycleNo,
-			Integer oldHistoricalLoanCycleNo) {
-		if (historicalLoanCycleNo == null)
-			historicalLoanCycleNo = 0;
-		if (oldHistoricalLoanCycleNo == null)
-			oldHistoricalLoanCycleNo = 0;
-		Integer difference = historicalLoanCycleNo - oldHistoricalLoanCycleNo;
-		if(performanceHistory != null)
-			performanceHistory.setLoanCycleNumber(performanceHistory
-					.getLoanCycleNumber()
-					+ difference);
 	}
 	
 	private void createDepositSchedule() throws CustomerException{

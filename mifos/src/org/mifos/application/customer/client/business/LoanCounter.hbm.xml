@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+    <class name="org.mifos.application.customer.client.business.LoanCounter" table="LOAN_COUNTER">
+        <id name="loanCounterId" column="LOAN_COUNTER_ID" type="integer" access="field">
+			<generator class="native" />
+		</id>
+        <property name="loanCycleCounter" column="LOAN_CYCLE_COUNTER"/>   
+		<many-to-one name="clientPerfHistory" column="CLIENT_PERF_ID" class="org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity" lazy="true" access="field" />
+		<many-to-one name="loanOffering" column="LOAN_OFFERING_ID" class="org.mifos.application.productdefinition.business.LoanOfferingBO" lazy="true" access="field" cascade="none"/>
+    </class>    
+</hibernate-mapping>

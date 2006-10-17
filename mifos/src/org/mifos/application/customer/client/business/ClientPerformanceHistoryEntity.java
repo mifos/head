@@ -1,16 +1,21 @@
 package org.mifos.application.customer.client.business;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerPerformanceHistory;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.util.helpers.Money;
 
 public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 
 	private final Integer id;
 
-	private Integer loanCycleNumber;
+	private Set<LoanCounter> loanCounters;
 
 	private Integer noOfActiveLoans;
 
@@ -26,7 +31,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		super();
 		this.id = null;
 		this.client = client;
-		this.loanCycleNumber = 0;
+		this.loanCounters = new HashSet<LoanCounter>();
 		this.noOfActiveLoans = 0;
 		this.lastLoanAmount = new Money();
 		this.delinquentPortfolio = new Money();
@@ -37,13 +42,13 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		super();
 		this.id = null;
 		this.client = null;
-		this.loanCycleNumber = 0;
+		this.loanCounters = new HashSet<LoanCounter>();
 		this.noOfActiveLoans = 0;
 		this.lastLoanAmount = null;
 		this.delinquentPortfolio = null;
 		this.totalSavings = null;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -64,12 +69,16 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.lastLoanAmount = lastLoanAmount;
 	}
 
-	public Integer getLoanCycleNumber() {
-		return loanCycleNumber;
+	public Set<LoanCounter> getLoanCounters() {
+		return loanCounters;
+	}
+	
+	public void setLoanCounters(Set<LoanCounter> loanCounters) {
+		this.loanCounters = loanCounters;
 	}
 
-	public void setLoanCycleNumber(Integer loanCycleNumber) {
-		this.loanCycleNumber = loanCycleNumber;
+	private void addLoanCounter(LoanCounter loanCounter) {
+		this.loanCounters.add(loanCounter);
 	}
 
 	public Integer getNoOfActiveLoans() {
@@ -95,7 +104,40 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 	public ClientBO getClient() {
 		return client;
 	}
-	
+
+	public void updateLoanCounter(LoanOfferingBO loanOfferingBO,
+			YesNoFlag counterFlag) {
+		boolean isCounterUpdated = false;
+		if (loanCounters == null)
+			loanCounters = new HashSet<LoanCounter>();
+		for (LoanCounter loanCount : loanCounters) {
+			if (loanCount.getLoanOffering().getPrdOfferingId().equals(
+					loanOfferingBO.getPrdOfferingId())) {
+				loanCount.updateLoanCounter(counterFlag);
+				isCounterUpdated = true;
+			}
+		}
+		if (!isCounterUpdated) {
+			LoanCounter loanCounter = new LoanCounter(this, loanOfferingBO,
+					counterFlag);
+			addLoanCounter(loanCounter);
+		}
+	}
+
+	public Integer getLoanCycleNumber() {
+		Integer loanCount = 0;
+		for (LoanCounter loanCounter : getLoanCounters()) {
+			if (loanCounter.getLoanOffering().isIncludeInLoanCounter())
+				loanCount += loanCounter.getLoanCycleCounter();
+		}
+		if(client.getHistoricalData() != null){
+			if(client.getHistoricalData().getLoanCycleNumber() == null)
+				client.getHistoricalData().setLoanCycleNumber(0);
+			loanCount += client.getHistoricalData().getLoanCycleNumber();
+		}
+		return loanCount;
+	}
+
 	public Money getDelinquentPortfolioAmount() {
 		Money amountOverDue = new Money();
 		Money totalOutStandingAmount = new Money();
