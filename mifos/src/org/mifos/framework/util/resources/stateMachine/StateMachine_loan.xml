@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<statemaps xmlns="http://www.aditi.com"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.aditi.com StateMachine.xsd ">
+<statemaps xmlns="http://www.aditi.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.aditi.com StateMachine.xsd ">
 	<stateConfiguration configurationName="configuration 1">
 		<state>
 			<statename>PartialApplication</statename>
 			<stateid>1</stateid>
 			<possiblestates>
-			<possiblestate>
+				<possiblestate>
 					<statename>PendingApproval</statename>
 					<stateid>2</stateid>
-			</possiblestate>
-			<possiblestate>
-				<statename>Cancel</statename>
-				<stateid>10</stateid>
-			</possiblestate>
+				</possiblestate>
+				<possiblestate>
+					<statename>Cancel</statename>
+					<stateid>10</stateid>
+				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>Cancel</statename>
 			<stateid>10</stateid>
-		</state>		
+		</state>
 		<state>
 			<statename>PendingApproval</statename>
 			<stateid>2</stateid>
@@ -96,7 +94,7 @@
 			</possiblestates>
 		</state>
 	</stateConfiguration>
-	
+
 	<stateConfiguration configurationName="configuration 2">
 		<state>
 			<statename>PartialApplication</statename>
@@ -104,7 +102,7 @@
 			<possiblestates>
 				<possiblestate>
 					<statename>Apporved</statename>
-					<stateid>2</stateid>
+					<stateid>3</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Cancel</statename>
@@ -114,7 +112,7 @@
 		</state>
 		<state>
 			<statename>Cancel</statename>
-			<stateid>15</stateid>
+			<stateid>10</stateid>
 		</state>
 		<state>
 			<statename>Apporved</statename>
@@ -174,20 +172,20 @@
 			<statename>PartialApplication</statename>
 			<stateid>1</stateid>
 			<possiblestates>
-			<possiblestate>
+				<possiblestate>
 					<statename>PendingApproval</statename>
 					<stateid>2</stateid>
-			</possiblestate>
-			<possiblestate>
-				<statename>Cancel</statename>
-				<stateid>10</stateid>
-			</possiblestate>
+				</possiblestate>
+				<possiblestate>
+					<statename>Cancel</statename>
+					<stateid>10</stateid>
+				</possiblestate>
 			</possiblestates>
 		</state>
 		<state>
 			<statename>Cancel</statename>
 			<stateid>10</stateid>
-		</state>		
+		</state>
 		<state>
 			<statename>PendingApproval</statename>
 			<stateid>2</stateid>
@@ -252,7 +250,7 @@
 			<possiblestates>
 				<possiblestate>
 					<statename>Apporved</statename>
-					<stateid>2</stateid>
+					<stateid>3</stateid>
 				</possiblestate>
 				<possiblestate>
 					<statename>Cancel</statename>
@@ -262,7 +260,7 @@
 		</state>
 		<state>
 			<statename>Cancel</statename>
-			<stateid>15</stateid>
+			<stateid>10</stateid>
 		</state>
 		<state>
 			<statename>Apporved</statename>
