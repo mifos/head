@@ -46,11 +46,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.AccountStatusActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.util.resources.OfficeConstants;
@@ -60,6 +62,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
@@ -112,6 +115,7 @@ public class AccountStatusAction extends BaseAction {
 			SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
 					new ArrayList<PersonnelView>(), request);
 		}
+
 		return mapping.findForward(ActionForwards.changeAccountStatus_success
 				.toString());
 	}
@@ -170,7 +174,28 @@ public class AccountStatusAction extends BaseAction {
 		Short officeId = Short.valueOf(accountStatusActionForm.getOfficeId());
 		List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
 				getUserContext(request), officeId);
-		SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers, request);
+		SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers,
+				request);
+
+		if (officeId != null) {
+			AccountStateEntity accountStateEntity = null;
+			if (Configuration.getInstance().getAccountConfig(
+					getShortValue(accountStatusActionForm.getOfficeId()))
+					.isPendingApprovalStateDefinedForLoan()) {
+				accountStateEntity = (AccountStateEntity) new MasterDataService()
+						.getMasterDataEntity(AccountStateEntity.class,
+								AccountState.LOANACC_PENDINGAPPROVAL.getValue());
+			} else {
+				accountStateEntity = (AccountStateEntity) new MasterDataService()
+						.getMasterDataEntity(AccountStateEntity.class,
+								AccountState.LOANACC_PARTIALAPPLICATION
+										.getValue());
+			}
+			accountStateEntity.setLocaleId(getUserContext(request)
+					.getLocaleId());
+			SessionUtils.setAttribute(LoanConstants.LOANACCOUNTSTAES,
+					accountStateEntity, request);
+		}
 
 		return mapping.findForward(ActionForwards.changeAccountStatus_success
 				.toString());

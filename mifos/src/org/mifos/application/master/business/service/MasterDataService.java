@@ -159,4 +159,13 @@ public class MasterDataService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
+	
+	public MasterDataEntity getMasterDataEntity(Class clazz, Short id)
+			throws ServiceException {
+		try {
+			return new MasterPersistence().getMasterDataEntity(clazz, id);
+		} catch (PersistenceException e) {
+			throw new ServiceException(e);
+		}
+	}
 }

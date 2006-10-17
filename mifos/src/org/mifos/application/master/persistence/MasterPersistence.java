@@ -212,6 +212,9 @@ public class MasterPersistence extends Persistence {
 		return queryResult;
 	}
 	
+	public MasterDataEntity getMasterDataEntity(Class clazz,Short id) throws PersistenceException {
+		return (MasterDataEntity)getPersistentObject(clazz,id);
+	}
 	
 	
 }

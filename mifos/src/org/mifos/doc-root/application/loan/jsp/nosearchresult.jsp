@@ -100,9 +100,20 @@
 								<mifos:mifoslabel name="accountStatus.currentstatus" mandatory="yes"/> 
 							</td>
 							<td>
-							<html-el:select property="currentStatus" style="width:136px;" >
-								<html-el:option value="2"><mifos:mifoslabel name="accountStatus.state"/></html-el:option>
-							</html-el:select>
+
+								<c:set var="accountState" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountStates')}" />
+									<html-el:select property="currentStatus" style="width:136px;">
+										<c:choose>
+											<c:when test="${accountState != null}">
+												<html-el:option value="${accountState.id}">
+													<c:out value="${accountState.name}" />
+												</html-el:option>
+											</c:when>
+											<c:otherwise>
+												<html-el:option value="">--Slelect--</html-el:option>
+											</c:otherwise>
+										</c:choose>
+									</html-el:select>
 							</td>
 						</tr>
 						
