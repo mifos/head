@@ -17,6 +17,8 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class ChkListActionForm extends BaseActionForm {
 
+	private String text;
+
 	private String checkListId;
 
 	private boolean isCustomer;
@@ -134,6 +136,14 @@ public class ChkListActionForm extends BaseActionForm {
 
 	public void setStateName(String stateName) {
 		this.stateName = stateName;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	public List<String> getValidCheckListDetails(){

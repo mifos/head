@@ -1,39 +1,39 @@
 <!-- /**
- 
+
  * viewgroupdetails.jsp    version: 1.0
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  */-->
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
@@ -183,7 +183,7 @@
 									<html-el:link
 										href="loanAccountAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 										<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"></mifos:mifoslabel>
-									</html-el:link> &nbsp;|&nbsp; 
+									</html-el:link> &nbsp;|&nbsp;
 		              </c:if> <html-el:link
 									href="savingsAction.do?method=getPrdOfferings&customerId=${BusinessKey.customerId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}">
 									<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"></mifos:mifoslabel>
@@ -351,8 +351,8 @@
 							<span class="fontnormal">
 								<c:if test="${BusinessKey.customerStatus.id !=7 && BusinessKey.customerStatus.id !=8}">
 									<html-el:link href="custAction.do?method=getClosedAccounts&customerId=${BusinessKey.customerId}&input=group&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
-										<mifos:mifoslabel name="Group.viewallclosedaccounts" bundle="GroupUIResources"></mifos:mifoslabel> 
-									</html-el:link> 
+										<mifos:mifoslabel name="Group.viewallclosedaccounts" bundle="GroupUIResources"></mifos:mifoslabel>
+									</html-el:link>
 								</c:if>
 							</span>
 							</td>
@@ -455,7 +455,7 @@
 						<span class="fontnormal"><span class="fontnormal"><br>
 								<c:forEach var="program" items="${requestScope.customerPrograms}">
 									<c:out value="${program.programName}"/><br>
-								</c:forEach> 
+								</c:forEach>
 					 </span></span><br>
 					<br> --%></td>
 						</tr>
@@ -538,13 +538,13 @@
 										<c:choose>
 											<c:when test="${cfdef.fieldType == 3}">
 												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"
-													bundle="CenterUIResources"></mifos:mifoslabel>: 
+													bundle="CenterUIResources"></mifos:mifoslabel>:
 							    	<span class="fontnormal"><c:out
 													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,cf.fieldValue)}" />
 											</c:when>
 											<c:otherwise>
 												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"
-													bundle="CenterUIResources"></mifos:mifoslabel>: 
+													bundle="CenterUIResources"></mifos:mifoslabel>:
 							    	<span class="fontnormal"><c:out value="${cf.fieldValue}" />
 											</c:otherwise>
 										</c:choose>
@@ -601,14 +601,14 @@
 												value="${BusinessKey.customerMeeting.meeting.meetingPlace}" />
 											</span></td>
 											<td width="41%" align="right" valign="top" class="fontnormal"><br>
-											
+
 											<html-el:link
 												action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
 												<mifos:mifoslabel name="Group.editmeetingchedule"
 													bundle="GroupUIResources" />
 												<br>
 											</html-el:link>
-											
+
 											<a href="groupTransferAction.do?method=loadBranches&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"> <mifos:mifoslabel
 												name="Group.editOfficeMembership" bundle="GroupUIResources" />
 											</a></td>
@@ -689,8 +689,8 @@
 							<tr>
 								<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
 									name="${ConfigurationConstants.LOAN}"></mifos:mifoslabel> <mifos:mifoslabel
-									name="label.loancyclecounter" bundle="CustomerUIResources"></mifos:mifoslabel>
-								-</span></td>
+									name="label.loancyclecounter" isColonRequired="Yes" bundle="CustomerUIResources"></mifos:mifoslabel>
+								</span></td>
 							</tr>
 
 							<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanCycleCounter')}"

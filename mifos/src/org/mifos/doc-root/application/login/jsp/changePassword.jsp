@@ -28,8 +28,7 @@
 				height="74"></td>
 			<td align="right" bgcolor="#FFFFFF" class="fontnormal"><html-el:link
 				href="javascript:fnLogout()"><mifos:mifoslabel
-				name="login.logout" bundle="LoginUIResources"/></html-el:link>&nbsp;|&nbsp;
-				 <a href="#">Help</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+				name="login.logout" bundle="LoginUIResources"/></html-el:link>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 		</tr>
 		<tr>
 			<td align="left" valign="bottom" bgcolor="#ffffff">&nbsp;</td>

@@ -1,10 +1,10 @@
-<!-- 
+<!--
 
 /**
 
  * applyCharges.jsp    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -12,27 +12,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -60,14 +60,14 @@
 						form.action="applyChargeAction.do?method=cancel";
 						form.submit();
 				}
-				
+
 				function fun_submit(){
 					document.getElementsByName("charge")[0].value=document.getElementsByName("chargeAmount")[0].value;
-				}	
-				
+				}
+
 			function loadValues(current)
-			
-			{		
+
+			{
 						if(current.selectedIndex >-1)
 						{
 						  	var amount =document.getElementsByName("amount")[current.selectedIndex].value;
@@ -80,11 +80,11 @@
 							}else{
 								document.getElementsByName("chargeAmount")[0].disabled=false;
 							}
-							
+
 							var span = document.getElementById("formula");
-							
+
 							if( formulaId == null  && periodicity == null)
-							{	
+							{
 								span.style.display="none";
 								span.innerHTML="";
 							}
@@ -104,18 +104,18 @@
 								    span.innerHTML = periodicity;
 								}
 							}
-							
-							
+
+
 						}
-						
-				
+
+
 			}
-		
+
 	</script>
 		<html-el:form method="post" action="applyChargeAction.do?method=update" onsubmit="fun_submit()">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
-			
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -150,8 +150,8 @@
 						class="paddingL15T15">
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<td width="70%" class="headingorange"><span class="heading"> 
-								
+							<td width="70%" class="headingorange"><span class="heading">
+
 								<c:choose>
 									<c:when test="${BusinessKey.accountType.accountTypeId==AccountTypes.LOANACCOUNT.value}">
 										<c:out value="${BusinessKey.loanOffering.prdOfferingName}" />&nbsp;#&nbsp;
@@ -161,7 +161,7 @@
 										<c:out value="${BusinessKey.customer.displayName}" />
 									</c:otherwise>
 								</c:choose>
-								&nbsp;-&nbsp; </span> 
+								&nbsp;-&nbsp; </span>
 								<mifos:mifoslabel name="accounts.apply_charges" />
 							</td>
 						</tr>
@@ -170,20 +170,20 @@
 					<logic:messagesPresent>
 						<table width="93%" border="0" cellpadding="3" cellspacing="0"><tr><td>
 									<font class="fontnormalRedBold">
-										<html-el:errors bundle="accountsUIResources" /> 
+										<html-el:errors bundle="accountsUIResources" />
 									</font></td></tr>
 						</table><br>
 					</logic:messagesPresent>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="20%" align="right" class="fontnormal"><mifos:mifoslabel
-								name="accounts.sel_charge_type" /></td>
+								mandatory="yes" name="accounts.sel_charge_type" /></td>
 							<td width="20%"  align="left" class="fontnormal">
 							<mifos:select property="chargeType" style="width:136px;" onchange="loadValues(this)">
 								<c:forEach var="applicableCharge" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'applicableChargeList')}" >
 									<html-el:option value="${applicableCharge.feeId}">${applicableCharge.feeName}</html-el:option>
 								</c:forEach>
-								
+
 							</mifos:select>
 							</td>
 							<td width="10%" align="left" class="fontnormal"><mifos:mifoslabel
@@ -192,17 +192,17 @@
 								property="chargeAmount"></mifos:mifosdecimalinput></td>
 							<td  width="40%" class="fontnormal" align="left">
 							<SPAN id="formula"></SPAN>
-							</td>	
+							</td>
 									<html-el:hidden property="amount" value=""/>
-									<html-el:hidden property="formulaId" value=""/>									
-									<html-el:hidden property="periodicity" value=""/>	
+									<html-el:hidden property="formulaId" value=""/>
+									<html-el:hidden property="periodicity" value=""/>
 									<html-el:hidden property="paymentType" value=""/>
-									<html-el:hidden property="charge" value=""/>	
+									<html-el:hidden property="charge" value=""/>
 							<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'applicableChargeList')}" >
 									<html-el:hidden property="amount" value="${fee.amountOrRate}"/>
 									<html-el:hidden property="formulaId" value="${fee.formula}"/>
-									<html-el:hidden property="periodicity" value="${fee.periodicity}"/>	
-									<html-el:hidden property="paymentType" value="${fee.paymentType}"/>										
+									<html-el:hidden property="periodicity" value="${fee.periodicity}"/>
+									<html-el:hidden property="paymentType" value="${fee.paymentType}"/>
 							</c:forEach>
 						</tr>
 					</table>
@@ -231,9 +231,9 @@
 			</table>
 			<br>
 	<html-el:hidden property="accountId" value="${BusinessKey.accountId}"/>
-	<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/> 
+	<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/>
 	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}"/>
 	</html-el:form>
-	
+
 	</tiles:put>
 </tiles:insert>

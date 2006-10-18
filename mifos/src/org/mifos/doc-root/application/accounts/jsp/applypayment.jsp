@@ -1,39 +1,39 @@
 <!--
- 
+
  * applypayment.jsp  version: 1.0
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  -->
 
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
@@ -53,7 +53,7 @@
 		customerAccountActionForm.action="customerAccountAction.do?method=load";
 		customerAccountActionForm.submit();
 	}
-	
+
 	function ViewLoanDetails(form){
 		form.action="loanAccountAction.do?method=get";
 		form.submit();
@@ -65,7 +65,7 @@
 			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))"
 			focus="paymentTypeId">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/>
@@ -74,7 +74,7 @@
 						<c:when test="${param.input == 'loan'}">
 						</c:when>
 						<c:otherwise>
-						
+
 							<html-el:link href="customerAccountAction.do?method=load&globalCustNum=${param.globalCustNum}" >
 								<c:if test="${param.input == 'ViewCenterCharges'}">
 									<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" />
@@ -88,7 +88,7 @@
 								<mifos:mifoslabel name="Center.Charges"
 									bundle="CenterUIResources" />
 							</html-el:link>
-							
+
 						</c:otherwise>
 					</c:choose> </span></td>
 				</tr>
@@ -100,8 +100,7 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="70%" class="headingorange"><span class="heading"> <c:out
-								value="${param.prdOfferingName}" /> # <c:out
-						value="${BusinessKey.globalAccountNum}" /> - </span><mifos:mifoslabel
+								value="${param.prdOfferingName}" /> - </span><mifos:mifoslabel
 								name="accounts.apply_payment" />
 								</td>
 						</tr>

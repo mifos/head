@@ -186,9 +186,11 @@ function populateStates(form,selectBox)
 function populateStateName(form,selectBox)
 {
 		var stateNameIndex=document.getElementsByName("stateNames");
-		if(stateNameIndex[selectBox.selectedIndex - 1] != null){
-			var stateName=stateNameIndex[selectBox.selectedIndex - 1].value;
-			document.getElementsByName("stateName")[0].value = stateName;
+		if (selectBox.selectedIndex > 0) {
+			if(stateNameIndex[selectBox.selectedIndex - 1] != null){
+				var stateName=stateNameIndex[selectBox.selectedIndex - 1].value;
+				document.getElementsByName("stateName")[0].value = stateName;
+			}
 		}
 }
 

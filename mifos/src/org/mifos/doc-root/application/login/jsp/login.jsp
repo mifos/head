@@ -55,11 +55,11 @@
 				</tr>
 				<tr>
 					<td width="45%" align="left" valign="top"
-						style="BORDER-RIGHT: #d7deee 1px solid; PADDING-RIGHT: 10px; PADDING-LEFT: 10px; 
+						style="BORDER-RIGHT: #d7deee 1px solid; PADDING-RIGHT: 10px; PADDING-LEFT: 10px;
 					PADDING-BOTTOM: 10px; PADDING-TOP: 10px"><span
 						class="fontnormal"><mifos:mifoslabel name="login.welcome" bundle="LoginUIResources"/> <br>
 					<br>
-					<A href="#">Help</a></span><br>
+					</span><br>
 					</td>
 
 					<td width="55%" align="left" valign="top"

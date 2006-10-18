@@ -34,7 +34,7 @@
 * and how it is applied.
 
 *
-* 
+*
 */
  -->
 
@@ -154,17 +154,17 @@
 										<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
 											<html-el:option value="${loop.index}">${item.masterTypeName}</html-el:option>
 										</c:forEach>
-									</mifos:select> 
+									</mifos:select>
 									<html-el:hidden property="isCustomers" value="" />
 									<html-el:hidden property="masterIds" value="" />
-									<html-el:hidden property="masterNames" value="" /> 
+									<html-el:hidden property="masterNames" value="" />
 									<c:forEach
-									
+
 										var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
 										<html-el:hidden property="isCustomers"
 											value="${item.isCustomer}" />
 										<html-el:hidden property="masterIds"
-											value="${item.masterTypeId}" />	
+											value="${item.masterTypeId}" />
 										<html-el:hidden property="masterNames"
 											value="${item.masterTypeName}" />
 									</c:forEach></td>
@@ -181,7 +181,7 @@
 												</c:forEach>
 									</mifos:select>
 									<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}" varStatus="loop">
-										
+
 										<html-el:hidden property="stateName"
 												value="${item.stateName}" />
 										<html-el:hidden property="stateNames"
@@ -208,7 +208,7 @@
 									<table width="86%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="34%" valign="top"><html-el:textarea
-												property="text" value="" cols="50" rows="5">
+												property="text" cols="50" rows="5">
 											</html-el:textarea></td>
 
 											<td width="66%" valign="top" class="paddingleft05notop"><html-el:button
@@ -236,13 +236,13 @@
 													</c:forEach>
 													<div id="myDiv">
 													</div>
-									
+
 											<br>
 										</tr>
 										<tr valign="top" class="fontnormal">
 											<td colspan="2"><html-el:hidden
-												property="numberOfPreviousItems" value="0" /> 
-												
+												property="numberOfPreviousItems" value="0" />
+
 												<c:forEach var="item"
 													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
 													varStatus="loop">
@@ -255,16 +255,16 @@
 												onclick="RemoveSelected();isButtonRequired() ">
 												<mifos:mifoslabel name="checklist.button_removeselected" />
 											</html-el:button></div>
-											<script>										
-										setNumberOfPreviousItems();	
-										isButtonRequired();									
+											<script>
+										setNumberOfPreviousItems();
+										isButtonRequired();
 									</script></td>
 										</tr>
 									</table>
 									</td>
 								</tr>
 							</table>
-							
+
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>
 									<td align="center" class="blueline">&nbsp;</td>
@@ -285,7 +285,7 @@
 							</table>
 							<br>
 							</td>
-						</tr>  
+						</tr>
 					</table>
 					<br>
 					</td>

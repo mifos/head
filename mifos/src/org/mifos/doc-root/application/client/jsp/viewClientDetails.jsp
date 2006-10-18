@@ -301,12 +301,12 @@
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="69%" align="right" class="fontnormal">
-							<span class="fontnormal"> 
+							<span class="fontnormal">
 								<c:if test="${BusinessKey.customerStatus.id !=1 && BusinessKey.customerStatus.id !=2}">
 									<html-el:link href="custAction.do?method=getClosedAccounts&customerId=${BusinessKey.customerId}&input=client&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
                   						<mifos:mifoslabel name="client.ClosedAccountsLink" bundle="ClientUIResources" />
                   					</html-el:link>
-                  				</c:if> 
+                  				</c:if>
                   			</span>
                   			</td>
 						</tr>
@@ -702,9 +702,9 @@
 						</tr>
 						<tr>
 							<td class="paddingL10"><span class="fontnormal8pt"> <mifos:mifoslabel
-								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel
+								name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel isColonRequired="yes"
 								name="label.loancyclecounter" bundle="CustomerUIResources"></mifos:mifoslabel>
-							-</span></td>
+							</span></td>
 						</tr>
 						<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanCycleCounter')}"
 							var="loanCycle">

@@ -1,39 +1,39 @@
 <!--
- 
+
  * viewsavingstrxnhistory.jsp  version: 1.0
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  -->
 
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
@@ -58,13 +58,13 @@
 
 </SCRIPT>
 	<html-el:form method="post" action="/loanAccountAction.do?method=get" >
-	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td class="bluetablehead05">
 			  <span class="fontnormal8pt">
-	          	<customtags:headerLink/> 
+	          	<customtags:headerLink/>
 	          	<c:choose>
 	          	<c:when test="${param.input == 'LoanDetails'}">
 	          	  <html-el:link action="loanAccountAction.do?globalAccountNum=${param.globalAccountNum}&method=get&randomNUm=${sessionScope.randomNUm}"> /
@@ -86,41 +86,41 @@
 	          	</html-el:link>
 	          	</c:otherwise>
 	          	</c:choose>
-	          </span>               
+	          </span>
           </td>
         </tr>
       </table>
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td align="left" valign="top" class="paddingL15T15" >
-          
+
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="83%" class="headingorange">
                 	<span class="heading">
                 	<c:choose>
 			          	<c:when test="${param.input == 'LoanDetails'}">
-	    	            	<c:out value="${param.prdOfferingName}"></c:out> # <c:out value="${param.globalAccountNum}"></c:out> - 			          	
+	    	            	<c:out value="${param.prdOfferingName}"></c:out> -
 			          	</c:when>
 			          	<c:otherwise>
-	    	            	<c:out value="${BusinessKey.customer.displayName}"></c:out> # <c:out value="${BusinessKey.globalAccountNum}"></c:out> - 
+	    	            	<c:out value="${BusinessKey.customer.displayName}"></c:out> -
 	   	            	</c:otherwise>
 	   	            </c:choose>
-                	</span> 
+                	</span>
                 	<mifos:mifoslabel name="Savings.Transactionhistory"/>
 	            </td>
               </tr>
             </table>
             <br>
-    
+
             <mifoscustom:mifostabletag source="trxnhistoryList" scope="session" xmlFileName="TrxnHistory.xml" moduleName="accounts" passLocale="true"/>
             <br>
-            
+
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="center">
-					
-					
+
+
 					<c:choose>
 					<c:when test="${param.input == 'LoanDetails'}">
 					<html-el:button property="returnToAccountDetailsbutton"
@@ -135,8 +135,8 @@
 						     styleClass="buttn" style="width:165px;">
 								<mifos:mifoslabel name="accounts.backtocharges" />
 						</html-el:button>
-					</c:otherwise>	
-					</c:choose>	
+					</c:otherwise>
+					</c:choose>
 					</td>
 				</tr>
     		</table>
@@ -147,7 +147,7 @@
 </html-el:form>
 
 <html-el:form action="customerAccountAction.do">
-	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}" /> 
+	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
 </html-el:form>
 </tiles:put>
-</tiles:insert>        
+</tiles:insert>
