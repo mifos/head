@@ -23,6 +23,18 @@
     </example>
   </function>
   
+  <function>
+    <description>
+     This takes a Double and gives it correct value
+    </description>
+    <name>getDoubleValue</name>
+    <function-class>org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFn</function-class>
+    <function-signature>java.lang.String getDoubleValue(java.lang.Double)</function-signature>
+    <example>
+      &lt;c:out value="${fn:getDoubleValue(java.lang.Double)}">
+    </example>
+  </function>
+  
    <function>
     <description>
      To get the current date is user format

@@ -191,7 +191,8 @@ public class ChkListActionForm extends BaseActionForm {
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		super.reset(mapping, request);
 		String method = request.getParameter("method");
-		if (method.equals(Methods.preview.toString()) || method.equals(Methods.managePreview.toString())) {
+		if (method.equals(Methods.preview.toString()) || method.equals(Methods.managePreview.toString())
+				|| method.equals("getStates")) {
 			detailsList.clear();
 			detailsList = null;
 			detailsList = new ArrayList<String>();

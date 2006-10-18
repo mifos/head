@@ -194,7 +194,7 @@ public class LoanBO extends AccountBO {
 		this.interestRate = interesRate;
 		setInterestDeductedAtDisbursement(interestDeductedAtDisbursement);
 		setGracePeriodTypeAndDuration(interestDeductedAtDisbursement,
-				gracePeriodDuration);
+				gracePeriodDuration, noOfinstallments);
 		this.gracePeriodPenalty = Short.valueOf("0");
 		this.fund = fund;
 		this.loanMeeting = buildLoanMeeting(customer.getCustomerMeeting()
@@ -940,6 +940,11 @@ public class LoanBO extends AccountBO {
 
 	public void save() throws AccountException {
 		try {
+			this
+					.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(
+							this.getAccountState(), this.getAccountState(),
+							(new PersonnelPersistence())
+									.getPersonnel(userContext.getId()), this));
 			new LoanPersistance().createOrUpdate(this);
 			this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
 			new LoanPersistance().createOrUpdate(this);
@@ -2280,8 +2285,8 @@ public class LoanBO extends AccountBO {
 	}
 
 	private void setGracePeriodTypeAndDuration(
-			boolean interestDeductedAtDisbursement, Short gracePeriodDuration)
-			throws AccountException {
+			boolean interestDeductedAtDisbursement, Short gracePeriodDuration,
+			Short noOfInstallments) throws AccountException {
 		if (interestDeductedAtDisbursement) {
 			this.gracePeriodType = new GracePeriodTypeEntity(
 					GraceTypeConstants.NONE);
@@ -2290,10 +2295,8 @@ public class LoanBO extends AccountBO {
 			if (!loanOffering.getGracePeriodType().getId().equals(
 					GraceTypeConstants.NONE.getValue()))
 				if (gracePeriodDuration == null
-						|| gracePeriodDuration >= loanOffering
-								.getMaxNoInstallments())
-					throw new AccountException(
-							AccountExceptionConstants.CREATEEXCEPTION);
+						|| gracePeriodDuration >= noOfInstallments)
+					throw new AccountException("errors.gracePeriod");
 			this.gracePeriodType = loanOffering.getGracePeriodType();
 			this.gracePeriodDuration = gracePeriodDuration;
 		}

@@ -37,6 +37,7 @@
  */
 package org.mifos.application.productdefinition.struts.action;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -614,12 +615,9 @@ public class LoanPrdAction extends BaseAction {
 				.getMinLoanAmount().getAmountDoubleValue() != 0.0))
 			loanPrdActionForm.setDefaultLoanAmount(getStringValue(loanOffering
 					.getDefaultLoanAmount()));
-		loanPrdActionForm.setMaxInterestRate(getStringValue(loanOffering
-				.getMaxInterestRate()));
-		loanPrdActionForm.setMinInterestRate(getStringValue(loanOffering
-				.getMinInterestRate()));
-		loanPrdActionForm.setDefInterestRate(getStringValue(loanOffering
-				.getDefInterestRate()));
+		loanPrdActionForm.setMaxInterestRate(BigDecimal.valueOf(loanOffering.getMaxInterestRate()).toString());
+		loanPrdActionForm.setMinInterestRate(BigDecimal.valueOf(loanOffering.getMinInterestRate()).toString());
+		loanPrdActionForm.setDefInterestRate(BigDecimal.valueOf(loanOffering.getDefInterestRate()).toString());
 		loanPrdActionForm.setMaxNoInstallments(getStringValue(loanOffering
 				.getMaxNoInstallments()));
 		loanPrdActionForm.setMinNoInstallments(getStringValue(loanOffering

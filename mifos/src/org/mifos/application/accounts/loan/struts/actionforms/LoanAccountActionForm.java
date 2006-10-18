@@ -363,7 +363,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 		while (i >= defaultFees.size()) {
 			defaultFees.add(new FeeView());
 		}
-		return (FeeView) (defaultFees.get(i));
+		return defaultFees.get(i);
 	}
 	
 	public Boolean isInterestDeductedAtDisbursment(){
@@ -386,7 +386,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 	public FeeView getSelectedFee(int index) {
 		while (index >= additionalFees.size())
 			additionalFees.add(new FeeView());
-		return (FeeView) additionalFees.get(index);
+		return additionalFees.get(index);
 	}
 
 	@Override
@@ -470,12 +470,15 @@ public class LoanAccountActionForm extends BaseActionForm {
 		}
 		if (((!isInterestDedAtDisbValue()) && StringUtils
 				.isNullOrEmpty(getGracePeriodDuration()))
-				|| (getGracePeriodDurationValue() != null && getGracePeriodDurationValue() > loanOffering
-						.getMaxNoInstallments()))
+				|| (getDoubleValue(getGracePeriodDuration()) != null
+						&& getDoubleValue(getNoOfInstallments()) != null && getDoubleValue(getGracePeriodDuration()) >= getDoubleValue(getNoOfInstallments()))) {
+			String noInst = StringUtils.isNullOrEmpty(getNoOfInstallments()) ? getStringValue(loanOffering
+					.getMaxNoInstallments())
+					: getNoOfInstallments();
 			addError(errors, LoanConstants.GRACEPERIODDURATION,
 					LoanConstants.GRACEPERIODERROR,
-					LoanConstants.GRACEPERIODDURATION,
-					getStringValue(loanOffering.getMaxNoInstallments()));
+					LoanConstants.GRACEPERIODDURATION, noInst);
+		}
 		validateFees(request, errors);
 
 	}

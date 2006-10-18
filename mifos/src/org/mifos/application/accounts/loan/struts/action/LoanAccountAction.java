@@ -493,17 +493,17 @@ public class LoanAccountAction extends AccountAppAction {
 		}
 	}
 
-	private boolean isMeetingMatched(MeetingBO customerMeeting,
-			MeetingBO loanOfferingMeeting) {
-		return customerMeeting != null
-				&& loanOfferingMeeting != null
-				&& customerMeeting.getMeetingDetails().getRecurrenceType()
+	private boolean isMeetingMatched(MeetingBO meetingToBeMatched,
+			MeetingBO meetingToBeMatchedWith) {
+		return meetingToBeMatched != null
+				&& meetingToBeMatchedWith != null
+				&& meetingToBeMatched.getMeetingDetails().getRecurrenceType()
 						.getRecurrenceId().equals(
-								loanOfferingMeeting.getMeetingDetails()
+								meetingToBeMatchedWith.getMeetingDetails()
 										.getRecurrenceType().getRecurrenceId())
-				&& isMultiple(loanOfferingMeeting.getMeetingDetails()
-						.getRecurAfter(), customerMeeting.getMeetingDetails()
-						.getRecurAfter());
+				&& isMultiple(meetingToBeMatchedWith.getMeetingDetails()
+						.getRecurAfter(), meetingToBeMatched
+						.getMeetingDetails().getRecurAfter());
 	}
 
 	private boolean isMultiple(Short valueToBeChecked,
@@ -566,12 +566,20 @@ public class LoanAccountAction extends AccountAppAction {
 		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
 		List<FeeView> additionalFees = new ArrayList<FeeView>();
 		List<FeeView> defaultFees = new ArrayList<FeeView>();
-		for (FeeBO fee : fees) {
-			FeeView feeView = new FeeView(userContext, fee);
-			if (loanOffering.isFeePresent(fee))
-				defaultFees.add(feeView);
-			else
-				additionalFees.add(feeView);
+		for (Iterator<FeeBO> iter = fees.iterator(); iter.hasNext();) {
+			FeeBO fee = iter.next();
+			if (fee.isPeriodic()
+					&& !isMeetingMatched(fee.getFeeFrequency()
+							.getFeeMeetingFrequency(), loanOffering
+							.getLoanOfferingMeeting().getMeeting())) {
+				iter.remove();
+			} else {
+				FeeView feeView = new FeeView(userContext, fee);
+				if (loanOffering.isFeePresent(fee))
+					defaultFees.add(feeView);
+				else
+					additionalFees.add(feeView);
+			}
 		}
 		actionForm.setDefaultFees(defaultFees);
 		SessionUtils.setAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
@@ -692,7 +700,8 @@ public class LoanAccountAction extends AccountAppAction {
 					upcomingInstallment.getTotalFeeDueWithMiscFeeDue(),
 					upcomingInstallment.getPenaltyDue());
 		}
-		return null;
+		return new ViewInstallmentDetails(new Money(), new Money(),
+				new Money(), new Money());
 	}
 
 	private ViewInstallmentDetails getOverDueInstallmentDetails(

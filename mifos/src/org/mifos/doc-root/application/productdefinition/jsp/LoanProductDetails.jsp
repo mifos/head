@@ -48,6 +48,7 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib uri="/userlocaledate" prefix="userdatefn"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
+<%@taglib uri="/loan/loanfunctions" prefix="userfn"%>
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
@@ -144,10 +145,10 @@
 										<td height="23" class="fontnormalbold">
 											<span class="fontnormal"> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.type"
 													bundle="ProductDefUIResources" />: <c:out value="${loanPrd.interestTypes.name}" /> <br> <mifos:mifoslabel name="product.max" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}"
-													bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.maxInterestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel
+													bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />: <c:out value="${userfn:getDoubleValue(loanPrd.maxInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel
 													name="product.min" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />: <c:out
-													value="${loanPrd.minInterestRate}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-													name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.defInterestRate}" /> <mifos:mifoslabel name="product.perc"
+													value="${userfn:getDoubleValue(loanPrd.minInterestRate)}" /> <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" /><br> <mifos:mifoslabel name="product.default" bundle="ProductDefUIResources" /> <mifos:mifoslabel
+													name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.prdrate" bundle="ProductDefUIResources" />: <c:out value="${userfn:getDoubleValue(loanPrd.defInterestRate)}" /> <mifos:mifoslabel name="product.perc"
 													bundle="ProductDefUIResources" /><br> </span>
 										</td>
 									</tr>

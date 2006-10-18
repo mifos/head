@@ -38,6 +38,7 @@
 
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 import org.mifos.application.meeting.business.MeetingBO;
@@ -63,4 +64,12 @@ public class LoanUIHelperFn {
 	public static String getMeetingRecurrence(Object meeting,	Object userContext) {
 		return  meeting!=null ? new MeetingHelper().getMessageWithFrequency((MeetingBO)meeting, (UserContext)userContext):null;
 	}
+	
+	public static String getDoubleValue(Double value) {
+		if (value != null)
+			return BigDecimal.valueOf(value).toString();
+		else
+			return "0.0";
+	}
+
 }
