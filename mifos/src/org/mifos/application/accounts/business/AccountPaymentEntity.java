@@ -46,6 +46,7 @@ import java.util.Set;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -163,7 +164,7 @@ public class AccountPaymentEntity extends PersistentObject {
 	 * Create reverse entries of all the transactions associated with this
 	 * payment and adds them to the set of transactions associated.
 	 */
-	List<AccountTrxnEntity> reversalAdjustment(String adjustmentComment)
+	List<AccountTrxnEntity> reversalAdjustment(PersonnelBO personnel, String adjustmentComment)
 			throws AccountException {
 		List<AccountTrxnEntity> newlyAddedTrxns = null;
 		this.setAmount(getAmount().subtract(getAmount()));
@@ -183,7 +184,7 @@ public class AccountPaymentEntity extends PersistentObject {
 								"Generating reverse transactions for transaction id "
 										+ accntTrxn.getAccountTrxnId());
 				AccountTrxnEntity reverseAccntTrxn = accntTrxn
-						.generateReverseTrxn(adjustmentComment);
+						.generateReverseTrxn(personnel, adjustmentComment);
 				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 						.debug(
 								"Amount associated with reverse transaction is "

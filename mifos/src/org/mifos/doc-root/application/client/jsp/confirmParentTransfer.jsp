@@ -92,8 +92,8 @@
 								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
 								name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel> <mifos:mifoslabel
 								name="client.EditGroupInstructions3" bundle="ClientUIResources"></mifos:mifoslabel>
-							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
-
+							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel><br>
+							<mifos:mifoslabel name="meeting.msgUpdateMeeting" bundle="MeetingResources"/>
 							</td>
 
 						</tr>

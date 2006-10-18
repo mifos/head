@@ -308,7 +308,7 @@ public class AccountBO extends BusinessObject {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"Adjustment is possible hence attempting to adjust.");
 			List<AccountTrxnEntity> reversedTrxns = getLastPmnt()
-					.reversalAdjustment(adjustmentComment);
+					.reversalAdjustment(getLoggedInUser(), adjustmentComment);
 			updateInstallmentAfterAdjustment(reversedTrxns);
 			buildFinancialEntries(new HashSet(reversedTrxns));
 			updatePerformanceHistoryOnAdjustment(reversedTrxns.size());
@@ -1091,7 +1091,7 @@ public class AccountBO extends BusinessObject {
 	protected List<AccountTrxnEntity> reversalAdjustment(
 			String adjustmentComment, AccountPaymentEntity lastPayment)
 			throws AccountException {
-		return lastPayment.reversalAdjustment(adjustmentComment);
+		return lastPayment.reversalAdjustment(getLoggedInUser(), adjustmentComment);
 
 	}
 	
@@ -1195,6 +1195,15 @@ public class AccountBO extends BusinessObject {
 		}
 		this.addAccountFlag(accountStateFlagEntity);
 	}
+
+	
+	private PersonnelBO getLoggedInUser()throws AccountException{
+		try{
+			return new PersonnelPersistence().getPersonnel(getUserContext().getId());
+		}catch(PersistenceException pe){
+			throw new AccountException(pe);
+		}
+	}
 	
 	protected void updateCustomFields(List<CustomFieldView> customFields) {
 		if (customFields != null) {
@@ -1221,6 +1230,5 @@ public class AccountBO extends BusinessObject {
 			}
 		}
 	}
-
 
 }

@@ -4093,7 +4093,7 @@ public class TestLoanBO extends MifosTestCase {
 		loan = (LoanBO) accountBO;
 		assertEquals(Integer.valueOf("0"), loan.getPerformanceHistory()
 				.getTotalNoOfMissedPayments());
-		assertEquals(Integer.valueOf("0"), loan.getPerformanceHistory()
+		assertEquals(Short.valueOf("0"), loan.getPerformanceHistory()
 				.getDaysInArrears());
 		assertEquals(Integer.valueOf("0"), loan.getPerformanceHistory()
 				.getNoOfPayments());

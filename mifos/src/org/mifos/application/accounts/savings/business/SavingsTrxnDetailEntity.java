@@ -118,7 +118,7 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 	}
 
 	@Override
-	protected AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
+	protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment)
 			throws AccountException {
 		try {
 			MasterPersistence masterPersistence = new MasterPersistence();
@@ -134,7 +134,7 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 										AccountActionEntity.class,
 										AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
 						getDepositAmount().negate(), balAfterAdjust,
-						getPersonnel(), getCustomer(), getDueDate(),
+						loggedInUser, getCustomer(), getDueDate(),
 						getActionDate(), adjustmentComment, this);
 			} else if (getAccountActionEntity().getId().equals(
 					AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
@@ -146,7 +146,7 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 										AccountActionEntity.class,
 										AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
 						getWithdrawlAmount().negate(), balAfterAdjust,
-						getPersonnel(), getCustomer(), getDueDate(),
+						loggedInUser, getCustomer(), getDueDate(),
 						getActionDate(), adjustmentComment, this);
 
 			} else {

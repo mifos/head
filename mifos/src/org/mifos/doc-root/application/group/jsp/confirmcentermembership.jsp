@@ -76,15 +76,15 @@
         	            <mifos:mifoslabel name="Group.change" bundle="GroupUIResources"></mifos:mifoslabel>
         	            <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" ></mifos:mifoslabel>
         	            <mifos:mifoslabel name="Group.membership" bundle="GroupUIResources"></mifos:mifoslabel>
-        	            <br>
+        	            <br><br>
                     <span class="fontnormal">
                             <mifos:mifoslabel name="Group.confirmcenterMsg1" bundle="GroupUIResources"></mifos:mifoslabel>
                             <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" ></mifos:mifoslabel>
                             <mifos:mifoslabel name="Group.confirmcenterMsg2" bundle="GroupUIResources"></mifos:mifoslabel>
                             <mifos:mifoslabel name="${ConfigurationConstants.GROUP}" ></mifos:mifoslabel>
                             <mifos:mifoslabel name="Group.confirmcenterMsg3" bundle="GroupUIResources"></mifos:mifoslabel>
-                            <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" ></mifos:mifoslabel>
-                    
+                            <mifos:mifoslabel name="${ConfigurationConstants.CENTER}" ></mifos:mifoslabel><br>
+		                    <mifos:mifoslabel name="meeting.msgUpdateMeeting" bundle="MeetingResources"/>
                     </span></td>
                 </tr>
               </table>

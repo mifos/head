@@ -14,6 +14,8 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -108,10 +110,11 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		customerAccountBO= (CustomerAccountBO)TestObjectFactory.getObject(CustomerAccountBO.class,customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer();
-		
+		PersonnelBO loggedInUser = new PersonnelPersistence().getPersonnel(userContext.getId());
 		for(AccountTrxnEntity accntTrxn : customerAccountBO.getLastPmnt().getAccountTrxns()){
-			AccountTrxnEntity reverseAccntTrxn = ((CustomerTrxnDetailEntity)accntTrxn).generateReverseTrxn("adjustment");
+			AccountTrxnEntity reverseAccntTrxn = ((CustomerTrxnDetailEntity)accntTrxn).generateReverseTrxn(loggedInUser, "adjustment");
 			assertEquals(reverseAccntTrxn.getAmount(),accntTrxn.getAmount().negate());
+			assertEquals(loggedInUser.getPersonnelId(), reverseAccntTrxn.getPersonnel().getPersonnelId());
 		}
 		
 	}

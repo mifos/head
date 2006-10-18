@@ -1414,9 +1414,11 @@ public class TestSavingsBO extends MifosTestCase {
 						.size();
 				if (accountTrxn.getAccountActionEntity().getId().equals(
 						AccountConstants.ACTION_SAVINGS_ADJUSTMENT))
+					assertEquals(userContext.getId(), accountTrxn.getPersonnel().getPersonnelId());
 					for (FinancialTransactionBO finTrxn : accountTrxn
 							.getFinancialTransactions()) {
 						assertEquals("correction entry", finTrxn.getNotes());
+						assertEquals(userContext.getId(), finTrxn.getPostedBy().getPersonnelId());
 					}
 			}
 			assertEquals(Integer.valueOf(6).intValue(), countFinancialTrxns);

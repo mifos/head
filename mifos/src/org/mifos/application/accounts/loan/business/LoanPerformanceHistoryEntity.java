@@ -1,8 +1,6 @@
 package org.mifos.application.accounts.loan.business;
 
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -52,29 +50,8 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 		this.noOfPayments = noOfPayments;
 	}
 	
-	public Integer getDaysInArrears() {
-		if (loan.getAccountState().getId().equals(
-				AccountStates.LOANACC_ACTIVEINGOODSTANDING)
-				|| loan.getAccountState().getId().equals(
-						AccountStates.LOANACC_OBLIGATIONSMET)
-				|| loan.getAccountState().getId().equals(
-						AccountStates.LOANACC_WRITTENOFF)
-				|| loan.getAccountState().getId().equals(
-						AccountStates.LOANACC_RESCHEDULED)
-				|| loan.getAccountState().getId().equals(
-						AccountStates.LOANACC_BADSTANDING)) {
-			if (!loan.getDetailsOfInstallmentsInArrears().isEmpty()) {
-				AccountActionDateEntity accountActionDateEntity = loan.getDetailsOfInstallmentsInArrears()
-						.get(loan.getDetailsOfInstallmentsInArrears().size() - 1);
-				Calendar actionDate = new GregorianCalendar();
-				actionDate.setTime(accountActionDateEntity.getActionDate());
-				long diffInTermsOfDay = (Calendar.getInstance()
-						.getTimeInMillis() - actionDate.getTimeInMillis())
-						/ (24 * 60 * 60 * 1000);
-				return Integer.valueOf(new Long(diffInTermsOfDay).toString());
-			}
-		}
-		return 0;
+	public Short getDaysInArrears() {
+		return loan.getDaysInArrears();
 	}
 	
 	public Integer getTotalNoOfMissedPayments() {

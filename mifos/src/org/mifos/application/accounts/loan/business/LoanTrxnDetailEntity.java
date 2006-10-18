@@ -165,7 +165,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 	}
 
 	@Override
-	protected AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
+	protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment)
 			throws AccountException {
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
@@ -183,7 +183,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 					(AccountActionEntity) new MasterPersistence()
 							.getPersistentObject(AccountActionEntity.class,
 									AccountConstants.ACTION_LOAN_ADJUSTMENT),
-					getInstallmentId(), getDueDate(), getPersonnel(),
+					getInstallmentId(), getDueDate(), loggedInUser,
 					getActionDate(), getAmount().negate(), comment, this,
 					getPrincipalAmount().negate(),
 					getInterestAmount().negate(), getPenaltyAmount().negate(),

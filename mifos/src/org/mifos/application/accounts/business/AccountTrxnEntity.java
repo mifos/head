@@ -41,9 +41,7 @@ package org.mifos.application.accounts.business;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
@@ -194,6 +192,6 @@ public abstract class AccountTrxnEntity extends PersistentObject {
 	}
 
 	protected abstract AccountTrxnEntity generateReverseTrxn(
-			String adjustmentComment) throws AccountException;
+			PersonnelBO personnel, String adjustmentComment) throws AccountException;
 
 }

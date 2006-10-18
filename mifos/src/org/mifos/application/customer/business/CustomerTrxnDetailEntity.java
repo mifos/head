@@ -117,7 +117,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 	}
 
 	@Override
-	protected AccountTrxnEntity generateReverseTrxn(String adjustmentComment)
+	protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment)
 			throws AccountException {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		MifosLogManager
@@ -137,7 +137,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 					(AccountActionEntity) masterPersistence
 							.getPersistentObject(AccountActionEntity.class,
 									AccountConstants.ACTION_CUSTOMER_ADJUSTMENT),
-					getInstallmentId(), getDueDate(), getPersonnel(),
+					getInstallmentId(), getDueDate(), loggedInUser,
 					getActionDate(), getAmount().negate(), comment, this,
 					getMiscFeeAmount().negate(), getMiscPenaltyAmount()
 							.negate());

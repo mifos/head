@@ -15,6 +15,8 @@ import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -53,13 +55,13 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 	
 	public static List<AccountTrxnEntity> reversalAdjustment(
 			String adjustmentComment, AccountPaymentEntity lastPayment)
-			throws AccountException {
-		return lastPayment.reversalAdjustment(adjustmentComment);
+			throws Exception {
+		return lastPayment.reversalAdjustment(new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext().getId()),adjustmentComment);
 
 	}
 	
 	public void testReversalAdjustment() throws Exception {
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestObjectFactory.getContext();
 		createInitialObjects();
 		accountBO=client.getCustomerAccount();
 		Date currentDate = new Date(System.currentTimeMillis());
@@ -105,12 +107,14 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		customerAccountBO= (CustomerAccountBO)TestObjectFactory.getObject(CustomerAccountBO.class,customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer(); 
 		
-		List<AccountTrxnEntity> reversedTrxns = customerAccountBO.getLastPmnt().reversalAdjustment("adjustment");
+		PersonnelBO loggedInUser = new PersonnelPersistence().getPersonnel(userContext.getId());
+		List<AccountTrxnEntity> reversedTrxns = customerAccountBO.getLastPmnt().reversalAdjustment(loggedInUser, "adjustment");
 		for (AccountTrxnEntity accntTrxn : reversedTrxns) {
 			CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity)accntTrxn;
 			CustomerScheduleEntity accntActionDate =(CustomerScheduleEntity) customerAccountBO.getAccountActionDate(custTrxn.getInstallmentId());
 			assertEquals(custTrxn.getMiscFeeAmount().getAmountDoubleValue(),accntActionDate.getMiscFeePaid().negate().getAmountDoubleValue());
 			assertEquals(custTrxn.getMiscPenaltyAmount().getAmountDoubleValue(),accntActionDate.getMiscPenaltyPaid().negate().getAmountDoubleValue());
+			assertEquals(loggedInUser.getPersonnelId(), custTrxn.getPersonnel().getPersonnelId());
 		}
 		
 	}
