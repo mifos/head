@@ -1124,7 +1124,7 @@ public class AccountBO extends BusinessObject {
 		transactionHistory.setAccountingEnteries(accountTrxn
 				.getAccountPayment().getPaymentId(), String
 				.valueOf(removeSign(accountTrxn.getAmount())), accountTrxn
-				.getCustomer().getDisplayName(), getUserContext().getName());
+				.getCustomer().getDisplayName(), accountTrxn.getPersonnel().getDisplayName());
 	}
 
 	private AccountCustomFieldEntity getAccountCustomField(Short fieldId) {

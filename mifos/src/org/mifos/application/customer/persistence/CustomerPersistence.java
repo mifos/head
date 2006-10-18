@@ -310,7 +310,7 @@ public class CustomerPersistence extends Persistence {
 				Configuration.getInstance().getCustomerConfig(
 						personnel.getOffice().getOfficeId())
 						.canGroupApplyForLoan() == true ? new Boolean(true)
-						: new Boolean(true)));
+						: new Boolean(false)));
 
 		String[] aliasNames = { "clientName", "clientId", "groupName",
 				"centerName", "officeName", "globelNo" };

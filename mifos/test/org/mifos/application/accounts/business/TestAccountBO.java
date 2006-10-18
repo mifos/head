@@ -307,7 +307,37 @@ public class TestAccountBO extends TestAccount {
 		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());
 	}
-
+	public void testGetTransactionHistoryViewByOtherUser() throws Exception {
+		Date currentDate = new Date(System.currentTimeMillis());
+		LoanBO loan = (LoanBO) accountBO;
+		loan.setUserContext(TestObjectFactory.getUserContext());
+		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+		accntActionDates.addAll(loan.getAccountActionDates());
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(Short.valueOf("2"));
+		PaymentData accountPaymentDataView = TestObjectFactory
+				.getLoanAccountPaymentData(accntActionDates, TestObjectFactory
+						.getMoneyForMFICurrency(100), null,
+						personnel, "receiptNum", Short.valueOf("1"),
+						currentDate, currentDate);
+		loan.applyPayment(accountPaymentDataView);
+		TestObjectFactory.flushandCloseSession();
+		loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+				.getAccountId());
+		loan.setUserContext(TestObjectFactory.getUserContext());
+		List<TransactionHistoryView> trxnHistlist = loan
+				.getTransactionHistoryView();
+		assertNotNull("Account TrxnHistoryView list object should not be null",
+				trxnHistlist);
+		assertTrue(
+				"Account TrxnHistoryView list object Size should be greater than zero",
+				trxnHistlist.size() > 0);
+		for (TransactionHistoryView transactionHistoryView : trxnHistlist) {
+			assertEquals(transactionHistoryView.getPostedBy(),personnel.getDisplayName());
+		}
+		TestObjectFactory.flushandCloseSession();
+		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+				.getAccountId());
+	}
 	public void testGetPeriodicFeeList() throws PersistenceException {
 		FeeBO oneTimeFee = TestObjectFactory.createOneTimeAmountFee(
 				"One Time Fee", FeeCategory.LOAN, "20",
