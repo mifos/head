@@ -15,6 +15,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeCustomFieldEntity;
+import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.struts.actionforms.OffActionForm;
@@ -29,6 +30,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -220,6 +222,9 @@ public class OffAction extends BaseAction {
 		office.update(offActionForm.getOfficeName(), offActionForm
 				.getShortName(), newStatus, newlevel, parentOffice,
 				offActionForm.getAddress(), offActionForm.getCustomFields());
+		if (parentOffice!=null&&! sessionOffice.getParentOffice().getOfficeId().equals(parentOffice.getOfficeId()))
+			HierarchyManager.getInstance().init();
+		
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
@@ -271,10 +276,23 @@ public class OffAction extends BaseAction {
 			form.setOfficeLevel(officeLevel);
 			OfficeLevel Level = OfficeLevel.getOfficeLevel(Short
 					.valueOf(officeLevel));
-			SessionUtils.setAttribute(OfficeConstants.PARENTS,
-					((OfficeBusinessService) getService()).getActiveParents(
-							Level, getUserContext(request).getLocaleId()),
-					request);
+
+			List<OfficeView> parents = ((OfficeBusinessService) getService())
+					.getActiveParents(Level, getUserContext(request)
+							.getLocaleId());
+			OfficeBO office = (OfficeBO) SessionUtils.getAttribute(
+					Constants.BUSINESS_KEY, request);
+
+			if (form.getInput()!=null&&form.getInput().equals("edit") && office != null)
+				
+				for (int i = 0; i < parents.size(); i++) {
+					OfficeView view = parents.get(i);
+					if (view.getOfficeId().equals(office.getOfficeId())) {
+						parents.remove(view);
+					}
+				}
+			SessionUtils
+					.setAttribute(OfficeConstants.PARENTS, parents, request);
 		}
 	}
 
@@ -313,16 +331,14 @@ public class OffAction extends BaseAction {
 				customFieldDefs, request);
 	}
 
-	private void loadofficeLevels(HttpServletRequest request)
-			throws Exception {
+	private void loadofficeLevels(HttpServletRequest request) throws Exception {
 		SessionUtils.setAttribute(OfficeConstants.OFFICELEVELLIST,
 				((OfficeBusinessService) getService())
 						.getConfiguredLevels(getUserContext(request)
 								.getLocaleId()), request);
 	}
 
-	private void loadOfficeStatus(HttpServletRequest request)
-			throws Exception {
+	private void loadOfficeStatus(HttpServletRequest request) throws Exception {
 		SessionUtils.setAttribute(OfficeConstants.OFFICESTATUSLIST,
 				((OfficeBusinessService) getService())
 						.getStatusList(getUserContext(request).getLocaleId()),

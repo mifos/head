@@ -565,6 +565,10 @@ public interface NamedQueryConstants {
 	public String ACCOUNT_LIST_ID_SEARCH="accounts.account_list_IdSearch";
 	public String PERSONNEL_SEARCH_COUNT="count_search_Personnel";
 	public String PERSONNEL_SEARCH="search_Personnel";
+	
+	public String PERSONNEL_SEARCH_COUNT_FIRST_NAME_AND_LAST_NAME="count_search_Personnel_first_and_last_name";
+	public String PERSONNEL_SEARCH_FIRST_NAME_AND_LAST_NAME="search_Personnel_first_and_last_name";
+	
 	public String CENTER_SEARCH="search_Centers";
 	public String CENTER_SEARCH_COUNT="count_search_Centers";
 	public String GROUP_SEARCHWITH_CENTER="group_SearchWithCenter";

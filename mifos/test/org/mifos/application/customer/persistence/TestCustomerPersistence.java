@@ -68,7 +68,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 	private CustomerBO center;
 
 	private CustomerBO client;
-
+	
+	private CustomerBO group2;
 	private CustomerBO group;
 
 	private AccountBO account;
@@ -101,6 +102,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.cleanUp(clientAccount);
 		TestObjectFactory.cleanUp(account);
 		TestObjectFactory.cleanUp(client);
+		TestObjectFactory.cleanUp(group2);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
 		HibernateUtil.closeSession();
@@ -1113,6 +1115,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("center",meeting,Short.valueOf("1"),Short.valueOf("1"));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
+				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group2 = TestObjectFactory.createGroup("Group33", Short.valueOf("11"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
 		List<CustomerBO>  customers = new CustomerPersistence().getGroupsUnderUser(personnel);

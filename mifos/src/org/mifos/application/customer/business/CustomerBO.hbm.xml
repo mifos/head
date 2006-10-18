@@ -646,7 +646,7 @@
 	        	   <![CDATA[from  org.mifos.application.customer.business.CustomerBO customer 
 	        	   where customer.personnel.personnelId=:personnelId and 
 	        	   	customer.office.officeId=:officeId and customer.customerLevel.id=:customerLevelId 
-	        	   	and (customer.customerStatus.id=:GROUPACTIVE or customer.customerStatus.id=:GROUPONHOLD)]]>
+	        	   	and customer.customerStatus.id in (7,8,9,10)]]>
         </query>
 		  <query name="numberOfMeetingsAttended">
 		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (1,4) and customerAttendance.id in (select max(custAttendance.id) from org.mifos.application.customer.client.business.ClientAttendanceBO custAttendance where custAttendance.customer.customerId=:CUSTOMERID group by custAttendance.meetingDate )]]>

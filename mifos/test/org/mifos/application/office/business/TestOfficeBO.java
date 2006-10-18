@@ -518,11 +518,43 @@ public class TestOfficeBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(areaOffice);
 		TestObjectFactory.cleanUp(regionalOffice);
 		resetOffices();
-		// this may have updated the existing office searchId's so reset them
-		// beak
 
 	}
+	public void testUpdateParentFailure() throws Exception {
+		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO regionalOffice = TestObjectFactory.createOffice(
+				OfficeLevel.REGIONALOFFICE, parent, "abcd", "abcd");
+		// createChild also
+		OfficeBO areaOffice = TestObjectFactory.createOffice(
+				OfficeLevel.AREAOFFICE, regionalOffice, "2", "2");
+		OfficeBO branchOffice = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, areaOffice, "3", "3");
+		HibernateUtil.commitTransaction();
+		TestObjectFactory.flushandCloseSession();
+		branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
+		areaOffice = TestObjectFactory.getOffice(areaOffice.getOfficeId());
+		areaOffice.setUserContext(userContext);
+		try{
+		areaOffice.update("2", "2", areaOffice.getOfficeStatus(), areaOffice
+				.getOfficeLevel(), branchOffice, null, null);
+		
+		fail();
+		}
+		catch (OfficeException e) {
+			assertTrue(true);
+		}
+		regionalOffice = TestObjectFactory.getOffice(regionalOffice
+				.getOfficeId());
+		TestObjectFactory.cleanUp(branchOffice);
+		TestObjectFactory.cleanUp(areaOffice);
+		TestObjectFactory.cleanUp(regionalOffice);
+		resetOffices();
 
+	}
+	
+	
+	
+	
 	public void testUpdateParentFromHoToArea() throws Exception {
 		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
 		OfficeBO regionalOffice = TestObjectFactory.createOffice(

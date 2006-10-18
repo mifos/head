@@ -425,9 +425,9 @@ public class OfficeBO extends BusinessObject {
 		changeOfficeName(newName);
 		changeOfficeShortName(newShortName);
 		changeStatus(newStatus);
+		updateLevel(newLevel);
 		if(! this.getOfficeLevel().equals(OfficeLevel.HEADOFFICE))
 			updateParent(newParent);
-		updateLevel(newLevel);
 		updateAddress(address);
 		updateCustomFields(customFileds);
 		setUpdateDetails();
@@ -473,6 +473,9 @@ public class OfficeBO extends BusinessObject {
 				if (!this.getParentOffice().getOfficeId().equals(
 						newParent.getOfficeId())) {
 					OfficeBO oldParent = this.getParentOffice();
+					
+					if( this.getOfficeLevel().getValue().shortValue()<newParent.getOfficeLevel().getValue().shortValue())
+						throw new OfficeException(OfficeConstants.ERROR_INVLID_PARENT);
 					OfficeBO oldParent1 = getIfChildPresent(newParent,
 							oldParent);
 					if (oldParent1 == null)

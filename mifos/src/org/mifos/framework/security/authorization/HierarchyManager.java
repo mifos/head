@@ -150,6 +150,7 @@ public class HierarchyManager implements Observer {
 		} catch (PersistenceException e) {
 			throw new OfficeException(e);
 		}
+		hierarchyMap.clear();
 		for (int i = 0; i < officeList.size(); i++)
 			addToMap(officeList.get(i));
 	}

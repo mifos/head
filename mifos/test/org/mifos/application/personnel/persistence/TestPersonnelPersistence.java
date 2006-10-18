@@ -207,6 +207,14 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		assertEquals(1,queryResult.getSize());
 		assertEquals(1,queryResult.get(0,10).size());
 	}
+	public  void testSearchFirstNameAndLastName()throws Exception{
+		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		personnel = createPersonnelWithName(branchOffice, PersonnelLevel.LOAN_OFFICER,new Name("Rajender",null,"singh","saini"));
+		QueryResult queryResult = persistence.search(personnel.getPersonnelDetails().getName().getFirstName()+" "+personnel.getPersonnelDetails().getName().getLastName(),Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1,queryResult.getSize());
+		assertEquals(1,queryResult.get(0,10).size());
+	}	
 	public void  testGetActiveLoUnderUser()throws Exception{
 		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
 		personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
@@ -240,6 +248,14 @@ public class TestPersonnelPersistence extends MifosTestCase {
 			PersonnelLevel personnelLevel) throws Exception {
 		UserContext userContext = TestObjectFactory.getUserContext();
 		name = new Name("XYZ", null, null, null);
+		return create(personnelLevel,name,userContext.getId(), office);
+	}
+	private PersonnelBO createPersonnelWithName(OfficeBO office,
+			PersonnelLevel personnelLevel,Name personnelName) throws Exception {
+		UserContext userContext = TestObjectFactory.getUserContext();
+		return create(personnelLevel,personnelName,userContext.getId(),office);
+	}
+  private 	PersonnelBO create(PersonnelLevel personnelLevel,Name name,Short createdBy,OfficeBO office)throws Exception{
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				Short.valueOf("1")));
@@ -250,15 +266,15 @@ public class TestPersonnelPersistence extends MifosTestCase {
 				.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
 				"xyz@yahoo.com", null, customFieldView, name, "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				address, userContext.getId());
+				address, createdBy);
 		personnel.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
 		return personnel;
-	}
-
+  }
+	
 	private void createCustomers(Short centerStatus, CustomerStatus groupStatus, Short clientStatus){
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", centerStatus, "1.4", meeting, new Date(System.currentTimeMillis()));

@@ -184,39 +184,59 @@ public class PersonnelPersistence extends Persistence {
 
 	public QueryResult search(String searchString, Short userId) throws PersistenceException {
 		String[] namedQuery = new String[2];
+		List<Param> paramList =getParamList(new PersonnelPersistence().getPersonnel(userId));
+		
+		if( searchString.contains(" "))
+		{
+			namedQuery[0] = NamedQueryConstants.PERSONNEL_SEARCH_COUNT_FIRST_NAME_AND_LAST_NAME;
+			namedQuery[1] = NamedQueryConstants.PERSONNEL_SEARCH_FIRST_NAME_AND_LAST_NAME;
+			paramList.add(typeNameValue("String", "USER_NAME1", searchString.split(" ")[0]));
+			paramList.add(typeNameValue("String", "USER_NAME2", searchString.split(" ")[1]));
+		}
+		else{
+			namedQuery[0] = NamedQueryConstants.PERSONNEL_SEARCH_COUNT;
+			namedQuery[1] = NamedQueryConstants.PERSONNEL_SEARCH;
+			paramList.add(typeNameValue("String", "USER_NAME", searchString + "%"));
+		}
+		return getQueryResults(paramList,namedQuery);
+	}
+	
+	private List<Param> getParamList(PersonnelBO personnel){
 		List<Param> paramList = new ArrayList<Param>();
-		QueryInputs queryInputs = new QueryInputs();
-		QueryResult queryResult = QueryFactory
-				.getQueryResult(PersonnelConstants.USER_LIST);
-		
-		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
-		
-		String officeSearchId = personnel.getOffice().getSearchId();
-		namedQuery[0] = NamedQueryConstants.PERSONNEL_SEARCH_COUNT;
-		namedQuery[1] = NamedQueryConstants.PERSONNEL_SEARCH;
-		paramList.add(typeNameValue("String", "USER_NAME", searchString + "%"));
-		paramList.add(typeNameValue("String", "SEARCH_ID", officeSearchId));
-		paramList.add(typeNameValue("String", "SEARCH_ALL", officeSearchId
+		paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
+		paramList.add(typeNameValue("String", "SEARCH_ALL", personnel.getOffice().getSearchId()
 				+ ".%"));
-		paramList.add(typeNameValue("Short", "USERID", userId));
+		paramList.add(typeNameValue("Short", "USERID", personnel.getPersonnelId()));
 		paramList.add(typeNameValue("Short", "LOID",
 				PersonnelLevel.LOAN_OFFICER.getValue()));
 		paramList.add(typeNameValue("Short", "USERLEVEL_ID",personnel.getLevel().getId()));
+		
+		return paramList;
+
+	}
+	private QueryResult getQueryResults(List<Param> paramList,String[] namedQuery) throws PersistenceException{
+		
+		QueryResult queryResult = QueryFactory
+		.getQueryResult(PersonnelConstants.USER_LIST);
+		QueryInputs queryInputs = new QueryInputs();
+		queryInputs.setQueryStrings(namedQuery);
+		queryInputs.setParamList(paramList);
+		queryInputs
+		.setPath("org.mifos.application.personnel.util.helpers.UserSearchResultsView");
+			queryInputs.setAliasNames(getAliasNames());
+			try {
+				queryResult.setQueryInputs(queryInputs);
+			} catch (HibernateSearchException e) {
+				throw new PersistenceException(e);
+			}
+			return queryResult;
+	}
+	private String[] getAliasNames(){
 		String[] aliasNames = { "officeId", "officeName", "personnelId",
 				"globalPersonnelNum", "personnelName" };
-		queryInputs.setQueryStrings(namedQuery);
-		queryInputs
-				.setPath("org.mifos.application.personnel.util.helpers.UserSearchResultsView");
-		queryInputs.setAliasNames(aliasNames);
-		queryInputs.setParamList(paramList);
-		try {
-			queryResult.setQueryInputs(queryInputs);
-		} catch (HibernateSearchException e) {
-			throw new PersistenceException(e);
-		}
-		return queryResult;
+		return aliasNames;
+
 	}
-	
 	public List<PersonnelBO> getActiveLoUnderUser(Short officeId)throws PersistenceException{
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(CustomerSearchConstants.OFFICEID, officeId);

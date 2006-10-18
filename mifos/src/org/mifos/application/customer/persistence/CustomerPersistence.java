@@ -949,10 +949,6 @@ public class CustomerPersistence extends Persistence {
 				.getOffice().getOfficeId());
 		queryParameters.put(CustomerSearchConstants.CUSTOMERLEVELID,
 				CustomerLevel.GROUP.getValue());
-		queryParameters.put(CustomerSearchConstants.GROUP_ACTIVE,
-				CustomerStatus.GROUP_ACTIVE.getValue());
-		queryParameters.put(CustomerSearchConstants.GROUP_ONHOLD,
-				CustomerStatus.GROUP_HOLD);
 		return executeNamedQuery(
 				NamedQueryConstants.SEARCH_GROUPS_FOR_LOAN_OFFICER,
 				queryParameters);

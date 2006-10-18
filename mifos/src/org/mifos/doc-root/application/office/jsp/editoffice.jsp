@@ -23,7 +23,7 @@ function goToCancelPage(){
   {
 
 		document.offActionForm.method.value="loadParent";
-		document.offActionForm.method.value="edit";
+		document.offActionForm.input.value="edit";
 		offActionForm.submit();
   }
    function submitViewOfficesLink(){
@@ -335,6 +335,7 @@ function getOffice(officeid){
 			</table>
 			<br>
 			<br>
+			<html-el:hidden property="input" value="edit" />
 			<html-el:hidden property="method" value="editpreview" />
 			<html-el:hidden property="officeId" value="${BusinessKey.officeId}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
