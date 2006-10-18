@@ -77,7 +77,6 @@ public abstract class Persistence {
 			setParametersInQuery(query, queryName, queryParameters);
 			return query.list();
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistenceException(e);
 		}
 	}
@@ -144,8 +143,8 @@ public abstract class Persistence {
 			throws PersistenceException {
 		try {
 			return HibernateUtil.getSessionTL().get(clazz, persistentObjectId);
-		} catch (Exception he) {
-			throw new PersistenceException(he);
+		} catch (Exception e) {
+			throw new PersistenceException(e);
 		}
 	}
 
