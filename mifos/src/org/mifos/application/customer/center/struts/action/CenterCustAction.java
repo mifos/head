@@ -78,6 +78,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -89,7 +90,7 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CenterCustAction extends CustAction {
 	@Override
-	protected BusinessService getService(){
+	protected BusinessService getService() {
 		return getCenterBusinessService();
 	}
 
@@ -98,7 +99,7 @@ public class CenterCustAction extends CustAction {
 		return true;
 	}
 
-	private CenterBusinessService getCenterBusinessService(){
+	private CenterBusinessService getCenterBusinessService() {
 		return (CenterBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Center);
 	}
@@ -117,9 +118,11 @@ public class CenterCustAction extends CustAction {
 			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
 		doCleanUp(actionForm, request);
-		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING,
+				request);
 		loadCreateMasterData(actionForm, request);
-		actionForm.setMfiJoiningDate(DateHelper.getCurrentDate(getUserContext(request).getPereferedLocale()));
+		actionForm.setMfiJoiningDate(DateHelper.getCurrentDate(getUserContext(
+				request).getPereferedLocale()));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -154,7 +157,8 @@ public class CenterCustAction extends CustAction {
 				CustomerConstants.CUSTOMER_MEETING, request);
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		UserContext userContext = getUserContext(request);
-		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
+		convertCustomFieldDateToUniformPattern(customFields, userContext
+				.getPereferedLocale());
 
 		CenterBO center = new CenterBO(userContext,
 				actionForm.getDisplayName(), actionForm.getAddress(),
@@ -177,21 +181,21 @@ public class CenterCustAction extends CustAction {
 		clearActionForm((CenterCustActionForm) form);
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		CenterBO centerBO = getCenterBusinessService().getCenter(center.getCustomerId());
+		CenterBO centerBO = getCenterBusinessService().getCenter(
+				center.getCustomerId());
 		center = null;
 
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY,centerBO
-				, request);
-		loadUpdateMasterData(request , centerBO);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, centerBO, request);
+		loadUpdateMasterData(request, centerBO);
 		setValuesInActionForm((CenterCustActionForm) form, request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
 	private void setValuesInActionForm(CenterCustActionForm actionForm,
-			HttpServletRequest request) throws Exception{
+			HttpServletRequest request) throws Exception {
 		CenterBO center = (CenterBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		if(center.getPersonnel()!=null)
+		if (center.getPersonnel() != null)
 			actionForm.setLoanOfficerId(center.getPersonnel().getPersonnelId()
 					.toString());
 		else
@@ -237,14 +241,18 @@ public class CenterCustAction extends CustAction {
 				Constants.BUSINESS_KEY, request);
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
 		Date mfiJoiningDate = null;
-		if(actionForm.getMfiJoiningDate()!=null)
-			mfiJoiningDate = getDateFromString(actionForm.getMfiJoiningDate(), getUserContext(request)
-				.getPereferedLocale());
-		CenterBO centerBO = ((CenterBusinessService)getService()).findBySystemId(center.getGlobalCustNum());
+		if (actionForm.getMfiJoiningDate() != null)
+			mfiJoiningDate = getDateFromString(actionForm.getMfiJoiningDate(),
+					getUserContext(request).getPereferedLocale());
+		CenterBO centerBO = ((CenterBusinessService) getService())
+				.findBySystemId(center.getGlobalCustNum());
 		centerBO.setVersionNo(center.getVersionNo());
 		centerBO.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(centerBO);
-		centerBO.update(getUserContext(request), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), mfiJoiningDate, actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
+		centerBO.update(getUserContext(request), actionForm
+				.getLoanOfficerIdValue(), actionForm.getExternalId(),
+				mfiJoiningDate, actionForm.getAddress(), actionForm
+						.getCustomFields(), actionForm.getCustomerPositions());
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
@@ -275,20 +283,19 @@ public class CenterCustAction extends CustAction {
 		loadFees(actionForm, request, FeeCategory.CENTER, null);
 	}
 
-	private void loadUpdateMasterData(HttpServletRequest request ,CenterBO center)
-			throws Exception {
+	private void loadUpdateMasterData(HttpServletRequest request,
+			CenterBO center) throws Exception {
 		loadLoanOfficers(center.getOffice().getOfficeId(), request);
 		loadCustomFieldDefinitions(request);
 		loadPositions(request);
-		loadClients(request,center);
+		loadClients(request, center);
 	}
 
 	private void loadCreateCustomFields(CenterCustActionForm actionForm,
 			HttpServletRequest request) throws Exception {
 		loadCustomFieldDefinitions(request);
 		// Set Default values for custom fields
-		List<CustomFieldDefinitionEntity> customFieldDefs =
-			(List<CustomFieldDefinitionEntity>) SessionUtils
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
@@ -319,57 +326,80 @@ public class CenterCustAction extends CustAction {
 				customFieldDefs, request);
 	}
 
-	@TransactionDemarcate (saveToken = true)
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
 
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
-		CustomerBusinessService customerBusinessService = ((CustomerBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Customer));
-		CenterBO centerBO =(CenterBO) customerBusinessService.findBySystemId(actionForm.getGlobalCustNum(),CustomerLevel.CENTER.getValue());
+		CustomerBusinessService customerBusinessService = ((CustomerBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Customer));
+		CenterBO centerBO = (CenterBO) customerBusinessService.findBySystemId(
+				actionForm.getGlobalCustNum(), CustomerLevel.CENTER.getValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, centerBO, request);
-		centerBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
-		SessionUtils.setAttribute(CenterConstants.GROUP_LIST,centerBO.getChildren(CustomerLevel.GROUP, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),request);
+		centerBO.getCustomerStatus().setLocaleId(
+				getUserContext(request).getLocaleId());
+		SessionUtils.setAttribute(CenterConstants.GROUP_LIST, centerBO
+				.getChildren(CustomerLevel.GROUP,
+						ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),
+				request);
 
-	  CenterPerformanceHistory centerPerformanceHistory = 	customerBusinessService.getCenterPerformanceHistory(centerBO.getSearchId(),centerBO.getOffice().getOfficeId());
-	  SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,centerPerformanceHistory,request);
+		CenterPerformanceHistory centerPerformanceHistory = customerBusinessService
+				.getCenterPerformanceHistory(centerBO.getSearchId(), centerBO
+						.getOffice().getOfficeId());
+		SessionUtils.setAttribute(CenterConstants.PERFORMANCE_HISTORY,
+				centerPerformanceHistory, request);
 
-	  //set localeId in center saving accounts
+		// set localeId in center saving accounts
 
-	  loadCustomFieldDefinitions(request);
+		loadCustomFieldDefinitions(request);
 
-	  UserContext userContext = getUserContext(request);
-	  
-	  loadMasterDataForDetailsPage(request,centerBO,getUserContext(request).getLocaleId());
-	  initCustomerPosition(centerBO,userContext.getLocaleId());
-	  return mapping.findForward(ActionForwards.get_success.toString());
+		UserContext userContext = getUserContext(request);
+
+		loadMasterDataForDetailsPage(request, centerBO, getUserContext(request)
+				.getLocaleId());
+		initCustomerPosition(centerBO, userContext.getLocaleId());
+		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 
 	@TransactionDemarcate(conditionToken = true)
 	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		CenterCustActionForm actionForm = (CenterCustActionForm) form;
+		cleanSearchResults(request, (CenterCustActionForm) form);
+		return mapping
+				.findForward(ActionForwards.loadSearch_success.toString());
+	}
+
+	@TransactionDemarcate(conditionToken = true)
+	public ActionForward loadTransferSearch(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		cleanSearchResults(request, (CenterCustActionForm) form);
+		return mapping.findForward(ActionForwards.loadTransferSearch_success
+				.toString());
+	}
+
+	private void cleanSearchResults(HttpServletRequest request,
+			CenterCustActionForm actionForm) throws PageExpiredException {
 		actionForm.setSearchString(null);
 		cleanUpSearch(request);
-		if (actionForm.getInput().equals(
-				CenterConstants.INPUT_SEARCH_TRANSFERGROUP))
-			 return mapping.findForward(ActionForwards.loadTransferSearch_success
-					.toString());
-		else
-			return mapping.findForward(ActionForwards.loadSearch_success
-					.toString());
+
 	}
 
 	@TransactionDemarcate(joinToken = true)
-	public ActionForward search(ActionMapping mapping, ActionForm form,
+	public ActionForward searchTransfer(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		loadSearchResults(request, form);
+		return mapping.findForward(ActionForwards.transferSearch_success
+				.toString());
+	}
+
+	private void loadSearchResults(HttpServletRequest request, ActionForm form)
+			throws Exception {
 		CenterCustActionForm actionForm = (CenterCustActionForm) form;
-		ActionForward actionForward = super.search(mapping, form, request,
-				response);
 		String searchString = actionForm.getSearchString();
 		UserContext userContext = getUserContext(request);
 		if (searchString == null)
@@ -377,20 +407,26 @@ public class CenterCustAction extends CustAction {
 		addSeachValues(searchString, userContext.getBranchId().toString(),
 				new OfficeBusinessService()
 						.getOffice(userContext.getBranchId()).getOfficeName(),
-				request);			
+				request);
 		searchString = StringUtils.normalizeSearchString(searchString);
 		if (searchString.equals(""))
 			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
 		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
 				new CenterBusinessService().search(searchString, userContext
 						.getId()), request);
+	}
 
-		if (actionForm.getInput().equals(
-				CenterConstants.INPUT_SEARCH_TRANSFERGROUP))
-			actionForward = mapping.findForward(ActionForwards.transferSearch_success
-					.toString());
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward search(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		ActionForward actionForward = super.search(mapping, form, request,
+				response);
+		loadSearchResults(request, form);
 		return actionForward;
 	}
+
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			CenterBO centerBO, Short localeId) throws Exception {
 		List<SavingsBO> savingsAccounts = centerBO.getOpenSavingAccounts();
@@ -399,13 +435,15 @@ public class CenterCustAction extends CustAction {
 				savingsAccounts, request);
 	}
 
-	private void initCustomerPosition(CenterBO centerBO,Short localeId){
+	private void initCustomerPosition(CenterBO centerBO, Short localeId) {
 
-		for (CustomerPositionEntity customerPosition : centerBO.getCustomerPositions()) {
+		for (CustomerPositionEntity customerPosition : centerBO
+				.getCustomerPositions()) {
 
 			customerPosition.getPosition().setLocaleId(localeId);
 		}
 	}
+
 	private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList,
 			Short localeId) {
 		for (SavingsBO accountBO : accountList)
@@ -415,6 +453,7 @@ public class CenterCustAction extends CustAction {
 	private void setLocaleForAccount(AccountBO account, Short localeId) {
 		account.getAccountState().setLocaleId(localeId);
 	}
+
 	private void doCleanUp(CenterCustActionForm actionForm,
 			HttpServletRequest request) throws Exception {
 		clearActionForm(actionForm);

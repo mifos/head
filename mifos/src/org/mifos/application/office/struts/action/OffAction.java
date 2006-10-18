@@ -35,6 +35,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -197,7 +198,7 @@ public class OffAction extends BaseAction {
 				.toString());
 	}
 
-	@TransactionDemarcate(validateAndResetToken = true)
+	@TransactionDemarcate(validateAndResetToken = true)@CloseSession
 	public ActionForward update(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -223,11 +224,20 @@ public class OffAction extends BaseAction {
 				.getShortName(), newStatus, newlevel, parentOffice,
 				offActionForm.getAddress(), offActionForm.getCustomFields());
 		if (parentOffice!=null&&! sessionOffice.getParentOffice().getOfficeId().equals(parentOffice.getOfficeId()))
-			HierarchyManager.getInstance().init();
-		
+		{
+			return mapping.findForward(ActionForwards.update_cache_success.toString());
+		}
+		else
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
-
+	public ActionForward updateCache(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		HierarchyManager.getInstance().init();
+		return mapping.findForward(ActionForwards.update_success.toString());
+	}	
+	
+	
 	private void loadEditCustomFields(HttpServletRequest request,
 			OffActionForm offActionForm) throws Exception {
 		// get the office

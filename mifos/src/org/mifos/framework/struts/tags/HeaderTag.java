@@ -77,15 +77,20 @@ public class HeaderTag extends TagSupport {
 		} catch (PageExpiredException pex) {
 			obj=(BusinessObject)pageContext.getSession().getAttribute(Constants.BUSINESS_KEY);
 		}
-			
+		try {	
 		String linkStr;
 		if(selfLink!=null && selfLink!="")
 			linkStr = TagGenerator.createHeaderLinks(obj,Boolean.getBoolean(selfLink),randomNum);
 		else
 			linkStr = TagGenerator.createHeaderLinks(obj,true,randomNum);
-		try {
+		
 			pageContext.getOut().write(linkStr);
-		}catch (IOException e) {
+		}
+		
+		catch (PageExpiredException e) {
+			new JspException(e);
+		}
+		catch (IOException e) {
 			new JspException(e);
 		}
 		return SKIP_BODY;

@@ -38,6 +38,7 @@
 package org.mifos.framework.components.taggenerator;
 
 import org.mifos.framework.business.BusinessObject;
+import org.mifos.framework.exceptions.PageExpiredException;
 
 public abstract class TagGenerator {
 	
@@ -51,7 +52,7 @@ public abstract class TagGenerator {
 		this.associatedGenerator = associatedGenerator;
 	}	
 	
-	public static String createHeaderLinks(BusinessObject bo, boolean selfLinkRequired, Object randomNum){
+	public static String createHeaderLinks(BusinessObject bo, boolean selfLinkRequired, Object randomNum) throws PageExpiredException{
 		TagGenerator generator= TagGeneratorFactory.getInstance().getGenerator(bo);
 		return generator.build(bo, selfLinkRequired,randomNum).toString();
 	}

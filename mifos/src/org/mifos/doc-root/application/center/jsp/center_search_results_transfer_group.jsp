@@ -17,7 +17,7 @@
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
 
-<html-el:form action="centerCustAction.do?method=search">
+<html-el:form action="centerCustAction.do?method=searchTransfer">
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
 <html-el:hidden property="input" value="CenterSearch_TransferGroup"/> 
 <html-el:hidden property="currentFlowKey" value="${param.currentFlowKey}" />

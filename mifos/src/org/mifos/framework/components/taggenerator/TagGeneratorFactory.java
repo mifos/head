@@ -52,6 +52,8 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
+import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class TagGeneratorFactory {
 
@@ -97,8 +99,10 @@ public class TagGeneratorFactory {
 		return instance;
 	}
 
-	public TagGenerator getGenerator(BusinessObject bo) {
+	public TagGenerator getGenerator(BusinessObject bo) throws PageExpiredException {
 		try {
+			
+			if ( bo==null) throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
 			return (TagGenerator) Class.forName(
 					getGeneratorNames().get(getClassName(bo))).newInstance();
 		} catch (ClassNotFoundException e) {

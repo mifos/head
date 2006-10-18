@@ -151,13 +151,25 @@
 									</c:choose>
 									<div id="Layer2"
 										style="border: 1px solid #CECECE; height:100px; width:100%; overflow: auto; padding:6px; margin-top:5px;">
-									<c:forEach items='${LoanOfficerslist}' var="loanOfficer">
+										<c:choose>
+										<c:when test="${ not empty LoanOfficerslist }">
+										<c:forEach items='${LoanOfficerslist}' var="loanOfficer">
 										<html-el:link
 											action="custSearchAction.do?method=get&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 											<c:out value="${loanOfficer.displayName}" />
 										</html-el:link>
+										
 										<br>
-									</c:forEach></div>
+										
+									</c:forEach>
+									</c:when>
+									<c:otherwise>
+											<mifos:mifoslabel name="CustomerSearch.No"/>
+											<mifos:mifoslabel name="CustomerSearch.loanOfficer"/><mifos:mifoslabel name="CustomerSearch.s"/>
+											<mifos:mifoslabel name="CustomerSearch.available"/>
+									</c:otherwise>
+									</c:choose>
+									</div>
 									</div>
 									</td>
 								</tr>
@@ -190,7 +202,11 @@
 									</table>
 									<div id="Layer2"
 										style="border: 1px solid #CECECE; height:100px; width:100%; overflow: auto; padding:6px; margin-top:5px;">
-									<span class="fontnormal"> <c:forEach items="${customerList}"
+									<span class="fontnormal">
+									
+									<c:choose>
+									<c:when test="${not empty customerList }">
+									 <c:forEach items="${customerList}"
 										var="customer">
 										<c:choose>
 											<c:when test='${isCenterHeirarchyExists eq true}'>
@@ -208,7 +224,30 @@
 												<br>
 											</c:otherwise>
 										</c:choose>
-									</c:forEach> </span></div>
+									</c:forEach> 
+									</c:when>
+									<c:otherwise>
+									
+									<c:choose>
+											<c:when test='${isCenterHeirarchyExists eq true}'>
+											<mifos:mifoslabel name="CustomerSearch.no"/>
+											<mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/><mifos:mifoslabel name="CustomerSearch.s"/>
+											<mifos:mifoslabel name="CustomerSearch.available"/>
+											
+												<br>
+											</c:when>
+											<c:otherwise>
+											<mifos:mifoslabel name="CustomerSearch.no"/>
+											<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/><mifos:mifoslabel name="CustomerSearch.s"/>
+											<mifos:mifoslabel name="CustomerSearch.available"/>
+												<br>
+											</c:otherwise>
+										</c:choose>
+									</c:otherwise>
+									</c:choose>
+									
+									
+									</span></div>
 
 									</div>
 									</td>

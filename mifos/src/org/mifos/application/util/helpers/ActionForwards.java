@@ -54,5 +54,5 @@ public enum ActionForwards {
 	delete_success,delete_failure,viewAllLoanProducts_success,viewAllLoanProducts_failure,loadUnLockUser_success,unLockUserAccount_success
 	, load_main_page,viewAllFunds_success,cancelManage_success,loadSearch_success,loadAllChecklist_success,loadAllChecklist_failure,
 	loadMainSearch_success,mainSearch_success,
-	loadTransferSearch_success,transferSearch_success, previewHistoricalData_failure;
+	loadTransferSearch_success,transferSearch_success, previewHistoricalData_failure,update_cache_success;
 }

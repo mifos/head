@@ -56,7 +56,7 @@
 <html-el:form method="post" action ="groupTransferAction.do?method=cancel">
 	<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 </html-el:form>
-<html-el:form method="post" action ="centerCustAction.do?method=search">
+<html-el:form method="post" action ="centerCustAction.do?method=searchTransfer">
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
 <html-el:hidden property="input" value="CenterSearch_TransferGroup"/> 
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

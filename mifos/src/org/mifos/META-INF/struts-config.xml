@@ -231,7 +231,7 @@
 		<action path="/groupTransferAction" type="org.mifos.application.customer.group.struts.action.GroupTransferAction" name="groupTransferActionForm" parameter="method" input="/groupTransferAction.do?method=validate" validate="false"
 			scope="session">
 			<!--  Load forwards -->
-			<forward name="loadParents_success" path="/centerCustAction.do?method=loadSearch&amp;input=CenterSearch_TransferGroup" />
+			<forward name="loadParents_success" path="/centerCustAction.do?method=loadTransferSearch&amp;input=CenterSearch_TransferGroup" />
 			<forward name="loadBranches_success" path="/pages/application/group/jsp/choosebranch.jsp" />
 			<!-- Preview Page Forwards -->
 			<forward name="previewParentTransfer_success" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
@@ -924,6 +924,7 @@
 			<forward name="editpreview_failure" path="/pages/application/office/jsp/editoffice.jsp" />
 			<forward name="editprevious_success" path="/pages/application/office/jsp/editoffice.jsp" />
 			<forward name="update_success" path="/offAction.do?method=get" />
+			<forward name="update_cache_success" path="/offAction.do?method=updateCache" />
 			<forward name="update_failure" path="/pages/application/office/jsp/edit_preview_office.jsp" />
 			<forward name="search_success" path="/pages/application/office/jsp/viewOffices.jsp" />
 		</action>

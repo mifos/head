@@ -112,13 +112,26 @@
 									</c:choose>
 									<div id="Layer2"
 										style="border: 1px solid #CECECE; height:100px; width:100%; overflow: auto; padding:6px; margin-top:5px;">
-									<c:forEach items='${LoanOfficerslist}' var="loanOfficer">
-										<html-el:link
+										
+									<c:choose>
+										<c:when test="${ not empty LoanOfficerslist }">
+										
+											<c:forEach items='${LoanOfficerslist}' var="loanOfficer">
+											<html-el:link
 											action="custSearchAction.do?method=get&officeId=${custSearchActionForm.officeId}&loanOfficerId=${loanOfficer.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 											<c:out value="${loanOfficer.displayName}" />
-										</html-el:link>
-										<br>
-									</c:forEach></div>
+											</html-el:link>
+											<br>
+											</c:forEach>
+									  </c:when>
+									<c:otherwise>
+											<mifos:mifoslabel name="CustomerSearch.no"/>
+											<mifos:mifoslabel name="CustomerSearch.loanOfficer"/><mifos:mifoslabel name="CustomerSearch.s"/>
+											<mifos:mifoslabel name="CustomerSearch.available"/>
+									</c:otherwise>
+									</c:choose>
+									
+									</div>
 									</td>
 								</tr>
 							</table>

@@ -95,14 +95,32 @@
 							</table>
 							<div id="Layer2"
 								style="border: 1px solid #CECECE; height:100px; width:100%; overflow: auto; padding:6px; margin-top:5px;">
-							<span class="fontnormal"> <c:forEach
+							<span class="fontnormal">
+							
+									<c:choose>
+										<c:when test="${ not empty OfficesList }">
+										
+							
+							
+							 <c:forEach
 								items="${OfficesList}" var="office">
 								<html-el:link action="custSearchAction.do?method=preview&officeId=${office.officeId}&currentFlowKey=${requestScope.currentFlowKey}"
 									>
 									<c:out value="${office.officeName}" />
 								</html-el:link>
 								<br>
-							</c:forEach> </span></div>
+							</c:forEach> 
+									  </c:when>
+									<c:otherwise>
+											<mifos:mifoslabel name="CustomerSearch.no"/>
+											<mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/><mifos:mifoslabel name="CustomerSearch.s"/>
+											<mifos:mifoslabel name="CustomerSearch.available"/>
+									</c:otherwise>
+									</c:choose>
+							
+							
+							
+							</span></div>
 							</td>
 						</tr>
 					</table>

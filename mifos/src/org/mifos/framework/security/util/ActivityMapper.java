@@ -188,7 +188,7 @@ public class ActivityMapper {
 		activityMap.put("/offAction-update",
 				SecurityConstants.OFFICE_EDIT_OFFICE);
 		activityMap.put("/offAction-getAllOffices", SecurityConstants.VIEW);
-
+		activityMap.put("/offAction-updateCache", SecurityConstants.VIEW);
 		// roles and permission related mappings
 		activityMap.put("/manageRolesAndPermission-manage",
 				SecurityConstants.VIEW);
@@ -409,6 +409,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/centerCustAction-cancelChangeLog",
 				SecurityConstants.VIEW);
+		
+		activityMap.put("/centerCustAction-loadTransferSearch", SecurityConstants.VIEW);
+		activityMap.put("/centerCustAction-searchTransfer", SecurityConstants.VIEW);
 		// For M2 Center ends
 
 		// colsed account searchaction in center details page

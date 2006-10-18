@@ -3,7 +3,7 @@
 		xmlns="http://www.aditi.com" 
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:schemaLocation="http://www.aditi.com tabletag.xsd ">
-<path key="GroupList" forwardkey="search_success" action="groupCustAction.do"/> 
+<path key="GroupList" forwardkey="transferSearch_success" action="groupCustAction.do"/> 
 <pagerequirements flowRequired="true" numbersrequired="true" bluelinerequired="true" headingrequired="false" valignnumbers="false" blanklinerequired="false"/>  
 <row>
 	<column label="" labeltype="string" boldlabel="false" type="text" >
