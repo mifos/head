@@ -214,6 +214,37 @@
 								property="collateralNote" style="width:320px; height:110px;"></mifos:textarea></td>
 						</tr>
 					</table>
+					<br>
+					<table width="93%" border="0" cellpadding="3" cellspacing="0">
+						<tr>
+						  <td colspan="2" class="fontnormalbold">
+						     <mifos:mifoslabel name="loan.additionalInfo" bundle="loanUIResources"/></td>
+						 </tr>
+		                <c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}" varStatus="loopStatus">
+		              	 <bean:define id="ctr">
+		                	<c:out value="${loopStatus.index}"/>
+		                </bean:define>
+		
+						<tr class="fontnormal">
+			                <td width="30%" align="right">
+								<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" bundle="loanUIResources"></mifos:mifoslabel>:
+							</td>
+			                <td width="70%">          
+								<c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_NUMBER}">  
+				                	<mifos:mifosnumbertext  name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"/>
+				                </c:if>
+				               	<c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_ALPHANUMBER}">
+				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"/>
+								</c:if>
+				                <c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_DATE}"> 
+				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"/>
+				                </c:if>
+				                <html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>
+				                <html-el:hidden property='customField[${ctr}].fieldType' value='${cf.fieldType}' />
+		                	</td>
+		           		</tr>
+					     </c:forEach>
+					</table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center" class="blueline">&nbsp;</td>

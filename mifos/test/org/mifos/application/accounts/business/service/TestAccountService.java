@@ -32,6 +32,7 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
@@ -47,12 +48,15 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountService extends MifosTestCase {
@@ -335,6 +339,28 @@ public class TestAccountService extends MifosTestCase {
 				accountBO.getAccountState(), AccountTypes.LOANACCOUNT,
 				TestObjectFactory.getUserContext().getLocaleId());
 		assertEquals(2, statusListForLoan.size());
+	}
+	
+	public void testRetrieveCustomFieldsDefinition() throws Exception {
+		List<CustomFieldDefinitionEntity> customFields = service
+				.retrieveCustomFieldsDefinition(EntityType.LOAN);
+		assertNotNull(customFields);
+		assertEquals(TestConstants.LOAN_CUSTOMFIELDS_NUMBER, customFields
+				.size());
+	}
+
+	public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			List<CustomFieldDefinitionEntity> customFields = service
+			.retrieveCustomFieldsDefinition(EntityType.LOAN);
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+
 	}
 
 	private AccountBO getLoanAccount() {

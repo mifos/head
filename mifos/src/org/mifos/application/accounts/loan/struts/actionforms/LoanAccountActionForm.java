@@ -47,10 +47,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.Methods;
@@ -70,6 +72,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 		super();
 		defaultFees = new ArrayList<FeeView>();
 		additionalFees = new ArrayList<FeeView>();
+		customFields = new ArrayList<CustomFieldView>();
 	}
 
 	private String accountId;
@@ -113,6 +116,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 	private String stateSelected;
 
 	private String gracePeriod;
+	
+	private List<CustomFieldView> customFields;
 
 	public String getGracePeriod() {
 		return gracePeriod;
@@ -258,6 +263,22 @@ public class LoanAccountActionForm extends BaseActionForm {
 		this.noOfInstallments = noOfInstallments;
 	}
 
+	
+	public List<CustomFieldView> getCustomFields() {
+		return customFields;
+	}
+
+	public void setCustomFields(List<CustomFieldView> customFields) {
+		this.customFields = customFields;
+	}
+
+	public CustomFieldView getCustomField(int i){
+		while(i>=customFields.size()){
+			customFields.add(new CustomFieldView());
+		}
+		return customFields.get(i);
+	}
+	
 	public List<FeeView> getAdditionalFees() {
 		return additionalFees;
 	}

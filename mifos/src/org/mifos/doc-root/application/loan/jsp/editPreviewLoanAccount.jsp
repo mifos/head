@@ -158,12 +158,24 @@
 							<c:out
 								value="${sessionScope.loanAccountActionForm.collateralNote}" />
 							<br>
+							<span class="fontnormalbold"><mifos:mifoslabel name="loan.additionalInfo" bundle="loanUIResources"/></span><br>
+			                    	<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+										<c:forEach var="cf" items="${sessionScope.loanAccountActionForm.customFields}">
+											<c:if test="${cfdef.fieldId==cf.fieldId}">
+												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="loanUIResources"></mifos:mifoslabel>: 
+						        		  	 	<span class="fontnormal">
+												<c:out value="${cf.fieldValue}"/>
+											</span><br>
+										</c:if>
+									</c:forEach>
+					  			</c:forEach>
 							<br>
 							<html-el:button property="editButton" styleClass="insidebuttn"
 								onclick="fnEdit(this.form)">
 								<mifos:mifoslabel name="loan.edit_loan_acc" />
 							</html-el:button> </span></td>
 						</tr>
+						
 					</table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>

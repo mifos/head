@@ -292,20 +292,6 @@ public class SavingsAction extends AccountAppAction {
 		return mapping.findForward("create_success");
 	}
 
-	private List<CustomFieldView> getAccountCustomFieldView(
-			SavingsActionForm savingsActionForm) {
-		List<CustomFieldView> customfield = null;
-		if (savingsActionForm.getAccountCustomFieldSet() != null) {
-			customfield = new ArrayList<CustomFieldView>();
-			for (AccountCustomFieldEntity entity : savingsActionForm
-					.getAccountCustomFieldSet()) {
-				customfield.add(new CustomFieldView(entity.getFieldId(), entity
-						.getFieldValue(), null));
-			}
-		}
-		return customfield;
-	}
-
 	@TransactionDemarcate(saveToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)

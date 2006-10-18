@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -11,6 +12,7 @@ import org.mifos.application.accounts.business.AccountStateMachines;
 import org.mifos.application.accounts.business.TransactionHistoryView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -19,6 +21,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.checklist.business.AccountCheckListBO;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.exceptions.CustomerException;
@@ -34,6 +37,7 @@ import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -394,5 +398,17 @@ public class AccountBusinessService extends BusinessService {
 		return ActivityMapper.getInstance().isRemoveFeesPermittedForAccounts(accountTypes,
 				customerLevel, userContext, recordOfficeId,
 				recordLoanOfficerId);
+	}
+
+	public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(EntityType entityType)
+	throws ServiceException {
+
+	try {
+		List<CustomFieldDefinitionEntity> customFields = new AccountPersistence().retrieveCustomFieldsDefinition(entityType.getValue());
+		Hibernate.initialize(customFields);
+		return customFields;
+	} catch (PersistenceException e) {
+		throw new ServiceException(e);
+	}
 	}
 }

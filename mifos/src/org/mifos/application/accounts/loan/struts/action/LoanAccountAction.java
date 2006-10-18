@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +18,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
@@ -30,7 +33,10 @@ import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstall
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerCustomFieldEntity;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
@@ -45,6 +51,8 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.CustomFieldType;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -64,6 +72,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class LoanAccountAction extends AccountAppAction {
@@ -242,7 +251,7 @@ public class LoanAccountAction extends AccountAppAction {
 		LoanOfferingBO loanOffering = getLoanOffering(loanActionForm
 				.getPrdOfferingIdValue(), getUserContext(request).getLocaleId());
 		setDataIntoForm(loanOffering, loanActionForm, request);
-		loadMasterData(request);
+		loadCreateMasterData(loanActionForm,request);
 		SessionUtils.removeAttribute(LoanConstants.LOANOFFERING, request);
 
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
@@ -250,6 +259,11 @@ public class LoanAccountAction extends AccountAppAction {
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
 				getFunds(loanOffering), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+	
+	private void loadCreateMasterData(LoanAccountActionForm actionForm, HttpServletRequest request)throws Exception {
+		loadMasterData(request);
+		loadCreateCustomFields(actionForm,request);
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -281,7 +295,7 @@ public class LoanAccountAction extends AccountAppAction {
 						.getInterestDoubleValue(), loanActionForm
 						.getGracePeriodDurationValue(), getFund(request,
 						loanActionForm.getLoanOfferingFundValue()),
-				loanActionForm.getFeesToApply());
+				loanActionForm.getFeesToApply(),loanActionForm.getCustomFields());
 		loan.setBusinessActivityId(loanActionForm.getBusinessActivityIdValue());
 		loan.setCollateralNote(loanActionForm.getCollateralNote());
 		CollateralTypeEntity collateralTypeEntity = (CollateralTypeEntity) findMasterEntity(
@@ -347,8 +361,8 @@ public class LoanAccountAction extends AccountAppAction {
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, getLoanOffering(
 				loanBO.getLoanOffering().getPrdOfferingId(), getUserContext(
 						request).getLocaleId()), request);
+		loadUpdateMasterData(request);
 		setFormAttributes(loanBO, form, request);
-		loadMasterData(request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
@@ -408,6 +422,7 @@ public class LoanAccountAction extends AccountAppAction {
 		loanBO.setVersionNo(loanBOInSession.getVersionNo());
 		loanBO.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(loanBO);
+		
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
 		loanBO.updateLoan(loanAccountActionForm.isInterestDedAtDisbValue(),
 				loanAccountActionForm.getLoanAmountValue(),
@@ -418,7 +433,7 @@ public class LoanAccountAction extends AccountAppAction {
 						.getGracePeriodDurationValue(), loanAccountActionForm
 						.getBusinessActivityIdValue(), loanAccountActionForm
 						.getCollateralNote(), getCollateralTypeEntity(form,
-						request));
+						request),loanAccountActionForm.getCustomFields());
 		loanBOInSession = null;
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanBO, request);
@@ -463,6 +478,7 @@ public class LoanAccountAction extends AccountAppAction {
 								.getAccountId()), request);
 		SessionUtils.setAttribute(LoanConstants.NOTES, loanBO
 				.getRecentAccountNotes(), request);
+		 loadCustomFieldDefinitions(request);
 	}
 
 	private void removePrdOfferingsNotMachingCustomerMeeting(
@@ -563,6 +579,8 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private void loadMasterData(HttpServletRequest request) throws Exception {
+		
+		
 		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
 				getMasterEntities(CollateralTypeEntity.class, getUserContext(
 						request).getLocaleId()), request);
@@ -575,6 +593,8 @@ public class LoanAccountAction extends AccountAppAction {
 										MasterConstants.LOAN_PURPOSES,
 										getUserContext(request).getLocaleId()),
 						request);
+		
+		
 	}
 
 	private String getNameForBusinessActivityEntity(Integer entityId,
@@ -659,6 +679,8 @@ public class LoanAccountAction extends AccountAppAction {
 				.getNoOfInstallments()));
 		loanAccountActionForm.setGracePeriodDuration(getStringValue(loan
 				.getGracePeriodDuration()));
+		loanAccountActionForm.setCustomFields(createCustomFieldViews(loan
+				.getAccountCustomFields(), request));
 	}
 
 	private ViewInstallmentDetails getUpcomingInstallmentDetails(
@@ -706,5 +728,71 @@ public class LoanAccountAction extends AccountAppAction {
 				new ActivityContext(ActivityMapper.getInstance()
 						.getActivityIdForState(newSate), officeId,
 						loanOfficerId));
+	}
+	
+	private void loadCreateCustomFields(LoanAccountActionForm actionForm,
+			HttpServletRequest request) throws Exception {
+		loadCustomFieldDefinitions(request);
+		// Set Default values for custom fields
+		List<CustomFieldDefinitionEntity> customFieldDefs =
+			(List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+
+		for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
+			if (StringUtils.isNullAndEmptySafe(fieldDef.getDefaultValue())
+					&& fieldDef.getFieldType().equals(
+							CustomFieldType.DATE.getValue())) {
+				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
+						DateHelper.getUserLocaleDate(getUserContext(request)
+								.getPereferedLocale(), fieldDef
+								.getDefaultValue()), fieldDef.getFieldType()));
+			} else {
+				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
+						fieldDef.getDefaultValue(), fieldDef.getFieldType()));
+			}
+		}
+		actionForm.setCustomFields(customFields);
+	}
+	private void loadCustomFieldDefinitions(HttpServletRequest request)
+	throws Exception {
+		SessionUtils.setAttribute(LoanConstants.CUSTOM_FIELDS,
+				getAccountBizService().retrieveCustomFieldsDefinition(EntityType.LOAN) , request);
+	}
+	
+	private List<CustomFieldView> createCustomFieldViews(
+			Set<AccountCustomFieldEntity> customFieldEntities,
+			HttpServletRequest request) throws ApplicationException {
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		Locale locale = getUserContext(request).getPereferedLocale();
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
+				if (customFieldDef.getFieldId().equals(
+						customFieldEntity.getFieldId())) {
+					if (customFieldDef.getFieldType().equals(
+							CustomFieldType.DATE.getValue())) {
+						customFields.add(new CustomFieldView(customFieldEntity
+								.getFieldId(), DateHelper.getUserLocaleDate(
+								locale, customFieldEntity.getFieldValue()),
+								customFieldDef.getFieldType()));
+					} else {
+						customFields
+								.add(new CustomFieldView(customFieldEntity
+										.getFieldId(), customFieldEntity
+										.getFieldValue(), customFieldDef
+										.getFieldType()));
+					}
+				}
+			}
+		}
+		return customFields;
+	}
+	
+	private void loadUpdateMasterData(HttpServletRequest request)throws Exception {
+		loadMasterData(request);
+		loadCustomFieldDefinitions(request);
 	}
 }

@@ -81,6 +81,7 @@ import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
@@ -179,7 +180,7 @@ public class LoanBO extends AccountBO {
 			CustomerBO customer, AccountState accountState, Money loanAmount,
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interesRate,
-			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews)
+			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,List<CustomFieldView> customFields)
 			throws AccountException {
 		super(userContext, customer, AccountTypes.LOANACCOUNT, accountState);
 		validate(loanOffering, loanAmount, noOfinstallments, disbursementDate,
@@ -205,6 +206,7 @@ public class LoanBO extends AccountBO {
 		this.loanActivityDetails = new HashSet<LoanActivityEntity>();
 		generateMeetingSchedule();
 		this.loanSummary = buildLoanSummary();
+		addcustomFields(customFields);
 	}
 
 	public Integer getBusinessActivityId() {
@@ -955,7 +957,7 @@ public class LoanBO extends AccountBO {
 	public void updateLoan(Boolean interestDeductedAtDisbursment,Money loanAmount,
 			Double interestRate,Short noOfInstallments,Date disbursmentDate,
 			Short gracePeriodDuration,Integer businessActivityId,String collateralNote,
-			CollateralTypeEntity collateralTypeEntity) throws AccountException {
+			CollateralTypeEntity collateralTypeEntity,List<CustomFieldView>customFields) throws AccountException {
 		if (interestDeductedAtDisbursment){
 			try {
 				setGracePeriodType((GracePeriodTypeEntity) new MasterPersistence().retrieveMasterEntity(				
@@ -989,6 +991,7 @@ public class LoanBO extends AccountBO {
 						LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
 			regeneratePaymentSchedule();
 		}
+		updateCustomFields(customFields);
 		update();
 	}
 	
@@ -2783,5 +2786,6 @@ public class LoanBO extends AccountBO {
 		}
 
 	}
-
+	
+	
 }

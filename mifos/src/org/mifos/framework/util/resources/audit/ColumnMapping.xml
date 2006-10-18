@@ -8,6 +8,7 @@
 			<!-- <entity name="accountNotes"/>-->
 			<entity name="accountFlags"/>
 			<entity name="flag"  parentName="accountFlags"/>
+			<entity name="accountCustomFields" mergeProperties="yes"  displayKey="Account.customField.displayName"/>
 		</entitiesToLog>
 		<propertyName name="collateralType" displayKey="Loan.CollateralType" doNotLog="No" lookUp="yes">
 			<entityName name="CollateralTypes">
@@ -40,6 +41,10 @@
 		<propertyName name="comment" displayKey="Loan.comment" parentName="accountNotes" />
 
 		<propertyName name="_accountFlagsBackref" parentName="accountFlags" doNotLog="yes"/>
+		<propertyName name="fieldId" parentName="accountCustomFields" displayKey="Account.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
+		<propertyName name="fieldValue" parentName="accountCustomFields" displayKey="Account.customField.feildValue" />
+		<propertyName name="accountCustomFieldId" parentName="accountCustomFields" doNotLog="yes" />
+		
 
 	</entityType>
 

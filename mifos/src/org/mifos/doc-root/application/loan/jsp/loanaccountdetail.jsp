@@ -368,7 +368,15 @@
 						<tr>
 							<td class="fontnormal"><br>
 							<span class="fontnormalbold"><mifos:mifoslabel
-								name="loan.additionalInfo" /></span> <span class="fontnormal"><br>
+								name="loan.additionalInfo" /><br></span> <span class="fontnormal">
+								<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+									<c:forEach var="cf" items="${BusinessKey.accountCustomFields}">
+										<c:if test="${cfdef.fieldId==cf.fieldId}">
+											<span class="fontnormal"> <mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"></mifos:mifoslabel>: <c:out value="${cf.fieldValue}" /> </span>
+											<br>
+										</c:if>
+									</c:forEach>
+								</c:forEach>
 							</span> <br>
 							<span class="fontnormalbold"> <mifos:mifoslabel
 								name="loan.recurring_acc_fees" /><br>

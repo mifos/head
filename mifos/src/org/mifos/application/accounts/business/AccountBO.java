@@ -64,6 +64,7 @@ import org.mifos.application.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
@@ -76,6 +77,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -280,7 +282,14 @@ public class AccountBO extends BusinessObject {
 			}
 		}
 	}
-
+	protected void addcustomFields(List<CustomFieldView> customFields) {
+		if (customFields != null)
+			for (CustomFieldView view : customFields) {
+				this.getAccountCustomFields().add(
+						new AccountCustomFieldEntity(this, view.getFieldId(),
+								view.getFieldValue()));
+			}
+	}
 	public final void applyPayment(PaymentData paymentData)
 			throws AccountException {
 		AccountPaymentEntity accountPayment = makePayment(paymentData);
@@ -1186,5 +1195,32 @@ public class AccountBO extends BusinessObject {
 		}
 		this.addAccountFlag(accountStateFlagEntity);
 	}
+	
+	protected void updateCustomFields(List<CustomFieldView> customFields) {
+		if (customFields != null) {
+			for (CustomFieldView fieldView : customFields) {
+				if (fieldView.getFieldType().equals(
+						CustomFieldType.DATE.getValue())
+						&& StringUtils.isNullAndEmptySafe(fieldView
+								.getFieldValue()))
+					fieldView.convertDateToUniformPattern(getUserContext()
+							.getPereferedLocale());
+				if(getAccountCustomFields().size()>0){
+					for (AccountCustomFieldEntity fieldEntity : getAccountCustomFields())
+						if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
+							fieldEntity.setFieldValue(fieldView.getFieldValue());
+				}
+				else{
+					for (CustomFieldView view : customFields) {
+						this.getAccountCustomFields().add(
+								new AccountCustomFieldEntity(this, view.getFieldId(),
+										view.getFieldValue()));
+					}
+				}
+				
+			}
+		}
+	}
+
 
 }

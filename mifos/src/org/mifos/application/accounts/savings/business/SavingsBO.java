@@ -334,15 +334,6 @@ public class SavingsBO extends AccountBO {
 		return savingsPerformance;
 	}
 
-	private void addcustomFields(List<CustomFieldView> customFields) {
-		if (customFields != null)
-			for (CustomFieldView view : customFields) {
-				this.getAccountCustomFields().add(
-						new AccountCustomFieldEntity(this, view.getFieldId(),
-								view.getFieldValue()));
-			}
-	}
-
 	public void save() throws AccountException {
 		logger.info("In SavingsBO::save(), Before Saving , accountId: "
 				+ getAccountId());

@@ -304,6 +304,21 @@
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
+											    <mifos:mifoslabel name="loan.additionalInfo" bundle="loanUIResources"/><br>
+							                    	<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+														<c:forEach var="cf" items="${sessionScope.loanAccountActionForm.customFields}">
+															<c:if test="${cfdef.fieldId==cf.fieldId}">
+																<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="loanUIResources"></mifos:mifoslabel>: 
+										        		  	 	<span class="fontnormal">
+																<c:out value="${cf.fieldValue}"/>
+															</span><br>
+														</c:if>
+													</c:forEach>
+									  			</c:forEach>
+											</td>
+										</tr>
+										<tr>
+											<td class="fontnormalbold">
 												<br>
 												<mifos:mifoslabel name="loan.charged_applied" />
 												<br>

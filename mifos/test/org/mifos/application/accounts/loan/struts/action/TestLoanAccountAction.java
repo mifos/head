@@ -28,9 +28,12 @@ import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
@@ -484,7 +487,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				request));
 		assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANFUNDS,
 				request));
-
+		assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS,
+				request));
 		TestObjectFactory.removeObject(loanOffering);
 	}
 
@@ -660,6 +664,15 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+		.getAttribute(LoanConstants.CUSTOM_FIELDS, request);
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "11");
+			i++;
+		}
 		addRequestParameter("method", "schedulePreview");
 		actionPerform();
 		verifyNoActionErrors();
@@ -680,7 +693,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-
 	}
 
 	public void testSchedulePreviewWithoutData() throws Exception {
@@ -911,6 +923,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		TestObjectFactory.cleanUp(loan);
 	}
+	
+	
 
 	public void testCreateWithoutPermission() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -940,6 +954,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testManage() throws Exception {
+		try{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
@@ -958,6 +973,12 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				MasterConstants.COLLATERAL_TYPES, request));
 		assertNotNull(SessionUtils.getAttribute(
 				MasterConstants.BUSINESS_ACTIVITIES, request));
+		assertNotNull(SessionUtils.getAttribute(
+				LoanConstants.CUSTOM_FIELDS, request));
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	public void testManageWithoutFlow() throws Exception {

@@ -3,6 +3,9 @@
  */
 package org.mifos.application.accounts.struts.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,10 +13,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
+import org.mifos.application.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
@@ -149,8 +155,22 @@ public class AccountAppAction extends BaseAction {
 				.getBusinessService(BusinessServiceName.Customer);
 	}
 	
-	private AccountBusinessService getAccountBizService() {
+	protected AccountBusinessService getAccountBizService() {
 		return (AccountBusinessService) ServiceFactory
 		.getInstance().getBusinessService(BusinessServiceName.Accounts);
+	}
+	
+	protected List<CustomFieldView> getAccountCustomFieldView(
+			SavingsActionForm savingsActionForm) {
+		List<CustomFieldView> customfield = null;
+		if (savingsActionForm.getAccountCustomFieldSet() != null) {
+			customfield = new ArrayList<CustomFieldView>();
+			for (AccountCustomFieldEntity entity : savingsActionForm
+					.getAccountCustomFieldSet()) {
+				customfield.add(new CustomFieldView(entity.getFieldId(), entity
+						.getFieldValue(), null));
+			}
+		}
+		return customfield;
 	}
 }

@@ -163,4 +163,5 @@ public interface LoanConstants {
 	public static final String NOSEARCHRESULTS ="errors.nosearchresults";
 	public final String FEE_WAIVED = "Fee waived";
 	public final String PENALTY_WAIVED = "Penalty waived";
+	public final String CUSTOM_FIELDS = "customFields";
 }

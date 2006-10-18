@@ -8,12 +8,16 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountPersistence extends TestAccount {
@@ -102,6 +106,13 @@ public class TestAccountPersistence extends TestAccount {
 
 	}	
 	
+	public void testRetrieveCustomFieldsDefinition() throws Exception {
+		List<CustomFieldDefinitionEntity> customFields = accountPersistence
+				.retrieveCustomFieldsDefinition(EntityType.LOAN.getValue());
+		assertNotNull(customFields);
+		assertEquals(TestConstants.LOAN_CUSTOMFIELDS_NUMBER, customFields
+				.size());
+	}
 	
 	private SavingsBO getSavingsAccount() throws Exception {
 		return TestObjectFactory.createSavingsAccount("12345678910", group,
@@ -121,4 +132,5 @@ public class TestAccountPersistence extends TestAccount {
 				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
 				meetingIntPost);
 	}
+	
 }
