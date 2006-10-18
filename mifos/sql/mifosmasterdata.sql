@@ -1,4 +1,6 @@
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
+/* To set the default currency, enter 1 in the default_currency field */
+/* To set how Mifos handles rounding, enter 1 in ROUNDING_MODE to round up, and 2 to round down.  Enter NULL if no rounding is desired.  */
 INSERT INTO CURRENCY(CURRENCY_ID,CURRENCY_NAME,DISPLAY_SYMBOL,ROUNDING_MODE,ROUNDING_AMOUNT,DEFAULT_CURRENCY,DEFAULT_DIGITS_AFTER_DECIMAL)
 VALUES(1,'DOLLAR','$',1,.5,0,1);
 INSERT INTO CURRENCY(CURRENCY_ID,CURRENCY_NAME,DISPLAY_SYMBOL,ROUNDING_MODE,ROUNDING_AMOUNT,DEFAULT_CURRENCY,DEFAULT_DIGITS_AFTER_DECIMAL)	
@@ -25,7 +27,7 @@ VALUES(4,'Office Status','Office Status');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(5,'AccountStates','Account States');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(6,'Personel Status','Personel Status');
+VALUES(6,'Personnel Status','Personnel Status');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(7,'Group Flag','Group Flag');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
@@ -35,11 +37,11 @@ VALUES(9,'Titles','Customer Position');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(10,'Poverty Status','Custom Field Poverty Status for Client');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(11,'Center','Client VALUES');
+VALUES(11,'Center','Center VALUES');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(12,'Group','Group VALUES');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
-VALUES(13,'Client','Center VALUES');
+VALUES(13,'Client','Client VALUES');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(14,'Office','Office');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
@@ -242,7 +244,8 @@ VALUES(5,'South Africa','SA');
 INSERT INTO COUNTRY(COUNTRY_ID,COUNTRY_NAME,COUNTRY_SHORT_NAME)
 VALUES(6,'United Kingdom','GB');
 
-/* The table Office_Level contains the differnt levels supported by the MFI like HeadOffice,RegionalOffice etc  - Configuration */
+/* The table Office_Level contains the different levels supported by the MFI like HeadOffice,RegionalOffice etc  */
+/* Office Levels can be configured in the UI, so there is no need to make changes in this section when configuring Mifos  */
 INSERT INTO OFFICE_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,CONFIGURED)
 VALUES(1,NULL,104,0,1);
 INSERT INTO OFFICE_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,CONFIGURED)
@@ -1277,7 +1280,7 @@ VALUES(7,4,1,'Office Status');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
 VALUES(9,5,1,'Loan Status');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
-VALUES(11,6,1,'Personel Status');
+VALUES(11,6,1,'Personnel Status');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
 VALUES(13,7,1,'Group Flag');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
@@ -1578,6 +1581,8 @@ INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE
 VALUES(136,1,69,'Groups');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) 		
 VALUES(137,1,70,'Kendras');
+
+/* Look-up values for Days of the Week */
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) 		
 VALUES(143,1,72,'Sunday');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE) 		
@@ -1736,11 +1741,13 @@ VALUES(263,1,142,'Customer Account Active');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(264,1,143,'Customer Account InActive');
 
-/* Inserting VALUES for business activites*/
+/* Inserting VALUES for business activites field-- stored at a client level.  */
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(265,1,144,'Animal Husbandry');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(266,1,145,'Micro Enterprise');
+
+/* Inserting VALUES for when one-time fees are charged.   Used when defining a fee, under Admin tab. This should not be configured.  */
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(267,1,146,'Upfront');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
@@ -1748,7 +1755,7 @@ VALUES(269,1,147,'Time Of Disburstment');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(271,1,148,'Time of First Loan Repayment ');
 
-/*Inserting VALUES for FeeFormulaMaster*/
+/*Inserting VALUES for FeeFormulaMaster.  Used when defining a fee, under Admin tab.  Note that "Service Charge" is a renaming of interest.  If the label "interest" is renamed in LOOKUP_LABEL, then this word should also be renamed here.  */
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(273,1,149,'Loan Amount');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
@@ -1761,6 +1768,8 @@ INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE
 VALUES(281,1,153,'Inactive');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(283,1,154,'Personnel');
+
+
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
 VALUES(285,1,155,'Custom Field 1');
 INSERT INTO LOOKUP_VALUE_LOCALE(LOOKUP_VALUE_ID,LOCALE_ID,LOOKUP_ID,LOOKUP_VALUE)
@@ -2528,14 +2537,18 @@ INSERT INTO CUSTOMER_ATTENDANCE_TYPES
 VALUES(4,197,'Late');
 
 /* The table Customer level will contain the different levels supported by the system like center,group etc - System */
+/* Level for Centers */
 INSERT INTO CUSTOMER_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,MAX_CHILD_COUNT,MAX_INSTANCE_COUNT)
 VALUES(3,NULL,11,NULL,4,10);
+/* Level for Groups */
 INSERT INTO CUSTOMER_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,MAX_CHILD_COUNT,MAX_INSTANCE_COUNT)
 VALUES(2,3,12,NULL,2,12);
+/* Level for Clients */
 INSERT INTO CUSTOMER_LEVEL(LEVEL_ID,PARENT_LEVEL_ID,LEVEL_NAME_ID,INTERACTION_FLAG,MAX_CHILD_COUNT,MAX_INSTANCE_COUNT)
 VALUES(1,2,13,NULL,1,30);
 
 /* The table Customer State contains the different states supported at each level of customer, like Center could have Partial, Pending state etc - System */
+/* States for Customers */
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
 VALUES(1,1,1,'Customer Was Partial',1);
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
@@ -2548,6 +2561,7 @@ INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRE
 VALUES(5,1,5,'Customer Was Cancel',1);
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
 VALUES(6,1,6,'Customer Was Close',1);
+/* States for Groups */
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
 VALUES(7,2,7,'Customer Was Partial',1);
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
@@ -2561,9 +2575,11 @@ VALUES(11,2,11,'Customer Was Cancel',1);
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
 VALUES(12,2,12,'Customer Was Close',1);
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
+/* States for Centers */
 VALUES(13,3,13,'Customer Was Active',1);
 INSERT INTO CUSTOMER_STATE(STATUS_ID,LEVEL_ID,STATUS_LOOKUP_ID,DESCRIPTION,CURRENTLY_IN_USE)
 VALUES(14,3,14,'Customer Was Inactive',1);
+
 
 /* The table Customer State Flag contains the different flags associated at the various customer states - System */
 INSERT INTO CUSTOMER_STATE_FLAG(FLAG_ID,FLAG_LOOKUP_ID,STATUS_ID,FLAG_DESCRIPTION,ISBLACKLISTED)
@@ -2628,7 +2644,7 @@ INSERT INTO PRD_APPLICABLE_MASTER(PRD_APPLICABLE_MASTER_ID,LOOKUP_ID)
 VALUES(3,70);
 
 
-/* The table Account State contains the different states supported at each level of account, like Loan could have Partial, Pending state etc - System */
+/* The table Account State contains the different states supported at each type of account, like Loan could have Partial, Pending state etc - System */
 INSERT INTO ACCOUNT_STATE(ACCOUNT_STATE_ID,LOOKUP_id,PRD_TYPE_ID,CURRENTLY_IN_USE)
 VALUES(1,17,1,1);
 INSERT INTO ACCOUNT_STATE(ACCOUNT_STATE_ID,LOOKUP_id,PRD_TYPE_ID,CURRENTLY_IN_USE)
@@ -2723,7 +2739,7 @@ INSERT INTO ACCOUNT_ACTION(ACCOUNT_ACTION_ID,LOOKUP_ID)
 VALUES(17,549);
 /*Postion Table */
 
-/* The table Position contains the position values that can be associated to a client like President etc. - Configuration */
+/* The table Position contains the group and center position values that can be associated to a client like Group President, Group Secretary, etc. Note that Groups and Centers share the same set of position titles- Configuration */
 INSERT INTO POSITION (POSITION_ID,LOOKUP_ID)
 VALUES(1,186);
 INSERT INTO POSITION (POSITION_ID,LOOKUP_ID)
@@ -2733,6 +2749,8 @@ VALUES(3,188);
 INSERT INTO POSITION (POSITION_ID,LOOKUP_ID)
 VALUES(4,216);
 
+
+/* STILL NEEDS COMMENTS */
 INSERT INTO OFFICE_ACTION_PAYMENT_TYPE(OFFICE_ID,PRD_TYPE_ID,ACCOUNT_ACTION_ID,PAYMENT_TYPE_ID)
 VALUES(NULL,NULL,1,NULL);
 INSERT INTO OFFICE_ACTION_PAYMENT_TYPE(OFFICE_ID,PRD_TYPE_ID,ACCOUNT_ACTION_ID,PAYMENT_TYPE_ID)
@@ -2750,7 +2768,8 @@ VALUES(1,15);
 INSERT INTO OFFICE_STATUS(STATUS_ID,LOOKUP_ID)
 VALUES(2,16);
 
-/* The table Office will contain the default Head office information of the MFI like officename etc - Configuration */
+/* The table Office will contain the default Head office information of the MFI like officename etc */
+/* This information can be configured through the UI, so does not need to be configured in the script */
 INSERT INTO OFFICE( PARENT_OFFICE_ID, GLOBAL_OFFICE_NUM, STATUS_ID, OFFICE_CODE_ID, OFFICE_LEVEL_ID,  SEARCH_ID, OFFICE_SHORT_NAME, MAX_CHILD_COUNT,LOCAL_REMOTE_FLAG, DISPLAY_NAME, CREATED_BY, CREATED_DATE, UPDATED_BY, UPDATED_DATE, VERSION_NO)
 VALUES(NULL,'0001',1,NULL,1,'1.1','MIF1',2,1,'Mifos HO ',NULL,NULL,NULL,NULL,1);
 
@@ -2758,7 +2777,7 @@ VALUES(NULL,'0001',1,NULL,1,'1.1','MIF1',2,1,'Mifos HO ',NULL,NULL,NULL,NULL,1);
 INSERT INTO OFFICE_ADDRESS(OFFICE_ADDRESS_ID ,OFFICE_ID ,ADDRESS_1 ,ADDRESS_2 ,ADDRESS_3 ,CITY ,STATE ,COUNTRY, ZIP ,TELEPHONE )
 VALUES(1,1,'V-nagar','713/A','8th Cross','Bangalore','Karnataka','India','560017','9845241646');
 
-
+/* STILL NEEDS COMMENTS */
 INSERT INTO MFI_ATTRIBUTE(ATTRIBUTE_ID, OFFICE_ID, ATTRIBUTE_NAME, ATTRIBUTE_VALUE) 
 VALUES(1,1,'CENTER','GROUP');
 INSERT INTO MFI_ATTRIBUTE(ATTRIBUTE_ID, OFFICE_ID, ATTRIBUTE_NAME, ATTRIBUTE_VALUE)
@@ -2799,7 +2818,9 @@ VALUES(1,2,1,1,1,1,1,NULL,1,1,'mifos',NULL,1,'mifos',1,NULL,1,NULL,4,NULL,0,0);
 INSERT INTO PERSONNEL_DETAILS 
 VALUES(1,'Mifos',NULL,NULL,'MFI',123,'1979-12-12',NULL,50,NULL,NULL,NULL,'Bangalore',NULL,NULL,'Bangalore','Bangalore','Bangalore',1234,NULL);
 
-/* the table ENTITY_MASTER is used for field configuration -- Configuration*/
+/* the table ENTITY_MASTER is used to specify entities that can be configured and are refered to in later sections of the script. */
+/* Examples of how these entities might be configured later in the script: adding "Custom fields", or hidding/renaming fields that are associated with an entity (ie, hiding the field "middle name" in clients */
+/* No configuration is needed in this section */
 INSERT INTO ENTITY_MASTER(ENTITY_TYPE_ID,ENTITY_TYPE)
 VALUES(1,'Client');
 INSERT INTO ENTITY_MASTER(ENTITY_TYPE_ID,ENTITY_TYPE)
@@ -2851,9 +2872,8 @@ VALUES(23,'BulkEntry');
 
 
 
-/*Custom fields customized for GK
-Client*/
-/* The table Custom Field Definition will contain the additional information that will be required to be shown for a client , group etc for the MFI - Configuration */
+/* The table Custom Field Definition will contain the additional information fields that an MFI configure Mifosthat will be required to be shown for a client , group etc for the MFI - Configuration */
+/* Client*/
 INSERT INTO CUSTOM_FIELD_DEFINITION(FIELD_ID,ENTITY_ID,FIELD_TYPE,ENTITY_TYPE,MANDATORY_FLAG,LEVEL_ID,DEFAULT_VALUE) 
 VALUES (1,10,2,1,1,1,NULL);
 INSERT INTO CUSTOM_FIELD_DEFINITION(FIELD_ID,ENTITY_ID,FIELD_TYPE,ENTITY_TYPE,MANDATORY_FLAG,LEVEL_ID,DEFAULT_VALUE) 
@@ -3566,7 +3586,11 @@ VALUES(191,1);
 INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID) 
 VALUES(192,1);
 
+
 /* The table WEEK Days contains the week days information like Monday,Tuesday etc used by the system, it also contain the working day attribute against the same which can be configured by the MFI to indicate Monday is an offday - Configuration */
+/* Enter 1 into the WORKING_DAY field to indicate that the day is working day; 0 to indicate a non-working day. */
+/* Enter 1 into the START_OF_FISCAL_WEEK field to indicate that the day is the start of the fiscal week, and 0 for all other days.  Only one day should be marked as the start of the fiscal week.  This field is used for reporting purposes (ie, the timeperiod for weekly reports will start with the fiscal day) */
+/* The look-up values for days of the week are defined above, in LOOKUP_VALUE_LOCALE.   This list below starts with Sunday */
 INSERT INTO WEEK_DAYS_MASTER(WEEK_DAYS_MASTER_ID,LOOKUP_ID,WORKING_DAY,START_OF_FISCAL_WEEK)
 VALUES(1,72,0,0);
 INSERT INTO WEEK_DAYS_MASTER(WEEK_DAYS_MASTER_ID,LOOKUP_ID,WORKING_DAY,START_OF_FISCAL_WEEK)
@@ -3627,8 +3651,10 @@ INSERT INTO FEE_FREQUENCY_TYPE(FEE_FREQUENCY_ID,LOOKUP_ID) VALUES(1,558);
 INSERT INTO FEE_FREQUENCY_TYPE(FEE_FREQUENCY_ID,LOOKUP_ID) VALUES(2,559);
 
 /*master data for table FIELD_CONFIGURATION */
-/*Middle Name for client and personnel*/
 /* The table Field Configuration will contain the MFI configuration related to fields being mandatory , hidden etc - Configuration */
+/* ENTITY_ID is defined in the ENTITY_MASTER table and refers to entities such as client, personnel, groups, etc against which various data field can be marked as hidden and/or mandatory */
+
+/*Middle Name for client and personnel*/
 INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)
 VALUES(1,'MiddleName',1,0,0);
 INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)
@@ -4375,11 +4401,12 @@ INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) V
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(25,6,'Daily Portfolio quality data report - Aging analysis','analysis');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(26,7,'Kendra Meeting Schedule','kendra_meeting');
 
+/* The table Transaction Type defines the transaction types for which the MFI can assign acceptable payment methods.  - System.*/
 INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(1,'Loan Disbursement');
 INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(2,'Loan Repayment');
 INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(3,'Savings Deposit');
 INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(4,'Savings Withdrawals');
-INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(5,'Fees/penalty payments');
+INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(5,'Client Fees/penalty payments');
 
 /* The table Supported Modes will contain the different payment modes supported by the system - System*/
 INSERT INTO SUPPORTED_MODES (MODE_ID,TRANSACTION_ID,PAYMENT_TYPE_ID) VALUES (1,1,1);
