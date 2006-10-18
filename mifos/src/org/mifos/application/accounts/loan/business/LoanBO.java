@@ -60,7 +60,6 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;

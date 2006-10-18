@@ -13,7 +13,6 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.CustomerActivityEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;

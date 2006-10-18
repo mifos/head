@@ -42,9 +42,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -52,7 +50,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -67,7 +64,6 @@ import org.mifos.framework.util.helpers.Cache;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FileCacheRep;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.valueobjects.Context;
 
 /**
  * This class renders the table list.

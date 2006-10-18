@@ -38,9 +38,9 @@
 
 package org.mifos.framework.security.util;
 
-import org.mifos.framework.util.valueobjects.ValueObject;
+import org.mifos.framework.business.View;
 
-public class OfficeSearch extends ValueObject{
+public class OfficeSearch extends View{
 	/***************************** Fields **********************/
 	/**
 	 * This would hold the officeid

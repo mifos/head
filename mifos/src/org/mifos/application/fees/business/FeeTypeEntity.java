@@ -40,7 +40,7 @@ package org.mifos.application.fees.business;
 
 import java.util.Set;
 
-import org.mifos.application.master.util.valueobjects.LookUpEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.framework.business.PersistentObject;
 
 public class FeeTypeEntity extends PersistentObject {

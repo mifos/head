@@ -44,21 +44,6 @@ import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 
 public class SearchObject{// extends BasicDynaBean {
 
-	/*private String searchName;
-	private String userId;
-	private String branchId;
-	
-	public SearchObject(DynaClass arg0) {
-		super(arg0);
-	}
-	
-	public SearchObject(DynaClass arg0, Context context) {
-		super(arg0);
-		values.put(Constants.USER_ID, context.getUserId());
-		values.put(Constants.BRANCH_ID, context.getBranchId());
-		//searchName is already in the form. Should always be present
-	}*/
-	
 	private Map<String,String> searchNodeMap;
 	
 	public SearchObject(){

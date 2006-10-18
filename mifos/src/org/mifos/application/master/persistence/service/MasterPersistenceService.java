@@ -2,10 +2,10 @@ package org.mifos.application.master.persistence.service;
 
 import java.util.List;
 
+import org.mifos.application.master.business.EntityMaster;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.master.util.valueobjects.EntityMaster;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;

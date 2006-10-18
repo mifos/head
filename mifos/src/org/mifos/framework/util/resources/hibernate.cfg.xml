@@ -6,25 +6,9 @@
 	<session-factory>
 
 		<!-- master data mapping files-->
-		<mapping resource="org/mifos/application/master/util/valueobjects/Country.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/Language.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/SupportedLocales.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/LookUpEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/LookUpValueLocale.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/Position.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/Status.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/StatusFlag.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/LookUpLabel.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/LookUpValue.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/AccountState.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/AccountType.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/Currency.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/CollateralType.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/SavingsType.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/RecommendedAmntUnit.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/InterestCalcType.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/SpouseFatherLookup.hbm.xml" />
-		<mapping resource="org/mifos/application/master/util/valueobjects/GLCode.hbm.xml" />
+
+		<mapping resource="org/mifos/application/master/business/LookUpEntity.hbm.xml" />
+		<mapping resource="org/mifos/application/accounts/business/AccountTypeEntity.hbm.xml" />
 
 		<mapping resource="org/mifos/application/checklist/business/CheckListBO.hbm.xml" />
 		<mapping resource="org/mifos/application/checklist/business/CheckListDetailEntity.hbm.xml" />
@@ -33,9 +17,9 @@
 		<mapping resource="org/mifos/framework/security/util/PersonalRoles.hbm.xml" />
 		<!-- Product Definition -->
 		<mapping resource="org/mifos/application/productdefinition/business/PrdCategoryStatusEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/productdefinition/util/valueobjects/PaymentType.hbm.xml" />
+
 		<!-- Audit Log -->
-		<mapping resource="org/mifos/framework/struts/plugin/valueObjects/EntityMaster.hbm.xml" />
+		<mapping resource="org/mifos/framework/components/fieldConfiguration/business/EntityMaster.hbm.xml" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLog.hbm.xml" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLogRecord.hbm.xml" />
 		<!-- Cron Jobs -->
@@ -154,7 +138,7 @@
 		<mapping resource="org/mifos/application/master/business/SpouseFatherLookupEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/accounts/savings/business/SavingsPerformanceEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/accounts/business/AccountActionEntity.hbm.xml" />
-		<mapping resource="org/mifos/application/accounts/business/CustomerActivityEntity.hbm.xml" />
+		<mapping resource="org/mifos/application/customer/business/CustomerActivityEntity.hbm.xml" />
 		<mapping resource="org/mifos/application/office/business/OfficeCustomFieldEntity.hbm.xml" />
 
 		<mapping resource="org/mifos/application/master/business/InterestTypesEntity.hbm.xml" />

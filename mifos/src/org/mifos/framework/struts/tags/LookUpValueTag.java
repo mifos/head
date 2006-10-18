@@ -44,8 +44,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-import org.mifos.application.master.util.valueobjects.EntityMaster;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
+import org.mifos.application.master.business.EntityMaster;
+import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 

@@ -43,17 +43,17 @@ import java.util.Locale;
 
 import javax.servlet.jsp.JspException;
 
-import org.mifos.application.accounts.business.CustomerAccountView;
-import org.mifos.application.accounts.business.LoanAccountsProductView;
-import org.mifos.application.accounts.business.SavingsAccountView;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;

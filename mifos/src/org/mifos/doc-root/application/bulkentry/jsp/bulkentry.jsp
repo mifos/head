@@ -329,7 +329,7 @@
 											<td>
 												<mifos:select property="paymentId">
 													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PaymentTypesList')}" var="payment">
-														<html-el:option value="${payment.id}">${payment.lookUpValue}</html-el:option>
+														<html-el:option value="${payment.id}">${payment.name}</html-el:option>
 													</c:forEach>
 												</mifos:select>
 											</td>

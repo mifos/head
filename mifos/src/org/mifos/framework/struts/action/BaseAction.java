@@ -50,7 +50,7 @@ import org.mifos.framework.util.helpers.SearchObject;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.util.helpers.ValueObjectUtil;
+import org.mifos.framework.util.helpers.ConvertionUtil;
 
 public abstract class BaseAction extends DispatchAction {
 
@@ -85,7 +85,7 @@ public abstract class BaseAction extends DispatchAction {
 		BusinessObject object = getBusinessObjectFromSession(request);
 		if (!skipActionFormToBusinessObjectConversion((String) request
 				.getParameter("method")))
-			ValueObjectUtil.populateBusinessObject(actionForm, object, locale);
+			ConvertionUtil.populateBusinessObject(actionForm, object, locale);
 	}
 
 	protected TransactionDemarcate getTransaction(ActionForm actionForm,
@@ -245,7 +245,7 @@ public abstract class BaseAction extends DispatchAction {
 
 	protected SearchObject formSearchObject(ActionForm form,
 			HttpServletRequest request) throws SearchObjectNotCreatedException {
-		return ValueObjectUtil.getSearchObject(form);
+		return ConvertionUtil.getSearchObject(form);
 	}
 
 	protected UserContext getUserContext(HttpServletRequest request) {

@@ -37,52 +37,44 @@
  */
 package org.mifos.framework.hibernate.factory;
 
-
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 
 /**
- *  HibernateSessionFactory is used to get the hibernate session factory.
- *  Hibernate session factory is configured with mapping configuration files.
- *  Hibernate sessions are got using this session factory. 
- *  Hibernate uses this configuration information to perform all its 
- *  activities when apis are invoked on the hibernate session object.
+ * HibernateSessionFactory is used to get the hibernate session factory.
+ * Hibernate session factory is configured with mapping configuration files.
+ * Hibernate sessions are got using this session factory. Hibernate uses this
+ * configuration information to perform all its activities when apis are invoked
+ * on the hibernate session object.
  */
-public class HibernateSessionFactory
-{
+public class HibernateSessionFactory {
 
-    private static SessionFactory sessionFactory;
+	private static SessionFactory sessionFactory;
 
-    /**
-	 * Set the static hibernate session factory from
-	 * the hibernate configuration passed as a parameter.
+	/**
+	 * Set the static hibernate session factory from the hibernate configuration
+	 * passed as a parameter.
 	 */
-    public static void setConfiguration(Configuration config)
-	throws HibernateStartUpException {
+	public static void setConfiguration(Configuration config)
+			throws HibernateStartUpException {
 		try {
-			/** Throwing HibernateStartUpException
-			    seems to cause somewhat mysterious failures
-			    in {@link TestConstPlugin}.
-			    
-			    Why?
-			    
-			    And shouldn't we at least call .close()
-			    on the old sessionFactory, if nothing else?
-			*/
-//			if (sessionFactory != null) {
-//				/* Re-opening the sesssion factory on every test
-//				 * seems to be too slow.  */
-//				throw new HibernateStartUpException(
-//					"Session factory is already open");
-//			}
+			/**
+			 * Throwing HibernateStartUpException seems to cause somewhat
+			 * mysterious failures in {@link TestConstPlugin}.
+			 * 
+			 * Why?
+			 * 
+			 * And shouldn't we at least call .close() on the old
+			 * sessionFactory, if nothing else?
+			 */
 			sessionFactory = config.buildSessionFactory();
 		} catch (Exception e) {
 			throw new HibernateStartUpException(e);
 		}
 	}
 
-    /**
+	/**
 	 * The call to getSessionFactory returns the HibernateSessionFactory which
 	 * is configured with the mapping hibernate configuration files
 	 */

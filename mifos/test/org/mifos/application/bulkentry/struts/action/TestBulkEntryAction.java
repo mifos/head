@@ -53,11 +53,10 @@ import javax.servlet.http.HttpSession;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.business.CustomerAccountView;
-import org.mifos.application.accounts.business.LoanAccountView;
-import org.mifos.application.accounts.business.SavingsAccountView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
@@ -65,8 +64,10 @@ import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -446,15 +447,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				savingsOffering3);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils
-				.setAttribute(
-						BulkEntryConstants.PAYMENT_TYPES_LIST,
-						masterService
-								.getMasterData(
-										MasterConstants.PAYMENT_TYPE,
-										userContext.getLocaleId(),
-										"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
-										"paymentTypeId").getLookUpMaster(),
-						request);
+		.setAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST,
+				masterService.retrieveMasterEntities(
+						PaymentTypeEntity.class, userContext
+								.getLocaleId()), request);
 		SessionUtils.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 				Constants.YES, request);
 

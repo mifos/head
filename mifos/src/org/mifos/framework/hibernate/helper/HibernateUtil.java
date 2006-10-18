@@ -51,51 +51,44 @@ import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 public class HibernateUtil {
 
 	private static final SessionFactory sessionFactory;
-	
-	private static final ThreadLocal<SessionHolder> threadLocal = 
-		new ThreadLocal<SessionHolder>();
-	
+
+	private static final ThreadLocal<SessionHolder> threadLocal = new ThreadLocal<SessionHolder>();
+
 	static {
 		try {
 			sessionFactory = HibernateSessionFactory.getSessionFactory();
 		} catch (Throwable ex) {
-			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
-			    .error("Initial SessionFactory creation failed.", false, null, ex);
+			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error(
+					"Initial SessionFactory creation failed.", false, null, ex);
 
 			throw new ExceptionInInitializerError(ex);
 		}
 	}
 
 	/**
-	 * Method returns a hibernate session object 
-	 * which it obtains from SessionFactory.
+	 * Method returns a hibernate session object which it obtains from
+	 * SessionFactory.
 	 */
-	public static Session getSession() throws HibernateProcessException
-	{
-		try
-		{
+	public static Session getSession() throws HibernateProcessException {
+		try {
 			return sessionFactory.openSession();
 		} catch (HibernateException e) {
-			throw new HibernateProcessException(HibernateConstants.FAILED_OPENINGSESSION,e);
+			throw new HibernateProcessException(
+					HibernateConstants.FAILED_OPENINGSESSION, e);
 		}
 	}
 
-	public static void closeSession(Session session) 
-	throws HibernateProcessException
-	{
-		try
-		{
-			if(session != null && session.isOpen() )
-			{
+	public static void closeSession(Session session)
+			throws HibernateProcessException {
+		try {
+			if (session != null && session.isOpen()) {
 				session.close();
 				session = null;
 			}
 
-
-		}
-		catch(HibernateException e)
-		{
-			throw new HibernateProcessException(HibernateConstants.FAILED_CLOSINGSESSION,e);
+		} catch (HibernateException e) {
+			throw new HibernateProcessException(
+					HibernateConstants.FAILED_CLOSINGSESSION, e);
 		}
 
 	}
@@ -103,18 +96,16 @@ public class HibernateUtil {
 	/**
 	 * Method that returns the hibernate session factory
 	 */
-	public static SessionFactory getSessionFactory()
-	{
+	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
-	
 	public static Session getSessionTL() {
 		try {
 			if (threadLocal.get() == null) {
 				AuditInterceptor auditInterceptor = new AuditInterceptor();
-				SessionHolder sessionHolder = 
-					new SessionHolder(sessionFactory.openSession(auditInterceptor));
+				SessionHolder sessionHolder = new SessionHolder(sessionFactory
+						.openSession(auditInterceptor));
 				sessionHolder.setInterceptor(auditInterceptor);
 				threadLocal.set(sessionHolder);
 			}
@@ -124,16 +115,14 @@ public class HibernateUtil {
 		return threadLocal.get().getSession();
 
 	}
-	
-	public static AuditInterceptor getInterceptor(){
+
+	public static AuditInterceptor getInterceptor() {
 		return getSessionHolder().getInterceptor();
 	}
-	
 
 	public static Transaction startTransaction() {
 		Transaction transaction = getSessionHolder().getTransaction();
-		if(transaction == null)
-		{
+		if (transaction == null) {
 			transaction = getSessionHolder().getSession().beginTransaction();
 			getSessionHolder().setTranasction(transaction);
 		}
@@ -141,26 +130,27 @@ public class HibernateUtil {
 	}
 
 	public static Transaction getTransaction() {
-		if(getSessionHolder() == null)
+		if (getSessionHolder() == null)
 			return null;
-		
+
 		return getSessionHolder().getTransaction();
 	}
 
 	public static void closeSession() {
 		SessionHolder sessionHolder = getSessionHolder();
-		if(sessionHolder != null){
+		if (sessionHolder != null) {
 			Session session = sessionHolder.getSession();
 			session.close();
 			session = null;
 			getSessionHolder().setInterceptor(null);
 			threadLocal.set(null);
 		}
-		
+
 	}
+
 	public static void closeandFlushSession() {
 		SessionHolder sessionHolder = getSessionHolder();
-		if(sessionHolder != null){
+		if (sessionHolder != null) {
 			Session session = sessionHolder.getSession();
 			session.flush();
 			session.close();
@@ -168,40 +158,39 @@ public class HibernateUtil {
 			getSessionHolder().setInterceptor(null);
 			threadLocal.set(null);
 		}
-		
+
 	}
 
 	private static SessionHolder getSessionHolder() {
 		if (null == threadLocal.get()) {
-			// need to log to indicate that the session is being invoked when not present
-			
+			// need to log to indicate that the session is being invoked when
+			// not present
+
 		}
 		return threadLocal.get();
 	}
-	
-	public static boolean isSessionOpen()
-	{
-		if(getSessionHolder()== null)
+
+	public static boolean isSessionOpen() {
+		if (getSessionHolder() == null)
 			return false;
-		
+
 		return true;
 	}
 
 	public static void commitTransaction() {
-		if(getTransaction()!=null){
+		if (getTransaction() != null) {
 			getTransaction().commit();
 			getSessionHolder().setTranasction(null);
 		}
-		
+
 	}
 
 	public static void rollbackTransaction() {
-		if(getTransaction()!=null){
+		if (getTransaction() != null) {
 			getTransaction().rollback();
 			getSessionHolder().setTranasction(null);
 		}
-		
+
 	}
 
 }
-

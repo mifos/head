@@ -37,123 +37,103 @@
  */
 package org.mifos.framework.hibernate.helper;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.type.Type;
 
 /**
- *  This is the interface that is returned on a search operation. Search would typically result in a set of search result objects , these search result objects would be obtained through hibernate scroll for pagination in the front end , the associate hibernate session would be held in this object , a call to close from the front end on this interface would result in the hibernate session object getting closed.
+ * This is the interface that is returned on a search operation. Search would
+ * typically result in a set of search result objects , these search result
+ * objects would be obtained through hibernate scroll for pagination in the
+ * front end , the associate hibernate session would be held in this object , a
+ * call to close from the front end on this interface would result in the
+ * hibernate session object getting closed.
  */
-public class QueryInputs
-{
- 
-   private String dtoPath;
-   private Type[] returnTypes;
-   private String[] aliasNames;
-   private boolean buildDTO = true;
-   private String[] queryStrings=new String[2];
-   java.util.List paramList = new java.util.ArrayList();
+public class QueryInputs {
 
+	private String dtoPath;
 
-/**
- * @return Returns the paramList.
- */
-public java.util.List getParamList() {
-	return paramList;
-}
-/**
- * @param paramList The paramList to set.
- */
-public void setParamList(java.util.List paramList) {
-	this.paramList = paramList;
-}
+	private Type[] returnTypes;
 
-/**
- * @return Returns the queryStrings.
- */
-public String[] getQueryStrings() {
-	return queryStrings;
-}
-/**
- * @param queryStrings The queryStrings to set.
- */
-public void setQueryStrings(String[] queryStrings) {
-	this.queryStrings = queryStrings;
-}
-/**
-	  * Set the path which will be used for building the DTO
-	  * @param path
-     */
-   public void setPath(String path)
-   {
-    	this.dtoPath = path;
-   }
-/**
-	  * Set the return types which will be used for building the DTO
-	  * @param returnTypes
-     */
-   public void setTypes(Type[] returnTypes)
-   {
-   	this.returnTypes = returnTypes;
-   }
+	private String[] aliasNames;
 
-   /**
-   	  * Set the alias names of the columns which will be used for building the DTO
-   	  * @param aliasNames
-     */
-   public void setAliasNames(String[] aliasNames)
-   {
-   	this.aliasNames = aliasNames;
-   }
+	private boolean buildDTO = true;
 
-     /**
-        * Return the path for building the DTO
-        * @return String
-     */
-   public String getPath()
-   {
-       	return dtoPath;
-   }
-   /**
-    * Return the types for building the DTO
-     * @return Type[]
-     */
+	private String[] queryStrings = new String[2];
 
-    public Type[] getTypes()
-    {
-      	return returnTypes;
-    }
+	List paramList = new ArrayList();
 
-      /**
-	    * Return the alias names for building the DTO
-	     * @return String[]
-     */
-    public String[] getAliasNames()
-   {
-      	return  aliasNames;
-   }
+	
+	public List getParamList() {
+		return paramList;
+	}
 
-   /**
-      	  * Set the boolean to indicate wether DTO has to be built
-      	  * @param buildDTO
-     */
-   public void setBuildDTO(boolean buildDTO)
-   {
-	   this.buildDTO = buildDTO;
-   }
+	
+	public void setParamList(List paramList) {
+		this.paramList = paramList;
+	}
 
-    /**
-     * Return the boolean to indicate wether DTO has to be built
-     * @param boolean
-     */
-   public boolean getBuildDTO()
-   {
-	   return buildDTO;
-   }
+	public String[] getQueryStrings() {
+		return queryStrings;
+	}
 
-   public void cleanUp()
-   {
-		dtoPath	= null;
-		returnTypes  = null;
-		aliasNames = null;
+	
+	public void setQueryStrings(String[] queryStrings) {
+		this.queryStrings = queryStrings;
+	}
 
-   }
+	/**
+	 * Set the path which will be used for building the DTO
+	 */
+	public void setPath(String path) {
+		this.dtoPath = path;
+	}
+
+	/**
+	 * Set the return types which will be used for building the DTO
+	 */
+	public void setTypes(Type[] returnTypes) {
+		this.returnTypes = returnTypes;
+	}
+
+	/**
+	 * Set the alias names of the columns which will be used for building the
+	 * DTO
+	 */
+	public void setAliasNames(String[] aliasNames) {
+		this.aliasNames = aliasNames;
+	}
+
+	/**
+	 * Return the path for building the DTO
+	 */
+	public String getPath() {
+		return dtoPath;
+	}
+
+	/**
+	 * Return the types for building the DTO
+	 */
+
+	public Type[] getTypes() {
+		return returnTypes;
+	}
+
+	/**
+	 * Return the alias names for building the DTO
+	 */
+	public String[] getAliasNames() {
+		return aliasNames;
+	}
+
+	
+	/**
+	 * Return the boolean to indicate wether DTO has to be built
+	 */
+	public boolean getBuildDTO() {
+		return buildDTO;
+	}
+
 }

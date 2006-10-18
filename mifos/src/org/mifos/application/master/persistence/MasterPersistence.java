@@ -12,12 +12,12 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.business.EntityMaster;
+import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.TransactionTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.master.util.valueobjects.EntityMaster;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -84,9 +84,12 @@ public class MasterPersistence extends Persistence {
 	private List<LookUpMaster> lookUpValue(String entityName, Short localeId,
 			String classPath, String column, Session session) {
 
-		String q = "select new org.mifos.application.master.util.valueobjects.LookUpMaster(mainTable.";
-		String q2 = " ,lookup.lookUpId,lookupvalue.lookUpValue) from org.mifos.application.master.util.valueobjects.LookUpValue lookup,org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue,";
-		String q3 = " mainTable where mainTable.lookUpId =lookup.lookUpId and lookup.lookUpEntity.entityType =? and lookup.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=?";
+		String q = "select new org.mifos.application.master.business.LookUpMaster(mainTable.";
+		String q2 = " ,lookup.lookUpId,lookupvalue.lookUpValue) " +
+				"from org.mifos.application.master.business.LookUpValueEntity lookup," +
+				"org.mifos.application.master.business.LookUpValueLocaleEntity lookupvalue,";
+		String q3 = " mainTable where mainTable.lookUpId =lookup.lookUpId and lookup.lookUpEntity.entityType =?" +
+				" and lookup.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=?";
 
 		q = q + column + q2 + classPath + q3;
 

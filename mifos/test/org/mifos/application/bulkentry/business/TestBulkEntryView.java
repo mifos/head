@@ -4,9 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.business.CustomerAccountView;
-import org.mifos.application.accounts.business.LoanAccountsProductView;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
@@ -15,6 +14,7 @@ import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.meeting.business.MeetingBO;

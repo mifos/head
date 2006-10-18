@@ -38,9 +38,9 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.framework.util.valueobjects.ValueObject;
+import org.mifos.framework.persistence.Persistence;
 
-public class LookUpValueLocaleEntity extends ValueObject {
+public class LookUpValueLocaleEntity extends Persistence {
 
 	private String lookUpValue;
 

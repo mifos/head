@@ -2,11 +2,11 @@ package org.mifos.framework.components.fieldConfiguration.persistence.service;
 
 import java.util.List;
 
+import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.service.PersistenceService;
-import org.mifos.framework.struts.plugin.valueObjects.EntityMaster;
 
 public class FieldConfigurationPersistenceService extends PersistenceService{
 	

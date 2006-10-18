@@ -13,14 +13,5 @@
         <property name="lookUpId" column="ATTENDANCE_LOOKUP_ID" type="integer" />
         <property name="desciption" column="DESCRIPTION" />
   	</class>
-  <!--	<query name="bulkEntry.getCustAttTypes">
-  		<![CDATA[select new 
-  			org.mifos.application.productdefinition.util.valueobjects.MasterObject(
-  			cat.attendanceId,lookupvalue.lookUpValue) 
-  			from org.mifos.application.bulkentry.util.valueobjects.CustomerAttendanceTypes cat,
-  			org.mifos.application.master.util.valueobjects.LookUpValueLocale lookupvalue 
-  			where cat.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId
-  		]]>
-  	</query> -->
 </hibernate-mapping>
         

@@ -10,7 +10,7 @@ public class MifosSelectHelper {
 
 	private static MifosSelectHelper instance = new MifosSelectHelper(); 
 	private MifosSelectHelper() {
-		map.put(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, new String[]{"org.mifos.application.master.util.valueobjects.PrdCategoryStatus", ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID});
+		map.put(ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID, new String[]{"org.mifos.application.productdefinition.business.PrdStatusEntity", ProductDefinitionConstants.PRODUCTCATEGORYSTATUSID});
 	}
 	public static MifosSelectHelper getInstance(){
 		return instance;

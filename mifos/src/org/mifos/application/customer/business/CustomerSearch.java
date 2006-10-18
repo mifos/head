@@ -42,12 +42,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mifos.framework.util.valueobjects.ValueObject;
+import org.mifos.framework.business.View;
+
 
 /**
  * This class acts a valueobject for searching customers.
  */
-public class CustomerSearch extends ValueObject {
+public class CustomerSearch extends View {
 	
 	public CustomerSearch() {
 		super();

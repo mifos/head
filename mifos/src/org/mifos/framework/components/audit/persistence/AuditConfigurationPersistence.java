@@ -9,9 +9,9 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.util.valueobjects.LookUpEntity;
-import org.mifos.application.master.util.valueobjects.LookUpLabel;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -31,11 +31,11 @@ public class AuditConfigurationPersistence extends Persistence {
 						.next();
 				LookUpEntity lookUpEntity = customFieldDefinitionEntity
 						.getLookUpEntity();
-				Set<LookUpLabel> lookUpLabelSet = lookUpEntity
+				Set<LookUpLabelEntity> lookUpLabelSet = lookUpEntity
 						.getLookUpLabelSet();
-				for (Iterator<LookUpLabel> iterator = lookUpLabelSet.iterator(); iterator
+				for (Iterator<LookUpLabelEntity> iterator = lookUpLabelSet.iterator(); iterator
 						.hasNext();) {
-					LookUpLabel lookUpLabel = iterator.next();
+					LookUpLabelEntity lookUpLabel = iterator.next();
 					if (lookUpLabel.getLocaleId().equals(localeId)) {
 						valueMap.put(customFieldDefinitionEntity.getFieldId()
 								.toString(), lookUpLabel.getLabelName());

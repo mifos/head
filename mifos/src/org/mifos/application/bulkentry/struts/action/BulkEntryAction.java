@@ -53,20 +53,21 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.business.CustomerAccountView;
-import org.mifos.application.accounts.business.LoanAccountsProductView;
-import org.mifos.application.accounts.business.SavingsAccountView;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
+import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.master.business.LookUpMaster;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.resources.OfficeConstants;
@@ -170,15 +171,10 @@ public class BulkEntryAction extends BaseAction {
 				request.setAttribute(BulkEntryConstants.REFRESH, Constants.YES);
 			}
 			SessionUtils
-					.setAttribute(
-							BulkEntryConstants.PAYMENT_TYPES_LIST,
-							masterService
-									.getMasterData(
-											MasterConstants.PAYMENT_TYPE,
-											userContext.getLocaleId(),
-											"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
-											"paymentTypeId").getLookUpMaster(),
-							request);
+					.setAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST,
+							masterService.retrieveMasterEntities(
+									PaymentTypeEntity.class, userContext
+											.getLocaleId()), request);
 			SessionUtils.setAttribute(
 					BulkEntryConstants.ISBACKDATEDTRXNALLOWED, Constants.NO,
 					request);
@@ -724,7 +720,7 @@ public class BulkEntryAction extends BaseAction {
 		int i = 0;
 		BulkEntryActionForm bulkEntryForm = (BulkEntryActionForm) form;
 		Short paymentTypeId = Short.valueOf(bulkEntryForm.getPaymentId());
-		List<LookUpMaster> paymentTypeList = (List<LookUpMaster>) SessionUtils
+		List<PaymentTypeEntity> paymentTypeList = (List<PaymentTypeEntity>) SessionUtils
 				.getAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST, request);
 		for (i = 0; i < paymentTypeList.size(); i++) {
 			if (paymentTypeId.shortValue() == paymentTypeList.get(i).getId()
@@ -736,7 +732,7 @@ public class BulkEntryAction extends BaseAction {
 		paymentType.setPaymentTypeId(paymentTypeList.get(i).getId()
 				.shortValue());
 		paymentType
-				.setPaymentTypeValue(paymentTypeList.get(i).getLookUpValue());
+				.setPaymentTypeValue(paymentTypeList.get(i).getName());
 		return paymentType;
 	}
 

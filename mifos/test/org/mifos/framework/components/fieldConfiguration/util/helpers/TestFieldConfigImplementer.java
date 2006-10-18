@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.service.FieldConfigurationPersistenceService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
-import org.mifos.framework.struts.plugin.valueObjects.EntityMaster;
 
 public class TestFieldConfigImplementer extends MifosTestCase{
 	

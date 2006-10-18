@@ -51,7 +51,7 @@
 			<one-to-many class="org.mifos.application.accounts.financial.business.FinancialTransactionBO"/>
 		</list>
 		<joined-subclass
-			name="org.mifos.application.accounts.business.LoanTrxnDetailEntity"
+			name="org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity"
 			table="LOAN_TRXN_DETAIL">
 			<key column="ACCOUNT_TRXN_ID" />
 			<property name="principalAmount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">

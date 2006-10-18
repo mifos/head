@@ -10,7 +10,7 @@ import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.taglib.html.Constants;
 import org.apache.strutsel.taglib.html.ELSelectTag;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
+import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 

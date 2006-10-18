@@ -45,10 +45,6 @@ public class PaymentTypeEntity extends MasterDataEntity {
 		super();
 	}
 	
-	public void setId(Short id){
-		super.setId(id);
-	}
-	
 	public PaymentTypeEntity(Short id) {
 		super(id);
 	}

@@ -1,6 +1,5 @@
 package org.mifos.framework.components.fieldConfiguration.business;
 
-import org.mifos.framework.struts.plugin.valueObjects.EntityMaster;
 
 
 

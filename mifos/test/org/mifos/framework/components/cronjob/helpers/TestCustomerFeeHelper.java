@@ -11,7 +11,7 @@ import org.hibernate.Query;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.business.CustomerActivityEntity;
+import org.mifos.application.customer.business.CustomerActivityEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.TestCustomerAccountBO;

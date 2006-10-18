@@ -44,8 +44,6 @@ package org.mifos.framework.exceptions;
  * 
  */
 public class HibernateStartUpException extends SystemException {
-	private String key = "exception.framework.SystemException.HibernateStartUpException";
-
 	public HibernateStartUpException(Object[] values) {
 		super(values);
 
@@ -59,11 +57,6 @@ public class HibernateStartUpException extends SystemException {
 	public HibernateStartUpException(String key, Throwable cause) {
 		super(key, cause);
 
-	}
-
-	@Override
-	public String getKey() {
-		return key;
 	}
 
 }

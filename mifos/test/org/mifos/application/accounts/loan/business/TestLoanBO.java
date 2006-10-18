@@ -20,7 +20,6 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.exceptions.AccountException;

@@ -52,7 +52,7 @@ import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.struts.uihelpers.BulkEntryDisplayHelper;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
+import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;

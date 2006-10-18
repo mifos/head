@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+
+<hibernate-mapping>
+
+	<class name="org.mifos.application.customer.business.CustomerActivityEntity" table="CUSTOMER_ACCOUNT_ACTIVITY">
+		<id name="customerActivityId" column="CUSTOMER_ACCOUNT_ACTIVITY_ID" type="integer" access="field">
+			<generator class="native" />
+		</id>
+		<property name="amount" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" access="field">
+			<column name="FEE_AMOUNT_CURRENCY_ID" />
+			<column name="AMOUNT" />
+		</property>
+		<property name="description" column="DESCRIPTION" access="field" />
+		<property name="createdDate" column="CREATED_DATE" access="field" />
+		<many-to-one name="customerAccount" column="ACCOUNT_ID" class="org.mifos.application.customer.business.CustomerAccountBO" access="field" />
+		<many-to-one name="personnel" column="CREATED_BY" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" access="field" />
+	</class>
+</hibernate-mapping>

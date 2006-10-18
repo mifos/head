@@ -71,7 +71,6 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeFrequencyType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.office.business.OfficeBO;
@@ -95,7 +94,7 @@ public class AccountBO extends BusinessObject {
 
 	protected String globalAccountNum;
 
-	protected final AccountType accountType;
+	protected final AccountTypeEntity accountType;
 
 	protected final CustomerBO customer;
 
@@ -152,7 +151,7 @@ public class AccountBO extends BusinessObject {
 		accountFlags = new HashSet<AccountFlagMapping>();
 		this.accountId = null;
 		this.customer = customer;
-		this.accountType = new AccountType(accountType.getValue());
+		this.accountType = new AccountTypeEntity(accountType.getValue());
 		this.office = customer.getOffice();
 		this.personnel = customer.getPersonnel();
 		this.setAccountState(new AccountStateEntity(accountState));
@@ -167,7 +166,7 @@ public class AccountBO extends BusinessObject {
 		return globalAccountNum;
 	}
 
-	public AccountType getAccountType() {
+	public AccountTypeEntity getAccountType() {
 		return accountType;
 	}
 

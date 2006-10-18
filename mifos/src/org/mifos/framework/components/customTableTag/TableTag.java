@@ -15,7 +15,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.valueobjects.Context;
 
 public class TableTag extends BodyTagSupport {
 
@@ -107,7 +106,7 @@ public class TableTag extends BodyTagSupport {
 								.toString());
 
 			tableInfo = new StringBuilder();
-			if (source == null || scope==null) {
+			if (source == null || scope == null) {
 				throw new JspException();
 			}
 			List obj = null;
@@ -128,15 +127,10 @@ public class TableTag extends BodyTagSupport {
 
 			if (passLocale != null && passLocale.equalsIgnoreCase("true")) {
 				if (obj != null || !obj.isEmpty()) {
-					Context context = (Context) pageContext.getRequest()
-							.getAttribute(Constants.CONTEXT);
-					UserContext userContext = null;
-					if (context != null) {
-						userContext = context.getUserContext();
-					} else {
-						userContext = (UserContext) pageContext.getSession()
-								.getAttribute(Constants.USER_CONTEXT_KEY);
-					}
+					UserContext userContext = (UserContext) pageContext
+							.getSession().getAttribute(
+									Constants.USER_CONTEXT_KEY);
+
 					populateLocale(userContext);
 				}
 			}

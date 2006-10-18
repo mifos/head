@@ -8,11 +8,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.struts.plugin.valueObjects.EntityMaster;
 
 public final class EntityMasterData {
 

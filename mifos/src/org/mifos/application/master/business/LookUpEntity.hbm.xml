@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.mifos.application.master.business.LookUpEntity" table="LOOKUP_ENTITY">
+		<id column="ENTITY_ID" name="entityId" type="java.lang.Short">
+			<generator class="native"></generator>
+		</id>
+		<property column="ENTITY_NAME" name="entityType" type="java.lang.String" />
+
+		<set name="lookUpLabelSet" cascade="all" lazy="false">
+			<key column="ENTITY_ID" update="false" />
+			<one-to-many class="org.mifos.application.master.business.LookUpLabelEntity" />
+		</set>
+		<set name="lookUpValueSet" cascade="all" lazy="false">
+			<key column="ENTITY_ID" update="false" />
+			<one-to-many class="org.mifos.application.master.business.LookUpValueEntity" />
+		</set>
+
+
+	</class>
+
+	<query name="masterdata.entityvalue">
+		<![CDATA[select new org.mifos.application.master.business.EntityMaster(entity.entityId ,label.localeId,label.labelName) 
+				from org.mifos.application.master.business.LookUpEntity entity, 
+				org.mifos.application.master.business.LookUpLabelEntity label 
+				where entity.entityId = label.lookUpEntity.entityId and label.localeId=:localeId and 
+				entity.entityType=:entityType]]>
+	</query>
+	<query name="masterdata.entitylookupvalue">
+		<![CDATA[select new org.mifos.application.master.business.LookUpMaster(
+				lookup.lookUpId,lookupvalue.lookUpValue) 
+				from org.mifos.application.master.business.LookUpValueEntity lookup,
+				org.mifos.application.master.business.LookUpEntity entity,
+				org.mifos.application.master.business.LookUpValueLocaleEntity lookupvalue 
+				where entity.entityType=:entityType and lookup.lookUpEntity.entityId =entity.entityId and 
+				lookup.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=:localeId  ]]>
+	</query>
+
+
+
+</hibernate-mapping>

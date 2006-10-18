@@ -7,10 +7,10 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.master.business.EntityMaster;
+import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.master.util.valueobjects.EntityMaster;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
@@ -116,12 +116,12 @@ public class TestMasterBusinessService extends MifosTestCase {
 	public void testGetMasterData() throws Exception {
 		EntityMaster paymentTypes = masterService
 				.getMasterData(
-						MasterConstants.PAYMENT_TYPE,
-						Short.valueOf("1"),
-						"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
-						"paymentTypeId");
+						MasterConstants.ATTENDENCETYPES,
+						(short)1,
+						"org.mifos.application.master.business.CustomerAttendance",
+						"attendanceId");
 		List<LookUpMaster> paymentValues = paymentTypes.getLookUpMaster();
-		assertEquals(TestConstants.PAYMENTTYPES_NUMBER, paymentValues.size());
+		assertEquals(4, paymentValues.size());
 
 	}
 	

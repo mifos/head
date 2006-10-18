@@ -56,17 +56,17 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.CustomerAccountView;
+import org.mifos.application.accounts.business.AccountTypeEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
-import org.mifos.application.accounts.business.LoanAccountView;
-import org.mifos.application.accounts.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
@@ -104,6 +104,7 @@ import org.mifos.application.customer.client.business.ClientNameDetailView;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -122,7 +123,6 @@ import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.util.valueobjects.AccountType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -1035,7 +1035,7 @@ public class TestObjectFactory {
 
 	private static void deleteAccountActionDates(AccountBO account) {
 		Session session = HibernateUtil.getSessionTL();
-		AccountType accountType = account.getAccountType();
+		AccountTypeEntity accountType = account.getAccountType();
 		for (AccountActionDateEntity actionDates : account
 				.getAccountActionDates()) {
 			if (accountType

@@ -9,7 +9,7 @@
 	      <generator class="native"/>
      </id>
     <property name="fieldName" column="FIELD_NAME" />
-    <many-to-one  class="org.mifos.framework.struts.plugin.valueObjects.EntityMaster" name="entityMaster" column="ENTITY_ID" />
+    <many-to-one  class="org.mifos.framework.components.fieldConfiguration.business.EntityMaster" name="entityMaster" column="ENTITY_ID" />
     <property name="mandatoryFlag" column="MANDATORY_FLAG"/>
     <property name="hiddenFlag" column="HIDDEN_FLAG"/>
     <many-to-one  class="org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity" name="parentFieldConfig" column="PARENT_FIELD_CONFIG_ID" />

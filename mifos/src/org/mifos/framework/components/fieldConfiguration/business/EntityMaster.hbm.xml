@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping>
+ <class name="org.mifos.framework.components.fieldConfiguration.business.EntityMaster" table="ENTITY_MASTER">
+     <id name="id" type="short" column="ENTITY_TYPE_ID">
+      <generator class="native"/>
+    </id>
+   <property name="entityType" type="string" column="ENTITY_TYPE" />
+     </class>
+ <query name="getEntityMaster">
+            <![CDATA[from EntityMaster]]>
+     </query>
+</hibernate-mapping>
+ 

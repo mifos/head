@@ -20,7 +20,7 @@
 		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
 		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
 		<many-to-one name="accountState" column="ACCOUNT_STATE_ID" class="org.mifos.application.accounts.business.AccountStateEntity" cascade="none" update="true" insert="true" unique="true" lazy="true" />
-		<many-to-one name="accountType" column="ACCOUNT_TYPE_ID" class="org.mifos.application.master.util.valueobjects.AccountType" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
+		<many-to-one name="accountType" column="ACCOUNT_TYPE_ID" class="org.mifos.application.accounts.business.AccountTypeEntity" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
 		<many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
 
 		<set name="accountNotes" cascade="all" inverse="true" table="ACCOUNT_NOTES" lazy="true" order-by="ACCOUNT_NOTES_ID desc" access="field">
@@ -136,7 +136,7 @@
 			<key column="ACCOUNT_ID" />
 			<set name="customerActivitDetails" cascade="all" inverse="true" table="CUSTOMER_ACCOUNT_ACTIVITY" lazy="true" order-by="CUSTOMER_ACCOUNT_ACTIVITY_ID desc">
 				<key column="ACCOUNT_ID" />
-				<one-to-many class="org.mifos.application.accounts.business.CustomerActivityEntity" />
+				<one-to-many class="org.mifos.application.customer.business.CustomerActivityEntity" />
 			</set>
 			<set name="accountActionDates" cascade="all" inverse="true" table="CUSTOMER_SCHEDULE" lazy="true" order-by="INSTALLMENT_ID asc" access="field">
 				<key column="ACCOUNT_ID" />

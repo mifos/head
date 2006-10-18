@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
+import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;

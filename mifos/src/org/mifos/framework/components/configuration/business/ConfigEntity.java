@@ -1,9 +1,9 @@
 package org.mifos.framework.components.configuration.business;
 
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.framework.util.valueobjects.ValueObject;
+import org.mifos.framework.persistence.Persistence;
 
-public class ConfigEntity extends ValueObject {
+public class ConfigEntity extends Persistence {
 
 	private Short systemConfigId;
 	private OfficeBO office;

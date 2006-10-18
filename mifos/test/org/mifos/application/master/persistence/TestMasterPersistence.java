@@ -3,12 +3,12 @@ package org.mifos.application.master.persistence;
 import java.util.List;
 
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.business.EntityMaster;
+import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.master.util.valueobjects.EntityMaster;
-import org.mifos.application.master.util.valueobjects.LookUpMaster;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -32,12 +32,12 @@ public class TestMasterPersistence extends MifosTestCase {
 		MasterPersistence masterPersistence = new MasterPersistence();
 		EntityMaster paymentTypes = masterPersistence
 				.getLookUpEntity(
-						MasterConstants.PAYMENT_TYPE,
-						Short.valueOf("1"),
-						"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
-						"paymentTypeId");
+						MasterConstants.ATTENDENCETYPES,
+						(short)1,
+						"org.mifos.application.master.business.CustomerAttendance",
+						"attendanceId");
 		List<LookUpMaster> paymentValues = paymentTypes.getLookUpMaster();
-		assertEquals(TestConstants.PAYMENTTYPES_NUMBER, paymentValues.size());
+		assertEquals(4, paymentValues.size());
 
 	}
 
@@ -48,10 +48,10 @@ public class TestMasterPersistence extends MifosTestCase {
 		try {
 			masterPersistence
 					.getLookUpEntity(
-							MasterConstants.PAYMENT_TYPE,
-							Short.valueOf("1"),
-							"org.mifos.application.productdefinition.util.valueobjects.PaymentType",
-							"paymentTypeId");
+							MasterConstants.ATTENDENCETYPES,
+							(short)1,
+							"org.mifos.application.master.business.CustomerAttendance",
+							"attendanceId");
 			fail();
 		} catch (Exception e) {
 			assertTrue(true);
