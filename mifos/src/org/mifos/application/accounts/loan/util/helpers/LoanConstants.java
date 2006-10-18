@@ -164,4 +164,5 @@ public interface LoanConstants {
 	public final String FEE_WAIVED = "Fee waived";
 	public final String PENALTY_WAIVED = "Penalty waived";
 	public final String CUSTOM_FIELDS = "customFields";
+	public final String ERRORS_SPECIFY_CUSTOM_FIELD_VALUE = "errors.Account.specifyCustomFieldValue";
 }

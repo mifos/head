@@ -52,16 +52,20 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -480,6 +484,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 					LoanConstants.GRACEPERIODDURATION, noInst);
 		}
 		validateFees(request, errors);
+		validateCustomFields(request, errors);
 
 	}
 
@@ -550,5 +555,28 @@ public class LoanAccountActionForm extends BaseActionForm {
 			if (fee.getFeeId().equals(selectedFee.getFeeId()))
 				return fee.isPeriodic();
 		return false;
+	}
+	
+	private  void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
+		try {
+			List<CustomFieldDefinitionEntity> customFieldDefs =(List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+			for(CustomFieldView customField : customFields){
+				boolean isErrorFound = false;
+				for(CustomFieldDefinitionEntity customFieldDef : customFieldDefs){
+					if(customField.getFieldId().equals(customFieldDef.getFieldId())&& customFieldDef.isMandatory()){
+						if(StringUtils.isNullOrEmpty(customField.getFieldValue())){
+							errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
+							isErrorFound = true;
+							break;
+						}
+					}
+				}
+				if(isErrorFound)
+					break;
+			}
+		} catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+		}
 	}
 }

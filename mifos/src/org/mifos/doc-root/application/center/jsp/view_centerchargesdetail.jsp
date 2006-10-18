@@ -62,7 +62,7 @@
 		<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink />
-				</span> <!-- Center Charges --> <span class="fontnormal8ptbold">/ <mifos:mifoslabel
+				</span> <!-- Center Charges --> <span class="fontnormal8ptbold"> <mifos:mifoslabel
 					name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
 					name="Center.Charges" bundle="CenterUIResources" /> </span></td>
 			</tr>

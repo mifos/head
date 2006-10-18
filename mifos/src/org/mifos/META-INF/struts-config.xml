@@ -868,7 +868,7 @@
 			<forward name="preview_success" path="/pages/application/client/jsp/preview_ClientDetails.jsp" />
 			<forward name="preview_failure" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp" />
 			<forward name="previewPersonalInfo_success" path="/pages/application/client/jsp/preview_ClientDetails.jsp" />
-			<forward name="previewPersonalInfo_failure" path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp" />
+			<forward name="previewPersonalInfo_failure" path="/pages/application/client/jsp/create_ClientPersonalInfo.jsp" />
 			<forward name="previewMfiInfo_failure" path="/pages/application/client/jsp/create_ClientMfiInfo.jsp" />
 			<forward name="previewEditPersonalInfo_success" path="/pages/application/client/jsp/preview_EditClientPersonalInfo.jsp" />
 			<forward name="previewEditPersonalInfo_failure" path="/pages/application/client/jsp/edit_ClientPersonalInfo.jsp" />
