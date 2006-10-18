@@ -117,7 +117,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 						.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT) || new SavingsHelper()
 						.getPaymentActionType(lastPayment).equals(
 								AccountConstants.ACTION_SAVINGS_WITHDRAWAL))) {
-			actionForm.setLastPaymentAmount(savings.getLastPmnt().getAmount());
+			//actionForm.setLastPaymentAmount(savings.getLastPmnt().getAmount());
 			AccountActionEntity accountAction = (AccountActionEntity) new MasterPersistence()
 					.getPersistentObject(AccountActionEntity.class,
 							new SavingsHelper()
@@ -180,7 +180,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 					savings.getOffice().getOfficeId(), uc.getId());
 		
 		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
-		savings.adjustLastUserAction(actionForm.getLastPaymentAmount(),
+		savings.adjustLastUserAction(actionForm.getLastPaymentAmountValue(),
 				actionForm.getNote());
 		doCleanUp(request);
 		HibernateUtil.commitTransaction();
@@ -215,7 +215,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 	private void clearActionForm(ActionForm form) {
 		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
 		actionForm.setLastPaymentAmountOption("1");
-		actionForm.setLastPaymentAmount(new Money());
+		actionForm.setLastPaymentAmount(null);
 		actionForm.setNote(null);
 	}
 

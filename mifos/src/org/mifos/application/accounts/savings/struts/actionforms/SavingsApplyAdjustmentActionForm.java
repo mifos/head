@@ -43,7 +43,6 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -51,27 +50,27 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
+public class SavingsApplyAdjustmentActionForm extends BaseActionForm{
 
-	public Money lastPaymentAmount;
+	public String lastPaymentAmount;
 	public String note;
 	public String input;
 	public String lastPaymentAmountOption;
 	
-	public SavingsApplyAdjustmentActionForm(){
-		lastPaymentAmount=new Money();
+	public SavingsApplyAdjustmentActionForm(){		
 	}
 	
-	public Money getLastPaymentAmount() {
+	public String getLastPaymentAmount() {
 		return lastPaymentAmount;
 	}
 
-	public void setLastPaymentAmount(Money lastPaymentAmount) {
+	public void setLastPaymentAmount(String lastPaymentAmount) {
 		this.lastPaymentAmount = lastPaymentAmount;
 	}
 
@@ -99,6 +98,10 @@ public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
 		this.lastPaymentAmountOption = lastPaymentAmountOption;
 	}
 	
+	public Money getLastPaymentAmountValue() {
+		return getMoney(lastPaymentAmount);
+	}
+	
 	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String method = request.getParameter("method");
@@ -106,28 +109,23 @@ public class SavingsApplyAdjustmentActionForm extends ValidatorActionForm{
 		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
 			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 		try{
-			if(method!=null && method.equals("load")||
-							method.equals("previous")||
-							method.equals("validate")||
-							method.equals("adjustLastUserAction")||
-							method.equals("cancel")){
-			}else{
-				if(method.equals("preview")){
-					SavingsBO savings = (SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
-					AccountPaymentEntity payment = savings.getLastPmnt();
-					if(payment==null || savings.getLastPmntAmnt()==0 || !(new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL) || new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))){
-						errors.add(SavingsConstants.INVALID_LAST_PAYMENT,new ActionMessage(SavingsConstants.INVALID_LAST_PAYMENT));
-					}
+			if(method!=null && method.equals("preview")){
+				SavingsBO savings = (SavingsBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
+				AccountPaymentEntity payment = savings.getLastPmnt();
+				if(payment==null || savings.getLastPmntAmnt()==0 || !(new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL) || new SavingsHelper().getPaymentActionType(payment).equals(AccountConstants.ACTION_SAVINGS_DEPOSIT))){
+					errors.add(SavingsConstants.INVALID_LAST_PAYMENT,new ActionMessage(SavingsConstants.INVALID_LAST_PAYMENT));
+				}else{ 
+					if(StringUtils.isNullOrEmpty(lastPaymentAmount))
+						errors.add(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT, new ActionMessage(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
 					
 					if (StringUtils.isNullAndEmptySafe(getNote())&& getNote().length() > CustomerConstants.COMMENT_LENGTH) {
 						errors.add(AccountConstants.MAX_NOTE_LENGTH, new ActionMessage(
 								AccountConstants.MAX_NOTE_LENGTH, AccountConstants.COMMENT_LENGTH));
 					}
-				}				
-				errors.add(super.validate(mapping,request));
+					errors.add(super.validate(mapping,request));
+				}
 			}
 		}catch(ApplicationException ae){
-			errors = new ActionErrors();
 			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
 					.getValues()));
 		}

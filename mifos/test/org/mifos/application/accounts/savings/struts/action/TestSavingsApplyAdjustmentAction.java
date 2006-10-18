@@ -4,6 +4,7 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Locale;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;
@@ -14,6 +15,8 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.PaymentData;
+import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -123,7 +126,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION,request);
 		assertEquals(AccountConstants.ACTION_SAVINGS_DEPOSIT, accountAction
 				.getId().shortValue());
-		assertEquals(Short.valueOf("1"), (Short) SessionUtils
+		assertEquals(Short.valueOf("1"),  SessionUtils
 				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -166,7 +169,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION,request);
 		assertEquals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL, accountAction
 				.getId().shortValue());
-		assertEquals(Short.valueOf("1"), (Short)SessionUtils
+		assertEquals(Short.valueOf("1"), SessionUtils
 				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -192,7 +195,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				SavingsConstants.ACCOUNT_ACTION,request));
 		assertNull(SessionUtils.getAttribute(
 				SavingsConstants.CLIENT_NAME,request));
-		assertEquals(Short.valueOf("0"), (Short) SessionUtils
+		assertEquals(Short.valueOf("0"),  SessionUtils
 				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
@@ -201,32 +204,26 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	public void testSuccessfullPreviewSuccess() throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
-		savings = createSavingsAccount("000X00000000017", savingsOffering,
+		savings = createSavingsAccountWithPayment("000X00000000017", savingsOffering,
 				group, AccountStates.SAVINGS_ACC_APPROVED);
-		HibernateUtil.closeSession();
-		PersonnelBO createdBy = new PersonnelPersistence()
-				.getPersonnel(userContext.getId());
-		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
-				savings, new Money(Configuration.getInstance()
-						.getSystemConfig().getCurrency(), "1000.0"), new Money(
-						Configuration.getInstance().getSystemConfig()
-								.getCurrency(), "1000.0"), helper
-						.getDate("20/05/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
-				group);
-		TestAccountPaymentEntity.addAccountPayment(payment,savings);
-		savings.update();
-		HibernateUtil.closeSession();
+		
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		addRequestParameter("note", "adjustmentComment");
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		verifyForward("load_success");
+		
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "preview");
+		addRequestParameter("note", "adjustmentComment");
+		addRequestParameter("lastPaymentAmount", "100");
 		actionPerform();
 		verifyForward("preview_success");
 		verifyNoActionMessages();
 		verifyNoActionErrors();
-		savings = (SavingsBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY,request);
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 	}
@@ -247,12 +244,19 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	public void testSuccessfullPreviewFailure_LongNotes() throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
-		savings = createSavingsAccount("000X00000000017", savingsOffering,
+		savings = createSavingsAccountWithPayment("000X00000000017", savingsOffering,
 				group, AccountStates.SAVINGS_ACC_APPROVED);
-		HibernateUtil.closeSession();
+		
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		HibernateUtil.closeSession();
+		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+		verifyForward("load_success");
+		
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "preview");
+		addRequestParameter("lastPaymentAmount", "");
 		addRequestParameter("note", "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" +
 				"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" +
 				"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" +
@@ -262,7 +266,11 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		assertEquals(2, getErrrorSize());
 		assertEquals(1, getErrrorSize(AccountConstants.MAX_NOTE_LENGTH));
-		assertEquals(1, getErrrorSize(SavingsConstants.INVALID_LAST_PAYMENT));		
+		assertEquals(1, getErrrorSize(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
 	}
 	
 	public void testSuccessfullPrevious() {
@@ -304,6 +312,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		assertEquals(Integer.valueOf(1).intValue(), savings.getLastPmnt()
 				.getAccountTrxns().size());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		HibernateUtil.closeSession();
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
 		addRequestParameter("method", "adjustLastUserAction");
 		actionPerform();
@@ -341,10 +350,31 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				meetingIntPost);
 	}
 
+	private SavingsBO createSavingsAccountWithPayment(String globalAccountNum,
+			SavingsOfferingBO savingsOffering, CustomerBO group,
+			short accountStateId) throws Exception {
+		SavingsBO savings =  TestObjectFactory.createSavingsAccount(globalAccountNum, group,
+				accountStateId, new Date(), savingsOffering, userContext);
+		PaymentData paymentData = new PaymentData(new Money("100"), savings
+				.getPersonnel(), Short.valueOf("1"), new Date(System
+				.currentTimeMillis()));
+		paymentData.setCustomer(group);
+		paymentData.setRecieptDate(new Date(System.currentTimeMillis()));
+		paymentData.setRecieptNum("34244");
+		AccountActionDateEntity accountActionDate=null;
+		paymentData.addAccountPaymentData(new SavingsPaymentData(accountActionDate));
+		savings.applyPayment(paymentData);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		return new SavingsPersistence().findById(savings.getAccountId());
+	}
+	
+	
 	private SavingsBO createSavingsAccount(String globalAccountNum,
 			SavingsOfferingBO savingsOffering, CustomerBO group,
 			short accountStateId) throws Exception {
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
 				accountStateId, new Date(), savingsOffering, userContext);
 	}
+	
 }
