@@ -87,7 +87,8 @@ public class ConfigurationPersistence extends Persistence{
 
 	
 	public ConfigEntity getSystemConfiguration() throws PersistenceException{
-		List<ConfigEntity> queryResult = executeNamedQuery(NamedQueryConstants.GET_SYSTEM_CONFIG,null);
+		List<ConfigEntity> queryResult = executeNamedQuery(
+			NamedQueryConstants.GET_SYSTEM_CONFIG, null);
 		if (queryResult==null || queryResult.size()==0) {
 			logger.error("No System Configuration Specified");
 			throw new FrameworkRuntimeException(null, "No System Configuration Specified");

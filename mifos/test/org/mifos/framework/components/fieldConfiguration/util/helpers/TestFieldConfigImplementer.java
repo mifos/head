@@ -45,13 +45,13 @@ public class TestFieldConfigImplementer extends MifosTestCase{
 		EntityMasterData.getInstance().init();
 		fieldConfigItf.init();
 		Map<Short,List<FieldConfigurationEntity>> entityMandatoryMap=fieldConfigItf.getEntityMandatoryFieldMap();
-		assertEquals(entityMandatoryMap.size(),23);
+		assertEquals(22, entityMandatoryMap.size());
 		
 		List<FieldConfigurationEntity> listOfMandatoryFields=entityMandatoryMap.get(Short.valueOf("22"));
-		assertEquals(listOfMandatoryFields.size(),1);
+		assertEquals(1, listOfMandatoryFields.size());
 		
 		List<FieldConfigurationEntity> listOfFields=fieldConfigItf.getEntityFieldMap().get(Short.valueOf("22"));
-		assertEquals(listOfFields.size(),5);
+		assertEquals(5, listOfFields.size());
 		
 		for(FieldConfigurationEntity fieldConfigurationEntity : listOfMandatoryFields){
 			assertEquals(fieldConfigurationEntity.getFieldName(),"PurposeOfLoan");

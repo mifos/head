@@ -2,24 +2,29 @@ package org.mifos.framework.components.fieldConfiguration.persistence;
 
 import java.util.List;
 
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 
-public class TestFieldConfigurationPersistence extends MifosTestCase{
+public class TestFieldConfigurationPersistence extends MifosTestCase {
 	
+	private FieldConfigurationPersistence fieldConfigurationPersistence=
+		new FieldConfigurationPersistence();
 	
-	private FieldConfigurationPersistence fieldConfigurationPersistence=new FieldConfigurationPersistence();
-	
-	public void testGetEntityMasterList() throws PersistenceException{
-		List<EntityMaster> entityMasterList = fieldConfigurationPersistence.getEntityMasterList();
-		assertEquals(entityMasterList.size(),23);
+	public void testGetEntityMasterList() throws PersistenceException {
+		List<EntityMaster> entityMasterList = 
+			fieldConfigurationPersistence.getEntityMasterList();
+		assertEquals(22, entityMasterList.size());
 	}
 	
-	public void testGetListOfFields() throws NumberFormatException, PersistenceException{
-		List<FieldConfigurationEntity> fieldList=fieldConfigurationPersistence.getListOfFields(Short.valueOf("22"));
-		assertEquals(fieldList.size(),5);
+	public void testGetListOfFields() 
+	throws NumberFormatException, PersistenceException {
+		List<FieldConfigurationEntity> fieldList =
+			fieldConfigurationPersistence.getListOfFields(
+				EntityType.LOAN.getValue());
+		assertEquals(5, fieldList.size());
 	}
 
 }

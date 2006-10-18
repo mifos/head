@@ -7,7 +7,6 @@ public class StartUpException extends SystemException {
 
 	public StartUpException(Throwable cause) {
 		super(cause);
-		super.initCause(cause);
 	}
 
 	@Override
