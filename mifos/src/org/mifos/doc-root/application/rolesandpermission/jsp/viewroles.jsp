@@ -48,50 +48,12 @@
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<script language="javascript">
-
-    function  submitAdminLink()
-	{
-		document.rolesPermissionsActionForm.method.value="cancel";
-		document.rolesPermissionsActionForm.action="rolesPermission.do";
-		document.rolesPermissionsActionForm.submit();
-	}
-
- function  manageRole(id,name)
- {
- 			document.rolesPermissionsActionForm.name.value=name;
- 			document.rolesPermissionsActionForm.id.value=id;
- 			document.rolesPermissionsActionForm.method.value="manage";
- 			document.rolesPermissionsActionForm.action="rolesPermission.do";
- 			document.rolesPermissionsActionForm.submit();
- 			
- }	
- 
- function  deleteRole(id,name)
- {
- 			document.rolesPermissionsActionForm.name.value=name;
- 			document.rolesPermissionsActionForm.id.value=id;
- 			document.rolesPermissionsActionForm.method.value="preview";
- 			document.rolesPermissionsActionForm.action="rolesPermission.do";
- 			document.rolesPermissionsActionForm.submit();
- 			
- }	
- function addRole(){
-	 document.rolesPermissionsActionForm.action="rolesPermission.do";
-	 document.rolesPermissionsActionForm.method.value="load";
-	 document.rolesPermissionsActionForm.submit();
- }
-
- 
-	
-</script>
-
 		<html-el:form action="/rolesPermission.do" >
 
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <html-el:link
-						href="javascript:submitAdminLink()">
+						href="rolesPermission.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 
 
 						<mifos:mifoslabel name="roleandpermission.labelAdmin"
@@ -117,7 +79,7 @@
 							<span class="fontnormal"><mifos:mifoslabel
 								name="roleandpermission.labelAddNewRoleInstruction"
 								bundle="RolesAndPermissionResources"></mifos:mifoslabel> </span>
-							<span class="fontnormal"> <html-el:link href="javascript:addRole()"	>
+							<span class="fontnormal"> <html-el:link href="rolesPermission.do?method=load&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="roleandpermission.labelNewRole"
 									bundle="RolesAndPermissionResources"></mifos:mifoslabel>
 							</html-el:link></td>
@@ -133,10 +95,10 @@
 								<tr>
 									<td width="39%" class="blueline"><span class="fontnormalbold">
 									<html-el:link
-										href="rolesPermission.do?method=manage&id=${item.id}&currentFlowKey=${requestScope.currentFlowKey}"><c:out value="${item.name}"/></html-el:link>
+										href="rolesPermission.do?method=manage&id=${item.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><c:out value="${item.name}"/></html-el:link>
 									</span></td>
 									<td width="61%" class="blueline"><span class="fontnormal"> <html-el:link
-										href="rolesPermission.do?method=preview&id=${item.id}&currentFlowKey=${requestScope.currentFlowKey}">
+										href="rolesPermission.do?method=preview&id=${item.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="roleandpermission.labelDeleteRole"
 											bundle="RolesAndPermissionResources"></mifos:mifoslabel>
 									</html-el:link> </span></td>
@@ -150,7 +112,6 @@
 
 			<html-el:hidden property="name" value="" />
 			<html-el:hidden property="id" value="" />
-			<html-el:hidden property="method" value="" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>

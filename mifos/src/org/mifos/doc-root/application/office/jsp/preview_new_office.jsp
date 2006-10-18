@@ -13,21 +13,20 @@
 		<!-- Next is code for setting the hidden veriable to cancel -->
 		<script language="javascript" type="text/javascript">
 function goToCreatePage() {
-	document.offActionForm.method.value="create";
+	document.offActionForm.action="offAction.do?method=create";
 }
 function goToCancelPage(){
-	document.offActionForm.method.value="load";
-	document.offActionForm.action="AdminAction.do";
+	document.offActionForm.action="AdminAction.do?method=load";
 	offActionForm.submit();
   }
   function goToPreviousPage()
   {
-	document.offActionForm.method.value="previous";
+	document.offActionForm.action="offAction.do?method=previous";
 	offActionForm.submit();
 
   }
 </script>
-		<html-el:form action="/offAction.do">
+		<html-el:form action="/offAction.do?method=create">
 			<br>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -219,8 +218,6 @@ function goToCancelPage(){
 					</td>
 				</tr>
 			</table>
-			<!-- hidden veriable which will be set to method -->
-			<html-el:hidden property="method" value="create" />
 			<!-- hidden veriable which will set input veriable -->
 			<html-el:hidden property="input" value="create" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

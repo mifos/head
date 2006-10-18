@@ -194,21 +194,18 @@ var index=0;
 }
 
   function goToCancelPage(){
-	document.rolesPermissionsActionForm.method.value="viewRoles";
-	document.rolesPermissionsActionForm.action="rolesPermission.do";	
+	document.rolesPermissionsActionForm.action="rolesPermission.do?method=viewRoles";	
 	document.rolesPermissionsActionForm.submit();
   }
   
     function  submitAdminLink()
 	{
-		document.rolesPermissionsActionForm.method.value="cancel";
-		document.rolesPermissionsActionForm.action="rolesPermission.do";
+		document.rolesPermissionsActionForm.action="rolesPermission.do?method=cancel";
 		document.rolesPermissionsActionForm.submit();
 	}  
      function  submitRolesAndPermissionLink()
 	{
-		document.rolesPermissionsActionForm.method.value="viewRoles";
-		document.rolesPermissionsActionForm.action="rolesPermission.do";
+		document.rolesPermissionsActionForm.action="rolesPermission.do?method=viewRoles";
 		document.rolesPermissionsActionForm.submit();
 	}
 
@@ -222,9 +219,7 @@ function submitMe()
 	          {
 				if ( arrElements[i].checked)
 					{
-					
-						document.rolesPermissionsActionForm.method.value="update";
-						document.rolesPermissionsActionForm.action="rolesPermission.do";
+						document.rolesPermissionsActionForm.action="rolesPermission.do?method=update";
 						document.rolesPermissionsActionForm.submit();
              			return true;
              			
@@ -241,9 +236,7 @@ function submitCreate()
 	          {
 				if ( arrElements[i].checked)
 					{
-					
-						document.rolesPermissionsActionForm.method.value="create";
-						document.rolesPermissionsActionForm.action="rolesPermission.do";
+						document.rolesPermissionsActionForm.action="rolesPermission.do?method=create";
 						document.rolesPermissionsActionForm.submit();
 						return true;
              			

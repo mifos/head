@@ -67,9 +67,6 @@
 	          	<customtags:headerLink/>
 	          	<c:choose>
 	          	<c:when test="${param.input == 'LoanDetails'}">
-	          	  <html-el:link action="loanAccountAction.do?globalAccountNum=${param.globalAccountNum}&method=get&randomNUm=${sessionScope.randomNUm}"> /
-	          	    <c:out value="${param.prdOfferingName}"></c:out>
-	          	  </html-el:link>
 	          	</c:when>
 	          	<c:otherwise>
 	          	<html-el:link href="customerAccountAction.do?method=load"> /
@@ -113,7 +110,7 @@
             </table>
             <br>
 
-            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session" xmlFileName="TrxnHistory.xml" moduleName="accounts" passLocale="true"/>
+            <mifoscustom:mifostabletag source="trxnhistoryList" scope="session_flow" xmlFileName="TrxnHistory.xml" moduleName="accounts" passLocale="true"/>
             <br>
 
             <table width="95%" border="0" cellpadding="0" cellspacing="0">

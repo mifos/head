@@ -10,53 +10,29 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<script language="javascript">
-function goToPreviewPage() {
-	document.offActionForm.method.value="editpreview";
-}
-function goToCancelPage(){
-	document.offActionForm.method.value="get";
-	offActionForm.submit();
-
+<script language="javascript">
+	function goToCancelPage(){
+		document.offActionForm.action="offAction.do?method=get";
+		offActionForm.submit();
 	}
   function papulateParent()
   {
-
-		document.offActionForm.method.value="loadParent";
-		document.offActionForm.input.value="edit";
-		offActionForm.submit();
-  }
-   function submitViewOfficesLink(){
-	document.offActionForm.method.value="getAllOffices";
-	document.offActionForm.action="offAction.do";
-
+	document.offActionForm.action="offAction.do?method=loadParent&input=edit";
 	offActionForm.submit();
   }
-function getOffice(officeid){
-	document.offActionForm.method.value="get";
-	document.offActionForm.officeId.value=officeid;
-	document.offActionForm.action="offAction.do";
-	offActionForm.submit();
-  }
-   function  submitAdminLink()
-{
-		document.offActionForm.method.value="load";
-		document.offActionForm.action="AdminAction.do";
-		offActionForm.submit();
-}
 </script>
-		<html-el:form action="/offAction.do">
+		<html-el:form action="/offAction.do?method=editpreview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"></c:set>
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
-						href="javascript:submitAdminLink()">
+						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="Office.labelLinkAdmin" />
 					</html-el:link> / <html-el:link
-						href="javascript:submitViewOfficesLink()">
+						href="offAction.do?method=getAllOffices&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="Office.labelLinkViewOffices" />
 					</html-el:link> / <html-el:link
-						href="javascript:getOffice(${offActionForm.officeId})">
+						href="offAction.do?method=get&officeId=${offActionForm.officeId}&randomNUm=${sessionScope.randomNUm}">
 						<c:out value="${BusinessKey.officeName}"></c:out>
 					</html-el:link> </span></td>
 				</tr>
@@ -335,8 +311,6 @@ function getOffice(officeid){
 			</table>
 			<br>
 			<br>
-			<html-el:hidden property="input" value="edit" />
-			<html-el:hidden property="method" value="editpreview" />
 			<html-el:hidden property="officeId" value="${BusinessKey.officeId}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>

@@ -135,7 +135,6 @@ public class OffActionForm extends BaseActionForm {
 		this.officeStatus = "";
 		this.shortName = "";
 		this.parentOfficeId = "";
-		this.customFields = new ArrayList<CustomFieldView>();
 		this.address = new Address();
 
 	}
@@ -271,8 +270,6 @@ public class OffActionForm extends BaseActionForm {
 					.toString();
 		else
 			this.parentOfficeId = null;
-
-
 	}
 
 	public String getInput() {

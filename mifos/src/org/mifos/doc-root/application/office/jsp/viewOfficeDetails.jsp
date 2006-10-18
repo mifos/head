@@ -9,40 +9,16 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<script language="javascript">
-function goToCancelPage(){
-	document.offActionForm.method.value="get";
-	offActionForm.submit();
-  }
- function submitViewOfficesLink(){
-	document.offActionForm.method.value="getAllOffices";
-	document.offActionForm.action="offAction.do";
-
-	offActionForm.submit();
-  }
-  function editOfficeInformationLink(id){
-	document.offActionForm.method.value="edit";
-	document.offActionForm.officeLevel.value=id;
-	offActionForm.submit();
-  }
-  function  submitAdminLink()
-{
-		document.offActionForm.method.value="load";
-		document.offActionForm.action="AdminAction.do";
-		offActionForm.submit();
-}
-</script>
-
-		<html-el:form action="/offAction.do" method="get">
+		<html-el:form action="/offAction.do">
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 			   var="BusinessKey" />
 
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td class="bluetablehead05"><span class="fontnormal8pt">
-							<html-el:link href="javascript:submitAdminLink()"><mifos:mifoslabel
+							<html-el:link href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel
 								name="Office.labelLinkAdmin" /></html-el:link> / <html-el:link
-										href="javascript:submitViewOfficesLink()" > <mifos:mifoslabel
+										href="offAction.do?method=getAllOffices&randomNUm=${sessionScope.randomNUm}" > <mifos:mifoslabel
 								name="Office.labelLinkViewOffices" />
 
 							</html-el:link> / </span><span class="fontnormal8ptbold"><c:out
@@ -57,7 +33,7 @@ function goToCancelPage(){
 									<td width="50%" height="23" class="headingorange"><c:out
 										value="${BusinessKey.officeName}"></c:out></td>
 									<td width="50%" align="right">
-									<html-el:link href="javascript:editOfficeInformationLink(${BusinessKey.level.id})"
+									<html-el:link href="offAction.do?method=edit&officeLevel=${BusinessKey.level.id}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"
 										>
 										<mifos:mifoslabel name="Office.labelEditOfficeInfo"
 											/>
@@ -173,7 +149,6 @@ function goToCancelPage(){
 					</table>
 					<br>
 			<html-el:hidden	property="officeId"	value="${BusinessKey.officeId}" />
-			<html-el:hidden	property="method"	value="" />
 			<html-el:hidden property="officeLevel" value="${BusinessKey.level.id}"/>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>

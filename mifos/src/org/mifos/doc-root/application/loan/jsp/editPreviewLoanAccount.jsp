@@ -173,9 +173,14 @@
 							<html-el:button property="editButton" styleClass="insidebuttn"
 								onclick="fnEdit(this.form)">
 								<mifos:mifoslabel name="loan.edit_loan_acc" />
-							</html-el:button> </span></td>
+							</html-el:button> </td>
 						</tr>
-						
+						<tr>
+							<td><html-el:button property="editButton" styleClass="insidebuttn"
+								onclick="fnEdit(this.form)">
+								<mifos:mifoslabel name="loan.edit_loan_acc" />
+							</html-el:button></span></td>
+						</tr>
 					</table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>

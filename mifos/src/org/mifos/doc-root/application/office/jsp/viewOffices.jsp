@@ -9,40 +9,11 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-
-		<script language="javascript">
-function goToCancelPage(){
-	document.offActionForm.method.value="cancel";
-	offActionForm.submit();
-  }
-function getOffice(officeid){
-	document.offActionForm.method.value="get";
-	document.offActionForm.officeId.value=officeid;
-	document.offActionForm.action="offAction.do";
-	offActionForm.submit();
-  }
-function addNewOffice(officeType){
-	document.offActionForm.method.value="load";
-	document.offActionForm.officeLevel.value=officeType;
-	offActionForm.submit();
-  }
-function addNewOfficeBlank(){
-	document.offActionForm.method.value="load";
-	document.offActionForm.officeLevel.value="";
-	offActionForm.submit();
-  }
-   function  submitAdminLink()
-{
-		document.offActionForm.method.value="load";
-		document.offActionForm.action="AdminAction.do";
-		offActionForm.submit();
-}
-</script>
-		<html-el:form action="/offAction.do" method="POST">
+		<html-el:form action="/offAction.do?method=preview">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
-						href="javascript:submitAdminLink()">
+						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="office.labelLinkAdmin"
 							bundle="OfficeResources"></mifos:mifoslabel>
 					</html-el:link> / </span> <span class="fontnormal8ptbold"><mifos:mifoslabel
@@ -61,7 +32,7 @@ function addNewOfficeBlank(){
 							<td class="fontnormalbold"><span class="fontnormal"><mifos:mifoslabel
 								name="office.labelViewOfficeInstruction"
 								bundle="OfficeResources"></mifos:mifoslabel> <html-el:link
-								href="javascript:addNewOfficeBlank()">
+								href="offAction.do?method=load&officeLevel=&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="office.labelViewOfficeAddNewOffice"
 									bundle="OfficeResources"></mifos:mifoslabel>
 							</html-el:link><br>
@@ -74,7 +45,7 @@ function addNewOfficeBlank(){
 								<!-- for head office -->
 								<c:if test="${office.level.id == OfficeLevel.HEADOFFICE.value }">
 									<span class="fontnormalbold"> <html-el:link
-										href="javascript:getOffice(${office.officeId})">
+										href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 										<c:out value="${office.officeName}" />
 									</html-el:link> <br>
 									</span>
@@ -106,7 +77,7 @@ function addNewOfficeBlank(){
 												name="Office.labelRegionalOffice" bundle="OfficeUIResources" />
 											</span></td>
 											<td width="39%" align="right"><html-el:link
-												href="javascript:addNewOffice(${OfficeLevel.REGIONALOFFICE.value})">
+												href="offAction.do?method=load&officeLevel=${OfficeLevel.REGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew"
 													bundle="OfficeResources" />
 												<mifos:mifoslabel name="Office.labelRegionalOffice"
@@ -127,7 +98,7 @@ function addNewOfficeBlank(){
 													<td width="61%"><span class="fontnormalbold"><span
 														class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
 													<td width="39%" align="right"><html-el:link
-														href="javascript:addNewOffice(${office.level.id})">
+														href="offAction.do?method=load&officeLevel=${office.level.id}&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="office.labelAddNew"
 															bundle="OfficeResources"></mifos:mifoslabel>
 														<c:out value="${office.level.name}" />
@@ -143,7 +114,7 @@ function addNewOfficeBlank(){
 													src="pages/framework/images/bullet_circle.gif" width="9"
 													height="11"></td>
 												<td width="99%"><html-el:link
-													href="javascript:getOffice(${office.officeId})">
+													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${office.officeName}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
 													test="${office.status.id == OfficeStatus.INACTIVE.value}">
@@ -168,7 +139,7 @@ function addNewOfficeBlank(){
 												name="Office.labelDivisionalOffice"
 												bundle="OfficeUIResources" /> </span></td>
 											<td width="39%" align="right"><html-el:link
-												href="javascript:addNewOffice(${OfficeLevel.SUBREGIONALOFFICE.value})">
+												href="offAction.do?method=load&officeLevel=${OfficeLevel.SUBREGIONALOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew"
 													bundle="OfficeResources" />
 												<mifos:mifoslabel name="Office.labelDivisionalOffice"
@@ -189,7 +160,7 @@ function addNewOfficeBlank(){
 													<td width="61%"><span class="fontnormalbold"><span
 														class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
 													<td width="39%" align="right"><html-el:link
-														href="javascript:addNewOffice(${office.level.id})">
+														href="offAction.do?method=load&officeLevel=${office.level.id}&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="office.labelAddNew"
 															bundle="OfficeResources"></mifos:mifoslabel>
 														<c:out value="${office.level.name}" />
@@ -205,7 +176,7 @@ function addNewOfficeBlank(){
 													src="pages/framework/images/bullet_circle.gif" width="9"
 													height="11"></td>
 												<td width="99%"><html-el:link
-													href="javascript:getOffice(${office.officeId})">
+													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${office.officeName}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
 													test="${office.status.id == OfficeStatus.INACTIVE.value}">
@@ -226,7 +197,7 @@ function addNewOfficeBlank(){
 												name="Office.labelAreaOffice" bundle="OfficeUIResources" />
 											</span></td>
 											<td width="39%" align="right"><html-el:link
-												href="javascript:addNewOffice(${OfficeLevel.AREAOFFICE.value})">
+												href="offAction.do?method=load&officeLevel=${OfficeLevel.AREAOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew"
 													bundle="OfficeResources" />
 												<mifos:mifoslabel name="Office.labelAreaOffice"
@@ -247,7 +218,7 @@ function addNewOfficeBlank(){
 													<td width="61%"><span class="fontnormalbold"><span
 														class="fontnormalbold"><c:out value="${office.level.name}" /></span></span></td>
 													<td width="39%" align="right"><html-el:link
-														href="javascript:addNewOffice(${office.level.id})">
+														href="offAction.do?method=load&officeLevel=${office.level.id}&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="office.labelAddNew"
 															bundle="OfficeResources"></mifos:mifoslabel>
 														<c:out value="${office.level.name}" />
@@ -263,7 +234,7 @@ function addNewOfficeBlank(){
 													src="pages/framework/images/bullet_circle.gif" width="9"
 													height="11"></td>
 												<td width="99%"><html-el:link
-													href="javascript:getOffice(${office.officeId})">
+													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${office.officeName}" />
 												</html-el:link>&nbsp;&nbsp;&nbsp; <c:if
 													test="${office.status.id == OfficeStatus.INACTIVE.value}">
@@ -286,7 +257,7 @@ function addNewOfficeBlank(){
 												name="Office.labelBranchOffice" bundle="OfficeUIResources" />
 											</span></td>
 											<td width="39%" align="right"><html-el:link
-												href="javascript:addNewOffice(${OfficeLevel.BRANCHOFFICE.value})">
+												href="offAction.do?method=load&officeLevel=${OfficeLevel.BRANCHOFFICE.value}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="office.labelAddNew"
 													bundle="OfficeResources" />
 												<mifos:mifoslabel name="Office.labelBranchOffice"
@@ -307,7 +278,7 @@ function addNewOfficeBlank(){
 													<td width="61%"><span class="fontnormalbold"> <c:out
 														value="${office.level.name}"></c:out> </span></td>
 													<td width="39%" align="right"><html-el:link
-														href="javascript:addNewOffice(5)">
+														href="offAction.do?method=load&officeLevel=5&randomNUm=${sessionScope.randomNUm}">
 														<mifos:mifoslabel name="office.labelAddNew"
 															bundle="OfficeResources" />
 														<c:out value="${office.level.name}"></c:out>
@@ -334,7 +305,7 @@ function addNewOfficeBlank(){
 													src="pages/framework/images/bullet_circle.gif" width="9"
 													height="11"></td>
 												<td width="99%"><html-el:link
-													href="javascript:getOffice(${office.officeId})">
+													href="offAction.do?method=get&officeId=${office.officeId}&randomNUm=${sessionScope.randomNUm}">
 													<c:out value="${office.officeName}" />
 												</html-el:link> &nbsp;&nbsp;&nbsp; <c:if
 													test="${office.status.id == OfficeStatus.INACTIVE.value}">
@@ -354,8 +325,6 @@ function addNewOfficeBlank(){
 			</table>
 			<br>
 			<br>
-			<!-- hidden veriable which will be set to method -->
-			<html-el:hidden property="method" value="preview" />
 			<!-- hidden veriable which will set input veriable -->
 			<html-el:hidden property="input" value="search" />
 			<!-- hidden varible for office type -->

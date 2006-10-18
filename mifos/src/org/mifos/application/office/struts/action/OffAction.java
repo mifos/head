@@ -162,7 +162,7 @@ public class OffAction extends BaseAction {
 		officeBO = ((OfficeBusinessService) getService()).getOffice(Short
 				.valueOf(actionForm.getOfficeId()));
 		actionForm.clear();
-		loadCreateCustomFields(actionForm, request);
+		loadCustomFieldDefinitions(request);
 		officeBO.getStatus().setLocaleId(getUserContext(request).getLocaleId());
 		officeBO.getLevel().setLocaleId(getUserContext(request).getLocaleId());
 		actionForm.populate(officeBO);

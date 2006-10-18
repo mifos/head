@@ -7,18 +7,7 @@
 <%@ taglib uri="http://struts.apache.org/tags-tiles" prefix="tiles"%>
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-<script language="javascript">
-  function seeDetails(){
-	document.offActionForm.method.value="get";
-	offActionForm.submit();
-  }
-  function create(){
-	document.offActionForm.method.value="load";
-	offActionForm.submit();
-  }
-</script>
-
-		<html-el:form action="/offAction.do" >
+		<html-el:form action="/offAction.do?method=get" >
 
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
@@ -42,14 +31,14 @@
 
 
 
-									<html-el:link action="/offAction.do?method=get&officeId=${sessionScope.offActionForm.officeId}">
+									<html-el:link action="/offAction.do?method=get&officeId=${sessionScope.offActionForm.officeId}&randomNUm=${sessionScope.randomNUm}">
 									 <mifos:mifoslabel
 										name="Office.labelViewOfficeDetails" />
 									</html-el:link>
 									<span class="fontnormal"><br>
 									<br>
 									</span><span class="fontnormal">
-									<html-el:link action="/offAction.do?method=load" >
+									<html-el:link action="/offAction.do?method=load&randomNUm=${sessionScope.randomNUm}" >
 
 									 <mifos:mifoslabel
 										name="Office.labelAddNewOfficeNow" /></html-el:link> </span></td>
@@ -64,8 +53,6 @@
 				</tr>
 			</table> -->
 			<html-el:hidden property="input" value="createSuccess" />
-			<!-- hidden veriable which will set input veriable -->
-			<html-el:hidden property="method" value="get" />
 			<html-el:hidden property="officeId"  />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>

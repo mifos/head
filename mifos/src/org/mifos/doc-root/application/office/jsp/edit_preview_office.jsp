@@ -12,52 +12,32 @@
 	<tiles:put name="body" type="string">
 		<!-- Next is code for setting the hidden veriable to cancel -->
 		<script language="javascript" type="text/javascript">
-function goToUpdatePage(){
-	document.offActionForm.method.value="update";
-}
 function goToCancelPage(id){
-	document.offActionForm.method.value="get";
-	document.offActionForm.officeId.value=id;
-	offActionForm.submit();
+	document.offActionForm.action="offAction.do?method=get&officeId="+id;
+	document.offActionForm.submit();
   }
   function goToPreviousPage()
   {
-	document.offActionForm.method.value="editprevious";
+	document.offActionForm.action="offAction.do?method=editprevious"
 	offActionForm.submit();
 
   }
-     function submitViewOfficesLink(){
-	document.offActionForm.method.value="getAllOffices";
-	document.offActionForm.action="offAction.do";
-	offActionForm.submit();
-  }
-function getOffice(officeid){
-	document.offActionForm.method.value="get";
-	document.offActionForm.officeId.value=officeid;
-	offActionForm.submit();
-  }
-function  submitAdminLink()
-{
-		document.offActionForm.method.value="load";
-		document.offActionForm.action="AdminAction.do";
-		offActionForm.submit();
-}
 </script>
-		<html-el:form action="/offAction.do" method="POST">
+		<html-el:form action="/offAction.do?method=update">
 			<c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"></c:set>
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
-						href="javascript:submitAdminLink()">
+						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="office.labelLinkAdmin"
 							bundle="OfficeResources"></mifos:mifoslabel>
 					</html-el:link> / <html-el:link
-						href="javascript:submitViewOfficesLink()">
+						href="offAction.do?method=getAllOffices&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="office.labelLinkViewOffices"
 							bundle="OfficeResources"></mifos:mifoslabel>
 
 					</html-el:link> / <html-el:link
-						href="javascript:getOffice(${BusinessKey.officeId})">
+						href="offAction.do?method=get&officeId=${BusinessKey.officeId}&randomNUm=${sessionScope.randomNUm}">
 						<c:out value="${BusinessKey.officeName}"></c:out>
 					</html-el:link> </span></td>
 				</tr>
@@ -207,8 +187,6 @@ function  submitAdminLink()
 					</td>
 				</tr>
 			</table>
-			<!-- hidden veriable which will be set to method -->
-			<html-el:hidden property="method" value="update" />
 			<html-el:hidden property="officeId" value="${offActionForm.officeId}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>

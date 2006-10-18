@@ -32,14 +32,14 @@
 		<span class="fontnormal"><br>    
                             <br>
                             </span>
-			<a href="PersonAction.do?method=get&globalPersonnelNum=<c:out value="${requestScope.globalPersonnelNum}"/>">
+			<a href="PersonAction.do?method=get&randomNUm=${sessionScope.randomNUm}&globalPersonnelNum=<c:out value="${requestScope.globalPersonnelNum}"/>">
 			<mifos:mifoslabel name="Personnel.ViewUserdetailsNow" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a>
 			<span class="fontnormal"><br>
                             <br>
                         </span>
 			<span class="fontnormal">
-			 <a href="PersonAction.do?method=chooseOffice">
+			 <a href="PersonAction.do?method=chooseOffice&randomNUm=${sessionScope.randomNUm}">
 			<mifos:mifoslabel name="Personnel.AddNewUser" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			</a>
 			</span></td>

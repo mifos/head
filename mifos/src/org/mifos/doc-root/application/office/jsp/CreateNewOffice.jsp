@@ -11,31 +11,20 @@
 	<tiles:put name="body" type="string">
 
 		<script language="javascript">
-/*
- * This function is called when user press the cancel button
- */
-function goToCancelPage(){
-	document.offActionForm.method.value="load";
-	document.offActionForm.action="AdminAction.do";
-	offActionForm.submit();
+	function goToCancelPage(){
+		document.offActionForm.action="AdminAction.do?method=load";
+		offActionForm.submit();
+  	}
 
-
-  }
-/*
- * This function is called when user press the officeType in office Type
- * select box
- */
-
-  function papulateParent(selectBox)
-  {
-  		if(selectBox.selectedIndex > 0)
-  		{
-		  document.offActionForm.method.value="loadParent";
-		  offActionForm.submit();
-		}
+  function papulateParent(selectBox){
+		if(selectBox.selectedIndex > 0)
+		{
+	  document.offActionForm.action="offAction.do?method=loadParent";
+	  offActionForm.submit();
+	}
   }
 </script>
-		<html-el:form action="/offAction.do">
+		<html-el:form action="/offAction.do?method=preview">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -277,8 +266,6 @@ function goToCancelPage(){
 				<br>
 
 			</table>
-			<!-- hidden veriable which will be set to method -->
-			<html-el:hidden property="method" value="preview" />
 			<!-- hidden veriable which will set input veriable -->
 			<html-el:hidden property="input" value="create" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

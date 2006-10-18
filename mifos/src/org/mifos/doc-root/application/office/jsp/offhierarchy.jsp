@@ -50,17 +50,16 @@
 	<tiles:put name="body" type="string">
 		<script language="javascript">
 			function cancel() {
-				document.offhierarchyactionform.method.value="cancel";
-				document.offhierarchyactionform.action="offhierarchyaction.do";
+				document.offhierarchyactionform.action="offhierarchyaction.do?method=cancel";
 				offhierarchyactionform.submit();
 			}
 		</script>
 		<script src="pages/framework/js/CommonUtilities.js"></script>
-		<html-el:form action="/offhierarchyaction.do" onsubmit="return func_disableSubmitBtn('submitBtn');">
+		<html-el:form action="/offhierarchyaction.do?method=update" onsubmit="return func_disableSubmitBtn('submitBtn');">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"><html-el:link href="javascript:cancel()">
+						<span class="fontnormal8pt"><html-el:link href="offhierarchyaction.do?method=cancel&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Office.labelLinkAdmin" ></mifos:mifoslabel>
 							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel name="Office.labelViewOfficeHierarchy" /></span>
 					</td>
@@ -151,7 +150,6 @@
 				</tr>
 			</table>
 			<br>
-			<html-el:hidden property="method" value="update" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		</html-el:form>
 	</tiles:put>

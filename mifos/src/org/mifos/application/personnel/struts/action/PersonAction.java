@@ -42,6 +42,7 @@ import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.tabletag.TableTagConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -333,9 +334,13 @@ public class PersonAction extends SearchAction {
 	public ActionForward loadSearch(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		((PersonActionForm) form).clear();
-		cleanUpSearch(request);
+		cleanUpOnLoadSearch(request);
 		return mapping.findForward(ActionForwards.search_success.toString());
+	}
+	
+	private void cleanUpOnLoadSearch(HttpServletRequest request) throws PageExpiredException {
+		SessionUtils.setRemovableAttribute("TableCache",null,TableTagConstants.PATH,request.getSession());
+		SessionUtils.removeAttribute(Constants.SEARCH_RESULTS,request);
 	}
 
 	private void loadMasterData(HttpServletRequest request,

@@ -45,6 +45,7 @@ public class LoginAction extends BaseAction {
 		return getPersonnelBizService();
 	}
 
+	
 	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside load of LoginAction");
 		SessionUtils.setAttribute(LoginConstants.LOGINACTIONFORM, null,request.getSession());
@@ -110,6 +111,7 @@ public class LoginAction extends BaseAction {
 		return mapping.findForward(getCancelForward(personnelBO.getPasswordChanged()));
 	}
 
+	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse httpservletresponse)
 			throws Exception {

@@ -66,7 +66,7 @@
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
-								href="javascript:submitAdminLink()">
+								href="rolesPermission.do?method=cancel&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 
 
 								<mifos:mifoslabel name="roleandpermission.labelAdmin"
@@ -75,7 +75,7 @@
 
 							</html-el:link> /<span class="fontnormal8ptbold"> </span><span
 								class="fontnormal8pt"> <html-el:link
-								href="javascript:submitRolesAndPermissionLink()">
+								href="rolesPermission.do?method=viewRoles&randomNUm=${sessionScope.randomNUm}">
 
 
 								<mifos:mifoslabel

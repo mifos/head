@@ -441,9 +441,10 @@
 												<mifos:mifoslabel name="loan.apply_payment" />
 											</html-el:link><br> 
 										</c:if>
+									<c:if test="${BusinessKey.accountState.id!='7'}">
 									 <html-el:link href="applyChargeAction.do?method=load&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 										<mifos:mifoslabel name="loan.apply_charges" />
-									</html-el:link><br>
+									</html-el:link></c:if><br>
 									<c:choose>
 										<c:when
 											test="${(BusinessKey.accountState.id=='5' || BusinessKey.accountState.id=='9') }">

@@ -111,7 +111,7 @@
 												</html-el:option>
 											</c:when>
 											<c:otherwise>
-												<html-el:option value="">--Slelect--</html-el:option>
+												<html-el:option value="">--Select--</html-el:option>
 											</c:otherwise>
 										</c:choose>
 									</html-el:select>
