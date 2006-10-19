@@ -155,6 +155,7 @@ class User_Test_Cases < TestClass
       @confirm_password_msg=@personnel_properties['errors.validpassword'].squeeze(" ")
       @dupl_username_dob_msg=@personnel_properties['error.duplicate_username_or_dob'].squeeze(" ")
       @username_with_space_msg=string_replace_message(@personnel_properties['errors.spacesmask'],"{0}",@personnel_properties['Personnel.UserNameLabel'])
+      @search_message=@personnel_properties['Personnel.SearchMsg']
     rescue =>e
       quit_on_error(e) 
     end
@@ -383,7 +384,6 @@ class User_Test_Cases < TestClass
       number_of_display_name=count_items("select count(DISPLAY_NAME)from PERSONNEL where DISPLAY_NAME='"+first_name+" "+last_name+"'")
       number_of_dob=count_items("select count(DOB)from PERSONNEL_DETAILS where DOB='"+new_date.to_s+"'")
       @dupl_username_msg=string_replace_message(@personnel_properties['error.duplicateuser'],"{0}",user_name)
-      # puts "count is"+@@number_of_username+" for username "+user_name.to_s
       if (@@number_of_username.to_i == 0 ) and   (number_of_display_name.to_i > 0) and (number_of_dob.to_i >0)
         
         begin
@@ -552,7 +552,6 @@ class User_Test_Cases < TestClass
       
       dbquery("SELECT floor((DATEDIFF(CURDATE(), '"+b_date+"'))/365)")
       age =dbresult[0] 
-      #puts age	  
       dbquery("select date_format(sysdate(),'%d/%m/%Y')")
       date_of_joining = dbresult[0] 
       
@@ -668,16 +667,12 @@ class User_Test_Cases < TestClass
       $ie.wait
       number_of_personnel=count_items("select count(PERSONNEL_ID) from PERSONNEL")
       number_of_pages=number_of_personnel.to_i/10
-      #puts "number of pages "+number_of_pages.to_s
       number_of_pages=number_of_pages.ceil
       dbquery("select GLOBAL_PERSONNEL_NUM from personnel where PERSONNEL_ID=(select max(PERSONNEL_ID) from PERSONNEL)")
       global_personnel_num=dbresult[0].to_s
-      #puts "global personnel num"+global_personnel_num.to_s
       exist_on_page=0
       count=1
       while (number_of_pages >0 and exist_on_page==0) 
-        #puts "pages "+number_of_pages.to_s
-        
         if ($ie.link(:text,first_name.to_s+" "+last_name.to_s).exists?())
           $logger.log_results("User- "+first_name.to_s+" "+last_name.to_s+" appears on page "+count.to_s,"NA","user should exist on page","Passed")
           exist_on_page=1
@@ -757,6 +752,32 @@ class User_Test_Cases < TestClass
     mifos_logout()
   end  
   
+  #added as part og bug# 948
+  def check_viewuserlink_on_blueband()
+    begin
+       $ie.link(:text,@admin_link).click
+       $ie.link(:text,@view_system_users_link).click
+       #dbquery("select first_name,last_name,middle_name,second_last_name from personnel_details where personnel_id =(select personnel_id  from personnel where level_id=1 limit 1)")
+        dbquery("select first_name,last_name,middle_name,second_last_name from personnel_details where personnel_id =(select personnel_id  from personnel where level_id=1 and personnel_id=11)")
+       first_name=dbresult[0]
+       last_name=dbresult[1]
+       middle_name=dbresult[2]
+       second_last_name=dbresult[3]
+       full_name=first_name.to_s+" "+last_name.to_s+" "+second_last_name.to_s+" "+middle_name.to_s
+       $ie.form(:name,"personActionForm").text_field(:name,"searchString").set(first_name)
+       $ie.form(:name,"personActionForm").button(:value,"Search").click()
+       $ie.link(:text,full_name.to_s.strip()).click
+       $ie.link(:text,@edit_user_info_link).click
+       $ie.link(:text,@view_system_users_link).click 
+       assert($ie.contains_text(@search_message))
+       $logger.log_results("Bug#948-View system user link on blueband", "Click on the View system user link","Should display the search page for system users","Passed")       
+       rescue Test::Unit::AssertionFailedError=>e
+       $logger.log_results("Bug#948-View system user link on blueband", "Click on the View system user link","Did not display the search page for system users","failed")       
+       rescue =>e
+       quit_on_error(e) 
+   end  
+  end #end of check_viewuserlink_on_blueband
+  
 end  
 
 
@@ -802,6 +823,8 @@ class User
     user_obj.Check_New_User
     rowid=rowid+($maxcol)
   end
+
+  user_obj.check_viewuserlink_on_blueband()
   user_obj.user_logout
   
 end
