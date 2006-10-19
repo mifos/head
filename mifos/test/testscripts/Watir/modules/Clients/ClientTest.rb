@@ -344,7 +344,7 @@ class ClientCreateEdit<TestClass
     @@groupprop=load_properties("modules/propertis/GroupUIResources.properties")
     @@officeprop=load_properties("modules/propertis/OfficeUIResources.properties")
     @@customerprop=load_properties("modules/propertis/CustomerUIResources.properties")
-    
+    @@centerprop=load_properties("modules/propertis/CenterUIResources.properties")
   end
   
   #labels like member are fetched from the database
@@ -402,6 +402,9 @@ class ClientCreateEdit<TestClass
     @@client_mfi_page_msg=(@@createclient+" "+@@clientprop['client.CreateMfiInformationTitle']).squeeze(" ")
     @@client_review=@@createclient+" "+@@clientprop['client.CreatePreviewReviewSubmitTitle'].squeeze(" ")    
     @@view_account_activity_applypayment=@@groupprop['group.applypayment']
+    @@edit_center_details=@@centerprop['Center.Edit']+" "+@@lookup_name_center+" "+@@centerprop['Center.GroupsLink3']
+    @@button_search=@@centerprop['button.Search']
+    @@historical_data_link=@@clientprop['client.HistoricalDataLink']
   end
   
   #checking for the link Create new client in clients&accounts section
@@ -948,6 +951,9 @@ class ClientCreateEdit<TestClass
       assert($ie.contains_text(@@clientprop['client.PerformanceHistoryHeading']))and assert($ie.contains_text(@@active))
       $logger.log_results("Status changed to Active","NA","NA","passed") 
       view_change_log_active()
+      check_view_all_closed_accounts_link()
+   #   click_view_all_closed_accounts_link()
+      
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("Status changed to Active","NA","NA","failed") 
     rescue =>excp
@@ -1358,10 +1364,12 @@ class ClientCreateEdit<TestClass
       text_to_check=@@c_name+" - "+@@customerprop['label.historicaldata']
       assert($ie.contains_text(@@customerprop['label.add_edit_hd']))
       $logger.log_results("View Summarized Historical Data","Should work","Working","Passed")
-      $ie.button(:value,@@return_to_details_page).click
+      #$ie.button(:value,@@return_to_details_page).click
+      $ie.button(:value,"Back to Charges Page").click
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Summarized Historical Data","Should work","Working","Failed")
-      $ie.button(:value,@@return_to_details_page).click
+      #$ie.button(:value,@@return_to_details_page).click
+      $ie.button(:value,"Back to Charges Page").click
     rescue =>excp
       quit_on_error(excp) 
     end
@@ -1373,6 +1381,7 @@ class ClientCreateEdit<TestClass
       @@view_all_closed_accounts_client=@@clientprop['client.ClosedAccountsLink']
       assert($ie.contains_text(@@view_all_closed_accounts_client))
       $logger.log_results("View all closed accounts link existed","NA","NA","passed")
+      click_view_all_closed_accounts_link() 
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View all closed accounts link existed","NA","NA","failed")    
     rescue =>excp
@@ -1972,6 +1981,98 @@ def check_bluebandlink_view_all_account_activity()
  check_blueband_links("Client-View all account activity")
  
 end
+
+def apply_miscfees_to_inactive_customer()
+    dbquery("select display_name, global_cust_num  from customer where status_id in (1,2) and customer_level_id=1")
+    @@Display_name=dbresult[0]
+    @@global_cust_num=dbresult[1]
+    search_client @@global_cust_num
+    $ie.link(:text,@@Display_name+": ID "+@@global_cust_num).click
+    $ie.link(:text,@@view_details).click
+    $ie.link(:text,"Apply Charges").click
+    $ie.select_list(:name,"chargeType").select_value("-1")
+    $ie.text_field(:name,"chargeAmount").set("34")
+    $ie.button(:value,"Submit").click
+    #assert($ie.contains_text(@@inactive_client_misc_fees_msg))
+    assert($ie.contains_text("Misc fee or penalty can only be applied to active customers."))
+    $logger.log_results("Bug#802-Issue-Misc Fees cannot be applied for Inactive Clients","Enter a Misc fees or penalty","Should not allow to apply","passed")
+    rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Bug#802-Issue-Misc Fees cannot be applied for Inactive Clients","Enter a Misc fees or penalty","Allowed to apply","failed")
+    rescue =>excp
+      quit_on_error(excp)
+end 
+
+
+#added as part of Bug#862
+  def check_clients_under_kendra()
+  # to find center having atleast 1 client
+  dbquery("select center.customer_id,center.global_cust_num,center.display_name  as center_num from customer center join  customer grp on center.customer_id and grp.parent_customer_id=center.customer_id and center.customer_level_id=3 join customer client on grp.customer_id and client.parent_customer_id=grp.customer_id group by center_num having count(client.global_cust_num )>0")
+  cust_id=dbresult[0]
+  cust_num=dbresult[1]
+  display_name=dbresult[2]  
+  #now find all the clients under the center obtained from above query
+  $res=$dbh.real_query("Select display_name from customer c,(select Customer_id from customer where parent_customer_id in (select customer_id from customer where customer_level_id=3 and status_id=13 and customer_id="+cust_id+")) pc where c.parent_customer_id=pc.customer_id order by c.customer_id")
+  rowcount=$res.num_rows()
+  #array to store list of clients from query
+  client_list=[]
+  row=0
+  while(row<rowcount) 
+  client_list[row]=$res.fetch_row.to_a
+  row+=1
+  end
+    $ie.link(:text,"Clients & Accounts").click  
+    $ie.text_field(:name,"searchString").set(cust_num) 
+    $ie.button(:value,@@button_search).click 
+    $ie.link(:text,display_name+": ID "+cust_num).click
+    $ie.link(:text,@@edit_center_details).click
+      #array to store list of clients from the select list
+    kendra_leaders_list=$ie.select_list(:name,"customerPosition[0].customerId").getAllContents()
+    i=0
+    while(i<client_list.length)
+        if(client_list[i].to_s!=kendra_leaders_list[i+1].to_s)
+             $logger.log_results("Bug#862-Clients display in certner details page","Check the kendra leader dropdown in the Center details page","Not displaying the clients","failed")            
+             break
+        end
+     i+=1
+     end  
+
+  if(i>=client_list.length)
+     $logger.log_results("Bug#862-Clients display in certner details page","Check the kendra leader dropdown in the Center details page","Displaying the clients","passed")            
+  end
+  
+    
+ end #end of function check_clients_under_kendra()
+
+#added as part of Bug#1069 which updates  the system configuration to disable/enable Center creation
+def update_system_configuration_status(status)
+
+    $dbh.real_query("update system_configuration set center_hierarchy_exist="+status.to_s+" where office_id=1")
+end
+
+#added as part of Bug#979
+  def check_edit_historical_data()
+    begin
+      dbquery("select global_cust_num,display_name from customer where customer_level_id=1 and status_id=3")
+      cust_num=dbresult[0]
+      display_name=dbresult[1]
+      search_client(cust_num)
+      $ie.link(:text,display_name+": ID "+cust_num).click
+      $ie.link(:text,@@historical_data_link).click      
+      $ie.link(:text,"Add/Edit historical Data").click
+      $ie.text_field(:name,"commentNotes").set("Notes")
+      $ie.button(:value,@@button_preview).click
+      $ie.button(:value,@@button_submit).click
+      begin
+        assert($ie.contains_text("Add/Edit historical Data"))
+        $logger.log_results("Bug#979-Add/Edit Historical Data","Enter some historical data","Should not give any Exception","passed")
+        rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Bug#979-Add/Edit Historical Data","Enter some historical data","Displays some Exception","failed")
+        rescue =>excp
+        quit_on_error(excp)
+      end
+    end   
+  end # end of function check_edit_historical_data
+
   end # end of class
 
 
@@ -2005,103 +2106,111 @@ class ClientTest
   #Opens the Fist sheet in Testdata.xls file to create client with all mandatory data
   
  filename=File.expand_path(File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
-  clientobject.open(filename,1)
-  rowid=-1
+   clientobject.open(filename,1)
+   rowid=-1
   
-  #  creating a client with different sets of mandatory data it reads the data from the opened .xls file
-  # and put send the values to create client test cases
+   #  creating a client with different sets of mandatory data it reads the data from the opened .xls file
+   # and put send the values to create client test cases
   
-  while(rowid<$maxrow*$maxcol-1)
-    clientobject.read_client_values(rowid,1)
-    clientobject.create_client_with_all_mandatory_data(clientobject.Salutation,clientobject.Fname,clientobject.Lname,clientobject.Date,clientobject.Month,\
-    clientobject.Year,clientobject.Gender,clientobject.PovertyStatus,clientobject.Religion,clientobject.Sorftype,clientobject.Sorffname,\
-    clientobject.Sorflname,clientobject.Custom)
+   while(rowid<$maxrow*$maxcol-1)
+     clientobject.read_client_values(rowid,1)
+     clientobject.create_client_with_all_mandatory_data(clientobject.Salutation,clientobject.Fname,clientobject.Lname,clientobject.Date,clientobject.Month,\
+     clientobject.Year,clientobject.Gender,clientobject.PovertyStatus,clientobject.Religion,clientobject.Sorftype,clientobject.Sorffname,\
+     clientobject.Sorflname,clientobject.Custom)
     
-    clientobject.check_create_client_mfi_mandatory()
-    clientobject.create_client_enter_mfidata(clientobject.Salutation,clientobject.Fname,clientobject.Lname,clientobject.Date,clientobject.Month,\
-    clientobject.Year,clientobject.Gender,clientobject.Religion,clientobject.Sorftype,clientobject.Sorffname,\
-    clientobject.Sorflname,clientobject.Custom)
-    clientobject.submit_data(clientobject.Statusname) 
-    clientobject.check_client_charges_label()
-    clientobject.db_check()
-    #Checking for the View Summarised historical data link exist
-    #Checking for the View Summarised historical data link functionality
-    clientobject.check_view_summarized_historical_Data_link_exist()
-    clientobject.check_view_summarized_historical_Data_link_functionality()    
+     clientobject.check_create_client_mfi_mandatory()
+     clientobject.create_client_enter_mfidata(clientobject.Salutation,clientobject.Fname,clientobject.Lname,clientobject.Date,clientobject.Month,\
+     clientobject.Year,clientobject.Gender,clientobject.Religion,clientobject.Sorftype,clientobject.Sorffname,\
+     clientobject.Sorflname,clientobject.Custom)
+     clientobject.submit_data(clientobject.Statusname) 
+     clientobject.check_client_charges_label()
+     clientobject.db_check()
+     #Checking for the View Summarised historical data link exist
+     #Checking for the View Summarised historical data link functionality
+     clientobject.check_view_summarized_historical_Data_link_exist()
+     clientobject.check_view_summarized_historical_Data_link_functionality()    
     
-    rowid+=$maxcol
-  end    
+     rowid+=$maxcol
+   end    
   
   #Opening the second sheet in the testdata.xls file
+  
+     #added as part of Bug#1069.This is to check whether client can be created even 
+  #when the center_hierarchy is disabled in system configuration. This disables center creation
+  clientobject.update_system_configuration_status(0)
+
   
   clientobject.open(filename,2)
   rowid=-1
   
   #Creating and editing Client with different sets of mandatory and optional data.
   #data comes from the second sheet of testdata.xls
-  
-  while(rowid<$maxrow*$maxcol-1)
-    clientobject.read_client_values(rowid,2)
-    clientobject.select_group()
-    clientobject.client_create_with_all_data(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,\
-                                             clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.PovertyStatus,clientobject.Mstatus,clientobject.Noofchildren,\
-                                             clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
-                                             clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
-                                             clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)                                               
-    clientobject.click_continue() 
-    clientobject.check_create_client_mfi_mandatory
-    clientobject.client_create_enter_all_data_mfi(clientobject.Externalid,clientobject.Tdate,clientobject.Tmonth,clientobject.Tyear)
-    clientobject.click_preview()
-    clientobject.edit_personal_information_from_review(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,\
-                                                       clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.PovertyStatus,clientobject.Mstatus,clientobject.Noofchildren,\
-                                                       clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
-                                                       clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
-                                                       clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)
-    clientobject.edit_mfi_information_from_review(clientobject.Externalid,clientobject.Tdate,clientobject.Tmonth,clientobject.Tyear)
-    #Submits the client data with given status, 
-    #change the status and checks the entity in View change log page
-    #checks for different labels and functionality of links 
+   while(rowid<$maxrow*$maxcol-1)
+     clientobject.read_client_values(rowid,2)
+     clientobject.select_group()
+     clientobject.client_create_with_all_data(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,\
+                                              clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.PovertyStatus,clientobject.Mstatus,clientobject.Noofchildren,\
+                                              clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
+                                              clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
+                                              clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)                                               
+     clientobject.click_continue() 
+     clientobject.check_create_client_mfi_mandatory
+     clientobject.client_create_enter_all_data_mfi(clientobject.Externalid,clientobject.Tdate,clientobject.Tmonth,clientobject.Tyear)
+     clientobject.click_preview()
+     clientobject.edit_personal_information_from_review(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,\
+                                                        clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.PovertyStatus,clientobject.Mstatus,clientobject.Noofchildren,\
+                                                        clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
+                                                        clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
+                                                        clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)
+     clientobject.edit_mfi_information_from_review(clientobject.Externalid,clientobject.Tdate,clientobject.Tmonth,clientobject.Tyear)
+     #Submits the client data with given status, 
+     #change the status and checks the entity in View change log page
+     #checks for different labels and functionality of links 
     
-    clientobject.submit_data(clientobject.Statusname) 
-    clientobject.check_client_charges_label()
-    clientobject.db_check()
-    #Searching the client from the Clients&Accounts page and editing the personnnel and MFI informations from client details page
-    #Editing the group membership from client details page
-    #checking for the view all closed account link functionality
-    #PovertyStatus
-    clientobject.search_client_from_clients_accounts_page()
-    clientobject.check_edit_client_personalinformation_link_from_details_page
-    clientobject.edit_client_personnel_enter_data(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,\
-                                                  clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.PovertyStatus,clientobject.Mstatus,clientobject.Noofchildren,\
-                                                  clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
-                                                  clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
-                                                  clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)
-    clientobject.check_edit_client_mfi_data_link_from_details_page
-    clientobject.edit_client_mfi_enter_data(clientobject.Externalid)
-    #Checking for edit group membership link
-    #checking for edit group membership link functionality
-    #editing the group membership  
-    clientobject.check_edit_group_membership_link()
-    clientobject.click_edit_group_membership_link()   
-    clientobject.edit_group_membership() 
-    #Checking for View closed account link functinality
-    clientobject.check_view_all_closed_accounts_link
-    clientobject.click_view_all_closed_accounts_link
-    #Clicking on the links and check the page whether it is redirecting to proper page
-    #Adding a note
-    clientobject.check_add_notes_link
-    clientobject.click_add_notes_link
-    clientobject.check_mandatory_in_add_notes_page
-    clientobject.enter_more_data_in_notes_field(clientobject.Notes)
-    #Checking for the Add notes and see all notes links    
-    clientobject.enter_data_in_add_note
-    clientobject.check_for_see_all_notes_link
-    clientobject.click_see_all_notes_link        
-    rowid+=$maxcol
-  end 
+     clientobject.submit_data(clientobject.Statusname) 
+     clientobject.check_client_charges_label()
+     clientobject.db_check()
+     #Searching the client from the Clients&Accounts page and editing the personnnel and MFI informations from client details page
+     #Editing the group membership from client details page
+     #checking for the view all closed account link functionality
+     #PovertyStatus
+     clientobject.search_client_from_clients_accounts_page()
+     clientobject.check_edit_client_personalinformation_link_from_details_page
+     clientobject.edit_client_personnel_enter_data(clientobject.Salutation,clientobject.Fname,clientobject.Mname,clientobject.Sname,clientobject.Lname,clientobject.Govtid,\
+                                                   clientobject.Date,clientobject.Month,clientobject.Year,clientobject.Gender,clientobject.PovertyStatus,clientobject.Mstatus,clientobject.Noofchildren,\
+                                                   clientobject.Religion,clientobject.Education,clientobject.Sorftype,clientobject.Sorffname,clientobject.Sorfmname,\
+                                                   clientobject.Sorfsname,clientobject.Sorflname,clientobject.Address1,clientobject.Address2,clientobject.Address3,clientobject.City,\
+                                                   clientobject.State,clientobject.Country,clientobject.Pcode,clientobject.Phone,clientobject.Custom)
+     clientobject.check_edit_client_mfi_data_link_from_details_page
+     clientobject.edit_client_mfi_enter_data(clientobject.Externalid)
+     #Checking for edit group membership link
+     #checking for edit group membership link functionality
+     #editing the group membership  
+     clientobject.check_edit_group_membership_link()
+     clientobject.click_edit_group_membership_link()   
+     clientobject.edit_group_membership() 
+     #Checking for View closed account link functinality
+#     clientobject.check_view_all_closed_accounts_link
+#     clientobject.click_view_all_closed_accounts_link
+     #Clicking on the links and check the page whether it is redirecting to proper page
+     #Adding a note
+     clientobject.check_add_notes_link
+     clientobject.click_add_notes_link
+     clientobject.check_mandatory_in_add_notes_page
+     clientobject.enter_more_data_in_notes_field(clientobject.Notes)
+     #Checking for the Add notes and see all notes links    
+     clientobject.enter_data_in_add_note
+     clientobject.check_for_see_all_notes_link
+     clientobject.click_see_all_notes_link        
+     rowid+=$maxcol
+   end 
   
  # Opening the third sheet in the testdata.xls file to create client outside the group
-  
+ 
+    #added as part of Bug#1069.This is to check whether client can be created even 
+  #when the center_hierarchy is disabled in system configuration. This enables center creation
+  clientobject.update_system_configuration_status(1)
+
   clientobject.open(filename,3)
   rowid=-1
   
@@ -2141,20 +2250,29 @@ class ClientTest
     rowid+=$maxcol
   end    
   
+  #added as part of Bug#802
+  clientobject.apply_miscfees_to_inactive_customer()
+  
   for i in ["-1","-2"] # selecting Misc Fees and Misc Penalty
-  # for i in ["-1"]
         clientobject.apply_miscfees(i)
-   end
+  end
    
    clientobject.add_periodicFee
    clientobject.check_applyfee
      #added by Dilip as part of Bug#592
    clientobject.click_Applycharges_View_all_account_activity()
+   
    #added by Dilip as part of Bug#728
    clientobject.check_Group_Performance_Metrics()
    
    #added as part of bug#631
    clientobject.check_bluebandlink_view_all_account_activity()
+   
+   #added as part of Bug#862
+   clientobject.check_clients_under_kendra()
+   
+   #added as part of Bug#979
+   clientobject.check_edit_historical_data()
    
   clientobject.mifos_logout
 end
