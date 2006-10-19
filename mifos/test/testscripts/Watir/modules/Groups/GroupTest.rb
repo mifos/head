@@ -199,6 +199,8 @@ class GroupCreateEdit < TestClass
     @@miscchargeapplicable=@@accountprop['error.miscchargenotapplicable']
     @@group_applycharges=@@groupprop['group.applycharges']
     @@group_amountdue=@@groupprop['Group.amountdue']
+    @@return_account_details=@@accountprop['Account.returnToAccountDetails']
+    
   end
   #checking for the link Create new group in Clients&Accounts page 
   
@@ -592,6 +594,7 @@ class GroupCreateEdit < TestClass
         $logger.log_results("Status changed to Active","NA","NA","failed") 
       end
       view_change_log_active()
+      view_all_closed_accounts()
     rescue =>excp
       quit_on_error(excp)    
     end
@@ -790,6 +793,7 @@ class GroupCreateEdit < TestClass
       $ie.link(:text,@@change_log).click
       assert($ie.contains_text(@@status_pending_name)) and assert($ie.contains_text(@@status_partial_name))
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed")    
+      $ie.button(:value,@@return_account_details).click()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
     rescue =>excp
@@ -802,6 +806,7 @@ class GroupCreateEdit < TestClass
       $ie.link(:text,@@change_log).click
       assert($ie.contains_text(@@status_pending_name)) and assert($ie.contains_text(@@status_active_name))
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed")    
+      $ie.button(:value,@@return_account_details).click()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
     rescue =>excp
@@ -1088,7 +1093,7 @@ class GroupTest
     groupobject.Edit_address2,groupobject.Edit_address3,groupobject.Edit_city,\
     groupobject.Edit_state,groupobject.Edit_country,groupobject.Edit_pcode,groupobject.Edit_phone,\
     groupobject.Edit_customfield)  
-    groupobject.view_all_closed_accounts
+   # groupobject.view_all_closed_accounts
     groupobject.edit_center_membership(groupobject.Edit_gname)
     groupobject.edit_center_membership_select_center(groupobject.Edit_gname)
     rowid+=$maxcol
