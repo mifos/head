@@ -392,6 +392,7 @@ public class CenterCustAction extends CustAction {
 	public ActionForward searchTransfer(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		cleanUpSearch(request);
 		loadSearchResults(request, form);
 		return mapping.findForward(ActionForwards.transferSearch_success
 				.toString());

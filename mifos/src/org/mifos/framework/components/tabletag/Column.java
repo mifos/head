@@ -288,7 +288,7 @@ public class Column {
 			.append("\">")
 			.append(value);	
 		if (! "/".equalsIgnoreCase((String)value) && ! ("").equals(((String)value).trim())) {
-			stringColumn.append(":").append("&nbsp;");
+			stringColumn.append(":");
 		} 
 		stringColumn.append("</span>");
 	}

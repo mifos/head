@@ -424,10 +424,12 @@ public class OfficeBO extends BusinessObject {
 			throws OfficeException {
 		changeOfficeName(newName);
 		changeOfficeShortName(newShortName);
-		changeStatus(newStatus);
+		
 		updateLevel(newLevel);
 		if(! this.getOfficeLevel().equals(OfficeLevel.HEADOFFICE))
 			updateParent(newParent);
+		
+		changeStatus(newStatus);
 		updateAddress(address);
 		updateCustomFields(customFileds);
 		setUpdateDetails();

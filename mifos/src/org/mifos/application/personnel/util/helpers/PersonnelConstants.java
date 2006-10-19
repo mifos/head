@@ -184,7 +184,7 @@ public interface PersonnelConstants {
 	public static final String ERROR_GENDER="error.gender";
 	public static final String ERROR_EMAIL="error.email";
 	public static final String ERROR_VALID_EMAIL="error.vaildEmail";
-	public static final String ERROR_LEVEL="error.nolevel";
+	public static final String ERROR_LEVEL="error.level";
 	public static final String ERROR_USER_NAME="error.username";
 	public static final String INVALID_USER_NAME="error.invalidusername";
 	public static final String ERROR_DOB="error.dob";

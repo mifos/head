@@ -81,13 +81,13 @@ public class PageScroll {
 		
 		
 		if (prev) {
-			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Previous"),"searchPrev", currentFlowKey)).append("</td>");
+			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Previous"),"searchPrev", currentFlowKey,current-1)).append("</td>");
 		} else {
 			result.append("<td width=\"75\" class=\"fontnormalboldgray\">Previous</td>");
 		}
 		result.append("<td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results "+ pageStart + "-" + pageEnd + " of " + size + " </td>");
 		if (next) {
-			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Next"),"searchNext", currentFlowKey)).append("</td>");
+			result.append("<td width=\"75\" class=\"fontnormalbold\">").append(getAnchor(action, resource.getString("Next"),"searchNext", currentFlowKey,current+1)).append("</td>");
 		} else {
 			result.append("<td width=\"75\" align=\"right\" class=\"fontnormalboldgray\">Next</td>");
 		}
@@ -106,7 +106,7 @@ public class PageScroll {
 	 * @param paramvalue2	method value(previous or next).
 	 * @return
 	 */
-	protected static String getAnchor(String hRef, String text,String method, String currentFlowKey) {
+	protected static String getAnchor(String hRef, String text,String method, String currentFlowKey,int current) {
 		StringBuilder result = new StringBuilder();
 		
 		result.append("<a href='").append(hRef)
@@ -114,6 +114,8 @@ public class PageScroll {
 			  .append(method)
 			  .append("&currentFlowKey=")
 			  .append(currentFlowKey)
+			  .append("&current=")
+			  .append(current)
 			  .append("'>").append(text)
 			  .append("</a>");
 		return result.toString();

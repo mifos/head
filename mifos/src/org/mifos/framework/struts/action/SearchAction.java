@@ -36,10 +36,11 @@ public class SearchAction extends BaseAction {
 	
 	public ActionForward searchPrev(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
-		Integer current = (Integer)SessionUtils.getAttribute("current",request.getSession());
+		//Integer current = (Integer)SessionUtils.getAttribute("current",request);
 		
-		if( current ==null) throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
-		SessionUtils.setRemovableAttribute("current",current-1,TableTagConstants.PATH,request.getSession());
+		//if( current ==null) throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		//SessionUtils.setRemovableAttribute("current",current-1,TableTagConstants.PATH,request.getSession());
+		checkForValidData(request);
 		SessionUtils.setRemovableAttribute("meth","previous",TableTagConstants.PATH,request.getSession());
 		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
 		if( forwardkey ==null)throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
@@ -47,11 +48,12 @@ public class SearchAction extends BaseAction {
 	}
 	
 	public ActionForward searchNext(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Integer current=1;
-		if(null !=SessionUtils.getAttribute("current",request.getSession())) {
-		  current=(Integer)SessionUtils.getAttribute("current",request.getSession());
-		}
-		SessionUtils.setRemovableAttribute("current",current+1,TableTagConstants.PATH,request.getSession());
+		//Integer current=1;
+		//if(null !=SessionUtils.getAttribute("current",request.getSession())) {
+		//  current=(Integer)SessionUtils.getAttribute("current",request.getSession());
+		//}
+		//SessionUtils.setRemovableAttribute("current",current+1,TableTagConstants.PATH,request.getSession());
+		checkForValidData(request);
 		SessionUtils.setRemovableAttribute("meth","next",TableTagConstants.PATH,request.getSession());
 		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
 		if( forwardkey ==null)throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
@@ -85,6 +87,18 @@ public class SearchAction extends BaseAction {
 		return null;
 	}
 	
+	
+	private void checkForValidData(HttpServletRequest request) throws PageExpiredException{
+		
+		 SessionUtils.getAttribute(
+				Constants.SEARCH_STRING, request);
+		SessionUtils.getAttribute(
+				Constants.OFFICE_NAME,  request);
+		SessionUtils.getAttribute(
+				Constants.BRANCH_ID,  request);
+
+		
+	}
 	protected void checkPermissionForAddingNotes(AccountTypes accountTypes,CustomerLevel customerLevel,
 			UserContext userContext, Short recordOfficeId,
 			Short recordLoanOfficerId) throws ApplicationException {

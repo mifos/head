@@ -105,7 +105,7 @@ public class Link {
 					stringbuilder.append("&"+Constants.CURRENTFLOWKEY+"="+flowKey);
 				stringbuilder.append("&"+Constants.RANDOMNUM+"="+randomNumber);
 				stringbuilder.append("\">");
-				stringbuilder.append(" " + MifosTagUtils.xmlEscape( name[i]) + "</a></span>");
+				stringbuilder.append(MifosTagUtils.xmlEscape( name[i]) + "</a></span>");
 			}
 			else if(styleClass != null && styleClass.equals("headingblue") && bold.equalsIgnoreCase("true"))
 			{			
@@ -118,7 +118,7 @@ public class Link {
 				stringbuilder.append("&"+Constants.RANDOMNUM+"="+randomNumber);
 				stringbuilder.append("class=\""+styleClass+"\"");
 				stringbuilder.append(">");
-				stringbuilder.append(" " + MifosTagUtils.xmlEscape(name[i]) + "</a></span>");
+				stringbuilder.append(MifosTagUtils.xmlEscape(name[i]) + "</a></span>");
 			}
 			else
 			{			
@@ -131,7 +131,7 @@ public class Link {
 				//stringbuilder.append("class=");
 				//stringbuilder.append(bold.equalsIgnoreCase("true")?"\"headingblue\">" :"\"\">");
 				stringbuilder.append("\">");
-				stringbuilder.append(" " + MifosTagUtils.xmlEscape(name[i]) + "</a></span>");					
+				stringbuilder.append(MifosTagUtils.xmlEscape(name[i]) + "</a></span>");					
 			}
 			stringbuilder.append((i == (name.length - 1)) ? "" : ",");			
 		}
