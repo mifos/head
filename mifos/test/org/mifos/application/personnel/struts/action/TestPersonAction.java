@@ -396,6 +396,16 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		verifyInputForward();
 	}
 
+	public void testManagePreviewFailureLoginNameWithSpace() throws Exception {
+		addActionAndMethod(Methods.preview.toString());
+		setRequestData();
+		addRequestParameter("loginName", "XYZ PQR");
+		actionPerform();
+		assertEquals(1, getErrrorSize(PersonnelConstants.INVALID_USER_NAME));
+		verifyInputForward();
+	}
+
+
 	public void testManagePreviewFailureWrongPasswordAndReaptPassword()
 			throws Exception {
 		addActionAndMethod(Methods.preview.toString());

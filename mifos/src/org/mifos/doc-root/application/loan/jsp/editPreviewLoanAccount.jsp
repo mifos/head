@@ -1,39 +1,39 @@
 <!--
- 
+
  * editPreviewLoanAccount.jsp  version: xxx
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  -->
 
 <%@ taglib uri="/tags/struts-html" prefix="html"%>
@@ -52,7 +52,7 @@
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<html-el:form method="post" action="/loanAccountAction.do?method=update"
 			onsubmit="func_disableSubmitBtn('previewDetailsBtn')">
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set
 				value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				var="BusinessKey" />
@@ -140,7 +140,7 @@
 								isManadatoryIndicationNotRequired="yes" /><mifos:mifoslabel
 								name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />&nbsp;
 							<span class="fontnormal">
-							
+
 							 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivitieName')}" /></span></td>
 						</tr>
 						<tr id="Loan.CollateralType">
@@ -162,7 +162,7 @@
 			                    	<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 										<c:forEach var="cf" items="${sessionScope.loanAccountActionForm.customFields}">
 											<c:if test="${cfdef.fieldId==cf.fieldId}">
-												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="loanUIResources"></mifos:mifoslabel>: 
+												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="loanUIResources"></mifos:mifoslabel>:
 						        		  	 	<span class="fontnormal">
 												<c:out value="${cf.fieldValue}"/>
 											</span><br>
@@ -174,12 +174,6 @@
 								onclick="fnEdit(this.form)">
 								<mifos:mifoslabel name="loan.edit_loan_acc" />
 							</html-el:button> </td>
-						</tr>
-						<tr>
-							<td><html-el:button property="editButton" styleClass="insidebuttn"
-								onclick="fnEdit(this.form)">
-								<mifos:mifoslabel name="loan.edit_loan_acc" />
-							</html-el:button></span></td>
 						</tr>
 					</table>
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">

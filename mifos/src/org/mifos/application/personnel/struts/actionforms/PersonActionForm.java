@@ -554,6 +554,9 @@ public class PersonActionForm extends BaseActionForm {
 		if (StringUtils.isNullOrEmpty(loginName)) {
 			errors.add(PersonnelConstants.ERROR_USER_NAME, new ActionMessage(
 					PersonnelConstants.ERROR_USER_NAME));
+		} else if (loginName.trim().contains(" ")) {
+			errors.add(PersonnelConstants.INVALID_USER_NAME, new ActionMessage(
+					PersonnelConstants.INVALID_USER_NAME));
 		}
 	}
 	private void handleManagePreviewValidations(ActionErrors errors,

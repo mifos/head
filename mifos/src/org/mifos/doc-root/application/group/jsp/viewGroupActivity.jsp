@@ -67,7 +67,7 @@
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/>
-				<html-el:link href="customerAccountAction.do?method=load&randomNUm=${sessionScope.randomNUm}">/
+				<html-el:link href="customerAccountAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 	          	   <mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/>
 			<mifos:mifoslabel name="Group.charges" bundle="GroupUIResources"/>
 	          	</html-el:link></span>

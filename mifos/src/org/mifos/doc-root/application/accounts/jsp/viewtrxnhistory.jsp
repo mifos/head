@@ -69,7 +69,7 @@
 	          	<c:when test="${param.input == 'LoanDetails'}">
 	          	</c:when>
 	          	<c:otherwise>
-	          	<html-el:link href="customerAccountAction.do?method=load"> /
+	          	<html-el:link href="customerAccountAction.do?method=load">
 	          	<c:if test="${param.input == 'ViewCenterCharges'}">
 	          	   <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
 	          	</c:if>

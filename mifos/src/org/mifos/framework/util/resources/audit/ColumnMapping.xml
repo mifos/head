@@ -44,7 +44,7 @@
 		<propertyName name="fieldId" parentName="accountCustomFields" displayKey="Account.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
 		<propertyName name="fieldValue" parentName="accountCustomFields" displayKey="Account.customField.feildValue" />
 		<propertyName name="accountCustomFieldId" parentName="accountCustomFields" doNotLog="yes" />
-		
+
 
 	</entityType>
 
@@ -156,8 +156,8 @@
 		<propertyName name="secondLastName" doNotLog="yes" />
 		<propertyName name="lastName"  doNotLog="yes" />
 		<propertyName name="middleName" doNotLog="yes" />
-		
-		
+
+
 		<propertyName name="firstName" parentName="name" displayKey="Client.customerNameDetailSet.firstName" />
 		<propertyName name="secondLastName" parentName="name" displayKey="Client.customerNameDetailSet.secondLastName" />
 		<propertyName name="lastName"  parentName="name" displayKey="Client.customerNameDetailSet.lastName" />
@@ -358,11 +358,11 @@
 		<propertyName name="dateOfBirth" parentName="customer" doNotLog="yes" />
 		<propertyName name="clientConfidential" parentName="customer" doNotLog="yes" />
 		<propertyName name="personnelId" parentName="customer" doNotLog="yes" />
-		
+
 		<propertyName name="meetingPlace" parentName="meeting" displayKey="Center.meeting.meetingPlace" />
 		<propertyName name="recurAfter" parentName="meetingDetails" displayKey="LoanProduct.meetingDetails.recurAfter"/>
 		<propertyName name="recurrenceId" parentName="recurrenceType" displayKey="LoanProduct.recurrenceType.recurrenceName" methodName="retrieveRecurrenceTypes" lookUp="yes"/>
-		
+
 	</entityType>
 
 
@@ -387,7 +387,7 @@
 			<entity  name="meetingDetails"  parentName="meeting"/>
 			<entity  name="meetingRecurrence"  parentName="meetingDetails"/>
 			<entity  name="weekDay"  parentName="meetingRecurrence"/>
-			
+
 			<entity  name="personnel"/>
 			<entity name="historicalData"/>
 			<entity name="office"></entity>
@@ -508,7 +508,7 @@
 		<propertyName name="notes" parentName="historicalData" displayKey="historicalData.notes"/>
 		<propertyName name="loanCycleNumber" parentName="historicalData" displayKey="Loan,historicalData.loanCycleNumber"/>
 
-		<propertyName name="mfiJoiningDate" displayKey="Client.mfiJoiningDate" />	
+		<propertyName name="mfiJoiningDate" displayKey="Client.mfiJoiningDate" />
 
 		<propertyName name="officeName" parentName="office" displayKey="BranchOffice,Customer.name" />
 		<propertyName name="officeId" parentName="office" doNotLog="yes" />
@@ -517,7 +517,7 @@
 		<propertyName name="maxChildCount" parentName="office" doNotLog="yes" />
 		<propertyName name="searchId" parentName="office" doNotLog="yes" />
 		<propertyName name="operationMode" parentName="office" doNotLog="yes" />
-		
+
 		<propertyName name="personnelId" parentName="personnel" doNotLog="yes" />
 		<propertyName name="globalPersonnelNum" parentName="personnel" doNotLog="yes" />
 		<propertyName name="userName" parentName="personnel" doNotLog="yes" />
@@ -529,7 +529,7 @@
 		<propertyName name="lastLogin" parentName="personnel" doNotLog="yes" />
 		<propertyName name="maxChildCount" parentName="personnel" doNotLog="yes" />
 		<propertyName name="displayName" parentName="personnel" displayKey="Center.personnel.displayName" />
-		
+
 	 </entityType>
 
 	<entityType name="Savings" classPath="org.mifos.application.accounts.savings.business.SavingsBO">
@@ -575,12 +575,12 @@
 			<entity name="prdCategory"/>
 			<entity name="prdApplicableMaster"/>
 			<entity name="prdStatus"/>
-			
+
 			<entity name="loanOfferingMeeting"/>
 			<entity name="meeting" parentName="loanOfferingMeeting"/>
 			<entity name="meetingDetails" parentName="meeting"/>
 			<entity name="recurrenceType" parentName="meetingDetails"/>
-			
+
 			<entity name="gracePeriodType"/>
 			<entity name="loanOfferingFees"/>
 			<entity name="fees" parentName="loanOfferingFees"/>
@@ -777,19 +777,18 @@
 			<entity name="preferredLocale"/>
 			<entity name="language" parentName="preferredLocale"/>
 		</entitiesToLog>
-		
+
 		<!-- <propertyName name="language" parentName="preferredLocale" displayKey="Personnel.LanguagePreferred"  doNotLog="No" lookUp="yes">
 			<entityName name="Language">
 				<classPath  path="org.mifos.application.master.business.LanguageEntity"/>
 			</entityName>
 		</propertyName>-->
-
+		<propertyName name="passwordChanged" parentName="personnelDetails" doNotLog="yes" />
 		<propertyName name="level" displayKey="Personnel.Status"  doNotLog="No" lookUp="yes">
 			<entityName name="PersonnelLevels">
 				<classPath  path="org.mifos.application.personnel.business.PersonnelLevelEntity"/>
 			</entityName>
 		</propertyName>
-
 		<propertyName name="fieldId" parentName="customFields" displayKey="Personnel.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
 		<propertyName name="fieldValue" parentName="customFields" displayKey="Personnel.customField.feildValue" />
 		<propertyName name="firstName" parentName="personnelDetails" displayKey="Personnel.firstName"  />
@@ -820,6 +819,11 @@
 		<propertyName name="phoneNumber" parentName="address" displayKey="Personnel.telephone" />
 		<propertyName name="officeName" parentName="office" displayKey="Personnel.officeName" />
 		<propertyName name="officeId" parentName="office" doNotLog="yes" />
+		<propertyName name="shortName" parentName="office" doNotLog="yes" />
+		<propertyName name="globalOfficeNum" parentName="office" doNotLog="yes" />
+		<propertyName name="maxChildCount" parentName="office" doNotLog="yes" />
+		<propertyName name="searchId" parentName="office" doNotLog="yes" />
+		<propertyName name="operationMode" parentName="office" doNotLog="yes" />
 		<propertyName name="title" displayKey="Personnel.PersonnelTitle"  doNotLog="No" lookUp="yes">
 			<entityName name="PersonnelTitles"/>
 		</propertyName>
@@ -827,7 +831,6 @@
 		<propertyName name="levelId" parentName="level" displayKey="Personnel.userHierarchy"  doNotLog="No" lookUp="yes">
 			<entityName name="PersonnelLevels">
 				<classPath  path="org.mifos.application.personnel.util.helpers.PersonnelLevel"/>
-				<pkColumn name="levelId"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="personnelRoleId"  parentName="personnelRoles"   doNotLog="yes"/>
@@ -836,11 +839,11 @@
 		<propertyName name="displayName" displayKey="Personnel.displayName" />
 		<propertyName name="userName" displayKey="Personnel.displayName" />
         <propertyName name="encriptedPassword"  displayKey="Personnel.encriptedPassword" />
-        
+
     	<propertyName name="localeId"  parentName="preferredLocale"  doNotLog="yes" />
 		<propertyName name="localeName"  parentName="preferredLocale"  doNotLog="yes"/>
 		<propertyName name="defaultLocale"  parentName="preferredLocale"  doNotLog="yes"/>
-		
+
 		<propertyName name="languageId"  parentName="language"  doNotLog="yes"/>
 		<propertyName name="languageShortName"  parentName="language"  doNotLog="yes"/>
 		<propertyName name="languageName"  parentName="language"  doNotLog="yes" displayKey="Personnel.LanguagePreferred"/>

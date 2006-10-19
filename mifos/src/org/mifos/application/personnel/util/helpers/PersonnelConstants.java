@@ -1,39 +1,39 @@
 /**
- 
+
  * PersonnelConstants.java    version: 1.0
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  */
 package org.mifos.application.personnel.util.helpers;
 
@@ -100,7 +100,7 @@ public interface PersonnelConstants {
 	//names for master data
 	public static final String LANGUAGE_NAME="languageName";
 	public static final String LOANOFFICERACTIVE="ACTIVE";
-	
+
 	//perosnnel status
 	public static final Short ACTIVE=1;
 	public static final Short INACTIVE=2;
@@ -110,7 +110,7 @@ public interface PersonnelConstants {
 	public static final String STATUS="status";
 	public static final String STATUS_LIST="statusList";
 	public static final String ROLES_TO_DELETE="rolesToDelete";
-	
+
 	//transfer
 	public static final String TRANSFER="transfer";
 	//input pages
@@ -125,7 +125,7 @@ public interface PersonnelConstants {
 	public static final String USER_CHANGE_LOG="UserChangeLog";
 	public static final String USER_CHANGE_LOG_LIST="UserChangeLogList";
 	public static final String ADMIN_PAGE="AdminPage";
-	
+
 	public static final short NOTES_COUNT=3;
 	public static final String NOTES="notes";
 	public static final String GENDER ="Gender";
@@ -156,7 +156,7 @@ public interface PersonnelConstants {
 	public static final String PASSWORD_MASK="errors.spacesmask";
 	public static final String USER_CHANGE_LOG_ERROR="error.userchangelog";
 	public static final String ERROR_MASTERDATA="error.masterdata";
-	
+
 	//M2 Constants
 	public static final String PERSONNELUIRESOURCESPATH="org/mifos/application/personnel/util/resources/PersonnelUIResources";
 	public static final String ERRORMANDATORY="errors.mandatory";
@@ -178,18 +178,19 @@ public interface PersonnelConstants {
 	public static final short PERSONNELDISPLAYNAMELENGTH =200;
 	public static final String DISPLAY_NAME ="display name";
 	public static final String DISPLAYNAME ="displayName";
-	
+
 	public static final String ERROR_FIRSTNAME="error.firstName";
 	public static final String ERROR_LASTNAME="error.lastName";
 	public static final String ERROR_GENDER="error.gender";
 	public static final String ERROR_EMAIL="error.email";
 	public static final String ERROR_VALID_EMAIL="error.vaildEmail";
-	public static final String ERROR_LEVEL="error.level";
+	public static final String ERROR_LEVEL="error.nolevel";
 	public static final String ERROR_USER_NAME="error.username";
+	public static final String INVALID_USER_NAME="error.invalidusername";
 	public static final String ERROR_DOB="error.dob";
 	public static final String ERROR_PASSWORD_LENGTH="error.passwordLength";
-	
+
 	public static final String ERROR_STATUS="errors.status";
 	public static final String ERROR_NO_LEVEL="error.nolevel";
-	
+
 }

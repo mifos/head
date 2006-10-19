@@ -1,10 +1,10 @@
-<!-- 
+<!--
 
 /**
 
  * viewCenterActivity.jsp    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -12,27 +12,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -61,13 +61,13 @@
 			customerAccountActionForm.submit();
 		}
 </script>
-		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
+		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 			   var="BusinessKey" />
         <table width="95%" border="0" cellpadding="0" cellspacing="0">
 			<tr>
-				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/> 
-				<html-el:link href="customerAccountAction.do?method=load&randomNUm=${sessionScope.randomNUm}">/
+				<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink/>
+				<html-el:link href="customerAccountAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 	          	  <mifos:mifoslabel name="${ConfigurationConstants.CENTER}"/>
 	          		<mifos:mifoslabel name="Center.Charges" bundle="CenterUIResources"/>
 	          	</html-el:link></span>
@@ -112,16 +112,16 @@
 						</html-el:link>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 	              </tr>
-	            </table> 
+	            </table>
 	            <br>
 	         </c:if>
- 			<mifoscustom:mifostabletag moduleName="customer" scope="session" source="customerAccountActivityList" xmlFileName="CustomerRecentActivity.xml" passLocale="true"/>            
+ 			<mifoscustom:mifostabletag moduleName="customer" scope="session" source="customerAccountActivityList" xmlFileName="CustomerRecentActivity.xml" passLocale="true"/>
             <br>
              <table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td align="center">
 					   <html-el:button property="returnToAccountDetailsbutton"
-					       onclick="fun_cancel();" 
+					       onclick="fun_cancel();"
 						     styleClass="buttn" style="width:165px;">
 						<mifos:mifoslabel name="label.backtodetailspage" bundle="CustomerUIResources"/>
 						</html-el:button>
@@ -129,9 +129,9 @@
 				</tr>
     		</table>
         </tr>
-      </table> 
+      </table>
 		<html:form action="customerAccountAction.do">
-        	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}" /> 
+        	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
      	</html:form>
 </tiles:put>
-</tiles:insert>      
+</tiles:insert>
