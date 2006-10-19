@@ -458,7 +458,9 @@ class CenterCreateEdit < TestClass
       if frequncymeeting=="1" then
         $ie.radio(:name,"frequency","1").set
         $ie.text_field(:name,"recurWeek").set(reccurweek)
-        $ie.select_list(:name,"weekDay").select_value(weekweekday)
+        #$ie.select_list(:name,"weekDay").select_value(weekweekday)
+        weekday=Time.now.strftime("%A")
+      	$ie.select_list(:name,"weekDay").select(weekday)
         $ie.text_field(:name,"meetingPlace").set(meetingplace)
         $ie.button(:value,@@button_save).click
       elsif frequncymeeting=="2" then
