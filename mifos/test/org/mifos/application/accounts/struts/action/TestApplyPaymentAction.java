@@ -90,7 +90,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,AccountApplyPaymentAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);	
 		request.getSession().setAttribute(SecurityConstants.SECURITY_PARAM,"Loan");

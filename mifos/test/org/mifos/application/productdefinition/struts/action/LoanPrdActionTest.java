@@ -115,7 +115,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,LoanPrdAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 	}

@@ -87,7 +87,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,SavingsClosureAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

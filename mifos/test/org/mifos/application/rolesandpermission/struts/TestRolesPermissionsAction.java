@@ -10,6 +10,7 @@ import java.util.Set;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.application.rolesandpermission.struts.action.RolesPermissionsAction;
 import org.mifos.application.rolesandpermission.struts.actionforms.RolesPermissionsActionForm;
 import org.mifos.application.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -54,7 +55,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,RolesPermissionsAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 	}

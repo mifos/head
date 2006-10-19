@@ -134,7 +134,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,ClientCustAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
@@ -389,7 +389,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("groupFlag", "0");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-
+		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
@@ -425,6 +425,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("groupFlag", "0");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
+		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
@@ -468,6 +469,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("groupFlag", "0");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
+		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		setRequestPathInfo("/clientCustAction.do");
@@ -1012,6 +1014,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			addRequestParameter("groupFlag", "1");
 			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 			actionPerform();
+			flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
 			verifyNoActionErrors();
 			verifyNoActionMessages();
 			verifyForward(ActionForwards.load_success.toString());
@@ -1595,6 +1598,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			addRequestParameter("groupFlag", "1");
 			addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 			actionPerform();
+			flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
 			verifyNoActionErrors();
 			verifyNoActionMessages();
 			verifyForward(ActionForwards.load_success.toString());

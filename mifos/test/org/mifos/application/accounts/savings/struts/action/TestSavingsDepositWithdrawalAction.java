@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountActionEntity;
+import org.mifos.application.accounts.financial.business.service.activity.SavingsWithdrawalFinancialActivity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -68,7 +69,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,SavingsDepositWithdrawalAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

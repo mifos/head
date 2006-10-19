@@ -825,13 +825,9 @@
 
 		<action path="/applyChargeAction" type="org.mifos.application.accounts.struts.action.ApplyChargeAction" parameter="method" name="ApplyChargeActionForm" input="/applyChargeAction.do?method=validate" validate="true" scope="session">
 			<forward name="load_success" path="/pages/application/accounts/jsp/applyCharges.jsp"></forward>
+			<forward name="load_ViewClientCharges_failure" path="/pages/application/client/jsp/view_clientchargesdetail.jsp"></forward>
 			<forward name="update_failure" path="/pages/application/accounts/jsp/applyCharges.jsp"></forward>
 			<forward name="loanDetails_success" path="/loanAccountAction.do?method=get"></forward>
-			<!--
-			<forward name="clientDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewClientCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			<forward name="groupDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewGroupCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			<forward name="centerDetails_success" path="/closedaccsearchaction.do?method=search&amp;input=ViewCenterCharges&amp;searchNode(search_name)=ClientChargesDetails" />
-			-->
 			<forward name="clientDetails_success" path="/customerAccountAction.do?method=load" />
 			<forward name="groupDetails_success" path="/customerAccountAction.do?method=load" />
 			<forward name="centerDetails_success" path="/customerAccountAction.do?method=load" />

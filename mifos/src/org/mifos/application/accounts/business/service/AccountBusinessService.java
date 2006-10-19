@@ -131,21 +131,25 @@ public class AccountBusinessService extends BusinessService {
 			Short categoryType = getCategoryType(account.getCustomer());
 
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue()))
+					AccountTypes.LOANACCOUNT.getValue())) {
 				applicableChargeList = getLoanApplicableCharges(
 						new AccountPersistence().getAllAppllicableFees(
 								accountId, FeeCategory.LOAN.getValue()),
 						userContext, (LoanBO) account);
-			else if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.CUSTOMERACCOUNT.getValue()))
+			} else if (account.getAccountType().getAccountTypeId().equals(
+					AccountTypes.CUSTOMERACCOUNT.getValue())) {
+				if (account.getCustomer().getCustomerMeeting() == null)
+					throw new ServiceException(
+							AccountExceptionConstants.APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION);
 				applicableChargeList = getCustomerApplicableCharges(
 						new AccountPersistence().getAllAppllicableFees(
 								accountId, getCategoryType(account
-										.getCustomer())), userContext
-								, ((CustomerAccountBO) account)
-								.getCustomer().getCustomerMeeting()
-								.getMeeting().getMeetingDetails()
-								.getRecurrenceType().getRecurrenceId());
+										.getCustomer())), userContext,
+						((CustomerAccountBO) account).getCustomer()
+								.getCustomerMeeting().getMeeting()
+								.getMeetingDetails().getRecurrenceType()
+								.getRecurrenceId());
+			}
 			addMiscFeeAndPenalty(applicableChargeList);
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);

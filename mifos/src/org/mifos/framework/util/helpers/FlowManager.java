@@ -46,10 +46,16 @@ public class FlowManager {
 
 	private Map<String, Flow> flowData = new HashMap<String, Flow>();
 
+	private Map<String, String> classData = new HashMap<String, String>();
+
 	public FlowManager() {
 	}
 
-	public void addFLow(String key, Flow value) {
+	public void addFLow(String key, Flow value,String className) {
+		if(classData.containsKey(className)) {
+			flowData.remove(classData.get(className));
+		}
+		classData.put(className,key);
 		flowData.put(key, value);
 	}
 
@@ -82,7 +88,7 @@ public class FlowManager {
 	public void removeFlow(String key) {
 		flowData.remove(key);
 	}
-	
+
 	public void removeFromFlow(String flowKey, String key)
 			throws PageExpiredException {
 		if (!isFlowValid(flowKey))
@@ -91,4 +97,5 @@ public class FlowManager {
 		Flow flow = getFlow(flowKey.toString());
 		flow.removeFromSession(key);
 	}
+
 }

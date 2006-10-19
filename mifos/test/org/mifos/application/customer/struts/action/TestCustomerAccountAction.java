@@ -49,7 +49,7 @@ public class TestCustomerAccountAction extends MifosMockStrutsTestCase {
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,CustomerAccountAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,flowManager);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 	}

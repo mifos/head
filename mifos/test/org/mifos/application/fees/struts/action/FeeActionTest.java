@@ -104,7 +104,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,FeeAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 	}
@@ -308,6 +308,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
+		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("feeName", "CustomerFee");

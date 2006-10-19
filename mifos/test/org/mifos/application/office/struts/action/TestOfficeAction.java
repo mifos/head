@@ -48,7 +48,7 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,OffAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 	}
@@ -266,6 +266,7 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.load_success.toString());
+		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
 		FlowManager fm = (FlowManager)SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
 		assertEquals(true, fm.isFlowValid(flowKey));
 
@@ -307,6 +308,7 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.load_success.toString());
+		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
 		FlowManager fm = (FlowManager)SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
 		assertEquals(true, fm.isFlowValid(flowKey));
 

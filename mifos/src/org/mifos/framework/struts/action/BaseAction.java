@@ -148,7 +148,7 @@ public abstract class BaseAction extends DispatchAction {
 			flowManager = new FlowManager();
 			request.getSession(false).setAttribute(Constants.FLOWMANAGER,flowManager);
 		}
-		flowManager.addFLow(flowKey, new Flow());
+		flowManager.addFLow(flowKey, new Flow(),this.clazz.getName());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
 	}

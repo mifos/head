@@ -69,7 +69,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		Flow flow = new Flow();
 		flowKey = String.valueOf(System.currentTimeMillis());
 		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow);
+		flowManager.addFLow(flowKey, flow,PersonAction.class.getName());
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 		EntityMasterData.getInstance().init();
@@ -509,7 +509,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addActionAndMethod(Methods.get.toString());
 		addRequestParameter("globalPersonnelNum", "1");
 		actionPerform();
-
+		flowKey = request.getAttribute(Constants.CURRENTFLOWKEY).toString();
 		personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		AuditLog auditLog = new AuditLog(personnel.getPersonnelId().intValue(), EntityType.PERSONNEL.getValue(), "Mifos", new java.sql.Date(System.currentTimeMillis()),
 				Short.valueOf("3"));
