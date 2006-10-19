@@ -52,10 +52,10 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="javascript:fnOnAdmin(feeactionform)">
+						<span class="fontnormal8pt"> <html-el:link href="feeaction.do?method=cancelCreate&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.admin" bundle="FeesUIResources">
 								</mifos:mifoslabel>
-							</html-el:link> / <html-el:link href="javascript:fnOnView(feeactionform)">
+							</html-el:link> / <html-el:link href="feeaction.do?method=viewAll&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.viewfees" bundle="FeesUIResources">
 								</mifos:mifoslabel>
 							</html-el:link> / </span> <span class="fontnormal8ptbold"> <c:out value="${BusinessKey.feeName}"></c:out> </span>
@@ -71,7 +71,7 @@
 									<c:out value="${BusinessKey.feeName}"></c:out>
 								</td>
 								<td width="33%" align="right">
-									<html-el:link href="javascript:fnOnEditFeeInformation(feeactionform)">
+									<html-el:link href="feeaction.do?method=manage&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 										<mifos:mifoslabel name="Fees.editfeeinformation" bundle="FeesUIResources">
 										</mifos:mifoslabel>
 									</html-el:link>
@@ -159,7 +159,6 @@
 									<span class="fontnormal"> <br> <br> </span>
 								</td>
 							</tr>
-							<html-el:hidden property="method" value="cancel" />
 							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</table>
 						<br>

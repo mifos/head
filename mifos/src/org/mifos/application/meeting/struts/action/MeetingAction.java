@@ -108,8 +108,12 @@ public class MeetingAction extends BaseAction {
 			throws Exception {
 		MeetingActionForm actionForm = (MeetingActionForm) form;
 		clearActionForm(actionForm);
-		CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(
+		CustomerBO customerInSession = (CustomerBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
+		CustomerBO customer = getCustomerBusinessService().getCustomer(customerInSession.getCustomerId());
+		customer.setVersionNo(customerInSession.getVersionNo());	
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customer, request);
+		customerInSession = null;
 		ActionForward forward = null;
 		loadMasterData(request);
 		if (customer.getCustomerMeeting() != null) {
@@ -140,9 +144,15 @@ public class MeetingAction extends BaseAction {
 		CustomerBO customer = getCustomerBusinessService().getCustomer(customerInSession.getCustomerId());
 		customer.setVersionNo(customerInSession.getVersionNo());		
 		customer.setUserContext(getUserContext(request));
+		if (customer.getPersonnel() != null)
+			getMeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(), getUserContext(request), customer.getOffice()
+							.getOfficeId(), customer.getPersonnel()
+							.getPersonnelId());
+		else
+			getMeetingBusinessService().checkPermissionForEditMeetingSchedule(customer.getLevel(), getUserContext(request), customer.getOffice()
+							.getOfficeId(), getUserContext(request).getId());
 		customer.updateMeeting(meeting);
-		ActionForwards forward = forwardForUpdate(actionForm
-				.getCustomerLevelValue());
+		ActionForwards forward = forwardForUpdate(actionForm.getCustomerLevelValue());
 		return mapping.findForward(forward.toString());
 	}
 

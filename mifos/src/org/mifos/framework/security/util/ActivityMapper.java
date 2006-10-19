@@ -206,63 +206,7 @@ public class ActivityMapper {
 				SecurityConstants.ROLES_DELETE_ROLES);
 		activityMap.put("/manageRolesAndPermission-delete",
 				SecurityConstants.ROLES_DELETE_ROLES);
-
-		// Group ralated mappings
-		// activities related to create group
-		activityMap.put("/GroupAction-chooseOffice", SecurityConstants.VIEW);
-		activityMap.put("/GroupAction-hierarchyCheck", SecurityConstants.VIEW);
-		activityMap.put("/GroupAction-load", SecurityConstants.VIEW);
-		activityMap.put("/GroupAction-loadMeeting",
-				SecurityConstants.MEETING_CREATE_GROUP_MEETING);
-		activityMap.put("/GroupAction-setDefaultFormedByPersonnel",
-				SecurityConstants.VIEW);
-		activityMap.put("/GroupAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/GroupAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/GroupAction-create", SecurityConstants.VIEW);
-		activityMap.put("/GroupAction-search", SecurityConstants.VIEW);
-
-		// activities related to retrieve group for Group Module
-		activityMap.put("/GroupAction-getDetails", SecurityConstants.VIEW);
-		activityMap.put("/GroupAction-get", SecurityConstants.VIEW);
-
-		// activities related to update group status for Group Module
-		activityMap.put("/GroupAction-loadStatus", SecurityConstants.VIEW);
-		activityMap.put("/GroupAction-updateStatus", SecurityConstants.VIEW);
-
-		// activities related to update group for Group Module
-		activityMap.put("/GroupAction-manage",
-				SecurityConstants.GROUP_EDIT_GROUP);
-		activityMap.put("/GroupAction-update",
-				SecurityConstants.GROUP_EDIT_GROUP);
-
-		// activities related to change center membership for Group Module
-		activityMap.put("/GroupAction-loadParentTransfer",
-				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-		activityMap.put("/GroupAction-confirmParentTransfer",
-				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-		activityMap.put("/GroupAction-updateParent",
-				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-
-		// activities related to change center membership for Group Module
-		activityMap.put("/GroupAction-loadParentTransfer",
-				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-		activityMap.put("/GroupAction-confirmParentTransfer",
-				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-		activityMap.put("/GroupAction-updateParent",
-				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-
-		// activities related to transfer the group for Group Module
-		activityMap.put("/GroupAction-loadTransfer",
-				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
-		activityMap.put("/GroupAction-confirmBranchTransfer",
-				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
-		activityMap.put("/GroupAction-updateBranch",
-				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
-		// apply charges
-		activityMap.put("/closedaccsearchaction-search",
-				SecurityConstants.GROUP_APPLY_CHARGES_TO_GROUP_ACCOUNT);
-		activityMap.put("/GroupAction-loadSearch", SecurityConstants.VIEW);
-
+		
 		// Customer Historical Data related mapping
 		activityMap.put("/custHistoricalDataAction-loadHistoricalData",
 				SecurityConstants.VIEW);
@@ -277,29 +221,6 @@ public class ActivityMapper {
 		activityMap.put("/custHistoricalDataAction-cancelHistoricalData",
 				SecurityConstants.VIEW);
 
-		// personnel related mappings
-		activityMap.put("/PersonnelAction-chooseOffice",
-				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-		activityMap.put("/PersonnelAction-load",
-				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-		activityMap.put("/PersonnelAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/PersonnelAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/PersonnelAction-create",
-				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-
-		activityMap.put("/PersonnelAction-get", SecurityConstants.VIEW);
-		activityMap.put("/PersonnelAction-manage",
-				SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
-		activityMap.put("/PersonnelAction-update",
-				SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
-
-		activityMap.put("/PersonnelAction-loadSearch", SecurityConstants.VIEW);
-		activityMap.put("/PersonnelAction-search", SecurityConstants.VIEW);
-
-		activityMap.put("/PersonnelAction-loadUnLockUser",
-				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
-		activityMap.put("/PersonnelAction-unLockUserAccount",
-				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
 
 		// m2 personnel related mappings
 		activityMap.put("/PersonAction-get", SecurityConstants.VIEW);
@@ -334,56 +255,12 @@ public class ActivityMapper {
 		activityMap
 				.put("/PersonAction-cancelChangeLog", SecurityConstants.VIEW);
 
-		// for your settings link
-		activityMap.put("/PersonnelAction-getDetails", SecurityConstants.VIEW);
-		activityMap.put("/PersonnelAction-editPersonalInfo",
-				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-		activityMap.put("/PersonnelAction-previewPersonalInfo",
-				SecurityConstants.VIEW);
-		activityMap.put("/PersonnelAction-prevPersonalInfo",
-				SecurityConstants.VIEW);
-		activityMap.put("/PersonnelAction-updateSettings",
-				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-		activityMap.put("/PersonnelAction-loadChangePassword",
-				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-
-		// center ralated mappings
-		activityMap.put("/centerAction-chooseOffice",
-				SecurityConstants.CENTER_CREATE_NEW_CENTER);
-		activityMap.put("/centerAction-load",
-				SecurityConstants.CENTER_CREATE_NEW_CENTER);
-		activityMap.put("/centerAction-loadMeeting-CenterCreate",
-				SecurityConstants.MEETING_CREATE_CENTER_MEETING);
-		activityMap.put("/centerAction-loadMeeting-Center",
-				SecurityConstants.MEETING_UPDATE_CENTER_MEETING);
-
-		activityMap.put("/centerAction-getDetails", SecurityConstants.VIEW);
-		activityMap.put("/centerAction-get", SecurityConstants.VIEW);
-		activityMap.put("/centerAction-loadStatus",
-				SecurityConstants.CENTER_EDIT_STATUS);
-		activityMap.put("/centerAction-updateStatus",
-				SecurityConstants.CENTER_EDIT_STATUS);
-		activityMap
-				.put(
-						"/centerAction-manage",
-						SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
-		activityMap.put("/centerAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/centerAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/centerAction-create",
-				SecurityConstants.CENTER_CREATE_NEW_CENTER);
-		activityMap
-				.put(
-						"/centerAction-update",
-						SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
-		activityMap.put("/centerAction-loadSearch", SecurityConstants.VIEW);
-		activityMap.put("/centerAction-search", SecurityConstants.VIEW);
-
 		// For M2 Center ------------------------
 		activityMap.put("/centerCustAction-chooseOffice",
 				SecurityConstants.CENTER_CREATE_NEW_CENTER);
 		activityMap.put("/centerCustAction-load",
 				SecurityConstants.CENTER_CREATE_NEW_CENTER);
-		activityMap.put("/centerCustAction-loadMeeting-CenterCreate",
+		activityMap.put("/centerCustAction-loadMeeting",
 				SecurityConstants.MEETING_CREATE_CENTER_MEETING);
 		activityMap.put("/centerCustAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/centerCustAction-preview", SecurityConstants.VIEW);
@@ -414,70 +291,6 @@ public class ActivityMapper {
 		activityMap.put("/centerCustAction-searchTransfer", SecurityConstants.VIEW);
 		// For M2 Center ends
 
-		// colsed account searchaction in center details page
-		activityMap
-				.put("/closedaccsearchaction-search", SecurityConstants.VIEW);
-
-		// CustomerSearch
-		// activityMap.put("/CustomerSearchAction-validate",SecurityConstants.VIEW);
-
-		// client creation action
-		activityMap
-				.put("/clientCreationAction-preLoad", SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-load", SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-chooseOffice",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-setDefaultFormedByPersonnel",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-next", SecurityConstants.VIEW);
-		activityMap
-				.put("/clientCreationAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-prevPersonalInfo",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-prevMFIInfo",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-create", SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-get", SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-getDetails",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-loadStatus",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-loadTransfer",
-				SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
-		activityMap.put("/clientCreationAction-loadBranchTransfer",
-				SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
-		activityMap.put("/clientCreationAction-editMFIInfo",
-				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
-		activityMap.put("/clientCreationAction-editPersonalInfo",
-				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-		activityMap.put("/clientCreationAction-update",
-				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-		activityMap.put("/clientCreationAction-updateMfi",
-				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
-
-		activityMap.put("/clientCreationAction-loadMeeting-ClientCreate",
-				SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
-		activityMap.put("/clientCreationAction-loadMeeting-Client",
-				SecurityConstants.MEETING_UPDATE_CLIENT_MEETING);
-
-		activityMap.put("/clientCreationAction-previous",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-retrievePictureOnPreview",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-retrievePicture",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientCreationAction-showPicture",
-				SecurityConstants.VIEW);
-		activityMap
-				.put(
-						"/clientCreationAction-loadHistoricalData",
-						SecurityConstants.CUSTOMER_ADD_HISTORICAL_DATA_TO_CENTER_GROUP_CLIENT);
-
-		activityMap.put("/clientStatusAction-load", SecurityConstants.VIEW);
-		activityMap.put("/clientStatusAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/clientStatusAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/clientStatusAction-update", SecurityConstants.VIEW);
-
 		activityMap.put("/clientTransferAction-loadParents",
 				SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
 		activityMap.put("/clientTransferAction-loadBranches",
@@ -507,12 +320,7 @@ public class ActivityMapper {
 		activityMap.put("/meetingAction-load", SecurityConstants.VIEW);
 		activityMap.put("/meetingAction-create", SecurityConstants.VIEW);
 		activityMap.put("/meetingAction-update", SecurityConstants.VIEW);
-		activityMap.put("/meetingAction-edit-Group",
-				SecurityConstants.MEETING_UPDATE_GROUP_MEETING);
-		activityMap.put("/meetingAction-edit-Center",
-				SecurityConstants.MEETING_UPDATE_CENTER_MEETING);
-		activityMap.put("/meetingAction-edit-Client",
-				SecurityConstants.MEETING_UPDATE_CLIENT_MEETING);
+		activityMap.put("/meetingAction-edit",SecurityConstants.VIEW);
 		activityMap.put("/meetingAction-cancelCreate", SecurityConstants.VIEW);
 		activityMap.put("/meetingAction-cancelUpdate", SecurityConstants.VIEW);
 		// product categories mapping
@@ -1025,7 +833,7 @@ public class ActivityMapper {
 		activityMap
 				.put("/clientCustAction-prevMeeting", SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-create", SecurityConstants.VIEW);
-		activityMap.put("/clientCustAction-loadMeeting-ClientCreate",
+		activityMap.put("/clientCustAction-loadMeeting",
 				SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
 		activityMap.put("/clientCustAction-get", SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-editPersonalInfo",
@@ -1044,8 +852,6 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-updateMfiInfo",
 				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
-		activityMap.put("/clientCustAction-loadMeeting-Client",
-				SecurityConstants.MEETING_UPDATE_CLIENT_MEETING);
 		activityMap.put("/clientCustAction-retrievePicture",
 				SecurityConstants.VIEW);
 		activityMap
@@ -1069,7 +875,7 @@ public class ActivityMapper {
 		activityMap
 				.put("/groupCustAction-chooseOffice", SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-load", SecurityConstants.VIEW);
-		activityMap.put("/groupCustAction-loadMeeting-GroupCreate",
+		activityMap.put("/groupCustAction-loadMeeting",
 				SecurityConstants.MEETING_CREATE_GROUP_MEETING);
 		activityMap.put("/groupCustAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-previous", SecurityConstants.VIEW);
@@ -1661,6 +1467,27 @@ public class ActivityMapper {
 			else if (customerLevel.equals(CustomerLevel.CLIENT))
 				activityId = SecurityConstants.CIENT_REMOVE_FEE_TYPE_FROM_CLIENT_ACCOUNT;
 		}
+		return activityId;
+	}
+	
+	public boolean isEditMeetingSchedulePermittedForCustomers(
+			CustomerLevel customerLevel, UserContext userContext,
+			Short recordOfficeId, Short recordLoanOfficerId) {
+		return AuthorizationManager.getInstance().isActivityAllowed(
+				userContext,
+				new ActivityContext(
+						getActivityIdForEditMeetingSchedule(customerLevel),
+						recordOfficeId, recordLoanOfficerId));
+	}
+
+	private short getActivityIdForEditMeetingSchedule(CustomerLevel customerLevel) {
+		short activityId = -1;
+		if (customerLevel.equals(CustomerLevel.CENTER))
+			activityId = SecurityConstants.MEETING_UPDATE_CENTER_MEETING;
+		else if (customerLevel.equals(CustomerLevel.GROUP))
+			activityId = SecurityConstants.MEETING_UPDATE_GROUP_MEETING;
+		else if (customerLevel.equals(CustomerLevel.CLIENT))
+			activityId = SecurityConstants.MEETING_UPDATE_CLIENT_MEETING;
 		return activityId;
 	}
 }

@@ -771,7 +771,6 @@
 				</tr>
 			</table>
 			<br>
-			<mifos:SecurityParam property="Client" />
 			<html-el:hidden property="globalAccountNum" value="${BusinessKey.customerAccount.globalAccountNum}" />
 		</html-el:form>
 	</tiles:put>

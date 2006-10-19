@@ -26,7 +26,6 @@ import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -102,7 +101,9 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
 					request);
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
-				new ArrayList<PaymentTypeEntity>(), request);
+				getMasterDataService().getSupportedPaymentModes(
+						uc.getLocaleId(),
+						TrxnTypes.savings_deposit.getValue()), request);
 		SessionUtils.setAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,
 				new Boolean(Configuration.getInstance().getAccountConfig(
 						savings.getCustomer().getOffice().getOfficeId())
@@ -131,21 +132,12 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				&& actionForm.getTrxnTypeId() != "") {
 			Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
 			if (trxnTypeId.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT)) {
-				SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
-						getMasterDataService().getSupportedPaymentModes(
-								uc.getLocaleId(),
-								TrxnTypes.savings_deposit.getValue()), request);
 				if (actionForm.getCustomerId() != null
 						&& actionForm.getCustomerId() != "")
 					actionForm.setAmount(savings.getTotalPaymentDue(Integer
 							.valueOf(actionForm.getCustomerId())).toString());
 			} else {
 				actionForm.setAmount(new Money().toString());
-				SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
-						getMasterDataService().getSupportedPaymentModes(
-								uc.getLocaleId(),
-								TrxnTypes.savings_withdrawal.getValue()),
-						request);
 			}
 		}
 		return mapping.findForward(ActionForwards.load_success.toString());

@@ -48,7 +48,7 @@
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
 		<script src="pages/application/fees/js/Fees.js"></script>
-		<html-el:form action="/feeaction.do" focus="feeName">
+		<html-el:form action="/feeaction.do?method=preview" focus="feeName">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -366,7 +366,6 @@
 												</html-el:button>
 											</td>
 										</tr>
-										<html-el:hidden property="method" value="preview" />
 										<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 									</table>
 									<br>

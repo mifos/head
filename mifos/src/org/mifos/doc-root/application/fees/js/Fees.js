@@ -105,60 +105,20 @@ function showRateOrAmoount() {
     }
 }
 function fnCancel(form) {
-    form.method.value = "cancelCreate";
-    form.action = "feeaction.do";
+    form.action = "feeaction.do?method=cancelCreate";
     form.submit();
 }
 function fnEdit(form) {
-    form.method.value = "previous";
-    form.action = "feeaction.do";
+    form.action = "feeaction.do?method=previous";
     form.submit();
 }
-function fnOnAdmin(form) {
-    form.method.value = "cancelCreate";
-    form.action = "feeaction.do";
-    form.submit();
-}
-function fnOnView(form) {
-    form.method.value = "viewAll";
-    form.action = "feeaction.do";
-    form.submit();
-}
-function fnOnEditFeeInformation(form) {
-    form.method.value = "manage";
-    form.action = "feeaction.do";
-    form.submit();
-}
-function fnOnNewFee(form) {
-    form.method.value = "load";
-    form.action = "feeaction.do";
-    form.submit();
-}
-function fnOnSubmit() {
-    document.feeactionform.method.value = "update";
-    document.feeactionform.action = "feeaction.do";
-    document.feeactionform.submit();
-}
-function fnOnEditView(Id) {
-    document.feeactionform.feeId.value = Id;
-    document.feeactionform.method.value = "cancelEdit";
-    document.feeactionform.action = "feeaction.do";
-    document.feeactionform.submit();
-}
+
 function fnOnEditCancel(Id) {
-    document.feeactionform.method.value = "cancelEdit";
-    document.feeactionform.feeIdTemp.value = Id;
-    document.feeactionform.action = "feeaction.do";
+    document.feeactionform.action = "feeaction.do?method=cancelEdit&feeIdTemp="+Id;
     document.feeactionform.submit();
 }
+
 function fnOnEditPreviousFeeInformation(form) {
-    form.method.value = "editPrevious";
-    form.action = "feeaction.do";
+    form.action = "feeaction.do?method=editPrevious";
     form.submit();
-}
-function fnGet(Id) {
-    document.feeactionform.feeId.value = Id;
-    document.feeactionform.method.value = "get";
-    document.feeactionform.action = "feeaction.do";
-    document.feeactionform.submit();
 }

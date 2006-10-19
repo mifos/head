@@ -557,7 +557,6 @@
 				</tr>
 			</table>
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-			<mifos:SecurityParam property="CenterCreate"></mifos:SecurityParam>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

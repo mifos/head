@@ -54,7 +54,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
@@ -87,7 +86,6 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 		flowKey = createFlow(request, AccountApplyPaymentAction.class);
-		request.getSession().setAttribute(SecurityConstants.SECURITY_PARAM,"Loan");
 	}
 	
 	@Override

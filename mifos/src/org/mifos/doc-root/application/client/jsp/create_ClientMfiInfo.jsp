@@ -446,7 +446,6 @@
 					</td>
 				</tr>
 			</table>
-			<mifos:SecurityParam property="ClientCreate"></mifos:SecurityParam>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

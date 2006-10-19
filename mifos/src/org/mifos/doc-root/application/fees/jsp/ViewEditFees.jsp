@@ -50,11 +50,11 @@
 				
 			</script>
 			<script src="pages/application/fees/js/Fees.js"></script>
-		<html-el:form action="/feeaction.do">
+		<html-el:form action="/feeaction.do?method=get">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="javascript:fnOnAdmin(feeactionform)">
+						<span class="fontnormal8pt"> <html-el:link href="feeaction.do?method=cancelCreate&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.admin" bundle="FeesUIResources">
 								</mifos:mifoslabel>
 							</html-el:link> / </span> <span class="fontnormal8ptbold"> <mifos:mifoslabel name="Fees.viewfees" bundle="FeesUIResources">
@@ -74,7 +74,7 @@
 							<tr>
 								<td class="fontnormalbold">
 									<span class="fontnormal"> <mifos:mifoslabel name="Fees.ViewFeesInstruction" bundle="FeesUIResources">
-										</mifos:mifoslabel> <html-el:link href="javascript:fnOnNewFee(feeactionform)">
+										</mifos:mifoslabel> <html-el:link href="feeaction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 											<mifos:mifoslabel name="Fees.smalldefinenewfee" bundle="FeesUIResources">
 											</mifos:mifoslabel>
 										</html-el:link> <br> </span> <span class="fontnormalbold"> <span class="fontnormalbold"> <br> </span> </span> <span class="fontnormalbold"> </span> <span class="fontnormal"> </span> <span class="fontnormalbold"> <span class="fontnormalbold"> <font
@@ -87,7 +87,7 @@
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
 												<td width="99%">
-													<html-el:link href="javascript:fnGet(${productFee.feeId})">
+													<html-el:link href="feeaction.do?method=get&feeId=${productFee.feeId}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${productFee.feeName}" />
 													</html-el:link>
 													(
@@ -114,7 +114,7 @@
 													<img src="pages/framework/images/bullet_circle.gif" width="9" height="11">
 												</td>
 												<td width="99%">
-													<html-el:link href="javascript:fnGet(${clientFee.feeId})">
+													<html-el:link href="feeaction.do?method=get&feeId=${clientFee.feeId}&randomNUm=${sessionScope.randomNUm}">
 														<c:out value="${clientFee.feeName}" />
 													</html-el:link>
 													(
@@ -130,7 +130,6 @@
 									</table>
 								</td>
 							</tr>
-							<html-el:hidden property="method" value="get" />
 							<html-el:hidden property="feeId" value="" />
 							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</table>

@@ -311,7 +311,6 @@ public class AccountBO extends BusinessObject {
 					.reversalAdjustment(getLoggedInUser(), adjustmentComment);
 			updateInstallmentAfterAdjustment(reversedTrxns);
 			buildFinancialEntries(new HashSet(reversedTrxns));
-			updatePerformanceHistoryOnAdjustment(reversedTrxns.size());
 			try {
 				(new AccountPersistence()).createOrUpdate(this);
 			} catch (PersistenceException e) {
@@ -1015,9 +1014,6 @@ public class AccountBO extends BusinessObject {
 
 	protected void resetAccountActionDates() {
 		this.accountActionDates.clear();
-	}
-
-	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {
 	}
 
 	protected void updateInstallmentAfterAdjustment(

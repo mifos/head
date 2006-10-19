@@ -575,7 +575,6 @@
 					</td>
 				</tr>
 			</table>
-			<mifos:SecurityParam property="Center" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

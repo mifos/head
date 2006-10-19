@@ -599,7 +599,6 @@
 			</table>
 			<html-el:hidden property="input" value="createGroup" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-			<mifos:SecurityParam property="GroupCreate"></mifos:SecurityParam>
 		</html-el:form>
 
 	</tiles:put>

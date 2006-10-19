@@ -47,18 +47,18 @@
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
 		<script src="pages/application/fees/js/Fees.js"></script>
-		<html-el:form action="/feeaction.do">
+		<html-el:form action="/feeaction.do?method=editPreview">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="javascript:fnOnAdmin(feeactionform)">
+						<span class="fontnormal8pt"> <html-el:link href="feeaction.do?method=cancelCreate&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.admin" />
 
-							</html-el:link> / <html-el:link href="javascript:fnOnView(feeactionform)">
+							</html-el:link> / <html-el:link href="feeaction.do?method=viewAll&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.viewfees" />
 
-							</html-el:link> / <html-el:link href="javascript:fnOnEditView(${BusinessKey.feeId})">
+							</html-el:link> / <html-el:link href="feeaction.do?method=cancelEdit&feeId=${BusinessKey.feeId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<c:out value="${BusinessKey.feeName}"></c:out>
 							</html-el:link> </span>
 					</td>
@@ -151,7 +151,6 @@
 									</html-el:button>
 								</td>
 							</tr>
-							<html-el:hidden property="method" value="editPreview" />
 							<html-el:hidden property="input" value="edit" />
 							<html-el:hidden property="feeIdTemp" value="${BusinessKey.feeId}" />
 							<html-el:hidden property="feeId" value="${BusinessKey.feeId}" />

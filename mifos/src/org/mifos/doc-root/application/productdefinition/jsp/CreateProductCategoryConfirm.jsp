@@ -50,23 +50,7 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-
-		<script language="javascript">
-		<!--
-			function fnGet() {
-				productCategoryActionForm.method.value="get";
-				productCategoryActionForm.action="productCategoryAction.do";
-				productCategoryActionForm.submit();
-			}
-			function fnLoad() {
-				productCategoryActionForm.method.value="load";
-				productCategoryActionForm.action="productCategoryAction.do";
-				productCategoryActionForm.submit();
-			}
-		//-->
-		</script>
-
-		<html-el:form action="/productCategoryAction">
+		<html-el:form action="/productCategoryAction?method=get">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td width="70%" align="left" valign="top" class="paddingL15T15">
@@ -97,7 +81,6 @@
 									bundle="ProductDefUIResources" />
 							</html-el:link></span></td>
 						</tr>
-						<html-el:hidden property="method" value="get" />
 						<html-el:hidden property="globalPrdCategoryNum"
 							value="${sessionScope.productCategoryActionForm.globalPrdCategoryNum}" />
 					</table>

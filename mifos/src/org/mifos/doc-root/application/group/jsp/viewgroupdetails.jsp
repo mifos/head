@@ -758,7 +758,6 @@
 			</table>
 			<br>
 			<br>
-			<mifos:SecurityParam property="Group" />
 			<html-el:hidden property="customerId"
 				value="${BusinessKey.customerId}" />
 			<html-el:hidden property="globalCustNum"

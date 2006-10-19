@@ -53,23 +53,11 @@
 		<script language="javascript">
 <!--
 	function fnEdit(form) {
-		form.method.value="managePrevious";
-		form.action="productCategoryAction.do";
+		form.action="productCategoryAction.do?method=managePrevious";
 		form.submit();
 	}
-	function fnSearch() {
-		productCategoryActionForm.method.value="getAllCategories";
-		productCategoryActionForm.action="productCategoryAction.do";
-		productCategoryActionForm.submit();
-	}
 	function fnGet() {
-		productCategoryActionForm.method.value="get";
-		productCategoryActionForm.action="productCategoryAction.do";
-		productCategoryActionForm.submit();
-	}
-	function fnCancel() {
-		productCategoryActionForm.method.value="load";
-		productCategoryActionForm.action="AdminAction.do";
+		productCategoryActionForm.action="productCategoryAction.do?method=get";
 		productCategoryActionForm.submit();
 	}
 	function func_disableSubmitBtn(){
@@ -83,14 +71,14 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
-						href="javascript:fnCancel()">
+						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="product.admin"
 							bundle="ProductDefUIResources" />
 					</html-el:link> / <html-el:link
-						href="javascript:fnSearch()">
+						href="productCategoryAction.do?method=getAllCategories&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="product.viewprdcat"
 							bundle="ProductDefUIResources" />
-					</html-el:link> / <html-el:link href="javascript:fnGet()">
+					</html-el:link> / <html-el:link href="productCategoryAction.do?method=get&randomNUm=${sessionScope.randomNUm}">
 						<c:out value="${BusinessKey.productCategoryName}" />
 					</html-el:link></span></td>
 				</tr>

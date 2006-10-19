@@ -49,18 +49,18 @@
 	<tiles:put name="body" type="string">
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script src="pages/application/fees/js/Fees.js"></script>
-		<html-el:form action="/feeaction.do" onsubmit="return func_disableSubmitBtn('submitBtn');">
+		<html-el:form action="/feeaction.do?method=update" onsubmit="return func_disableSubmitBtn('submitBtn');">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"> <html-el:link href="javascript:fnOnAdmin(feeactionform)">
+						<span class="fontnormal8pt"> <html-el:link href="feeaction.do?method=cancelCreate&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.admin">
 								</mifos:mifoslabel>
-							</html-el:link> / <html-el:link href="javascript:fnOnView(feeactionform)">
+							</html-el:link> / <html-el:link href="feeaction.do?method=viewAll&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="Fees.viewfees">
 								</mifos:mifoslabel>
-							</html-el:link> / <html-el:link href="javascript:fnOnEditView(${BusinessKey.feeId})">
+							</html-el:link> / <html-el:link href="feeaction.do?method=cancelEdit&feeId=${BusinessKey.feeId}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								<c:out value="${BusinessKey.feeName}" />
 							</html-el:link> </span>
 					</td>
@@ -149,7 +149,6 @@
 									</html-el:button>
 								</td>
 							</tr>
-							<html-el:hidden property="method" value="update" />
 							<html-el:hidden property="input" value="previewEditFees" />
 							<html-el:hidden property="feeIdTemp" value="${BusinessKey.feeId}" />
 							<html-el:hidden property="feeId" value="${BusinessKey.feeId}" />

@@ -1039,12 +1039,10 @@ public class LoanBO extends AccountBO {
 		}
 	}
 
-	@Override
-	protected void updatePerformanceHistoryOnAdjustment(Integer noOfTrxnReversed) {
+	protected void updatePerformanceHistoryOnAdjustment() {
 		if (getPerformanceHistory() != null) {
 			getPerformanceHistory().setNoOfPayments(
-					getPerformanceHistory().getNoOfPayments()
-							- noOfTrxnReversed);
+					getPerformanceHistory().getNoOfPayments()- 1);
 		}
 	}
 
@@ -1156,6 +1154,8 @@ public class LoanBO extends AccountBO {
 						loanTrxn.getPenaltyAmount(), loanTrxn
 								.getMiscPenaltyAmount(), loanTrxn
 								.getMiscFeeAmount());
+				if(accntActionDate.getPaymentStatus().equals(PaymentStatus.PAID.getValue()))
+					updatePerformanceHistoryOnAdjustment();
 				accntActionDate.setPaymentStatus(PaymentStatus.UNPAID
 						.getValue());
 				accntActionDate.setPaymentDate(null);

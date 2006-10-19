@@ -53,8 +53,7 @@
 		<script language="javascript">
 		<!--
 			function fnCancel(form) {
-				form.method.value="load";
-				form.action="AdminAction.do";
+				form.action="AdminAction.do?method=load";
 				form.submit();
 			}
 		//-->

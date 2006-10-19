@@ -49,26 +49,11 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-		<script language="javascript">
-		<!--
-			function fnCancel() {
-				productCategoryActionForm.method.value="load";
-				productCategoryActionForm.action="AdminAction.do";
-				productCategoryActionForm.submit();
-			}
-
-			function fnLoad() {
-				productCategoryActionForm.method.value="load";
-				productCategoryActionForm.action="productCategoryAction.do";
-				productCategoryActionForm.submit();
-			}
-		//-->
-		</script>
-		<html-el:form action="/productCategoryAction">
+		<html-el:form action="/productCategoryAction?method=search">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"><html-el:link
-						href="javascript:fnCancel()">
+						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="product.admin"
 							bundle="ProductDefUIResources" />
 					</html-el:link>/ </span> <span class="fontnormal8ptbold"><mifos:mifoslabel
@@ -86,7 +71,7 @@
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"><mifos:mifoslabel
 								name="product.clickcatdet" bundle="ProductDefUIResources" />&nbsp;<html-el:link
-								href="javascript:fnLoad()">
+								href="productCategoryAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="product.addnewprdcat"
 									bundle="ProductDefUIResources" />
 							</html-el:link>
@@ -141,7 +126,6 @@
 									</tr>
 								</table>
 							</c:forEach>
-							<html-el:hidden property="method" value="search" />
 							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</html-el:form>
 					</tiles:put>

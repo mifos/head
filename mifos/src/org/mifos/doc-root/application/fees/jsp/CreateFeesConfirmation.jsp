@@ -45,29 +45,7 @@
 <tiles:insert definition=".view">
 <tiles:put name="body" type="string">
 
-<script>
-function meetingpopup(){	window.open("schedulemeetingpopup.htm",null,"height=400,width=800,status=yes,scrollbars=yes,toolbar=no,menubar=no,location=no");
-}
-
-function fnOnView(Id){
-	document.feeactionform.feeId.value=Id;
-	document.feeactionform.method.value="get";
-	document.feeactionform.action="feeaction.do";
-	document.feeactionform.submit();
-}
-
-function fnOnNewFee(form){
-	form.method.value="load";
-	form.action="feeaction.do";
-	form.submit();
-}
-
-</script>
-
-
-<html-el:form action="/feeaction.do">
-
-
+<html-el:form action="/feeaction.do?method=get">
           <table width="95%" border="0" cellpadding="0" cellspacing="0">
             <tr>
               <td width="70%" align="left" valign="top" class="paddingL15T15">
@@ -93,7 +71,7 @@ function fnOnNewFee(form){
                     <br>
                     <br>
                     </span>
-					<html-el:link href="javascript:fnOnView(${sessionScope.feeactionform.feeId})">
+					<html-el:link href="feeaction.do?method=get&feeId=${sessionScope.feeactionform.feeId}&randomNUm=${sessionScope.randomNUm}">
 					<mifos:mifoslabel name="Fees.viewfeedetail" bundle="FeesUIResources"></mifos:mifoslabel>
 					</html-el:link>
                     
@@ -102,15 +80,13 @@ function fnOnNewFee(form){
                     <br>
                     <span>
                     <span class="fontnormal">
-                    <html-el:link href="javascript:fnOnNewFee(feeactionform)">
+                    <html-el:link href="feeaction.do?method=load&randomNUm=${sessionScope.randomNUm}">
                     <mifos:mifoslabel name="Fees.definenewfee" bundle="FeesUIResources">
                     </mifos:mifoslabel>
                     </html-el:link>
                     </span>
                     </td>
                   </tr>
-
-                  <html-el:hidden property="method" value="get"/> 
                   <html-el:hidden property="feeId" value=""/>
 				  
                   </table>

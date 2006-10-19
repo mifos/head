@@ -50,36 +50,16 @@
 
 <tiles:insert definition=".view">
 	<tiles:put name="body" type="string">
-
-		<script language="javascript">
-<!--
-	function fnSearch() {
-		productCategoryActionForm.method.value="getAllCategories";
-		productCategoryActionForm.action="productCategoryAction.do";
-		productCategoryActionForm.submit();
-	}
-	function fnManage() {
-		productCategoryActionForm.method.value="manage";
-		productCategoryActionForm.action="productCategoryAction.do";
-		productCategoryActionForm.submit();
-	}
-	function fnCancel() {
-		productCategoryActionForm.method.value="load";
-		productCategoryActionForm.action="AdminAction.do";
-		productCategoryActionForm.submit();
-	}
-//-->
-</script>
-		<html-el:form action="/productCategoryAction">
+		<html-el:form action="/productCategoryAction?method=manage">
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 			   var="BusinessKey" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <html-el:link
-						href="javascript:fnCancel()">
+						href="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="product.admin"
 							bundle="ProductDefUIResources" />
-					</html-el:link> / <html-el:link href="javascript:fnSearch()">
+					</html-el:link> / <html-el:link href="productCategoryAction.do?method=getAllCategories&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="product.viewprdcat"
 							bundle="ProductDefUIResources" />
 					</html-el:link> / </span> <span class="fontnormal8ptbold"><c:out
@@ -140,7 +120,6 @@
 								<span class="fontnormal"><br>
 							</c:if> </span><span class="fontnormal"> </span></td>
 						</tr>
-						<html-el:hidden property="method" value="manage" />
 						<html-el:hidden property="searchNode(search_name)"
 							value="ProductCategories" />
 					</table>

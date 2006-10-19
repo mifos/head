@@ -104,6 +104,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		
 		Boolean isBackDatedAllowed = (Boolean)SessionUtils.getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,request);
 		assertNotNull(isBackDatedAllowed);
+		assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request));
 		group = new CustomerPersistence().getCustomer(group
 				.getCustomerId());
 		center = new CustomerPersistence().getCustomer(center
@@ -141,6 +142,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		assertEquals(2, clientList.size());
 		Boolean isBackDatedAllowed = (Boolean)SessionUtils.getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,request);
 		assertNotNull(isBackDatedAllowed);
+		assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 		client1 = new CustomerPersistence().getCustomer(client1
@@ -166,8 +168,6 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_WITHDRAWAL));
 		actionPerform();
 		verifyForward("load_success");
-		
-		assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request));
 	}
 	
 	public void testSuccessfullReLoad_Deposit() throws Exception {
@@ -183,8 +183,6 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_DEPOSIT));
 		actionPerform();
 		verifyForward("load_success");
-		
-		assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE,request));
 	}
 	
 	public void testFailurePreview() throws Exception {

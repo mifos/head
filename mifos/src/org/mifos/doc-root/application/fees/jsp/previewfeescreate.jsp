@@ -50,7 +50,7 @@
 	<tiles:put name="body" type="string">
 		<script src="pages/framework/js/CommonUtilities.js"></script>
 		<script src="pages/application/fees/js/Fees.js"></script>
-		<html-el:form action="/feeaction.do" onsubmit="return func_disableSubmitBtn('submitBtn');">
+		<html-el:form action="/feeaction.do?method=create" onsubmit="return func_disableSubmitBtn('submitBtn');">
 
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -250,7 +250,6 @@
 												</html-el:button>
 											</td>
 										</tr>
-										<html-el:hidden property="method" value="create" />
 										<html-el:hidden property="input" value="previewFees" />
 										<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 									</table>

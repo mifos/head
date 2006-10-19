@@ -111,7 +111,7 @@ public class LoginAction extends BaseAction {
 		return mapping.findForward(getCancelForward(personnelBO.getPasswordChanged()));
 	}
 
-	@TransactionDemarcate(validateAndResetToken = true)
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse httpservletresponse)
 			throws Exception {

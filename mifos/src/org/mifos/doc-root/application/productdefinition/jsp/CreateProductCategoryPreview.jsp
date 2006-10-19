@@ -54,13 +54,11 @@
 		<script language="javascript">
 		<!--
 			function fnCancel(form) {
-				form.method.value="load";
-				form.action="AdminAction.do";
+				form.action="AdminAction.do?method=load";
 				form.submit();
 			}
 			function fnEdit(form) {
-				form.method.value="createPrevious";
-				form.action="productCategoryAction.do";
+				form.action="productCategoryAction.do?method=createPrevious";
 				form.submit();
 			}
 
@@ -70,7 +68,7 @@
 		//-->
 		</script>
 
-		<html-el:form action="/productCategoryAction.do" onsubmit="func_disableSubmitBtn();">
+		<html-el:form action="/productCategoryAction.do?method=create" onsubmit="func_disableSubmitBtn();">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -163,7 +161,7 @@
 									<br>
 									<br>
 									</span><span class="fontnormal"> <br>
-									<html-el:hidden property="method" value="create" /> <html-el:hidden
+									 <html-el:hidden
 										property="input" value="admin" /> <html-el:button
 										property="edit" styleClass="insidebuttn"
 										onclick="fnEdit(this.form)">
