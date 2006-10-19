@@ -25,9 +25,6 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -57,12 +54,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,CustomerApplyAdjustmentAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
+		flowKey = createFlow(request, CustomerApplyAdjustmentAction.class);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 	}
 
@@ -221,7 +213,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				accountBO, TestObjectFactory.getMoneyForMFICurrency(100),
 				"1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")));
 
-		Money totalFees = new Money();
+//		Money totalFees = new Money();
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(
 				accountPaymentEntity,
 				(AccountActionEntity) masterPersistenceService.findById(
@@ -241,8 +233,9 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 					accountTrxnEntity, accountFeesActionDetailEntity
 							.getAccountFee(), accountFeesActionDetailEntity
 							.getFeeAmount());
-			TestCustomerTrxnDetailEntity.addFeesTrxnDetail(accountTrxnEntity,feeTrxn);
-			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
+			TestCustomerTrxnDetailEntity.addFeesTrxnDetail(
+					accountTrxnEntity,feeTrxn);
+//			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
 		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,customerAccountBO);

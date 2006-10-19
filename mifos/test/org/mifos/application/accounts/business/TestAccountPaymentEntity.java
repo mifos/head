@@ -3,7 +3,6 @@ package org.mifos.application.accounts.business;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;

@@ -47,7 +47,6 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.BulkEntryCustomerAccountInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
-import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.framework.util.helpers.Money;
 

@@ -80,8 +80,6 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -125,12 +123,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,GroupCustAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
+		flowKey = createFlow(request, GroupCustAction.class);
 		EntityMasterData.getInstance().init();
 		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
 		fieldConfigItf.init();
@@ -197,9 +190,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request));
-		CenterBO oldCenter = center;
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
-		oldCenter =  null;	
 		removeFees(fees);	
 	}
 	
@@ -225,9 +216,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,request));
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,request));
-		CenterBO oldCenter = center;
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
-		oldCenter =  null;	
 		removeFees(fees);
 	}
 	
@@ -246,9 +235,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.loadMeeting_success.toString());
-		CenterBO oldCenter = center;
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
-		oldCenter =  null;
 	}
 	
 	public void testPreviewFailure_With_Name_Null()throws Exception{
@@ -263,10 +250,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		assertEquals("Group Name", 1, getErrrorSize(CustomerConstants.NAME));
-		verifyInputForward();		
-		CenterBO oldCenter = center;
+		verifyInputForward();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
-		oldCenter =  null;
 	}
 
 	public void testPreviewFailure_TrainedWithoutTrainedDate()throws Exception{
@@ -295,11 +280,8 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		}
 		actionPerform();
 		assertEquals("Trained Date", 1, getErrrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
-		verifyInputForward();		
-		CenterBO oldCenter = center;
+		verifyInputForward();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
-		oldCenter =  null;
-		
 	}
 	
 	public void testFailurePreview_WithoutMandatoryCustomField_IfAny() throws Exception{
@@ -341,9 +323,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			assertEquals("CustomField", 0, getErrrorSize(CustomerConstants.CUSTOM_FIELD));
 			verifyForward(ActionForwards.preview_success.toString());
 		}
-		CenterBO oldCenter = center;
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
-		oldCenter =  null;
 	}
 	
 	public void testFailurePreview_WithDuplicateFee() throws Exception{
@@ -368,9 +348,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
 		verifyInputForward();
 		removeFees(feesToRemove);
-		CenterBO oldCenter = center;
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
-		oldCenter =  null;
 	}
 	
 	public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception{
@@ -393,9 +371,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
 		verifyInputForward();
 		removeFees(feesToRemove);
-		CenterBO oldCenter = center;
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
-		oldCenter =  null;
 	}
 
 	public void testSuccessfulPreview() throws Exception{
@@ -435,9 +411,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		removeFees(feesToRemove);
 		assertNotNull(SessionUtils.getAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,request));
-		CenterBO oldCenter = center;
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
-		oldCenter =  null;
 	}
 	
 	public void testSuccessfulPrevious() throws Exception {
@@ -617,7 +591,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 					.getName());
 			break;
 		}
-		TestObjectFactory.removeCustomerFromPosition((CustomerBO) group);
+		TestObjectFactory.removeCustomerFromPosition(group);
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
 				new Integer(center.getCustomerId()).intValue());
@@ -994,12 +968,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		center  = new CenterBO(userContext, "MyCenter", null, null, null, "1234", null, officeId, meeting, Short.valueOf("3"));
 		center.save();
 		HibernateUtil.commitTransaction();
-	}
-
-	private MeetingBO getMeeting() {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		return meeting;
 	}
 
 	private void createCustomers() {

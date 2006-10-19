@@ -3,7 +3,6 @@ package org.mifos.application.accounts.loan.business;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.framework.util.helpers.Money;
 

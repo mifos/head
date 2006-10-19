@@ -10,7 +10,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.mifos.framework.components.customTableTag.Table;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;

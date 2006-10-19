@@ -22,8 +22,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -44,6 +42,7 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 	
 	private String flowKey;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
@@ -60,14 +59,10 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,ApplyChargeAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);	
+		flowKey = createFlow(request, ApplyChargeAction.class);
 	}
 
+	@Override
 	public void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(accountBO);
 		TestObjectFactory.cleanUp(client);

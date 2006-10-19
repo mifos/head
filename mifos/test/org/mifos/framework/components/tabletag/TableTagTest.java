@@ -12,8 +12,6 @@ import junit.framework.TestCase;
 
 import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
-import org.mifos.framework.exceptions.TableTagException;
-import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.util.helpers.SearchObject;
 
 public class TableTagTest extends TestCase {

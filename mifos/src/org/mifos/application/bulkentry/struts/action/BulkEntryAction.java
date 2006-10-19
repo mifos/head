@@ -63,7 +63,6 @@ import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;

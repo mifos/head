@@ -47,7 +47,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.EntityMode;
-import org.hibernate.Session;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
@@ -55,9 +54,7 @@ import org.hibernate.type.AbstractComponentType;
 import org.hibernate.type.Type;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
-import org.mifos.application.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;

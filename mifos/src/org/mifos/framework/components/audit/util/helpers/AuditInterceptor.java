@@ -41,7 +41,6 @@ package org.mifos.framework.components.audit.util.helpers;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;

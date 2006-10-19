@@ -51,7 +51,7 @@ public class FlowManager {
 	public FlowManager() {
 	}
 
-	public void addFLow(String key, Flow value,String className) {
+	public void addFLow(String key, Flow value, String className) {
 		if(classData.containsKey(className)) {
 			flowData.remove(classData.get(className));
 		}

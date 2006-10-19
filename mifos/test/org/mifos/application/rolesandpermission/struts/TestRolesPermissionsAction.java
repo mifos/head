@@ -1,6 +1,5 @@
 package org.mifos.application.rolesandpermission.struts;
 
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,8 +18,6 @@ import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -36,15 +33,11 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/rolesandpermission/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/rolesandpermission/struts-config.xml")
+				.getPath());
 		userContext = TestObjectFactory.getUserContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
@@ -52,12 +45,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,RolesPermissionsAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
+		flowKey = createFlow(request, RolesPermissionsAction.class);
 	}
 
 	@Override
@@ -102,7 +90,6 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
 
-		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("name", "New Role");

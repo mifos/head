@@ -35,8 +35,6 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -62,8 +60,6 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	private SavingsOfferingBO savingsOffering2;
 
-	private SavingsOfferingBO savingsOffering3;
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -78,15 +74,9 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,SavingsAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
+		flowKey = createFlow(request, SavingsAction.class);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-
 	}
 
 	@Override

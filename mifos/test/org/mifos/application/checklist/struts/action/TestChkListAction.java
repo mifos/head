@@ -1,6 +1,5 @@
 package org.mifos.application.checklist.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -20,8 +19,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -33,15 +30,11 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/checklist/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/checklist/struts-config.xml")
+				.getPath());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
@@ -49,12 +42,7 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,ChkListAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
+		flowKey = createFlow(request, ChkListAction.class);
 	}
 
 	@Override

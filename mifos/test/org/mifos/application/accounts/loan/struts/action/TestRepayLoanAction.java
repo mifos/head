@@ -19,8 +19,6 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -36,7 +34,7 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 	private UserContext userContext;
 	private String flowKey;
 	
-	// success
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {
@@ -54,18 +52,14 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,RepayLoanAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);	
+		flowKey = createFlow(request, RepayLoanAction.class);
 		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		accountBO=(AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class,accountBO.getAccountId());
 	}
 	
+	@Override
 	protected void tearDown() throws Exception {
 		accountBO=(AccountBO)HibernateUtil.getSessionTL().get(AccountBO.class,accountBO.getAccountId());
 		group=(CustomerBO)HibernateUtil.getSessionTL().get(CustomerBO.class,group.getCustomerId());

@@ -42,6 +42,7 @@ import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ConvertionUtil;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -50,7 +51,6 @@ import org.mifos.framework.util.helpers.SearchObject;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.util.helpers.ConvertionUtil;
 
 public abstract class BaseAction extends DispatchAction {
 

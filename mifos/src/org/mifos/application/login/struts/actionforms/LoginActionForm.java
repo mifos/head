@@ -8,7 +8,6 @@ import org.apache.struts.action.ActionMessage;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class LoginActionForm extends BaseActionForm {
 

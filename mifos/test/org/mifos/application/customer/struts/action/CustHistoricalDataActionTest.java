@@ -19,8 +19,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -53,12 +51,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 		
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,CustHistoricalDataAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
+		flowKey = createFlow(request, CustHistoricalDataAction.class);
 	}
 
 	@Override

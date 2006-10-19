@@ -45,9 +45,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
-import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
-import org.mifos.framework.exceptions.SystemException;
 
 public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl{
 	

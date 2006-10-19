@@ -18,8 +18,6 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -27,8 +25,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 
 	protected UserContext userContext = null;
-
-
 	
 	protected LoanBO loanBO = null;
 
@@ -37,8 +33,6 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	protected CustomerBO group = null;
 	
 	private Date currentDate = null;
-	
-	private Calendar calendar = null;
 	
 	private String flowKey;
 	
@@ -61,18 +55,9 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,LoanDisbursmentAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);		
+		flowKey = createFlow(request, LoanDisbursmentAction.class);
 		setRequestPathInfo("/loanDisbursmentAction");
-		 calendar = new GregorianCalendar();
 		currentDate=new Date(System.currentTimeMillis());
-		
-		
-		
 	}
 
 	@Override
@@ -109,8 +94,8 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		verifyForward(Constants.LOAD_SUCCESS);
 		verifyNoActionErrors();
+		verifyForward(Constants.LOAD_SUCCESS);
 		assertNotNull(SessionUtils.getAttribute(
 				MasterConstants.PAYMENT_TYPE,request));
 		LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) request
@@ -119,13 +104,11 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 				.getAmountTobePaidAtdisburtail(new Date(System
 						.currentTimeMillis())));
 		assertEquals(actionForm.getLoanAmount(), loanBO.getLoanAmount());
-
 	}
 
 	public void testPreviewFailure_NomaadatoryFieds() {
 		createInitialObjects(2);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
 		String []errors = {AccountConstants.ERROR_MANDATORY,AccountConstants.ERROR_MANDATORY};
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("method", "preview");

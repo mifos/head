@@ -26,8 +26,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -68,12 +66,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("recordOfficeId", "1");
 		ActivityContext ac = TestObjectFactory.getActivityContext();
 		request.getSession(false).setAttribute("ActivityContext", ac);
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,SavingsPrdAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
+		flowKey = createFlow(request, SavingsPrdAction.class);
 	}
 
 	public void testLoad() throws Exception {
@@ -1035,11 +1028,10 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day + noOfDays);
 		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar
 				.getTimeInMillis());
-		SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance(
+		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(
 				DateFormat.SHORT, locale);
 		String userfmt = DateHelper
-				.convertToCurrentDateFormat(((SimpleDateFormat) sdf)
-						.toPattern());
+				.convertToCurrentDateFormat(format.toPattern());
 		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
 

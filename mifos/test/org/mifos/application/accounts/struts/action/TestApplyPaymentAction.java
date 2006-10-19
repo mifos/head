@@ -57,8 +57,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -70,6 +68,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	private CustomerBO group;
 	private UserContext userContext ;
 	private String flowKey;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -87,12 +86,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,AccountApplyPaymentAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);	
+		flowKey = createFlow(request, AccountApplyPaymentAction.class);
 		request.getSession().setAttribute(SecurityConstants.SECURITY_PARAM,"Loan");
 	}
 	

@@ -39,7 +39,6 @@ package org.mifos.application.accounts.struts.action;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -64,8 +63,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -91,32 +88,18 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	/**
 	 * This sets the web.xml,struts-config.xml and prepares the userContext
 	 * and activityContext and sets them in the session.
-	 *
-	 * @see junit.framework.MifosTestCase#setUp()
 	 */
 	@Override
 	public void setUp()throws Exception{
 		super.setUp();
-		try {	setServletConfigFile("WEB-INF/web.xml");
-				setConfigFile(
-						"org/mifos/application/accounts/struts-config.xml");
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
+		setServletConfigFile("WEB-INF/web.xml");
+		setConfigFile("org/mifos/application/accounts/struts-config.xml");
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,ApplyAdjustment.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);	
-		
-
+		flowKey = createFlow(request, ApplyAdjustment.class);
 	}
 
 	private AccountBO getLoanAccount() {

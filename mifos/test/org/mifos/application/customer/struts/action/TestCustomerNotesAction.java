@@ -52,8 +52,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -85,13 +83,7 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,CustomerNotesAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
-
+		flowKey = createFlow(request, CustomerNotesAction.class);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 	}
@@ -359,7 +351,6 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		
 		setRequestPathInfo("/customerNotesAction.do");
 		addRequestParameter("method", "search");
-		System.out.println(request.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter(Constants.CURRENTFLOWKEY,(String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("search_success");
@@ -370,15 +361,14 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		
 		getobjects();
-		
 	}
 
 	private void getobjects(){
 		client = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
 		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
 		center = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
-	
 	}
+
 	public void testLoadForGroup() {
 		createInitialObjects();
 		setRequestPathInfo("/customerNotesAction.do");

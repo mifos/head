@@ -74,7 +74,6 @@ import org.mifos.application.fees.business.service.FeeBusinessService;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.business.service.PersonnelBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;

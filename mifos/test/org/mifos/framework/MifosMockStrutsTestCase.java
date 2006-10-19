@@ -47,6 +47,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Flow;
+import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -121,5 +124,15 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 		}// end-if
 		request = null;
 	}// end-doCleanUp
+
+	protected String createFlow(HttpServletRequest request, Class flowClass) {
+		Flow flow = new Flow();
+		String flowKey = String.valueOf(System.currentTimeMillis());
+		FlowManager flowManager = new FlowManager();
+		flowManager.addFLow(flowKey, flow, flowClass.getName());
+		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
+				flowManager);
+		return flowKey;
+	}
 
 }

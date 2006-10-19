@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountActionEntity;
-import org.mifos.application.accounts.financial.business.service.activity.SavingsWithdrawalFinancialActivity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
@@ -28,8 +27,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -66,12 +63,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,SavingsDepositWithdrawalAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
+		flowKey = createFlow(request, SavingsDepositWithdrawalAction.class);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 	}

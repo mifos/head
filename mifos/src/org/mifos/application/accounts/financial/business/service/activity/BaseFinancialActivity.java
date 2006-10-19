@@ -39,10 +39,8 @@
 package org.mifos.application.accounts.financial.business.service.activity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;

@@ -30,10 +30,8 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
@@ -68,8 +66,6 @@ import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -101,13 +97,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,LoanAccountAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
-
+		flowKey = createFlow(request, LoanAccountAction.class);
 	}
 
 	@Override
@@ -1272,15 +1262,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		return fees;
 	}
 
-	private String getPrefferedDate(Date date) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		currentDateCalendar.setTime(date);
-		return (currentDateCalendar.get(Calendar.DATE) + "/"
-				+ currentDateCalendar.get(Calendar.MONTH) + 1)
-				+ "/" + currentDateCalendar.get(Calendar.YEAR);
-
-	}
-
 	private String offSetCurrentDate(int noOfDays, Locale locale) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
@@ -1289,10 +1270,10 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day + noOfDays);
 		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar
 				.getTimeInMillis());
-		SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance(
+		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(
 				DateFormat.SHORT, locale);
 		String userfmt = DateHelper
-				.convertToCurrentDateFormat(((SimpleDateFormat) sdf)
+				.convertToCurrentDateFormat(format
 						.toPattern());
 		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
@@ -1305,16 +1286,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		int day = dateCalendar.get(Calendar.DAY_OF_MONTH);
 		dateCalendar = new GregorianCalendar(year, month, day + noOfDays);
 		return new java.sql.Date(dateCalendar.getTime().getTime());
-	}
-
-	private Date incrementCurrentDate(int noOfDays) {
-		Calendar currentDateCalendar = new GregorianCalendar();
-		int year = currentDateCalendar.get(Calendar.YEAR);
-		int month = currentDateCalendar.get(Calendar.MONTH);
-		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-		currentDateCalendar = new GregorianCalendar(year, month, day + noOfDays);
-		return DateUtils.getDateWithoutTimeStamp(currentDateCalendar
-				.getTimeInMillis());
 	}
 
 	private void createInitialCustomers() {

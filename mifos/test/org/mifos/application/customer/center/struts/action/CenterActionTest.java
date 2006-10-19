@@ -43,7 +43,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -83,13 +82,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
 
-		Flow flow = new Flow();
-		flowKey = String.valueOf(System.currentTimeMillis());
-		FlowManager flowManager = new FlowManager();
-		flowManager.addFLow(flowKey, flow,CenterCustAction.class.getName());
-		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
-				flowManager);
-
+		flowKey = createFlow(request, CenterCustAction.class);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 

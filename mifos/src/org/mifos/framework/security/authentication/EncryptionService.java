@@ -41,7 +41,6 @@
  */
 package org.mifos.framework.security.authentication;
 
-import org.mifos.framework.exceptions.SystemException;
 
 /**
  * EncryptionService will provide the encryption services to the system it
