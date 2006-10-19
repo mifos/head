@@ -23,6 +23,7 @@ import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -230,6 +231,45 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		actionPerform();
 		verifyForward("preview_success");
+
+	}
+	
+	public void testPreview_WithMandatoryCustomField_IfAny() throws Exception {
+		createAndAddObjectsForCreate();
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "load");
+		addRequestParameter("selectedPrdOfferingId", savingsOffering
+				.getPrdOfferingId().toString());
+
+		actionPerform();
+		verifyForward("load_success");
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+		.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		boolean isCustomFieldMandatory = false;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			if (customFieldDef.isMandatory()) {
+				isCustomFieldMandatory = true;
+				break;
+			}
+		}
+		addRequestParameter("selectedPrdOfferingId", savingsOffering
+				.getPrdOfferingId().toString());
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "preview");
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "");
+			i++;
+		}
+		actionPerform();
+		if (isCustomFieldMandatory)
+			assertEquals("CustomField", 1,
+					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+		else
+			assertEquals("CustomField", 0,
+					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
 
 	}
 

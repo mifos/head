@@ -490,6 +490,7 @@
 									<br>
 									</span><br></td></tr>
 									<tr><td class="fontnormalbold">
+									<c:if test="${!empty sessionScope.clientCustActionForm.defaultFees}">
 									<mifos:mifoslabel name="client.ChargesApplied"
 										bundle="ClientUIResources"></mifos:mifoslabel> <span
 										class="fontnormal"><br>
@@ -511,6 +512,7 @@
 											</span><br>
 										</c:if>
 									</c:forEach>
+									</c:if>
 									<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" >
 										<c:forEach var="selectedFee" items="${sessionScope.clientCustActionForm.additionalFees}" >
 											<c:if test="${fee.feeId == selectedFee.feeId}">

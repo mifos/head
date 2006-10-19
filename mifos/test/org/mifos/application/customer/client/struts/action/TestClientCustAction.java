@@ -1546,7 +1546,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("loanOfficerId", "3");
-		addRequestParameter("groupFlag", "0");
+		addRequestParameter("groupFlag", "1");
 		addRequestParameter("method", "updateMfiInfo");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();

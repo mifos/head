@@ -291,6 +291,7 @@ function goToEditPage(){
                 <td class="fontnormal">
 					<span class="fontnormalbold">
 					 <br>
+		             <c:if test="${!empty sessionScope.centerCustActionForm.defaultFees}">
 		             <span class="fontnormalbold"><mifos:mifoslabel name="Center.AdministrativeFeesHeading" bundle="CenterUIResources"/><br>
 						<c:forEach var="adminFee" items="${sessionScope.centerCustActionForm.defaultFees}">
 							<c:if test="${adminFee.removed == false}">
@@ -310,6 +311,7 @@ function goToEditPage(){
 							</c:if>
 						</c:forEach>
 					</span>
+					</c:if>
 					</td>
 					</tr>
 

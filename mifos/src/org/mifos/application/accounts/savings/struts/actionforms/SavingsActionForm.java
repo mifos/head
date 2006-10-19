@@ -39,6 +39,7 @@
 package org.mifos.application.accounts.savings.struts.actionforms;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,12 +48,17 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.struts.actionforms.AccountAppActionForm;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -99,6 +105,7 @@ public class SavingsActionForm extends AccountAppActionForm {
 								new ActionMessage(SavingsConstants.MANDATORY,
 										SavingsConstants.MANDATORY_AMOUNT));
 					}
+					validateCustomFields(request,errors);
 				} catch (PageExpiredException e) {
 					errors.add(SavingsConstants.MANDATORY, new ActionMessage(
 							SavingsConstants.MANDATORY,
@@ -132,5 +139,28 @@ public class SavingsActionForm extends AccountAppActionForm {
 		this.setAccountId(null);
 		this.setSelectedPrdOfferingId(null);
 		this.setAccountCustomFieldSet(new ArrayList<AccountCustomFieldEntity>());
+	}
+	
+	private  void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
+		try {
+			List<CustomFieldDefinitionEntity> customFieldDefs =(List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+			for(AccountCustomFieldEntity customField : getAccountCustomFieldSet()){
+				boolean isErrorFound = false;
+				for(CustomFieldDefinitionEntity customFieldDef : customFieldDefs){
+					if(customField.getFieldId().equals(customFieldDef.getFieldId())&& customFieldDef.isMandatory()){
+						if(StringUtils.isNullOrEmpty(customField.getFieldValue())){
+							errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
+							isErrorFound = true;
+							break;
+						}
+					}
+				}
+				if(isErrorFound)
+					break;
+			}
+		} catch (PageExpiredException pee) {
+			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,
+					new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
+		}
 	}
 }

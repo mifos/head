@@ -425,57 +425,59 @@
 									<!--Custom Fields end  -->
 									<!-- Administrative Set Fees -->
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
-										<tr>
+										<c:if test="${!empty sessionScope.centerCustActionForm.defaultFees}">
+										  <tr>
 											<td colspan="2" class="fontnormalbold">
 												<mifos:mifoslabel name="Center.AdministrativeFeesHeading" bundle="CenterUIResources" />
 												<br>
 												<br>
 											</td>
-										</tr>
-										<!-- For each admin fee that is retrieved the name and amoutn is displayed -->
-										<c:forEach var="adminFees" items="${sessionScope.centerCustActionForm.defaultFees}" varStatus="loopStatus1">
-											<bean:define id="ctr1" toScope="request">
-												<c:out value="${loopStatus1.index}" />
-											</bean:define>
-											<tr>
-												<td width="21%" align="right" class="fontnormal">
-													<c:out value="${adminFees.feeName}" />:
-												</td>
-												<td width="79%" class="fontnormal">
-													<table width="500" border="0" cellspacing="0" cellpadding="0">
-														<!-- Fee amount display as label or text field -->
-														<tr class="fontnormal">
-															<td width="148">
-																<c:choose>
-																	<c:when test="${adminFees.periodic == true}">
-																		<c:out value="${adminFees.amount}" />
-																	</c:when>
-																	<c:otherwise>
-																		<mifos:mifosdecimalinput property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
-																	</c:otherwise>
-																</c:choose>
-															</td>
-															<td width="182">
-																&nbsp;
-																<mifos:mifoslabel name="Center.Periodicity" bundle="CenterUIResources" />
-																<c:choose>
-																	<c:when test="${adminFees.periodic == true}">
-																		<c:out value="${adminFees.feeSchedule}" />
-																	</c:when>
-																	<c:otherwise>
-																		<mifos:mifoslabel name="Fees.onetime" />
-																	</c:otherwise>
-																</c:choose>
-															</td>
-															<td width="170">
-																<html-el:checkbox property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox>
-																Check to Remove
-															</td>
-														</tr>
-													</table>
-												</td>
-											</tr>
-										</c:forEach>
+										  </tr>
+											<!-- For each admin fee that is retrieved the name and amoutn is displayed -->
+											<c:forEach var="adminFees" items="${sessionScope.centerCustActionForm.defaultFees}" varStatus="loopStatus1">
+												<bean:define id="ctr1" toScope="request">
+													<c:out value="${loopStatus1.index}" />
+												</bean:define>
+												<tr>
+													<td width="21%" align="right" class="fontnormal">
+														<c:out value="${adminFees.feeName}" />:
+													</td>
+													<td width="79%" class="fontnormal">
+														<table width="500" border="0" cellspacing="0" cellpadding="0">
+															<!-- Fee amount display as label or text field -->
+															<tr class="fontnormal">
+																<td width="148">
+																	<c:choose>
+																		<c:when test="${adminFees.periodic == true}">
+																			<c:out value="${adminFees.amount}" />
+																		</c:when>
+																		<c:otherwise>
+																			<mifos:mifosdecimalinput property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
+																		</c:otherwise>
+																	</c:choose>
+																</td>
+																<td width="182">
+																	&nbsp;
+																	<mifos:mifoslabel name="Center.Periodicity" bundle="CenterUIResources" />
+																	<c:choose>
+																		<c:when test="${adminFees.periodic == true}">
+																			<c:out value="${adminFees.feeSchedule}" />
+																		</c:when>
+																		<c:otherwise>
+																			<mifos:mifoslabel name="Fees.onetime" />
+																		</c:otherwise>
+																	</c:choose>
+																</td>
+																<td width="170">
+																	<html-el:checkbox property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox>
+																	Check to Remove
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</c:forEach>
+										</c:if>
 									</table>
 									<br>
 									<!-- Administrative Set Fees End-->

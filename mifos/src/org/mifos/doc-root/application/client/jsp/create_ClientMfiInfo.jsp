@@ -283,6 +283,7 @@
 							<br>
 							<!-- Administrative Set Fees -->
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
+								<c:if test="${!empty sessionScope.clientCustActionForm.defaultFees}">
 								<tr>
 									<td colspan="2" class="fontnormalbold"><mifos:mifoslabel
 										name="client.AdministrativeFeesHeading"
@@ -336,7 +337,7 @@
 											 </td>
 									 	</tr>
 									</c:forEach>
-
+								</c:if>
 							</table>
 							<br>
 							<!-- Administrative Set Fees End--> <!-- Fee Type -->

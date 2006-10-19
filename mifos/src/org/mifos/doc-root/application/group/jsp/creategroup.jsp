@@ -464,6 +464,7 @@
 									<br>
 									<!-- Administrative Set Fees -->
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
+										<c:if test="${!empty sessionScope.groupCustActionForm.defaultFees}">
 										<tr>
 											<td colspan="2" class="fontnormalbold">
 												<mifos:mifoslabel name="Group.adminsetfess" bundle="GroupUIResources"></mifos:mifoslabel>
@@ -514,6 +515,7 @@
 												</td>
 											</tr>
 										</c:forEach>
+										</c:if>
 									</table>
 
 									<!-- Administrative Set Fees End-->

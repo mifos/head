@@ -289,10 +289,14 @@
 									<mifos:mifoslabel name="Fees.labelMonths"
 										bundle="FeesUIResources" />
 								</c:if> )</td>
-								<td width="55%"><html-el:link
+								<td width="55%">
+								<c:if test="${BusinessKey.customer.customerStatus.id != CustomerStatus.GROUP_CANCELLED.value and BusinessKey.customer.customerStatus.id != CustomerStatus.GROUP_CLOSED.value}">
+								<html-el:link
 									href="accountAppAction.do?method=removeFees&globalCustNum=${BusinessKey.customer.globalCustNum}&statusId=${BusinessKey.customer.customerStatus.id}&feeId=${recurrenceFees.fees.feeId}&accountId=${recurrenceFees.account.accountId}&fromPage=group&input=Group&globalAccountNum=${BusinessKey.globalAccountNum}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="Group.remove" />
-								</html-el:link></td>
+								</html-el:link>
+								</c:if>
+								</td>
 							</tr>
 						</c:if>
 					</c:forEach>

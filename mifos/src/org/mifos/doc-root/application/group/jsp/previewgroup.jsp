@@ -382,6 +382,7 @@
   		 	
   		 	<tr>
                   <td class="fontnormalbold">
+					<c:if test="${!empty sessionScope.groupCustActionForm.defaultFees}">
 					<mifos:mifoslabel name="Group.adminsetfess" bundle="GroupUIResources"></mifos:mifoslabel><br>
 						<c:forEach var="adminFee" items="${sessionScope.groupCustActionForm.defaultFees}">
 								<c:if test="${adminFee.removed == false}">
@@ -401,6 +402,7 @@
 								</c:if> 
 							</c:forEach>
 							<br>
+							</c:if>
 				</td>
 			</tr>
 			<tr>

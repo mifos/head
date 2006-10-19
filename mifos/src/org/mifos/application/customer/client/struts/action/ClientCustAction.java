@@ -661,13 +661,19 @@ public class ClientCustAction extends CustAction {
 		client.setTrainedDate(getDateFromString(actionForm.getTrainedDate(),
 				getUserContext(request).getPereferedLocale()));
 		PersonnelBO personnel = null;
+		
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 			if (actionForm.getLoanOfficerIdValue() != null){ 
 				personnel = getPersonnelBusinessService().getPersonnel(
 						actionForm.getLoanOfficerIdValue());
 			}
-			client.updateMfiInfo(personnel);
 		}
+		else if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
+			personnel = client.getPersonnel();
+		}
+		
+			
+		client.updateMfiInfo(personnel);
 		client.setUserContext(getUserContext(request));
 		return mapping.findForward(ActionForwards.updateMfiInfo_success
 				.toString());

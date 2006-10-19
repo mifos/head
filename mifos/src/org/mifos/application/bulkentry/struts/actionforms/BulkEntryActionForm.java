@@ -430,6 +430,11 @@ public class BulkEntryActionForm extends ActionForm {
 					BulkEntryConstants.MANDATORYFIELDS, getLabel(customerLabel,
 							userLocale)));
 		}
+		if (paymentId == null || "".equals(paymentId.trim())) {
+			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
+					BulkEntryConstants.MANDATORYFIELDS,
+					BulkEntryConstants.MODEOFPAYMENT));
+		}
 		if (transactionDate == null || "".equals(transactionDate.trim())) {
 			errors.add(BulkEntryConstants.MANDATORYENTER, new ActionMessage(
 					BulkEntryConstants.MANDATORYENTER,
@@ -449,11 +454,7 @@ public class BulkEntryActionForm extends ActionForm {
 					new ActionMessage(BulkEntryConstants.MEETINGDATEEXCEPTION,
 							BulkEntryConstants.DATEOFTRXN));
 		}
-		if (paymentId == null || "".equals(paymentId.trim())) {
-			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(
-					BulkEntryConstants.MANDATORYFIELDS,
-					BulkEntryConstants.MODEOFPAYMENT));
-		}
+		
 		return errors;
 	}
 
