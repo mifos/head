@@ -36,6 +36,7 @@ class SavingsAccountCreateEdit < TestClass
       @@prod_name=dbresult[1]
       @@prod_id=dbresult[0]
       @@recommended_amnt_unit=dbresult[2]
+
       rescue =>excp
       quit_on_error(excp)
     end
@@ -145,8 +146,11 @@ class SavingsAccountCreateEdit < TestClass
       @@savings_account_close_msg=@@savingsprop['Savings.reviewDetails']+" "+@@savingsprop['Savings.clickSubmitIfSatisfied']+" "+@@savingsprop['Savings.clickCancelToReturn']+" "+@@savingsprop['Savings.detailsWithOutClosing']
       @@make_depositorwithdrawal=@@savingsprop['Savings.makeDepositWithdrawl']
       @@button_reviewtransaction=@@savingsprop['Savings.reviewTransaction']
-      
-    rescue =>excp
+      @@button_search=@@centerprop['button.Search']
+      @@total_amnt_due_on=@@savingsprop['Savings.totalAmountDue']
+      @@type_of_deposit=@@savingsprop['Savings.typeOfDeposits']
+  
+      rescue =>excp
       quit_on_error(excp)
     end
   end
@@ -557,7 +561,115 @@ class SavingsAccountCreateEdit < TestClass
             end  
       end  
     end
-  end
+ 
+  def mandatory_membername_validation()
+  begin
+    dbquery("select global_account_num,account_state_id,account_id from account where account_type_id=2 and  account_state_id in (14,16) and customer_id in (select customer_id from customer where customer_level_id=3)")
+    globalacctnum=dbresult[0]
+    account_state=dbresult[1]
+    @@account_id=dbresult[2]
+    $ie.link(:text,"Clients & Accounts").click
+    $ie.text_field(:name,"searchString").set(globalacctnum)
+    $ie.button(:value,@@button_search).click
+    $ie.link(:text,"Account # "+globalacctnum).click
+      if(account_state.to_i==14) #state change required only for pending status
+        statusChange()
+      end
+      
+    #added as part of bug#690
+    check_nextmeeting_date()
+    #added as part of bug#870
+    check_typeofdeposit(@@account_id)
+    
+    $ie.link(:text,@@make_depositorwithdrawal).click
+        begin
+        assert($ie.contains_text(globalacctnum+" - "+@@make_depositorwithdrawal))
+        $logger.log_results(@@make_depositorwithdrawal+ " link","should work","Working","Passed")    
+        $ie.select_list(:name,"trxnTypeId").select("Deposit")
+        $ie.text_field(:name,"amount").set("500")
+        $ie.select_list(:name,"paymentTypeId").select("Cash")
+        $ie.button(:value,@@button_reviewtransaction).click
+               begin
+               assert($ie.contains_text("Please specify Client name."))
+               $logger.log_results("Mandatory check for member name","Do not select the Member name","Validating","passed")    
+               rescue Test::Unit::AssertionFailedError=>e
+               $logger.log_results("Mandatory check for member name","Do not select the Member name","Not Validating","failed")    
+                rescue =>excp
+               quit_on_error(excp)
+               end
+        rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results(@@make_depositorwithdrawal+" link","should work","not working","failed")    
+        rescue =>excp
+        quit_on_error(excp)
+       end
+   end    
+ end # end of mandatory_membername_validation()
+ 
+ def check_nextmeeting_date()
+   begin
+     dbquery("Select distinct(date_format(action_date,'%d/%m/%Y')),sum(deposit),SUM(Deposit_paid)  from Saving_Schedule where Account_Id ="+@@account_id+" and action_date >= current_date and installment_Id = (Select min(installment_id) from Saving_Schedule where action_date >= current_date and Account_Id ="+@@account_id+") group by action_date")
+     nextmeetingdate=dbresult[0]
+     totaldepositdue=dbresult[1]
+     totaldepositpaid=dbresult[2]
+     deposit_topay=totaldepositdue.to_f - totaldepositpaid.to_f
+     assert($ie.contains_text(@@total_amnt_due_on+" "+nextmeetingdate+": "+deposit_topay.to_f.to_s))
+     $logger.log_results("Bug#690-Total amount due display","Should display the total amount due","Displaying","passed")         
+     rescue Test::Unit::AssertionFailedError=>e
+     $logger.log_results("Bug#690-Total amount due display","Should display the total amount due","Not Displaying","failed")               
+     rescue=>excp
+     quit_on_error(excp)
+   end   
+ end # end of check_nextmeeting_date()
+ 
+ def check_savings_accountstate_after_depositwithdrawal()
+    begin
+      dbquery("select global_account_num,account_state_id,account_id from account where account_type_id=2 and  account_state_id =16 and customer_id in (select customer_id from customer where customer_level_id=3)")
+      globalacctnum=dbresult[0]
+      account_state=dbresult[1]
+      account_id=dbresult[2]
+      $ie.link(:text,"Clients & Accounts").click
+      $ie.text_field(:name,"searchString").set(globalacctnum)
+      $ie.button(:value,@@button_search).click
+      $ie.link(:text,"Account # "+globalacctnum).click
+      change_statusInactive()
+      $ie.link(:text,@@make_depositorwithdrawal).click
+      $ie.select_list(:name,"customerId").select("Non-specified")
+      $ie.select_list(:name,"trxnTypeId").select("Deposit")
+      $ie.text_field(:name,"amount").set("500")
+      $ie.select_list(:name,"paymentTypeId").select("Cash")
+      $ie.button(:value,@@button_reviewtransaction).click
+      $ie.button(:value,@@button_submit).click    
+      dbquery("select account_state_id from account where account_type_id=2 and  account_id="+account_id+"")    
+      account_state=dbresult[0]
+      assert(account_state.to_i==16)
+      $logger.log_results("Bug#497-Inactive Savings account status change to active on making a deposit/withdrawal","Make a deposit/withdrawal from savings account","The status of the account should change to active","passed")         
+      rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Bug#497-Inactive Savings account status change to active on making a deposit/withdrawal","Make a deposit/withdrawal from savings account","The status of the account did not change to active","failed")         
+      rescue=>excp
+      quit_on_error(excp)
+    end
+    
+ end # end of check_savings_accountstate_after_depositwithdrawal()
+ 
+ def check_typeofdeposit(account_id)
+    begin
+      dbquery("select savings_type_id from savings_account where account_id="+account_id+"")
+      savingstype=dbresult[0]
+      if(savingstype.to_i==1) then 
+      deposit_type="Mandatory"
+      elsif(savingstype.to_i==2) then 
+      deposit_type="Voluntary"
+      end
+#      @@type_of_deposit
+      assert($ie.contains_text(@@type_of_deposit+": "+deposit_type))
+      $logger.log_results("Bug#870-Type of deposit display","Select any savings account","The type of deposit displayed","passed")         
+      rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Bug#870-Type of deposit display","Select any savings account","The type of deposit is not displayed","failed")         
+      rescue=>excp
+      quit_on_error(excp)
+   end   
+ end # end of check_typeofdeposit()
+end #end of class
   
  
 
@@ -595,5 +707,7 @@ class SavingsAccountTest
     savingsobj.statusChange
     rowid+=$maxcol
   end
+  savingsobj.mandatory_membername_validation()
+  savingsobj.check_savings_accountstate_after_depositwithdrawal()
   savingsobj.mifos_logout()
 end
