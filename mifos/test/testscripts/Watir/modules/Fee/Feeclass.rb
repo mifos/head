@@ -123,8 +123,9 @@ class Feeclass<TestClass
       @maxlen_feename_msg=string_replace_message(@maxlen_feename_msg,"{1}","50")
       @maxlen_rate_msg=string_replace_message(@@feeprop['errors.rateGreaterThen999'],"{0}",@@feeprop['Fees.error.rate'])
       @maxlen_amount_msg=string_replace_message(@@feeprop['errors.amountGreaterThan'],"{0}",@@feeprop['Fees.error.amount'])
+      @invalid_recurrencepattern_msg=@@feeprop['errors.Meeting.invalidRecurAfter'] 
     rescue =>excp
-      quit_on_error(excp)
+        quit_on_error(excp)
     end
   end
   
@@ -672,6 +673,55 @@ class Feeclass<TestClass
       quit_on_error(excp)
     end
   end
+  
+#added as part og bug#677
+  def view_fees_after_backbutton_clicked()
+        $ie.link(:text,@admin_label).click
+        $ie.link(:text,@view_fees_link).click
+        dbquery("select fee_id,fee_name from fees where status=1")
+         fees_id=dbresult[0]
+         feename=dbresult[1]
+         $ie.link(:text,feename).click
+         $ie.back()
+        #selecting fee other than the previous selected fee.
+         dbquery("select fee_id,fee_name from fees where status=1 and fee_id!="+fees_id+"")
+         fee_id=dbresult[0]
+         feename=dbresult[1]
+         $ie.link(:text,feename).click
+         assert($ie.contains_text(feename))and assert($ie.contains_text(@edit_fees_link))
+         $logger.log_results("Bug#677-View Fees after clicking back button in IE","Should redirect","redirected","passed")
+         rescue Test::Unit::AssertionFailedError=>e
+         $logger.log_results("Bug#677-View Fees after clicking back button in IE","Should redirect"," not redirected","failed")
+         rescue =>excp
+         quit_on_error(excp)
+  end
+  
+  #added as part of Bug#827
+  def check_errormsg_for_recurrence_pattern()
+    begin
+      $ie.link(:text,@admin_label).click
+      $ie.link(:text,@define_new_fees_link).click
+      $ie.text_field(:name,"feeName").set("Feestest") 
+      $ie.select_list(:name,"categoryType").select_value("1")
+      $ie.radio(:name,"feeFrequencyType","1").set
+      $ie.radio(:name,"feeRecurrenceType","1").set
+      $ie.text_field(:name,"weekRecurAfter").set("0") 
+      $ie.text_field(:name,"amount").set("100") 
+      $ie.select_list(:name,"glCode").select_value("48")      
+      $ie.button(:value,@preview_button).click
+      $ie.button(:value,@submit_button).click
+      begin
+          assert($ie.contains_text(@invalid_recurrencepattern_msg)) 
+          $logger.log_results("Bug#827-Invalid recurrence pattern in fees","Should display a proper error message","Displayed","Passed")
+          rescue Test::Unit::AssertionFailedError=>e
+          $logger.log_results("Bug#827-Invalid recurrence pattern in fees","Did not display a proper error message","Not displayed","failed")
+         rescue =>excp
+         quit_on_error(excp)
+                    
+      end
+    end
+  end
+  
 end
 
 class Fee_Test
@@ -726,5 +776,10 @@ class Fee_Test
   feeobject.verify_viewfeelink()
   feeobject.click_viewfeelink()
   feeobject.select_click_fee()
+  #added as part of bug#677
+  feeobject.view_fees_after_backbutton_clicked
+ # added as part of bug#827
+  feeobject.check_errormsg_for_recurrence_pattern()
+  
   feeobject.mifos_logout()
 end
