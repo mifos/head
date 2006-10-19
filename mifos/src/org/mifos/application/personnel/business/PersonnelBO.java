@@ -250,10 +250,6 @@ public class PersonnelBO extends BusinessObject {
 		return noOfTries;
 	}
 
-	private void setNoOfTries(Short noOfTries) {
-		this.noOfTries = noOfTries;
-	}
-
 	public Short getPasswordChanged() {
 		return passwordChanged;
 	}
