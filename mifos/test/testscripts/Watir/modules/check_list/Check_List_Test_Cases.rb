@@ -75,6 +75,7 @@ class Check_List_Test_Cases < TestClass
       @checklist_item_msg=string_replace_message(@@checklistprop['errors.mandatory_item'],"{0}",@@checklistprop['checklist.display_status'])
       @max_name_length_msg=string_replace_message(@@checklistprop['errors.maximumlength'],"{0}",@@checklistprop['checklist.checklistName'])
       @max_name_length_msg=string_replace_message(@max_name_length_msg,"{1}","50")
+      @checklist_status_already_defined_exception=@@checklistprop['exceptions.application.checklist.Statusalreadydefined']
     rescue =>excp
       quit_on_error(excp)
     end
@@ -242,13 +243,7 @@ class Check_List_Test_Cases < TestClass
         # Iterate through each status for a particular type
         @@customer_status_count = 0 
         @@max_customer_status_count = @@res_customer_status.num_rows()
-        
-        puts "@@customer_status_count: " + @@customer_status_count.to_s
-        puts "@@max_customer_status_count " + @@max_customer_status_count.to_s
-        puts "@@customer_type_count " + @@customer_type_count.to_s
-        
         while  @@customer_status_count < @@max_customer_status_count
-          puts " in while loop for status @@customer_status_count: " + @@customer_status_count.to_s
           @@resultset_customer_status = @@res_customer_status.fetch_row.to_a
           @@customer_status_id = @@resultset_customer_status[0]        
           @@status_name = @@resultset_customer_status[1]        
@@ -274,22 +269,11 @@ class Check_List_Test_Cases < TestClass
         @@res_product_status = $dbh.real_query("select  asa.account_state_id, lvl.lookup_value from account_state asa, lookup_value_locale lvl where asa.prd_type_id = "+ @@prd_type_id +" and asa.lookup_id = lvl.lookup_id and lvl.locale_id =1 and asa.account_state_id not in (1,6,11,12,13,17)")
         @@product_status_count = 0 
         @@max_product_status_count = @@res_product_status.num_rows()
-        puts "@@product_type_count: "   + @@product_type_count.to_s 
         @@type_count = @@product_type_count.to_i +    @@max_customer_type_count.to_i 
-        puts "@@type_count: "   + @@type_count.to_s
-        
-        puts "@@product_status_count " + @@product_status_count.to_s
-        puts "@@max_product_status_count " + @@max_product_status_count.to_s
-        puts "@@type_count " + @@type_count.to_s
-        
         while  @@product_status_count < @@max_product_status_count        
-          
-          puts "in while loop @@product_status_count " + @@product_status_count.to_s
           @@resultset_product_status = @@res_product_status.fetch_row.to_a
           @@product_status_id = @@resultset_product_status[0]        
           @@status_name = @@resultset_product_status[1]        
-          puts "@@product_status_id: " + @@product_status_id.to_s
-          
           @@status_count = @@max_customer_status_count.to_i + @@product_status_count
           Create_New_CheckList(checklist_name + (@@product_type_count + @@max_customer_type_count.to_i).to_s + @@product_status_count.to_s, @@type_count, @@product_status_id, 1)
           @@product_status_count += 1            
@@ -313,9 +297,8 @@ class Check_List_Test_Cases < TestClass
       else
         $logger.log_results("CheckList- Check for new check list link on admin page", "Click on admin 'Define new checklist' link","Access to the new check list page","Failed")
       end
-      
       $ie.text_field(:name,"checklistName").set(checklist_name)        
-      $ie.select_list(:name,"type").select(chk_type)
+      $ie.select_list(:name,"type").select(chk_type.to_s.strip())
       $ie.select_list(:name,"stateId").select(status)
       
       count = 0
@@ -508,6 +491,34 @@ class Check_List_Test_Cases < TestClass
     end
   end
   
+  #added as part of Bug#916
+  
+
+  def Create_New_CheckList_Duplicate(checklist_name, chk_type, status, check_list_items, checklist_type)
+      begin
+        $ie.link(:text,@admin_link).click
+        $ie.link(:text,@define_new_checklist_link).click
+        $ie.text_field(:name,"checklistName").set(checklist_name)        
+        $ie.select_list(:name,"type").select(chk_type)
+        $ie.select_list(:name,"stateId").select(status)
+        count = 0
+        while count < check_list_items.length
+          $ie.text_field(:name,"text").set(check_list_items[count])        
+          $ie.button(:value,@add_button).click                
+          count+=1             
+        end
+        $ie.button(:value,@preview_button).click      
+       begin 
+        assert($ie.contains_text(@checklist_status_already_defined_exception)) 
+         $logger.log_results("Bug#916-Duplicate Checklist", "Combination of Chekclist type and status","Should not allow to create duplicate checklist","Passed")
+        rescue Test::Unit::AssertionFailedError=>e
+         $logger.log_results("Bug#916-Duplicate Checklist", "Combination of Chekclist type and status","Allowed to create","failed")
+        rescue=>excp
+        quit_on_error(excp)
+       end 
+      end
+  end  
+
   # To log out from the application 
   def checklist_logout()
     begin
@@ -541,10 +552,17 @@ class Check_List
       checklist_obj.Man_New_CheckList_with_status(checklist_obj.Checklist_status)
       #$ie.link(:text,@admin_link).click
     end    
-    checklist_obj.Create_New_CheckList(checklist_obj.Checklist_name,checklist_obj.Checklist_type,checklist_obj.Checklist_status,checklist_obj.Checklist_items,checklist_obj.Type )
+ #  checklist_obj.Create_New_CheckList(checklist_obj.Checklist_name,checklist_obj.Checklist_type,checklist_obj.Checklist_status,checklist_obj.Checklist_items,checklist_obj.Type )
+ 
+ #added as part of Bug#916
+     if (rowid == 19)then 
+        checklist_obj.Create_New_CheckList_Duplicate(checklist_obj.Checklist_name,checklist_obj.Checklist_type,checklist_obj.Checklist_status,checklist_obj.Checklist_items,checklist_obj.Type )
+    else
+        checklist_obj.Create_New_CheckList(checklist_obj.Checklist_name,checklist_obj.Checklist_type,checklist_obj.Checklist_status,checklist_obj.Checklist_items,checklist_obj.Type )
+    end
     count = 1
-    rowid+=$maxcol
+     rowid+=$maxcol
   end
-  checklist_obj.delete_all_checklist()
+ checklist_obj.delete_all_checklist()
   checklist_obj.checklist_logout()
 end
