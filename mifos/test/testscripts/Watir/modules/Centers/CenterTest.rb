@@ -129,6 +129,10 @@ class CenterCreateEdit < TestClass
       @@lookup_name_group=dbresult[0]
       dbquery("SELECT lookup_value FROM lookup_value_locale where lookup_id=84 and locale_id=1")
       @@lookup_name_center=dbresult[0]
+      dbquery("SELECT fees.fee_name,fees.fee_id FROM fees,fee_frequency where fee_frequency.fee_id=fees.fee_id and fee_frequency.fee_frequencytype_id=2  and fee_frequency.frequency_payment_id =1 and fees.status=1 and fees.category_id=4 and fees.fee_id in (select fee_id from feelevel)")
+      @@fee_name=dbresult[0]
+      @@fee_id=dbresult[1]
+      
     rescue =>excp
       quit_on_error(excp)
     end
@@ -194,6 +198,9 @@ class CenterCreateEdit < TestClass
       @view_center_details=@@centerprop['Center.View']+" "+@@lookup_name_center+" "+@@centerprop['Center.DetailsNow']
       @month_msg=@@meetingprop['errors.Meeting.specifyDayNumAndRecurAfter']
       @@back_to_details_page=@@centerprop['Center.backtodetailspage']
+      @@menu_clients_msg = @@menuprop['label.clients']
+      @@menu_accounts_msg = @@menuprop['label.accounts']
+      
     rescue =>excp
       quit_on_error(excp)
     end
@@ -756,7 +763,94 @@ class CenterCreateEdit < TestClass
   rescue =>excp
     quit_on_error(excp)    
   end
-end
+  
+  #added as part of bug#945
+  def check_kendraname_link()
+    begin
+       $ie.link(:text,"Clients & Accounts").click
+       dbquery("select o.display_name,p.display_name,c.display_name from customer c,(select personnel_id,display_name,office_id from personnel where level_id=1) p,(select office_id,display_name from office where office_level_id=5 and status_id=1) o where p.office_id=o.office_id and p.personnel_id=c.loan_officer_id and c.customer_level_id=3 group by p.display_name having count(c.display_name)>0")
+       office_name=dbresult[0]
+       loanofficer_name=dbresult[1]
+       kendra_name=dbresult[2]
+       $ie.link(:text,office_name).click       
+       $ie.link(:text,loanofficer_name).click
+       $ie.link(:text,kendra_name).click
+       assert($ie.contains_text(@@edit_center_status))
+       $logger.log_results("Bug#945-Click on Kendra name","Click on a kendra name","Should display the kendrra details","Passed")
+       rescue Test::Unit::AssertionFailedError=>e
+       $logger.log_results("Bug#945-Click on Kendra name","Click on a kendra name","Should display the kendrra details","failed")
+       rescue =>excp
+       quit_on_error(excp) 
+       
+    end
+  end
+  
+  #added as part of Bug#860
+  def check_CreateKendra_inactive_fee()
+  
+     $ie.link(:text,"Clients & Accounts").click  
+     select_office()
+     
+     begin    
+       assert($ie.contains_text(@@fee_name))
+       $logger.log_results("Check it default fees displayed","Create new kendra","Should display the default fees applied to kendra","passed")         
+     rescue Test::Unit::AssertionFailedError=>e
+       $logger.log_results("Check it default fees displayed","Create a new kendra","Does not display the default fees appliedto kendra","failed")            
+     end
+     
+     update_fee_status(2) #make fees inactive 
+     
+     $ie.link(:text,"Clients & Accounts").click
+     select_office()
+     begin
+       assert(!($ie.contains_text(@@fee_name)))
+       $logger.log_results("Bug#860-Fees made inactive","make a fee inactive ","Inactive fees not displayed while creating a n ew Kendra ","passed")     
+       rescue Test::Unit::AssertionFailedError=>e
+       $logger.log_results("Bug#860-Fees made inactive","make a fee inactive ","Inactive fees not displayed while creating a n ew Kendra ","passed")            
+       rescue=>excp
+       quit_on_error(excp)
+     end 
+     
+     update_fee_status(1) #make fees active  so that it can run in next iteration if required
+     
+  end
+  
+  #added as part of Bug#860
+  def  update_fee_status(status)
+  $dbh.real_query("update fees set status="+status.to_s+" where fee_id="+@@fee_id+"")
+  end
+  
+#added as part of Bug#833
+def search_customer_by_global_account_number()
+    begin
+    custsearch_not_found_msg="No results found for"
+    custsearch_in_msg="in"
+      $ie.link(:text,@@menu_clients_msg+" & "+@@menu_accounts_msg).click
+      # Retrieves global_account_num from the database
+      dbquery("select global_account_num from account a, customer c where a.customer_id=c.customer_id and account_type_id=3")
+      global_account_num=dbresult[0]
+
+      # Inserts the retrieved result into the textfield
+      $ie.text_field(:name,"searchString").set(global_account_num) 
+      $ie.button(:value,@@button_search).click
+
+      # Gets the current content from select list
+      get_selected_item_from_list = $ie.select_list(:name,"officeId").getSelectedItems() 
+      
+      # Checks for the result
+      begin
+          assert($ie.contains_text(custsearch_not_found_msg+" " +global_account_num+ " "+custsearch_in_msg+" "+get_selected_item_from_list[0].to_s)) 
+          $logger.log_results("Bug#833-Search Customer on global account number","Search Customer on global account number","Displaying the error message","Passed")
+          rescue Test::Unit::AssertionFailedError=>e
+          $logger.log_results("Bug#833-Search Customer on global account number","Search Customer on global account number","Not displaying the error message","failed")
+          rescue =>excp
+           quit_on_error(excp)
+      end
+    end
+end # End of search_customer_by_global_id() function
+
+
+end # end of class
 
 class CenterTest
   centerobject=CenterCreateEdit.new
@@ -810,5 +904,15 @@ class CenterTest
   end
   #added as part of bug#830
   centerobject.make_office_inactive()
+
+  #added as part of bug#945
+  centerobject.check_kendraname_link()
+
+  #added as part of bug#860
+  centerobject.check_CreateKendra_inactive_fee()
+
+   #added as part of Bug#833
+  centerobject.search_customer_by_global_account_number() 
+  
   centerobject.mifos_logout()
 end
