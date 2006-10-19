@@ -91,6 +91,7 @@ public class PersonnelNoteAction extends SearchAction {
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 	
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

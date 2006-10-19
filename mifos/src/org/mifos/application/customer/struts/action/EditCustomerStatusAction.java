@@ -154,6 +154,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		return mapping.findForward(getDetailAccountPage(form));
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response){
 		logger.debug("In EditCustomerStatusAction:validate()");

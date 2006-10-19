@@ -197,6 +197,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		return mapping.findForward("account_detail_page");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

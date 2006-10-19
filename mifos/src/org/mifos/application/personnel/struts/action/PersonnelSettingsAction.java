@@ -121,6 +121,7 @@ public class PersonnelSettingsAction extends BaseAction {
 				.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse httpservletresponse)
 			throws Exception {

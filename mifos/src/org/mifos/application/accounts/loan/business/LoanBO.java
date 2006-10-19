@@ -997,6 +997,7 @@ public class LoanBO extends AccountBO {
 			regeneratePaymentSchedule();
 		}
 		updateCustomFields(customFields);
+		loanSummary.setOriginalPrincipal(loanAmount);
 		update();
 	}
 	

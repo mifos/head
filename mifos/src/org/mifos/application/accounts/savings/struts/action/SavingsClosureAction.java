@@ -255,6 +255,7 @@ public class SavingsClosureAction extends BaseAction {
 		return mapping.findForward("close_success");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

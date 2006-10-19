@@ -68,6 +68,7 @@ public class PrdConfAction extends BaseAction {
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response) {
 		String method = (String) request.getAttribute("methodCalled");

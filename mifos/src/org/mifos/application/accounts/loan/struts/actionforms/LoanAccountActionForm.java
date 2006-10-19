@@ -428,7 +428,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			else if (method.equals(Methods.schedulePreview.toString()))
 				checkValidationForSchedulePreview(errors, request);
 			else if (method.equals(Methods.managePreview.toString()))
-				checkValidationForSchedulePreview(errors, request);
+				checkValidationForManagePreview(errors, request);
 		} catch (ApplicationException ae) {
 			errors = new ActionErrors();
 			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
@@ -457,6 +457,21 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 	private void checkValidationForSchedulePreview(ActionErrors errors,
 			HttpServletRequest request) throws ApplicationException {
+		checkValidationForPreview(errors, request);
+		validateFees(request, errors);
+		validateCustomFields(request, errors);
+
+	}
+
+	private void checkValidationForManagePreview(ActionErrors errors,
+			HttpServletRequest request) throws ApplicationException {
+		checkValidationForPreview(errors, request);
+		validateCustomFields(request, errors);
+
+	}
+	
+	private void checkValidationForPreview(ActionErrors errors,
+			HttpServletRequest request) throws ApplicationException {
 		LoanOfferingBO loanOffering = (LoanOfferingBO) SessionUtils
 				.getAttribute(LoanConstants.LOANOFFERING, request);
 		checkForMinMax(errors, getLoanAmount(), loanOffering.getMaxLoanAmount()
@@ -483,11 +498,10 @@ public class LoanAccountActionForm extends BaseActionForm {
 					LoanConstants.GRACEPERIODERROR,
 					LoanConstants.GRACEPERIODDURATION, noInst);
 		}
-		validateFees(request, errors);
-		validateCustomFields(request, errors);
 
 	}
 
+	
 	private void checkForMinMax(ActionErrors errors, String currentValue,
 			Short maxValue, Short minValue, String field) {
 		if (StringUtils.isNullOrEmpty(currentValue)

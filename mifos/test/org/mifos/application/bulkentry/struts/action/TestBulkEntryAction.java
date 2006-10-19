@@ -534,7 +534,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "validate");
 		addRequestParameter("input", "load");
-
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -548,7 +548,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "validate");
 		addRequestParameter("input", "get");
-
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -562,7 +562,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "validate");
 		addRequestParameter("input", "preview");
-
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();

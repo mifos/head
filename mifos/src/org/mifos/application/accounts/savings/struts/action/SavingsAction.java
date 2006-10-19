@@ -506,6 +506,7 @@ public class SavingsAction extends AccountAppAction {
 		return mapping.findForward("getStatusHistory_success");
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

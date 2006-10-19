@@ -236,6 +236,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 		return masterDataService;
 	}
 
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward validate(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
