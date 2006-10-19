@@ -28,7 +28,20 @@ function createCheckList()
 			numberOfItems=i;
 		}
 		k = numberOfItems;
+		while (true)
+		{
+			var chkBox = document.getElementsByName("detailsList["+k+"]");
+			if (chkBox.length > 0)
+			{
+				k++;
+			}
+			else
+			{
+				break;
+			}
+		}
 	}
+
 	var re = /\s/g;; //Match any white space including space, tab, form-feed, etc.
 	var aTextArea=document.getElementsByName('text')[0].value;
 	var str = aTextArea.replace(re, "");

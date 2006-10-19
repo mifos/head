@@ -1,39 +1,39 @@
 <!-- /**
- 
+
  * edityoursettings.jsp    version: 1.0
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  */-->
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
@@ -82,7 +82,7 @@
 								</tr>
 							</table>
 							<br>
-							
+
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td colspan="2"><font class="fontnormalRedBold"> <html-el:errors
@@ -105,17 +105,19 @@
 									</td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel name="Personnel.MiddleName" /></td>
+									<td align="right"><mifos:mifoslabel keyhm="Personnel.MiddleName"
+									name="Personnel.MiddleName" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
-										property="middleName"
+										property="middleName" keyhm="Personnel.MiddleName"
               							maxlength="100"
 										value="${form.middleName}" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
-										name="Personnel.SecondLastName" /></td>
+										name="Personnel.SecondLastName" keyhm="Personnel.SecondLastName" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
+										keyhm="Personnel.SecondLastName"
 										property="secondLastName"
 										maxlength="100"
 										value="${form.secondLastName}" />
@@ -132,8 +134,9 @@
 									</td>
 								</tr>
 
-								<tr class="fontnormal">
+								<tr id="Personnel.GovernmentId" class="fontnormal">
 									<td align="right"><mifos:mifoslabel
+										keyhm="Personnel.GovernmentId"
 										name="${ConfigurationConstants.GOVERNMENT_ID}"
 										bundle="PersonnelUIResources"></mifos:mifoslabel>:</td>
 									<td><c:out
@@ -158,32 +161,32 @@
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="Personnel.MaritalStatus" /></td>
-									
+
 									<td>
-									
-								
-								
+
+
+
 									<mifos:select property="maritalStatus" value="${form.maritalStatus}">
-											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList')}" 
+											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'maritalStatusList')}"
 											var="maritalStatus">
 											<html-el:option value="${maritalStatus.id}">${maritalStatus.name}</html-el:option>
 											</c:forEach>
-											
+
 									</mifos:select>
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.Gender"
 										mandatory="yes" /></td>
-									
+
 									<td>
-									
+
 									<mifos:select property="gender" value="${form.gender}">
-											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderList')}" 
+											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'genderList')}"
 											var="gender">
 											<html-el:option value="${gender.id}">${gender.name}</html-el:option>
 											</c:forEach>
-											
+
 									</mifos:select>
 									</td>
 								</tr>
@@ -191,14 +194,14 @@
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
 										name="Personnel.LanguagePreferred" /></td>
-										
+
 									<td>
 									<mifos:select property="preferredLocale" value="${form.preferredLocale}">
-											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}" 
+											<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'languageList')}"
 											var="languageList">
 											<html-el:option value="${languageList.id}">${languageList.name}</html-el:option>
 											</c:forEach>
-											
+
 									</mifos:select>
 									</td>
 								</tr>
@@ -222,7 +225,7 @@
 									<td width="68%"><mifos:mifosalphanumtext
 										name="PersonnelSettingsActionForm"
 										property="address.line1"
-										value="${form.address.line1}" 
+										value="${form.address.line1}"
 										maxlength="200" />
 									</td>
 								</tr>
@@ -231,16 +234,18 @@
 										name="${ConfigurationConstants.ADDRESS2}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.line2"
-										value="${form.address.line2}" 
+										value="${form.address.line2}"
 										maxlength="200" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
+										keyhm="Personnel.Address3"
 										name="${ConfigurationConstants.ADDRESS3}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
+										keyhm="Personnel.Address3"
 										property="address.line3"
-										value="${form.address.line3}" 
+										value="${form.address.line3}"
 										maxlength="200" />
 									</td>
 								</tr>
@@ -249,40 +254,48 @@
 										name="${ConfigurationConstants.CITY}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.city"
-										value="${form.address.city}" 
+										value="${form.address.city}"
 										maxlength="100" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
+										keyhm="Personnel.State"
 										name="${ConfigurationConstants.STATE}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
 										property="address.state"
-										value="${form.address.state}" 
+										keyhm="Personnel.State"
+										value="${form.address.state}"
 										maxlength="100" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel name="Personnel.Country" /></td>
+									<td align="right"><mifos:mifoslabel name="Personnel.Country"
+									keyhm="Personnel.Country" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
+										keyhm="Personnel.Country"
 										property="address.country"
-										value="${form.address.country}" 
+										value="${form.address.country}"
 										maxlength="100" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel
+										keyhm="Personnel.PostalCode"
 										name="${ConfigurationConstants.POSTAL_CODE}" />:</td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
+										keyhm="Personnel.PostalCode"
 										property="address.zip"
-										value="${form.address.zip}" 
+										value="${form.address.zip}"
 										maxlength="100" />
 									</td>
 								</tr>
 								<tr class="fontnormal">
-									<td align="right"><mifos:mifoslabel name="Personnel.Telephone" /></td>
+									<td align="right"><mifos:mifoslabel
+									keyhm="Personnel.Telephone" name="Personnel.Telephone" /></td>
 									<td><mifos:mifosalphanumtext name="PersonnelSettingsActionForm"
+										keyhm="Personnel.Telephone"
 										property="address.phoneNumber"
-										value="${form.address.phoneNumber}" 
+										value="${form.address.phoneNumber}"
 										maxlength="20" />
 									</td>
 								</tr>

@@ -61,6 +61,7 @@ import org.mifos.application.customer.struts.actionforms.CustomerActionForm;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -252,7 +253,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 					EntityType.CLIENT);
 			validateTrained(request, errors);
 			validateFees(request, errors);
-			validateSelectedOfferings(errors);
+			validateSelectedOfferings(errors, request);
 		}
 
 		if (method.equals(Methods.previewEditMfiInfo.toString())) {
@@ -393,7 +394,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 		}
 	}
 
-	private void validateSelectedOfferings(ActionErrors errors) {
+	private void validateSelectedOfferings(ActionErrors errors, HttpServletRequest request) {
 		boolean duplicateFound = false;
 		for (int i = 0; i < selectedOfferings.size() - 1; i++) {
 			for (int j = i + 1; j < selectedOfferings.size(); j++)
@@ -401,11 +402,18 @@ public class ClientCustActionForm extends CustomerActionForm {
 						&& selectedOfferings.get(j) != null
 						&& selectedOfferings.get(i).equals(
 								selectedOfferings.get(j))) {
-					errors
-							.add(
-									ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED,
-									new ActionMessage(
-											ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));
+					String selectedOffering = "";
+					try {
+						List<SavingsOfferingBO> offeringsList = (List<SavingsOfferingBO>) SessionUtils
+							.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
+						for (SavingsOfferingBO savingsOffering : offeringsList) {
+							if (selectedOfferings.get(i).equals(savingsOffering.getPrdOfferingId()))
+								selectedOffering = savingsOffering.getPrdOfferingName();
+							break;
+						}
+					} catch (PageExpiredException pee) { }
+					errors.add(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED,
+						new ActionMessage(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, selectedOffering));
 					duplicateFound = true;
 					break;
 				}

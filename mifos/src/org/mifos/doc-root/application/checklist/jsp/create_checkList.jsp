@@ -225,14 +225,15 @@
 													<br>
 													<c:forEach var="item"
 													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
-
 														varStatus="loop">
-														<tr id="myvalue${loop.index}div">
-															<input name='mycheckBOx' type="checkbox"
-																value="${item}" />${item}
-															<input name='detailsList[${loop.index}]' type="hidden"
-																value="${item}" />
-														</tr>
+														<c:if test="${item != ''}">
+															<tr id="myvalue${loop.index}div">
+																<input name='mycheckBOx' type="checkbox"
+																	value="${item}" />${item}
+																<input name='detailsList[${loop.index}]' type="hidden"
+																	value="${item}" />
+															</tr>
+														</c:if>
 													</c:forEach>
 													<div id="myDiv">
 													</div>

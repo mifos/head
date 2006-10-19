@@ -1,39 +1,39 @@
 <!-- /**
- 
+
  * previewyoursettings.jsp    version: 1.0
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  */-->
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
@@ -61,18 +61,18 @@
 <c:set var="form" value="${sessionScope.personnelSettingsActionForm}" />
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td height="350" align="left" valign="top" bgcolor="#FFFFFF"> 
+    <td height="350" align="left" valign="top" bgcolor="#FFFFFF">
          <table width="590" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center" class="blueline">&nbsp;</td>
         </tr>
-    </table>   
-    
-          
+    </table>
+
+
       <table width="590" border="0" align="center" cellpadding="0" cellspacing="0" class="bluetableborder">
           <tr>
             <td align="left" valign="top" class="paddingleftCreates">
-            
+
             <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                   <td class="headingorange">
@@ -102,107 +102,129 @@
               </span>
               </td>
             </tr>
-            
-            <tr class="fontnormal">
-           	 <td width="100%" class="fontnormalbold">
+
+            <tr>
+           	 <td width="100%">
+			  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+			    <tr><td  class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.FirstName"/>
 	           	 <span class="fontnormal">
 		           	 <c:out value="${form.firstName}"/>
 	           	 </span> <br>
-	           	 
-	           	 <mifos:mifoslabel name="Personnel.MiddleName"/>
+				</td></tr>
+				<tr id="Personnel.MiddleName"><td  class="fontnormalbold">
+	           	 <mifos:mifoslabel keyhm="Personnel.MiddleName" name="Personnel.MiddleName"/>
 	           	 <span class="fontnormal">
 	           		 <c:out value="${form.middleName}"/>
 	           	 </span><br>
-	           	 
-	           	 <mifos:mifoslabel name="Personnel.SecondLastName"/>
+				</td></tr>
+				<tr id="Personnel.SecondLastName"><td class="fontnormalbold">
+	           	 <mifos:mifoslabel keyhm="Personnel.SecondLastName" name="Personnel.SecondLastName"/>
 	           	 <span class="fontnormal">
 		           	 <c:out value="${form.secondLastName}"/>
 	           	 </span><br>
-	           	 
+				</td></tr>
+				<tr><td  class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.LastName"/>
-	           	 <span class="fontnormal">	           	 
-		           	 <c:out value="${form.lastName}"/> 
+	           	 <span class="fontnormal">
+		           	 <c:out value="${form.lastName}"/>
 	           	 </span><br>
-	           	 
-	           	 <mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" bundle="PersonnelUIResources"></mifos:mifoslabel>: 
+				</td></tr>
+				<tr id="Personnel.GovernmentId"><td class="fontnormalbold">
+	           	 <mifos:mifoslabel name="${ConfigurationConstants.GOVERNMENT_ID}" bundle="PersonnelUIResources"></mifos:mifoslabel>:
 				 <span class="fontnormal">
-					<c:out value="${form.governmentIdNumber}"/> 
+					<c:out value="${form.governmentIdNumber}"/>
 				 </span> <br>
-				 
+				 </td></tr>
+				<tr><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.Email" />
  	           	 <span class="fontnormal">
 		           	 <c:out value="${form.emailId}"/>
 	           	 </span><br>
-	           	 
+				</tr></td>
+				<tr><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.DOB" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			    <span class="fontnormal">
 					<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,form.dob)}" />
 				</span><br>
-
+				</td></tr>
+				<tr><td class="fontnormalbold">
 			    <mifos:mifoslabel name="Personnel.Age" bundle="PersonnelUIResources"></mifos:mifoslabel>
 			     <span class="fontnormal">
-					<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelAge')}"/> 
-				 </span><br> 	
-				 
+					<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'personnelAge')}"/>
+				 </span><br>
+				</td></tr>
+				<tr><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.MaritalStatus" />
- 	           	 <span class="fontnormal">	           	 
-		           	 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'MaritalStatus')}"/> 
+ 	           	 <span class="fontnormal">
+		           	 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'MaritalStatus')}"/>
 	           	 </span><br>
-	
+				</td></tr>
+				<tr><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.Gender" />
-				 <span class="fontnormal">	             	 
+				 <span class="fontnormal">
 		           	 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Gender')}"/>
 	           	 </span><br>
-	           	 
+				</td></tr>
+				<tr><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.LanguagePreferred" />
-	           	 <span class="fontnormal">	  
+	           	 <span class="fontnormal">
 		           	 <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'Language')}"/>
 	           	 </span><br>
-	           	 
-	           	 <mifos:mifoslabel name="Personnel.UserName"  bundle="PersonnelUIResources"></mifos:mifoslabel> 
+				</td></tr>
+				<tr><td class="fontnormalbold">
+	           	 <mifos:mifoslabel name="Personnel.UserName"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 				<span class="fontnormal">
-					<c:out value="${form.userName}"/> 
+					<c:out value="${form.userName}"/>
 				</span><br>
 	           	 <br>
+				</td></tr>
+				<tr><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.Address" /><br>
- 				 <span class="fontnormal">	             	 
-		           	 <c:out value="${form.addressDetails}"/> 
+ 				 <span class="fontnormal">
+		           	 <c:out value="${form.addressDetails}"/>
 	           	 </span><br>
-	           	 
+				</td></tr>
+				<tr><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.CITY}" />:
-	           	 <span class="fontnormal">	 
-		           	 <c:out value="${form.address.city}"/> 
+	           	 <span class="fontnormal">
+		           	 <c:out value="${form.address.city}"/>
 	           	 </span><br>
-	           	 
-	           	 <mifos:mifoslabel name="${ConfigurationConstants.STATE}" />:
-	           	 <span class="fontnormal">	 
-		           	 <c:out value="${form.address.state}"/> 
+				</td></tr>
+				<tr id="Personnel.State"><td class="fontnormalbold">
+	           	 <mifos:mifoslabel keyhm="Personnel.State" name="${ConfigurationConstants.STATE}" />:
+	           	 <span class="fontnormal">
+		           	 <c:out value="${form.address.state}"/>
 	           	 </span><br>
-	           	 
+				</td></tr>
+				<tr id="Personnel.Country"><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.Country" />
-	           	 <span class="fontnormal">	 
-	    	       	 <c:out value="${form.address.country}"/> 
+	           	 <span class="fontnormal">
+	    	       	 <c:out value="${form.address.country}"/>
 	           	 </span><br>
-	           	 
+				</td></tr>
+				<tr id="Personnel.PostalCode"><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="${ConfigurationConstants.POSTAL_CODE}"/>:
-	           	 <span class="fontnormal">	 
-		           	 <c:out value="${form.address.zip}"/> 
+	           	 <span class="fontnormal">
+		           	 <c:out value="${form.address.zip}"/>
 	           	 </span><br>
-	           	 
+				</td></tr>
+				<tr id="Personnel.Telephone"><td class="fontnormalbold">
 	           	 <mifos:mifoslabel name="Personnel.Telephone"/>
-	           	 <span class="fontnormal">	 
-		           	 <c:out value="${form.address.phoneNumber}"/> 
+	           	 <span class="fontnormal">
+		           	 <c:out value="${form.address.phoneNumber}"/>
 	           	 </span><br>
+	           	 </td></tr>
+	          </table>
    			 </td>
             </tr>
 
           </table>
               <br>
          <table width="93%" border="0" cellpadding="3" cellspacing="0">
-               
-                
-              
+
+
+
       <tr class="fontnormal">
 	   <td>
            <html-el:button property="btn" styleClass="insidebuttn" style="width:130px;" onclick="goToEditPage()">
@@ -229,7 +251,7 @@
                	</html-el:button>
                   </td>
                 </tr>
-              </table>              <br>  
+              </table>              <br>
             <br></td>
           </tr>
         </table>
