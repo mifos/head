@@ -3,6 +3,8 @@ package org.mifos.application.customer.struts.action;
 import java.util.Date;
 import java.util.List;
 
+import javax.naming.directory.SearchControls;
+
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomerBO;
@@ -12,6 +14,7 @@ import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -142,7 +145,18 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.mainSearch_success.toString());
 		veryfyResults();
 
-	}	
+	}
+	public void testMainSearchFailure()throws Exception{
+		//createGroupWithCenter();
+		userContext.setId(Short.valueOf("1"));
+		addActionAndMethod(Methods.mainSearch.toString());
+		addRequestParameter("searchString", "");
+		addRequestParameter("officeId", "0");
+		actionPerform();
+		assertEquals("SearchString", 1,
+				getErrrorSize(CustomerSearchConstants.NAMEMANDATORYEXCEPTION));
+		verifyForward(ActionForwards.mainSearch_success.toString());
+	}
 	public void testMainIdSearch()throws Exception{
 		createGroupWithCenter();
 		userContext.setId(Short.valueOf("1"));
@@ -154,10 +168,6 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.mainSearch_success.toString());
 		veryfyResults();
-/*		HibernateUtil.closeSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-*/
 	}
 	public void testMainAccountIdSearch()throws Exception{
 		userContext.setId(Short.valueOf("1"));
@@ -170,10 +180,6 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.mainSearch_success.toString());
 		veryfyResults();
-/*		HibernateUtil.closeSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-*/
 	}
 	private void veryfyResults() throws Exception{
 		QueryResult queryResult = (QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request);
@@ -194,7 +200,6 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 	private void createGroupWithCenter()throws Exception{
 		createParentCustomer();
 		group = TestObjectFactory.createGroupUnderCenter("group",CustomerStatus.GROUP_ACTIVE, center);
-		//HibernateUtil.closeSession();
 	}
 	private LoanBO getLoanAccount() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -219,6 +224,5 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter("Center",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
 				new Date(System.currentTimeMillis()));
-
 	}
 }

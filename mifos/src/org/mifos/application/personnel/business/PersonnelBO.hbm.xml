@@ -106,7 +106,9 @@
 			from org.mifos.application.personnel.business.PersonnelBO personnel 
 			where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
 			and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) 
-			and (personnel.personnelDetails.name.firstName like :USER_NAME or personnel.personnelDetails.name.lastName like :USER_NAME )
+			and (personnel.personnelDetails.name.firstName like :USER_NAME or personnel.personnelDetails.name.lastName like :USER_NAME
+			or 
+			(personnel.personnelDetails.name.firstName like :USER_NAME1 and personnel.personnelDetails.name.lastName like :USER_NAME2) )
 			 order by personnel.office.officeName, personnel.personnelDetails.name.lastName
 			 ]]>
 	</query>
@@ -115,7 +117,9 @@
 			from org.mifos.application.personnel.business.PersonnelBO personnel 
 			where ( (:USERLEVEL_ID=:LOID and personnel.personnelId=:USERID) or :USERLEVEL_ID!=:LOID) 
 			and (personnel.office.searchId=:SEARCH_ID or personnel.office.searchId like :SEARCH_ALL) 
-			and (personnel.personnelDetails.name.firstName like :USER_NAME or personnel.personnelDetails.name.lastName like :USER_NAME )
+			and (personnel.personnelDetails.name.firstName like :USER_NAME or personnel.personnelDetails.name.lastName like :USER_NAME or 
+			
+			(personnel.personnelDetails.name.firstName like :USER_NAME1 and personnel.personnelDetails.name.lastName like :USER_NAME2))
 	 		]]>
 	 </query>
 	 

@@ -255,12 +255,12 @@ public class CustomerPersistence extends Persistence {
 		QueryResult queryResult = null;
 
 		try {
-			if (searchString.contains(" ")) {
+/*			if (searchString.contains(" ")) {
 				String[] searchStrings = searchString.split(" ");
 				queryResult = mainSearch(searchStrings[0], searchStrings[1],
 						officeId, userId, userOfficeId);
 			} else {
-
+*/
 				queryResult = new AccountPersistence().search(searchString,
 						officeId);
 				if (queryResult == null) {
@@ -268,7 +268,7 @@ public class CustomerPersistence extends Persistence {
 					if (queryResult == null) {
 						queryResult = mainSearch(searchString, officeId,
 								userId, userOfficeId);
-					}
+//					}
 				}
 			}
 
@@ -394,6 +394,15 @@ public class CustomerPersistence extends Persistence {
 		}
 		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString
 				+ "%"));
+		if ( searchString.contains(" ")){
+			paramList.add(typeNameValue("String", "SEARCH_STRING1", searchString.substring(0,searchString.indexOf(" "))));
+			paramList.add(typeNameValue("String", "SEARCH_STRING2", searchString.substring(searchString.indexOf(" ")+1,searchString.length())));
+		}
+		else
+		{
+			paramList.add(typeNameValue("String", "SEARCH_STRING1", searchString));
+			paramList.add(typeNameValue("String", "SEARCH_STRING2",""));
+		}
 		setParams(paramList, userId);
 		queryResult.setQueryInputs(queryInputs);
 		return queryResult;
@@ -433,36 +442,6 @@ public class CustomerPersistence extends Persistence {
 				.setPath("org.mifos.application.customer.business.CustomerSearch");
 		queryInputs.setAliasNames(getAliasNames());
 		return queryInputs;
-
-	}
-
-	private QueryResult mainSearch(String firstName, String lastName,
-			Short officeId, Short userId, Short userOfficeId)
-			throws PersistenceException, HibernateSearchException {
-
-		String[] namedQuery = new String[2];
-		List<Param> paramList = new ArrayList<Param>();
-		QueryInputs queryInputs = setQueryInputsValues(namedQuery, paramList);
-		QueryResult queryResult = QueryFactory
-				.getQueryResult(CustomerSearchConstants.CUSTOMERSEARCHRESULTS);
-		if (officeId.shortValue() != 0) {
-			namedQuery[0] = NamedQueryConstants.CUSTOMER_SEARCH_COUNT_FIRST_AND_LAST_NAME;
-			namedQuery[1] = NamedQueryConstants.CUSTOMER_SEARCH_FIRST_AND_LAST_NAME;
-			paramList.add(typeNameValue("Short", "OFFICEID", officeId));
-
-		} else {
-			namedQuery[0] = NamedQueryConstants.CUSTOMER_SEARCH_COUNT_NOOFFICEID_FIRST_AND_LAST_NAME;
-			namedQuery[1] = NamedQueryConstants.CUSTOMER_SEARCH_NOOFFICEID_FIRST_AND_LAST_NAME;
-			paramList.add(typeNameValue("String", "OFFICE_SEARCH_ID",
-					new OfficePersistence().getOffice(userOfficeId)
-							.getSearchId()
-							+ "%"));
-		}
-		paramList.add(typeNameValue("String", "SEARCH_STRING1", firstName));
-		paramList.add(typeNameValue("String", "SEARCH_STRING2", lastName));
-		setParams(paramList, userId);
-		queryResult.setQueryInputs(queryInputs);
-		return queryResult;
 
 	}
 
