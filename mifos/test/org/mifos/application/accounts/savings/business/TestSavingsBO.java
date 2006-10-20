@@ -52,6 +52,8 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
@@ -325,6 +327,59 @@ public class TestSavingsBO extends MifosTestCase {
 				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
 	}
 
+	public void testIsTrxnDateValid_BeforeFirstMeeting() throws Exception {
+		createInitialObjects();
+		savingsOffering = createSavingsOffering("dfasdasd1", "sad1",
+				RecommendedAmountUnit.COMPLETEGROUP);
+		savings = helper.createSavingsAccount(savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
+				userContext);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		savings = (SavingsBO)TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+		int i=-5;
+		for(AccountActionDateEntity actionDate : savings.getAccountActionDates()){
+			((SavingsScheduleEntity)actionDate).setActionDate(offSetCurrentDate(i--));
+		}
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = (SavingsBO)TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+
+		assertTrue(savings.isTrxnDateValid(savings.getActivationDate()));
+		assertFalse(savings.isTrxnDateValid(offSetCurrentDate(1)));
+		
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+	}
+	
+	public void testIsTrxnDateValid_AfterFirstMeeting() throws Exception {
+	 	createInitialObjects();
+		savingsOffering = createSavingsOffering("dfasdasd1", "sad1",
+				RecommendedAmountUnit.COMPLETEGROUP);
+		savings = helper.createSavingsAccount(savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
+				userContext);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		savings = (SavingsBO)TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+		int i=-5;
+		for(AccountActionDateEntity actionDate : savings.getAccountActionDates()){
+			((SavingsScheduleEntity)actionDate).setActionDate(offSetCurrentDate(i--));
+		}
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = (SavingsBO)TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
+		java.util.Date trxnDate = offSetCurrentDate(-5);
+		if (Configuration.getInstance().getAccountConfig(Short.valueOf("3"))
+				.isBackDatedTxnAllowed())
+			assertTrue(savings.isTrxnDateValid(trxnDate));
+		else
+			assertFalse(savings.isTrxnDateValid(trxnDate));
+		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+	}
+
+	
 	public void testSuccessfulSave() throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering("dfasdasd1", "sad1",

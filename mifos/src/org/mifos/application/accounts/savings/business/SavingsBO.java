@@ -35,6 +35,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
@@ -2086,5 +2087,29 @@ public class SavingsBO extends AccountBO {
 
 		return nextAccountAction != null ? nextAccountAction.getActionDate()
 				: null;
+	}
+	
+	@Override
+	public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
+		if (Configuration.getInstance().getAccountConfig(
+				getOffice().getOfficeId()).isBackDatedTxnAllowed()) {
+			Date meetingDate = null;
+			trxnDate = DateUtils.getDateWithoutTimeStamp(trxnDate.getTime());
+			try {
+				meetingDate = new CustomerPersistence()
+						.getLastMeetingDateForCustomer(getCustomer()
+								.getCustomerId());
+				if (meetingDate != null) {
+					meetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());					
+					return trxnDate.compareTo(meetingDate) >= 0 ? true : false;
+				} else{
+					Date activationDate = DateUtils.getDateWithoutTimeStamp(getActivationDate().getTime());
+					return trxnDate.compareTo(activationDate) >= 0 && trxnDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp())<=0? true : false;
+				}
+			} catch (PersistenceException e) {
+				throw new AccountException(e);
+			}			
+		}else
+			return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
 	}
 }

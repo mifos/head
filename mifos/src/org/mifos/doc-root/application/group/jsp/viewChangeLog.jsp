@@ -109,8 +109,8 @@
 							<td align="center"><html-el:button property="returnToAccountDetailsbutton"
 								onclick="returnToDetails()"
 								styleClass="buttn" style="width:165px;">
-								<mifos:mifoslabel name="Group.returnToAccountDetails"
-									bundle="GroupUIResources" />
+								<mifos:mifoslabel name="Center.backtodetailspage"
+									bundle="CenterUIResources" />
 							</html-el:button></td>
 						</tr>
 					</table>
