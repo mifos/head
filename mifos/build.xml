@@ -228,7 +228,7 @@
 
 	</target>
 
-	<target name="war">
+	<target name="war" depends="compile,copy_files">
 		<delete file="${dist.dir}/${webapplication.name}.war"/>
 		<war destfile="${dist.dir}/${webapplication.name}.war" webxml="${src.dir}/org/mifos/META-INF/web.xml">
 			<fileset dir="${build.src.dir}/"/>
@@ -345,7 +345,7 @@
 		<fail if="tests.instrument.failure" message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
 
-	<target name="deploy">
+	<target name="deploy" depends="war">
 		<echo message="Deploying application ${webapplication.name}.war to ${deploy.destination}"/>
 		<copy file="${dist.dir}/${webapplication.name}.war" 
 			todir="${deploy.destination}"
