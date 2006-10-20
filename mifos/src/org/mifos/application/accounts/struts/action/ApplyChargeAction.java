@@ -12,13 +12,17 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.struts.actionforms.ApplyChargeActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -67,6 +71,18 @@ public class ApplyChargeAction extends BaseAction {
 		AccountBO accountBO = getAccountBusinessService().getAccount(
 				Integer.valueOf(applyChargeActionForm.getAccountId()));
 		accountBO.setUserContext(userContext);
+
+		CustomerLevel customerLevel = null;
+		if(accountBO.getType().equals(AccountTypes.CUSTOMERACCOUNT))
+			customerLevel = accountBO.getCustomer().getLevel();
+		if (accountBO.getPersonnel() != null)
+			checkPermissionForApplyCharges(accountBO.getType(), customerLevel, userContext,
+					accountBO.getOffice().getOfficeId(), accountBO.getPersonnel()
+							.getPersonnelId());
+		else
+			checkPermissionForApplyCharges(accountBO.getType(), customerLevel, userContext,
+					accountBO.getOffice().getOfficeId(), userContext.getId());
+
 		accountBO.applyCharge(chargeType, chargeAmount);
 		accountBO.update();
 		return mapping.findForward(getDetailAccountPage(accountBO));
@@ -124,5 +140,22 @@ public class ApplyChargeAction extends BaseAction {
 			else
 				return "centerDetails_success";
 		}
+	}
+	
+	private void checkPermissionForApplyCharges(AccountTypes accountTypes,CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) throws ApplicationException {
+		if (!isPermissionAllowed(accountTypes, customerLevel, userContext,
+				recordOfficeId, recordLoanOfficerId))
+			throw new CustomerException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+	
+	private boolean isPermissionAllowed(AccountTypes accountTypes,CustomerLevel customerLevel,
+			UserContext userContext, Short recordOfficeId,
+			Short recordLoanOfficerId) {
+		return ActivityMapper.getInstance().isPaymentPermittedForAccounts(
+				accountTypes, customerLevel, userContext, recordOfficeId,
+				recordLoanOfficerId);
 	}
 }

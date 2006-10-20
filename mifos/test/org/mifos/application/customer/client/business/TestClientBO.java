@@ -653,6 +653,18 @@ public class TestClientBO extends MifosTestCase {
 		}
 	}
 	
+	public void testUpdateGroupFailure_GroupStatusLower_Client_OnHold()throws Exception{
+		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);	
+		client.changeStatus(CustomerStatus.CLIENT_HOLD.getValue(), null, "client on hold");
+		try{
+			client.transferToGroup(group1);
+			assertTrue(false);
+		}catch(CustomerException ce){
+			assertTrue(true);
+			assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS,ce.getKey());
+		}
+	}
+	
 	public void testUpdateGroupFailure_ClientHasActiveAccounts()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
 		accountBO = createSavingsAccount(client,"fsaf6","ads6");

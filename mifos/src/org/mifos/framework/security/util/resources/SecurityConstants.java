@@ -390,4 +390,10 @@ public interface SecurityConstants {
 		//ADDED BY MFTECH
 	public final short ADMINISTER_REPORTPARAMS = 142;
     public final short ADMINISTER_REPORTDS = 142;
+    
+    public final short LOAN_CAN_APPLY_CHARGES = 131;
+    
+    public final short CLIENT_CAN_APPLY_CHARGES = 198;
+    public final short GROUP_CAN_APPLY_CHARGES = 199;
+    public final short CENTER_CAN_APPLY_CHARGES = 200;
 }

@@ -1356,14 +1356,14 @@ public class ActivityMapper {
 			CustomerLevel customerLevel) {
 		short activityId = -1;
 		if (accountTypes.equals(AccountTypes.LOANACCOUNT))
-			activityId = SecurityConstants.LOAN_MAKE_PAYMENT_TO_ACCOUNT;
+			activityId = SecurityConstants.LOAN_CAN_APPLY_CHARGES;
 		else if (accountTypes.equals(AccountTypes.CUSTOMERACCOUNT)) {
 			if (customerLevel.equals(CustomerLevel.CENTER))
-				activityId = SecurityConstants.CENTER_MAKE_PAYMENTS_TO_CENTER_ACCOUNT;
+				activityId = SecurityConstants.CENTER_CAN_APPLY_CHARGES;
 			else if (customerLevel.equals(CustomerLevel.GROUP))
-				activityId = SecurityConstants.GROUP_MAKE_PAYMENT_TO_GROUP_ACCOUNT;
+				activityId = SecurityConstants.GROUP_CAN_APPLY_CHARGES;
 			else if (customerLevel.equals(CustomerLevel.CLIENT))
-				activityId = SecurityConstants.CIENT_MAKE_PAYMENT_TO_CLIENT_ACCOUNT;
+				activityId = SecurityConstants.CLIENT_CAN_APPLY_CHARGES;
 		}
 		return activityId;
 	}
@@ -1455,6 +1455,31 @@ public class ActivityMapper {
 	}
 
 	private short getActivityIdForRemoveFees(AccountTypes accountTypes,
+			CustomerLevel customerLevel) {
+		short activityId = -1;
+		if (accountTypes.equals(AccountTypes.LOANACCOUNT))
+			activityId = SecurityConstants.LOAN_REMOVE_FEE_TYPE_ATTACHED_TO_ACCOUNT;
+		else if (accountTypes.equals(AccountTypes.CUSTOMERACCOUNT)) {
+			if (customerLevel.equals(CustomerLevel.CENTER))
+				activityId = SecurityConstants.CENTER_REMOVE_FEE_TYPE_FROM_CENTER_ACCOUNT;
+			else if (customerLevel.equals(CustomerLevel.GROUP))
+				activityId = SecurityConstants.GROUP_REMOVE_FEE_TYPE_FROM_GROUP_ACCOUNT;
+			else if (customerLevel.equals(CustomerLevel.CLIENT))
+				activityId = SecurityConstants.CIENT_REMOVE_FEE_TYPE_FROM_CLIENT_ACCOUNT;
+		}
+		return activityId;
+	}
+	
+	public boolean isApplyChargesPermittedForAccounts(AccountTypes accountTypes,
+			CustomerLevel customerLevel, UserContext userContext,
+			Short recordOfficeId, Short recordLoanOfficerId) {
+		return AuthorizationManager.getInstance().isActivityAllowed(
+				userContext,
+				new ActivityContext(getActivityIdForApplyCharges(accountTypes,
+						customerLevel), recordOfficeId, recordLoanOfficerId));
+	}
+
+	private short getActivityIdForApplyCharges(AccountTypes accountTypes,
 			CustomerLevel customerLevel) {
 		short activityId = -1;
 		if (accountTypes.equals(AccountTypes.LOANACCOUNT))

@@ -705,7 +705,7 @@ public class ClientBO extends CustomerBO {
 		if (clientStatus.equals(CustomerStatus.CLIENT_PENDING)) {
 			if (groupStatus.equals(CustomerStatus.GROUP_PARTIAL))
 				return true;
-		} else if (clientStatus.equals(CustomerStatus.CLIENT_ACTIVE)) {
+		} else if (clientStatus.equals(CustomerStatus.CLIENT_ACTIVE) || clientStatus.equals(CustomerStatus.CLIENT_HOLD)) {
 			if (groupStatus.equals(CustomerStatus.GROUP_PARTIAL)
 					|| groupStatus.equals(CustomerStatus.GROUP_PENDING)) {
 				return true;
