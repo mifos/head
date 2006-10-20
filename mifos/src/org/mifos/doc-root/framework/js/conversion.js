@@ -312,11 +312,11 @@ function genericOnkeyPress(fmt,element ,e,code_0,code_9,decimal_code)
 		
 	}
 	
-	if(charCode>96 && charCode<123 )
+	if(charCode>105 && charCode<123 )
 	{	
 		return false;
 	}
-	else if(charCode>90 && charCode<97)
+	else if(charCode>90 && charCode<96)
 	{
 		return false;
 	}
