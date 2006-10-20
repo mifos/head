@@ -122,6 +122,24 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 		
 	}
 	
+	public void testUpdateFailureWith_Rate_GreaterThan999() {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		createInitialObjects();
+		accountBO = getLoanAccount(client,meeting);
+		setRequestPathInfo("/applyChargeAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter("chargeType","-1");
+		addRequestParameter("chargeAmount","999999");
+		addRequestParameter("selectedChargeFormula","%LoanAmount");
+		addRequestParameter("charge", "18");
+		addRequestParameter("accountId", accountBO.getAccountId().toString());
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		assertEquals("Rate", 1,
+				getErrrorSize(AccountConstants.RATE));
+		
+	}
+	
 	public void testValidate() throws Exception {
 		setRequestPathInfo("/applyChargeAction.do");
 		addRequestParameter("method", "validate");

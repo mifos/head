@@ -65,16 +65,22 @@
 					document.getElementsByName("charge")[0].value=document.getElementsByName("chargeAmount")[0].value;
 				}
 
-			function loadValues(current)
+			function loadValues(current,passed)
 
 			{
 						if(current.selectedIndex >-1)
 						{
 						  	var amount =document.getElementsByName("amount")[current.selectedIndex].value;
+						  	var changedAmount =document.getElementsByName("changedAmount")[current.selectedIndex].value;
 						  	var formulaId =document.getElementsByName("formulaId")[current.selectedIndex].value;
 						  	var periodicity=document.getElementsByName("periodicity")[current.selectedIndex].value;
 						  	var paymentType=document.getElementsByName("paymentType")[current.selectedIndex].value;
-							document.getElementsByName("chargeAmount")[0].value=amount;
+							if(passed==1){
+								document.getElementsByName("chargeAmount")[0].value=amount;
+							}
+							else{
+								document.getElementsByName("chargeAmount")[0].value=changedAmount;
+							}
 							if(periodicity!=""){
 								document.getElementsByName("chargeAmount")[0].disabled=true;
 							}else{
@@ -97,10 +103,12 @@
 								}
 								else if ( formulaId != null  && periodicity == null || periodicity=="")
 								{
+									document.getElementsByName("selectedChargeFormula")[0].value=formulaId;
 									span.innerHTML = formulaId;
 								}
 								else if ( formulaId == null  && periodicity != null)
 								{
+								    document.getElementsByName("selectedChargeFormula")[0].value="";
 								    span.innerHTML = periodicity;
 								}
 							}
@@ -115,7 +123,7 @@
 		<html-el:form method="post" action="applyChargeAction.do?method=update" onsubmit="fun_submit()">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
-
+			<html-el:hidden property="selectedChargeFormula" value="" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -179,7 +187,7 @@
 							<td width="20%" align="right" class="fontnormal"><mifos:mifoslabel
 								mandatory="yes" name="accounts.sel_charge_type" /></td>
 							<td width="20%"  align="left" class="fontnormal">
-							<mifos:select property="chargeType" style="width:136px;" onchange="loadValues(this)">
+							<mifos:select property="chargeType" style="width:136px;" onchange="loadValues(this,1)">
 								<c:forEach var="applicableCharge" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'applicableChargeList')}" >
 									<html-el:option value="${applicableCharge.feeId}">${applicableCharge.feeName}</html-el:option>
 								</c:forEach>
@@ -200,6 +208,7 @@
 									<html-el:hidden property="charge" value=""/>
 							<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'applicableChargeList')}" >
 									<html-el:hidden property="amount" value="${fee.amountOrRate}"/>
+									<html-el:hidden property="changedAmount" value="${fee.amountOrRate}"/>
 									<html-el:hidden property="formulaId" value="${fee.formula}"/>
 									<html-el:hidden property="periodicity" value="${fee.periodicity}"/>
 									<html-el:hidden property="paymentType" value="${fee.paymentType}"/>
@@ -234,6 +243,10 @@
 	<html-el:hidden property="globalAccountNum" value="${BusinessKey.globalAccountNum}"/>
 	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}"/>
 	</html-el:form>
+	<script>
+		document.getElementsByName("changedAmount")[document.getElementsByName("chargeType")[0].selectedIndex].value=document.getElementsByName("chargeAmount")[0].value
+		loadValues(document.getElementsByName("chargeType")[0],0)
+	</script>
 
 	</tiles:put>
 </tiles:insert>

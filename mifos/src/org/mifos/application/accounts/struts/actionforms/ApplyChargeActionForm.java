@@ -5,8 +5,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class ApplyChargeActionForm extends ValidatorActionForm {
 
@@ -17,6 +21,8 @@ public class ApplyChargeActionForm extends ValidatorActionForm {
 	private String chargeAmount;
 	
 	private String charge;
+	
+	private String selectedChargeFormula;
 	
 	public String getAccountId() {
 		return accountId;
@@ -49,14 +55,25 @@ public class ApplyChargeActionForm extends ValidatorActionForm {
 	public void setCharge(String charge) {
 		this.charge = charge;
 	}
-	
-	
+		
+	public String getSelectedChargeFormula() {
+		return selectedChargeFormula;
+	}
+
+	public void setSelectedChargeFormula(String selectedChargeFormula) {
+		this.selectedChargeFormula = selectedChargeFormula;
+	}
+
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		String methodCalled = request.getParameter(Methods.method.toString());
 		if (null != methodCalled) {
 			if ((Methods.update.toString()).equals(methodCalled)) {
+				if(!StringUtils.isNullOrEmpty(selectedChargeFormula)){
+					validateRate(errors, request);
+					
+				}
 				errors.add(super.validate(mapping, request));
 			}
 		}
@@ -65,6 +82,15 @@ public class ApplyChargeActionForm extends ValidatorActionForm {
 			request.setAttribute("methodCalled", methodCalled);
 		}
 		return errors;
+	}
+
+	private void validateRate(ActionErrors errors,HttpServletRequest request) {
+		if(Double.valueOf(chargeAmount) > Double.valueOf("999")){
+			errors.add(AccountConstants.RATE,
+					new ActionMessage(AccountConstants.RATE_ERROR));
+			request.setAttribute("selectedChargeFormula" ,selectedChargeFormula);
+		}
+		
 	}
 
 }

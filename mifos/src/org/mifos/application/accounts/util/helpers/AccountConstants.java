@@ -158,7 +158,8 @@ public interface AccountConstants {
 	public static final String GLOBAL_ACCOUNT_NUMBER="globalAccountNumber"; 
 	//Errors
 	public static final String VERSIONNOMATCHINGPROBLEM="error.versionnodonotmatch";
-	
+	public static final String RATE_ERROR="errors.rateException";
+	public static final String RATE="Rate";
 	//AccountTypes
 	//public static Short LOAN_TYPE=1;
 	//public static Short SAVING_TYPE=2;
