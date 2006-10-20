@@ -770,6 +770,7 @@
 			<entity name="personnelDetails"/>
 			<entity name="level"/>
 			<entity name="personnelRoles"/>
+			<entity name="status"/>
 			<entity name="role" parentName="personnelRoles"/>
 			<entity name="address" parentName="personnelDetails"/>
 			<entity name="customFields" mergeProperties="yes"  displayKey="Personnel.customField.displayName"/>
@@ -783,7 +784,6 @@
 				<classPath  path="org.mifos.application.master.business.LanguageEntity"/>
 			</entityName>
 		</propertyName>-->
-		<propertyName name="passwordChanged" parentName="personnelDetails" doNotLog="yes" />
 		<propertyName name="level" displayKey="Personnel.Status"  doNotLog="No" lookUp="yes">
 			<entityName name="PersonnelLevels">
 				<classPath  path="org.mifos.application.personnel.business.PersonnelLevelEntity"/>
@@ -797,6 +797,7 @@
 		<propertyName name="lastName" parentName="personnelDetails"  displayKey="Personnel.lastName"/>
 		<propertyName name="governmentId" parentName="personnelDetails" displayKey="Personnel.governmentId" />
 		<propertyName name="emailId" displayKey="Personnel.emailId"  />
+		<propertyName name="passwordChanged" doNotLog="yes" />
 		<propertyName name="maritalStatus" parentName="personnelDetails" displayKey="Personnel.MaritalStatus" doNotLog="No" lookUp="yes">
 			<entityName name="MaritalStatus"/>
 		</propertyName>
@@ -804,9 +805,10 @@
 			<entityName name="Gender"/>
 		</propertyName>
 		<propertyName name="dateOfJoiningMFI" parentName="personnelDetails" displayKey="Personnel.dateOfJoiningMFI"  />
-		<propertyName name="personnelStatus" displayKey="Personnel.Status"  doNotLog="No" lookUp="yes">
+
+		<propertyName name="status" displayKey="Personnel.Status"  doNotLog="No" lookUp="yes" >
 			<entityName name="PersonnelStatus">
-				<classPath  path="org.mifos.application.personnel.util.helpers.PersonnelStatus"/>
+				<classPath  path="org.mifos.application.personnel.business.PersonnelStatusEntity"/>
 			</entityName>
 		</propertyName>
 		<propertyName name="line1" parentName="address" displayKey="Address1"  />
@@ -843,7 +845,7 @@
     	<propertyName name="localeId"  parentName="preferredLocale"  doNotLog="yes" />
 		<propertyName name="localeName"  parentName="preferredLocale"  doNotLog="yes"/>
 		<propertyName name="defaultLocale"  parentName="preferredLocale"  doNotLog="yes"/>
-
+		<propertyName name="preferredLocalelanguage" doNotLog="yes" />
 		<propertyName name="languageId"  parentName="language"  doNotLog="yes"/>
 		<propertyName name="languageShortName"  parentName="language"  doNotLog="yes"/>
 		<propertyName name="languageName"  parentName="language"  doNotLog="yes" displayKey="Personnel.LanguagePreferred"/>

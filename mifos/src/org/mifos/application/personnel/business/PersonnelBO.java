@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;
@@ -119,7 +120,7 @@ public class PersonnelBO extends BusinessObject {
 		this.personnelMovements = new HashSet<PersonnelMovementEntity>();
 		this.personnelNotes = new HashSet<PersonnelNotesEntity>();
 		this.personnelId = null;
-		this.globalPersonnelNum = "XX";
+		this.globalPersonnelNum = new Long(System.currentTimeMillis()).toString();
 		if (customFields != null)
 			for (CustomFieldView view : customFields) {
 				this.customFields.add(new PersonnelCustomFieldEntity(view
