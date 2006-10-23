@@ -8,9 +8,11 @@ import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.exception.GenericJDBCException;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
@@ -99,6 +101,8 @@ public abstract class Persistence {
 				return query.uniqueResult();
 			}
 			return null;
+		} catch (GenericJDBCException gje) {
+			throw new ConnectionNotFoundException(gje);
 		} catch (Exception e) {
 			throw new PersistenceException(e);
 		}
