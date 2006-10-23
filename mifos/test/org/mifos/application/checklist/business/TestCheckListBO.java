@@ -191,6 +191,27 @@ public class TestCheckListBO extends MifosTestCase {
 				.getCheckListType());
 	}
 
+	public void testSaveInValidConnection() throws CheckListException {
+		ProductTypeEntity productTypeEntity = (ProductTypeEntity) TestObjectFactory
+				.getObject(ProductTypeEntity.class, (short) 2);
+		AccountStateEntity accountStateEntity = new AccountStateEntity(
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
+		AccountCheckListBO accountCheckList = new AccountCheckListBO(productTypeEntity,
+				accountStateEntity, "Account CheckList", Short.valueOf("1"),
+				getCheckListDetails(), Short.valueOf("1"), (short) 1);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			accountCheckList.save();
+			fail();
+		} catch (CheckListException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
 	private List<String> getCheckListDetails() {
 		List<String> details = new ArrayList();
 		details.add("new detail1");

@@ -9,6 +9,7 @@ import org.mifos.application.rolesandpermission.business.TestRoleBO;
 import org.mifos.application.rolesandpermission.business.service.TestRolesPermissionsBusinessService;
 import org.mifos.application.rolesandpermission.persistence.TestRolesAndPermissionPersistence;
 import org.mifos.application.rolesandpermission.struts.TestRolesPermissionsAction;
+import org.mifos.application.rolesandpermission.utils.helpers.TestRoleTempleteBuilder;
 import org.mifos.framework.MifosTestSuite;
 
 public class RolesAndPermissionTestSuite extends MifosTestSuite {
@@ -26,6 +27,7 @@ public class RolesAndPermissionTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestRolesPermissionsBusinessService.class);
 		testSuite.addTestSuite(TestRolesAndPermissionPersistence.class);
 		testSuite.addTestSuite(TestRolesPermissionsAction.class);
+		testSuite.addTestSuite(TestRoleTempleteBuilder.class);
 		return testSuite;
 	}
 }
