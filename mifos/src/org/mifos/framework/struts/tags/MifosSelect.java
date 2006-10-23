@@ -327,6 +327,7 @@ public class MifosSelect extends BodyTagSupport {
 		
 		Map inputCopy = new HashMap();
 		if(inMap != null)
+		{
 			inputCopy = new HashMap(inMap);
         if(outMap != null) {
         	Set input = inMap.keySet();
@@ -341,6 +342,7 @@ public class MifosSelect extends BodyTagSupport {
         		}
         	}
         }
+		}
         rawselect[0].setData(inputCopy);
         rawselect[1].setData(outMap);
         init();
@@ -419,7 +421,7 @@ public class MifosSelect extends BodyTagSupport {
     private Map helper(Collection coll) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     	Map<Object,Object> map=new HashMap<Object,Object>();
     	// System.out.println("in the helper method$$$$$$$$$$$$$$$$$$$$$$"+coll);
-    	if(!coll.isEmpty()) {
+    	if(coll!=null&&!coll.isEmpty()) {
     		for (Iterator it = coll.iterator(); it.hasNext();) {
     			Object object = it.next();
 				Object string1=null;

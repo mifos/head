@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.persistence.FeePersistence;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -115,4 +118,13 @@ public class LoanPrdBusinessService extends BusinessService {
 		}
 	}
 
+	public FeeBO getfee(Short feeId, RateAmountFlag rateflag) throws ServiceException {
+		
+			try {
+				return new  FeePersistence().getFee(feeId,rateflag);
+			} catch (PersistenceException e) {
+				throw new ServiceException(e);
+			}
+		
+	}
 }

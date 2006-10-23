@@ -115,7 +115,7 @@
 											src="pages/framework/images/bullet_circle.gif" width="9"
 											height="11"></td>
 										<td width="99%"><html-el:link
-											href="productCategoryAction.do?method=get&globalPrdCategoryNum=${productCategory.globalPrdCategoryNum}&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+											href="productCategoryAction.do?method=get&globalPrdCategoryNum=${productCategory.globalPrdCategoryNum}&randomNUm=${sessionScope.randomNUm}">
 											<c:out value="${productCategory.productCategoryName}" />
 										</html-el:link> <c:if
 											test="${productCategory.prdCategoryStatus.id eq 0}">

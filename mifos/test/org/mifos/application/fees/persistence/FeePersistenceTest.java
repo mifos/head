@@ -6,6 +6,9 @@ import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
+import org.mifos.application.fees.util.helpers.FeeFormula;
+import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -28,6 +31,7 @@ public class FeePersistenceTest extends MifosTestCase {
 		TestObjectFactory.removeObject(fee2);
 		TestObjectFactory.removeObject(periodicFee);
 		super.tearDown();
+		HibernateUtil.closeSession();
 	}
 	
 	public void testGetUpdatedFeesForCustomer() throws Exception{
@@ -82,6 +86,30 @@ public class FeePersistenceTest extends MifosTestCase {
 		List<FeeBO> feeList = feePersistence.retrieveProductFees();
 		assertEquals(1, feeList.size());
 		assertEquals("ProductFee1", feeList.get(0).getFeeName());
+	}
+	
+	public void testGetFee()throws Exception{
+		fee2 = TestObjectFactory.createPeriodicAmountFee("ProductFee1", 
+				FeeCategory.LOAN, "400", RecurrenceType.WEEKLY, Short.valueOf("2"));
+		Short feeId = fee2.getFeeId();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		fee2 = feePersistence.getFee(fee2.getFeeId(),fee2.getFeeType());
+		assertEquals(feeId.shortValue(), fee2.getFeeId().shortValue());
+		
+		
+	}
+	public void testGetRateFee()throws Exception{
+		fee1 = TestObjectFactory.createOneTimeRateFee("Loanfee", 
+				FeeCategory.LOAN, 11.1, FeeFormula.AMOUNT, FeePayment.TIME_OF_DISBURSMENT);
+		
+		Short feeId = fee1.getFeeId();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		fee1 = feePersistence.getFee(fee1.getFeeId(),RateAmountFlag.RATE);
+		assertEquals(feeId.shortValue(), fee1.getFeeId().shortValue());
+
+		
 	}
 
 }

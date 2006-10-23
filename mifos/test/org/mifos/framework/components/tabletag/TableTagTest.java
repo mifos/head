@@ -185,4 +185,18 @@ public class TableTagTest extends TestCase {
 		tableTag.setName("viewUsers");
 		assertNotNull(tableTag.helperCache("org/mifos/framework/util/resources/tabletag/viewUsers.xml","viewUsers"));
 	}
+	
+	public void testPageScroll(){
+		assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>",PageScroll.getAnchor("hRef","text","load","1234",1));
+		assertEquals("<tr><td width=\"75\" class=\"fontnormalboldgray\">Previous</td><td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results 1-10 of 100 </td><td width=\"75\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=2'>Next</a></td></tr>",PageScroll.getPages(1,10,100,"loaad","1234"));
+		assertEquals("<tr><td width=\"75\" class=\"fontnormalbold\"><a href='loaad?method=searchPrev&currentFlowKey=1234&current=4'>Previous</a></td><td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results 41-50 of 100 </td><td width=\"75\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=6'>Next</a></td></tr>",PageScroll.getPages(5,10,100,"loaad","1234"));
+		assertEquals("<tr><td width=\"75\" class=\"fontnormalboldgray\">Previous</td><td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results 1-3 of 3 </td><td width=\"75\" align=\"right\" class=\"fontnormalboldgray\">Next</td></tr>",PageScroll.getPages(1,10,3,"loaad","1234"));
+	}
+	public void testLink(){
+		assertEquals("",Link.createLink(new String []{""},null,null,null,null,null,null));
+		assertEquals("<span class=\"fontnormalbold\"><a href= \"load?X&currentFlowKey=1234&randomNUm=9999\">a</a></span>,<span class=\"fontnormalbold\"><a href= \"load?Y&currentFlowKey=1234&randomNUm=9999\">b</a></span>",Link.createLink(new String []{"a","b"},new String []{"X","Y"},"true","load","fontnormalbold","1234","9999"));
+		assertEquals("<span class=\"headingblue\"><a href= \"load?X\"&currentFlowKey=1234&randomNUm=9999class=\"headingblue\">a</a></span>,<span class=\"headingblue\"><a href= \"load?Y\"&currentFlowKey=1234&randomNUm=9999class=\"headingblue\">b</a></span>",Link.createLink(new String []{"a","b"},new String []{"X","Y"},"true","load","headingblue","1234","9999"));
+		assertEquals("<span><a href= \"load?X&currentFlowKey=1234&randomNUm=9999\">a</a></span>,<span><a href= \"load?Y&currentFlowKey=1234&randomNUm=9999\">b</a></span>",Link.createLink(new String []{"a","b"},new String []{"X","Y"},"true","load",null,"1234","9999"));
+	}
+	
 }

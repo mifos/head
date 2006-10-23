@@ -56,6 +56,7 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.fund.business.service.FundBusinessService;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -250,8 +251,10 @@ public class LoanPrdAction extends BaseAction {
 		List<FeeView> feeSelected = new ArrayList<FeeView>();
 		for (LoanOfferingFeesEntity prdOfferingFees : loanOffering
 				.getLoanOfferingFees()) {
-			feeSelected.add(new FeeView(getUserContext(request),
-					prdOfferingFees.getFees()));
+			FeeBO fee = prdOfferingFees.getFees();
+			fee = new LoanPrdBusinessService().getfee(fee.getFeeId(),fee.getFeeType());
+			feeSelected.add(new FeeView(getUserContext(request),fee
+					));
 		}
 		loadSelectedFeesAndFunds(feeSelected, fundsSelected, request);
 		loadStatusList(request);
@@ -548,7 +551,7 @@ public class LoanPrdAction extends BaseAction {
 		}
 		prdDefLogger
 				.debug("getFeeViewList method of Loan Product Action called");
-		return feeViews;
+		return feeViews.size()>0?feeViews:null;
 	}
 
 	private List<FeeBO> getFeeList(List<FeeBO> fees, String[] feesSelected) {

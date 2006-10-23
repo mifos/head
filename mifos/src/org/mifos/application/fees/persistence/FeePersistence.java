@@ -42,11 +42,13 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.ApplicableAccountsTypeEntity;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.RateFeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeeStatus;
+import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
@@ -57,7 +59,19 @@ public class FeePersistence extends Persistence {
 		Session session = HibernateUtil.getSessionTL();
 		return (FeeBO) session.get(FeeBO.class, feeId);
 	}
+	public FeeBO getFee(Short feeId,RateAmountFlag rateflag) throws PersistenceException {
 
+			if ( rateflag.equals(RateAmountFlag.AMOUNT))
+			{
+				return (AmountFeeBO) getPersistentObject(AmountFeeBO.class
+						,feeId);
+			}
+			else
+			{
+				return (RateFeeBO) getPersistentObject(RateFeeBO.class
+						,feeId);
+			}
+	}
 	public List<FeeBO> getUpdatedFeesForCustomer() throws PersistenceException {
 		return executeNamedQuery(
 			NamedQueryConstants.GET_UPDATED_FEES_FOR_CUSTOMERS, null);

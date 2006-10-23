@@ -158,7 +158,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(funds);
 		List<FeeView> loanFees = (List<FeeView>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANFEESLIST, request);
-		assertNotNull(loanFees);
+		assertNull(loanFees);
 		List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANPRDFEE, request);
 		assertNotNull(productFees);
@@ -723,7 +723,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(funds);
 		List<FeeView> fees = (List<FeeView>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANFEESLIST, request);
-		assertNotNull(fees);
+		assertNull(fees);
 		List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANPRDFEE, request);
 		assertNotNull(productFees);

@@ -87,7 +87,7 @@ public class Link {
 	}
 	
 	//Used to create the link 
-	private static String createLink(String[] name,String[] parameters,
+	 static String createLink(String[] name,String[] parameters,
 			String bold,String action ,String styleClass, String flowKey, Object randomNumber) {
 		StringBuilder stringbuilder = new StringBuilder();
 		for (int i = 0; i < name.length; i++) {

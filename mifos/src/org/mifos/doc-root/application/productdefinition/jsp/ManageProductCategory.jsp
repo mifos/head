@@ -74,7 +74,7 @@
 						href="productCategoryAction.do?method=getAllCategories&randomNUm=${sessionScope.randomNUm}">
 						<mifos:mifoslabel name="product.viewprdcat"
 							bundle="ProductDefUIResources" />
-					</html-el:link> / <html-el:link href="productCategoryAction.do?method=get&randomNUm=${sessionScope.randomNUm}">
+					</html-el:link> / <html-el:link href="productCategoryAction.do?method=get&globalPrdCategoryNum=${BusinessKey.globalPrdCategoryNum}&randomNUm=${sessionScope.randomNUm}">
 						<c:out value="${BusinessKey.productCategoryName}" />
 					</html-el:link></span></td>
 				</tr>
