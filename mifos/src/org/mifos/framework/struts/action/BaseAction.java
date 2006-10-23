@@ -33,7 +33,6 @@ import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SearchObjectNotCreatedException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -47,7 +46,6 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.SearchObject;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -136,7 +134,7 @@ public abstract class BaseAction extends DispatchAction {
 			.getAttribute(Constants.CURRENTFLOWKEY);
 			if ( flowKey==null)createToken(request);
 			else joinToken(request);
-			
+
 		}
 	}
 
@@ -187,7 +185,7 @@ public abstract class BaseAction extends DispatchAction {
 			} catch (HibernateException he) {
 				HibernateUtil.rollbackTransaction();
 				throw new ApplicationException(he);
-			} 
+			}
 		} else {
 			postHandleTransaction(request, annotation);
 		}
@@ -307,12 +305,12 @@ public abstract class BaseAction extends DispatchAction {
 			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
 		return date;
 	}
-	
+
 	protected void setInitialObjectForAuditLogging(Object object){
 		HibernateUtil.getSessionTL();
 		HibernateUtil.getInterceptor().createInitialValueMap(object);
 	}
-	
+
 	private ActionForward logout(ActionMapping mapping, HttpServletRequest request) throws ApplicationException {
 		request.getSession(false).invalidate();
 		ActionErrors error = new ActionErrors();
@@ -320,7 +318,7 @@ public abstract class BaseAction extends DispatchAction {
 		request.setAttribute(Globals.ERROR_KEY, error);
 		return mapping.findForward(ActionForwards.load_main_page.toString());
 	}
-	
+
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadChangeLog(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -331,7 +329,7 @@ public abstract class BaseAction extends DispatchAction {
 		request.getSession().setAttribute(AuditConstants.AUDITLOGRECORDS,auditBusinessService.getAuditLogRecords(entityType,entityId));
 		return mapping.findForward(AuditConstants.VIEW+request.getParameter(AuditConstants.ENTITY_TYPE)+AuditConstants.CHANGE_LOG);
 	}
-	
+
 	@TransactionDemarcate(validateAndResetToken = true)
 	public ActionForward cancelChangeLog(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)

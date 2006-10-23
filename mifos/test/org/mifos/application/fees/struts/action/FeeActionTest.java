@@ -57,6 +57,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -109,7 +110,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(fee2);
 		TestObjectFactory.cleanUp(fee3);
 		HibernateUtil.closeSession();
-		super.tearDown();		
+		super.tearDown();
 	}
 
 	public void testLoad() throws Exception {
@@ -270,12 +271,12 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("glCode", GLOCDE_ID);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		
+
 		assertEquals(1, getErrrorSize());
 		assertEquals("Fee Rate or Formula", 1, getErrrorSize(FeeConstants.RATE_OR_AMOUNT));
 		verifyInputForward();
 	}
-	
+
 	public void testFailurePreviewWith_AmountNotNull() throws Exception {
 		setRequestPathInfo("/feeaction.do");
 		addRequestParameter("method", "preview");
@@ -595,7 +596,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
 		verifyInputForward();
 	}
-	
+
 	public void testFailureEditPreviewForRate() throws Exception {
 		fee = TestObjectFactory.createOneTimeRateFee("One Time Fee",
 				FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
@@ -755,5 +756,13 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 				.getObject(FeeBO.class, fee2.getFeeId());
 		fee3 = (FeeBO) TestObjectFactory
 				.getObject(FeeBO.class, fee3.getFeeId());
+	}
+
+	public void testFeeCategory() throws Exception {
+		try {
+			FeeCategory.getFeeCategory(new Short((short)999));
+			fail();
+		} catch (PropertyNotFoundException pnfe) {
+		}
 	}
 }

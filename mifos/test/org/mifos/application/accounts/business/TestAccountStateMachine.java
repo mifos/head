@@ -18,6 +18,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ServiceUnavailableException;
+import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -54,21 +56,21 @@ public class TestAccountStateMachine extends MifosTestCase {
 		List<AccountStateEntity> stateList = service.getStatusList(accountBO.getAccountState(),AccountTypes.getAccountType(accountBO.getAccountType().getAccountTypeId()),TestObjectFactory.getUserContext().getLocaleId());
 		assertEquals(2,stateList.size());
 	}
-	
+
 	public void testGetStatusName() throws Exception {
 		createInitialObjects();
 		accountBO  = getLoanAccount(client,meeting);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT,null);
 		assertNotNull(service.getStatusName((short) 1, AccountState.LOANACC_RESCHEDULED,AccountTypes.LOANACCOUNT));
 	}
-	
+
 	public void testGetFlagName() throws Exception {
 		createInitialObjects();
 		accountBO  = getLoanAccount(client,meeting);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT,null);
 		assertNotNull(service.getFlagName((short) 1,AccountStateFlag.LOAN_WITHDRAW,AccountTypes.LOANACCOUNT));
 	}
-	
+
 	private void createInitialObjects() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
@@ -80,7 +82,7 @@ public class TestAccountStateMachine extends MifosTestCase {
 		client = TestObjectFactory.createClient("Client",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
 				.currentTimeMillis()));
 	}
-	
+
 	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -91,5 +93,27 @@ public class TestAccountStateMachine extends MifosTestCase {
 		return TestObjectFactory.createLoanAccount("42423142341", customer, Short
 				.valueOf("5"), startDate, loanOffering);
 
+	}
+
+	public void testStatesInitializationException() throws Exception {
+		createInitialObjects();
+		accountBO  = getLoanAccount(client,meeting);
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,AccountTypes.LOANACCOUNT,null);
+			fail();
+		} catch (StatesInitializationException sie) {
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+
+	public void testServiceUnavailableException() throws Exception {
+		try {
+			service = (AccountBusinessService) ServiceFactory.getInstance().
+				getBusinessService(null);
+			fail();
+		} catch (ServiceUnavailableException sue) {
+		}
 	}
 }
