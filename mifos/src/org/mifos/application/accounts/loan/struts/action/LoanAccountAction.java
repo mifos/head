@@ -663,6 +663,7 @@ public class LoanAccountAction extends AccountAppAction {
 	private void setFormAttributes(LoanBO loan, ActionForm form,
 			HttpServletRequest request) throws Exception {
 		LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
+		loanAccountActionForm.setStateSelected(getStringValue(loan.getAccountState().getId()));
 		loanAccountActionForm
 				.setLoanAmount(getStringValue(loan.getLoanAmount()));
 

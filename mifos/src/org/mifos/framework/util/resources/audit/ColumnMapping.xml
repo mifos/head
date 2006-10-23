@@ -784,7 +784,7 @@
 				<classPath  path="org.mifos.application.master.business.LanguageEntity"/>
 			</entityName>
 		</propertyName>-->
-		<propertyName name="level" displayKey="Personnel.Status"  doNotLog="No" lookUp="yes">
+		<propertyName name="level" displayKey="Personnel.userHierarchy"  doNotLog="No" lookUp="yes">
 			<entityName name="PersonnelLevels">
 				<classPath  path="org.mifos.application.personnel.business.PersonnelLevelEntity"/>
 			</entityName>

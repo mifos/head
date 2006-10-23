@@ -464,7 +464,8 @@ public class LoanAccountActionForm extends BaseActionForm {
 
 	private void checkValidationForManagePreview(ActionErrors errors,
 			HttpServletRequest request) throws ApplicationException {
-		checkValidationForPreview(errors, request);
+		if(getState().equals(AccountState.LOANACC_PARTIALAPPLICATION) || getState().equals(AccountState.LOANACC_PENDINGAPPROVAL))
+			checkValidationForPreview(errors, request);
 		validateCustomFields(request, errors);
 
 	}

@@ -202,6 +202,11 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 		// if allowed invoke the execute method of the action class
 
 		try {
+			String currentFlowKey = request.getParameter(Constants.CURRENTFLOWKEY);
+			if(currentFlowKey != null) {
+				previousRequestValues.getPreviousRequestValueMap().put(Constants.CURRENTFLOWKEY, currentFlowKey);
+			}
+				
 			forward = (action.execute(mapping, form, request, response));
 			String method = request.getParameter("method");
 			if (method.equals(ClientConstants.METHOD_RETRIEVE_PICTURE)) {

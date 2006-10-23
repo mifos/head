@@ -75,7 +75,9 @@ public interface AuditConstants {
   public static final String VIEW="view";
   public static final String CHANGE_LOG="ChangeLog";
   public static final String CANCEL="cancel";
-  
+  public String PERSONNELSTATUSPATH= "org.mifos.application.personnel.business.PersonnelStatusEntity";
+  public String PERSONNELLEVELPATH= "org.mifos.application.personnel.business.PersonnelLevelEntity";
+  public String PRDSTATUSPATH= "org.mifos.application.productdefinition.business.PrdStatusEntity";
   
   
  

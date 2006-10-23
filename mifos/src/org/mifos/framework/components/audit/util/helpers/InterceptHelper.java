@@ -54,7 +54,10 @@ import org.hibernate.type.AbstractComponentType;
 import org.hibernate.type.Type;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.business.PersonnelLevelEntity;
+import org.mifos.application.personnel.business.PersonnelStatusEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
+import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -141,7 +144,7 @@ public class InterceptHelper {
 		setPrimaryKeyValues(customMeta,object,customMeta.getIdentifierPropertyName(),state);
 		
 		for (int i = 0; i < propertyNames.length; i++) {
-			logger.debug("hibernateMeta property name : "+propertyNames[i]+ " and value : " + propertyValues[i]); 
+			logger.debug("hibernateMeta property name : "+propertyNames[i]+ " and value : " + propertyValues[i]);
 				if (!propertyTypes[i].isEntityType()  
 						&& !propertyTypes[i].isCollectionType() 
 							&& !propertyTypes[i].isComponentType()) {
@@ -208,7 +211,17 @@ public class InterceptHelper {
 					!propertyTypes[i].isComponentType() && 
 						propertyValues[i] instanceof MasterDataEntity &&
 						AuditConfigurtion.isObjectToBeLogged(entityName,propertyNames[i],null)){
-				populateValueForObjectsOfTypeMasterDataEntity(propertyValues[i],state,propertyNames[i]);
+				String personnelStatusName = AuditConstants.PERSONNELSTATUSPATH;
+				String personnelLevelName = AuditConstants.PERSONNELLEVELPATH;
+				if(propertyValues[i].getClass().getName().startsWith(personnelStatusName)) {
+					Short id = ((PersonnelStatusEntity)propertyValues[i]).getId();
+					populateValueForObjectsOfTypeMasterDataEntity(id,state,propertyNames[i]);
+				}else if(propertyValues[i].getClass().getName().startsWith(personnelLevelName)) {
+					Short id = ((PersonnelLevelEntity)propertyValues[i]).getId();
+					populateValueForObjectsOfTypeMasterDataEntity(id,state,propertyNames[i]);
+				}
+				else 
+					populateValueForObjectsOfTypeMasterDataEntity(propertyValues[i],state,propertyNames[i]);
 			}
 			
 			//Reading Collection Types   
@@ -282,17 +295,18 @@ public class InterceptHelper {
 	
 	private void readFurtherMeta(Object obj,String firstName,String state) {
 		Class clazz = getClazz(obj);
-
-		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
-				.getClassMetadata(clazz);
-
+		ClassMetadata customMeta = HibernateUtil.getSessionFactory().getClassMetadata(clazz);
 		Object[] propertyValues = customMeta.getPropertyValues(obj,
 				EntityMode.POJO);
 		String[] propertyNames = customMeta.getPropertyNames();
 		Type[] propertyTypes = customMeta.getPropertyTypes();
-
-		setPrimaryKeyValues(customMeta,obj,firstName.concat(customMeta.getIdentifierPropertyName()),state);
-		
+		String prdStatusName = AuditConstants.PRDSTATUSPATH;
+		if(obj.getClass().getName().startsWith(prdStatusName)) {
+			Short id = ((PrdStatusEntity)obj).getOfferingStatusId();
+			setPrimaryKeyValues(id,firstName.concat(customMeta.getIdentifierPropertyName()),state);
+		}else {	
+			setPrimaryKeyValues(customMeta,obj,firstName.concat(customMeta.getIdentifierPropertyName()),state);
+		}
 		
 		for (int i = 0; i < propertyNames.length; i++) {
 			logger.debug("readFurtherMeta property : " + propertyNames[i]);
@@ -1453,7 +1467,44 @@ public class InterceptHelper {
 		}
 	}
 	
+	private void setPrimaryKeyValues(Short id,String name,String state){
+		if(state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)){
+			if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+				String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,id,localeId);
+				initialValues.put(name, value);
+				logger.debug("i setPrimaryKeyValues "+name+ " value : " +  value);
+			}else{
+				initialValues.put(name, id);
+				logger.debug("i setPrimaryKeyValues "+name+ " value : " + id);
+			}
+			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			if(columnName!=null && !columnName.equals("")){
+				columnNames.put(name,columnName);
+			}else{
+				columnNames.put(name,id);
+			}
+		}
+		else{
+			if(AuditConfigurtion.checkForPropertyName(entityName,name,localeId)){
+				String value=AuditConfigurtion.getValueOfCorrespondingId(entityName,name,id,localeId);
+				logger.debug("c setPrimaryKeyValues "+name+ " value : " +  value);
+				changedValues.put(name,value);
+			}else{
+				changedValues.put(name,id);
+			}
+			String columnName=AuditConfigurtion.getColumnNameForPropertyName(entityName,name);
+			if(columnName!=null && !columnName.equals("")){
+				columnNames.put(name,columnName);
+			}else{
+				columnNames.put(name,id);
+			}
+		}
+	}
 	
+	private void populateValueForObjectsOfTypeMasterDataEntity(Short id,String state,String name){
+		setPrimaryKeyValues(id,name,state);
+		
+	}
 	
 	private void populateValueForObjectsOfTypeMasterDataEntity(Object obj,String state,String name){
 		Class clazz = getClazz(obj);
