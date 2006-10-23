@@ -64,47 +64,22 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
 public class HierarchyManager implements Observer {
-	/**
-	 * This would hold the office id to searchid mapping
-	 */
 	private static Map<Short, OfficeCacheView> hierarchyMap;
-
-	/**
-	 * This would hold the singleton instance of HierarchyManager
-	 */
 	private static HierarchyManager hierarchyManager;
-
-	/**
-	 * Default constructor
-	 */
 	private HierarchyManager() {
 		hierarchyMap = new HashMap<Short, OfficeCacheView>();
 	}
 
-	/**
-	 * This function will return the singleton instance of the HierarchyManager
-	 * class
-	 * 
-	 * @return hm HierarchyManager instance
-	 */
 	public static HierarchyManager getInstance() {
 		if (hierarchyManager == null)
 			hierarchyManager = new HierarchyManager();
-
 		return hierarchyManager;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.mifos.framework.security.util.Observer#handleEvent(org.mifos.framework.security.util.SecurityEvent)
-	 */
 	public void handleEvent(SecurityEvent e) {
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info(
 				"Map before" + hierarchyMap);
 		List<OfficeCacheView> officeList = convertToOfficeCacheList((List<OfficeSearch>) e
 				.getObject());
-
 		if (e.getEventType().equals(Constants.CREATE))
 			updateMapForCreateEvent(officeList);
 		else if (e.getEventType().equals(Constants.UPDATE))
@@ -155,15 +130,6 @@ public class HierarchyManager implements Observer {
 			addToMap(officeList.get(i));
 	}
 
-	/**
-	 * Returns wheter given office falls under the given user or above
-	 * 
-	 * @param uc
-	 *            usercontext object
-	 * @param officeId
-	 *            office id which we want to test whether it falls under or not
-	 * @return short perdefind constant
-	 */
 	public short getOfficeLevel(UserContext uc, short officeId) {
 		short userBranch = uc.getBranchId().shortValue();
 		if (userBranch == officeId) {
@@ -187,37 +153,6 @@ public class HierarchyManager implements Observer {
 		}
 
 	}
-
-	/**
-	 * This function returns all the offices falls under the given user
-	 * 
-	 * @param branchId
-	 *            branch id of the given user
-	 * @return the list of OfficeSearch objects which contains the id's of all
-	 *         the offices under the given user
-	 */
-	public List<OfficeSearch> getOfficesUnder(short branchId)
-			throws SystemException, ApplicationException {
-		try {
-			return SecurityHelper.getPersonnelOffices(branchId);
-		} catch (SystemException se) {
-			throw se;
-		} catch (ApplicationException ae) {
-			throw ae;
-		} catch (Exception e) {
-			throw new SecurityException(SecurityConstants.INITIALIZATIONFAILED);
-		}
-
-	}
-
-	/**
-	 * This function will return the search id of the given branch id if anyone
-	 * is intersted to find
-	 * 
-	 * @param branchId
-	 *            id of the branch
-	 * @return
-	 */
 	public String getSearchId(short branchId) {
 		return hierarchyMap.get(new Short(branchId)).getSearchId().toString();
 	}

@@ -55,52 +55,6 @@ import org.mifos.framework.exceptions.ValueObjectConversionException;
  */
 public class ConvertionUtil {
 
-	/**
-	 * Returns the searchObject which is formed out of the action form passed to
-	 * this method. This method assumes that the action form is basically a
-	 * dynaaction form. It reads the actionform and converts it to a
-	 * searchObject which is also a <link>BasicDynaBean</link>
-	 * <p>
-	 * It is mandatory for the actionform to have a map based property named
-	 * searchNode which will be a key value pair of the searchparameters and
-	 * searchvalues
-	 */
-	public static SearchObject getSearchObject(ActionForm actionForm)
-			throws SearchObjectNotCreatedException {
-		SearchObject searchObject = new SearchObject();
-		Map<String, String> searchNodeMap = null;
-
-		// WE NEED TO CHECK HERE IF SEAARCHNAME IS THERE IN THE MAP
-		// OR WE NEED TO DEVISE ANOTHER MECHANISM TO MANDATING THAT
-		// ALSO NEED TO CHANGE THE COMMENT AFTER CODE REVIEW
-		try {
-			searchNodeMap = (Map) MethodInvoker.invokeWithNoException(
-					actionForm, "getSearchNodeMap", new Object[] {},
-					new Class[] {});
-			searchObject.setSearchNodeMap(searchNodeMap);
-		} catch (SystemException se) {
-
-			se.printStackTrace();
-			throw new SearchObjectNotCreatedException(se);
-		} catch (ApplicationException ae) {
-
-			ae.printStackTrace();
-			throw new SearchObjectNotCreatedException(ae);
-		}
-		return searchObject;
-	}
-
-	/**
-	 * @param actionForm
-	 * @param moduleName
-	 * @param subModuleName
-	 * @return
-	 * @throws ValueObjectConversionException
-	 *             Converts the action form into value object by copying values
-	 *             from the attributes of the actionform and setting them into
-	 *             the value object.
-	 */
-
 	public static void populateBusinessObject(ActionForm actionForm,
 			BusinessObject object, Locale locale)
 			throws ValueObjectConversionException {

@@ -242,12 +242,6 @@ public abstract class BaseAction extends DispatchAction {
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return false;
 	}
-
-	protected SearchObject formSearchObject(ActionForm form,
-			HttpServletRequest request) throws SearchObjectNotCreatedException {
-		return ConvertionUtil.getSearchObject(form);
-	}
-
 	protected UserContext getUserContext(HttpServletRequest request) {
 		return (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());

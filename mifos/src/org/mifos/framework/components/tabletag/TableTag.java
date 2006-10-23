@@ -50,10 +50,6 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.struts.Globals;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.taglib.html.ErrorsTag;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -66,7 +62,6 @@ import org.mifos.framework.struts.tags.MifosTagUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Cache;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FileCacheRep;
 import org.mifos.framework.util.helpers.SessionUtils;
 
@@ -77,7 +72,8 @@ public class TableTag extends BodyTagSupport {
 
 	public static final String ALL_BRANCHES = "0";
 
-	private int pageSize = Integer.valueOf(TableTagConstants.MIFOSTABLE_PAGESIZE);
+	private int pageSize = Integer
+			.valueOf(TableTagConstants.MIFOSTABLE_PAGESIZE);
 
 	private static final long serialVersionUID = 1L;
 
@@ -130,7 +126,7 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * Function get the name of XML and JSP file
-	 *
+	 * 
 	 * @return Returns the name.
 	 */
 	public String getName() {
@@ -204,6 +200,7 @@ public class TableTag extends BodyTagSupport {
 
 	// Object of the Table class
 	int size = 0;
+
 	int current = 1;
 
 	/**
@@ -220,15 +217,15 @@ public class TableTag extends BodyTagSupport {
 			}
 			if (list.size() == 0) {
 				JspWriter out = pageContext.getOut();
-					XmlBuilder result;
-//					try {
-						result = noResults((String)SessionUtils.getAttribute(Constants.OFFICE_NAME,(HttpServletRequest) pageContext.getRequest()),
-								(String)SessionUtils.getAttribute(Constants.BRANCH_ID,(HttpServletRequest) pageContext.getRequest()),
-								(String)SessionUtils.getAttribute(Constants.SEARCH_STRING,(HttpServletRequest) pageContext.getRequest()));
-//					} catch (PageExpiredException e) {
-						
-//						throw new JspException(e);
-//					}
+				XmlBuilder result;
+				result = noResults((String) SessionUtils.getAttribute(
+						Constants.OFFICE_NAME, (HttpServletRequest) pageContext
+								.getRequest()), (String) SessionUtils
+						.getAttribute(Constants.BRANCH_ID,
+								(HttpServletRequest) pageContext.getRequest()),
+						(String) SessionUtils.getAttribute(
+								Constants.SEARCH_STRING,
+								(HttpServletRequest) pageContext.getRequest()));
 				out.write(result.getOutput());
 				return super.doStartTag();
 			}
@@ -243,17 +240,8 @@ public class TableTag extends BodyTagSupport {
 			throw new JspException(ioe);
 		} catch (HibernateSearchException hse) {
 			throw new JspException(hse);
-		}
-		catch (PageExpiredException e) {
-			
-/*			ActionErrors errors = new ActionErrors();
-			errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION,new ActionMessage(ExceptionConstants.PAGEEXPIREDEXCEPTION));
-			
-			HttpServletRequest request =(HttpServletRequest) pageContext.getRequest();
-			request.setAttribute(Globals.ERROR_KEY,errors);
-			request.getSession().setAttribute(Globals.ERROR_KEY,errors);
-
-*/			throw new JspException(e);
+		} catch (PageExpiredException e) {
+				throw new JspException(e);
 		}
 		return super.doStartTag();
 
@@ -295,8 +283,8 @@ public class TableTag extends BodyTagSupport {
 
 		html.endTag("table");
 		return html;
-	}	
-	
+	}
+
 	private void renderInClause(XmlBuilder html, String myOfficeName) {
 		html.startTag("span", "class", "headingorange");
 		html.text(" in");
@@ -308,6 +296,7 @@ public class TableTag extends BodyTagSupport {
 		html.text(myOfficeName);
 		html.endTag("span");
 	}
+
 	private void createStartTable(StringBuilder result,
 			boolean headingRequired, boolean topBlueLineRequired)
 			throws PageExpiredException {
@@ -359,34 +348,46 @@ public class TableTag extends BodyTagSupport {
 							"<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>");
 		}
 	}
+
 	/**
 	 * Function used to create end part of the table.
 	 */
-	 void createEndTable(StringBuilder result,boolean bottomBlueLineRequired) {
-		if(bottomBlueLineRequired) {
-			result.append("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">")
-			.append("<img src=\"pages/framework/images/trans.gif \" width=\"10\" height=\"5\"></td></tr>")
-			.append("<tr><td height=\"35\" colspan=\"2\" align=\"center\" class=\"blueline\">")
-			.append("<table width=\"300\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
-		}else {
-			result.append("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">")
-				.append("<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>")
-				.append("<tr><td height=\"35\" colspan=\"2\" align=\"center\">")
-				.append("<table width=\"300\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+	void createEndTable(StringBuilder result, boolean bottomBlueLineRequired) {
+		if (bottomBlueLineRequired) {
+			result
+					.append(
+							"<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">")
+					.append(
+							"<img src=\"pages/framework/images/trans.gif \" width=\"10\" height=\"5\"></td></tr>")
+					.append(
+							"<tr><td height=\"35\" colspan=\"2\" align=\"center\" class=\"blueline\">")
+					.append(
+							"<table width=\"300\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
+		} else {
+			result
+					.append(
+							"<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">")
+					.append(
+							"<img src=\"pages/framework/images/trans.gif \" width=\"5\" height=\"3\"></td></tr>")
+					.append(
+							"<tr><td height=\"35\" colspan=\"2\" align=\"center\">")
+					.append(
+							"<table width=\"300\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
 		}
 	}
 
 	/**
 	 * Function to get single xml file.
 	 */
-	 String getSingleFile() throws  JspException {
+	String getSingleFile() throws JspException {
 		ResourceBundle resource = ResourceBundle
 				.getBundle(TableTagConstants.PROPERTIESFILE);
 		String xmlPath = resource.getString(name + "_xml");
 		if (xmlPath != null) {
 			return xmlPath;
 		} else
-			throw new JspException(resource.getString(TableTagConstants.NOXMLFILE_ERROR));
+			throw new JspException(resource
+					.getString(TableTagConstants.NOXMLFILE_ERROR));
 	}
 
 	/**
@@ -394,24 +395,28 @@ public class TableTag extends BodyTagSupport {
 	 */
 	private String getAction(Table table) throws JspException {
 
-		String action=(String) SessionUtils.getAttribute("action",pageContext.getSession());
-		String forwardkey =(String) SessionUtils.getAttribute("forwardkey",pageContext.getSession());	
+		String action = (String) SessionUtils.getAttribute("action",
+				pageContext.getSession());
+		String forwardkey = (String) SessionUtils.getAttribute("forwardkey",
+				pageContext.getSession());
 		ResourceBundle resource = ResourceBundle
-		.getBundle(TableTagConstants.PROPERTIESFILE);
-		if(null==action || null==forwardkey) {
+				.getBundle(TableTagConstants.PROPERTIESFILE);
+		if (null == action || null == forwardkey) {
 			Path pathVar = table.findPath(key);
 			action = pathVar.getAction();
 			forwardkey = pathVar.getForwardkey();
 			if (action != null) {
-				SessionUtils.setRemovableAttribute("action", action,TableTagConstants.PATH, pageContext
-						.getSession());
+				SessionUtils.setRemovableAttribute("action", action,
+						TableTagConstants.PATH, pageContext.getSession());
 			} else
-				throw new JspException(resource.getString( TableTagConstants.NOACTION_ERROR));
+				throw new JspException(resource
+						.getString(TableTagConstants.NOACTION_ERROR));
 			if (forwardkey != null) {
-				SessionUtils.setRemovableAttribute("forwardkey", forwardkey,TableTagConstants.PATH, pageContext
-						.getSession());
+				SessionUtils.setRemovableAttribute("forwardkey", forwardkey,
+						TableTagConstants.PATH, pageContext.getSession());
 			} else
-				throw new JspException(resource.getString( TableTagConstants.NOFWDKEY_ERROR));
+				throw new JspException(resource
+						.getString(TableTagConstants.NOFWDKEY_ERROR));
 		}
 
 		return action;
@@ -419,7 +424,7 @@ public class TableTag extends BodyTagSupport {
 
 	/**
 	 * A helper method to get table object
-	 *
+	 * 
 	 * @param xmlFilePath
 	 *            path of the xml file.
 	 * @param name
@@ -427,93 +432,103 @@ public class TableTag extends BodyTagSupport {
 	 *            we are taking last substring of name attribut of the tag.
 	 * @return table object.
 	 */
-	private Table helperCache(String xmlFilePath, String key)
+	Table helperCache(String xmlFilePath, String key)
 			throws TableTagParseException {
-		FileCacheRep fileCacheRep=FileCacheRep.getInstance();
-		Table table=null;
-		if (! fileCacheRep.isKeyPresent(key)) {
-			table= TableTagParser.getInstance().parser(xmlFilePath);
+		FileCacheRep fileCacheRep = FileCacheRep.getInstance();
+		Table table = null;
+		if (!fileCacheRep.isKeyPresent(key)) {
+			table = TableTagParser.getInstance().parser(xmlFilePath);
 			fileCacheRep.addTOCacherep(key, table);
-		}
-		else {
-			table=fileCacheRep.getFromCacheRep(key);
+		} else {
+			table = fileCacheRep.getFromCacheRep(key);
 		}
 		return table;
 	}
 
-	private void getTableData(List list) throws TableTagException, TableTagParseException,
-			JspException, TableTagTypeParserException, IOException, PageExpiredException {
+	private void getTableData(List list) throws TableTagException,
+			TableTagParseException, JspException, TableTagTypeParserException,
+			IOException, PageExpiredException {
 		Locale locale = getLocale();
 		ResourceBundle resource = ResourceBundle
-		.getBundle(TableTagConstants.PROPERTIESFILE);
-		
-		String currentPage = ((HttpServletRequest)pageContext.getRequest()).getParameter("current");
-		Integer currentValue=null;
-		if (currentPage!=null&&!currentPage.equals(""))
-		{
-			 currentValue=Integer.valueOf(currentPage);
-		}
-		else
-		{
-			currentValue=1;
+				.getBundle(TableTagConstants.PROPERTIESFILE);
+
+		String currentPage = ((HttpServletRequest) pageContext.getRequest())
+				.getParameter("current");
+		Integer currentValue = null;
+		if (currentPage != null && !currentPage.equals("")) {
+			currentValue = Integer.valueOf(currentPage);
+		} else {
+			currentValue = 1;
 		}
 		if (type.equalsIgnoreCase("single")) {
-			getSingleData(list,locale,currentValue);
+			getSingleData(list, locale, currentValue);
 		} else if (type.equalsIgnoreCase("multiple")) {
-			getMultipleData(list,locale,currentValue);
+			getMultipleData(list, locale, currentValue);
 		} else
-			throw new TableTagException(resource.getString(TableTagConstants.WRONGTYPE_ERROR));
+			throw new TableTagException(resource
+					.getString(TableTagConstants.WRONGTYPE_ERROR));
 	}
 
-	private void getSingleData(List list,Locale locale,Integer currentValue) throws TableTagParseException, TableTagException,
-			JspException, IOException, PageExpiredException {
+	private void getSingleData(List list, Locale locale, Integer currentValue)
+			throws TableTagParseException, TableTagException, JspException,
+			IOException, PageExpiredException {
 		String xmlFilePath = getSingleFile();
 		Table table = helperCache(xmlFilePath, name);
 		ResourceBundle resource = ResourceBundle
-		.getBundle(TableTagConstants.PROPERTIESFILE);
+				.getBundle(TableTagConstants.PROPERTIESFILE);
 		if (table != null) {
 			StringBuilder result = new StringBuilder();
 			JspWriter out = pageContext.getOut();
-			boolean headingRequired=table.getPageRequirements().getHeadingRequired().equalsIgnoreCase("true");
-			boolean topBlueLineRequired=table.getPageRequirements().getTopbluelineRequired().equalsIgnoreCase("true");
-			createStartTable(result,  headingRequired,topBlueLineRequired);
+			boolean headingRequired = table.getPageRequirements()
+					.getHeadingRequired().equalsIgnoreCase("true");
+			boolean topBlueLineRequired = table.getPageRequirements()
+					.getTopbluelineRequired().equalsIgnoreCase("true");
+			createStartTable(result, headingRequired, topBlueLineRequired);
 			out.write(result.toString());
-			displayData(list, table,locale,currentValue);
+			displayData(list, table, locale, currentValue);
 		} else
-			throw new JspException(resource.getString(TableTagConstants.TABLENOTFOUND_ERROR));
+			throw new JspException(resource
+					.getString(TableTagConstants.TABLENOTFOUND_ERROR));
 	}
 
-	private void getMultipleData(List list,Locale locale,Integer currentValue) throws TableTagTypeParserException,
-			TableTagParseException, TableTagException, JspException,IOException, PageExpiredException {
+	private void getMultipleData(List list, Locale locale, Integer currentValue)
+			throws TableTagTypeParserException, TableTagParseException,
+			TableTagException, JspException, IOException, PageExpiredException {
 		StringBuilder result = new StringBuilder();
 		JspWriter out = pageContext.getOut();
-		createStartTable(result,true,false);
+		createStartTable(result, true, false);
 		ResourceBundle resource = ResourceBundle
-		.getBundle(TableTagConstants.PROPERTIESFILE);
+				.getBundle(TableTagConstants.PROPERTIESFILE);
 		out.write(result.toString());
 		int number = ((currentValue - 1) * pageSize);
-		for (Object object:list) {
-			Table table = helperMultipleData(object,locale);
+		for (Object object : list) {
+			Table table = helperMultipleData(object, locale);
 			if (table != null) {
-				displayDataMultiple(object, table,++number,locale);
+				displayDataMultiple(object, table, ++number, locale);
 			} else
-				throw new JspException(resource.getString(TableTagConstants.TABLENOTFOUND_ERROR));
+				throw new JspException(resource
+						.getString(TableTagConstants.TABLENOTFOUND_ERROR));
 		}
 		result = new StringBuilder();
-		createEndTable(result,false);
-		String action = (String) SessionUtils.getAttribute("action",pageContext.getSession());
+		createEndTable(result, false);
+		String action = (String) SessionUtils.getAttribute("action",
+				pageContext.getSession());
 		out.write(result.toString());
-		String currentFlowkey =(String) ((HttpServletRequest)pageContext.getRequest()).getAttribute(Constants.CURRENTFLOWKEY);
-		out.write(PageScroll.getPages(currentValue, pageSize, size, action, currentFlowkey));
+		String currentFlowkey = (String) ((HttpServletRequest) pageContext
+				.getRequest()).getAttribute(Constants.CURRENTFLOWKEY);
+		out.write(PageScroll.getPages(currentValue, pageSize, size, action,
+				currentFlowkey));
 		out.write("</table></td></tr>");
 		out.write("</table>");
 	}
 
-	private Table helperMultipleData(Object object,Locale locale)
-				throws TableTagTypeParserException, TableTagParseException,TableTagException,JspException {
+	private Table helperMultipleData(Object object, Locale locale)
+			throws TableTagTypeParserException, TableTagParseException,
+			TableTagException, JspException {
 		Files file = TypeParser.getInstance().parser(getSingleFile());
 		FileName[] fileName = file.getFileName();
-		String str =(String)TableTagUtils.getInstance().helper(pageContext ,"type","method",object,locale);
+		String str = (String) TableTagUtils.getInstance().helper(pageContext,
+				"type", "method", object, locale);
 		for (int i = 0; i < fileName.length; i++) {
 			if (str.equalsIgnoreCase(fileName[i].getName())) {
 				return helperCache(fileName[i].getPath(), fileName[i].getName());
@@ -522,147 +537,164 @@ public class TableTag extends BodyTagSupport {
 		return null;
 	}
 
-	private void displayDataMultiple(Object object, Table table,int number,Locale locale) throws TableTagException, IOException,
-			JspException {
+	private void displayDataMultiple(Object object, Table table, int number,
+			Locale locale) throws TableTagException, IOException, JspException {
 		String data = null;
 
 		JspWriter out = pageContext.getOut();
 		getAction(table);
-		boolean isFlowRequired = table.getPageRequirements().getFlowRequired().equalsIgnoreCase("true")? true:false;
-		data = table.getTable(pageContext ,object,locale, isFlowRequired);
+		boolean isFlowRequired = table.getPageRequirements().getFlowRequired()
+				.equalsIgnoreCase("true") ? true : false;
+		data = table.getTable(pageContext, object, locale, isFlowRequired);
 		out.write("<tr class=\"fontnormal\"><td width=\"3%\" valign=\"top\">");
 		out.write((number) + ".</td><td width=\"97%\">");
 		out.write(data);
-		if (table.getPageRequirements().getBlanklinerequired().equalsIgnoreCase("true")) {
+		if (table.getPageRequirements().getBlanklinerequired()
+				.equalsIgnoreCase("true")) {
 			out.write("<br />");
 		}
 		out.write("</td></tr>");
 	}
 
-
-	private void displayData(List list, Table table,Locale locale,Integer currentValue) throws TableTagException, IOException,
+	private void displayData(List list, Table table, Locale locale,
+			Integer currentValue) throws TableTagException, IOException,
 			JspException {
 		JspWriter out = pageContext.getOut();
-		
-		
+
 		int number = ((currentValue - 1) * pageSize);
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			Object object = it.next();
-			boolean isFlowRequired = table.getPageRequirements().getFlowRequired().equalsIgnoreCase("true")? true:false;
-			String data  = table.getTable(pageContext ,object,locale, isFlowRequired);
+			boolean isFlowRequired = table.getPageRequirements()
+					.getFlowRequired().equalsIgnoreCase("true") ? true : false;
+			String data = table.getTable(pageContext, object, locale,
+					isFlowRequired);
 			if (data == null) {
 				throw new JspException("XML.filenotfound");
 			}
-			if (table.getPageRequirements().getNumbersRequired().equalsIgnoreCase("true")) {
+			if (table.getPageRequirements().getNumbersRequired()
+					.equalsIgnoreCase("true")) {
 				out.write("<tr class=\"fontnormal\"><td width=\"3%\" ");
-				if(table.getPageRequirements().getValignnumbers().equalsIgnoreCase("true")) {
+				if (table.getPageRequirements().getValignnumbers()
+						.equalsIgnoreCase("true")) {
 					out.write("valign=\"top\"");
 				}
 				out.write(">");
 				out.write((++number) + ".</td><td width=\"97%\"");
 			}
 			out.write(data);
-			if (table.getPageRequirements().getBlanklinerequired().equalsIgnoreCase("true")) {
+			if (table.getPageRequirements().getBlanklinerequired()
+					.equalsIgnoreCase("true")) {
 				if (it.hasNext()) {
 					out.write("<br />");
 				}
 			}
-			if (table.getPageRequirements().getBluelineRequired().equalsIgnoreCase("true")) {
+			if (table.getPageRequirements().getBluelineRequired()
+					.equalsIgnoreCase("true")) {
 				if (it.hasNext()) {
-					out.write("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">");
-					out.write("<img src=\"pages/framework/images/trans.gif \" width=\"10\" height=\"5\"></td></tr>");
+					out
+							.write("<tr><td colspan=\"2\" valign=\"top\" class=\"blueline\">");
+					out
+							.write("<img src=\"pages/framework/images/trans.gif \" width=\"10\" height=\"5\"></td></tr>");
 				}
 			}
 			out.write("</td></tr>");
 		}
 		StringBuilder result = new StringBuilder();
-		boolean bottomBlueLineRequired = table.getPageRequirements().getBottombluelineRequired().equalsIgnoreCase("true");
-		createEndTable(result,bottomBlueLineRequired);
+		boolean bottomBlueLineRequired = table.getPageRequirements()
+				.getBottombluelineRequired().equalsIgnoreCase("true");
+		createEndTable(result, bottomBlueLineRequired);
 		String action = getAction(table);
 		out.write(result.toString());
-		String currentFlowkey =(String) ((HttpServletRequest)pageContext.getRequest()).getAttribute(Constants.CURRENTFLOWKEY);
-		out.write(PageScroll.getPages(currentValue, pageSize, size, action, currentFlowkey));
+		String currentFlowkey = (String) ((HttpServletRequest) pageContext
+				.getRequest()).getAttribute(Constants.CURRENTFLOWKEY);
+		out.write(PageScroll.getPages(currentValue, pageSize, size, action,
+				currentFlowkey));
 		out.write("</table></td></tr>");
 		out.write("</table>");
 	}
 
 	private List getList() throws HibernateSearchException, JspException {
-		Cache cache = (Cache)SessionUtils.getAttribute(TableTagConstants.TABLECACHE, pageContext.getSession());
-		
-		String currentPage = ((HttpServletRequest)pageContext.getRequest()).getParameter("current");
-		Integer currentValue=null;
-		if (currentPage!=null&&!currentPage.equals(""))
-		{
-			 currentValue=Integer.valueOf(currentPage);
+		Cache cache = (Cache) SessionUtils.getAttribute(
+				TableTagConstants.TABLECACHE, pageContext.getSession());
+
+		String currentPage = ((HttpServletRequest) pageContext.getRequest())
+				.getParameter("current");
+		Integer currentValue = null;
+		if (currentPage != null && !currentPage.equals("")) {
+			currentValue = Integer.valueOf(currentPage);
+		} else {
+			currentValue = 1;
 		}
-		else
-		{
-			currentValue=1;
-		}
-		
+
 		List list = null;
 		if (cache == null) {
-			list=getCacheNullList();
-			current=1;
-			//Bug ID-29262
-			//SessionUtils.setRemovableAttribute("current",Integer.valueOf(current),TableTagConstants.PATH,pageContext.getSession());
-		}
-		else if (currentValue!= null) {
+			list = getCacheNullList();
+			current = 1;
+			// Bug ID-29262
+			// SessionUtils.setRemovableAttribute("current",Integer.valueOf(current),TableTagConstants.PATH,pageContext.getSession());
+		} else if (currentValue != null) {
 			current = currentValue;
 
-			String meth=(String)SessionUtils.getAttribute("meth", pageContext.getSession());
-			list = meth==null?cache.getList(current, "next"):cache.getList(current, meth);
-			size=cache.getSize();
+			String meth = (String) SessionUtils.getAttribute("meth",
+					pageContext.getSession());
+			list = meth == null ? cache.getList(current, "next") : cache
+					.getList(current, meth);
+			size = cache.getSize();
 		}
 		return list;
 	}
 
 	private List getCacheNullList() throws HibernateSearchException {
-		List list=null;
-		Cache cache=null;
-		try{
-			QueryResult query = (QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,(HttpServletRequest)pageContext.getRequest());
-			if(null!= query) {
-				cache=new Cache(query);
-				list = cache.getList(0,"");
+		List list = null;
+		Cache cache = null;
+		try {
+			QueryResult query = (QueryResult) SessionUtils.getAttribute(
+					Constants.SEARCH_RESULTS, (HttpServletRequest) pageContext
+							.getRequest());
+			if (null != query) {
+				cache = new Cache(query);
+				list = cache.getList(0, "");
 				if (null == list) {
-					list= new ArrayList();
-				}
-				else {
+					list = new ArrayList();
+				} else {
 					SessionUtils.setRemovableAttribute(
-							TableTagConstants.TABLECACHE, cache,TableTagConstants.PATH, pageContext.getSession());
-					size=cache.getSize();
+							TableTagConstants.TABLECACHE, cache,
+							TableTagConstants.PATH, pageContext.getSession());
+					size = cache.getSize();
 				}
 			}
-		}catch (PageExpiredException e) {
+		} catch (PageExpiredException e) {
 
-				throw new HibernateSearchException(e);
+			throw new HibernateSearchException(e);
 		}
 		return list;
 	}
-	
+
 	private Locale getLocale() {
-		HttpSession session=pageContext.getSession();
-		Locale userPreferredLocale=null;
-		if(null!=session) {
-			UserContext userContext=(UserContext)session.getAttribute(LoginConstants.USERCONTEXT);
-			if(null!=userContext) {
+		HttpSession session = pageContext.getSession();
+		Locale userPreferredLocale = null;
+		if (null != session) {
+			UserContext userContext = (UserContext) session
+					.getAttribute(LoginConstants.USERCONTEXT);
+			if (null != userContext) {
 				userPreferredLocale = userContext.getPereferedLocale();
-				if(null==userPreferredLocale) {
-					userPreferredLocale=userContext.getMfiLocale();
+				if (null == userPreferredLocale) {
+					userPreferredLocale = userContext.getMfiLocale();
 				}
 			}
 		}
 		return userPreferredLocale;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.servlet.jsp.tagext.BodyTagSupport#release()
 	 */
-		@Override
+	@Override
 	public void release() {
 		super.release();
-		current=1;
-		size=0;
+		current = 1;
+		size = 0;
 	}
 }

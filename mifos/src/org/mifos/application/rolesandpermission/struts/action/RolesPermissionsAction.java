@@ -52,6 +52,8 @@ public class RolesPermissionsAction extends BaseAction {
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		doCleanUp((RolesPermissionsActionForm) form);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,null, request);
 		SessionUtils.setAttribute(RolesAndPermissionConstants.ACTIVITYLIST,
 				((RolesPermissionsBusinessService) getService())
 						.getActivities(), request);

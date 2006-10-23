@@ -178,4 +178,11 @@ public class TableTagTest extends TestCase {
 	  assertEquals("false",pageRequirements.getValignnumbers());
 	  
 	}
+	
+	public void testHelperCache()throws Exception{
+		
+		TableTag tableTag = 	new TableTag("single");
+		tableTag.setName("viewUsers");
+		assertNotNull(tableTag.helperCache("org/mifos/framework/util/resources/tabletag/viewUsers.xml","viewUsers"));
+	}
 }
