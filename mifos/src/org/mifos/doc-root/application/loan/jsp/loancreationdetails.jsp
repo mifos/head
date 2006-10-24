@@ -118,13 +118,12 @@
 				function fun_refresh(form)
 					{
 						
-							form.method.value="load";
-							form.action="loanAccountAction.do";
+							form.action="loanAccountAction.do?method=load";
 							form.submit();
 							
 					}
 			</SCRIPT>
-		<html-el:form action="/loanAccountAction.do" onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
+		<html-el:form action="/loanAccountAction.do?method=schedulePreview" onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOffering')}" var="LoanOffering" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -611,7 +610,6 @@
 					</td>
 				</tr>
 			</table>
-			<html-el:hidden property="method" value="schedulePreview" />
 			<html-el:hidden property="gracePeriodTypeId" value="${LoanOffering.gracePeriodType.id}" />
 			<html-el:hidden property="gracePeriodname" value="${LoanOffering.gracePeriodType.name}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

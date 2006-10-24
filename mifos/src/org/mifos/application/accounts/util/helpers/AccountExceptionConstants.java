@@ -47,5 +47,7 @@ public interface AccountExceptionConstants {
 	public final String ZEROAMNTADJUSTMENT = "exception.accounts.ApplicationException.ZeroAmntAdjustmnet";
 	public final String CANNOTADJUST = "exception.accounts.ApplicationException.CannotAdjust";
 	public final String CREATEEXCEPTION = "exception.accounts.create";
+	public final String CREATEEXCEPTIONPRDINACTIVE = "exception.accounts.create.prd.inactive";
+	public final String CREATEEXCEPTIONCUSTOMERINACTIVE = "exception.accounts.create.customer.inactive";
 	public final String APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION = "error.applycharge.nocustomermeeting";
 }

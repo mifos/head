@@ -42,8 +42,7 @@
 	*/
  				function fun_cancel(form)
 					{
-						form.method.value="loadMainSearch";
-						form.action="custSearchAction.do";
+						form.action="custSearchAction.do?method=loadMainSearch";
 						form.submit();
 					}
 	
@@ -65,8 +64,7 @@
 						else
 						{
 						
-							loanActionForm.action="loanAction.do";
-							loanActionForm.method.value="load";
+							loanActionForm.action="loanAction.do?method=load";
 							
 							func_disableSubmitBtn("continueBtn");
 							
