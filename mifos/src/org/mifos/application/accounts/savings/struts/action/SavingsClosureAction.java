@@ -45,7 +45,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountNotesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
@@ -120,11 +119,11 @@ public class SavingsClosureAction extends BaseAction {
 		// retrieve the savings object
 
 		savings = savingsService.findById(savings.getAccountId());
-		Hibernate.initialize(savings.getCustomer());
-		Hibernate.initialize(savings.getCustomer().getPersonnel());
-		Hibernate.initialize(savings.getAccountNotes());
-		Hibernate.initialize(savings.getAccountStatusChangeHistory());
-		Hibernate.initialize(savings.getSavingsActivityDetails());
+		savingsService.initialize(savings.getCustomer());
+		savingsService.initialize(savings.getCustomer().getPersonnel());
+		savingsService.initialize(savings.getAccountNotes());
+		savingsService.initialize(savings.getAccountStatusChangeHistory());
+		savingsService.initialize(savings.getSavingsActivityDetails());
 		initialize(savings.getSavingsOffering().getDepositGLCode());
 		initialize(savings.getSavingsOffering().getInterestGLCode());
 
@@ -277,12 +276,12 @@ public class SavingsClosureAction extends BaseAction {
 	}
 
 	private void initialize(GLCodeEntity glCode) {
-		Hibernate.initialize(glCode);
-		Hibernate.initialize(glCode.getAssociatedCOA());
+		savingsService.initialize(glCode);
+		savingsService.initialize(glCode.getAssociatedCOA());
 
-		Hibernate.initialize(glCode.getAssociatedCOA().getCOAHead());
-		Hibernate.initialize(glCode.getAssociatedCOA().getAssociatedGlcode());
-		Hibernate.initialize(glCode.getAssociatedCOA().getSubCategory());
+		savingsService.initialize(glCode.getAssociatedCOA().getCOAHead());
+		savingsService.initialize(glCode.getAssociatedCOA().getAssociatedGlcode());
+		savingsService.initialize(glCode.getAssociatedCOA().getSubCategory());
 
 	}
 }

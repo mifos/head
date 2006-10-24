@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -78,7 +77,7 @@ public class LoanPrdPersistence extends Persistence {
 			throws PersistenceException {
 		LoanOfferingBO loanOffering = (LoanOfferingBO) getPersistentObject(
 				LoanOfferingBO.class, loanOfferingId);
-		Hibernate.initialize(loanOffering);
+		initialize(loanOffering);
 		loanOffering.getPrdCategory().getProductCategoryName();
 		loanOffering.getPrdApplicableMaster().setLocaleId(localeId);
 		loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);

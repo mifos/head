@@ -46,7 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -784,8 +783,8 @@ public class CustomerPersistence extends Persistence {
 		for (CustomerStatusEntity customerStatus : queryResult) {
 			for (CustomerStatusFlagEntity customerStatusFlagEntity : customerStatus
 					.getFlagSet()) {
-				Hibernate.initialize(customerStatusFlagEntity);
-				Hibernate.initialize(customerStatusFlagEntity.getNames());
+				initialize(customerStatusFlagEntity);
+				initialize(customerStatusFlagEntity.getNames());
 			}
 		}
 		return queryResult;

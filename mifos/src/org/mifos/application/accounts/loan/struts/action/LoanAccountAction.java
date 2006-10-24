@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -152,13 +151,13 @@ public class LoanAccountAction extends AccountAppAction {
 
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		LoanBO loanBO = loanBusinessService.findBySystemId(globalAccountNum);
-		Hibernate.initialize(loanBO.getLoanMeeting());
+		loanBusinessService.initialize(loanBO.getLoanMeeting());
 		for (AccountActionDateEntity accountActionDateEntity : loanBO
 				.getAccountActionDates()) {
-			Hibernate.initialize(accountActionDateEntity);
+			loanBusinessService.initialize(accountActionDateEntity);
 			for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : ((LoanScheduleEntity) accountActionDateEntity)
 					.getAccountFeesActionDetails()) {
-				Hibernate.initialize(accountFeesActionDetailEntity);
+				loanBusinessService.initialize(accountFeesActionDetailEntity);
 			}
 		}
 		setLocaleForMasterEntities(loanBO, getUserContext(request)
@@ -186,7 +185,7 @@ public class LoanAccountAction extends AccountAppAction {
 			HttpServletResponse response) throws Exception {
 		String globalAccountNum = request.getParameter("globalAccountNum");
 		LoanBO loanBO = loanBusinessService.findBySystemId(globalAccountNum);
-		Hibernate.initialize(loanBO.getAccountStatusChangeHistory());
+		loanBusinessService.initialize(loanBO.getAccountStatusChangeHistory());
 		loanBO.setUserContext(getUserContext(request));
 		List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>(
 				loanBO.getAccountStatusChangeHistory());

@@ -206,6 +206,7 @@
 									<html-el:hidden property="periodicity" value=""/>
 									<html-el:hidden property="paymentType" value=""/>
 									<html-el:hidden property="charge" value=""/>
+									<html-el:hidden property="changedAmount" value=""/>
 							<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'applicableChargeList')}" >
 									<html-el:hidden property="amount" value="${fee.amountOrRate}"/>
 									<html-el:hidden property="changedAmount" value="${fee.amountOrRate}"/>

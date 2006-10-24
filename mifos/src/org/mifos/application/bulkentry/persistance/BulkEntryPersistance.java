@@ -42,7 +42,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -166,7 +165,7 @@ public class BulkEntryPersistance extends Persistence {
 	private void initializeFees(
 			List<BulkEntryAccountFeeActionView> actionViewList) {
 		for (BulkEntryAccountFeeActionView actionView : actionViewList) {
-			Hibernate.initialize(actionView.getFee());
+			initialize(actionView.getFee());
 		}
 	}
 

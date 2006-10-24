@@ -186,22 +186,19 @@ public class EditCustomerStatusActionForm extends BaseActionForm {
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		String methodCalled = request.getParameter(Methods.method.toString());
 		if (null != methodCalled) {
-			if ((Methods.preview.toString()).equals(methodCalled)) {
+			if ((Methods.previewStatus.toString()).equals(methodCalled)) {
 				this.flagId = null;
 			}
 		}
 	}
 
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		String methodCalled = request.getParameter(Methods.method.toString());
 		if (null != methodCalled) {
-			if ((Methods.preview.toString()).equals(methodCalled)) {
-				handleStatusPreviewValidations(request, errors);
-			} else if ((Methods.update.toString()).equals(methodCalled)) {
-				handleUpdateStatus(request, errors);
-			} else if ((Methods.previewStatus.toString()).equals(methodCalled)) {
+			if ((Methods.previewStatus.toString()).equals(methodCalled)) {
 				handleStatusPreviewValidations(request, errors);
 			} else if ((Methods.updateStatus.toString()).equals(methodCalled)) {
 				handleUpdateStatus(request, errors);

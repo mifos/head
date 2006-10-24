@@ -48,7 +48,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
@@ -493,7 +492,7 @@ public class SavingsAction extends AccountAppAction {
 		logger.debug("In SavingsAction::getRecentActivity()");
 		String globalAccountNum = request.getParameter("globalAccountNum");
 		SavingsBO savings = savingsService.findBySystemId(globalAccountNum);
-		Hibernate.initialize(savings.getAccountStatusChangeHistory());
+		savingsService.initialize(savings.getAccountStatusChangeHistory());
 		savings.setUserContext((UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession()));
 		List<AccountStatusChangeHistoryEntity> savingsStatusHistoryViewList = new ArrayList<AccountStatusChangeHistoryEntity>(
@@ -535,16 +534,16 @@ public class SavingsAction extends AccountAppAction {
 						.getGlobalAccountNum());
 		for (AccountActionDateEntity actionDate : savings
 				.getAccountActionDates())
-			Hibernate.initialize(actionDate);
+			savingsService.initialize(actionDate);
 
-		Hibernate.initialize(savings.getAccountNotes());
+		savingsService.initialize(savings.getAccountNotes());
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		for (AccountFlagMapping accountFlagMapping : savings.getAccountFlags()) {
-			Hibernate.initialize(accountFlagMapping.getFlag());
+			savingsService.initialize(accountFlagMapping.getFlag());
 			accountFlagMapping.getFlag().setLocaleId(uc.getLocaleId());
 		}
-		Hibernate.initialize(savings.getAccountFlags());
+		savingsService.initialize(savings.getAccountFlags());
 		savings.getAccountState().setLocaleId(uc.getLocaleId());
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);

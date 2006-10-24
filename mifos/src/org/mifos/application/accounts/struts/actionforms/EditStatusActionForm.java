@@ -124,7 +124,18 @@ public class EditStatusActionForm extends ValidatorActionForm {
 	public void setSelectedItems(String[] selectedItems) {
 		this.selectedItems = selectedItems;
 	}
+	
+	@Override
+	public void reset(ActionMapping mapping, HttpServletRequest request) {
+		String methodCalled = request.getParameter(Methods.method.toString());
+		if (null != methodCalled) {
+			if ((Methods.preview.toString()).equals(methodCalled)) {
+				this.flagId = null;
+			}
+		}
+	}
 
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();

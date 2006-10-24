@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -130,8 +129,8 @@ public class AccountPersistence extends Persistence {
 		for (AccountStateEntity accountStateEntity : queryResult) {
 			for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
 					.getFlagSet()) {
-				Hibernate.initialize(accountStateFlagEntity);
-				Hibernate.initialize(accountStateFlagEntity.getNames());
+				initialize(accountStateFlagEntity);
+				initialize(accountStateFlagEntity.getNames());
 			}
 		}
 		return queryResult;

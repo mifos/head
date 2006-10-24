@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
@@ -122,7 +121,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 							new SavingsHelper()
 									.getPaymentActionType(lastPayment));
 			accountAction.setLocaleId(uc.getLocaleId());
-			Hibernate.initialize(savings.getLastPmnt().getAccountTrxns());
+			getSavingsService().initialize(savings.getLastPmnt().getAccountTrxns());
 			SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION,
 					accountAction, request);
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_NAME,

@@ -39,7 +39,6 @@ package org.mifos.framework.components.configuration.persistence;
 
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -103,8 +102,8 @@ public class ConfigurationPersistence extends Persistence{
 				throw new FrameworkRuntimeException(null, "No Default Locale Specified");
 		  }
 		  SupportedLocalesEntity locale = supportedLocaleList.get(0);
-		  Hibernate.initialize(locale.getCountry());
-		  Hibernate.initialize(locale.getLanguage());
+		  initialize(locale.getCountry());
+		  initialize(locale.getLanguage());
 		  return locale;
 	}
 	

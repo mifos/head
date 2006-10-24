@@ -3,7 +3,6 @@ package org.mifos.application.productdefinition.persistence;
 import java.util.HashMap;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
@@ -90,8 +89,8 @@ public class PrdOfferingPersistence extends Persistence {
 		List<PrdStatusEntity> prdStatusList = (List<PrdStatusEntity>) executeNamedQuery(
 				NamedQueryConstants.PRODUCT_STATUS, queryParameters);
 		for (PrdStatusEntity prdStatus : prdStatusList) {
-			Hibernate.initialize(prdStatus);
-			Hibernate.initialize(prdStatus.getPrdState());
+			initialize(prdStatus);
+			initialize(prdStatus.getPrdState());
 			prdStatus.getPrdState().setLocaleId(localeId);
 		}
 		prdLogger.debug("getting the applicable product Status Done and : "

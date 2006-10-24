@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.exception.GenericJDBCException;
@@ -163,5 +164,9 @@ public abstract class Persistence {
 
 	protected Param typeNameValue(String type, String name, Object value) {
 		return new Param(type, name, value);
+	}
+	
+	public void initialize(Object object) {
+		Hibernate.initialize(object);
 	}
 }

@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -330,7 +329,7 @@ public class CustomerAccountBO extends AccountBO {
 						.getApplicableDatesCount(accountActionDate
 								.getActionDate());
 				if (applicableDatesCount > 0) {
-					Hibernate.initialize(accountFeesEntity.getFees());
+					new AccountPersistence().initialize(accountFeesEntity.getFees());
 					accountFeesEntity.setLastAppliedDate(accountActionDate
 							.getActionDate());
 					FeeBO feesBO = getAccountFeesObject(accountFeesEntity

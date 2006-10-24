@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -82,9 +81,9 @@ public class SavingsPersistence extends Persistence {
 				: (SavingsBO) queryResult;
 		if (savings != null && savings.getRecommendedAmount() == null) {
 			savings.setRecommendedAmount(new Money());
-			Hibernate.initialize(savings.getAccountActionDates());
-			Hibernate.initialize(savings.getAccountNotes());
-			Hibernate.initialize(savings.getAccountFlags());
+			initialize(savings.getAccountActionDates());
+			initialize(savings.getAccountNotes());
+			initialize(savings.getAccountFlags());
 		}
 		return savings;
 

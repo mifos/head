@@ -2,7 +2,6 @@ package org.mifos.application.accounts.savings.business.service;
 
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
@@ -49,7 +48,7 @@ public class SavingsBusinessService extends BusinessService {
 		try {
 			List<CustomFieldDefinitionEntity> customFields = savingsPersistence
 					.retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
-			Hibernate.initialize(customFields);
+			initialize(customFields);
 			return customFields;
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
@@ -86,5 +85,8 @@ public class SavingsBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
-
+	
+	public void initialize(Object object) {
+		savingsPersistence.initialize(object);
+	}
 }
