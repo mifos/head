@@ -215,11 +215,6 @@ public class InitializerPlugin implements PlugIn {
 	 * personnel table already exists where the user name is "mifos". Insertion
 	 * of that row is taken care by master data script.This is a temporary
 	 * method and would be altered when the set module is done.
-	 * 
-	 * @throws URISyntaxException
-	 * @throws XMLReaderException
-	 * @throws EncryptionException
-	 * @throws HibernateProcessException
 	 */
 	private void configureAdminUser() throws XMLReaderException,
 			URISyntaxException, HibernateProcessException, SystemException {

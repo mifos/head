@@ -2782,7 +2782,7 @@ VALUES(1,'2005-12-22','Pongal');
 /* The table Personnel contains the default user of the system with information like login name etc - Configuration */
  INSERT INTO PERSONNEL(PERSONNEL_ID,LEVEL_ID,GLOBAL_PERSONNEL_NUM,OFFICE_ID,TITLE,PERSONNEL_STATUS,PREFERRED_LOCALE,SEARCH_ID,MAX_CHILD_COUNT,PASSWORD,LOGIN_NAME,EMAIL_ID,PASSWORD_CHANGED,DISPLAY_NAME,CREATED_BY,
 CREATED_DATE,UPDATED_BY,UPDATED_DATE,NO_OF_TRIES,LAST_LOGIN,LOCKED,VERSION_NO)
-VALUES(1,2,1,1,1,1,1,NULL,1,1,'mifos',NULL,1,'mifos',1,NULL,1,NULL,4,NULL,0,0);
+VALUES(1,2,1,1,1,1,1,NULL,1,NULL,'mifos',NULL,1,'mifos',1,NULL,1,NULL,4,NULL,0,0);
 
 /* The table Personnel Details contains the address information of the default user  - Configuration */
 INSERT INTO PERSONNEL_DETAILS 
