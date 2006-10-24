@@ -61,6 +61,7 @@ import org.mifos.application.productdefinition.exceptions.ProductDefinitionExcep
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
@@ -1236,7 +1237,15 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	}
 	
        
-       
+	public void testPrdOfferingView(){
+		PrdOfferingView prdOfferingView=new PrdOfferingView();
+		prdOfferingView.setGlobalPrdOfferingNum("1234");
+		assertEquals("1234",prdOfferingView.getGlobalPrdOfferingNum());
+		prdOfferingView.setPrdOfferingId(Short.valueOf("1"));
+		assertEquals(Short.valueOf("1"),prdOfferingView.getPrdOfferingId());
+		prdOfferingView.setPrdOfferingName("name");
+		assertEquals("name",prdOfferingView.getPrdOfferingName());
+	}
     
 	private MeetingBO getMeeting() {
 		return TestObjectFactory.createMeeting(TestObjectFactory

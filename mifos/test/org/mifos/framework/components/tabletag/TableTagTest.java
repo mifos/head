@@ -199,4 +199,32 @@ public class TableTagTest extends TestCase {
 		assertEquals("<span><a href= \"load?X&currentFlowKey=1234&randomNUm=9999\">a</a></span>,<span><a href= \"load?Y&currentFlowKey=1234&randomNUm=9999\">b</a></span>",Link.createLink(new String []{"a","b"},new String []{"X","Y"},"true","load",null,"1234","9999"));
 	}
 	
+	public void testTabletag(){
+		
+		TableTag tableTag = new TableTag();
+		
+		tableTag.setClassName("myclass");
+		assertEquals("myclass",tableTag.getClassName());
+		tableTag.setType("mytype");
+		assertEquals("mytype",tableTag.getType());
+		tableTag.setName("myname");
+		assertEquals("myname",tableTag.getName());
+		tableTag.setBorder("myborder");
+		assertEquals("myborder",tableTag.getBorder());
+		tableTag.setCellpadding("mycellpading");
+		assertEquals("mycellpading",tableTag.getCellpadding());
+		tableTag.setCellspacing("mycellspacing");
+		assertEquals("mycellspacing",tableTag.getCellspacing());
+		tableTag.setWidth("mywidth");
+		assertEquals("mywidth",tableTag.getWidth());
+		tableTag.setKey("mykey");
+		assertEquals("mykey",tableTag.getKey());
+		
+		tableTag.release();
+		
+		assertEquals(1,tableTag.current);
+		assertEquals(0,tableTag.size);
+		
+	}
+	
 }

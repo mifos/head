@@ -38,17 +38,17 @@ public class CustomerTestSuite extends MifosTestSuite {
 		super();
 
 	}
-	public static void main(String[] args){
-		try{
+
+	public static void main(String[] args) {
+		try {
 			Test testSuite = suite();
-			TestRunner.run (testSuite);
-		}
-		catch(Exception e){
+			TestRunner.run(testSuite);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static Test suite()throws Exception {
+	public static Test suite() throws Exception {
 		CustomerTestSuite testSuite = new CustomerTestSuite();
 		testSuite.addTestSuite(TestCenterPersistence.class);
 		testSuite.addTestSuite(TestCustomerPersistence.class);

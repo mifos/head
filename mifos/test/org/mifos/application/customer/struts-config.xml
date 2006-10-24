@@ -68,6 +68,7 @@
 			<forward name="mainSearch_success" path="/pages/application/customer/jsp/search_result.jsp" />
 			<forward name="mainSearch_failure" path="/pages/application/customer/jsp/search_result.jsp" />
 			<forward name="getHomePage_success" path="/pages/application/customer/jsp/home.jsp" />
+			<forward name="loadallbranches_success" path="/custSearchAction.do?method=mainSearch" />
         		
        	</action>
   		<action path="/custApplyAdjustment" type="org.mifos.application.customer.struts.action.CustomerApplyAdjustmentAction" 

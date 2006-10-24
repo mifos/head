@@ -181,6 +181,49 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.mainSearch_success.toString());
 		veryfyResults();
 	}
+	
+	public void testGet()throws Exception{
+		addActionAndMethod(Methods.get.toString());
+		//createGroupWithCenter();
+		addRequestParameter("searchString", "gr");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(CustomerSearchConstants.LOADFORWARDLOANOFFICER_SUCCESS);
+		OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf("3"));
+		
+		assertEquals(officeBO.getOfficeName(),SessionUtils.getAttribute(CustomerSearchConstants.OFFICE,request));
+		assertEquals(true,SessionUtils.getAttribute("isCenterHeirarchyExists",request));
+		assertEquals(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER,SessionUtils.getAttribute(CustomerSearchConstants.LOADFORWARD,request));
+
+	}
+	public void testPreview()throws Exception{
+		addActionAndMethod(Methods.preview.toString());
+		//createGroupWithCenter();
+		addRequestParameter("searchString", "gr");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER_SUCCESS);
+		OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf("3"));
+		
+		assertEquals(officeBO.getOfficeName(),SessionUtils.getAttribute(CustomerSearchConstants.OFFICE,request));
+		assertEquals(true,SessionUtils.getAttribute("isCenterHeirarchyExists",request));
+		assertEquals(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER,SessionUtils.getAttribute(CustomerSearchConstants.LOADFORWARD,request));
+
+	}
+	
+	public void testLoadAllBranches()throws Exception{
+		addActionAndMethod("loadAllBranches");
+		addRequestParameter("searchString", "gr");
+		addRequestParameter("officeId", "3");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(CustomerSearchConstants.LOADALLBRANCHES_SUCCESS);
+	}
 	private void veryfyResults() throws Exception{
 		QueryResult queryResult = (QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request);
 		assertNotNull(queryResult);

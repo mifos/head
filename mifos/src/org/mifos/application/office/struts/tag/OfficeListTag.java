@@ -14,6 +14,7 @@ import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.MifosTagUtils;
@@ -190,7 +191,7 @@ public class OfficeListTag extends BodyTagSupport {
 			OfficeBO loggedInOffice = officePersistence.getOffice(userContext.getBranchId()); 
 			if(branchOnlyChildren.size()>0){
 				for(OfficeBO dataScopeBranch : branchOnlyChildren){
-					if(dataScopeBranch.getSearchId().startsWith(loggedInOffice.getSearchId())){
+					if(dataScopeBranch.getSearchId().startsWith(loggedInOffice.getSearchId())&&dataScopeBranch.getOfficeStatus().equals(OfficeStatus.ACTIVE)){
 						dataScopeBranches.add(dataScopeBranch);
 					}
 				}

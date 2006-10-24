@@ -15,6 +15,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -245,4 +246,38 @@ public class TestMasterBusinessService extends MifosTestCase {
 			HibernateUtil.closeSession();
 		}
 	}
+	
+	public void testgetLoanProductsAsOfMeetingDate(){
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.getLoanProductsAsOfMeetingDate(null,"1.1", Short.valueOf("1"));
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+	public void testretrieveCustomFieldsDefinition(){
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.retrieveCustomFieldsDefinition(EntityType.CENTER);
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}
+	public void testgetMasterDataEntity(){
+		TestObjectFactory.simulateInvalidConnection();
+		try {
+			masterService.getMasterDataEntity(null,null);
+			fail();
+		} catch (ServiceException e) {
+			assertTrue(true);
+		} finally {
+			HibernateUtil.closeSession();
+		}
+	}	
 }

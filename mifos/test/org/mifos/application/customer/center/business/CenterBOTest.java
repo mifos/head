@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomFieldView;
+import org.mifos.application.customer.center.util.helpers.CenterSearchResults;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
@@ -469,6 +470,19 @@ public class CenterBOTest extends MifosTestCase {
 		assertNull(meeting);
 	}
 
+	public void testCenterSearchResultsView(){
+		
+		CenterSearchResults searchResults = new CenterSearchResults();
+		searchResults.setCenterName("Center");
+		searchResults.setCenterSystemId("1234");
+		searchResults.setParentOfficeId(Short.valueOf("1"));
+		searchResults.setParentOfficeName("BO");
+		assertEquals("Center",searchResults.getCenterName());
+		assertEquals("1234",searchResults.getCenterSystemId());
+		assertEquals(Short.valueOf("1").shortValue(),searchResults.getParentOfficeId());
+		assertEquals("BO",searchResults.getParentOfficeName());
+		
+	}
 	private void createCustomers() throws Exception {
 		meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"),
 				new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
