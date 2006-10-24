@@ -29,6 +29,7 @@ import org.mifos.application.customer.struts.action.TestCustomerAction;
 import org.mifos.application.customer.struts.action.TestCustomerApplyAdjustmentAction;
 import org.mifos.application.customer.struts.action.TestCustomerNotesAction;
 import org.mifos.application.customer.struts.action.TestEditCustomerStatusAction;
+import org.mifos.application.customer.util.helpers.TestCustomerHelpers;
 import org.mifos.framework.MifosTestSuite;
 
 public class CustomerTestSuite extends MifosTestSuite {
@@ -45,7 +46,6 @@ public class CustomerTestSuite extends MifosTestSuite {
 		catch(Exception e){
 			e.printStackTrace();
 		}
-
 	}
 
 	public static Test suite()throws Exception {
@@ -76,6 +76,7 @@ public class CustomerTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(ClientPersistenceTest.class);
 		testSuite.addTestSuite(ClientBusinessServiceTest.class);
 		testSuite.addTestSuite(TestCustSearchAction.class);
+		testSuite.addTestSuite(TestCustomerHelpers.class);
 		return testSuite;
 	}
 }
