@@ -16,6 +16,7 @@ import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.TransactionTypeEntity;
+import org.mifos.application.master.util.helpers.Cache;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -217,6 +218,11 @@ public class MasterPersistence extends Persistence {
 	public MasterDataEntity getMasterDataEntity(Class clazz,Short id) throws PersistenceException {
 		return (MasterDataEntity)getPersistentObject(clazz,id);
 	}
-	
-	
+
+	@Override
+	public Object getPersistentObject(Class clazz, Short persistentObjectId) throws PersistenceException {
+		if(clazz.getName().startsWith(MasterConstants.PATH_ACCOUNTACTIONENTITY))
+			return Cache.getCacheValue().get(persistentObjectId);
+		return super.getPersistentObject(clazz, persistentObjectId);
+	}
 }

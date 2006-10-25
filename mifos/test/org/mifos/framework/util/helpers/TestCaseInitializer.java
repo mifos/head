@@ -39,6 +39,7 @@ package org.mifos.framework.util.helpers;
 
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
+import org.mifos.application.master.util.helpers.CacheInitializer;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
@@ -60,6 +61,7 @@ public class TestCaseInitializer {
 			DatabaseSetup.initializeHibernate();
 
 			FinancialInitializer.initialize();
+			CacheInitializer.initialize();
 			AuthorizationManager.getInstance().init();
 			HierarchyManager.getInstance().init();
 			MifosConfiguration.getInstance().init();

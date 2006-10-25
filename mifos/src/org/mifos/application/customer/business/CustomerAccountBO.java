@@ -56,6 +56,7 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
@@ -79,7 +80,7 @@ import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -173,7 +174,6 @@ public class CustomerAccountBO extends AccountBO {
 	@Override
 	protected AccountPaymentEntity makePayment(PaymentData paymentData)
 			throws AccountException {
-		MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
 		AccountPaymentEntity accountPayment = new AccountPaymentEntity(this,
 				paymentData.getTotalAmount(), paymentData.getRecieptNum(),
 				paymentData.getRecieptDate(), new PaymentTypeEntity(paymentData
@@ -198,11 +198,11 @@ public class CustomerAccountBO extends AccountBO {
 						customerAccountPaymentData,
 						paymentData.getPersonnel(),
 						paymentData.getTransactionDate(),
-						(AccountActionEntity) masterPersistenceService
-								.findById(
+						(AccountActionEntity) new MasterPersistence()
+								.getPersistentObject(
 										AccountActionEntity.class,
-										AccountConstants.ACTION_CUSTOMER_ACCOUNT_REPAYMENT),
-						"Payment rcvd.");
+										AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT
+												.getValue()), "Payment rcvd.");
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}

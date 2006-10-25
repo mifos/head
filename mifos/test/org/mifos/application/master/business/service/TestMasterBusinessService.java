@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -272,7 +273,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 	public void testgetMasterDataEntity(){
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			masterService.getMasterDataEntity(null,null);
+			masterService.getMasterDataEntity(AccountStateEntity.class,Short.valueOf("1"));
 			fail();
 		} catch (ServiceException e) {
 			assertTrue(true);

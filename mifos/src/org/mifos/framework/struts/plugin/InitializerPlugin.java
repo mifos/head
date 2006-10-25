@@ -55,6 +55,7 @@ import org.hibernate.Transaction;
 import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.master.util.helpers.CacheInitializer;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.cronjobs.MifosScheduler;
@@ -116,6 +117,7 @@ public class InitializerPlugin implements PlugIn {
 			initializeSecurity();
 			configureAdminUser();
 			FinancialInitializer.initialize();
+			CacheInitializer.initialize();
 			EntityMasterData.getInstance().init();
 			initializeEntityMaster();
 			(new MifosScheduler()).registerTasks();

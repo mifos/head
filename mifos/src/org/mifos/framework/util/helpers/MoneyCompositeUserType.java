@@ -113,6 +113,8 @@ public class MoneyCompositeUserType implements CompositeUserType {
 			//has been done so that there is a compatibility with M1 code
 			if(currencyId == null || currencyId.shortValue() == 0){
 				currency = Configuration.getInstance().getSystemConfig().getCurrency();
+			}else if(currencyId.equals(Configuration.getInstance().getSystemConfig().getCurrency().getCurrencyId())) {
+				currency = Configuration.getInstance().getSystemConfig().getCurrency();
 			}
 			else{
 				Session session1 = HibernateUtil.getSessionTL();
