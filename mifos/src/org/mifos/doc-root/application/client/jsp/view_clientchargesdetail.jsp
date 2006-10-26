@@ -145,7 +145,7 @@
 						</c:if> <BR>
 						<span class="fontnormalbold"> <mifos:mifoslabel
 							name="client.total" isColonRequired="Yes"
-							bundle="ClientUIResources" /><c:out
+							bundle="ClientUIResources" /> <c:out
 							value='${BusinessKey.totalAmountDue.amountDoubleValue}'></c:out>
 						</span></td>
 					</tr>

@@ -453,6 +453,7 @@ public class GroupCustAction extends CustAction {
 		actionForm.setCustomerId(group.getCustomerId().toString());
 		actionForm.setGlobalCustNum(group.getGlobalCustNum());
 		actionForm.setExternalId(group.getExternalId());
+		System.out.println("*************groups address objec: "+group.getAddress());
 		actionForm.setAddress(group.getAddress());
 		actionForm.setCustomerPositions(createCustomerPositionViews(group
 				.getCustomerPositions(), request));

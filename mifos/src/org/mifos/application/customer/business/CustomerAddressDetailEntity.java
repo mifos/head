@@ -71,6 +71,8 @@ public class CustomerAddressDetailEntity extends PersistentObject {
 	}
 	
 	public Address getAddress() {
+		if(address==null)
+			address = new Address();
 		return address;
 	}
 	
