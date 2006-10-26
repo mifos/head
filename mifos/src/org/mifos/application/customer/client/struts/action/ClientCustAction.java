@@ -147,15 +147,15 @@ public class ClientCustAction extends CustAction {
 			}
 			actionForm.setOfficeId(actionForm.getParentGroup().getOffice()
 					.getOfficeId().toString());
-			if(actionForm.getParentGroup().getPersonnel()!=null)
+			if (actionForm.getParentGroup().getPersonnel() != null)
 				actionForm.setFormedByPersonnel(actionForm.getParentGroup()
-					.getPersonnel().getPersonnelId().toString());
+						.getPersonnel().getPersonnelId().toString());
 		}
 		loadCreateMasterData(actionForm, request);
 		SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
-		Configuration.getInstance().getCustomerConfig(
+				Configuration.getInstance().getCustomerConfig(
 						getUserContext(request).getBranchId())
-						.isCenterHierarchyExists(), request);	
+						.isCenterHierarchyExists(), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -174,7 +174,7 @@ public class ClientCustAction extends CustAction {
 		if (actionForm.getParentGroupId() != null) {
 			CustomerBO parent = getCustomerBusinessService().getCustomer(
 					Integer.valueOf(actionForm.getParentGroupId()));
-			if (null != parent && null!=parent.getParentCustomer())
+			if (null != parent && null != parent.getParentCustomer())
 				parent.getParentCustomer().getDisplayName();
 			actionForm.setParentGroup(parent);
 		}
@@ -221,10 +221,11 @@ public class ClientCustAction extends CustAction {
 			loadLoanOfficers(actionForm.getOfficeIdValue(), request);
 			officeId = actionForm.getOfficeIdValue();
 			loadFees(actionForm, request, FeeCategory.CLIENT, null);
-		} else{
+		} else {
 			officeId = actionForm.getParentGroup().getOffice().getOfficeId();
-			if(actionForm.getParentGroup().getCustomerMeeting()!=null)
-				loadFees(actionForm, request, FeeCategory.CLIENT, actionForm.getParentGroup().getCustomerMeeting().getMeeting());
+			if (actionForm.getParentGroup().getCustomerMeeting() != null)
+				loadFees(actionForm, request, FeeCategory.CLIENT, actionForm
+						.getParentGroup().getCustomerMeeting().getMeeting());
 			else
 				loadFees(actionForm, request, FeeCategory.CLIENT, null);
 		}
@@ -302,6 +303,34 @@ public class ClientCustAction extends CustAction {
 	}
 
 	@TransactionDemarcate(joinToken = true)
+	public ActionForward retrievePicture(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		System.out.println("**********In retrievePicture: ");
+		ClientBO clientBO = (ClientBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		System.out.println("**********In size: "+clientBO.getCustomerPicture().getPicture().length());
+		InputStream in = clientBO.getCustomerPicture().getPicture()
+				.getBinaryStream();
+		
+		in.mark(0);
+		response.setContentType("image/jpeg");
+		BufferedOutputStream out = new BufferedOutputStream(response
+				.getOutputStream());
+		byte[] by = new byte[1024 * 4]; // 4K buffer buf, 0, buf.length
+		int index = in.read(by, 0, 1024 * 4);
+		while (index != -1) {
+			out.write(by, 0, index);
+			index = in.read(by, 0, 1024 * 4);
+		}
+		out.flush();
+		out.close();
+		in.reset();
+		String forward = ClientConstants.CUSTOMER_PICTURE_PAGE;
+		return mapping.findForward(forward);
+	}
+
+	@TransactionDemarcate(joinToken = true)
 	public ActionForward previewPersonalInfo(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
@@ -360,9 +389,9 @@ public class ClientCustAction extends CustAction {
 		Short personnelId = null;
 		Short officeId = null;
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
-			if(actionForm.getParentGroup().getPersonnel()!=null){
-			personnelId = actionForm.getParentGroup().getPersonnel()
-					.getPersonnelId();
+			if (actionForm.getParentGroup().getPersonnel() != null) {
+				personnelId = actionForm.getParentGroup().getPersonnel()
+						.getPersonnelId();
 			}
 			officeId = actionForm.getParentGroup().getOffice().getOfficeId();
 		} else {
@@ -379,56 +408,51 @@ public class ClientCustAction extends CustAction {
 		List<SavingsOfferingBO> selectedOfferings = getSelectedOfferings(
 				actionForm, request);
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
-				client = new ClientBO(userContext, actionForm.getClientName()
-						.getDisplayName(), actionForm.getStatusValue(),
-						actionForm.getExternalId(), getDateFromString(
-								actionForm.getMfiJoiningDate(), userContext
-										.getPereferedLocale()), actionForm
-								.getAddress(), customFields, actionForm
-								.getFeesToApply(), selectedOfferings,
-						actionForm.getFormedByPersonnelValue(), actionForm
-								.getOfficeIdValue(), meeting, actionForm
-								.getLoanOfficerIdValue(), getDateFromString(
-								actionForm.getDateOfBirth(), userContext
-										.getPereferedLocale()), actionForm
-								.getGovernmentId(), actionForm
-								.getTrainedValue(), getDateFromString(
-								actionForm.getTrainedDate(), userContext
-										.getPereferedLocale()), actionForm
-								.getGroupFlagValue(), actionForm
-								.getClientName(), actionForm.getSpouseName(),
-						actionForm.getClientDetailView(), actionForm
-								.getCustomerPicture());
-			} else {
-				CustomerBO parentCustomer = getCustomerBusinessService()
-						.getCustomer(
-								actionForm.getParentGroup().getCustomerId());
-				parentCustomer.setVersionNo(actionForm.getParentGroup()
-						.getVersionNo());
-				client = new ClientBO(userContext, actionForm.getClientName()
-						.getDisplayName(), actionForm.getStatusValue(),
-						actionForm.getExternalId(), getDateFromString(
-								actionForm.getMfiJoiningDate(), userContext
-										.getPereferedLocale()), actionForm
-								.getAddress(), customFields, actionForm
-								.getFeesToApply(), selectedOfferings,
-						actionForm.getFormedByPersonnelValue(), parentCustomer
-								.getOffice().getOfficeId(), parentCustomer,
-						getDateFromString(actionForm.getDateOfBirth(),
-								userContext.getPereferedLocale()), actionForm
-								.getGovernmentId(), actionForm
-								.getTrainedValue(), getDateFromString(
-								actionForm.getTrainedDate(), userContext
-										.getPereferedLocale()), actionForm
-								.getGroupFlagValue(), actionForm
-								.getClientName(), actionForm.getSpouseName(),
-						actionForm.getClientDetailView(), actionForm
-								.getCustomerPicture());
-			}
-			client.save();
-			actionForm.setCustomerId(client.getCustomerId().toString());
-			actionForm.setGlobalCustNum(client.getGlobalCustNum());
-			client = null;
+			client = new ClientBO(userContext, actionForm.getClientName()
+					.getDisplayName(), actionForm.getStatusValue(), actionForm
+					.getExternalId(), getDateFromString(actionForm
+					.getMfiJoiningDate(), userContext.getPereferedLocale()),
+					actionForm.getAddress(), customFields, actionForm
+							.getFeesToApply(), selectedOfferings, actionForm
+							.getFormedByPersonnelValue(), actionForm
+							.getOfficeIdValue(), meeting, actionForm
+							.getLoanOfficerIdValue(), getDateFromString(
+							actionForm.getDateOfBirth(), userContext
+									.getPereferedLocale()), actionForm
+							.getGovernmentId(), actionForm.getTrainedValue(),
+					getDateFromString(actionForm.getTrainedDate(), userContext
+							.getPereferedLocale()), actionForm
+							.getGroupFlagValue(), actionForm.getClientName(),
+					actionForm.getSpouseName(), actionForm
+							.getClientDetailView(), actionForm
+							.getCustomerPicture());
+		} else {
+			CustomerBO parentCustomer = getCustomerBusinessService()
+					.getCustomer(actionForm.getParentGroup().getCustomerId());
+			parentCustomer.setVersionNo(actionForm.getParentGroup()
+					.getVersionNo());
+			client = new ClientBO(userContext, actionForm.getClientName()
+					.getDisplayName(), actionForm.getStatusValue(), actionForm
+					.getExternalId(), getDateFromString(actionForm
+					.getMfiJoiningDate(), userContext.getPereferedLocale()),
+					actionForm.getAddress(), customFields, actionForm
+							.getFeesToApply(), selectedOfferings, actionForm
+							.getFormedByPersonnelValue(), parentCustomer
+							.getOffice().getOfficeId(), parentCustomer,
+					getDateFromString(actionForm.getDateOfBirth(), userContext
+							.getPereferedLocale()), actionForm
+							.getGovernmentId(), actionForm.getTrainedValue(),
+					getDateFromString(actionForm.getTrainedDate(), userContext
+							.getPereferedLocale()), actionForm
+							.getGroupFlagValue(), actionForm.getClientName(),
+					actionForm.getSpouseName(), actionForm
+							.getClientDetailView(), actionForm
+							.getCustomerPicture());
+		}
+		client.save();
+		actionForm.setCustomerId(client.getCustomerId().toString());
+		actionForm.setGlobalCustNum(client.getGlobalCustNum());
+		client = null;
 		return mapping.findForward(ActionForwards.create_success.toString());
 	}
 
@@ -506,7 +530,28 @@ public class ClientCustAction extends CustAction {
 		request.removeAttribute(ClientConstants.AGE);
 		loadMasterDataForDetailsPage(request, clientBO);
 		setSpouseOrFatherName(request, clientBO);
+		setPicture(actionForm, clientBO, request);
 		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
+	private void setPicture(ClientCustActionForm actionForm, ClientBO clientBO,
+			HttpServletRequest request) throws Exception {
+		if (clientBO.getCustomerPicture() != null
+				&& clientBO.getCustomerPicture().getPicture().length() != 0) {
+			SessionUtils.setAttribute("noPictureOnGet", "No", request);
+		} else {
+			SessionUtils.setAttribute("noPictureOnGet", "Yes", request);
+		}
+
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward showPicture(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		System.out.println("**********show picture");
+		String forward = ClientConstants.CUSTOMER_PICTURE_PAGE;
+		return mapping.findForward(forward);
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -589,8 +634,10 @@ public class ClientCustAction extends CustAction {
 		}
 		client.setUserContext(getUserContext(request));
 		client.updateClientDetails(actionForm.getClientDetailView());
-		client.updatePersonalInfo(actionForm.getClientName().getDisplayName(),actionForm.getGovernmentId(),getDateFromString(actionForm.getDateOfBirth(),
-				getUserContext(request).getPereferedLocale()));
+		client.updatePersonalInfo(actionForm.getClientName().getDisplayName(),
+				actionForm.getGovernmentId(), getDateFromString(actionForm
+						.getDateOfBirth(), getUserContext(request)
+						.getPereferedLocale()));
 
 		return mapping.findForward(ActionForwards.updatePersonalInfo_success
 				.toString());
@@ -602,8 +649,8 @@ public class ClientCustAction extends CustAction {
 			throws Exception {
 		SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST,
 				Configuration.getInstance().getCustomerConfig(
-								getUserContext(request).getBranchId())
-								.isCenterHierarchyExists(), request);	
+						getUserContext(request).getBranchId())
+						.isCenterHierarchyExists(), request);
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		clearActionForm(actionForm);
 		ClientBO client = (ClientBO) SessionUtils.getAttribute(
@@ -661,18 +708,17 @@ public class ClientCustAction extends CustAction {
 		client.setTrainedDate(getDateFromString(actionForm.getTrainedDate(),
 				getUserContext(request).getPereferedLocale()));
 		PersonnelBO personnel = null;
-		
+
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
-			if (actionForm.getLoanOfficerIdValue() != null){ 
+			if (actionForm.getLoanOfficerIdValue() != null) {
 				personnel = getPersonnelBusinessService().getPersonnel(
 						actionForm.getLoanOfficerIdValue());
 			}
-		}
-		else if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
+		} else if (actionForm.getGroupFlagValue().equals(
+				YesNoFlag.YES.getValue())) {
 			personnel = client.getPersonnel();
 		}
-		
-			
+
 		client.updateMfiInfo(personnel);
 		client.setUserContext(getUserContext(request));
 		return mapping.findForward(ActionForwards.updateMfiInfo_success
@@ -785,7 +831,7 @@ public class ClientCustAction extends CustAction {
 	}
 
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
-			ClientBO clientBO) throws ApplicationException {
+			ClientBO clientBO) throws Exception {
 		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setAttribute(ClientConstants.AGE,
 				calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
@@ -836,6 +882,7 @@ public class ClientCustAction extends CustAction {
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.POVERTY_STATUS,
 						getUserContext(request).getLocaleId()), request);
+
 	}
 
 	private void setLocaleIdToLoanStatus(List<LoanBO> accountList,

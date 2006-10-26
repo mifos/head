@@ -50,9 +50,10 @@
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 		<script language="javascript">
-  function photopopup(custId , custName){
-
-   window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
+  function photopopup(custId , custName, currentFlow){
+	//	alert("currentFlow");
+	//alert(currentFlow);
+   window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
 
   }
 
@@ -122,13 +123,16 @@
 								<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivitiesEntityName')}" /></span> <br>
 						</tr>
 						<tr>
-							<td class="fontnormalbold"><span class="fontnormal"> <c:set
-								var="custId" value="${BusinessKey.customerId}" />
-							<c:set var="custName"
-								value="${BusinessKey.personnel.displayName}" /> <%--	<c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'noPictureOnGet')} eq 'No'}">
-								<a href="javascript:photopopup(${custId} , '${custName}')"><mifos:mifoslabel
+							<td class="fontnormalbold"><span class="fontnormal"> 
+							<c:set var="custId" value="${BusinessKey.customerId}" />
+							<c:set var="custName"	value="${BusinessKey.personnel.displayName}" /> 	
+							<c:set var="pic"	value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'noPictureOnGet')}" /> 
+							<%-- <c:out value="pic val;ue: "/>
+							<c:out value="${pic}"/> --%>
+							<c:if test="${pic eq 'No'}">
+								<a href="javascript:photopopup(${custId} , '${custName}' ,'${requestScope.currentFlowKey}')"><mifos:mifoslabel
 								name="client.seephoto" bundle="ClientUIResources"></mifos:mifoslabel></a>
-							</c:if> --%></span><br>
+							</c:if> </span><br>
 							</td>
 						</tr>
 					</table>

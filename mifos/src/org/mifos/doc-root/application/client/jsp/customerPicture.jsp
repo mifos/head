@@ -44,7 +44,7 @@
 <%@taglib uri="http://struts.apache.org/tags-bean-el" prefix="bean-el"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <html>
 	<head>
 		<title>Mifos </title>
@@ -56,8 +56,8 @@
 				window.resizeTo(250,200);
 		  	}
 		  	function goToGetPage(){
-				clientCreationActionForm.action="clientCreationAction.do?method=get";
-				clientCreationActionForm.submit();
+				clientCustActionForm.action="clientCustAction.do?method=get";
+				clientCustActionForm.submit();
 			  }
 		</script>
 	</head>
@@ -66,15 +66,19 @@
 	<script language="javascript">
 	
 	function goToCancelPage(){
-		clientCreationActionForm.action="clientCreationAction.do?method=get";
+		//clientCustActionForm.action="clientCustAction.do?method=get";
+		//clientCustActionForm.submit();
 		window.close()
-		clientCreationActionForm.submit();
+		
 	  }
 	  
 	  
 	  
 	</script>
-		<html-el:form action="clientCreationAction.do?method=get" >
+		<html-el:form action="clientCustAction.do?method=get" >
+			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
+			   var="BusinessKey" />
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			  <tr>
 			    <td width="188" colspan="2" class="bgorange"><img src="pages/framework/images/trans.gif" width="6" height="6"></td>
@@ -90,7 +94,7 @@
 			        <td align="center" class="heading"><img src="pages/framework/images/trans.gif" width="10" height="10"></td>
 			      </tr>
 			      <tr>
-			        <td align="center" class="heading"><c:out value="${requestScope.clientVO.displayName}"/></td>
+			        <td align="center" class="heading"><c:out value="${BusinessKey.displayName}"/></td>
 			      </tr>
 			      <tr>
 			        <td><img src="pages/framework/images/trans.gif" width="10" height="10"></td>
@@ -99,9 +103,10 @@
 			    <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
 			        <tr>
 			          <td align="center" valign="top">
-			          	<img src="/Mifos/clientCreationAction.do?method=retrievePicture&customerId=${requestScope.clientVO.customerId}" height= "150" width="150"/> </td>
-                  	            
-			        </tr>
+			          	<img src="/mifos/clientCustAction.do?method=retrievePicture&currentFlowKey=${requestScope.currentFlowKey}"
+											height="100" width="150" />
+			           <%--	<img src="/mifos/clientCustAction.do?method=retrievePicture&customerId=${requestScope.clientVO.customerId}" height= "150" width="150"/> --%></td>
+                    </tr>
 			        <tr>
 			          <td align="center" valign="top" class="paddingleft">
 			  		  	<html-el:button onclick="goToCancelPage()" property = "cancelButton" styleClass="cancelbuttn" style="width:65px">
