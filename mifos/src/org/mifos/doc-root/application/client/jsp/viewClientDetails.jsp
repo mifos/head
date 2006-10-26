@@ -51,9 +51,7 @@
 	<tiles:put name="body" type="string">
 		<script language="javascript">
   function photopopup(custId , custName, currentFlow){
-	//	alert("currentFlow");
-	//alert(currentFlow);
-   window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
+	  window.open("clientCustAction.do?method=showPicture&customerId="+ custId + "&displayName=" + custName+ "&currentFlowKey=" + currentFlow,null,"height=250,width=200,status=no,scrollbars=no,toolbar=no,menubar=no,location=no");
 
   }
 

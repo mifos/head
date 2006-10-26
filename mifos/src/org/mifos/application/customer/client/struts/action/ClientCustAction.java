@@ -306,10 +306,9 @@ public class ClientCustAction extends CustAction {
 	public ActionForward retrievePicture(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		System.out.println("**********In retrievePicture: ");
+		
 		ClientBO clientBO = (ClientBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		System.out.println("**********In size: "+clientBO.getCustomerPicture().getPicture().length());
 		InputStream in = clientBO.getCustomerPicture().getPicture()
 				.getBinaryStream();
 		
@@ -549,7 +548,7 @@ public class ClientCustAction extends CustAction {
 	public ActionForward showPicture(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		System.out.println("**********show picture");
+		
 		String forward = ClientConstants.CUSTOMER_PICTURE_PAGE;
 		return mapping.findForward(forward);
 	}
