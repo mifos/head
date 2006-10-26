@@ -59,6 +59,7 @@
 						document.getElementsByName("gracePeriodDuration")[0].disabled=true;
 					} else  {
 						if(document.getElementsByName("intDedDisbursement")[0].checked==true) {
+						    document.getElementsByName("gracePeriodDuration")[0].value="0";
 							document.getElementsByName("gracePeriodDuration")[0].disabled=true;
 						}else{
 							document.getElementsByName("gracePeriodDuration")[0].disabled=false;

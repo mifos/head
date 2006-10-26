@@ -155,7 +155,7 @@
 							<td align="right" class="fontnormal"><span class="mandatorytext"></span>
 							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;</td>
 							<td valign="top">
-								<input type="text" name="gracePeriod" onchange="setGracePeriodDurationValue();"/></td>
+								<mifos:mifosnumbertext property="gracePeriod" onchange="setGracePeriodDurationValue();"/></td>
 						</tr>
 						<html-el:hidden property="inheritedGracePeriodDuration"
 								value="${sessionScope.loanAccountActionForm.gracePeriodDuration}" />

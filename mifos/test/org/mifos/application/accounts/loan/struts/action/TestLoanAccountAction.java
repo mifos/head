@@ -847,6 +847,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getCurrentDate(((UserContext) request.getSession()
 						.getAttribute("UserContext")).getPereferedLocale()));
 		addRequestParameter("intDedDisbursement", "1");
+		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter("method", "schedulePreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
@@ -854,6 +855,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.schedulePreview_success.toString());
+		LoanAccountActionForm actionForm = (LoanAccountActionForm) request
+		.getSession().getAttribute("loanAccountActionForm");
+		assertEquals("0",actionForm.getGracePeriodDuration());
 		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
 				.getObject(LoanOfferingBO.class, loanOffering
 						.getPrdOfferingId()));
