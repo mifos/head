@@ -24,6 +24,7 @@ import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
 import org.mifos.framework.components.cronjobs.helpers.ApplyCustomerFeeChangesHelper;
 import org.mifos.framework.components.cronjobs.helpers.ApplyCustomerFeeChangesTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -369,6 +370,15 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 				.getAccountFeesAction(groupaccountPeriodicFee.getAccountFeeId());
 		assertEquals(5.0, groupaccountFeesAction.getFeeAmount()
 				.getAmountDoubleValue());
+	}
+	
+	public void testCronJobException(){
+		List<String> error = new ArrayList<String>();
+		error.add("error1");
+		error.add("error2");
+		CronJobException cronJobException = new CronJobException("error.invailddata",error);
+		assertEquals("error.invailddata",cronJobException.getKey());
+		assertEquals("error1,error2",cronJobException.getErrorMessage());
 	}
 	
 	private java.sql.Date offSetDate(Date date , int noOfDays) {

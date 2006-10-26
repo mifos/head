@@ -8,6 +8,8 @@ import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.application.rolesandpermission.util.helpers.RoleTempleteBuilder;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.security.util.ActivityChangeEvent;
+import org.mifos.framework.security.util.RoleChangeEvent;
 
 public class TestRoleTempleteBuilder extends MifosTestCase {
 
@@ -37,5 +39,22 @@ public class TestRoleTempleteBuilder extends MifosTestCase {
 		assertTrue(stringBuilder.toString().contains("Can create new role"));
 		assertTrue(stringBuilder.toString().contains("Can modify a role"));
 		assertTrue(stringBuilder.toString().contains("Can delete a role"));
+	}
+
+	public void testActivityChangeEvent() {
+		ActivityChangeEvent activityChangeEvent = new ActivityChangeEvent(
+				"event", "stringObject");
+		assertEquals("value of event", "event", activityChangeEvent
+				.getEventType());
+		assertEquals("value of object", "stringObject", activityChangeEvent
+				.getObject());
+	}
+
+	public void testRoleChangeEvent() {
+		RoleChangeEvent roleChangeEvent = new RoleChangeEvent("event",
+				"stringObject");
+		assertEquals("value of event", "event", roleChangeEvent.getEventType());
+		assertEquals("value of object", "stringObject", roleChangeEvent
+				.getObject());
 	}
 }

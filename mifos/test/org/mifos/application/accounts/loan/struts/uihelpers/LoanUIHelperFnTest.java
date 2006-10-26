@@ -1,13 +1,19 @@
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Locale;
 
+import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.struts.action.LoanAccountAction;
+import org.mifos.application.accounts.loan.util.helpers.EqualsObjectComparator;
+import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -21,6 +27,7 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -35,15 +42,19 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 				TestObjectFactory.getActivityContext());
 		flowKey = createFlow(request, LoanAccountAction.class);
 	}
+
 	public void testGetCurrrentDate() {
 		Locale locale = new Locale("EN");
-		assertEquals(DateHelper.getCurrentDate(locale), LoanUIHelperFn.getCurrrentDate(locale));
+		assertEquals(DateHelper.getCurrentDate(locale), LoanUIHelperFn
+				.getCurrrentDate(locale));
 	}
 
 	public void testGetMeetingRecurrence() throws Exception {
 		UserContext userContext = TestObjectFactory.getContext();
-		MeetingBO meeting = TestObjectFactory.getMeeting("2", "2", Short.valueOf("2"));
-		assertEquals("2 month(s)", LoanUIHelperFn.getMeetingRecurrence(meeting, userContext));
+		MeetingBO meeting = TestObjectFactory.getMeeting("2", "2", Short
+				.valueOf("2"));
+		assertEquals("2 month(s)", LoanUIHelperFn.getMeetingRecurrence(meeting,
+				userContext));
 	}
 
 	public void testGetDoubleValue() {
@@ -51,4 +62,51 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 		assertEquals("0.0", LoanUIHelperFn.getDoubleValue(null));
 	}
 
+	public void testLoanActivityView() {
+		LoanActivityView loanActivityView = new LoanActivityView();
+		LoanActivityView loanActivityView1 = new LoanActivityView();
+		long l = System.currentTimeMillis();
+		loanActivityView.setTimeStamp(new Timestamp(l));
+		loanActivityView1.setTimeStamp(new Timestamp(l));
+		assertEquals(-1, new EqualsObjectComparator().compare(loanActivityView,
+				loanActivityView1));
+		loanActivityView1.setTimeStamp(new Timestamp(l - 1));
+		assertEquals(-1, new EqualsObjectComparator().compare(loanActivityView,
+				loanActivityView1));
+		loanActivityView.setTimeStamp(new Timestamp(l - 1));
+		loanActivityView1.setTimeStamp(new Timestamp(l));
+		assertEquals(1, new EqualsObjectComparator().compare(loanActivityView,
+				loanActivityView1));
+	}
+
+	public void testRepaymentScheduleInstallment() {
+		RepaymentScheduleInstallment repaymentScheduleInstallment = new RepaymentScheduleInstallment();
+		long l = System.currentTimeMillis();
+		repaymentScheduleInstallment.setDueDate(new Date(l));
+		repaymentScheduleInstallment.setFees(new Money("100.0"));
+		repaymentScheduleInstallment.setInstallment(10);
+		repaymentScheduleInstallment.setInterest(new Money("100.0"));
+		repaymentScheduleInstallment.setLocale(new Locale("1"));
+		repaymentScheduleInstallment.setMiscFees(new Money("100.0"));
+		repaymentScheduleInstallment.setMiscPenalty(new Money("100.0"));
+		repaymentScheduleInstallment.setPrincipal(new Money("100.0"));
+
+		double m = new Money("100").getAmountDoubleValue();
+		assertEquals("Due date", new Date(l), repaymentScheduleInstallment
+				.getDueDate());
+		assertEquals("fees", m, repaymentScheduleInstallment.getFees()
+				.getAmountDoubleValue());
+		assertEquals("Installment", "10", repaymentScheduleInstallment
+				.getInstallment().toString());
+		assertEquals("Interest", m, repaymentScheduleInstallment.getFees()
+				.getAmountDoubleValue());
+		assertEquals("Locale", "1", repaymentScheduleInstallment.getLocale()
+				.toString());
+		assertEquals("Misc fees", m, repaymentScheduleInstallment.getMiscFees()
+				.getAmountDoubleValue());
+		assertEquals("Misc penalty", m, repaymentScheduleInstallment
+				.getMiscPenalty().getAmountDoubleValue());
+		assertEquals("principal", m, repaymentScheduleInstallment
+				.getPrincipal().getAmountDoubleValue());
+	}
 }

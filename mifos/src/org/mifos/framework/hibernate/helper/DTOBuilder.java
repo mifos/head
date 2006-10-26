@@ -130,7 +130,7 @@ public class DTOBuilder
   	  * @param string
   	  * @return String
      */
-private String capitalize(String s)
+String capitalize(String s)
 {
                 if(s!=null && s.length()!=0)
                 {
@@ -149,7 +149,7 @@ private String capitalize(String s)
   	  * @param string
   	  * @return Class[]
      */
- private Class[] getParameterTypes(String dataType) throws Exception
+Class[] getParameterTypes(String dataType) throws Exception
           {
             Class[] params = new Class[1];
                   // compare the datatypes and cast the value accordingly before returning
@@ -193,7 +193,7 @@ private String capitalize(String s)
   	  * @param value,dataType
   	  * @return Object
   	  */
-      private Object getValue(Object value, String dataType)
+      Object getValue(Object value, String dataType)
       {
         if(dataType.equals("date") )
 		{

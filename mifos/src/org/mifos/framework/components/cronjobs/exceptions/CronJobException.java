@@ -40,7 +40,7 @@ public class CronJobException extends ApplicationException {
 				builder.append(string);
 				builder.append(",");
 			}
-			errorMessage = builder.toString();
+			errorMessage = builder.substring(0,builder.length()-1);
 		} else {
 			errorMessage = this.getMessage();
 		}

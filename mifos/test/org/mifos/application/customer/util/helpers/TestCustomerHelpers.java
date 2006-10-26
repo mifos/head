@@ -1,8 +1,10 @@
 package org.mifos.application.customer.util.helpers;
 
 import java.sql.Date;
+import java.util.Locale;
 
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.group.util.helpers.GroupSearchResults;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -66,6 +68,27 @@ public class TestCustomerHelpers extends MifosTestCase {
 				.getPersonnelId());
 	}
 
+	public void testCustomerViewDefaultConstructor(){
+		createCenter();
+		CustomerView customerView = new CustomerView();
+		customerView.setCustomerId(center.getCustomerId());
+		customerView.setDisplayName(center.getDisplayName());
+		customerView.setGlobalCustNum(center.getGlobalCustNum());
+		customerView.setOfficeId(center.getOffice().getOfficeId());
+		customerView.setStatusId(center.getStatus().getValue());
+		customerView.setPersonnelId(center.getPersonnel().getPersonnelId());
+		customerView.setCustomerLevelId(center.getLevel().getValue());
+		customerView.setVersionNo(1);
+		assertEquals(center.getCustomerId(),customerView.getCustomerId());
+		assertEquals(center.getDisplayName(),customerView.getDisplayName());
+		assertEquals(center.getGlobalCustNum(),customerView.getGlobalCustNum());
+		assertEquals(center.getOffice().getOfficeId(),customerView.getOfficeId());
+		assertEquals(center.getStatus().getValue(),customerView.getStatusId());
+		assertEquals(center.getPersonnel().getPersonnelId(),customerView.getPersonnelId());
+		assertEquals(center.getLevel().getValue(),customerView.getCustomerLevelId());
+		assertEquals("1",customerView.getVersionNo().toString());
+	}
+	
 	public void testPerformanceHistoryView() {
 		PerformanceHistoryView performanceHistoryView = new PerformanceHistoryView();
 		performanceHistoryView.setNumberOfClients(10);
@@ -89,6 +112,48 @@ public class TestCustomerHelpers extends MifosTestCase {
 						center.getOffice().getOfficeName(), 2));
 	}
 
+	public void testLoanCycleCounter() {
+		LoanCycleCounter loanCycleCounter = new LoanCycleCounter();
+		loanCycleCounter.setCounter(1);
+		loanCycleCounter.setOfferingName("offeringName");
+		assertEquals("value of counter", 1, loanCycleCounter.getCounter());
+		assertEquals("value of offering name", "offeringName", loanCycleCounter
+				.getOfferingName());
+		loanCycleCounter = new LoanCycleCounter("offeringName");
+		LoanCycleCounter loanCycleCounter1 = new LoanCycleCounter(
+				"offeringName");
+		LoanCycleCounter loanCycleCounter2 = new LoanCycleCounter(
+				"offeringName1");
+		assertTrue(loanCycleCounter.equals(loanCycleCounter1));
+		assertFalse(loanCycleCounter.equals(loanCycleCounter2));
+	}
+
+	public void testCustomerRecentActivityView() {
+		CustomerRecentActivityView customerRecentActivityView = new CustomerRecentActivityView(
+				new Date(System.currentTimeMillis()), "description", "1000",
+				"mifos");
+		customerRecentActivityView.setLocale(new Locale("1"));
+		assertEquals("date", new Date(System.currentTimeMillis()),
+				customerRecentActivityView.getActivityDate());
+		assertEquals("description",customerRecentActivityView.getDescription());
+		assertEquals("1000",customerRecentActivityView.getAmount());
+		assertEquals("mifos",customerRecentActivityView.getPostedBy());
+		assertEquals("1",customerRecentActivityView.getLocale().toString());
+	}
+
+	public void testGroupSearchResults(){
+		createCenter();
+		GroupSearchResults groupSearchResults = new GroupSearchResults();
+		groupSearchResults.setCenterName(center.getDisplayName());
+		groupSearchResults.setGroupId(1);
+		groupSearchResults.setGroupName("group1");
+		groupSearchResults.setOfficeName(center.getOffice().getOfficeName());
+		assertEquals("center name", center.getDisplayName(), groupSearchResults.getCenterName());
+		assertEquals("group id", 1, groupSearchResults.getGroupId());
+		assertEquals("group name", "group1", groupSearchResults.getGroupName());
+		assertEquals("office name", center.getOffice().getOfficeName(), groupSearchResults.getOfficeName());
+	}
+	
 	private void createCenter() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
