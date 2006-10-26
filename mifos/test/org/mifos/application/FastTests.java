@@ -44,6 +44,8 @@ import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.struts.tags.DateHelperTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
+import org.mifos.framework.util.helpers.ConvertionUtilTest;
+import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.MoneyTest;
 
 /**
@@ -66,6 +68,8 @@ public class FastTests extends MifosTestSuite {
 
 		suite.addTestSuite(TableTagTest.class);
 		suite.addTestSuite(XmlBuilderTest.class);
+		suite.addTestSuite(MethodInvokerTest.class);
+		suite.addTestSuite(ConvertionUtilTest.class);
 		return suite;
 	}
 

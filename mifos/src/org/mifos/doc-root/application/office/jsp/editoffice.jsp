@@ -190,8 +190,8 @@
 						<tr class="fontnormal" id="Office.Address3">
 							<td align="right"><mifos:mifoslabel
 								name="${ConfigurationConstants.ADDRESS3}"
-								bundle="OfficeUIResources" keyhm="Office.Address3"
-								isColonRequired="yes"></mifos:mifoslabel>:</td>
+								bundle="OfficeUIResources" keyhm="Office.Address3">
+								</mifos:mifoslabel>:</td>
 							<td><mifos:mifosalphanumtext property="address.line3"
 								value="${offActionForm.address.line3}"
 								maxlength="200" keyhm="Office.Address3">

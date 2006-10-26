@@ -57,22 +57,22 @@ import org.mifos.framework.exceptions.ConstantsNotLoadedException;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class ConstPlugin implements PlugIn{
-	
+
 	private String constantFileNames;
-	
+
 	public void setConstantFileNames(String constantFileNames) {
 		this.constantFileNames = constantFileNames;
 	}
-	
-	public void init(ActionServlet actionServlet , ModuleConfig config) throws ServletException{		
+
+	public void init(ActionServlet actionServlet , ModuleConfig config) throws ServletException{
 		try{
 			ServletContext servletContext = actionServlet.getServletContext();
-			List<String> constantFileNameList = getConstantFileNames();			
+			List<String> constantFileNameList = getConstantFileNames();
 			List<Class> constantClassList = buildClasses(constantFileNameList);
 			ConstantMapBuilder constantBuilder=ConstantMapBuilder.getInstance();
 			for(Class cl:constantClassList){
-				servletContext.setAttribute(getName(cl),constantBuilder.buildMap(cl));				
-			}		
+				servletContext.setAttribute(getName(cl),constantBuilder.buildMap(cl));
+			}
 		}
 		catch(Exception e){
 			UnavailableException ue = new UnavailableException(e.getMessage(), 0);
@@ -80,26 +80,26 @@ public class ConstPlugin implements PlugIn{
 			throw ue;
 		}
 	}
-	
+
 	private String getName(Class cl){
-		String className = cl.getName();		
-		String constantKeyName = className.substring(className.lastIndexOf(".")+1);		
+		String className = cl.getName();
+		String constantKeyName = className.substring(className.lastIndexOf(".")+1);
 		return constantKeyName;
 	}
-	
+
 	public void destroy() {
 	}
-	
-	private List<String> getConstantFileNames(){		
+
+	private List<String> getConstantFileNames(){
 		StringTokenizer tokenizer = new StringTokenizer(constantFileNames,",");
-		List<String> fileNameList = new ArrayList<String>();		
+		List<String> fileNameList = new ArrayList<String>();
 		while(tokenizer.hasMoreTokens()){
 			fileNameList.add(tokenizer.nextToken());
 		}
 		return fileNameList;
 	}
-	
-	private List<Class> buildClasses(List<String> constantFileNameList) throws ConstantsNotLoadedException{
+
+	List<Class> buildClasses(List<String> constantFileNameList) throws ConstantsNotLoadedException{
 		List<Class> constantClassNameList = new ArrayList<Class>();
 		String constantFileName = null ;
 		try{
@@ -108,14 +108,14 @@ public class ConstPlugin implements PlugIn{
 				constantClassNameList.add(Class.forName(constantFileName));
 			}
 		}
-		catch(ClassNotFoundException cnfe){			
+		catch(ClassNotFoundException cnfe){
 			Object[] values = new Object[]{constantFileName};
 			throw new ConstantsNotLoadedException(ExceptionConstants.CONSTANTSNOTLOADEDEXCEPTION,cnfe,values);
 		}
 		return constantClassNameList;
 	}
-	
-	private static void checkModifiers(Field field) throws ConstantsNotLoadedException{
+
+	public static void checkModifiers(Field field) throws ConstantsNotLoadedException{
 		if(!Modifier.isFinal(field.getModifiers()))
 			throw new ConstantsNotLoadedException("field: "+ field.getName()+" is not declared as final");
 		if(!Modifier.isStatic(field.getModifiers()))
@@ -123,26 +123,26 @@ public class ConstPlugin implements PlugIn{
 		if(!Modifier.isPublic(field.getModifiers()))
 			throw new ConstantsNotLoadedException("field: "+ field.getName()+" is not declared as public");
 	}
-	
+
 	/**
 	 * Builds the Map for all the constansts in the given constant file.
 	 **/
-	private static class ConstantMapBuilder{		
+	private static class ConstantMapBuilder{
 		private  static ConstantMapBuilder instance = new ConstantMapBuilder();
-		private  ConstantMapBuilder(){			
+		private  ConstantMapBuilder(){
 		}
 		public static ConstantMapBuilder getInstance(){
 			return instance;
-		}				
-		public Map buildMap(Class constantClass) throws ConstantsNotLoadedException{			
+		}
+		public Map buildMap(Class constantClass) throws ConstantsNotLoadedException{
 			Map<String, Object> constantsMap = new HashMap<String, Object>();
 			Field[] fields = constantClass.getDeclaredFields();
 			try{
 				for (int i = 0; i < fields.length; i++) {
 					 checkModifiers(fields[i]);
-			         String fieldName = fields[i].getName();			        
-			         Object fieldValue = fields[i].get(null);			         
-			         constantsMap.put(fieldName,fieldValue);			         
+			         String fieldName = fields[i].getName();
+			         Object fieldValue = fields[i].get(null);
+			         constantsMap.put(fieldName,fieldValue);
 			    }
 			}catch(IllegalAccessException iae){
 				throw new ConstantsNotLoadedException(iae);

@@ -14,8 +14,6 @@ public class ConstantsNotLoadedException extends SystemException {
 	public ConstantsNotLoadedException(String key, Throwable cause,
 			Object[] values) {
 		super(key,cause);
-		this.key = key;
-		super.initCause(cause);
 		this.values = values;
 	}
 }

@@ -139,6 +139,7 @@ public class ActivityMapper {
 		activityMap.put("/CustomerSearchAction-loadAllBranches",
 				SecurityConstants.VIEW);
 
+		activityMap.put("/loginAction-login", SecurityConstants.VIEW);
 		activityMap.put("/loginAction-logout", SecurityConstants.VIEW);
 		activityMap.put("/loginAction-updatePassword", SecurityConstants.VIEW);
 
@@ -206,7 +207,7 @@ public class ActivityMapper {
 				SecurityConstants.ROLES_DELETE_ROLES);
 		activityMap.put("/manageRolesAndPermission-delete",
 				SecurityConstants.ROLES_DELETE_ROLES);
-		
+
 		// Customer Historical Data related mapping
 		activityMap.put("/custHistoricalDataAction-loadHistoricalData",
 				SecurityConstants.VIEW);
@@ -286,7 +287,7 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/centerCustAction-cancelChangeLog",
 				SecurityConstants.VIEW);
-		
+
 		activityMap.put("/centerCustAction-loadTransferSearch", SecurityConstants.VIEW);
 		activityMap.put("/centerCustAction-searchTransfer", SecurityConstants.VIEW);
 		// For M2 Center ends
@@ -1469,7 +1470,7 @@ public class ActivityMapper {
 		}
 		return activityId;
 	}
-	
+
 	public boolean isApplyChargesPermittedForAccounts(AccountTypes accountTypes,
 			CustomerLevel customerLevel, UserContext userContext,
 			Short recordOfficeId, Short recordLoanOfficerId) {
@@ -1494,7 +1495,7 @@ public class ActivityMapper {
 		}
 		return activityId;
 	}
-	
+
 	public boolean isEditMeetingSchedulePermittedForCustomers(
 			CustomerLevel customerLevel, UserContext userContext,
 			Short recordOfficeId, Short recordLoanOfficerId) {

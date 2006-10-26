@@ -11,11 +11,12 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.ConfigEntity;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class TestConfigurationPersistence extends MifosTestCase {
 
 	private ConfigurationPersistence configurationPersistence;
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -27,13 +28,13 @@ public class TestConfigurationPersistence extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
-	
+
 	public void testGetDefaultCurrency() throws Exception {
-		MifosCurrency defaultCurrency = 
+		MifosCurrency defaultCurrency =
 			configurationPersistence.getDefaultCurrency();
 		assertEquals("RUPEE", defaultCurrency.getCurrencyName());
 	}
-	
+
 	public void testNoDefaultCurrency() throws Exception {
 		try {
 			configurationPersistence.defaultCurrencyFromList(
@@ -42,9 +43,12 @@ public class TestConfigurationPersistence extends MifosTestCase {
 		}
 		catch (FrameworkRuntimeException e) {
 			assertEquals("No Default Currency Specified", e.getMessage());
+			e.setValues(null);
+			assertNull(e.getValues());
+			assertEquals(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, e.getKey());
 		}
 	}
-	
+
 	public void testAmbiguousDefaultCurrency() throws Exception {
 		try {
 			List currencies = new ArrayList();
@@ -57,31 +61,31 @@ public class TestConfigurationPersistence extends MifosTestCase {
 			fail();
 		}
 		catch (FrameworkRuntimeException e) {
-			assertEquals("Both Franc and Euro are marked as default currencies", 
+			assertEquals("Both Franc and Euro are marked as default currencies",
 				e.getMessage());
 		}
 	}
-	
+
 	public void testGetSystemConfiguration() throws Exception {
-		ConfigEntity systemConfig = 
+		ConfigEntity systemConfig =
 			configurationPersistence.getSystemConfiguration();
 		assertNotNull(systemConfig);
 	}
-	
+
 	public void testGetOfficeConfiguration() throws Exception {
-		List<ConfigEntity> configList = 
+		List<ConfigEntity> configList =
 			configurationPersistence.getOfficeConfiguration();
 		assertEquals(1, configList.size());
 	}
-	
+
 	public void testGetSupportedLocale() throws Exception {
-		SupportedLocalesEntity locale = 
+		SupportedLocalesEntity locale =
 			configurationPersistence.getSupportedLocale();
 		assertEquals(Short.valueOf("1"),locale.getLocaleId());
 	}
-	
+
 	public void testGetWeekDaysList() throws Exception{
-		List<WeekDaysEntity> weekDaysList = 
+		List<WeekDaysEntity> weekDaysList =
 			configurationPersistence.getWeekDaysList();
 		assertEquals(7, weekDaysList.size());
 	}

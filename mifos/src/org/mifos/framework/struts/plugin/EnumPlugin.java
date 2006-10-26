@@ -101,7 +101,7 @@ public class EnumPlugin implements PlugIn {
 		return fileNameList;
 	}
 
-	private List<Class> buildClasses(List<String> enumFileNameList)
+	List<Class> buildClasses(List<String> enumFileNameList)
 			throws EnumsNotLoadedException {
 		List<Class> enumClassNameList = new ArrayList<Class>();
 		String constantFileName = null;

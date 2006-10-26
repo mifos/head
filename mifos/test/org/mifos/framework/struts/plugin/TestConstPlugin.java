@@ -1,13 +1,16 @@
 package org.mifos.framework.struts.plugin;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.ConstantsNotLoadedException;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class TestConstPlugin extends MifosMockStrutsTestCase{
 
-	// TODO: This test is spewing 
+	// TODO: This test is spewing
 	// org.mifos.framework.exceptions.PageExpiredException
 	// to standard output/error when it runs.
 
@@ -45,5 +48,23 @@ public class TestConstPlugin extends MifosMockStrutsTestCase{
 		assertNotNull(context.getAttribute("AccountStates"));
 		assertNotNull(context.getAttribute("SavingsConstants"));
 	}
-
+	public void testConstantsPluginException() throws Exception {
+		ConstPlugin constPlugin = new ConstPlugin();
+		ArrayList<String> constPluginClasses = new ArrayList<String>();
+		constPluginClasses.add("org.mifos.doesNotExist");
+		try {
+			Class doesNotExistClass = ConstPlugin.class;
+			Field[] fields = doesNotExistClass.getDeclaredFields();
+			Field field = fields[0];
+			ConstPlugin.checkModifiers(field);
+		} catch (ConstantsNotLoadedException enle) {
+			enle.printStackTrace();
+		}
+		try {
+			constPlugin.buildClasses(constPluginClasses);
+			fail();
+		} catch (ConstantsNotLoadedException enle) {
+			enle.printStackTrace();
+		}
+	}
 }

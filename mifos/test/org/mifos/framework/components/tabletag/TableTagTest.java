@@ -12,10 +12,12 @@ import junit.framework.TestCase;
 
 import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
+import org.mifos.framework.exceptions.TableTagException;
+import org.mifos.framework.exceptions.TableTagTypeParserException;
 import org.mifos.framework.util.helpers.SearchObject;
 
 public class TableTagTest extends TestCase {
-	
+
 	public void testNoResults() throws Exception {
 		String html =
 			new TableTag("single")
@@ -61,7 +63,7 @@ public class TableTagTest extends TestCase {
 		assertContains("the-office-name", html);
 		assertWellFormedFragment(html);
 	}
-	
+
 	public void testCreateEndTable(){
 		StringBuilder stringBuilder = new StringBuilder();
 			new TableTag("single").createEndTable(stringBuilder,true);
@@ -84,16 +86,16 @@ public class TableTagTest extends TestCase {
 		tableTag.setName("viewUsers");
 		assertEquals("org/mifos/framework/util/resources/tabletag/viewUsers.xml",tableTag.getSingleFile());
 	}
-	
+
 	public void testParser()throws Exception{
-		
+
 	  Files files=	TypeParser.getInstance().parser("org/mifos/framework/util/resources/tabletag/type.xml");
 	  assertNotNull(files);
 	  FileName[] file= files.getFileName();
 	  assertNotNull(file);
 	  assertEquals("1",file[0].getName());
 	  assertEquals("org/mifos/framework/util/resources/tabletag/CustomerClient.xml",file[0].getPath());
-	  
+
 	}
 
 	public void testGetDisplayText()throws Exception{
@@ -102,7 +104,7 @@ public class TableTagTest extends TestCase {
 		assertEquals("<span class=\"fontnormal\">a</span>,<span class=\"fontnormal\">b</span>",Text.getDisplayText(new String[]{"a","b"},"false"));
 
 	}
-	
+
 	public void testGetImage()throws Exception{
 		CustomerSearch customerSearch = new CustomerSearch();
 		assertEquals("<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;PartialApplication</span>",
@@ -114,7 +116,7 @@ public class TableTagTest extends TestCase {
 		assertEquals("<span class=\"fontnormal\">&nbsp;<img src=pages/framework/images/status_yellow.gif width=\"8\" height=\"9\"></span><span class=\"fontnormal\">&nbsp;Partial Application</span>",
 		Text.getImage(customerSearch,"13"));
 	}
-	
+
 	public void testTableTagParser()throws Exception{
 	  Table  table= 	TableTagParser.getInstance().parser("org/mifos/framework/util/resources/tabletag/viewUsers.xml");
 	  Path path [] = table.getPath();
@@ -122,14 +124,14 @@ public class TableTagTest extends TestCase {
 		  assertEquals("PersonAction.do",path[i].getAction());
 		  assertEquals("search_success",path[i].getForwardkey());
 		  assertEquals("viewUsers",path[i].getKey());
-		
-	} 
+
+	}
 	  for (Row row : table.getRow()) {
 		  assertEquals("false",row.getTdrequired());
-		  
+
 		  int i=0;
 		for (Column column : row.getColumn()) {
-			
+
 			if ( i++==1){
 				assertEquals("PersonAction.do",column.getAction());
 				assertEquals("true",column.getBoldlabel());
@@ -138,18 +140,18 @@ public class TableTagTest extends TestCase {
 				assertEquals("false",column.getIsLinkOptional());
 				assertEquals("/",column.getLabel());
 				assertEquals("string",column.getLabeltype());
-				
+
 				DisplayName displayName = column.getDisplayname();
 				assertEquals("true",displayName.getBold());
 			for (Fragment fragment : displayName.getFragment()) {
 				assertEquals("true",fragment.getBold());
 				assertEquals("personnelName",fragment.getFragmentName());
-				assertEquals("method",fragment.getFragmentType());	
+				assertEquals("method",fragment.getFragmentType());
 				assertEquals("false",fragment.getItalic());
 			}
-			
+
 			Parameters parameters = column.getParameters();
-			
+
 			int j=0;
 			for (Param param : parameters.getParam()) {
 				if( j++==1)
@@ -159,15 +161,15 @@ public class TableTagTest extends TestCase {
 					assertEquals("string",param.getParameterValueType());
 				}
 			}
-			
+
 			}
-		}  
+		}
 
 	}
-	  
-	  
+
+
 	  PageRequirements pageRequirements = table.getPageRequirements();
-	  
+
 	  assertEquals("false",pageRequirements.getBlanklinerequired());
 	  assertEquals("true",pageRequirements.getBluelineRequired());
 	  assertEquals("false",pageRequirements.getBottombluelineRequired());
@@ -176,16 +178,16 @@ public class TableTagTest extends TestCase {
 	  assertEquals("true",pageRequirements.getNumbersRequired());
 	  assertEquals("true",pageRequirements.getTopbluelineRequired());
 	  assertEquals("false",pageRequirements.getValignnumbers());
-	  
+
 	}
-	
+
 	public void testHelperCache()throws Exception{
-		
+
 		TableTag tableTag = 	new TableTag("single");
 		tableTag.setName("viewUsers");
 		assertNotNull(tableTag.helperCache("org/mifos/framework/util/resources/tabletag/viewUsers.xml","viewUsers"));
 	}
-	
+
 	public void testPageScroll(){
 		assertEquals("<a href='hRef?method=load&currentFlowKey=1234&current=1'>text</a>",PageScroll.getAnchor("hRef","text","load","1234",1));
 		assertEquals("<tr><td width=\"75\" class=\"fontnormalboldgray\">Previous</td><td width=\"150\" align=\"center\" class=\"fontnormalbold\">Results 1-10 of 100 </td><td width=\"75\" class=\"fontnormalbold\"><a href='loaad?method=searchNext&currentFlowKey=1234&current=2'>Next</a></td></tr>",PageScroll.getPages(1,10,100,"loaad","1234"));
@@ -198,11 +200,32 @@ public class TableTagTest extends TestCase {
 		assertEquals("<span class=\"headingblue\"><a href= \"load?X\"&currentFlowKey=1234&randomNUm=9999class=\"headingblue\">a</a></span>,<span class=\"headingblue\"><a href= \"load?Y\"&currentFlowKey=1234&randomNUm=9999class=\"headingblue\">b</a></span>",Link.createLink(new String []{"a","b"},new String []{"X","Y"},"true","load","headingblue","1234","9999"));
 		assertEquals("<span><a href= \"load?X&currentFlowKey=1234&randomNUm=9999\">a</a></span>,<span><a href= \"load?Y&currentFlowKey=1234&randomNUm=9999\">b</a></span>",Link.createLink(new String []{"a","b"},new String []{"X","Y"},"true","load",null,"1234","9999"));
 	}
-	
+
+	public void testTableTagTypeParserException()throws Exception{
+		Files files = null;
+		try {
+			files = TypeParser.getInstance().parser("org/mifos/framework/components/tabletag/type.xml");
+			fail();
+		} catch (TableTagTypeParserException tttpe) {
+			assertEquals("exception.framework.SystemException.TypeParseException", tttpe.getKey());
+		}
+	}
+	public void testTableTagException()throws Exception{
+		try {
+			Text.getImage(this, "name");
+			fail();
+		} catch (TableTagException tte) {
+			assertEquals("exception.framework.TableTagException", tte.getKey());
+		}
+	}
+
+	private void getCustomerType() {
+	}
+
 	public void testTabletag(){
-		
+
 		TableTag tableTag = new TableTag();
-		
+
 		tableTag.setClassName("myclass");
 		assertEquals("myclass",tableTag.getClassName());
 		tableTag.setType("mytype");
@@ -219,12 +242,12 @@ public class TableTagTest extends TestCase {
 		assertEquals("mywidth",tableTag.getWidth());
 		tableTag.setKey("mykey");
 		assertEquals("mykey",tableTag.getKey());
-		
+
 		tableTag.release();
-		
+
 		assertEquals(1,tableTag.current);
 		assertEquals(0,tableTag.size);
-		
+
 	}
-	
+
 }

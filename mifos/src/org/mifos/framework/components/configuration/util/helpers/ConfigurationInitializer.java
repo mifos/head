@@ -335,7 +335,7 @@ public class ConfigurationInitializer {
 		}
 	}
 
-	private static void checkModifiers(Field field)
+	static void checkModifiers(Field field)
 			throws ConstantsNotLoadedException {
 		if (!Modifier.isFinal(field.getModifiers()))
 			throw new ConstantsNotLoadedException("field: " + field.getName()

@@ -1,9 +1,11 @@
 package org.mifos.framework.struts.plugin;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.EnumsNotLoadedException;
 import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class TestEnumPlugin extends MifosMockStrutsTestCase{
@@ -59,4 +61,15 @@ public class TestEnumPlugin extends MifosMockStrutsTestCase{
 		assertNotNull(context.getAttribute("RecommendedAmountUnit"));
 	}
 
+	public void testEnumPluginException() throws Exception {
+		EnumPlugin enumPlugin = new EnumPlugin();
+		ArrayList<String> enumPluginClasses = new ArrayList<String>();
+		enumPluginClasses.add("org.mifos.doesNotExist");
+		try {
+			enumPlugin.buildClasses(enumPluginClasses);
+			fail();
+		} catch (EnumsNotLoadedException enle) {
+			enle.printStackTrace();
+		}
+	}
 }
