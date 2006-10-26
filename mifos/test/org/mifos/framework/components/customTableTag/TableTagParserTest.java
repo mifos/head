@@ -26,7 +26,7 @@ public class TableTagParserTest extends TestCase {
 		Table table = TableTagParser.getInstance()
 				.parser(ResourceLoader
 						.getURI(
-								"org\\mifos\\framework\\util\\resources\\customTableTag\\example.xml")
+								"org/mifos/framework/util/resources/customTableTag/example.xml")
 						.toString());
 		assertNotNull(table);
 		HeaderDetails details = table.getHeaderDetails();
