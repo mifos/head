@@ -184,7 +184,7 @@ public class LoanBO extends AccountBO {
 			throws AccountException {
 		super(userContext, customer, AccountTypes.LOANACCOUNT, accountState);
 		validate(loanOffering, loanAmount, noOfinstallments, disbursementDate,
-				interesRate, gracePeriodDuration, fund, customer);
+				interesRate, gracePeriodDuration, fund, customer,interestDeductedAtDisbursement);
 		setCreateDetails();
 		this.loanOffering = loanOffering;
 		this.loanAmount = loanAmount;
@@ -2254,7 +2254,7 @@ public class LoanBO extends AccountBO {
 
 	private void validate(LoanOfferingBO loanOffering, Money loanAmount,
 			Short noOfinstallments, Date disbursementDate, Double interestRate,
-			Short gracePeriodDuration, FundBO fund, CustomerBO customer)
+			Short gracePeriodDuration, FundBO fund, CustomerBO customer,boolean interestDeductedAtDisbursement)
 			throws AccountException {
 		if (loanOffering == null || loanAmount == null
 				|| noOfinstallments == null || disbursementDate == null
@@ -2272,6 +2272,10 @@ public class LoanBO extends AccountBO {
 		if (isDisbursementDateLessThanCurrentDate(disbursementDate))
 			throw new AccountException(
 					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+		
+		if ( interestDeductedAtDisbursement==true&& noOfinstallments.shortValue()<=1)
+			throw new AccountException(
+					LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
 	}
 
 	private void buildAccountFee(List<FeeView> feeViews) {

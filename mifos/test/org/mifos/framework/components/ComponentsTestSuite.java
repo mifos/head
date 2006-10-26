@@ -20,7 +20,6 @@ public class ComponentsTestSuite extends MifosTestSuite{
 		testSuite.addTestSuite(TestTagGenerator.class);
 		testSuite.addTestSuite(TestLogging.class);
 		testSuite.addTestSuite(TestMessage.class);
-		testSuite.addTestSuite(TableTagParserTest.class);
 		testSuite.addTestSuite(TableTagExceptionTest.class);
 		return testSuite;
 	}

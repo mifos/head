@@ -1466,7 +1466,7 @@ public class TestObjectFactory {
 			LoanOfferingBO loanOfering, int disbursalType) {
 		LoanBO loan = TestLoanBO
 				.createLoanAccountWithDisbursement(globalNum, customer,
-						accountStateId, startDate, loanOfering, disbursalType);
+						accountStateId, startDate, loanOfering, disbursalType,Short.valueOf("6"));
 		try {
 			loan.save();
 		} catch (AccountException e) {

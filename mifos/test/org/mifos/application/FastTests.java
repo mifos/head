@@ -40,6 +40,7 @@ import junit.framework.TestSuite;
 import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.framework.MifosTestSuite;
+import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.struts.tags.DateHelperTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
@@ -70,6 +71,7 @@ public class FastTests extends MifosTestSuite {
 		suite.addTestSuite(XmlBuilderTest.class);
 		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTestSuite(ConvertionUtilTest.class);
+		suite.addTestSuite(TableTagParserTest.class);
 		return suite;
 	}
 

@@ -850,15 +850,17 @@ public class AccountBO extends BusinessObject {
 			List<InstallmentDate> installmentDates) throws AccountException {
 		List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
 		for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-			Short accountFeeType = accountFeesEntity.getFees()
-					.getFeeFrequency().getFeeFrequencyType().getId();
-			if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
-				feeInstallmentList.add(handleOneTime(accountFeesEntity,
-						installmentDates));
-			} else if (accountFeeType.equals(FeeFrequencyType.PERIODIC
-					.getValue())) {
-				feeInstallmentList.addAll(handlePeriodic(accountFeesEntity,
-						installmentDates));
+			if (accountFeesEntity.isActive()) {
+				Short accountFeeType = accountFeesEntity.getFees()
+						.getFeeFrequency().getFeeFrequencyType().getId();
+				if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
+					feeInstallmentList.add(handleOneTime(accountFeesEntity,
+							installmentDates));
+				} else if (accountFeeType.equals(FeeFrequencyType.PERIODIC
+						.getValue())) {
+					feeInstallmentList.addAll(handlePeriodic(accountFeesEntity,
+							installmentDates));
+				}
 			}
 		}
 		return feeInstallmentList;

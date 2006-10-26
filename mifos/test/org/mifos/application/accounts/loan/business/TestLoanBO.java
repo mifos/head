@@ -86,6 +86,8 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanBO extends MifosTestCase {
+	
+	LoanOfferingBO loanOffering = null;
 	protected AccountBO accountBO = null;
 
 	protected CustomerBO center = null;
@@ -109,6 +111,8 @@ public class TestLoanBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		
+		TestObjectFactory.removeObject(loanOffering);
 		if (accountBO != null)
 			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 					AccountBO.class, accountBO.getAccountId());
@@ -311,10 +315,40 @@ public class TestLoanBO extends MifosTestCase {
 		loanSummary.setOriginalInterest(new Money(currency, "36.0"));
 		return loan;
 	}
+	
+	public void testCreateLoanAccountWithIntersetDeductedAtDisbursementFailure()throws Exception{
+		
+		createInitialCustomers();
+		MeetingBO meeting = TestObjectFactory.createLoanMeeting(group
+				.getCustomerMeeting().getMeeting());
+		
+		 loanOffering = TestObjectFactory.createLoanOffering(
+				"Loan", Short.valueOf("2"),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("1"), Short.valueOf("1"), Short
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				Short.valueOf("1"), meeting);
+			List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 1);
+			MifosCurrency currency = TestObjectFactory.getCurrency();
+		 try{
+			 new LoanBO(TestObjectFactory.getUserContext(), loanOffering,
+						group, AccountState.LOANACC_PARTIALAPPLICATION,
+						new Money(currency, "300.0"), Short.valueOf("1"),
+						meetingDates.get(0), true, 10.0, (short) 0, new FundBO(),
+						new ArrayList<FeeView>(),null);
+			 
+			 fail();
+		 }
+		 catch (AccountException e) {
+			assertTrue(true);
+		}
+
+		
+	}
 
 	public static LoanBO createLoanAccountWithDisbursement(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
-			LoanOfferingBO loanOfering, int disbursalType) {
+			LoanOfferingBO loanOfering, int disbursalType,Short noOfInstallments) {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(startDate);
 		MeetingBO meeting = TestObjectFactory.createLoanMeeting(customer
@@ -325,7 +359,7 @@ public class TestLoanBO extends MifosTestCase {
 		try {
 			loan = new LoanBO(TestObjectFactory.getUserContext(), loanOfering,
 					customer, AccountState.getStatus(accountStateId),
-					new Money(currency, "300.0"), Short.valueOf("6"),
+					new Money(currency, "300.0"), noOfInstallments,
 					meetingDates.get(0), false, 10.0, (short) 0, new FundBO(),
 					new ArrayList<FeeView>(),null);
 		} catch (NumberFormatException e) {

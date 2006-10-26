@@ -306,7 +306,7 @@ function genericOnkeyPress(fmt,element ,e,code_0,code_9,decimal_code)
 		var index=txt.indexOf('.');
 		if ( -1 != index && charCode==46 ) return false;
 		
-	if( charCode ==13)
+	if( charCode ==13 || charCode ==110)
 	{
 		if(txt == ".") element.value="0.";
 		
