@@ -88,6 +88,7 @@ public class DatabaseSetup {
 	private static DataStore createStandardStore() {
 		Database database = new Database();
 	    executeScript(database, "sql/mifosdbcreationscript.sql");
+	    
 	    executeScript(database, "sql/Iteration13-DBScripts25092006.sql");
 	
 	    executeScript(database, "sql/mifosmasterdata.sql");
@@ -100,11 +101,16 @@ public class DatabaseSetup {
 	
 	        database.executeScript(sql);
 	    } catch (MayflySqlException e) {
-	        throw new RuntimeException(
-	            "error at line " + e.startLineNumber() +
-	            " column " + e.startColumn(),
-	            e
-	        );
+	    	if (e.startLineNumber() == -1) {
+	    		throw e.asRuntimeException();
+	    	}
+	    	else {
+		        throw new RuntimeException(
+		            "error at line " + e.startLineNumber() +
+		            " column " + e.startColumn(),
+		            e
+		        );
+	    	}
 	    } catch (FileNotFoundException e) {
 	    	throw new RuntimeException(e);
 		}
