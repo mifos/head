@@ -250,4 +250,12 @@ public class TableTagTest extends TestCase {
 
 	}
 
+	public void testSearchObject() throws Exception {
+		SearchObject searchObject = new SearchObject();
+		searchObject.addSearchTermAndOffice("newSearchTerm", "1");
+		assertEquals("newSearchTerm", searchObject.getFromSearchNodeMap("dummy-search-term-key"));
+		searchObject.setSearchNodeMap(null);
+		assertNull(searchObject.getSearchNodeMap());
+	}
+
 }

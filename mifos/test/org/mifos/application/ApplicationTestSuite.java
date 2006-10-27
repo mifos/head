@@ -70,10 +70,12 @@ import org.mifos.framework.components.configuration.ConfigurationTestSuite;
 import org.mifos.framework.components.cronjob.CronjobTestSuite;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
+import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.hibernate.HibernateTest;
 import org.mifos.framework.hibernate.helper.TestHibernateHelper;
 import org.mifos.framework.persistence.TestPersistence;
 import org.mifos.framework.struts.StrutsTestSuite;
+import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
 
 public class ApplicationTestSuite extends MifosTestSuite {
@@ -121,8 +123,9 @@ public class ApplicationTestSuite extends MifosTestSuite {
 		suite.addTestSuite(TestMenuParser.class);
 		suite.addTestSuite(TestHibernateHelper.class);
 		suite.addTestSuite(TestPersistence.class);
+		suite.addTestSuite(FrameworkExceptionTest.class);
+		suite.addTest(FrameworkUtilsSuite.suite());
 		return suite;
 	}
-
 }
 
