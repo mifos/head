@@ -61,14 +61,14 @@ public class ActivityTag extends TagSupport {
 		return EVAL_PAGE;
 	}
 
-	private void populateLocaleID(List<ActivityEntity> activities,
+	 void populateLocaleID(List<ActivityEntity> activities,
 			Short localeId) {
 		for (ActivityEntity activityEntity : activities) {
 			activityEntity.setLocaleId(localeId);
 		}
 	}
 
-	private static Set<Short> convertToIdSet(List<ActivityEntity> activityList) {
+	 static Set<Short> convertToIdSet(List<ActivityEntity> activityList) {
 		Set<Short> activities = new HashSet<Short>();
 		for (Iterator<ActivityEntity> iter = activityList.iterator(); iter
 				.hasNext();) {
@@ -78,7 +78,7 @@ public class ActivityTag extends TagSupport {
 		return activities;
 	}
 
-	private List<ActivityEntity> getActivities(
+	 List<ActivityEntity> getActivities(
 			List<ActivityEntity> activityList, Map<String, String> activities) {
 		List<ActivityEntity> newActivityList = new ArrayList<ActivityEntity>();
 		List<Short> ids = new ArrayList<Short>();

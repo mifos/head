@@ -207,7 +207,7 @@
 			<forward name="loadSearch_success" path="/pages/application/center/jsp/center_search.jsp" />
 			<forward name="loadTransferSearch_success" path="/pages/application/center/jsp/center_search_transfer_group.jsp" />
 			<forward name="transferSearch_success" path="/pages/application/center/jsp/center_search_results_transfer_group.jsp" />
-			<forward name="search_CenterSearch_TransferGroup_failure" path="/pages/application/center/jsp/center_search_transfer_group.jsp" />
+			<forward name="searchTransfer_CenterSearch_TransferGroup_failure" path="/pages/application/center/jsp/center_search_transfer_group.jsp" />
 			<forward name="viewCenterChangeLog" path="/pages/application/center/jsp/viewChangeLog.jsp" />
 			<forward name="cancelCenterChangeLog" path="/centerCustAction.do?method=get" />
 		</action>

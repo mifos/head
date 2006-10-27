@@ -73,7 +73,7 @@
               <table width="96%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
    					<td>
-   						<font class="fontnormalRedBold"><html-el:errors bundle="GroupUIResources"/></font>
+   						<font class="fontnormalRedBold"><html-el:errors bundle="CenterUIResources"/></font>
 					</td>
 				</tr>
                 <tr>
