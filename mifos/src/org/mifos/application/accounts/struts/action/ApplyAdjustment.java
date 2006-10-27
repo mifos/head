@@ -113,7 +113,9 @@ public class ApplyAdjustment extends BaseAction {
 			HttpServletResponse response) throws Exception {
 		request.setAttribute("method", "applyAdjustment");
 		ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
+		AccountBO accountBOInSession = (AccountBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+		checkVersionMismatch(accountBOInSession.getVersionNo(),accnt.getVersionNo());
 		if (null == accnt.getLastPmnt() || accnt.getLastPmntAmnt() == 0) {
 			request.setAttribute("method", "previewAdjustment");
 			throw new ApplicationException(
@@ -148,6 +150,7 @@ public class ApplyAdjustment extends BaseAction {
 		return mapping.findForward("canceladj_success");
 	}
 
+	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 
 		return true;
@@ -163,6 +166,7 @@ public class ApplyAdjustment extends BaseAction {
 		appAdjustActionForm.setAdjustmentNote(null);
 	}
 
+	@Override
 	protected boolean isNewBizRequired(HttpServletRequest request)
 			throws ServiceException {
 		if (request.getAttribute(Constants.BUSINESS_KEY) != null) {

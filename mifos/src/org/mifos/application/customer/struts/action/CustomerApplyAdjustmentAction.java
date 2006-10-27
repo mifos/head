@@ -73,7 +73,9 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		String forward = null;
 		request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_APPLY_ADJUSTMENT);
 		CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm)form;
+		CustomerBO customerBOInSession = (CustomerBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
 		CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm.getGlobalCustNum());
+		checkVersionMismatch(customerBOInSession.getVersionNo(),customerBO.getVersionNo());
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,customerBO,request);
 		if(null == customerBO.getCustomerAccount().getLastPmnt() || customerBO.getCustomerAccount().getLastPmntAmnt() == 0){

@@ -101,8 +101,9 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		verifyForward(Constants.PREVIOUS_SUCCESS);
 	}
 	
-	public void testMakeRepaymentForCurrentDateSameAsInstallmentDate(){
+	public void testMakeRepaymentForCurrentDateSameAsInstallmentDate() throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		Money amount=((LoanBO)accountBO).getTotalEarlyRepayAmount();
 		setRequestPathInfo("/repayLoanAction");
 		addRequestParameter("method", "makeRepayment");
@@ -119,10 +120,10 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		
 	}
 	
-	public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDates(){
+	public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDates() throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		changeFirstInstallmentDate(accountBO);
-		
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		Money amount=((LoanBO)accountBO).getTotalEarlyRepayAmount();
 	
 		setRequestPathInfo("/repayLoanAction");

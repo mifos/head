@@ -542,7 +542,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	public Date getUpcomingChargesDate() {
-		AccountActionDateEntity nextAccountAction = getDetailsOfNextInstallment();
+		AccountActionDateEntity nextAccountAction = getNextUnpaidDueInstallment();
 		return nextAccountAction != null ? nextAccountAction.getActionDate()
 				: new java.sql.Date(System.currentTimeMillis());
 	}
@@ -588,6 +588,7 @@ public class CustomerAccountBO extends AccountBO {
 			throws AccountException {
 		AccountFeesEntity accountFee = getAccountFee(fee, charge
 				.getAmountDoubleValue());
+		accountFee.setAccountFeeAmount(charge);
 		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
 		for (AccountActionDateEntity accountActionDateEntity : dueInstallments)
 			installmentDates.add(new InstallmentDate(accountActionDateEntity
@@ -705,12 +706,10 @@ public class CustomerAccountBO extends AccountBO {
 			return true;
 		return false;
 	}
-
-	public Money getNextDueAmount() {
-
+	
+	private AccountActionDateEntity getNextUnpaidDueInstallment() {
 		AccountActionDateEntity accountAction = null;
 		for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
-
 			if (accountActionDate.getPaymentStatus().equals(
 					PaymentStatus.UNPAID.getValue())) {
 				if (accountActionDate.compareDate(DateUtils
@@ -722,11 +721,14 @@ public class CustomerAccountBO extends AccountBO {
 								.getInstallmentId())
 							accountAction = accountActionDate;
 					}
-
 				}
 			}
 		}
+		return accountAction;
+	}
 
+	public Money getNextDueAmount() {
+		AccountActionDateEntity accountAction = getNextUnpaidDueInstallment();
 		if (accountAction != null)
 			return getDueAmount(accountAction);
 		else

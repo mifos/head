@@ -97,6 +97,7 @@ public class LoanDisbursmentAction extends BaseAction {
 		LoanDisbursmentActionForm actionForm = (LoanDisbursmentActionForm) form;
 		LoanBO loan = ((LoanBusinessService) getService()).getAccount(Integer
 				.valueOf(actionForm.getAccountId()));
+		checkVersionMismatch(savedloan.getVersionNo(),loan.getVersionNo());
 		loan.setVersionNo(savedloan.getVersionNo());
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());

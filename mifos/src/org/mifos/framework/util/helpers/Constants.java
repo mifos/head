@@ -117,4 +117,5 @@ public interface Constants {
 	public static final String FLOWMANAGER="flowManager";
 	public static final String RANDOMNUM="randomNUm";
 	public static final String INPUT="input";
+	public static final String ERROR_VARSIONMISMATCH="error.versionnodonotmatch";
 }

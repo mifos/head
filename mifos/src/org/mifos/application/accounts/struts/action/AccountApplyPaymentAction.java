@@ -144,6 +144,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
 		AccountBO account = getAccountBusinessService().getAccount(
 				Integer.valueOf(actionForm.getAccountId()));
+		checkVersionMismatch(savedAccount.getVersionNo(),account.getVersionNo());
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		CustomerLevel customerLevel = null;

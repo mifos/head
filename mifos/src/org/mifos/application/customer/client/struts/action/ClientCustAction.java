@@ -605,6 +605,7 @@ public class ClientCustAction extends CustAction {
 				Constants.BUSINESS_KEY, request);
 		ClientBO client = getClientBusinessService().getClient(
 				clientInSession.getCustomerId());
+		checkVersionMismatch(clientInSession.getVersionNo(),client.getVersionNo());
 		client.setVersionNo(clientInSession.getVersionNo());
 		clientInSession = null;
 		client.setUserContext(getUserContext(request));
@@ -691,6 +692,7 @@ public class ClientCustAction extends CustAction {
 				Constants.BUSINESS_KEY, request);
 		ClientBO client = getClientBusinessService().getClient(
 				clientInSession.getCustomerId());
+		checkVersionMismatch(clientInSession.getVersionNo(),client.getVersionNo());
 		client.setVersionNo(clientInSession.getVersionNo());
 		clientInSession = null;
 		client.setUserContext(getUserContext(request));

@@ -57,6 +57,7 @@
 	}
 </script>
 <html-el:form action="/fundAction.do?method=update">
+<c:set var="oldFundName" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'oldFundName')}"/>
    <table width="95%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="bluetablehead05">
@@ -68,7 +69,7 @@
 						<mifos:mifoslabel name="funds.viewfunds" bundle="fundUIResources"/> 
 				</html-el:link>/ 
 			</span>
-			<span class="fontnormal8ptbold"><c:out value="${sessionScope.fundActionForm.fundName}"/></span>
+			<span class="fontnormal8ptbold"><c:out value="${oldFundName}"/></span>
 			</td>
       </tr>
     </table>
@@ -76,7 +77,7 @@
           <tr>
             <td width="70%" align="left" valign="top" class="paddingL15T15"><table width="93%" border="0" cellpadding="3" cellspacing="0">
               <tr>
-                <td class="headingorange"><span class="heading"><c:out value="${param.oldFundName}"/> - </span>
+                <td class="headingorange"><span class="heading"><c:out value="${oldFundName}"/> - </span>
                 <mifos:mifoslabel name="funds.preview_fundInfo" bundle="fundUIResources"/>                
                 </td>
               </tr>

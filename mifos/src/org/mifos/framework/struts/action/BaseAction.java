@@ -336,5 +336,9 @@ public abstract class BaseAction extends DispatchAction {
 			throws Exception {
 		return mapping.findForward(AuditConstants.CANCEL+request.getParameter(AuditConstants.ENTITY_TYPE)+AuditConstants.CHANGE_LOG);
 	}
-
+	
+	protected void checkVersionMismatch(Integer oldVersionNum, Integer newVersionNum) throws ApplicationException {
+		if(!oldVersionNum.equals(newVersionNum))
+			throw new ApplicationException(Constants.ERROR_VARSIONMISMATCH);
+	}
 }

@@ -27,6 +27,7 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.ResourceLoader;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
@@ -245,7 +246,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		customerAccountBO = (CustomerAccountBO) TestObjectFactory.getObject(
 				CustomerAccountBO.class, customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer();
-
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,client,request);
 	}
 
 }

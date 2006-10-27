@@ -207,8 +207,11 @@ public class SavingsClosureAction extends BaseAction {
 			throws Exception {
 		AccountPaymentEntity payment = (AccountPaymentEntity) SessionUtils
 				.getAttribute(SavingsConstants.ACCOUNT_PAYMENT, request);
-		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
+		SavingsBO savingsInSession = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
+		SavingsBO savings = savingsService.findById(savingsInSession.getAccountId());
+		checkVersionMismatch(savingsInSession.getVersionNo(),savings.getVersionNo());
+		savings.setUserContext(getUserContext(request));
 		logger.debug("In SavingsClosureAction::close(), accountId: "
 				+ savings.getAccountId());
 		SavingsClosureActionForm actionForm = (SavingsClosureActionForm) form;

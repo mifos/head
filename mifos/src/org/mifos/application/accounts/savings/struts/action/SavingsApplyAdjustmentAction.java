@@ -164,8 +164,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		Integer accountId = savings.getAccountId();
-		SessionUtils.removeAttribute(Constants.BUSINESS_KEY , request);
+		Integer versionNum = savings.getVersionNo();
 		savings = getSavingsService().findById(accountId);
+		checkVersionMismatch(versionNum,savings.getVersionNo());
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 		

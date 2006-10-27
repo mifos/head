@@ -246,6 +246,7 @@ public class CenterCustAction extends CustAction {
 					getUserContext(request).getPereferedLocale());
 		CenterBO centerBO = ((CenterBusinessService) getService())
 				.findBySystemId(center.getGlobalCustNum());
+		checkVersionMismatch(center.getVersionNo(),centerBO.getVersionNo());
 		centerBO.setVersionNo(center.getVersionNo());
 		centerBO.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(centerBO);

@@ -963,17 +963,20 @@ public class LoanBO extends AccountBO {
 			Double interestRate,Short noOfInstallments,Date disbursmentDate,
 			Short gracePeriodDuration,Integer businessActivityId,String collateralNote,
 			CollateralTypeEntity collateralTypeEntity,List<CustomFieldView>customFields) throws AccountException {
-		if (interestDeductedAtDisbursment){
+		if (interestDeductedAtDisbursment) {
 			try {
-				setGracePeriodType((GracePeriodTypeEntity) new MasterPersistence().retrieveMasterEntity(				
-								GraceTypeConstants.NONE.getValue(),
-								GracePeriodTypeEntity.class,getUserContext().getLocaleId()));
+				if (noOfInstallments <= 1)
+					throw new AccountException(
+							LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
+				setGracePeriodType((GracePeriodTypeEntity) new MasterPersistence()
+						.retrieveMasterEntity(GraceTypeConstants.NONE
+								.getValue(), GracePeriodTypeEntity.class,
+								getUserContext().getLocaleId()));
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
-		}else
-			setGracePeriodType(getLoanOffering()
-					.getGracePeriodType());
+		} else
+			setGracePeriodType(getLoanOffering().getGracePeriodType());
 		setLoanAmount(loanAmount);
 		setInterestRate(interestRate);
 		setNoOfInstallments(noOfInstallments);

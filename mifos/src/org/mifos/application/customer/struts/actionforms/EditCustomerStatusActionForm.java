@@ -51,6 +51,10 @@ import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class EditCustomerStatusActionForm extends BaseActionForm {
+	
+	public EditCustomerStatusActionForm() {
+		selectedItems = new String[50];
+	}
 
 	private String customerId;
 
@@ -188,6 +192,7 @@ public class EditCustomerStatusActionForm extends BaseActionForm {
 		if (null != methodCalled) {
 			if ((Methods.previewStatus.toString()).equals(methodCalled)) {
 				this.flagId = null;
+				this.selectedItems = null; 
 			}
 		}
 	}

@@ -232,7 +232,7 @@ public class PersonAction extends SearchAction {
 
 		PersonnelBO personnelInit = ((PersonnelBusinessService) getService())
 				.getPersonnel(Short.valueOf(actionForm.getPersonnelId()));
-
+		checkVersionMismatch(personnel.getVersionNo(),personnelInit.getVersionNo());
 		personnelInit.setVersionNo(personnel.getVersionNo());
 		personnelInit.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(personnelInit);
@@ -584,19 +584,6 @@ public class PersonAction extends SearchAction {
 			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
 					null, request);
 	}
-
-/*	private Short getLocaleId(Short lookUpId) throws ServiceException {
-		if (lookUpId != null)
-			for (SupportedLocalesEntity locale : ((PersonnelBusinessService) getService())
-					.getAllLocales()) {
-				if (locale.getLanguage().getLookUpId().intValue() == lookUpId
-						.intValue())
-					return locale.getLocaleId();
-				break;
-			}
-		return Short.valueOf("1");
-
-	}*/
 
 	protected Locale getUserLocale(HttpServletRequest request) {
 		Locale locale = null;

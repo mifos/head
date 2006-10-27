@@ -68,4 +68,5 @@ public interface FundConstants {
 	public String FUNDNAME = "fund Name";
 	public String FUND_CODE = "fund Code";
 	public String METHODCALLED="methodCalled";
+	public String OLDFUNDNAME = "oldFundName";
 }

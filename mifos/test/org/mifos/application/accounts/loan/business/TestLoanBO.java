@@ -3942,6 +3942,23 @@ public class TestLoanBO extends MifosTestCase {
 					true);
 		}
 	}
+	
+	public void testUpdateLoanWithInterestDeducted() {
+		accountBO = getLoanAccount();
+		try {
+			LoanBO loanBO = ((LoanBO) accountBO);
+			((LoanBO) accountBO).updateLoan(loanBO
+					.isInterestDeductedAtDisbursement(),
+					loanBO.getLoanAmount(), loanBO.getInterestRate(), Short.valueOf("1"), loanBO
+							.getDisbursementDate(), loanBO
+							.getGracePeriodDuration(), loanBO
+							.getBusinessActivityId(), "Loan account updated",
+					null,null);
+			assertFalse(true);
+		} catch (AccountException ae) {
+			assertTrue("Invalid no of installment",true);
+		}
+	}
 
 	public void testApplyTimeOfFirstRepaymentFee() throws Exception {
 		accountBO = getLoanAccount();

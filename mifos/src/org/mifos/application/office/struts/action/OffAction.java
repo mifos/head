@@ -207,6 +207,7 @@ public class OffAction extends BaseAction {
 				Constants.BUSINESS_KEY, request);
 		OfficeBO office = ((OfficeBusinessService) getService())
 				.getOffice(Short.valueOf(sessionOffice.getOfficeId()));
+		checkVersionMismatch(sessionOffice.getVersionNo(),office.getVersionNo());
 		office.setVersionNo(sessionOffice.getVersionNo());
 		office.setUserContext(getUserContext(request));
 		OfficeStatus newStatus = null;

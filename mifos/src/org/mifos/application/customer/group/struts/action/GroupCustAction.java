@@ -276,6 +276,7 @@ public class GroupCustAction extends CustAction {
 		GroupBO groupBO;
 		groupBO = getGroupBusinessService().findBySystemId(
 				actionForm.getGlobalCustNum());
+		checkVersionMismatch(group.getVersionNo(),groupBO.getVersionNo());
 		groupBO.setVersionNo(group.getVersionNo());
 		groupBO.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(groupBO);

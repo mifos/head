@@ -164,10 +164,7 @@ public class OfficePersistence extends Persistence {
 		queryParameters.put("LOCALE_ID", localeId);
 		List<OfficeView> queryResult = executeNamedQuery(
 				NamedQueryConstants.GETACTIVEPARENTS, queryParameters);
-		if (queryResult != null && queryResult.size() != 0) {
 			return queryResult;
-		}
-		return null;
 
 	}
 

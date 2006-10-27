@@ -75,7 +75,7 @@
 								<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" />
 								<mifos:mifoslabel name="product.products" bundle="ProductDefUIResources" />
 							</html-el:link> / <html-el:link href="loanproductaction.do?method=get&prdOfferingId=${sessionScope.loanproductactionform.prdOfferingId}&randomNUm=${sessionScope.randomNUm}">
-								<c:out value="${prdOfferName}" />
+								<c:out value="${BusinessKey.prdOfferingName}" />
 							</html-el:link></span>
 					</td>
 				</tr>

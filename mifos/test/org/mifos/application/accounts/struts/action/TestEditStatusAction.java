@@ -275,6 +275,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting,
 				AccountState.LOANACC_PARTIALAPPLICATION);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "update");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
@@ -349,6 +350,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		savingsOffering = createSavingsOffering();
 		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
 				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "update");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
@@ -374,6 +376,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		savingsOffering = createSavingsOffering();
 		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
 				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		SessionUtils.setAttribute(Constants.USERCONTEXT, createUser(), request
 				.getSession());
 		setRequestPathInfo("/editStatusAction.do");

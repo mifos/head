@@ -324,8 +324,9 @@ public class EditCustomerStatusAction extends BaseAction {
 	private void updateStatus(ActionForm form, HttpServletRequest request)
 			throws Exception {
 		EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
-		CustomerBO customerBO = customerService
-				.getCustomer(editStatusActionForm.getCustomerIdValue());
+		CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		CustomerBO customerBO = customerService.getCustomer(customerBOInSession.getCustomerId());
+		checkVersionMismatch(customerBOInSession.getVersionNo(),customerBO.getVersionNo());
 		customerBO.setUserContext(getUserContext(request));
 		customerBO.getCustomerStatus().setLocaleId(
 				getUserContext(request).getLocaleId());
@@ -341,6 +342,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		setInitialObjectForAuditLogging(customerBO);
 		customerBO.changeStatus(newStatusId, flagId, editStatusActionForm
 				.getNotes());
+		customerBOInSession = null;
 		customerBO = null;
 	}
 }

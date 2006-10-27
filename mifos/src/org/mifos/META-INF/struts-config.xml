@@ -198,6 +198,7 @@
 			<forward name="editPreview_failure" path="/pages/application/center/jsp/editcenter.jsp" />
 			<forward name="editprevious_success" path="/pages/application/center/jsp/editcenter.jsp" />
 			<forward name="update_success" path="/centerCustAction.do?method=get" />
+			<forward name="update_failure" path="/pages/application/center/jsp/previeweditcenter.jsp" />
 			<!-- Cancel Page Forwards -->
 			<forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch&amp;input=mainpage" />
 			<forward name="editcancel_success" path="/centerCustAction.do?method=get" />
@@ -523,7 +524,8 @@
 			<forward name="preview_success" path="/pages/application/loan/jsp/Review_RepayLoan.jsp" />
 			<forward name="previous_success" path="/pages/application/loan/jsp/RepayLoan.jsp" />
 			<forward name="update_success" path="/loanAccountAction.do?method=get" />
-			<forward name="preview_faliure" path="/pages/application/loan/jsp/RepayLoan.jsp" />
+			<forward name="update_failure" path="/pages/application/loan/jsp/Review_RepayLoan.jsp" />
+			<forward name="preview_failure" path="/pages/application/loan/jsp/RepayLoan.jsp" />
 		</action>
 		<!-- End -->
 		<!-- Bulk Entry Action -->
@@ -572,6 +574,8 @@
 			<forward name="create_failure" path="/pages/application/savings/jsp/createsavingsaccountpreview.jsp" />
 			<forward name="update_failure" path="/pages/application/savings/jsp/previewsavingsaccount.jsp" />
 			<forward name="depositduedetails_success" path="/pages/application/savings/jsp/savingsaccountdepositduedetails.jsp" />
+			<forward name="waiveAmountDue_failure" path="/pages/application/savings/jsp/savingsaccountdepositduedetails.jsp" />
+			<forward name="waiveAmountOverDue_failure" path="/pages/application/savings/jsp/savingsaccountdepositduedetails.jsp" />
 			<forward name="waiveAmount_success" path="/savingsAction.do?method=getDepositDueDetails" />
 			<forward name="getStatusHistory_success" path="/pages/application/savings/jsp/viewstatuschangehistory.jsp" />
 			<!--  Audit Log -->
@@ -598,6 +602,7 @@
 			<forward name="preview_success" path="/pages/application/savings/jsp/reviewclosesavings.jsp" />
 			<forward name="previous_success" path="/pages/application/savings/jsp/closesavingsaccount.jsp" />
 			<forward name="close_success" path="/savingsAction.do?method=get" />
+			<forward name="close_failure" path="/pages/application/savings/jsp/reviewclosesavings.jsp" />
 			<forward name="preview_faliure" path="/pages/application/savings/jsp/closesavingsaccount.jsp" />
 		</action>
 		<!-- Savings Closure action end -->

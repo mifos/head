@@ -371,6 +371,7 @@ public class SavingsAction extends AccountAppAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		Integer version = savings.getVersionNo();
 		savings = new SavingsBusinessService().findById(savings.getAccountId());
+		checkVersionMismatch(version,savings.getVersionNo());
 		savings.setVersionNo(version);
 		savings.setUserContext(uc);
 		setInitialObjectForAuditLogging(savings);
@@ -559,8 +560,9 @@ public class SavingsAction extends AccountAppAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		savings = savingsService.findBySystemId(((SavingsActionForm) form)
-				.getGlobalAccountNum());
+		Integer versionNum = savings.getVersionNo();
+		savings = savingsService.findBySystemId(((SavingsActionForm) form).getGlobalAccountNum());
+		checkVersionMismatch(versionNum,savings.getVersionNo());
 		savings.setUserContext(uc);
 		savings.waiveAmountDue(WaiveEnum.ALL);
 		return mapping.findForward("waiveAmount_success");
@@ -575,8 +577,10 @@ public class SavingsAction extends AccountAppAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
+		Integer versionNum = savings.getVersionNo();
 		savings = savingsService.findBySystemId(((SavingsActionForm) form)
 				.getGlobalAccountNum());
+		checkVersionMismatch(versionNum,savings.getVersionNo());
 		savings.setUserContext(uc);
 		savings.waiveAmountOverDue();
 		return mapping.findForward("waiveAmount_success");

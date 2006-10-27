@@ -5,16 +5,20 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public class EditStatusActionForm extends ValidatorActionForm {
+public class EditStatusActionForm extends BaseActionForm {
+	
+	public EditStatusActionForm() {
+		selectedItems = new String[50];
+	}
+	
 	private String accountId;
 
 	private String globalAccountNum;
@@ -131,6 +135,7 @@ public class EditStatusActionForm extends ValidatorActionForm {
 		if (null != methodCalled) {
 			if ((Methods.preview.toString()).equals(methodCalled)) {
 				this.flagId = null;
+				this.selectedItems = null;
 			}
 		}
 	}
@@ -182,11 +187,6 @@ public class EditStatusActionForm extends ValidatorActionForm {
 					AccountConstants.NOTES, String
 							.valueOf(LoanConstants.COMMENT_LENGTH));
 		return errors;
-	}
-
-	private void addError(ActionErrors errors, String property, String key,
-			String... arg) {
-		errors.add(property, new ActionMessage(key, arg));
 	}
 
 	private boolean isCheckListNotComplete(String chklistSize) {

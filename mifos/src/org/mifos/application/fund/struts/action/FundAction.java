@@ -142,6 +142,7 @@ public class FundAction extends BaseAction {
 		FundActionForm fundActionForm = (FundActionForm) form;
 		Short fundId = getShortValue(fundActionForm.getFundCodeId());
 		FundBO fundBO = getFund(fundId);
+		SessionUtils.setAttribute(FundConstants.OLDFUNDNAME, fundBO.getFundName(),request);
 		setFormAttributes(fundActionForm,fundBO.getFundName(),fundBO.getFundCode().getFundCodeValue());
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}

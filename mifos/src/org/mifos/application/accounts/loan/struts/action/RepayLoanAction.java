@@ -17,6 +17,7 @@ import org.mifos.application.accounts.loan.struts.actionforms.RepayLoanActionFor
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -73,6 +74,7 @@ public class RepayLoanAction extends BaseAction {
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
 				masterDataService.retrievePaymentTypes(uc.getLocaleId()),
 				request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,loanBO,request);
 		return mapping.findForward(Constants.LOAD_SUCCESS);
 	}
 
@@ -85,11 +87,12 @@ public class RepayLoanAction extends BaseAction {
 				LoanConstants.TOTAL_REPAYMENT_AMOUNT,request);
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).info(
 				"Performing loan repayment");
-		String globalAccountNum = request.getParameter("globalAccountNum");
+				String globalAccountNum = request.getParameter("globalAccountNum");
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		LoanBO loanBO = ((LoanBusinessService) getService())
-				.findBySystemId(globalAccountNum);
+		LoanBO loanBOInSession = (LoanBO)SessionUtils.getAttribute(Constants.BUSINESS_KEY,request);
+		LoanBO loanBO = ((LoanBusinessService) getService()).findBySystemId(globalAccountNum);
+		checkVersionMismatch(loanBOInSession.getVersionNo(),loanBO.getVersionNo());
 		RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form;
 		Date receiptDate = null;
 		if (repayLoanActionForm.getRecieptDate() != null
@@ -117,6 +120,7 @@ public class RepayLoanAction extends BaseAction {
 		return mapping.findForward(Constants.PREVIOUS_SUCCESS);
 	}
 
+	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
@@ -129,7 +133,7 @@ public class RepayLoanAction extends BaseAction {
 		logger.debug("In RepayLoanAction::validate(), method: " + method);
 		String forward = null;
 		if (method != null && method.equals("preview"))
-			forward = "preview_faliure";
+			forward = ActionForwards.preview_failure.toString();
 		return mapping.findForward(forward);
 	}
 

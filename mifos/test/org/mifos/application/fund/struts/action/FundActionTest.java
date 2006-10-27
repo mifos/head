@@ -162,6 +162,7 @@ public class FundActionTest extends MifosMockStrutsTestCase {
 		fund = (FundBO)TestObjectFactory.getObject(FundBO.class,fund.getFundId());
 		assertNotNull(fund);
 		assertEquals("Fund-1",fund.getFundName());
+		assertEquals("Fund-1",SessionUtils.getAttribute(FundConstants.OLDFUNDNAME, request));
 	}
 	
 	public void testPreviewManageWithNullFundName() throws Exception{

@@ -196,6 +196,8 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
+		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,	loan.getAccountId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan,request);
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "applyAdjustment");
 		addRequestParameter("adjustmentNote", "Loan adjustment testing");
@@ -234,6 +236,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.updateObject(loan);
 		HibernateUtil.closeSession();
 		loan=(LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan,request);
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "applyAdjustment");
 		addRequestParameter("adjustmentNote", "Loan adjustment testing");
@@ -276,6 +279,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan, 0);
 		TestObjectFactory.flushandCloseSession();
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan,request);
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "applyAdjustment");
 		addRequestParameter("adjustmentNote", "Loan adjustment testing");

@@ -103,6 +103,7 @@ public class ClientTransferAction extends BaseAction {
 		
 		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		ClientBO client = (ClientBO)getCustomerBusinessService().getCustomer(clientInSession.getCustomerId());
+		checkVersionMismatch(clientInSession.getVersionNo(),client.getVersionNo());
 		client.setVersionNo(clientInSession.getVersionNo());
 		client.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(client);
@@ -152,6 +153,7 @@ public class ClientTransferAction extends BaseAction {
 		transferToGroup.setUserContext(getUserContext(request));
 		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		ClientBO client = getClientBusinessService().getClient(clientInSession.getCustomerId());
+		checkVersionMismatch(clientInSession.getVersionNo(),client.getVersionNo());
 		client.setVersionNo(clientInSession.getVersionNo());
 		client.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(client);

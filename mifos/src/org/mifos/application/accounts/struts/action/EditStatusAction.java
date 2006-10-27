@@ -105,10 +105,11 @@ public class EditStatusAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
+		AccountBO accountBOInSession = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USERCONTEXT, request.getSession());
-		AccountBO accountBO = getAccountBusinessService().getAccount(
-				getIntegerValue(editStatusActionForm.getAccountId()));
+		AccountBO accountBO = getAccountBusinessService().getAccount(getIntegerValue(editStatusActionForm.getAccountId()));
+		checkVersionMismatch(accountBOInSession.getVersionNo(),accountBO.getVersionNo());
 		accountBO.setUserContext(userContext);
 		accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
 		setInitialObjectForAuditLogging(accountBO);
@@ -122,6 +123,7 @@ public class EditStatusAction extends BaseAction {
 		checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
 		accountBO.changeStatus(newStatusId, flagId, editStatusActionForm
 				.getNotes());
+		accountBOInSession = null;
 		accountBO.update();
 		accountBO = null;
 		return mapping.findForward(getDetailAccountPage(form));

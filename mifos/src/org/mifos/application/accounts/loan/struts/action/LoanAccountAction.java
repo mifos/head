@@ -417,6 +417,7 @@ public class LoanAccountAction extends AccountAppAction {
 				Constants.BUSINESS_KEY, request);
 		LoanBO loanBO = loanBusinessService.findBySystemId(loanBOInSession
 				.getGlobalAccountNum());
+		checkVersionMismatch(loanBOInSession.getVersionNo(),loanBO.getVersionNo());
 		loanBO.setVersionNo(loanBOInSession.getVersionNo());
 		loanBO.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(loanBO);

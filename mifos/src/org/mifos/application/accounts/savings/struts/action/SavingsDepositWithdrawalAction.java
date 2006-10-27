@@ -175,6 +175,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				Constants.BUSINESS_KEY, request);
 		SavingsBO savings = getSavingsService().findById(
 				savedAccount.getAccountId());
+		checkVersionMismatch(savedAccount.getVersionNo(),savings.getVersionNo());
 		savings.setVersionNo(savedAccount.getVersionNo());
 		logger
 				.debug("In SavingsDepositWithdrawalAction::makePayment(), accountId: "

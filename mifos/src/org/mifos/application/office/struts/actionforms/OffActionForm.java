@@ -263,7 +263,7 @@ public class OffActionForm extends BaseActionForm {
 					.getCountry());
 			this.address.setZip(officeBO.getAddress().getAddress().getZip());
 		} else {
-			this.address = null;
+			this.address = new Address();
 		}
 		if (officeBO.getParentOffice() != null)
 			this.parentOfficeId = officeBO.getParentOffice().getOfficeId()

@@ -122,6 +122,7 @@ public class CustHistoricalDataAction extends BaseAction {
 		CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		CustomerBO customerBO = getCustomerBusinessService().getCustomer(customerBOInSession.getCustomerId());
+		checkVersionMismatch(customerBOInSession.getVersionNo(),customerBO.getVersionNo());
 		customerBO.setVersionNo(customerBOInSession.getVersionNo());
 		customerBO.setUserContext(getUserContext(request));
 		customerBOInSession = null;

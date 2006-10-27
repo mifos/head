@@ -66,6 +66,7 @@ public class GroupTransferAction extends BaseAction {
 				Constants.BUSINESS_KEY, request);
 		GroupBO group = getGroupBusinessService().getGroup(
 				groupInSession.getCustomerId());
+		checkVersionMismatch(groupInSession.getVersionNo(),group.getVersionNo());
 		group.setVersionNo(groupInSession.getVersionNo());
 		group.setUserContext(getUserContext(request));
 		setInitialObjectForAuditLogging(group);
@@ -116,6 +117,7 @@ public class GroupTransferAction extends BaseAction {
 				Constants.BUSINESS_KEY, request);
 		GroupBO group = getGroupBusinessService().getGroup(
 				groupInSession.getCustomerId());
+		checkVersionMismatch(groupInSession.getVersionNo(),group.getVersionNo());
 		group.setUserContext(getUserContext(request));
 		group.setVersionNo(groupInSession.getVersionNo());
 		setInitialObjectForAuditLogging(group);

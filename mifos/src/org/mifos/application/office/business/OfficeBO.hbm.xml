@@ -10,7 +10,7 @@
 		<id name="officeId" column="OFFICE_ID" type="short" access="field">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer" />
+		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null"/>
 		<property name="searchId" column="SEARCH_ID" type="string" />
 		<property name="officeName" column="DISPLAY_NAME" type="string" />
 		<property name="createdDate" column="CREATED_DATE" type="date" />
