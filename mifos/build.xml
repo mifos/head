@@ -260,13 +260,13 @@
 				use ${db.name};
 			</transaction>
 			<transaction src="./sql/mifosdroptables.sql" />
-			<transaction src="./sql/mifosdbcreationscript.sql" />
+            <transaction src="./sql/mifosdbcreationscript.sql" />
+            <transaction src="./sql/mifosmasterdata.sql" />
 			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
-			<transaction src="./sql/Iteration14-DDL-DBScripts10102006.sql" />
-			<transaction src="./sql/Iteration15-DDL-DBScripts24102006.sql" />
-			<transaction src="./sql/mifosmasterdata.sql" />
+            <transaction src="./sql/Iteration14-DDL-DBScripts10102006.sql" />
 			<transaction src="./sql/Iteration14-DML-DBScripts10102006.sql" />
-			<transaction src="./sql/Iteration15-DBScripts20061012.sql" />
+            <transaction src="./sql/Iteration15-DDL-DBScripts24102006.sql" />
+            <transaction src="./sql/Iteration15-DBScripts20061012.sql" />
 			<transaction src="./sql/rmpdroptables.sql" />
 			<transaction src="./sql/rmpdbcreationscript.sql" />
 			<transaction src="./sql/rmpmasterdata.sql" />
@@ -289,18 +289,18 @@
 			     haven't yet figured out how I can factor
 			     out the duplication in ant.
 			-->
-							<transaction src="./sql/mifosdroptables.sql" />
-			                <transaction src="./sql/mifosdbcreationscript.sql" />
-			                <transaction src="./sql/mifosmasterdata.sql" />
-							<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
-   	    	                <transaction src="./sql/Iteration14-DDL-DBScripts10102006.sql" />
-							<transaction src="./sql/Iteration14-DML-DBScripts10102006.sql" />
-			                <transaction src="./sql/Iteration15-DDL-DBScripts24102006.sql" />
-    		                <transaction src="./sql/Iteration15-DBScripts20061012.sql" />
-			                <transaction src="./sql/testdbinsertionscript.sql" />
-							<transaction src="./sql/rmpdroptables.sql" />
-							<transaction src="./sql/rmpdbcreationscript.sql" />
-							<transaction src="./sql/rmpmasterdata.sql" />
+			<transaction src="./sql/mifosdroptables.sql" />
+            <transaction src="./sql/mifosdbcreationscript.sql" />
+            <transaction src="./sql/mifosmasterdata.sql" />
+			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
+            <transaction src="./sql/Iteration14-DDL-DBScripts10102006.sql" />
+			<transaction src="./sql/Iteration14-DML-DBScripts10102006.sql" />
+            <transaction src="./sql/Iteration15-DDL-DBScripts24102006.sql" />
+            <transaction src="./sql/Iteration15-DBScripts20061012.sql" />
+            <transaction src="./sql/testdbinsertionscript.sql" />
+			<transaction src="./sql/rmpdroptables.sql" />
+			<transaction src="./sql/rmpdbcreationscript.sql" />
+			<transaction src="./sql/rmpmasterdata.sql" />
 		</sql>
 	</target>
 
