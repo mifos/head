@@ -13,6 +13,8 @@ import org.mifos.application.accounts.loan.struts.action.TestLoanAccountAction;
 import org.mifos.application.accounts.loan.struts.action.TestLoanActivityAction;
 import org.mifos.application.accounts.loan.struts.action.TestRepayLoanAction;
 import org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFnTest;
+import org.mifos.application.accounts.loan.struts.uihelpers.TestLoanActivityTag;
+import org.mifos.application.accounts.loan.struts.uihelpers.TestLoanRepayTag;
 import org.mifos.framework.MifosTestSuite;
 
 public class LoanTestSuite extends MifosTestSuite {
@@ -32,6 +34,8 @@ public class LoanTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(TestAccountStatusAction.class);
 		testSuite.addTestSuite(TestLoanScheduleEntity.class);
 		testSuite.addTestSuite(LoanUIHelperFnTest.class);
+		testSuite.addTestSuite(TestLoanActivityTag.class);
+		testSuite.addTestSuite(TestLoanRepayTag.class);
 		return testSuite;
 	}
 }

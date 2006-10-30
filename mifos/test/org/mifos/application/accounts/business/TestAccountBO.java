@@ -446,8 +446,13 @@ public class TestAccountBO extends TestAccount {
 				AccountBO.class, accountBO.getAccountId());
 		for (AccountNotesEntity accountNotes : accountBO
 				.getRecentAccountNotes()) {
-			assertEquals("Last note added is account updated",
-					"account updated", accountNotes.getComment());
+			assertEquals("Last note added is account updated","account updated", accountNotes.getComment());
+			assertEquals(currentDate.toString(),accountNotes.getCommentDateStr());
+			assertEquals(personnelBO.getPersonnelId(),accountNotes.getPersonnel().getPersonnelId());
+			assertEquals(personnelBO.getDisplayName(),accountNotes.getPersonnel().getDisplayName());
+			assertEquals(currentDate.toString(),accountNotes.getCommentDate().toString());
+			assertEquals(accountBO.getAccountId(),accountNotes.getAccount().getAccountId());
+			assertNotNull(accountNotes.getCommentId());
 			break;
 		}
 	}

@@ -55,6 +55,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -121,6 +122,24 @@ public class TestAccountService extends MifosTestCase {
 		assertTrue(
 				"Account TrxnHistoryView list object Size should be greater than zero",
 				trxnHistlist.size() > 0);
+		for(TransactionHistoryView view : trxnHistlist) {
+			assertEquals("100.0",view.getBalance());
+			assertNotNull(view.getClientName());
+			assertEquals("-",view.getCredit());
+			assertEquals("100.0",view.getDebit());
+			assertNotNull(view.getGlcode());
+			assertEquals("-",view.getNotes());
+			assertNotNull(view.getPostedBy());
+			assertNotNull(view.getType());
+			assertNotNull(view.getUserPrefferedPostedDate());
+			assertNotNull(view.getUserPrefferedTransactionDate());
+			assertNotNull(view.getAccountTrxnId());
+			assertNull(view.getLocale());
+			assertNotNull(view.getPaymentId());
+			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(view.getPostedDate().getTime()));
+			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(view.getTransactionDate().getTime()));
+			break;
+		}
 		TestObjectFactory.flushandCloseSession();
 		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());

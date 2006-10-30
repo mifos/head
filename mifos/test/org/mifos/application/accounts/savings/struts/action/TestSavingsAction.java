@@ -35,6 +35,7 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -497,9 +498,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("getRecentActivity_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(((List<SavingsRecentActivityView>) SessionUtils
-				.getAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST , request)).size(),
-				0);
+		assertEquals(0,((List<SavingsRecentActivityView>) SessionUtils
+				.getAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST , request)).size());
 	}
 
 	public void testSuccessfulGetTransactionHistory() throws Exception {
@@ -537,8 +537,26 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		verifyForward("getTransactionHistory_success");
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		assertEquals(2, ((List<SavingsTransactionHistoryView>)SessionUtils.getAttribute(SavingsConstants.TRXN_HISTORY_LIST,request))
-				.size());
+		List<SavingsTransactionHistoryView> trxnHistlist = (List<SavingsTransactionHistoryView>)SessionUtils.getAttribute(SavingsConstants.TRXN_HISTORY_LIST,request);
+		assertEquals(2, trxnHistlist.size());
+		for(SavingsTransactionHistoryView view : trxnHistlist) {
+			assertEquals("100.0",view.getBalance());
+			assertNotNull(view.getClientName());
+			assertEquals("100.0",view.getCredit());
+			assertEquals("-",view.getDebit());
+			assertNotNull(view.getGlcode());
+			assertEquals("-",view.getNotes());
+			assertNotNull(view.getPostedBy());
+			assertNotNull(view.getType());
+			assertNotNull(view.getUserPrefferedPostedDate());
+			assertNotNull(view.getUserPrefferedTransactionDate());
+			assertNotNull(view.getAccountTrxnId());
+			assertNull(view.getLocale());
+			assertNotNull(view.getPaymentId());
+			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(view.getPostedDate().getTime()));
+			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(view.getTransactionDate().getTime()));
+			break;
+		}
 		HibernateUtil.closeSession();	
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		group = savings.getCustomer();

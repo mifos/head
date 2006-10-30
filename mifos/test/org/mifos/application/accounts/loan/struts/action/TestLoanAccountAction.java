@@ -14,6 +14,7 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountNotesEntity;
+import org.mifos.application.accounts.business.ViewInstallmentDetails;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
@@ -223,7 +224,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				LoanConstants.LOAN_ALL_ACTIVITY_VIEW, request)).size());
 	}
 
-	public void testGetInstallmentDetails() {
+	public void testGetInstallmentDetails() throws Exception{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
@@ -250,6 +251,12 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("viewInstmentDetails_success");
+		
+		ViewInstallmentDetails view = (ViewInstallmentDetails)SessionUtils.getAttribute(LoanConstants.VIEW_OVERDUE_INSTALLMENT_DETAILS,request);
+		assertEquals(new Money("12.0"),view.getInterest());
+		assertEquals(new Money("100.0"),view.getFees());
+		assertEquals(new Money("0.0"),view.getPenalty());
+		assertEquals(new Money("100.0"),view.getPrincipal());
 	}
 
 	public void testGet() throws Exception {

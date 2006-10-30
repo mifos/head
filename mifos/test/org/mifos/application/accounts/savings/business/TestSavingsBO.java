@@ -31,6 +31,7 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -52,8 +53,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
@@ -172,6 +171,43 @@ public class TestSavingsBO extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
+	}
+	
+	private SavingsBO createSavingsAccountPayment() throws Exception{
+		AccountPaymentEntity payment;
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering("2333dsf", "2132");
+		savings = helper.createSavingsAccount(savingsOffering, group,
+				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+
+		Money initialBal = new Money(currency, "5500");
+		payment = helper.createAccountPayment(savings, null, new Money(
+				currency, "5500.0"), new Date(), createdBy);
+		payment.addAcountTrxn(helper.createAccountTrxn(payment, null,
+				initialBal, initialBal, helper.getDate("04/01/2006"), null,
+				null, AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings,
+				createdBy, group));
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		return (SavingsBO) TestObjectFactory.getObject(SavingsBO.class, savings
+				.getAccountId());
+	}
+	
+	public void testSavingsTrxnDetailsWithZeroAmt() throws Exception {
+		savings = createSavingsAccountPayment();
+		for(AccountPaymentEntity accountPaymentEntity : savings.getAccountPayments()){
+			for(AccountTrxnEntity accountTrxnEntity : accountPaymentEntity.getAccountTrxns()){
+				SavingsTrxnDetailEntity trxnEntity = (SavingsTrxnDetailEntity)accountTrxnEntity;
+				assertEquals(new Money("5500"),trxnEntity.getBalance());
+				assertEquals(new Money(),trxnEntity.getDepositAmount());
+				assertEquals(new Money(),trxnEntity.getInterestAmount());
+				assertEquals(new Money(),trxnEntity.getWithdrawlAmount());
+				break;
+			}
+		}
 	}
 
 	private SavingsBO createSavingsWithAccountPayments() throws Exception {
@@ -1889,36 +1925,41 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testGetRecentAccountActivity() throws Exception {
-		try {
-			createInitialObjects();
-			savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-			savings = helper.createSavingsAccount("000100000000017",
-					savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
-					userContext);
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
+		savings = helper.createSavingsAccount("000100000000017",
+				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
+				userContext);
 
-			SavingsActivityEntity savingsActivity = new SavingsActivityEntity(
-					savings.getPersonnel(), (AccountActionEntity) HibernateUtil
-							.getSessionTL().get(AccountActionEntity.class,
-									Short.valueOf("1")), new Money("100"),
-					new Money("22"), new Date(), savings);
+		SavingsActivityEntity savingsActivity = new SavingsActivityEntity(
+				savings.getPersonnel(), (AccountActionEntity) HibernateUtil
+						.getSessionTL().get(AccountActionEntity.class,
+								Short.valueOf("1")), new Money("100"),
+				new Money("22"), new Date(), savings);
 
-			savingsActivity.setCreatedBy(Short.valueOf("1"));
-			savingsActivity
-					.setCreatedDate(new Date(System.currentTimeMillis()));
+		savingsActivity.setCreatedBy(Short.valueOf("1"));
+		savingsActivity
+				.setCreatedDate(new Date(System.currentTimeMillis()));
 
-			savings.addSavingsActivityDetails(savingsActivity);
+		savings.addSavingsActivityDetails(savingsActivity);
 
-			savings.update();
-			HibernateUtil.getSessionTL().flush();
-			HibernateUtil.closeSession();
-			savings = savingsPersistence.findById(savings.getAccountId());
-			savings.setUserContext(userContext);
-			assertEquals(1, savings.getRecentAccountActivity(3).size());
-			group = savings.getCustomer();
-			center = group.getParentCustomer();
-		} catch (Exception e) {
-			e.printStackTrace();
+		savings.update();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		assertEquals(1, savings.getRecentAccountActivity(3).size());
+		for(SavingsRecentActivityView view : savings.getRecentAccountActivity(3)) {
+			assertNotNull(view.getActivity());
+			assertEquals("100.0",view.getAmount());
+			assertEquals("22.0",view.getRunningBalance());
+			assertNotNull(view.getAccountTrxnId());
+			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(view.getActionDate().getTime()));
+			assertNull(view.getLocale());
+			break;
 		}
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
 	}
 
 	// For the MifosTestCases for amount in arrears, we are creating a savings

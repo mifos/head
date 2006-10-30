@@ -197,6 +197,19 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
 		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,	loan.getAccountId());
+		loan.setUserContext(userContext);
+		for (AccountStatusChangeHistoryEntity accountStatus : loan.getAccountStatusChangeHistory()) {
+			assertEquals(loan.getAccountId(),accountStatus.getAccount().getAccountId());
+			assertNotNull(accountStatus.getAccountStatusChangeId());
+			assertEquals(AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue(),accountStatus.getNewStatus().getId());
+			assertEquals(personnel.getPersonnelId(),accountStatus.getPersonnel().getPersonnelId());
+			assertEquals(personnel.getDisplayName(),accountStatus.getPersonnel().getDisplayName());
+			assertEquals("-",accountStatus.getOldStatusName());
+			assertNotNull(accountStatus.getNewStatusName());
+			assertNull(accountStatus.getLocale());
+			assertNotNull(accountStatus.getUserPrefferedTransactionDate());
+		}
+		
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan,request);
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "applyAdjustment");

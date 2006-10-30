@@ -139,6 +139,24 @@ public class TestLoanBusinessService extends MifosTestCase {
 
 		assertNotNull(loanAllActivityView);
 		assertEquals(6, loanAllActivityView.size());
+		for(LoanActivityView view : loanAllActivityView) {
+			assertNotNull(view.getActivity());
+			assertNotNull(view.getUserPrefferedDate());
+			assertNotNull(view.getActionDate().getTime());
+			assertEquals(new Money("100.0"),view.getFees());
+			assertNotNull(view.getId());
+			assertEquals(new Money("12.0"),view.getInterest());
+			assertNull(view.getLocale());
+			assertEquals(new Money("0.0"),view.getPenalty());
+			assertEquals(new Money("100.0"),view.getPrincipal());
+			assertEquals(new Money("212.0"),view.getTotal());
+			assertNotNull(view.getTimeStamp());
+			assertEquals(new Money("-100.0"),view.getRunningBalanceFees());
+			assertEquals(new Money("24.0"),view.getRunningBalanceInterest());
+			assertEquals(new Money("0.0"),view.getRunningBalancePenalty());
+			assertEquals(new Money("200.0"),view.getRunningBalancePrinciple());
+			break;
+		}
 	}
 
 	private AccountBO getLoanAccount() {

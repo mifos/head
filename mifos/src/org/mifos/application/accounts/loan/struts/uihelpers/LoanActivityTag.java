@@ -20,6 +20,8 @@ import org.mifos.framework.util.helpers.LabelTagUtils;
 
 public class LoanActivityTag extends BodyTagSupport{
 	Locale locale = null;
+	
+	@Override
 	public int doStartTag() throws JspException {
 		StringBuilder builder = new StringBuilder();
 		try {
@@ -72,7 +74,7 @@ public class LoanActivityTag extends BodyTagSupport{
 		return SKIP_BODY;
 	}
 	
-	private String buildLeftHeaderRows(LoanActivityView loanRecentActivityView) {
+	 String buildLeftHeaderRows(LoanActivityView loanRecentActivityView) {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
 		.append("<td class=\"drawtablerow\">")
@@ -93,7 +95,7 @@ public class LoanActivityTag extends BodyTagSupport{
 		return stringBuilder.toString();
 	}
 	
-	private String buildRightHeaderRows(LoanActivityView loanRecentActivityView) {
+	 String buildRightHeaderRows(LoanActivityView loanRecentActivityView) {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
 		.append("<td align=\"right\" class=\"drawtablerow\">")

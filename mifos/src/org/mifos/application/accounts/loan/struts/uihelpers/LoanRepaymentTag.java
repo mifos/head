@@ -26,6 +26,7 @@ import org.mifos.framework.util.helpers.Money;
 public class LoanRepaymentTag extends BodyTagSupport {
 	Locale locale = null;
 
+	@Override
 	public int doStartTag() throws JspException {
 		boolean twoTables = false;
 		StringBuilder builder = new StringBuilder();
@@ -275,7 +276,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 		return SKIP_BODY;
 	}
 
-	private String createInstallmentRow(LoanScheduleEntity installment,
+	 String createInstallmentRow(LoanScheduleEntity installment,
 			boolean isPaymentMade) {
 		StringBuilder builder = new StringBuilder();
 		builder
@@ -329,7 +330,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 		return builder.toString();
 	}
 
-	private String createRunningBalanceRow(LoanScheduleEntity installment,
+	 String createRunningBalanceRow(LoanScheduleEntity installment,
 			Money totalPrincipal, Money totalInterest, Money totalFees) {
 		StringBuilder builder = new StringBuilder();
 		builder
