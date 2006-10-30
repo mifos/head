@@ -42,12 +42,11 @@
 <%@taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
 <html-el:form method="get" action="/savingsAction.do">
-
   <table width="95%" border="0" cellpadding="0" cellspacing="0">
     <tr>
       <td align="left" valign="top" class="paddingL15T15" >
@@ -97,7 +96,7 @@
 			            	<mifos:mifoslabel name="Savings.account"/> 
                         </html-el:link><br>
                     <c:if test="${requestScope.clientLevel != CustomerConstants.CENTER_LEVEL_ID}">
-                        <html-el:link href="loanAction.do?method=getPrdOfferings&customer.customerId=${requestScope.clientId}">
+                        <html-el:link href="loanAccountAction.do?method=getPrdOfferings&customerId=${requestScope.clientId}&randomNUm=${sessionScope.randomNUm}">
                             <mifos:mifoslabel name="Savings.openANew"/>
 			            	<mifos:mifoslabel name="${ConfigurationConstants.LOAN}"/>
 			            	<mifos:mifoslabel name="Savings.account"/> 

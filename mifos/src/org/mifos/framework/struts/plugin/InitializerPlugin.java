@@ -175,7 +175,6 @@ public class InitializerPlugin implements PlugIn {
 	 *             IF there is any exception while configuring the logger
 	 */
 	private void initializeLogger() throws AppNotConfiguredException {
-		// System.out.println("Inside the logger initialization");
 		try {
 			MifosLogManager.configure(FilePaths.LOGFILE);
 		} catch (LoggerConfigurationException lce) {
@@ -288,7 +287,6 @@ public class InitializerPlugin implements PlugIn {
 			throws HibernateProcessException, ApplicationException {
 		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
 		fieldConfigItf.init();
-		// TODO Remove this code after M1 code migration.
 		servlet.getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,
 				fieldConfigItf.getEntityMandatoryFieldMap());
 	}

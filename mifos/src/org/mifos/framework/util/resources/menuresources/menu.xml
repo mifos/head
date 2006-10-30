@@ -47,14 +47,6 @@
 				</menuitem>
 				<menuitem>
 					<displayname> 
-						<namefragment>label.print</namefragment> 
-						
-						<namefragment>label.collectionsheets</namefragment> 
-					</displayname>
-					<linkvalue>	#	</linkvalue>
-				</menuitem>
-				<menuitem>
-					<displayname> 
 						<namefragment>label.enter</namefragment> 
 						<namefragment>label.collectionsheet</namefragment> 
 						<namefragment>label.data</namefragment>
@@ -72,13 +64,6 @@
 						<namefragment>label.manage</namefragment> 
 						<namefragment>label.collectionsheets</namefragment>
 				</displayname>
-				<menuitem>
-					<displayname> 
-						<namefragment>label.print</namefragment> 
-						<namefragment>label.collectionsheets</namefragment> 
-					</displayname>
-					<linkvalue>#</linkvalue>
-				</menuitem>
 				<menuitem>
 					<displayname> 
 						<namefragment>label.enter</namefragment> 
