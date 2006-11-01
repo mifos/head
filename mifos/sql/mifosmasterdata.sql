@@ -3234,8 +3234,9 @@ VALUES(191,136,555,555 );
 INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) VALUES(192,113,560,560 );
 
 /* The table Role will contain the default admin role required for the MFI - System */
-INSERT INTO ROLE(ROLE_ID,ROLE_NAME,VERSION_NO,CREATED_BY,CREATED_DATE,UPDATED_BY,UPDATED_DATE)
-VALUES(1,'Admin',1,NULL,NULL,NULL,NULL);
+INSERT INTO ROLE(ROLE_ID,ROLE_NAME,VERSION_NO,CREATED_BY,CREATED_DATE,
+UPDATED_BY,UPDATED_DATE,DESCRIPTION)
+VALUES(1,'Admin',1,NULL,NULL,NULL,NULL,'');
 
 /* The table Role Activity will contain the mapping between the role created for the mfi admin against the activities he can perform which could typically be all - System */
 INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID)

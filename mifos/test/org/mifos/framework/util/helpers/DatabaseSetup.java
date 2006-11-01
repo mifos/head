@@ -7,7 +7,7 @@ import java.io.Reader;
 
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.JdbcDriver;
-import net.sourceforge.mayfly.MayflySqlException;
+import net.sourceforge.mayfly.MayflyException;
 import net.sourceforge.mayfly.datastore.DataStore;
 
 import org.hibernate.cfg.Configuration;
@@ -53,8 +53,8 @@ public class DatabaseSetup {
 			// it reading and parsing a whole bunch of xml files.
 			// That's why we try to share it between different tests.
 			configuration.configure(
-				    new File("src/" + FilePaths.HIBERNATECFGFILE)
-				);
+			    new File("src/" + FilePaths.HIBERNATECFGFILE)
+			);
 			hibernateConfiguration = configuration;
 		}
 		return hibernateConfiguration;
@@ -70,7 +70,8 @@ public class DatabaseSetup {
 		configuration.setProperty(
 			"hibernate.connection.url", url);
 		configuration.setProperty(
-			"hibernate.dialect", "org.hibernate.dialect.GenericDialect");
+			"hibernate.dialect", 
+			"org.mifos.framework.util.helpers.MayflyDialect");
 		return configuration;
 	}
 
@@ -88,10 +89,9 @@ public class DatabaseSetup {
 	private static DataStore createStandardStore() {
 		Database database = new Database();
 	    executeScript(database, "sql/mifosdbcreationscript.sql");
-	    
-	    executeScript(database, "sql/Iteration13-DBScripts25092006.sql");
-	
 	    executeScript(database, "sql/mifosmasterdata.sql");
+
+	    executeScript(database, "sql/Iteration13-DBScripts25092006.sql");
 		return database.dataStore();
 	}
 
@@ -100,9 +100,10 @@ public class DatabaseSetup {
 	        Reader sql = new FileReader(name);
 	
 	        database.executeScript(sql);
-	    } catch (MayflySqlException e) {
+	    }
+	    catch (MayflyException e) {
 	    	if (e.startLineNumber() == -1) {
-	    		throw e.asRuntimeException();
+	    		throw e;
 	    	}
 	    	else {
 		        throw new RuntimeException(
