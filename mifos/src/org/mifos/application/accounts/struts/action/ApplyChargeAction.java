@@ -154,7 +154,7 @@ public class ApplyChargeAction extends BaseAction {
 	private boolean isPermissionAllowed(AccountTypes accountTypes,CustomerLevel customerLevel,
 			UserContext userContext, Short recordOfficeId,
 			Short recordLoanOfficerId) {
-		return ActivityMapper.getInstance().isPaymentPermittedForAccounts(
+		return ActivityMapper.getInstance().isApplyChargesPermittedForAccounts(
 				accountTypes, customerLevel, userContext, recordOfficeId,
 				recordLoanOfficerId);
 	}

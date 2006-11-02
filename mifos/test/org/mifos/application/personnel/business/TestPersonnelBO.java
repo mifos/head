@@ -33,6 +33,7 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -432,7 +433,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus()
 				.intValue());
 		assertEquals("abc@yahoo.com", personnel.getEmailId());
-		assertTrue(personnel.isPasswordChanged());
+		assertFalse(personnel.isPasswordChanged());
 		assertEquals(2, personnel.getTitle().intValue());
 		assertEquals(PersonnelLevel.LOAN_OFFICER.getValue(), personnel
 				.getLevel().getId());

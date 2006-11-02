@@ -59,7 +59,7 @@
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
-						<span class="fontnormal8pt"><html-el:link href="offhierarchyaction.do?method=cancel&randomNUm=${sessionScope.randomNUm}">
+						<span class="fontnormal8pt"><html-el:link href="offhierarchyaction.do?method=cancel&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 								<mifos:mifoslabel name="Office.labelLinkAdmin" ></mifos:mifoslabel>
 							</html-el:link> / </span><span class="fontnormal8ptbold"><mifos:mifoslabel name="Office.labelViewOfficeHierarchy" /></span>
 					</td>
