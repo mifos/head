@@ -105,6 +105,8 @@ public class ActivityMapper {
 	private final short GROUP_CREATEPARTIAL = 57;
 
 	private final short GROUP_CREATEPENDING = 58;
+	
+	private final short CENTER_CHANGE_STATUS = 81;
 
 	private ActivityMapper() {
 
@@ -1164,7 +1166,6 @@ public class ActivityMapper {
 
 	public short getActivityIdForNewCustomerStateId(short newState,
 			short cancelFlag) {
-
 		short activityId = -1;
 		switch (newState) {
 		case CustomerConstants.CLIENT_APPROVED:
@@ -1234,10 +1235,17 @@ public class ActivityMapper {
 		case GroupConstants.ACTIVE:
 			activityId = GROUP_CANCHANGETO_APPROVED;
 			break;
+			
+		case CustomerConstants.CENTER_ACTIVE_STATE:
+			activityId = CENTER_CHANGE_STATUS;
+			break;
+		case CustomerConstants.CENTER_INACTIVE_STATE:
+			activityId = CENTER_CHANGE_STATUS;
+			break;
+		
 		default:
 			break;
 		}
-
 		return activityId;
 	}
 

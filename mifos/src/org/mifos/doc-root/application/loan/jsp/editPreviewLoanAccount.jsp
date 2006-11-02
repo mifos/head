@@ -158,6 +158,9 @@
 							<c:out
 								value="${sessionScope.loanAccountActionForm.collateralNote}" />
 							<br>
+						</tr>
+						<tr>
+							<td class="fontnormal">
 							<span class="fontnormalbold"><mifos:mifoslabel name="loan.additionalInfo" bundle="loanUIResources"/></span><br>
 			                    	<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 										<c:forEach var="cf" items="${sessionScope.loanAccountActionForm.customFields}">
