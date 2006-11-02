@@ -130,6 +130,127 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
+	
+	public void testWaiveMiscFeeAfterPayment() throws Exception {
+		createInitialCustomers();
+		LoanOfferingBO loanOffering = createLoanOffering(false);
+		List<FeeView> feeViews = new ArrayList<FeeView>();
+		boolean isInterestDedAtDisb = false;
+		Short noOfinstallments = (short) 6;
+		LoanBO loan = createAndRetrieveLoanAccount(loanOffering,
+				isInterestDedAtDisb, feeViews, noOfinstallments);
+		loan.setUserContext(TestObjectFactory.getUserContext());
+		loan.applyCharge(Short.valueOf("-1"),Double.valueOf("200"));
+		for(AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(loanScheduleEntity.getMiscFee(),new Money("200"));
+				assertEquals(loanScheduleEntity.getMiscFeePaid(),new Money());
+			}
+		}
+		assertEquals(loan.getLoanSummary().getOriginalFees(),new Money("200"));
+		assertEquals(loan.getLoanSummary().getFeesPaid(),new Money());
+		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+		accntActionDates.addAll(loan.getAccountActionDates());
+		Date currentDate = new Date(System.currentTimeMillis());
+		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
+				accntActionDates,
+				TestObjectFactory.getMoneyForMFICurrency(200), null, accountBO
+						.getPersonnel(), "receiptNum", Short.valueOf("1"),
+				currentDate, currentDate);
+		loan.applyPayment(paymentData);
+		TestObjectFactory.updateObject(loan);
+		for(AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(loanScheduleEntity.getMiscFee(),new Money("200"));
+				assertEquals(loanScheduleEntity.getMiscFeePaid(),new Money("200"));
+			}
+		}
+		assertEquals(loan.getLoanSummary().getOriginalFees(),new Money("200"));
+		assertEquals(loan.getLoanSummary().getFeesPaid(),new Money("200"));
+		loan.applyCharge(Short.valueOf("-1"),Double.valueOf("300"));
+		TestObjectFactory.updateObject(loan);
+		for(AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(loanScheduleEntity.getMiscFee(),new Money("500"));
+				assertEquals(loanScheduleEntity.getMiscFeePaid(),new Money("200"));
+			}
+		}
+		assertEquals(loan.getLoanSummary().getOriginalFees(),new Money("500"));
+		assertEquals(loan.getLoanSummary().getFeesPaid(),new Money("200"));
+		loan.waiveAmountDue(WaiveEnum.FEES);
+		for(AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(loanScheduleEntity.getMiscFee(),new Money("200"));
+				assertEquals(loanScheduleEntity.getMiscFeePaid(),new Money("200"));
+			}
+		}
+		assertEquals(loan.getLoanSummary().getOriginalFees(),new Money("200"));
+		assertEquals(loan.getLoanSummary().getFeesPaid(),new Money("200"));
+	}
+
+	
+	public void testWaiveMiscPenaltyAfterPayment() throws Exception {
+		accountBO = getLoanAccount();
+		TestObjectFactory.flushandCloseSession();
+		accountBO=(AccountBO)TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		accountBO.setUserContext(TestObjectFactory.getUserContext());
+		Date currentDate = new Date(System.currentTimeMillis());
+		LoanBO loan = (LoanBO) accountBO;
+		loan.applyCharge(Short.valueOf("-2"),Double.valueOf("200"));
+		TestObjectFactory.updateObject(loan);
+		for(AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(loanScheduleEntity.getMiscPenalty(),new Money("200"));
+				assertEquals(loanScheduleEntity.getMiscPenaltyPaid(),new Money());
+			}
+		}
+		assertEquals(loan.getLoanSummary().getOriginalPenalty(),new Money("200"));
+		assertEquals(loan.getLoanSummary().getPenaltyPaid(),new Money());
+		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
+		accntActionDates.addAll(loan.getAccountActionDates());
+		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
+				accntActionDates,
+				TestObjectFactory.getMoneyForMFICurrency(200), null, accountBO
+						.getPersonnel(), "receiptNum", Short.valueOf("1"),
+				currentDate, currentDate);
+		loan.applyPayment(paymentData);
+		TestObjectFactory.updateObject(loan);
+		for(AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(loanScheduleEntity.getMiscPenalty(),new Money("200"));
+				assertEquals(loanScheduleEntity.getMiscPenaltyPaid(),new Money("200"));
+			}
+		}
+		assertEquals(loan.getLoanSummary().getOriginalPenalty(),new Money("200"));
+		assertEquals(loan.getLoanSummary().getPenaltyPaid(),new Money("200"));
+		loan.applyCharge(Short.valueOf("-2"),Double.valueOf("300"));
+		TestObjectFactory.updateObject(loan);
+		for(AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(loanScheduleEntity.getMiscPenalty(),new Money("500"));
+				assertEquals(loanScheduleEntity.getMiscPenaltyPaid(),new Money("200"));
+			}
+		}
+		assertEquals(loan.getLoanSummary().getOriginalPenalty(),new Money("500"));
+		assertEquals(loan.getLoanSummary().getPenaltyPaid(),new Money("200"));
+		loan.waiveAmountDue(WaiveEnum.PENALTY);
+		for(AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()){
+			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity)accountActionDateEntity;
+			if(loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))){
+				assertEquals(loanScheduleEntity.getMiscPenalty(),new Money("200"));
+				assertEquals(loanScheduleEntity.getMiscPenaltyPaid(),new Money("200"));
+			}
+		}
+		assertEquals(loan.getLoanSummary().getOriginalPenalty(),new Money("200"));
+		assertEquals(loan.getLoanSummary().getPenaltyPaid(),new Money("200"));
+	}
 
 	public static void setFeeAmount(
 			AccountFeesActionDetailEntity accountFeesActionDetailEntity,
@@ -1720,7 +1841,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getAmountTobePaidAtdisburtail(startDate));
 
 	}
-
+	
 	public void testWaivePenaltyChargeDue() throws Exception {
 		accountBO = getLoanAccount();
 		for (AccountActionDateEntity accountAction : ((LoanBO) accountBO)

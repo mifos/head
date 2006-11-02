@@ -200,7 +200,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
 	public Money getPenaltyDue() {
 		return (getPenalty().add(getMiscPenalty())).subtract(getPenaltyPaid()
-				.subtract(getMiscPenaltyPaid()));
+				.add(getMiscPenaltyPaid()));
 	}
 
 	public Money getTotalDue() {
@@ -301,7 +301,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		miscPenaltyPaid = miscPenaltyPaid.add(miscPenalty);
 		miscFeePaid = miscFeePaid.add(miscFee);
 	}
-
+	
 	Money waiveCharges() {
 		Money chargeWaived = new Money();
 		chargeWaived = chargeWaived.add(getMiscFee()).add(getMiscPenalty());
@@ -318,7 +318,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	Money waiveFeeCharges() {
 		Money chargeWaived = new Money();
 		chargeWaived = chargeWaived.add(getMiscFeeDue());
-		setMiscFee(new Money());
+		setMiscFee(getMiscFeePaid());
 		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
 			chargeWaived = chargeWaived
 					.add(((LoanFeeScheduleEntity) accountFeesActionDetailEntity)
@@ -424,8 +424,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
 	Money waivePenaltyCharges() {
 		Money chargeWaived = new Money();
-		chargeWaived = chargeWaived.add(getMiscPenalty());
-		setMiscPenalty(new Money());
+		chargeWaived = chargeWaived.add(getMiscPenaltyDue());
+		setMiscPenalty(getMiscPenaltyPaid());
 		return chargeWaived;
 	}
 

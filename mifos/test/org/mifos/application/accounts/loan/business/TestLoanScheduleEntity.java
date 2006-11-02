@@ -48,7 +48,8 @@ public class TestLoanScheduleEntity extends TestAccount {
 		accountActionDate.setPenalty(new Money("20.0"));
 		accountActionDate.setPenaltyPaid(new Money("5.0"));
 		accountActionDate.setMiscPenalty(new Money("10.0"));
-		assertEquals(25.0, accountActionDate.getPenaltyDue()
+		accountActionDate.setMiscPenaltyPaid(new Money("5.0"));
+		assertEquals(20.0, accountActionDate.getPenaltyDue()
 				.getAmountDoubleValue());
 
 	}

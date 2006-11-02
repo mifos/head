@@ -716,7 +716,7 @@ public class LoanAccountAction extends AccountAppAction {
 			LoanScheduleEntity installment = (LoanScheduleEntity) accountActionDate;
 			principalDue = principalDue.add(installment.getPrincipalDue());
 			interestDue = interestDue.add(installment.getInterestDue());
-			feesDue = feesDue.add(installment.getTotalFees());
+			feesDue = feesDue.add(installment.getTotalFeeDueWithMiscFeeDue());
 			penaltyDue = penaltyDue.add(installment.getPenaltyDue());
 		}
 		return new ViewInstallmentDetails(principalDue, interestDue, feesDue,
