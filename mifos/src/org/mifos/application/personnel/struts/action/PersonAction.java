@@ -314,7 +314,7 @@ public class PersonAction extends SearchAction {
 	}
 
 	@Override
-	@TransactionDemarcate(joinToken = true)
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward search(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

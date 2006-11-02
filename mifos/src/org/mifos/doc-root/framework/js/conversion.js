@@ -305,11 +305,15 @@ function genericOnkeyPress(fmt,element ,e,code_0,code_9,decimal_code)
 		var txt=element.value;
 		var index=txt.indexOf('.');
 		if ( -1 != index && charCode==46 ) return false;
-		
-	if( charCode ==13 || charCode ==110)
+	//alert("charCode1="+charCode);	
+	if( charCode ==13 || charCode ==110 || charCode ==190)
 	{
 		if(txt == ".") element.value="0.";
 		
+	}
+	if(charCode == 190)
+	{	
+		return false;
 	}
 	
 	if(charCode>105 && charCode<123 )
@@ -346,7 +350,7 @@ function genericOnkeyPress(fmt,element ,e,code_0,code_9,decimal_code)
 	}
 	else
 	{
-			
+		//alert(txt);	
 		if( txt =="") return true;
 		if(pattern2 !=null&&pattern2 !="")
 		 if( true == pattern2.test(txt.toString()) ) return true;
@@ -357,6 +361,7 @@ function genericOnkeyPress(fmt,element ,e,code_0,code_9,decimal_code)
 		if(pattern5 !=null&&pattern5 !="")
 		if( true == pattern5.test(txt.toString())) return true;
 		//still here 
+		//alert(savedText);	
 		element.value=savedText;
 		return false;
 	}
@@ -522,7 +527,7 @@ function genericOnkeyPress1(fmt,element ,e)
 		var txt=element.value;
 		var index=txt.indexOf('.');
 		if ( -1 != index && charCode==46 ) return false;
-		
+	//alert("charCode2="+charCode);	
 	if( charCode ==13)
 	{
 		if(txt == ".") element.value="0.";

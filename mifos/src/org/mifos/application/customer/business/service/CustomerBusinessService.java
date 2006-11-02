@@ -54,10 +54,9 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerPerformanceHistoryView;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.center.business.CenterPerformanceHistory;
-import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.CustomerPictureEntity;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -311,36 +310,16 @@ public class CustomerBusinessService extends BusinessService {
 		return total;
 	}
 
-	private List<CustomerBO> getCustomer(String searchId, Short officeId,
-			Short customerLevelId) throws ServiceException {
+	public CenterPerformanceHistory getCenterPerformanceHistory(
+			String searchId, Short officeId) throws ServiceException {
+		List<CustomerBO> groups = null;
+		List<CustomerBO> clients = null;
 		try {
-			return new CustomerPersistence().getAllChildrenForParent(searchId,
-					officeId, customerLevelId);
+			groups = new CustomerPersistence().getChildren(searchId,officeId,CustomerLevel.GROUP, ChildrenStateType.ACTIVE_AND_ONHOLD);
+			clients = new CustomerPersistence().getChildren(searchId,officeId,CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}
-	}
-
-	private List<CustomerBO> getChildList(List<CustomerBO> centerChildren,
-			short childLevelId) {
-		List<CustomerBO> children = new ArrayList<CustomerBO>();
-		for (int i = 0; i < centerChildren.size(); i++) {
-			CustomerBO customer = centerChildren.get(i);
-			if (customer.getCustomerLevel().getId().shortValue() == childLevelId)
-				children.add(customer);
-		}
-		return children;
-	}
-
-	public CenterPerformanceHistory getCenterPerformanceHistory(
-			String searchId, Short officeId) throws ServiceException {
-
-		List<CustomerBO> centerChildren = getCustomer(searchId, officeId,
-				CustomerConstants.CENTER_LEVEL_ID);
-		List<CustomerBO> groups = getChildList(centerChildren,
-				CustomerConstants.GROUP_LEVEL_ID);
-		List<CustomerBO> clients = getChildList(centerChildren,
-				CenterConstants.CLIENT_LEVEL_ID);
 		List<AccountBO> loanList = getAccountsForCustomer(searchId, officeId,
 				AccountTypes.LOANACCOUNT.getValue());
 		List<AccountBO> savingsList = getAccountsForCustomer(searchId,

@@ -351,8 +351,9 @@ public class LoanAccountAction extends AccountAppAction {
 	public ActionForward manage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		LoanBO loanBO = (LoanBO) SessionUtils.getAttribute(
-				Constants.BUSINESS_KEY, request);
+		LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		LoanBO loanBO = loanBusinessService.getAccount(loanBOInSession.getAccountId());
+		loanBO.setUserContext(getUserContext(request));
 		SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, loanBO
 				.getDisbursementDate(), request);
 		SessionUtils.removeAttribute(LoanConstants.LOANOFFERING, request);
@@ -361,6 +362,7 @@ public class LoanAccountAction extends AccountAppAction {
 						request).getLocaleId()), request);
 		loadUpdateMasterData(request);
 		setFormAttributes(loanBO, form, request);
+		loanBOInSession = null;
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
