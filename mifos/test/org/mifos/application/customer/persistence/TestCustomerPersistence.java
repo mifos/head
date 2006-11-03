@@ -1049,7 +1049,36 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(1, queryResult.get(0, 10).size());
 
 	}
+	public void testSearchGropAndClientForLoNoResults() throws Exception {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE
+				.getValue(), "1.1", meeting,Short.valueOf("3"),Short.valueOf("3"), new Date(System
+				.currentTimeMillis()));	
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE,
+				"1234",true,new java.util.Date(),null,null,null,Short.valueOf("3"), center);
+		HibernateUtil.commitTransaction();
+		QueryResult queryResult = new CustomerPersistence().searchGroupClient("C",  Short.valueOf("3"));
+		assertNotNull(queryResult);
+		assertEquals(0, queryResult.getSize());
+		assertEquals(0, queryResult.get(0, 10).size());
 
+	}
+	public void testSearchGropAndClientForLo() throws Exception {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getMeetingHelper(1, 1, 4, 2));
+		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE
+				.getValue(), "1.1", meeting,Short.valueOf("3"),Short.valueOf("3"), new Date(System
+				.currentTimeMillis()));	
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE,
+				"1234",true,new java.util.Date(),null,null,null,Short.valueOf("3"), center);
+		HibernateUtil.commitTransaction();
+		QueryResult queryResult = new CustomerPersistence().searchGroupClient("G",  Short.valueOf("3"));
+		assertNotNull(queryResult);
+		assertEquals(1, queryResult.getSize());
+		assertEquals(1, queryResult.get(0, 10).size());
+
+	}
 	public void testSearchCustForSavings() throws Exception {
 		createCustomers(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);

@@ -254,20 +254,14 @@ public class CustomerPersistence extends Persistence {
 		QueryResult queryResult = null;
 
 		try {
-/*			if (searchString.contains(" ")) {
-				String[] searchStrings = searchString.split(" ");
-				queryResult = mainSearch(searchStrings[0], searchStrings[1],
-						officeId, userId, userOfficeId);
-			} else {
-*/
+
 				queryResult = new AccountPersistence().search(searchString,
 						officeId);
 				if (queryResult == null) {
-					queryResult = idSearch(searchString, officeId);
+					queryResult = idSearch(searchString, officeId,userId);
 					if (queryResult == null) {
 						queryResult = mainSearch(searchString, officeId,
 								userId, userOfficeId);
-//					}
 				}
 			}
 
@@ -288,8 +282,7 @@ public class CustomerPersistence extends Persistence {
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.ACCOUNTSEARCHRESULTS);
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
-		if (new PersonnelPersistence().getPersonnel(userId).getLevel().getId()
-				.equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
+		if (personnel.getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
 			namedQuery[0] = NamedQueryConstants.SEARCH_GROUP_CLIENT_COUNT_LO;
 			namedQuery[1] = NamedQueryConstants.SEARCH_GROUP_CLIENT_LO;
 			paramList.add(typeNameValue("Short", "PERSONNEL_ID", userId));
@@ -444,7 +437,7 @@ public class CustomerPersistence extends Persistence {
 
 	}
 
-	private QueryResult idSearch(String searchString, Short officeId)
+	private QueryResult idSearch(String searchString, Short officeId,Short userId)
 			throws HibernateSearchException, SystemException,
 			PersistenceException {
 		if (!isCustomerExist(searchString))
@@ -465,16 +458,33 @@ public class CustomerPersistence extends Persistence {
 		queryResult.setQueryInputs(queryInputs);
 		queryInputs.setQueryStrings(namedQuery);
 		queryInputs.setParamList(paramList);
+		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
 
 		if (officeId != null && officeId.shortValue() == 0) {
 			namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID_COUNT;
 			namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID;
+			if (personnel.getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue()) ){
+				paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
+			}
+			else {
+				paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()+"%"));
+			}
 		} else {
-			namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_COUNT;
-			namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH;
 			paramList.add(typeNameValue("Short", "OFFICEID", officeId));
+			if (personnel.getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue()) ){
+				paramList.add(typeNameValue("String", "ID", personnel.getPersonnelId()));
+				namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_COUNT;
+				namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH;
+
+			}
+			else {
+				paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()+"%"));
+				namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_COUNT_NONLO;
+				namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NONLO;
+			}
 
 		}
+		
 		paramList.add(typeNameValue("String", "SEARCH_STRING", searchString));
 
 		return queryResult;

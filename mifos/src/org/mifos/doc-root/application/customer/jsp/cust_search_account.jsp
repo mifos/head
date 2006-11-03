@@ -18,7 +18,7 @@
 		</script>
 
 		<html-el:form method="post"
-			action="/custSearchAction.do">
+			action="/custSearchAction.do?method=search">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="470" align="left" valign="top" bgcolor="#FFFFFF">

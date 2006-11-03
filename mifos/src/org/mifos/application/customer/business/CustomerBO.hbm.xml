@@ -395,7 +395,7 @@
 	        	   left join c.parentCustomer as pa 
 	        	   left join pa.parentCustomer as papa 
 	        	   left join c.office as off  
-	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING ]]>
+	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
         </query>
         <query name="Customer.cust_idsearch">
 	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
@@ -403,7 +403,7 @@
 	        	   left join c.parentCustomer as pa 
 	        	   left join pa.parentCustomer as papa 
 	        	   left join c.office as off  
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING ]]>
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and per.personnelId =:ID ]]>
         </query>
 
          <query name="Customer.cust_idsearch_withoutoffice_count">
@@ -412,7 +412,7 @@
 	        	   left join c.parentCustomer as pa 
 	        	   left join pa.parentCustomer as papa 
 	        	   left join c.office as off  
-	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING ]]>
+	        	   left join c.personnel as per where  c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
         </query>
         <query name="Customer.cust_idsearch_count">
 	        	   <![CDATA[select count(*)  
@@ -420,10 +420,26 @@
 	        	   left join c.parentCustomer as pa 
 	        	   left join pa.parentCustomer as papa 
 	        	   left join c.office as off  
-	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING ]]>
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and per.personnelId =:ID ]]>
         </query>
 
+        <query name="Customer.cust_idsearch_nonLo">
+	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
+	        	   from org.mifos.application.customer.business.CustomerBO as c 
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+        </query>
 
+       <query name="Customer.cust_idsearch_count_nonLo">
+	        	   <![CDATA[select count(*)  
+	        	   from org.mifos.application.customer.business.CustomerBO as c 
+	        	   left join c.parentCustomer as pa 
+	        	   left join pa.parentCustomer as papa 
+	        	   left join c.office as off  
+	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.globalCustNum=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+        </query>
 
         
          <query name="search_Centers">
@@ -501,7 +517,7 @@
 		left join customerOne.parentCustomer as customerTwo 
 		left join cust.office as off 
 		where (:GROUP_LOAN_ALLOWED=true 
-				and cust.customerLevel.id in (2,3) 
+				and cust.customerLevel.id =2 
 				and off.searchId like :SEARCH_ID 
 				and cust.personnel.personnelId=:PERSONNEL_ID  
 				and cust.displayName like :SEARCH_STRING) 
@@ -522,7 +538,7 @@
 		left join customerOne.parentCustomer as customerTwo 
 		left join cust.office as off 
 		where (:GROUP_LOAN_ALLOWED=true 
-				and cust.customerLevel.id in (2,3) 
+				and cust.customerLevel.id =2 
 				and off.searchId like :SEARCH_ID 
 				and cust.personnel.personnelId=:PERSONNEL_ID  
 				and cust.displayName like :SEARCH_STRING) 

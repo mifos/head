@@ -556,6 +556,8 @@ public interface NamedQueryConstants {
 	public String CUSTOMER_ID_SEARCH="Customer.cust_idsearch";
 	public String CUSTOMER_ID_SEARCH_COUNT="Customer.cust_idsearch_count";
 	
+	public String CUSTOMER_ID_SEARCH_NONLO="Customer.cust_idsearch_nonLo";
+	public String CUSTOMER_ID_SEARCH_COUNT_NONLO="Customer.cust_idsearch_count_nonLo";
 	
 	public String ACCOUNT_ID_SEARCH="accounts.account_IdSearch";
 	public String ACCOUNT_ID_SEARCH_NOOFFICEID="accounts.account_IdSearch_withoutoffice";
