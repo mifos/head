@@ -4,7 +4,9 @@
 package org.mifos.application.accounts.business;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -122,6 +124,19 @@ public class TestAccountActionDateEntity extends TestAccount {
 				accountBO.getAccountId());
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
+	}
+	
+	public static void changeInstallmentDatesToPreviousDate(AccountBO accountBO) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day - 1);
+		for (AccountActionDateEntity accountActionDateEntity : accountBO
+				.getAccountActionDates()) {
+			accountActionDateEntity.setActionDate(new java.sql.Date(
+					currentDateCalendar.getTimeInMillis()));
+		}
 	}
 
 }

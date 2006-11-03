@@ -74,6 +74,7 @@ import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.hibernate.HibernateTest;
 import org.mifos.framework.hibernate.helper.TestHibernateHelper;
 import org.mifos.framework.persistence.TestPersistence;
+import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
@@ -90,6 +91,7 @@ public class ApplicationTestSuite extends MifosTestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite suite = new ApplicationTestSuite();
+		suite.addTest(SecurityTestSuite.suite());
 		suite.addTest(CollectionSheetTestSuite.suite());
 		suite.addTest(CustomerTestSuite.suite());
 		suite.addTest(BulkEntryTestSuite.suite());

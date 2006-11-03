@@ -280,6 +280,8 @@ public class LoanAccountAction extends AccountAppAction {
 		CustomerBO oldCustomer = (CustomerBO) SessionUtils.getAttribute(
 				LoanConstants.LOANACCOUNTOWNER, request);
 		CustomerBO customer = getCustomer(oldCustomer.getCustomerId());
+		customer.getPersonnel().getDisplayName();
+		customer.getOffice().getOfficeName();
 		customer.setVersionNo(oldCustomer.getVersionNo());
 		oldCustomer = null;
 		LoanBO loan = null;

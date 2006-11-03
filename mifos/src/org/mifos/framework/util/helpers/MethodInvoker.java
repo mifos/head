@@ -66,41 +66,24 @@ public class MethodInvoker {
  * @throws SystemException
  * @throws ApplicationException
  */
-public static Object invoke(Object targetObject,String methodName,Object[] parametersToBePassed,Class... parameterTypes) throws SystemException,ApplicationException{
-		
+	public static Object invoke(Object targetObject, String methodName,
+			Object[] parametersToBePassed, Class... parameterTypes)
+			throws SystemException, ApplicationException {
+
 		Method method = null;
 		Object invocationResult = null;
-		
-		
+
 		try {
-			
-			method = targetObject.getClass().getMethod(methodName, parameterTypes);
-			invocationResult=	method.invoke(targetObject, parametersToBePassed);
-		} catch (SecurityException se) {
-			se.printStackTrace();
-			throw new MethodInvocationException(se);
-		} catch (NoSuchMethodException nsme) {
-			nsme.printStackTrace();
-			throw new MethodInvocationException(nsme);
-		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
-			throw new MethodInvocationException(iae);
-		} catch (IllegalAccessException iae) {
-			iae.printStackTrace();
-			throw new MethodInvocationException(iae);
-		} catch (InvocationTargetException ite) {
-			ite.printStackTrace();
-			Throwable cause = ite.getCause();
-			if(cause instanceof ApplicationException){
-				throw  (ApplicationException)cause;
-			}else if (cause instanceof SystemException){
-				throw  (SystemException)cause;
-			}else{
-				throw new SystemException(cause);
-			}
+
+			method = targetObject.getClass().getMethod(methodName,
+					parameterTypes);
+			invocationResult = method
+					.invoke(targetObject, parametersToBePassed);
+		} catch (Exception e) {
+			throw new MethodInvocationException(e);
 		}
 		return invocationResult;
-		
+
 	}
 
 
@@ -116,41 +99,23 @@ public static Object invoke(Object targetObject,String methodName,Object[] param
  * @throws SystemException
  * @throws ApplicationException
  */
-public static Object invokeWithNoException(Object targetObject,
-	String methodName,Object[] parametersToBePassed,Class... parameterTypes)
-throws SystemException,ApplicationException {
-	
-	Method method = null;
-	Object invocationResult = null;
-	
-	
-	try {
-		method = targetObject.getClass().getMethod(methodName, parameterTypes);
-		//MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("target object is of class " + targetObject.getClass());
-	//	MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("parameters are " + parametersToBePassed);
-	//	MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("method name is  " + methodName);
-		invocationResult=	method.invoke(targetObject, parametersToBePassed);
-	} catch (SecurityException se) {
-		se.printStackTrace();
-	} catch (NoSuchMethodException nsme) {
-		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).error("No method with "+ methodName+" was found.Either the method is not present or the specified parameters dont match");
-	} catch (IllegalArgumentException iae) {
-		iae.printStackTrace();
-	} catch (IllegalAccessException iae) {
-		iae.printStackTrace();
-	} catch (InvocationTargetException ite) {
-		ite.printStackTrace();
-		Throwable cause = ite.getCause();
-		if(cause instanceof ApplicationException){
-			throw  (ApplicationException)cause;
-		}else if (cause instanceof SystemException){
-			throw  (SystemException)cause;
-		}else{
-			throw new SystemException(cause);
+	public static Object invokeWithNoException(Object targetObject,
+			String methodName, Object[] parametersToBePassed,
+			Class... parameterTypes) throws SystemException,
+			ApplicationException {
+
+		Method method = null;
+		Object invocationResult = null;
+
+		try {
+			method = targetObject.getClass().getMethod(methodName,
+					parameterTypes);
+			invocationResult = method
+					.invoke(targetObject, parametersToBePassed);
+		} catch (Exception e) {
 		}
+		return invocationResult;
+
 	}
-	return invocationResult;
-	
-}
 
 }

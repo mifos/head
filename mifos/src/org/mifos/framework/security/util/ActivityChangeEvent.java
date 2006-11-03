@@ -61,36 +61,19 @@ public class ActivityChangeEvent implements SecurityEvent {
 		return object;
 	}
 
-	/**
-	 * This function set the object
-	 * @param object The object to set.
-	 */
-	public void setObject(Object object) {
-		this.object = object;
-	}
-
+	
 	/* (non-Javadoc)
      * @see org.mifos.framework.security.Util.SecurityEvent#getEventType()
      */
     public String getEventType() {
-        // TODO Auto-generated method stub
         return eventType;
     }
-
-	/**
-	 * This function set the eventType
-	 * @param eventType The eventType to set.
-	 */
-	public void setEventType(String eventType) {
-		this.eventType = eventType;
-	}
 
 	/**
 	 * @param eventType
 	 * @param object
 	 */
 	public ActivityChangeEvent(String eventType, Object object) {
-		// TODO Auto-generated constructor stub
 		this.eventType = eventType;
 		this.object = object;
 	}

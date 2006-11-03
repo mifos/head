@@ -50,6 +50,7 @@ import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -629,6 +630,82 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
+	
+	public void testSchedulePreviewFailureWhenLoanProductFrequencyChanges() throws Exception {
+		createInitialObjects();
+		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
+				PrdApplicableMaster.GROUPS.getValue().toString(), 1, 1);
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("method", "getPrdOfferings");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		actionPerform();
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		addRequestParameter("method", "load");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
+				.toString());
+		actionPerform();
+		
+		loanOffering.update(Short.valueOf("1"), loanOffering
+				.getPrdOfferingName(), loanOffering.getPrdOfferingShortName(),
+				loanOffering.getPrdCategory(), loanOffering
+						.getPrdApplicableMaster(), loanOffering.getStartDate(),
+				loanOffering.getEndDate(), loanOffering.getDescription(),
+				PrdStatus.LOANACTIVE, loanOffering.getGracePeriodType(),
+				loanOffering.getInterestTypes(), loanOffering
+						.getGracePeriodDuration(), loanOffering
+						.getMaxLoanAmount(), loanOffering.getMinLoanAmount(),
+				loanOffering.getDefaultLoanAmount(), loanOffering
+						.getMaxInterestRate(), loanOffering
+						.getMinInterestRate(), loanOffering
+						.getDefInterestRate(), loanOffering
+						.getMaxNoInstallments(), loanOffering
+						.getMinNoInstallments(), loanOffering
+						.getDefNoInstallments(), loanOffering
+						.isIncludeInLoanCounter(), loanOffering
+						.isIntDedDisbursement(), loanOffering
+						.isPrinDueLastInst(), new ArrayList<FundBO>(),
+				new ArrayList<FeeBO>(), Short.valueOf("1"),
+				RecurrenceType.MONTHLY);	
+		HibernateUtil.commitTransaction();
+
+		setRequestPathInfo("/loanAccountAction.do");
+		addRequestParameter("loanAmount", loanOffering.getDefaultLoanAmount()
+				.toString());
+		addRequestParameter("interestRate", loanOffering.getDefInterestRate()
+				.toString());
+		addRequestParameter("noOfInstallments", loanOffering
+				.getDefNoInstallments().toString());
+		addRequestParameter("disbursementDate", DateHelper
+				.getCurrentDate(((UserContext) request.getSession()
+						.getAttribute("UserContext")).getPereferedLocale()));
+		addRequestParameter("gracePeriodDuration", "1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY));
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+		.getAttribute(LoanConstants.CUSTOM_FIELDS, request);
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "11");
+			i++;
+		}
+		addRequestParameter("method", "schedulePreview");
+		actionPerform();
+		verifyActionErrors(new String[]{"exception.accounts.changeInLoanMeeting"});
+		verifyInputForward();
+	
+		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
+				.getObject(LoanOfferingBO.class, loanOffering
+						.getPrdOfferingId()));
+		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+	}
+
 
 	public void testSchedulePreview() throws Exception {
 		createInitialObjects();

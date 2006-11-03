@@ -50,4 +50,5 @@ public interface AccountExceptionConstants {
 	public final String CREATEEXCEPTIONPRDINACTIVE = "exception.accounts.create.prd.inactive";
 	public final String CREATEEXCEPTIONCUSTOMERINACTIVE = "exception.accounts.create.customer.inactive";
 	public final String APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION = "error.applycharge.nocustomermeeting";
+	public final String CHANGEINLOANMEETING ="exception.accounts.changeInLoanMeeting";
 }

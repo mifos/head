@@ -202,14 +202,14 @@ public class CustomerAccountBO extends AccountBO {
 								.getPersistentObject(
 										AccountActionEntity.class,
 										AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT
-												.getValue()), "Payment rcvd.");
+												.getValue()), AccountConstants.PAYMENT_RCVD);
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
 			accountPayment.addAcountTrxn(accountTrxn);
 		}
 		addCustomerActivity(new CustomerActivityEntity(this, paymentData
-				.getPersonnel(), paymentData.getTotalAmount(), "Payment rcvd.",
+				.getPersonnel(), paymentData.getTotalAmount(), AccountConstants.PAYMENT_RCVD,
 				paymentData.getTransactionDate()));
 		return accountPayment;
 	}
@@ -278,7 +278,7 @@ public class CustomerAccountBO extends AccountBO {
 				}
 			}
 			addCustomerActivity(buildCustomerActivity(totalAmountAdj,
-					"Amnt Adjusted", userContext.getId()));
+					AccountConstants.AMNT_ADJUSTED, userContext.getId()));
 		}
 	}
 
@@ -289,7 +289,7 @@ public class CustomerAccountBO extends AccountBO {
 				.waiveCharges();
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
 			addCustomerActivity(buildCustomerActivity(chargeWaived,
-					"Amnt waived", userContext.getId()));
+					AccountConstants.AMNT_WAIVED, userContext.getId()));
 		}
 		try {
 			(new AccountPersistence()).createOrUpdate(this);
@@ -311,7 +311,7 @@ public class CustomerAccountBO extends AccountBO {
 		}
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
 			addCustomerActivity(buildCustomerActivity(chargeWaived,
-					"Amnt waived", userContext.getId()));
+					AccountConstants.AMNT_WAIVED, userContext.getId()));
 		}
 		try {
 			(new AccountPersistence()).createOrUpdate(this);
@@ -514,7 +514,7 @@ public class CustomerAccountBO extends AccountBO {
 			FeeBO fee = new FeePersistence().getFee(feeId);
 			updateCustomerActivity(feeId, new Money(charge.toString()), fee
 					.getFeeName()
-					+ " applied");
+					+ AccountConstants.APPLIED);
 		} else {
 			Money chargeAmount = new Money(String.valueOf(charge));
 			List<AccountActionDateEntity> dueInstallments = null;
@@ -600,7 +600,7 @@ public class CustomerAccountBO extends AccountBO {
 				feeInstallmentList, dueInstallments);
 		updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied, fee
 				.getFeeName()
-				+ " applied");
+				+ AccountConstants.APPLIED);
 		accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
 	}
 
@@ -622,7 +622,7 @@ public class CustomerAccountBO extends AccountBO {
 				feeInstallmentList, customerScheduleList);
 		updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied, fee
 				.getFeeName()
-				+ " applied");
+				+ AccountConstants.APPLIED);
 		accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
 	}
 

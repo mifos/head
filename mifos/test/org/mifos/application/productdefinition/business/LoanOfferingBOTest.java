@@ -132,7 +132,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				"Loan Product updated", PrdStatus.LOANACTIVE, null,
 				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
 				new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
-				(short) 2, false, true, false, null, fees, (short) 2,
+				(short) 2, false, false, false, null, fees, (short) 2,
 				RecurrenceType.MONTHLY);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -155,18 +155,22 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
+				
 		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
 				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
 		
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.LOANPRODUCT.getValue(),new Integer(loanOffering.getPrdOfferingId().toString()));
 		assertEquals(2,auditLogList.size());
 		assertEquals(EntityType.LOANPRODUCT.getValue(),auditLogList.get(0).getEntityType());
-		assertEquals(18,auditLogList.get(0).getAuditLogRecords().size());
+		assertEquals(19,auditLogList.get(0).getAuditLogRecords().size());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
 			if(auditLogRecord.getFieldName().equalsIgnoreCase("Fee Types") && auditLogRecord.getNewValue().equalsIgnoreCase("Loan Periodic")){
 				assertEquals("-",auditLogRecord.getOldValue());
 			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Fee Types") && auditLogRecord.getNewValue().equalsIgnoreCase("Loan One time")){
 				assertEquals("Loan Periodic",auditLogRecord.getOldValue());
+			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("Service Charge deducted At Disbursement")){
+				assertEquals("1",auditLogRecord.getOldValue());
+				assertEquals("0",auditLogRecord.getNewValue());
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();

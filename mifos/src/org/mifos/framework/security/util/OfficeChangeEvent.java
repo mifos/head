@@ -62,32 +62,6 @@ public class OfficeChangeEvent implements SecurityEvent {
 		this.object = object;
 	}
 
-	/**
-	 * This function sets the eventType
-	 * @param eventType the eventType to set.
-	 */
-	
-	public void setEventType(String eventType) {
-		this.eventType = eventType;
-	}
-
-	/**
-	 * This function sets the object
-	 * @param object the object to set.
-	 */
-	
-	public void setObject(Object object) {
-		this.object = object;
-	}
-
-	/**
-	 * Default Constructor
-	 */
-	public OfficeChangeEvent() {
-		super();
-
-	}
-
 	/* (non-Javadoc)
 	 * @see org.mifos.framework.security.util.SecurityEvent#getEventType()
 	 */

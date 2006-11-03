@@ -982,17 +982,17 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public Short getLastInstallmentId() {
-		Short LastInstallmentId = null;
+		Short lastInstallmentId = null;
 		for (AccountActionDateEntity date : this.getAccountActionDates()) {
 
-			if (LastInstallmentId == null)
-				LastInstallmentId = date.getInstallmentId();
+			if (lastInstallmentId == null)
+				lastInstallmentId = date.getInstallmentId();
 			else {
-				if (LastInstallmentId < date.getInstallmentId())
-					LastInstallmentId = date.getInstallmentId();
+				if (lastInstallmentId < date.getInstallmentId())
+					lastInstallmentId = date.getInstallmentId();
 			}
 		}
-		return LastInstallmentId;
+		return lastInstallmentId;
 
 	}
 

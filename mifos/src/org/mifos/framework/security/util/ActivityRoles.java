@@ -47,14 +47,7 @@ public class ActivityRoles {
 	 * This would hold the id of the activity 
 	 */
     private 	Short  id;
-    /**
-     * This would hold the name of the activity
-     */
-    private 	String name;
-    /**
-     * This would hold the description of the activity
-     */
-    private 	String description;
+   
     /**
      * This would hold the all the roles associated with this activity
      */
@@ -73,20 +66,7 @@ public class ActivityRoles {
 	public void setActivityRoles(Set activityRoles) {
 		this.activityRoles = activityRoles;
 	}
-	/**
-	 * This Function returns the description
-	 * @return Returns the description.
-	 */
-	public String getDescription() {
-		return description;
-	}
-	/**
-	 * This function set the description
-	 * @param description The description to set.
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	
 	/**
 	 * This Function returns the id
 	 * @return Returns the id.
@@ -100,20 +80,6 @@ public class ActivityRoles {
 	 */
 	public void setId(Short id) {
 		this.id = id;
-	}
-	/**
-	 * This Function returns the name
-	 * @return Returns the name.
-	 */
-	public String getName() {
-		return name;
-	}
-	/**
-	 * This function set the name
-	 * @param name The name to set.
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 

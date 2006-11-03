@@ -62,21 +62,6 @@ public class RoleChangeEvent implements SecurityEvent {
 		return object;
 	}
 
-	/**
-	 * This function set the object
-	 * @param object The object to set.
-	 */
-	public void setObject(Object object) {
-		this.object = object;
-	}
-
-	/**
-	 * This function set the eventType
-	 * @param eventType The eventType to set.
-	 */
-	public void setEventType(String eventType) {
-		this.eventType = eventType;
-	}
 
 	/* (non-Javadoc)
      * @see org.mifos.framework.security.Util.SecurityEvent#getEventType()

@@ -539,7 +539,7 @@
 			<!-- <entity name="accountNotes"/>-->
 			<entity name="accountFlags"/>
 			<entity name="flag"  parentName="accountFlags"/>
-			<entity name="accountCustomFields" mergeProperties="yes"  displayKey="Account.customField.displayName"/>
+			<entity name="accountCustomFields" displayKey="Account.customField.displayName"/>
 		</entitiesToLog>
 		<propertyName name="accountState" displayKey="Loan.accountState" doNotLog="No" lookUp="yes">
 			<entityName name="AccountStates">
@@ -563,8 +563,8 @@
 		<propertyName name="commentDate" parentName="accountNotes" doNotLog="yes"/>
 		<propertyName name="comment" displayKey="Loan.comment" parentName="accountNotes" />
 		<propertyName name="_accountFlagsBackref" parentName="accountFlags" doNotLog="yes"/>
-		<propertyName name="fieldId" parentName="accountCustomFields" displayKey="Account.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
-		<propertyName name="fieldValue" parentName="accountCustomFields" displayKey="Account.customField.feildValue" />
+		<propertyName name="fieldId" parentName="accountCustomFields" displayKey="Account.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition" doNotLog="yes"/>
+		<propertyName name="fieldValue" parentName="accountCustomFields" displayKey="Saving.customField.externalSavingsId" />
 		<propertyName name="accountCustomFieldId" parentName="accountCustomFields" doNotLog="yes" />
 
 	</entityType>
@@ -608,6 +608,7 @@
 
 		<propertyName name="loanCounter" displayKey="LoanProduct.loanCounterFlag1,Loan,LoanProduct.loanCounterFlag2"/>
 
+		<propertyName name="intDedDisbursement" displayKey="Interest,Loan.intDedDisbursement"/>
 		<propertyName name="prdOfferingName" displayKey="LoanProduct.prdOfferingName" />
 		<propertyName name="prdOfferingShortName" displayKey="LoanProduct.prdOfferingShortName" />
 		<propertyName name="description" displayKey="LoanProduct.description" />

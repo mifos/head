@@ -607,7 +607,7 @@ public class LoanBO extends AccountBO {
 			Short rcvdPaymentTypeId) throws AccountException {
 		AccountPaymentEntity accountPaymentEntity = null;
 		addLoanActivity(buildLoanActivity(this.loanAmount, personnel,
-				"Loan Disbursal", transactionDate));
+				AccountConstants.LOAN_DISBURSAL, transactionDate));
 
 		// if the trxn date is not equal to disbursementDate we need to
 		// regenerate the installments
@@ -722,14 +722,14 @@ public class LoanBO extends AccountBO {
 					new PaymentTypeEntity(Short.valueOf(paymentTypeId)));
 			addAccountPayment(accountPaymentEntity);
 
-			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,"Payment rcvd.",AccountActionTypes.LOAN_REPAYMENT);
-			makeEarlyRepaymentForFutureInstallments(accountPaymentEntity,"Payment rcvd.",AccountActionTypes.LOAN_REPAYMENT);
+			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,AccountConstants.PAYMENT_RCVD,AccountActionTypes.LOAN_REPAYMENT);
+			makeEarlyRepaymentForFutureInstallments(accountPaymentEntity,AccountConstants.PAYMENT_RCVD,AccountActionTypes.LOAN_REPAYMENT);
 
 			if (getPerformanceHistory() != null)
 				getPerformanceHistory().setNoOfPayments(
 						getPerformanceHistory().getNoOfPayments() + 1);
 			addLoanActivity(buildLoanActivity(accountPaymentEntity
-					.getAccountTrxns(), personnel, "Loan Repayment", DateUtils
+					.getAccountTrxns(), personnel, AccountConstants.LOAN_REPAYMENT, DateUtils
 					.getCurrentDateWithoutTimeStamp()));
 			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
@@ -806,10 +806,10 @@ public class LoanBO extends AccountBO {
 					this, getEarlyClosureAmount(), null, null,
 					new PaymentTypeEntity(Short.valueOf("1")));
 			this.addAccountPayment(accountPaymentEntity);
-			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,"Loan Written Off",AccountActionTypes.WRITEOFF);
-			makeEarlyRepaymentForFutureInstallments(accountPaymentEntity,"Loan Written Off",AccountActionTypes.WRITEOFF);
+			makeEarlyRepaymentForDueInstallments(accountPaymentEntity,AccountConstants.LOAN_WRITTEN_OFF,AccountActionTypes.WRITEOFF);
+			makeEarlyRepaymentForFutureInstallments(accountPaymentEntity,AccountConstants.LOAN_WRITTEN_OFF,AccountActionTypes.WRITEOFF);
 			addLoanActivity(buildLoanActivity(accountPaymentEntity
-					.getAccountTrxns(), personnel, "Loan Written Off",
+					.getAccountTrxns(), personnel, AccountConstants.LOAN_WRITTEN_OFF,
 					DateUtils.getCurrentDateWithoutTimeStamp()));
 			buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 			// Client performance entry
@@ -865,7 +865,7 @@ public class LoanBO extends AccountBO {
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
 			updateTotalFeeAmount(chargeWaived);
 			updateAccountActivity(null, null, chargeWaived, null, userContext
-					.getId(), "Amnt " + chargeWaived + " waived");
+					.getId(), AccountConstants.AMOUNT + chargeWaived + AccountConstants.WAIVED);
 		}
 		try {
 			new LoanPersistance().createOrUpdate(this);
@@ -886,7 +886,7 @@ public class LoanBO extends AccountBO {
 		if (chargeWaived != null && chargeWaived.getAmountDoubleValue() > 0.0) {
 			updateTotalPenaltyAmount(chargeWaived);
 			updateAccountActivity(null, null, null, chargeWaived, userContext
-					.getId(), "Amnt " + chargeWaived + " waived");
+					.getId(), AccountConstants.AMOUNT + chargeWaived + AccountConstants.WAIVED);
 		}
 		try {
 			new LoanPersistance().createOrUpdate(this);
@@ -1109,7 +1109,7 @@ public class LoanBO extends AccountBO {
 										AccountActionTypes.LOAN_REPAYMENT
 												.getValue()), loanPaymentData
 								.getAmountPaidWithFeeForInstallment(),
-						"Payment rcvd.");
+						AccountConstants.PAYMENT_RCVD);
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
@@ -1127,7 +1127,7 @@ public class LoanBO extends AccountBO {
 						.getNoOfPayments() + 1);
 		}
 		addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(),
-				paymentData.getPersonnel(), "Payment rcvd.", paymentData
+				paymentData.getPersonnel(), AccountConstants.PAYMENT_RCVD, paymentData
 						.getTransactionDate()));
 		return accountPayment;
 	}
@@ -1192,7 +1192,7 @@ public class LoanBO extends AccountBO {
 						.getPersonnel(getUserContext().getId());
 
 				addLoanActivity(buildLoanActivity(reversedTrxns, personnel,
-						"Loan Adjusted", DateUtils
+						AccountConstants.LOAN_ADJUSTED, DateUtils
 								.getCurrentDateWithoutTimeStamp()));
 			} catch (PersistenceException e) {
 				throw new AccountException(e);
@@ -2021,7 +2021,7 @@ public class LoanBO extends AccountBO {
 		updateLoanSummary(fee.getFeeId(), totalFeeAmountApplied);
 		updateLoanActivity(fee.getFeeId(), totalFeeAmountApplied, fee
 				.getFeeName()
-				+ " applied");
+				+ AccountConstants.APPLIED);
 	}
 
 	private void applyOneTimeFee(FeeBO fee, Double charge,
@@ -2048,7 +2048,7 @@ public class LoanBO extends AccountBO {
 		updateLoanSummary(fee.getFeeId(), totalFeeAmountApplied);
 		updateLoanActivity(fee.getFeeId(), totalFeeAmountApplied, fee
 				.getFeeName()
-				+ " applied");
+				+ AccountConstants.APPLIED);
 	}
 
 	private void applyMiscCharge(Short chargeType, Money charge,
@@ -2220,7 +2220,7 @@ public class LoanBO extends AccountBO {
 			}
 		} else {
 			throw new AccountException(
-					AccountExceptionConstants.CREATEEXCEPTION);
+					AccountExceptionConstants.CHANGEINLOANMEETING);
 		}
 	}
 
@@ -2570,7 +2570,7 @@ public class LoanBO extends AccountBO {
 		accountPaymentEntity.addAcountTrxn(loanTrxnDetailEntity);
 
 		addLoanActivity(buildLoanActivity(accountPaymentEntity
-				.getAccountTrxns(), personnel, "Payment rcvd.", recieptDate));
+				.getAccountTrxns(), personnel, AccountConstants.PAYMENT_RCVD, recieptDate));
 		return accountPaymentEntity;
 	}
 

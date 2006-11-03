@@ -52,13 +52,6 @@ public class EventManger {
 	{
 		SecurityEvent se = EventFactory.getEventFactory().createEvent(EventName,obj,type);
 		
-		/*if ( EventName.equalsIgnoreCase(Constants.ROLECHANGEEVENT))
-		{
-			AuthorizationManager am = AuthorizationManager.getInstance();
-			am.handleEvent(se);
-
-		}*/
-
 		if (EventName.equalsIgnoreCase(SecurityConstants.OFFICECHANGEEVENT))
 		{
 			HierarchyManager hm = HierarchyManager.getInstance();
@@ -67,11 +60,4 @@ public class EventManger {
 		}
 		
 	}
-	/*
-	public static void postEvent()
-	{
-		HierarchyManager hm = HierarchyManager.getInstance();
-		hm.handleEvent(null);
-	}
-	*/
 }

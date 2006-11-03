@@ -33,27 +33,6 @@ public abstract class BusinessObject extends PersistentObject {
 		return this.userContext;
 	}
 
-	public List<FieldConfigurationEntity> getMandatoryFieldList() {
-		List<FieldConfigurationEntity> mandatoryFieldList = new ArrayList<FieldConfigurationEntity>();
-		for (FieldConfigurationEntity fieldConfigurationEntity : fieldList) {
-			if (fieldConfig.isFieldManadatory(fieldConfigurationEntity
-					.getLabel())) {
-				mandatoryFieldList.add(fieldConfigurationEntity);
-			}
-		}
-		return mandatoryFieldList;
-	}
-
-	public List<FieldConfigurationEntity> getHiddenFieldList() {
-		List<FieldConfigurationEntity> hiddenFieldList = new ArrayList<FieldConfigurationEntity>();
-		for (FieldConfigurationEntity fieldConfigurationEntity : fieldList) {
-			if (fieldConfig.isFieldHidden(fieldConfigurationEntity.getLabel())) {
-				hiddenFieldList.add(fieldConfigurationEntity);
-			}
-		}
-		return hiddenFieldList;
-	}
-
 	protected void setCreateDetails() {
 		setCreatedDate(new Date());
 		setCreatedBy(userContext.getId());

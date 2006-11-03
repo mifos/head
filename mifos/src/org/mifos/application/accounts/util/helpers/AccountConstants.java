@@ -209,5 +209,16 @@ public interface AccountConstants {
 	public static final String MAX_NOTE_LENGTH ="errors.maximumlengthForNotes";
 	public String CLOSEDLOANACCOUNTSLIST="ClosedLoanAccountsList";
 	public String CLOSEDSAVINGSACCOUNTSLIST="ClosedSavingsAccountsList";
+	
+	public String LOAN_DISBURSAL="Loan Disbursal";
+	public String PAYMENT_RCVD="Payment rcvd.";
+	public String LOAN_REPAYMENT="Loan Repayment";
+	public String LOAN_WRITTEN_OFF="Loan Written Off";
+	public String WAIVED=" waived";
+	public String AMOUNT="Amnt ";
+	public String LOAN_ADJUSTED="Loan Adjusted";
+	public String APPLIED=" applied";
+	public String AMNT_ADJUSTED="Amnt Adjusted";
+	public String AMNT_WAIVED="Amnt waived";
 }
 
