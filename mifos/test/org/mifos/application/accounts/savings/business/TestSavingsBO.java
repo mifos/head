@@ -46,9 +46,9 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -440,10 +440,10 @@ public class TestSavingsBO extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group1", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		client1 = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_CLOSED, "1.1.1.1", group, new Date(
+				CustomerStatus.CLIENT_CLOSED, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.2", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
 						System.currentTimeMillis()));
 		savingsOffering = createSavingsOffering("dfasdasd2", "sad2",
 				RecommendedAmountUnit.PERINDIVIDUAL);
@@ -708,7 +708,7 @@ public class TestSavingsBO extends MifosTestCase {
 		 * (now bogusly caught in TestObjectFactory).  Why?
 		 */
 		client1 = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
@@ -732,7 +732,7 @@ public class TestSavingsBO extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client1 = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
@@ -765,7 +765,7 @@ public class TestSavingsBO extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client1 = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
@@ -808,7 +808,7 @@ public class TestSavingsBO extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client1 = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = TestObjectFactory.createSavingsAccount("43245434", center,
@@ -900,7 +900,7 @@ public class TestSavingsBO extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client1 = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
@@ -1279,7 +1279,7 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testAdjustPmnt_LastPaymentIncreasedForWithdrawal()
 			throws Exception {
 		createInitialObjects();
-		client1 = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				group.getSearchId() + ".1", group, new Date(System
 						.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
@@ -1874,7 +1874,8 @@ public class TestSavingsBO extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client1 = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client1 = TestObjectFactory.createClient(
+				"Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
@@ -1905,7 +1906,7 @@ public class TestSavingsBO extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client1 = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
@@ -2267,10 +2268,10 @@ public class TestSavingsBO extends MifosTestCase {
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
 		client1 = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_CLOSED, "1.1.1.1", group, new Date(
+				CustomerStatus.CLIENT_CLOSED, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.2", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
 						System.currentTimeMillis()));
 	}
 
@@ -3874,10 +3875,10 @@ public class TestSavingsBO extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group1", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		client1 = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.2", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
 						System.currentTimeMillis()));
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
@@ -4050,10 +4051,10 @@ public class TestSavingsBO extends MifosTestCase {
 	private SavingsBO getSavingsAccountForCenter() throws Exception {
 		createInitialObjects();
 		client1 = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.2", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
 						System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		return helper.createSavingsAccount(savingsOffering, center,

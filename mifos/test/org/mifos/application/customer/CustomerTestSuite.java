@@ -30,7 +30,6 @@ import org.mifos.application.customer.struts.action.TestCustomerAction;
 import org.mifos.application.customer.struts.action.TestCustomerApplyAdjustmentAction;
 import org.mifos.application.customer.struts.action.TestCustomerNotesAction;
 import org.mifos.application.customer.struts.action.TestEditCustomerStatusAction;
-import org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFn;
 import org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFnTest;
 import org.mifos.application.customer.util.helpers.TestCustomerHelpers;
 import org.mifos.framework.MifosTestSuite;

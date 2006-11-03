@@ -5,7 +5,6 @@ import junit.framework.TestSuite;
 
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.security.util.SecurityHelperTest;
-import org.mifos.framework.struts.StrutsTestSuite;
 
 public class SecurityTestSuite extends MifosTestSuite {
 

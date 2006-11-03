@@ -9,7 +9,6 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -103,10 +102,10 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 	private SavingsBO getSavingsAccountForCenter() throws Exception {
 		createInitialObjects();
 		client1 = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.2", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
 						System.currentTimeMillis()));
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");

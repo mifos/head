@@ -8,7 +8,6 @@ import java.util.Locale;
 import junit.framework.TestCase;
 
 import org.mifos.application.office.business.OfficeView;
-import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.util.helpers.ResourceLoader;
 

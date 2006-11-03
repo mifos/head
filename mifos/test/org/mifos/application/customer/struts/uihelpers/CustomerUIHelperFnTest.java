@@ -39,8 +39,6 @@
 package org.mifos.application.customer.struts.uihelpers;
 
 import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -49,21 +47,14 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
 import org.mifos.application.customer.business.PositionEntity;
-import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.struts.action.EditCustomerStatusAction;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -274,7 +265,7 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 	}
 

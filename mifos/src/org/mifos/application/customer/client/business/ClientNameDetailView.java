@@ -40,6 +40,7 @@ package org.mifos.application.customer.client.business;
 
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.framework.business.util.Name;
 
 public class ClientNameDetailView {
 
@@ -59,6 +60,13 @@ public class ClientNameDetailView {
 
 	public ClientNameDetailView() {
 		super();
+	}
+
+	public ClientNameDetailView(Short nameType, Integer salutation,
+			String firstName, String middleName,
+			String lastName, String secondLastName) {
+	    this(nameType, salutation, new StringBuilder(), firstName,
+	    		middleName, lastName, secondLastName);
 	}
 
 	public ClientNameDetailView(Short nameType, Integer salutation,
@@ -141,6 +149,14 @@ public class ClientNameDetailView {
 
 	public void setSecondLastName(String secondLastName) {
 		this.secondLastName = secondLastName;
+	}
+
+	public Name asName() {
+		return new Name(
+			getFirstName(), 
+			getMiddleName(), 
+			getSecondLastName(),
+			getLastName());
 	}
 
 }

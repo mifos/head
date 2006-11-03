@@ -8,7 +8,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.util.helpers.StringUtils;
 

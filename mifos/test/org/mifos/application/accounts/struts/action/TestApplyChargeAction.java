@@ -10,8 +10,8 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -158,7 +158,7 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 				.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE, "1.4.1", center, new Date(System
 				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client",ClientConstants.STATUS_ACTIVE,"1.4.1.1",group,new Date(System
+		client = TestObjectFactory.createClient("Client",CustomerStatus.CLIENT_ACTIVE,"1.4.1.1",group,new Date(System
 				.currentTimeMillis()));
 	}
 	

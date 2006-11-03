@@ -11,7 +11,6 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -234,13 +233,11 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.4", meeting, officeId, personnelId, new Date(System
-						.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 	}
 

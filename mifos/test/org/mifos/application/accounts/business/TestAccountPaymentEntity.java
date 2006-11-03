@@ -11,6 +11,7 @@ import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
 import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -127,8 +128,8 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("3"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client_Active_test",Short
-				.valueOf("3"), "1.1.1", group, new Date(System
+		client = TestObjectFactory.createClient("Client_Active_test",
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1", group, new Date(System
 				.currentTimeMillis()));
 	}
 

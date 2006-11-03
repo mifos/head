@@ -66,6 +66,7 @@ import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.PaymentTypeView;
@@ -417,7 +418,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"1.1", meeting, startDate);
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, startDate);
-		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client = TestObjectFactory.createClient("Client", 
+				CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		account = getLoanAccount(group, meeting);
 		SavingsOfferingBO savingsOffering1 = createSavingsOffering(
@@ -570,7 +572,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client = TestObjectFactory.createClient("Client", 
+				CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
@@ -679,7 +682,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client = TestObjectFactory.createClient(
+				"Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),

@@ -1,8 +1,6 @@
 package org.mifos.framework.util.helpers;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;

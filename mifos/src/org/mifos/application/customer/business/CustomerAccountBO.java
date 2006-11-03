@@ -68,7 +68,6 @@ import org.mifos.application.accounts.util.helpers.InstallmentDate;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -161,6 +160,7 @@ public class CustomerAccountBO extends AccountBO {
 		return customerActivitDetails;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setCustomerActivitDetails(
 			Set<CustomerActivityEntity> customerActivitDetails) {
 		this.customerActivitDetails = customerActivitDetails;
@@ -407,7 +407,7 @@ public class CustomerAccountBO extends AccountBO {
 	protected void regenerateFutureInstallments(Short nextInstallmentId)
 			throws AccountException {
 		if (!this.getCustomer().getCustomerStatus().getId().equals(
-				ClientConstants.STATUS_CLOSED)
+				CustomerStatus.CLIENT_CLOSED.getValue())
 				&& !this.getCustomer().getCustomerStatus().getId().equals(
 						GroupConstants.CLOSED)) {
 			List<Date> meetingDates = null;

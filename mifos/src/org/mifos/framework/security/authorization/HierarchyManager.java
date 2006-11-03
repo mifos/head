@@ -50,17 +50,13 @@ import org.mifos.application.office.exceptions.OfficeException;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.Observer;
 import org.mifos.framework.security.util.OfficeCacheView;
 import org.mifos.framework.security.util.OfficeSearch;
 import org.mifos.framework.security.util.SecurityEvent;
-import org.mifos.framework.security.util.SecurityHelper;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 
 public class HierarchyManager implements Observer {

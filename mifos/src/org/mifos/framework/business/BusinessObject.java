@@ -1,6 +1,5 @@
 package org.mifos.framework.business;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

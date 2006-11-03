@@ -72,13 +72,6 @@ public interface ClientConstants {
 	public static final String  CITIZENSHIP_ENTITY_NAME = "citizenshipEntityName";
 	public static final String  ETHINICITY_ENTITY_NAME= "ethinicityEntityName";
 	public static final String  EDUCATION_LEVEL_ENTITY_NAME = "educationLevelEntityName";
-	/**Status Constants*/
-	public static final short STATUS_PARTIAL =1;
-	public static final short STATUS_PENDING =2;
-	public static final short STATUS_ACTIVE =3;
-	public static final short STATUS_HOLD =4;
-	public static final short STATUS_CANCELLED =5;
-	public static final short STATUS_CLOSED =6;
 	
 	/**Request parameter names for the dropdown values*/
 	public static final String SALUTATION_VALUE  = "salutationValue";

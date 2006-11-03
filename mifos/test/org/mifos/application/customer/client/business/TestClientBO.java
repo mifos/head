@@ -204,8 +204,8 @@ public class TestClientBO extends MifosTestCase {
 	public void testFailure_InitialSavingsOfferingAtCreate()throws Exception{
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		String name = "client1";
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 		List<SavingsOfferingBO> offerings = new ArrayList<SavingsOfferingBO>();
 		offerings.add(savingsOffering1);
@@ -224,8 +224,8 @@ public class TestClientBO extends MifosTestCase {
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2", "s2", SavingsType.VOLUNTARY, PrdApplicableMaster.CLIENTS);
 		String name = "client1";
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 		List<SavingsOfferingBO> offerings = new ArrayList<SavingsOfferingBO>();
 		offerings.add(savingsOffering1);
@@ -331,8 +331,8 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testCreateClientWithoutName() throws Exception {
 		try {
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(""),"","","","");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"","","","");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			client = new ClientBO(TestObjectFactory.getUserContext(), "", CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null, null,
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -345,8 +345,8 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testCreateClientWithoutOffice() throws Exception {
 		try {
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder("firstlast"),"first","","last","");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"first","","last","");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, null, null, null,
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -360,8 +360,8 @@ public class TestClientBO extends MifosTestCase {
 	public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
 		String name = "Client 1";
 		Short povertyStatus = Short.valueOf("41");
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),povertyStatus);
 		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null, null,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -382,8 +382,8 @@ public class TestClientBO extends MifosTestCase {
 		
 		String name = "Client 1";
 		Short povertyStatus = Short.valueOf("41");
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),povertyStatus);
 		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_ACTIVE, null, null, null, null, null, selectedOfferings, personnel, Short.valueOf("3"), getMeeting(), personnel,
 				null, null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -416,8 +416,8 @@ public class TestClientBO extends MifosTestCase {
 		
 		String name = "Client 1";
 		Short povertyStatus = Short.valueOf("41");
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),povertyStatus);
 		client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_PENDING, null, null, null, null, null, selectedOfferings, personnel, Short.valueOf("3"), getMeeting(), personnel,
 				null,null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -449,8 +449,8 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testSuccessfulCreateWithParentGroup() throws Exception {
 		String name = "Client 1";
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 		createParentObjects(CustomerStatus.GROUP_PARTIAL); 
 		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
@@ -466,8 +466,8 @@ public class TestClientBO extends MifosTestCase {
 	public void testFailureCreatePendingClientWithParentGroupInLowerStatus() throws Exception {
 		try{
 			String name = "Client 1";
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			createParentObjects(CustomerStatus.GROUP_PARTIAL); 
 			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("2")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
@@ -482,8 +482,8 @@ public class TestClientBO extends MifosTestCase {
 	public void testFailureCreateActiveClientWithParentGroupInLowerStatus() throws Exception {
 		try{
 			String name = "Client 1";
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			createParentObjects(CustomerStatus.GROUP_PARTIAL); 
 			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("3")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
@@ -499,8 +499,8 @@ public class TestClientBO extends MifosTestCase {
 		List<FeeView> fees = getFees();
 		try {			
 			meeting = getMeeting();
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder("firstlast"),"first","","last","");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"first","","last","");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("3")), null, null, null, null, fees, null, personnel, officeId, meeting,null, null,
 					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -515,8 +515,8 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testFailureCreateActiveClientWithoutMeeting() throws Exception {
 		try {
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder("firstlast"),"first","","last","");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"first","","last","");
+			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("3")), null, null, null, null, null,  null, personnel, officeId, null,personnel, null,
 					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -532,8 +532,8 @@ public class TestClientBO extends MifosTestCase {
 	public void testFailureCreateClientWithDuplicateNameAndDOB() throws Exception {
 		ClientBO client1 = null;
 		String name = "Client 1";
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -556,8 +556,8 @@ public class TestClientBO extends MifosTestCase {
 	public void testFailureCreateClientWithDuplicateGovtId() throws Exception {
 		ClientBO client1 = null;
 		String name = "Client 1";
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,new StringBuilder(name),"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
 				"1",null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -581,8 +581,8 @@ public class TestClientBO extends MifosTestCase {
 		String firstName = "Client";
 		String lastName = "Last";
 		String displayName = "Client Last";
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("3"),1,new StringBuilder(displayName),firstName,"",lastName ,"");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,new StringBuilder("testSpouseName"),"first","middle","last","secondLast");
+		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("3"),1,firstName,"",lastName,"");
+		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, getCustomFields(), null, null, personnel, officeId, meeting,personnel, null,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
@@ -1042,8 +1042,7 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
-				"1.1", meeting, office.getOfficeId(), Short.valueOf("1"), new Date(System.currentTimeMillis()));
+		center1 = TestObjectFactory.createCenter("Center1", meeting, office.getOfficeId(), Short.valueOf("1"));
 		group1 = TestObjectFactory.createGroup("Group2", CustomerStatus.GROUP_ACTIVE.getValue(),
 				center1.getSearchId()+".1", center1, new Date(System.currentTimeMillis()));
 		HibernateUtil.closeSession();

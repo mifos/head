@@ -7,10 +7,10 @@ import java.util.GregorianCalendar;
 import org.mifos.application.customer.business.CustomerHistoricalDataEntity;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -273,7 +273,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 	}
 

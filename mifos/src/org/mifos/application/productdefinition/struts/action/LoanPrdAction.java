@@ -56,7 +56,6 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.business.service.FeeBusinessService;
-import org.mifos.application.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.fund.business.service.FundBusinessService;
 import org.mifos.application.master.business.InterestTypesEntity;

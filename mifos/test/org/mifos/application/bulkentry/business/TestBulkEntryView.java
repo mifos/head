@@ -266,7 +266,8 @@ public class TestBulkEntryView extends MifosTestCase {
                 "1.1", meeting, new Date(System.currentTimeMillis()));
         group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
                 "1.1.1", center, new Date(System.currentTimeMillis()));
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE.getValue(),
+        client = TestObjectFactory.createClient("Client", 
+        		CustomerStatus.CLIENT_ACTIVE,
                 "1.1.1.1", group, new Date(System.currentTimeMillis()));
          
         java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();

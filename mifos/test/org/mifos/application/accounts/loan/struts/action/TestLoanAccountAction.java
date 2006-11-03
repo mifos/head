@@ -31,8 +31,8 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
@@ -1294,7 +1294,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
@@ -1384,7 +1384,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 	}
 

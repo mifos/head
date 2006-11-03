@@ -188,7 +188,7 @@ public class TestAccountStatusAction extends MifosMockStrutsTestCase {
 				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
 						+ ".1", center, new Date());
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1", group,
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1", group,
 				new Date(System.currentTimeMillis()));
 		HibernateUtil.closeSession();
 	}

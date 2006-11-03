@@ -3,8 +3,6 @@ package org.mifos.application.customer.struts.action;
 import java.util.Date;
 import java.util.List;
 
-import javax.naming.directory.SearchControls;
-
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.customer.business.CustomerBO;
@@ -14,7 +12,6 @@ import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;

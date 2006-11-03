@@ -317,16 +317,16 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 
 	private void createClients() {
 		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_CLOSED.getValue(), "1.1.1.1", group, new Date(
+				CustomerStatus.CLIENT_CLOSED, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1.2", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
 						System.currentTimeMillis()));
 		client3 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_PARTIAL.getValue(), "1.1.1.2", group, new Date(
+				CustomerStatus.CLIENT_PARTIAL, "1.1.1.2", group, new Date(
 						System.currentTimeMillis()));
 		client4 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_HOLD.getValue(), "1.1.1.2", group, new Date(
+				CustomerStatus.CLIENT_HOLD, "1.1.1.2", group, new Date(
 						System.currentTimeMillis()));
 	}
 }

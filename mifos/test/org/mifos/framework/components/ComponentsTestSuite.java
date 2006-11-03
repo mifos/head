@@ -4,7 +4,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.framework.MifosTestSuite;
-import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.logger.TestLogging;
 import org.mifos.framework.components.logger.TestMessage;
 import org.mifos.framework.components.tabletag.TableTagExceptionTest;

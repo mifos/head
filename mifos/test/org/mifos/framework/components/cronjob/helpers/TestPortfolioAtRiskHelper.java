@@ -9,7 +9,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -94,7 +94,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.1.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", "LOAN", Short.valueOf("2"), new Date(System

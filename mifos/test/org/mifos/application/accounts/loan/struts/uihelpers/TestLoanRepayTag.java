@@ -8,7 +8,7 @@ import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -63,8 +63,8 @@ public class TestLoanRepayTag extends MifosTestCase {
 		LoanRepaymentTag loanRepaymentTag = new LoanRepaymentTag();
 		loanRepaymentTag.locale = userContext.getPereferedLocale();
 		assertContains("90.0",loanRepaymentTag.createRunningBalanceRow((LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),new Money("50"),new Money("20"),new Money("20")));
-		
 	}
+
 	private LoanBO getLoanAccount(Short accountSate, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -74,7 +74,7 @@ public class TestLoanRepayTag extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
@@ -89,7 +89,7 @@ public class TestLoanRepayTag extends MifosTestCase {
 				new Money("100"), new Money("100"), new Money("100"),
 				new Money("100"), new Money("100"), new Money("100"),
 				new Money("100"), new Money("100"), startDate);
-		((LoanBO) accountBO).addLoanActivity(loanActivity);
+		accountBO.addLoanActivity(loanActivity);
 		TestObjectFactory.updateObject(accountBO);
 		return accountBO;
 	}	

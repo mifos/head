@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.Set;
 
 import org.mifos.application.customer.business.CustomFieldView;

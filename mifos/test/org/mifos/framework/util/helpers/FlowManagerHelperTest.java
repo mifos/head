@@ -2,9 +2,7 @@ package org.mifos.framework.util.helpers;
 
 import java.net.URISyntaxException;
 
-import org.mifos.application.fees.struts.action.FeeAction;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 

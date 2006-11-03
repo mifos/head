@@ -556,7 +556,8 @@ public class TestCollSheetBO extends MifosTestCase {
 				meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", (short) 9, "1.1.1",
 				center, new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", (short) 3, "1.1.1.1",
+		client = TestObjectFactory.createClient(
+				"Client", CustomerStatus.CLIENT_ACTIVE, "1.1.1.1",
 				group, new Date(System.currentTimeMillis()));
 		return TestObjectFactory.createSavingsAccount("43245434", client,
 				(short) 16, new Date(System.currentTimeMillis()),

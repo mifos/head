@@ -11,9 +11,9 @@ import java.util.Set;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
@@ -33,7 +33,6 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -799,13 +798,11 @@ public class TestPersonnelBO extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.4", meeting, officeId, personnelId, new Date(System
-						.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 	}
 

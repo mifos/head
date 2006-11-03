@@ -464,7 +464,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				GroupConstants.ACTIVE, center1.getSearchId() + ".1", center1,
 				new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
 				group, new Date(System.currentTimeMillis()));
 		ClientBO client2 = TestObjectFactory.createClient("client2",
 				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
@@ -584,7 +584,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 		CustomerCheckListBO checklistCenter = TestObjectFactory
 				.createCustomerChecklist(center.getCustomerLevel().getId(),
@@ -632,7 +632,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 		HibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();

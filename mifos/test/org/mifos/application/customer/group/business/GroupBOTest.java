@@ -22,7 +22,6 @@ import org.mifos.application.customer.business.CustomerPositionView;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -198,15 +197,14 @@ public class GroupBOTest extends MifosTestCase {
 	
 	public void testSuccessfulUpdate_Group_UnderBranchForLoggig() throws Exception {
 			String name = "Group_underBranch";
-			String newName = "Group_NameChanged";
 			group = createGroupUnderBranch(name, CustomerStatus.GROUP_ACTIVE,getCustomFields());
 			group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 					.getCustomerId());
 			client = TestObjectFactory.createClient("Client",
-					ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+					CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
 					group, new Date(System.currentTimeMillis()));
 			client1 = TestObjectFactory.createClient("Client1",
-					ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".2",
+					CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".2",
 					group, new Date(System.currentTimeMillis()));
 			HibernateUtil.getSessionTL();
 			HibernateUtil.getInterceptor().createInitialValueMap(group);
@@ -244,7 +242,7 @@ public class GroupBOTest extends MifosTestCase {
 	
 	public void testSuccessfulTransferToCenterInSameBranchForLogging() throws Exception {
 		createObjectsForTranferToCenterInSameBranch();
-		String newCenterSearchId = center1.getSearchId();
+		center1.getSearchId(); // does this do hibernate magic or is it unneeded?
 		HibernateUtil.closeSession();
 
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
@@ -611,7 +609,7 @@ public class GroupBOTest extends MifosTestCase {
 			}
 		}
 		group.getPerformanceHistory().generatePortfolioAtRisk();
-		assertEquals(new Money("1.0"), ((GroupBO) group)
+		assertEquals(new Money("1.0"), group
 				.getPerformanceHistory().getPortfolioAtRisk());
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -631,8 +629,8 @@ public class GroupBOTest extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(new Money("600.0"), ((GroupBO) group).getPerformanceHistory().getTotalOutStandingLoanAmount());
-		assertEquals(new Money("600.0"), ((GroupBO) group)
+		assertEquals(new Money("600.0"), group.getPerformanceHistory().getTotalOutStandingLoanAmount());
+		assertEquals(new Money("600.0"), group
 				.getPerformanceHistory().getTotalOutStandingLoanAmount());
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -652,8 +650,8 @@ public class GroupBOTest extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(new Money("300.0"), ((GroupBO) group).getPerformanceHistory().getAvgLoanAmountForMember());
-		assertEquals(new Money("300.0"), ((GroupBO) group)
+		assertEquals(new Money("300.0"), group.getPerformanceHistory().getAvgLoanAmountForMember());
+		assertEquals(new Money("300.0"), group
 				.getPerformanceHistory().getAvgLoanAmountForMember());
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
@@ -689,9 +687,10 @@ public class GroupBOTest extends MifosTestCase {
 				.getCustomerId());
 		assertEquals(new Money("1000.0"), savings1.getSavingsBalance());
 		assertEquals(new Money("2000.0"), savings2.getSavingsBalance());
-		assertEquals(new Money("2000.0"), ((ClientBO) client)
-				.getSavingsBalance());
-		assertEquals(new Money("3000.0"), ((GroupBO) group).getPerformanceHistory().getTotalSavingsAmount());
+		assertEquals(new Money("2000.0"), 
+				client.getSavingsBalance());
+		assertEquals(new Money("3000.0"), 
+				group.getPerformanceHistory().getTotalSavingsAmount());
 		TestObjectFactory.flushandCloseSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -716,15 +715,16 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 		client1 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_HOLD, "1.4.1.2", group, new Date(System
+				CustomerStatus.CLIENT_HOLD, "1.4.1.2", group, new Date(System
 						.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client3",
-				ClientConstants.STATUS_CANCELLED, "1.4.1.3", group, new Date(
+				CustomerStatus.CLIENT_CANCELLED, "1.4.1.3", group, new Date(
 						System.currentTimeMillis()));
-		assertEquals(Integer.valueOf("2"), ((GroupBO) group).getPerformanceHistory().getActiveClientCount());
+		assertEquals(Integer.valueOf("2"), 
+				group.getPerformanceHistory().getActiveClientCount());
 	}
 
 	public void testUpdateBranchFailure_OfficeNULL() throws Exception {
@@ -1470,7 +1470,7 @@ public class GroupBOTest extends MifosTestCase {
 				center.getSearchId() + ".1", center, new Date(System
 						.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
 				group, new Date(System.currentTimeMillis()));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loandsdasd", "fsad", Short.valueOf("2"), new Date(System

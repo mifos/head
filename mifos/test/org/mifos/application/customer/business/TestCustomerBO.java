@@ -27,7 +27,6 @@ import org.mifos.application.customer.group.business.GroupPerformanceHistoryEnti
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
@@ -123,11 +122,8 @@ public class TestCustomerBO extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 
-		center = TestObjectFactory
-				.createCenter("Center", Short.valueOf("14"), "1.4", meeting,
-						getBranchOffice().getOfficeId(), loanOfficer
-								.getPersonnelId(), new Date(System
-								.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting, getBranchOffice().getOfficeId(), loanOfficer
+		.getPersonnelId());
 		center.setUserContext(TestObjectFactory.getUserContext());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(), null,
@@ -724,7 +720,7 @@ public class TestCustomerBO extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 	}
 
@@ -783,9 +779,7 @@ public class TestCustomerBO extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("14"),
-				"1.4", meeting, officeId, personnelId, new Date(System
-						.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
 	}
 
 	private void createGroup() {

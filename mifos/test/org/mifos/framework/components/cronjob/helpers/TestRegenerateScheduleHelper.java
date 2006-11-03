@@ -16,9 +16,9 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -115,13 +115,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				GroupConstants.ACTIVE, center1.getSearchId() + ".1", center1,
 				new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
 				group, new Date(System.currentTimeMillis()));
 		ClientBO client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_CLOSED, group.getSearchId() + ".2",
+				CustomerStatus.CLIENT_CLOSED, group.getSearchId() + ".2",
 				group, new Date(System.currentTimeMillis()));
 		ClientBO client3 = TestObjectFactory.createClient("client3",
-				ClientConstants.STATUS_CANCELLED, group1.getSearchId() + ".1",
+				CustomerStatus.CLIENT_CANCELLED, group1.getSearchId() + ".1",
 				group1, new Date(System.currentTimeMillis()));
 		center.getCustomerMeeting().getMeeting().getMeetingDetails()
 				.setRecurAfter(Short.valueOf("2"));
@@ -202,8 +202,6 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				.setRecurAfter(Short.valueOf("2"));
 		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),YesNoFlag.YES.getValue());
 
-		Calendar meetingStartDate = center.getCustomerMeeting().getMeeting()
-				.getMeetingStartDate();
 		AccountActionDateEntity accountActionDateEntity = center
 				.getCustomerAccount().getDetailsOfNextInstallment();
 		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
@@ -422,10 +420,10 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				center.getSearchId() + ".1", center, new Date(System
 						.currentTimeMillis()));
 		client1 = TestObjectFactory.createClient("client1",
-				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".1",
+				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
 				group, new Date(System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
-				ClientConstants.STATUS_ACTIVE, group.getSearchId() + ".2",
+				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".2",
 				group, new Date(System.currentTimeMillis()));
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));

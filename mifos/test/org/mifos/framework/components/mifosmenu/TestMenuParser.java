@@ -2,8 +2,6 @@ package org.mifos.framework.components.mifosmenu;
 
 import org.mifos.framework.MifosTestCase;
 
-import junit.framework.TestCase;
-
 public class TestMenuParser extends MifosTestCase {
 
 	public void testParse() {

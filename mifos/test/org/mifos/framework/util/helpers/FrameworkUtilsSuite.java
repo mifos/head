@@ -1,9 +1,9 @@
 package org.mifos.framework.util.helpers;
 
-import org.mifos.framework.MifosTestSuite;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.mifos.framework.MifosTestSuite;
 
 public class FrameworkUtilsSuite extends MifosTestSuite {
 

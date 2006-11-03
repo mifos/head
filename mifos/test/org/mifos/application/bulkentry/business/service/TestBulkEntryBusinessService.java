@@ -19,6 +19,7 @@ import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -357,7 +358,8 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client = TestObjectFactory.createClient(
+				"Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, currentDate);
 		HibernateUtil.closeSession();
 	}

@@ -261,8 +261,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				.getCustomerFormedByPersonnel().getPersonnelId());
 		
 		List<FeeView> additionalFees = (List<FeeView>)SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,request);
-		assertNotNull(additionalFees);
 		assertEquals(0, additionalFees.size());
+		
 		group = (GroupBO) HibernateUtil.getSessionTL().get(GroupBO.class,
 				group.getCustomerId());
 		removeFees(fees);	
@@ -1329,7 +1329,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	
 		
 	private void createClientForAuditLog() throws Exception {
-		String name = "Client 1";
 		Short officeId = 1;
 		Short personnel = 3;
 		meeting = getMeeting();
@@ -1345,11 +1344,11 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		Short povertyStatus = Short.valueOf("41");
 		
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-				Short.valueOf("3"), salutaion, new StringBuilder(name), "Client", "",
-				"1", "");
+				Short.valueOf("3"), salutaion, "Client", "", "1",
+				"");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-				Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
-				"first", "middle", "last", "secondLast");
+				Short.valueOf("2"), 1, "first",
+				"middle", "last", "secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(ethincity, citizenship,handicapped, businessActivities, maritalStatus,
 				educationLevel, numChildren, gender, povertyStatus);
 		client = new ClientBO(TestObjectFactory.getUserContext(),
@@ -1653,16 +1652,15 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 	
 	private void createAndSetClientInSession() throws Exception {
-		String name = "Client 1";
 		Short officeId = 1;
 		Short personnel = 3;
 		meeting = getMeeting();
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-				Short.valueOf("3"), 1, new StringBuilder(name), "Client", "",
-				"1", "");
+				Short.valueOf("3"), 1, "Client", "", "1",
+				"");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-				Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
-				"first", "middle", "last", "secondLast");
+				Short.valueOf("2"), 1, "first",
+				"middle", "last", "secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1,
 				1, Short.valueOf("1"), Short.valueOf("1"),Short.valueOf("41"));
 		client = new ClientBO(TestObjectFactory.getUserContext(),

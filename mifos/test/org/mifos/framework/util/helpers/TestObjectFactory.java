@@ -235,13 +235,6 @@ public class TestObjectFactory {
 		return center;
 	}
 
-	// TODO: remove extra parameters from references
-	public static CenterBO createCenter(String customerName, Short statusId,
-			String searchId, MeetingBO meeting, Short officeId,
-			Short personnelId, Date startDate) {
-		return createCenter(customerName, meeting, officeId, personnelId);
-	}
-
 	public static CenterBO createCenter(String customerName, MeetingBO meeting,
 			Short officeId, Short personnelId) {
 		CenterBO center = null;
@@ -370,21 +363,28 @@ public class TestObjectFactory {
 
 	public static ClientBO createClient(String customerName, Short statusId,
 			String searchId, CustomerBO parentCustomer, Date startDate) {
+		return createClient(customerName, CustomerStatus.getStatus(statusId), 
+			searchId, parentCustomer, startDate);
+	}
+
+	public static ClientBO createClient(
+			String customerName, CustomerStatus status,
+			String searchId, CustomerBO parentCustomer, Date startDate) {
 		ClientBO client = null;
 		try {
 			Short office = new Short("3");
 			Short personnel = new Short("1");
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-					Short.valueOf("1"), 1, new StringBuilder("testClientName"),
-					customerName, "middle", customerName, "secondLast");
+					Short.valueOf("1"), 1, customerName,
+					"middle", customerName, "secondLast");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-					Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
-					customerName, "middle", customerName, "secondLast");
+					Short.valueOf("2"), 1, customerName,
+					"middle", customerName, "secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
 							.valueOf("41"));
 			client = new ClientBO(getUserContext(), customerName,
-					CustomerStatus.getStatus(statusId), null, null, null, null,
+					status, null, null, null, null,
 					getFees(), null, personnel, office, parentCustomer, null,
 					null, null, null, YesNoFlag.YES.getValue(),
 					clientNameDetailView, spouseNameDetailView,
@@ -410,11 +410,11 @@ public class TestObjectFactory {
 			Short office = new Short("3");
 			Short personnel = new Short("1");
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-					Short.valueOf("3"), 1, new StringBuilder(customerName),
-					customerName, "middle", customerName, "secondLast");
+					Short.valueOf("3"), 1, customerName,
+					"middle", customerName, "secondLast");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-					Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
-					customerName, "middle", customerName, "secondLast");
+					Short.valueOf("2"), 1, customerName,
+					"middle", customerName, "secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
 							.valueOf("41"));
@@ -439,11 +439,10 @@ public class TestObjectFactory {
 		Short personnel = new Short("1");
 		try {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-					Short.valueOf("1"), 1, new StringBuilder(customerName
-							+ customerName), customerName, "", customerName, "");
+					Short.valueOf("1"), 1, customerName, "", customerName, "");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-					Short.valueOf("2"), 1, new StringBuilder("testSpouseName"),
-					customerName, "middle", customerName, "secondLast");
+					Short.valueOf("2"), 1, customerName,
+					"middle", customerName, "secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
 							.valueOf("41"));
@@ -819,8 +818,8 @@ public class TestObjectFactory {
 		List<Date> dates = new ArrayList<Date>();
 		try {
 			dates = meeting.getAllDates(occurrences);
-		} catch (MeetingException me) {
-			me.printStackTrace();
+		} catch (MeetingException e) {
+			throw new RuntimeException(e);
 		}
 		return dates;
 	}
@@ -830,7 +829,7 @@ public class TestObjectFactory {
 		try {
 			dates = meeting.getAllDates(DateUtils.getLastDayOfNextYear());
 		} catch (MeetingException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return dates;
 	}
@@ -978,9 +977,7 @@ public class TestObjectFactory {
 	public static void cleanUp(CustomerBO customer) {
 		if (null != customer) {
 			deleteCustomer(customer);
-			customer = null;
 		}
-
 	}
 
 	public static void cleanUp(List<CustomerBO> customerList) {
@@ -1094,7 +1091,7 @@ public class TestObjectFactory {
 				prdOfferingMeeting1.setMeeting(null);
 				session.delete(prdOfferingMeeting1);
 			} catch (ProductDefinitionException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 			try {
 				PrdOfferingMeetingEntity prdOfferingMeeting2 = savings
@@ -1102,7 +1099,7 @@ public class TestObjectFactory {
 				prdOfferingMeeting2.setMeeting(null);
 				session.delete(prdOfferingMeeting2);
 			} catch (ProductDefinitionException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 			session.delete(savings.getSavingsOffering());
 		} else {
@@ -1470,7 +1467,7 @@ public class TestObjectFactory {
 		try {
 			loan.save();
 		} catch (AccountException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		HibernateUtil.commitTransaction();
 		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));

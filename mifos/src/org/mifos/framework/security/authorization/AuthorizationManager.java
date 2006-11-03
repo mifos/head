@@ -38,7 +38,6 @@
 
 package org.mifos.framework.security.authorization;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,7 +50,6 @@ import org.mifos.framework.exceptions.SecurityException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityRoles;
-import org.mifos.framework.security.util.SecurityEvent;
 import org.mifos.framework.security.util.SecurityHelper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;

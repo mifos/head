@@ -52,10 +52,10 @@ import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
@@ -219,7 +219,8 @@ public class ConfigurationInitializer {
 	private void setClientOptionalState(Map<Key, Object> officeConfigMap,
 			CustomerStatusEntity customerStateEntity) throws SystemException,
 			ApplicationException {
-		if (customerStateEntity.getId().equals(ClientConstants.STATUS_PENDING))
+		if (customerStateEntity.getId().equals(
+				CustomerStatus.CLIENT_PENDING.getValue()))
 			officeConfigMap.put(new Key(getHeadOffice().getOfficeId(),
 					ConfigConstants.PENDING_APPROVAL_DEFINED_FOR_CLIENT),
 					Constants.NO);

@@ -40,7 +40,6 @@ import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientPerformanceHistoryEntity;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
@@ -1560,7 +1559,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountActionDateEntity.setPrincipalPaid(new Money("20.0"));
 		accountActionDateEntity.setInterestPaid(new Money("10.0"));
 		accountActionDateEntity.setPenaltyPaid(new Money("5.0"));
-		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(((LoanBO) accountBO).getTotalAmountDue()
 				.getAmountDoubleValue(), 389.0);
@@ -1696,12 +1695,13 @@ public class TestLoanBO extends MifosTestCase {
 	public void testGetTotalAmountInArrearsWithPayment() throws Exception {
 		accountBO = getLoanAccount();
 
-		LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountBO
+		LoanScheduleEntity accountActionDateEntity = 
+			(LoanScheduleEntity) accountBO
 				.getAccountActionDate((short) 1);
 		accountActionDateEntity.setPrincipalPaid(new Money("20.0"));
 		accountActionDateEntity.setInterestPaid(new Money("10.0"));
 		accountActionDateEntity.setPenaltyPaid(new Money("5.0"));
-		((LoanScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
+		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
 
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(((LoanBO) accountBO).getTotalAmountInArrears()
@@ -5143,7 +5143,7 @@ public class TestLoanBO extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 		/*((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
 		TestObjectFactory.updateObject(client);*/
@@ -5171,7 +5171,7 @@ public class TestLoanBO extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
@@ -5433,7 +5433,7 @@ public class TestLoanBO extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
 				"1.4.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client",
-				ClientConstants.STATUS_ACTIVE, "1.4.1.1", group, new Date(
+				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
 	}
 

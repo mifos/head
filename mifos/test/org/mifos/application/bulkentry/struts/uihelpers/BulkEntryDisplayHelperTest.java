@@ -18,6 +18,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -165,7 +166,8 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 				"1.1", meeting, new Date(System.currentTimeMillis()));
 		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
 				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
+		client = TestObjectFactory.createClient("Client", 
+				CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
