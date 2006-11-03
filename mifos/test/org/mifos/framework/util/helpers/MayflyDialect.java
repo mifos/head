@@ -36,10 +36,10 @@ public class MayflyDialect extends Dialect {
 		return "auto_increment not null";
 	}
 
-//	@Override
-//	public String getIdentitySelectString() {
-//		return "call identity()";
-//	}
+	@Override
+	public String getIdentitySelectString() {
+		return "call identity()";
+	}
 
 	@Override
 	public String getIdentityInsertString() {
