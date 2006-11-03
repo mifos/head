@@ -200,7 +200,7 @@ class GroupCreateEdit < TestClass
     @@group_applycharges=@@groupprop['group.applycharges']
     @@group_amountdue=@@groupprop['Group.amountdue']
     @@return_account_details=@@accountprop['Account.returnToAccountDetails']
-    
+    @@back_to_details_page=@@centerprop['Center.backtodetailspage']    
   end
   #checking for the link Create new group in Clients&Accounts page 
   
@@ -793,7 +793,7 @@ class GroupCreateEdit < TestClass
       $ie.link(:text,@@change_log).click
       assert($ie.contains_text(@@status_pending_name)) and assert($ie.contains_text(@@status_partial_name))
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed")    
-      $ie.button(:value,@@return_account_details).click()
+      $ie.button(:value,@@back_to_details_page).click()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
     rescue =>excp
@@ -806,7 +806,7 @@ class GroupCreateEdit < TestClass
       $ie.link(:text,@@change_log).click
       assert($ie.contains_text(@@status_pending_name)) and assert($ie.contains_text(@@status_active_name))
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Passed")    
-      $ie.button(:value,@@return_account_details).click()
+      $ie.button(:value,@@back_to_details_page).click()
     rescue Test::Unit::AssertionFailedError=>e
       $logger.log_results("View Change Log is displaying proper data","N/A","N/A","Failed")        
     rescue =>excp
