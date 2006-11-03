@@ -573,7 +573,12 @@ class SavingsAccountCreateEdit < TestClass
     $ie.button(:value,@@button_search).click
     $ie.link(:text,"Account # "+globalacctnum).click
       if(account_state.to_i==14) #state change required only for pending status
-        statusChange()
+       # statusChange()
+      $ie.link(:text,@@edit_account_status).click
+      $ie.radio(:name,"newStatusId","16").set
+      $ie.text_field(:name,"notes").set("aaaaa")
+      $ie.button(:value,@@button_preview).click()
+      $ie.button(:value,@@button_submit).click()
       end
       
     #added as part of bug#690
@@ -677,7 +682,7 @@ class SavingsAccountTest
   savingsobj=SavingsAccountCreateEdit.new
   filename=File.expand_path( File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
   savingsobj.open(filename,1)
-  rowid=-1
+  rowid=-1  
   colid=1
   #logging into mifos
   savingsobj.savings_login
