@@ -2,6 +2,7 @@ package org.mifos.application.customer.client.business;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -10,12 +11,14 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.configuration.business.ConfigurationIntf;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerStatusEntity;
@@ -35,6 +38,7 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -812,8 +816,10 @@ public class ClientBO extends CustomerBO {
 			for(ClientInitialSavingsOfferingEntity clientOffering: offeringsAssociatedInCreate){
 				try {
 					SavingsOfferingBO savingsOffering = new SavingsPrdPersistence().getSavingsProduct(clientOffering.getSavingsOffering().getPrdOfferingId());
-					if(savingsOffering.isActive())
-						addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACC_APPROVED,savingsOffering.getRecommendedAmount(), null));
+					if(savingsOffering.isActive()){
+						List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsPersistence().retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
+						addAccount(new SavingsBO(getUserContext(), savingsOffering, this, AccountState.SAVINGS_ACC_APPROVED,savingsOffering.getRecommendedAmount(), createCustomFieldViewsForClientSavingsAccount(customFieldDefs)));
+					}
 				} catch (PersistenceException pe) {
 					throw new CustomerException(pe);
 				} catch (AccountException pe) {
@@ -821,6 +827,13 @@ public class ClientBO extends CustomerBO {
 				}
 			}				
 		}
+	}
+	
+	private List<CustomFieldView> createCustomFieldViewsForClientSavingsAccount(List<CustomFieldDefinitionEntity> customFieldDefs){
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+		for(CustomFieldDefinitionEntity customFieldDef : customFieldDefs)
+			customFields.add(new CustomFieldView(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(), customFieldDef.getFieldType()));
+		return customFields;
 	}
 	
 	private void persistSavingAccounts()throws CustomerException{

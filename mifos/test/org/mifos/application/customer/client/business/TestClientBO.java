@@ -138,6 +138,7 @@ public class TestClientBO extends MifosTestCase {
 		assertNotNull(accountBO.getAccountActionDates());
 
 		assertEquals(10,accountBO.getAccountActionDates().size());
+		assertEquals(1,accountBO.getAccountCustomFields().size());
 		for(AccountActionDateEntity actionDate: accountBO.getAccountActionDates()){
 			assertEquals(client.getCustomerId(),actionDate.getCustomer().getCustomerId());
 			assertTrue(true);
@@ -166,7 +167,7 @@ public class TestClientBO extends MifosTestCase {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		assertNotNull(accountBO.getAccountActionDates());
-
+		assertEquals(1,accountBO.getAccountCustomFields().size());
 		assertEquals(10,accountBO.getAccountActionDates().size());
 		for(AccountActionDateEntity actionDate: accountBO.getAccountActionDates()){
 			assertEquals(client.getCustomerId(),actionDate.getCustomer().getCustomerId());
@@ -188,6 +189,7 @@ public class TestClientBO extends MifosTestCase {
 
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
+		assertEquals(1,accountBO.getAccountCustomFields().size());
 		assertEquals(10,accountBO.getAccountActionDates().size());
 		for(AccountActionDateEntity actionDate: accountBO.getAccountActionDates()){
 			assertEquals(client.getCustomerId(),actionDate.getCustomer().getCustomerId());

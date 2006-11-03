@@ -65,7 +65,10 @@ import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
@@ -74,6 +77,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -83,17 +87,18 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class SavingsAction extends AccountAppAction {
@@ -154,40 +159,62 @@ public class SavingsAction extends AccountAppAction {
 		SavingsActionForm savingsActionForm = ((SavingsActionForm) form);
 		logger.debug(" selectedPrdOfferingId: "
 				+ savingsActionForm.getSelectedPrdOfferingId());
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
-		loadMasterData(uc, request);
+		loadMasterData(savingsActionForm, request);
 		loadPrdoffering(savingsActionForm, request);
 		logger.info(" Data loaded successfully ");
 		return mapping.findForward("load_success");
 	}
 
-	private void loadMasterData(UserContext uc, HttpServletRequest request)
-			throws ApplicationException, SystemException {
-
+	private void loadMasterData(SavingsActionForm actionForm, HttpServletRequest request)
+			throws Exception {
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
 		SessionUtils.setAttribute(MasterConstants.INTEREST_CAL_TYPES,
 				masterDataService.retrieveMasterEntities(
 						InterestCalcTypeEntity.class, uc.getLocaleId()),
 				request);
-		loadMasterDataPartail(uc, request);
-
+		loadMasterDataPartial(actionForm,request);
+		loadCustomFieldsForCreate(actionForm, request);		
 	}
 
-	private void loadMasterDataPartail(UserContext uc,
-			HttpServletRequest request) throws PageExpiredException,
-			ApplicationException, SystemException {
+	private void loadMasterDataPartial(SavingsActionForm actionForm,
+			HttpServletRequest request) throws Exception{
+		UserContext uc = (UserContext) SessionUtils.getAttribute(
+				Constants.USER_CONTEXT_KEY, request.getSession());
 		SessionUtils.setAttribute(MasterConstants.SAVINGS_TYPE,
 				masterDataService.retrieveMasterEntities(
 						SavingsTypeEntity.class, uc.getLocaleId()), request);
 		SessionUtils.setAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT,
 				masterDataService.retrieveMasterEntities(
 						RecommendedAmntUnitEntity.class, uc.getLocaleId()),
-				request);
+				request);	
 		SessionUtils.setAttribute(SavingsConstants.CUSTOM_FIELDS,
 				savingsService.retrieveCustomFieldsDefinition(), request);
-
 	}
+	
+	private void loadCustomFieldsForCreate(SavingsActionForm actionForm,
+			HttpServletRequest request) throws Exception {
+		// Set Default values for custom fields
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 
+		for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
+			if (StringUtils.isNullAndEmptySafe(fieldDef.getDefaultValue())
+					&& fieldDef.getFieldType().equals(
+							CustomFieldType.DATE.getValue())) {
+				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
+						DateHelper.getUserLocaleDate(getUserContext(request)
+								.getPereferedLocale(), fieldDef
+								.getDefaultValue()), fieldDef.getFieldType()));
+			} else {
+				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
+						fieldDef.getDefaultValue(), fieldDef.getFieldType()));
+			}
+		}
+		actionForm.setAccountCustomFieldSet(customFields);
+	}
+	
 	private void loadPrdoffering(SavingsActionForm savingsActionForm,
 			HttpServletRequest request) throws ServiceException,
 			PageExpiredException {
@@ -266,11 +293,16 @@ public class SavingsAction extends AccountAppAction {
 				.getStateSelected()), uc, null, customer.getOffice()
 				.getOfficeId(), customer.getPersonnel().getPersonnelId());
 
+		List<CustomFieldView> customFields = savingsActionForm.getAccountCustomFieldSet();
+		UserContext userContext = getUserContext(request);
+		convertCustomFieldDateToUniformPattern(customFields, userContext
+				.getPereferedLocale());
+		
 		SavingsBO saving = new SavingsBO(uc, savingsOfferingBO, customer,
 				AccountState.getStatus(getShortValue(savingsActionForm
 						.getStateSelected())), savingsActionForm
 						.getRecommendedAmntValue(),
-				getAccountCustomFieldView(savingsActionForm));
+						customFields);
 		saving.save();
 
 		request.setAttribute(SavingsConstants.GLOBALACCOUNTNUM, saving
@@ -311,7 +343,7 @@ public class SavingsAction extends AccountAppAction {
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 
-		loadMasterDataPartail(uc, request);
+		loadMasterDataPartial(actionForm, request);
 
 		SessionUtils.setAttribute(SavingsConstants.PRDOFFCERING, savings
 				.getSavingsOffering(), request);
@@ -319,8 +351,7 @@ public class SavingsAction extends AccountAppAction {
 				.getRecommendedAmount().toString());
 
 		actionForm.clear();
-		actionForm.setAccountCustomFieldSet(new ArrayList(savings
-				.getAccountCustomFields()));
+		
 		SessionUtils.setAttribute(
 				SavingsConstants.RECENTY_ACTIVITY_DETAIL_PAGE, savings
 						.getRecentAccountActivity(3), request);
@@ -339,6 +370,7 @@ public class SavingsAction extends AccountAppAction {
 				Constants.BUSINESS_KEY, request);
 		SavingsActionForm actionForm = (SavingsActionForm) form;
 		actionForm.setRecommendedAmount(savings.getRecommendedAmount().toString());
+		actionForm.setAccountCustomFieldSet(createCustomFieldViewsForEdit(savings.getAccountCustomFields(),request));
 		return mapping.findForward("edit_success");
 	}
 
@@ -376,7 +408,7 @@ public class SavingsAction extends AccountAppAction {
 		savings.setUserContext(uc);
 		setInitialObjectForAuditLogging(savings);
 		savings.update(actionForm.getRecommendedAmntValue(),
-				getAccountCustomFieldView(actionForm));
+				actionForm.getAccountCustomFieldSet());
 		request.setAttribute(SavingsConstants.GLOBALACCOUNTNUM, savings
 				.getGlobalAccountNum());
 		logger
@@ -616,5 +648,5 @@ public class SavingsAction extends AccountAppAction {
 				new ActivityContext(ActivityMapper.getInstance()
 						.getActivityIdForState(newSate), officeId,
 						loanOfficerId));
-	}
+	}	
 }

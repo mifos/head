@@ -132,6 +132,7 @@
                     </c:choose>
                 <br>  <br>  
                 
+                 <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
                 <span class="fontnormalbold"><mifos:mifoslabel name="Savings.additionalInformation"/></span>
                <br>
                   <c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
@@ -143,8 +144,9 @@
 								</span><br>
 							</c:if>
 						</c:forEach>
-  					</c:forEach>
+  					</c:forEach>  					
                   <br>
+                  </c:if>
                   <span class="fontnormal">
 	                  <html-el:button property="editButton" styleClass="insidebuttn" style="width:70px;" onclick="fnEdit(this.form)">
 							<mifos:mifoslabel name="Savings.Edit" />

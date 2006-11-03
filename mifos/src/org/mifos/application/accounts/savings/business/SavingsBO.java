@@ -382,12 +382,19 @@ public class SavingsBO extends AccountBO {
 		this.recommendedAmount = recommendedAmount;
 		if (this.getAccountCustomFields() != null && customFields != null) {
 			for (CustomFieldView view : customFields) {
+				boolean fieldPresent=false;
 				for (AccountCustomFieldEntity customFieldEntity : this
 						.getAccountCustomFields()) {
 					if (customFieldEntity.getFieldId()
-							.equals(view.getFieldId()))
+							.equals(view.getFieldId())){
+						fieldPresent=true;
 						customFieldEntity.setFieldValue(view.getFieldValue());
+					}
 				}
+				if(!fieldPresent)
+					this.getAccountCustomFields().add(
+							new AccountCustomFieldEntity(this, view.getFieldId(),
+									view.getFieldValue()));
 			}
 		}
 

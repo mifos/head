@@ -5,6 +5,8 @@ package org.mifos.application.accounts.struts.action;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,22 +17,26 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
-import org.mifos.application.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.util.helpers.CenterConstants;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountAppAction extends BaseAction {
@@ -160,17 +166,51 @@ public class AccountAppAction extends BaseAction {
 		.getInstance().getBusinessService(BusinessServiceName.Accounts);
 	}
 	
-	protected List<CustomFieldView> getAccountCustomFieldView(
-			SavingsActionForm savingsActionForm) {
-		List<CustomFieldView> customfield = null;
-		if (savingsActionForm.getAccountCustomFieldSet() != null) {
-			customfield = new ArrayList<CustomFieldView>();
-			for (AccountCustomFieldEntity entity : savingsActionForm
-					.getAccountCustomFieldSet()) {
-				customfield.add(new CustomFieldView(entity.getFieldId(), entity
-						.getFieldValue(), null));
-			}
+	protected void convertCustomFieldDateToUniformPattern(
+			List<CustomFieldView> customFields, Locale locale) {
+		for (CustomFieldView customField : customFields) {
+			if (customField.getFieldType().equals(
+					CustomFieldType.DATE.getValue())
+					&& StringUtils.isNullAndEmptySafe(customField
+							.getFieldValue()))
+				customField.convertDateToUniformPattern(locale);
 		}
-		return customfield;
+	}
+	
+	protected List<CustomFieldView> createCustomFieldViewsForEdit(
+			Set<AccountCustomFieldEntity> customFieldEntities,
+			HttpServletRequest request) throws ApplicationException {
+		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
+
+		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
+				.getAttribute(SavingsConstants.CUSTOM_FIELDS, request);
+		Locale locale = getUserContext(request).getPereferedLocale();
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			boolean customFieldPresent = false;
+			for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
+				customFieldPresent=true;
+				if (customFieldDef.getFieldId().equals(
+						customFieldEntity.getFieldId())) {
+					if (customFieldDef.getFieldType().equals(
+							CustomFieldType.DATE.getValue())) {
+						customFields.add(new CustomFieldView(customFieldEntity
+								.getFieldId(), DateHelper.getUserLocaleDate(
+								locale, customFieldEntity.getFieldValue()),
+								customFieldDef.getFieldType()));
+					} else {
+						customFields
+								.add(new CustomFieldView(customFieldEntity
+										.getFieldId(), customFieldEntity
+										.getFieldValue(), customFieldDef
+										.getFieldType()));
+					}
+				}
+			}
+			if(!customFieldPresent)
+				customFields
+				.add(new CustomFieldView(customFieldDef.getFieldId(),
+						customFieldDef.getDefaultValue(), customFieldDef.getFieldType()));
+		}
+		return customFields;
 	}
 }

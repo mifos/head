@@ -98,7 +98,7 @@
                 </tr>
               <tr>
                 <td class="fontnormal">
-                <mifos:mifoslabel name="savings.correct" bundle="SavingsUIResources" />
+                <mifos:mifoslabel name="savings.correct" bundle="SavingsUIResources" mandatory="yes"/>
                 <c:out value="${accountActionValue.name}"/>
                 <mifos:mifoslabel name="Savings.amount" />:
                    <c:if test="${param.method == 'load'}">

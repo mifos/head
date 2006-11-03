@@ -163,6 +163,60 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				accountStateId, new Date(), savingsOffering, userContext);
 	}
 
+	public void testSuccessfulUpdate_WithCustomField() throws Exception {
+		createInitialObjects();
+		savingsOffering = createSavingsOffering("sav prd2", "prd2");
+		savings  = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_ACC_PARTIALAPPLICATION, new Money("100"),null);
+		savings.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		assertEquals(0, savings.getAccountCustomFields().size());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("globalAccountNum",savings.getGlobalAccountNum());
+		actionPerform();
+		
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "edit");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		
+		addRequestParameter("recommendedAmount", "600.0");
+		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "update");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsBusinessService()
+				.retrieveCustomFieldsDefinition();
+		int i = 0;
+		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+			addRequestParameter("customField[" + i + "].fieldId",
+					customFieldDef.getFieldId().toString());
+			addRequestParameter("customField[" + i + "].fieldValue", "12");
+			i++;
+		}
+		actionPerform();	
+		verifyForward("update_success");
+		
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		HibernateUtil.closeSession();
+		savingsOffering = null;
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		assertNotNull(savings);
+		assertEquals(600.0, savings.getRecommendedAmount()
+				.getAmountDoubleValue());
+		assertEquals(1, savings.getAccountCustomFields().size());
+		
+	}
+	
 	public void testGetPrdOfferings() throws Exception {
 		createInitialObjects();
 		savingsOffering1 = createSavingsOffering("sav prd1", "prd1");
@@ -405,7 +459,12 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		createAndAddObjects(AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
 		savingsOffering = null;
 		setRequestPathInfo("/savingsAction.do");
+		addRequestParameter("method", "get");
+		addRequestParameter("globalAccountNum",savings.getGlobalAccountNum());
+		actionPerform();
+		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "edit");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("edit_success");
 		verifyNoActionErrors();

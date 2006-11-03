@@ -6,7 +6,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix = "mifos"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
-
+<%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
  <tiles:put name="body" type="string">
 <html-el:form action="notesAction.do">
@@ -19,6 +19,7 @@
           </td>
         </tr>
       </table>
+      <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
       <table width="95%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td width="70%" align="left" valign="top" class="paddingL15T15">
@@ -26,8 +27,13 @@
             	<tr>
               		<td width="83%" class="headingorange">
 						<span class="heading">
-							<c:out value="${sessionScope.notesActionForm.prdOfferingName}"/> # <c:out
-								value="${sessionScope.notesActionForm.globalAccountNum}" /> -
+							<c:if test="${sessionScope.notesActionForm.accountTypeId == '2'}">
+									<c:out value="${BusinessKey.savingsOffering.prdOfferingName}"/>
+							</c:if>
+							<c:if test="${sessionScope.notesActionForm.accountTypeId == '1'}">
+									<c:out value="${BusinessKey.loanOffering.prdOfferingName}"/>
+							</c:if>
+							# <c:out value="${sessionScope.notesActionForm.globalAccountNum}" /> -
 						</span>
 						<mifos:mifoslabel name="Account.Notes" bundle="accountsUIResources"></mifos:mifoslabel>
 					</td>

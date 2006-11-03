@@ -47,7 +47,6 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.struts.actionforms.AccountAppActionForm;
@@ -78,6 +77,7 @@ public class SavingsActionForm extends AccountAppActionForm {
 		this.recommendedAmount = recommendedAmount;
 	}
 
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		String method = request.getParameter("method");
@@ -138,13 +138,13 @@ public class SavingsActionForm extends AccountAppActionForm {
 	public void clear() {
 		this.setAccountId(null);
 		this.setSelectedPrdOfferingId(null);
-		this.setAccountCustomFieldSet(new ArrayList<AccountCustomFieldEntity>());
+		this.setAccountCustomFieldSet(new ArrayList<CustomFieldView>());
 	}
 	
 	private  void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
 		try {
 			List<CustomFieldDefinitionEntity> customFieldDefs =(List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-			for(AccountCustomFieldEntity customField : getAccountCustomFieldSet()){
+			for(CustomFieldView customField : getAccountCustomFieldSet()){
 				boolean isErrorFound = false;
 				for(CustomFieldDefinitionEntity customFieldDef : customFieldDefs){
 					if(customField.getFieldId().equals(customFieldDef.getFieldId())&& customFieldDef.isMandatory()){

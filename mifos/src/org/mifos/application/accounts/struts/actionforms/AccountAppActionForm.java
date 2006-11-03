@@ -4,12 +4,10 @@
 package org.mifos.application.accounts.struts.actionforms;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.struts.validator.ValidatorActionForm;
-import org.mifos.application.accounts.business.AccountCustomFieldEntity;
+import org.mifos.application.customer.business.CustomFieldView;
 
 public class AccountAppActionForm extends ValidatorActionForm {
 	private String accountId;
@@ -24,7 +22,7 @@ public class AccountAppActionForm extends ValidatorActionForm {
 
 	private String input;
 
-	private List<AccountCustomFieldEntity> accountCustomFieldSet;
+	private List<CustomFieldView> accountCustomFieldSet;
 
 	// values for moving back
 	private String searchInput;
@@ -58,7 +56,7 @@ public class AccountAppActionForm extends ValidatorActionForm {
 	}
 
 	public AccountAppActionForm() {
-		accountCustomFieldSet = new ArrayList<AccountCustomFieldEntity>();
+		accountCustomFieldSet = new ArrayList<CustomFieldView>();
 	}
 
 	public String getStateSelected() {
@@ -85,12 +83,12 @@ public class AccountAppActionForm extends ValidatorActionForm {
 		this.customerId = customerId;
 	}
 
-	public Set<AccountCustomFieldEntity> getAccountCustomFieldSet() {
-		return new HashSet<AccountCustomFieldEntity>(this.accountCustomFieldSet);
+	public List<CustomFieldView> getAccountCustomFieldSet() {
+		return this.accountCustomFieldSet;
 	}
 
 	public void setAccountCustomFieldSet(
-			List<AccountCustomFieldEntity> accountCustomFieldSet) {
+			List<CustomFieldView> accountCustomFieldSet) {
 		this.accountCustomFieldSet = accountCustomFieldSet;
 	}
 
@@ -122,11 +120,11 @@ public class AccountAppActionForm extends ValidatorActionForm {
 	 * Return the value of the one of the custom field at index i in
 	 * accountCustomFields List.
 	 */
-	public AccountCustomFieldEntity getCustomField(int i) {
+	public CustomFieldView getCustomField(int i) {
 		while (i >= accountCustomFieldSet.size()) {
-			accountCustomFieldSet.add(new AccountCustomFieldEntity());
+			accountCustomFieldSet.add(new CustomFieldView());
 		}
-		return (AccountCustomFieldEntity) (accountCustomFieldSet.get(i));
+		return (accountCustomFieldSet.get(i));
 	}
 
 }

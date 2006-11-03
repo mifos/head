@@ -296,7 +296,8 @@
                 </tr>
               </table>
               <br>
-                            <table width="93%" border="0" cellpadding="3" cellspacing="0">
+             <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+              <table width="93%" border="0" cellpadding="3" cellspacing="0">
                 <tr>
                   <td colspan="2" class="fontnormalbold">
                   <mifos:mifoslabel name="Savings.additionalInformation"/></td>
@@ -325,12 +326,14 @@
            </tr>
          </c:forEach>
               </table>
+              </c:if>
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" class="blueline">&nbsp;</td>
                 </tr>
               </table>
               <br>
+              
               <table width="93%" border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
