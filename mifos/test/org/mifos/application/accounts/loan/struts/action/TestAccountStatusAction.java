@@ -163,6 +163,16 @@ public class TestAccountStatusAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.changeAccountStatusConfirmation_success.toString());
 	}
 	
+	public void testUpdate_validation() throws Exception{
+		createCustomers();
+		account = getLoanAccount(group);
+		setRequestPathInfo("/ChangeAccountStatus.do");
+		addRequestParameter("method", "update");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyInputForward();
+	}
+	
 	private void createParentCustomer() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));

@@ -137,6 +137,9 @@ public class AccountStatusActionForm extends BaseActionForm {
 			if (StringUtils.isNullOrEmpty(getPersonnelId()))
 				addError(errors, "loanOfficer", "errors.mandatoryselect",
 						"Loan Officer");
+			if (StringUtils.isNullOrEmpty(getCurrentStatus()))
+				addError(errors, "currentStatus", "errors.mandatoryselect",
+						"Current Status");
 		}
 		if (method.equals(Methods.update.toString())) {
 			if (getApplicableAccountRecords().size() == 0)
