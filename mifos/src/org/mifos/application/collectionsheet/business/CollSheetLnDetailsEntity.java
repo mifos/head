@@ -40,17 +40,15 @@ package org.mifos.application.collectionsheet.business;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.persistance.LoanPersistance;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
-import org.mifos.application.collectionsheet.persistence.service.CollectionSheetPersistenceService;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class CollSheetLnDetailsEntity extends PersistentObject {
 
@@ -281,12 +279,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 	public void addAccountDetails(AccountActionDateEntity accountActionDate)
 			throws SystemException, ApplicationException {
 		LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
-		CollectionSheetPersistenceService collSheetPersistService = null;
-		collSheetPersistService = (CollectionSheetPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.CollectionSheet);
-		LoanBO loan = collSheetPersistService.getLoanAccount(loanSchedule
-				.getAccount().getAccountId());
+		LoanBO loan = new LoanPersistance().getAccount(loanSchedule.getAccount().getAccountId());
 		this.accountId = loanSchedule.getAccount().getAccountId();
 		this.currentInstallmentNo = loanSchedule.getInstallmentId();
 		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(

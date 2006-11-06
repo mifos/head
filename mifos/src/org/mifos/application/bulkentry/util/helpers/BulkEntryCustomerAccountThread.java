@@ -57,11 +57,9 @@ public class BulkEntryCustomerAccountThread implements Runnable {
 											transactionDate);
 							HibernateUtil.commitTransaction();
 						} catch (ServiceException be) {
-							be.printStackTrace();
 							accountNums.add((String) (be.getValues()[0]));
 							HibernateUtil.rollbackTransaction();
 						} catch (Exception e) {
-							e.printStackTrace();
 							accountNums.add(customerAccountView.getAccountId()
 									.toString());
 							HibernateUtil.rollbackTransaction();

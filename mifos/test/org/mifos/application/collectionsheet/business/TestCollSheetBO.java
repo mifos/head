@@ -21,21 +21,19 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.collectionsheet.persistence.service.CollectionSheetPersistenceService;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 
@@ -499,12 +497,8 @@ public class TestCollSheetBO extends MifosTestCase {
 	private void generateCollectionSheetForDate(
 			CollectionSheetBO collectionSheet) throws SystemException,
 			ApplicationException {
-
-		CollectionSheetPersistenceService collSheetPerService = (CollectionSheetPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.CollectionSheet);
 		try {
-			List<AccountActionDateEntity> accountActionDates = collSheetPerService
+			List<AccountActionDateEntity> accountActionDates = new CollectionSheetPersistence()
 					.getCustFromAccountActionsDate(collectionSheet
 							.getCollSheetDate());
 			MifosLogManager
@@ -515,7 +509,7 @@ public class TestCollSheetBO extends MifosTestCase {
 				collectionSheet.populateAccountActionDates(accountActionDates);
 
 			}
-			List<LoanBO> loanBOs = collSheetPerService
+			List<LoanBO> loanBOs = new CollectionSheetPersistence()
 					.getLnAccntsWithDisbursalDate(collectionSheet
 							.getCollSheetDate());
 			MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)

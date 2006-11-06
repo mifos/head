@@ -46,9 +46,8 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
-import org.mifos.application.collectionsheet.persistence.service.CollectionSheetPersistenceService;
+import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;
@@ -58,7 +57,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 /**
  * This is the helper class which is invoked by the collection sheet task. The
@@ -141,10 +139,7 @@ public class CollectionSheetHelper extends TaskHelper {
 	private void generateCollectionSheetForDate(
 			CollectionSheetBO collectionSheet) throws SystemException,
 			ApplicationException {
-		CollectionSheetPersistenceService collSheetPerService = (CollectionSheetPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.CollectionSheet);
-		List<AccountActionDateEntity> accountActionDates = collSheetPerService
+		List<AccountActionDateEntity> accountActionDates = new CollectionSheetPersistence()
 				.getCustFromAccountActionsDate(collectionSheet
 						.getCollSheetDate());
 		MifosLogManager
@@ -155,7 +150,7 @@ public class CollectionSheetHelper extends TaskHelper {
 			collectionSheet.populateAccountActionDates(accountActionDates);
 
 		}
-		List<LoanBO> loanBOs = collSheetPerService
+		List<LoanBO> loanBOs = new CollectionSheetPersistence()
 				.getLnAccntsWithDisbursalDate(collectionSheet
 						.getCollSheetDate());
 		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(

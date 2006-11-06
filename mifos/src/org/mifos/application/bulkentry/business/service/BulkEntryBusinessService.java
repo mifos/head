@@ -151,7 +151,6 @@ public class BulkEntryBusinessService extends BusinessService {
 						if (savings.containsKey(accountView.getAccountId()))
 							savings.get(accountView.getAccountId())
 									.setYesNoFlag(YesNoFlag.NO);
-						be.printStackTrace();
 						accountNums.add((String) (be.getValues()[0]));
 						HibernateUtil.rollbackTransaction();
 
@@ -159,7 +158,6 @@ public class BulkEntryBusinessService extends BusinessService {
 						if (savings.containsKey(accountView.getAccountId()))
 							savings.get(accountView.getAccountId())
 									.setYesNoFlag(YesNoFlag.NO);
-						e.printStackTrace();
 						accountNums.add(accountView.getAccountId().toString());
 						HibernateUtil.rollbackTransaction();
 					} finally {
@@ -206,14 +204,12 @@ public class BulkEntryBusinessService extends BusinessService {
 							if (savings.containsKey(accountView.getAccountId()))
 								savings.get(accountView.getAccountId())
 										.setYesNoFlag(YesNoFlag.NO);
-							be.printStackTrace();
 							accountNums.add((String) (be.getValues()[0]));
 							HibernateUtil.rollbackTransaction();
 						} catch (Exception e) {
 							if (savings.containsKey(accountView.getAccountId()))
 								savings.get(accountView.getAccountId())
 										.setYesNoFlag(YesNoFlag.NO);
-							e.printStackTrace();
 							accountNums.add(accountView.getAccountId()
 									.toString());
 							HibernateUtil.rollbackTransaction();
@@ -260,7 +256,6 @@ public class BulkEntryBusinessService extends BusinessService {
 				saveClientAttendance(client);
 				HibernateUtil.commitTransaction();
 			} catch (ServiceException e) {
-				e.printStackTrace();
 				HibernateUtil.rollbackTransaction();
 				customerNames.add(client.getDisplayName());
 			} finally {
@@ -276,7 +271,6 @@ public class BulkEntryBusinessService extends BusinessService {
 				saveSavingsAccount(saving);
 				HibernateUtil.commitTransaction();
 			} catch (ServiceException e) {
-				e.printStackTrace();
 				HibernateUtil.rollbackTransaction();
 				customerNames.add(saving.getGlobalAccountNum());
 			} finally {
@@ -372,7 +366,6 @@ public class BulkEntryBusinessService extends BusinessService {
 		try {
 			new BulkEntryPersistance().createOrUpdate(loan);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ServiceException(e);
 		}
 	}
@@ -381,7 +374,6 @@ public class BulkEntryBusinessService extends BusinessService {
 		try {
 			new BulkEntryPersistance().createOrUpdate(client);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ServiceException(e);
 		}
 	}
@@ -390,7 +382,6 @@ public class BulkEntryBusinessService extends BusinessService {
 		try {
 			new BulkEntryPersistance().createOrUpdate(savings);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ServiceException(e);
 		}
 	}

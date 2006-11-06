@@ -45,10 +45,8 @@ import java.util.Map;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
 public class CollectionSheetPersistence extends Persistence {
@@ -91,16 +89,4 @@ public class CollectionSheetPersistence extends Persistence {
 			NamedQueryConstants.CUSTOMERS_WITH_SPECIFIED_DISBURSAL_DATE,
 			Collections.singletonMap(CollectionSheetConstants.MEETING_DATE, date));
 	}
-
-
-	public LoanBO getLoanAccount(Integer accountId) {
-		
-		return (LoanBO)HibernateUtil.getSessionTL().get(LoanBO.class, accountId);
-	}
-
-
-	public SavingsBO getSavingsAccount(Integer accountId) {
-		return (SavingsBO)HibernateUtil.getSessionTL().get(SavingsBO.class, accountId);
-	}	
-
 }

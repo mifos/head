@@ -40,20 +40,16 @@ package org.mifos.application.collectionsheet.business;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.application.collectionsheet.persistence.service.CollectionSheetPersistenceService;
+import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class CollSheetSavingsDetailsEntity extends PersistentObject {
 
-	CollectionSheetPersistenceService collSheetPersistService;
 	public CollSheetSavingsDetailsEntity() {
 		super();
-		//this.accountBalance = new Money();
 	}
 	
 	private Long savingsDetailsId;
@@ -144,6 +140,7 @@ public class CollSheetSavingsDetailsEntity extends PersistentObject {
 	 * @param obj - Object to be compared for equality.
 	 * @return - Returns true if the objects are equal else returns false.
 	 */
+	@Override
 	public boolean equals(Object obj){
 		CollSheetSavingsDetailsEntity collSheetSavingsDetailsObj = (CollSheetSavingsDetailsEntity)obj;
 		if(null != savingsDetailsId && null != collSheetSavingsDetailsObj.getSavingsDetailsId()){
@@ -156,6 +153,7 @@ public class CollSheetSavingsDetailsEntity extends PersistentObject {
 		
 	}
 	
+	@Override
 	public int hashCode(){
 		return this.accountId.hashCode();
 	}
@@ -168,8 +166,7 @@ public class CollSheetSavingsDetailsEntity extends PersistentObject {
 	public void addAccountDetails(AccountActionDateEntity accountActionDate)throws SystemException,ApplicationException   {
 		SavingsScheduleEntity savingsSchedule = (SavingsScheduleEntity)accountActionDate;
 		this.accountId = savingsSchedule.getAccount().getAccountId();
-		collSheetPersistService = (CollectionSheetPersistenceService)ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.CollectionSheet);
-		SavingsBO savings= collSheetPersistService.getSavingsAccount(accountId);
+		SavingsBO savings= new SavingsPersistence().findById(accountId);
 		this.installmentId = savingsSchedule.getInstallmentId();
 		this.accountBalance = savings.getSavingsBalance();
 		this.recommendedAmntDue = savingsSchedule.getDeposit() .subtract( savingsSchedule.getDepositPaid());
