@@ -241,17 +241,6 @@ where o.office_id=$P{branchid}]]></queryString>
 					</textElement>
 				<text><![CDATA[Branch Progress Report]]></text>
 				</staticText>
-				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="4"
-						y="1"
-						width="52"
-						height="44"
-						key="image-1"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["GrameenKoota.GIF"]]></imageExpression>
-				</image>
 				<line direction="TopDown">
 					<reportElement
 						x="0"
@@ -2351,7 +2340,7 @@ where o.office_id=$P{branchid}]]></queryString>
 						<subreportParameterExpression><![CDATA[$P{staffid}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression  class="java.lang.String"><![CDATA["branch_staffsummary.jasper"]]></subreportExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA["\\pages\\application\\reports\\uploads\\branch_staffsummary.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 		</detail>

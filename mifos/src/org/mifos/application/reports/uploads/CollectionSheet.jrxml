@@ -125,13 +125,13 @@ where acc3.CUSTOMER_ID=mem.CUSTOMER_ID and acc3.account_type_id=1 and acc3.accou
 (select round(acd2.PRINCIPAL,2) from account acc5
 left join loan_account lacc3 on lacc3.ACCOUNT_ID = acc5.ACCOUNT_ID
 left join prd_offering prd3 on prd3.PRD_OFFERING_ID=lacc3.PRD_OFFERING_ID
-left join account_actions_date acd2 on acd2.ACCounT_ID=acc5.ACCOUNT_ID
+left join loan_schedule acd2 on acd2.ACCounT_ID=acc5.ACCOUNT_ID
 where acc5.CUSTOMER_ID=mem.CUSTOMER_ID and acc5.account_type_id=1 and date_format(acd2.action_date,'%Y%m%d')=date_format(now(),'%Y%m%d') and prd3.PRD_OFFERING_SHORT_NAME='BSKL') as loan1_due,
 
 (select round(acd.PRINCIPAL,2) from account acc4
 left join loan_account lacc2 on lacc2.ACCOUNT_ID = acc4.ACCOUNT_ID
 left join prd_offering prd2 on prd2.PRD_OFFERING_ID=lacc2.PRD_OFFERING_ID
-left join account_actions_date acd on acd.ACCounT_ID=acc4.ACCOUNT_ID
+left join loan_schedule acd on acd.ACCounT_ID=acc4.ACCOUNT_ID
 where acc4.CUSTOMER_ID=mem.CUSTOMER_ID and acc4.account_type_id=1 and date_format(acd.action_date,'%Y%m%d')=date_format(now(),'%Y%m%d') and prd2.PRD_OFFERING_SHORT_NAME='CL') as loan2_due,
 
 (select round(sacc.RECOMMENDED_AMOUNT,2) from account acc
@@ -143,7 +143,9 @@ from personnel p
 left join customer ke on ke.discriminator="center" and ke.loan_officer_id=p.personnel_id
 inner join customer gr on gr.PARENT_CUSTOMER_ID=ke.CUSTOMER_ID and gr.discriminator="group"
 inner join customer mem on mem.PARENT_CUSTOMER_ID=gr.CUSTOMER_ID and mem.discriminator="client"
-inner join office o on o.OFFICE_ID=ke.BRANCH_ID where p.PERSONNEL_ID=$P{staffid} order by ke.CUSTOMER_ID,gr.CUSTOMER_ID,mem.CUSTOMER_ID]]></queryString>
+inner join office o on o.OFFICE_ID=ke.BRANCH_ID where p.PERSONNEL_ID=$P{staffid} order by ke.CUSTOMER_ID,gr.CUSTOMER_ID,mem.CUSTOMER_ID
+
+]]></queryString>
 
 	<field name="branchid" class="java.lang.Long"/>
 	<field name="kendraid" class="java.lang.Long"/>

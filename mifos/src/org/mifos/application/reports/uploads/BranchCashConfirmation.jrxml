@@ -47,26 +47,26 @@
 (select SUM(acd2 .PRINCIPAL+acd2 .INTEREST) from account acc5
 left join loan_account lacc3 on lacc3.ACCOUNT_ID = acc5.ACCOUNT_ID
 left join prd_offering prd3 on prd3.PRD_OFFERING_ID=lacc3.PRD_OFFERING_ID
-left join account_actions_date acd2 on acd2.ACCounT_ID=acc5.ACCOUNT_ID
+left join loan_schedule acd2 on acd2.ACCounT_ID=acc5.ACCOUNT_ID
 where acc5.office_ID=o.office_ID and acc5.account_type_id=1 and date_format(acd2.action_date,'%Y%m%d') =date_format(now(),'%Y%m%d') and prd3.PRD_OFFERING_SHORT_NAME='BSKL') as igldue,
 
 (select SUM(acd1.PRINCIPAL+acd1.INTEREST) from account acc4
 left join loan_account lacc2 on lacc2.ACCOUNT_ID = acc4.ACCOUNT_ID
 left join prd_offering prd2 on prd2.PRD_OFFERING_ID=lacc2.PRD_OFFERING_ID
-left join account_actions_date acd1 on acd1.ACCounT_ID=acc4.ACCOUNT_ID
+left join loan_schedule acd1 on acd1.ACCounT_ID=acc4.ACCOUNT_ID
 where acc4.office_ID=o.office_ID and acc4.account_type_id=1 and date_format(acd1.action_date,'%Y%m%d') =date_format(now(),'%Y%m%d') and prd2.PRD_OFFERING_SHORT_NAME='CL') as spldue,0 as vdfdue,
 
 
 (select SUM(acd2 .PRINCIPAL_paid+acd2 .INTEREST_paid) from account acc5
 left join loan_account lacc3 on lacc3.ACCOUNT_ID = acc5.ACCOUNT_ID
 left join prd_offering prd3 on prd3.PRD_OFFERING_ID=lacc3.PRD_OFFERING_ID
-left join account_actions_date acd2 on acd2.ACCounT_ID=acc5.ACCOUNT_ID
+left join loan_schedule acd2 on acd2.ACCounT_ID=acc5.ACCOUNT_ID
 where acc5.office_ID=o.office_ID and acc5.account_type_id=1 and date_format(acd2.action_date,'%Y%m%d') =date_format(now(),'%Y%m%d') and prd3.PRD_OFFERING_SHORT_NAME='BSKL') as iglactual,
 
 (select SUM(acd1.PRINCIPAL_paid+acd1.INTEREST_paid) from account acc4
 left join loan_account lacc2 on lacc2.ACCOUNT_ID = acc4.ACCOUNT_ID
 left join prd_offering prd2 on prd2.PRD_OFFERING_ID=lacc2.PRD_OFFERING_ID
-left join account_actions_date acd1 on acd1.ACCounT_ID=acc4.ACCOUNT_ID
+left join loan_schedule acd1 on acd1.ACCounT_ID=acc4.ACCOUNT_ID
 where acc4.office_ID=o.office_ID and acc4.account_type_id=1 and date_format(acd1.action_date,'%Y%m%d') =date_format(now(),'%Y%m%d') and prd2.PRD_OFFERING_SHORT_NAME='CL') as splactual,0 as vdfactual,
 
 (select SUM(lacc1.loan_amount) from account acc3
@@ -97,9 +97,10 @@ sacc.PRD_OFFERING_ID as savingtype,prd1.PRD_OFFERING_NAME,prd2.PRD_OFFERING_NAME
  0 as sldisb, date_format(now(),'%d %M %Y') as tdate
 from OFFICE o
 left join ACCOUNT acc on acc.OFFICE_ID=o.OFFICE_ID and acc.ACCOUNT_TYPE_ID in (1,2)
-left join account_actions_date aad on aad.ACCOUNT_ID=acc.ACCOUNT_ID and date_format(ACTION_DATE,'%Y%m%d')=date_format(now(),'%Y%m%d')
+left join loan_schedule aad on aad.ACCOUNT_ID=acc.ACCOUNT_ID and date_format(aad.ACTION_DATE,'%Y%m%d')=date_format(now(),'%Y%m%d')
 left join LOAN_ACCOUNT lacc on lacc.ACCOUNT_ID=acc.ACCOUNT_ID
 left join SAVINGS_ACCOUNT sacc on sacc.ACCOUNT_ID=acc.ACCOUNT_ID
+left join saving_schedule ss on ss.account_id=acc.account_id
 left join prd_offering prd1 on prd1.PRD_OFFERING_ID=lacc.PRD_OFFERING_ID
 left join prd_offering prd2 on prd2.PRD_OFFERING_ID=sacc.PRD_OFFERING_ID
 where o.OFFICE_ID=$P{branchid}  group by o.office_id]]></queryString>
