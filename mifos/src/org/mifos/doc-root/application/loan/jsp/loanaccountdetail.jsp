@@ -246,22 +246,33 @@
 						</table>
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
-								<td width="35%" class="headingorange"><mifos:mifoslabel
-									name="loan.recentActivity" /></td>
-								<td width="65%" align="right" class="fontnormal">&nbsp; <html-el:link
-									href="loanAccountAction.do?method=getAllActivity&accountId=${BusinessKey.accountId}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&accountStateId=${BusinessKey.accountState.id}&globalAccountNum=${BusinessKey.globalAccountNum}&lastPaymentAction=${lastPaymentAction}&accountType=${BusinessKey.accountType.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
-									<mifos:mifoslabel name="loan.view_acc_activity" />
-								</html-el:link></td>
+								<td width="35%" class="headingorange">
+									<c:if test="${BusinessKey.accountState.id == 3 || BusinessKey.accountState.id == 4 || BusinessKey.accountState.id == 5
+									 || BusinessKey.accountState.id == 6 || BusinessKey.accountState.id == 7 || BusinessKey.accountState.id == 8 || BusinessKey.accountState.id == 9}">
+										<mifos:mifoslabel name="loan.recentActivity" />
+									</c:if>	
+								</td>
+								<td width="65%" align="right" class="fontnormal">&nbsp; 
+									<c:if test="${!empty BusinessKey.loanActivityDetails}">
+										<html-el:link
+											href="loanAccountAction.do?method=getAllActivity&accountId=${BusinessKey.accountId}&prdOfferingName=${BusinessKey.loanOffering.prdOfferingName}&accountStateId=${BusinessKey.accountState.id}&globalAccountNum=${BusinessKey.globalAccountNum}&lastPaymentAction=${lastPaymentAction}&accountType=${BusinessKey.accountType.accountTypeId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+											<mifos:mifoslabel name="loan.view_acc_activity" />
+										</html-el:link>
+									</c:if>
+								</td>
 							</tr>
 						</table>
-					<mifoscustom:mifostabletag source="recentAccountActivities"
-						scope="session" xmlFileName="RecentAccountActivity.xml"
-						moduleName="accounts\\loan" passLocale="true" />
-					<table width="96%" border="0" cellpadding="3" cellspacing="0">
-						<tr>
-							<td colspan="3">&nbsp;</td>
-						</tr>
-					</table>
+						<c:if test="${BusinessKey.accountState.id == 3 || BusinessKey.accountState.id == 4 || BusinessKey.accountState.id == 5
+									 || BusinessKey.accountState.id == 6 || BusinessKey.accountState.id == 7 || BusinessKey.accountState.id == 8 || BusinessKey.accountState.id == 9}">
+							<mifoscustom:mifostabletag source="recentAccountActivities"
+								scope="session" xmlFileName="RecentAccountActivity.xml"
+								moduleName="accounts\\loan" passLocale="true" />
+						<table width="96%" border="0" cellpadding="3" cellspacing="0">
+							<tr>
+								<td colspan="3">&nbsp;</td>
+							</tr>
+						</table>
+						</c:if>
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="69%" class="headingorange"><mifos:mifoslabel
@@ -335,8 +346,7 @@
 								name="loan.allowed_no_of_inst" />&nbsp;<c:out
 								value="${BusinessKey.loanOffering.minNoInstallments}" />
 							-&nbsp;<c:out
-								value="${BusinessKey.loanOffering.maxNoInstallments}" />
-							)<br>
+								value="${BusinessKey.loanOffering.maxNoInstallments}" />)<br>
 							<mifos:mifoslabel name="loan.grace_period" />:&nbsp;<c:out
 								value="${BusinessKey.gracePeriodDuration}" />&nbsp;<mifos:mifoslabel
 								name="loan.inst" /><br>
