@@ -162,6 +162,12 @@
 		        <include name="*.wsdl"/>
 		    </fileset>
 		</copy>
+		<copy todir="${build.src.dir}/pages/application/reports/uploads">
+		    <fileset dir="${src.dir}/org/mifos/application/reports/uploads">
+			<include name="*.jrxml"/>
+		        <include name="*.jasper"/>
+		    </fileset>
+		</copy>
 	</target>
 
 	<target name="lib" depends="compile" description="Build the mifos library">
