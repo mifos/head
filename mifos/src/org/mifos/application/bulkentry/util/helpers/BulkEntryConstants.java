@@ -106,5 +106,12 @@ public interface BulkEntryConstants {
 	
 	public String ISBACKDATEDTRXNALLOWED = "isBackDatedTrxnAllowed";
 	public String ISCENTERHEIRARCHYEXISTS = "isCenterHeirarchyExists";
-	
+	public String LOANS="loans";
+	public String SAVINGS="savings";
+	public String CLIENTS="clients";
+	public String CUSTOMERACCOUNTS="customeraccounts";
+	public String ERRORCLIENTS="errorclients";
+	public String ERRORLOANS="errorloans";
+	public String ERRORSAVINGSDEPOSIT="errorsavingsdeposit";
+	public String ERRORSAVINGSWITHDRAW="errorsavingswithdraw";
 }

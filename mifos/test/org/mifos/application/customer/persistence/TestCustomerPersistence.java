@@ -394,21 +394,33 @@ public class TestCustomerPersistence extends MifosTestCase {
 		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
 				group.getSearchId() + ".1", group, new Date(System
 						.currentTimeMillis()));
-
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
-				new Date(System.currentTimeMillis()), Short.valueOf("2"));
+		HibernateUtil.closeSession();
+		List<ClientBO> clients = new ArrayList<ClientBO>();
+		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
+				new Date(System.currentTimeMillis()), Short.valueOf("2"),clients);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
-
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"));
+		HibernateUtil.closeSession();
+		
+		clients = new ArrayList<ClientBO>();
+		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),clients);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 
 		Calendar currentDate = new GregorianCalendar();
 		currentDate.roll(Calendar.DATE, 1);
 
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
-				new Date(currentDate.getTimeInMillis()), Short.valueOf("4"));
+		clients = new ArrayList<ClientBO>();
+		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
+				new Date(currentDate.getTimeInMillis()), Short.valueOf("4"),clients);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence
@@ -428,20 +440,32 @@ public class TestCustomerPersistence extends MifosTestCase {
 				"1.1.1", center, new Date(System.currentTimeMillis()));
 		client = TestObjectFactory.createClient("Client", Short.valueOf("3"),
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
-
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"));
+		HibernateUtil.closeSession();
+		List<ClientBO> clients = new ArrayList<ClientBO>();
+		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),clients);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
-				new Date(System.currentTimeMillis()), Short.valueOf("2"));
+		clients = new ArrayList<ClientBO>();
+		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
+				new Date(System.currentTimeMillis()), Short.valueOf("2"),clients);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 
 		Calendar currentDate = new GregorianCalendar();
 		currentDate.roll(Calendar.DATE, 1);
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
-				new Date(currentDate.getTimeInMillis()), Short.valueOf("3"));
+		clients = new ArrayList<ClientBO>();
+		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
+				new Date(currentDate.getTimeInMillis()), Short.valueOf("3"),clients);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence

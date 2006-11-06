@@ -169,20 +169,26 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulCreate() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-				request);
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "create");
-
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-
 		Calendar meetinDateCalendar = new GregorianCalendar();
-
 		int year = meetinDateCalendar.get(Calendar.YEAR);
 		int month = meetinDateCalendar.get(Calendar.MONTH);
 		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
 		meetinDateCalendar = new GregorianCalendar(year, month, day);
+		
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+				+ year);
+		actionPerform();
+
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("attendenceSelected[0]", "2");
 		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
 				+ year);
@@ -220,22 +226,32 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	public void testFailureCreate() throws Exception {
 		BulkEntryBO bulkEntry = getFailureBulkEntry();
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-				request);
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "create");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-
 		Calendar meetinDateCalendar = new GregorianCalendar();
-
 		int year = meetinDateCalendar.get(Calendar.YEAR);
 		int month = meetinDateCalendar.get(Calendar.MONTH);
 		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
 		meetinDateCalendar = new GregorianCalendar(year, month, day);
+		
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
 				+ year);
 		TestObjectFactory.simulateInvalidConnection();
+		actionPerform();
+
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("attendenceSelected[0]", "2");
+		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+				+ year);
+
+		
 		actionPerform();
 		HibernateUtil.closeSession();
 
@@ -255,6 +271,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	public void testSuccessfulPreview() throws Exception {
 		BulkEntryBO bulkEntry = getSuccessfulBulkEntry();
+		Calendar meetinDateCalendar = new GregorianCalendar();
+		int year = meetinDateCalendar.get(Calendar.YEAR);
+		int month = meetinDateCalendar.get(Calendar.MONTH);
+		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
+		meetinDateCalendar = new GregorianCalendar(year, month, day);
+		
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
 				request);
@@ -270,10 +292,31 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("depositAmountEntered[2][2]", "100.0");
 		addRequestParameter("withDrawalAmountEntered[0][0]", "100.0");
 		addRequestParameter("depositAmountEntered[0][0]", "100.0");
+		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+				+ year);
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward("preview_success");
+		HibernateUtil.closeSession();
+
+		groupAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				groupAccount.getAccountId());
+		clientAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+				clientAccount.getAccountId());
+		centerSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+				SavingsBO.class, centerSavingsAccount.getAccountId());
+		clientSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+				SavingsBO.class, clientSavingsAccount.getAccountId());
+		groupSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+				SavingsBO.class, groupSavingsAccount.getAccountId());
+		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				center.getCustomerId());
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
+		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+
 	}
 
 	public void testFailurePreview() throws Exception {

@@ -40,7 +40,9 @@ package org.mifos.application.bulkentry.business.service;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.hibernate.FlushMode;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -54,18 +56,27 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.bulkentry.business.BulkEntryView;
+import org.mifos.application.bulkentry.persistance.BulkEntryPersistance;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
+import org.mifos.application.bulkentry.util.helpers.BulkEntryClientAttendanceThread;
+import org.mifos.application.bulkentry.util.helpers.BulkEntryCustomerAccountThread;
+import org.mifos.application.bulkentry.util.helpers.BulkEntryLoanThread;
+import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
@@ -95,6 +106,185 @@ public class BulkEntryBusinessService extends BusinessService {
 		}
 	}
 
+	public void setData(List<BulkEntryView> customerViews,
+			Map<Integer, BulkEntrySavingsCache> savingsCache,
+			List<ClientBO> clients, List<String> savingsDepNames,
+			List<String> savingsWithNames, List<String> customerNames,
+			Short personnelId, String recieptId, Short paymentId,
+			Date receiptDate, Date transactionDate, Date meetingDate) {
+		StringBuffer isThreadDone = new StringBuffer();
+		BulkEntryClientAttendanceThread bulkEntryClientAttendanceThread = new BulkEntryClientAttendanceThread(
+				customerViews, clients, customerNames, meetingDate,
+				isThreadDone);
+		Thread thread = new Thread(bulkEntryClientAttendanceThread);
+		thread.start();
+		for (BulkEntryView parent : customerViews) {
+			setSavingsDepositDetails(parent.getSavingsAccountDetails(),
+					personnelId, recieptId, paymentId, receiptDate,
+					transactionDate, savingsDepNames, parent
+							.getCustomerDetail().getCustomerLevelId(), parent
+							.getCustomerDetail().getCustomerId(), savingsCache);
+			setSavingsWithdrawalsDetails(parent.getSavingsAccountDetails(),
+					personnelId, recieptId, paymentId, receiptDate,
+					transactionDate, savingsWithNames, parent
+							.getCustomerDetail().getCustomerId(), savingsCache);
+		}
+		while (!isThreadDone.toString().equals("Done")) {
+		}
+	}
+
+	private void setSavingsWithdrawalsDetails(
+			List<SavingsAccountView> accountViews, Short personnelId,
+			String recieptId, Short paymentId, Date receiptDate,
+			Date transactionDate, List<String> accountNums, Integer customerId,
+			Map<Integer, BulkEntrySavingsCache> savings) {
+		if (null != accountViews) {
+			for (SavingsAccountView accountView : accountViews) {
+				String amount = accountView.getWithDrawalAmountEntered();
+				if (null != amount && !"".equals(amount.trim())
+						&& !Double.valueOf(amount).equals(0.0)) {
+					try {
+						setSavingsWithdrawalAccountDetails(accountView,
+								personnelId, recieptId, paymentId, receiptDate,
+								transactionDate, customerId, savings);
+					} catch (ServiceException be) {
+						if (savings.containsKey(accountView.getAccountId()))
+							savings.get(accountView.getAccountId())
+									.setYesNoFlag(YesNoFlag.NO);
+						be.printStackTrace();
+						accountNums.add((String) (be.getValues()[0]));
+						HibernateUtil.rollbackTransaction();
+
+					} catch (Exception e) {
+						if (savings.containsKey(accountView.getAccountId()))
+							savings.get(accountView.getAccountId())
+									.setYesNoFlag(YesNoFlag.NO);
+						e.printStackTrace();
+						accountNums.add(accountView.getAccountId().toString());
+						HibernateUtil.rollbackTransaction();
+					} finally {
+						HibernateUtil.closeSession();
+					}
+				}
+			}
+		}
+	}
+
+	private void setSavingsDepositDetails(
+			List<SavingsAccountView> accountViews, Short personnelId,
+			String recieptId, Short paymentId, Date receiptDate,
+			Date transactionDate, List<String> accountNums, Short levelId,
+			Integer customerId, Map<Integer, BulkEntrySavingsCache> savings) {
+		if (null != accountViews) {
+			for (SavingsAccountView accountView : accountViews) {
+				String amount = accountView.getDepositAmountEntered();
+				if (null != amount && !Double.valueOf(amount).equals(0.0)) {
+					if ((!savings.containsKey(accountView.getAccountId()))
+							|| (savings.containsKey(accountView.getAccountId()) && (!savings
+									.get(accountView.getAccountId())
+									.getYesNoFlag().equals(YesNoFlag.NO))))
+						try {
+							boolean isCenterGroupIndvAccount = false;
+							if (levelId
+									.equals(CustomerConstants.CENTER_LEVEL_ID)
+									|| (levelId
+											.equals(CustomerConstants.GROUP_LEVEL_ID) && accountView
+											.getSavingsOffering()
+											.getRecommendedAmntUnit()
+											.getId()
+											.equals(
+													RecommendedAmountUnit.PERINDIVIDUAL
+															.getValue()))) {
+								isCenterGroupIndvAccount = true;
+							}
+							setSavingsDepositAccountDetails(accountView,
+									personnelId, recieptId, paymentId,
+									receiptDate, transactionDate,
+									isCenterGroupIndvAccount, customerId,
+									savings);
+						} catch (ServiceException be) {
+							if (savings.containsKey(accountView.getAccountId()))
+								savings.get(accountView.getAccountId())
+										.setYesNoFlag(YesNoFlag.NO);
+							be.printStackTrace();
+							accountNums.add((String) (be.getValues()[0]));
+							HibernateUtil.rollbackTransaction();
+						} catch (Exception e) {
+							if (savings.containsKey(accountView.getAccountId()))
+								savings.get(accountView.getAccountId())
+										.setYesNoFlag(YesNoFlag.NO);
+							e.printStackTrace();
+							accountNums.add(accountView.getAccountId()
+									.toString());
+							HibernateUtil.rollbackTransaction();
+						} finally {
+							HibernateUtil.closeSession();
+						}
+				}
+			}
+		}
+	}
+
+	public void saveData(List<LoanAccountsProductView> accountViews,
+			Short personnelId, String recieptId, Short paymentId,
+			Date receiptDate, Date transactionDate, List<String> accountNums,
+			List<SavingsBO> savings, List<String> savingsNames,
+			List<ClientBO> clients, List<String> customerNames,
+			List<CustomerAccountView> customerAccounts,
+			List<String> customerAccountNums) {
+		StringBuffer isThreadOneDone = new StringBuffer();
+		StringBuffer isCustomerAccountThreadDone = new StringBuffer();
+		BulkEntryLoanThread bulkEntryLoanThreadOne = new BulkEntryLoanThread(
+				accountViews, personnelId, recieptId, paymentId, receiptDate,
+				transactionDate, accountNums, isThreadOneDone);
+		Thread threadOne = new Thread(bulkEntryLoanThreadOne);
+		threadOne.start();
+		BulkEntryCustomerAccountThread bulkEntryCustomerAccountThread = new BulkEntryCustomerAccountThread(
+				customerAccounts, personnelId, recieptId, paymentId,
+				receiptDate, transactionDate, customerAccountNums,
+				isCustomerAccountThreadDone);
+		Thread threadCustomerAccount = new Thread(
+				bulkEntryCustomerAccountThread);
+		threadCustomerAccount.start();
+		saveAttendance(clients, customerNames);
+		saveSavingsAccount(savings, savingsNames);
+		while ((!isThreadOneDone.toString().equals("Done"))
+				&& (!isCustomerAccountThreadDone.toString().equals("Done"))) {
+		}
+	}
+
+	private void saveAttendance(List<ClientBO> clients,
+			List<String> customerNames) {
+		for (ClientBO client : clients) {
+			try {
+				saveClientAttendance(client);
+				HibernateUtil.commitTransaction();
+			} catch (ServiceException e) {
+				e.printStackTrace();
+				HibernateUtil.rollbackTransaction();
+				customerNames.add(client.getDisplayName());
+			} finally {
+				HibernateUtil.closeSession();
+			}
+		}
+	}
+
+	private void saveSavingsAccount(List<SavingsBO> savings,
+			List<String> customerNames) {
+		for (SavingsBO saving : savings) {
+			try {
+				saveSavingsAccount(saving);
+				HibernateUtil.commitTransaction();
+			} catch (ServiceException e) {
+				e.printStackTrace();
+				HibernateUtil.rollbackTransaction();
+				customerNames.add(saving.getGlobalAccountNum());
+			} finally {
+				HibernateUtil.closeSession();
+			}
+		}
+	}
+
 	public void saveLoanAccount(
 			LoanAccountsProductView loanAccountsProductView, Short personnelId,
 			String recieptId, Short paymentId, Date receiptDate,
@@ -114,21 +304,24 @@ public class BulkEntryBusinessService extends BusinessService {
 		}
 	}
 
-	public void saveSavingsDepositAccount(SavingsAccountView accountView,
+	public void setSavingsDepositAccountDetails(SavingsAccountView accountView,
 			Short personnelId, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate,
-			boolean isCenterGroupIndvAccount, Integer customerId)
+			boolean isCenterGroupIndvAccount, Integer customerId,
+			Map<Integer, BulkEntrySavingsCache> savings)
 			throws ServiceException {
 		Integer accountId = accountView.getAccountId();
 		PaymentData accountPaymentDataView = getSavingsAccountPaymentData(
 				accountView, customerId, personnelId, recieptId, paymentId,
 				receiptDate, transactionDate, isCenterGroupIndvAccount);
-		saveSavingsAccountPayment(accountId, accountPaymentDataView);
+		saveSavingsAccountPayment(accountId, accountPaymentDataView, savings);
 	}
 
-	public void saveSavingsWithdrawalAccount(SavingsAccountView accountView,
-			Short personnelId, String recieptId, Short paymentId,
-			Date receiptDate, Date transactionDate, Integer customerId)
+	public void setSavingsWithdrawalAccountDetails(
+			SavingsAccountView accountView, Short personnelId,
+			String recieptId, Short paymentId, Date receiptDate,
+			Date transactionDate, Integer customerId,
+			Map<Integer, BulkEntrySavingsCache> savings)
 			throws ServiceException {
 		if (null != accountView) {
 			Integer accountId = accountView.getAccountId();
@@ -136,7 +329,8 @@ public class BulkEntryBusinessService extends BusinessService {
 				PaymentData accountPaymentDataView = getWithdrawalSavingsPaymentDataView(
 						accountView, customerId, personnelId, recieptId,
 						paymentId, receiptDate, transactionDate);
-				saveSavingsWithdrawal(accountId, accountPaymentDataView);
+				saveSavingsWithdrawal(accountId, accountPaymentDataView,
+						savings);
 			}
 		}
 	}
@@ -160,36 +354,66 @@ public class BulkEntryBusinessService extends BusinessService {
 		}
 	}
 
-	public void saveAttendance(Integer customerId, Date meetingDate,
-			Short attendance) throws ServiceException {
-		ClientBO client = (ClientBO) getCustomer(customerId);
+	public void setClientAttendance(Integer customerId, Date meetingDate,
+			Short attendance, List<ClientBO> clients) throws ServiceException {
 		try {
+			ClientBO client = (ClientBO) getCustomer(customerId);
+			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
 			client.handleAttendance(meetingDate, attendance);
-		} catch (CustomerException e) {
+			HibernateUtil.getSessionTL().clear();
+			clients.add(client);
+		} catch (Exception e) {
 			throw new ServiceException("errors.update", e,
-					new String[] { client.getGlobalCustNum() });
+					new String[] { customerId.toString() });
+		}
+	}
+
+	public void saveLoanAccount(LoanBO loan) throws ServiceException {
+		try {
+			new BulkEntryPersistance().createOrUpdate(loan);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServiceException(e);
+		}
+	}
+
+	public void saveClientAttendance(ClientBO client) throws ServiceException {
+		try {
+			new BulkEntryPersistance().createOrUpdate(client);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServiceException(e);
+		}
+	}
+
+	public void saveSavingsAccount(SavingsBO savings) throws ServiceException {
+		try {
+			new BulkEntryPersistance().createOrUpdate(savings);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServiceException(e);
 		}
 	}
 
 	private AccountBO getAccount(Integer accountId, AccountTypes type)
 			throws ServiceException {
+		AccountBO account = null;
 		try {
-			if (type.equals(AccountTypes.LOANACCOUNT))
-
-				return bulkEntryPersistanceService
+			if (type.equals(AccountTypes.LOANACCOUNT)) {
+				account = bulkEntryPersistanceService
 						.getLoanAccountWithAccountActionsInitialized(accountId);
-
-			else if (type.equals(AccountTypes.SAVINGSACCOUNT))
-				return bulkEntryPersistanceService
+			} else if (type.equals(AccountTypes.SAVINGSACCOUNT)) {
+				account = bulkEntryPersistanceService
 						.getSavingsAccountWithAccountActionsInitialized(accountId);
-			else if (type.equals(AccountTypes.CUSTOMERACCOUNT))
-				return bulkEntryPersistanceService
+			} else if (type.equals(AccountTypes.CUSTOMERACCOUNT)) {
+				account = bulkEntryPersistanceService
 						.getCustomerAccountWithAccountActionsInitialized(accountId);
-			return null;
+			}
 		} catch (PersistenceException e) {
 			throw new ServiceException("errors.update", e,
 					new String[] { accountId.toString() });
 		}
+		return account;
 	}
 
 	private CustomerBO getCustomer(Integer customerId) throws ServiceException {
@@ -221,7 +445,7 @@ public class BulkEntryBusinessService extends BusinessService {
 						AccountTypes.LOANACCOUNT);
 				account.disburseLoan(recieptId, transactionDate, paymentId,
 						getPersonnel(personnelId), receiptDate, paymentId);
-			} catch (AccountException ae) {
+			} catch (Exception ae) {
 				throw new ServiceException("errors.update", ae,
 						new String[] { account.getGlobalAccountNum() });
 			}
@@ -252,7 +476,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			try {
 				account = getAccount(accountId, AccountTypes.LOANACCOUNT);
 				account.applyPayment(paymentData);
-			} catch (AccountException ae) {
+			} catch (Exception ae) {
 				throw new ServiceException("errors.update", ae,
 						new String[] { account.getGlobalAccountNum() });
 			}
@@ -271,12 +495,23 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	private void saveSavingsAccountPayment(Integer accountId,
-			PaymentData accountPaymentDataView) throws ServiceException {
+			PaymentData accountPaymentDataView,
+			Map<Integer, BulkEntrySavingsCache> savings)
+			throws ServiceException {
 		AccountBO account = null;
 		try {
-			account = getAccount(accountId, AccountTypes.SAVINGSACCOUNT);
+			if (savings.containsKey(accountId))
+				account = savings.get(accountId).getAccount();
+			else
+				account = getAccount(accountId, AccountTypes.SAVINGSACCOUNT);
+			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
 			account.applyPayment(accountPaymentDataView);
-		} catch (AccountException ae) {
+			HibernateUtil.getSessionTL().clear();
+			savings.put(account.getAccountId(), new BulkEntrySavingsCache(
+					(SavingsBO) account, YesNoFlag.YES));
+		} catch (Exception ae) {
+			if (savings.containsKey(accountId))
+				savings.get(accountId).setYesNoFlag(YesNoFlag.NO);
 			throw new ServiceException("errors.update", ae,
 					new String[] { account.getGlobalAccountNum() });
 		}
@@ -313,13 +548,24 @@ public class BulkEntryBusinessService extends BusinessService {
 	}
 
 	private void saveSavingsWithdrawal(Integer accountId,
-			PaymentData accountPaymentDataView) throws ServiceException {
+			PaymentData accountPaymentDataView,
+			Map<Integer, BulkEntrySavingsCache> savings)
+			throws ServiceException {
 		SavingsBO account = null;
 		try {
-			account = (SavingsBO) getAccount(accountId,
-					AccountTypes.SAVINGSACCOUNT);
+			if (savings.containsKey(accountId))
+				account = savings.get(accountId).getAccount();
+			else
+				account = (SavingsBO) getAccount(accountId,
+						AccountTypes.SAVINGSACCOUNT);
+			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
 			account.withdraw(accountPaymentDataView);
-		} catch (AccountException ae) {
+			HibernateUtil.getSessionTL().clear();
+			savings.put(account.getAccountId(), new BulkEntrySavingsCache(
+					account, YesNoFlag.YES));
+		} catch (Exception ae) {
+			if (savings.containsKey(accountId))
+				savings.get(accountId).setYesNoFlag(YesNoFlag.NO);
 			throw new ServiceException("errors.update", ae,
 					new String[] { account.getGlobalAccountNum() });
 		}

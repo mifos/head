@@ -2,7 +2,9 @@ package org.mifos.application.bulkentry.business.service;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
@@ -15,6 +17,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
+import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -79,12 +82,14 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	public void testSuccessfulSaveAttendance() throws NumberFormatException,
 			Exception {
 		createInitialObjects();
-
-		bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
-				currentDate, (short) 1);
-
+		List<ClientBO> clients = new ArrayList<ClientBO>();
+		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
+				currentDate, (short) 1,clients);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
+
 		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		assertEquals("The size of attendance ", ((ClientBO) client)
@@ -93,9 +98,12 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	public void testSaveAttendanceForNoMeetingDate() {
 		createInitialObjects();
+		List<ClientBO> clients = new ArrayList<ClientBO>();
 		try {
-			bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
-					null, (short) 1);
+			bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
+					null, (short) 1,clients);
+			HibernateUtil.closeSession();
+			bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 			HibernateUtil.commitTransaction();
 			assertTrue("The attendance has been update for meeting date null",
 					false);
@@ -156,12 +164,17 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 						.currentTimeMillis()), createSavingsOffering(
 						"Client21", "ased"));
 		HibernateUtil.closeSession();
-
-		bulkEntryBusinessService.saveSavingsDepositAccount(
+		
+		Map<Integer,BulkEntrySavingsCache> savingsAccounts = new HashMap<Integer,BulkEntrySavingsCache>();
+		bulkEntryBusinessService.setSavingsDepositAccountDetails(
 				getSavingsAccountView(clientSavingsAccount, "100", "0"), Short
 						.valueOf("1"), "3424", (short) 1, new java.sql.Date(
 						System.currentTimeMillis()), new java.sql.Date(System
-						.currentTimeMillis()), false, client.getCustomerId());
+						.currentTimeMillis()), false, client.getCustomerId(),
+				savingsAccounts);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveSavingsAccount(savingsAccounts.get(
+				clientSavingsAccount.getAccountId()).getAccount());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		clientSavingsAccount = (SavingsBO) accountPersistence
@@ -173,11 +186,16 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	public void testSuccessfulSavingsAccountWithdrawal() throws Exception {
 		createSavingsAccountWithBal("100", "Dfre1qw", "xzsc");
-		bulkEntryBusinessService.saveSavingsWithdrawalAccount(
+		HibernateUtil.closeSession();
+		Map<Integer,BulkEntrySavingsCache> savingsAccounts = new HashMap<Integer,BulkEntrySavingsCache>();
+		bulkEntryBusinessService.setSavingsWithdrawalAccountDetails(
 				getSavingsAccountView(clientSavingsAccount, "0", "100"), Short
 						.valueOf("1"), "3424", (short) 1, new java.sql.Date(
 						System.currentTimeMillis()), new java.sql.Date(System
-						.currentTimeMillis()), client.getCustomerId());
+						.currentTimeMillis()), client.getCustomerId(),savingsAccounts);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveSavingsAccount(savingsAccounts.get(
+				clientSavingsAccount.getAccountId()).getAccount());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		clientSavingsAccount = (SavingsBO) accountPersistence
@@ -285,8 +303,8 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		createInitialObjects();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			bulkEntryBusinessService.saveAttendance(client.getCustomerId(),
-					currentDate, (short) 1);
+			bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
+					currentDate, (short) 1,new ArrayList<ClientBO>());
 			fail();
 		} catch (ServiceException e) {
 			assertTrue(true);
@@ -397,10 +415,14 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				createSavingsOffering(OfferingName, shortName));
 		HibernateUtil.closeSession();
 
-		bulkEntryBusinessService.saveSavingsDepositAccount(
+		Map<Integer,BulkEntrySavingsCache> savingsAccounts = new HashMap<Integer,BulkEntrySavingsCache>();
+		bulkEntryBusinessService.setSavingsDepositAccountDetails(
 				getSavingsAccountView(clientSavingsAccount, amount, "0"), Short
 						.valueOf("1"), "3424", (short) 1, currentDate,
-				currentDate, false, client.getCustomerId());
+				currentDate, false,client.getCustomerId(),savingsAccounts);
+		HibernateUtil.closeSession();
+		bulkEntryBusinessService.saveSavingsAccount(savingsAccounts.get(
+				clientSavingsAccount.getAccountId()).getAccount());
 		HibernateUtil.commitTransaction();
 	}
 

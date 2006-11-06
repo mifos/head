@@ -40,9 +40,11 @@ package org.mifos.application.bulkentry.struts.action;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,13 +56,15 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
+import org.mifos.application.bulkentry.util.helpers.BulkEntrySavingsCache;
 import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -72,16 +76,14 @@ import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -302,7 +304,67 @@ public class BulkEntryAction extends BaseAction {
 	public ActionForward preview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(
+				BulkEntryConstants.BULKENTRY, request);
+		List<ClientBO> clients = new ArrayList<ClientBO>();
+		List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
+		List<String> customerNames = new ArrayList<String>();
+		List<String> savingsDepNames = new ArrayList<String>();
+		List<String> savingsWithNames = new ArrayList<String>();
+		Map<Integer, BulkEntrySavingsCache> savingsCache = new HashMap<Integer, BulkEntrySavingsCache>();
+		List<LoanAccountsProductView> loanAccprdViews = new ArrayList<LoanAccountsProductView>();
+		List<CustomerAccountView> customerAccViews = new ArrayList<CustomerAccountView>();
+		Date meetingDate = Date.valueOf(DateHelper
+				.convertUserToDbFmt(((BulkEntryActionForm) form)
+						.getTransactionDate(), "dd/MM/yyyy"));
+		List<BulkEntryView> customerViews = new ArrayList<BulkEntryView>();
+		setData(bulkEntry.getBulkEntryParent(), loanAccprdViews,
+				customerAccViews, customerViews);
+		new BulkEntryBusinessService().setData(customerViews, savingsCache,
+				clients, savingsDepNames, savingsWithNames, customerNames,
+				getUserContext(request).getId(), bulkEntry.getReceiptId(),
+				bulkEntry.getPaymentType().getPaymentTypeId(), bulkEntry
+						.getReceiptDate(), bulkEntry.getTransactionDate(),
+				meetingDate);
+		for (Integer accountId : savingsCache.keySet()) {
+			BulkEntrySavingsCache bulkEntrySavingsCache = savingsCache
+					.get(accountId);
+			if (bulkEntrySavingsCache.getYesNoFlag().equals(YesNoFlag.YES))
+				savingsAccounts.add(bulkEntrySavingsCache.getAccount());
+		}
+
+		SessionUtils.setAttribute(BulkEntryConstants.CLIENTS, clients, request);
+		SessionUtils.setAttribute(BulkEntryConstants.SAVINGS, savingsAccounts,
+				request);
+		SessionUtils.setAttribute(BulkEntryConstants.LOANS, loanAccprdViews,
+				request);
+		SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERACCOUNTS,
+				customerAccViews, request);
+		SessionUtils.setAttribute(BulkEntryConstants.ERRORCLIENTS,
+				customerNames, request);
+		SessionUtils.setAttribute(BulkEntryConstants.ERRORSAVINGSDEPOSIT,
+				savingsDepNames, request);
+		SessionUtils.setAttribute(BulkEntryConstants.ERRORSAVINGSWITHDRAW,
+				savingsWithNames, request);
 		return mapping.findForward(BulkEntryConstants.PREVIEWSUCCESS);
+	}
+
+	private void setData(BulkEntryView parent,
+			List<LoanAccountsProductView> loanAccprdViews,
+			List<CustomerAccountView> customerAccViews,
+			List<BulkEntryView> customerViews) {
+		List<BulkEntryView> children = parent.getBulkEntryChildren();
+		Short levelId = parent.getCustomerDetail().getCustomerLevelId();
+		if (null != children) {
+			for (BulkEntryView child : children) {
+				setData(child, loanAccprdViews, customerAccViews, customerViews);
+			}
+		}
+		customerViews.add(parent);
+		if (!levelId.equals(CustomerConstants.CENTER_LEVEL_ID)) {
+			loanAccprdViews.addAll(parent.getLoanAccountDetails());
+		}
+		customerAccViews.add(parent.getCustomerAccountDetails());
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -347,38 +409,46 @@ public class BulkEntryAction extends BaseAction {
 		// To enable cache
 		BulkEntryBusinessService bulkEntryService = new BulkEntryBusinessService();
 		List<String> loanAccountNums = new ArrayList<String>();
-		List<String> savingsDepositAccountNums = new ArrayList<String>();
-		List<String> savingsWithdrawalsAccountNums = new ArrayList<String>();
 		List<String> customerAccountNums = new ArrayList<String>();
+		List<String> savingsDepositAccountNums = (List<String>) SessionUtils
+				.getAttribute(BulkEntryConstants.ERRORSAVINGSDEPOSIT, request);
+		List<String> savingsWithdrawalsAccountNums = (List<String>) SessionUtils
+				.getAttribute(BulkEntryConstants.ERRORSAVINGSWITHDRAW, request);
+		List<String> customerNames = (List<String>) SessionUtils.getAttribute(
+				BulkEntryConstants.ERRORCLIENTS, request);
 		StringBuilder builder = new StringBuilder();
 		ActionErrors actionErrors = new ActionErrors();
 
-		UserContext userContext = getUserContext(request);
 		BulkEntryBO bulkEntry = (BulkEntryBO) SessionUtils.getAttribute(
 				BulkEntryConstants.BULKENTRY, request);
-
 		logger.debug("transactionDate "
 				+ ((BulkEntryActionForm) form).getTransactionDate());
-
-		Date meetingDate = Date.valueOf(DateHelper
-				.convertUserToDbFmt(((BulkEntryActionForm) form)
-						.getTransactionDate(), "dd/MM/yyyy"));
-
-		Short personnelId = userContext.getId();
-		saveData(bulkEntry, personnelId, meetingDate, loanAccountNums,
-				savingsDepositAccountNums, savingsWithdrawalsAccountNums,
-				customerAccountNums, bulkEntryService);
+		Short personnelId = getUserContext(request).getId();
+		List<ClientBO> clients = (List<ClientBO>) SessionUtils.getAttribute(
+				BulkEntryConstants.CLIENTS, request);
+		List<SavingsBO> savings = (List<SavingsBO>) SessionUtils.getAttribute(
+				BulkEntryConstants.SAVINGS, request);
+		List<LoanAccountsProductView> loans = (List<LoanAccountsProductView>) SessionUtils
+				.getAttribute(BulkEntryConstants.LOANS, request);
+		List<CustomerAccountView> customerAccounts = (List<CustomerAccountView>) SessionUtils
+				.getAttribute(BulkEntryConstants.CUSTOMERACCOUNTS, request);
+		bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(),
+				bulkEntry.getPaymentType().getPaymentTypeId(), bulkEntry
+						.getReceiptDate(), bulkEntry.getTransactionDate(),
+				loanAccountNums, savings, savingsDepositAccountNums, clients,
+				customerNames, customerAccounts, customerAccountNums);
 		request.setAttribute(BulkEntryConstants.CENTER, bulkEntry
 				.getBulkEntryParent().getCustomerDetail().getDisplayName());
 		if (loanAccountNums.size() > 0 || savingsDepositAccountNums.size() > 0
 				|| savingsWithdrawalsAccountNums.size() > 0
-				|| customerAccountNums.size() > 0) {
+				|| customerAccountNums.size() > 0 || customerNames.size() > 0) {
 			getErrorString(builder, loanAccountNums, "Loan");
 			getErrorString(builder, savingsDepositAccountNums,
 					"Savings Deposit");
 			getErrorString(builder, savingsWithdrawalsAccountNums,
 					"Savings Withdrawal");
 			getErrorString(builder, customerAccountNums, "A/C collections");
+			getErrorString(builder, customerNames, "Attendance");
 			builder.append("<br><br>");
 			actionErrors.add(BulkEntryConstants.ERRORSUPDATE,
 					new ActionMessage(BulkEntryConstants.ERRORSUPDATE, builder
@@ -388,224 +458,6 @@ public class BulkEntryAction extends BaseAction {
 		// TO clear bulk entry cache in persistence service
 		bulkEntryService = null;
 		return mapping.findForward(BulkEntryConstants.CREATESUCCESS);
-	}
-
-	private void saveData(BulkEntryBO bulkEntry, Short personnelId,
-			Date meetingDate, List<String> loanAccountNums,
-			List<String> savingsDepositAccountNums,
-			List<String> savingsWithdrawalsAccountNums,
-			List<String> customerAccountNums,
-			BulkEntryBusinessService bulkEntryBusinessService) {
-		logger.debug("saveDate");
-		BulkEntryView bulkEntryParentView = bulkEntry.getBulkEntryParent();
-		String receiptId = bulkEntry.getReceiptId();
-		Short paymentId = bulkEntry.getPaymentType().getPaymentTypeId();
-		Date receiptDate = bulkEntry.getReceiptDate();
-		Date transactionDate = bulkEntry.getTransactionDate();
-		saveCollections(bulkEntryParentView, personnelId, receiptId, paymentId,
-				receiptDate, meetingDate, transactionDate, loanAccountNums,
-				savingsDepositAccountNums, customerAccountNums,
-				bulkEntryBusinessService);
-		saveWithdrawals(bulkEntryParentView, personnelId, receiptId, paymentId,
-				receiptDate, transactionDate, meetingDate,
-				savingsWithdrawalsAccountNums, bulkEntryBusinessService);
-	}
-
-	private void saveCollections(BulkEntryView parent, Short personnelId,
-			String receiptId, Short paymentId, Date receiptDate,
-			Date meetingDate, Date transactionDate,
-			List<String> loanAccountNums,
-			List<String> savingsDepositAccountNums,
-			List<String> customerAccountNums,
-			BulkEntryBusinessService bulkEntryBusinessService) {
-		List<BulkEntryView> children = parent.getBulkEntryChildren();
-		Short levelId = parent.getCustomerDetail().getCustomerLevelId();
-		if (null != children) {
-			for (BulkEntryView bulkEntryView : children) {
-				saveCollections(bulkEntryView, personnelId, receiptId,
-						paymentId, receiptDate, meetingDate, transactionDate,
-						loanAccountNums, savingsDepositAccountNums,
-						customerAccountNums, bulkEntryBusinessService);
-			}
-		}
-		if (!levelId.equals(CustomerConstants.CENTER_LEVEL_ID)) {
-			saveLoanAccount(parent.getLoanAccountDetails(), personnelId,
-					receiptId, paymentId, receiptDate, transactionDate,
-					loanAccountNums, parent.getCustomerDetail(),
-					bulkEntryBusinessService);
-		}
-		if (levelId.equals(CustomerConstants.CLIENT_LEVEL_ID)) {
-			saveAttendance(parent, meetingDate, bulkEntryBusinessService);
-		}
-		saveSavingsCollection(parent.getSavingsAccountDetails(), personnelId,
-				receiptId, paymentId, receiptDate, transactionDate,
-				savingsDepositAccountNums, levelId, parent.getCustomerDetail()
-						.getCustomerId(), bulkEntryBusinessService);
-		saveCustomerAccountCollections(parent.getCustomerAccountDetails(),
-				personnelId, receiptId, paymentId, receiptDate,
-				transactionDate, customerAccountNums, bulkEntryBusinessService);
-	}
-
-	private void saveWithdrawals(BulkEntryView parent, Short personnelId,
-			String receiptId, Short paymentId, Date receiptDate,
-			Date transactionDate, Date meetingDate,
-			List<String> savingsWithdrawalsAccountNums,
-			BulkEntryBusinessService bulkEntryBusinessService) {
-		List<BulkEntryView> children = parent.getBulkEntryChildren();
-		if (null != children) {
-			for (BulkEntryView bulkEntryView : children) {
-				saveWithdrawals(bulkEntryView, personnelId, receiptId,
-						paymentId, receiptDate, transactionDate, meetingDate,
-						savingsWithdrawalsAccountNums, bulkEntryBusinessService);
-			}
-		}
-		saveSavingsWithdrawals(parent.getSavingsAccountDetails(), personnelId,
-				receiptId, paymentId, receiptDate, transactionDate,
-				savingsWithdrawalsAccountNums, parent.getCustomerDetail()
-						.getCustomerId(), bulkEntryBusinessService);
-	}
-
-	private void saveSavingsWithdrawals(List<SavingsAccountView> accountViews,
-			Short personnelId, String recieptId, Short paymentId,
-			Date receiptDate, Date transactionDate, List<String> accountNums,
-			Integer customerId,
-			BulkEntryBusinessService bulkEntryBusinessService) {
-		if (null != accountViews) {
-			for (SavingsAccountView accountView : accountViews) {
-				String amount = accountView.getWithDrawalAmountEntered();
-				if (null != amount && !"".equals(amount.trim())
-						&& !Double.valueOf(amount).equals(0.0)) {
-					try {
-						bulkEntryBusinessService.saveSavingsWithdrawalAccount(
-								accountView, personnelId, recieptId, paymentId,
-								receiptDate, transactionDate, customerId);
-						HibernateUtil.commitTransaction();
-					} catch (ServiceException be) {
-						accountNums.add((String) (be.getValues()[0]));
-						HibernateUtil.rollbackTransaction();
-					} catch (Exception e) {
-						accountNums.add(accountView.getAccountId().toString());
-						HibernateUtil.rollbackTransaction();
-					} finally {
-						HibernateUtil.closeSession();
-					}
-				}
-			}
-		}
-	}
-
-	private void saveSavingsCollection(List<SavingsAccountView> accountViews,
-			Short personnelId, String recieptId, Short paymentId,
-			Date receiptDate, Date transactionDate, List<String> accountNums,
-			Short levelId, Integer customerId,
-			BulkEntryBusinessService bulkEntryBusinessService) {
-		if (null != accountViews) {
-			for (SavingsAccountView accountView : accountViews) {
-				String amount = accountView.getDepositAmountEntered();
-				if (null != amount && !Double.valueOf(amount).equals(0.0)) {
-					try {
-						boolean isCenterGroupIndvAccount = false;
-						if (levelId.equals(CustomerConstants.CENTER_LEVEL_ID)
-								|| (levelId
-										.equals(CustomerConstants.GROUP_LEVEL_ID) && accountView
-										.getSavingsOffering()
-										.getRecommendedAmntUnit()
-										.getId()
-										.equals(
-												RecommendedAmountUnit.PERINDIVIDUAL
-														.getValue()))) {
-							isCenterGroupIndvAccount = true;
-						}
-						bulkEntryBusinessService.saveSavingsDepositAccount(
-								accountView, personnelId, recieptId, paymentId,
-								receiptDate, transactionDate,
-								isCenterGroupIndvAccount, customerId);
-						HibernateUtil.commitTransaction();
-					} catch (ServiceException be) {
-						accountNums.add((String) (be.getValues()[0]));
-						HibernateUtil.rollbackTransaction();
-					} catch (Exception e) {
-						accountNums.add(accountView.getAccountId().toString());
-						HibernateUtil.rollbackTransaction();
-					} finally {
-						HibernateUtil.closeSession();
-					}
-				}
-			}
-		}
-	}
-
-	private void saveLoanAccount(List<LoanAccountsProductView> accountViews,
-			Short personnelId, String recieptId, Short paymentId,
-			Date receiptDate, Date transactionDate, List<String> accountNums,
-			CustomerView customerView,
-			BulkEntryBusinessService bulkEntryBusinessService) {
-		if (null != accountViews) {
-			for (LoanAccountsProductView loanAccountsProductView : accountViews) {
-				try {
-					bulkEntryBusinessService.saveLoanAccount(
-							loanAccountsProductView, personnelId, recieptId,
-							paymentId, receiptDate, transactionDate);
-					HibernateUtil.commitTransaction();
-				} catch (ServiceException be) {
-					accountNums.add((String) (be.getValues()[0]));
-					HibernateUtil.rollbackTransaction();
-				} catch (Exception e) {
-					accountNums.add("Accounts for "
-							+ loanAccountsProductView.getPrdOfferingShortName()
-							+ "of customer" + customerView.getDisplayName());
-					HibernateUtil.rollbackTransaction();
-				} finally {
-					HibernateUtil.closeSession();
-				}
-			}
-		}
-	}
-
-	private void saveCustomerAccountCollections(
-			CustomerAccountView customerAccountView, Short personnelId,
-			String recieptId, Short paymentId, Date receiptDate,
-			Date transactionDate, List<String> accountNums,
-			BulkEntryBusinessService bulkEntryBusinessService) {
-		if (null != customerAccountView) {
-			String amount = customerAccountView
-					.getCustomerAccountAmountEntered();
-			if (null != amount && !Double.valueOf(amount).equals(0.0)) {
-				try {
-					bulkEntryBusinessService.saveCustomerAccountCollections(
-							customerAccountView, personnelId, recieptId,
-							paymentId, receiptDate, transactionDate);
-					HibernateUtil.commitTransaction();
-				} catch (ServiceException be) {
-					accountNums.add((String) (be.getValues()[0]));
-					HibernateUtil.rollbackTransaction();
-				} catch (Exception e) {
-					accountNums.add(customerAccountView.getAccountId()
-							.toString());
-					HibernateUtil.rollbackTransaction();
-				} finally {
-					HibernateUtil.closeSession();
-				}
-			}
-		}
-	}
-
-	private void saveAttendance(BulkEntryView bulkEntryView, Date meetingDate,
-			BulkEntryBusinessService bulkEntryBusinessService) {
-		logger.debug("save Attendance " + bulkEntryView.getAttendence());
-		try {
-			Short attendance = bulkEntryView.getAttendence();
-			bulkEntryBusinessService.saveAttendance(bulkEntryView
-					.getCustomerDetail().getCustomerId(), meetingDate,
-					attendance);
-			HibernateUtil.commitTransaction();
-		} catch (ServiceException e) {
-			HibernateUtil.rollbackTransaction();
-		} catch (Exception e) {
-			HibernateUtil.rollbackTransaction();
-		} finally {
-			HibernateUtil.closeSession();
-		}
 	}
 
 	private void getErrorString(StringBuilder builder,
@@ -731,8 +583,7 @@ public class BulkEntryAction extends BaseAction {
 		PaymentTypeView paymentType = new PaymentTypeView();
 		paymentType.setPaymentTypeId(paymentTypeList.get(i).getId()
 				.shortValue());
-		paymentType
-				.setPaymentTypeValue(paymentTypeList.get(i).getName());
+		paymentType.setPaymentTypeValue(paymentTypeList.get(i).getName());
 		return paymentType;
 	}
 
