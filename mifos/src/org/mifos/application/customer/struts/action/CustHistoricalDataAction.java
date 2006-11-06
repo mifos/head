@@ -157,7 +157,7 @@ public class CustHistoricalDataAction extends BaseAction {
 				.toString());
 	}
 
-	@TransactionDemarcate(validateAndResetToken = true)
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward cancelHistoricalData(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

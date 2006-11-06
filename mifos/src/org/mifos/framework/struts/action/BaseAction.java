@@ -330,7 +330,7 @@ public abstract class BaseAction extends DispatchAction {
 		return mapping.findForward(AuditConstants.VIEW+request.getParameter(AuditConstants.ENTITY_TYPE)+AuditConstants.CHANGE_LOG);
 	}
 
-	@TransactionDemarcate(validateAndResetToken = true)
+	@TransactionDemarcate(saveToken = true)
 	public ActionForward cancelChangeLog(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
