@@ -12,25 +12,25 @@
 
 
 
-* Apache License 
-* Copyright (c) 2005-2006 Grameen Foundation USA 
-* 
+* Apache License
+* Copyright (c) 2005-2006 Grameen Foundation USA
+*
 
 * Licensed under the Apache License, Version 2.0 (the "License"); you may
 * not use this file except in compliance with the License. You may obtain
-* a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+* a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 *
 
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and limitations under the 
+* See the License for the specific language governing permissions and limitations under the
 
-* License. 
-* 
-* See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+* License.
+*
+* See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
-* and how it is applied. 
+* and how it is applied.
 
 *
 
@@ -39,9 +39,9 @@ package org.mifos.application.checklist.util.resources;
 
 public interface CheckListConstants {
 
-	//custom methods 
+	//custom methods
 	public final String LOADPARENT="loadParent";
-	public final String LOADALL="loadall";		
+	public final String LOADALL="loadall";
 	public final String FORWARDLOADPARENTSUCESS="loadParent_success";
 	public final String LISTOFSTATUSES="list";
 	public final String FORWARDONLOADALL="forward_view";
@@ -74,7 +74,7 @@ public interface CheckListConstants {
 	public String PENDINGAPPROVAL="Application Pending Approval";
 	public final Short STATUS_ACTIVE = 1;
 	public final Short STATUS_INACTIVE = 0;
-	
+
 	public final String CHECKLIST_CREATION_EXCEPTION = "exception.checklist.creation";
 	public final String CHECKLIST_MASTERDATA="checkList_masterData";
 	public final String STATES="states";
@@ -93,5 +93,6 @@ public interface CheckListConstants {
 	public final String INACTIVE = "inactive";
 	public final String CHECKLIST_STATUS="checklist status";
 	public final String CHECKLIST_ITEMS="items";
-	
+	public final String OLDCHECKLISTNAME="oldChecklistName";
+
 }

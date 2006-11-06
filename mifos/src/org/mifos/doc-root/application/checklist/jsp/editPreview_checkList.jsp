@@ -34,7 +34,7 @@
 * and how it is applied.
 
 *
-* 
+*
 */
  -->
 
@@ -70,15 +70,15 @@
 					<span class="fontnormal8pt">
 						<html-el:link action="AdminAction.do?method=load">
 							<mifos:mifoslabel name="checklist.admin" />
-						</html-el:link> / 
+						</html-el:link> /
 						<html-el:link action="chkListAction.do?method=loadAllChecklist&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="checklist.view_checklists" />
-						</html-el:link> / 
+						</html-el:link> /
 					</span>
 					<span class="fontnormal8pt">
-					<html-el:link href="chkListAction.do?method=get&checkListId=${sessionScope.ChkListActionForm.checkListId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">	
-							${sessionScope.ChkListActionForm.checklistName}
-						</html-el:link>	
+					<html-el:link href="chkListAction.do?method=get&checkListId=${sessionScope.ChkListActionForm.checkListId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+							${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'oldChecklistName')}
+						</html-el:link>
 					</span></td>
 				</tr>
 			</table>
@@ -90,8 +90,8 @@
 						<tr>
 							<td class="headingorange">
 								<span class="heading">
-									${sessionScope.ChkListActionForm.checklistName} - 
-								</span> 
+									${sessionScope.ChkListActionForm.checklistName} -
+								</span>
 								<mifos:mifoslabel name="checklist.reviewchecklist_Info" />
 							</td>
 						</tr>
@@ -104,11 +104,11 @@
 					<br>
 					<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-						<font class="fontnormalRedBold"> 
+						<font class="fontnormalRedBold">
 							<html-el:errors	bundle="checklistUIResources" />
 						 </font>
 						<td width="100%" colspan="2" class="fontnormalbold">
-							<mifos:mifoslabel name="checklist.checklistdetails" /> 
+							<mifos:mifoslabel name="checklist.checklistdetails" />
 							<br>
 							<br>
 							<span >
@@ -117,9 +117,9 @@
 								<c:out value="${sessionScope.ChkListActionForm.checklistName}"></c:out>
 								</span>
 								<br>
-								<mifos:mifoslabel name="checklist.type" /> 
+								<mifos:mifoslabel name="checklist.type" />
 								<span class="fontnormal">
-								<c:out value="${sessionScope.ChkListActionForm.masterTypeName}"></c:out> 							
+								<c:out value="${sessionScope.ChkListActionForm.masterTypeName}"></c:out>
 								</span>
 								<br>
 								<mifos:mifoslabel name="checklist.displayed_status"  />
@@ -135,29 +135,29 @@
 								<span class="fontnormal">
 
 								<c:choose>
-								
-									<c:when test='${sessionScope.ChkListActionForm.checklistStatus=="1"}'>								
+
+									<c:when test='${sessionScope.ChkListActionForm.checklistStatus=="1"}'>
 										Active
 									</c:when>
 									<c:otherwise>
 										Inactive
 									</c:otherwise>
-								</c:choose>				
-								</span>						
+								</c:choose>
+								</span>
 								<br>
 								<br>
-								<mifos:mifoslabel name="checklist.items" /> 
-								<c:forEach	var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}">  
+								<mifos:mifoslabel name="checklist.items" />
+								<c:forEach	var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}">
 									<br>
 									<span class="fontnormal">
 									<c:out value="${item}"></c:out>
-									</span> 
-									<br>																				
-								</c:forEach> 
+									</span>
+									<br>
+								</c:forEach>
 								<br>
 							</span>
 						</td>
-							
+
 						</tr>
 						<tr>
 							<td colspan="2" class="fontnormalbold">
@@ -177,10 +177,10 @@
 						<td align="center">
 							<html-el:submit property="submitbutton" style="width:70px" styleClass="buttn">
 								<mifos:mifoslabel name="checklist.button_submit" />
-							</html-el:submit> &nbsp; 														
+							</html-el:submit> &nbsp;
 							<html-el:button property="button" style="width:70px"	styleClass="cancelbuttn" onclick="javascript:getChklist(this.form)">
 									<mifos:mifoslabel name="checklist.button_cancel" />
-							</html-el:button>									
+							</html-el:button>
 						</td>
 						</tr>
 					</table>
@@ -188,7 +188,7 @@
 					</td>
 				</tr>
 			</table>
-			<br>			
+			<br>
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

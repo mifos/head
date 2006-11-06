@@ -32,7 +32,7 @@ public class TestOfficeBO extends MifosTestCase {
 	public static void setChildren(Set<OfficeBO> children,OfficeBO office) {
 		office.setChildren(children);
 	}
-	
+
 	public void testCreateFailureDuplicateName() throws Exception {
 		try {
 
@@ -290,7 +290,7 @@ public class TestOfficeBO extends MifosTestCase {
 		}
 		TestObjectFactory.cleanUp(savbedChild);
 		TestObjectFactory.cleanUp(savbedOffice);
-	} 
+	}
 	public void testUpdateOfficelevel() throws Exception {
 		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
@@ -394,7 +394,7 @@ public class TestOfficeBO extends MifosTestCase {
 				.getOfficeId());
 		for (OfficeCustomFieldEntity customField : savbedOffice2
 				.getCustomFields()) {
-
+			assertEquals("abcd", customField.getOffice().getOfficeName());
 			assertEquals("123456", customField.getFieldValue());
 		}
 		TestObjectFactory.cleanUp(savbedOffice2);
@@ -537,7 +537,7 @@ public class TestOfficeBO extends MifosTestCase {
 		try{
 		areaOffice.update("2", "2", areaOffice.getOfficeStatus(), areaOffice
 				.getOfficeLevel(), branchOffice, null, null);
-		
+
 		fail();
 		}
 		catch (OfficeException e) {
@@ -551,10 +551,10 @@ public class TestOfficeBO extends MifosTestCase {
 		resetOffices();
 
 	}
-	
-	
-	
-	
+
+
+
+
 	public void testUpdateParentFromHoToArea() throws Exception {
 		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
 		OfficeBO regionalOffice = TestObjectFactory.createOffice(
@@ -658,11 +658,11 @@ public class TestOfficeBO extends MifosTestCase {
 		assertEquals("headOffice", officeView.getOfficeName());
 		assertEquals(Integer.valueOf("1"), officeView.getVersionNo());
 		assertEquals(Short.valueOf("1"), officeView.getOfficeId());
-		
-		
+
+
 		OfficeView officeView2 = new OfficeView(Short.valueOf("1"),
 				"headOffice",Short.valueOf("1") ,"Hifos HO",Integer.valueOf("1"));
-		
+
 		assertEquals("Hifos HO", officeView2.getLevelName());
 		assertEquals("Hifos HO(headOffice)", officeView2.getDisplayName());
 	}
@@ -688,6 +688,14 @@ public class TestOfficeBO extends MifosTestCase {
 				.getAddress(), null);
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
+	}
+
+	public void testOfficeEquals() throws Exception {
+		OfficeBO office = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO office_temp = TestObjectFactory.getOffice(Short.valueOf("1"));
+		assertTrue(office.equals(office_temp));
+		office_temp = TestObjectFactory.getOffice(Short.valueOf("2"));
+		assertFalse(office.equals(office_temp));
 	}
 
 	@Override

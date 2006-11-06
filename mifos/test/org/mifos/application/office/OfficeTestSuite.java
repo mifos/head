@@ -3,6 +3,7 @@ package org.mifos.application.office;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.mifos.application.office.business.OfficeLevelEntityTest;
 import org.mifos.application.office.business.TestOfficeBO;
 import org.mifos.application.office.business.TestOfficeStatusEntity;
 import org.mifos.application.office.business.service.OfficeHierarchyBusinessServiceTest;
@@ -30,6 +31,7 @@ public class OfficeTestSuite extends MifosTestSuite {
 		testSuite.addTestSuite(OffHierarchyActionTest.class);
 		testSuite.addTestSuite(TestOfficeStatusEntity.class);
 		testSuite.addTestSuite(OfficeListTagTest.class);
+		testSuite.addTestSuite(OfficeLevelEntityTest.class);
 		return testSuite;
 	}
 }

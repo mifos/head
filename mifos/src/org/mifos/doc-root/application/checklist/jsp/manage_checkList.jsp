@@ -34,7 +34,7 @@
 * and how it is applied.
 
 *
-* 
+*
 */
  -->
 
@@ -57,7 +57,7 @@
 			type="text/javascript">
 </script>
 
-		
+
 		<html-el:form action="/chkListAction.do?method=managePreview">
 			<c:set var="checkList" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
@@ -69,14 +69,14 @@
 						<html-el:link action="AdminAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="checklist.admin" />
 						</html-el:link> /
-						<html-el:link action="chkListAction.do?method=loadAllChecklist&randomNUm=${sessionScope.randomNUm}">	
+						<html-el:link action="chkListAction.do?method=loadAllChecklist&randomNUm=${sessionScope.randomNUm}">
 							<mifos:mifoslabel name="checklist.view_checklists" />
-						</html-el:link> / 
+						</html-el:link> /
 					</span>
 					<span class="fontnormal8pt">
-						<html-el:link href="chkListAction.do?method=get&checkListId=${sessionScope.ChkListActionForm.checkListId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">	
-							${sessionScope.ChkListActionForm.checklistName}
-						</html-el:link>				
+						<html-el:link href="chkListAction.do?method=get&checkListId=${sessionScope.ChkListActionForm.checkListId}&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}">
+							${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'oldChecklistName')}
+						</html-el:link>
 					</span></td>
 				</tr>
 			</table>
@@ -101,8 +101,8 @@
 					<br>
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
-							<font class="fontnormalRedBold"> 
-								<html-el:errors	bundle="checklistUIResources" /> 
+							<font class="fontnormalRedBold">
+								<html-el:errors	bundle="checklistUIResources" />
 							</font>
 							<td colspan="2" class="fontnormalbold">
 								<mifos:mifoslabel name="checklist.checklistdetails" /><br>
@@ -126,17 +126,17 @@
 								<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
 											<html-el:option value="${loop.index}">${item.masterTypeName}</html-el:option>
 								</c:forEach>
-								</mifos:select> 
+								</mifos:select>
 							<html-el:hidden property="isCustomers" value="" />
 							<html-el:hidden property="masterIds" value="" />
-							<html-el:hidden property="masterNames" value="" /> 
+							<html-el:hidden property="masterNames" value="" />
 						<c:forEach
-									
+
 										var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
 										<html-el:hidden property="isCustomers"
 											value="${item.isCustomer}" />
 										<html-el:hidden property="masterIds"
-											value="${item.masterTypeId}" />	
+											value="${item.masterTypeId}" />
 										<html-el:hidden property="masterNames"
 											value="${item.masterTypeName}" />
 									</c:forEach>
@@ -155,7 +155,7 @@
 												</c:forEach>
 									</mifos:select>
 									<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}" varStatus="loop">
-										
+
 										<html-el:hidden property="stateName"
 												value="${item.stateName}" />
 										<html-el:hidden property="stateNames"
@@ -163,7 +163,7 @@
 									</c:forEach>
 								</td>
 						</tr>
-						
+
 						 <tr class="fontnormal">
                   <td align="right" valign="top">
 					<mifos:mifoslabel name="checklist.status_checklist" />
@@ -171,7 +171,7 @@
                   <td valign="top">
                  	 <html-el:select property="checklistStatus"  style="width:136px;">
 	                 	 <c:choose>
-							<c:when test='${sessionScope.ChkListActionForm.checklistStatus=="1"}'>								
+							<c:when test='${sessionScope.ChkListActionForm.checklistStatus=="1"}'>
 								<option value="1" selected><mifos:mifoslabel name="checklist.active" /></option>
 								<option value="0"><mifos:mifoslabel name="checklist.inactive" /></option>
 							</c:when>
@@ -179,7 +179,7 @@
 								<option value="0" selected><mifos:mifoslabel name="checklist.inactive" /></option>
 								<option value="1"><mifos:mifoslabel name="checklist.active" /></option>
 							</c:otherwise>
-						</c:choose>	                 
+						</c:choose>
                  	 </html-el:select>
 					</td>
                 	</tr>
@@ -216,12 +216,12 @@
 									<td>&nbsp;</td>
 									<td>&nbsp;</td>
 								</tr>
-								
+
 								<tr valign="top" class="fontnormal">
-								<br> 
-									<td colspan="2">									
-									
-									
+								<br>
+									<td colspan="2">
+
+
 										<c:forEach var="item"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
 											varStatus="loop">
@@ -230,34 +230,34 @@
 														value="${item}" />${item}
 													<input name='detailsList[${loop.index}]' type="hidden"
 														value="${item}" />
-																
+
 												</tr>
-												
+
 										</c:forEach>
-										
+
 										<div id="myDiv">
 										</div>
 										<br>
 									<html-el:hidden property="numberOfPreviousItems" value="0"/>
-									
+
 										<c:forEach var="item"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
 											varStatus="loop">
 												<input name="numberOfPreviousItems" type="hidden"
 														value='${loop.index}' />
 										</c:forEach>
-											
-									<div id="removeButton" style="display:none">								
+
+									<div id="removeButton" style="display:none">
 										<html-el:button property="removeSelected" styleClass="insidebuttn" value="Remove Selected" style="width:120px" onclick="RemoveSelected();isButtonRequired() ">
 											<mifos:mifoslabel name="checklist.button_removeselected" />
 										</html-el:button>
 									</div>
-									
-										<script>	
-																				
-											setNumberOfPreviousItems();	
-											isButtonRequired();									
-										</script>									
+
+										<script>
+
+											setNumberOfPreviousItems();
+											isButtonRequired();
+										</script>
 									</td>
 								</tr>
 							</table>
@@ -281,12 +281,12 @@
 							<td align="center">
 								<html-el:submit style="width:70px"	styleClass="buttn">
 								<mifos:mifoslabel name="checklist.button_preview" />
-								</html-el:submit> &nbsp;							
-						
+								</html-el:submit> &nbsp;
+
 								<html-el:button property="cancelBttn" style="width:70px"	styleClass="cancelbuttn" onclick="javascript:getChklist(this.form)">
-										<mifos:mifoslabel name="checklist.button_cancel" />		
-								</html-el:button>									
-							
+										<mifos:mifoslabel name="checklist.button_cancel" />
+								</html-el:button>
+
 							</td>
 						</tr>
 					</table>

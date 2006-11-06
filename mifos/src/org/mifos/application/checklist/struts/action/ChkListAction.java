@@ -252,6 +252,7 @@ public class ChkListAction extends BaseAction {
 		SessionUtils.setAttribute(CheckListConstants.STATES, states, request);
 		List<String> details = chkListActionForm.getValidCheckListDetails();
 		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
+		SessionUtils.setAttribute(CheckListConstants.OLDCHECKLISTNAME, checkList.getChecklistName(), request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
