@@ -156,9 +156,11 @@
 							</tr>
 							<tr>
 								<td class="drawtablerowbold">
-									<mifos:mifoslabel name="Savings.totalamountdue" />
-									&nbsp;
-									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.nextMeetingDate)}" />
+									<mifos:mifoslabel name="Savings.totalAmountDue" />
+									<c:if test="${!empty BusinessKey.nextMeetingDate}">										
+										<mifos:mifoslabel name="Savings.on" />
+										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.nextMeetingDate)}" />
+									</c:if>
 								</td>
 								<td align="right" class="drawtablerow">
 									<c:out value="${BusinessKey.totalAmountDue}" />

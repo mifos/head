@@ -39,6 +39,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -1821,7 +1822,42 @@ public class SavingsBO extends AccountBO {
 				getTotalAmountDueForNextInstallment());
 	}
 
-	public Money getTotalAmountDueForInstallment(Short installmentId) {
+	@Override
+	public Money getTotalAmountInArrears(){
+		List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
+		Money totalAmount = new Money();
+		if (installmentsInArrears != null && installmentsInArrears.size() > 0){
+			for (AccountActionDateEntity accountAction : installmentsInArrears){
+				if(!(accountAction.getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()) 
+						&& 	accountAction.getCustomer().getStatus().equals(CustomerStatus.CLIENT_CLOSED)))
+					totalAmount = totalAmount.add(getDueAmount(accountAction));
+			}
+		}
+		return totalAmount;
+	}
+	
+	public Money getTotalAmountDueForNextInstallment(){
+		AccountActionDateEntity nextAccountAction = getDetailsOfNextInstallment();
+		Money totalAmount = new Money();
+		if (nextAccountAction != null){
+			if (null != getAccountActionDates()
+					&& getAccountActionDates().size() > 0) {
+				for (AccountActionDateEntity accntActionDate : getAccountActionDates()) {
+					if (accntActionDate.getInstallmentId().equals(nextAccountAction.getInstallmentId())
+							&& accntActionDate.getPaymentStatus().equals(
+									PaymentStatus.UNPAID.getValue())) {
+						if(!(accntActionDate.getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()) 
+								&& 	accntActionDate.getCustomer().getStatus().equals(CustomerStatus.CLIENT_CLOSED)))
+							totalAmount = totalAmount.add(((SavingsScheduleEntity) accntActionDate)
+											.getTotalDepositDue());
+					}
+				}
+			}
+		}
+		return totalAmount;
+	}
+	
+	/*private Money getTotalAmountDueForInstallment(Short installmentId) {
 		Money totalAmount = new Money();
 		if (null != getAccountActionDates()
 				&& getAccountActionDates().size() > 0) {
@@ -1845,7 +1881,7 @@ public class SavingsBO extends AccountBO {
 			return getTotalAmountDueForInstallment(nextAccountAction
 					.getInstallmentId());
 		return new Money();
-	}
+	}*/
 
 	private List<AccountActionDateEntity> getNextInstallment() {
 		List<AccountActionDateEntity> nextInstallment = new ArrayList<AccountActionDateEntity>();

@@ -46,6 +46,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
+import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -1986,8 +1987,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getAccountActionDate((short) 1);
 		((SavingsScheduleEntity)accountActionDateEntity).setActionDate(offSetCurrentDate(1));
 		savings = (SavingsBO) saveAndFetch(savings);
-		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
-				200.0);
+		assertEquals(200.0,savings.getTotalAmountInArrears().getAmountDoubleValue());
 	}
 
 	public void testGetTotalAmountInArrearsWithPartialPayment()
@@ -1999,8 +1999,7 @@ public class TestSavingsBO extends MifosTestCase {
 		accountActionDateEntity.setActionDate(offSetCurrentDate(1));
 
 		savings = (SavingsBO) saveAndFetch(savings);
-		assertEquals(savings.getTotalAmountInArrears().getAmountDoubleValue(),
-				180.0);
+		assertEquals(180.0,savings.getTotalAmountInArrears().getAmountDoubleValue());
 	}
 
 	public void testGetTotalAmountInArrearsWithPaymentDone() throws Exception {
@@ -2087,6 +2086,22 @@ public class TestSavingsBO extends MifosTestCase {
 		assertEquals(savings.getTotalAmountDue().getAmountDoubleValue(), 600.0);
 	}
 
+	public void testGetTotalAmountDueForActiveCustomers() throws Exception {
+		savings = getSavingsAccountForCenter();
+		client1.changeStatus(CustomerStatus.CLIENT_CLOSED.getValue(),Short.valueOf("6"), "Client closed");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		for(AccountActionDateEntity actionDate: savings.getAccountActionDates()){
+			if(actionDate.getInstallmentId().shortValue()==1)
+				((SavingsScheduleEntity)actionDate).setActionDate(offSetCurrentDate(2));
+		}
+		Money dueAmount = new Money("1000");
+		assertEquals(dueAmount, savings.getTotalAmountDue());
+		client1=(ClientBO)TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
+		client2=(ClientBO)TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
+	}
+	
 	public void testGetTotalAmountDueForCenter() throws Exception {
 		savings = getSavingsAccountForCenter();
 		Money dueAmount = new Money();
@@ -2267,8 +2282,7 @@ public class TestSavingsBO extends MifosTestCase {
 		group = TestObjectFactory.createGroup("Group_Active_test", Short
 				.valueOf("9"), "1.1.1", center, new Date(System
 				.currentTimeMillis()));
-		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_CLOSED, "1.1.1.1", group, new Date(
+		client1 = TestObjectFactory.createClient("client1",	CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
 				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(

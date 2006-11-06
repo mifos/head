@@ -2,6 +2,8 @@ package org.mifos.application.accounts.savings.struts.tag;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -11,6 +13,8 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
@@ -51,42 +55,31 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 	StringBuilder buildUI(
 			List<AccountActionDateEntity> installmentsInArrears, Locale locale) {
 		StringBuilder builder = new StringBuilder();
+		SavingsScheduleEntity installment = null;
 		Date actionDate = null;
-		Money totalAmount = new Money();
-		int currentSize = 0;
-		int listSize = installmentsInArrears.size();
-
-		for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
-			SavingsScheduleEntity installment = (SavingsScheduleEntity) accountActionDate;
-			currentSize++;
-			if (actionDate == null)
-				actionDate = installment.getActionDate();
-			if (actionDate.compareTo(installment.getActionDate()) != 0
-					|| currentSize == listSize) {
-				if (currentSize == listSize
-						&& actionDate.compareTo(installment.getActionDate()) == 0) {
-					builder.append(buildDepositDueUIRow(locale, actionDate,
-							totalAmount.add(installment.getTotalDepositDue())));
-				} else if (actionDate.compareTo(installment.getActionDate()) != 0
-						&& currentSize != listSize) {
-					builder.append(buildDepositDueUIRow(locale, actionDate,
-							totalAmount));
-				} else {
-					builder.append(buildDepositDueUIRow(locale, actionDate,
-							totalAmount));
-					builder
-							.append(buildDepositDueUIRow(locale, installment
-									.getActionDate(), installment
-									.getTotalDepositDue()));
+	
+		Collections.sort(installmentsInArrears, new Comparator<AccountActionDateEntity>() {
+			public int compare(AccountActionDateEntity actionDate1, AccountActionDateEntity actionDate2) {
+				return actionDate1.getActionDate().compareTo(actionDate2.getActionDate());
+			}
+		});		
+		
+		for (int i = 0; i < installmentsInArrears.size();) {
+			actionDate = installmentsInArrears.get(i).getActionDate();
+			Money totalAmount = new Money();
+			do{
+				installment = (SavingsScheduleEntity) installmentsInArrears.get(i);	
+				if(!(installment.getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue()) 
+						&& 	installment.getCustomer().getStatus().equals(CustomerStatus.CLIENT_CLOSED))){
+					totalAmount = totalAmount.add(installment.getTotalDepositDue());
 				}
-				totalAmount = installment.getTotalDepositDue();
-				actionDate = installment.getActionDate();
-			} else
-				totalAmount = totalAmount.add(installment.getTotalDepositDue());
+				i++;
+			} while(i < installmentsInArrears.size() && actionDate.equals(installmentsInArrears.get(i).getActionDate()));
+			if(totalAmount.getAmountDoubleValue()>0)
+				builder.append(buildDepositDueUIRow(locale, actionDate,
+						totalAmount));
 		}
-
 		return builder;
-
 	}
 
 	StringBuilder buildDateUI(Locale locale, Date actionDate) {

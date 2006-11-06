@@ -124,9 +124,22 @@
 							<c:if test="${BusinessKey.accountState.id != AccountStates.SAVINGS_ACC_CLOSED}">
 								<tr>
 									<td class="fontnormal" colspan="2">
-										<mifos:mifoslabel name="Savings.totalamountdue" />
-										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.nextMeetingDate)}" />:
-										<c:out value="${BusinessKey.totalAmountDue}" />
+										<c:choose>
+											<c:when test="${empty BusinessKey.nextMeetingDate}">
+												<mifos:mifoslabel name="Savings.totalAmountDue" isColonRequired="yes"/>
+											</c:when>
+											<c:otherwise>
+												<mifos:mifoslabel name="Savings.totalAmountDue"/>
+												<mifos:mifoslabel name="Savings.on"/>
+												<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.nextMeetingDate)}" />:
+											</c:otherwise>
+										</c:choose>										
+										<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
+											<c:out value="${BusinessKey.totalAmountDue}" />
+										</c:if>
+										<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_VOLUNTARY}">
+											<c:out value="${BusinessKey.totalAmountDueForNextInstallment}" />
+										</c:if>										
 									</td>
 								</tr>
 							</c:if>
