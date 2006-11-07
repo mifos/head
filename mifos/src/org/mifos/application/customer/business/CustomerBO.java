@@ -964,7 +964,6 @@ public abstract class CustomerBO extends BusinessObject {
 					}
 				}
 				if (!isPositionFound) {
-					if(positionView.getCustomerId()!=null)
 						addCustomerPosition(new CustomerPositionEntity(
 								new PositionEntity(positionView.getPositionId()),
 								getCustomer(positionView.getCustomerId()), this));
