@@ -31,6 +31,7 @@ class LoanAccountCreateEdit<TestClass
     begin
       @@loanprop=load_properties("modules/propertis/LoanUIResources.properties")
       @@accountprop=load_properties("modules/propertis/accountsUIResources.properties")
+      @@menuprop=load_properties("modules/propertis/MenuResources.properties")      
     rescue =>excp
       quit_on_error(excp)
     end
@@ -48,7 +49,24 @@ class LoanAccountCreateEdit<TestClass
       @@loan_installments_review=@@accountprop['accounts.create']+" "+@@loan_label+" "+ @@accountprop['accounts.account']+" -  "+@@loanprop['loan.review&edit']
       @@loan_account_preview=@@accountprop['accounts.create']+" "+@@loan_label+" "+ @@accountprop['accounts.account']+" -  "+@@loanprop['loan.preview']+" "+@@loan_label+" "+@@accountprop['accounts.acc_info']
       @@loan_create_success=@@loanprop['loan.successful_creation']+" "+@@loan_label+" "+@@accountprop['accounts.account']
-      
+      @@loan_disburse_loan = @@loanprop['loan.disburseloan']
+      @@loan_submit = @@loanprop['loan.submit']
+      @@loan_reviewtransaction = @@loanprop['loan.reviewtransaction']
+      @@loan_edit_acc_status = @@loanprop['loan.edit_acc_status']
+      @@loan_installment_paid = @@loanprop['loan.instt_paid']
+      @@loan_view_repayment_schedule = @@loanprop['loan.view_schd']
+      @@loan_apply_charges = @@loanprop['loan.apply_charges']
+      @@loan_search = @@loanprop['loan.search']
+      @@loan_return_to_account_details = @@loanprop['loan.returnToAccountDetails']
+      @@loan_apply_payment = @@loanprop['loan.apply_payment']
+      @@loan_apply_adjustment = @@loanprop['loan.apply_adjustment']
+      @@loan_installment_details = @@loanprop['loan.view_inst_details']
+      @@loan_total_amount_due = @@loanprop['loan.totalAmtDue']      
+      @@change_acct_status=@@menuprop['label.change']+" "+@@menuprop['label.accountSmall']+" "+@@menuprop['label.status']
+      @@loan_no_search_result_found_msg=@@loanprop['errors.nosearchresults']
+      @@loan_waive = @@loanprop['loan.waive']
+      @@loan_view_account_activity = @@loanprop['loan.view_acc_activity']
+      @@repayloan = @@loanprop['loan.repayloan']
 #      puts "account link "+@@loan_account_link.to_s
 #      puts "select cust "+@@loan_select_customer.to_s
 #      puts "view "+@@view_loan_account_details.to_s
@@ -76,7 +94,8 @@ class LoanAccountCreateEdit<TestClass
       @@loan_ammount=string_replace_message(@@loan_ammount,"{1}",@@min_loan_amount)
       @@loan_ammount=string_replace_message(@@loan_ammount,"{2}",@@max_loan_amount)
       @@loan_disbursal_date=string_replace_message(@@loanprop['errors.validandmandatory'],"{0}",@@loanprop['loan.proposed_date'])
-    
+   
+      
     rescue =>excp
       quit_on_error(excp)
     end
@@ -535,7 +554,12 @@ class LoanAccountCreateEdit<TestClass
     begin
       # $ie.select_list(:name,"prdOfferingId").select_value("")
       $ie.select_list(:name,"prdOfferingId").select_value(@@product_id)
-      search_res=$dbh.real_query("SELECT fee_id FROM fees where category_id=5 and status=1 and fee_id not in(select fee_id from prd_offering_fees where prd_offering_id="+@@product_id+" )")
+      #search_res=$dbh.real_query("SELECT fee_id FROM fees where category_id=5 and status=1 and fee_id not in(select fee_id from prd_offering_fees where prd_offering_id="+@@product_id+" )")
+      #query was not searching on the basis of recurrence id of customer
+      search_res=$dbh.real_query("select a.fee_id,a.fee_name,c.recurrence_id,c.recur_after from fees a,fee_frequency b,recurrence_detail c where a.fee_id=b.fee_id and (b.frequency_meeting_id=c.meeting_id or b.frequency_meeting_id is null )and c.recurrence_id="+@@customerRecurr_ID+" and a.fee_id not in (select fee_id from feelevel) and a.fee_id not in(select fee_id from prd_offering_fees where prd_offering_id=4 ) and a.category_id=5  and (select mod(c.recur_after,"+@@customerRecurr_after+")=0) and status=1 group by a.fee_id")
+     puts "@@customerRecurr_ID"+ @@customerRecurr_ID.to_s
+    puts "@@customerRecurr_after"+@@customerRecurr_after.to_s
+      
       dbresult1=search_res.fetch_row.to_a
       row1=search_res.num_rows()
       puts "row 1 "+row1.to_s
@@ -601,7 +625,7 @@ class LoanAccountCreateEdit<TestClass
       $ie.button(:value,@@loanprop['loan.edit_loan_acc']).click
       assert($ie.contains_text(@@loan_account_info))
       $logger.log_results("Page redirect to Create loan account","N/A","N/A","Passed")
-      fee_select_one_by_one
+     # fee_select_one_by_one
       click_continue
       click_preview
     rescue Test::Unit::AssertionFailedError=>e
@@ -822,16 +846,304 @@ class LoanAccountCreateEdit<TestClass
     end
   end
   
+  #added as part og Bug#824
+  def disburse_loan() 
+   begin
+      $ie.link(:text,@@loan_disburse_loan).click    
+      $ie.select_list(:name,"paymentTypeId").select("Cash")
+      if($ie.select_list(:name,"paymentModeOfPayment").enabled?())
+       $ie.select_list(:name,"paymentModeOfPayment").select("Cash")
+      end
+            
+      $ie.button(:value,@@loan_reviewtransaction).click  
+      $ie.button(:value,@@loan_submit).click
+      assert($ie.contains_text(@@loan_edit_acc_status))
+      $logger.log_results("Disburse loan","Disburse a loan","Successful","Passed")
+      rescue Test::Unit::AssertionFailedError=>e
+      $logger.log_results("Disburse loan","Disburse a loan","Unsuccessful","failed")
+      rescue =>excp
+      quit_on_error(excp)
+    end
+end # end of function disburse loan()
   
+ #added as part of Bug#824
+ 
+ def check_Miscfees_applied_to_loan()
+      begin 
+      
+
+        # Getting the necessary data through query
+        dbquery("select m.account_id,m.global_account_num,prd_offering_name from prd_offering po, " +
+      "(select ddd.account_id,ddd.global_account_num,laa.prd_offering_id from loan_account laa, " +
+      "(select a.global_account_num,a.account_id from Loan_Schedule la, account a where a.account_id=la.account_id " +
+      "and account_type_id=1 and account_state_id =3 and Installment_Id = 1 and PAYMENT_DATE is NULL )ddd " + 
+      "where ddd.account_id=laa.account_id and laa.disbursement_date=current_date) m " + 
+      "where m.prd_offering_id=po.prd_offering_id")
+        
+        # Storing  results that are retrieved
+        @@account_id=dbresult[0]      
+        @@global_cust_num=dbresult[1]
+        @@prd_offering_name=dbresult[2]
+        
+        # Clicking Clients & Accounts link
+        $ie.link(:text,"Clients & Accounts").click      
+        # Searching the specific loan data from the query retrieved
+        $ie.text_field(:name,"searchString").set(@@global_cust_num.to_s) 
+        $ie.button(:value,@@loan_search).click   
+  
+        # Clicking the loan account link
+        $ie.link(:text,"Account # " + @@global_cust_num).click             
+        
+        # Click Apply Charges Link
+        $ie.link(:text,@@loan_apply_charges).click             
+        # Select Misc Fees and enter some value
+        $ie.select_list(:name,"chargeType").select_value("-1")
+        $ie.text_field(:name,"chargeAmount").set("34")
+        $ie.button(:value,@@loan_submit).click
+  
+        $ie.link(:text,@@loan_view_repayment_schedule).click             
+       #Checking whether Installment Paid is present      
+       begin 
+           assert($ie.contains_text(@@loan_installment_paid))
+              $logger.log_results("Bug#824-Apply fees to Loan accounts","Apply fees to loan account","Displayed as installement paid","Failed")
+           rescue Test::Unit::AssertionFailedError=>e
+              $logger.log_results("Bug#824-Apply fees to Loan accounts","Apply fees to loan account","Not displayed as installement paid","passed")
+           rescue =>excp       
+              quit_on_error(excp)    
+           end
+       end
+       
+       $ie.button(:value,@@loan_return_to_account_details).click   
+  
+        # Calling disburse_loan() function
+          disburse_loan()
+        #view all account activity moved here as it visible only for disbursed loans
+          view_account_activity()
+        #added as part of Bug#720     
+          check_next_installment_date()
+        #added as part of Bug#736     
+          check_apply_payment_for_loans() 
+        #added as part of Bug#744    
+          check_waive_fees()
+        #added as part of Bug#867
+          check_repay_loan()
+        #added to create active accounts for feeone.rb file
+        activate_loan_accounts()
+          
 end
+
+ #added as part of #720
+ # This function will check the date shown in view installment page in loan
+def check_next_installment_date()
+    begin
+      
+      # Getting the next installment date through query
+      dbquery("select date_format(action_date,'%d/%m/%Y') from loan_schedule " + 
+      "where account_id=" + @@account_id + " and action_date>=current_date order by action_date")
+      next_installment_date=dbresult[0]
+     $ie.link(:text,@@loan_installment_details).click  
+      # Asserting whether the next installment in displaying form the above query
+      begin
+        assert($ie.contains_text(@@loan_total_amount_due + " " + next_installment_date))
+        $logger.log_results("Bug#720-Next Installment Date", "Message","Displaying","Passed")
+        rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Bug#720-Next Installment Date", "Message","Not Displaying","Failed")
+        rescue =>excp
+        quit_on_error(excp)
+      end              
+      $ie.button(:value,@@loan_return_to_account_details).click     
+    end    
+end
+ 
+ #added as part of Bug#730
+  def check_change_acct_status()
+    begin
+        # Getting the office_name, personnel, customer_id, account_id from the Query
+        dbquery("Select o.display_name as office_name,p.display_name as personnel,lac.customer_id,lac.account_id from customer c, " +
+        "(select a.customer_id,a.account_id from loan_account la, account a where a.account_id=la.account_id and account_state_id=2) lac, " +
+        "(select personnel_id,display_name,office_id from personnel where level_id=1) p, " + 
+        "(select office_id,display_name from office where office_level_id=5 and status_id=1) o " + 
+        " where p.office_id=o.office_id and p.personnel_id=c.loan_officer_id " + 
+        " and lac.customer_id=c.customer_id") 
+        
+        # Storing results that are retrieved
+        @@office_name=dbresult[0]
+        @@personnel=dbresult[1]
+        $ie.link(:text,"Clients & Accounts").click    
+        $ie.link(:text,@@change_acct_status).click    
+        # Selecting all the select boxes
+        $ie.select_list(:name,"officeId").select(@@office_name.to_s)        
+        $ie.select_list(:name,"personnelId").select(@@personnel.to_s)
+        $ie.button(:value,@@loan_search).click   
+        $ie.checkbox(:name,"selectAll1").set(set_or_clear=true)        
+        $ie.button(:value,@@loan_submit).click    
+      begin
+       assert($ie.contains_text("Please specify notes."))     
+       $logger.log_results("Bug#730-Check Mandatory Notes field", "Do not enter notes","Displaying error message","Passed")
+       rescue Test::Unit::AssertionFailedError=>e
+       $logger.log_results("Bug#730-Check Mandatory Notes field", "Do not enter notes","Not displaying error message","failed")
+       rescue =>excp
+       quit_on_error(excp)
+       end                
+    end
+  
+  end
+  
+  
+  #added as part og Bug#736
+  def check_apply_payment_for_loans()
+    begin
+        dbquery("select action_date,account_id,sum(principal-PRINCIPAL_PAID) p, " +
+                "sum(misc_fees-MISC_FEES_PAID)  m , " +
+                "SUM(interest-INTEREST_PAID) i , " +
+                "((principal-PRINCIPAL_PAID)+(misc_fees-MISC_FEES_PAID)+(interest-INTEREST_PAID)) total " +
+                "from loan_schedule where account_id=" +@@account_id+ " and " +
+                "action_date>=current_date group by action_date order by action_date limit 1") 
+
+        @@get_next_installment_fee_amount = dbresult[3].to_f
+        $ie.link(:text,@@loan_apply_payment).click
+        $ie.text_field(:name,"amount").set(@@get_next_installment_fee_amount.to_s) 
+        $ie.select_list(:name,"paymentTypeId").select("Cash")
+        $ie.button(:value,@@loan_reviewtransaction).click  
+        $ie.button(:value,@@loan_submit).click
+        
+        #excuting the same query to get the misc amount after applying the payment
+        dbquery("select action_date,account_id,sum(principal-PRINCIPAL_PAID) p, " +
+                "sum(misc_fees-MISC_FEES_PAID)  m , " +
+                "SUM(interest-INTEREST_PAID) i , " +
+                "((principal-PRINCIPAL_PAID)+(misc_fees-MISC_FEES_PAID)+(interest-INTEREST_PAID)) total " +
+                "from loan_schedule where account_id=" +@@account_id+ " and " +
+                "action_date>=current_date group by action_date order by action_date limit 1")
+        @@get_next_installment_fee_amount = dbresult[3].to_f        
+        
+       $ie.link(:text,@@loan_installment_details).click    
+        table_obj=$ie.table(:index,12) 
+   	    @@get_fees_from_next_installment_page = table_obj[5][2].text.to_f
+   	    
+   	    puts  "@@get_fees_from_next_installment_page->"+@@get_fees_from_next_installment_page.to_s
+   	    puts "@@get_next_installment_fee_amount->"+@@get_next_installment_fee_amount.to_s
+
+        # Checking whether Misc fees is shown is present   
+        begin
+           assert(@@get_fees_from_next_installment_page == @@get_next_installment_fee_amount)
+             $logger.log_results("Bug#736-Apply payment in loans", "Message","Found","Passed")
+           rescue Test::Unit::AssertionFailedError=>e
+             $logger.log_results("Bug#736-Apply payment in loans", "Message","Not Found","Failed")
+           rescue =>excp
+             quit_on_error(excp)
+        end  
+    end
+  end # end of function check_apply_payment_for_loans()
+  
+  #added as part of Bug#744
+  def check_waive_fees()
+    begin
+     $ie.link(:text,@@loan_apply_charges).click
+     $ie.select_list(:name,"chargeType").select_value("-1")
+     $ie.text_field(:name,"chargeAmount").set("34")
+     $ie.button(:value,@@loan_submit).click  
+     puts "@@acouint_id=>"+@@account_id.to_s
+     # query to get the remaining fees amount and the  total from the DB in view all account activity page.
+     dbquery("select account_id,"+
+            "round((sum(principal)- sum(principal_paid))) p,"+
+            "(sum(misc_fees)-sum(misc_fees_paid)) m,"+
+            "(sum(interest)-sum(interest_paid)) i," +
+            "round((sum(principal)- sum(principal_paid)))+sum(misc_fees)-sum(misc_fees_paid)+sum(interest)-sum(interest_paid) grandtotal " +
+            " from loan_schedule where account_id="+@@account_id+" group by account_id")
+     @@get_misc_fee_amount = dbresult[2].to_f
+     @@get_total=dbresult[4].to_f
+     #variable to check the running balance
+     running_balance=@@get_total-@@get_misc_fee_amount
+     
+     $ie.link(:text,@@loan_installment_details).click
+     $ie.link(:text,@@loan_waive).click
+     $ie.button(:value,@@loan_return_to_account_details).click         
+     $ie.link(:text,@@loan_view_account_activity).click               
+     table_obj=$ie.table(:index,13)  # New Value that is matching in the page
+     
+     get_fees_from_all_activity_page =  table_obj[3][11].text.to_f
+     get_running_balance_from_all_activity_page = table_obj[3][12].text.to_f
+    
+      puts "running_balance=>"+running_balance.to_s
+      
+    # query to get the remaining fees from the DB in view all account activity page after waiving off the fees.
+        dbquery("select account_id,"+
+                "round((sum(principal)- sum(principal_paid))) p,"+
+                "(sum(misc_fees)-sum(misc_fees_paid)) m,"+
+                "(sum(interest)-sum(interest_paid)) i," +
+                "round((sum(principal)- sum(principal_paid)))+sum(misc_fees)-sum(misc_fees_paid)+sum(interest)-sum(interest_paid) grandtotal " +
+                " from loan_schedule where account_id="+@@account_id+" group by account_id")
+       @@get_misc_fee_amount = dbresult[2].to_f
+       begin
+            assert((get_fees_from_all_activity_page == @@get_misc_fee_amount)&&(get_running_balance_from_all_activity_page == running_balance))
+            $logger.log_results("Bug#744-Waive Fees", "Waive the fee amount","The fees should be waived","Passed")
+            rescue Test::Unit::AssertionFailedError=>e
+            $logger.log_results("Bug#744-Waive Fees", "Waive the fee amount","The fees should is not waived","failed")
+            rescue =>excp
+            quit_on_error(excp) 
+        end
+      $ie.button(:value,@@loan_return_to_account_details).click         
+    end
+  end
+  
+  #added as part of Bug#964
+  def check_repay_loan()
+    begin
+      $ie.link(:text,@@repayloan).click   
+      $ie.select_list(:name,"paymentTypeId").select("Cash")
+      $ie.button(:value,@@loan_reviewtransaction).click  
+      $ie.button(:value,@@loan_submit).click
+      $ie.link(:text,@@loan_view_account_activity).click          
+      table_obj=$ie.table(:index,11)  # New Value that is matching in the page
+      total_amount= table_obj[3][12].text.to_f
+      
+      #query to get the total left in the DB
+       dbquery("select account_id,"+
+                "round((sum(principal)- sum(principal_paid))) p,"+
+                "(sum(misc_fees)-sum(misc_fees_paid)) m,"+
+                "(sum(interest)-sum(interest_paid)) i," +
+                "round((sum(principal)- sum(principal_paid)))+sum(misc_fees)-sum(misc_fees_paid)+sum(interest)-sum(interest_paid) grandtotal " +
+                " from loan_schedule where account_id="+@@account_id+" group by account_id")
+      
+      loan_balance=dbresult[4].to_f
+      
+      puts "loan_balance=>"+loan_balance.to_s
+      puts "total_amount=>"+total_amount.to_s
+       puts "account_id=>"+@@account_id.to_s
+      
+          begin
+            assert(total_amount == loan_balance)
+            $logger.log_results("Bug#867-Check repay Loan", "Repay the Loan","Total should be 0","Passed")
+            rescue Test::Unit::AssertionFailedError=>e
+            $logger.log_results("Bug#867-Check repay Loan", "Repay the Loan","Total should not 0","failed")
+            rescue =>excp
+            quit_on_error(excp) 
+        end
+    end
+  end
+  
+  def activate_loan_accounts()
+    begin
+    dbquery("select global_account_num,account_state_id from account where account_type_id=1 and account_state_id=2")
+    global_account_number=dbresult[0]
+    $ie.link(:text,"Clients & Accounts").click
+    $ie.text_field(:name,"searchString").set(global_account_number)
+    $ie.button(@@loanprop['loan.search']).click
+    search_name="Account # "+global_account_number
+    $ie.link(:text,search_name).click
+    change_status_active()
+    end
+  end
+  
+  
+end # end of class
 
 class LoanAccountTest
   loanobject=LoanAccountCreateEdit.new
-  loanobject.login_loanaccount
-  loanobject.database_connection
-  loanobject.get_labels_from_db
-  
-  loanobject.read_from_properties_file
+  loanobject.login_loanaccount()
+  loanobject.database_connection()
+  loanobject.get_labels_from_db()
+  loanobject.read_from_properties_file()
   loanobject.read_values_from_hash()
   filename=File.expand_path(File.dirname($PROGRAM_NAME))+"/data/testdata.xls"
   loanobject.open(filename,1)
@@ -875,7 +1187,7 @@ class LoanAccountTest
     loanobject.validate_ammount_zero()
     loanobject.validate_no_of_installments_greater
     loanobject.validate_no_of_installments_lesser
-    loanobject.fee_select_one_by_one
+    #loanobject.fee_select_one_by_one
     #loanobject.validate_ammount_decimal()
     loanobject.click_continue
     loanobject.click_preview
@@ -887,10 +1199,14 @@ class LoanAccountTest
       #commented this as this link does not exist currently
       #loanobject.view_change_log 
     loanobject.view_repayment_schedules
-    loanobject.view_account_activity
+  #  loanobject.view_account_activity
     loanobject.edit_loan_account_data
-    
-    
   end
-    loanobject.mifos_logout()
+  
+  #added as part of Bug#824
+  loanobject.check_Miscfees_applied_to_loan()
+  #added as part of Bug#730
+ loanobject.check_change_acct_status()
+  
+  loanobject.mifos_logout()
 end
