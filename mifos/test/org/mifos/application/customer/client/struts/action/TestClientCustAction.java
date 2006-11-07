@@ -1081,6 +1081,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		assertNotNull(povertyStatusList);
 		assertEquals("Age of customer should be 50 years", 50, SessionUtils
 				.getAttribute(ClientConstants.AGE, request));
+		assertNotNull(SessionUtils.getAttribute(
+				CustomerConstants.CUSTOM_FIELDS_LIST, request));
 		// assertEquals("No of active loan accounts should be
 		// 1",1,((List<LoanBO>)SessionUtils.getAttribute(ClientConstants.CUSTOMERACTIVELOANACCOUNTS,request)).size());
 		HibernateUtil.closeSession();

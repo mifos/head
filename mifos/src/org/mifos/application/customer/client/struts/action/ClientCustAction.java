@@ -834,6 +834,7 @@ public class ClientCustAction extends CustAction {
 	private void loadMasterDataForDetailsPage(HttpServletRequest request,
 			ClientBO clientBO) throws Exception {
 		Short localeId = getUserContext(request).getLocaleId();
+		loadCustomFieldDefinitions(EntityType.CLIENT, request);
 		SessionUtils.setAttribute(ClientConstants.AGE,
 				calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
 						.getTime())), request);
