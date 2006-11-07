@@ -98,6 +98,8 @@ public class GroupCustActionForm extends CustomerActionForm {
 			validateCustomFields(request,errors);			
 			validateFees(request,errors);
 		}
+		if (method.equals(Methods.update.toString()))
+			validateTrainedAndTrainedDate();
 		return errors;
 	}
 	

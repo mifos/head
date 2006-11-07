@@ -514,6 +514,13 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		}
 
 	}
+	
+	protected void validateTrainedAndTrainedDate() {
+		if(!isCustomerTrained() || ValidateMethods.isNullOrBlank(getTrainedDate())) {
+			setTrained(null);
+			setTrainedDate(null);
+		}
+	}
 
 	private boolean isSelectedFeePeriodic(FeeView selectedFee, List<FeeView> additionalFeeList){
 		for(FeeView fee: additionalFeeList)
