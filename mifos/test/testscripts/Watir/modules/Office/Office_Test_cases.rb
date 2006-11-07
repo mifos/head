@@ -152,6 +152,7 @@ class Office_Test_Cases < TestClass
       @blankspace_msg=@@officeprop['Office.officeName.maskmsg']
       @duplicate_officename_msg=@@officeprop['error.office.duplicateName']
       @duplicate_shortname_msg=@@officeprop['error.office.duplicateShortName']
+      @define_new_regional_office=@@officeprop['Office.labelAddNew']+" " +@@officeprop['Office.labelDivisionalOffice']
     rescue =>excp
       quit_on_error(excp)
     end
@@ -470,6 +471,7 @@ class Office_Test_Cases < TestClass
     begin
       set_office_data(office_name, short_name, office_type, parent_office,"","","","","","","","","",members_per_group, members_per_kendra,"")
       $ie.button(:value,@preview_button).click  
+      #added part of 843
       $ie.button(:value,@submit_button).click
     rescue =>excp
       quit_on_error(excp) 
@@ -716,6 +718,48 @@ class Office_Test_Cases < TestClass
     end
   end
   
+  #added as part of bug#660
+  def check_office_level_hierarchy()
+  
+    $ie.link(:text,@admin_label).click  
+     $ie.link(:text,@view_office_link).click
+
+    begin
+        assert($ie.contains_text(@define_new_regional_office))
+        $logger.log_results("Bug#660-Check the define new Divisional Office link","Define new Divisional Office link should be present","Present","passed")
+        rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Bug#660-Check the define new Divisional Office link","Define new Divisional Office link should be present","Not Present","failed")
+        rescue =>excp
+        quit_on_error(excp) 
+    end
+    $ie.link(:text,@admin_label).click  
+    $ie.link(:text,@view_office_hier_link).click
+    $ie.checkbox(:name,"subRegionalOffice").set(set_or_clear=false)  #unchecking the divisional office
+    $ie.button(:value,@submit_button).click()
+    $ie.link(:text,@view_office_link).click()
+      begin
+        assert(!($ie.contains_text(@define_new_regional_office)))
+        $logger.log_results("Bug#660-Check the define new Divsional Office link","Define new Divsional Office link should not be present ","Not Present","passed")
+        $ie.link(:text,@admin_label).click  
+        $ie.link(:text,@view_office_hier_link).click
+        $ie.checkbox(:name,"subRegionalOffice").set(set_or_clear=true)  #checking the divisional office back
+        $ie.button(:value,@submit_button).click()
+    
+        rescue Test::Unit::AssertionFailedError=>e
+        $logger.log_results("Bug#660-Check the define new Regional Office link","Define new Regional Office link should not be present ","Present","failed")
+        $ie.link(:text,@admin_label).click  
+        $ie.link(:text,@view_office_hier_link).click
+        $ie.checkbox(:name,"subRegionalOffice").set(set_or_clear=true)  #checking the divisional office back
+        $ie.button(:value,@submit_button).click()
+    
+        rescue =>excp
+        $ie.link(:text,@admin_label).click  
+        $ie.link(:text,@view_office_hier_link).click
+        $ie.checkbox(:name,"subRegionalOffice").set(set_or_clear=true)  #checking the divisional office back
+         $ie.button(:value,@submit_button).click()
+        quit_on_error(excp)     
+      end  
+  end
 end
 
 
@@ -729,8 +773,9 @@ class Office
   office_obj.Check_office_hierarchy
   office_obj.Check_Office_Links
   office_obj.Check_New_Office_cancel
-  
-  
+  #added as part of Bug#660
+   office_obj.check_office_level_hierarchy()
+
   filename=File.expand_path( File.dirname($PROGRAM_NAME))+"/data/Office_Data.xls"
   office_obj.open(filename,2) 
   count = 0
@@ -763,6 +808,6 @@ class Office
     rowid+=$maxcol
   end
   
+
   office_obj.mifos_logout()  
-  
 end
