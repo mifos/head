@@ -43,7 +43,7 @@
 <%@ taglib uri="/tags/struts-bean" prefix="bean"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
-<%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
+<%@taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="/tags/struts-tiles" prefix="tiles"%>
 <%@ taglib uri="/mifos/customtags" prefix="mifoscustom"%>
 <%@ taglib uri="/loan/loanfunctions" prefix="loanfn"%>
@@ -52,16 +52,18 @@
 
 <tiles:insert definition=".create">
 	<tiles:put name="body" type="string">
-
+<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 		<script language="JavaScript"
 			src="pages/application/checklist/js/validator.js"
 			type="text/javascript">
 	</script>
 
-		<html-el:form action="/chkListAction.do?method=preview" focus="checklistName" >
+		<html-el:form action="/chkListAction.do?method=preview"
+			focus="checklistName">
 			<html-el:hidden property="typeName" value="" />
 			<html-el:hidden property="displayedStatus" value="" />
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+			<html-el:hidden property="currentFlowKey"
+				value="${requestScope.currentFlowKey}" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="350" align="left" valign="top" bgcolor="#FFFFFF">
@@ -151,16 +153,16 @@
 									<td valign="top"><mifos:select property="type"
 										style="width:136px;"
 										onchange="populateStates(this.form,this);">
-										<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
+										<c:forEach var="item"
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}"
+											varStatus="loop">
 											<html-el:option value="${loop.index}">${item.masterTypeName}</html-el:option>
 										</c:forEach>
-									</mifos:select>
-									<html-el:hidden property="isCustomers" value="" />
-									<html-el:hidden property="masterIds" value="" />
-									<html-el:hidden property="masterNames" value="" />
-									<c:forEach
-
-										var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}" varStatus="loop">
+									</mifos:select> <html-el:hidden property="isCustomers" value="" />
+									<html-el:hidden property="masterIds" value="" /> <html-el:hidden
+										property="masterNames" value="" /> <c:forEach var="item"
+										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'checkList_masterData')}"
+										varStatus="loop">
 										<html-el:hidden property="isCustomers"
 											value="${item.isCustomer}" />
 										<html-el:hidden property="masterIds"
@@ -172,22 +174,22 @@
 								<tr class="fontnormal">
 									<td align="right" valign="top"><mifos:mifoslabel
 										name="checklist.displayed_status" mandatory="yes" /></td>
-									<td valign="top">
+									<td valign="top"><mifos:select property="stateId"
+										style="width:136px;"
+										onchange="populateStateName(this.form,this);">
+										<c:forEach var="item"
+											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}"
+											varStatus="loop">
+											<html-el:option value="${item.stateId}">${item.stateName}</html-el:option>
+										</c:forEach>
+									</mifos:select> <c:forEach var="item"
+										items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}"
+										varStatus="loop">
 
-									<mifos:select property="stateId" style="width:136px;"
-									onchange="populateStateName(this.form,this);">
-												<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}" varStatus="loop">
-												<html-el:option	value="${item.stateId}" >${item.stateName}</html-el:option>
-												</c:forEach>
-									</mifos:select>
-									<c:forEach var="item" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}" varStatus="loop">
-
-										<html-el:hidden property="stateName"
-												value="${item.stateName}" />
+										<html-el:hidden property="stateName" value="${item.stateName}" />
 										<html-el:hidden property="stateNames"
-												value="${item.stateName}" />
-									</c:forEach>
-													</td>
+											value="${item.stateName}" />
+									</c:forEach></td>
 								</tr>
 
 								<tr class="fontnormal">
@@ -208,7 +210,7 @@
 									<table width="86%" border="0" cellspacing="0" cellpadding="0">
 										<tr>
 											<td width="34%" valign="top"><html-el:textarea
-												property="text" cols="50" rows="5">
+												property="text" cols="50" rows="5" onkeypress="return restrictScript(event);">
 											</html-el:textarea></td>
 
 											<td width="66%" valign="top" class="paddingleft05notop"><html-el:button
@@ -222,34 +224,32 @@
 									<br>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
 										<tr class="fontnormal">
-													<br>
-													<c:forEach var="item"
-													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
-														varStatus="loop">
-														<c:if test="${item != ''}">
-															<tr id="myvalue${loop.index}div">
-																<input name='mycheckBOx' type="checkbox"
-																	value="${item}" />${item}
-																<input name='detailsList[${loop.index}]' type="hidden"
-																	value="${item}" />
-															</tr>
-														</c:if>
-													</c:forEach>
-													<div id="myDiv">
-													</div>
+											<br>
+											<c:forEach var="item"
+												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
+												varStatus="loop">
+												<c:if test="${item != ''}">
+													<tr id="myvalue${loop.index}div">
+														<input name='mycheckBOx' type="checkbox" value="${item}" />
+														${item}
+														<input name='detailsList[${loop.index}]' type="hidden"
+															value="${item}" />
+													</tr>
+												</c:if>
+											</c:forEach>
+											<div id="myDiv"></div>
 
 											<br>
 										</tr>
 										<tr valign="top" class="fontnormal">
 											<td colspan="2"><html-el:hidden
-												property="numberOfPreviousItems" value="0" />
-
-												<c:forEach var="item"
-													items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
-													varStatus="loop">
-													<input name="numberOfPreviousItems" type="hidden"
-														value='${loop.index}' />
-												</c:forEach>
+												property="numberOfPreviousItems" value="0" /> <c:forEach
+												var="item"
+												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'details')}"
+												varStatus="loop">
+												<input name="numberOfPreviousItems" type="hidden"
+													value='${loop.index}' />
+											</c:forEach>
 											<div id="removeButton" style="display:none"><html-el:button
 												property="removeSelected" styleClass="insidebuttn"
 												value="Remove Selected" style="width:120px"
@@ -277,8 +277,8 @@
 									<td align="center"><html-el:submit style="width:70px"
 										property="button" styleClass="buttn">
 										<mifos:mifoslabel name="checklist.button_preview" />
-									</html-el:submit> &nbsp; <html-el:button style="width:70px" property="cancelBttn"
-										styleClass="cancelbuttn"
+									</html-el:submit> &nbsp; <html-el:button style="width:70px"
+										property="cancelBttn" styleClass="cancelbuttn"
 										onclick="javascript:fnCancel(this.form)">
 										<mifos:mifoslabel name="checklist.button_cancel" />
 									</html-el:button></td>

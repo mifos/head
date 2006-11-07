@@ -16,11 +16,9 @@ function FnCheckNumCharsOnPress_en_US(evt) {
 		return true; 
 	else
 		return false;*/
-	/*if((keyCodePress==39) || (keyCodePress==34) ||
-		(keyCodePress==60) || (keyCodePress==62))
+	if((keyCodePress==60) || (keyCodePress==62))
 		return false;
 	else
-	*/
 		return true;
 }
 

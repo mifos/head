@@ -56,7 +56,7 @@
 			src="pages/application/checklist/js/validator.js"
 			type="text/javascript">
 </script>
-
+<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
 
 		<html-el:form action="/chkListAction.do?method=managePreview">
 			<c:set var="checkList" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" />
@@ -201,7 +201,7 @@
 							<table width="86%" border="0" cellspacing="0" cellpadding="0">
 								<tr>
 									<td width="34%" valign="top">
-										<html-el:textarea property="text" value="" cols="50" rows="5"></html-el:textarea>
+										<html-el:textarea property="text" value="" cols="50" rows="5" onkeypress="return restrictScript(event);"></html-el:textarea>
 									</td>
 									<td width="66%" valign="top" class="paddingleft05notop">
 									<html-el:button	property="button" styleClass="insidebuttn" style="width:65px" onclick="createCheckList();isButtonRequired()">
