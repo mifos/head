@@ -44,30 +44,46 @@
 	<parameter name="branchid" isForPrompting="true" class="java.lang.Integer"/>
 	<parameter name="staffid" isForPrompting="true" class="java.lang.Integer"/>
 	<queryString><![CDATA[select p.PERSONNEL_ID as staffid,p.DISPLAY_NAME as staffname,0 as crfbalance,0 as elamountoutstanding,0 as loanoutstanding,0 as portfolioatrisk,0 as s2balance,0 as s3balance,0 as thismonthtotalgroup,
-ifnull((select count(c.CUSTOMER_ID) from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.CUSTOMER_LEVEL_ID=2),0) as grouppermonth,
-ROUND((ifnull((select count(c.CUSTOMER_ID) from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.CUSTOMER_LEVEL_ID=1),0)/ifnull((select count(c.CUSTOMER_ID) from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.CUSTOMER_LEVEL_ID=3),0)),0) as memperkendra,
-ifnull((select count(c.CUSTOMER_ID) from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.CUSTOMER_LEVEL_ID=1),0) as totmember,
-ifnull((select count(c.CUSTOMER_ID) from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.CUSTOMER_LEVEL_ID=3),0) as kendrahandled,
 
-ifnull((select count(distinct c.CUSTOMER_ID) from Customer c,loan_account loan,account act where c.customer_id=act.customer_id and act.account_id=loan.account_id and c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.status_ID=3 and c.CUSTOMER_LEVEL_ID=1),0) as totactiveborrowers,
+ifnull((select count(c.CUSTOMER_ID) from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID
+and c.CUSTOMER_LEVEL_ID=2 AND MONTH(c.CREATED_DATE)=MONTH(CURRENT_DATE)),0) as grouppermonth,
 
-ifnull((select count(distinct loan.account_ID) from Customer c,loan_account loan,account act where c.customer_id=act.customer_id and act.account_id=loan.account_id and c.LOAN_OFFICER_ID=p.PERSONNEL_ID and act.account_state_id=5 and c.CUSTOMER_LEVEL_ID=1),0) as noofactiveloans,
+ROUND((ifnull((select count(c.CUSTOMER_ID) from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and
+c.CUSTOMER_LEVEL_ID=1 AND  c.STATUS_ID IN (3,4)),0)/ifnull((select count(c.CUSTOMER_ID)
+from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.CUSTOMER_LEVEL_ID=3  AND c.STATUS_ID=13),0)),0) as memperkendra,
+
+ifnull((select count(c.CUSTOMER_ID) from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and
+c.CUSTOMER_LEVEL_ID=1 AND  c.STATUS_ID IN (3,4)),0) as totmember,
+ifnull((select count(c.CUSTOMER_ID) from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and
+c.CUSTOMER_LEVEL_ID=3 AND c.STATUS_ID=13),0) as kendrahandled,
+
+ifnull((select count(distinct c.CUSTOMER_ID) from Customer c,loan_account loan,account act
+where c.customer_id=act.customer_id and act.account_id=loan.account_id and
+c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.status_ID IN (3,4) and c.CUSTOMER_LEVEL_ID=1 AND act.ACCOUNT_STATE_ID IN (5,9)),0) as totactiveborrowers,
+
+ifnull((select count(distinct loan.account_ID) from Customer c,loan_account loan,account act
+where c.customer_id=act.customer_id and act.account_id=loan.account_id and
+c.LOAN_OFFICER_ID=p.PERSONNEL_ID and act.account_state_id IN (5,9) and c.CUSTOMER_LEVEL_ID=1),0) as noofactiveloans,
 
 (select round(sum(sacc.SAVINGS_BALANCE),2) from account acc1
 left join savings_account sacc on sacc.ACCOUNT_ID = acc1.ACCOUNT_ID
 left join prd_offering prd on prd.PRD_OFFERING_ID=sacc.PRD_OFFERING_ID
 left join customer mem on acc1.CUSTOMER_ID=mem.CUSTOMER_ID
-where mem.LOAN_OFFICER_ID=p.PERSONNEL_ID 
-and account_type_id=2 
-and prd.PRD_OFFERING_SHORT_NAME='MM1' 
+where mem.LOAN_OFFICER_ID=p.PERSONNEL_ID
+and account_type_id=2
+and prd.PRD_OFFERING_SHORT_NAME='MM1'
 group by p.personnel_id) as s1balance,
 
-ifnull((select count(distinct loan.account_ID) from Customer c,loan_account loan,account act where c.customer_id=act.customer_id and act.account_id=loan.account_id and c.LOAN_OFFICER_ID=p.PERSONNEL_ID  and c.CUSTOMER_LEVEL_ID=1),0) as noofloandisbursed,
+ifnull((select count(distinct loan.account_ID) from Customer c,loan_account loan,account act where
+c.customer_id=act.customer_id and act.account_id=loan.account_id and c.LOAN_OFFICER_ID=p.PERSONNEL_ID
+and c.CUSTOMER_LEVEL_ID=1 AND ACT.ACCOUNT_STATE_ID IN (5,6,7,8,9)),0) as noofloandisbursed,
 
 
-ifnull((select round(sum(loan_amount),2) from Customer c,loan_account loan,account act where c.customer_id=act.customer_id and act.account_id=loan.account_id and c.LOAN_OFFICER_ID=p.PERSONNEL_ID  and c.CUSTOMER_LEVEL_ID=1 group by p.personnel_id),0) as amountdisbursed,
+ifnull((select round(sum(loan_amount),2) from Customer c,loan_account loan,account act
+where c.customer_id=act.customer_id and act.account_id=loan.account_id and
+c.LOAN_OFFICER_ID=p.PERSONNEL_ID  and c.CUSTOMER_LEVEL_ID=1 AND ACT.ACCOUNT_STATE_ID IN (5,6,7,8,9) group by p.personnel_id),0) as amountdisbursed,
 
-(select distinct c.branch_id from Customer c,personnel p where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.CUSTOMER_LEVEL_ID=1 ) as branchid
+(select distinct c.branch_id from Customer c where c.LOAN_OFFICER_ID=p.PERSONNEL_ID and c.CUSTOMER_LEVEL_ID=1 ) as branchid 
 from personnel p where p.office_id=$P{branchid} and p.personnel_id=$P{staffid}]]></queryString>
 
 	<field name="staffid" class="java.lang.Integer"/>

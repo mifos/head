@@ -51,6 +51,7 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fund.business.FundBO;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
@@ -576,7 +577,9 @@ public class LoanPrdActionForm extends BaseActionForm {
 							ConfigurationConstants.INTEREST, request),
 					ProductDefinitionConstants.RATETYPE);
 		validateMinMaxDefInterestRates(errors, request);
-        vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
+		vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors,
+				request);
+		validatePrincDueOnLastInstAndPrincGraceType(errors);
 		setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
 		prdDefLogger
 				.debug("validateForPreview method of Loan Product Action form method called :"
@@ -601,7 +604,9 @@ public class LoanPrdActionForm extends BaseActionForm {
 					ProductDefinitionConstants.ERROR_SELECT,
 					ProductDefinitionConstants.STATUS);
 		validateMinMaxDefInterestRates(errors, request);
-        vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors, request);
+		vaildateDecliningInterestSvcChargeDeductedAtDisbursement(errors,
+				request);
+		validatePrincDueOnLastInstAndPrincGraceType(errors);
 		setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
 		prdDefLogger
 				.debug("validateForEditPreview method of Loan Product Action form method called :"
@@ -702,7 +707,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 					FeeBO fee = getFeeFromList(fees, selectedFee);
 					if (fee != null) {
 						isFrequencyMatchingOfferingFrequency(fee, errors);
-						feeViews.add(new FeeView(getUserContext(request),fee));
+						feeViews.add(new FeeView(getUserContext(request), fee));
 
 					}
 				}
@@ -935,32 +940,44 @@ public class LoanPrdActionForm extends BaseActionForm {
 		} catch (Exception ne) {
 		}
 	}
-    
-            
-	private void vaildateDecliningInterestSvcChargeDeductedAtDisbursement(ActionErrors errors,
-	        HttpServletRequest request) {
-	    prdDefLogger
-	        .debug("start Loan prd Action Form vaildateDecliningInterestSvcChargeDeductedAtDisbursement :"
-	                + getInterestTypes()
-	                + "---"
-	                + getIntDedDisbursementFlag());
-               
-               
-	    if(getInterestTypes()!= null && getInterestTypes().equals(
-	            InterestTypeConstants.DECLININGINTEREST.getValue().toString())){
-                   
-	        if (null != getIntDedDisbursementFlag() && getIntDedDisbursementFlag().equals("1")){
-	            errors.add(
-	                    ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION,
-	                    new ActionMessage(
-	                            ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION));
-	        }
-	    }
-               
-               
-	    prdDefLogger
-	        .debug("Loan prd Action Form vaildateDecliningInterestSvcChargeDeductedAtDisbursement called " );
+
+	private void vaildateDecliningInterestSvcChargeDeductedAtDisbursement(
+			ActionErrors errors, HttpServletRequest request) {
+		prdDefLogger
+				.debug("start Loan prd Action Form vaildateDecliningInterestSvcChargeDeductedAtDisbursement :"
+						+ getInterestTypes()
+						+ "---"
+						+ getIntDedDisbursementFlag());
+
+		if (getInterestTypes() != null
+				&& getInterestTypes().equals(
+						InterestTypeConstants.DECLININGINTEREST.getValue()
+								.toString())) {
+
+			if (null != getIntDedDisbursementFlag()
+					&& getIntDedDisbursementFlag().equals("1")) {
+				errors
+						.add(
+								ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION,
+								new ActionMessage(
+										ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION));
+			}
+		}
+
+		prdDefLogger
+				.debug("Loan prd Action Form vaildateDecliningInterestSvcChargeDeductedAtDisbursement called ");
 	}
-        
-    
+
+	private void validatePrincDueOnLastInstAndPrincGraceType(ActionErrors errors) {
+		if (getGracePeriodTypeValue() != null
+				&& getGracePeriodTypeValue().equals(
+						GraceTypeConstants.PRINCIPALONLYGRACE.getValue())
+				&& isPrinDueLastInstValue()) {
+			addError(
+					errors,
+					ProductDefinitionConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE,
+					ProductDefinitionConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE);
+		}
+	}
+
 }

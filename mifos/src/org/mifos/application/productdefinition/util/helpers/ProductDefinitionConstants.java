@@ -226,5 +226,7 @@ public interface ProductDefinitionConstants {
 	public String LATENESSDAYS = "lateness days";
 	public String MAX_DAYS="product.maxDays";
 	public String ERROR_MAX_DAYS="errors.maxValue";
+	
+	public static final String PRINCIPALLASTPAYMENT_INVALIDGRACETYPE="errors.principallast_invalidgrace";
 }
 

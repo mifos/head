@@ -58,9 +58,11 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
+import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -154,24 +156,22 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 						ProductDefinitionConstants.LOANINTERESTGLCODELIST,
 						request)).size());
 		List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.SRCFUNDSLIST, request);
+				ProductDefinitionConstants.SRCFUNDSLIST, request);
 		assertNotNull(funds);
 		List<FeeView> loanFees = (List<FeeView>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.LOANFEESLIST, request);
+				ProductDefinitionConstants.LOANFEESLIST, request);
 		assertNull(loanFees);
 		List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.LOANPRDFEE, request);
+				ProductDefinitionConstants.LOANPRDFEE, request);
 		assertNotNull(productFees);
 		List<FeeView> selectedFees = (List<FeeView>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request);
+				ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request);
 		assertNotNull(selectedFees);
 		List<FundBO> selectedFunds = (List<FundBO>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, request);
+				ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, request);
 		assertNotNull(selectedFunds);
-		assertEquals(0, (selectedFees)
-				.size());
-		assertEquals(0, (selectedFunds)
-				.size());
+		assertEquals(0, (selectedFees).size());
+		assertEquals(0, (selectedFunds).size());
 	}
 
 	public void testPreviewWithOutData() throws Exception {
@@ -268,8 +268,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyInputForward();
 	}
 
-	public void testPreviewWithImproperMinMaxInterestRates()
-			throws Exception {
+	public void testPreviewWithImproperMinMaxInterestRates() throws Exception {
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -526,6 +525,45 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.preview_success.toString());
 	}
 
+	public void testPreviewForPricDueOnLastInstAndPrincGrace() throws Exception {
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
+		addRequestParameter("prdCategory", "1");
+		addRequestParameter("startDate", offSetCurrentDate(0, userContext
+				.getPereferedLocale()));
+		addRequestParameter("endDate", offSetCurrentDate(1, userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("minLoanAmount", "2000");
+		addRequestParameter("maxLoanAmount", "11000");
+		addRequestParameter("defaultLoanAmount", "5000");
+		addRequestParameter("interestTypes", "1");
+		addRequestParameter("maxInterestRate", "12");
+		addRequestParameter("minInterestRate", "1");
+		addRequestParameter("defInterestRate", "4");
+		addRequestParameter("freqOfInstallments", "2");
+		addRequestParameter("gracePeriodType",
+				GraceTypeConstants.PRINCIPALONLYGRACE.getValue().toString());
+		addRequestParameter("gracePeriodDuration", "1");
+		addRequestParameter("prinDueLastInstFlag", YesNoFlag.YES.getValue()
+				.toString());
+		addRequestParameter("recurAfter", "1");
+		addRequestParameter("maxNoInstallments", "14");
+		addRequestParameter("minNoInstallments", "2");
+		addRequestParameter("defNoInstallments", "11");
+		addRequestParameter("intDedDisbursementFlag", "1");
+		addRequestParameter("principalGLCode", "7");
+		addRequestParameter("interestGLCode", "7");
+
+		actionPerform();
+		verifyActionErrors(new String[] { ProductDefinitionConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE });
+		verifyInputForward();
+	}
+
 	public void testPreviewForPageExpiration() throws Exception {
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "preview");
@@ -719,19 +757,19 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 						ProductDefinitionConstants.LOANINTERESTGLCODELIST,
 						request)).size());
 		List<FundBO> funds = (List<FundBO>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.SRCFUNDSLIST, request);
+				ProductDefinitionConstants.SRCFUNDSLIST, request);
 		assertNotNull(funds);
 		List<FeeView> fees = (List<FeeView>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.LOANFEESLIST, request);
+				ProductDefinitionConstants.LOANFEESLIST, request);
 		assertNull(fees);
 		List<FeeBO> productFees = (List<FeeBO>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.LOANPRDFEE, request);
+				ProductDefinitionConstants.LOANPRDFEE, request);
 		assertNotNull(productFees);
 		List<FeeView> selectedFees = (List<FeeView>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request);
+				ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, request);
 		assertNotNull(selectedFees);
 		List<FundBO> selectedFunds = (List<FundBO>) SessionUtils.getAttribute(
-						ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, request);
+				ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST, request);
 		assertNotNull(selectedFunds);
 		assertEquals("The size of applicable status list", 2,
 				((List<PrdStatusEntity>) SessionUtils.getAttribute(
@@ -809,8 +847,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals(loanOffering.getInterestGLcode().getGlcodeId().toString(),
 				loanPrdActionForm.getInterestGLCode());
 
-		assertEquals(loanOffering.getLoanOfferingFees().size(),
-				(selectedFees).size());
+		assertEquals(loanOffering.getLoanOfferingFees().size(), (selectedFees)
+				.size());
 		assertEquals(loanOffering.getLoanOfferingFunds().size(),
 				(selectedFunds).size());
 
@@ -923,6 +961,51 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward(ActionForwards.editPreview_success.toString());
+	}
+
+	public void testEditPreviewForPricDueOnLastInstAndPrincGrace()
+			throws Exception {
+		loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "editPreview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE,
+				loanOffering.getStartDate(), request);
+
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
+		addRequestParameter("prdCategory", "1");
+		addRequestParameter("startDate", offSetCurrentDate(0, userContext
+				.getPereferedLocale()));
+		addRequestParameter("endDate", offSetCurrentDate(1, userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("minLoanAmount", "2000");
+		addRequestParameter("maxLoanAmount", "11000");
+		addRequestParameter("defaultLoanAmount", "5000");
+		addRequestParameter("interestTypes", "1");
+		addRequestParameter("maxInterestRate", "12");
+		addRequestParameter("minInterestRate", "1");
+		addRequestParameter("defInterestRate", "4");
+		addRequestParameter("freqOfInstallments", "2");
+		addRequestParameter("prdStatus", "2");
+		addRequestParameter("gracePeriodType",
+				GraceTypeConstants.PRINCIPALONLYGRACE.getValue().toString());
+		addRequestParameter("gracePeriodDuration", "1");
+		addRequestParameter("prinDueLastInstFlag", YesNoFlag.YES.getValue()
+				.toString());
+		addRequestParameter("recurAfter", "1");
+		addRequestParameter("maxNoInstallments", "14");
+		addRequestParameter("minNoInstallments", "2");
+		addRequestParameter("defNoInstallments", "11");
+		addRequestParameter("intDedDisbursementFlag", "1");
+		addRequestParameter("principalGLCode", "7");
+		addRequestParameter("interestGLCode", "7");
+
+		actionPerform();
+		verifyActionErrors(new String[] { ProductDefinitionConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE });
+		verifyInputForward();
 	}
 
 	public void testEditPrevious() throws Exception {
@@ -1094,121 +1177,119 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 
 	}
 
-	
 	public void testCreateDecliningInterestDisbursementFail() throws Exception {
-	    fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic",
-			            FeeCategory.LOAN, "100.0", RecurrenceType.MONTHLY, (short) 1);
+		fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic",
+				FeeCategory.LOAN, "100.0", RecurrenceType.MONTHLY, (short) 1);
 		setRequestPathInfo("/loanproductaction.do");
-	    addRequestParameter("method", "load");
-	    actionPerform();
-	    
-	    flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-	    
-	    setRequestPathInfo("/loanproductaction.do");
-	    addRequestParameter("method", "preview");
-	    addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-	    
-	    addRequestParameter("prdOfferingName", "Loan Offering");
-	    addRequestParameter("prdOfferingShortName", "LOAN");
-	    addRequestParameter("prdCategory", "1");
-	    addRequestParameter("startDate", offSetCurrentDate(0, userContext
-	            .getPereferedLocale()));
-	    addRequestParameter("endDate", offSetCurrentDate(1, userContext
-	            .getPereferedLocale()));
-	    addRequestParameter("prdApplicableMaster", "1");
-	    addRequestParameter("minLoanAmount", "2000");
-	    addRequestParameter("maxLoanAmount", "11000");
-	    addRequestParameter("defaultLoanAmount", "5000");
-	    addRequestParameter("interestTypes", "2");
-	    addRequestParameter("maxInterestRate", "12");
-	    addRequestParameter("minInterestRate", "1");
-	    addRequestParameter("defInterestRate", "4");
-	    addRequestParameter("freqOfInstallments", "2");
-	    addRequestParameter("prdOfferinFees", new String[] { fee.getFeeId()
-	            .toString() });
-	    addRequestParameter("loanOfferingFunds", new String[] { "1" });
-	    addRequestParameter("recurAfter", "1");
-	    addRequestParameter("maxNoInstallments", "14");
-	    addRequestParameter("minNoInstallments", "2");
-	    addRequestParameter("defNoInstallments", "11");
-	    addRequestParameter("intDedDisbursementFlag", "1");
-	    addRequestParameter("principalGLCode", "35");
-	    addRequestParameter("interestGLCode", "45");
-	    actionPerform();
-	    setRequestPathInfo("/loanproductaction.do");
-	    addRequestParameter("method", "create");
-	    addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-	    actionPerform();
-	    verifyActionErrors(new String[] {
-	    "exceptions.declineinterestdisbursementdeduction" });
-	    
+		addRequestParameter("method", "load");
+		actionPerform();
+
+		flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
+		addRequestParameter("prdCategory", "1");
+		addRequestParameter("startDate", offSetCurrentDate(0, userContext
+				.getPereferedLocale()));
+		addRequestParameter("endDate", offSetCurrentDate(1, userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("minLoanAmount", "2000");
+		addRequestParameter("maxLoanAmount", "11000");
+		addRequestParameter("defaultLoanAmount", "5000");
+		addRequestParameter("interestTypes", "2");
+		addRequestParameter("maxInterestRate", "12");
+		addRequestParameter("minInterestRate", "1");
+		addRequestParameter("defInterestRate", "4");
+		addRequestParameter("freqOfInstallments", "2");
+		addRequestParameter("prdOfferinFees", new String[] { fee.getFeeId()
+				.toString() });
+		addRequestParameter("loanOfferingFunds", new String[] { "1" });
+		addRequestParameter("recurAfter", "1");
+		addRequestParameter("maxNoInstallments", "14");
+		addRequestParameter("minNoInstallments", "2");
+		addRequestParameter("defNoInstallments", "11");
+		addRequestParameter("intDedDisbursementFlag", "1");
+		addRequestParameter("principalGLCode", "35");
+		addRequestParameter("interestGLCode", "45");
+		actionPerform();
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyActionErrors(new String[] { "exceptions.declineinterestdisbursementdeduction" });
+
 	}
-	
-	public void testCreateDecliningInterestDisbursementSuccess() throws Exception {
-	    fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic",
-	            FeeCategory.LOAN, "100.0", RecurrenceType.MONTHLY, (short) 1);
-	    setRequestPathInfo("/loanproductaction.do");
-	    addRequestParameter("method", "load");
-	    actionPerform();
-	    
-	    flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
-	    
-	    setRequestPathInfo("/loanproductaction.do");
-	    addRequestParameter("method", "preview");
-	    addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-	    
-	    addRequestParameter("prdOfferingName", "Loan Offering");
-	    addRequestParameter("prdOfferingShortName", "LOAN");
-	    addRequestParameter("prdCategory", "1");
-	    addRequestParameter("startDate", offSetCurrentDate(0, userContext
-	            .getPereferedLocale()));
-	    addRequestParameter("endDate", offSetCurrentDate(1, userContext
-	            .getPereferedLocale()));
-	    addRequestParameter("prdApplicableMaster", "1");
-	    addRequestParameter("minLoanAmount", "2000");
-	    addRequestParameter("maxLoanAmount", "11000");
-	    addRequestParameter("defaultLoanAmount", "5000");
-	    addRequestParameter("interestTypes", "2");
-	    addRequestParameter("maxInterestRate", "12");
-	    addRequestParameter("minInterestRate", "1");
-	    addRequestParameter("defInterestRate", "4");
-	    addRequestParameter("freqOfInstallments", "2");
-	    addRequestParameter("prdOfferinFees", new String[] { fee.getFeeId()
-	            .toString() });
-	    addRequestParameter("loanOfferingFunds", new String[] { "1" });
-	    addRequestParameter("recurAfter", "1");
-	    addRequestParameter("maxNoInstallments", "14");
-	    addRequestParameter("minNoInstallments", "2");
-	    addRequestParameter("defNoInstallments", "11");
-	    //addRequestParameter("intDedDisbursementFlag", "0");
-	    addRequestParameter("principalGLCode", "35");
-	    addRequestParameter("interestGLCode", "45");
-	    actionPerform();
-	    setRequestPathInfo("/loanproductaction.do");
-	    addRequestParameter("method", "create");
-	    addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-	    actionPerform();
-	    
-	    verifyNoActionErrors();
-	    verifyNoActionMessages();
-	    verifyForward(ActionForwards.create_success.toString());
-	    
-	    assertNotNull(request
-	            .getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
-	    assertNotNull(request
-	            .getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
-	    assertNull(((FlowManager) request.getSession().getAttribute(
-	            Constants.FLOWMANAGER)).getFlow(flowKey));
-	    
-	    TestObjectFactory
-	    .removeObject((LoanOfferingBO) TestObjectFactory
-	            .getObject(
-	                    LoanOfferingBO.class,
-	                    (Short) request
-	                    .getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
+
+	public void testCreateDecliningInterestDisbursementSuccess()
+			throws Exception {
+		fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic",
+				FeeCategory.LOAN, "100.0", RecurrenceType.MONTHLY, (short) 1);
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "load");
+		actionPerform();
+
+		flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
+
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+		addRequestParameter("prdOfferingName", "Loan Offering");
+		addRequestParameter("prdOfferingShortName", "LOAN");
+		addRequestParameter("prdCategory", "1");
+		addRequestParameter("startDate", offSetCurrentDate(0, userContext
+				.getPereferedLocale()));
+		addRequestParameter("endDate", offSetCurrentDate(1, userContext
+				.getPereferedLocale()));
+		addRequestParameter("prdApplicableMaster", "1");
+		addRequestParameter("minLoanAmount", "2000");
+		addRequestParameter("maxLoanAmount", "11000");
+		addRequestParameter("defaultLoanAmount", "5000");
+		addRequestParameter("interestTypes", "2");
+		addRequestParameter("maxInterestRate", "12");
+		addRequestParameter("minInterestRate", "1");
+		addRequestParameter("defInterestRate", "4");
+		addRequestParameter("freqOfInstallments", "2");
+		addRequestParameter("prdOfferinFees", new String[] { fee.getFeeId()
+				.toString() });
+		addRequestParameter("loanOfferingFunds", new String[] { "1" });
+		addRequestParameter("recurAfter", "1");
+		addRequestParameter("maxNoInstallments", "14");
+		addRequestParameter("minNoInstallments", "2");
+		addRequestParameter("defNoInstallments", "11");
+		// addRequestParameter("intDedDisbursementFlag", "0");
+		addRequestParameter("principalGLCode", "35");
+		addRequestParameter("interestGLCode", "45");
+		actionPerform();
+		setRequestPathInfo("/loanproductaction.do");
+		addRequestParameter("method", "create");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.create_success.toString());
+
+		assertNotNull(request
+				.getAttribute(ProductDefinitionConstants.LOANPRODUCTID));
+		assertNotNull(request
+				.getAttribute(ProductDefinitionConstants.LOANPRDGLOBALOFFERINGNUM));
+		assertNull(((FlowManager) request.getSession().getAttribute(
+				Constants.FLOWMANAGER)).getFlow(flowKey));
+
+		TestObjectFactory
+				.removeObject((LoanOfferingBO) TestObjectFactory
+						.getObject(
+								LoanOfferingBO.class,
+								(Short) request
+										.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
 	}
-	
-    
+
 	private String offSetCurrentDate(int noOfDays, Locale locale) {
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
@@ -1217,11 +1298,10 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day + noOfDays);
 		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar
 				.getTimeInMillis());
-		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(
-				DateFormat.SHORT, locale);
-		String userfmt = DateHelper
-				.convertToCurrentDateFormat(format
-						.toPattern());
+		SimpleDateFormat format = (SimpleDateFormat) DateFormat
+				.getDateInstance(DateFormat.SHORT, locale);
+		String userfmt = DateHelper.convertToCurrentDateFormat(format
+				.toPattern());
 		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
 
