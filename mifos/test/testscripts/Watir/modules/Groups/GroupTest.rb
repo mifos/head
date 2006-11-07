@@ -162,6 +162,7 @@ class GroupCreateEdit < TestClass
     @@custprop=load_properties("modules/propertis/CustomerUIResources.properties")
     @@centerprop=load_properties("modules/propertis/CenterUIResources.properties")
     @@accountprop=load_properties("modules/propertis/accountsUIResources.properties")
+    @@loanprop=load_properties("modules/propertis/LoanUIResources.properties")
   end
   #Getting the lables from properties file
   
@@ -200,7 +201,11 @@ class GroupCreateEdit < TestClass
     @@group_applycharges=@@groupprop['group.applycharges']
     @@group_amountdue=@@groupprop['Group.amountdue']
     @@return_account_details=@@accountprop['Account.returnToAccountDetails']
-    @@back_to_details_page=@@centerprop['Center.backtodetailspage']    
+    @@back_to_details_page=@@centerprop['Center.backtodetailspage']  
+    @@reviewadjustment = @@accountprop['accounts.btn_reviewAdjustment']
+    @@reviewtransaction = @@loanprop['loan.reviewtransaction']
+    @@group_apply_adjustment = @@groupprop['Group.applyAdjustment']
+    @@group_waive = @@groupprop['Group.waive']
   end
   #checking for the link Create new group in Clients&Accounts page 
   
@@ -941,6 +946,7 @@ class GroupCreateEdit < TestClass
       
       #added as part of Bug#802
       apply_Miscfees_to_inactivecustomer()
+      
       feetypearr=$ie.select_list(:name,"chargeType").getAllContents()
       $ie.select_list(:name,"chargeType").select(feetypearr[1].to_s)
       #    arr=$ie.select_list(:name,"chargeType").getSelectedItems()
@@ -955,7 +961,7 @@ class GroupCreateEdit < TestClass
         $logger.log_results("Bug#397-Fee applied to a customer","Fee applied a group which is not active","Fee displayed for inactive group","failed")
       end
       change_status(@@Display_name)
-      # again verifying the view details page ro check whether the fees applied is displayed now.
+      # again verifying the view details page to check whether the fees applied is displayed now.
       search_client(@@global_cust_num) 
       $ie.link(:text,@@Display_name.strip()+": ID "+@@global_cust_num).click
       table_obj=$ie.table(:index,15)
@@ -1037,6 +1043,65 @@ class GroupCreateEdit < TestClass
     end
   end #end of search_client method
   
+  def check_waive_amount()
+    begin
+    dbquery("select global_cust_num,display_name from customer where customer_level_id=2 and status_id=9")
+    customer_number=dbresult[0]
+    customer_name=dbresult[1]
+    search_client(customer_number)
+    $ie.link(:text,customer_name.strip()+": ID "+customer_number).click
+    $ie.link(:text,@@view_details).click
+    
+      #applying Misc fees 
+      apply_charges()
+
+      #applying payment
+      apply_payment()
+
+      #Apply adjustment
+      apply_adjustment()
+      
+     $ie.link(:text,@@group_waive).click()
+      begin
+         assert($ie.contains_text(@@group_applypayment))
+         $logger.log_results("Bug#964-Waive Amount","Should work","Working","Passed")
+         rescue Test::Unit::AssertionFailedError=>e
+         $logger.log_results("Bug#964-Waive Amount","NA","NA","failed")
+         rescue =>excp
+         quit_on_error(excp)   
+       end 
+    end
+  end
+  
+  def apply_adjustment()
+    begin
+     $ie.link(:text,@@group_apply_adjustment).click             
+    $ie.checkbox(:name,"adjustcheckbox").set(set_or_clear=true) 
+    $ie.text_field(:name,"adjustmentNote").set("Amount Adjusted")
+    $ie.button(:value,@@reviewadjustment).click
+    $ie.button(:value,@@button_submit).click
+
+    end
+  end
+  
+  def apply_payment()
+    begin
+    $ie.link(:text,@@group_applypayment).click
+    $ie.select_list(:name,"paymentTypeId").select("Cash")
+    $ie.button(:value,@@reviewtransaction).click  
+    $ie.button(:value,@@button_submit).click
+    end
+  end
+  
+  def apply_charges()
+    begin
+      $ie.link(:text,@@group_applycharges).click
+      $ie.select_list(:name,"chargeType").select_value("-1")
+      $ie.text_field(:name,"chargeAmount").set("34")
+      $ie.button(:value,@@button_submit).click
+    end
+  end
+  
   
 end #end of class
 
@@ -1102,5 +1167,9 @@ class GroupTest
   
   #added by Dilip as part of bug#397
   groupobject.check_feeApplied_status()
+  
+  #added as part of Bug#964
+  groupobject.check_waive_amount()
+  
   groupobject.mifos_logout()
 end
