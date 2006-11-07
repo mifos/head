@@ -50,7 +50,7 @@ class FeeOnetime < TestClass
       dbquery("select personnel_id from personnel where login_name="+"'"+name_login+"'")
       @@personnel_id=dbresult[0]
       #dbquery("select account_id,global_account_num from account where account_type_id=1 and account_state_id < 5 and personnel_id="+@@personnel_id)
-      dbquery("select account_id,global_account_num from account where account_type_id=1 and account_state_id < 5")
+      dbquery("select account_id,global_account_num from account where account_type_id=1 and account_state_id in (3,5)")
       @@account_num=dbresult[0]
       @@global_account_num=dbresult[1]
       dbquery("SELECT fees.fee_name,fees.rate,fees.fee_amount,fees.fee_id,fees.discriminator FROM fees,fee_frequency where fee_frequency.fee_id=fees.fee_id and fee_frequency.fee_frequencytype_id=2  and fee_frequency.frequency_payment_id ="+@@fee_type+" and fees.status=1 and fees.category_id=5")
