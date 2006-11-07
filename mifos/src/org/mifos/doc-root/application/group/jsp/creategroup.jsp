@@ -421,9 +421,10 @@
 											</td>
 										</tr>
 									</table>
-									<br>
+									
 
-
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+							<br>
 									<!-- Custom Fields -->
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
@@ -461,7 +462,7 @@
 									</table>
 
 									<!--Custom Fields end  -->
-									<br>
+									</c:if>
 									<!-- Administrative Set Fees -->
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<c:if test="${!empty sessionScope.groupCustActionForm.defaultFees}">

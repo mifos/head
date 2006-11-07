@@ -253,6 +253,7 @@ function meetingpopup(){
       		<%-- Custom Fields  Values --%>
       		 <tr>
                 <td height="23" class="fontnormalbold">
+                <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 				      <mifos:mifoslabel name="Group.additionalinformation" bundle="GroupUIResources"></mifos:mifoslabel>
 					<br>
 		
@@ -265,6 +266,7 @@ function meetingpopup(){
 						</c:forEach>
     			</c:forEach> 
 		      <br>
+		      </c:if>
 	<html-el:button property="editInfo" styleClass="insidebuttn" style="width:130px;" onclick="GoToEditPage()">
 		<mifos:mifoslabel name="Group.edit" bundle="GroupUIResources"/><c:out value=" "/><mifos:mifoslabel name="${ConfigurationConstants.GROUP}"/><c:out value=" "/><mifos:mifoslabel name="Group.groupinformation" bundle="GroupUIResources"/>
 	</html-el:button>

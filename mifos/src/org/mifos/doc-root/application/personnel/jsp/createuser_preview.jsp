@@ -384,11 +384,11 @@
 
 								<tr>
 									<td class="fontnormalbold"><br>
-									<c:if test="${!empty personActionForm.customFields}">
+									<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 										<mifos:mifoslabel name="Personnel.AdditionalInfo"
 											bundle="PersonnelUIResources"></mifos:mifoslabel>
 										<br>
-									</c:if> <c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+									 <c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 										<c:forEach var="cf"
 											items="${personActionForm.customFields}">
 											<c:if test="${cfdef.fieldId==cf.fieldId}">
@@ -400,6 +400,7 @@
 											</c:if>
 										</c:forEach>
 									</c:forEach> <br>
+									</c:if>
 									<html-el:button property="btn" styleClass="insidebuttn"
 										style="width:130px;" onclick="goToEditPage()">
 										<mifos:mifoslabel name="button.EditUserInformation"

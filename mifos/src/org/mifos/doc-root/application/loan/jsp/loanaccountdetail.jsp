@@ -377,6 +377,7 @@
 						</tr>
 						<tr>
 							<td class="fontnormal"><br>
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<span class="fontnormalbold"><mifos:mifoslabel
 								name="loan.additionalInfo" /><br></span> <span class="fontnormal">
 								<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
@@ -388,6 +389,7 @@
 									</c:forEach>
 								</c:forEach>
 							</span> <br>
+							</c:if>
 							<span class="fontnormalbold"> <mifos:mifoslabel
 								name="loan.recurring_acc_fees" /><br>
 							</span> <c:forEach items="${BusinessKey.accountFees}" var="feesSet">

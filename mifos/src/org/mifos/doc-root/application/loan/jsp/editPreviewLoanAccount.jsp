@@ -161,6 +161,7 @@
 						</tr>
 						<tr>
 							<td class="fontnormal">
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<span class="fontnormalbold"><mifos:mifoslabel name="loan.additionalInfo" bundle="loanUIResources"/></span><br>
 			                    	<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 										<c:forEach var="cf" items="${sessionScope.loanAccountActionForm.customFields}">
@@ -173,6 +174,7 @@
 									</c:forEach>
 					  			</c:forEach>
 							<br>
+							</c:if>
 							<html-el:button property="editButton" styleClass="insidebuttn"
 								onclick="fnEdit(this.form)">
 								<mifos:mifoslabel name="loan.edit_loan_acc" />

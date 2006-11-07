@@ -452,6 +452,7 @@
 
 									</table>
 									<br>
+									<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 						                <tr>
 						                  <td colspan="2" class="fontnormalbold">
@@ -482,6 +483,7 @@
 						         </c:forEach>
 						              </table>
 						              <br>
+				             </c:if>
 									<!-- Administrative Set Fees -->
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>

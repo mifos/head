@@ -401,10 +401,10 @@
           </tr>
         </table>
             <br>
-	
+	<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
             <table width="95%" border="0" cellpadding="3" cellspacing="0">
            <c:set var="customFieldDefns" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"/> 
-            <c:if test="${!empty customFieldDefns}">
+            
               <tr>
                 <td colspan="2" class="fontnormalbold">
                 
@@ -413,7 +413,7 @@
                   <br>
                 </td>
               </tr>
-			</c:if>              
+			        
               
              <c:forEach var="cf" items="${customFieldDefns}"
 									varStatus="loopStatus">
@@ -442,7 +442,7 @@
 									</tr>
 								</c:forEach>
             	</table>
-
+		</c:if>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center" class="blueline">&nbsp;                </td>

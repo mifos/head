@@ -362,7 +362,7 @@
 											
 				</td>
 				</tr>	
-			
+			<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 			<tr>
                   <td class="fontnormalbold">
                   <br>
@@ -375,13 +375,14 @@
 				           	 	<span class="fontnormal"><c:out value="${cf.fieldValue}"/></span><br>
 							</c:if>
 						</c:forEach>
-		  		  </c:forEach>  
-  		 			 <br>
+		  		  </c:forEach>    		 			
   		 	</td>
   		 	</tr>
+  		 	</c:if>
   		 	
   		 	<tr>
                   <td class="fontnormalbold">
+                   <br>
 					<c:if test="${!empty sessionScope.groupCustActionForm.defaultFees}">
 					<mifos:mifoslabel name="Group.adminsetfess" bundle="GroupUIResources"></mifos:mifoslabel><br>
 						<c:forEach var="adminFee" items="${sessionScope.groupCustActionForm.defaultFees}">

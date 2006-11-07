@@ -603,14 +603,13 @@
 						</c:if>
 						<tr>
 							<td height="23" colspan="2" class="fontnormalbold"><br>
-							<c:if test="${!empty BusinessKey.customFields}">
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 								<span class="fontnormalbold"> <mifos:mifoslabel
 									name="client.AdditionalInformationHeading"
 									bundle="ClientUIResources"></mifos:mifoslabel> </span>
-							</c:if> <span class="fontnormal"> <span class="fontnormal"><br>
-							</span> <c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-								<c:forEach var="customField"
-									items="${BusinessKey.customFields}">
+							<span class="fontnormal"> <br>
+							<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+								<c:forEach var="customField" items="${BusinessKey.customFields}">
 									<c:if test="${cf.fieldId==customField.fieldId}">
 										<c:choose>
 											<c:when test="${cf.fieldType == 3}">
@@ -631,6 +630,9 @@
 									</c:if>
 								</c:forEach>
 							</c:forEach> <br>
+							</span>
+							</c:if>
+							<span class="fontnormal">							
 							<!-- Bug Id 27210. Added code to pass the created date as parameter-->
 
 							<a href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${BusinessKey.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel

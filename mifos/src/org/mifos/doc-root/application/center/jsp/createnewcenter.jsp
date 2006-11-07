@@ -91,20 +91,6 @@
 	  		var mfiJoiningDateYY = document.getElementById("mfiJoiningDateYY");
 			if(! (validateMyForm(mfiJoiningDate,mfiJoiningDateFormat,mfiJoiningDateYY)))
 				return false;
-	 		if (centerCustActionForm.fieldTypeList.length!= undefined && centerCustActionForm.fieldTypeList.length!= null){
-				for(var i=0; i <=centerCustActionForm.fieldTypeList.length;i++){
-					if (centerCustActionForm.fieldTypeList[i]!= undefined){
-						if(centerCustActionForm.fieldTypeList[i].value == "3"){
-							var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");
-					  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");
-							var dateValue = customFieldDate.value;
-							if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
-								return false;
-						}
-					}
-		 		}
-		 	}
 	  }
 	function loadMeeting(){
 	    centerCustActionForm.action="centerCustAction.do?method=loadMeeting";
@@ -383,9 +369,11 @@
 											</td>
 										</tr>
 									</table>
-									<br>
+									
 									<!-- Address end -->
 									<!-- Custom Fields -->
+									<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+									<br>
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td colspan="2" class="fontnormalbold">
@@ -407,21 +395,21 @@
 												<td width="79%">
 													<html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>
 													<html-el:hidden property='fieldTypeList' value='${cf.fieldType}' />
-													<c:if test="${cf.fieldType == 1}">
+													<c:if test="${cf.fieldType == CustomFieldType.NUMERIC.value}">
 														<mifos:mifosnumbertext name="centerCustActionForm" property='customField[${ctr}].fieldValue' maxlength="200" />
 													</c:if>
-													<c:if test="${cf.fieldType == 2}">
+													<c:if test="${cf.fieldType == CustomFieldType.ALPHA_NUMERIC.value}">
 														<mifos:mifosalphanumtext name="centerCustActionForm" property='customField[${ctr}].fieldValue' maxlength="200" />
 													</c:if>
-													<c:if test="${cf.fieldType == 3}">
+													<c:if test="${cf.fieldType == CustomFieldType.DATE.value}">
 														<date:datetag property="customField[${ctr}].fieldValue" />
 													</c:if>
 												</td>
 											</tr>
 										</c:forEach>
-
 									</table>
 									<br>
+									</c:if>
 									<!--Custom Fields end  -->
 									<!-- Administrative Set Fees -->
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">

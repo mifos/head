@@ -302,8 +302,10 @@
 												&nbsp; <span class="fontnormal"><br> <c:out value="${BusinessKey.collateralNote}" /> </span>
 											</td>
 										</tr>
+										<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 										<tr>
 											<td class="fontnormalbold">
+											<br>
 											    <mifos:mifoslabel name="loan.additionalInfo" bundle="loanUIResources"/><br>
 							                    	<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 														<c:forEach var="cf" items="${sessionScope.loanAccountActionForm.customFields}">
@@ -317,6 +319,7 @@
 									  			</c:forEach>
 											</td>
 										</tr>
+										</c:if>
 										<tr>
 											<td class="fontnormalbold">
 												<br>

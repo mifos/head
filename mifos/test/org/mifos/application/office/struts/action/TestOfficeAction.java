@@ -242,14 +242,15 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/offAction.do");
 		addRequestParameter("method",method);
 	}
+	
 	private OfficeBO createLoadOffice() throws Exception{
 		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
+		TestObjectFactory.flushandCloseSession();
 		officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, officeBO, request);
-		TestObjectFactory.flushandCloseSession();
 		return officeBO;
 	}
 

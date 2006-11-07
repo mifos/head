@@ -198,6 +198,7 @@
 								</tr>
 							</table>
 							<br>
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 									<tr>
@@ -234,7 +235,7 @@
 								</c:forEach>
 
 							</table>
-
+						</c:if>
 							<!--Custom Fields end  -->
 
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">

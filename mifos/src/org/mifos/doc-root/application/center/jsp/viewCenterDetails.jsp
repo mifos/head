@@ -424,13 +424,13 @@
 
 						<tr>
 							<td height="23" colspan="2" class="fontnormalbold"><span
-								class="fontnormal"> <!-- Additional Information --> </c:if> <c:if
-								test="${!empty BusinessKey.customFields}">
+								class="fontnormal"> <!-- Additional Information --> </c:if> 
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 								<span class="fontnormalbold"> <mifos:mifoslabel
 									name="Center.AdditionalInformationHeading"
 									/> <br>
 								</span>
-							</c:if> <span class="fontnormal"> <c:forEach var="cf"
+							 <span class="fontnormal"> <c:forEach var="cf"
 								items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 								<c:forEach var="customField"
 									items="${BusinessKey.customFields}">
@@ -455,6 +455,8 @@
 								</c:forEach>
 							</c:forEach> <br>
 							<br>
+							</span>
+							</c:if>
 							<html-el:link href="centerCustAction.do?method=loadChangeLog&entityType=Center&entityId=${BusinessKey.customerId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel
 								name="Center.ChangeLogLink" bundle="CenterUIResources"></mifos:mifoslabel>

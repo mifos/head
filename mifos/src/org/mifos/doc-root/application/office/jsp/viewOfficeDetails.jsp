@@ -123,7 +123,7 @@
 									</c:if>
 									<br>
 
-									<c:if test="${!empty BusinessKey.customFields}">
+									<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 										<mifos:mifoslabel name="Office.labelAdditionInformation" />
 									 <span class="fontnormal"><br>
 									 <c:forEach var="cfdef"

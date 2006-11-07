@@ -304,6 +304,7 @@
 		<c:out value="${BusinessKey.userName}"/> 
 		</span><br>
       <br>
+      <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
      <mifos:mifoslabel name="Personnel.AdditionalInfo"  bundle="PersonnelUIResources"></mifos:mifoslabel> 
 	  <br>
 		<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
@@ -315,7 +316,9 @@
 			</c:if>
 		</c:forEach>
 	</c:forEach> 
-	<span class="fontnormal"><br>
+	<br>
+	</c:if>
+	<span class="fontnormal">
       <br>
 	   <html-el:button property="btn" styleClass="insidebuttn" style="width:130px;" onclick="goToEditPage()">
 		 <mifos:mifoslabel name="button.EditUserInformation"  bundle="PersonnelUIResources"></mifos:mifoslabel>

@@ -320,6 +320,7 @@
 							</table>
 							<br>
 							<!-- Custom Fields -->
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td colspan="2" class="fontnormalbold">
@@ -354,7 +355,6 @@
 													</c:if>
 													<c:if test="${customFieldDef.fieldType == CustomFieldType.DATE.value}">
 														<date:datetag property="customField[${ctr}].fieldValue" />
-
 													</c:if>
 												<td>
 											</tr>
@@ -362,7 +362,7 @@
 									</c:forEach>
 								</c:forEach>
 							</table>
-
+							</c:if>
 							<!--Custom Fields end  -->
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>

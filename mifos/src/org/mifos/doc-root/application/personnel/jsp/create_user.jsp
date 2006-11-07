@@ -343,18 +343,17 @@
 								</tr>
 							</table>
 							<br>
-							
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 							
-							<c:set var="customFieldsList" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"/> 
-								<c:if test="${requestScope.customFieldsList !=null}">
+							<c:set var="customFieldsList" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"/> 								
 									<tr>
 										<td colspan="2" class="fontnormalbold" >
 										<mifos:mifoslabel	name="Personnel.AdditionalInfo"	/><br>
 										<br>
 										</td>
 									</tr>
-								</c:if>
+								
 								<c:forEach var="cf" items="${requestScope.customFieldsList}"
 									varStatus="loopStatus">
 									<bean:define id="ctr">
@@ -381,7 +380,7 @@
 								</c:forEach>
 
 							</table>
-
+						</c:if>
 							<!--Custom Fields end  -->
 							
 							

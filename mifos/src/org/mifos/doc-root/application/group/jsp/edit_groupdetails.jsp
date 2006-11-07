@@ -50,25 +50,9 @@
 	<tiles:put name="body" type="string">
 
 		<script language="javascript">
-	function chkForValidDates(){
-		
+	function chkForValidDates(){		
 	  		if(! chkForDateTrainedDate())
-				return false;
-	 		 	  	
-			if (groupCustActionForm.fieldTypeList.length!= undefined && groupCustActionForm.fieldTypeList.length!= null){	  	
-				for(var i=0; i <=groupCustActionForm.fieldTypeList.length;i++){
-					if (groupCustActionForm.fieldTypeList[i]!= undefined){
-						if(groupCustActionForm.fieldTypeList[i].value == "3"){
-							var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");	  
-					  	 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");	  
-							var dateValue = customFieldDate.value;
-							if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
-								return false;
-						}
-					}
-		 		}
-		 	 }
+				return false; 	
 	  }
   function chkForDateTrainedDate(){
 	 var trainedDate = document.getElementById("trainedDate");	  
@@ -355,8 +339,9 @@
 
 						</table>
 
-
-						<%--Custom Fields end  --%>
+				<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+				<br>
+						<%--Custom Fields start  --%>
 						<table width="95%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="2" class="fontnormalbold">
@@ -397,6 +382,7 @@
 							</c:forEach>
 
 						</table>
+					</c:if>
 						<br>
 						<%--Custom Fields end  --%>
 						<table width="95%" border="0" cellpadding="0" cellspacing="0">

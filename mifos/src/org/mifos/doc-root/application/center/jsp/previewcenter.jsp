@@ -268,6 +268,7 @@ function goToEditPage(){
 				</tr>
 
 				<!--CustomField addition -->
+				<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 				<tr>
                 <td class="fontnormal">
 					<span class="fontnormalbold">
@@ -285,7 +286,7 @@ function goToEditPage(){
 					</span>
 				</td>
 				</tr>
-
+				</c:if>
 				<!-- Fee addition -->
 				<tr>
                 <td class="fontnormal">

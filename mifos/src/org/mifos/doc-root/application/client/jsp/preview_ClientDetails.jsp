@@ -363,27 +363,29 @@
 
 									<!--CustomField addition --> <span class="fontnormal">
 									</span> </td></tr>
-									<tr><td height="23" class="fontnormalbold"><br><mifos:mifoslabel
-										name="client.AdditionalInformationHeading"
-										bundle="ClientUIResources"></mifos:mifoslabel><span></span> <span
-										class="fontnormal"><br>
-									</span>
-									<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
-										 <c:forEach var="customField" items="${sessionScope.clientCustActionForm.customFields}">
-											<c:if test="${cf.fieldId==customField.fieldId}">
-												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" bundle="CenterUIResources"></mifos:mifoslabel>:
-									         	<span class="fontnormal"><c:out value="${customField.fieldValue}"/></span><br>
-											</c:if>
-										</c:forEach>
-			    				  	</c:forEach>
-								 <br>
-									<!-- Edit Button --> <html-el:button
-										onclick="goToPersonalPage()" property="editButton"
-										styleClass="insidebuttn">
-										<mifos:mifoslabel name="button.previousPersonalInfo"
-											bundle="ClientUIResources"></mifos:mifoslabel>
-									</html-el:button></td>
-								</tr>
+									<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+										<tr><td height="23" class="fontnormalbold"><br><mifos:mifoslabel
+											name="client.AdditionalInformationHeading"
+											bundle="ClientUIResources"></mifos:mifoslabel><span></span> <span
+											class="fontnormal"><br>
+										</span>
+										<c:forEach var="cf" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+											 <c:forEach var="customField" items="${sessionScope.clientCustActionForm.customFields}">
+												<c:if test="${cf.fieldId==customField.fieldId}">
+													<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" bundle="CenterUIResources"></mifos:mifoslabel>:
+										         	<span class="fontnormal"><c:out value="${customField.fieldValue}"/></span><br>
+												</c:if>
+											</c:forEach>
+				    				  	</c:forEach>
+									 <br>
+										<!-- Edit Button --> <html-el:button
+											onclick="goToPersonalPage()" property="editButton"
+											styleClass="insidebuttn">
+											<mifos:mifoslabel name="button.previousPersonalInfo"
+												bundle="ClientUIResources"></mifos:mifoslabel>
+										</html-el:button></td>
+									  </tr>
+								</c:if>
 							</table>
 							<%-- Personal Information end --%> <br>
 							<%-- MFI Information --%>

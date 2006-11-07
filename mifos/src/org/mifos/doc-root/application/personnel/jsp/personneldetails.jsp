@@ -218,6 +218,7 @@
 							name="Personnel.UserName" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						<c:out value="${personnelBO.userName}" /> </span><br>
 						<br>
+						<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 						<c:if test="${!empty personnelBO.customFields}">
 							<mifos:mifoslabel name="Personnel.AdditionalInfo"
 								bundle="PersonnelUIResources"></mifos:mifoslabel>
@@ -235,6 +236,7 @@
 								</c:if>
 							</c:forEach>
 						</c:forEach> <br>
+						</c:if>
 						<span class="fontnormal"> <html-el:link
 							href="PersonAction.do?method=loadChangeLog&entityType=Personnel&entityId=${personnelBO.personnelId}&currentFlowKey=${requestScope.currentFlowKey}">
 							<mifos:mifoslabel name="Personnel.ViewChangeLog"

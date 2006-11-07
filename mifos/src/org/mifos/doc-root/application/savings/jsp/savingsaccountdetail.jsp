@@ -230,7 +230,16 @@
 										<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 											<c:forEach var="cf" items="${BusinessKey.accountCustomFields}">
 												<c:if test="${cfdef.fieldId==cf.fieldId}">
-													<span class="fontnormal"> <mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"></mifos:mifoslabel>: <c:out value="${cf.fieldValue}" /> </span>
+												<c:choose>
+													<c:when test="${cfdef.fieldType == 3}">
+														<span class="fontnormal"> <mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" isColonRequired="yes"/>
+														<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,cf.fieldValue)}" />
+													</c:when>
+													<c:otherwise>
+														<span class="fontnormal"> <mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" isColonRequired="yes"/> 
+														<c:out value="${cf.fieldValue}" /> </span>
+													</c:otherwise>
+													</c:choose>
 													<br>
 												</c:if>
 											</c:forEach>

@@ -297,6 +297,7 @@
 
 							<!--CustomField addition -->
 						</td></tr>
+						<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 									<tr><td height="23" class="fontnormalbold"><br><mifos:mifoslabel
 								name="client.AdditionalInformationHeading"
 								bundle="ClientUIResources"></mifos:mifoslabel><span></span>
@@ -318,6 +319,7 @@
 									bundle="ClientUIResources"></mifos:mifoslabel>
 							</html-el:button></td>
 						</tr>
+						</c:if>
 					</table>
 					<%-- Personal Information end --%> <!-- Submit and cancel buttons -->
 					<table width="93%" border="0" cellpadding="0" cellspacing="0">

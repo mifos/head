@@ -136,6 +136,7 @@ function goToCancelPage(id){
 							<td class="fontnormalbold"><mifos:mifoslabel
 								name="Office.labelTelephone" /><span class="fontnormal"> <c:out
 								value="${offActionForm.address.phoneNumber}"></c:out></span><br><br>
+						<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<c:if test="${!empty offActionForm.customFields}">
 								<mifos:mifoslabel name="Office.labelAdditionInformation" />
 							</c:if> <span class="fontnormal"><br>
@@ -149,9 +150,10 @@ function goToCancelPage(id){
 										</span>
 									</c:if>
 								</c:forEach>
-							</c:forEach> <span class="fontnormal"></span> <br>
+							</c:forEach> </span></c:if> <br>
 							<br>
-							<span class="fontnormal"></span> <html-el:button
+							<span class="fontnormal">
+							 <html-el:button
 								onclick="goToPreviousPage();" property="cancelButton"
 								styleClass="insidebuttn" style="width:150px">
 								<mifos:mifoslabel name="Office.edit" />

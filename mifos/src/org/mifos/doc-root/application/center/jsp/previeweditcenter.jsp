@@ -216,7 +216,7 @@
 			        </span>
             </td>
             </tr>
-
+		<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 			 <tr>
              <td width="100%" class="fontnormal">
              <br>
@@ -238,7 +238,7 @@
 					</span>
 				</td>
               </tr>
-
+		</c:if>
             </table>
 
            	  <!-- Submit and cancel buttons -->

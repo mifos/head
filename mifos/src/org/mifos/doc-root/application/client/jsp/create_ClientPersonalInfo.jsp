@@ -687,6 +687,7 @@
 							</table>
 							<br>
 							<!-- Address end --> <!-- Custom Fields -->
+							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<table width="93%" border="0" cellpadding="3" cellspacing="0">
 								<tr>
 									<td colspan="2" class="fontnormalbold">Additional information<br>
@@ -724,6 +725,7 @@
 
 							</table>
 							<br>
+							</c:if>
 							<!-- Buttons -->
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>

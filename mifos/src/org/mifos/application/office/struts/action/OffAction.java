@@ -175,6 +175,14 @@ public class OffAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		OffActionForm offActionForm = (OffActionForm) form;
+		OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		OfficeBO office = ((OfficeBusinessService) getService())
+				.getOffice(sessionOffice.getOfficeId());
+		checkVersionMismatch(sessionOffice.getVersionNo(),office.getVersionNo());
+		office.setVersionNo(sessionOffice.getVersionNo());
+		office.setUserContext(getUserContext(request));
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, office, request);
 		loadofficeLevels(request);
 		loadParents(request, offActionForm);
 		loadEditCustomFields(request, offActionForm);
@@ -203,6 +211,7 @@ public class OffAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		OffActionForm offActionForm = (OffActionForm) form;
+		ActionForward forward = null;
 		OfficeBO sessionOffice = (OfficeBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		OfficeBO office = ((OfficeBusinessService) getService())
@@ -221,16 +230,18 @@ public class OffAction extends BaseAction {
 		if (getShortValue(offActionForm.getParentOfficeId()) != null)
 			parentOffice = ((OfficeBusinessService) getService())
 					.getOffice(getShortValue(offActionForm.getParentOfficeId()));
+		
+		if (parentOffice!=null&&! office.getParentOffice().getOfficeId().equals(parentOffice.getOfficeId()))		
+			forward= mapping.findForward(ActionForwards.update_cache_success.toString());		
+		else
+			forward= mapping.findForward(ActionForwards.update_success.toString());
+		
 		office.update(offActionForm.getOfficeName(), offActionForm
 				.getShortName(), newStatus, newlevel, parentOffice,
 				offActionForm.getAddress(), offActionForm.getCustomFields());
-		if (parentOffice!=null&&! sessionOffice.getParentOffice().getOfficeId().equals(parentOffice.getOfficeId()))
-		{
-			return mapping.findForward(ActionForwards.update_cache_success.toString());
-		}
-		else
-		return mapping.findForward(ActionForwards.update_success.toString());
+		return forward;
 	}
+	
 	public ActionForward updateCache(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -245,8 +256,8 @@ public class OffAction extends BaseAction {
 		OfficeBO office = (OfficeBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
 		List<CustomFieldView> customfields = new ArrayList<CustomFieldView>();
-		if (office.getCustomFields() != null)
-			for (OfficeCustomFieldEntity customField : office.getCustomFields()) {
+		if (office.getCustomFields() != null && office.getCustomFields().size()>0)
+			for (OfficeCustomFieldEntity customField : office.getCustomFields()){
 				customfields.add(new CustomFieldView(customField.getFieldId(),
 						customField.getFieldValue(), null));
 			}

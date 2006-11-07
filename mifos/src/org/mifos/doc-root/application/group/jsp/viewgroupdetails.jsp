@@ -525,6 +525,7 @@
 						</tr>
 
 						<%--Additional information custom fields--%>
+						<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 						<tr>
 							<td height="23" colspan="2" class="fontnormalbold"><br>
 							<c:if test="${!empty BusinessKey.customFields}">
@@ -554,6 +555,7 @@
 							</c:forEach> <br>
 							</span></td>
 						</tr>
+						</c:if>
 						<tr>
 							<td colspan="2" class="fontnormal"><span class="fontnormal"> <!-- Dynamic links -->
 							<c:choose>
