@@ -779,17 +779,12 @@
 			<entity name="preferredLocale"/>
 			<entity name="language" parentName="preferredLocale"/>
 		</entitiesToLog>
-
-		<!-- <propertyName name="language" parentName="preferredLocale" displayKey="Personnel.LanguagePreferred"  doNotLog="No" lookUp="yes">
-			<entityName name="Language">
-				<classPath  path="org.mifos.application.master.business.LanguageEntity"/>
-			</entityName>
-		</propertyName>-->
 		<propertyName name="level" displayKey="Personnel.userHierarchy"  doNotLog="No" lookUp="yes">
 			<entityName name="PersonnelLevels">
 				<classPath  path="org.mifos.application.personnel.business.PersonnelLevelEntity"/>
 			</entityName>
 		</propertyName>
+		<propertyName name="personnelCustomFieldId" parentName="customFields" doNotLog="yes" />		
 		<propertyName name="fieldId" parentName="customFields" displayKey="Personnel.customField.feildId" lookUp="yes" methodName="retrieveAllCustomFieldsDefinition"/>
 		<propertyName name="fieldValue" parentName="customFields" displayKey="Personnel.customField.feildValue" />
 		<propertyName name="firstName" parentName="personnelDetails" displayKey="Personnel.firstName"  />
@@ -831,11 +826,6 @@
 			<entityName name="PersonnelTitles"/>
 		</propertyName>
 		<propertyName name="name" parentName="level" displayKey="Personnel.userHierarchy" />
-		<propertyName name="levelId" parentName="level" displayKey="Personnel.userHierarchy"  doNotLog="No" lookUp="yes">
-			<entityName name="PersonnelLevels">
-				<classPath  path="org.mifos.application.personnel.util.helpers.PersonnelLevel"/>
-			</entityName>
-		</propertyName>
 		<propertyName name="personnelRoleId"  parentName="personnelRoles"   doNotLog="yes"/>
 		<propertyName name="id"  parentName="role"   doNotLog="yes"/>
 		<propertyName name="name"  parentName="role"   displayKey="Personnel.role"/>

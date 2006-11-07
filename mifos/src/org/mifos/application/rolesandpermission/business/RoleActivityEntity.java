@@ -40,4 +40,11 @@ public class RoleActivityEntity extends PersistentObject {
 		return false;
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+	
+	
+
 }
