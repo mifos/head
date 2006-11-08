@@ -503,10 +503,10 @@
 													<c:out value="${adminFees.feeName}" />:
 												</td>
 												<td width="70%" class="fontnormal">
-													<table width="420" border="0" cellspacing="0" cellpadding="0">
+													<table width="100%" border="0" cellspacing="0" cellpadding="0">
 														<!-- Fee amount display as label or text field -->
 														<tr class="fontnormal">
-															<td width="140">
+															<td width="20%">
 																<c:choose>
 																	<c:when test="${adminFees.periodic == true}">
 																		<c:out value="${adminFees.amount}" />
@@ -515,11 +515,9 @@
 																		<mifos:mifosdecimalinput property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
 																	</c:otherwise>
 																</c:choose>
-																<c:out value="${adminFees.feeFormula}" />
 															</td>
-															<td width="140">
-																&nbsp;
-																<mifos:mifoslabel name="loan.periodicity" />
+															<td>
+																&nbsp;<mifos:mifoslabel name="loan.periodicity" />
 																<c:choose>
 																	<c:when test="${adminFees.periodic == true}">
 																		<c:out value="${adminFees.feeSchedule}" />
@@ -528,12 +526,14 @@
 																		<mifos:mifoslabel name="Fees.onetime" />
 																	</c:otherwise>
 																</c:choose>
+																<c:if test="${!empty adminFees.feeFormula}">
+																	<br>&nbsp;<SPAN class="fontnormal"><c:out value="${adminFees.feeFormula}" /></SPAN>
+																</c:if>
 															</td>
-															<td width="140">
+															<td width="30%" align="center">
 																<html-el:checkbox property="defaultFee[${ctr1}].feeRemoved" value="1"></html-el:checkbox>
 																<mifos:mifoslabel name="loan.checkToRemove" />
 															</td>
-															<%--<c:out value="${adminFees.feeRemoved}" />--%>
 														</tr>
 													</table>
 												</td>
@@ -566,13 +566,14 @@
 														</c:forEach>
 													</mifos:select>
 												</td>
-												<td width="12%" align="right" class="fontnormal">
+												<td align="left" width="6%" class="fontnormal">
 													<mifos:mifoslabel name="loan.amount" />:
 												</td>
-												<td width="50%" class="fontnormal">
-													<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' decimalFmt="10.5"/>
+												<td align="left" class="fontnormal">
+													<mifos:mifosdecimalinput property='selectedFee[${ctr2}].amount' decimalFmt="10.5" style="width:70px;"/>
+												</td>
+												<td>
 													<SPAN id="feeFormulaSpan${loopStatus2.index}" class="fontnormal"></SPAN>
-
 												</td>
 												<c:if test="${ctr2 == 0}">
 													<c:forEach var="fee" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'additionalFeeList')}" varStatus="loopStatus3">
