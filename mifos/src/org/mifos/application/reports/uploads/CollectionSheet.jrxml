@@ -105,39 +105,39 @@ p.DISPLAY_NAME as staffname,ke.CUSTOMER_ID as centerid,ke.CUSTOMER_ID as kendrai
 ke.DISPLAY_NAME as kendraname,gr.CUSTOMER_ID as groupid,gr.DISPLAY_NAME as groupname,
 mem.CUSTOMER_ID as memberid,mem.DISPLAY_NAME as membername,0 as l3_bal,0 as vdf_bal,0 as mm2_bal,0 as el_bal, 0 as l3_due,0 as vdf_due,0 as mm2_due,0 as el_due,0 as fees,0 as fine,0 as gkl_issue,0 as el_issue,0 as gkl_issue,0 as el_issue,0 as mm2_withdraw,0 as other_withdraw,0 as mm2_coll,
 
-(select round(sacc.SAVINGS_BALANCE,2) from account acc1
+(select sum(sacc.SAVINGS_BALANCE) from account acc1
 left join savings_account sacc on sacc.ACCOUNT_ID = acc1.ACCOUNT_ID
 left join prd_offering prd on prd.PRD_OFFERING_ID=sacc.PRD_OFFERING_ID
-where acc1.CUSTOMER_ID=mem.CUSTOMER_ID and account_type_id=2 and prd.PRD_OFFERING_SHORT_NAME='MM1') as mm1_bal,
+where acc1.CUSTOMER_ID=mem.CUSTOMER_ID and account_type_id=2 and prd.PRD_OFFERING_SHORT_NAME='MM1' group by acc1.CUSTOMER_ID) as mm1_bal,
 
-(select round((lsum.orig_principal-principal_paid),2) from account acc2
+(select sum(lsum.orig_principal-principal_paid) from account acc2
 left join loan_account lacc on lacc.ACCOUNT_ID = acc2.ACCOUNT_ID
 left join loan_summary lsum on  lsum.account_id=lacc.ACCOUNT_ID
 left join prd_offering prd on prd.PRD_OFFERING_ID=lacc.PRD_OFFERING_ID
-where acc2.CUSTOMER_ID=mem.CUSTOMER_ID  and  acc2.account_type_id=1  and prd.PRD_OFFERING_SHORT_NAME='BSKL' )as loan1_bal,
+where acc2.CUSTOMER_ID=mem.CUSTOMER_ID  and  acc2.account_type_id=1  and prd.PRD_OFFERING_SHORT_NAME='BSKL' group by acc2.CUSTOMER_ID)as loan1_bal,
 
-(select round(lsum1.orig_principal-lsum1.principal_paid,2) from account acc3
+(select sum(lsum1.orig_principal-lsum1.principal_paid) from account acc3
 left join loan_account lacc1 on lacc1.ACCOUNT_ID = acc3.ACCOUNT_ID
 left join loan_summary lsum1 on  lsum1.account_id=lacc1.ACCOUNT_ID
 left join prd_offering prd1 on prd1.PRD_OFFERING_ID=lacc1.PRD_OFFERING_ID
-where acc3.CUSTOMER_ID=mem.CUSTOMER_ID and acc3.account_type_id=1 and acc3.account_state_id != 6 and prd1.PRD_OFFERING_SHORT_NAME='CL') as loan2_bal,
+where acc3.CUSTOMER_ID=mem.CUSTOMER_ID and acc3.account_type_id=1 and acc3.account_state_id != 6 and prd1.PRD_OFFERING_SHORT_NAME='CL' group by acc3.CUSTOMER_ID) as loan2_bal,
 
-(select round(acd2.PRINCIPAL,2) from account acc5
+(select sum(acd2.PRINCIPAL) from account acc5
 left join loan_account lacc3 on lacc3.ACCOUNT_ID = acc5.ACCOUNT_ID
 left join prd_offering prd3 on prd3.PRD_OFFERING_ID=lacc3.PRD_OFFERING_ID
 left join loan_schedule acd2 on acd2.ACCounT_ID=acc5.ACCOUNT_ID
-where acc5.CUSTOMER_ID=mem.CUSTOMER_ID and acc5.account_type_id=1 and date_format(acd2.action_date,'%Y%m%d')=date_format(now(),'%Y%m%d') and prd3.PRD_OFFERING_SHORT_NAME='BSKL') as loan1_due,
+where acc5.CUSTOMER_ID=mem.CUSTOMER_ID and acc5.account_type_id=1 and date_format(acd2.action_date,'%Y%m%d')=date_format(now(),'%Y%m%d') and prd3.PRD_OFFERING_SHORT_NAME='BSKL' group by acc5.CUSTOMER_ID) as loan1_due,
 
-(select round(acd.PRINCIPAL,2) from account acc4
+(select sum(acd.PRINCIPAL) from account acc4
 left join loan_account lacc2 on lacc2.ACCOUNT_ID = acc4.ACCOUNT_ID
 left join prd_offering prd2 on prd2.PRD_OFFERING_ID=lacc2.PRD_OFFERING_ID
 left join loan_schedule acd on acd.ACCounT_ID=acc4.ACCOUNT_ID
-where acc4.CUSTOMER_ID=mem.CUSTOMER_ID and acc4.account_type_id=1 and date_format(acd.action_date,'%Y%m%d')=date_format(now(),'%Y%m%d') and prd2.PRD_OFFERING_SHORT_NAME='CL') as loan2_due,
+where acc4.CUSTOMER_ID=mem.CUSTOMER_ID and acc4.account_type_id=1 and date_format(acd.action_date,'%Y%m%d')=date_format(now(),'%Y%m%d') and prd2.PRD_OFFERING_SHORT_NAME='CL' group by acc4.CUSTOMER_ID) as loan2_due,
 
-(select round(sacc.RECOMMENDED_AMOUNT,2) from account acc
+(select sum(sacc.RECOMMENDED_AMOUNT) from account acc
 left join savings_account sacc on sacc.ACCOUNT_ID = acc.ACCOUNT_ID
 left join prd_offering prd on prd.PRD_OFFERING_ID=sacc.PRD_OFFERING_ID
-where acc.CUSTOMER_ID=mem.CUSTOMER_ID and acc.account_type_id=2 and prd.PRD_OFFERING_SHORT_NAME='MM1') as mm1_due
+where acc.CUSTOMER_ID=mem.CUSTOMER_ID and acc.account_type_id=2 and prd.PRD_OFFERING_SHORT_NAME='MM1' group by acc.CUSTOMER_ID) as mm1_due
 
 from personnel p
 left join customer ke on ke.discriminator="center" and ke.loan_officer_id=p.personnel_id
@@ -2649,3 +2649,4 @@ inner join office o on o.OFFICE_ID=ke.BRANCH_ID where p.PERSONNEL_ID=$P{staffid}
 			</band>
 		</summary>
 </jasperReport>
+
