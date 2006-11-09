@@ -1,36 +1,20 @@
 package org.mifos.application;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.classic.Session;
-import org.mifos.application.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.application.configuration.business.MifosConfiguration;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
-import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
-import org.mifos.framework.security.authorization.AuthorizationManager;
-import org.mifos.framework.security.authorization.HierarchyManager;
+import org.mifos.application.fees.persistence.FeePersistenceTest;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /**
  * This class might be an interesting demonstration/check of how
  * we have hibernate set up to talk to different test databases.
  * 
- * On this other hand, it is a bit slow for something which doesn't
- * test MIFOS, and things like the statics in {@link DatabaseSetup}
- * probably are problematic in terms of modifying state which other
- * tests will want to deal with.  Therefore, {@link #xtestMayflyAndHibernate()}
- * and {@link #xtestMysql()} are disabled, and the whole test
- * isn't part of the regular suite.
+ * But now that {@link FeePersistenceTest} is passing with Mayfly,
+ * the only thing left here is some Mayfly dump tests (currently
+ * commented out).
  */
 public class HibernateTest extends TestCase {
 	
@@ -38,95 +22,38 @@ public class HibernateTest extends TestCase {
 		Database database = new Database(DatabaseSetup.getStandardStore());
         ResultSet results = database.query("select * from logmessages");
         assertFalse(results.next());
+    }
+    
+    /*
+    public void testMayflyDump() throws Exception {
+        checkRoundTrip(DatabaseSetup.getStandardStore());
+    }
+    */
+
+    /**
+     * From a datastore, dump it, then load from that dump,
+     * dump again, and compare the two dumps.
+     * 
+     * This is a somewhat weak test in that if the dump does something wrong,
+     * it quite possibly will do the same thing wrong in both dumps.  But if the
+     * dump produces SQL we can't parse or something of that order, we'll
+     * catch it.
+     */
+    /*
+    private static void checkRoundTrip(DataStore inputStore) {
+        String dump = new SqlDumper().dump(inputStore);
+        Database database2 = new Database();
+        try {
+            database2.executeScript(new StringReader(dump));
+        }
+        catch (MayflyException e) {
+            throw new RuntimeException(
+                "failure in command: " + e.failingCommand(), e);
+        }
         
-        checkJdbc(database.openConnection());
+        String dump2 = new SqlDumper().dump(database2.dataStore());
+        assertEquals(dump, dump2);
     }
-    
-    public void xtestStartup() throws Exception {
-		DatabaseSetup.configureLogging();
-		DatabaseSetup.initializeHibernate();
-		squawk("hibernate");
-		FinancialInitializer.initialize();
-		squawk("financial");
-		AuthorizationManager.getInstance().init();
-		squawk("authorization");
-		HierarchyManager.getInstance().init();
-		squawk("hierarchy");
-		MifosConfiguration.getInstance().init();
-		squawk("mifos");
-		AuditConfigurtion.init(); // brings to knees
-		squawk("audit");
-	}
-    
-    public void xtestBringToKnees1() throws Exception {
-		DatabaseSetup.configureLogging();
-		DatabaseSetup.initializeHibernate();
-    	new MasterPersistence().retrieveMasterEntities("Loan Purposes", (short)1);
-    }
-    
-    public void xtestBringToKnees2() throws Exception {
-		Database database = new Database(DatabaseSetup.getStandardStore());
-		System.out.println(database.rowCount("lookup_entity")); // 89
-		System.out.println(database.rowCount("lookup_value")); // 555
-		System.out.println(database.rowCount("lookup_value_locale")); // 546
-        ResultSet results = database.query(
-        	"select lookupvalu2_.LOOKUP_ID as col_0_0_, " +
-        	"lookupvalu2_.LOOKUP_VALUE as col_1_0_ " +
-        	"from " +
-        	"LOOKUP_ENTITY mifoslooku0_, " +
-        	"LOOKUP_VALUE lookupvalu1_, " +
-        	"LOOKUP_VALUE_LOCALE lookupvalu2_ " +
-        	"where " +
-        	"(mifoslooku0_.ENTITY_ID=lookupvalu1_.ENTITY_ID and " +
-        	"lookupvalu2_.LOOKUP_ID=lookupvalu1_.LOOKUP_ID and " +
-        	"lookupvalu2_.LOCALE_ID=1 and mifoslooku0_.ENTITY_NAME='Loan Purposes')"
-        );
-        results.close();
-	}
-
-	private void squawk(String whatWeDid) {
-		System.out.println(whatWeDid +
-			" done " + Runtime.getRuntime().totalMemory() / 1000000.0);
-	}
-    
-    public void xtestMayflyAndHibernate() throws Exception {
-		Configuration configuration = DatabaseSetup.mayflyConfiguration();
-		SessionFactory sessionFactory = configuration.buildSessionFactory();
-
-		// From here on out is fast; the slow stuff is above this.
-		Session session = 
-			sessionFactory.openSession();
-		checkJdbc(session.connection());
-		checkHibernateQuery(session);
-		session.close();
-	}
-
-	public void xtestMysql() throws Exception {
-		DatabaseSetup.setMysql();
-
-		Session session = 
-			HibernateSessionFactory.getSessionFactory().openSession();
-		checkJdbc(session.connection());
-		checkHibernateQuery(session);
-		session.close();
-	}
-
-	private void checkJdbc(Connection connection) throws SQLException {
-		Statement statement = connection.createStatement();
-		ResultSet results = statement.executeQuery(
-			"select currency_name from currency where currency_id = 3");
-		assertTrue(results.next());
-		String name = results.getString("currency_name");
-		assertEquals("EURO", name);
-		assertFalse(results.next());
-		results.close();
-		statement.close();
-	}
-
-	private void checkHibernateQuery(Session session) {
-		MifosCurrency currency = (MifosCurrency)
-			session.get(MifosCurrency.class, new Short((short) 3));
-		assertEquals("EURO", currency.getCurrencyName());
-	}
+    */
 
 }

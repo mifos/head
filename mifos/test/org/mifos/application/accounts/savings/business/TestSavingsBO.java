@@ -46,7 +46,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.persistence.ClientPersistence;
-import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -1417,117 +1416,113 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testAdjustPmnt_LastPaymentDepositMandatory_PaidAllDue()
 			throws Exception {
-		try {
-			createInitialObjects();
-			savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-			savings = helper.createSavingsAccount("000100000000017",
-					savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
-					userContext);
-			Money recommendedAmnt = new Money(currency, "500.0");
-			Date paymentDate = helper.getDate("09/05/2006");
-			AccountActionDateEntity actionDate1 = helper
-					.createAccountActionDate(savings, Short.valueOf("1"),
-							helper.getDate("01/05/2006"), paymentDate, savings
-									.getCustomer(), recommendedAmnt,
-							recommendedAmnt, PaymentStatus.PAID);
-			AccountActionDateEntity actionDate2 = helper
-					.createAccountActionDate(savings, Short.valueOf("2"),
-							helper.getDate("08/05/2006"), paymentDate, savings
-									.getCustomer(), recommendedAmnt,
-							recommendedAmnt, PaymentStatus.PAID);
-			TestAccountActionDateEntity.addAccountActionDate(actionDate1,savings);
-			TestAccountActionDateEntity.addAccountActionDate(actionDate2,savings);
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
+		savings = helper.createSavingsAccount("000100000000017",
+				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
+				userContext);
+		Money recommendedAmnt = new Money(currency, "500.0");
+		Date paymentDate = helper.getDate("09/05/2006");
+		AccountActionDateEntity actionDate1 = helper
+				.createAccountActionDate(savings, Short.valueOf("1"),
+						helper.getDate("01/05/2006"), paymentDate, savings
+								.getCustomer(), recommendedAmnt,
+						recommendedAmnt, PaymentStatus.PAID);
+		AccountActionDateEntity actionDate2 = helper
+				.createAccountActionDate(savings, Short.valueOf("2"),
+						helper.getDate("08/05/2006"), paymentDate, savings
+								.getCustomer(), recommendedAmnt,
+						recommendedAmnt, PaymentStatus.PAID);
+		TestAccountActionDateEntity.addAccountActionDate(actionDate1,savings);
+		TestAccountActionDateEntity.addAccountActionDate(actionDate2,savings);
 
-			Money depositAmount = new Money(currency, "1200.0");
+		Money depositAmount = new Money(currency, "1200.0");
 
-			// Adding 1 account payment of Rs 1200. With three transactions of
-			// (500
-			// + 500 + 200).
-			AccountPaymentEntity payment = helper.createAccountPayment(savings,
-					depositAmount, paymentDate, createdBy);
-			Money balanceAmount = new Money(currency, "4500.0");
-			SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(payment,
-					Short.valueOf("1"), recommendedAmnt, balanceAmount,
-					paymentDate, helper.getDate("01/05/2006"), null,
-					AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
-					createdBy, group);
+		// Adding 1 account payment of Rs 1200. With three transactions of
+		// (500
+		// + 500 + 200).
+		AccountPaymentEntity payment = helper.createAccountPayment(savings,
+				depositAmount, paymentDate, createdBy);
+		Money balanceAmount = new Money(currency, "4500.0");
+		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(payment,
+				Short.valueOf("1"), recommendedAmnt, balanceAmount,
+				paymentDate, helper.getDate("01/05/2006"), null,
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+				createdBy, group);
 
-			balanceAmount = new Money(currency, "5000.0");
-			SavingsTrxnDetailEntity trxn2 = helper.createAccountTrxn(payment,
-					Short.valueOf("2"), recommendedAmnt, balanceAmount,
-					paymentDate, helper.getDate("08/05/2006"), null,
-					AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
-					createdBy, group);
+		balanceAmount = new Money(currency, "5000.0");
+		SavingsTrxnDetailEntity trxn2 = helper.createAccountTrxn(payment,
+				Short.valueOf("2"), recommendedAmnt, balanceAmount,
+				paymentDate, helper.getDate("08/05/2006"), null,
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+				createdBy, group);
 
-			balanceAmount = new Money(currency, "5200.0");
-			SavingsTrxnDetailEntity trxn3 = helper.createAccountTrxn(payment,
-					null, new Money(currency, "200.0"), balanceAmount,
-					paymentDate, null, null,
-					AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
-					createdBy, group);
+		balanceAmount = new Money(currency, "5200.0");
+		SavingsTrxnDetailEntity trxn3 = helper.createAccountTrxn(payment,
+				null, new Money(currency, "200.0"), balanceAmount,
+				paymentDate, null, null,
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+				createdBy, group);
 
-			payment.addAcountTrxn(trxn1);
-			payment.addAcountTrxn(trxn2);
-			payment.addAcountTrxn(trxn3);
-			TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		payment.addAcountTrxn(trxn1);
+		payment.addAcountTrxn(trxn2);
+		payment.addAcountTrxn(trxn3);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 
-			savings.setSavingsBalance(balanceAmount);
-			savings.update();
-			HibernateUtil.getSessionTL().flush();
-			HibernateUtil.closeSession();
+		savings.setSavingsBalance(balanceAmount);
+		savings.update();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
 
-			savings = savingsPersistence.findById(savings.getAccountId());
-			savings.setUserContext(userContext);
-			payment = savings.getLastPmnt();
-			for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
-				Hibernate.initialize(accountTrxn.getFinancialTransactions());
-			}
-			assertEquals(Integer.valueOf(3).intValue(), payment
-					.getAccountTrxns().size());
-
-			// Adjust last deposit of 1200 to 2000.
-			Money amountAdjustedTo = new Money(currency, "2000.0");
-			SavingsTypeEntity savingsType = new SavingsTypeEntity(
-					SavingsType.MANDATORY);
-			savings.setSavingsType(savingsType);
-			savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
-
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-			savings = savingsPersistence.findById(savings.getAccountId());
-			AccountPaymentEntity newPayment = savings.getLastPmnt();
-			assertEquals(Integer.valueOf(2).intValue(), savings
-					.getAccountPayments().size());
-			assertEquals(Integer.valueOf(6).intValue(), payment
-					.getAccountTrxns().size());
-			int countFinancialTrxns = 0;
-			for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
-				countFinancialTrxns += accountTrxn.getFinancialTransactions()
-						.size();
-				if (accountTrxn.getAccountActionEntity().getId().equals(
-						AccountConstants.ACTION_SAVINGS_ADJUSTMENT))
-					assertEquals(userContext.getId(), accountTrxn.getPersonnel().getPersonnelId());
-					for (FinancialTransactionBO finTrxn : accountTrxn
-							.getFinancialTransactions()) {
-						assertEquals("correction entry", finTrxn.getNotes());
-						assertEquals(userContext.getId(), finTrxn.getPostedBy().getPersonnelId());
-					}
-			}
-			assertEquals(Integer.valueOf(6).intValue(), countFinancialTrxns);
-			assertEquals(payment.getAmount(), new Money());
-
-			assertEquals(new Money(currency, "6000.0"), savings
-					.getSavingsBalance());
-			assertEquals(newPayment.getAmount(), amountAdjustedTo);
-			assertEquals(Integer.valueOf(3).intValue(), newPayment
-					.getAccountTrxns().size());
-
-			Hibernate.initialize(savings.getAccountActionDates());
-			group = savings.getCustomer();
-			center = group.getParentCustomer();
-		} catch (Exception e) {
-			e.printStackTrace();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		payment = savings.getLastPmnt();
+		for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
+			Hibernate.initialize(accountTrxn.getFinancialTransactions());
 		}
+		assertEquals(Integer.valueOf(3).intValue(), payment
+				.getAccountTrxns().size());
+
+		// Adjust last deposit of 1200 to 2000.
+		Money amountAdjustedTo = new Money(currency, "2000.0");
+		SavingsTypeEntity savingsType = new SavingsTypeEntity(
+				SavingsType.MANDATORY);
+		savings.setSavingsType(savingsType);
+		savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
+
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		AccountPaymentEntity newPayment = savings.getLastPmnt();
+		assertEquals(Integer.valueOf(2).intValue(), savings
+				.getAccountPayments().size());
+		assertEquals(Integer.valueOf(6).intValue(), payment
+				.getAccountTrxns().size());
+		int countFinancialTrxns = 0;
+		for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
+			countFinancialTrxns += accountTrxn.getFinancialTransactions()
+					.size();
+			if (accountTrxn.getAccountActionEntity().getId().equals(
+					AccountConstants.ACTION_SAVINGS_ADJUSTMENT))
+				assertEquals(userContext.getId(), accountTrxn.getPersonnel().getPersonnelId());
+				for (FinancialTransactionBO finTrxn : accountTrxn
+						.getFinancialTransactions()) {
+					assertEquals("correction entry", finTrxn.getNotes());
+					assertEquals(userContext.getId(), finTrxn.getPostedBy().getPersonnelId());
+				}
+		}
+		assertEquals(Integer.valueOf(6).intValue(), countFinancialTrxns);
+		assertEquals(payment.getAmount(), new Money());
+
+		assertEquals(new Money(currency, "6000.0"), savings
+				.getSavingsBalance());
+		assertEquals(newPayment.getAmount(), amountAdjustedTo);
+		assertEquals(Integer.valueOf(3).intValue(), newPayment
+				.getAccountTrxns().size());
+
+		Hibernate.initialize(savings.getAccountActionDates());
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
 	}
 
 	public void testAdjustPmnt_LastPaymentDepositMandatory_PaidSomeDueInstallments()
@@ -1702,84 +1697,80 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testAdjustPmnt_LastPaymentDepositVol_PaidDueExactAmount()
 			throws Exception {
-		try {
-			createInitialObjects();
-			savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-			savings = helper.createSavingsAccount("000100000000017",
-					savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
-					userContext);
-			Money recommendedAmnt = new Money(currency, "500.0");
-			Money partialAmnt = new Money(currency, "200.0");
-			Date paymentDate = helper.getDate("06/05/2006");
-			AccountActionDateEntity actionDate1 = helper
-					.createAccountActionDate(savings, Short.valueOf("1"),
-							helper.getDate("01/05/2006"), paymentDate, savings
-									.getCustomer(), recommendedAmnt,
-							partialAmnt, PaymentStatus.PAID);
-			AccountActionDateEntity actionDate2 = helper
-					.createAccountActionDate(savings, Short.valueOf("2"),
-							helper.getDate("08/05/2006"), null, savings
-									.getCustomer(), recommendedAmnt, null,
-							PaymentStatus.UNPAID);
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
+		savings = helper.createSavingsAccount("000100000000017",
+				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
+				userContext);
+		Money recommendedAmnt = new Money(currency, "500.0");
+		Money partialAmnt = new Money(currency, "200.0");
+		Date paymentDate = helper.getDate("06/05/2006");
+		AccountActionDateEntity actionDate1 = helper
+				.createAccountActionDate(savings, Short.valueOf("1"),
+						helper.getDate("01/05/2006"), paymentDate, savings
+								.getCustomer(), recommendedAmnt,
+						partialAmnt, PaymentStatus.PAID);
+		AccountActionDateEntity actionDate2 = helper
+				.createAccountActionDate(savings, Short.valueOf("2"),
+						helper.getDate("08/05/2006"), null, savings
+								.getCustomer(), recommendedAmnt, null,
+						PaymentStatus.UNPAID);
 
-			TestAccountActionDateEntity.addAccountActionDate(actionDate1,savings);
-			TestAccountActionDateEntity.addAccountActionDate(actionDate2,savings);
+		TestAccountActionDateEntity.addAccountActionDate(actionDate1,savings);
+		TestAccountActionDateEntity.addAccountActionDate(actionDate2,savings);
 
-			Money depositAmount = new Money(currency, "200.0");
+		Money depositAmount = new Money(currency, "200.0");
 
-			// Adding 1 account payment of Rs 500. With one transactions of 500.
-			AccountPaymentEntity payment = helper.createAccountPayment(savings,
-					depositAmount, paymentDate, createdBy);
-			Money balanceAmount = new Money(currency, "4200.0");
-			SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(payment,
-					Short.valueOf("1"), partialAmnt, balanceAmount,
-					paymentDate, helper.getDate("01/05/2006"), null,
-					AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
-					createdBy, group);
+		// Adding 1 account payment of Rs 500. With one transactions of 500.
+		AccountPaymentEntity payment = helper.createAccountPayment(savings,
+				depositAmount, paymentDate, createdBy);
+		Money balanceAmount = new Money(currency, "4200.0");
+		SavingsTrxnDetailEntity trxn1 = helper.createAccountTrxn(payment,
+				Short.valueOf("1"), partialAmnt, balanceAmount,
+				paymentDate, helper.getDate("01/05/2006"), null,
+				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+				createdBy, group);
 
-			payment.addAcountTrxn(trxn1);
-			TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		payment.addAcountTrxn(trxn1);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 
-			savings.setSavingsBalance(balanceAmount);
-			savings.update();
-			HibernateUtil.getSessionTL().flush();
-			HibernateUtil.closeSession();
+		savings.setSavingsBalance(balanceAmount);
+		savings.update();
+		HibernateUtil.getSessionTL().flush();
+		HibernateUtil.closeSession();
 
-			savings = savingsPersistence.findById(savings.getAccountId());
-			savings.setUserContext(userContext);
-			payment = savings.getLastPmnt();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		payment = savings.getLastPmnt();
 
-			assertEquals(Integer.valueOf(1).intValue(), payment
-					.getAccountTrxns().size());
+		assertEquals(Integer.valueOf(1).intValue(), payment
+				.getAccountTrxns().size());
 
-			// Adjust last deposit of 700 to 1000.
-			Money amountAdjustedTo = new Money(currency, "500.0");
-			savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
+		// Adjust last deposit of 700 to 1000.
+		Money amountAdjustedTo = new Money(currency, "500.0");
+		savings.adjustLastUserAction(amountAdjustedTo, "correction entry");
 
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-			savings = savingsPersistence.findById(savings.getAccountId());
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsPersistence.findById(savings.getAccountId());
 
-			AccountPaymentEntity newPayment = savings.getLastPmnt();
+		AccountPaymentEntity newPayment = savings.getLastPmnt();
 
-			assertEquals(Integer.valueOf(2).intValue(), savings
-					.getAccountPayments().size());
-			assertEquals(Integer.valueOf(2).intValue(), payment
-					.getAccountTrxns().size());
-			assertEquals(payment.getAmount(), new Money());
+		assertEquals(Integer.valueOf(2).intValue(), savings
+				.getAccountPayments().size());
+		assertEquals(Integer.valueOf(2).intValue(), payment
+				.getAccountTrxns().size());
+		assertEquals(payment.getAmount(), new Money());
 
-			assertEquals(new Money(currency, "4500.0"), savings
-					.getSavingsBalance());
-			assertEquals(amountAdjustedTo, newPayment.getAmount());
-			assertEquals(Integer.valueOf(1).intValue(), newPayment
-					.getAccountTrxns().size());
+		assertEquals(new Money(currency, "4500.0"), savings
+				.getSavingsBalance());
+		assertEquals(amountAdjustedTo, newPayment.getAmount());
+		assertEquals(Integer.valueOf(1).intValue(), newPayment
+				.getAccountTrxns().size());
 
-			Hibernate.initialize(savings.getAccountActionDates());
-			group = savings.getCustomer();
-			center = group.getParentCustomer();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Hibernate.initialize(savings.getAccountActionDates());
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
 	}
 
 	public void testAdjustPmnt_LastPaymentDepositVol_PaidDueExcessAmount()
@@ -2526,76 +2517,72 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testInterestAdjustment_LastDepositPaymentNullified_WithMinBal()
 			throws Exception {
+		createInitialObjects();
+		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
+				MeetingConstants.MONTHLY, Short.valueOf("1"));
+		savings = helper.createSavingsAccount(savingsOffering, group,
+				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+		savings.setActivationDate(helper.getDate("20/02/2006"));
+		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
+
+		Money depositMoney = new Money(currency, "2000.0");
+		AccountPaymentEntity payment = helper
+				.createAccountPaymentToPersist(savings, depositMoney,
+						depositMoney, helper.getDate("25/02/2006"),
+						AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+						createdBy, group);
+		TestAccountPaymentEntity.addAccountPayment(payment,savings);
+		savings.setSavingsBalance(depositMoney);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		savings = savingsPersistence.findById(savings.getAccountId());
+
+		Money oldInterest = savings.calculateInterestForAdjustment(helper
+				.getDate("25/02/2006"), null);
+		assertEquals(0.0, oldInterest.getAmountDoubleValue());
+
+		savings.updateInterestAccrued();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		savings = savingsPersistence.findById(savings.getAccountId());
+		// Min Bal 25/02 - 01/03 = 2000
+		// Interest 2000*.12*4/365 = 2.6
+		assertEquals(2.6, savings.getInterestToBePosted()
+				.getAmountDoubleValue());
+
+		oldInterest = savings.calculateInterestForAdjustment(helper
+				.getDate("25/02/2006"), null);
+		assertEquals(2.6, oldInterest.getAmountDoubleValue());
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		savings = savingsPersistence.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		Money amountAdjustedTo = new Money();
+
 		try {
-			createInitialObjects();
-			savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
-					SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
-					MeetingConstants.MONTHLY, Short.valueOf("1"));
-			savings = helper.createSavingsAccount(savingsOffering, group,
-					AccountStates.SAVINGS_ACC_APPROVED, userContext);
-			savings.setActivationDate(helper.getDate("20/02/2006"));
-			savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
-
-			Money depositMoney = new Money(currency, "2000.0");
-			AccountPaymentEntity payment = helper
-					.createAccountPaymentToPersist(savings, depositMoney,
-							depositMoney, helper.getDate("25/02/2006"),
-							AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
-							createdBy, group);
-			TestAccountPaymentEntity.addAccountPayment(payment,savings);
-			savings.setSavingsBalance(depositMoney);
-			savings.update();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-
-			savings = savingsPersistence.findById(savings.getAccountId());
-
-			Money oldInterest = savings.calculateInterestForAdjustment(helper
-					.getDate("25/02/2006"), null);
-			assertEquals(0.0, oldInterest.getAmountDoubleValue());
-
-			savings.updateInterestAccrued();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-
-			savings = savingsPersistence.findById(savings.getAccountId());
-			// Min Bal 25/02 - 01/03 = 2000
-			// Interest 2000*.12*4/365 = 2.6
-			assertEquals(2.6, savings.getInterestToBePosted()
-					.getAmountDoubleValue());
-
-			oldInterest = savings.calculateInterestForAdjustment(helper
-					.getDate("25/02/2006"), null);
-			assertEquals(2.6, oldInterest.getAmountDoubleValue());
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-
-			savings = savingsPersistence.findById(savings.getAccountId());
-			savings.setUserContext(userContext);
-			Money amountAdjustedTo = new Money();
-
-			try {
-				savings.adjustLastUserAction(amountAdjustedTo,
-						"correction entry");
-			} catch (ApplicationException ae) {
-				assertTrue(false);
-			}
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-			savings = savingsPersistence.findById(savings.getAccountId());
-			payment = savings.getLastPmnt();
-			assertEquals(Integer.valueOf(2).intValue(), payment
-					.getAccountTrxns().size());
-			assertEquals(new Money(), savings.getSavingsBalance());
-
-			assertEquals(0.0, savings.getInterestToBePosted()
-					.getAmountDoubleValue());
-
-			group = savings.getCustomer();
-			center = group.getParentCustomer();
-		} catch (Exception e) {
-			e.printStackTrace();
+			savings.adjustLastUserAction(amountAdjustedTo,
+					"correction entry");
+		} catch (ApplicationException ae) {
+			assertTrue(false);
 		}
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		payment = savings.getLastPmnt();
+		assertEquals(Integer.valueOf(2).intValue(), payment
+				.getAccountTrxns().size());
+		assertEquals(new Money(), savings.getSavingsBalance());
+
+		assertEquals(0.0, savings.getInterestToBePosted()
+				.getAmountDoubleValue());
+
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
 	}
 
 	public void testInterestAdjustment_LastDepositPaymentNullified_WithAvgBal()
@@ -3983,83 +3970,78 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testSuccessfulCloseAccount() throws Exception {
-		try {
-			createInitialObjects();
-			savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-			savings = helper.createSavingsAccount("000X00000000017",
-					savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
-					userContext);
-			savings.setActivationDate(helper.getDate("20/05/2006"));
+		createInitialObjects();
+		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
+		savings = helper.createSavingsAccount("000X00000000017",
+				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
+				userContext);
+		savings.setActivationDate(helper.getDate("20/05/2006"));
 
-			AccountPaymentEntity payment1 = helper
-					.createAccountPaymentToPersist(savings, new Money(currency,
-							"1000.0"), new Money(currency, "1000.0"), helper
-							.getDate("30/05/2006"),
-							AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
-							createdBy, group);
-			TestAccountPaymentEntity.addAccountPayment(payment1,savings);
-			savings.update();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+		AccountPaymentEntity payment1 = helper
+				.createAccountPaymentToPersist(savings, new Money(currency,
+						"1000.0"), new Money(currency, "1000.0"), helper
+						.getDate("30/05/2006"),
+						AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+						createdBy, group);
+		TestAccountPaymentEntity.addAccountPayment(payment1,savings);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 
-			Money balanceAmount = new Money(currency, "1500.0");
-			AccountPaymentEntity payment2 = helper
-					.createAccountPaymentToPersist(savings, new Money(currency,
-							"500.0"), balanceAmount, helper
-							.getDate("15/06/2006"),
-							AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
-							createdBy, group);
-			TestAccountPaymentEntity.addAccountPayment(payment2,savings);
-			savings.update();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+		Money balanceAmount = new Money(currency, "1500.0");
+		AccountPaymentEntity payment2 = helper
+				.createAccountPaymentToPersist(savings, new Money(currency,
+						"500.0"), balanceAmount, helper
+						.getDate("15/06/2006"),
+						AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+						createdBy, group);
+		TestAccountPaymentEntity.addAccountPayment(payment2,savings);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 
-			Money interestAmount = new Money(currency, "40");
-			savings.setInterestToBePosted(interestAmount);
-			savings.setSavingsBalance(balanceAmount);
-			savings.update();
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
+		Money interestAmount = new Money(currency, "40");
+		savings.setInterestToBePosted(interestAmount);
+		savings.setSavingsBalance(balanceAmount);
+		savings.update();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
 
-			savings = savingsPersistence.findById(savings.getAccountId());
-			savings.setUserContext(userContext);
-			Money interestAtClosure = savings
-					.calculateInterestForClosure(new SavingsHelper()
-							.getCurrentDate());
-			AccountPaymentEntity payment = new AccountPaymentEntity(savings,
-					balanceAmount.add(interestAtClosure), null, null,
-					new PaymentTypeEntity(Short.valueOf("1")));
-			AccountNotesEntity notes = new AccountNotesEntity(
-					new java.sql.Date(System.currentTimeMillis()),
-					"closing account", TestObjectFactory
-							.getPersonnel(userContext.getId()), savings);
-			savings.closeAccount(payment, notes, group);
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-			savings = savingsPersistence.findById(savings.getAccountId());
-			assertEquals(2, savings.getSavingsActivityDetails().size());
+		savings = savingsPersistence.findById(savings.getAccountId());
+		savings.setUserContext(userContext);
+		Money interestAtClosure = savings
+				.calculateInterestForClosure(new SavingsHelper()
+						.getCurrentDate());
+		AccountPaymentEntity payment = new AccountPaymentEntity(savings,
+				balanceAmount.add(interestAtClosure), null, null,
+				new PaymentTypeEntity(Short.valueOf("1")));
+		AccountNotesEntity notes = new AccountNotesEntity(
+				new java.sql.Date(System.currentTimeMillis()),
+				"closing account", TestObjectFactory
+						.getPersonnel(userContext.getId()), savings);
+		savings.closeAccount(payment, notes, group);
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		savings = savingsPersistence.findById(savings.getAccountId());
+		assertEquals(2, savings.getSavingsActivityDetails().size());
 
-			for (SavingsActivityEntity activity : savings
-					.getSavingsActivityDetails()) {
-				assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),
-						DateUtils.getDateWithoutTimeStamp(activity
-								.getTrxnCreatedDate().getTime()));
-				if (activity.getActivity().getId().equals(
-						AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
-					assertEquals(balanceAmount.add(interestAtClosure), activity
-							.getAmount());
-					assertEquals(balanceAmount.add(interestAtClosure), savings
-							.getSavingsPerformance().getTotalWithdrawals());
-				} else if (activity.getActivity().getId().equals(
-						AccountConstants.ACTION_SAVINGS_INTEREST_POSTING))
-					assertEquals(interestAtClosure, activity.getAmount());
-			}
-			group = savings.getCustomer();
-			center = group.getParentCustomer();
-		} catch (Exception e) {
-			// TODO: get rid of this try-catch
-			e.printStackTrace();
+		for (SavingsActivityEntity activity : savings
+				.getSavingsActivityDetails()) {
+			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),
+					DateUtils.getDateWithoutTimeStamp(activity
+							.getTrxnCreatedDate().getTime()));
+			if (activity.getActivity().getId().equals(
+					AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
+				assertEquals(balanceAmount.add(interestAtClosure), activity
+						.getAmount());
+				assertEquals(balanceAmount.add(interestAtClosure), savings
+						.getSavingsPerformance().getTotalWithdrawals());
+			} else if (activity.getActivity().getId().equals(
+					AccountConstants.ACTION_SAVINGS_INTEREST_POSTING))
+				assertEquals(interestAtClosure, activity.getAmount());
 		}
+		group = savings.getCustomer();
+		center = group.getParentCustomer();
 	}
 
 	private SavingsBO getSavingsAccountForCenter() throws Exception {
