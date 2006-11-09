@@ -28,7 +28,7 @@ public class TestJDBCAppender extends MifosTestCase {
 	    try {
 			con = HibernateUtil.getSessionTL().connection();
 	        stmt = con.createStatement();
-	        String sql = "DELETE from logmessages where MESSAGE LIKE \"%" + message + "%\"";
+	        String sql = "DELETE from LOGMESSAGES where MESSAGE LIKE \"%" + message + "%\"";
 	        stmt.executeUpdate(sql);
 	    } catch (SQLException e) {
 	       if (stmt != null)
@@ -49,7 +49,7 @@ public class TestJDBCAppender extends MifosTestCase {
 
 	// Was this ever working?  It isn't working for me...
 	// -kingdon, 6-7 Nov 2006
-	public void xtestGetConnection() throws Exception {
+	public void testGetConnection() throws Exception {
 		MifosLogger logger = MifosLogManager.getLogger("org.mifos.framework.logger");
 		message = new Long(System.currentTimeMillis()).toString();
 		logger.debug(message);
@@ -63,7 +63,7 @@ public class TestJDBCAppender extends MifosTestCase {
 	    try {
 			con = HibernateUtil.getSessionTL().connection();
 	        stmt = con.createStatement();
-	        String sql = "SELECT MESSAGE from logmessages where MESSAGE LIKE \"%" + message + "%\"";
+	        String sql = "SELECT MESSAGE from LOGMESSAGES where MESSAGE LIKE \"%" + message + "%\"";
 	        ResultSet rs = stmt.executeQuery(sql);
 	        int count = 0;
 	        while (rs.next()) {

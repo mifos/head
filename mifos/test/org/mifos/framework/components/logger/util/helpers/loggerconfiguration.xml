@@ -23,7 +23,7 @@
          logging,the category, the class , method, the line number from where the log statement was issued ,
          the log statement and the date
     -->
-	<param name="ConversionPattern" value="INSERT INTO logmessages (LEVEL,MODULE_NAME,CLASS_NAME,METHOD_NAME,LINE_NUMBER,MESSAGE,DATE )
+	<param name="ConversionPattern" value="INSERT INTO LOGMESSAGES (LEVEL,MODULE_NAME,CLASS_NAME,METHOD_NAME,LINE_NUMBER,MESSAGE,DATE )
 		VALUES ('%-3p',  '%c', '%C{1}','%M','%L', '%m', '%d{dd MMM yyyy HH:mm:ss}')"/>
 
 	</layout>

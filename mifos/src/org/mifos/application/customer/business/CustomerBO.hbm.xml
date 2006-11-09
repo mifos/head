@@ -675,9 +675,9 @@
 	        	   	and customer.customerStatus.id in (7,8,9,10)]]>
         </query>
 		  <query name="numberOfMeetingsAttended">
-		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (1,4) and customerAttendance.id in (select max(custAttendance.id) from org.mifos.application.customer.client.business.ClientAttendanceBO custAttendance where custAttendance.customer.customerId=:CUSTOMERID group by custAttendance.meetingDate )]]>
+		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (1,4) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
 	 </query>
 	 <query name="numberOfMeetingsMissed">
-		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (2,3) and customerAttendance.id in (select max(custAttendance.id) from org.mifos.application.customer.client.business.ClientAttendanceBO custAttendance where custAttendance.customer.customerId=:CUSTOMERID group by custAttendance.meetingDate )]]>
+		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (2,3) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
 	 </query>
 </hibernate-mapping>
