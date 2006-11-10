@@ -34,7 +34,7 @@
 	<parameter name="staffid" isForPrompting="true" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT '0000-00-00' as dissolveddt,0 as totdropouts, 0 as totreplacements, 0 as totdormants, 0 as tottargets,
 0 as totnumloanout, 0 as portfolioatrisk,0 as saving2balance,0 as saving3balance, 0 as elamtout, 0 as crfbal,
-0 as totmanager, ((select count(*) from loan_arrears_aging la where  la.office_id=o.office_id) ) as arr_numloan,
+ifnull((select count(distinct p.PERSONNEL_ID) from personnel p where p.OFFICE_ID=o.OFFICE_ID and p.TITLE=540),0) as totmanager, ((select count(*) from loan_arrears_aging la where  la.office_id=o.office_id) ) as arr_numloan,
 0 as arr_loanatrisk,(select count(distinct customer_id) from loan_arrears_aging la where la.office_id=o.office_id) as arr_member,(select sum(overdue_balance) from loan_arrears_aging la where la.office_id=o.office_id)  as arr_amt,
 0 as arr_memberatrisk,(select sum(COALESCE(unpaid_balance,0)) from loan_arrears_aging la where la.office_id=o.office_id) as arr_amtout,0 as arr_arforriskmem, 0 as arr_outstandingatrisk,
 
@@ -73,7 +73,7 @@ ifnull((select sum(COALESCE(unpaid_balance,0)) from loan_arrears_aging la where 
 ifnull((select sum(COALESCE(unpaid_balance,0)) from loan_arrears_aging la where la.days_in_arrears >=8 and la.days_in_arrears <=14 and la.office_id=o.office_id),0) as age_2wk_out,
 ifnull((select sum(COALESCE(unpaid_balance,0)) from loan_arrears_aging la where la.days_in_arrears >=15 and la.days_in_arrears <=21 and la.office_id=o.office_id),0)  as  age_3wk_out,
 ifnull((select sum(COALESCE(unpaid_balance,0)) from loan_arrears_aging la where la.days_in_arrears >=22 and la.days_in_arrears <=29 and la.office_id=o.office_id),0) as age_4wk_out,
-ifnull((select sum(COALESCE(unpaid_balance,0)) from loan_arrears_aging la where la.days_in_arrears >=29 and la.days_in_arrears <=35 and la.office_id=o.office_id),0) as age_5pluswk_out,
+ifnull((select abs(sum(COALESCE(unpaid_balance,0))) from loan_arrears_aging la where la.days_in_arrears >=29 and la.days_in_arrears <=35 and la.office_id=o.office_id),0) as age_5pluswk_out,
 ifnull((select sum(COALESCE(unpaid_balance,0)) from loan_arrears_aging la where la.days_in_arrears >=36 and la.days_in_arrears <=112 and la.office_id=o.office_id),0) as age_5_16wk_out,
 ifnull((select sum(COALESCE(unpaid_balance,0)) from loan_arrears_aging la where la.days_in_arrears >=113 and la.days_in_arrears <=192 and la.office_id=o.office_id),0) as age_16_26wk_out,
 ifnull((select sum(COALESCE(unpaid_balance,0)) from loan_arrears_aging la where la.days_in_arrears >=193 and la.office_id=o.office_id),0) as age_26pluswk_out,
@@ -89,8 +89,8 @@ ifnull((select count(gr.CUSTOMER_ID) from CUSTOMER gr where gr.BRANCH_ID = o.OFF
 ifnull((select count(cl.CUSTOMER_ID) from CUSTOMER cl where cl.BRANCH_ID = o.OFFICE_ID and cl.discriminator="client" ),0) as totclient,
 ifnull((select count(c.CUSTOMER_ID) from CUSTOMER c,customer_state cs where c.BRANCH_ID=o.OFFICE_ID and cs.STATUS_ID=c.STATUS_ID and c.CUSTOMER_LEVEL_ID=1 and cs.DESCRIPTION='Customer Was Active'),0) as totactiveborrowers,
 ifnull((select count(distinct(a.CUSTOMER_ID)) from CUSTOMER c,account a where c.BRANCH_ID=o.OFFICE_ID and a.customer_id=c.customer_id  and a.ACCOUNT_TYPE_ID=2 and a.ACCOUNT_STATE_ID=16 and c.CUSTOMER_LEVEL_ID=1),0) as totsavers,
-ifnull((select count(distinct p.PERSONNEL_ID) from personnel p,personnel_level pl where p.OFFICE_ID=o.OFFICE_ID and pl.LEVEL_ID=p.LEVEL_ID and pl.LEVEL_NAME_ID=58 ),0) as totkendramanager,
-ifnull((select count(distinct p.PERSONNEL_ID) from personnel p,personnel_level pl where p.OFFICE_ID=o.OFFICE_ID and pl.LEVEL_ID=p.LEVEL_ID and pl.LEVEL_NAME_ID=59 ),0) as totbranchmanager,
+ifnull((select count(distinct p.PERSONNEL_ID) from personnel p where p.OFFICE_ID=o.OFFICE_ID and p.TITLE=58 ),0) as totkendramanager,
+ifnull((select count(distinct p.PERSONNEL_ID) from personnel p where p.OFFICE_ID=o.OFFICE_ID and p.TITLE=59 ),0) as totbranchmanager,
 ifnull((select sum(la.LOAN_AMOUNT) from customer c left join account a on a.CUSTOMER_ID=c.CUSTOMER_ID left join loan_account la on la.ACCOUNT_ID=a.ACCOUNT_ID where c.BRANCH_ID=o.OFFICE_ID),0) as amtdisb,
 ifnull((select count(la.ACCOUNT_ID) from customer c left join account a on a.CUSTOMER_ID=c.CUSTOMER_ID left join loan_account la on la.ACCOUNT_ID=a.ACCOUNT_ID where c.BRANCH_ID=o.OFFICE_ID),0) as numloandisbursed,
 ifnull((select sum(sa.SAVINGS_BALANCE) from customer c left join account a on a.CUSTOMER_ID=c.CUSTOMER_ID left join savings_account sa on sa.ACCOUNT_ID=a.ACCOUNT_ID where c.BRANCH_ID=o.OFFICE_ID),0) as saving1balance,
