@@ -77,6 +77,7 @@ import org.mifos.framework.persistence.TestPersistence;
 import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
+import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
 
 public class ApplicationTestSuite extends MifosTestSuite {
@@ -126,6 +127,7 @@ public class ApplicationTestSuite extends MifosTestSuite {
 		suite.addTestSuite(TestHibernateHelper.class);
 		suite.addTestSuite(TestPersistence.class);
 		suite.addTestSuite(FrameworkExceptionTest.class);
+		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTest(FrameworkUtilsSuite.suite());
 		return suite;
 	}

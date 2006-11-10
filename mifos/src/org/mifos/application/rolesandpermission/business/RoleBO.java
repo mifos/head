@@ -20,24 +20,32 @@ import org.mifos.framework.util.helpers.StringUtils;
 
 public class RoleBO extends BusinessObject {
 
-	private final Short id = null;
+	private Short id = null;
 
 	private String name;
 
 	private final Set<RoleActivityEntity> activities = new HashSet<RoleActivityEntity>();
 
-	MifosLogger logger = MifosLogManager
-			.getLogger(LoggerConstants.ROLEANDPERMISSIONLOGGER);
+	MifosLogger logger;
 
 	private RolesPermissionsPersistence rolesPermissionPersistence = new RolesPermissionsPersistence();
 
 	protected RoleBO() {
+		logger = MifosLogManager.getLogger(
+				LoggerConstants.ROLEANDPERMISSIONLOGGER);
+	}
+	
+	RoleBO(MifosLogger logger, int id) {
+		this.logger = logger;
+		this.id = (short) id;
 	}
 
 	public RoleBO(UserContext userContext, String roleName,
 			List<ActivityEntity> activityList)
 			throws RolesPermissionException {
 		super(userContext);
+		logger = MifosLogManager.getLogger(
+			LoggerConstants.ROLEANDPERMISSIONLOGGER);
 		logger.info("Creating a new role");
 		validateRoleName(roleName);
 		validateActivities(activityList);
@@ -69,7 +77,6 @@ public class RoleBO extends BusinessObject {
 	
 	public List<Short> getActivityIds() {
 		List<Short> ids = new ArrayList<Short>();
-		List<ActivityEntity> activityList = new ArrayList<ActivityEntity>();
 		for (RoleActivityEntity roleActivityEntity : activities) {
 			ids.add(roleActivityEntity.getActivity().getId());
 		}

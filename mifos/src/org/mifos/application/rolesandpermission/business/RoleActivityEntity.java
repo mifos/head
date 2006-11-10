@@ -26,6 +26,14 @@ public class RoleActivityEntity extends PersistentObject {
 
 	@Override
 	public boolean equals(Object arg0) {
+		if (arg0 == null) {
+			return false;
+		}
+		
+		if (arg0.getClass() != RoleActivityEntity.class) {
+			return false;
+		}
+
 		RoleActivityEntity roleActivityEntity = (RoleActivityEntity) arg0;
 		if (this.getRole().getId() == null
 				|| roleActivityEntity.getRole().getId() == null
@@ -42,9 +50,7 @@ public class RoleActivityEntity extends PersistentObject {
 
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		return 0;
 	}
-	
-	
 
 }

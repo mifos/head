@@ -56,18 +56,14 @@ public class TableTagParser {
         table=createTable(document);
 
       } catch(URISyntaxException e){
-      	e.printStackTrace() ;
+          throw new TableTagParseException(e);
       }catch (ParserConfigurationException e) {
-        e.printStackTrace();
         throw new TableTagParseException(e);
       } catch (IOException e) {
-        e.printStackTrace();
         throw new TableTagParseException(e);
       } catch (SAXParseException e) {
-        e.printStackTrace();
         throw new TableTagParseException(e);
       } catch (SAXException e) {
-        e.printStackTrace();
         throw new TableTagParseException(e);
       }
       return table;

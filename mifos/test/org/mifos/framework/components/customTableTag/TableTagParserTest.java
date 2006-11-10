@@ -1,11 +1,13 @@
 package org.mifos.framework.components.customTableTag;
 import static junitx.framework.StringAssert.assertContains;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import junit.framework.TestCase;
+import junitx.framework.ObjectAssert;
 
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.framework.exceptions.TableTagParseException;
@@ -17,8 +19,11 @@ public class TableTagParserTest extends TestCase {
 		TableTagParser tableTagParser = new TableTagParser();
 		try {
 			tableTagParser.parser("org/mifos/framework/struts/util/helpers/struts-config.xml");
-		} catch (TableTagParseException ttpe) {
-			assertEquals("exception.framework.TableTagParseException", ttpe.getKey());
+			fail();
+		} catch (TableTagParseException e) {
+			assertEquals("exception.framework.TableTagParseException", e.getKey());
+			ObjectAssert.assertInstanceOf(
+				FileNotFoundException.class, e.getCause());
 		}
 	}
 	public void testParser() throws Exception {

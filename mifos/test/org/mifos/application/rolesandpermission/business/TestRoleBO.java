@@ -135,7 +135,6 @@ public class TestRoleBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
-		Short roleId=roleBO.getId();
 		assertEquals(176,roleBO.getActivities().size());
 		assertEquals(roleBO.getCreatedBy(),Short.valueOf("1"));
 		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(roleBO.getCreatedDate().getTime()));

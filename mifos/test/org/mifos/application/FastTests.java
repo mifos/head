@@ -39,20 +39,34 @@ import junit.framework.TestSuite;
 
 import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.application.master.business.MifosCurrencyTest;
+import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
+import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
+import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.struts.tags.DateHelperTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
 import org.mifos.framework.util.helpers.ConvertionUtilTest;
-import org.mifos.framework.util.helpers.MethodInvokerTest;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.MoneyTest;
 
 /**
  * Tests which run quickly (say, <10ms per test, or some such,
  * so that the whole run can be done in seconds or at most a
  * minute or two).
+ * 
+ * Test setup should also be fast (say, <1-2 seconds).
+ * This currently means that a fast test cannot inherit from
+ * {@link MifosTestCase}, call Hibernate, or other things
+ * which take many seconds to start up.
+ * 
+ * If your only reason for wanting {@link MifosTestCase} is logging,
+ * it might be possible to just call
+ * {@link DatabaseSetup#configureLogging()} (haven't verified this
+ * is fast).  Or pass around a {@link TestLogger}
+ * (see {@link RoleActivityEntityTest} for an example).
  */
 public class FastTests extends MifosTestSuite {
 
@@ -69,9 +83,12 @@ public class FastTests extends MifosTestSuite {
 
 		suite.addTestSuite(TableTagTest.class);
 		suite.addTestSuite(XmlBuilderTest.class);
-		suite.addTestSuite(MethodInvokerTest.class);
+		// Slow because it needs logging (and thus extends MifosTestCase)
+//		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTestSuite(ConvertionUtilTest.class);
 		suite.addTestSuite(TableTagParserTest.class);
+		
+		suite.addTestSuite(RoleActivityEntityTest.class);
 		return suite;
 	}
 

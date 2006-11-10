@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
+import junit.framework.Assert;
+import junitx.extensions.EqualsHashCodeTestCase;
+
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 import org.mifos.framework.security.util.UserContext;
@@ -36,5 +39,45 @@ public class TestUtils {
 		SAXReader reader = new SAXReader();
 	    reader.read(new StringReader("<root>" + xml + "</root>"));
 	}
+
+    /**
+     * Here is our equals/hashCode testing framework.  Is there really
+     * not just one to download?  This wheel gets reinvented so often.
+     * The one in {@link EqualsHashCodeTestCase} is seriously broken -
+     * it often gets confused about which equals method it is testing
+     * (e.g. the one from Object or the one under test) and similar
+     * problems.
+     */
+    
+    public static void assertAllEqual(Object[] objects) {
+        /**
+         * The point of checking each pair is to make sure that equals is
+         * transitive per the contract of {@link Object#equals(java.lang.Object)}.
+         */
+        for (int i = 0; i < objects.length; i++) {
+            Assert.assertFalse(objects[i].equals(null));
+            for (int j = 0; j < objects.length; j++) {
+                assertIsEqual(objects[i], objects[j]);
+            }
+        }
+    }
+
+    public static void assertIsEqual(Object one, Object two) {
+    	Assert.assertTrue(one.equals(two));
+    	Assert.assertTrue(two.equals(one));
+    	Assert.assertEquals(one.hashCode(), two.hashCode());
+    }
+
+    public static void assertIsNotEqual(Object one, Object two) {
+        assertReflexiveAndNull(one);
+        assertReflexiveAndNull(two);
+        Assert.assertFalse(one.equals(two));
+        Assert.assertFalse(two.equals(one));
+    }
+
+    public static void assertReflexiveAndNull(Object object) {
+    	Assert.assertTrue(object.equals(object));
+    	Assert.assertFalse(object.equals(null));
+    }
 
 }

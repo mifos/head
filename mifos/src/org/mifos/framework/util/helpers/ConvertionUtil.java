@@ -78,14 +78,11 @@ public class ConvertionUtil {
 			} else {
 				throw new ValueObjectConversionException("");
 			}
-		} catch (InvocationTargetException ite) {
-			ite.printStackTrace();
-			throw new ValueObjectConversionException(ite);
-		} catch (IllegalAccessException iae) {
-			iae.printStackTrace();
-			throw new ValueObjectConversionException(iae);
+		} catch (InvocationTargetException e) {
+			throw new ValueObjectConversionException(e);
+		} catch (IllegalAccessException e) {
+			throw new ValueObjectConversionException(e);
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new ValueObjectConversionException(e);
 		}
 	}
