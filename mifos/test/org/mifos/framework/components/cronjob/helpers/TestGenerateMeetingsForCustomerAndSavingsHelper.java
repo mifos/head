@@ -1,6 +1,5 @@
 package org.mifos.framework.components.cronjob.helpers;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,8 +78,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()), feeView);
+				meeting, feeView);
 		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());	
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,

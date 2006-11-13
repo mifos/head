@@ -181,7 +181,7 @@ import org.mifos.framework.security.util.UserContext;
  * statements for creating some default objects.
  * 
  * The convention followed here is that any method that starts with "get" is
- * returning an object already existing in the database , this object is not
+ * returning an object already existing in the database, this object is not
  * meant to be modified and the method that starts with "create" creates a new
  * object inserts it into the database and returns that hence these objects are
  * meant to be cleaned up by the user.
@@ -218,46 +218,33 @@ public class TestObjectFactory {
 				.getPersonnel(personnelId));
 	}
 
-	public static CenterBO createCenter(String customerName, MeetingBO meeting) {
-		CenterBO center = null;
-		try {
-			Short officeId = new Short("3");
-			Short personnel = new Short("1");
-			center = new CenterBO(getUserContext(), customerName, null, null,
-					getFees(), null, null, officeId, meeting, personnel);
-			center.save();
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		addObject(center);
-		return center;
+	public static CenterBO createCenter(
+		String customerName, MeetingBO meeting) {
+		return createCenter(customerName, meeting, getFees());
 	}
 
 	public static CenterBO createCenter(String customerName, MeetingBO meeting,
 			Short officeId, Short personnelId) {
-		CenterBO center = null;
-		try {
-			center = new CenterBO(getUserContext(), customerName, null, null,
-					getFees(), null, null, officeId, meeting, personnelId);
-			center.save();
-			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		addObject(center);
-		return center;
+		return createCenter(customerName, meeting, officeId, personnelId, 
+			getFees());
 	}
 
-	public static CenterBO createCenter(String customerName, Short statusId,
-			String searchId, MeetingBO meeting, Date startDate,
+	public static CenterBO createCenter(String customerName, 
+			MeetingBO meeting,
 			List<FeeView> fees) {
+		Short officeId = new Short("3");
+		Short personnel = new Short("1");
+		return createCenter(customerName, meeting, officeId, personnel,
+			fees);
+	}
+
+	public static CenterBO createCenter(
+		String customerName, MeetingBO meeting, 
+		Short officeId, Short personnelId, List<FeeView> fees) {
 		CenterBO center = null;
 		try {
-			Short officeId = new Short("3");
-			Short personnel = new Short("1");
 			center = new CenterBO(getUserContext(), customerName, null, null,
-					fees, null, null, officeId, meeting, personnel);
+					fees, null, null, officeId, meeting, personnelId);
 			center.save();
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
@@ -353,7 +340,6 @@ public class TestObjectFactory {
 		return group;
 	}
 
-	// TODO: searchId and startDate are unused; nuke them.
 	public static ClientBO createClient(
 			String customerName, CustomerStatus status,
 			CustomerBO parentCustomer) {

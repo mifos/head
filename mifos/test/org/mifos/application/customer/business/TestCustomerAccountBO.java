@@ -1020,8 +1020,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				FeePayment.UPFRONT);
 		feeView.add(new FeeView(userContext, upfrontFee));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()), feeView);
+				meeting, feeView);
 		Date startDate = new Date(System.currentTimeMillis());
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
@@ -1082,8 +1081,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				FeePayment.UPFRONT);
 		feeView.add(new FeeView(userContext, upfrontFee));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()), feeView);
+				meeting, feeView);
 		Date startDate = new Date(System.currentTimeMillis());
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {

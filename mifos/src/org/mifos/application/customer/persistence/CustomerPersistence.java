@@ -599,7 +599,7 @@ public class CustomerPersistence extends Persistence {
 
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("customerId", customerId);
-		return (List<SavingsBO>) executeNamedQuery(
+		return executeNamedQuery(
 				NamedQueryConstants.RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER,
 				queryParameters);
 	}
@@ -682,7 +682,7 @@ public class CustomerPersistence extends Persistence {
 		queryParameters.put("SEARCH_STRING2", searchId + ".%");
 		queryParameters.put("OFFICE_ID", officeId);
 		queryParameters.put("ACCOUNT_TYPE_ID", accountTypeId);
-		return (List<AccountBO>) executeNamedQuery(
+		return executeNamedQuery(
 				NamedQueryConstants.RETRIEVE_ACCCOUNTS_FOR_CUSTOMER,
 				queryParameters);
 	}
