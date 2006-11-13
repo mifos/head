@@ -183,7 +183,7 @@
 													<mifos:mifoslabel name="Fees.selecttimeofcharge" />
 													<br>
 													<div id="loanTimeOfChargeDiv">
-														<mifos:select property="loanCharge" style="width:180px;">
+														<mifos:select property="loanCharge">
 															<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'TimeOfCharges')}" var="timeOfcharge">
 																<html-el:option value="${timeOfcharge.id}">${timeOfcharge.name}</html-el:option>
 															</c:forEach>
@@ -299,7 +299,7 @@
 															<td width="16%">
 																<mifos:mifosdecimalinput property="rate" size="3" decimalFmt="3.5"></mifos:mifosdecimalinput>
 																<mifos:mifoslabel name="Fees.percentof" />
-																<mifos:select property="feeFormula" style="width:136px;">
+																<mifos:select property="feeFormula">
 																	<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'FormulaList')}" var="formula">
 																		<html-el:option value="${formula.id}">${formula.name}</html-el:option>
 																	</c:forEach>

@@ -1,10 +1,10 @@
-<!-- 
+<!--
 
 /**
 
  * EditSavingsProduct.jsp    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -12,27 +12,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -67,7 +67,7 @@
 					document.getElementById("dayDIV").style.display = "none";
 					document.getElementById("weekDIV").style.display = "none";
 					document.getElementById("monthDIV").style.display = "block";
-					if(document.savingsproductactionform.monthType[0].checked == false && 
+					if(document.savingsproductactionform.monthType[0].checked == false &&
 						document.savingsproductactionform.monthType[1].checked == false)
 						document.savingsproductactionform.monthType[0].checked = true;
 					}
@@ -78,7 +78,7 @@
 					document.getElementById("monthDIV").style.display = "none";
 				}
 			}
-			
+
 			function showMeetingFrequency1(){
 				if (document.savingsproductactionform.timeForInterestCacl[0].checked == true){
 					document.getElementById("dayDIV1").style.display = "block";
@@ -94,7 +94,7 @@
 					document.getElementById("dayDIV1").style.display = "none";
 					document.getElementById("weekDIV1").style.display = "none";
 					document.getElementById("monthDIV1").style.display = "block";
-					if(document.savingsproductactionform.intmonthType[0].checked == false && 
+					if(document.savingsproductactionform.intmonthType[0].checked == false &&
 						document.savingsproductactionform.intmonthType[1].checked == false)
 						document.savingsproductactionform.intmonthType[0].checked = true;
 					}
@@ -109,18 +109,18 @@
 				savingsproductactionform.action="savingsproductaction.do?method=cancelEdit";
 				savingsproductactionform.submit();
 			}
-			
+
 			function fnCheckRecMand() {
 				if(document.getElementsByName("savingsType")[0].value==1) {
 					document.getElementsByName("mandamnt")[0].style.display = "block";
-					document.getElementsByName("recamnt")[0].style.display = "none";			
+					document.getElementsByName("recamnt")[0].style.display = "none";
 				}
 				else {
 					document.getElementsByName("mandamnt")[0].style.display = "none";
-					document.getElementsByName("recamnt")[0].style.display = "block";	
+					document.getElementsByName("recamnt")[0].style.display = "block";
 				}
 			}
-			
+
 			function fnCheckAppliesTo() {
 				if(document.getElementsByName("prdApplicableMaster")[0].value==2) {
 					document.getElementsByName("recommendedAmntUnit")[0].disabled=false;
@@ -132,7 +132,7 @@
 			}
 		</script>
 		<script src="pages/framework/js/date.js"></script>
-		<html-el:form action="/savingsproductaction.do?method=previewManage" onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) && 
+		<html-el:form action="/savingsproductaction.do?method=previewManage" onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))" focus="prdOfferingName">
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set	value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
@@ -222,7 +222,7 @@
 									:
 								</td>
 								<td valign="top">
-									<mifos:select property="prdCategory" style="width:136px;">
+									<mifos:select property="prdCategory">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsProductCategoryList')}" var="category">
 											<html-el:option value="${category.productCategoryID}">${category.productCategoryName}</html-el:option>
 										</c:forEach>
@@ -345,7 +345,7 @@
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'PrdCategoryStatusList')}" var="statusValue">
 											<html-el:option value="${statusValue.offeringStatusId}">${statusValue.prdState.name}</html-el:option>
 										</c:forEach>
-									</mifos:select> 
+									</mifos:select>
 								</td>
 							</tr>
 						</table>

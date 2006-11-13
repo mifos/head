@@ -1,39 +1,39 @@
 <!--
- 
+
  * editLoanAccount.jsp  version: xxx
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  -->
 
 <%@taglib uri="/tags/struts-html" prefix="html"%>
@@ -56,8 +56,8 @@
 		<html-el:form action="/loanAccountAction.do?method=managePreview"
 			onsubmit="return (validateMyForm(disbursementDate,disbursementDateFormat,disbursementDateYY));">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />	
-			
+			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
+
 			<td height="200" align="left" valign="top" bgcolor="#FFFFFF"
 				class="paddingleftmain">
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
@@ -170,7 +170,7 @@
 								isColonRequired="yes" bundle="loanUIResources"
 								isManadatoryIndicationNotRequired="yes" /></td>
 							<td valign="top"><mifos:select keyhm="Loan.PurposeOfLoan"
-								property="businessActivityId" style="width:136px;">
+								property="businessActivityId">
 								<c:forEach var="BusinessActivity" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" >
 									<html-el:option value="${BusinessActivity.id}">${BusinessActivity.name}</html-el:option>
 								</c:forEach>
@@ -225,19 +225,19 @@
 		              	 <bean:define id="ctr">
 		                	<c:out value="${loopStatus.index}"/>
 		                </bean:define>
-		
+
 						<tr class="fontnormal">
 			                <td width="30%" align="right">
 								<mifos:mifoslabel name="${cf.lookUpEntity.entityType}" mandatory="${cf.mandatoryStringValue}" bundle="loanUIResources"></mifos:mifoslabel>:
 							</td>
-			                <td width="70%">          
-								<c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_NUMBER}">  
+			                <td width="70%">
+								<c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_NUMBER}">
 				                	<mifos:mifosnumbertext  name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"/>
 				                </c:if>
 				               	<c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_ALPHANUMBER}">
 				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"/>
 								</c:if>
-				                <c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_DATE}"> 
+				                <c:if test="${cf.fieldType == MasterConstants.CUSTOMFIELD_DATE}">
 				                	<mifos:mifosalphanumtext name = "loanAccountActionForm" property='customField[${ctr}].fieldValue' maxlength="200"/>
 				                </c:if>
 				                <html-el:hidden property='customField[${ctr}].fieldId' value="${cf.fieldId}"></html-el:hidden>
@@ -275,7 +275,7 @@
 				property="globalAccountNum" />
 			<html-el:hidden value="${BusinessKey.accountState.id}"
 				property="accountStateId" />
-			
+
 		</html-el:form>
 		</body>
 	</tiles:put>

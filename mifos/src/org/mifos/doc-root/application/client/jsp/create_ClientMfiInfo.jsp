@@ -226,7 +226,7 @@
 										<td align="right" width="27%"><mifos:mifoslabel
 											name="client.LoanOfficer" bundle="ClientUIResources"></mifos:mifoslabel></td>
 										<td><mifos:select property="loanOfficerId"
-											style="width:136px;" onchange="populateDefaultFormedBy(this)">
+											onchange="populateDefaultFormedBy(this)">
 											<c:forEach var="loanOfficersList" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOfficers')}" >
 												<html-el:option value="${loanOfficersList.personnelId}">${loanOfficersList.displayName}</html-el:option>
 											</c:forEach>
@@ -246,8 +246,7 @@
 									<td align="right" width="27%"><mifos:mifoslabel
 										name="client.FormedBy" mandatory="yes"
 										bundle="ClientUIResources"></mifos:mifoslabel></td>
-									<td><mifos:select property="formedByPersonnel"
-										style="width:136px;">
+									<td><mifos:select property="formedByPersonnel">
 										<c:forEach var="customerFormedBy"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'formedByLoanOfficers')}">
 											<html-el:option value="${customerFormedBy.personnelId}">
@@ -413,7 +412,7 @@
 											</mifos:select>
 										</td>
 									</tr>
-							 	</c:forEach>							
+							 	</c:forEach>
 							</table>
 							<br>
 							<!-- Buttons -->

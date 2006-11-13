@@ -175,7 +175,6 @@
 									<td align="right" valign="top"><mifos:mifoslabel
 										name="checklist.displayed_status" mandatory="yes" /></td>
 									<td valign="top"><mifos:select property="stateId"
-										style="width:136px;"
 										onchange="populateStateName(this.form,this);">
 										<c:forEach var="item"
 											items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'states')}"

@@ -1,10 +1,10 @@
-<!-- 
+<!--
 
 /**
 
  * CreateLoanProduct.jsp    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -12,27 +12,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -73,7 +73,7 @@
 				if(document.getElementsByName("intDedDisbursementFlag")[0].checked==true) {
 					document.getElementsByName("gracePeriodType")[0].disabled=true;
 					document.getElementsByName("gracePeriodType")[0].selectedIndex=0;
-					document.getElementsByName("gracePeriodDuration")[0].value="";			
+					document.getElementsByName("gracePeriodDuration")[0].value="";
 					document.getElementsByName("gracePeriodDuration")[0].disabled=true;
 				}
 				else {
@@ -93,7 +93,7 @@
 		//-->
 		</script>
 		<script src="pages/framework/js/date.js"></script>
-		<html-el:form action="/loanproductaction" onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) && 
+		<html-el:form action="/loanproductaction" onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))" focus="prdOfferingName">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -209,7 +209,7 @@
 												:
 											</td>
 											<td valign="top">
-												<mifos:select property="prdCategory" style="width:136px;">
+												<mifos:select property="prdCategory">
 													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanProductCategoryList')}" var="category">
 														<html-el:option value="${category.productCategoryID}">${category.productCategoryName}</html-el:option>
 													</c:forEach>
@@ -472,7 +472,7 @@
 												:
 											</td>
 											<td valign="top">
-												<mifos:select property="gracePeriodType" style="width:136px;" onchange="fnGracePeriod();">
+												<mifos:select property="gracePeriodType" onchange="fnGracePeriod();">
 													<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'LoanGracePeriodTypeList')}" var="graceType">
 														<html-el:option value="${graceType.id}">${graceType.name}</html-el:option>
 													</c:forEach>

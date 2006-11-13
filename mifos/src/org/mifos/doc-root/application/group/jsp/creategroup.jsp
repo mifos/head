@@ -1,39 +1,39 @@
 <!-- /**
- 
+
  * creategroup.jsp    version: 1.0
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  */-->
 <%@ taglib uri="http://struts.apache.org/tags-html-el" prefix="html-el"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
@@ -52,8 +52,8 @@
   function goToCancelPage(){
 	groupCustActionForm.action="groupCustAction.do?method=cancel";
 	groupCustActionForm.submit();
-  }	
-  		
+  }
+
   function displayAmount(listBox, textBox ){
 	var comboBox = document.getElementsByName(listBox)[0];
 	var amountField = document.getElementsByName(textBox)[0];
@@ -74,25 +74,25 @@
 	    groupCustActionForm.action="groupCustAction.do?method=loadMeeting";
 	    groupCustActionForm.submit();
     }
-    
+
     function populateDefaultFormedBy(selectBox){
   		document.forms["groupCustActionForm"].elements["formedByPersonnel"].value=document.forms["groupCustActionForm"].elements["loanOfficerId"].value;
 	}
-    
+
     function chkForValidDates(){
     	return chkForTrainedDate();
     }
-    
+
     function chkForTrainedDate(){
-		 var trainedDate = document.getElementById("trainedDate");	  
+		 var trainedDate = document.getElementById("trainedDate");
 	  	 if (trainedDate!=undefined && trainedDate!=null){
-	  	 	var trainedDateFormat = document.getElementById("trainedDateFormat");	  
-	  	 	var trainedDateYY = document.getElementById("trainedDateYY");	  
+	  	 	var trainedDateFormat = document.getElementById("trainedDateFormat");
+	  	 	var trainedDateYY = document.getElementById("trainedDateYY");
 		    return (validateMyForm(trainedDate,trainedDateFormat,trainedDateYY))
 	 	 }
 	 	 return true;
     }
-  
+
 </script>
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CenterHierarchyExist')}" var="CenterHierarchyExist" />
@@ -197,39 +197,39 @@
 											</tr>
 										</table>
 									</logic:messagesPresent>
-									
-									
+
+
 										<br>
 										<table width="93%" border="0" cellspacing="0" cellpadding="3">
 										<c:choose>
 										<c:when test="${CenterHierarchyExist == true}">
 											<tr>
 												<td>
-													<span class="fontnormalbold"> 
+													<span class="fontnormalbold">
 														<mifos:mifoslabel name="Group.loanofficerassigned" bundle="GroupUIResources"/>
-													</span> 
-													<span class="fontnormal"> 
-														<c:out value="${sessionScope.groupCustActionForm.parentCustomer.personnel.displayName}" /> 
-														<html-el:hidden	property="loanOfficerId" value="${sessionScope.groupCustActionForm.parentCustomer.personnel.personnelId}" /> <br> 
-													</span> 
-													<span class="fontnormalbold"> 
-														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}">												</mifos:mifoslabel> 
-														<mifos:mifoslabel name="Group.assigned" bundle="GroupUIResources"/> 
-													</span> 
-													<span class="fontnormal"> 
-														<c:out value="${sessionScope.groupCustActionForm.parentCustomer.displayName}" /><br> 
 													</span>
-													<span class="fontnormalbold"> 
+													<span class="fontnormal">
+														<c:out value="${sessionScope.groupCustActionForm.parentCustomer.personnel.displayName}" />
+														<html-el:hidden	property="loanOfficerId" value="${sessionScope.groupCustActionForm.parentCustomer.personnel.personnelId}" /> <br>
+													</span>
+													<span class="fontnormalbold">
+														<mifos:mifoslabel name="${ConfigurationConstants.CENTER}">												</mifos:mifoslabel>
+														<mifos:mifoslabel name="Group.assigned" bundle="GroupUIResources"/>
+													</span>
+													<span class="fontnormal">
+														<c:out value="${sessionScope.groupCustActionForm.parentCustomer.displayName}" /><br>
+													</span>
+													<span class="fontnormalbold">
 														<mifos:mifoslabel name="Group.meetingschedule" bundle="GroupUIResources"/>
-													</span> 
-													<span class="fontnormal"> 
-														<c:out value="${customerfn:getMeetingSchedule(sessionScope.groupCustActionForm.parentCustomer.customerMeeting.meeting, sessionScope.UserContext)}" /> <br> 
-													</span> 
-													<span class="fontnormalbold"> 
-														<mifos:mifoslabel name="Group.locationofthemeeting" bundle="GroupUIResources"/> 
-													</span> 
-													<span class="fontnormal"> 
-														<c:out value="${sessionScope.groupCustActionForm.parentCustomer.customerMeeting.meeting.meetingPlace}" /> <br> 
+													</span>
+													<span class="fontnormal">
+														<c:out value="${customerfn:getMeetingSchedule(sessionScope.groupCustActionForm.parentCustomer.customerMeeting.meeting, sessionScope.UserContext)}" /> <br>
+													</span>
+													<span class="fontnormalbold">
+														<mifos:mifoslabel name="Group.locationofthemeeting" bundle="GroupUIResources"/>
+													</span>
+													<span class="fontnormal">
+														<c:out value="${sessionScope.groupCustActionForm.parentCustomer.customerMeeting.meeting.meetingPlace}" /> <br>
 													</span>
 													<br>
 												</td>
@@ -239,8 +239,8 @@
 									<tr>
 										<td class="fontnormal">
 											<br>
-											<span class="fontnormalbold"> <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><c:out value=" " /> 
-												<mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources" isColonRequired="yes"/> 
+											<span class="fontnormalbold"> <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><c:out value=" " />
+												<mifos:mifoslabel name="Center.Selected" bundle="CenterUIResources" isColonRequired="yes"/>
 											</span>
 											<c:out value="${sessionScope.groupCustActionForm.officeName}" />
 											<br>
@@ -250,7 +250,7 @@
 									</c:otherwise>
 									</c:choose>
 									</table>
-									
+
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td colspan="2" class="fontnormalbold">
@@ -303,7 +303,7 @@
 												<mifos:mifoslabel name="Group.FormedBy" mandatory="yes" bundle="GroupUIResources"></mifos:mifoslabel>
 											</td>
 											<td>
-												<mifos:select property="formedByPersonnel" style="width:136px;">
+												<mifos:select property="formedByPersonnel">
 													<c:forEach var="customerFormedBy" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'formedByLoanOfficers')}">
 														<html-el:option value="${customerFormedBy.personnelId}">
 															<c:out value="${customerFormedBy.displayName}" />
@@ -353,7 +353,7 @@
 									<table width="93%" border="0" cellpadding="3" cellspacing="0">
 										<tr>
 											<td colspan="2" class="fontnormalbold">
-												<mifos:mifoslabel keyhm="Group.Address" name="Group.address" bundle="GroupUIResources"></mifos:mifoslabel>											
+												<mifos:mifoslabel keyhm="Group.Address" name="Group.address" bundle="GroupUIResources"></mifos:mifoslabel>
 											</td>
 										</tr>
 										<tr class="fontnormal">
@@ -421,7 +421,7 @@
 											</td>
 										</tr>
 									</table>
-									
+
 
 							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
 							<br>
@@ -489,7 +489,7 @@
 																	<c:choose>
 																		<c:when test="${adminFees.periodic == true}">
 																			<c:out value="${adminFees.amount}" />
-																		</c:when>	
+																		</c:when>
 																		<c:otherwise>
 																			<mifos:mifosdecimalinput property="defaultFee[${ctr1}].amount" value="${adminFees.amount}" style="width:135px;" />
 																		</c:otherwise>

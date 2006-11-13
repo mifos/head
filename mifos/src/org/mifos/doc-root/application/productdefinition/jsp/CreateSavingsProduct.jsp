@@ -1,10 +1,10 @@
-<!-- 
+<!--
 
 /**
 
  * CreateSavingsProduct.jsp    version: 1.0
 
- 
+
 
  * Copyright (c) 2005-2006 Grameen Foundation USA
 
@@ -12,27 +12,27 @@
 
  * All rights reserved.
 
- 
 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
+ * See the License for the specific language governing permissions and limitations under the
 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
 
- * and how it is applied. 
+ * and how it is applied.
 
  *
 
@@ -60,14 +60,14 @@
 			function fnCheckRecMand() {
 				if(document.getElementsByName("savingsType")[0].value==1) {
 					document.getElementsByName("mandamnt")[0].style.display = "block";
-					document.getElementsByName("recamnt")[0].style.display = "none";			
+					document.getElementsByName("recamnt")[0].style.display = "none";
 				}
 				else {
 					document.getElementsByName("mandamnt")[0].style.display = "none";
-					document.getElementsByName("recamnt")[0].style.display = "block";	
+					document.getElementsByName("recamnt")[0].style.display = "block";
 				}
 			}
-			
+
 			function fnCheckAppliesTo() {
 				if(document.getElementsByName("prdApplicableMaster")[0].value==2) {
 					document.getElementsByName("recommendedAmntUnit")[0].disabled=false;
@@ -80,7 +80,7 @@
 		//-->
 		</script>
 		<script src="pages/framework/js/date.js"></script>
-		<html-el:form action="/savingsproductaction" onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) && 
+		<html-el:form action="/savingsproductaction" onsubmit="return (validateMyForm(startDate,startDateFormat,startDateYY) &&
 				validateMyForm(endDate,endDateFormat,endDateYY))" focus="prdOfferingName">
 			<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
 				<tr>
@@ -193,7 +193,7 @@
 									:
 								</td>
 								<td valign="top">
-									<mifos:select property="prdCategory" style="width:136px;">
+									<mifos:select property="prdCategory">
 										<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsProductCategoryList')}" var="category">
 											<html-el:option value="${category.productCategoryID}">${category.productCategoryName}</html-el:option>
 										</c:forEach>
@@ -322,7 +322,7 @@
 							<tr class="fontnormal">
 								<td align="right">
 									<span class="mandatorytext"> <mifos:mifoslabel mandatory="yes" name="product.balusedfor" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.SERVICE_CHARGE}" bundle="ProductDefUIResources" /> <mifos:mifoslabel
-											name="product.calc" bundle="ProductDefUIResources" />: 
+											name="product.calc" bundle="ProductDefUIResources" />:
 								</td>
 								<td valign="top">
 									<mifos:select property="interestCalcType" style="width:136px;">

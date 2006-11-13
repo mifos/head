@@ -1,39 +1,39 @@
 <!--
- 
+
  * createsavingsaccount.jsp  version: 1.0
- 
- 
- 
+
+
+
  * Copyright (c) 2005-2006 Grameen Foundation USA
- 
+
  * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
- 
+
  * All rights reserved.
- 
- 
- 
- * Apache License 
- * Copyright (c) 2005-2006 Grameen Foundation USA 
- * 
- 
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
- * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
  *
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the 
- 
- * License. 
- * 
- * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license 
- 
- * and how it is applied. 
- 
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
  *
- 
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
  -->
 
 <%@taglib uri="/tags/struts-bean" prefix="bean"%>
@@ -54,10 +54,10 @@
       <tr>
         <td align="center" class="heading">&nbsp;</td>
       </tr>
-    </table>      
+    </table>
       <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
-        <td class="bluetablehead">  
+        <td class="bluetablehead">
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tr>
               <td width="33%">
@@ -98,7 +98,7 @@
 	                <span class="heading">
 	                <mifos:mifoslabel name="Savings.Create"/>
 	                <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
-	                <mifos:mifoslabel name="Savings.account"/> - 
+	                <mifos:mifoslabel name="Savings.account"/> -
 	                </span>
 	                <mifos:mifoslabel name="Savings.Enter"/>
 	                <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
@@ -114,15 +114,15 @@
 				<mifos:mifoslabel name="Savings.clickCancel"/>
 <br>            <font color="#FF0000">*</font><mifos:mifoslabel name="Savings.fieldsRequired"/> </td>
               </tr>
-              
-              
+
+
               <tr>
                 <td class="fontnormal">
 	                <font class="fontnormalRedBold"><html-el:errors	bundle="SavingsUIResources" /></font>
                 <br>
                   <span class="fontnormalbold">
                   <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'client')}" var="client" />
-                  <mifos:mifoslabel name="Savings.accountOwner"/>: 
+                  <mifos:mifoslabel name="Savings.accountOwner"/>:
                   </span><c:out value="${client.displayName}" />
                 </td>
               </tr>
@@ -135,10 +135,10 @@
                   <mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}"/>
                   <mifos:mifoslabel name="Savings.instanceName"/>:</td>
                   <td width="70%">
-                 
-             		<mifos:select name="savingsActionForm" property="selectedPrdOfferingId" style="width:136px;">
-             		
-             		<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingsPrdOfferings')}" 
+
+             		<mifos:select name="savingsActionForm" property="selectedPrdOfferingId">
+
+             		<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'savingsPrdOfferings')}"
 											var="savingsPrdOfferings">
 											<html-el:option value="${savingsPrdOfferings.prdOfferingId}">${savingsPrdOfferings.prdOfferingName}</html-el:option>
 					</c:forEach>
