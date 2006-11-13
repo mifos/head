@@ -168,9 +168,7 @@ public class TestSavingsBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
 				.valueOf("13"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test", Short
-				.valueOf("9"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 	
 	private SavingsBO createSavingsAccountPayment() throws Exception{
@@ -437,8 +435,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testSuccessfulSaveInApprovedState() throws Exception {
 		center = helper.createCenter();
-		group = TestObjectFactory.createGroup("Group1", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_CLOSED, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
@@ -694,8 +691,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testGenerateAndUpdateDepositActionsForClient() throws Exception {
 		center = helper.createCenter();
-		group = TestObjectFactory.createGroup("Group1", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
 		savingsOffering = createSavingsOffering("dfasdasd1", "sad1",
 				RecommendedAmountUnit.PERINDIVIDUAL);
 
@@ -730,8 +726,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
@@ -763,8 +758,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
@@ -806,8 +800,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
@@ -898,8 +891,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
@@ -1864,8 +1856,7 @@ public class TestSavingsBO extends MifosTestCase {
 						meetingIntCalc, meetingIntPost);
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient(
 				"Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
@@ -1896,8 +1887,7 @@ public class TestSavingsBO extends MifosTestCase {
 				"dfasdasd1", "sad1");
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
@@ -2270,9 +2260,7 @@ public class TestSavingsBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
 				.valueOf("13"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test", Short
-				.valueOf("9"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",	CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
 		client2 = TestObjectFactory.createClient("client2",
@@ -3873,8 +3861,7 @@ public class TestSavingsBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
 				.valueOf("13"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group1", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
 						System.currentTimeMillis()));
@@ -4097,8 +4084,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 		center = TestObjectFactory.createCenter("center1", Short.valueOf("13"),
 				"1.4", meeting, startDate);
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, startDate);
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 
 		SavingsTestHelper SavingsTestHelper = new SavingsTestHelper();
 

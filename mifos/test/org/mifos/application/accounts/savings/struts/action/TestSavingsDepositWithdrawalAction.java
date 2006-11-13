@@ -310,9 +310,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
 				.valueOf("13"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test", Short
-				.valueOf("9"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 
 	private void createClients() {

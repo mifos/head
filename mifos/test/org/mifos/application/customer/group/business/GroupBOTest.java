@@ -23,7 +23,6 @@ import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -712,8 +711,7 @@ public class GroupBOTest extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
 				.valueOf("13"), "1.4", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
-				"1.4.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
 						System.currentTimeMillis()));
@@ -1437,8 +1435,7 @@ public class GroupBOTest extends MifosTestCase {
 	}
 
 	private GroupBO createGroup(String name, CenterBO center) {
-		return TestObjectFactory.createGroup(name, GroupConstants.ACTIVE,
-				"1.4.1", center, new Date(System.currentTimeMillis()));
+		return TestObjectFactory.createGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
 	}
 
 	private OfficeBO createOffice() throws Exception {
@@ -1466,9 +1463,7 @@ public class GroupBOTest extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				center.getSearchId() + ".1", center, new Date(System
-						.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
 				group, new Date(System.currentTimeMillis()));

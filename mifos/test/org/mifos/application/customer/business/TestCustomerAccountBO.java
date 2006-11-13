@@ -510,9 +510,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_PARTIAL.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
@@ -741,9 +739,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
@@ -779,9 +775,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_PARTIAL.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
@@ -806,9 +800,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
@@ -854,9 +846,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
@@ -916,9 +906,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_PENDING.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PENDING, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
@@ -978,9 +966,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
@@ -1205,9 +1191,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -1237,9 +1221,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -1287,9 +1269,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test",
-				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 
 	private void applyPayment() throws ServiceException, FinancialException,

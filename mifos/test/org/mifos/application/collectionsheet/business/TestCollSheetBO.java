@@ -60,6 +60,7 @@ public class TestCollSheetBO extends MifosTestCase {
 		super.tearDown();
 	}
 
+	@Override
 	protected void setUp() throws Exception {
 		HibernateUtil.getSessionTL();
 	}
@@ -93,8 +94,6 @@ public class TestCollSheetBO extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(AccountStates.LOANACC_APPROVED, startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
-		AccountActionDateEntity firstInstallmentActionDate = loan
-				.getAccountActionDate((short) 1);
 		collectionSheet = createCollectionSheet(getCurrentDate());
 		generateCollectionSheetForDate(collectionSheet);
 		HibernateUtil.getSessionTL();
@@ -116,8 +115,6 @@ public class TestCollSheetBO extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(AccountStates.LOANACC_APPROVED, startDate, 2);
 		LoanBO loan = (LoanBO) accountBO;
-		AccountActionDateEntity firstInstallmentActionDate = loan
-				.getAccountActionDate((short) 1);
 		collectionSheet = createCollectionSheet(getCurrentDate());
 		generateCollectionSheetForDate(collectionSheet);
 		HibernateUtil.getSessionTL();
@@ -137,8 +134,6 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	public void testCollSheetForSavingsDeposit() throws Exception {
-		
-		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
 		SavingsBO savings = (SavingsBO) accountBO;
 		AccountActionDateEntity firstInstallmentActionDate = savings
@@ -161,8 +156,6 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	public void testCollSheetForSavingsDepositVoluntary() throws Exception {
-
-		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
 		SavingsBO savings = (SavingsBO) accountBO;
 		AccountActionDateEntity firstInstallmentActionDate = savings
@@ -261,8 +254,6 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	public void testUpdate() throws Exception {
-
-		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
 		SavingsBO savings = (SavingsBO) accountBO;
 		AccountActionDateEntity firstInstallmentActionDate = savings
@@ -276,7 +267,6 @@ public class TestCollSheetBO extends MifosTestCase {
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
 		assertEquals(Short.valueOf("2"), collectionSheet.getStatusFlag());
-
 	}
 
 	private CollectionSheetBO createCollectionSheet() throws Exception {
@@ -326,9 +316,8 @@ public class TestCollSheetBO extends MifosTestCase {
 				.valueOf("1"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
 
-		CustomerBO group = TestObjectFactory.createGroup("ashGrp", Short
-				.valueOf("1"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
+		// TODO: Is CLIENT_PARTIAL right or should this be GROUP_PARTIAL?
+		CustomerBO group = TestObjectFactory.createGroupUnderCenter("ashGrp", CustomerStatus.CLIENT_PARTIAL, center);
 
 		CustomerBO client = TestObjectFactory.createClient("ash", Short
 				.valueOf("1"), "1.1.1.1", group, new Date(System
@@ -366,10 +355,10 @@ public class TestCollSheetBO extends MifosTestCase {
 				.valueOf("1"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
 
-		CustomerBO group = TestObjectFactory.createGroup("ashGrp", CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
+		CustomerBO group = TestObjectFactory.createGroupUnderCenter("ashGrp", CustomerStatus.GROUP_ACTIVE, center);
 
-		CustomerBO client = TestObjectFactory.createClient("ash", CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1.1", group, new Date(System
+		CustomerBO client = TestObjectFactory.createClient("ash", 
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(System
 				.currentTimeMillis()));
 
 		List<CustomerBO> customers = new ArrayList<CustomerBO>();
@@ -475,8 +464,7 @@ public class TestCollSheetBO extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
@@ -548,34 +536,13 @@ public class TestCollSheetBO extends MifosTestCase {
 						meetingIntCalc, meetingIntPost);
 		center = TestObjectFactory.createCenter("Center", (short) 13, "1.1",
 				meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", (short) 9, "1.1.1",
-				center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient(
 				"Client", CustomerStatus.CLIENT_ACTIVE, "1.1.1.1",
 				group, new Date(System.currentTimeMillis()));
 		return TestObjectFactory.createSavingsAccount("43245434", client,
 				(short) 16, new Date(System.currentTimeMillis()),
 				savingsOffering);
-
-	}
-
-	private AccountBO createLoanAccount() {
-		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", Short.valueOf("9"),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
-		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
-				loanOffering);
-		return accountBO;
 	}
 
 }

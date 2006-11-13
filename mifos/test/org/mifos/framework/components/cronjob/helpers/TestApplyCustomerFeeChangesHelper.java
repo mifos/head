@@ -15,7 +15,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFeeScheduleEntity;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -43,8 +43,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("center1", Short.valueOf("13"),
 				"1.4", meeting, startDate);
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
-				"1.1.1", center, startDate);
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 	}
 
 	@Override

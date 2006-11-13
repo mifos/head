@@ -1718,9 +1718,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.4", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("group",
-				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
-						+ ".1", center, new Date());
+		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client",
 				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
 						+ ".1", group, new Date());
@@ -1731,9 +1729,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.4", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("group",
-				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
-						+ ".1", center, new Date());
+		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 	}
 	
 	private void createParentGroup() {

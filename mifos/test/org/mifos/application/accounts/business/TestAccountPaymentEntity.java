@@ -125,9 +125,8 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
 				.valueOf("13"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test", Short
-				.valueOf("3"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
+		// TODO: Is CLIENT_ACTIVE really right?  Shouldn't it be GROUP_ACTIVE?
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.CENTER_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client_Active_test",
 				CustomerStatus.CLIENT_ACTIVE, "1.1.1", group, new Date(System
 				.currentTimeMillis()));

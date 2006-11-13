@@ -972,9 +972,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 
 	private void createCustomers() {
 		createParentCustomer();
-		group = TestObjectFactory.createGroup("group",
-				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
-						+ ".1", center, new Date());
+		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1", group,
 				new Date(System.currentTimeMillis()));

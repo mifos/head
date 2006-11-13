@@ -74,7 +74,6 @@ public class InterceptHelper {
 	private Locale locale;
 	private Short localeId;
 	private String entityName;
-	private String newEntityName;
 	private Integer entityId;
 	private StringBuilder initialArray=null;
 	private StringBuilder changeArray=null;
@@ -885,7 +884,7 @@ public class InterceptHelper {
 			 String name=firstName.concat("meetingPlace");
 			 logger.debug("i readMeetingCollection "+name+ " : " + meeting.getMeetingPlace());
 			 String oldValue=getOldValueToKey(initialValues,name);
-			 String value=value=meeting.getMeetingPlace();
+			 String value = meeting.getMeetingPlace();
 			 if(!oldValue.equals("")){
 				 changedValues.put(name, value.concat(",").concat(oldValue));
 			 }else{
@@ -1532,9 +1531,6 @@ public class InterceptHelper {
 		ClassMetadata customMeta = HibernateUtil.getSessionFactory()
 				.getClassMetadata(clazz);
 
-		Object[] propertyValues = customMeta.getPropertyValues(obj,
-				EntityMode.POJO);
-		
 		setPrimaryKeyValueForCollectionTypeAndMerge(customMeta,obj,name,state);
 		
 	}

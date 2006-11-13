@@ -18,6 +18,7 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -326,9 +327,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
 				.valueOf("13"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test", Short
-				.valueOf("9"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 
 	private SavingsOfferingBO createSavingsOffering() {

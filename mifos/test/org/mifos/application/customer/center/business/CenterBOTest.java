@@ -489,9 +489,7 @@ public class CenterBOTest extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group",
-				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
-						+ ".1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
 						+ ".1", group, new Date(System.currentTimeMillis()));

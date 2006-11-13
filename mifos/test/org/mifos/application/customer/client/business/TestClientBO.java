@@ -691,8 +691,7 @@ public class TestClientBO extends MifosTestCase {
 		MeetingBO meeting = new MeetingBO(Short.valueOf("2"), Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Bangalore");
 		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group1 = TestObjectFactory.createGroup("Group2", CustomerStatus.GROUP_ACTIVE.getValue(),
-				center1.getSearchId()+".1", center1, new Date(System.currentTimeMillis()));
+		group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		client.setUserContext(TestObjectFactory.getUserContext());
@@ -1031,8 +1030,7 @@ public class TestClientBO extends MifosTestCase {
 		MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Bangalore");
 		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group1 = TestObjectFactory.createGroup("Group2", groupStatus.getValue(),
-				center1.getSearchId()+".1", center1, new Date(System.currentTimeMillis()));
+		group1 = TestObjectFactory.createGroupUnderCenter("Group2", groupStatus, center1);
 		HibernateUtil.closeSession();
 	}
 	
@@ -1043,8 +1041,7 @@ public class TestClientBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center1 = TestObjectFactory.createCenter("Center1", meeting, office.getOfficeId(), Short.valueOf("1"));
-		group1 = TestObjectFactory.createGroup("Group2", CustomerStatus.GROUP_ACTIVE.getValue(),
-				center1.getSearchId()+".1", center1, new Date(System.currentTimeMillis()));
+		group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
 		HibernateUtil.closeSession();
 	}
 	
@@ -1090,8 +1087,7 @@ public class TestClientBO extends MifosTestCase {
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Delhi");
 		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = createClient(CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.closeSession();
 	}
@@ -1106,8 +1102,7 @@ public class TestClientBO extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", groupStatus.getValue(),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
 		HibernateUtil.closeSession();
 	}
 

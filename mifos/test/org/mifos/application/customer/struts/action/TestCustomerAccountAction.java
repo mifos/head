@@ -5,7 +5,6 @@ import java.sql.Date;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -94,9 +93,7 @@ public class TestCustomerAccountAction extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.4", meeting, new Date(System.currentTimeMillis()));
 		if (!(customer == "Center"))
-			group = TestObjectFactory.createGroup("Group",
-					GroupConstants.ACTIVE, "1.4.1", center, new Date(System
-							.currentTimeMillis()));
+			group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		if (!(customer == "Center" || customer == "Group"))
 			client = TestObjectFactory.createClient("Client",
 					CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(

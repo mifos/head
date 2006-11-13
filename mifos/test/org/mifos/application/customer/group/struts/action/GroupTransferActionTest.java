@@ -306,8 +306,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	private GroupBO createGroup(String name, CenterBO center){
-		return TestObjectFactory.createGroup(name, GroupConstants.ACTIVE, "1.4.1", center, new Date(System
-				.currentTimeMillis()));
+		return TestObjectFactory.createGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
 	}
 	
 	private void createCustomers(){

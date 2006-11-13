@@ -283,12 +283,10 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", CustomerStatus.GROUP_ACTIVE.getValue(),
-				center.getSearchId()+".1", center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
 				"1.1", meeting1, new Date(System.currentTimeMillis()));
-		group1 = TestObjectFactory.createGroup("Group2", CustomerStatus.GROUP_ACTIVE.getValue(),
-				center1.getSearchId()+".1", center1, new Date(System.currentTimeMillis()));
+		group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
 		client = TestObjectFactory.createClient("Client11", CustomerStatus.CLIENT_ACTIVE.getValue(),
 				group.getSearchId()+".1", group, new Date(System.currentTimeMillis()));
 		HibernateUtil.closeSession();

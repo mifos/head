@@ -17,7 +17,6 @@ import org.mifos.application.customer.center.util.helpers.CenterConstants;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
-import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -590,9 +589,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
 				"1.4", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", GroupConstants.ACTIVE,
-				center.getSearchId() + ".1", center, new Date(System
-						.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		savingsBO = getSavingsAccount("fsaf6", "ads6", center);
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/centerCustAction.do");
@@ -830,9 +827,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		}
 	}
 	private void createGroupAndClient() {
-		group = TestObjectFactory.createGroup("group",
-				CustomerStatus.GROUP_ACTIVE.getValue(), center.getSearchId()
-						+ ".1", center, new Date());
+		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client",
 				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
 						+ ".1", group, new Date());

@@ -173,8 +173,7 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 	}
 	
 	private GroupBO createGroup(String groupName){
-		return TestObjectFactory.createGroup(groupName, CustomerStatus.GROUP_ACTIVE.getValue(), 
-				"1.1.1", center, new Date(System.currentTimeMillis()));
+		return TestObjectFactory.createGroupUnderCenter(groupName, CustomerStatus.GROUP_ACTIVE, center);
 	}
 	
 	private CenterBO createCenter(String name) {

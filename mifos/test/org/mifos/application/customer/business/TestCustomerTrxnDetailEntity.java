@@ -11,6 +11,7 @@ import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -20,7 +21,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -58,11 +58,12 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", Short
 				.valueOf("13"), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group_Active_test", Short
-				.valueOf("3"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client_Active_test",Short
-				.valueOf("3"), "1.1.1", group, new Date(System
+		// TODO: Is CLIENT_ACTIVE right or should this be GROUP_ACTIVE?
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", 
+				CustomerStatus.CLIENT_ACTIVE, 
+				center);
+		client = TestObjectFactory.createClient("Client_Active_test",
+				CustomerStatus.CLIENT_ACTIVE, "1.1.1", group, new Date(System
 				.currentTimeMillis()));
 	}
 
@@ -84,7 +85,6 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO,TestObjectFactory.getMoneyForMFICurrency(100),"1111",currentDate,new PaymentTypeEntity(Short.valueOf("1")));
 		
-		Money totalFees = new Money();
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(
 				accountPaymentEntity,
 				(AccountActionEntity) masterPersistenceService
@@ -101,7 +101,6 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 					accountTrxnEntity, accountFeesActionDetailEntity.getAccountFee(),
 					accountFeesActionDetailEntity.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
-			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
 		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,customerAccountBO);

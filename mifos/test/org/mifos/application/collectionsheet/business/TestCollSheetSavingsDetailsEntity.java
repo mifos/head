@@ -46,6 +46,7 @@ import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -247,8 +248,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 						meetingIntCalc, meetingIntPost);
 		center = TestObjectFactory.createCenter("Center", (short) 13, "1.1",
 				meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", (short) 9, "1.1.1",
-				center, new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", (short) 3,
 				"1.1.1.1", group, new Date(System.currentTimeMillis()));
 		return TestObjectFactory.createSavingsAccount("43245434", client1,

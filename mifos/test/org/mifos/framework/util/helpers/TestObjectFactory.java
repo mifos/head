@@ -218,6 +218,7 @@ public class TestObjectFactory {
 				.getPersonnel(personnelId));
 	}
 
+	// TODO: searchId and startDate are not used; nuke them.
 	public static CenterBO createCenter(String customerName, Short statusId,
 			String searchId, MeetingBO meeting, Date startDate) {
 		CenterBO center = null;
@@ -298,13 +299,6 @@ public class TestObjectFactory {
 		return address;
 	}
 
-	// TODO: change references and remove this method
-	public static GroupBO createGroup(String customerName, Short statusId,
-			String searchId, CustomerBO parentCustomer, Date startDate) {
-		return createGroupUnderCenter(customerName, CustomerStatus
-				.getStatus(statusId), parentCustomer);
-	}
-
 	public static GroupBO createGroupUnderCenter(String customerName,
 			CustomerStatus customerStatus, CustomerBO parentCustomer) {
 		Short formedBy = new Short("1");
@@ -367,6 +361,7 @@ public class TestObjectFactory {
 			searchId, parentCustomer, startDate);
 	}
 
+	// TODO: searchId and startDate are unused; nuke them.
 	public static ClientBO createClient(
 			String customerName, CustomerStatus status,
 			String searchId, CustomerBO parentCustomer, Date startDate) {

@@ -1061,9 +1061,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter("Center",
 				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
 				new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group",
-				CustomerStatus.GROUP_ACTIVE.getValue(), "1.1.1", center,
-				new Date(System.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1", group,
 				new Date(System.currentTimeMillis()));
@@ -1076,10 +1074,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter("Center", centerStatus
 				.getValue(), "1.1", meeting, new Date(System
 				.currentTimeMillis()));
-		group = TestObjectFactory.createGroup("Group", groupStatus.getValue(),
-				"1.1.1", center, new Date(System.currentTimeMillis()));
-		client = TestObjectFactory.createClient("Client", clientStatus
-				.getValue(), "1.1.1", group, new Date(System
+		group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
+		client = TestObjectFactory.createClient("Client", clientStatus,
+				"1.1.1", group, new Date(System
 				.currentTimeMillis()));
 	}
 

@@ -5,6 +5,7 @@ import java.sql.Date;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -17,7 +18,7 @@ public class GroupPersistenceTest extends MifosTestCase {
 
 	private CustomerBO center;
 
-	private CustomerBO group;
+	private GroupBO group;
 
 	private GroupPersistence groupPersistence = new GroupPersistence();
 
@@ -36,7 +37,7 @@ public class GroupPersistenceTest extends MifosTestCase {
 
 	public void testGetGroupBySystemId() throws PersistenceException{
 		createGroup();
-		group = (GroupBO) groupPersistence.findBySystemId(group.getGlobalCustNum());
+		group = groupPersistence.findBySystemId(group.getGlobalCustNum());
 		assertEquals("Group_Active_test", group.getDisplayName());
 	}
 
@@ -61,9 +62,7 @@ public class GroupPersistenceTest extends MifosTestCase {
 	}
 	private void createGroup(){
 		center = createCenter();
-		group = TestObjectFactory.createGroup("Group_Active_test", Short
-				.valueOf("9"), "1.1.1", center, new Date(System
-				.currentTimeMillis()));
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		HibernateUtil.closeSession();
 
 		
