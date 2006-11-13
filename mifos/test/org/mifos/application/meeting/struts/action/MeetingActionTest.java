@@ -809,14 +809,18 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 	}
 
 	private GroupBO createGroupUnderBranch(MeetingBO meeting)throws Exception{
-		return TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_PENDING, Short.valueOf("1"), meeting, Short.valueOf("1"));
+		return TestObjectFactory.createGroupUnderBranch("group1", 
+				CustomerStatus.GROUP_PENDING, Short.valueOf("1"), meeting, 
+				Short.valueOf("1"));
 	}
 
 	private ClientBO createClient(MeetingBO meeting){
-		return TestObjectFactory.createClient("myclient1", meeting, CustomerStatus.CLIENT_PENDING.getValue(), new Date());
+		return TestObjectFactory.createClient("myclient1", meeting, 
+				CustomerStatus.CLIENT_PENDING);
 	}
 
-	private ClientBO createClient(String clientName, GroupBO group, CustomerStatus clientStatus) {
+	private ClientBO createClient(String clientName, GroupBO group, 
+			CustomerStatus clientStatus) {
 		return TestObjectFactory.createClient(clientName, clientStatus
 				.getValue(), group, new Date());
 	}

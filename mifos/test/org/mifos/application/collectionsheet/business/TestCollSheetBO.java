@@ -312,16 +312,14 @@ public class TestCollSheetBO extends MifosTestCase {
 
 		MeetingBO meeting = TestObjectFactory.getMeetingHelper(1, 1, 4, 2);
 		TestObjectFactory.createMeeting(meeting);
-		CustomerBO center = TestObjectFactory.createCenter("ashCenter", Short
-				.valueOf("1"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		CustomerBO center = TestObjectFactory.createCenter("ashCenter", meeting);
 
 		// TODO: Is CLIENT_PARTIAL right or should this be GROUP_PARTIAL?
-		CustomerBO group = TestObjectFactory.createGroupUnderCenter("ashGrp", CustomerStatus.CLIENT_PARTIAL, center);
+		CustomerBO group = TestObjectFactory.createGroupUnderCenter("ashGrp", 
+			CustomerStatus.CLIENT_PARTIAL, center);
 
-		CustomerBO client = TestObjectFactory.createClient("ash", Short
-				.valueOf("1"), "1.1.1.1", group, new Date(System
-				.currentTimeMillis()));
+		CustomerBO client = TestObjectFactory.createClient("ash", 
+				CustomerStatus.CLIENT_PARTIAL, group);
 
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 
@@ -351,15 +349,12 @@ public class TestCollSheetBO extends MifosTestCase {
 
 		MeetingBO meeting = TestObjectFactory.getMeetingHelper(1, 1, 4, 2);
 		TestObjectFactory.createMeeting(meeting);
-		CustomerBO center = TestObjectFactory.createCenter("ashCenter", Short
-				.valueOf("1"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		CustomerBO center = TestObjectFactory.createCenter("ashCenter", meeting);
 
 		CustomerBO group = TestObjectFactory.createGroupUnderCenter("ashGrp", CustomerStatus.GROUP_ACTIVE, center);
 
 		CustomerBO client = TestObjectFactory.createClient("ash", 
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(System
-				.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 
 		List<CustomerBO> customers = new ArrayList<CustomerBO>();
 		customers.add(client);
@@ -371,8 +366,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	private List<AccountActionDateEntity> getCustomerAccntDetails() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center1", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center1", meeting);
 		AccountBO accountBO = center.getCustomerAccount();
 
 		List<AccountActionDateEntity> accntActionDates = getAccountActionDates(
@@ -462,8 +456,7 @@ public class TestCollSheetBO extends MifosTestCase {
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
@@ -534,12 +527,10 @@ public class TestCollSheetBO extends MifosTestCase {
 						.currentTimeMillis()), (short) 2, 300.0, (short) 1,
 						1.2, 200.0, 200.0, savingsType, (short) 1,
 						meetingIntCalc, meetingIntPost);
-		center = TestObjectFactory.createCenter("Center", (short) 13, "1.1",
-				meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient(
-				"Client", CustomerStatus.CLIENT_ACTIVE, "1.1.1.1",
-				group, new Date(System.currentTimeMillis()));
+				"Client", CustomerStatus.CLIENT_ACTIVE, group);
 		return TestObjectFactory.createSavingsAccount("43245434", client,
 				(short) 16, new Date(System.currentTimeMillis()),
 				savingsOffering);

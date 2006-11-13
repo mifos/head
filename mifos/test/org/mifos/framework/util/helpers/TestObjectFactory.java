@@ -218,9 +218,7 @@ public class TestObjectFactory {
 				.getPersonnel(personnelId));
 	}
 
-	// TODO: searchId and startDate are not used; nuke them.
-	public static CenterBO createCenter(String customerName, Short statusId,
-			String searchId, MeetingBO meeting, Date startDate) {
+	public static CenterBO createCenter(String customerName, MeetingBO meeting) {
 		CenterBO center = null;
 		try {
 			Short officeId = new Short("3");
@@ -355,16 +353,10 @@ public class TestObjectFactory {
 		return group;
 	}
 
-	public static ClientBO createClient(String customerName, Short statusId,
-			String searchId, CustomerBO parentCustomer, Date startDate) {
-		return createClient(customerName, CustomerStatus.getStatus(statusId), 
-			searchId, parentCustomer, startDate);
-	}
-
 	// TODO: searchId and startDate are unused; nuke them.
 	public static ClientBO createClient(
 			String customerName, CustomerStatus status,
-			String searchId, CustomerBO parentCustomer, Date startDate) {
+			CustomerBO parentCustomer) {
 		ClientBO client = null;
 		try {
 			Short office = new Short("3");
@@ -398,8 +390,8 @@ public class TestObjectFactory {
 		return client;
 	}
 
-	public static ClientBO createClient(String customerName, MeetingBO meeting,
-			Short statusId, Date startDate) {
+	public static ClientBO createClient(String customerName, 
+		MeetingBO meeting, CustomerStatus status) {
 		ClientBO client;
 		try {
 			Short office = new Short("3");
@@ -414,7 +406,7 @@ public class TestObjectFactory {
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
 							.valueOf("41"));
 			client = new ClientBO(getUserContext(), clientNameDetailView
-					.getDisplayName(), CustomerStatus.getStatus(statusId),
+					.getDisplayName(), status,
 					null, null, null, null, getFees(), null, personnel, office,
 					meeting, personnel, new Date(), null, null, null,
 					YesNoFlag.NO.getValue(), clientNameDetailView,

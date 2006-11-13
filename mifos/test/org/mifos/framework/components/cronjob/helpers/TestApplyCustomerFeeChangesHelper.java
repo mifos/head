@@ -41,8 +41,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		Date startDate = new Date(System.currentTimeMillis());
-		center = TestObjectFactory.createCenter("center1", Short.valueOf("13"),
-				"1.4", meeting, startDate);
+		center = TestObjectFactory.createCenter("center1", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 	}
 

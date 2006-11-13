@@ -1,7 +1,6 @@
 package org.mifos.application.customer.client.struts.action;
 
 import java.net.URISyntaxException;
-import java.sql.Date;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
@@ -272,7 +271,8 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	
 	private void createObjectsForClientTransfer()throws Exception{
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
-		client = TestObjectFactory.createClient("client_to_transfer",getMeeting(),CustomerStatus.CLIENT_ACTIVE.getValue(), new java.util.Date());
+		client = TestObjectFactory.createClient("client_to_transfer",
+			getMeeting(), CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.closeSession();
 	}
 	
@@ -281,14 +281,16 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 				.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meeting1 = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
-				"1.1", meeting1, new Date(System.currentTimeMillis()));
-		group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
-		client = TestObjectFactory.createClient("Client11", CustomerStatus.CLIENT_ACTIVE.getValue(),
-				group.getSearchId()+".1", group, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
+		group = TestObjectFactory.createGroupUnderCenter("Group", 
+				CustomerStatus.GROUP_ACTIVE, center);
+		center1 = TestObjectFactory.createCenter("Center1", 
+				meeting1);
+		group1 = TestObjectFactory.createGroupUnderCenter("Group2", 
+				CustomerStatus.GROUP_ACTIVE, center1);
+		client = TestObjectFactory.createClient("Client11", 
+				CustomerStatus.CLIENT_ACTIVE,
+				group);
 		HibernateUtil.closeSession();
 	}
 	

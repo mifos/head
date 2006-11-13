@@ -82,12 +82,9 @@ public class TestCollSheetCustBO extends MifosTestCase {
 		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
 		MeetingBO meeting = TestObjectFactory.getMeetingHelper(1, 1, 4, 2);
 		TestObjectFactory.createMeeting(meeting);
-		CustomerBO centerBO = TestObjectFactory.createCenter("ash", Short
-				.valueOf("1"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
-		CustomerBO groupBO = TestObjectFactory.createClient("ashGrp", Short
-				.valueOf("1"), "1.1.1", centerBO, new Date(System
-				.currentTimeMillis()));
+		CustomerBO centerBO = TestObjectFactory.createCenter("ash", meeting);
+		CustomerBO groupBO = TestObjectFactory.createClient("ashGrp", 
+				CustomerStatus.CLIENT_PARTIAL, centerBO);
 		collSheetCustBO.populateCustomerDetails(groupBO);
 		assertEquals(collSheetCustBO.getSearchId(), "1.1.1");
 		assertEquals(collSheetCustBO.getParentCustomerId(), centerBO
@@ -224,8 +221,7 @@ public class TestCollSheetCustBO extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center1", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center1", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),

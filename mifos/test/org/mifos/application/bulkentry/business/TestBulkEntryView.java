@@ -72,8 +72,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
 				.valueOf("2"), startDate, Short.valueOf("1"), 300.0, 1.2, Short
@@ -124,8 +123,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
 				.valueOf("2"), startDate, Short.valueOf("1"), 300.0, 1.2, Short
@@ -177,8 +175,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
 				.valueOf("2"), startDate, Short.valueOf("1"), 300.0, 1.2, Short
@@ -225,8 +222,7 @@ public class TestBulkEntryView extends MifosTestCase {
 	public void testPopulateForCustomerAccount() throws PersistenceException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
 		List<BulkEntryInstallmentView> bulkEntryAccountActionViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(DateUtils
@@ -259,12 +255,11 @@ public class TestBulkEntryView extends MifosTestCase {
         BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
                     .getMeetingHelper(1, 1, 4, 2));
-        center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
-                "1.1", meeting, new Date(System.currentTimeMillis()));
+        center = TestObjectFactory.createCenter("Center", meeting);
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", 
         		CustomerStatus.CLIENT_ACTIVE,
-                "1.1.1.1", group, new Date(System.currentTimeMillis()));
+                group);
          
         java.util.Date meetingDate = DateUtils.getCurrentDateWithoutTimeStamp();
          

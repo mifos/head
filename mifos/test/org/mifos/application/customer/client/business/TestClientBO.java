@@ -101,7 +101,8 @@ public class TestClientBO extends MifosTestCase {
 	public void testUpdateWeeklyMeeting_SavedToUpdateLater()throws Exception{
 		String oldMeetingPlace = "Delhi";
 		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, oldMeetingPlace);
-		client = TestObjectFactory.createClient("clientname",weeklyMeeting,CustomerStatus.CLIENT_ACTIVE.getValue(), new java.util.Date());
+		client = TestObjectFactory.createClient("clientname",weeklyMeeting,
+			CustomerStatus.CLIENT_ACTIVE);
 		MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
 		String meetingPlace = "Bangalore";
 		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, clientMeeting.getMeetingDetails().getRecurAfter(), clientMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
@@ -203,16 +204,17 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testFailure_InitialSavingsOfferingAtCreate()throws Exception{
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
-		String name = "client1";
-		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
-		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
+		ClientNameDetailView clientView = 
+			new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
+		ClientNameDetailView spouseView = 
+			new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 		List<SavingsOfferingBO> offerings = new ArrayList<SavingsOfferingBO>();
 		offerings.add(savingsOffering1);
 		offerings.add(savingsOffering1);
 		try{
-			client = new ClientBO(TestObjectFactory.getContext(), clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, personnel, officeId, null, null,
-				null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+			client = new ClientBO(TestObjectFactory.getContext(), clientView.getDisplayName(), CustomerStatus.CLIENT_PARTIAL, null, null, null, null, null, offerings, personnel, officeId, null, null,
+				null,null,null,YesNoFlag.NO.getValue(),clientView,spouseView,clientDetailView,null);
 		}catch(CustomerException ce){
 			assertEquals(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED, ce.getKey());
 			assertTrue(true);
@@ -223,7 +225,6 @@ public class TestClientBO extends MifosTestCase {
 	public void testInitialSavingsOfferingAtCreate()throws Exception{
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2", "s2", SavingsType.VOLUNTARY, PrdApplicableMaster.CLIENTS);
-		String name = "client1";
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
@@ -414,7 +415,6 @@ public class TestClientBO extends MifosTestCase {
 		selectedOfferings.add(savingsOffering1);
 		selectedOfferings.add(savingsOffering2);
 		
-		String name = "Client 1";
 		Short povertyStatus = Short.valueOf("41");
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
@@ -465,7 +465,6 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testFailureCreatePendingClientWithParentGroupInLowerStatus() throws Exception {
 		try{
-			String name = "Client 1";
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
@@ -481,7 +480,6 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testFailureCreateActiveClientWithParentGroupInLowerStatus() throws Exception {
 		try{
-			String name = "Client 1";
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
@@ -530,8 +528,6 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testFailureCreateClientWithDuplicateNameAndDOB() throws Exception {
-		ClientBO client1 = null;
-		String name = "Client 1";
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
@@ -542,20 +538,19 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		try {
-			client1 = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
+			new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
 					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			assertFalse("Client Created", true);
 			
-		} catch (CustomerException ce) {
-			assertNull(client1);
-			assertEquals(ce.getKey(), CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION);
+		} catch (CustomerException e) {
+			assertEquals(
+				CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
+				e.getKey());
 		}
 			
 	}
 	
 	public void testFailureCreateClientWithDuplicateGovtId() throws Exception {
-		ClientBO client1 = null;
-		String name = "Client 1";
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
@@ -566,13 +561,13 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		try {
-			client1 = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
+			new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
 					"1",null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			assertFalse("Client Created", true);
 			
-		} catch (CustomerException ce) {
-			assertNull(client1);
-			assertEquals(ce.getKey(), CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION);
+		} catch (CustomerException e) {
+			assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, 
+				e.getKey());
 		}
 			
 	}
@@ -689,8 +684,7 @@ public class TestClientBO extends MifosTestCase {
 	public void testUpdateGroupFailure_MeetingFrequencyMismatch()throws Exception{
 		createInitialObjects();
 		MeetingBO meeting = new MeetingBO(Short.valueOf("2"), Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Bangalore");
-		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center1 = TestObjectFactory.createCenter("Center1", meeting);
 		group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
 		HibernateUtil.closeSession();
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
@@ -938,10 +932,14 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testUpdateWeeklyMeeting()throws Exception{
-		client = TestObjectFactory.createClient("clientname",getMeeting(),CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());
+		client = TestObjectFactory.createClient("clientname", getMeeting(),
+			CustomerStatus.CLIENT_PENDING);
 		MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
 		String meetingPlace = "Bangalore";
-		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, clientMeeting.getMeetingDetails().getRecurAfter(), clientMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, 
+			clientMeeting.getMeetingDetails().getRecurAfter(), 
+			clientMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, 
+			meetingPlace);
 		client.updateMeeting(newMeeting);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -954,7 +952,8 @@ public class TestClientBO extends MifosTestCase {
 	public void testUpdateMonthlyMeeting()throws Exception{
 		String meetingPlace = "Bangalore";
 		MeetingBO monthlyMeeting = new MeetingBO(WeekDay.MONDAY, RankType.FIRST, Short.valueOf("2"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "delhi");
-		client = TestObjectFactory.createClient("clientname",monthlyMeeting,CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());
+		client = TestObjectFactory.createClient("clientname",monthlyMeeting,
+			CustomerStatus.CLIENT_PENDING);
 		MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
 		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, RankType.FIRST, clientMeeting.getMeetingDetails().getRecurAfter(), clientMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
 		client.updateMeeting(newMeeting);
@@ -966,8 +965,11 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testUpdateMonthlyMeetingOnDate()throws Exception{
-		MeetingBO monthlyMeetingOnDate = new MeetingBO(Short.valueOf("5"), Short.valueOf("2"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "delhi");
-		client = TestObjectFactory.createClient("clientname",monthlyMeetingOnDate,CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());
+		MeetingBO monthlyMeetingOnDate = new MeetingBO(Short.valueOf("5"), 
+			Short.valueOf("2"), new java.util.Date(), 
+			MeetingType.CUSTOMERMEETING, "delhi");
+		client = TestObjectFactory.createClient("clientname",
+			monthlyMeetingOnDate, CustomerStatus.CLIENT_PENDING);
 		MeetingBO clientMeeting = client.getCustomerMeeting().getMeeting();
 		String meetingPlace = "Bangalore";
 		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, clientMeeting.getMeetingDetails().getRecurAfter(), clientMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
@@ -977,11 +979,14 @@ public class TestClientBO extends MifosTestCase {
 		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		assertEquals(meetingPlace, client.getCustomerMeeting().getUpdatedMeeting().getMeetingPlace());
 	}
+
 	public void testCreateMeeting()throws Exception{
-		client = TestObjectFactory.createClient("clientname",null,CustomerStatus.CLIENT_PENDING.getValue(), new java.util.Date());
+		client = TestObjectFactory.createClient("clientname",
+			null, CustomerStatus.CLIENT_PENDING);
 		String meetingPlace = "newPlace";
 		Short recurAfter = Short.valueOf("4");
-		MeetingBO newMeeting = new MeetingBO(WeekDay.FRIDAY, recurAfter, new java.util.Date(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		MeetingBO newMeeting = new MeetingBO(WeekDay.FRIDAY, recurAfter, 
+			new java.util.Date(), MeetingType.CUSTOMERMEETING, meetingPlace);
 		client.updateMeeting(newMeeting);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -994,8 +999,11 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	private void createObjectsForClientTransfer()throws Exception{
-		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
-		client = TestObjectFactory.createClient("client_to_transfer",getMeeting(),CustomerStatus.CLIENT_ACTIVE.getValue(), new java.util.Date());
+		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, 
+			TestObjectFactory.getOffice(Short.valueOf("1")), 
+			"customer_office", "cust");
+		client = TestObjectFactory.createClient("client_to_transfer",
+				getMeeting(), CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.closeSession();
 	}
 	
@@ -1028,8 +1036,7 @@ public class TestClientBO extends MifosTestCase {
 	private void createObjectsForTranferToGroup_SameBranch(CustomerStatus groupStatus)throws Exception{
 		createInitialObjects();
 		MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Bangalore");
-		center1 = TestObjectFactory.createCenter("Center1", CustomerStatus.CENTER_ACTIVE.getValue(),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center1 = TestObjectFactory.createCenter("Center1", meeting);
 		group1 = TestObjectFactory.createGroupUnderCenter("Group2", groupStatus, center1);
 		HibernateUtil.closeSession();
 	}
@@ -1047,7 +1054,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	private void createObjectsForClient(String name, CustomerStatus status)throws Exception{
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
-		client = TestObjectFactory.createClient(name,getMeeting(),status.getValue(), new java.util.Date());
+		client = TestObjectFactory.createClient(name, getMeeting(), status);
 		HibernateUtil.closeSession();
 	}
 	
@@ -1085,23 +1092,21 @@ public class TestClientBO extends MifosTestCase {
 	
 	private void createInitialObjects() throws Exception{
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, "Delhi");
-		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = createClient(CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.closeSession();
 	}
 	
 	private ClientBO createClient(CustomerStatus clientStatus){
-		return TestObjectFactory.createClient("Client", clientStatus.getValue(),
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+		return TestObjectFactory.createClient("Client", clientStatus,
+				group);
 	}
 	
 	private void createParentObjects(CustomerStatus groupStatus) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", CustomerStatus.CENTER_ACTIVE.getValue(),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
 		HibernateUtil.closeSession();
 	}

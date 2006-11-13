@@ -38,7 +38,6 @@
 
 package org.mifos.application.customer.struts.uihelpers;
 
-import java.sql.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.business.AccountStateEntity;
@@ -259,12 +258,10 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 
 }

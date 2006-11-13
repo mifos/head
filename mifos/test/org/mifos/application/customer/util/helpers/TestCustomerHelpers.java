@@ -157,7 +157,6 @@ public class TestCustomerHelpers extends MifosTestCase {
 	private void createCenter() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 	}
 }

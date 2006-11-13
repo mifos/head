@@ -1,6 +1,5 @@
 package org.mifos.application.customer.struts.action;
 
-import java.sql.Date;
 
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
@@ -90,14 +89,12 @@ public class TestCustomerAccountAction extends MifosMockStrutsTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.4", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		if (!(customer == "Center"))
 			group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		if (!(customer == "Center" || customer == "Group"))
 			client = TestObjectFactory.createClient("Client",
-					CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
-							System.currentTimeMillis()));
+					CustomerStatus.CLIENT_ACTIVE, group);
 		setPath();
 	}
 

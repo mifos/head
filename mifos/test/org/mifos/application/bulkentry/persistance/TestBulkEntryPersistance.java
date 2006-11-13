@@ -68,9 +68,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
@@ -90,9 +88,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	public void testSuccessfulApplyPayment() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
@@ -130,9 +126,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter(
 				"Group", CustomerStatus.GROUP_ACTIVE,
 				center);
@@ -167,9 +161,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	public void testFailureApplyPayment() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
@@ -237,12 +229,10 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 		.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group,
-				new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 
 		HibernateUtil.closeSession();
 

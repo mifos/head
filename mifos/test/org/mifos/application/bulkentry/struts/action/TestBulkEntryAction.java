@@ -380,9 +380,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	public void testLoadCustomers() throws PageExpiredException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "loadCustomerList");
 		addRequestParameter("officeId", "3");
@@ -401,9 +399,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	public void testGetLastMeetingDateForCustomer() throws PageExpiredException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "getLastMeetingDateForCustomer");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -457,12 +453,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		Date startDate = new Date(System.currentTimeMillis());
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, startDate);
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client", 
 				CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		account = getLoanAccount(group, meeting);
 		SavingsOfferingBO savingsOffering1 = createSavingsOffering(
 				"SavingPrd1", "ased");
@@ -610,12 +605,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		Date startDate = new Date(System.currentTimeMillis());
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client", 
 				CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
@@ -719,12 +713,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient(
 				"Client", CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),

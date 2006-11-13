@@ -55,16 +55,13 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		// TODO: Is CLIENT_ACTIVE right or should this be GROUP_ACTIVE?
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", 
 				CustomerStatus.CLIENT_ACTIVE, 
 				center);
 		client = TestObjectFactory.createClient("Client_Active_test",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1", group, new Date(System
-				.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 
 	public void testGenerateReverseTrxn() throws Exception {

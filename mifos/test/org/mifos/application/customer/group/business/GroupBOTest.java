@@ -200,11 +200,9 @@ public class GroupBOTest extends MifosTestCase {
 			group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
 					.getCustomerId());
 			client = TestObjectFactory.createClient("Client",
-					CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
-					group, new Date(System.currentTimeMillis()));
+					CustomerStatus.CLIENT_ACTIVE, group);
 			client1 = TestObjectFactory.createClient("Client1",
-					CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".2",
-					group, new Date(System.currentTimeMillis()));
+					CustomerStatus.CLIENT_ACTIVE, group);
 			HibernateUtil.getSessionTL();
 			HibernateUtil.getInterceptor().createInitialValueMap(group);
 			
@@ -708,19 +706,14 @@ public class GroupBOTest extends MifosTestCase {
 	public void testGetActiveOnHoldChildrenOfGroup() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		client1 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_HOLD, "1.4.1.2", group, new Date(System
-						.currentTimeMillis()));
+				CustomerStatus.CLIENT_HOLD, group);
 		client2 = TestObjectFactory.createClient("client3",
-				CustomerStatus.CLIENT_CANCELLED, "1.4.1.3", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_CANCELLED, group);
 		assertEquals(Integer.valueOf("2"), 
 				group.getPerformanceHistory().getActiveClientCount());
 	}
@@ -1311,8 +1304,7 @@ public class GroupBOTest extends MifosTestCase {
 	private void createCenter() {
 		meeting = getMeeting();
 		center = TestObjectFactory.createCenter("Center",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 	}
 	
 	private CenterBO createCenter(String name) throws Exception{
@@ -1461,12 +1453,10 @@ public class GroupBOTest extends MifosTestCase {
 	private void createInitialObject() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
-				group, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loandsdasd", "fsad", Short.valueOf("2"), new Date(System
 						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,

@@ -85,8 +85,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		CustomerBO center = TestObjectFactory.createCenter("Center_Active",
-				Short.valueOf("13"), "1.1", meeting, new Date(System
-						.currentTimeMillis()));
+				meeting);
 		List<CustomerView> customers = masterService
 				.getListOfActiveParentsUnderLoanOfficer(Short.valueOf("1"),
 						CustomerConstants.CENTER_LEVEL_ID, Short.valueOf("3"));
@@ -99,8 +98,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		CustomerBO center = TestObjectFactory.createCenter("Center_Active",
-				Short.valueOf("13"), "1.1", meeting, new Date(System
-						.currentTimeMillis()));
+				meeting);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			masterService.getListOfActiveParentsUnderLoanOfficer(Short
@@ -136,8 +134,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 
 		Date startDate = new Date(System.currentTimeMillis());
-		CustomerBO center = TestObjectFactory.createCenter("Center", Short
-				.valueOf("13"), "1.1", meeting, startDate);
+		CustomerBO center = TestObjectFactory.createCenter("Center", meeting);
 		SavingsOfferingBO savingsOffering = TestObjectFactory
 				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
@@ -165,8 +162,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 
 		Date startDate = new Date(System.currentTimeMillis());
-		CustomerBO center = TestObjectFactory.createCenter("Center", Short
-				.valueOf("13"), "1.1", meeting, startDate);
+		CustomerBO center = TestObjectFactory.createCenter("Center", meeting);
 		SavingsOfferingBO savingsOffering = TestObjectFactory
 				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short

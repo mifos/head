@@ -1,6 +1,5 @@
 package org.mifos.framework.components.taggenerator;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -157,9 +156,7 @@ public class TestTagGenerator extends MifosTestCase {
 	private void createInitialObjectsForSavings() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering = helper.createSavingsOffering("prd1", "cdfg");

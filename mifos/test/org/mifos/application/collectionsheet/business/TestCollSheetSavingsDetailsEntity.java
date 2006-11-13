@@ -246,11 +246,10 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 						.currentTimeMillis()), (short) 2, 300.0, (short) 1,
 						1.2, 200.0, 200.0, savingsType, (short) 1,
 						meetingIntCalc, meetingIntPost);
-		center = TestObjectFactory.createCenter("Center", (short) 13, "1.1",
-				meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client1 = TestObjectFactory.createClient("Client", (short) 3,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
+				group);
 		return TestObjectFactory.createSavingsAccount("43245434", client1,
 				(short) 16, new Date(System.currentTimeMillis()),
 				savingsOffering);

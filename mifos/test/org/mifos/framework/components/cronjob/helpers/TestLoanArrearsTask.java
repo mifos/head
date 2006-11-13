@@ -44,8 +44,7 @@ public class TestLoanArrearsTask extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		Date startDate = new Date(System.currentTimeMillis());
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, startDate);
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanAccount = getLoanAccount(group, meeting);
 	}

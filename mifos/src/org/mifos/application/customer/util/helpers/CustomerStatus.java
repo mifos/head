@@ -1,5 +1,7 @@
 package org.mifos.application.customer.util.helpers;
 
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
+
 
 
 public enum CustomerStatus {
@@ -7,10 +9,14 @@ public enum CustomerStatus {
 	CLIENT_ACTIVE (Short.valueOf("3")), 
 	CLIENT_HOLD (Short.valueOf("4")), CLIENT_CANCELLED (Short.valueOf("5")), 
 	CLIENT_CLOSED (Short.valueOf("6")), 
-	GROUP_PARTIAL (Short.valueOf("7")), GROUP_PENDING (Short.valueOf("8")), 
-	GROUP_ACTIVE (Short.valueOf("9")),
-	GROUP_HOLD (Short.valueOf("10")), GROUP_CANCELLED (Short.valueOf("11")),
-	GROUP_CLOSED (Short.valueOf("12")),
+
+	GROUP_PARTIAL (GroupConstants.PARTIAL_APPLICATION), 
+	GROUP_PENDING (GroupConstants.PENDING_APPROVAL), 
+	GROUP_ACTIVE (GroupConstants.ACTIVE),
+	GROUP_HOLD (GroupConstants.HOLD), 
+	GROUP_CANCELLED (GroupConstants.CANCELLED),
+	GROUP_CLOSED (GroupConstants.CLOSED),
+
 	CENTER_ACTIVE(Short.valueOf("13")), CENTER_INACTIVE(Short.valueOf("14"));
 
 	Short value;

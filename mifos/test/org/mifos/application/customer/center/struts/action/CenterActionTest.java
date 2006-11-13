@@ -566,8 +566,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 	private void createAndSetCenterInSession() throws Exception {
 		String name = "manage_center";
 		center = TestObjectFactory.createCenter(name,
-				CustomerStatus.CENTER_ACTIVE.getValue(), "", getMeeting(),
-				new Date());
+				getMeeting());
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
 				new Integer(center.getCustomerId()).intValue());
@@ -587,8 +586,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 	public void testGet() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.4", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		savingsBO = getSavingsAccount("fsaf6", "ads6", center);
 		HibernateUtil.closeSession();
@@ -748,8 +746,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 	public void testSearch() throws Exception{
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("SearchCenter", Short.valueOf("13"),
-				"1.4", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("SearchCenter", meeting);
 		addActionAndMethod(Methods.search.toString());
 		addRequestParameter("searchString", "Sear");
 		addRequestParameter("input", "search");
@@ -829,7 +826,6 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 	private void createGroupAndClient() {
 		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
-						+ ".1", group, new Date());
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 }

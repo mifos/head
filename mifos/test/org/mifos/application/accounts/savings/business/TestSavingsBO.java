@@ -165,9 +165,7 @@ public class TestSavingsBO extends MifosTestCase {
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 	
@@ -437,11 +435,9 @@ public class TestSavingsBO extends MifosTestCase {
 		center = helper.createCenter();
 		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_CLOSED, "1.1.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_CLOSED, group);
 		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		savingsOffering = createSavingsOffering("dfasdasd2", "sad2",
 				RecommendedAmountUnit.PERINDIVIDUAL);
 		savings = new SavingsBO(userContext, savingsOffering, group,
@@ -704,8 +700,7 @@ public class TestSavingsBO extends MifosTestCase {
 		 * (now bogusly caught in TestObjectFactory).  Why?
 		 */
 		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
@@ -724,11 +719,10 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testSuccessfulWithdraw() throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
@@ -756,11 +750,10 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testSuccessfulApplyPayment() throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
 				AccountStates.SAVINGS_ACC_INACTIVE, new Date(System
@@ -798,11 +791,10 @@ public class TestSavingsBO extends MifosTestCase {
 			throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = TestObjectFactory.createSavingsAccount("43245434", center,
 				AccountStates.SAVINGS_ACC_APPROVED, new Date(System
@@ -889,11 +881,10 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testMaxWithdrawAmount() throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
@@ -1272,8 +1263,7 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
-				group.getSearchId() + ".1", group, new Date(System
-						.currentTimeMillis()));
+				group);
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		savingsOffering.setMaxAmntWithdrawl(new Money("2500"));
 		savings = helper.createSavingsAccount("000100000000017",
@@ -1854,12 +1844,11 @@ public class TestSavingsBO extends MifosTestCase {
 								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("1"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient(
 				"Client", CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
 				savingsOffering);
@@ -1885,11 +1874,10 @@ public class TestSavingsBO extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = helper.createSavingsOffering(
 				"dfasdasd1", "sad1");
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		savings = TestObjectFactory.createSavingsAccount("43245434", client1,
 				Short.valueOf("16"), new Date(System.currentTimeMillis()),
 				savingsOffering);
@@ -2257,15 +2245,11 @@ public class TestSavingsBO extends MifosTestCase {
 	private void createCustomerObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-		client1 = TestObjectFactory.createClient("client1",	CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
-						System.currentTimeMillis()));
+		client1 = TestObjectFactory.createClient("client1",	CustomerStatus.CLIENT_ACTIVE, group);
 		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 
 	public void testCalculateInterest_IntCalcFreqOneDay_minbal()
@@ -3858,16 +3842,12 @@ public class TestSavingsBO extends MifosTestCase {
 	private SavingsBO getSavingAccount() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
@@ -4034,11 +4014,9 @@ public class TestSavingsBO extends MifosTestCase {
 	private SavingsBO getSavingsAccountForCenter() throws Exception {
 		createInitialObjects();
 		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		return helper.createSavingsAccount(savingsOffering, center,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -4082,8 +4060,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		Date startDate = new Date(System.currentTimeMillis());
 
-		center = TestObjectFactory.createCenter("center1", Short.valueOf("13"),
-				"1.4", meeting, startDate);
+		center = TestObjectFactory.createCenter("center1", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 
 		SavingsTestHelper SavingsTestHelper = new SavingsTestHelper();

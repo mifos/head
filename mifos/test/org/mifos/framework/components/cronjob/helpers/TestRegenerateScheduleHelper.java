@@ -101,23 +101,17 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 			SystemException, ApplicationException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		CenterBO center1 = TestObjectFactory.createCenter(
-				"Center_Active_test1", Short.valueOf("13"), "1.5", meeting,
-				new Date(System.currentTimeMillis()));
+				"Center_Active_test1", meeting);
 		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
 		client = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
-				group, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_CLOSED, group.getSearchId() + ".2",
-				group, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_CLOSED, group);
 		ClientBO client3 = TestObjectFactory.createClient("client3",
-				CustomerStatus.CLIENT_CANCELLED, group1.getSearchId() + ".1",
-				group1, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_CANCELLED, group1);
 		center.getCustomerMeeting().getMeeting().getMeetingDetails()
 				.setRecurAfter(Short.valueOf("2"));
 		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),YesNoFlag.YES.getValue());
@@ -408,16 +402,12 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
 				new Short("1"));
 		TestObjectFactory.createMeeting(meeting);
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
-				group, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".2",
-				group, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
@@ -439,8 +429,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 	private AccountBO getLoanAccount() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanOfferingBO = TestObjectFactory.createLoanOffering("Loan", Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short

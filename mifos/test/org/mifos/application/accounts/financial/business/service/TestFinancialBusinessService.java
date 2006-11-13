@@ -164,8 +164,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 	private LoanBO getLoanAccount() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
@@ -394,9 +393,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 	private void createInitialObjectsForSavings() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering = helper.createSavingsOffering("sav 1234", "cvf1",
@@ -407,10 +404,6 @@ public class TestFinancialBusinessService extends MifosTestCase {
 	}
 
 	public void testLoanWriteOffAccountingEntries() throws Exception {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
-		Date currentDate = new Date(System.currentTimeMillis());
 		loan = getLoanAccount();
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(

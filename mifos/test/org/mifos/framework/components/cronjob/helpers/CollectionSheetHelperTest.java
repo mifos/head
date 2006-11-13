@@ -105,8 +105,7 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, Calendar.DAY_OF_WEEK));
 		center = TestObjectFactory.createCenter("Center",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 	}
 

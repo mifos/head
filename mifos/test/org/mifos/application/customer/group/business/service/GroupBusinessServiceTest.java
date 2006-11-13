@@ -179,13 +179,13 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 	private CenterBO createCenter(String name) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createCenter(name, CustomerStatus.CENTER_ACTIVE.getValue(), "1.4",
-				meeting, new Date(System.currentTimeMillis()));
+		return TestObjectFactory.createCenter(name, meeting);
 	}
 	
 	private ClientBO createClient(String clientName){
-		return TestObjectFactory.createClient(clientName,CustomerStatus.CLIENT_ACTIVE.getValue(), 
-				"1.1.1", group, new Date(System.currentTimeMillis()));
+		return TestObjectFactory.createClient(clientName,
+				CustomerStatus.CLIENT_ACTIVE, 
+				group);
 	}
 	
 	private LoanBO getLoanAccount(CustomerBO customerBO) {

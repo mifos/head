@@ -94,6 +94,7 @@ public class ClientBusinessServiceTest extends MifosTestCase{
 	}
 	
 	private ClientBO createClient(String clientName){
-		return TestObjectFactory.createClient(clientName, null, CustomerStatus.CLIENT_PARTIAL.getValue(), new java.util.Date());
+		return TestObjectFactory.createClient(clientName, null, 
+			CustomerStatus.CLIENT_PARTIAL);
 	}
 }

@@ -204,9 +204,10 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			throws Exception {
 		userContext = TestObjectFactory.getUserContext();
 		createInitialObjects();
-		client = TestObjectFactory.createClient("Client_Active_test", Short
-				.valueOf("13"), "1.1.1", group, new Date(System
-				.currentTimeMillis()));
+
+		// TODO: Is CENTER_ACTIVE right or should it be CLIENT_ACTIVE?
+		client = TestObjectFactory.createClient("Client_Active_test", 
+				CustomerStatus.CENTER_ACTIVE, group);
 		customerAccountBO = client.getCustomerAccount();
 		assertFalse("State is not active hence adjustment is not possible",
 				customerAccountBO.isAdjustPossibleOnLastTrxn());
@@ -217,9 +218,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			throws Exception {
 		userContext = TestObjectFactory.getUserContext();
 		createInitialObjects();
-		client = TestObjectFactory.createClient("Client_Active_test", Short
-				.valueOf("3"), "1.1.1", group, new Date(System
-				.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client_Active_test", CustomerStatus.CLIENT_ACTIVE, group);
 		customerAccountBO = client.getCustomerAccount();
 		assertFalse("Last payment was null hence adjustment is not possible",
 				customerAccountBO.isAdjustPossibleOnLastTrxn());
@@ -346,12 +345,10 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		customerAccount = center.getCustomerAccount();
 		customerAccount.setUserContext(uc);
 		customerAccount.applyCharge(Short.valueOf("-1"), new Double("33"));
-		Money amount = new Money();
 		for (AccountActionDateEntity accountActionDateEntity : customerAccount
 				.getAccountActionDates()) {
 			CustomerScheduleEntity customerSchEntity = (CustomerScheduleEntity) accountActionDateEntity;
 			if (customerSchEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-				amount = customerSchEntity.getMiscFee();
 				assertEquals(new Money("33.0"), customerSchEntity.getMiscFee());
 			}
 		}
@@ -508,8 +505,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
@@ -548,12 +544,6 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			SystemException, ApplicationException {
 		createInitialObjects();
 		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
-		Short feeId = null;
-		for (AccountFeesEntity accountFeesEntity : customerAccountBO
-				.getAccountFees()) {
-			FeeBO feesBO = accountFeesEntity.getFees();
-			feeId = feesBO.getFeeId();
-		}
 		customerAccountBO.updateAccountActivity(null, null, new Money("222"),
 				null, Short.valueOf("1"), "Mainatnence Fee removed");
 		TestObjectFactory.updateObject(customerAccountBO);
@@ -737,8 +727,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
@@ -773,8 +762,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
@@ -798,8 +786,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 
 		TestObjectFactory.flushandCloseSession();
@@ -844,8 +831,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
@@ -904,8 +890,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PENDING, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
@@ -964,8 +949,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
@@ -1018,8 +1002,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		assertEquals(100.00, center.getCustomerAccount().getNextDueAmount()
 				.getAmountDoubleValue());
 	}
@@ -1183,8 +1166,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meetingBO,
-				new Date(System.currentTimeMillis()));
+				meetingBO);
 		changeAllInstallmentDateToPreviousDate(center.getCustomerAccount(), 14);
 		center.update();
 		HibernateUtil.commitTransaction();
@@ -1213,8 +1195,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meetingBO,
-				new Date(System.currentTimeMillis()));
+				meetingBO);
 		changeFirstInstallmentDateToPreviousDate(center.getCustomerAccount());
 		center.update();
 		HibernateUtil.commitTransaction();
@@ -1241,8 +1222,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	private void createCenter() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 	}
 
 	private void changeFirstInstallmentDateToPreviousDate(
@@ -1267,16 +1247,13 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 
 	private void applyPayment() throws ServiceException, FinancialException,
 			NumberFormatException, PersistenceException {
-		client = TestObjectFactory.createClient("Client_Active_test", Short
-				.valueOf("3"), "1.1.1", group, new Date(System
-				.currentTimeMillis()));
+		client = TestObjectFactory.createClient("Client_Active_test", CustomerStatus.CLIENT_ACTIVE, group);
 		customerAccountBO = client.getCustomerAccount();
 		Date currentDate = new Date(System.currentTimeMillis());
 		customerAccountBO.setUserContext(userContext);
@@ -1299,7 +1276,6 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						.getMoneyForMFICurrency(300), "1111", currentDate,
 				new PaymentTypeEntity(Short.valueOf("1")));
 
-		Money totalFees = new Money();
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(
 				accountPaymentEntity,
 				(AccountActionEntity) masterPersistenceService.findById(
@@ -1320,7 +1296,6 @@ public class TestCustomerAccountBO extends MifosTestCase {
 							.getAccountFee(), accountFeesActionDetailEntity
 							.getFeeAmount());
 			accountTrxnEntity.addFeesTrxnDetail(feeTrxn);
-			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
 		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,

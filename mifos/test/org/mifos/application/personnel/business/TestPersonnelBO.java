@@ -800,8 +800,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 
 	private PersonnelBO createPersonnel(OfficeBO office,

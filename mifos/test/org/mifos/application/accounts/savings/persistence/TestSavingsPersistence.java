@@ -361,8 +361,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		SavingsTestHelper helper = new SavingsTestHelper();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		savingsOffering = helper.createSavingsOffering("SavingPrd1", "wsed",
 				Short.valueOf("1"), Short.valueOf("1"));
@@ -394,8 +393,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		SavingsTestHelper helper = new SavingsTestHelper();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		savingsOffering = helper.createSavingsOffering("SavingPrd1", "cvfg",
 				Short.valueOf("1"), Short.valueOf("1"));
@@ -426,9 +424,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 
 	}

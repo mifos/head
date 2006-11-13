@@ -209,8 +209,7 @@ public class CenterBOTest extends MifosTestCase {
 	public void testFailureCreate_DuplicateName() throws Exception {
 		String name = "Center1";
 		center = TestObjectFactory.createCenter(name,
-				CustomerStatus.CENTER_ACTIVE.getValue(), "", getMeeting(),
-				new Date());
+				getMeeting());
 		HibernateUtil.closeSession();
 
 		String externalId = "12345";
@@ -232,8 +231,7 @@ public class CenterBOTest extends MifosTestCase {
 	public void testFailureDuplicateName() throws Exception {
 		String name = "Center1";
 		center = TestObjectFactory.createCenter(name,
-				CustomerStatus.CENTER_ACTIVE.getValue(), "", getMeeting(),
-				new Date());
+				getMeeting());
 		HibernateUtil.closeSession();
 
 		String externalId = "12345";
@@ -487,12 +485,10 @@ public class CenterBOTest extends MifosTestCase {
 		meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"),
 				new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
 		center = TestObjectFactory.createCenter("Center",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
-						+ ".1", group, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 
 	private MeetingBO getMeeting() {

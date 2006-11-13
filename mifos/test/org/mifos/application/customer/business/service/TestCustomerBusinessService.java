@@ -197,8 +197,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testGetAllActivityView() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -231,8 +230,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testFailureGetRecentActivityView() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -249,8 +247,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testGetRecentActivityView() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		HibernateUtil.closeSession();
 		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
@@ -349,9 +346,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testFindBySystemId() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		savingsBO = getSavingsAccount(group, "fsaf5", "ads5");
 		HibernateUtil.closeSession();
@@ -374,9 +369,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testgetBySystemId() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		savingsBO = getSavingsAccount(group, "fsaf5", "ads5");
 		HibernateUtil.closeSession();
@@ -446,23 +439,17 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		Money totalPortfolioAtRisk = new Money();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		CenterBO center1 = TestObjectFactory.createCenter(
-				"Center_Active_test1", Short.valueOf("13"), "1.5", meeting,
-				new Date(System.currentTimeMillis()));
+				"Center_Active_test1", meeting);
 		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
 		client = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, group.getSearchId() + ".1",
-				group, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
-						+ ".2", group, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client3 = TestObjectFactory.createClient("client3",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), group1.getSearchId()
-						+ ".1", group1, new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group1);
 		account = getSavingsAccountWithBalance(center, meeting,
 				"savings prd123", "xyz1");
 		AccountBO account1 = getSavingsAccountWithBalance(client, meeting,
@@ -569,13 +556,10 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		CustomerCheckListBO checklistCenter = TestObjectFactory
 				.createCustomerChecklist(center.getCustomerLevel().getId(),
 						center.getCustomerStatus().getId(),
@@ -616,13 +600,10 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testFailureGetCustomerChecklist() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		HibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -639,9 +620,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 			throws NumberFormatException, SystemException, ApplicationException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		assertEquals(2, service.retrieveAllCustomerStatusList(
 				center.getCustomerLevel().getId()).size());
 	}
@@ -649,9 +628,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testFailureRetrieveAllCustomerStatusList() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.getStatusChecklist(center.getCustomerStatus().getId(),
@@ -667,9 +644,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 			SystemException, ApplicationException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		assertEquals(1, service.getFormedByPersonnel(
 				ClientConstants.LOAN_OFFICER_LEVEL,
 				center.getOffice().getOfficeId()).size());
@@ -678,9 +653,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testFailureGetFormedByPersonnel() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.getFormedByPersonnel(
@@ -696,9 +669,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testGetAllCustomerNotes() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		center.addCustomerNotes(TestObjectFactory.getCustomerNote("Test Note",
 				center));
 		TestObjectFactory.updateObject(center);
@@ -716,9 +687,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testGetAllCustomerNotesWithZeroNotes() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		assertEquals(0, service.getAllCustomerNotes(center.getCustomerId())
 				.getSize());
 		assertEquals(0, center.getCustomerNotes().size());
@@ -758,12 +727,10 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client",
-				CustomerStatus.CLIENT_CLOSED.getValue(), "1.4.1.1", group,
-				new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_CLOSED, group);
 
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.getUserContext().getLocaleId(),
@@ -1024,23 +991,20 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		center = createCenter("Center_Active_test");
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.4.1.1", group,
-				new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 
 	private CenterBO createCenter(String name) throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		return TestObjectFactory.createCenter(name,
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 	}
 
 	private LoanBO getLoanAccount() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short

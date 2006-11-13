@@ -91,20 +91,16 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center_Active_test", Short
-				.valueOf("13"), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 	
 	private SavingsBO getSavingsAccountForCenter() throws Exception {
 		createInitialObjects();
 		client1 = TestObjectFactory.createClient("client1",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		client2 = TestObjectFactory.createClient("client2",
-				CustomerStatus.CLIENT_ACTIVE, "1.1.1.2", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		return helper.createSavingsAccount(savingsOffering, center,

@@ -959,8 +959,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 	}
 	
 	private void createCenterWithoutFee()throws Exception{
@@ -974,8 +973,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		createParentCustomer();
 		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1", group,
-				new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		HibernateUtil.closeSession();
 	}
 

@@ -235,8 +235,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 	public void testUpdateCenterStatus() throws PageExpiredException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.loadStatus.toString());
 		addRequestParameter("customerId", center.getCustomerId().toString());
@@ -1059,25 +1058,20 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.1", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), "1.1.1", group,
-				new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 
 	private void createInitialObjects(CustomerStatus centerStatus,
 			CustomerStatus groupStatus, CustomerStatus clientStatus) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", centerStatus
-				.getValue(), "1.1", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
 		client = TestObjectFactory.createClient("Client", clientStatus,
-				"1.1.1", group, new Date(System
-				.currentTimeMillis()));
+				group);
 	}
 
 	private void createInitialObjectsWhenCenterHierarchyNotExist(
@@ -1104,7 +1098,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				TestObjectFactory.getOffice(Short.valueOf("1")),
 				"customer_office", "cust");
 		client = TestObjectFactory.createClient(name, getMeeting(),
-				CustomerStatus.CLIENT_PARTIAL.getValue(), new java.util.Date());
+				CustomerStatus.CLIENT_PARTIAL);
 	}
 
 	private void createClientWithoutMeeting(String name) throws Exception {
@@ -1112,7 +1106,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				TestObjectFactory.getOffice(Short.valueOf("1")),
 				"customer_office", "cust");
 		client = TestObjectFactory.createClient(name, null,
-				CustomerStatus.CLIENT_PARTIAL.getValue(), new java.util.Date());
+				CustomerStatus.CLIENT_PARTIAL);
 	}
 
 	private void createInitialObjectsOfficeInactive(CustomerStatus groupStatus,

@@ -1,6 +1,5 @@
 package org.mifos.application.customer.group.persistence;
 
-import java.sql.Date;
 
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -57,8 +56,7 @@ public class GroupPersistenceTest extends MifosTestCase {
 	private CenterBO createCenter(String name) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createCenter(name, Short.valueOf("13"), "1.4",
-				meeting, new Date(System.currentTimeMillis()));
+		return TestObjectFactory.createCenter(name, meeting);
 	}
 	private void createGroup(){
 		center = createCenter();

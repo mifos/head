@@ -162,12 +162,11 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		Date startDate = new Date(System.currentTimeMillis());
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.1", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client", 
 				CustomerStatus.CLIENT_ACTIVE,
-				"1.1.1.1", group, new Date(System.currentTimeMillis()));
+				group);
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),

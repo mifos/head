@@ -141,8 +141,7 @@ public class TestCenterBusinessService extends MifosTestCase {
 	private CenterBO createCenter(String name) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		return TestObjectFactory.createCenter(name, CustomerStatus.CENTER_ACTIVE.getValue(), 
-				"1.1",meeting, new Date(System.currentTimeMillis()));
+		return TestObjectFactory.createCenter(name, meeting);
 	}
 	
 	private GroupBO createGroup(String groupName){
@@ -150,8 +149,9 @@ public class TestCenterBusinessService extends MifosTestCase {
 	}
 	
 	private ClientBO createClient(String clientName){
-		return TestObjectFactory.createClient(clientName,CustomerStatus.CLIENT_ACTIVE.getValue(), 
-				"1.1.1", group, new Date(System.currentTimeMillis()));
+		return TestObjectFactory.createClient(clientName,
+				CustomerStatus.CLIENT_ACTIVE, 
+				group);
 	}
 	
 	private void createAccountsForCenter() throws Exception {

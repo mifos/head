@@ -51,7 +51,7 @@ public class TestAccountFeesEntity extends MifosTestCase {
 	public AccountBO getLoanAccount()
 	{ 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
-        center=TestObjectFactory.createCenter("Center",Short.valueOf("13"),"1.1",meeting,new Date(System.currentTimeMillis()));
+        center=TestObjectFactory.createCenter("Center",meeting);
         group=TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan",Short.valueOf("2"),
         		new Date(System.currentTimeMillis()),Short.valueOf("1"),300.0,1.2,Short.valueOf("3"),
@@ -75,7 +75,7 @@ public class TestAccountFeesEntity extends MifosTestCase {
 	public void testGetApplicableDatesCount() throws Exception{
 		accountPersistence = new AccountPersistence();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
-        center=TestObjectFactory.createCenter("Center",Short.valueOf("13"),"1.1",meeting,new Date(System.currentTimeMillis()));
+        center=TestObjectFactory.createCenter("Center",meeting);
         FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short.valueOf("2"));
         AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,new Double("100.0"));
 		center.getCustomerAccount().getAccountFees().add(accountPeriodicFee);

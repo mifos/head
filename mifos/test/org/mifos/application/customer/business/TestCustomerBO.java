@@ -437,12 +437,10 @@ public class TestCustomerBO extends MifosTestCase {
 			throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.4", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_CANCELLED, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_PARTIAL.getValue(), "1.4.1.1", group,
-				new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_PARTIAL, group);
 		Short newStatusId = CustomerStatus.CLIENT_ACTIVE.getValue();
 		try {
 			client.changeStatus(newStatusId, null, "Test");
@@ -458,12 +456,10 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testValidateStatusForClientWithPartialGroups() throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.4", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_PARTIAL, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_PARTIAL.getValue(), "1.4.1.1", group,
-				new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_PARTIAL, group);
 		Short newStatusId = CustomerStatus.CLIENT_ACTIVE.getValue();
 		try {
 			client.changeStatus(newStatusId, null, "Test");
@@ -481,12 +477,10 @@ public class TestCustomerBO extends MifosTestCase {
 			throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.4", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group,
-				new Date(System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 		accountBO = getLoanAccount(client, meeting);
 		HibernateUtil.closeSession();
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
@@ -708,12 +702,10 @@ public class TestCustomerBO extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, "1.4.1.1", group, new Date(
-						System.currentTimeMillis()));
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
@@ -778,8 +770,7 @@ public class TestCustomerBO extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
-				CustomerStatus.CENTER_ACTIVE.getValue(), "1.4", meeting,
-				new Date(System.currentTimeMillis()));
+				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 	}
 

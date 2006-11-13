@@ -1716,19 +1716,16 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	private void createInitialCustomers() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.4", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), group.getSearchId()
-						+ ".1", group, new Date());
+				CustomerStatus.CLIENT_ACTIVE, group);
 	}
 
 	private void createParentCustomer() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		center = TestObjectFactory.createCenter("Center", Short.valueOf("13"),
-				"1.4", meeting, new Date(System.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 	}
 	

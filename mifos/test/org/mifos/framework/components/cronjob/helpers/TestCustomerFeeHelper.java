@@ -55,9 +55,7 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 	public void testExecute() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, Calendar.DAY_OF_WEEK));
-		center = TestObjectFactory.createCenter("center1_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("center1_Active_test", meeting);
 
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
@@ -123,9 +121,7 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 	public void testExecuteToApplyPeriodicFee() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 2, 4, Calendar.DAY_OF_WEEK));
-		center = TestObjectFactory.createCenter("center1_Active_test", Short
-				.valueOf("13"), "1.4", meeting, new Date(System
-				.currentTimeMillis()));
+		center = TestObjectFactory.createCenter("center1_Active_test", meeting);
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
 			TestCustomerAccountBO.setActionDate(accountActionDateEntity,offSetDate(
