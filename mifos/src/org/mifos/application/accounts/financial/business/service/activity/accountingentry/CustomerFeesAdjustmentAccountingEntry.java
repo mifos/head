@@ -30,7 +30,7 @@ public class CustomerFeesAdjustmentAccountingEntry extends
 					FinancialConstants.DEBIT);
 			
 			addAccountEntryDetails(removeSign(feeTrxn.getFeeAmount()), finActionFee,
-					getGLcode(finActionFee.getApplicableDebitCOA()),
+					getGLcode(finActionFee.getApplicableDebitCharts()),
 					FinancialConstants.CREDIT);
 		}
 		// For Misc Fee
@@ -38,12 +38,12 @@ public class CustomerFeesAdjustmentAccountingEntry extends
 				.getFinancialAction(FinancialActionConstants.CUSTOMERACCOUNTMISCFEESPOSTING);
 		addAccountEntryDetails(removeSign(customertrxn.getMiscFeeAmount()),
 				finActionMiscFee, getGLcode(finActionMiscFee
-						.getApplicableDebitCOA()), FinancialConstants.CREDIT);
+						.getApplicableDebitCharts()), FinancialConstants.CREDIT);
 
 		
 		addAccountEntryDetails(removeSign(customertrxn.getMiscFeeAmount()),
 				finActionMiscFee, getGLcode(finActionMiscFee
-						.getApplicableCreditCOA()), FinancialConstants.DEBIT);
+						.getApplicableCreditCharts()), FinancialConstants.DEBIT);
 
 	}
 	

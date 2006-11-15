@@ -68,7 +68,7 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
 				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 		addAccountEntryDetails(amountToPost,
 				finActionPrincipal, getGLcode(finActionPrincipal
-						.getApplicableDebitCOA()), FinancialConstants.DEBIT);
+						.getApplicableDebitCharts()), FinancialConstants.DEBIT);
 
 		addAccountEntryDetails(amountToPost,
 				finActionPrincipal, glcodeCredit, FinancialConstants.CREDIT);
@@ -89,13 +89,13 @@ public class PrincipalAccountingEntry extends BaseAccountingEntry {
 					FinancialConstants.DEBIT);
 
 			addAccountEntryDetails(amountToPost.subtract(principalAmountNotRounded), finActionRounding,
-					getGLcode(finActionRounding.getApplicableCreditCOA()),
+					getGLcode(finActionRounding.getApplicableCreditCharts()),
 					FinancialConstants.CREDIT);
 			
 		}else if(amountToPost.getAmount().compareTo(principalAmountNotRounded.getAmount()) < 0 )
 		{
 			addAccountEntryDetails(principalAmountNotRounded.subtract(amountToPost)
-					, finActionRounding,getGLcode(finActionRounding.getApplicableDebitCOA()),
+					, finActionRounding,getGLcode(finActionRounding.getApplicableDebitCharts()),
 					FinancialConstants.DEBIT);
 
 			addAccountEntryDetails(principalAmountNotRounded.subtract(amountToPost), finActionRounding,

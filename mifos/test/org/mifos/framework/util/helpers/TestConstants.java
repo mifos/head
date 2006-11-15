@@ -47,8 +47,6 @@ public interface TestConstants {
 	public static final int FINANCIAL_DIRECTINCOME_SIZE=10;
 	public static final int FINANCIAL_PRINCIPALPOSTING_SIZE=10;
 	
-	public static final Short COACACHE_EXCEED_SIZE=155;
 	public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;
-
 
 }

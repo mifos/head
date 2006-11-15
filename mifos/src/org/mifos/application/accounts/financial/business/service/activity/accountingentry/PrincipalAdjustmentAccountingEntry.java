@@ -23,7 +23,7 @@ public class PrincipalAdjustmentAccountingEntry extends BaseAccountingEntry {
 				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 		addAccountEntryDetails(removeSign(loanTrxn.getPrincipalAmount()),
 				finActionPrincipal, getGLcode(finActionPrincipal
-						.getApplicableDebitCOA()), FinancialConstants.CREDIT);
+						.getApplicableDebitCharts()), FinancialConstants.CREDIT);
 
 		addAccountEntryDetails(removeSign(loanTrxn.getPrincipalAmount()),
 				finActionPrincipal, glcodeCredit, FinancialConstants.DEBIT);
@@ -36,12 +36,12 @@ public class PrincipalAdjustmentAccountingEntry extends BaseAccountingEntry {
 
 			addAccountEntryDetails(roundedAmount.subtract(
 					loanTrxn.getPrincipalAmount()).negate(), finActionRounding,
-					getGLcode(finActionPrincipal.getApplicableCreditCOA()),
+					getGLcode(finActionPrincipal.getApplicableCreditCharts()),
 					FinancialConstants.CREDIT);
 
 			addAccountEntryDetails(roundedAmount.subtract(loanTrxn
 					.getPrincipalAmount()), finActionRounding,
-					getGLcode(finActionRounding.getApplicableCreditCOA()),
+					getGLcode(finActionRounding.getApplicableCreditCharts()),
 					FinancialConstants.DEBIT);
 		}
 

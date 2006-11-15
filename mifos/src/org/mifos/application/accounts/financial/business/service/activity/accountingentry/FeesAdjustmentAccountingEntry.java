@@ -30,18 +30,18 @@ public class FeesAdjustmentAccountingEntry extends BaseAccountingEntry {
 					FinancialConstants.DEBIT);
 
 			addAccountEntryDetails(removeSign(feeTrxn.getFeeAmount()), finActionFee,
-					getGLcode(finActionFee.getApplicableDebitCOA()),
+					getGLcode(finActionFee.getApplicableDebitCharts()),
 					FinancialConstants.CREDIT);
 		}
 		// For Misc Fee
 		FinancialActionBO finActionMiscFee = FinancialActionCache
 				.getFinancialAction(FinancialActionConstants.MISCFEEPOSTING);
 		addAccountEntryDetails(removeSign(loanTrxn.getMiscFeeAmount()), finActionMiscFee,
-				getGLcode(finActionMiscFee.getApplicableDebitCOA()),
+				getGLcode(finActionMiscFee.getApplicableDebitCharts()),
 				FinancialConstants.CREDIT);
 
 		addAccountEntryDetails(removeSign(loanTrxn.getMiscFeeAmount()), finActionMiscFee,
-				getGLcode(finActionMiscFee.getApplicableCreditCOA()),
+				getGLcode(finActionMiscFee.getApplicableCreditCharts()),
 				FinancialConstants.DEBIT);
 
 	}

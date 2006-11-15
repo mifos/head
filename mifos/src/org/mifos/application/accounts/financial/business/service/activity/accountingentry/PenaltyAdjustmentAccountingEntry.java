@@ -27,11 +27,11 @@ public class PenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
 		FinancialActionBO finActionMiscPenalty = FinancialActionCache
 				.getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);
 		addAccountEntryDetails(removeSign(amount), finActionMiscPenalty,
-				getGLcode(finActionMiscPenalty.getApplicableDebitCOA()),
+				getGLcode(finActionMiscPenalty.getApplicableDebitCharts()),
 				FinancialConstants.CREDIT);
 
 		addAccountEntryDetails(removeSign(amount), finActionMiscPenalty,
-				getGLcode(finActionMiscPenalty.getApplicableCreditCOA()),
+				getGLcode(finActionMiscPenalty.getApplicableCreditCharts()),
 				FinancialConstants.DEBIT);
 
 	}

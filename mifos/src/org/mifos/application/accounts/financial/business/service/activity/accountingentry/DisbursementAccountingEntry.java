@@ -58,7 +58,7 @@ public class DisbursementAccountingEntry extends BaseAccountingEntry {
 		.getLoanOffering().getPrincipalGLcode();
 		addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal,glcodeDebit,FinancialConstants.DEBIT);
 
-		addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal, getGLcode(finloanDibursal.getApplicableCreditCOA()),FinancialConstants.CREDIT);
+		addAccountEntryDetails(loanTrxn.getAmount(), finloanDibursal, getGLcode(finloanDibursal.getApplicableCreditCharts()),FinancialConstants.CREDIT);
 	}
 
 }

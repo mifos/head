@@ -90,7 +90,7 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
 						.getDepositGLCode(), FinancialConstants.CREDIT);
 		addAccountEntryDetails(removeSign(savingsTrxn.getWithdrawlAmount()),
 				finActionWithrawal, getGLcode(finActionWithrawal
-						.getApplicableDebitCOA()), FinancialConstants.DEBIT);
+						.getApplicableDebitCharts()), FinancialConstants.DEBIT);
 	}
 	
 	private void adjustDeposit(SavingsBO savings,SavingsTrxnDetailEntity savingsTrxn)throws FinancialException{
@@ -107,7 +107,7 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
 		}
 		addAccountEntryDetails(removeSign(savingsTrxn.getDepositAmount()),
 				finActionDeposit, getGLcode(finActionDeposit
-						.getApplicableCreditCOA()), FinancialConstants.CREDIT);
+						.getApplicableCreditCharts()), FinancialConstants.CREDIT);
 
 		addAccountEntryDetails(removeSign(savingsTrxn.getDepositAmount()),
 				finActionDeposit, savings.getSavingsOffering()

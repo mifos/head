@@ -57,7 +57,7 @@ public class InterestAccountingEntry extends BaseAccountingEntry {
 		FinancialActionBO finActionInterest = FinancialActionCache
 				.getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
 		addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest,
-				getGLcode(finActionInterest.getApplicableDebitCOA()),
+				getGLcode(finActionInterest.getApplicableDebitCharts()),
 				FinancialConstants.DEBIT);
 
 		addAccountEntryDetails(loanTrxn.getInterestAmount(), finActionInterest,

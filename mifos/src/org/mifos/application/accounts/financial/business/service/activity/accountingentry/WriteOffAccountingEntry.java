@@ -20,7 +20,7 @@ public class WriteOffAccountingEntry extends BaseAccountingEntry {
 				.getFinancialAction(FinancialActionConstants.WRITEOFF);
 		addAccountEntryDetails(loanTrxn.getPrincipalAmount(),
 				finActionWriteOff, getGLcode(finActionWriteOff
-						.getApplicableDebitCOA()), FinancialConstants.DEBIT);
+						.getApplicableDebitCharts()), FinancialConstants.DEBIT);
 		GLCodeEntity glcodeCredit = ((LoanBO) loanTrxn.getAccount())
 				.getLoanOffering().getPrincipalGLcode();
 		addAccountEntryDetails(loanTrxn.getPrincipalAmount(),

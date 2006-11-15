@@ -126,13 +126,14 @@ public class FinancialBusinessService extends BusinessService {
 		Set<COABO> applicableCategory = null;
 		FinancialActionBO finActionFees = FinancialActionCache
 				.getFinancialAction(financialAction);
-		if (debitCredit.equals(FinancialConstants.DEBIT))
-			applicableCategory = finActionFees.getApplicableDebitCOA();
-		else if (debitCredit.equals(FinancialConstants.CREDIT))
-			applicableCategory = finActionFees.getApplicableCreditCOA();
+		if (debitCredit.equals(FinancialConstants.DEBIT)) {
+			applicableCategory = finActionFees.getApplicableDebitCharts();
+		} else if (debitCredit.equals(FinancialConstants.CREDIT)) {
+			applicableCategory = finActionFees.getApplicableCreditCharts();
+		}
 
-		for (COABO coabo : applicableCategory) {
-			glCodeList.add(coabo.getAssociatedGlcode());
+		for (COABO chartOfAccounts : applicableCategory) {
+			glCodeList.add(chartOfAccounts.getAssociatedGlcode());
 		}
 		return glCodeList;
 	}

@@ -29,18 +29,18 @@ public class CustomerAccountFeesAccountingEntry extends BaseAccountingEntry {
 					FinancialConstants.CREDIT);
 
 			addAccountEntryDetails(feeTrxn.getFeeAmount(), finActionFee,
-					getGLcode(finActionFee.getApplicableDebitCOA()),
+					getGLcode(finActionFee.getApplicableDebitCharts()),
 					FinancialConstants.DEBIT);
 		}
 		// For Misc Fee
 		FinancialActionBO finActionMiscFee = FinancialActionCache
 				.getFinancialAction(FinancialActionConstants.CUSTOMERACCOUNTMISCFEESPOSTING);
 		addAccountEntryDetails(customertrxn.getMiscFeeAmount(), finActionMiscFee,
-				getGLcode(finActionMiscFee.getApplicableDebitCOA()),
+				getGLcode(finActionMiscFee.getApplicableDebitCharts()),
 				FinancialConstants.DEBIT);
 
 		addAccountEntryDetails(customertrxn.getMiscFeeAmount(), finActionMiscFee,
-				getGLcode(finActionMiscFee.getApplicableCreditCOA()),
+				getGLcode(finActionMiscFee.getApplicableCreditCharts()),
 				FinancialConstants.CREDIT);
 
 	}

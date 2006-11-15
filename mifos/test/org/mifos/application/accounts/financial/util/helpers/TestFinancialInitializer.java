@@ -11,7 +11,7 @@ public class TestFinancialInitializer extends MifosTestCase {
 
 	public void testCOAInitializer() throws Exception {
 		FinancialInitializer.initializeCOA(HibernateUtil.getSessionTL());
-		COABO coaAssets = COACache.getCOA(CategoryConstants.ASSETS);
+		COABO coaAssets = ChartOfAccountsCache.get(CategoryConstants.ASSETS);
 		assertEquals(coaAssets.getCategoryId().shortValue(),
 				CategoryConstants.ASSETS);
 	}
@@ -40,7 +40,7 @@ public class TestFinancialInitializer extends MifosTestCase {
 	public void testCOAInitializerException() throws Exception {
 		try {
 			FinancialInitializer.initializeCOA(HibernateUtil.getSessionTL());
-			COACache.getCOA(Short.valueOf("-1"));
+			ChartOfAccountsCache.get(Short.valueOf("-1"));
 			assertTrue(false);
 		} catch (FinancialException e) {
 			assertTrue(true);
@@ -49,7 +49,7 @@ public class TestFinancialInitializer extends MifosTestCase {
 
 	public void testInit() throws FinancialException {
 		FinancialInitializer.initialize();
-		COABO coaAssets = COACache.getCOA(CategoryConstants.ASSETS);
+		COABO coaAssets = ChartOfAccountsCache.get(CategoryConstants.ASSETS);
 		assertEquals(coaAssets.getCategoryId().shortValue(),
 				CategoryConstants.ASSETS);
 		FinancialActionBO financialActionPrincipal = FinancialActionCache

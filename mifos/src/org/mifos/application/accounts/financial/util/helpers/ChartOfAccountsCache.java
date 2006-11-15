@@ -46,24 +46,24 @@ import org.mifos.application.accounts.financial.business.COAIDMapperEntity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.exceptions.FinancialExceptionConstants;
 
-public class COACache {
-	private static Map<Short, COABO> COARepository = new HashMap<Short, COABO>();
+public class ChartOfAccountsCache {
+	private static Map<Short, COABO> cache = new HashMap<Short, COABO>();
 
-	public static void addToCache(COAIDMapperEntity coaIdMapper) {
+	public static void add(COAIDMapperEntity coaIdMapper) {
 		if ((coaIdMapper != null)
-				&& (COARepository.get(coaIdMapper.getConstantId()) == null))
-			COARepository
-					.put(coaIdMapper.getConstantId(), coaIdMapper.getCoa());
+				&& (cache.get(coaIdMapper.getConstantId()) == null)) {
+			cache.put(coaIdMapper.getConstantId(), coaIdMapper.getCoa());
+		}
 	}
 
-	public static COABO getCOA(short categoryId) throws FinancialException {
-		COABO category = COARepository.get(categoryId);
-		if (category == null)
+	public static COABO get(short categoryId) throws FinancialException {
+		COABO category = cache.get(categoryId);
+		if (category == null) {
 			throw new FinancialException(
 					FinancialExceptionConstants.CATEGORYNOTFOUND);
+		}
 
 		return category;
-
 	}
 
 }

@@ -47,7 +47,7 @@ import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.business.service.activity.BaseFinancialActivity;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.util.helpers.COACache;
+import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.application.accounts.financial.util.helpers.CategoryConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.framework.util.helpers.Money;
@@ -80,8 +80,8 @@ public abstract class BaseAccountingEntry {
 	protected abstract void getSpecificAccountActionEntry()
 			throws FinancialException;
 
-	protected GLCodeEntity getGLcode(Set<COABO> coaSet) {
-		Iterator<COABO> iter = coaSet.iterator();
+	protected GLCodeEntity getGLcode(Set<COABO> chartsOfAccounts) {
+		Iterator<COABO> iter = chartsOfAccounts.iterator();
 		GLCodeEntity glcode = null;
 		while (iter.hasNext()) {
 			glcode = iter.next().getAssociatedGlcode();
@@ -93,19 +93,19 @@ public abstract class BaseAccountingEntry {
 	private Money getAmountToPost(Money postedMoney,
 			FinancialActionBO financialAction, GLCodeEntity glcode,
 			Short debitCreditFlag) throws FinancialException {
-		COABO coabo = COACache
-				.getCOA(glcode.getAssociatedCOA().getCategoryId());
-		if (coabo.getCOAHead().getCategoryId().equals(CategoryConstants.ASSETS)
-				|| coabo.getCOAHead().getCategoryId().equals(
+		COABO chartOfAccounts = ChartOfAccountsCache
+				.get(glcode.getAssociatedCOA().getCategoryId());
+		if (chartOfAccounts.getCOAHead().getCategoryId().equals(CategoryConstants.ASSETS)
+				|| chartOfAccounts.getCOAHead().getCategoryId().equals(
 						CategoryConstants.EXPENDITURE)) {
 			if (debitCreditFlag.equals(FinancialConstants.DEBIT))
 				return postedMoney;
 			else
 				return postedMoney.negate();
 		}
-		if (coabo.getCOAHead().getCategoryId().equals(
+		if (chartOfAccounts.getCOAHead().getCategoryId().equals(
 				CategoryConstants.LIABILITIES)
-				|| coabo.getCOAHead().getCategoryId().equals(
+				|| chartOfAccounts.getCOAHead().getCategoryId().equals(
 						CategoryConstants.INCOME)) {
 			if (debitCreditFlag.equals(FinancialConstants.DEBIT))
 				return postedMoney.negate();

@@ -74,7 +74,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 						.getDepositGLCode(), FinancialConstants.DEBIT);
 		addAccountEntryDetails(savingsTrxn.getWithdrawlAmount(),
 				finActionWithrawal, getGLcode(finActionWithrawal
-						.getApplicableCreditCOA()), FinancialConstants.CREDIT);				
+						.getApplicableCreditCharts()), FinancialConstants.CREDIT);				
 	}
 
 	private void handleRoundingForWithdrawal(SavingsBO savings, SavingsTrxnDetailEntity savingsTrxn)throws FinancialException{
@@ -92,7 +92,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 	
 	private void addEntriesForIncreasedAmount(SavingsBO savings, FinancialActionBO finActionRounding, Money roundedAmt, Money withdrawalAmt)throws FinancialException{
 		addAccountEntryDetails(roundedAmt.subtract(withdrawalAmt),
-				finActionRounding, getGLcode(finActionRounding.getApplicableDebitCOA()), FinancialConstants.DEBIT);
+				finActionRounding, getGLcode(finActionRounding.getApplicableDebitCharts()), FinancialConstants.DEBIT);
 		addAccountEntryDetails(roundedAmt.subtract(withdrawalAmt), finActionRounding,
 				savings.getSavingsOffering().getDepositGLCode(),FinancialConstants.CREDIT);
 	}
@@ -101,7 +101,7 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 		addAccountEntryDetails(withdrawalAmt.subtract(roundedAmt),
 				finActionRounding, savings.getSavingsOffering().getDepositGLCode(),FinancialConstants.DEBIT);
 		addAccountEntryDetails(withdrawalAmt.subtract(roundedAmt), finActionRounding,
-				getGLcode(finActionRounding.getApplicableCreditCOA()),FinancialConstants.CREDIT);		
+				getGLcode(finActionRounding.getApplicableCreditCharts()),FinancialConstants.CREDIT);		
 	}
 
 }

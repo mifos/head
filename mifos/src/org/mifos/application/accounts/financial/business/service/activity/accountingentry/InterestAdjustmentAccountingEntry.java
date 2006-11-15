@@ -22,7 +22,7 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 		FinancialActionBO finActionInterest = FinancialActionCache
 				.getFinancialAction(FinancialActionConstants.INTERESTPOSTING);
 		addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest,
-				getGLcode(finActionInterest.getApplicableDebitCOA()),
+				getGLcode(finActionInterest.getApplicableDebitCharts()),
 				FinancialConstants.CREDIT);
 
 		addAccountEntryDetails(removeSign(loanTrxn.getInterestAmount()), finActionInterest,
@@ -36,12 +36,12 @@ public class InterestAdjustmentAccountingEntry extends BaseAccountingEntry {
 
 			addAccountEntryDetails(roundedAmount.subtract(
 					loanTrxn.getInterestAmount()).negate(), finActionRounding,
-					getGLcode(finActionInterest.getApplicableCreditCOA()),
+					getGLcode(finActionInterest.getApplicableCreditCharts()),
 					FinancialConstants.DEBIT);
 
 			addAccountEntryDetails(roundedAmount.subtract(loanTrxn
 					.getInterestAmount()), finActionRounding,
-					getGLcode(finActionRounding.getApplicableCreditCOA()),
+					getGLcode(finActionRounding.getApplicableCreditCharts()),
 					FinancialConstants.CREDIT);
 		}
 

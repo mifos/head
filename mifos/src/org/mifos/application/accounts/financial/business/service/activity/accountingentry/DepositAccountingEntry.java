@@ -66,7 +66,7 @@ public class DepositAccountingEntry extends BaseAccountingEntry {
 
 		addAccountEntryDetails(savingsTrxn.getDepositAmount(),
 				finActionDeposit, getGLcode(finActionDeposit
-						.getApplicableDebitCOA()), FinancialConstants.DEBIT);
+						.getApplicableDebitCharts()), FinancialConstants.DEBIT);
 		addAccountEntryDetails(savingsTrxn.getDepositAmount(),
 				finActionDeposit, savings.getSavingsOffering()
 						.getDepositGLCode(), FinancialConstants.CREDIT);

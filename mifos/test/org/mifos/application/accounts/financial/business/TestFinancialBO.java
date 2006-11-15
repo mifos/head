@@ -23,7 +23,7 @@ public class TestFinancialBO extends MifosTestCase {
 				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
 		Set<COABO> applicableDebitCategory = finActionPrincipal
-				.getApplicableDebitCOA();
+				.getApplicableDebitCharts();
 
 		assertEquals(applicableDebitCategory.size(), 1);
 		Iterator<COABO> iterSubCategory = applicableDebitCategory.iterator();
@@ -43,7 +43,7 @@ public class TestFinancialBO extends MifosTestCase {
 				.getFinancialAction(FinancialActionConstants.PRINCIPALPOSTING);
 
 		Set<COABO> applicableCreditCategory = finActionPrincipal
-				.getApplicableCreditCOA();
+				.getApplicableCreditCharts();
 
 		assertEquals(applicableCreditCategory.size(),
 				TestConstants.FINANCIAL_PRINCIPALPOSTING_SIZE);
@@ -53,7 +53,7 @@ public class TestFinancialBO extends MifosTestCase {
 		FinancialActionBO finActionRounding = FinancialActionCache
 				.getFinancialAction(FinancialActionConstants.ROUNDING);
 		Set<COABO> applicableCreditCategory = finActionRounding
-				.getApplicableCreditCOA();
+				.getApplicableCreditCharts();
 		assertEquals(applicableCreditCategory.size(), 1);
 		for (COABO coa : applicableCreditCategory) {
 			assertEquals(coa.getCategoryId().shortValue(),

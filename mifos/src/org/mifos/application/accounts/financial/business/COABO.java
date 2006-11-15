@@ -44,6 +44,13 @@ import java.util.Set;
 
 import org.mifos.framework.business.BusinessObject;
 
+/**
+ * Chart of Accounts.
+ * 
+ * TODO: Rename this class to ChartOfAccountsBO (what else needs to change
+ * other than COABO.hbm.xml and the stuff which an Eclipse rename will
+ * find?).
+ */
 public class COABO extends BusinessObject {
 	private final Short categoryId;
 
@@ -90,7 +97,7 @@ public class COABO extends BusinessObject {
 			Iterator<COAHierarchyEntity> iter = subCategory.iterator();
 			while (iter.hasNext()) {
 				COAHierarchyEntity coaHierarchy = iter.next();
-				applicableCOA.addAll(coaHierarchy.getCoa().getAsscoicatedCOA());
+				applicableCOA.addAll(coaHierarchy.getCoa().getAssociatedChartOfAccounts());
 			}
 		}
 		return applicableCOA;
@@ -111,7 +118,7 @@ public class COABO extends BusinessObject {
 
 	}
 
-	public Set<COABO> getAsscoicatedCOA() {
+	public Set<COABO> getAssociatedChartOfAccounts() {
 		Set<COABO> applicableCOA = new HashSet<COABO>();
 		if (subCategory.size() == 0) {
 			applicableCOA.add(this);
@@ -123,10 +130,9 @@ public class COABO extends BusinessObject {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-
-		COABO coaIncomming = (COABO) obj;
-		if (coaIncomming.getCategoryId().shortValue() == this.categoryId
+	public boolean equals(Object otherObject) {
+		COABO other = (COABO) otherObject;
+		if (other.getCategoryId().shortValue() == this.categoryId
 				.shortValue())
 			return true;
 		return false;

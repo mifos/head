@@ -21,12 +21,12 @@ public class CustomerPenaltyAdjustmentAccountingEntry extends
 		
 		addAccountEntryDetails(removeSign(customertrxn.getMiscPenaltyAmount()),
 				finActionMiscPenalty, getGLcode(finActionMiscPenalty
-						.getApplicableDebitCOA()), FinancialConstants.CREDIT);
+						.getApplicableDebitCharts()), FinancialConstants.CREDIT);
 		
 		
 		addAccountEntryDetails(removeSign(customertrxn.getMiscPenaltyAmount()),
 				finActionMiscPenalty, getGLcode(finActionMiscPenalty
-						.getApplicableCreditCOA()), FinancialConstants.DEBIT);
+						.getApplicableCreditCharts()), FinancialConstants.DEBIT);
 
 	}
 	private Money removeSign(Money amount){

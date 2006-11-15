@@ -41,24 +41,23 @@ package org.mifos.application.accounts.financial.business;
 import java.util.Set;
 
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
-import org.mifos.application.accounts.financial.util.helpers.COACache;
+import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialRules;
 import org.mifos.application.master.business.MasterDataEntity;
 
 public class FinancialActionBO extends MasterDataEntity {
 
 
-	public Set<COABO> getApplicableDebitCOA() throws FinancialException {
-		COABO coaAccount = COACache.getCOA(FinancialRules
+	public Set<COABO> getApplicableDebitCharts() throws FinancialException {
+		COABO chart = ChartOfAccountsCache.get(FinancialRules
 				.getCategoryAssociatedToAction(getId(), "debit"));
-		return coaAccount.getAsscoicatedCOA();
-
+		return chart.getAssociatedChartOfAccounts();
 	}
 
-	public Set<COABO> getApplicableCreditCOA() throws FinancialException {
-		COABO coaAccount = COACache.getCOA(FinancialRules
+	public Set<COABO> getApplicableCreditCharts() throws FinancialException {
+		COABO chart = ChartOfAccountsCache.get(FinancialRules
 				.getCategoryAssociatedToAction(getId(), "credit"));
-		return coaAccount.getAsscoicatedCOA();
-
+		return chart.getAssociatedChartOfAccounts();
 	}
+
 }

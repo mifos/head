@@ -9,12 +9,21 @@
 		</id>
 
 		<property name="categoryName" column="COA_NAME" access="field" />
-		<many-to-one name="associatedGlcode" column="GLCODE_ID" class="org.mifos.application.accounts.financial.business.GLCodeEntity" outer-join="true" cascade="none" update="false" insert="false" unique="true" access="field" />
-		<many-to-one name="coaHierarchy" column="COA_ID" class="org.mifos.application.accounts.financial.business.COAHierarchyEntity" lazy="false" cascade="none" update="false" insert="false" unique="true" access="field" />
-		<set name="subCategory" cascade="none" inverse="true" table="COAHIERARCHY" lazy="false" outer-join="true" access="field">
+		<many-to-one name="associatedGlcode" column="GLCODE_ID" 
+		    class="org.mifos.application.accounts.financial.business.GLCodeEntity" 
+		    outer-join="true" cascade="none" update="false" insert="false" 
+		    unique="true" access="field" />
+		<many-to-one name="coaHierarchy" column="COA_ID" 
+		    class="org.mifos.application.accounts.financial.business.COAHierarchyEntity" 
+		    lazy="false" cascade="none" update="false" insert="false" 
+		    unique="true" access="field" />
+		<set name="subCategory" cascade="none" inverse="true" 
+		    table="COAHIERARCHY" lazy="false" outer-join="true" access="field">
 			<key column="PARENT_COAID" />
 
-			<many-to-many class="org.mifos.application.accounts.financial.business.COAHierarchyEntity" column="COA_ID" outer-join="true" />
+			<many-to-many 
+			    class="org.mifos.application.accounts.financial.business.COAHierarchyEntity" 
+			    column="COA_ID" outer-join="true" />
 		</set>
 
 	</class>

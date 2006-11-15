@@ -82,7 +82,7 @@ public class FinancialInitializer {
 			List<COAIDMapperEntity> listIdMapper = queryCOAIDMapper.list();
 			Iterator<COAIDMapperEntity> iterIdMapper = listIdMapper.iterator();
 			while (iterIdMapper.hasNext()) {
-				COACache.addToCache(hibernateInitalize(iterIdMapper.next()));
+				ChartOfAccountsCache.add(hibernateInitalize(iterIdMapper.next()));
 			}
 		} catch (Exception e) {
 			throw new FinancialException(
