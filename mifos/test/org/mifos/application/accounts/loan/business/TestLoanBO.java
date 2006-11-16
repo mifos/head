@@ -55,6 +55,7 @@ import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.master.business.CollateralTypeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -275,6 +276,11 @@ public class TestLoanBO extends MifosTestCase {
 			AccountActionDateEntity accountActionDateEntity, Short paymentStatus) {
 		((LoanScheduleEntity) accountActionDateEntity)
 				.setPaymentStatus(paymentStatus);
+	}
+	
+	public static void setDisbursementDate(
+			AccountBO account,Date disbursementDate) {
+		((LoanBO)account).setDisbursementDate(disbursementDate);
 	}
 	
 	public void testAddLoanDetailsForDisbursal() {
@@ -2083,7 +2089,10 @@ public class TestLoanBO extends MifosTestCase {
 				.getDetailsOfNextInstallment();
 		MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting()
 				.getMeeting();
-		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
+		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
+				(WeekDaysEntity) new MasterPersistence()
+						.retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
+								WeekDaysEntity.class, null));
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()
 						.getTime()));

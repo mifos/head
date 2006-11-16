@@ -60,7 +60,10 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -374,7 +377,10 @@ public class TestAccountBO extends TestAccount {
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
-		meeting.getMeetingDetails().setRecurAfter(Short.valueOf("2"));
+		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
+				(WeekDaysEntity) new MasterPersistence()
+						.retrieveMasterEntity(WeekDay.THURSDAY.getValue(),
+								WeekDaysEntity.class, null));
 		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
 		TestObjectFactory.updateObject(center);

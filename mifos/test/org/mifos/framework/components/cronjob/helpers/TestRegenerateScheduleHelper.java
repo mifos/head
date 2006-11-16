@@ -2,6 +2,7 @@ package org.mifos.framework.components.cronjob.helpers;
 
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -10,15 +11,20 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.TestCustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -102,10 +108,12 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		CenterBO center1 = TestObjectFactory.createCenter(
 				"Center_Active_test1", meeting);
-		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
+		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center1);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -114,7 +122,8 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				CustomerStatus.CLIENT_CANCELLED, group1);
 		center.getCustomerMeeting().getMeeting().getMeetingDetails()
 				.setRecurAfter(Short.valueOf("2"));
-		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),YesNoFlag.YES.getValue());
+		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),
+				YesNoFlag.YES.getValue());
 
 		List<java.util.Date> meetingDates = center.getCustomerMeeting()
 				.getMeeting().getAllDates((short) 10);
@@ -187,9 +196,17 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
 
-		center.getCustomerMeeting().getMeeting().getMeetingDetails()
-				.setRecurAfter(Short.valueOf("2"));
-		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),YesNoFlag.YES.getValue());
+		center
+				.getCustomerMeeting()
+				.getMeeting()
+				.getMeetingDetails()
+				.getMeetingRecurrence()
+				.setWeekDay(
+						(WeekDaysEntity) new MasterPersistence()
+								.retrieveMasterEntity(WeekDay.THURSDAY
+										.getValue(), WeekDaysEntity.class, null));
+		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),
+				YesNoFlag.YES.getValue());
 
 		AccountActionDateEntity accountActionDateEntity = center
 				.getCustomerAccount().getDetailsOfNextInstallment();
@@ -198,6 +215,107 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 						.getActionDate().getTime()));
 
 		TestObjectFactory.updateObject(center);
+		TestObjectFactory.flushandCloseSession();
+		regenerateScheduleHelper.execute(System.currentTimeMillis());
+
+		TestObjectFactory.flushandCloseSession();
+		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				center.getCustomerId());
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+		List<java.util.Date> meetingDates = null;
+		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
+				DateUtils.getCalendarDate(accountActionDateEntity
+						.getActionDate().getTime()));
+		for (AccountBO account : center.getAccounts()) {
+			meetingDates = center.getCustomerMeeting().getMeeting()
+					.getAllDates((short) 10);
+			meetingDates.remove(0);
+			for (AccountActionDateEntity actionDateEntity : account
+					.getAccountActionDates()) {
+				if (actionDateEntity.getInstallmentId().equals(
+						Short.valueOf("2")))
+					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
+							.get(0).getTime()), DateUtils
+							.getDateWithoutTimeStamp(actionDateEntity
+									.getActionDate().getTime()));
+				else if (actionDateEntity.getInstallmentId().equals(
+						Short.valueOf("3")))
+					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
+							.get(1).getTime()), DateUtils
+							.getDateWithoutTimeStamp(actionDateEntity
+									.getActionDate().getTime()));
+			}
+		}
+		for (AccountBO account : group.getAccounts()) {
+			for (AccountActionDateEntity actionDateEntity : account
+					.getAccountActionDates()) {
+				if (actionDateEntity.getInstallmentId().equals(
+						Short.valueOf("2")))
+					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
+							.get(0).getTime()), DateUtils
+							.getDateWithoutTimeStamp(actionDateEntity
+									.getActionDate().getTime()));
+				else if (actionDateEntity.getInstallmentId().equals(
+						Short.valueOf("3")))
+					assertEquals(DateUtils.getDateWithoutTimeStamp(meetingDates
+							.get(1).getTime()), DateUtils
+							.getDateWithoutTimeStamp(actionDateEntity
+									.getActionDate().getTime()));
+			}
+		}
+		assertEquals(YesNoFlag.NO.getValue(), center.getCustomerMeeting()
+				.getUpdatedFlag());
+
+		TestObjectFactory.flushandCloseSession();
+		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				center.getCustomerId());
+		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+				group.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
+				AccountBO.class, accountBO.getAccountId());
+	}
+
+	public void testExecuteWithLoanAccountWithPastInstallmentsdPaid()
+			throws Exception {
+		accountBO = getLoanAccount();
+		TestObjectFactory.flushandCloseSession();
+		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
+				center.getCustomerId());
+		group = (CustomerBO) TestObjectFactory.getObject(GroupBO.class, group
+				.getCustomerId());
+		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
+				accountBO.getAccountId());
+		TestLoanBO.setDisbursementDate(accountBO, offSetCurrentDate(21));
+		TestLoanBO.setPaymentStatus(accountBO.getAccountActionDate((short) 1),
+				PaymentStatus.PAID.getValue());
+		TestLoanBO.setPaymentStatus(accountBO.getAccountActionDate((short) 2),
+				PaymentStatus.PAID.getValue());
+		TestLoanBO.setPaymentStatus(accountBO.getAccountActionDate((short) 3),
+				PaymentStatus.PAID.getValue());
+
+		center
+				.getCustomerMeeting()
+				.getMeeting()
+				.getMeetingDetails()
+				.getMeetingRecurrence()
+				.setWeekDay(
+						(WeekDaysEntity) new MasterPersistence()
+								.retrieveMasterEntity(WeekDay.THURSDAY
+										.getValue(), WeekDaysEntity.class, null));
+		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),
+				YesNoFlag.YES.getValue());
+
+		AccountActionDateEntity accountActionDateEntity = center
+				.getCustomerAccount().getDetailsOfNextInstallment();
+		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
+				DateUtils.getCalendarDate(accountActionDateEntity
+						.getActionDate().getTime()));
+
+		TestObjectFactory.updateObject(center);
+		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 		regenerateScheduleHelper.execute(System.currentTimeMillis());
 
@@ -277,7 +395,8 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 
 		center.getCustomerMeeting().getMeeting().getMeetingDetails()
 				.setRecurAfter(Short.valueOf("1"));
-		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),YesNoFlag.YES.getValue());
+		TestCustomerBO.setUpdatedFlag(center.getCustomerMeeting(),
+				YesNoFlag.YES.getValue());
 
 		Calendar meetingStartDate = center.getCustomerMeeting().getMeeting()
 				.getMeetingStartDate();
@@ -403,7 +522,8 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				new Short("1"));
 		TestObjectFactory.createMeeting(meeting);
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		client2 = TestObjectFactory.createClient("client2",
@@ -428,9 +548,10 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 
 	private AccountBO getLoanAccount() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingHelper(1, 2, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		loanOfferingBO = TestObjectFactory.createLoanOffering("Loan", Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short
 				.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
@@ -439,5 +560,14 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOfferingBO);
+	}
+
+	private java.sql.Date offSetCurrentDate(int noOfDays) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
+		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
 	}
 }
