@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -166,6 +167,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -364,13 +366,27 @@ public class TestObjectFactory {
 					clientDetailView, null);
 			client.save();
 			HibernateUtil.commitTransaction();
-		} catch (Exception e) {
-			/** TODO: Why are we getting org.hibernate.NonUniqueObjectException
-			    for example in 
-			    {@link TestSavingsBO#testGenerateAndUpdateDepositActionsForClient()}
-			     ? */
-			//throw new RuntimeException(e);
-			e.printStackTrace();
+		} catch (CustomerException customerException) {
+			if (customerException.getCause() instanceof PersistenceException) {
+				PersistenceException persistenceException = 
+					(PersistenceException) customerException.getCause();
+				if (persistenceException.getCause() 
+						instanceof NonUniqueObjectException) {
+					/** TODO: Why are we getting this
+				    for example in 
+				    {@link TestSavingsBO#testGenerateAndUpdateDepositActionsForClient()}
+				     ? */
+					customerException.printStackTrace();
+				}
+				else {
+					throw new RuntimeException(customerException);
+				}
+			}
+			else {
+				throw new RuntimeException(customerException);
+			}
+		} catch (ApplicationException e) {
+			throw new RuntimeException(e);
 		}
 		addObject(client);
 		return client;
@@ -882,6 +898,7 @@ public class TestObjectFactory {
 					.toString(recurAfter), new Integer(meetingTypeId)
 					.shortValue());
 		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 		return meeting;
 	}

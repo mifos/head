@@ -62,22 +62,30 @@ public class ClientPersistence extends Persistence {
 		return (ClientBO) getPersistentObject(ClientBO.class,customerId);
 	}
 	
-	public boolean checkForDuplicacyOnGovtId(String governmentId , Integer customerId) throws PersistenceException {
+	public boolean checkForDuplicacyOnGovtId(
+			String governmentId, Integer customerId) 
+	throws PersistenceException {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("LEVEL_ID", CustomerConstants.CLIENT_LEVEL_ID);
 			queryParameters.put("GOVT_ID",governmentId);
 			queryParameters.put("customerId", customerId);
-			List queryResult = executeNamedQuery(NamedQueryConstants.GET_CLIENT_BASEDON_GOVTID, queryParameters);
+			List queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_CLIENT_BASEDON_GOVTID, 
+					queryParameters);
 			return ((Integer)queryResult.get(0)).intValue()>0;
 	}
 	
-	public boolean checkForDuplicacyOnName(String name, Date dob, Integer customerId) throws PersistenceException {
+	public boolean checkForDuplicacyOnName(
+			String name, Date dob, Integer customerId) 
+	throws PersistenceException {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("clientName",name);
 			queryParameters.put("LEVELID", CustomerConstants.CLIENT_LEVEL_ID);
 			queryParameters.put("DATE_OFBIRTH", dob);
 			queryParameters.put("customerId", customerId);
-			List queryResult = executeNamedQuery(NamedQueryConstants.GET_CLIENT_BASEDON_NAME_DOB, queryParameters);
+			List queryResult = executeNamedQuery(
+					NamedQueryConstants.GET_CLIENT_BASEDON_NAME_DOB, 
+					queryParameters);
 			return ((Integer)queryResult.get(0)).intValue()>0;
 			
 	}
@@ -91,9 +99,13 @@ public class ClientPersistence extends Persistence {
 		}
 	}
 	
-	public List<SavingsOfferingBO> retrieveOfferingsApplicableToClient()throws PersistenceException{
+	public List<SavingsOfferingBO> retrieveOfferingsApplicableToClient()
+	throws PersistenceException{
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("prdApplicableTo",PrdApplicableMaster.CLIENTS.getValue());
-		return (List<SavingsOfferingBO>)executeNamedQuery(NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, queryParameters);
+		queryParameters.put("prdApplicableTo",
+				PrdApplicableMaster.CLIENTS.getValue());
+		return executeNamedQuery(
+				NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, 
+				queryParameters);
 	}	
 }

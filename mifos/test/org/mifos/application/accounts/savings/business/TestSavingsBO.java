@@ -108,12 +108,20 @@ public class TestSavingsBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(client1);
-		TestObjectFactory.cleanUp(client2);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		try {
+			TestObjectFactory.cleanUp(savings);
+			TestObjectFactory.cleanUp(client1);
+			TestObjectFactory.cleanUp(client2);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			HibernateUtil.closeSession();
+		}
+		catch (Exception e) {
+			/* Throwing from a finally block, which tearDown is called from,
+			   will often just confuse matters.
+			 */
+			e.printStackTrace();
+		}
 		super.tearDown();
 	}
 
@@ -4058,7 +4066,6 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testGenerateMeetingForNextYear() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		Date startDate = new Date(System.currentTimeMillis());
 
 		center = TestObjectFactory.createCenter("center1", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
