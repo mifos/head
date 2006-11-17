@@ -229,10 +229,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
 				DateUtils.getCalendarDate(accountActionDateEntity
 						.getActionDate().getTime()));
-		for (AccountBO account : center.getAccounts()) {
-			meetingDates = center.getCustomerMeeting().getMeeting()
-					.getAllDates((short) 10);
+		meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(
+				(short) 10);
+		Calendar calendar = new GregorianCalendar();
+		int dayOfWeek = calendar.get(calendar.DAY_OF_WEEK);
+		if (dayOfWeek == 5)
 			meetingDates.remove(0);
+		for (AccountBO account : center.getAccounts()) {
 			for (AccountActionDateEntity actionDateEntity : account
 					.getAccountActionDates()) {
 				if (actionDateEntity.getInstallmentId().equals(
@@ -330,10 +333,13 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		center.getCustomerMeeting().getMeeting().setMeetingStartDate(
 				DateUtils.getCalendarDate(accountActionDateEntity
 						.getActionDate().getTime()));
-		for (AccountBO account : center.getAccounts()) {
-			meetingDates = center.getCustomerMeeting().getMeeting()
-					.getAllDates((short) 10);
+		meetingDates = center.getCustomerMeeting().getMeeting().getAllDates(
+				(short) 10);
+		Calendar calendar = new GregorianCalendar();
+		int dayOfWeek = calendar.get(calendar.DAY_OF_WEEK);
+		if (dayOfWeek == 5)
 			meetingDates.remove(0);
+		for (AccountBO account : center.getAccounts()) {
 			for (AccountActionDateEntity actionDateEntity : account
 					.getAccountActionDates()) {
 				if (actionDateEntity.getInstallmentId().equals(

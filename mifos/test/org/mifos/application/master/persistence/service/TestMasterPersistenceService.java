@@ -36,7 +36,7 @@ public class TestMasterPersistenceService extends MifosTestCase {
 	
 	public void testRetrievePaymentTypes()throws Exception{
 		List<PaymentTypeEntity> paymentTypeList = masterPersistenceService.retrievePaymentTypes(Short.valueOf("1"));
-		assertEquals(TestConstants.PAYMENTTYPES_NUMBER,paymentTypeList.size());
+		assertEquals(3,paymentTypeList.size());
 	}
 	
 	public void testGetSupportedPaymentModes()throws Exception{

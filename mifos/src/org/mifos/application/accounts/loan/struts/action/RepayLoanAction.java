@@ -18,6 +18,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -72,7 +73,8 @@ public class RepayLoanAction extends BaseAction {
 						.round(loanBO.getTotalEarlyRepayAmount()), request
 						);
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
-				masterDataService.retrievePaymentTypes(uc.getLocaleId()),
+				masterDataService.getSupportedPaymentModes(uc.getLocaleId(),
+						TrxnTypes.loan_repayment.getValue()),
 				request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,loanBO,request);
 		return mapping.findForward(Constants.LOAD_SUCCESS);

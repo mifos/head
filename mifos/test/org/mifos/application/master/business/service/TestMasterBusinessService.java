@@ -190,7 +190,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 	public void testRetrievePaymentTypes() throws Exception {
 		List<PaymentTypeEntity> paymentTypeList = masterService
 				.retrievePaymentTypes(Short.valueOf("1"));
-		assertEquals(TestConstants.PAYMENTTYPES_NUMBER, paymentTypeList.size());
+		assertEquals(3, paymentTypeList.size());
 	}
 
 	public void testRetrievePaymentTypesForInvalidConnection() throws Exception {

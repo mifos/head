@@ -64,8 +64,8 @@ public class LoanDisbursmentAction extends BaseAction {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
 				getMasterDataService().getSupportedPaymentModes(
-						uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
-				request);
+						uc.getLocaleId(),
+						TrxnTypes.loan_disbursement.getValue()), request);
 		loanDisbursmentActionForm.setAmount(loan
 				.getAmountTobePaidAtdisburtail(currentDate));
 		loanDisbursmentActionForm.setLoanAmount(loan.getLoanAmount());

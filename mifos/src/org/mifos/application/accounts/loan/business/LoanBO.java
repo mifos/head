@@ -1651,8 +1651,8 @@ public class LoanBO extends AccountBO {
 
 			addAccountActionDate(loanScheduleEntity);
 			for (FeeInstallment feeInstallment : feeInstallmentList) {
-				if (feeInstallment.getInstallmentId() == installmentDate
-						.getInstallmentId()
+				if (feeInstallment.getInstallmentId().shortValue() == installmentDate
+						.getInstallmentId().shortValue()
 						&& !feeInstallment.getAccountFeesEntity().getFees()
 								.isTimeOfDisbursement()) {
 					LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity(

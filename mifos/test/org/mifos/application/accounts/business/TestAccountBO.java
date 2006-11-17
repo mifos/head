@@ -386,6 +386,7 @@ public class TestAccountBO extends TestAccount {
 		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
 		TestObjectFactory.updateObject(center);
+		
 		center.getCustomerAccount().handleChangeInMeetingSchedule();
 		accountBO.handleChangeInMeetingSchedule();
 		HibernateUtil.getTransaction().commit();
@@ -394,29 +395,33 @@ public class TestAccountBO extends TestAccount {
 				.getCustomerId());
 		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
+		Calendar calendar = new GregorianCalendar();
+		int dayOfWeek = calendar.get(calendar.DAY_OF_WEEK);
+		if (dayOfWeek == 5)
+			meetingDates.remove(0);
 		for (AccountActionDateEntity actionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
 			else if (actionDateEntity.getInstallmentId().equals(
 					Short.valueOf("3")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
 		}
 		for (AccountActionDateEntity actionDateEntity : accountBO
 				.getAccountActionDates()) {
 			if (actionDateEntity.getInstallmentId().equals(Short.valueOf("2")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(0).getTime()));
 			else if (actionDateEntity.getInstallmentId().equals(
 					Short.valueOf("3")))
 				assertEquals(DateUtils.getDateWithoutTimeStamp(actionDateEntity
 						.getActionDate().getTime()), DateUtils
-						.getDateWithoutTimeStamp(meetingDates.get(2).getTime()));
+						.getDateWithoutTimeStamp(meetingDates.get(1).getTime()));
 		}
 
 	}

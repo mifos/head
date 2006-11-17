@@ -2098,7 +2098,10 @@ public class TestLoanBO extends MifosTestCase {
 						.getTime()));
 		List<java.util.Date> meetingDates = meeting.getAllDates(accountBO
 				.getApplicableIdsForFutureInstallments().size() + 1);
-		meetingDates.remove(0);
+		Calendar calendar = new GregorianCalendar();
+		int dayOfWeek = calendar.get(calendar.DAY_OF_WEEK);
+		if (dayOfWeek == 5)
+			meetingDates.remove(0);
 		((LoanBO) accountBO)
 				.regenerateFutureInstallments((short) (accountActionDateEntity
 						.getInstallmentId().intValue() + 1));

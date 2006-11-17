@@ -62,6 +62,7 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -130,8 +131,8 @@ public class SavingsClosureAction extends BaseAction {
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
-				masterDataService.retrievePaymentTypes(uc.getLocaleId()),
-				request);
+				masterDataService.getSupportedPaymentModes(uc.getLocaleId(),
+						TrxnTypes.savings_withdrawal.getValue()), request);
 		// client list will be loaded only if it is center savings account,
 		// or group savings account with deposit schedule of per client
 
