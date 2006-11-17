@@ -63,6 +63,8 @@ import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -523,6 +525,36 @@ public class TestAccountBO extends TestAccount {
 				.getCustomerId());
 		assertEquals(1, ((LoanBO) accountBO).getPerformanceHistory().getNoOfPayments().intValue());
 
+	}
+	
+	public void testAccountBOClosedDate() {
+		AccountBO account = new AccountBO();
+		java.util.Date originalDate = new java.util.Date();
+		final long TEN_SECONDS = 10000;
+		
+		// verify that after the setter is called, changes to the object
+		// passed to the setter do not affect the internal state
+		java.util.Date mutatingDate1 = (java.util.Date)originalDate.clone();
+		account.setClosedDate(mutatingDate1);
+		mutatingDate1.setTime(System.currentTimeMillis()+ TEN_SECONDS);
+		assertEquals(account.getClosedDate(), originalDate);
+		
+		// verify that after the getter is called, changes to the object
+		// returned by the getter do not affect the internal state
+		java.util.Date originalDate2 = (java.util.Date)originalDate.clone();
+		account.setClosedDate(originalDate2);
+		java.util.Date mutatingDate2 = account.getClosedDate();
+		mutatingDate2.setTime(System.currentTimeMillis() + TEN_SECONDS);		
+		assertEquals(account.getClosedDate(), originalDate);			
+	}
+	
+	public void testGetInstalmentDates() throws Exception {
+		AccountBO account = new AccountBO();
+		MeetingBO meeting = new MeetingBO(RecurrenceType.DAILY, (short)1, 
+			getDate("18/08/2005"), MeetingType.CUSTOMERMEETING);
+		/* make sure we can handle case where the number of
+		   installments is zero */
+		account.getInstallmentDates(meeting, (short)0, (short)0);		
 	}
 	
 	public static void addToAccountStatusChangeHistory(LoanBO loan,

@@ -217,7 +217,7 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public Date getClosedDate() {
-		return closedDate;
+		return (Date) ((closedDate == null) ? null : closedDate.clone());
 	}
 
 	protected void setGlobalAccountNum(String globalAccountNum) {
@@ -233,7 +233,7 @@ public class AccountBO extends BusinessObject {
 	}
 
 	protected void setClosedDate(Date closedDate) {
-		this.closedDate = closedDate;
+		this.closedDate = (Date) ((closedDate == null) ? null : closedDate.clone());
 	}
 
 	protected void addAccountStatusChangeHistory(
@@ -828,21 +828,27 @@ public class AccountBO extends BusinessObject {
 			throws AccountException {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"Generating intallment dates");
-		List<Date> dueDates = null;
+		List<Date> dueDates;
 		try {
-			if (!noOfInstallments.equals(Short.valueOf("0")))
+			if (!noOfInstallments.equals(Short.valueOf("0"))) {
 				dueDates = meeting.getAllDates(noOfInstallments
 						+ installmentToSkip);
+			}
+			else {
+				dueDates = null;
+			}
 		} catch (MeetingException e) {
 			throw new AccountException(e);
 		}
 		int installmentId = 1;
 		List<InstallmentDate> installmentDates = new ArrayList<InstallmentDate>();
-		for (Date date : dueDates)
-			installmentDates.add(new InstallmentDate(new Short(Integer
-					.toString(installmentId++)), date));
-
-		removeInstallmentsNeedNotPay(installmentToSkip, installmentDates);
+		if (dueDates != null) {
+			for (Date date : dueDates) {
+				installmentDates.add(new InstallmentDate(new Short(Integer
+						.toString(installmentId++)), date));
+			}
+			removeInstallmentsNeedNotPay(installmentToSkip, installmentDates);
+		}
 		return installmentDates;
 	}
 
