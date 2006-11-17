@@ -16,8 +16,6 @@ public class CacheTest extends MifosTestCase {
 
 	private QueryResultDTOImpl queryResult = null;
 
-	private Query query = null;
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

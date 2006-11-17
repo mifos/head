@@ -196,24 +196,32 @@ public class CollSheetCustBO extends BusinessObject {
 	}
 	
 	/**
-	 * If the collSheetCustId is not null it compares for equality based on it else it checks for collectionSheet not being
-	 * null in which case it returns true if both custId and collectionSheet.collSheetDate is equal to the corresponding 
+	 * If the collSheetCustId is not null it compares for equality 
+	 * based on it else it checks for collectionSheet not being
+	 * null in which case it returns true if both custId and 
+	 * collectionSheet.collSheetDate is equal to the corresponding 
 	 * properties of the passed object else it calls super.equals();
 	 * @param obj - Object to be compared for equality.
-	 * @return - Returns true if the objects are equal else returns false.
 	 */
+	@Override
 	public boolean equals(Object obj){
 		CollSheetCustBO collectionSheetCustomerObj = (CollSheetCustBO)obj;
-		if(null != collSheetCustId && null != collectionSheetCustomerObj.getCollSheetCustId()){
-			return collSheetCustId.equals(collectionSheetCustomerObj.getCollSheetCustId());
-		}else if(null != this.collectionSheet && null != collectionSheetCustomerObj.getCollectionSheet()){
-			return this.custId.equals(collectionSheetCustomerObj.getCustId()) && this.collectionSheet.getCollSheetDate().equals(collectionSheetCustomerObj.getCollectionSheet().getCollSheetDate()); 
-		}else{
+		if (null != collSheetCustId && 
+			null != collectionSheetCustomerObj.getCollSheetCustId()){
+			return collSheetCustId.equals(
+				collectionSheetCustomerObj.getCollSheetCustId());
+		} else if (null != this.collectionSheet && 
+			null != collectionSheetCustomerObj.getCollectionSheet()) {
+			return this.custId.equals(collectionSheetCustomerObj.getCustId()) && 
+			this.collectionSheet.getCollSheetDate().equals(
+				collectionSheetCustomerObj.getCollectionSheet().getCollSheetDate()); 
+		} else {
 			return super.equals(collectionSheetCustomerObj);
 		}
 		
 	}
 	
+	@Override
 	public int hashCode(){
 		return this.custId.hashCode();
 	}
@@ -228,14 +236,11 @@ public class CollSheetCustBO extends BusinessObject {
 		this.custDisplayName = customer.getDisplayName();
 		this.searchId = customer.getSearchId();
 		CustomerBO parentCustomer = customer.getParentCustomer();
-		if(null != parentCustomer){
+		if (null != parentCustomer) {
 			this.parentCustomerId = parentCustomer.getCustomerId();
 		}
 		this.loanOfficerId = customer.getPersonnel().getPersonnelId();
 		this.custOfficeId = customer.getOffice().getOfficeId();
-		
-		
-		
 	}
 	
 	
@@ -249,7 +254,8 @@ public class CollSheetCustBO extends BusinessObject {
 	}
 	
 	
-	public void populateAccountDetails(AccountActionDateEntity accountActionDateEntity) {
+	public void populateAccountDetails(
+			AccountActionDateEntity accountActionDateEntity) {
 		if(accountActionDateEntity instanceof CustomerScheduleEntity) {
 			CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity)accountActionDateEntity;
 			this.custAccntId = accountActionDate.getAccount().getAccountId();
@@ -263,23 +269,35 @@ public class CollSheetCustBO extends BusinessObject {
 	}
 	
 	/**
-	 * This method adds the passed collectionSheetLoanDetail object to the collectionSheetLoanDetailSet.
-	 * It also sets the bidirectional relationship.If the set is null it instantates a new HashSet.
+	 * This method adds the passed collectionSheetLoanDetail object to 
+	 * the collectionSheetLoanDetailSet.
+	 * It also sets the bidirectional relationship.  If the set is null 
+	 * it instantates a new HashSet.
 	 */
-	public void addCollectionSheetLoanDetail(CollSheetLnDetailsEntity collectionSheetLoanDetail) {
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("inside add collection sheet loan detail method");
+	public void addCollectionSheetLoanDetail(
+			CollSheetLnDetailsEntity collectionSheetLoanDetail) {
+		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
+			.debug("inside add collection sheet loan detail method");
 		collectionSheetLoanDetail.setCollectionSheetCustomer(this);
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("after setting the collection sheet customer relation ship");
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("Total Amnt due to be disbursed is" + collectionSheetLoanDetail.getAmntToBeDisbursed());
-		this.collectiveLoanAmntDue = new Money().add(collectiveLoanAmntDue).add(collectionSheetLoanDetail.getTotalAmntDue());
-		this.collectiveLoanDisbursal = new Money().add(collectiveLoanDisbursal).add(collectionSheetLoanDetail.getAmntToBeDisbursed()) ;
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("after updating the totals");
+		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
+			.debug("after setting the collection sheet customer relation ship");
+		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
+			.debug("Total Amnt due to be disbursed is" + 
+				collectionSheetLoanDetail.getAmntToBeDisbursed());
+		this.collectiveLoanAmntDue = new Money()
+			.add(collectiveLoanAmntDue)
+			.add(collectionSheetLoanDetail.getTotalAmntDue());
+		this.collectiveLoanDisbursal = new Money()
+			.add(collectiveLoanDisbursal)
+			.add(collectionSheetLoanDetail.getAmntToBeDisbursed()) ;
+		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
+			.debug("after updating the totals");
 		if(null == collectionSheetLoanDetails){
 			collectionSheetLoanDetails  = new HashSet<CollSheetLnDetailsEntity>();
 		}
 		this.collectionSheetLoanDetails.add(collectionSheetLoanDetail);
-		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug("after adding loan details object to the set");
-		
+		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
+			.debug("after adding loan details object to the set");
 	}
 	
 	

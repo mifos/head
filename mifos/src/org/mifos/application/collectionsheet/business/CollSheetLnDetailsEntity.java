@@ -76,8 +76,6 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 
 	private Money penaltyDue;
 
-	private Money totalScheduledAmntDue;
-
 	private Money principalOverDue;
 
 	private Money interestOverDue;
@@ -85,10 +83,6 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 	private Money feesOverDue;
 
 	private Money penaltyOverDue;
-
-	private Money totalAmntOverDue;
-
-	private Money totalAmntDue;
 
 	private Money amntToBeDisbursed;
 
@@ -223,23 +217,36 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 		this.principalOverDue = principalOverDue;
 	}
 
+	/**
+	 * We store this in the database.  Not sure whether this is intentional
+	 * (e.g. to ease reporting) or as a historical artifact.
+	 */
 	public Money getTotalAmntDue() {
-
 		return getTotalScheduledAmntDue().add(getTotalAmntOverDue());
 	}
 
+	/**
+	 * When reading from the database, we ignore this in favor of the
+	 * individual fields.
+	 */
 	public void setTotalAmntDue(Money totalAmntDue) {
-		this.totalAmntDue = totalAmntDue;
 	}
 
+	/**
+	 * We store this in the database.  Not sure whether this is intentional
+	 * (e.g. to ease reporting) or as a historical artifact.
+	 */
 	public Money getTotalAmntOverDue() {
 		return new Money("0").add(getPrincipalOverDue()).add(
 				getInterestOverDue()).add(getFeesOverDue()).add(
 				getPenaltyOverDue());
 	}
 
+	/**
+	 * When reading from the database, we ignore this in favor of the
+	 * individual fields.
+	 */
 	public void setTotalAmntOverDue(Money totalAmntOverDue) {
-		this.totalAmntOverDue = totalAmntOverDue;
 	}
 
 	public Short getTotalNoOfInstallments() {
@@ -251,7 +258,6 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 	}
 
 	public Money getTotalPrincipalDue() {
-
 		return this.totalPrincipalDue;
 	}
 
@@ -259,15 +265,20 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 		this.totalPrincipalDue = totalPrincipalDue;
 	}
 
+	/**
+	 * We store this in the database.  Not sure whether this is intentional
+	 * (e.g. to ease reporting) or as a historical artifact.
+	 */
 	public Money getTotalScheduledAmntDue() {
-
 		return new Money().add(getPrincipalDue()).add(getInterestDue()).add(
 				getFeesDue()).add(getPenaltyDue());
-
 	}
 
+	/**
+	 * When reading from the database, we ignore this in favor of the
+	 * individual fields.
+	 */
 	public void setTotalScheduledAmntDue(Money totalScheduledAmntDue) {
-		this.totalScheduledAmntDue = totalScheduledAmntDue;
 	}
 
 	/**

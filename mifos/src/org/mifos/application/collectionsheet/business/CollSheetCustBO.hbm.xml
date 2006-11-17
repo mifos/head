@@ -56,7 +56,8 @@
 		<property name="parentCustomerId" column="PARENT_CUSTOMER_ID" type="integer"/>
 		<property name="loanOfficerId" column="LOAN_OFFICER_ID" type="short"/>
 		<many-to-one name="collectionSheet" column="COLL_SHEET_ID" class="org.mifos.application.collectionsheet.business.CollectionSheetBO" unique="true" />
-		<set name="collectionSheetLoanDetails"   cascade="all"  table="COLL_SHEET_LOAN_DETAILS" inverse="true">
+		<set name="collectionSheetLoanDetails" cascade="all"
+			table="COLL_SHEET_LOAN_DETAILS" inverse="true">
 			<key column="COLL_SHEET_CUST_ID"  />
 			<one-to-many class="org.mifos.application.collectionsheet.business.CollSheetLnDetailsEntity" />
 		</set>

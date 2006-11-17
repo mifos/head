@@ -1,20 +1,12 @@
 package org.mifos.framework.business;
 
 import java.util.Date;
-import java.util.List;
 
-import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
 import org.mifos.framework.security.util.UserContext;
 
 public abstract class BusinessObject extends PersistentObject {
 
 	protected UserContext userContext;
-
-	private FieldConfigItf fieldConfig = FieldConfigImplementer.getInstance();
-
-	List<FieldConfigurationEntity> fieldList;
 
 	public BusinessObject() {
 		this.userContext = null;
