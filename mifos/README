@@ -244,7 +244,7 @@ ant clean copy_files compile war
        $JBOSS_HOME/bin/run.sh -c mifos
 
    or, on Windows:
-       $JBOSS_HOME/bin/run.bat  –c mifos
+       $JBOSS_HOME/bin/run.bat -c mifos
        
    Jetty example:
        cd <directory in which you installed jetty>
