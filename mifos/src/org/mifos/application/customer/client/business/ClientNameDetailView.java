@@ -41,6 +41,9 @@ package org.mifos.application.customer.client.business;
 import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class ClientNameDetailView {
 
@@ -63,10 +66,10 @@ public class ClientNameDetailView {
 	}
 
 	public ClientNameDetailView(Short nameType, Integer salutation,
-			String firstName, String middleName,
-			String lastName, String secondLastName) {
-	    this(nameType, salutation, new StringBuilder(), firstName,
-	    		middleName, lastName, secondLastName);
+			String firstName, String middleName, String lastName,
+			String secondLastName) {
+		this(nameType, salutation, new StringBuilder(), firstName, middleName,
+				lastName, secondLastName);
 	}
 
 	public ClientNameDetailView(Short nameType, Integer salutation,
@@ -103,20 +106,39 @@ public class ClientNameDetailView {
 
 	public String getDisplayName() {
 		displayName = new StringBuilder();
-		displayName.append(firstName);
-		if (!ValidateMethods.isNullOrBlank(middleName)) {
-			displayName.append(CustomerConstants.BLANK);
-			displayName.append(middleName);
+		String nameSequence = Configuration.getInstance().getCustomerConfig(
+				Short.valueOf("1")).getNameSequence();
+		if (StringUtils.isNullOrEmpty(nameSequence)) {
+			nameSequence = ConfigConstants.NAME_SEQUENCE_DEFAULT;
 		}
-		if (!ValidateMethods.isNullOrBlank(secondLastName)) {
-			displayName.append(CustomerConstants.BLANK);
-			displayName.append(secondLastName);
-		}
-		if (!ValidateMethods.isNullOrBlank(lastName)) {
-			displayName.append(CustomerConstants.BLANK);
-			displayName.append(lastName);
+		String[] names = nameSequence.split("\\,");
+		addToName(displayName, names[0], false);
+		for (int i = 1; i < names.length; i++) {
+			addToName(displayName, names[i], true);
 		}
 		return displayName.toString().trim();
+	}
+
+	private void addToName(StringBuilder displayName, String nameToBeAppend,
+			boolean isBlankRequired) {
+		if (nameToBeAppend.equals(ConfigConstants.FIRST_NAME)) {
+			appendToName(displayName, firstName, isBlankRequired);
+		} else if (nameToBeAppend.equals(ConfigConstants.MIDDLE_NAME)) {
+			appendToName(displayName, middleName, isBlankRequired);
+		} else if (nameToBeAppend.equals(ConfigConstants.LAST_NAME)) {
+			appendToName(displayName, lastName, isBlankRequired);
+		} else if (nameToBeAppend.equals(ConfigConstants.SECOND_LAST_NAME)) {
+			appendToName(displayName, secondLastName, isBlankRequired);
+		}
+	}
+
+	private void appendToName(StringBuilder displayName,
+			String valueToBeAppend, boolean isBlankRequired) {
+		if (!ValidateMethods.isNullOrBlank(valueToBeAppend)) {
+			if (isBlankRequired)
+				displayName.append(CustomerConstants.BLANK);
+			displayName.append(valueToBeAppend);
+		}
 	}
 
 	public String getFirstName() {
@@ -152,11 +174,8 @@ public class ClientNameDetailView {
 	}
 
 	public Name asName() {
-		return new Name(
-			getFirstName(), 
-			getMiddleName(), 
-			getSecondLastName(),
-			getLastName());
+		return new Name(getFirstName(), getMiddleName(), getSecondLastName(),
+				getLastName());
 	}
 
 }

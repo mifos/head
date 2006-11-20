@@ -73,4 +73,9 @@ public interface ConfigConstants {
 	 public static final  String MEETING_SCHEDULE_TYPE_DEFAULT = "same_day";
 	 
 	 public static final String OFFICE_CONFIG_CONSTANTS = "org.mifos.framework.components.configuration.util.helpers.OfficeConfigConstants";
+	 
+	 public static final  String FIRST_NAME = "first_name";
+	 public static final  String MIDDLE_NAME = "middle_name";
+	 public static final  String SECOND_LAST_NAME = "second_last_name";
+	 public static final  String LAST_NAME = "last_name";
 }

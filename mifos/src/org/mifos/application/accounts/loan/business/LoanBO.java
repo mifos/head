@@ -1622,7 +1622,8 @@ public class LoanBO extends AccountBO {
 
 	// read from configuration
 	private int getInterestDays() {
-		return AccountConstants.INTEREST_DAYS;
+		return Configuration.getInstance().getAccountConfig(
+				getOffice().getOfficeId()).getInterestDays();
 	}
 
 	// read from configuration
