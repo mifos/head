@@ -266,7 +266,7 @@
 						<table width="95%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="2" class="fontnormalbold">
-									<mifos:mifoslabel name="Group.address" bundle="GroupUIResources"></mifos:mifoslabel>
+									<mifos:mifoslabel name="Group.address" bundle="GroupUIResources"  keyhm="Group.Address"></mifos:mifoslabel>
 									<br>
 									<br>
 								</td>
