@@ -74,11 +74,22 @@
 									 </span><br>
 									 <!-- End for showing the correct parent -->
 
-
 									<c:if test="${not empty BusinessKey.address.address}">
+	
 									<mifos:mifoslabel name="office.labelAddress"
 										bundle="OfficeResources"></mifos:mifoslabel>
 										<br>
+										<c:if test="${ empty BusinessKey.address.address.displayAddress
+									&&  empty BusinessKey.address.address.city
+									&&  empty BusinessKey.address.address.state
+									&&  empty BusinessKey.address.address.country
+									&&  empty BusinessKey.address.address.zip
+									&&  empty BusinessKey.address.address.phoneNumber}">
+									<br>
+									<span
+										class="fontnormal"><mifos:mifoslabel name="Office.addressnotentered"/></span>
+										<br>
+										</c:if>
 										<span
 										class="fontnormal">
 										<c:out value="${BusinessKey.address.address.displayAddress}"></c:out>

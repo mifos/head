@@ -135,6 +135,18 @@
 						<br>
 						<mifos:mifoslabel name="Personnel.Address"
 							bundle="PersonnelUIResources"></mifos:mifoslabel><br>
+							<c:if test="${ empty personnelBO.personnelDetails.address.displayAddress
+									&&  empty personnelBO.personnelDetails.address.city
+									&&  empty personnelBO.personnelDetails.address.state
+									&&  empty personnelBO.personnelDetails.address.country
+									&&  empty personnelBO.personnelDetails.address.zip
+									&&  empty personnelBO.personnelDetails.address.phoneNumber}">
+									<br>
+									<span
+										class="fontnormal"><mifos:mifoslabel name="Personnel.addressnotentered"
+							bundle="PersonnelUIResources"></mifos:mifoslabel></span>
+										<br>
+										</c:if>
 						<span class="fontnormal"> <c:if
 							test="${!empty personnelBO.personnelDetails.address.displayAddress}">
 							<c:out
