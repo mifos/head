@@ -581,6 +581,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 				request);
 		validatePrincDueOnLastInstAndPrincGraceType(errors);
 		setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+		validateInterestGLCode(request,errors);
 		prdDefLogger
 				.debug("validateForPreview method of Loan Product Action form method called :"
 						+ prdOfferingName);
@@ -608,6 +609,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 				request);
 		validatePrincDueOnLastInstAndPrincGraceType(errors);
 		setSelectedFeesAndFundsAndValidateForFrequency(request, errors);
+		validateInterestGLCode(request,errors);
 		prdDefLogger
 				.debug("validateForEditPreview method of Loan Product Action form method called :"
 						+ prdOfferingName);
@@ -978,6 +980,17 @@ public class LoanPrdActionForm extends BaseActionForm {
 					ProductDefinitionConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE,
 					ProductDefinitionConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE);
 		}
+	}
+	
+	private void validateInterestGLCode(HttpServletRequest request,
+			ActionErrors errors) {
+		if (StringUtils.isNullOrEmpty(getInterestGLCode()))
+			addError(
+					errors,
+					ProductDefinitionConstants.INTERESTGLCODE,
+					ProductDefinitionConstants.ERROR_SELECT,
+					ProductDefinitionConstants.GLCODE_FOR
+							+ getLabel(ConfigurationConstants.INTEREST, request));
 	}
 
 }

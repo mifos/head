@@ -196,6 +196,7 @@ public interface ProductDefinitionConstants {
 	public String FREQUENCY = "Frequency of ";
 	public String POSTING_ACCOUNTS = "posting to accounts";
 	public String RECUR_AFTER = "Recur every";
+	public String GLCODE_FOR = "GL code for ";
 	
 	//GLcodes
 	public String PRICIPALGLCODE="principal";

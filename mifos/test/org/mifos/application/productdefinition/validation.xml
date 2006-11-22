@@ -196,10 +196,6 @@
 					<var-value>(((gracePeriodType == null) or (gracePeriodType==1)) or ((*this* !=null) and (maxNoInstallments >=*this* )))</var-value>
 				</var>
 			</field>
-			<field property="interestGLCode" depends="required">
-				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
-				<arg0 key="product.GlcodeInterest" />
-			</field>
 			<field property="principalGLCode" depends="required">
 				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg0 key="product.GlcodePrincipal" />
@@ -268,10 +264,6 @@
 			<field property="depositGLCode" depends="required">
 				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
 				<arg0 key="product.glcodedep" />
-			</field>
-			<field property="interestGLCode" depends="required">
-				<msg name="required" key="errors.select" bundle="ProductDefUIResources" />
-				<arg0 key="product.glcodeint" />
 			</field>
 		</form>
 	</formset>

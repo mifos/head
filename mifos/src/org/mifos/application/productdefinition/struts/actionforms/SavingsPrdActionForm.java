@@ -386,6 +386,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 						addError(errors, "recommendedAmount",
 								ProductDefinitionConstants.ERRORMANDAMOUNT);
 					validateInterestRate(errors, request);
+					validateInterestGLCode( request,errors);
 				} else if (method.equals(Methods.previewManage.toString())) {
 					errors.add(super.validate(mapping, request));
 					validateMandatoryAmount(errors);
@@ -400,6 +401,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 							startingDate);
 					validateEndDateAgainstCurrentDate(errors, startingDate,
 							savingsOffering.getEndDate(), endingDate);
+					validateInterestGLCode( request,errors);
 				}
 			}
 		} catch (ApplicationException ae) {
@@ -559,6 +561,17 @@ public class SavingsPrdActionForm extends BaseActionForm {
 			}
 		}
 
+	}
+
+	private void validateInterestGLCode(HttpServletRequest request,
+			ActionErrors errors) {
+		if (StringUtils.isNullOrEmpty(getInterestGLCode()))
+			addError(
+					errors,
+					ProductDefinitionConstants.INTERESTGLCODE,
+					ProductDefinitionConstants.ERROR_SELECT,
+					ProductDefinitionConstants.GLCODE_FOR
+							+ getLabel(ConfigurationConstants.INTEREST, request));
 	}
 
 	public void clear() {

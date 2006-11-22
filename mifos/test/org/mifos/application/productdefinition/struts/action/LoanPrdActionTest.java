@@ -181,7 +181,6 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 
 		actionPerform();
 		verifyActionErrors(new String[] {
-				"Please select the GL code for interest.",
 				"Please select the GL code for principal.",
 				"Please select the Product category.",
 				"Please specify the Applicable for.",
@@ -196,7 +195,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				"Please specify the Short name.",
 				"Please specify the Start date.", "errors.mandatoryconfig",
 				"errors.mandatoryconfig", "errors.mandatoryconfig",
-				"errors.selectconfig" });
+				"errors.select", "errors.selectconfig" });
 		verifyInputForward();
 	}
 
@@ -864,23 +863,21 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				loanOffering.getStartDate(), request);
 		actionPerform();
 		verifyActionErrors(new String[] {
-				"Please specify the Product instance name.",
-				"Please specify the Short name.",
-				"Please select the Product category.",
-				"Please specify the Start date.",
-				"Please specify the Applicable for.",
-				"Please specify the Min loan amount.",
-				"Please specify the Max loan amount.",
-				"Please specify the Frequency of installments.",
-				"Please specify the Recur every.",
-				"Please specify the Max # of installments.",
-				"Please specify the Min # of installments.",
-				"Please specify the Default # of installments.",
-				"Please select the GL code for interest.",
 				"Please select the GL code for principal.",
-				"errors.selectconfig", "errors.select",
+				"Please select the Product category.",
+				"Please specify the Applicable for.",
+				"Please specify the Default # of installments.",
+				"Please specify the Frequency of installments.",
+				"Please specify the Max # of installments.",
+				"Please specify the Max loan amount.",
+				"Please specify the Min # of installments.",
+				"Please specify the Min loan amount.",
+				"Please specify the Product instance name.",
+				"Please specify the Recur every.",
+				"Please specify the Short name.",
+				"Please specify the Start date.", "errors.mandatoryconfig",
 				"errors.mandatoryconfig", "errors.mandatoryconfig",
-				"errors.mandatoryconfig" });
+				"errors.select", "errors.select", "errors.selectconfig" });
 		verifyInputForward();
 	}
 

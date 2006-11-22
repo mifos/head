@@ -125,16 +125,15 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 
 		actionPerform();
-		verifyActionErrors(new String[] {
+		verifyActionErrors(new String[] { "Please select the Applicable for.",
+				"Please select the GL code for deposits.",
+				"Please select the Product category.",
+				"Please select the Type of deposits.",
 				"Please specify the Product instance name.",
 				"Please specify the Short name.",
-				"Please select the Product category.",
-				"Please specify the Start date.",
-				"Please select the Applicable for.",
-				"Please select the Type of deposits.", "errors.mandatory",
-				"errors.select", "errors.mandatory", "errors.mandatory",
-				"Please select the GL code for deposits.",
-				"Please select the GL code for interest." });
+				"Please specify the Start date.", "errors.mandatory",
+				"errors.mandatory", "errors.mandatory", "errors.select",
+				"errors.select" });
 		verifyInputForward();
 	}
 
@@ -633,7 +632,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals("timeForInterestCacl", 1, getErrrorSize("timeForInterestCacl"));
 		assertEquals("freqOfInterest", 1, getErrrorSize("freqOfInterest"));
 		assertEquals("depositGLCode", 1, getErrrorSize("depositGLCode"));
-		assertEquals("interestGLCode", 1, getErrrorSize("interestGLCode"));
+		assertEquals("interest", 1, getErrrorSize("interest"));
 		verifyInputForward();
 	}
 

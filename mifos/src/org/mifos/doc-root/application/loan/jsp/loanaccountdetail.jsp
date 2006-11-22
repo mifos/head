@@ -356,7 +356,7 @@
 						</tr>
 					</table>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">
-						<tr>
+						<tr id="collateral">
 							<td class="fontnormal"><br>
 							<span class="fontnormalbold"><mifos:mifoslabel
 								name="loan.collateralDetails" /></span>
@@ -375,6 +375,11 @@
 							<c:out value="${BusinessKey.collateralNote}" />
 						</td>
 						</tr>
+						<script>
+							if(document.getElementById("Loan.CollateralType").style.display=="none" &&
+								document.getElementById("Loan.CollateralNotes").style.display=="none")
+									document.getElementById("collateral").style.display="none";
+						</script>
 						<tr>
 							<td class="fontnormal"><br>
 							<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
