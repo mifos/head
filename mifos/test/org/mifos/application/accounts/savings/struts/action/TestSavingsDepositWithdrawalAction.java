@@ -315,9 +315,9 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 				CustomerStatus.CLIENT_CLOSED, group);
 		client2 = TestObjectFactory.createClient("client2",
 				CustomerStatus.CLIENT_ACTIVE, group);
-		client3 = TestObjectFactory.createClient("client2",
+		client3 = TestObjectFactory.createClient("client3",
 				CustomerStatus.CLIENT_PARTIAL, group);
-		client4 = TestObjectFactory.createClient("client2",
+		client4 = TestObjectFactory.createClient("client4",
 				CustomerStatus.CLIENT_HOLD, group);
 	}
 }

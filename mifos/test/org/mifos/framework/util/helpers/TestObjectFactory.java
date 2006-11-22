@@ -360,7 +360,8 @@ public class TestObjectFactory {
 							.valueOf("41"));
 			client = new ClientBO(getUserContext(), customerName,
 					status, null, null, null, null,
-					getFees(), null, personnel, office, parentCustomer, null,
+					getFees(), null, personnel, office, parentCustomer, 
+					new Date(1222333444000L),
 					null, null, null, YesNoFlag.YES.getValue(),
 					clientNameDetailView, spouseNameDetailView,
 					clientDetailView, null);

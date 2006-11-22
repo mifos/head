@@ -105,11 +105,19 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(fee);
-		TestObjectFactory.cleanUp(fee1);
-		TestObjectFactory.cleanUp(fee2);
-		TestObjectFactory.cleanUp(fee3);
-		HibernateUtil.closeSession();
+		try {
+			TestObjectFactory.cleanUp(fee);
+			TestObjectFactory.cleanUp(fee1);
+			TestObjectFactory.cleanUp(fee2);
+			TestObjectFactory.cleanUp(fee3);
+			HibernateUtil.closeSession();
+		}
+		catch (Exception e) {
+			/* Throwing exceptions from finally/tearDown will obscure
+			   a failure, if there was one.
+			*/
+			e.printStackTrace();
+		}
 		super.tearDown();
 	}
 

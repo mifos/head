@@ -149,10 +149,11 @@ public class ClientBO extends CustomerBO {
 		
 		this.dateOfBirth = dateOfBirth;
 		this.governmentId = governmentId;
-		if (trained != null)
+		if (trained != null) {
 			setTrained(trained);
-		else
+		} else {
 			setTrained(YesNoFlag.NO.getValue());
+		}
 		setTrainedDate(trainedDate);
 		this.groupFlag = groupFlag;
 		this.firstName = clientNameDetailView.getFirstName();
@@ -168,9 +169,10 @@ public class ClientBO extends CustomerBO {
 		createAssociatedOfferings(offeringsSelected);
 		validateForDuplicateNameOrGovtId(displayName, dateOfBirth, governmentId);
 
-		if (parentCustomer != null)
+		if (parentCustomer != null) {
 			checkIfClientStatusIsLower(getStatus().getValue(), parentCustomer
 					.getStatus().getValue());
+		}
 	
 		if (isActive()) {
 			validateFieldsForActiveClient(loanOfficerId, meeting);
@@ -645,11 +647,12 @@ public class ClientBO extends CustomerBO {
 
 	private void validateForDuplicateNameOrGovtId(String displayName,
 			Date dateOfBirth, String governmentId) throws CustomerException {
-		Integer custId = null;
-		if (getCustomerId() == null)
+		Integer custId;
+		if (getCustomerId() == null) {
 			custId = Integer.valueOf("0");
-		else
+		} else {
 			custId = getCustomerId();
+		}
 
 		checkForDuplicacy(displayName, dateOfBirth, governmentId, custId);
 
