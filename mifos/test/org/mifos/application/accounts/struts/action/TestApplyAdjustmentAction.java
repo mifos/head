@@ -37,7 +37,6 @@
  */
 package org.mifos.application.accounts.struts.action;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,12 +57,9 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.components.logger.MifosLogManager;
-import org.mifos.framework.exceptions.LoggerConfigurationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -76,15 +72,6 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	private LoanBO loan;
 	private UserContext userContext;
 	private String flowKey;
-	public TestApplyAdjustmentAction(){
-		try {
-			MifosLogManager.configure(FilePaths.LOGFILE);
-				
-		} catch (LoggerConfigurationException e) {
-
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * This sets the web.xml,struts-config.xml and prepares the userContext
