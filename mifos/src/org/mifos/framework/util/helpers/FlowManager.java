@@ -52,7 +52,7 @@ public class FlowManager {
 	}
 
 	public void addFLow(String key, Flow value, String className) {
-		if(classData.containsKey(className)) {
+		if (classData.containsKey(className)) {
 			flowData.remove(classData.get(className));
 		}
 		classData.put(className,key);
@@ -69,18 +69,20 @@ public class FlowManager {
 
 	public void addToFlow(String flowKey, String key, Object value)
 			throws PageExpiredException {
-		if (!isFlowValid(flowKey))
+		if (!isFlowValid(flowKey)) {
 			throw new PageExpiredException(
 					ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		}
 		Flow flow = getFlow(flowKey.toString());
 		flow.addObjectToSession(key, value);
 	}
 
 	public Object getFromFlow(String flowKey, String key)
 			throws PageExpiredException {
-		if (!isFlowValid(flowKey))
+		if (!isFlowValid(flowKey)) {
 			throw new PageExpiredException(
 					ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		}
 		Flow flow = getFlow(flowKey.toString());
 		return flow.getObjectFromSession(key);
 	}
@@ -91,9 +93,10 @@ public class FlowManager {
 
 	public void removeFromFlow(String flowKey, String key)
 			throws PageExpiredException {
-		if (!isFlowValid(flowKey))
+		if (!isFlowValid(flowKey)) {
 			throw new PageExpiredException(
 					ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		}
 		Flow flow = getFlow(flowKey.toString());
 		flow.removeFromSession(key);
 	}

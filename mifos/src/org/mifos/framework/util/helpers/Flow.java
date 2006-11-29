@@ -61,9 +61,7 @@ public class Flow {
 	}
 	
 	public void removeFromSession(String key) {
-		Object obj = getObjectFromSession(key);
 		sessionData.remove(key);
-		obj = null;
 	}
 
 }
