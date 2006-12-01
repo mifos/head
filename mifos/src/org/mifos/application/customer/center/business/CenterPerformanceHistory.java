@@ -1,8 +1,10 @@
 package org.mifos.application.customer.center.business;
 
+import java.io.Serializable;
+
 import org.mifos.framework.util.helpers.Money;
 
-public class CenterPerformanceHistory {
+public class CenterPerformanceHistory implements Serializable {
 	private Integer numberOfGroups;
 
 	private Integer numberOfClients;

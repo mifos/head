@@ -335,7 +335,7 @@ public class GroupCustAction extends CustAction {
 		searchString= StringUtils.normalizeSearchString(searchString);
 		if (searchString.equals(""))  checkSearchString(actionForm,request);
 		
-		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,new GroupBusinessService().search(searchString,userContext.getId()),request);
+		SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,new GroupBusinessService().search(searchString,userContext.getId()),request);
 		
 		if ( actionForm.getInput()!=null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
 			return mapping.findForward(ActionForwards.transferSearch_success.toString());
@@ -365,19 +365,19 @@ public class GroupCustAction extends CustAction {
 				Configuration.getInstance().getCustomerConfig(
 						groupBO.getOffice().getOfficeId())
 						.isCenterHierarchyExists(), request);
-		SessionUtils.setAttribute(ClientConstants.LOANCYCLECOUNTER,
+		SessionUtils.setCollectionAttribute(ClientConstants.LOANCYCLECOUNTER,
 				getCustomerBusinessService().fetchLoanCycleCounter(
 						groupBO.getCustomerId()), request);
 		List<LoanBO> loanAccounts = groupBO.getOpenLoanAccounts();
 		List<SavingsBO> savingsAccounts = groupBO.getOpenSavingAccounts();
 		setLocaleIdToLoanStatus(loanAccounts, localeId);
 		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
-		SessionUtils.setAttribute(GroupConstants.GROUPLOANACCOUNTSINUSE,
+		SessionUtils.setCollectionAttribute(GroupConstants.GROUPLOANACCOUNTSINUSE,
 				loanAccounts, request);
-		SessionUtils.setAttribute(GroupConstants.GROUPSAVINGSACCOUNTSINUSE,
+		SessionUtils.setCollectionAttribute(GroupConstants.GROUPSAVINGSACCOUNTSINUSE,
 				savingsAccounts, request);
 			SessionUtils
-					.setAttribute(
+					.setCollectionAttribute(
 							GroupConstants.CLIENT_LIST,
 							groupBO
 									.getChildren(CustomerLevel.CLIENT,ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),

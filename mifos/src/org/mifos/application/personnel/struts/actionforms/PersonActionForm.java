@@ -428,7 +428,7 @@ public class PersonActionForm extends BaseActionForm {
 			}
 		}
 		if (addFlag)
-			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+			SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
 					selectList, request);
 		else
 			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,

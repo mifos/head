@@ -38,12 +38,14 @@
 
 package org.mifos.application.accounts.business;
 
+import java.io.Serializable;
+
 import org.mifos.framework.persistence.Persistence;
 
 /**
  * This class depicts the different account types.
  */
-public class AccountTypeEntity extends Persistence {
+public class AccountTypeEntity extends Persistence implements Serializable{
 
 	public AccountTypeEntity() {
 		super();

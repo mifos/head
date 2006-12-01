@@ -112,7 +112,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 				Integer.valueOf(actionForm.getAccountId()));
 		account.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
-		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
+		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
 				getMasterDataService().getSupportedPaymentModes(
 						uc.getLocaleId(), TrxnTypes.loan_repayment.getValue()),
 				request);

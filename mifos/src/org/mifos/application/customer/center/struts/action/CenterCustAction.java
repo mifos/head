@@ -323,7 +323,7 @@ public class CenterCustAction extends CustAction {
 						BusinessServiceName.MasterDataService);
 		List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService
 				.retrieveCustomFieldsDefinition(EntityType.CENTER);
-		SessionUtils.setAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
+		SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
 				customFieldDefs, request);
 	}
 
@@ -341,7 +341,7 @@ public class CenterCustAction extends CustAction {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, centerBO, request);
 		centerBO.getCustomerStatus().setLocaleId(
 				getUserContext(request).getLocaleId());
-		SessionUtils.setAttribute(CenterConstants.GROUP_LIST, centerBO
+		SessionUtils.setCollectionAttribute(CenterConstants.GROUP_LIST, centerBO
 				.getChildren(CustomerLevel.GROUP,
 						ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED),
 				request);
@@ -413,7 +413,7 @@ public class CenterCustAction extends CustAction {
 		searchString = StringUtils.normalizeSearchString(searchString);
 		if (searchString.equals(""))
 			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
-		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
+		SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,
 				new CenterBusinessService().search(searchString, userContext
 						.getId()), request);
 	}
@@ -433,7 +433,7 @@ public class CenterCustAction extends CustAction {
 			CenterBO centerBO, Short localeId) throws Exception {
 		List<SavingsBO> savingsAccounts = centerBO.getOpenSavingAccounts();
 		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
-		SessionUtils.setAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
+		SessionUtils.setCollectionAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
 				savingsAccounts, request);
 	}
 

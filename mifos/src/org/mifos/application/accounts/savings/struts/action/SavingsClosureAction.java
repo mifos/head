@@ -130,7 +130,7 @@ public class SavingsClosureAction extends BaseAction {
 
 		savings.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
+		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
 				masterDataService.getSupportedPaymentModes(uc.getLocaleId(),
 						TrxnTypes.savings_withdrawal.getValue()), request);
 		// client list will be loaded only if it is center savings account,
@@ -141,7 +141,7 @@ public class SavingsClosureAction extends BaseAction {
 						.shortValue() == CustomerConstants.GROUP_LEVEL_ID && savings
 						.getRecommendedAmntUnit().getId().equals(
 								RecommendedAmountUnit.PERINDIVIDUAL.getValue())))
-			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, savings
+			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(CustomerLevel.CLIENT,
 							ChildrenStateType.ACTIVE_AND_ONHOLD), request);
 		else

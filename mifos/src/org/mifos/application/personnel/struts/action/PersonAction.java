@@ -326,7 +326,7 @@ public class PersonAction extends SearchAction {
 		addSeachValues(searchString,personnel.getOffice().getOfficeId().toString(),personnel.getOffice().getOfficeName(),request);
 		searchString= StringUtils.normalizeSearchString(searchString);
 		actionForward=super.search(mapping, form, request, response);
-		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
+		SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,
 				new PersonnelPersistence().search(searchString, userContext.getId()), request);
 		return actionForward;
 	}
@@ -348,35 +348,35 @@ public class PersonAction extends SearchAction {
 		UserContext userContext = getUserContext(request);
 		MasterPersistence masterPersistence = new MasterPersistence();
 
-		SessionUtils.setAttribute(PersonnelConstants.TITLE_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST,
 				masterPersistence.retrieveMasterEntities(
 						MasterConstants.PERSONNEL_TITLE, userContext
 								.getLocaleId()), request);
 
-		SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST,
 				masterPersistence.retrieveMasterEntities(
 						PersonnelLevelEntity.class, userContext.getLocaleId()),
 				request);
 
-		SessionUtils.setAttribute(PersonnelConstants.GENDER_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.GENDER_LIST,
 				masterPersistence.retrieveMasterEntities(
 						MasterConstants.GENDER, userContext.getLocaleId()),
 				request);
 
-		SessionUtils.setAttribute(PersonnelConstants.MARITAL_STATUS_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST,
 				masterPersistence.retrieveMasterEntities(
 						MasterConstants.MARITAL_STATUS, userContext
 								.getLocaleId()), request);
 		loadLanguageList(request);
-		SessionUtils.setAttribute(PersonnelConstants.ROLES_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST,
 				((PersonnelBusinessService) getService()).getRoles(), request);
 
-		SessionUtils.setAttribute(PersonnelConstants.ROLEMASTERLIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.ROLEMASTERLIST,
 				((PersonnelBusinessService) getService()).getRoles(), request);
 
 		List<CustomFieldDefinitionEntity> customFieldDefs = masterPersistence
 				.retrieveCustomFieldsDefinition(EntityType.PERSONNEL);
-		SessionUtils.setAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
+		SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
 				customFieldDefs, request);
 	}
 
@@ -387,7 +387,7 @@ public class PersonAction extends SearchAction {
 		for (SupportedLocalesEntity entity : locales) {
 			entity.getLanguage().setLocaleId(userContext.getLocaleId());
 		}
-		SessionUtils.setAttribute(PersonnelConstants.LANGUAGE_LIST,locales,request);
+		SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST,locales,request);
 	}
 	private void updatePersonnelLevelList(HttpServletRequest request)
 			throws PageExpiredException {
@@ -415,14 +415,14 @@ public class PersonAction extends SearchAction {
 		loadMasterData(request, personActionForm);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		SessionUtils.setAttribute(PersonnelConstants.STATUS_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST,
 				getMasterEntities(PersonnelStatusEntity.class, getUserContext(
 						request).getLocaleId()), request);
 		OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory
 				.getInstance().getBusinessService(BusinessServiceName.Office);
 		OfficeBO loggedInOffice = officeService.getOffice(userContext
 				.getBranchId());
-		SessionUtils.setAttribute(PersonnelConstants.OFFICE_LIST, officeService
+		SessionUtils.setCollectionAttribute(PersonnelConstants.OFFICE_LIST, officeService
 				.getChildOffices(loggedInOffice.getSearchId()), request);
 	}
 
@@ -500,7 +500,7 @@ public class PersonAction extends SearchAction {
 		for (PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()) {
 			selectList.add(personnelRole.getRole());
 		}
-		SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
 				selectList, request);
 	}
 
@@ -578,7 +578,7 @@ public class PersonAction extends SearchAction {
 			}
 		}
 		if (addFlag)
-			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
+			SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,
 					selectList, request);
 		else
 			SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST,

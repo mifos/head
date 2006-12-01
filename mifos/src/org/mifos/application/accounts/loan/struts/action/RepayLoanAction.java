@@ -72,7 +72,7 @@ public class RepayLoanAction extends BaseAction {
 				.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, Money
 						.round(loanBO.getTotalEarlyRepayAmount()), request
 						);
-		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
+		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
 				masterDataService.getSupportedPaymentModes(uc.getLocaleId(),
 						TrxnTypes.loan_repayment.getValue()),
 				request);

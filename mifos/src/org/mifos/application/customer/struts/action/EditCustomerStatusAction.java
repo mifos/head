@@ -110,7 +110,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
 
-		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST, customerService
+		SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_LIST, customerService
 				.getStatusList(customerBO.getCustomerStatus(),
 						customerBO.getLevel(), getUserContext(
 								request).getLocaleId()), request);
@@ -188,7 +188,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		List<CustomerCheckListBO> checklist = customerService
 				.getStatusChecklist(statusActionForm.getNewStatusIdValue(),
 						statusActionForm.getLevelIdValue());
-		SessionUtils.setAttribute(SavingsConstants.STATUS_CHECK_LIST,
+		SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST,
 				checklist, request.getSession());
 		newStatusName = getStatusName(customerBO, userContext.getLocaleId(),
 				statusActionForm.getNewStatusId(), statusActionForm
@@ -234,7 +234,7 @@ public class EditCustomerStatusAction extends BaseAction {
 		List<CustomerCheckListBO> checklist = customerService
 				.getStatusChecklist(statusActionForm.getNewStatusIdValue(),
 						statusActionForm.getLevelIdValue());
-		SessionUtils.setAttribute(SavingsConstants.STATUS_CHECK_LIST,
+		SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST,
 				checklist, request);
 		newStatusName = getStatusName(customerBO, userContext.getLocaleId(),
 				statusActionForm.getNewStatusId(), statusActionForm

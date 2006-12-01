@@ -210,7 +210,7 @@ public class ChkListActionForm extends BaseActionForm {
 		try {
 			if (null != request.getParameter(Constants.CURRENTFLOWKEY))
 				request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
-			SessionUtils.setAttribute(CheckListConstants.DETAILS, detailsList, request);
+			SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, detailsList, request);
 		} catch (PageExpiredException pee) {
 		}
 	}

@@ -308,7 +308,7 @@ public class SavingsPrdAction extends BaseAction {
 			savingsOffering.getPrdStatus().getPrdState().setLocaleId(
 					getUserContext(request).getLocaleId());
 		}
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.SAVINGSPRODUCTLIST, service
 						.getAllSavingsProducts(), request);
 		prdDefLogger.debug("Load method of Savings Product Action called");
@@ -397,7 +397,7 @@ public class SavingsPrdAction extends BaseAction {
 				.getInstance().getBusinessService(
 						BusinessServiceName.SavingsProduct);
 		Short localeId = getUserContext(request).getLocaleId();
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.PRDCATEGORYSTATUSLIST, service
 						.getApplicablePrdStatus(localeId), request);
 	}
@@ -409,28 +409,28 @@ public class SavingsPrdAction extends BaseAction {
 				.getInstance().getBusinessService(
 						BusinessServiceName.SavingsProduct);
 		Short locaeId = getUserContext(request).getLocaleId();
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.SAVINGSPRODUCTCATEGORYLIST, service
 						.getActiveSavingsProductCategories(), request);
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.SAVINGSAPPLFORLIST,
 				getMasterEntities(PrdApplicableMasterEntity.class, locaeId),
 				request);
-		SessionUtils.setAttribute(ProductDefinitionConstants.SAVINGSTYPELIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SAVINGSTYPELIST,
 				getMasterEntities(SavingsTypeEntity.class, locaeId), request);
-		SessionUtils.setAttribute(ProductDefinitionConstants.RECAMNTUNITLIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.RECAMNTUNITLIST,
 				getMasterEntities(RecommendedAmntUnitEntity.class, locaeId),
 				request);
-		SessionUtils.setAttribute(ProductDefinitionConstants.INTCALCTYPESLIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST,
 				getMasterEntities(InterestCalcTypeEntity.class, locaeId),
 				request);
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.SAVINGSRECURRENCETYPELIST, service
 						.getSavingsApplicableRecurrenceTypes(), request);
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.SAVINGSDEPOSITGLCODELIST,
 				getGLCodesForDeposit(), request);
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.SAVINGSINTERESTGLCODELIST,
 				getGLCodes(FinancialActionConstants.SAVINGS_INTERESTPOSTING,
 						FinancialConstants.DEBIT), request);

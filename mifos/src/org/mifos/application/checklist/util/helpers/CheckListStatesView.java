@@ -1,6 +1,8 @@
 package org.mifos.application.checklist.util.helpers;
 
-public class CheckListStatesView {
+import java.io.Serializable;
+
+public class CheckListStatesView implements Serializable {
 
 	private String stateName;
 

@@ -87,20 +87,20 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				AccountConstants.ACTION_SAVINGS_DEPOSIT, uc.getLocaleId()));
 		trxnTypes.add(getAccountsService().getAccountAction(
 				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, uc.getLocaleId()));
-		SessionUtils.setAttribute(AccountConstants.TRXN_TYPES, trxnTypes,
+		SessionUtils.setCollectionAttribute(AccountConstants.TRXN_TYPES, trxnTypes,
 				request);
 
 		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.CENTER_LEVEL_ID
 				|| (savings.getCustomer().getCustomerLevel().getId()
 						.shortValue() == CustomerConstants.GROUP_LEVEL_ID && savings
 						.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue())))
-			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, savings
+			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(
 							CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request);
 		else
 			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
 					request);
-		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
+		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
 				getMasterDataService().getSupportedPaymentModes(
 						uc.getLocaleId(),
 						TrxnTypes.savings_deposit.getValue()), request);

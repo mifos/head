@@ -128,10 +128,10 @@ public class CustAction extends SearchAction {
 		for (AccountBO loanBO : loanAccountsList) {
 			setLocaleIdForToRetrieveMasterDataName(loanBO, request);
 		}
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				AccountConstants.CLOSEDLOANACCOUNTSLIST,
 				loanAccountsList, request);
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				AccountConstants.CLOSEDSAVINGSACCOUNTSLIST,
 				savingsAccountList, request);
 		return mapping.findForward(ActionForwards.getAllClosedAccounts
@@ -210,7 +210,7 @@ public class CustAction extends SearchAction {
 						BusinessServiceName.MasterDataService);
 		List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService
 				.retrieveCustomFieldsDefinition(entityType);
-		SessionUtils.setAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
+		SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
 				customFieldDefs, request);
 	}
 
@@ -231,7 +231,7 @@ public class CustAction extends SearchAction {
 				additionalFees.add(new FeeView(getUserContext(request),fee));
 		}
 		actionForm.setDefaultFees(defaultFees);
-		SessionUtils.setAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
+		SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
 				additionalFees, request);
 	}
 
@@ -256,7 +256,7 @@ public class CustAction extends SearchAction {
 		List<PersonnelView> formedByPersonnel;
 		formedByPersonnel = customerService.getFormedByPersonnel(
 				ClientConstants.LOAN_OFFICER_LEVEL, officeId);
-		SessionUtils.setAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,
+		SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST,
 				formedByPersonnel, request);
 
 	}
@@ -270,7 +270,7 @@ public class CustAction extends SearchAction {
 		List<PersonnelView> personnelList = personnelService
 				.getActiveLoanOfficersInBranch(officeId, userContext.getId(),
 						userContext.getLevelId());
-		SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
+		SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST,
 				personnelList, request);
 	}
 
@@ -325,7 +325,7 @@ public class CustAction extends SearchAction {
 
 	protected void loadPositions(HttpServletRequest request)
 			throws ApplicationException {
-		SessionUtils.setAttribute(CustomerConstants.POSITIONS,
+		SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS,
 				getMasterEntities(PositionEntity.class, getUserContext(request)
 						.getLocaleId()), request);
 	}
@@ -335,7 +335,7 @@ public class CustAction extends SearchAction {
 		List<CustomerBO> customerList;
 		customerList = customerBO
 				.getChildren(CustomerLevel.CLIENT, ChildrenStateType.OTHER_THAN_CANCELLED_AND_CLOSED);
-		SessionUtils.setAttribute(CustomerConstants.CLIENT_LIST, customerList,
+		SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, customerList,
 				request);
 	}
 

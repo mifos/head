@@ -230,7 +230,7 @@ public class ClientCustAction extends CustAction {
 				loadFees(actionForm, request, FeeCategory.CLIENT, null);
 		}
 		loadFormedByPersonnel(officeId, request);
-		SessionUtils.setAttribute(ClientConstants.SAVINGS_OFFERING_LIST,
+		SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST,
 				getClientBusinessService()
 						.retrieveOfferingsApplicableToClient(), request);
 	}
@@ -238,42 +238,42 @@ public class ClientCustAction extends CustAction {
 	private void loadMasterDataEntities(ClientCustActionForm actionForm,
 			HttpServletRequest request) throws ApplicationException,
 			SystemException {
-		SessionUtils.setAttribute(ClientConstants.SALUTATION_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.SALUTATION,
 						getUserContext(request).getLocaleId()), request);
-		SessionUtils.setAttribute(ClientConstants.MARITAL_STATUS_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.MARITAL_STATUS_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.MARITAL_STATUS,
 						getUserContext(request).getLocaleId()), request);
-		SessionUtils.setAttribute(ClientConstants.CITIZENSHIP_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.CITIZENSHIP_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.CITIZENSHIP,
 						getUserContext(request).getLocaleId()), request);
-		SessionUtils.setAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.BUSINESS_ACTIVITIES,
 						getUserContext(request).getLocaleId()), request);
-		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.EDUCATION_LEVEL,
 						getUserContext(request).getLocaleId()), request);
-		SessionUtils.setAttribute(ClientConstants.GENDER_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.GENDER,
 						getUserContext(request).getLocaleId()), request);
-		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
 				getMasterEntities(SpouseFatherLookupEntity.class,
 						getUserContext(request).getLocaleId()), request);
-		SessionUtils.setAttribute(ClientConstants.HANDICAPPED_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.HANDICAPPED,
 						getUserContext(request).getLocaleId()), request);
-		SessionUtils.setAttribute(ClientConstants.ETHINICITY_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.ETHINICITY_ENTITY,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.ETHINICITY,
 						getUserContext(request).getLocaleId()), request);
-		SessionUtils.setAttribute(ClientConstants.POVERTY_STATUS,
+		SessionUtils.setCollectionAttribute(ClientConstants.POVERTY_STATUS,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.POVERTY_STATUS,
 						getUserContext(request).getLocaleId()), request);
@@ -838,7 +838,7 @@ public class ClientCustAction extends CustAction {
 		SessionUtils.setAttribute(ClientConstants.AGE,
 				calculateAge(new java.sql.Date((clientBO.getDateOfBirth())
 						.getTime())), request);
-		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
 				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
 				request);
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCE,
@@ -847,16 +847,16 @@ public class ClientCustAction extends CustAction {
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMERPERFORMANCEHISTORY,
 				getCustomerBusinessService().numberOfMeetings(false,
 						clientBO.getCustomerId()), request);
-		SessionUtils.setAttribute(ClientConstants.LOANCYCLECOUNTER,
+		SessionUtils.setCollectionAttribute(ClientConstants.LOANCYCLECOUNTER,
 				getCustomerBusinessService().fetchLoanCycleCounter(
 						clientBO.getCustomerId()), request);
 		List<LoanBO> loanAccounts = clientBO.getOpenLoanAccounts();
 		List<SavingsBO> savingsAccounts = clientBO.getOpenSavingAccounts();
 		setLocaleIdToLoanStatus(loanAccounts, localeId);
 		setLocaleIdToSavingsStatus(savingsAccounts, localeId);
-		SessionUtils.setAttribute(ClientConstants.CUSTOMERLOANACCOUNTSINUSE,
+		SessionUtils.setCollectionAttribute(ClientConstants.CUSTOMERLOANACCOUNTSINUSE,
 				loanAccounts, request);
-		SessionUtils.setAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
+		SessionUtils.setCollectionAttribute(ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE,
 				savingsAccounts, request);
 		SessionUtils.setAttribute(
 				ClientConstants.BUSINESS_ACTIVITIES_ENTITY_NAME,
@@ -877,10 +877,10 @@ public class ClientCustAction extends CustAction {
 		SessionUtils.setAttribute(ClientConstants.EDUCATION_LEVEL_ENTITY_NAME,
 				getNameForBusinessActivityEntity(clientBO.getCustomerDetail()
 						.getEducationLevel(), localeId), request);
-		SessionUtils.setAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
+		SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY,
 				getMasterEntities(SpouseFatherLookupEntity.class, localeId),
 				request);
-		SessionUtils.setAttribute(ClientConstants.POVERTY_STATUS,
+		SessionUtils.setCollectionAttribute(ClientConstants.POVERTY_STATUS,
 				getCustomerBusinessService().retrieveMasterEntities(
 						MasterConstants.POVERTY_STATUS,
 						getUserContext(request).getLocaleId()), request);

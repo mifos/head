@@ -37,7 +37,7 @@ public class PrdCategoryAction extends BaseAction {
 		doCleanUp(request, form);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		SessionUtils.setAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
 				getProductTypes(userContext), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -86,7 +86,7 @@ public class PrdCategoryAction extends BaseAction {
 		doCleanUp(request, form);
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		SessionUtils.setAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
 				getProductTypes(userContext), request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, getBusinessService()
 				.findByGlobalNum(request.getParameter("globalPrdCategoryNum")),
@@ -104,7 +104,7 @@ public class PrdCategoryAction extends BaseAction {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SessionUtils
-				.setAttribute(ProductDefinitionConstants.PRDCATEGORYSTATUSLIST,
+				.setCollectionAttribute(ProductDefinitionConstants.PRDCATEGORYSTATUSLIST,
 						getProductCategoryStatusList(userContext), request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
@@ -151,7 +151,7 @@ public class PrdCategoryAction extends BaseAction {
 			HttpServletResponse response) throws Exception {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.PRODUCTCATEGORYLIST,
 				getAllCategories(userContext), request);
 		return mapping.findForward(ActionForwards.search_success.toString());

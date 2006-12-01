@@ -135,7 +135,7 @@ public class BulkEntryAction extends BaseAction {
 			UserContext userContext = getUserContext(request);
 			List<OfficeView> activeBranches = masterService
 					.getActiveBranches(userContext.getBranchId());
-			SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
+			SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
 					activeBranches, request);
 			boolean isCenterHeirarchyExists = Configuration.getInstance()
 					.getCustomerConfig(
@@ -148,13 +148,13 @@ public class BulkEntryAction extends BaseAction {
 			if (activeBranches.size() == 1) {
 				List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
 						userContext, activeBranches.get(0).getOfficeId());
-				SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
+				SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST,
 						loanOfficers, request);
 				if (loanOfficers.size() == 1) {
 					List<CustomerView> parentCustomerList = loadCustomers(
 							loanOfficers.get(0).getPersonnelId(),
 							activeBranches.get(0).getOfficeId());
-					SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
+					SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERSLIST,
 							parentCustomerList, request);
 					request.setAttribute(BulkEntryConstants.REFRESH,
 							Constants.NO);
@@ -172,7 +172,7 @@ public class BulkEntryAction extends BaseAction {
 				request.setAttribute(BulkEntryConstants.REFRESH, Constants.YES);
 			}
 			SessionUtils
-					.setAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST,
+					.setCollectionAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST,
 							masterService.retrieveMasterEntities(
 									PaymentTypeEntity.class, userContext
 											.getLocaleId()), request);
@@ -228,7 +228,7 @@ public class BulkEntryAction extends BaseAction {
 		Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
 		List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
 				userContext, officeId);
-		SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
+		SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST,
 				loanOfficers, request);
 		return mapping.findForward(BulkEntryConstants.LOADSUCCESS);
 	}
@@ -243,7 +243,7 @@ public class BulkEntryAction extends BaseAction {
 		Short officeId = Short.valueOf(bulkEntryActionForm.getOfficeId());
 		List<CustomerView> parentCustomerList = loadCustomers(personnelId,
 				officeId);
-		SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
+		SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERSLIST,
 				parentCustomerList, request);
 		boolean isCenterHeirarchyExists = Configuration.getInstance()
 				.getCustomerConfig(officeId).isCenterHierarchyExists();
@@ -287,7 +287,7 @@ public class BulkEntryAction extends BaseAction {
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
 				request);
 		SessionUtils
-				.setAttribute(
+				.setCollectionAttribute(
 						BulkEntryConstants.CUSTOMERATTENDANCETYPES,
 						masterService
 								.getMasterData(
@@ -333,18 +333,18 @@ public class BulkEntryAction extends BaseAction {
 				savingsAccounts.add(bulkEntrySavingsCache.getAccount());
 		}
 
-		SessionUtils.setAttribute(BulkEntryConstants.CLIENTS, clients, request);
-		SessionUtils.setAttribute(BulkEntryConstants.SAVINGS, savingsAccounts,
+		SessionUtils.setCollectionAttribute(BulkEntryConstants.CLIENTS, clients, request);
+		SessionUtils.setCollectionAttribute(BulkEntryConstants.SAVINGS, savingsAccounts,
 				request);
-		SessionUtils.setAttribute(BulkEntryConstants.LOANS, loanAccprdViews,
+		SessionUtils.setCollectionAttribute(BulkEntryConstants.LOANS, loanAccprdViews,
 				request);
-		SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERACCOUNTS,
+		SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERACCOUNTS,
 				customerAccViews, request);
-		SessionUtils.setAttribute(BulkEntryConstants.ERRORCLIENTS,
+		SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORCLIENTS,
 				customerNames, request);
-		SessionUtils.setAttribute(BulkEntryConstants.ERRORSAVINGSDEPOSIT,
+		SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORSAVINGSDEPOSIT,
 				savingsDepNames, request);
-		SessionUtils.setAttribute(BulkEntryConstants.ERRORSAVINGSWITHDRAW,
+		SessionUtils.setCollectionAttribute(BulkEntryConstants.ERRORSAVINGSWITHDRAW,
 				savingsWithNames, request);
 		return mapping.findForward(BulkEntryConstants.PREVIEWSUCCESS);
 	}

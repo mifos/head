@@ -37,6 +37,8 @@
  */
 package org.mifos.framework.util.helpers;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +47,7 @@ import javax.servlet.http.HttpSession;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.hibernate.helper.QueryResult;
 
 /**
  * This class has helper methods to set attributes in session and retrieve them.
@@ -73,7 +76,17 @@ public class SessionUtils {
 	 * Sets the attribute in the session against the key specified.
 	 * These attributes are removed from session only when session is invalidated
 	 */
-	public static void setAttribute(String key, Object value, HttpSession session) {
+	public static void setAttribute(String key, Serializable value, HttpSession session) {
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
+			.debug("An attribute being set in the session with key being " + key);
+		session.setAttribute(key, value);
+	}
+
+	/**
+	 * Sets the attribute in the session against the key specified.
+	 * These attributes are removed from session only when session is invalidated
+	 */
+	public static void setCollectionAttribute(String key, Collection <? extends Serializable> value, HttpSession session) {
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER)
 			.debug("An attribute being set in the session with key being " + key);
 		session.setAttribute(key, value);
@@ -191,7 +204,15 @@ public class SessionUtils {
 		session.invalidate();
 	}
 
-	public static void setAttribute(String key, Object value,
+	/**
+	 * This method is a placeholder which documents where objects implmenting
+	 * the QueryResult interface are saved into the httpsession.  
+	 * QueryResults objects are not Serializable so they should not be saved
+	 * into an httpsession in their current form.  They either need to be modified
+	 * so that they are Serializable or the mechanism to pass query results to
+	 * the presentation tier needs to be refactored.
+	 */
+	public static void setQueryResultAttribute(String key, QueryResult value,
 			HttpServletRequest request) throws PageExpiredException {
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
 				"An attribute being set in the session with key being " + key);
@@ -200,7 +221,39 @@ public class SessionUtils {
 		HttpSession session = request.getSession();
 		FlowManager flowManager = (FlowManager) session
 				.getAttribute(Constants.FLOWMANAGER);
-		flowManager.addToFlow(currentFlowKey, key, value);
+		flowManager.addQueryResultToFlow(currentFlowKey, key, value);
+	}
+	
+	/**
+	 * Save a single Serializable object into the HttpSession via a 
+	 * FlowManager.
+	 */
+	public static void setAttribute(String key, Serializable value,
+			HttpServletRequest request) throws PageExpiredException {
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+				"An attribute being set in the session with key being " + key);
+		String currentFlowKey = (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY);
+		HttpSession session = request.getSession();
+		FlowManager flowManager = (FlowManager) session
+				.getAttribute(Constants.FLOWMANAGER);
+		flowManager.addObjectToFlow(currentFlowKey, key, value);
+	}
+
+	/**
+	 * Save a Collection of Serializable objects into the HttpSession via a 
+	 * FlowManager.
+	 */
+	public static void setCollectionAttribute(String key, Collection<? extends Serializable> value,
+			HttpServletRequest request) throws PageExpiredException {
+		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug(
+				"An attribute being set in the session with key being " + key);
+		String currentFlowKey = (String) request
+				.getAttribute(Constants.CURRENTFLOWKEY);
+		HttpSession session = request.getSession();
+		FlowManager flowManager = (FlowManager) session
+				.getAttribute(Constants.FLOWMANAGER);
+		flowManager.addCollectionToFlow(currentFlowKey, key, value);
 	}
 
 	public static Object getAttribute(String key, HttpServletRequest request)

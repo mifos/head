@@ -73,9 +73,9 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 				.setAttribute(PersonnelConstants.OFFICE,
 						personnelBusinessService.getOffice(Short.valueOf("1")),
 						request);
-		SessionUtils.setAttribute(PersonnelConstants.ROLES_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST,
 				personnelBusinessService.getRoles(), request);
-		SessionUtils.setAttribute(PersonnelConstants.ROLEMASTERLIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.ROLEMASTERLIST,
 				personnelBusinessService.getRoles(), request);
 
 		personnelBusinessService = null;

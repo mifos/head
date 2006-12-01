@@ -42,7 +42,7 @@ public class CustomerAction extends AccountAppAction {
 		logger.debug("In CustomerAction::getAllActivity()");
 		String type = request.getParameter("type");
 		String globalCustNum=request.getParameter("globalCustNum");
-		SessionUtils.setAttribute(CustomerConstants.CLIENTRECENTACCACTIVITYLIST,getCustomerBusinessService().getAllActivityView(globalCustNum),request);
+		SessionUtils.setCollectionAttribute(CustomerConstants.CLIENTRECENTACCACTIVITYLIST,getCustomerBusinessService().getAllActivityView(globalCustNum),request);
 		return mapping.findForward("view"+type+"Activity");
 	}
 }

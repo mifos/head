@@ -1,6 +1,8 @@
 package org.mifos.application.customer.business;
 
-public class CustomerPerformanceHistoryView {
+import java.io.Serializable;
+
+public class CustomerPerformanceHistoryView implements Serializable {
 
 	private Integer meetingsAttended;
 

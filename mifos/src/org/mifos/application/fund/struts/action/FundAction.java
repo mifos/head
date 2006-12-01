@@ -85,7 +85,7 @@ public class FundAction extends BaseAction {
 			throws Exception {
 		logger.debug("start Load method of Fund Action");
 		doCleanUp(request);
-		SessionUtils.setAttribute(FundConstants.ALL_FUNDLIST, getFundCodes(),request);
+		SessionUtils.setCollectionAttribute(FundConstants.ALL_FUNDLIST, getFundCodes(),request);
 		logger.debug("Load method of Fund Action called");
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -130,7 +130,7 @@ public class FundAction extends BaseAction {
 	public ActionForward viewAllFunds(ActionMapping mapping,
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-		SessionUtils.setAttribute(FundConstants.FUNDLIST, getFunds(),request);
+		SessionUtils.setCollectionAttribute(FundConstants.FUNDLIST, getFunds(),request);
 		return mapping.findForward(ActionForwards.viewAllFunds_success.toString());
 	}
 	

@@ -1,12 +1,13 @@
 package org.mifos.application.accounts.loan.business;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Money;
 
-public class LoanActivityView {
+public class LoanActivityView implements Serializable{
 	
 	private Integer id;
 	private Date actionDate;

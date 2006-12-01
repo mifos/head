@@ -79,7 +79,7 @@ public class SearchAction extends BaseAction {
 	}
 	public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		cleanUpSearch(request);
-		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,getSearchResult(form),request);
+		SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,getSearchResult(form),request);
 		return mapping.findForward(ActionForwards.search_success.toString());
 	}
 	

@@ -103,13 +103,13 @@ public class AccountStatusAction extends BaseAction {
 		List<OfficeView> activeBranches = masterService
 				.getActiveBranches(userContext.getBranchId());
 
-		SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
+		SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
 				activeBranches, request);
 
 		if (activeBranches.size() == 1) {
 			List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
 					userContext, activeBranches.get(0).getOfficeId());
-			SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
+			SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS,
 					loanOfficers, request);
 		} else {
 			SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS,
@@ -142,7 +142,7 @@ public class AccountStatusAction extends BaseAction {
 			return mapping.findForward(ActionForwards.noresultfound.toString());
 		}
 
-		SessionUtils.setAttribute(LoanConstants.SEARCH_RESULTS, searchResults,
+		SessionUtils.setCollectionAttribute(LoanConstants.SEARCH_RESULTS, searchResults,
 				request);
 
 		return mapping
@@ -174,7 +174,7 @@ public class AccountStatusAction extends BaseAction {
 		Short officeId = Short.valueOf(accountStatusActionForm.getOfficeId());
 		List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
 				getUserContext(request), officeId);
-		SessionUtils.setAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers,
+		SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS, loanOfficers,
 				request);
 
 		if (officeId != null) {

@@ -242,9 +242,9 @@ public class FeeAction extends BaseAction {
 		for (FeeBO fee : productFees)
 			setLocaleForMasterEntities(fee, localeId);
 
-		SessionUtils.setAttribute(FeeConstants.CUSTOMER_FEES, customerFees,
+		SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMER_FEES, customerFees,
 				request);
-		SessionUtils.setAttribute(FeeConstants.PRODUCT_FEES, productFees,
+		SessionUtils.setCollectionAttribute(FeeConstants.PRODUCT_FEES, productFees,
 				request);
 		return mapping.findForward(ActionForwards.viewAll_success.toString());
 	}
@@ -361,28 +361,28 @@ public class FeeAction extends BaseAction {
 	private void loadCreateMasterData(HttpServletRequest request)
 			throws ApplicationException, SystemException {
 		Short localeId = getUserContext(request).getLocaleId();
-		SessionUtils.setAttribute(FeeConstants.CATEGORYLIST, getMasterEntities(
+		SessionUtils.setCollectionAttribute(FeeConstants.CATEGORYLIST, getMasterEntities(
 				CategoryTypeEntity.class, localeId), request);
 
 		List<MasterDataEntity> timeOfCharges = getMasterEntities(
 				FeePaymentEntity.class, localeId);
-		SessionUtils.setAttribute(FeeConstants.TIMEOFCHARGES, timeOfCharges,
+		SessionUtils.setCollectionAttribute(FeeConstants.TIMEOFCHARGES, timeOfCharges,
 				request);
-		SessionUtils.setAttribute(FeeConstants.CUSTOMERTIMEOFCHARGES,
+		SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMERTIMEOFCHARGES,
 				getTimeOfChargeForCustomer(timeOfCharges), request);
-		SessionUtils.setAttribute(FeeConstants.FORMULALIST, getMasterEntities(
+		SessionUtils.setCollectionAttribute(FeeConstants.FORMULALIST, getMasterEntities(
 				FeeFormulaEntity.class, localeId), request);
-		SessionUtils.setAttribute(FeeConstants.FEE_FREQUENCY_TYPE_LIST,
+		SessionUtils.setCollectionAttribute(FeeConstants.FEE_FREQUENCY_TYPE_LIST,
 				getMasterEntities(FeeFrequencyTypeEntity.class, localeId),
 				request);
-		SessionUtils.setAttribute(FeeConstants.GLCODE_LIST, getGLCodes(),
+		SessionUtils.setCollectionAttribute(FeeConstants.GLCODE_LIST, getGLCodes(),
 				request);
 	}
 
 	private void loadUpdateMasterData(HttpServletRequest request)
 			throws ApplicationException, SystemException {
 
-		SessionUtils.setAttribute(FeeConstants.STATUSLIST, getMasterEntities(
+		SessionUtils.setCollectionAttribute(FeeConstants.STATUSLIST, getMasterEntities(
 				FeeStatusEntity.class, getUserContext(request).getLocaleId()),
 				request);
 	}

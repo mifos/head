@@ -50,7 +50,7 @@ public class ApplyChargeAction extends BaseAction {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		Integer accountId = Integer.valueOf(request.getParameter("accountId"));
-		SessionUtils.setAttribute(AccountConstants.APPLICABLE_CHARGE_LIST,
+		SessionUtils.setCollectionAttribute(AccountConstants.APPLICABLE_CHARGE_LIST,
 				getAccountBusinessService().getAppllicableFees(accountId,
 						userContext), request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,

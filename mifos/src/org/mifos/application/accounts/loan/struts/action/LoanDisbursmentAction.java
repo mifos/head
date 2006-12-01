@@ -62,7 +62,7 @@ public class LoanDisbursmentAction extends BaseAction {
 								.toString()));
 		loan.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-		SessionUtils.setAttribute(MasterConstants.PAYMENT_TYPE,
+		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
 				getMasterDataService().getSupportedPaymentModes(
 						uc.getLocaleId(),
 						TrxnTypes.loan_disbursement.getValue()), request);

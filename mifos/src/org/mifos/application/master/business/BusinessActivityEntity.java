@@ -1,6 +1,8 @@
 package org.mifos.application.master.business;
 
-public class BusinessActivityEntity {
+import java.io.Serializable;
+
+public class BusinessActivityEntity implements Serializable{
 
 	private Integer id;
 

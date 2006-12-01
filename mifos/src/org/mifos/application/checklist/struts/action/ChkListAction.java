@@ -60,10 +60,10 @@ public class ChkListAction extends BaseAction {
 		request.getSession().setAttribute("ChkListActionForm", null);
 		List<CheckListMasterView> masterData = ((CheckListBusinessService) getService())
 				.getCheckListMasterData(getUserContext(request));
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
-		SessionUtils.setAttribute(CheckListConstants.STATES, statesData,
+		SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
+		SessionUtils.setCollectionAttribute(CheckListConstants.STATES, statesData,
 				request);
-		SessionUtils.setAttribute(CheckListConstants.CHECKLIST_MASTERDATA,
+		SessionUtils.setCollectionAttribute(CheckListConstants.CHECKLIST_MASTERDATA,
 				masterData, request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -76,8 +76,8 @@ public class ChkListAction extends BaseAction {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
 		List<String> details = chkListActionForm.getValidCheckListDetails();
 		List<CheckListStatesView> states = getStates(chkListActionForm, request);
-		SessionUtils.setAttribute(CheckListConstants.STATES, states, request);
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
+		SessionUtils.setCollectionAttribute(CheckListConstants.STATES, states, request);
+		SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -87,7 +87,7 @@ public class ChkListAction extends BaseAction {
 			throws Exception {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
 		List<String> details = chkListActionForm.getValidCheckListDetails();
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
+		SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
 		isValidCheckListState(
 				getShortValue(chkListActionForm.getMasterTypeId()),
 				getShortValue(chkListActionForm.getStateId()),
@@ -103,7 +103,7 @@ public class ChkListAction extends BaseAction {
 			throws Exception {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
 		List<String> details = chkListActionForm.getValidCheckListDetails();
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request
+		SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request
 				.getSession());
 		return mapping.findForward(ActionForwards.previous_success.toString());
 	}
@@ -168,20 +168,20 @@ public class ChkListAction extends BaseAction {
 		List<AccountCheckListBO> accountCheckLists = ((CheckListBusinessService) getService())
 				.retreiveAllAccountCheckLists();
 		Short localeId = getUserContext(request).getLocaleId();
-		SessionUtils.setAttribute(CheckListConstants.CENTER_CHECKLIST,
+		SessionUtils.setCollectionAttribute(CheckListConstants.CENTER_CHECKLIST,
 				getCustomerCheckLists(customerCheckLists, CustomerLevel.CENTER,
 						localeId), request);
-		SessionUtils.setAttribute(CheckListConstants.GROUP_CHECKLIST,
+		SessionUtils.setCollectionAttribute(CheckListConstants.GROUP_CHECKLIST,
 				getCustomerCheckLists(customerCheckLists, CustomerLevel.GROUP,
 						localeId), request);
-		SessionUtils.setAttribute(CheckListConstants.CLIENT_CHECKLIST,
+		SessionUtils.setCollectionAttribute(CheckListConstants.CLIENT_CHECKLIST,
 				getCustomerCheckLists(customerCheckLists, CustomerLevel.CLIENT,
 						localeId), request);
 
-		SessionUtils.setAttribute(CheckListConstants.LOAN_CHECKLIST,
+		SessionUtils.setCollectionAttribute(CheckListConstants.LOAN_CHECKLIST,
 				getAccountCheckLists(accountCheckLists, ProductType.LOAN,
 						localeId), request);
-		SessionUtils.setAttribute(CheckListConstants.SAVINGS_CHECKLIST,
+		SessionUtils.setCollectionAttribute(CheckListConstants.SAVINGS_CHECKLIST,
 				getAccountCheckLists(accountCheckLists, ProductType.SAVINGS,
 						localeId), request);
 		return mapping.findForward(ActionForwards.loadAllChecklist_success
@@ -246,12 +246,12 @@ public class ChkListAction extends BaseAction {
 
 		List<CheckListMasterView> masterData = ((CheckListBusinessService) getService())
 				.getCheckListMasterData(getUserContext(request));
-		SessionUtils.setAttribute(CheckListConstants.CHECKLIST_MASTERDATA,
+		SessionUtils.setCollectionAttribute(CheckListConstants.CHECKLIST_MASTERDATA,
 				masterData, request);
 		List<CheckListStatesView> states = getStates(chkListActionForm, request);
-		SessionUtils.setAttribute(CheckListConstants.STATES, states, request);
+		SessionUtils.setCollectionAttribute(CheckListConstants.STATES, states, request);
 		List<String> details = chkListActionForm.getValidCheckListDetails();
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
+		SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
 		SessionUtils.setAttribute(CheckListConstants.OLDCHECKLISTNAME, checkList.getChecklistName(), request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
@@ -264,8 +264,8 @@ public class ChkListAction extends BaseAction {
 
 		List<String> details = chkListActionForm.getValidCheckListDetails();
 		List<CheckListStatesView> states = getStates(chkListActionForm, request);
-		SessionUtils.setAttribute(CheckListConstants.STATES, states, request);
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
+		SessionUtils.setCollectionAttribute(CheckListConstants.STATES, states, request);
+		SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
@@ -275,7 +275,7 @@ public class ChkListAction extends BaseAction {
 			throws Exception {
 		ChkListActionForm chkListActionForm = (ChkListActionForm) form;
 		List<String> details = chkListActionForm.getValidCheckListDetails();
-		SessionUtils.setAttribute(CheckListConstants.DETAILS, details, request);
+		SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
 		return mapping.findForward(ActionForwards.managepreview_success
 				.toString());
 	}

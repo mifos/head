@@ -1,6 +1,8 @@
 package org.mifos.application.checklist.util.helpers;
 
-public class CheckListMasterView {
+import java.io.Serializable;
+
+public class CheckListMasterView implements Serializable {
 
 	private boolean isCustomer;
 

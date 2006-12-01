@@ -1,11 +1,12 @@
 package org.mifos.application.accounts.savings.business;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.framework.struts.tags.DateHelper;
 
-public class SavingsRecentActivityView {
+public class SavingsRecentActivityView implements Serializable{
 	
 	private Integer accountTrxnId;
 	private Date actionDate;

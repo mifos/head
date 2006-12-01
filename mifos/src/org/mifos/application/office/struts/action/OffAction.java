@@ -128,15 +128,15 @@ public class OffAction extends BaseAction {
 		List<OfficeBO> officeList = getOffices(userContext,
 				((OfficeBusinessService) getService())
 						.getOfficesTillBranchOffice());
-		SessionUtils.setAttribute(OfficeConstants.GET_HEADOFFICE, getOffice(
+		SessionUtils.setCollectionAttribute(OfficeConstants.GET_HEADOFFICE, getOffice(
 				officeList, OfficeLevel.HEADOFFICE), request);
-		SessionUtils.setAttribute(OfficeConstants.GET_REGIONALOFFICE,
+		SessionUtils.setCollectionAttribute(OfficeConstants.GET_REGIONALOFFICE,
 				getOffice(officeList, OfficeLevel.REGIONALOFFICE), request);
-		SessionUtils.setAttribute(OfficeConstants.GET_SUBREGIONALOFFICE,
+		SessionUtils.setCollectionAttribute(OfficeConstants.GET_SUBREGIONALOFFICE,
 				getOffice(officeList, OfficeLevel.SUBREGIONALOFFICE), request);
-		SessionUtils.setAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(
+		SessionUtils.setCollectionAttribute(OfficeConstants.GET_AREAOFFICE, getOffice(
 				officeList, OfficeLevel.AREAOFFICE), request);
-		SessionUtils.setAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(
+		SessionUtils.setCollectionAttribute(OfficeConstants.GET_BRANCHOFFICE, getOffices(
 				userContext, ((OfficeBusinessService) getService())
 						.getBranchOffices()), request);
 		loadofficeLevels(request);
@@ -314,7 +314,7 @@ public class OffAction extends BaseAction {
 					}
 				}
 			SessionUtils
-					.setAttribute(OfficeConstants.PARENTS, parents, request);
+					.setCollectionAttribute(OfficeConstants.PARENTS, parents, request);
 		}
 	}
 
@@ -349,19 +349,19 @@ public class OffAction extends BaseAction {
 						BusinessServiceName.MasterDataService);
 		List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService
 				.retrieveCustomFieldsDefinition(EntityType.OFFICE);
-		SessionUtils.setAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
+		SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST,
 				customFieldDefs, request);
 	}
 
 	private void loadofficeLevels(HttpServletRequest request) throws Exception {
-		SessionUtils.setAttribute(OfficeConstants.OFFICELEVELLIST,
+		SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST,
 				((OfficeBusinessService) getService())
 						.getConfiguredLevels(getUserContext(request)
 								.getLocaleId()), request);
 	}
 
 	private void loadOfficeStatus(HttpServletRequest request) throws Exception {
-		SessionUtils.setAttribute(OfficeConstants.OFFICESTATUSLIST,
+		SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESTATUSLIST,
 				((OfficeBusinessService) getService())
 						.getStatusList(getUserContext(request).getLocaleId()),
 				request);

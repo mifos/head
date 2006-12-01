@@ -63,7 +63,7 @@ public class EditStatusAction extends BaseAction {
 		accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
 		setFormAttributes(form, accountBO);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
-		SessionUtils.setAttribute(SavingsConstants.STATUS_LIST,
+		SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_LIST,
 				getAccountBusinessService()
 						.getStatusList(
 								accountBO.getAccountState(),
@@ -184,7 +184,7 @@ public class EditStatusAction extends BaseAction {
 				.getStatusChecklist(
 						getShortValue(editStatusActionForm.getNewStatusId()),
 						getShortValue(editStatusActionForm.getAccountTypeId()));
-		SessionUtils.setAttribute(SavingsConstants.STATUS_CHECK_LIST,
+		SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST,
 				checklist, request);
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
 				.getNewStatusId()))

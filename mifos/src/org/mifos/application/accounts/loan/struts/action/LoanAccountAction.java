@@ -129,7 +129,7 @@ public class LoanAccountAction extends AccountAppAction {
 			throws Exception {
 		logger.debug("In loanAccountAction::getAllActivity()");
 		String globalAccountNum = request.getParameter("globalAccountNum");
-		SessionUtils.setAttribute(LoanConstants.LOAN_ALL_ACTIVITY_VIEW,
+		SessionUtils.setCollectionAttribute(LoanConstants.LOAN_ALL_ACTIVITY_VIEW,
 				loanBusinessService.getAllActivityView(globalAccountNum,
 						getUserContext(request).getLocaleId()), request);
 		return mapping.findForward(MethodNameConstants.GETALLACTIVITY_SUCCESS);
@@ -189,7 +189,7 @@ public class LoanAccountAction extends AccountAppAction {
 		loanBO.setUserContext(getUserContext(request));
 		List<AccountStatusChangeHistoryEntity> accStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>(
 				loanBO.getAccountStatusChangeHistory());
-		SessionUtils.setAttribute(LoanConstants.STATUS_HISTORY,
+		SessionUtils.setCollectionAttribute(LoanConstants.STATUS_HISTORY,
 				accStatusChangeHistory, request);
 		loanBO = null;
 		return mapping.findForward(ActionForwards.viewStatusHistory.toString());
@@ -229,7 +229,7 @@ public class LoanAccountAction extends AccountAppAction {
 						BusinessServiceName.LoanProduct))
 				.getApplicablePrdOfferings(customer.getCustomerLevel());
 		removePrdOfferingsNotMachingCustomerMeeting(loanOfferings, customer);
-		SessionUtils.setAttribute(LoanConstants.LOANPRDOFFERINGS,
+		SessionUtils.setCollectionAttribute(LoanConstants.LOANPRDOFFERINGS,
 				loanOfferings, request);
 		SessionUtils.setAttribute(LoanConstants.LOANACCOUNTOWNER, customer,
 				request);
@@ -254,7 +254,7 @@ public class LoanAccountAction extends AccountAppAction {
 
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
-		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
+		SessionUtils.setCollectionAttribute(LoanConstants.LOANFUNDS,
 				getFunds(loanOffering), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -303,7 +303,7 @@ public class LoanAccountAction extends AccountAppAction {
 						.getCollateralTypeIdValue());
 		loan.setCollateralType(collateralTypeEntity);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
-		SessionUtils.setAttribute(LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS,
+		SessionUtils.setCollectionAttribute(LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS,
 				getLoanSchedule(loan), request);
 		boolean isPendingApprovalDefined = Configuration.getInstance()
 				.getAccountConfig(getUserContext(request).getBranchId())
@@ -471,7 +471,7 @@ public class LoanAccountAction extends AccountAppAction {
 
 	private void loadLoanDetailPageInfo(LoanBO loanBO,
 			HttpServletRequest request) throws Exception {
-		SessionUtils.setAttribute(LoanConstants.RECENTACCOUNTACTIVITIES,
+		SessionUtils.setCollectionAttribute(LoanConstants.RECENTACCOUNTACTIVITIES,
 				loanBusinessService.getRecentActivityView(loanBO
 						.getGlobalAccountNum(), getUserContext(request)
 						.getLocaleId()), request);
@@ -479,7 +479,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.setAttribute(AccountConstants.LAST_PAYMENT_ACTION,
 						loanBusinessService.getLastPaymentAction(loanBO
 								.getAccountId()), request);
-		SessionUtils.setAttribute(LoanConstants.NOTES, loanBO
+		SessionUtils.setCollectionAttribute(LoanConstants.NOTES, loanBO
 				.getRecentAccountNotes(), request);
 		 loadCustomFieldDefinitions(request);
 	}
@@ -585,18 +585,18 @@ public class LoanAccountAction extends AccountAppAction {
 			}
 		}
 		actionForm.setDefaultFees(defaultFees);
-		SessionUtils.setAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
+		SessionUtils.setCollectionAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
 				additionalFees, request);
 	}
 
 	private void loadMasterData(HttpServletRequest request) throws Exception {
 		
 		
-		SessionUtils.setAttribute(MasterConstants.COLLATERAL_TYPES,
+		SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES,
 				getMasterEntities(CollateralTypeEntity.class, getUserContext(
 						request).getLocaleId()), request);
 		SessionUtils
-				.setAttribute(MasterConstants.BUSINESS_ACTIVITIES,
+				.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
 						((MasterDataService) ServiceFactory.getInstance()
 								.getBusinessService(
 										BusinessServiceName.MasterDataService))
@@ -769,7 +769,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 	private void loadCustomFieldDefinitions(HttpServletRequest request)
 	throws Exception {
-		SessionUtils.setAttribute(LoanConstants.CUSTOM_FIELDS,
+		SessionUtils.setCollectionAttribute(LoanConstants.CUSTOM_FIELDS,
 				getAccountBizService().retrieveCustomFieldsDefinition(EntityType.LOAN) , request);
 	}
 	

@@ -190,15 +190,15 @@ public class PersonnelSettingsAction extends BaseAction {
 	private void loadMasterData(HttpServletRequest request, Short localeId)
 			throws Exception {
 		MasterPersistence masterPersistence = new MasterPersistence();
-		SessionUtils.setAttribute(PersonnelConstants.GENDER_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.GENDER_LIST,
 				masterPersistence.retrieveMasterEntities(
 						MasterConstants.GENDER, localeId), request);
 
-		SessionUtils.setAttribute(PersonnelConstants.MARITAL_STATUS_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST,
 				masterPersistence.retrieveMasterEntities(
 						MasterConstants.MARITAL_STATUS, localeId), request);
 
-		SessionUtils.setAttribute(PersonnelConstants.LANGUAGE_LIST,
+		SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST,
 				masterPersistence.retrieveMasterEntities(
 						MasterConstants.LANGUAGE, localeId), request);
 	}

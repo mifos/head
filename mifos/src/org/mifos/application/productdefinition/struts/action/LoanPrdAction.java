@@ -382,7 +382,7 @@ public class LoanPrdAction extends BaseAction {
 			HttpServletResponse response) throws Exception {
 		prdDefLogger
 				.debug("start viewAllLoanProducts method of Loan Product Action");
-		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,
 				((LoanPrdBusinessService) ServiceFactory.getInstance()
 						.getBusinessService(BusinessServiceName.LoanProduct))
 						.getAllLoanOfferings(getUserContext(request)
@@ -404,35 +404,35 @@ public class LoanPrdAction extends BaseAction {
 				.getInstance().getBusinessService(BusinessServiceName.fund);
 		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
 		Short localeId = getUserContext(request).getLocaleId();
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANPRODUCTCATEGORYLIST, service
 						.getActiveLoanProductCategories(), request);
-		SessionUtils.setAttribute(ProductDefinitionConstants.LOANAPPLFORLIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANAPPLFORLIST,
 				service.getLoanApplicableCustomerTypes(localeId), request);
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANGRACEPERIODTYPELIST,
 				getMasterEntities(GracePeriodTypeEntity.class, localeId),
 				request);
 		SessionUtils
-				.setAttribute(ProductDefinitionConstants.INTERESTTYPESLIST,
+				.setCollectionAttribute(ProductDefinitionConstants.INTERESTTYPESLIST,
 						getMasterEntities(InterestTypesEntity.class, localeId),
 						request);
-		SessionUtils.setAttribute(ProductDefinitionConstants.INTCALCTYPESLIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST,
 				getMasterEntities(InterestCalcTypeEntity.class, localeId),
 				request);
-		SessionUtils.setAttribute(ProductDefinitionConstants.SRCFUNDSLIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCFUNDSLIST,
 				fundService.getSourcesOfFund(), request);
-		SessionUtils.setAttribute(ProductDefinitionConstants.LOANFEESLIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANFEESLIST,
 				getFeeViewList(getUserContext(request), fees), request);
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANPRICIPALGLCODELIST, getGLCodes(
 						FinancialActionConstants.PRINCIPALPOSTING,
 						FinancialConstants.CREDIT), request);
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANINTERESTGLCODELIST, getGLCodes(
 						FinancialActionConstants.INTERESTPOSTING,
 						FinancialConstants.CREDIT), request);
-		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDFEE, fees,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEE, fees,
 				request);
 		prdDefLogger
 				.debug("Load master data method of Loan Product Action called");
@@ -443,10 +443,10 @@ public class LoanPrdAction extends BaseAction {
 			throws Exception {
 		prdDefLogger
 				.debug("start loadSelectedFeesAndFunds method of Loan Product Action ");
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANPRDFEESELECTEDLIST,
 				feesSelected, request);
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST,
 				fundsSelected, request);
 		prdDefLogger
@@ -460,7 +460,7 @@ public class LoanPrdAction extends BaseAction {
 				.getInstance().getBusinessService(
 						BusinessServiceName.LoanProduct);
 		Short localeId = getUserContext(request).getLocaleId();
-		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTATUSLIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDSTATUSLIST,
 				service.getApplicablePrdStatus(localeId), request);
 		prdDefLogger
 				.debug("Load Status list method of Loan Product Action called");

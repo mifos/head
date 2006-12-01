@@ -145,7 +145,7 @@ public class SavingsAction extends AccountAppAction {
 		List<PrdOfferingView> savingPrds = savingsService.getSavingProducts(
 				customer.getOffice(), customer.getCustomerLevel(),
 				SavingsConstants.SAVINGS_ALL);
-		SessionUtils.setAttribute(SavingsConstants.SAVINGS_PRD_OFFERINGS,
+		SessionUtils.setCollectionAttribute(SavingsConstants.SAVINGS_PRD_OFFERINGS,
 				savingPrds, request);
 		logger.info(" Retrieved " + savingPrds.size()
 				+ " Products for customerId: " + customer.getCustomerId());
@@ -169,7 +169,7 @@ public class SavingsAction extends AccountAppAction {
 			throws Exception {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		SessionUtils.setAttribute(MasterConstants.INTEREST_CAL_TYPES,
+		SessionUtils.setCollectionAttribute(MasterConstants.INTEREST_CAL_TYPES,
 				masterDataService.retrieveMasterEntities(
 						InterestCalcTypeEntity.class, uc.getLocaleId()),
 				request);
@@ -181,14 +181,14 @@ public class SavingsAction extends AccountAppAction {
 			HttpServletRequest request) throws Exception{
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		SessionUtils.setAttribute(MasterConstants.SAVINGS_TYPE,
+		SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE,
 				masterDataService.retrieveMasterEntities(
 						SavingsTypeEntity.class, uc.getLocaleId()), request);
-		SessionUtils.setAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT,
+		SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT,
 				masterDataService.retrieveMasterEntities(
 						RecommendedAmntUnitEntity.class, uc.getLocaleId()),
 				request);	
-		SessionUtils.setAttribute(SavingsConstants.CUSTOM_FIELDS,
+		SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS,
 				savingsService.retrieveCustomFieldsDefinition(), request);
 	}
 	
@@ -352,10 +352,10 @@ public class SavingsAction extends AccountAppAction {
 
 		actionForm.clear();
 		
-		SessionUtils.setAttribute(
+		SessionUtils.setCollectionAttribute(
 				SavingsConstants.RECENTY_ACTIVITY_DETAIL_PAGE, savings
 						.getRecentAccountActivity(3), request);
-		SessionUtils.setAttribute(SavingsConstants.NOTES, savings
+		SessionUtils.setCollectionAttribute(SavingsConstants.NOTES, savings
 				.getRecentAccountNotes(), request);
 		logger.info(" Savings object retrieved successfully");
 		return mapping.findForward("get_success");
@@ -434,7 +434,7 @@ public class SavingsAction extends AccountAppAction {
 				Constants.BUSINESS_KEY, request);
 		savings = savingsService.findById(savings.getAccountId());
 		savings.setUserContext(uc);
-		SessionUtils.setAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST,
+		SessionUtils.setCollectionAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST,
 				savings.getRecentAccountActivity(null), request);
 		return mapping.findForward("getRecentActivity_success");
 	}
@@ -513,7 +513,7 @@ public class SavingsAction extends AccountAppAction {
 				}
 			}
 		}
-		SessionUtils.setAttribute(SavingsConstants.TRXN_HISTORY_LIST,
+		SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST,
 				savingsTransactionHistoryViewList, request);
 		return mapping.findForward("getTransactionHistory_success");
 	}
@@ -530,7 +530,7 @@ public class SavingsAction extends AccountAppAction {
 				Constants.USER_CONTEXT_KEY, request.getSession()));
 		List<AccountStatusChangeHistoryEntity> savingsStatusHistoryViewList = new ArrayList<AccountStatusChangeHistoryEntity>(
 				savings.getAccountStatusChangeHistory());
-		SessionUtils.setAttribute(SavingsConstants.STATUS_CHANGE_HISTORY_LIST,
+		SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHANGE_HISTORY_LIST,
 				savingsStatusHistoryViewList, request);
 
 		return mapping.findForward("getStatusHistory_success");

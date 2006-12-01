@@ -37,12 +37,15 @@
  */
 package org.mifos.framework.util.helpers;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.hibernate.helper.QueryResult;
 
-public class FlowManager {
+public class FlowManager implements Serializable{
 
 	private Map<String, Flow> flowData = new HashMap<String, Flow>();
 
@@ -67,25 +70,47 @@ public class FlowManager {
 		return flowData.get(key);
 	}
 
-	public void addToFlow(String flowKey, String key, Object value)
-			throws PageExpiredException {
-		if (!isFlowValid(flowKey)) {
+	public Flow getFlowWithValidation(String key) throws PageExpiredException {
+		if (!isFlowValid(key)) {
 			throw new PageExpiredException(
 					ExceptionConstants.PAGEEXPIREDEXCEPTION);
 		}
-		Flow flow = getFlow(flowKey.toString());
+		return getFlow(key);
+	}
+
+	/**
+	 * This is placeholder method documenting the use of non-Serializable
+	 * QueryResults.  It should be removed after QueryResults are made
+	 * Serializable or refactored.
+	 */	
+	public void addQueryResultToFlow(String flowKey, String key, QueryResult value)
+			throws PageExpiredException {
+		Flow flow = getFlowWithValidation(flowKey);
+		flow.addQueryResultToSession(key, value);
+	}
+	
+	public void addObjectToFlow(String flowKey, String key, Serializable value)
+			throws PageExpiredException {
+		Flow flow = getFlowWithValidation(flowKey);
 		flow.addObjectToSession(key, value);
 	}
 
+	public void addCollectionToFlow(String flowKey, String key, Collection<? extends Serializable> value)
+			throws PageExpiredException {
+		Flow flow = getFlowWithValidation(flowKey);
+		flow.addCollectionToSession(key, value);
+	}
+		
 	public Object getFromFlow(String flowKey, String key)
 			throws PageExpiredException {
 		if (!isFlowValid(flowKey)) {
 			throw new PageExpiredException(
 					ExceptionConstants.PAGEEXPIREDEXCEPTION);
 		}
-		Flow flow = getFlow(flowKey.toString());
+		Flow flow = getFlow(flowKey);
 		return flow.getObjectFromSession(key);
 	}
+
 
 	public void removeFlow(String key) {
 		flowData.remove(key);
@@ -97,7 +122,7 @@ public class FlowManager {
 			throw new PageExpiredException(
 					ExceptionConstants.PAGEEXPIREDEXCEPTION);
 		}
-		Flow flow = getFlow(flowKey.toString());
+		Flow flow = getFlow(flowKey);
 		flow.removeFromSession(key);
 	}
 

@@ -1,6 +1,8 @@
 package org.mifos.application.master.business;
 
-public class FundCodeEntity {
+import java.io.Serializable;
+
+public class FundCodeEntity implements Serializable {
 	private final Short fundCodeId;
 	
 	private String fundCodeValue;

@@ -85,7 +85,7 @@ public class OffHierarchyAction extends BaseAction {
 		List<OfficeLevelEntity> officeLevels = ((OfficeHierarchyBusinessService) getService())
 				.getOfficeLevels(getUserContext(request).getLocaleId());
 		setConfiguredDataInForm((OffHierarchyActionForm) form, officeLevels);
-		SessionUtils.setAttribute(OfficeConstants.OFFICE_LEVELS, officeLevels,
+		SessionUtils.setCollectionAttribute(OfficeConstants.OFFICE_LEVELS, officeLevels,
 				request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}

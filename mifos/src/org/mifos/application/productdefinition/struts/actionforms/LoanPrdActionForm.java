@@ -714,7 +714,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 					}
 				}
 			}
-			SessionUtils.setAttribute(
+			SessionUtils.setCollectionAttribute(
 					ProductDefinitionConstants.LOANPRDFEESELECTEDLIST,
 					feeViews, request);
 		} catch (PageExpiredException e) {
@@ -732,7 +732,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 						selectedFunds.add(fund);
 				}
 			}
-			SessionUtils.setAttribute(
+			SessionUtils.setCollectionAttribute(
 					ProductDefinitionConstants.LOANPRDFUNDSELECTEDLIST,
 					selectedFunds, request);
 		} catch (PageExpiredException e) {

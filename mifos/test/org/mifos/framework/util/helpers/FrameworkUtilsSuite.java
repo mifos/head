@@ -14,6 +14,8 @@ public class FrameworkUtilsSuite extends MifosTestSuite {
     public static Test suite() throws Exception {
         TestSuite suite = new TestSuite();
         suite.addTestSuite(FlowManagerHelperTest.class);
+        suite.addTestSuite(FlowManagerTest.class);
+        suite.addTestSuite(FlowTest.class);
         suite.addTestSuite(MifosDoubleConverterTest.class);
         suite.addTestSuite(ConvertionUtilTest.class);
         suite.addTestSuite(MethodInvokerTest.class);

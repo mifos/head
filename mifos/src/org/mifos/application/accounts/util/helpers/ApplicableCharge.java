@@ -1,6 +1,8 @@
 package org.mifos.application.accounts.util.helpers;
 
-public class ApplicableCharge {
+import java.io.Serializable;
+
+public class ApplicableCharge implements Serializable{
 
 	private String feeId;
 

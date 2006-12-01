@@ -82,7 +82,7 @@ public class CustSearchAction extends SearchAction {
 			List<PersonnelBO> personnelList = new PersonnelBusinessService()
 					.getActiveLoUnderUser(getShortValue(actionForm
 							.getOfficeId()));
-			SessionUtils.setAttribute(CustomerSearchConstants.LOANOFFICERSLIST,
+			SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST,
 					personnelList, request);
 		}
 		String officeName = null;
@@ -208,7 +208,7 @@ public class CustSearchAction extends SearchAction {
 		if (searchString.equals(""))
 			throw new CustomerException(
 					CustomerSearchConstants.NAMEMANDATORYEXCEPTION);
-		SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
+		SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,
 				getCustomerBusinessService().search(searchString, officeId,
 						userContext.getId(), userContext.getBranchId()),
 				request);
@@ -260,7 +260,7 @@ public class CustSearchAction extends SearchAction {
 		else
 			customerList = getCustomerBusinessService().getGroupsUnderUser(
 					personnel);
-		SessionUtils.setAttribute(CustomerSearchConstants.CUSTOMERLIST,
+		SessionUtils.setCollectionAttribute(CustomerSearchConstants.CUSTOMERLIST,
 				customerList, request);
 		SessionUtils.setAttribute("GrpHierExists", isCenterHierarchyExist,
 				request);
@@ -277,14 +277,14 @@ public class CustSearchAction extends SearchAction {
 				OfficeLevel.BRANCHOFFICE)) {
 			List<PersonnelBO> personnelList = new PersonnelBusinessService()
 					.getActiveLoUnderUser(personnel.getOffice().getOfficeId());
-			SessionUtils.setAttribute(CustomerSearchConstants.LOANOFFICERSLIST,
+			SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST,
 					personnelList, request);
 			SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD,
 					CustomerSearchConstants.LOADFORWARDNONLOANOFFICER, request);
 			form.setOfficeId(personnel.getOffice().getOfficeId().toString());
 			return CustomerSearchConstants.LOADFORWARDNONLOANOFFICER_SUCCESS;
 		} else {
-			SessionUtils.setAttribute(CustomerSearchConstants.OFFICESLIST,
+			SessionUtils.setCollectionAttribute(CustomerSearchConstants.OFFICESLIST,
 					new OfficeBusinessService()
 							.getActiveBranchesUnderUser(personnel.getOffice()
 									.getSearchId()), request);
@@ -319,12 +319,12 @@ public class CustSearchAction extends SearchAction {
 			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
 		if (actionForm.getInput() != null
 				&& actionForm.getInput().equals("loan"))
-			SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
+			SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,
 					getCustomerBusinessService().searchGroupClient(
 							searchString, userContext.getId()), request);
 		else if (actionForm.getInput() != null
 				&& actionForm.getInput().equals("savings"))
-			SessionUtils.setAttribute(Constants.SEARCH_RESULTS,
+			SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,
 					getCustomerBusinessService().searchCustForSavings(
 							searchString, userContext.getId()), request);
 		return actionForward;

@@ -24,13 +24,14 @@
  */
 package org.mifos.application.accounts.loan.util.helpers;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Money;
 
-public class RepaymentScheduleInstallment {
+public class RepaymentScheduleInstallment implements Serializable {
 
 	private Integer installment = 0;
 

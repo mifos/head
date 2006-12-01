@@ -38,17 +38,34 @@
 
 package org.mifos.framework.util.helpers;
 
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Flow {
+import org.mifos.framework.hibernate.helper.QueryResult;
+
+public class Flow implements Serializable {
 
 	private Map<String, Object> sessionData = new HashMap<String, Object>();
 
 	public Flow() {
 	}
 
-	public void addObjectToSession(String key, Object value) {
+	/**
+	 * This is placeholder method documenting the use of non-Serializable
+	 * QueryResults.  It should be removed after QueryResults are made
+	 * Serializable or refactored.
+	 */
+	public void addQueryResultToSession(String key, QueryResult value) {
+		sessionData.put(key, value);
+	}
+
+	public void addObjectToSession(String key, Serializable value) {
+		sessionData.put(key, value);
+	}
+
+	public void addCollectionToSession(String key, Collection<? extends Serializable> value) {
 		sessionData.put(key, value);
 	}
 

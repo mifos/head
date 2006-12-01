@@ -43,7 +43,7 @@ public class RolesPermissionsAction extends BaseAction {
 		doCleanUp((RolesPermissionsActionForm) form);
 		List<RoleBO> roles = ((RolesPermissionsBusinessService) getService())
 				.getRoles();
-		SessionUtils.setAttribute(RolesAndPermissionConstants.ROLES, roles,
+		SessionUtils.setCollectionAttribute(RolesAndPermissionConstants.ROLES, roles,
 				request);
 		return mapping.findForward(ActionForwards.viewRoles_success.toString());
 	}
@@ -54,7 +54,7 @@ public class RolesPermissionsAction extends BaseAction {
 			throws Exception {
 		doCleanUp((RolesPermissionsActionForm) form);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,null, request);
-		SessionUtils.setAttribute(RolesAndPermissionConstants.ACTIVITYLIST,
+		SessionUtils.setCollectionAttribute(RolesAndPermissionConstants.ACTIVITYLIST,
 				((RolesPermissionsBusinessService) getService())
 						.getActivities(), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
@@ -82,7 +82,7 @@ public class RolesPermissionsAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		RolesPermissionsActionForm rolesPermissionsActionForm = (RolesPermissionsActionForm) form;
-		SessionUtils.setAttribute(RolesAndPermissionConstants.ACTIVITYLIST,
+		SessionUtils.setCollectionAttribute(RolesAndPermissionConstants.ACTIVITYLIST,
 				((RolesPermissionsBusinessService) getService())
 						.getActivities(), request);
 		RoleBO role = ((RolesPermissionsBusinessService) getService()).getRole(Short

@@ -477,7 +477,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				savingsOffering3);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils
-		.setAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST,
+		.setCollectionAttribute(BulkEntryConstants.PAYMENT_TYPES_LIST,
 				masterService.retrieveMasterEntities(
 						PaymentTypeEntity.class, userContext
 								.getLocaleId()), request);
@@ -917,13 +917,13 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				OfficeConstants.BRANCHOFFICE, Integer.valueOf("0"));
 		List<OfficeView> branchOfficesList = new ArrayList<OfficeView>();
 		branchOfficesList.add(office);
-		SessionUtils.setAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
+		SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST,
 				branchOfficesList, request);
 
 		PersonnelView personnel = new PersonnelView(Short.valueOf("3"), "John");
 		List<PersonnelView> personnelList = new ArrayList<PersonnelView>();
 		personnelList.add(personnel);
-		SessionUtils.setAttribute(CustomerConstants.LOAN_OFFICER_LIST,
+		SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST,
 				personnelList, request);
 
 		CustomerView parentCustomer = new CustomerView(customerId,
@@ -931,7 +931,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 						.valueOf(CustomerConstants.CENTER_LEVEL_ID), "1.1");
 		List<CustomerView> customerList = new ArrayList<CustomerView>();
 		customerList.add(parentCustomer);
-		SessionUtils.setAttribute(BulkEntryConstants.CUSTOMERSLIST,
+		SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERSLIST,
 				customerList, request);
 	}
 

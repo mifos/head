@@ -122,7 +122,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			SavingsBO savings1 = service.findById(savings.getAccountId());
+			service.findById(savings.getAccountId());
 			fail();
 		} catch (ServiceException e) {
 			assertTrue(true);

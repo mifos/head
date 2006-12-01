@@ -73,7 +73,7 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 	}
 
 	public void testCreatePreview() throws PersistenceException, PageExpiredException {
-		SessionUtils.setAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
 				getProductTypes(userContext), request);
 		setRequestPathInfo("/productCategoryAction.do");
 		addRequestParameter("method", "createPreview");
@@ -90,7 +90,7 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 	}
 
 	public void testCreatePrevious() throws PersistenceException, PageExpiredException {
-		SessionUtils.setAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
 				getProductTypes(userContext), request);
 		setRequestPathInfo("/productCategoryAction.do");
 		addRequestParameter("method", "createPrevious");
@@ -108,7 +108,7 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 
 
 	public void testCreate() throws PersistenceException, PageExpiredException {
-		SessionUtils.setAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
 				getProductTypes(userContext), request);
 		setRequestPathInfo("/productCategoryAction.do");
 		addRequestParameter("method", "create");
@@ -203,7 +203,7 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 		ProductCategoryBO productCategoryBO =new ProductCategoryBO(userContext,getProductTypes(userContext).get(0),"product category","created a category");
 		productCategoryBO.save();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, productCategoryBO,request);
-		SessionUtils.setAttribute(ProductDefinitionConstants.PRDCATEGORYSTATUSLIST,getProductCategoryStatusList(userContext) ,request);
+		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRDCATEGORYSTATUSLIST,getProductCategoryStatusList(userContext) ,request);
 		setRequestPathInfo("/productCategoryAction.do");
 		addRequestParameter("method", "update");
 		addRequestParameter("productCategoryName", "product category 1");

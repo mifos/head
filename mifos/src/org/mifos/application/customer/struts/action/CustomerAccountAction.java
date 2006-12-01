@@ -84,7 +84,7 @@ public class CustomerAccountAction extends AccountAppAction {
 				.getRecentActivityView(customerBO.getCustomerId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerAccount, request);
 		//SessionUtils.setAttribute(CustomerConstants.CUSTOMER_ACCOUNT,customerAccount, request);
-		SessionUtils.setAttribute(CustomerConstants.RECENT_ACTIVITIES,recentActivities, request);
+		SessionUtils.setCollectionAttribute(CustomerConstants.RECENT_ACTIVITIES,recentActivities, request);
 		ActionForwards forward = getForward(customerBO);
 		return mapping.findForward(forward.toString());
 	}
