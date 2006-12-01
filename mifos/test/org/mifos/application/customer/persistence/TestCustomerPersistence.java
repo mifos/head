@@ -144,7 +144,6 @@ public class TestCustomerPersistence extends MifosTestCase {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		account = getLoanAccount(group, meeting, "adsfdsfsd", "3saf");
@@ -160,7 +159,6 @@ public class TestCustomerPersistence extends MifosTestCase {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		account = getLoanAccount(group, meeting, "Loan342423", "1wed");

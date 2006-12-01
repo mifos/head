@@ -695,7 +695,8 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testGenerateAndUpdateDepositActionsForClient() throws Exception {
 		center = helper.createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter(
+				"Group1", CustomerStatus.GROUP_ACTIVE, center);
 		savingsOffering = createSavingsOffering("dfasdasd1", "sad1",
 				RecommendedAmountUnit.PERINDIVIDUAL);
 

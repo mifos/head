@@ -863,11 +863,16 @@ public class CustomerPersistence extends Persistence {
 
 	public void updateLOsForAllChildren(Short parentLO, String parentSearchId,
 			Short parentOfficeId) {
-		String hql = "update CustomerBO customer set customer.personnel="
-				+ parentLO + " where customer.searchId like '" + parentSearchId
-				+ ".%' and customer.office.officeId=" + parentOfficeId;
+		String hql = "update CustomerBO customer " +
+				" set customer.personnel = :parentLoanOfficer " +
+				" where customer.searchId like :parentSearchId" +
+				" and customer.office.officeId = :parentOfficeId";
 		Session session = HibernateUtil.getSessionTL();
-		session.createQuery(hql).executeUpate();
+		Query update = session.createQuery(hql);
+		update.setParameter("parentLoanOfficer", parentLO);
+		update.setParameter("parentSearchId", parentSearchId + ".%");
+		update.setParameter("parentOfficeId", parentOfficeId);
+		update.executeUpate();
 	}
 
 	public void deleteCustomerMeeting(CustomerBO customer)
@@ -876,8 +881,9 @@ public class CustomerPersistence extends Persistence {
 	}
 
 	public void deleteMeeting(MeetingBO meeting) throws PersistenceException {
-		if (meeting != null)
+		if (meeting != null) {
 			delete(meeting);
+		}
 	}
 
 	public List<Integer> getCustomerAccountsForFee(Short feeId)
