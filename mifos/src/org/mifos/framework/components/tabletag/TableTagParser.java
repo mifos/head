@@ -134,6 +134,10 @@ public class TableTagParser {
 					.setTdrequired((rowNodeList.item(i).getAttributes()
 							.getNamedItem(TableTagConstants.TDREQUIRED)
 							.getNodeValue()));
+			row[i]
+				.setSuppressrow((rowNodeList.item(i).getAttributes()
+						.getNamedItem(TableTagConstants.SUPRESSROW)
+						.getNodeValue()));
 		}
 		return row;
 	}

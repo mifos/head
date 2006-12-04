@@ -115,4 +115,6 @@ public interface TableTagConstants {
 	public static final String NOFWDKEY_ERROR ="error.fwdkey";
 	public static final String WRONGTYPE_ERROR ="error.wrongtype";
 	public static final String TABLENOTFOUND_ERROR ="error.tablenotfound";
+	
+	public static final String SUPRESSROW = "suppressrow";
 }

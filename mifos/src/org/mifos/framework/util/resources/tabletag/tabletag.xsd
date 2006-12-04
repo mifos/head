@@ -62,6 +62,8 @@
 			</xs:sequence>
 			<xs:attribute name="tdrequired" type="xs:boolean"
 				default="false" />
+			<xs:attribute name="suppressrow" type="xs:boolean"
+				default="false" />
 		</xs:complexType>
 	</xs:element>
 

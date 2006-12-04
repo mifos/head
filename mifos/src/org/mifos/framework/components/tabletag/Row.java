@@ -87,6 +87,17 @@ public class Row {
 		this.tdrequired = tdrequired;
 	}
 
+	private String suppressrow;
+	
+	
+	public String getSuppressrow() {
+		return suppressrow;
+	}
+
+	public void setSuppressrow(String suppressrow) {
+		this.suppressrow = suppressrow;
+	}
+
 	/**
 	 * Function to get the row
 	 * 
@@ -108,6 +119,12 @@ public class Row {
 		}
 		if (!(columns.toString().equals(""))) {
 			row.append(columns.toString());
+			if (getSuppressrow() != null
+					&& getSuppressrow().equals("true")
+					&& !row.toString().contains(
+							"<span class=\"fontnormal\">/</span>")) {
+				return "";
+			}
 			return row.toString();
 		} 
 		return "";

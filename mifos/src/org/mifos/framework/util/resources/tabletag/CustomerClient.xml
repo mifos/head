@@ -64,7 +64,7 @@
   	</column>
   </row>
   
-<row>
+<row suppressrow="true">
 	<column label="alsosee" labeltype="key" boldlabel="false" type="link" action="custSearchAction.do">
 		<displayname>
 			<fragment-name name="branchName" type="method"/>
