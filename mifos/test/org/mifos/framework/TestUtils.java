@@ -1,5 +1,8 @@
 package org.mifos.framework;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Locale;
@@ -79,5 +82,15 @@ public class TestUtils {
     	Assert.assertTrue(object.equals(object));
     	Assert.assertFalse(object.equals(null));
     }
+    
+	public static void assertCanSerialize(Object object) throws IOException {
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		ObjectOutputStream objectOutputStream = 
+			new ObjectOutputStream(byteArrayOutputStream);
+		objectOutputStream.writeObject(object);
+		objectOutputStream.close();
+		Assert.assertTrue(byteArrayOutputStream.toByteArray().length > 0);
+	}	
+    
 
 }

@@ -53,6 +53,7 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl{
 
 		String searchString = null;
 		
+		@Override
 		public List get(int position, int noOfObjects) throws HibernateSearchException {
 			java.util.List returnList = new java.util.ArrayList();
 			

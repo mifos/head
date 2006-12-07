@@ -20,7 +20,11 @@ public class MayflyTests extends TestSuite {
 		TestSuite suite = new MayflyTests();
 		suite.addTestSuite(FeePersistenceTest.class);
 		//suite.addTestSuite(CenterBOTest.class);
+		
+		// Hung up on SELECT DISTINCT vs ORDER BY
+		// Also has other failures - apparently unrelated
 		//TestCustomerPersistence
+
 		suite.addTestSuite(TestSavingsBO.class);
 		suite.addTestSuite(TestApplyAdjustmentAction.class);
 		suite.addTestSuite(FeeActionTest.class);

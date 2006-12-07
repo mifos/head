@@ -10,7 +10,9 @@ import org.mifos.framework.exceptions.HibernateSearchException;
 
 public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
 	
-	 public java.util.List get(int position, int noOfObjects) throws HibernateSearchException
+	@Override
+	public java.util.List get(int position, int noOfObjects) 
+	throws HibernateSearchException
 	    {	 	
 		 		java.util.List returnList = new java.util.ArrayList();	
 		 		java.util.List list = new java.util.ArrayList();
