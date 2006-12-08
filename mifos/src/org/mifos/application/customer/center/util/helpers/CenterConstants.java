@@ -117,6 +117,6 @@ public interface CenterConstants {
 	String CHOOSE_OFFICE_SUCCESS = "chooseOffice_success";
 	String CENTER_SEARCH_TRANSFER_CANCEL_PAGE = "cancelTransfer_success";
 	String OLD_PERSONNEL = "oldPersonnel";
-	String NO_SEARCH_STING="errors.nosearchstring";
+	String NO_SEARCH_STRING="errors.nosearchstring";
 	
 }

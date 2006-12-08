@@ -3,9 +3,7 @@ package org.mifos.framework.util.helpers;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.MifosTestSuite;
-
-public class FrameworkUtilsSuite extends MifosTestSuite {
+public class FrameworkUtilsSuite extends TestSuite {
 
 	public FrameworkUtilsSuite() {
 		super();

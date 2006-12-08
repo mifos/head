@@ -53,7 +53,7 @@ public class ValidateMethods {
 	public static boolean isNullOrBlank(String value){
 		boolean isValueNull = false;
 		
-		if(value == null || value.trim().equals(AccountConstants.BLANK)){
+		if(value == null || value.trim().equals("")){
 			isValueNull = true;
 		}
 		return isValueNull;

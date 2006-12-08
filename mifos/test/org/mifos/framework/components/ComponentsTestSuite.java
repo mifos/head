@@ -3,14 +3,13 @@ package org.mifos.framework.components;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.logger.TestJDBCAppender;
 import org.mifos.framework.components.logger.TestLogging;
 import org.mifos.framework.components.logger.TestMessage;
 import org.mifos.framework.components.tabletag.TableTagExceptionTest;
 import org.mifos.framework.components.taggenerator.TestTagGenerator;
 
-public class ComponentsTestSuite extends MifosTestSuite{
+public class ComponentsTestSuite extends TestSuite{
 	public ComponentsTestSuite() {
 		super();
 	}

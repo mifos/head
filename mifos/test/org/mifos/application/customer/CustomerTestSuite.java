@@ -1,6 +1,7 @@
 package org.mifos.application.customer;
 
 import junit.framework.Test;
+import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.mifos.application.customer.business.CustomerViewTest;
@@ -32,9 +33,8 @@ import org.mifos.application.customer.struts.action.TestCustomerNotesAction;
 import org.mifos.application.customer.struts.action.TestEditCustomerStatusAction;
 import org.mifos.application.customer.struts.uihelpers.CustomerUIHelperFnTest;
 import org.mifos.application.customer.util.helpers.TestCustomerHelpers;
-import org.mifos.framework.MifosTestSuite;
 
-public class CustomerTestSuite extends MifosTestSuite {
+public class CustomerTestSuite extends TestSuite {
 
 	public CustomerTestSuite() throws Exception {
 		super();

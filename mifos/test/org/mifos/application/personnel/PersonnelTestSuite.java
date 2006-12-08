@@ -10,9 +10,8 @@ import org.mifos.application.personnel.persistence.TestPersonnelPersistence;
 import org.mifos.application.personnel.struts.action.PersonnelSettingsActionTest;
 import org.mifos.application.personnel.struts.action.TestPersonAction;
 import org.mifos.application.personnel.struts.action.TestPersonnelNoteAction;
-import org.mifos.framework.MifosTestSuite;
 
-public class PersonnelTestSuite extends MifosTestSuite {
+public class PersonnelTestSuite extends TestSuite {
 	public PersonnelTestSuite() {
 		super();
 	}

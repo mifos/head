@@ -13,9 +13,8 @@ import org.mifos.application.office.persistence.TestOfficePersistence;
 import org.mifos.application.office.struts.action.OffHierarchyActionTest;
 import org.mifos.application.office.struts.action.TestOfficeAction;
 import org.mifos.application.office.struts.tag.OfficeListTagTest;
-import org.mifos.framework.MifosTestSuite;
 
-public class OfficeTestSuite extends MifosTestSuite {
+public class OfficeTestSuite extends TestSuite {
 	public OfficeTestSuite() throws Exception {
 		super();
 	}

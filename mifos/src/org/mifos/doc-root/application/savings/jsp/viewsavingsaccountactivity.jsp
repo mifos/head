@@ -77,7 +77,7 @@
             </table>
             <br>
         <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'recentActivityList')}" var="recentActivityList" scope="session" />
-            <mifoscustom:mifostabletag source="recentActivityList" scope="session" xmlFileName="SavingsAccountActivity.xml" moduleName="accounts\\savings" passLocale="true"/>
+            <mifoscustom:mifostabletag source="recentActivityList" scope="session" xmlFileName="SavingsAccountActivity.xml" moduleName="accounts/savings" passLocale="true"/>
             <br>
             
             <table width="95%" border="0" cellpadding="0" cellspacing="0">

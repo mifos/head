@@ -1,7 +1,8 @@
 package org.mifos.framework.util.helpers;
 
-import org.mifos.framework.TestUtils;
 import junit.framework.TestCase;
+
+import org.mifos.framework.TestUtils;
 
 public class FlowManagerTest extends TestCase {
 	public void testIsSerializable() throws Exception {

@@ -4,9 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.framework.MifosTestSuite;
-
-public class LabelConfigurationTestSuite extends MifosTestSuite {
+public class LabelConfigurationTestSuite extends TestSuite {
 	
 	public static void main (String[] args)
 	{

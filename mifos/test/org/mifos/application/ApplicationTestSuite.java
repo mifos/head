@@ -63,7 +63,6 @@ import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
-import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.TestAuditLogSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
@@ -80,7 +79,7 @@ import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
 
-public class ApplicationTestSuite extends MifosTestSuite {
+public class ApplicationTestSuite extends TestSuite {
 
 	public ApplicationTestSuite() throws Exception {
 	}

@@ -266,7 +266,7 @@
 									 || BusinessKey.accountState.id == 6 || BusinessKey.accountState.id == 7 || BusinessKey.accountState.id == 8 || BusinessKey.accountState.id == 9}">
 							<mifoscustom:mifostabletag source="recentAccountActivities"
 								scope="session" xmlFileName="RecentAccountActivity.xml"
-								moduleName="accounts\\loan" passLocale="true" />
+								moduleName="accounts/loan" passLocale="true" />
 						<table width="96%" border="0" cellpadding="3" cellspacing="0">
 							<tr>
 								<td colspan="3">&nbsp;</td>

@@ -1,15 +1,15 @@
 package org.mifos.application.fund;
 
 import junit.framework.Test;
+import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.mifos.application.fund.business.FundBOTest;
 import org.mifos.application.fund.business.service.FundBusinessServiceTest;
 import org.mifos.application.fund.persistence.FundPersistenceTest;
 import org.mifos.application.fund.struts.action.FundActionTest;
-import org.mifos.framework.MifosTestSuite;
 
-public class FundTestSuite extends MifosTestSuite{
+public class FundTestSuite extends TestSuite{
 	public FundTestSuite() {
 		super();
 	}

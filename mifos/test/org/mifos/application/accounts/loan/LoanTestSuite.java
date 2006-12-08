@@ -15,9 +15,8 @@ import org.mifos.application.accounts.loan.struts.action.TestRepayLoanAction;
 import org.mifos.application.accounts.loan.struts.uihelpers.LoanUIHelperFnTest;
 import org.mifos.application.accounts.loan.struts.uihelpers.TestLoanActivityTag;
 import org.mifos.application.accounts.loan.struts.uihelpers.TestLoanRepayTag;
-import org.mifos.framework.MifosTestSuite;
 
-public class LoanTestSuite extends MifosTestSuite {
+public class LoanTestSuite extends TestSuite {
 	public static void main(String[] args) {
 		Test testSuite = suite();
 		TestRunner.run(testSuite);

@@ -6,9 +6,8 @@ import junit.textui.TestRunner;
 
 import org.mifos.application.reports.persistence.service.TestReportsPersistenceService;
 import org.mifos.application.reports.struts.action.TestReportsAction;
-import org.mifos.framework.MifosTestSuite;
 
-public class ReportsTestSuite extends MifosTestSuite{
+public class ReportsTestSuite extends TestSuite{
 	
 	public ReportsTestSuite() throws Exception {
 		super();

@@ -126,8 +126,6 @@ public interface AccountConstants {
 	
 	public static final String NO_TRANSACTION_POSSIBLE="error.noTransactionPossible";
 	
-	String BLANK = "";
-	public static final String NO_SEARCH_STRING="errors.nosearchstring";
 	public static final String SEARCH_STRING="searchString";
 
 	public final String VIEWCLIENTCHARGES="ViewClientCharges";

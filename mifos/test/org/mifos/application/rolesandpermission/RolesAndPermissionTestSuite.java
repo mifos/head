@@ -11,9 +11,8 @@ import org.mifos.application.rolesandpermission.persistence.TestRolesAndPermissi
 import org.mifos.application.rolesandpermission.struts.TestRolesPermissionsAction;
 import org.mifos.application.rolesandpermission.struts.tag.TestActivityTag;
 import org.mifos.application.rolesandpermission.utils.helpers.TestRoleTempleteBuilder;
-import org.mifos.framework.MifosTestSuite;
 
-public class RolesAndPermissionTestSuite extends MifosTestSuite {
+public class RolesAndPermissionTestSuite extends TestSuite {
 
 
 	public RolesAndPermissionTestSuite() throws Exception {

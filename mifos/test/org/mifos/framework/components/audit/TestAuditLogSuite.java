@@ -3,12 +3,11 @@ package org.mifos.framework.components.audit;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.audit.business.service.TestAuditBusinessService;
 import org.mifos.framework.components.audit.persistence.TestAuditPersistence;
 import org.mifos.framework.components.audit.util.TestAuditInterceptor;
 
-public class TestAuditLogSuite extends MifosTestSuite {
+public class TestAuditLogSuite extends TestSuite {
 
 	public TestAuditLogSuite() {
 		super();

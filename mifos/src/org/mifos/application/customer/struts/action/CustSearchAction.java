@@ -309,14 +309,14 @@ public class CustSearchAction extends SearchAction {
 		UserContext userContext = getUserContext(request);
 		String searchString = actionForm.getSearchString();
 		if (searchString == null)
-			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+			throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
 		addSeachValues(searchString, userContext.getBranchId().toString(),
 				new OfficeBusinessService()
 						.getOffice(userContext.getBranchId()).getOfficeName(),
 				request);
 		searchString = StringUtils.normalizeSearchString(searchString);
 		if (searchString.equals(""))
-			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+			throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
 		if (actionForm.getInput() != null
 				&& actionForm.getInput().equals("loan"))
 			SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,

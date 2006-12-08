@@ -44,9 +44,8 @@ import junit.textui.TestRunner;
 import org.mifos.application.collectionsheet.business.TestCollSheetBO;
 import org.mifos.application.collectionsheet.business.TestCollSheetCustBO;
 import org.mifos.application.collectionsheet.business.TestCollSheetSavingsDetailsEntity;
-import org.mifos.framework.MifosTestSuite;
 
-public class CollectionSheetTestSuite extends MifosTestSuite {
+public class CollectionSheetTestSuite extends TestSuite {
 
 	public static void main (String[] args)
 	{

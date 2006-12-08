@@ -16,9 +16,8 @@ import org.mifos.application.productdefinition.persistence.TestProductCategoryPe
 import org.mifos.application.productdefinition.struts.action.LoanPrdActionTest;
 import org.mifos.application.productdefinition.struts.action.SavingsPrdActionTest;
 import org.mifos.application.productdefinition.struts.action.TestPrdCategoryAction;
-import org.mifos.framework.MifosTestSuite;
 
-public class ProductDefinitionTestSuite extends MifosTestSuite {
+public class ProductDefinitionTestSuite extends TestSuite {
 
 	public ProductDefinitionTestSuite() throws Exception {
 		super();

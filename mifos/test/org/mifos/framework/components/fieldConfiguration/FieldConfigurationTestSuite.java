@@ -4,7 +4,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.fieldConfiguration.business.TestFieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.TestFieldConfigurationPersistence;
 import org.mifos.framework.components.fieldConfiguration.persistence.service.TestFieldConfigurationPersistenceService;
@@ -12,7 +11,7 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.TestFieldC
 import org.mifos.framework.components.fieldConfiguration.util.helpers.TestFieldConfigurationHelper;
 
 
-public class FieldConfigurationTestSuite extends MifosTestSuite{
+public class FieldConfigurationTestSuite extends TestSuite{
 
 	public FieldConfigurationTestSuite() {
 		super();

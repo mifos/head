@@ -3,10 +3,9 @@ package org.mifos.framework.security;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.security.util.SecurityHelperTest;
 
-public class SecurityTestSuite extends MifosTestSuite {
+public class SecurityTestSuite extends TestSuite {
 
 	public SecurityTestSuite() {
 		super();

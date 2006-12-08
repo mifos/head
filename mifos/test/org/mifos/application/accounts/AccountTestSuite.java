@@ -26,9 +26,8 @@ import org.mifos.application.accounts.struts.action.TestApplyPaymentAction;
 import org.mifos.application.accounts.struts.action.TestEditStatusAction;
 import org.mifos.application.accounts.struts.action.TestNotesAction;
 import org.mifos.application.customer.business.TestCustomerAccountBO;
-import org.mifos.framework.MifosTestSuite;
 
-public class AccountTestSuite extends MifosTestSuite {
+public class AccountTestSuite extends TestSuite {
 	
 	AccountTestSuite() throws Exception{
 		super();

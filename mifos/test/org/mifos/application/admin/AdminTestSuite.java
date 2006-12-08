@@ -5,9 +5,8 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.mifos.application.admin.struts.action.TestAdminAction;
-import org.mifos.framework.MifosTestSuite;
 
-public class AdminTestSuite extends MifosTestSuite{
+public class AdminTestSuite extends TestSuite{
 
 	public AdminTestSuite() throws Exception {
 		super();

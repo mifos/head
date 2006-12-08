@@ -40,7 +40,7 @@
 					</table>
 					<br>
 					 <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'statusChangeHistoryList')}" var="statusChangeHistoryList" scope="session" />
-					<customtable:mifostabletag  source="statusChangeHistoryList" scope="session"  xmlFileName="SavingsStatusChangeHistory.xml" moduleName="accounts\\savings" passLocale="true"/> 
+					<customtable:mifostabletag  source="statusChangeHistoryList" scope="session"  xmlFileName="SavingsStatusChangeHistory.xml" moduleName="accounts/savings" passLocale="true"/> 
 					
 
 					<br>

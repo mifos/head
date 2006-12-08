@@ -9,9 +9,8 @@ import org.mifos.application.bulkentry.persistance.TestBulkEntryPersistance;
 import org.mifos.application.bulkentry.persistance.service.TestBulkEntryPersistanceService;
 import org.mifos.application.bulkentry.struts.action.TestBulkEntryAction;
 import org.mifos.application.bulkentry.struts.uihelpers.BulkEntryDisplayHelperTest;
-import org.mifos.framework.MifosTestSuite;
 
-public class BulkEntryTestSuite extends MifosTestSuite {
+public class BulkEntryTestSuite extends TestSuite {
 
 	public BulkEntryTestSuite() throws Exception {
 		super();

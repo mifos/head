@@ -218,7 +218,6 @@ public interface GroupConstants {
 	public static final String TRAINED_DATE="errors.traineddate";
 	public static final String SAME_PARENT="errors.sameparent";
 	public static final String SAME_BRANCH="errors.samebranch";
-	public static final String NO_SEARCH_STRING="errors.nosearchstring";
 	public static final String INCOMPLETE_CHECKLIST="errors.incompletechecklist";
 	public static final String BRANCH_INACTIVE="errors.branchinactive";
 	public static final String FEE_INACTIVE="errors.feeinactive";	

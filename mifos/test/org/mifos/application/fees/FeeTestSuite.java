@@ -1,15 +1,15 @@
 package org.mifos.application.fees;
 
 import junit.framework.Test;
+import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.mifos.application.fees.business.FeeBOTest;
 import org.mifos.application.fees.business.service.TestFeeBusinessService;
 import org.mifos.application.fees.persistence.FeePersistenceTest;
 import org.mifos.application.fees.struts.action.FeeActionTest;
-import org.mifos.framework.MifosTestSuite;
 
-public class FeeTestSuite extends MifosTestSuite {
+public class FeeTestSuite extends TestSuite {
 
 	public FeeTestSuite() {
 		super();

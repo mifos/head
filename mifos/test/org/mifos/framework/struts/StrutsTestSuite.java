@@ -3,7 +3,6 @@ package org.mifos.framework.struts;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.struts.actionforms.TestBaseActionForm;
 import org.mifos.framework.struts.plugin.TestConstPlugin;
 import org.mifos.framework.struts.plugin.TestEnumPlugin;
@@ -14,7 +13,7 @@ import org.mifos.framework.struts.tag.MifosSelectTest;
 import org.mifos.framework.struts.tag.RawButtonTest;
 import org.mifos.framework.struts.tag.RawSelectTest;
 
-public class StrutsTestSuite extends MifosTestSuite {
+public class StrutsTestSuite extends TestSuite {
 
 	public StrutsTestSuite() {
 		super();

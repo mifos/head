@@ -41,7 +41,6 @@ import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
@@ -68,7 +67,7 @@ import org.mifos.framework.util.helpers.MoneyTest;
  * is fast).  Or pass around a {@link TestLogger}
  * (see {@link RoleActivityEntityTest} for an example).
  */
-public class FastTests extends MifosTestSuite {
+public class FastTests extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite suite = new FastTests();

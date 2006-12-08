@@ -351,7 +351,7 @@ public class GroupCustAction extends CustAction {
 		else {
 			request.setAttribute(Constants.INPUT,null);
 		}
-		throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+		throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
 
 	}	
 	

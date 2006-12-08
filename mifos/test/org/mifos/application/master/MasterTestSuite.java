@@ -1,14 +1,14 @@
 package org.mifos.application.master;
 
 import junit.framework.Test;
+import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.mifos.application.master.business.service.TestMasterBusinessService;
 import org.mifos.application.master.persistence.TestMasterPersistence;
 import org.mifos.application.master.persistence.service.TestMasterPersistenceService;
-import org.mifos.framework.MifosTestSuite;
 
-public class MasterTestSuite extends MifosTestSuite {
+public class MasterTestSuite extends TestSuite {
 
 public MasterTestSuite() throws Exception {
 		super();

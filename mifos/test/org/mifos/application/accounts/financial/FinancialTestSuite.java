@@ -10,9 +10,8 @@ import org.mifos.application.accounts.financial.util.helpers.ChartOfAccountsCach
 import org.mifos.application.accounts.financial.util.helpers.TestFinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.TestFinancialInitializer;
 import org.mifos.application.accounts.financial.util.helpers.TestFinancialRules;
-import org.mifos.framework.MifosTestSuite;
 
-public class FinancialTestSuite extends MifosTestSuite {
+public class FinancialTestSuite extends TestSuite {
 	
 	public FinancialTestSuite() throws Exception {
 		super();

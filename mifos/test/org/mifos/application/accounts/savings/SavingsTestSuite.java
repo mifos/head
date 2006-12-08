@@ -12,9 +12,8 @@ import org.mifos.application.accounts.savings.struts.action.TestSavingsClosureAc
 import org.mifos.application.accounts.savings.struts.action.TestSavingsDepositWithdrawalAction;
 import org.mifos.application.accounts.savings.struts.tag.TestSavingsOverDueDepositsTag;
 import org.mifos.application.accounts.savings.util.helpers.TestSavingsHelper;
-import org.mifos.framework.MifosTestSuite;
 
-public class SavingsTestSuite extends MifosTestSuite {
+public class SavingsTestSuite extends TestSuite {
 
 	public SavingsTestSuite() throws Exception {
 		super();

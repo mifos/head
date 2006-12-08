@@ -4,9 +4,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.login.struts.action.LoginActionTest;
-import org.mifos.framework.MifosTestSuite;
 
-public class LoginTestSuite extends MifosTestSuite{
+public class LoginTestSuite extends TestSuite{
 
 	public LoginTestSuite() {
 		super();

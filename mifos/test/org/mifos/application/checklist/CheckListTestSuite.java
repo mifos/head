@@ -8,9 +8,8 @@ import org.mifos.application.checklist.business.TestCheckListBO;
 import org.mifos.application.checklist.business.service.TestCheckListBusinessService;
 import org.mifos.application.checklist.persistence.TestCheckListPersistence;
 import org.mifos.application.checklist.struts.action.TestChkListAction;
-import org.mifos.framework.MifosTestSuite;
 
-public class CheckListTestSuite extends MifosTestSuite {
+public class CheckListTestSuite extends TestSuite {
 
 	public static void main(String[] args) {
 		Test testSuite = suite();

@@ -3,7 +3,6 @@ package org.mifos.framework.components.cronjob;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.mifos.framework.MifosTestSuite;
 import org.mifos.framework.components.cronjob.helpers.CollectionSheetHelperTest;
 import org.mifos.framework.components.cronjob.helpers.TestApplyCustomerFeeChangesHelper;
 import org.mifos.framework.components.cronjob.helpers.TestCustomerFeeHelper;
@@ -18,7 +17,7 @@ import org.mifos.framework.components.cronjob.helpers.TestSavingsIntCalcHelper;
 import org.mifos.framework.components.cronjob.helpers.TestSavingsIntPostingHelper;
 import org.mifos.framework.components.cronjob.persistence.TaskPersistenceTest;
 
-public class CronjobTestSuite extends MifosTestSuite {
+public class CronjobTestSuite extends TestSuite {
 
 	public CronjobTestSuite() {
 		super();

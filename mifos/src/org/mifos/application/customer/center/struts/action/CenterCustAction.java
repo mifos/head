@@ -405,14 +405,14 @@ public class CenterCustAction extends CustAction {
 		String searchString = actionForm.getSearchString();
 		UserContext userContext = getUserContext(request);
 		if (searchString == null)
-			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+			throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
 		addSeachValues(searchString, userContext.getBranchId().toString(),
 				new OfficeBusinessService()
 						.getOffice(userContext.getBranchId()).getOfficeName(),
 				request);
 		searchString = StringUtils.normalizeSearchString(searchString);
 		if (searchString.equals(""))
-			throw new CustomerException(CenterConstants.NO_SEARCH_STING);
+			throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
 		SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS,
 				new CenterBusinessService().search(searchString, userContext
 						.getId()), request);
