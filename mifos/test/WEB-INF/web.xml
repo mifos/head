@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
 
+<!-- This is the test web.xml.  Why is it separate from the one in src? -->
 <web-app>
 	<icon>
 		<small-icon></small-icon>
@@ -20,16 +22,6 @@
 		<filter-name>loginfilter</filter-name>
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
-	<listener>
-		<listener-class>
-			org.mifos.application.login.util.helpers.MifosSessionListener
-		</listener-class>
-	</listener>
-	<listener>
-		<listener-class>
-			org.mifos.application.login.util.helpers.MifosSessionAttributeListener
-		</listener-class>
-	</listener>
 
 	<servlet>
 		<servlet-name>Controller</servlet-name>
