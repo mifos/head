@@ -81,5 +81,9 @@ public class HibernateSessionFactory {
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
+	
+	public static boolean isConfigured() {
+		return sessionFactory != null;
+	}
 
 }

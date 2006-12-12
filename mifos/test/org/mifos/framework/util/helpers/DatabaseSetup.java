@@ -30,6 +30,10 @@ public class DatabaseSetup {
 	}
 
 	public static void initializeHibernate() {
+		if (HibernateSessionFactory.isConfigured()) {
+			return;
+		}
+
 		boolean testAgainstMysql = true;
 		if (testAgainstMysql) {
 			setMysql();
@@ -97,6 +101,7 @@ public class DatabaseSetup {
 	    executeScript(database, "sql/Iteration14-DML-DBScripts10102006.sql");
 	    executeScript(database, "sql/Iteration15-DDL-DBScripts24102006.sql");
 	    executeScript(database, "sql/Iteration15-DBScripts20061012.sql");
+	    executeScript(database, "sql/add-version.sql");
 	    
 	    executeScript(database, "sql/testdbinsertionscript.sql");
 

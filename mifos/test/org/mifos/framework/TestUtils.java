@@ -90,6 +90,22 @@ public class TestUtils {
 		objectOutputStream.writeObject(object);
 		objectOutputStream.close();
 		Assert.assertTrue(byteArrayOutputStream.toByteArray().length > 0);
+	}
+
+	public static void showMemory() {
+		System.out.println("free: " + 
+				Runtime.getRuntime().freeMemory()/ 1000000.0 +
+				" MB"
+				);
+		System.out.println("max: " + 
+				Runtime.getRuntime().maxMemory()/ 1000000.0 +
+				" MB"
+				);
+		System.out.println("total: " + 
+				Runtime.getRuntime().totalMemory()/ 1000000.0 +
+				" MB"
+				);
+		System.out.println();
 	}	
     
 
