@@ -126,7 +126,14 @@
 		</javac>
 	</target>
 
+	<!--
+	Note that my.hibernate.properties and my.HibernateTest.properties,
+	unlike my.build.properties, entirely override the corresponding
+	file if they are present.
+	-->
 	<target name="copy_files">
+        <available file="${conf.dir}/my.hibernate.properties"
+                property="my.hibernate.properties.present" value="true" />
 		<copy todir="${build.web-inf}/lib">
 			<fileset dir="lib" 
 				excludes="javax.servlet.jar, jsp-api.jar, strutstest-2.1.3.jar, junit.jar, cobertura.jar">
@@ -151,9 +158,12 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-		<copy todir="${build.classes}/conf">
+        <copy tofile="${build.classes}/conf/hibernate.properties" verbose="true">
 			<fileset dir="${conf.dir}">
-				<include name="hibernate.properties"/>
+                <include name="my.hibernate.properties" 
+                	if="my.hibernate.properties.present" />
+                <include name="hibernate.properties" 
+                	unless="my.hibernate.properties.present" />
 			</fileset>
 		</copy>
 		<copy todir="${build.web-inf}/services/MifosService/META-INF">
@@ -194,6 +204,8 @@
 		description="Build mifos API support"/>
 
 	<target name="copy_test_files">
+        <available file="${conf.dir}/my.HibernateTest.properties"
+                property="my.HibernateTest.properties.present" value="true"/>
 		<copy todir="${test.classes}">
 			<fileset dir="${test.dir}">
 				<exclude name="**/*.java"/>
@@ -204,9 +216,10 @@
 				<exclude name="**/*.java"/>
 			</fileset>
 		</copy>
-		<copy todir="${test.classes}/conf">
+        <copy tofile="${test.classes}/conf/HibernateTest.properties" verbose="true">
 			<fileset dir="${conf.dir}">
-				<include name="HibernateTest.properties"/>
+                <include name="HibernateTest.properties" unless="my.HibernateTest.properties.present"/>
+                <include name="my.HibernateTest.properties" if="my.HibernateTest.properties.present"/>
 			</fileset>
 		</copy>
 
