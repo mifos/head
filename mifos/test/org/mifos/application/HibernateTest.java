@@ -1,34 +1,47 @@
 package org.mifos.application;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
 import java.sql.ResultSet;
 
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
+import net.sourceforge.mayfly.MayflyException;
+import net.sourceforge.mayfly.datastore.DataStore;
+import net.sourceforge.mayfly.dump.SqlDumper;
 
-import org.mifos.application.fees.persistence.FeePersistenceTest;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /**
- * This class might be an interesting demonstration/check of how
- * we have hibernate set up to talk to different test databases.
+ * This class is for various Mayfly-related tests.
  * 
- * But now that {@link FeePersistenceTest} is passing with Mayfly,
- * the only thing left here is some Mayfly dump tests (currently
- * commented out).
+ * Also see {@link MayflyTests}; no particular need to test things
+ * here if they are covered in some of the tests there.
  */
 public class HibernateTest extends TestCase {
 	
-    public void testMayflyNoHibernate() throws Exception {
+    public void testMayflySanityCheck() throws Exception {
 		Database database = new Database(DatabaseSetup.getStandardStore());
         ResultSet results = database.query("select * from logmessages");
         assertFalse(results.next());
     }
     
-    /*
-    public void testMayflyDump() throws Exception {
+    public void xtestStartupTime() throws Exception {
+		long start = System.currentTimeMillis();
+		DataStore store = DatabaseSetup.getStandardStore();
+		assertEquals(4, store.table("currency").rowCount());
+		long end = System.currentTimeMillis();
+		System.out.println("total = " + (end - start) / 1000.0 + " s");
+	}
+    
+    public void xtestMayflyDump() throws Exception {
+    	/* not yet passing.  Something wrong in the mayfly dump
+    	   code which sorts by foreign keys, it would seem.
+    	 */
         checkRoundTrip(DatabaseSetup.getStandardStore());
     }
-    */
+    
 
     /**
      * From a datastore, dump it, then load from that dump,
@@ -39,14 +52,17 @@ public class HibernateTest extends TestCase {
      * dump produces SQL we can't parse or something of that order, we'll
      * catch it.
      */
-    /*
-    private static void checkRoundTrip(DataStore inputStore) {
+    
+    private static void checkRoundTrip(DataStore inputStore) throws IOException {
         String dump = new SqlDumper().dump(inputStore);
         Database database2 = new Database();
         try {
             database2.executeScript(new StringReader(dump));
         }
         catch (MayflyException e) {
+        	FileWriter writer = new FileWriter("checkRoundTrip.dump");
+        	writer.write("-- dump follows:\n");
+        	writer.write(dump);
             throw new RuntimeException(
                 "failure in command: " + e.failingCommand(), e);
         }
@@ -54,6 +70,5 @@ public class HibernateTest extends TestCase {
         String dump2 = new SqlDumper().dump(database2.dataStore());
         assertEquals(dump, dump2);
     }
-    */
 
 }
