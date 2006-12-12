@@ -4,7 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.CharacterCodingException;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
@@ -144,8 +147,9 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 	}
 	
 	public void testReadEmpty() throws Exception {
-		assertEquals("", DatabaseVersionPersistence.readFile(
-				new ByteArrayInputStream(new byte[0])));
+		String[] sqlStatements = DatabaseVersionPersistence.readFile(
+						new ByteArrayInputStream(new byte[0]));
+		assertEquals(0, sqlStatements.length);
 	}
 
 	public void testBadUtf8() throws Exception {
@@ -160,10 +164,50 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 	}
 	
 	public void testGoodUtf8() throws Exception {
-		String euroSign = 
-			DatabaseVersionPersistence.readFile(new ByteArrayInputStream(new byte[] {
-				(byte)0xe2, (byte)0x82, (byte)0xac }));
-		assertEquals("\u20AC", euroSign);
+		String[] sqlStatements = DatabaseVersionPersistence.readFile(
+				new ByteArrayInputStream(new byte[] {
+						(byte)0xe2, (byte)0x82, (byte)0xac }));
+		assertEquals(1, sqlStatements.length);
+		String euroSign = sqlStatements[0];
+		assertEquals("\n\u20AC", euroSign);
 	}
 
+	public void testExecuteStream() throws Exception {
+		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
+		Connection conn = new Database().openConnection();
+		byte[] sql = (
+				"create table FOO(DATABASE_VERSION INTEGER);\n"+
+				"--some comment\n"+
+				"insert into FOO(DATABASE_VERSION) VALUES(53);\n"
+				).getBytes("UTF-8");
+		ByteArrayInputStream in = new ByteArrayInputStream(sql);
+		persistence.execute(in, conn);
+		conn.commit();
+		readOneValueFromFoo(conn);
+	}
+
+	public void testUpgradeDatabase() throws Exception {
+		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
+		Database database = new Database();
+		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(78)");
+		Connection conn = database.openConnection();
+		conn.setAutoCommit(false);
+		persistence.upgradeDatabase(conn, 80);
+		conn.commit();
+		
+		readOneValueFromFoo(conn);
+	}
+
+	private void readOneValueFromFoo(Connection conn) throws SQLException {
+		Statement statement = conn.createStatement();
+		ResultSet results = statement.executeQuery("select * from FOO");
+		assertTrue(results.next());
+		int valueFromFoo = results.getInt(1);
+		assertEquals(53, valueFromFoo);
+		assertFalse(results.next());
+		results.close();
+		statement.close();
+	}
+	
 }

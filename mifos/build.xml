@@ -145,6 +145,11 @@
 				<exclude name="web.xml"/>
 			</fileset>
 		</copy>
+		<copy todir="${build.classes}/org/mifos/framework/persistence">
+			<fileset dir="${sql.dir}">
+				<include name="upgrade_to_*.sql" />
+			</fileset>
+		</copy>
 		<copy todir="${build.src.dir}/pages">
 			<fileset dir="${src.dir}/org/mifos/doc-root"/>
 		</copy>

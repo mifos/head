@@ -39,6 +39,7 @@
 package org.mifos.framework.struts.plugin;
 
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -72,6 +73,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
 import org.mifos.framework.hibernate.HibernateStartUp;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.persistence.DatabaseVersionPersistence;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.authorization.HierarchyManager;
@@ -112,6 +114,7 @@ public class InitializerPlugin implements PlugIn {
 		try {
 			initializeLogger();
 			initializeHibernate(this.hibernatePropertiesPath);
+			syncDatabaseVersion();
 			MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info(
 					"Logger has been initialised", false, null);
 			initializeSecurity();
@@ -134,6 +137,11 @@ public class InitializerPlugin implements PlugIn {
 			throw ue;
 		}
 
+	}
+
+	private void syncDatabaseVersion() throws SQLException, Exception {
+		DatabaseVersionPersistence persistance = new DatabaseVersionPersistence();
+		persistance.upgradeDatabase();
 	}
 
 	/**
