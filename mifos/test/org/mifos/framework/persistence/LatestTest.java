@@ -1,5 +1,11 @@
 package org.mifos.framework.persistence;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.dump.SqlDumper;
@@ -43,7 +49,7 @@ public class LatestTest extends TestCase {
 		assertEquals(latestDump, upgradeDump);
 	}
 
-	private void applyRealUpgrades(Database database) {
+	private void applyRealUpgrades(Database database) throws Exception {
 	    DatabaseSetup.executeScript(database, "sql/mifosdbcreationscript.sql");
 	    DatabaseSetup.executeScript(database, "sql/mifosmasterdata.sql");
 	    DatabaseSetup.executeScript(database, "sql/Iteration13-DBScripts25092006.sql");
@@ -52,7 +58,26 @@ public class LatestTest extends TestCase {
 	    DatabaseSetup.executeScript(database, "sql/Iteration15-DDL-DBScripts24102006.sql");
 	    DatabaseSetup.executeScript(database, "sql/Iteration15-DBScripts20061012.sql");
 	    DatabaseSetup.executeScript(database, "sql/add-version.sql");
-	    // TODO: apply all upgrade_to_*.sql files here
+
+	    runUpgradeScripts(database);
+	}
+
+	private void runUpgradeScripts(Database database) throws SQLException, IOException {
+	    Connection conn = database.openConnection();
+	    DatabaseVersionPersistence persistence = new DatabaseVersionPersistence() {
+	    	@Override
+	    	URL lookup(String name) {
+	    		try {
+					return new URL("file:sql/"+name);
+				} catch (MalformedURLException e) {
+					throw new RuntimeException(e);
+				}
+	    	}
+	    };	    
+	    int version  = persistence.read(conn);
+	    assertEquals(100, version);
+	    URL[] scripts = persistence.scripts(DatabaseVersionPersistence.APPLICATION_VERSION, version);
+	    persistence.execute(scripts, conn);
 	}
 
 	private void loadRealLatest(Database database) {

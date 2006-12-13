@@ -284,15 +284,8 @@
 				use ${db.name};
 			</transaction>
 			<transaction src="./sql/mifosdroptables.sql" />
-            <transaction src="./sql/mifosdbcreationscript.sql" />
-            <transaction src="./sql/mifosmasterdata.sql" />
-			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
-            <transaction src="./sql/Iteration14-DDL-DBScripts10102006.sql" />
-			<transaction src="./sql/Iteration14-DML-DBScripts10102006.sql" />
-            <transaction src="./sql/Iteration15-DDL-DBScripts24102006.sql" />
-            <transaction src="./sql/Iteration15-DBScripts20061012.sql" />
-			<transaction src="./sql/PostVersion1.0release-DBScripts20061213.sql" />
-            <transaction src="./sql/add-version.sql" />
+            <transaction src="./sql/latest-schema.sql" />
+            <transaction src="./sql/latest-data.sql" />
 			<transaction src="./sql/rmpdroptables.sql" />
 			<transaction src="./sql/rmpdbcreationscript.sql" />
 			<transaction src="./sql/rmpmasterdata.sql" />
@@ -316,16 +309,10 @@
 			     out the duplication in ant.
 			-->
 			<transaction src="./sql/mifosdroptables.sql" />
-            <transaction src="./sql/mifosdbcreationscript.sql" />
-            <transaction src="./sql/mifosmasterdata.sql" />
-			<transaction src="./sql/Iteration13-DBScripts25092006.sql" />
-            <transaction src="./sql/Iteration14-DDL-DBScripts10102006.sql" />
-			<transaction src="./sql/Iteration14-DML-DBScripts10102006.sql" />
-            <transaction src="./sql/Iteration15-DDL-DBScripts24102006.sql" />
-            <transaction src="./sql/Iteration15-DBScripts20061012.sql" />
-			<transaction src="./sql/PostVersion1.0release-DBScripts20061213.sql" />
-            <transaction src="./sql/add-version.sql" />
-            <transaction src="./sql/testdbinsertionscript.sql" />
+            <transaction src="./sql/latest-schema.sql" />
+            <transaction src="./sql/latest-data.sql" />
+
+			<transaction src="./sql/testdbinsertionscript.sql" />
 			<transaction src="./sql/rmpdroptables.sql" />
 			<transaction src="./sql/rmpdbcreationscript.sql" />
 			<transaction src="./sql/rmpmasterdata.sql" />

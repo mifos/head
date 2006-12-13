@@ -15,13 +15,13 @@ import java.util.ArrayList;
 
 public class DatabaseVersionPersistence extends Persistence {
 
-	public static final int APPLICATION_VERSION = 100;
+	public static final int APPLICATION_VERSION = 101;
 
 	public int read() throws SQLException {
 		return read(getConnection());
 	}
 
-	int read(Connection connection) throws SQLException {
+	public int read(Connection connection) throws SQLException {
 		Statement statement = connection.createStatement();
 		ResultSet results = statement.executeQuery("select DATABASE_VERSION from DATABASE_VERSION");
 		if (results.next()) {
@@ -217,5 +217,5 @@ public class DatabaseVersionPersistence extends Persistence {
 			version = upgradedVersion;
 		}
 	}
-	
+
 }

@@ -92,16 +92,9 @@ public class DatabaseSetup {
 
 	private static DataStore createStandardStore() {
 		Database database = new Database();
-	    executeScript(database, "sql/mifosdbcreationscript.sql");
-	    executeScript(database, "sql/mifosmasterdata.sql");
-
 	    // Should be the same as the files in build.xml
-	    executeScript(database, "sql/Iteration13-DBScripts25092006.sql");
-	    executeScript(database, "sql/Iteration14-DDL-DBScripts10102006.sql");
-	    executeScript(database, "sql/Iteration14-DML-DBScripts10102006.sql");
-	    executeScript(database, "sql/Iteration15-DDL-DBScripts24102006.sql");
-	    executeScript(database, "sql/Iteration15-DBScripts20061012.sql");
-	    executeScript(database, "sql/add-version.sql");
+	    executeScript(database, "sql/latest-schema.sql");
+	    executeScript(database, "sql/latest-data.sql");
 	    
 	    executeScript(database, "sql/testdbinsertionscript.sql");
 

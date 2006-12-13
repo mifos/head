@@ -6,7 +6,7 @@
 -- merged Iteration15-DBScripts20061012.sql
 -- merge add-version.sql
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(100);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(101);
 
 INSERT INTO CURRENCY(CURRENCY_ID,CURRENCY_NAME,DISPLAY_SYMBOL,ROUNDING_MODE,ROUNDING_AMOUNT,DEFAULT_CURRENCY,DEFAULT_DIGITS_AFTER_DECIMAL)
 VALUES(1,'DOLLAR','$',1,.5,0,1);
@@ -1240,6 +1240,7 @@ INSERT INTO LOOKUP_VALUE VALUES(565,87,' ');
 INSERT INTO LOOKUP_VALUE VALUES(566,87,' ');
 INSERT INTO LOOKUP_VALUE VALUES(567,87,' ');
 INSERT INTO LOOKUP_VALUE VALUES(568,87,' ');
+INSERT INTO LOOKUP_VALUE VALUES(569,87,' ');
 
 /*Personnel Level*/
 /* The table personnel level will contain the personnel hierarchy supported by the MFI(This feature is currently not supported) - Configuration */
@@ -2384,6 +2385,7 @@ INSERT INTO LOOKUP_VALUE_LOCALE VALUES(905,1,567,'Can apply charges to group acc
 INSERT INTO LOOKUP_VALUE_LOCALE VALUES(906,1,568,'Can apply charges to kendra accounts');
 INSERT INTO LOOKUP_VALUE_LOCALE VALUES(912,1,179,'Voucher');
 INSERT INTO LOOKUP_VALUE_LOCALE VALUES(913,1,180,'Cheque');
+INSERT INTO LOOKUP_VALUE_LOCALE VALUES(914,1,569,'Can create multiple Loan accounts');
 
 /*Category Types*/
 /*The table CATEGORY_TYPE is Used for defining applicablity of the fees--System */
@@ -3242,6 +3244,8 @@ INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_L
 VALUES(199,56,567,567 );
 INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID)
 VALUES(200,78,568,568 );
+INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) 
+VALUES(201,196,569,569);
 
 
 /* The table Role will contain the default admin role required for the MFI - System */
@@ -3565,6 +3569,7 @@ INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID)
 VALUES (199,1);
 INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID)
 VALUES (200,1);
+INSERT INTO ROLES_ACTIVITY(ACTIVITY_ID,ROLE_ID) VALUES (201,1);
 
 
 /* The table WEEK Days contains the week days information like Monday,Tuesday etc used by the system, it also contain the working day attribute against the same which can be configured by the MFI to indicate Monday is an offday - Configuration */
