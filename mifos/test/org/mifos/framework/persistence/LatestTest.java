@@ -52,6 +52,8 @@ public class LatestTest extends TestCase {
 	private void applyRealUpgrades(Database database) throws Exception {
 	    DatabaseSetup.executeScript(database, "sql/mifosdbcreationscript.sql");
 	    DatabaseSetup.executeScript(database, "sql/mifosmasterdata.sql");
+	    DatabaseSetup.executeScript(database, "sql/rmpdbcreationscript.sql");
+	    DatabaseSetup.executeScript(database, "sql/rmpmasterdata.sql");
 	    DatabaseSetup.executeScript(database, "sql/Iteration13-DBScripts25092006.sql");
 	    DatabaseSetup.executeScript(database, "sql/Iteration14-DDL-DBScripts10102006.sql");
 	    DatabaseSetup.executeScript(database, "sql/Iteration14-DML-DBScripts10102006.sql");
