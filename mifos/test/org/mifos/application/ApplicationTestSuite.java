@@ -73,6 +73,7 @@ import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.hibernate.HibernateTest;
 import org.mifos.framework.hibernate.helper.TestHibernateHelper;
 import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
+import org.mifos.framework.persistence.LatestTest;
 import org.mifos.framework.persistence.TestPersistence;
 import org.mifos.framework.security.SecurityTestSuite;
 import org.mifos.framework.struts.StrutsTestSuite;
@@ -125,6 +126,7 @@ public class ApplicationTestSuite extends TestSuite {
 
 		suite.addTestSuite(HibernateTest.class);
 		suite.addTestSuite(DatabaseVersionPersistenceTest.class);
+		suite.addTestSuite(LatestTest.class);
 
 		suite.addTestSuite(TestMenuParser.class);
 		suite.addTestSuite(TestHibernateHelper.class);
