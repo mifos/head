@@ -1,3 +1,7 @@
+-- This script contains Iteration15-DBScripts20061012.sql,
+-- Iteration15-DDL-DBScripts24102006.sql and also some 
+-- update scripts which is required as part of missing data in GK-Database.
+
 update lookup_label set ENTITY_NAME = 'Handicapped' where Label_ID = 43;
 
 update customer_hierarchy set status = 1 where status is null and end_date is not null;
@@ -146,3 +150,4 @@ CREATE TABLE LOAN_COUNTER(
  PRIMARY KEY(LOAN_COUNTER_ID)
 )
 ENGINE=InnoDB CHARACTER SET utf8;
+
