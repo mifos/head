@@ -19,7 +19,7 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  * Also see {@link MayflyTests}; no particular need to test things
  * here if they are covered in some of the tests there.
  */
-public class HibernateTest extends TestCase {
+public class MayflyMiscTest extends TestCase {
 	
     public void testMayflySanityCheck() throws Exception {
 		Database database = new Database(DatabaseSetup.getStandardStore());

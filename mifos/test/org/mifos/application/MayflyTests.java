@@ -29,7 +29,7 @@ public class MayflyTests extends TestSuite {
 		suite.addTestSuite(TestApplyAdjustmentAction.class);
 		suite.addTestSuite(FeeActionTest.class);
 		
-		suite.addTestSuite(HibernateTest.class);
+		suite.addTestSuite(MayflyMiscTest.class);
 		return suite;
 	}
 
