@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+This build file separates out the findbugs target so that build.xml
+does not require a developer to have findbugs installed.
+-->
+
+<project name="mifos-findbugs" default="findbugs" basedir=".">
+
+	<import file="build.xml"/>
+
+	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask"/>
+
+	<property name="tools.dir" value="${basedir}/tools/" />
+	<property name="findbugs.reportlevel" value="low" />
+	<property name="findbugs.home" value="${tools.dir}/findbugs-1.1.1" />
+
+	<target name="findbugs" depends="war"
+		description="Runs Findbugs on the MIFOS application and unit test class files." >
+		<findbugs home="${findbugs.home}"
+				  jvmargs="-Xmx512m"
+	              output="xml"
+				  reportlevel="${findbugs.reportlevel}"
+			  	  excludefilter="${conf.dir}/findbugs.filter.xml"
+	              outputFile="${dist.dir}/mifos.findbugs.output.xml" >
+			<auxClasspath>
+				<fileset dir="${basedir}">
+				    <include name="**/*.jar"/>
+				</fileset>
+			</auxClasspath>
+			<sourcePath path="${src.dir}" />
+			<class location="${build.dir}" />
+		</findbugs>
+	</target>
+	
+</project>
