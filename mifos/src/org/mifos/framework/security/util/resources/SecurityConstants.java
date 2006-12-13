@@ -396,4 +396,6 @@ public interface SecurityConstants {
     public final short CLIENT_CAN_APPLY_CHARGES = 198;
     public final short GROUP_CAN_APPLY_CHARGES = 199;
     public final short CENTER_CAN_APPLY_CHARGES = 200;
+    
+    public final short CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS = 201;
 }

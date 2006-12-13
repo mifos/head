@@ -954,6 +954,17 @@ public class ActivityMapper {
 		activityMap.put("/notesAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/notesAction-search", SecurityConstants.VIEW);
 		activityMap.put("/notesAction-create", SecurityConstants.VIEW);
+		
+		activityMap.put("/multipleloansaction-load",
+				SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS);
+		activityMap.put("/multipleloansaction-getLoanOfficers",
+				SecurityConstants.VIEW);
+		activityMap.put("/multipleloansaction-getCenters",
+				SecurityConstants.VIEW);
+		activityMap.put("/multipleloansaction-getPrdOfferings",
+				SecurityConstants.VIEW);
+		activityMap.put("/multipleloansaction-get", SecurityConstants.VIEW);
+		activityMap.put("/multipleloansaction-create", SecurityConstants.VIEW);
 
 		// ADDED BY MFTECH
 		activityMap.put("/reportsAction-load", SecurityConstants.VIEW);

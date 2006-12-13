@@ -718,4 +718,9 @@
 	 <query name="numberOfMeetingsMissed">
 		        	   <![CDATA[select count(*) from org.mifos.application.customer.client.business.ClientAttendanceBO customerAttendance where customerAttendance.meetingDate > :DATEONEYEARBEFORE and customerAttendance.attendance in (2,3) and customerAttendance.customer.customerId=:CUSTOMERID )]]>
 	 </query>
+	 <query name="Customer.getActiveClientsUnderParent">
+		<![CDATA[from org.mifos.application.customer.client.business.ClientBO as client
+				 where client.searchId like :SEARCH_STRING and client.office.officeId = :OFFICE_ID 
+				 and client.customerStatus.id in (3,4) order by client.customerActivationDate]]>
+	</query>
 </hibernate-mapping>

@@ -100,7 +100,9 @@
 		<!-- Customer Account Action form -->
 		<form-bean name="customerAccountActionForm" type="org.mifos.application.customer.struts.actionforms.CustomerAccountActionForm"></form-bean>
 
-						<form-bean name="custSearchActionForm" type="org.mifos.application.customer.struts.actionforms.CustSearchActionForm"></form-bean>
+		<form-bean name="custSearchActionForm" type="org.mifos.application.customer.struts.actionforms.CustSearchActionForm"></form-bean>
+		
+		<form-bean name="multipleloansactionform" type="org.mifos.application.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm"></form-bean>
 
 		<!-- ADDED BY MFTECH -->
 		<form-bean name="reportsParamsActionForm"
@@ -1026,7 +1028,17 @@
 			<forward name="cancel_success" path="/AdminAction.do?method=load" />
 		</action>
 
-
+		<action path="/multipleloansaction" type="org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction" name="multipleloansactionform" parameter="method" input="/multipleloansaction.do?method=validate"
+			validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/loan/jsp/CreateMultipleLoanAccounts.jsp" />
+			<forward name="load_failure" path="/custSearchAction.do?method=loadMainSearch" />
+			<forward name="get_success" path="/pages/application/loan/jsp/CreateMultipleLoanAccountsSearchResults.jsp" />
+			<forward name="get_failure" path="/pages/application/loan/jsp/CreateMultipleLoanAccounts.jsp" />
+			<forward name="create_success" path="/pages/application/loan/jsp/CreateMultipleLoanAccountsConfirm.jsp" />
+			<forward name="create_failure" path="/pages/application/loan/jsp/CreateMultipleLoanAccountsSearchResults.jsp" />
+			<forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch" />
+			<forward name="cancel_failure" path="/pages/application/loan/jsp/CreateMultipleLoanAccounts.jsp" />
+		</action>
 	</action-mappings>
 
 	<controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>

@@ -108,4 +108,15 @@ public class ClientPersistence extends Persistence {
 				NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, 
 				queryParameters);
 	}	
+	
+	public List<ClientBO> getActiveClientsUnderParent(String searchId,
+			Short officeId) throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("SEARCH_STRING", searchId + ".%");
+		queryParameters.put("OFFICE_ID", officeId);
+		List<ClientBO> queryResult = executeNamedQuery(
+				NamedQueryConstants.ACTIVE_CLIENTS_UNDER_PARENT,
+				queryParameters);
+		return queryResult;
+	}
 }

@@ -54,4 +54,5 @@ public interface LoanExceptionConstants {
 	public final String NOOFINSTALLMENTSSHOULDBEGREATERTHANONE = "exceptions.application.loan.noOfInstallmentsLessThanTwo";
 	public final String INVALIDFIELD = "exceptions.application.loan.invalidfield";
 	public final String INVALIDMINMAX = "errors.defMinMax";
+	public final String SELECT_ATLEAST_ONE_RECORD = "errors.alleastonerecord";
 }

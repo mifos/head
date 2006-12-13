@@ -604,4 +604,6 @@ public interface NamedQueryConstants {
 	public String CHECKLIST_GET_VALID_ACCOUNT_STATES="checklist.getStatusForAccount";
 	public String FETCH_ALL_RECURRENCE_TYPES="meeting.fetchAllReccurenceTypes";
 	
+	public String ACTIVE_CLIENTS_UNDER_PARENT="Customer.getActiveClientsUnderParent";
+	
 }

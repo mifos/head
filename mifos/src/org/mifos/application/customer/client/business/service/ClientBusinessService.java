@@ -73,4 +73,14 @@ public class ClientBusinessService extends BusinessService {
 			throw new ServiceException(pe);
 		}
 	}
+	
+	public List<ClientBO> getActiveClientsUnderParent(String searchId,
+			Short officeId) throws ServiceException {
+		try {
+			return new ClientPersistence().getActiveClientsUnderParent(
+					searchId, officeId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
 }

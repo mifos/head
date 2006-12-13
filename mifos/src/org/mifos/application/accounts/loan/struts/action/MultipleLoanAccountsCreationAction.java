@@ -1,0 +1,410 @@
+/**
+
+ * MultipleLoanAccountsCreationAction.java    version: xxx
+
+
+
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+
+ * 1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+
+ * All rights reserved.
+
+
+
+ * Apache License
+ * Copyright (c) 2005-2006 Grameen Foundation USA
+ *
+
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the
+
+ * License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an explanation of the license
+
+ * and how it is applied.
+
+ *
+
+ */
+
+package org.mifos.application.accounts.loan.struts.action;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.mifos.application.accounts.exceptions.AccountException;
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm;
+import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.customer.business.CustomerBO;
+import org.mifos.application.customer.business.CustomerLevelEntity;
+import org.mifos.application.customer.business.CustomerView;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientBusinessService;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.office.business.OfficeView;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
+import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.components.logger.LoggerConstants;
+import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.util.ActivityContext;
+import org.mifos.framework.security.util.ActivityMapper;
+import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
+import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TransactionDemarcate;
+
+public class MultipleLoanAccountsCreationAction extends BaseAction {
+
+	private MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+
+	@Override
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
+		return true;
+	}
+
+	@Override
+	protected BusinessService getService() {
+		return ServiceFactory.getInstance().getBusinessService(
+				BusinessServiceName.Loan);
+	}
+
+	@TransactionDemarcate(saveToken = true)
+	public ActionForward load(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("Inside load method");
+		List<OfficeView> activeBranches = ((MasterDataService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.MasterDataService))
+				.getActiveBranches(getUserContext(request).getBranchId());
+		SessionUtils.setCollectionAttribute(
+				LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, activeBranches,
+				request);
+		SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS,
+				Configuration.getInstance().getCustomerConfig(
+						new OfficePersistence().getHeadOffice().getOfficeId())
+						.isCenterHierarchyExists() ? Constants.YES
+						: Constants.NO, request);
+		request.getSession().setAttribute(
+				LoanConstants.MULTIPLE_LOANS_ACTION_FORM, null);
+		request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
+		logger.debug("outside load method");
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward getLoanOfficers(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		logger.debug("Inside getLoanOfficers method");
+		UserContext userContext = getUserContext(request);
+		List<PersonnelView> loanOfficers = ((MasterDataService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.MasterDataService))
+				.getListOfActiveLoanOfficers(
+						PersonnelLevel.LOAN_OFFICER.getValue(),
+						getShortValue(((MultipleLoanAccountsCreationActionForm) form)
+								.getBranchOfficeId()), userContext.getId(),
+						userContext.getLevelId());
+		SessionUtils.setCollectionAttribute(
+				LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, loanOfficers,
+				request);
+		logger.debug("outside getLoanOfficers method");
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward getCenters(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("Inside getCenters method");
+		MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
+		Short loanOfficerId = getShortValue(loanActionForm.getLoanOfficerId());
+		Short officeId = getShortValue(loanActionForm.getBranchOfficeId());
+		List<CustomerView> parentCustomerList = loadCustomers(loanOfficerId,
+				officeId);
+		boolean isCenterHeirarchyExists = Configuration.getInstance()
+				.getCustomerConfig(officeId).isCenterHierarchyExists();
+		SessionUtils.setCollectionAttribute(
+				LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, parentCustomerList,
+				request);
+		SessionUtils
+				.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS,
+						isCenterHeirarchyExists ? Constants.YES : Constants.NO,
+						request);
+		logger.debug("Inside getCenters method");
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward getPrdOfferings(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		logger.debug("Inside getPrdOfferings method");
+
+		MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
+		CustomerBO customer = ((CustomerBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Customer))
+				.getCustomer(getIntegerValue(loanActionForm.getCenterId()));
+		customer.getOffice().getOfficeId();
+		customer.getPersonnel().getPersonnelId();
+		loanActionForm.setCenterSearchId(customer.getSearchId());
+		List<LoanOfferingBO> loanOfferings = ((LoanPrdBusinessService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.LoanProduct))
+				.getApplicablePrdOfferings(new CustomerLevelEntity(
+						CustomerLevel.CLIENT));
+		removePrdOfferingsNotMachingCustomerMeeting(loanOfferings, customer);
+		SessionUtils.setCollectionAttribute(LoanConstants.LOANPRDOFFERINGS,
+				loanOfferings, request);
+		logger.debug("outside getPrdOfferings method");
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward get(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("Inside get method");
+		MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
+		List<ClientBO> clients = new ClientBusinessService()
+				.getActiveClientsUnderParent(
+						loanActionForm.getCenterSearchId(),
+						getShortValue(loanActionForm.getBranchOfficeId()));
+		if (clients == null || clients.size() == 0) {
+			throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
+		}
+		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.LoanProduct)).getLoanOffering(
+				getShortValue(loanActionForm.getPrdOfferingId()),
+				getUserContext(request).getLocaleId());
+		setClientDetails(loanActionForm, loanOffering, clients);
+		SessionUtils.setCollectionAttribute(
+				LoanConstants.MULTIPLE_LOANS_CLIENTS_LIST, clients, request);
+		SessionUtils
+				.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
+						((MasterDataService) ServiceFactory.getInstance()
+								.getBusinessService(
+										BusinessServiceName.MasterDataService))
+								.retrieveMasterEntities(
+										MasterConstants.LOAN_PURPOSES,
+										getUserContext(request).getLocaleId()),
+						request);
+		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
+				request);
+		SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED,
+				Configuration.getInstance().getAccountConfig(
+						getUserContext(request).getBranchId())
+						.isPendingApprovalStateDefinedForLoan(), request);
+		logger.debug("outside get method");
+		return mapping.findForward(ActionForwards.get_success.toString());
+	}
+
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("Inside validate method");
+		ActionForwards actionForward = ActionForwards.load_success;
+		String method = (String) request.getAttribute("methodCalled");
+		if (method != null) {
+			if (method.equals(Methods.getPrdOfferings.toString())
+					|| method.equals(Methods.load.toString())
+					|| method.equals(Methods.get.toString())) {
+				actionForward = ActionForwards.load_success;
+			} else if (method.equals(Methods.create.toString())) {
+				actionForward = ActionForwards.get_success;
+			}
+		}
+		logger.debug("outside validata method");
+		return mapping.findForward(actionForward.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward create(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("Inside create method");
+		MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
+		CustomerBO center = ((CustomerBusinessService) ServiceFactory
+				.getInstance().getBusinessService(BusinessServiceName.Customer))
+				.getCustomer(getIntegerValue(loanActionForm.getCenterId()));
+		checkPermissionForCreate(getShortValue(loanActionForm
+				.getStateSelected()), getUserContext(request), null, center
+				.getOffice().getOfficeId(), center.getPersonnel()
+				.getPersonnelId());
+		LoanOfferingBO loanOffering = ((LoanPrdBusinessService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.LoanProduct))
+				.getLoanOffering(getShortValue(loanActionForm
+						.getPrdOfferingId()));
+		List<MultipleLoanCreationViewHelper> applicableClientDetails = loanActionForm
+				.getApplicableClientDetails();
+		List<String> accountNumbers = new ArrayList<String>();
+		if (applicableClientDetails != null
+				&& applicableClientDetails.size() > 0) {
+			for (MultipleLoanCreationViewHelper clientDetail : applicableClientDetails) {
+				CustomerBO client = ((CustomerBusinessService) ServiceFactory
+						.getInstance().getBusinessService(
+								BusinessServiceName.Customer))
+						.getCustomer(getIntegerValue(clientDetail.getClientId()));
+				LoanBO loan = new LoanBO(getUserContext(request), loanOffering,
+						client, AccountState
+								.getStatus(getShortValue(loanActionForm
+										.getStateSelected())),
+						getMoney(clientDetail.getLoanAmount()), loanOffering
+								.getDefNoInstallments(), center
+								.getCustomerAccount().getNextMeetingDate(),
+						loanOffering.isIntDedDisbursement(), loanOffering
+								.getDefInterestRate(), loanOffering
+								.getGracePeriodDuration(), null, null, null);
+				loan.setBusinessActivityId(getIntegerValue(clientDetail
+						.getBusinessActivity()));
+				loan.save();
+				accountNumbers.add(loan.getGlobalAccountNum());
+			}
+		}
+		request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountNumbers);
+		logger.debug("outside create method");
+		return mapping.findForward(ActionForwards.create_success.toString());
+	}
+
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward cancel(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("cancel method called");
+		return mapping.findForward(ActionForwards.cancel_success.toString());
+	}
+
+	private List<CustomerView> loadCustomers(Short loanOfficerId, Short officeId)
+			throws Exception {
+		logger.debug("Inside loadCustomers method");
+		CustomerLevel customerLevel = CustomerLevel.CENTER;
+		if (!Configuration.getInstance().getCustomerConfig(officeId)
+				.isCenterHierarchyExists())
+			customerLevel = CustomerLevel.GROUP;
+		List<CustomerView> activeParentsUnderLoanOfficer = ((MasterDataService) ServiceFactory
+				.getInstance().getBusinessService(
+						BusinessServiceName.MasterDataService))
+				.getListOfActiveParentsUnderLoanOfficer(loanOfficerId,
+						customerLevel.getValue(), officeId);
+		logger.debug("oouside loadCustomers method");
+		return activeParentsUnderLoanOfficer;
+	}
+
+	private void removePrdOfferingsNotMachingCustomerMeeting(
+			List<LoanOfferingBO> loanOfferings, CustomerBO customer) {
+		logger
+				.debug("Inside removePrdOfferingsNotMachingCustomerMeeting method");
+		MeetingBO customerMeeting = customer.getCustomerMeeting().getMeeting();
+		for (Iterator<LoanOfferingBO> iter = loanOfferings.iterator(); iter
+				.hasNext();) {
+			LoanOfferingBO loanOffering = iter.next();
+			if (!isMeetingMatched(customerMeeting, loanOffering
+					.getLoanOfferingMeeting().getMeeting()))
+				iter.remove();
+		}
+		logger
+				.debug("outside removePrdOfferingsNotMachingCustomerMeeting method");
+	}
+
+	private boolean isMeetingMatched(MeetingBO meetingToBeMatched,
+			MeetingBO meetingToBeMatchedWith) {
+		logger.debug("isMeetingMatched method called");
+		return meetingToBeMatched != null
+				&& meetingToBeMatchedWith != null
+				&& meetingToBeMatched.getMeetingDetails().getRecurrenceType()
+						.getRecurrenceId().equals(
+								meetingToBeMatchedWith.getMeetingDetails()
+										.getRecurrenceType().getRecurrenceId())
+				&& isMultiple(meetingToBeMatchedWith.getMeetingDetails()
+						.getRecurAfter(), meetingToBeMatched
+						.getMeetingDetails().getRecurAfter());
+	}
+
+	private boolean isMultiple(Short valueToBeChecked,
+			Short valueToBeCheckedWith) {
+		return valueToBeChecked % valueToBeCheckedWith == 0;
+	}
+
+	private void setClientDetails(
+			MultipleLoanAccountsCreationActionForm loanActionForm,
+			LoanOfferingBO loanOffering, List<ClientBO> clients) {
+		logger.debug("inside setClientDetails method");
+		List<MultipleLoanCreationViewHelper> clientDetails = new ArrayList<MultipleLoanCreationViewHelper>();
+		if (clients != null && clients.size() > 0) {
+			for (ClientBO client : clients) {
+				MultipleLoanCreationViewHelper clientDetail = new MultipleLoanCreationViewHelper();
+				clientDetail
+						.setClientId(getStringValue(client.getCustomerId()));
+				clientDetail.setClientName(client.getDisplayName());
+				clientDetail.setLoanAmount(loanOffering.getDefaultLoanAmount()
+						.toString());
+				clientDetails.add(clientDetail);
+			}
+		}
+		loanActionForm.setClientDetails(clientDetails);
+		logger.debug("outside setClientDetails method");
+	}
+
+	protected void checkPermissionForCreate(Short newState,
+			UserContext userContext, Short flagSelected, Short officeId,
+			Short loanOfficerId) throws ApplicationException {
+		logger.debug("inside checkPermissionForCreate called");
+		if (!isPermissionAllowed(newState, userContext, officeId,
+				loanOfficerId, true))
+			throw new AccountException(
+					SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+	}
+
+	private boolean isPermissionAllowed(Short newSate, UserContext userContext,
+			Short officeId, Short loanOfficerId, boolean saveFlag) {
+		logger.debug("inside isPermissionAllowed called");
+		return AuthorizationManager.getInstance().isActivityAllowed(
+				userContext,
+				new ActivityContext(ActivityMapper.getInstance()
+						.getActivityIdForState(newSate), officeId,
+						loanOfficerId));
+	}
+}
