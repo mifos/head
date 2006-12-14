@@ -87,4 +87,13 @@ public class LatestTest extends TestCase {
 	    DatabaseSetup.executeScript(database, "sql/latest-data.sql");
 	}
 
+	public void testDropTables() throws Exception {
+		Database database = new Database();
+		String blankDB = new SqlDumper().dump(database.dataStore());
+		DatabaseSetup.executeScript(database, "sql/latest-schema.sql");
+		DatabaseSetup.executeScript(database, "sql/mifosdroptables.sql");
+		String cleanedDB = new SqlDumper().dump(database.dataStore());
+		assertEquals(blankDB, cleanedDB);
+	}
+
 }
