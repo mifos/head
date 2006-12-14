@@ -1,4 +1,10 @@
-/*Gk Data*/
+/* Data for Grameen Koota.
+   This just has data (DML) not schema changes (DDL).  The latter we
+     want to avoid doing specific to one deployment.
+   This file seems to have some customization, and some rules for
+     how certain fields are computed(?).
+*/
+
 UPDATE CUSTOMER_ATTENDANCE_TYPES SET DESCRIPTION = "Leave" WHERE ATTENDANCE_ID = 3;
 UPDATE CUSTOMER_ATTENDANCE_TYPES SET DESCRIPTION = "Late Present" WHERE ATTENDANCE_ID = 4;
 

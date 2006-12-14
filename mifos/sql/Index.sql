@@ -1,3 +1,5 @@
+-- Creates a bunch of indexes for MIFOS.
+-- Apparently out of date as of Dec 2006
 
 CREATE UNIQUE INDEX CUST_GLOBAL_IDX ON CUSTOMER (GLOBAL_CUST_NUM);
 

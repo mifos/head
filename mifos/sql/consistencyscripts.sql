@@ -1,3 +1,6 @@
+-- This file checks certain parts of the data for consistency
+-- It does not seem to be up to date as of Dec 2006.
+
 /** Savings consistency script **/
 create table savings_check (account_id int, savings_balance decimal(10,3), calculated_balance decimal(10,3));
 
