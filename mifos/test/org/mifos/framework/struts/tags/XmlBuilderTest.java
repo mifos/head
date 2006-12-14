@@ -184,4 +184,19 @@ public class XmlBuilderTest extends TestCase {
     	assertEquals("intro<p>Hello, world</p>", out.getOutput());
 	}
     
+    public void testComment() throws Exception {
+		out.comment("text");
+		assertEquals("<!--text-->", out.getOutput());
+	}
+    
+    public void testCommentWithHyphens() throws Exception {
+		out.comment("--");
+		assertEquals("<!--__-->", out.getOutput());
+	}
+    
+    public void testCommentWithHyphensEnds() throws Exception {
+		out.comment("- foo -");
+		assertEquals("<!--_ foo _-->", out.getOutput());
+	}
+    
 }

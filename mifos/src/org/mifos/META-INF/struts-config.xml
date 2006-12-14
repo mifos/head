@@ -1085,9 +1085,7 @@
 	<!-- Change Account Status resources -->
 	<message-resources key="accountStatusUIResources" parameter="org.mifos.application.accounts.loan.util.resources.AccountStatusUIResources"></message-resources>
 
-	<plug-in className="org.mifos.framework.struts.plugin.InitializerPlugin">
-		<set-property property="hibernatePropertiesPath" value="conf/hibernate.properties" />
-	</plug-in>
+	<plug-in className="org.mifos.framework.struts.plugin.InitializerPlugin"/>
 	<plug-in className="org.apache.struts.tiles.TilesPlugin">
 		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
 		<set-property property="definitions-debug" value="2" />

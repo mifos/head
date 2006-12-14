@@ -44,6 +44,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
+import org.mifos.framework.persistence.DatabaseVersionFilterTest;
 import org.mifos.framework.struts.tags.DateHelperTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
@@ -86,6 +87,8 @@ public class FastTests extends TestSuite {
 //		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTestSuite(ConvertionUtilTest.class);
 		suite.addTestSuite(TableTagParserTest.class);
+		
+		suite.addTestSuite(DatabaseVersionFilterTest.class);
 		
 		suite.addTestSuite(RoleActivityEntityTest.class);
 		return suite;

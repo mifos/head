@@ -110,4 +110,15 @@ public class XmlBuilder {
 		out.append(builder.getOutput());
 	}
 
+	public void comment(String string) {
+		out.append("<!--");
+		String text = string.replaceAll("--", "__");
+		if(text.startsWith("-"))
+			text = "_"+text.substring(1);
+		if(text.endsWith("-"))
+			text = text.substring(0, text.length()-1)+"_";
+		out.append(text);
+		out.append("-->");
+	}
+
 }
