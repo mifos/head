@@ -1,12 +1,16 @@
--- THIS TABLE HAS BEEN MADE MYISAM BECAUSE 
--- WE DO NOT NEED TO HAVE TRANSACTIONS ON THIS TABLE
+-- This script represents the latest schema.
 
--- Started with mifosdbcreationscript.sql
--- merged Iteration13-DBScripts25092006.sql
--- merged Iteration14-DDL-DBScripts10102006.sql
--- merged Iteration15-DDL-DBScripts24102006.sql
+-- Applying it should be the same as:
+-- Start with mifosdbcreationscript.sql
+-- merge rmpdbcreationscript.sql
+-- merge Iteration13-DBScripts25092006.sql
+-- merge Iteration14-DDL-DBScripts10102006.sql
+-- merge Iteration15-DDL-DBScripts24102006.sql
 -- merge add-version.sql
+-- merge all upgrade_to_*.sql files to date
 
+-- THE LOGMESSAGES TABLE HAS BEEN MADE MYISAM BECAUSE 
+-- WE DO NOT NEED TO HAVE TRANSACTIONS ON THIS TABLE
 CREATE TABLE LOGMESSAGES (
   LOG_ID INTEGER auto_increment NOT NULL,
   LEVEL varchar(20) default NULL,
@@ -4056,7 +4060,9 @@ CREATE TABLE report_jasper_map (
   REPORT_JASPER varchar(100) default NULL,
   PRIMARY KEY  (REPORT_ID),
   INDEX REPORT_CATEGORY_ID (REPORT_CATEGORY_ID),
-  CONSTRAINT report_jasper_map_ibfk_1 FOREIGN KEY (REPORT_CATEGORY_ID) REFERENCES report_category (REPORT_CATEGORY_ID) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT report_jasper_map_ibfk_1 FOREIGN KEY (REPORT_CATEGORY_ID) 
+      REFERENCES REPORT_CATEGORY (REPORT_CATEGORY_ID) 
+      ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB CHARACTER SET utf8; 
 
 CREATE TABLE report_parameter (

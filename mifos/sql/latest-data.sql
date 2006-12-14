@@ -1,13 +1,19 @@
-/* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
-/* To set the default currency, enter 1 in the default_currency field */
-/* To set how Mifos handles rounding, enter 1 in ROUNDING_MODE to round up, and 2 to round down.  Enter NULL if no rounding is desired.  */
--- Started with mifosmasterdata.sql
--- merged Iteration14-DML-DBScripts10102006.sql
--- merged Iteration15-DBScripts20061012.sql
+-- This script represents the latest master data (data which is shipped
+-- with MIFOS and is more about the operation of MIFOS than business data).
+
+-- Applying it should be the same as:
+-- Start with mifosmasterdata.sql
+-- merge rmpmasterdata.sql
+-- merge Iteration14-DML-DBScripts10102006.sql
+-- merge Iteration15-DBScripts20061012.sql
 -- merge add-version.sql
+-- merge all upgrade_to_*.sql files to date
 
 INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(101);
 
+/* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
+/* To set the default currency, enter 1 in the default_currency field */
+/* To set how Mifos handles rounding, enter 1 in ROUNDING_MODE to round up, and 2 to round down.  Enter NULL if no rounding is desired.  */
 INSERT INTO CURRENCY(CURRENCY_ID,CURRENCY_NAME,DISPLAY_SYMBOL,ROUNDING_MODE,ROUNDING_AMOUNT,DEFAULT_CURRENCY,DEFAULT_DIGITS_AFTER_DECIMAL)
 VALUES(1,'DOLLAR','$',1,.5,0,1);
 INSERT INTO CURRENCY(CURRENCY_ID,CURRENCY_NAME,DISPLAY_SYMBOL,ROUNDING_MODE,ROUNDING_AMOUNT,DEFAULT_CURRENCY,DEFAULT_DIGITS_AFTER_DECIMAL)	
