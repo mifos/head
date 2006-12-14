@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
+<!--
+Log4j configuration file for MIFOS.  The intention is to move this
+to conf/log4j.xml, but this has not yet been done.  Also, there
+should be a my.log4j.xml or some such mechanism for overriding
+the location of Mifos_log.log.
+-->
+
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
   
   <!--Console Appender: A logger attached to this appender logs all statements to the console --> 

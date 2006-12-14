@@ -284,7 +284,6 @@
 				use ${db.name};
 			</transaction>
 			<transaction src="./sql/mifosdroptables.sql" />
-			<transaction src="./sql/rmpdroptables.sql" />
             <transaction src="./sql/latest-schema.sql" />
             <transaction src="./sql/latest-data.sql" />
 		</sql>
@@ -307,7 +306,6 @@
 			     out the duplication in ant.
 			-->
 			<transaction src="./sql/mifosdroptables.sql" />
-			<transaction src="./sql/rmpdroptables.sql" />
             <transaction src="./sql/latest-schema.sql" />
             <transaction src="./sql/latest-data.sql" />
 
