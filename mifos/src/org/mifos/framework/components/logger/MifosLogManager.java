@@ -75,23 +75,22 @@ public class MifosLogManager {
 			// send the output somewhere.  The way it is now makes
 			// it too easy to lose messages, perhaps.
 			Logger.getRootLogger().addAppender(new NullAppender());
-		}catch (ResourceBundleNotFoundException e) {
+		} catch (ResourceBundleNotFoundException e) {
 			throw new LoggerConfigurationException(e);
-		}catch(URISyntaxException e){
+		} catch (URISyntaxException e) {
 			throw new LoggerConfigurationException(e);
-		}catch(MalformedURLException e){
+		} catch (MalformedURLException e) {
 			throw new LoggerConfigurationException(e);
 		}
 	}
 
 	/**
-	 * Function to obtain an instance of the mifos logger. This calls a helper method to create the logger
+	 * Function to obtain an instance of the mifos logger.
 	 * @param name The name the logger will be associated with
-	 * @return  An instance of the MifosLogger
 	 */
-	public static MifosLogger getLogger(String name){
-		return getLogger(name,null);
-	}//end-method getLogger
+	public static MifosLogger getLogger(String name) {
+		return getLogger(name, null);
+	}
 	
 	/**
 	 * Function to obtain an instance of the mifos logger. This calls a helper method to create the logger
@@ -100,7 +99,7 @@ public class MifosLogManager {
 	 * @param resourceBundleName The name of the resource bundle from where the logger takes its log statements
 	 * @return An instance of the MifosLogger
 	 */
-	public static MifosLogger getLogger(String name, String resourceBundleName){
+	public static MifosLogger getLogger(String name, String resourceBundleName) {
 		return getLoggerHelper(name,resourceBundleName);
 	}//end-method getLogger
 
@@ -157,44 +156,39 @@ public class MifosLogManager {
 
 	/**
 	 * Obtains the Resource bundle for a particular MFI Locale
-	 * 
-	 * @param resourceBundleName
-	 *            The name of the resource bundle
-	 * @return The resouce bundle for the locale
-	 * @throws ResourceBundleNotFoundException
 	 */
-	public static ResourceBundle getResourceBundle(String resourceBundleName)throws ResourceBundleNotFoundException{
-		Locale mfiLocale=getMFILocale();
-		ResourceBundleFactory resourceBundleFactory  = ResourceBundleFactory.getInstance();
-		return resourceBundleFactory.getResourceBundle(resourceBundleName , mfiLocale);
-	}//end-method getResourceBundle
+	public static ResourceBundle getResourceBundle(String resourceBundleName)
+	throws ResourceBundleNotFoundException {
+		Locale mfiLocale = getMFILocale();
+		ResourceBundleFactory resourceBundleFactory =
+			ResourceBundleFactory.getInstance();
+		return resourceBundleFactory.getResourceBundle(
+			resourceBundleName, mfiLocale);
+	}
 
 	/**
 	 * Configures the root logger from the loggerconfiguration.xml
-	 * A root logger instance is also created and the resource bundle for the locale of the MFI is associated
+	 * A root logger instance is also created and the resource bundle 
+	 * for the locale of the MFI is associated
 	 * with the logger
 	 */
-
-	public static void readConfiguration(String fileName)throws MalformedURLException,URISyntaxException{
-		URL url = null;
-			try {
-				url = ResourceLoader.getURI(fileName).toURL();
-			} catch (MalformedURLException mfue) {
-				throw mfue;
-			} catch (URISyntaxException urise) {
-				throw urise;
-			}
-			//url = MifosLogManager.class.getClassLoader().getResource(fileName);
+	public static void readConfiguration(String fileName)
+	throws MalformedURLException, URISyntaxException {
+		URL url;
+		try {
+			url = ResourceLoader.getURI(fileName).toURL();
+		} catch (MalformedURLException e) {
+			throw e;
+		} catch (URISyntaxException e) {
+			throw e;
+		}
+		//url = MifosLogManager.class.getClassLoader().getResource(fileName);
 
 		MifosDOMConfigurator.configureAndWatch(url.getPath(),LoggerConstants.DELAY);
+	}
 
-	}//end-method readConfiguration
-
-	/**
-	 * Function to obtain the MFI Locale
-	 * @return The locale of the MFI
-	 */
 	public static Locale getMFILocale(){
 		return ApplicationConfig.getMFILocale();
-	}//end-method getMFILocale
-}//~
+	}
+
+}

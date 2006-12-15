@@ -50,6 +50,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.util.helpers.Money;
 
 public class AccountPaymentEntity extends PersistentObject {
@@ -76,16 +77,10 @@ public class AccountPaymentEntity extends PersistentObject {
 
 	private Set<AccountTrxnEntity> accountTrxns;
 
+	private MifosLogger logger;
+
 	protected AccountPaymentEntity() {
-		accountTrxns = new HashSet<AccountTrxnEntity>();
-		paymentDate = new Date(System.currentTimeMillis());
-		account = null;
-		paymentType = null;
-		receiptNumber = null;
-		voucherNumber = null;
-		checkNumber = null;
-		receiptDate = null;
-		bankName = null;
+		this(null, null, null, null, null);
 	}
 
 	public AccountPaymentEntity(AccountBO account, Money amount,
@@ -101,7 +96,7 @@ public class AccountPaymentEntity extends PersistentObject {
 		this.bankName = null;
 		this.voucherNumber = null;
 		this.checkNumber = null;
-
+		this.logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	}
 
 	public Integer getPaymentId() {
@@ -124,6 +119,7 @@ public class AccountPaymentEntity extends PersistentObject {
 		return accountTrxns;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setAccountTrxns(Set<AccountTrxnEntity> accountTrxns) {
 		this.accountTrxns = accountTrxns;
 	}
@@ -168,31 +164,30 @@ public class AccountPaymentEntity extends PersistentObject {
 			throws AccountException {
 		List<AccountTrxnEntity> newlyAddedTrxns = null;
 		this.setAmount(getAmount().subtract(getAmount()));
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+		logger.debug(
 				"The amount in account payment is "
 						+ getAmount().getAmountDoubleValue());
 
 		if (null != getAccountTrxns() && getAccountTrxns().size() > 0) {
 			newlyAddedTrxns = new ArrayList<AccountTrxnEntity>();
-			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+			logger.debug(
 					"The number of transactions before adjustment are "
 							+ getAccountTrxns().size());
 			Set<AccountTrxnEntity> reverseAccntTrxns = new HashSet<AccountTrxnEntity>();
 			for (AccountTrxnEntity accntTrxn : getAccountTrxns()) {
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				logger
 						.debug(
 								"Generating reverse transactions for transaction id "
 										+ accntTrxn.getAccountTrxnId());
 				AccountTrxnEntity reverseAccntTrxn = accntTrxn
 						.generateReverseTrxn(personnel, adjustmentComment);
-				MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				logger
 						.debug(
 								"Amount associated with reverse transaction is "
 										+ reverseAccntTrxn.getAmount()
 												.getAmountDoubleValue());
 				reverseAccntTrxns.add(reverseAccntTrxn);
-				MifosLogManager
-						.getLogger(LoggerConstants.ACCOUNTSLOGGER)
+				logger
 						.debug(
 								"After succesfully adding the reverse transaction");
 			}
@@ -204,7 +199,7 @@ public class AccountPaymentEntity extends PersistentObject {
 			newlyAddedTrxns.addAll(reverseAccntTrxns);
 		}
 
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
+		logger.debug(
 				"After adding adjustment transactions the total no of transactions are "
 						+ getAccountTrxns().size());
 		return newlyAddedTrxns;
