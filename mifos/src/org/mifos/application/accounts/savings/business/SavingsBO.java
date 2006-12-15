@@ -2094,6 +2094,7 @@ public class SavingsBO extends AccountBO {
 				&& customerBO.getCustomerMeeting().getMeeting() != null) {
 			MeetingBO depositSchedule = customerBO.getCustomerMeeting()
 					.getMeeting();
+			Date oldMeetingDate = depositSchedule.getStartDate();
 			Calendar calendar = Calendar.getInstance();
 			Short lastInstallmentId = getLastInstallmentId();
 			AccountActionDateEntity lastInstallment = getAccountActionDate(lastInstallmentId);
@@ -2121,6 +2122,7 @@ public class SavingsBO extends AccountBO {
 							lastInstallment);
 				}
 			}
+			depositSchedule.setStartDate(oldMeetingDate);
 		}
 	}
 

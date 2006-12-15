@@ -138,5 +138,21 @@ public class TestAccountActionDateEntity extends TestAccount {
 					currentDateCalendar.getTimeInMillis()));
 		}
 	}
+	
+	public static void changeInstallmentDatesToPreviousDateExceptLastInstallment(
+			AccountBO accountBO,int noOfInstallmentsToBeChanged) {
+		Calendar currentDateCalendar = new GregorianCalendar();
+		int year = currentDateCalendar.get(Calendar.YEAR);
+		int month = currentDateCalendar.get(Calendar.MONTH);
+		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
+		currentDateCalendar = new GregorianCalendar(year, month, day - 1);
+		int size = accountBO.getAccountActionDates().size();
+		for (int i = 1; i <=noOfInstallmentsToBeChanged; i++) {
+			AccountActionDateEntity accountActionDateEntity = accountBO
+					.getAccountActionDate(Integer.valueOf(i).shortValue());
+			accountActionDateEntity.setActionDate(new java.sql.Date(
+					currentDateCalendar.getTimeInMillis()));
+		}
+	}
 
 }
