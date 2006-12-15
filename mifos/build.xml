@@ -40,14 +40,7 @@
 		</fileset>
 		<pathelement location="${build.classes}"/>
 	</path>
-	<path id="cobertura.classpath">
-		<fileset dir="${env.COBERTURA_HOME}">
-			<include name="cobertura.jar" />
-			<include name="lib/**/*.jar" />
-		</fileset>
-	</path>
 
-	<taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
 	<taskdef  name="junit" classpathref="class.path" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
 
 	<!--<echo level="debug">CLASSPATH - ${java.class.path}</echo>-->
@@ -60,7 +53,6 @@
 
 	<target name="check_config">
 		<fail message="JAVA_HOME not set. Please set JAVA_HOME" unless="env.JAVA_HOME"/>
-		<fail message="COBERTURA_HOME not set. Please set COBERTURA_HOME" unless="env.COBERTURA_HOME"/>
 		<!--check the jre version-->
 	</target>
 
@@ -313,66 +305,11 @@
 		</sql>
 	</target>
 
-	<target name="instrument" depends="compile,copy_files,compile_test,copy_test_files,build_test_db">
-		<delete file="${dist.dir}/mifos_cobertura.ser" />
-		<property name="instrumented.dir" value="${build.dir}/instrumented"/>
-		<cobertura-instrument todir="${instrumented.dir}" datafile="${dist.dir}/mifos_cobertura.ser">
-			<ignore regex="org.apache.log4j.*" />
-			<fileset dir="${build.classes}">
-				<include name="**/*.class" />
-				<exclude name="**/*Test.class" />
-			</fileset>
-		</cobertura-instrument>
-	</target>
-
-	<target name="coverage" depends="instrument" description="Compiles source, test, runs test cases and generates a coverage report">
-		<junit printsummary="on" fork="true" maxmemory="300M" failureproperty="tests.instrument.failure">
-
-			<sysproperty key="net.sourceforge.cobertura.datafile" file="${dist.dir}/mifos_cobertura.ser" />
-
-			<classpath location="${instrumented.dir}" />
-			<classpath location="${build.classes}" />
-			<classpath location="${test.classes}" />
-			<classpath refid="class.path" />
-			<classpath refid="cobertura.classpath" />
-
-			<formatter type="xml" />
-			<batchtest todir="${dist.dir}" >
-				<fileset dir="${test.classes}">
-					<include name="**/ApplicationTestSuite.class" />
-				</fileset>
-			</batchtest>
-		</junit>
-
-		<cobertura-report format="html" destdir="${dist.dir}/code_coverage" datafile="${dist.dir}/mifos_cobertura.ser">
-			<fileset dir="${src.dir}">
-				<include name="**/*.java" />
-			</fileset>
-		</cobertura-report>
-		<fail if="tests.instrument.failure" message="Unit tests failed - Report is available at ${dist.dir}"/>
-	</target>
-
 	<target name="deploy" depends="war">
 		<echo message="Deploying application ${webapplication.name}.war to ${deploy.destination}"/>
 		<copy file="${dist.dir}/${webapplication.name}.war" 
 			todir="${deploy.destination}"
 		/>
-	</target>
-
-	<target name="all" 
-		depends="clean_all,coverage,war,deploy,build_db,javadoc,email" 
-		description="Cleans the directory structure, gets latest, compiles, makes war, runs coverage test, builds db and sends an email of status"
-	/>
-
-	<target name="email">
-		<mail mailhost="${mail.server}" mailport="${mail.port}" subject="CVS Build successful on ${BUILD_ID}" encoding="plain">
-			<from address="${from.address}"/>
-			<to address="${to.address}"/>
-			<message> Use this link after 10 minutes to access: ${application.url}.	Use this link for the coverage report \\aditi292\buildtest\MIFOSCVS\DevSpace\WorkSpace\coveragereport</message>
-			<!--<fileset dir="." >
-   			<include name="build.log" />
-  			</fileset>-->
-		</mail>
 	</target>
 
 	<target name="javadoc">
