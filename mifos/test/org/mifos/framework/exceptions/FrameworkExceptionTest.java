@@ -2,9 +2,11 @@ package org.mifos.framework.exceptions;
 
 import java.util.ArrayList;
 
-import org.mifos.framework.MifosTestCase;
+import junit.framework.TestCase;
 
-public class FrameworkExceptionTest extends MifosTestCase {
+import org.mifos.framework.security.util.resources.SecurityConstants;
+
+public class FrameworkExceptionTest extends TestCase {
 
 	public void testAppNotConfiguredException() throws Exception {
 		try {
@@ -88,10 +90,10 @@ public class FrameworkExceptionTest extends MifosTestCase {
 			fail();
 		} catch (Exception ex) {
 			SecurityException se = new SecurityException(ex);
-			assertNotNull(se);
+			assertEquals(SecurityConstants.GENERALERROR, se.getKey());
 		}
 		SecurityException se = new SecurityException("key");
-		assertNotNull(se);
+		assertEquals("key", se.getKey());
 	}
 
 	public void testConnectionNotFoundException() throws Exception {

@@ -87,12 +87,13 @@ public class AuthorizationManager {
 				}
 			}
 
-		} catch (SystemException se) {
-			throw se;
-		} catch (ApplicationException ae) {
-			throw ae;
+		} catch (SystemException e) {
+			throw e;
+		} catch (ApplicationException e) {
+			throw e;
 		} catch (Exception e) {
-			throw new SecurityException(SecurityConstants.INITIALIZATIONFAILED);
+			throw new SecurityException(
+				SecurityConstants.INITIALIZATIONFAILED, e);
 		}
 
 	}

@@ -69,7 +69,6 @@ import org.mifos.framework.components.configuration.ConfigurationTestSuite;
 import org.mifos.framework.components.cronjob.CronjobTestSuite;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
-import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.hibernate.HibernateTest;
 import org.mifos.framework.hibernate.helper.TestHibernateHelper;
 import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
@@ -131,7 +130,6 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTestSuite(TestMenuParser.class);
 		suite.addTestSuite(TestHibernateHelper.class);
 		suite.addTestSuite(TestPersistence.class);
-		suite.addTestSuite(FrameworkExceptionTest.class);
 		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTest(FrameworkUtilsSuite.suite());
 		return suite;

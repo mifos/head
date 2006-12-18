@@ -39,7 +39,6 @@
 package org.mifos.framework.security.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -66,13 +65,6 @@ import org.mifos.framework.security.util.resources.SecurityConstants;
 public class SecurityHelper {
 
 	/**
-	 * This would hold the index map of the activity id's in the activity array ,
-	 * which we need to find the leaf activities in the system because those are
-	 * the only actual activies rest are only place holders
-	 */
-	private static HashMap<Short, Short> indexMap = new HashMap<Short, Short>();
-
-	/**
 	 * This function is used to retrive the all the activities in the system and
 	 * the set of roles which includes these activities
 	 * 
@@ -97,9 +89,9 @@ public class SecurityHelper {
 		} catch (HibernateProcessException e) {
 			transaction.rollback();
 			throw new SystemException(e);
-		} catch (HibernateException he) {
+		} catch (HibernateException e) {
 			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
+			throw new SecurityException(SecurityConstants.GENERALERROR, e);
 		} finally {
 			HibernateUtil.closeSession(session);
 		}
@@ -141,7 +133,7 @@ public class SecurityHelper {
 			throw new SystemException(e);
 		} catch (HibernateException he) {
 			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
+			throw new SecurityException(SecurityConstants.GENERALERROR, he);
 		}
 
 		finally {
@@ -185,7 +177,7 @@ public class SecurityHelper {
 			throw new SystemException(e);
 		} catch (HibernateException he) {
 			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
+			throw new SecurityException(SecurityConstants.GENERALERROR, he);
 		} finally {
 			HibernateUtil.closeSession(session);
 		}
@@ -222,7 +214,7 @@ public class SecurityHelper {
 			throw new SystemException(e);
 		} catch (HibernateException he) {
 			transaction.rollback();
-			throw new SecurityException(SecurityConstants.GENERALERROR);
+			throw new SecurityException(SecurityConstants.GENERALERROR, he);
 		} finally {
 			HibernateUtil.closeSession(session);
 		}
@@ -240,12 +232,11 @@ public class SecurityHelper {
 	 */
 	public static List<Short> getLeafActivities() throws SystemException,
 			ApplicationException {
-		// 
-		Session session = null;
-		Transaction transaction = null;
-		RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+		RolesPermissionsPersistence rolesPermissionsPersistence = 
+			new RolesPermissionsPersistence();
 
-		List<ActivityEntity> activityList = rolesPermissionsPersistence.getActivities();
+		List<ActivityEntity> activityList = 
+			rolesPermissionsPersistence.getActivities();
 		List<Short> leafs = new ArrayList<Short>();
 		buildLeafItems(activityList, leafs);
 		return leafs;
@@ -261,11 +252,6 @@ public class SecurityHelper {
 	 *            list of leafs id's
 	 */
 	private static void buildLeafItems(List<ActivityEntity> l, List<Short> leafs) {
-		for (short k = 0; k < l.size(); k++) {
-
-			indexMap.put(l.get(k).getId(), k);
-		}
-
 		List<ActivityEntity> li = getChildren(l, Short.valueOf("0"));
 
 		for (int i = 0; i < li.size(); i++) {
@@ -334,28 +320,15 @@ public class SecurityHelper {
 			List<Short> leafs) {
 		List<ActivityEntity> lst = getChildren(l, id);
 		for (int i = 0; i < lst.size(); i++) {
+			Short id2 = lst.get(i).getId();
 			// check whether it is leaf
-			List<ActivityEntity> li = getChildren(l, lst.get(i).getId());
-			Short index = getIndex(lst.get(i).getId());
+			List<ActivityEntity> li = getChildren(l, id2);
 			if (li.size() == 0) {
-				leafs.add(lst.get(i).getId());
+				leafs.add(id2);
 			} else {
-				makeLeafItems(l, lst.get(i).getId(), leafs);
+				makeLeafItems(l, id2, leafs);
 			}
 		}
 	}
 
-	/**
-	 * This function returns the index of the current activity in the list of
-	 * Activity objects this is for performance sake so that we need not to
-	 * search the list everytime
-	 * 
-	 * @param id
-	 *            id of the given activity whose index we want to find out in
-	 *            the list of activities
-	 * @return short index of the activity whose index we are want to know
-	 */
-	private static short getIndex(Short id) {
-		return indexMap.get(id);
-	}
 }

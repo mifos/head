@@ -44,6 +44,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
+import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.persistence.DatabaseVersionFilterTest;
 import org.mifos.framework.struts.tags.DateHelperTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
@@ -77,6 +78,7 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(DateHelperTest.class);
 		suite.addTestSuite(CustomFieldViewTest.class);
 		suite.addTestSuite(MifosTagUtilsTest.class);
+		suite.addTestSuite(FrameworkExceptionTest.class);
 
 		//Currently this one is slow (extends MifosTestCase).
 		//suite.addTestSuite(OfficeListTagTest.class);
