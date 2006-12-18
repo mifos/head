@@ -89,13 +89,12 @@ Detailed Instructions
 ---------------------
 
 1. Obtain the prerequisite software. You will need the following
-   packages and minimum release levels:
+   packages:
 
-       Java 2 Standard Edition SDK 5.0
-       MySQL 4.1.16
-       JBoss 4.0.3SP1 or tomcat or jetty
-       Apache Ant 1.6.5
-       Cobertura 1.7
+       Java 2 Standard Edition SDK 5.0 or later
+       MySQL 4.1.16 or later
+       JBoss 4.0.3SP1 or later, or tomcat or jetty
+       Apache Ant 1.6.5 or later
 
 If you are just deploying, Java, mySQL, and JBOSS are required. 
 
@@ -127,7 +126,6 @@ in order to choose a non-standard location.
 JAVA_HOME	The location of your JDK install
 JBOSS_HOME	The location of your JBoss install (if using JBoss)
 ANT_HOME	The location of your Ant install
-COBERTURA_HOME	The location of your Cobertural install
 PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your path or visible to your IDE, if you choose to build and debug in something like Eclipse or NetBeans.
 
 

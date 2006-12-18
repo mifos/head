@@ -268,8 +268,9 @@
 		description="Initates a clean build, cleaning all directories and getting a fresh copy from source control"/>
 
 	<target name="build_db" description="Builds the application database">
-		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" userid="${db.user}" password="${db.pwd}"
-		     classpath="${database.driver.jar}">
+		<sql driver="${db.driver}" url="jdbc:mysql://${db.ip}:${db.port}/" 
+			userid="${db.user}" password="${db.pwd}"
+			classpath="${database.driver.jar}">
 			<transaction>
 				Drop database if exists ${db.name};
 				create database ${db.name};			
@@ -278,6 +279,7 @@
 			<transaction src="./sql/mifosdroptables.sql" />
             <transaction src="./sql/latest-schema.sql" />
             <transaction src="./sql/latest-data.sql" />
+			<!-- <transaction src="./sql/Index.sql" /> -->
 		</sql>
 	</target>
 
@@ -300,6 +302,7 @@
 			<transaction src="./sql/mifosdroptables.sql" />
             <transaction src="./sql/latest-schema.sql" />
             <transaction src="./sql/latest-data.sql" />
+			<!-- <transaction src="./sql/Index.sql" /> -->
 
 			<transaction src="./sql/testdbinsertionscript.sql" />
 		</sql>

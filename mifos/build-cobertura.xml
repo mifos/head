@@ -2,6 +2,11 @@
 <!-- 
 This build file separates out the cobertura (test coverage) related targets
 so that build.xml does not require a developer to have cobertura installed.
+
+To make this work, install cobertura 1.7 or later, set the
+COBERTURA_HOME environment variables to the location of your 
+Cobertura install
+
 -->
 
 <project name="mifos-cobertura" default="coverage" basedir=".">

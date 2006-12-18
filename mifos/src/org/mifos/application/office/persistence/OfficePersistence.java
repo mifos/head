@@ -48,8 +48,7 @@ public class OfficePersistence extends Persistence {
 		List<String> queryResult = executeNamedQuery(
 				NamedQueryConstants.OFFICE_GET_SEARCHID, queryParameters);
 		if (queryResult != null && queryResult.size() != 0) {
-			searchId = (String) queryResult.get(0);
-
+			searchId = queryResult.get(0);
 		}
 		return searchId;
 
@@ -278,7 +277,7 @@ public class OfficePersistence extends Persistence {
 		queryParameters.put(CustomerSearchConstants.OFFICESEARCHID, officeSearchId + "%");
 		queryParameters.put(OfficeConstants.OFFICE_ACTIVE, OfficeStatus.ACTIVE.getValue());
 		
-		return (List<OfficeBO>)executeNamedQuery(
-				NamedQueryConstants.GET_ACTIVE_BRANCHES, queryParameters);
+		return executeNamedQuery(
+			NamedQueryConstants.GET_ACTIVE_BRANCHES, queryParameters);
 	}
 }

@@ -135,7 +135,7 @@ public class TestOfficePersistence extends MifosTestCase {
 	public void testGetBranchParents() throws Exception {
 		List<OfficeBO> officeList = officePersistence.getBranchParents("1.1");
 		assertEquals(1, officeList.size());
-		assertEquals(1, ((OfficeBO) officeList.get(0)).getChildren().size());
+		assertEquals(1, officeList.get(0).getChildren().size());
 		officeList = null;
 	}
 
@@ -147,6 +147,7 @@ public class TestOfficePersistence extends MifosTestCase {
 		officeList = null;
 		headOffice = null;
 	}
+
 	public void testGetBranchesUnderUser()throws Exception{
 		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
 		OfficeBO branchOffice = TestObjectFactory.createOffice(
@@ -158,9 +159,6 @@ public class TestOfficePersistence extends MifosTestCase {
 		assertEquals(branchOffice.getOfficeName(),officeList.get(0).getOfficeName());
 		assertEquals("TestBranchOffice",officeList.get(1).getOfficeName());
 		TestObjectFactory.cleanUp(branchOffice);
-
-		
-		
 	}
 	
 }

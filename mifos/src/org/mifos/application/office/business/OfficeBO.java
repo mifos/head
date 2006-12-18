@@ -319,6 +319,8 @@ public class OfficeBO extends BusinessObject {
 	private String generateOfficeGlobalNo() throws OfficeException {
 
 		try {
+			/* TODO: Why not auto-increment?  Fetching the max and adding
+			   one would seem to have a race condition.  */
 			String officeGlobelNo = String.valueOf(new OfficePersistence()
 					.getMaxOfficeId().intValue() + 1);
 			if (officeGlobelNo.length() > 4) {
