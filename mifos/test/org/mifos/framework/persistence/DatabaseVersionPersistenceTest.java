@@ -142,7 +142,9 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 			fail();
 		}
 		catch (UnsupportedOperationException e) {
-			assertEquals("downgrades not yet supported (from 88 to 87)", e.getMessage());
+			assertEquals(
+				"your database needs to be downgraded from 88 to 87", 
+				e.getMessage());
 		}
 	}
 	

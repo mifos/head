@@ -63,9 +63,17 @@ public class DatabaseVersionPersistence extends Persistence {
 	}
 
 	public URL[] scripts(int applicationVersion, int databaseVersion) {
-		if(applicationVersion < databaseVersion)
-			throw new UnsupportedOperationException("downgrades not yet supported (from "+
-					databaseVersion+" to "+applicationVersion+")");
+		if(applicationVersion < databaseVersion) {
+			/*
+			   Automatically applying downgrades would be a mistake because
+			   a downgrade is likely to destroy data (for example, if the
+			   upgrade had added a column and the application had put some
+			   data into that column prior to the downgrade).
+			 */
+			throw new UnsupportedOperationException(
+				"your database needs to be downgraded from " +
+				databaseVersion + " to " + applicationVersion);
+		}
 		
 		if(applicationVersion == databaseVersion) {
 			return new URL[0];
@@ -103,6 +111,7 @@ public class DatabaseVersionPersistence extends Persistence {
 		execute(url, conn);
 		conn.commit();
 	}
+
 	void execute(URL url, Connection conn) throws IOException , SQLException {
 		InputStream in = url.openStream();
 		execute(in, conn);

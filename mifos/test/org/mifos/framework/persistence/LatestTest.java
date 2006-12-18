@@ -1,5 +1,6 @@
 package org.mifos.framework.persistence;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -8,12 +9,15 @@ import java.sql.SQLException;
 
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
+import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class LatestTest extends TestCase {
 	
+	public static final int FIRST_NUMBERED_VERSION = 100;
+
 	public void testSimple() throws Exception {
 		Database database = new Database();
 		loadLatest(database);
@@ -42,15 +46,22 @@ public class LatestTest extends TestCase {
 		loadRealLatest(database);
 		String latestDump = new SqlDumper().dump(database.dataStore());
 
-		database = new Database();
-		applyRealUpgrades(database);
-		String upgradeDump = new SqlDumper().dump(database.dataStore());
+		DataStore upgraded = applyRealUpgrades();
+		String upgradeDump = new SqlDumper().dump(upgraded);
 		
 		assertEquals(latestDump, upgradeDump);
 	}
 
-	private void applyRealUpgrades(Database database) throws Exception {
-	    DatabaseSetup.executeScript(database, "sql/mifosdbcreationscript.sql");
+	private DataStore applyRealUpgrades() throws Exception {
+		Database database = new Database(upgradeToFirstNumberedVersion());
+
+	    runUpgradeScripts(database);
+	    return database.dataStore();
+	}
+
+	private DataStore upgradeToFirstNumberedVersion() {
+		Database database = new Database();
+		DatabaseSetup.executeScript(database, "sql/mifosdbcreationscript.sql");
 	    DatabaseSetup.executeScript(database, "sql/mifosmasterdata.sql");
 	    DatabaseSetup.executeScript(database, "sql/rmpdbcreationscript.sql");
 	    DatabaseSetup.executeScript(database, "sql/rmpmasterdata.sql");
@@ -60,8 +71,7 @@ public class LatestTest extends TestCase {
 	    DatabaseSetup.executeScript(database, "sql/Iteration15-DDL-DBScripts24102006.sql");
 	    DatabaseSetup.executeScript(database, "sql/Iteration15-DBScripts20061012.sql");
 	    DatabaseSetup.executeScript(database, "sql/add-version.sql");
-
-	    runUpgradeScripts(database);
+	    return database.dataStore();
 	}
 
 	private void runUpgradeScripts(Database database) throws SQLException, IOException {
@@ -77,8 +87,9 @@ public class LatestTest extends TestCase {
 	    	}
 	    };	    
 	    int version  = persistence.read(conn);
-	    assertEquals(100, version);
-	    URL[] scripts = persistence.scripts(DatabaseVersionPersistence.APPLICATION_VERSION, version);
+	    assertEquals(FIRST_NUMBERED_VERSION, version);
+	    URL[] scripts = persistence.scripts(
+	    	DatabaseVersionPersistence.APPLICATION_VERSION, version);
 	    persistence.execute(scripts, conn);
 	}
 
@@ -94,6 +105,32 @@ public class LatestTest extends TestCase {
 		DatabaseSetup.executeScript(database, "sql/mifosdroptables.sql");
 		String cleanedDB = new SqlDumper().dump(database.dataStore());
 		assertEquals(blankDB, cleanedDB);
+	}
+	
+	public void testDowngrades() throws Exception {
+		DataStore current = this.upgradeToFirstNumberedVersion();
+		for (int currentVersion = FIRST_NUMBERED_VERSION; 
+			currentVersion < DatabaseVersionPersistence.APPLICATION_VERSION;
+			++currentVersion) {
+			current = upAndBack(current, currentVersion + 1);
+		}
+	}
+
+	private DataStore upAndBack(DataStore current, int nextVersion) 
+	throws Exception {
+		Database database = new Database(current);
+		String before = new SqlDumper().dump(database.dataStore());
+		new DatabaseVersionPersistence().execute(
+			new FileInputStream("sql/upgrade_to_" + nextVersion + ".sql"), 
+			database.openConnection());
+		DataStore upgraded = database.dataStore();
+		new DatabaseVersionPersistence().execute(
+			new FileInputStream("sql/downgrade_from_" + nextVersion + ".sql"), 
+			database.openConnection());
+		String after = new SqlDumper().dump(database.dataStore());
+		assertEquals(before, after);
+		
+		return upgraded;
 	}
 
 }
