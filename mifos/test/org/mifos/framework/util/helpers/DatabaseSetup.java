@@ -10,6 +10,7 @@ import net.sourceforge.mayfly.JdbcDriver;
 import net.sourceforge.mayfly.MayflyException;
 import net.sourceforge.mayfly.datastore.DataStore;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.hibernate.HibernateStartUp;
@@ -18,6 +19,8 @@ import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
 public class DatabaseSetup {
 	
 	private static DataStore standardMayflyStore;
+	
+	private static SessionFactory mayflySessionFactory;
 
 	/**
 	 * Set up log4j (this is required for hibernate, as well as perhaps
@@ -46,22 +49,17 @@ public class DatabaseSetup {
 		HibernateStartUp.initialize("conf/HibernateTest.properties");
 	}
 
-	private static Configuration hibernateConfiguration = null;
-
 	public static Configuration getHibernateConfiguration() {
-		if (hibernateConfiguration == null) {
-			configureLogging();
-			
-			Configuration configuration = new Configuration();
-			// This step is slow (about 1-2 s for me) because it
-			// it reading and parsing a whole bunch of xml files.
-			// That's why we try to share it between different tests.
-			configuration.configure(
-			    new File("src/" + FilePaths.HIBERNATECFGFILE)
-			);
-			hibernateConfiguration = configuration;
-		}
-		return hibernateConfiguration;
+		configureLogging();
+		
+		Configuration configuration = new Configuration();
+		// This step is slow (about 1-2 s for me) because it
+		// it reading and parsing a whole bunch of xml files.
+		// That's why we try to share it between different tests.
+		configuration.configure(
+		    new File("src/" + FilePaths.HIBERNATECFGFILE)
+		);
+		return configuration;
 	}
 
 	public static Configuration mayflyConfiguration() {
@@ -80,7 +78,14 @@ public class DatabaseSetup {
 	}
 
 	public static void setMayfly() {
-		HibernateSessionFactory.setConfiguration(mayflyConfiguration());
+		HibernateSessionFactory.setFactory(mayflySessionFactory());
+	}
+	
+	public static synchronized SessionFactory mayflySessionFactory() {
+		if (mayflySessionFactory == null) {
+			mayflySessionFactory = mayflyConfiguration().buildSessionFactory();
+		}
+		return mayflySessionFactory;
 	}
 
 	public static synchronized DataStore getStandardStore() {

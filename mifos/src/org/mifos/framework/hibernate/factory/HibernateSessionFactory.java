@@ -59,19 +59,24 @@ public class HibernateSessionFactory {
 	public static void setConfiguration(Configuration config)
 			throws HibernateStartUpException {
 		try {
-			/**
-			 * Throwing HibernateStartUpException seems to cause somewhat
-			 * mysterious failures in {@link TestConstPlugin}.
-			 * 
-			 * Why?
-			 * 
-			 * And shouldn't we at least call .close() on the old
-			 * sessionFactory, if nothing else?
-			 */
-			sessionFactory = config.buildSessionFactory();
+			setFactory(config.buildSessionFactory());
 		} catch (Exception e) {
 			throw new HibernateStartUpException(e);
 		}
+	}
+
+	public static void setFactory(SessionFactory newFactory) {
+		/**
+		 * Throwing HibernateStartUpException if sessionFactory is
+		 * already set seems to cause somewhat
+		 * mysterious failures in {@link TestConstPlugin}.
+		 * 
+		 * Why?
+		 * 
+		 * And shouldn't we at least call .close() on the old
+		 * sessionFactory, if nothing else?
+		 */
+		sessionFactory = newFactory;
 	}
 
 	/**
