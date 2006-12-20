@@ -3,6 +3,7 @@ package org.mifos.framework.util.helpers;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 
 import net.sourceforge.mayfly.Database;
@@ -107,9 +108,9 @@ public class DatabaseSetup {
 	}
 
 	public static void executeScript(Database database, String name) {
-	    try {
-	        Reader sql = new FileReader(name);
-	
+        Reader sql = openFile(name);
+
+        try {
 	        database.executeScript(sql);
 	    }
 	    catch (MayflyException e) {
@@ -123,7 +124,22 @@ public class DatabaseSetup {
 		            e
 		        );
 	    	}
-	    } catch (FileNotFoundException e) {
+	    }
+	    finally {
+	    	try {
+				sql.close();
+			}
+	    	catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+	    }
+	}
+
+	private static Reader openFile(String name) {
+		try {
+			return new FileReader(name);
+		}
+        catch (FileNotFoundException e) {
 	    	throw new RuntimeException(e);
 		}
 	}
