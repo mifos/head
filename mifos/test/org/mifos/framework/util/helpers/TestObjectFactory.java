@@ -215,9 +215,13 @@ public class TestObjectFactory {
 	 *         null.
 	 */
 
-	public static PersonnelBO getPersonnel(Short personnelId) {
+	public static PersonnelBO getPersonnel(Session session, Short personnelId) {
 		return (PersonnelBO) addObject(testObjectPersistence
-				.getPersonnel(personnelId));
+				.getPersonnel(session, personnelId));
+	}
+
+	public static PersonnelBO getPersonnel(Short personnelId) {
+		return getPersonnel(HibernateUtil.getSessionTL(), personnelId);
 	}
 
 	public static CenterBO createCenter(
@@ -1279,6 +1283,10 @@ public class TestObjectFactory {
 	public static void updateObject(PersistentObject obj) {
 		testObjectPersistence.update(obj);
 	}
+	
+	public static void updateObject(Session session, PersistentObject obj) {
+		testObjectPersistence.update(session, obj);
+	}
 
 	private static UserContext userContext;
 
@@ -1335,15 +1343,19 @@ public class TestObjectFactory {
 	 * Also see {@link TestUtils#makeUser(int)} which should be faster (this
 	 * method involves several database accesses).
 	 */
-	public static UserContext getUserContext() throws SystemException,
+	public static UserContext getUserContext(Session session) throws SystemException,
 			 ApplicationException {
 		byte[] password = EncryptionService.getInstance()
 				.createEncryptedPassword("mifos");
-		PersonnelBO personnel = getPersonnel(Short.valueOf("1"));
+		PersonnelBO personnel = getPersonnel(session, Short.valueOf("1"));
 		TestPersonnelBO.setEncriptedPassword(password,personnel);
-		updateObject(personnel);
-		return personnel.login("mifos");
-
+		updateObject(session, personnel);
+		return personnel.login(session, "mifos");
+	}
+	
+	public static UserContext getUserContext() throws SystemException,
+			ApplicationException {
+		return getUserContext(HibernateUtil.getSessionTL());
 	}
 
 	public static void flushandCloseSession() {

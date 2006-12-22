@@ -9,6 +9,7 @@ import java.util.Set;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.exception.GenericJDBCException;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -38,17 +39,39 @@ public abstract class Persistence {
 			throw new PersistenceException(e);
 		}
 	}
-
 	public Object createOrUpdate(Object object) throws PersistenceException {
-		Session session = HibernateUtil.getSessionTL();
+		return createOrUpdate(HibernateUtil.getSessionTL(), object);
+	}
+
+	public Object createOrUpdate(Session session, Object object) throws PersistenceException {
+		if (session == HibernateUtil.getSessionTL()) {
+			// Why did taking out this kluge cause test failures?
+
+			try {
+				HibernateUtil.startTransaction();
+				session.saveOrUpdate(object);
+				if (HibernateUtil.getInterceptor().isAuditLogRequired()) {
+					HibernateUtil.getInterceptor().createChangeValueMap(object);
+				}
+				/* there isn't a call to HibernateUtil#commitTransaction() 
+				   here; is that why? */
+			} catch (Exception hibernateException) {
+				throw new PersistenceException(hibernateException);
+			}
+
+			return object;
+		}
+
+		Transaction tx = session.beginTransaction();
 		try {
-			HibernateUtil.startTransaction();
 			session.saveOrUpdate(object);
 			if (HibernateUtil.getInterceptor().isAuditLogRequired()) {
 				HibernateUtil.getInterceptor().createChangeValueMap(object);
 			}
-		} catch (Exception he) {
-			throw new PersistenceException(he);
+			tx.commit();
+		} catch (Exception hibernateException) {
+			tx.rollback();
+			throw new PersistenceException(hibernateException);
 		}
 		return object;
 	}

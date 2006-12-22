@@ -44,33 +44,18 @@ import org.mifos.framework.exceptions.ApplicationException;
  */
 public class CustomerException extends ApplicationException{
 	
-	
-	/** Constructor for CustomerException
-	 * @param key
-	 */
 	public CustomerException(String key) {
 		super(key);
 	}
 	
-	/** Constructor for CustomerException
-	 * @param key
-	 * @param values
-	 */
 	public CustomerException(String key,Object[] values) {
 		super(key, values);
 	}
 
-	/** Constructor for CustomerException
-	 * @param cause
-	 */
 	public CustomerException(Throwable cause) {
 		super(cause);
 	}
 	
-	
-	/** Constructor for CustomerException
-	 * @param cause
-	 */
 	public CustomerException(String key ,Throwable cause) {
 		super(key , cause);
 	}

@@ -54,6 +54,11 @@ public class OfficePersistence extends Persistence {
 
 	}
 
+	/**
+	 * @return The office, or null if not found (TODO: wouldn't we rather
+	 * have an exception if not found?  The usual idiom seems to be to just
+	 * dereference the returned office without any checking for null)
+	 */
 	public OfficeBO getOffice(Short officeId) throws PersistenceException {
 		return (OfficeBO) getPersistentObject(OfficeBO.class, officeId);
 	}

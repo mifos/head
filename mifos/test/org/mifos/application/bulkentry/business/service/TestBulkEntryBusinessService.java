@@ -147,9 +147,9 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 					(short) 1, "324423", (short) 1, new java.sql.Date(System
 							.currentTimeMillis()), new java.sql.Date(System
 							.currentTimeMillis()));
-			assertTrue("A paid installment can be paid again", false);
+			fail("A paid installment can be paid again");
 		} catch (ServiceException be) {
-			HibernateUtil.getTransaction().rollback();
+			HibernateUtil.rollbackTransaction();
 			account.getAccountPayments().clear();
 			assertNotNull(be);
 			assertEquals(be.getKey(), "errors.update");

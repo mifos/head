@@ -74,6 +74,8 @@ public class ApplicationException extends Exception {
 	}
 	
 	public ApplicationException(String key, Object[] values) {
+		// Putting the key in the message will make debugging easier.
+		//super(key);
 		this.key = key;
 		this.values = values;
 	}

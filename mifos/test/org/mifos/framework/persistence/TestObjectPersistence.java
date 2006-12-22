@@ -38,6 +38,7 @@
 package org.mifos.framework.persistence;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
@@ -59,10 +60,14 @@ public class TestObjectPersistence {
 	 * This record does not have any custom fields or roles associated with it.
 	 * If the row does not already exist in the database it returns null.
 	 */
-	public PersonnelBO getPersonnel(Short personnelId) {
-		Session session = HibernateUtil.getSessionTL();
+	public PersonnelBO getPersonnel(Session session, Short personnelId) {
 		return (PersonnelBO)session.get(PersonnelBO.class,personnelId );
 	}
+
+	public PersonnelBO getPersonnel(Short personnelId) {
+		return getPersonnel(HibernateUtil.getSessionTL(), personnelId);
+	}
+	
 	
 	/**
 	 * @return - Returns the Non loan officer created by test data scripts.
@@ -154,10 +159,32 @@ public class TestObjectPersistence {
 	}
 
 	public void update(PersistentObject obj) {
-		Session session = HibernateUtil.getSessionTL();	
-		HibernateUtil.startTransaction();
-		session.saveOrUpdate(obj);
-		HibernateUtil.getTransaction().commit();
+		update(HibernateUtil.getSessionTL(), obj);
+	}
+	
+	public void update(Session session, PersistentObject object) {
+		if (session == HibernateUtil.getSessionTL()) {
+			/** Various broken tests expect that they can call this method
+			    and then call HibernateUtil.getTransaction().commit()
+			    or the like.  Until they are cleaned up, we'll go along...
+			 */
+			HibernateUtil.startTransaction();
+			session.saveOrUpdate(object);
+			HibernateUtil.commitTransaction();
+			return;
+		}
+
+		Transaction tx = session.beginTransaction();
+		try{
+			session.saveOrUpdate(object);
+			tx.commit();
+		}catch(RuntimeException ex){
+			tx.rollback();
+			throw ex;
+		}catch(Exception e){
+			tx.rollback();
+			throw new RuntimeException(e);
+		}
 	}
 
 	public void flushandCloseSession() {

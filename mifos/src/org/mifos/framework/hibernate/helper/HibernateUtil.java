@@ -120,6 +120,16 @@ public class HibernateUtil {
 		return getSessionHolder().getInterceptor();
 	}
 
+	/**
+	 * Begin a transaction and store it in a thread-local variable,
+	 * or return the currently open transaction if there is one.
+	 * The result is that the transaction will remain open until
+	 * a call to {@link #commitTransaction()} or {@link #rollbackTransaction()}.
+	 * Calling this method instead of just creating a hibernate
+	 * Transaction via the session is probably not a good idea (see
+	 * an example of the latter at 
+	 * TestObjectPersistence#update(Session, org.mifos.framework.business.PersistentObject)
+	 */
 	public static Transaction startTransaction() {
 		Transaction transaction = getSessionHolder().getTransaction();
 		if (transaction == null) {

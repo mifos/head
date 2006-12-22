@@ -101,6 +101,8 @@ public class TestAccountBO extends TestAccount {
 			HibernateUtil.getTransaction().commit();
 			assert (false);
 		} catch (Exception e) {
+			/* TODO: what kind of exception?  This test could pass for almost
+			   any reason */
 			assertTrue(true);
 		}
 	}

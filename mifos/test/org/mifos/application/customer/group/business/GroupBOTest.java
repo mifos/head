@@ -1285,9 +1285,9 @@ public class GroupBOTest extends MifosTestCase {
 					getAddress(), null, null, personnel, center);
 			TestObjectFactory.simulateInvalidConnection();
 			group.save();
-			assertTrue(false);
+			fail();
 		} catch (CustomerException ce) {
-			assertTrue(true);
+			assertEquals("Customer.CreateFailed", ce.getKey());
 		}finally {
 			group=null;
 			HibernateUtil.closeSession();

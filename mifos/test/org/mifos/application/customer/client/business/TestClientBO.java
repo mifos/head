@@ -77,16 +77,22 @@ public class TestClientBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(accountBO);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(group1);
-		TestObjectFactory.cleanUp(center);
-		TestObjectFactory.cleanUp(center1);
-		TestObjectFactory.cleanUp(office);
-		TestObjectFactory.removeObject(savingsOffering1);
-		TestObjectFactory.removeObject(savingsOffering2);
-		HibernateUtil.closeSession();
+		try {
+			TestObjectFactory.cleanUp(accountBO);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(group1);
+			TestObjectFactory.cleanUp(center);
+			TestObjectFactory.cleanUp(center1);
+			TestObjectFactory.cleanUp(office);
+			TestObjectFactory.removeObject(savingsOffering1);
+			TestObjectFactory.removeObject(savingsOffering2);
+			HibernateUtil.closeSession();
+		}
+		catch (Exception e) {
+			// throwing here may obscure previous failures
+			e.printStackTrace();
+		}
 		super.tearDown();
 	}
 	
@@ -335,8 +341,11 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"","","","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			client = new ClientBO(TestObjectFactory.getUserContext(), "", CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null, null,
-					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+			client = new ClientBO(TestObjectFactory.getUserContext(), "", 
+					CustomerStatus.getStatus(new Short("1")), null, null, null, 
+					null, null, null, personnel, officeId, null, null,
+					null,null,null,YesNoFlag.YES.getValue(),
+					clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 			assertFalse("Client Created", true);
 		} catch (CustomerException ce) {
 			assertNull(client);
@@ -349,9 +358,12 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"first","","last","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, null, null, null,
+			client = new ClientBO(TestObjectFactory.getUserContext(), 
+					clientNameDetailView.getDisplayName(), 
+					CustomerStatus.getStatus(new Short("1")), 
+					null, null, null, null, null, null, personnel, null, null, null,
 					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
-			assertFalse("Client Created", true);
+			fail("Client Created");
 		} catch (CustomerException ce) {
 			assertNull(client);
 			assertEquals(ce.getKey(), CustomerConstants.INVALID_OFFICE);
@@ -364,8 +376,12 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(Short.valueOf("1"),1,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(Short.valueOf("2"),1,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),povertyStatus);
-		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.getStatus(new Short("1")), null, null, null, null, null, null, personnel, officeId, null, null,
-				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
+		client = new ClientBO(TestObjectFactory.getUserContext(), 
+				clientNameDetailView.getDisplayName(), 
+				CustomerStatus.getStatus(new Short("1")), null, null, null, 
+				null, null, null, personnel, officeId, null, null,
+				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,
+				spouseNameDetailView,clientDetailView,null);
 		client.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

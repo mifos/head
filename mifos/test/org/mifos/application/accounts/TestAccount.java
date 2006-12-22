@@ -27,10 +27,16 @@ public class TestAccount extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(accountBO);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		accountPersistence = null;
+		try {
+			TestObjectFactory.cleanUp(accountBO);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			accountPersistence = null;
+		}
+		catch (Exception e) {
+			// throwing here tends to mask failures
+			e.printStackTrace();
+		}
 
 		super.tearDown();
 	}

@@ -101,15 +101,21 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(clientSavingsAccount);
-		TestObjectFactory.cleanUp(groupAccount);
-		TestObjectFactory.cleanUp(clientAccount);
-		TestObjectFactory.cleanUp(account);
-		TestObjectFactory.cleanUp(savingsBO);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		try {
+			TestObjectFactory.cleanUp(clientSavingsAccount);
+			TestObjectFactory.cleanUp(groupAccount);
+			TestObjectFactory.cleanUp(clientAccount);
+			TestObjectFactory.cleanUp(account);
+			TestObjectFactory.cleanUp(savingsBO);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			HibernateUtil.closeSession();
+		}
+		catch (Exception e) {
+			// throwing here tends to mask other failures
+			e.printStackTrace();
+		}
 		super.tearDown();
 	}
 
@@ -804,7 +810,6 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		TestObjectFactory.updateObject(groupAccount);
 		TestObjectFactory.updateObject(clientAccount);
 		TestObjectFactory.updateObject(clientSavingsAccount);
-		HibernateUtil.commitTransaction();
 		assertEquals(1, service.getAllClosedAccount(client.getCustomerId(),
 				AccountTypes.LOANACCOUNT.getValue()).size());
 		assertEquals(1, service.getAllClosedAccount(group.getCustomerId(),
@@ -826,7 +831,6 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		TestObjectFactory.updateObject(groupAccount);
 		TestObjectFactory.updateObject(clientAccount);
 		TestObjectFactory.updateObject(clientSavingsAccount);
-		HibernateUtil.commitTransaction();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.getAllClosedAccount(client.getCustomerId(),
@@ -984,7 +988,6 @@ public class TestCustomerBusinessService extends MifosTestCase {
 			break;
 		}
 		TestObjectFactory.updateObject(accountBO);
-		HibernateUtil.getTransaction().commit();
 	}
 
 	private void createInitialCustomers() throws Exception {

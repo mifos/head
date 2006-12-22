@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.hibernate.Session;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
@@ -33,6 +34,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -659,6 +661,10 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	public UserContext login(String password) throws PersonnelException {
+		return login(HibernateUtil.getSessionTL(), password);		
+	}
+
+	public UserContext login(Session session, String password) throws PersonnelException {
 		logger.info("Trying to login");
 		UserContext userContext = null;
 		if(!isActive()) {
@@ -670,8 +676,8 @@ public class PersonnelBO extends BusinessObject {
 			updateNoOfTries();
 			throw new PersonnelException(LoginConstants.INVALIDOLDPASSWORD);
 		}
-		resetNoOfTries();
-		userContext = setUserContext();
+		resetNoOfTries(session);
+		userContext = setUserContext(session);
 		logger.info("Login successfull");
 		return userContext;
 	}
@@ -726,12 +732,12 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 
-	private void resetNoOfTries() throws PersonnelException {
+	private void resetNoOfTries(Session session) throws PersonnelException {
 		logger.info("Reseting  no of tries");
 		if(noOfTries.intValue()>0) {
 			this.noOfTries = YesNoFlag.NO.getValue();
 			try {
-				new PersonnelPersistence().createOrUpdate(this);
+				new PersonnelPersistence().createOrUpdate(session, this);
 			} catch (PersistenceException pe) {
 				throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 			}
@@ -748,17 +754,17 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 
-	private void updateLastPersonnelLoggedin() throws PersonnelException {
+	private void updateLastPersonnelLoggedin(Session session) throws PersonnelException {
 		logger.info("Updating lastLogin");
 		try{
 			this.lastLogin = new Date();
-			new PersonnelPersistence().createOrUpdate(this);
+			new PersonnelPersistence().createOrUpdate(session, this);
 		} catch (PersistenceException pe) {
 			throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
 		}
 	}
 
-	private UserContext setUserContext() throws PersonnelException {
+	private UserContext setUserContext(Session session) throws PersonnelException {
 		logger.info("Setting  usercontext");
 		UserContext userContext = new UserContext();
 		userContext.setId(getPersonnelId());
@@ -768,7 +774,7 @@ public class PersonnelBO extends BusinessObject {
 		userContext.setLastLogin(getLastLogin());
 		userContext.setPasswordChanged(getPasswordChanged());
 		if (LoginConstants.PASSWORDCHANGEDFLAG.equals(getPasswordChanged())) {
-			updateLastPersonnelLoggedin();
+			updateLastPersonnelLoggedin(session);
 		}
 		SupportedLocalesEntity supportedLocales = getPreferredLocale();
 		if (null != supportedLocales) {

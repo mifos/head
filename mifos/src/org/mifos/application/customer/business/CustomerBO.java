@@ -177,15 +177,21 @@ public abstract class CustomerBO extends BusinessObject {
 
 			createAddress(address);
 
-			if (parentCustomer != null)
+			if (parentCustomer != null) {
 				inheritDetailsFromParent(parentCustomer);
+			}
 			else {
 				if (loanOfficerId != null)
 					this.personnel = new PersonnelPersistence()
 							.getPersonnel(loanOfficerId);
 				this.customerMeeting = createCustomerMeeting(meeting);
-				if (officeId != null)
+				if (officeId != null) {
 					this.office = new OfficePersistence().getOffice(officeId);
+					if (this.office == null) {
+						throw new IllegalStateException(
+							"office id " + officeId + " not found in database");
+					}
+				}
 			}
 
 			if (formedBy != null)
