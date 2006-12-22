@@ -35,7 +35,7 @@ public final class EntityMasterData {
 	public void init()throws HibernateProcessException{
 		Session session=null;
 		try{
-			session=HibernateUtil.getSession();
+			session=HibernateUtil.openSession();
 			Transaction trxn = session.beginTransaction();
 			Query query = session.getNamedQuery("getEntityMaster");
 

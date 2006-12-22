@@ -470,7 +470,7 @@ public class SavingsBO extends AccountBO {
 			}
 			PaymentTypeEntity paymentType = null;
 			try {
-				paymentType = (PaymentTypeEntity) HibernateUtil.getSession()
+				paymentType = (PaymentTypeEntity) HibernateUtil.openSession()
 						.get(PaymentTypeEntity.class,
 								SavingsConstants.DEFAULT_PAYMENT_TYPE);
 			} catch (HibernateException e) {

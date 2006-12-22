@@ -56,7 +56,7 @@ public class QuerySession
     public static Session getSession() throws  HibernateProcessException
     {
        MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).info("opening session for search");
-       return HibernateUtil.getSession();
+       return HibernateUtil.openSession();
 
     }
 

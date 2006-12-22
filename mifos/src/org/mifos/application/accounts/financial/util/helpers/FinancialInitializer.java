@@ -55,22 +55,18 @@ public class FinancialInitializer {
 		Session session = null;
 
 		try {
-
-			session = HibernateUtil.getSession();
+			session = HibernateUtil.openSession();
 			initalizeFinancialAction(session);
 			initializeCOA(session);
-
 		}
-
 		catch (Exception e) {
-
 			throw new FinancialException(
 					FinancialExceptionConstants.ACTIONNOTFOUND, e);
 		} finally {
 			try {
 				HibernateUtil.closeSession(session);
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		}
 
@@ -120,4 +116,5 @@ public class FinancialInitializer {
 
 		return coaIDMapper;
 	}
+
 }

@@ -174,7 +174,7 @@ public class ApplicationInitializer implements ServletContextListener {
 		password = EncryptionService.getInstance().createEncryptedPassword(
 				"mifos");
 		try {
-			session = HibernateUtil.getSession();
+			session = HibernateUtil.openSession();
 			Transaction trxn = session.beginTransaction();
 			PersonRoles personRoles = (PersonRoles) session.createQuery(
 					"from PersonRoles p where p.loginName ='mifos'")

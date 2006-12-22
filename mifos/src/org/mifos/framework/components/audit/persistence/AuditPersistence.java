@@ -18,7 +18,7 @@ public class AuditPersistence extends Persistence {
 		Session session = null;
 		Transaction txn = null;
 		try {
-			session = HibernateUtil.getSession();
+			session = HibernateUtil.openSession();
 			txn = session.beginTransaction();
 			session.save(auditLog);
 			txn.commit();

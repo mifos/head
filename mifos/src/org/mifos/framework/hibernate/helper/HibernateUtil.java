@@ -66,10 +66,9 @@ public class HibernateUtil {
 	}
 
 	/**
-	 * Method returns a hibernate session object which it obtains from
-	 * SessionFactory.
+	 * Open a new hibernate session.
 	 */
-	public static Session getSession() throws HibernateProcessException {
+	public static Session openSession() throws HibernateProcessException {
 		try {
 			return sessionFactory.openSession();
 		} catch (HibernateException e) {
@@ -78,12 +77,14 @@ public class HibernateUtil {
 		}
 	}
 
+	/**
+	 * Close a session.  Do nothing if the session is null or already closed.
+	 */
 	public static void closeSession(Session session)
 			throws HibernateProcessException {
 		try {
 			if (session != null && session.isOpen()) {
 				session.close();
-				session = null;
 			}
 
 		} catch (HibernateException e) {
@@ -94,12 +95,16 @@ public class HibernateUtil {
 	}
 
 	/**
-	 * Method that returns the hibernate session factory
+	 * Return the hibernate session factory
 	 */
 	public static SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
+	/**
+	 * Return the current hibernate session for this thread.  If this
+	 * thread doesn't have one, create a new one.
+	 */
 	public static Session getSessionTL() {
 		try {
 			if (threadLocal.get() == null) {

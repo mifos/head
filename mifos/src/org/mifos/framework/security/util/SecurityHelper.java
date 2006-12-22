@@ -78,7 +78,7 @@ public class SecurityHelper {
 		Transaction transaction = null;
 		Query quaryActivityRoles = null;
 		try {
-			session = HibernateUtil.getSession();
+			session = HibernateUtil.openSession();
 			transaction = session.beginTransaction();
 			// get the named query
 			quaryActivityRoles = session
@@ -117,7 +117,7 @@ public class SecurityHelper {
 		Query personRoles = null;
 
 		try {
-			session = HibernateUtil.getSession();
+			session = HibernateUtil.openSession();
 			transaction = session.beginTransaction();
 			personRoles = session
 					.getNamedQuery(NamedQueryConstants.GETPERSONROLES);
@@ -164,7 +164,7 @@ public class SecurityHelper {
 		Transaction transaction = null;
 		Query officeSearch = null;
 		try {
-			session = HibernateUtil.getSession();
+			session = HibernateUtil.openSession();
 			transaction = session.beginTransaction();
 			officeSearch = session
 					.getNamedQuery(NamedQueryConstants.GETOFFICESEARCH);
@@ -203,7 +203,7 @@ public class SecurityHelper {
 		Query queryOfficeSearchList = null;
 
 		try {
-			session = HibernateUtil.getSession();
+			session = HibernateUtil.openSession();
 			transaction = session.beginTransaction();
 			queryOfficeSearchList = session
 					.getNamedQuery(NamedQueryConstants.GETOFFICESEARCHLIST);
