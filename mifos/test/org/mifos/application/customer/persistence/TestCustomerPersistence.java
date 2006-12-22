@@ -390,7 +390,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(2, customerPerformanceHistoryView.getMeetingsAttended()
 				.intValue());
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 	}
 
@@ -434,7 +434,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(2, customerPerformanceHistoryView.getMeetingsMissed()
 				.intValue());
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 	}
 
@@ -553,12 +553,12 @@ public class TestCustomerPersistence extends MifosTestCase {
 				CustomerStatus.CLIENT_CLOSED));
 		
 		TestObjectFactory.updateObject(client2);
-		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+		client2 = TestObjectFactory.getObject(ClientBO.class,
 				client2.getCustomerId());
 		TestCustomerBO.setCustomerStatus(client3,new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CANCELLED));
 		TestObjectFactory.updateObject(client3);
-		client3 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+		client3 = TestObjectFactory.getObject(ClientBO.class,
 				client3.getCustomerId());
 
 		List<AccountBO> loansForCenter = customerPersistence
@@ -679,13 +679,13 @@ public class TestCustomerPersistence extends MifosTestCase {
 		List<Integer> customerIds = customerPersistence.getChildrenForParent(
 				center.getSearchId(), Short.valueOf("3"));
 		assertEquals(3, customerIds.size());
-		CustomerBO customer = (CustomerBO) TestObjectFactory.getObject(
+		CustomerBO customer = TestObjectFactory.getObject(
 				CustomerBO.class, customerIds.get(0));
 		assertEquals("Group", customer.getDisplayName());
-		customer = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		customer = TestObjectFactory.getObject(CustomerBO.class,
 				customerIds.get(1));
 		assertEquals("client1", customer.getDisplayName());
-		customer = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		customer = TestObjectFactory.getObject(CustomerBO.class,
 				customerIds.get(2));
 		assertEquals("client2", customer.getDisplayName());
 
@@ -868,11 +868,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getOfficeId());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		assertEquals(newLO.getPersonnelId(), group.getPersonnel()
 				.getPersonnelId());
@@ -886,13 +886,13 @@ public class TestCustomerPersistence extends MifosTestCase {
 		client = TestObjectFactory.createClient("myClient", meeting,
 				CustomerStatus.CLIENT_PENDING);
 		HibernateUtil.closeSession();
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		customerPersistence.deleteCustomerMeeting(client);
 		TestCustomerBO.setCustomerMeeting(client,null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		assertNull(client.getCustomerMeeting());
 	}
@@ -954,9 +954,9 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.updateObject(groupAccount);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		groupAccount =(LoanBO) TestObjectFactory.getObject(LoanBO.class,groupAccount.getAccountId());
-		center = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
-		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		groupAccount =TestObjectFactory.getObject(LoanBO.class,groupAccount.getAccountId());
+		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
 		QueryResult queryResult = new CustomerPersistence().search(group
 				.getGlobalCustNum(), Short.valueOf("3"), Short.valueOf("1"),
 				Short.valueOf("1"));
@@ -1048,11 +1048,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertNotNull(accountList);
 		assertEquals(1, accountList.size());
 		// get all objects again
-		groupAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		groupAccount = TestObjectFactory.getObject(LoanBO.class,
 				groupAccount.getAccountId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 	}
 

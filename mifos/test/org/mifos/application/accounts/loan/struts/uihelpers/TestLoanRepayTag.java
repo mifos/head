@@ -45,9 +45,9 @@ public class TestLoanRepayTag extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
 		HibernateUtil.closeandFlushSession();
-		accountBO =(LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
-		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		center = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		accountBO =TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
 		LoanRepaymentTag loanRepaymentTag = new LoanRepaymentTag();
 		loanRepaymentTag.locale = userContext.getPereferedLocale();
 		assertContains("100.0",loanRepaymentTag.createInstallmentRow( (LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),false ));
@@ -57,9 +57,9 @@ public class TestLoanRepayTag extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
 		HibernateUtil.closeandFlushSession();
-		accountBO =(LoanBO) TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
-		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		center = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		accountBO =TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
 		LoanRepaymentTag loanRepaymentTag = new LoanRepaymentTag();
 		loanRepaymentTag.locale = userContext.getPereferedLocale();
 		assertContains("90.0",loanRepaymentTag.createRunningBalanceRow((LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),new Money("50"),new Money("20"),new Money("20")));

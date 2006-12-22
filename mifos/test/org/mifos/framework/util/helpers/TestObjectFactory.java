@@ -1362,8 +1362,10 @@ public class TestObjectFactory {
 		testObjectPersistence.flushandCloseSession();
 	}
 
-	public static Object getObject(Class clazz, Integer pk) {
-		return addObject(testObjectPersistence.getObject(clazz, pk));
+	public static <T> T getObject(Class<T> clazz, Integer pk) {
+		T object = testObjectPersistence.getObject(clazz, pk);
+		addObject(object);
+		return object;
 
 	}
 

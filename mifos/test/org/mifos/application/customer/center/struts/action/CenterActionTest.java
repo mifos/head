@@ -382,7 +382,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		removeInactiveFees(allFeeList);
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				new Integer(actionForm.getCustomerId()).intValue());
 	}
 
@@ -507,7 +507,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		center.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				new Integer(center.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
 
@@ -554,11 +554,11 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.update_success.toString());
 		assertEquals(positions.size(),center.getCustomerPositions().size());
 		assertEquals("12", center.getExternalId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 
 	}
@@ -568,7 +568,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		center = TestObjectFactory.createCenter(name,
 				getMeeting());
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				new Integer(center.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
 	}
@@ -609,11 +609,11 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 						ClientConstants.CUSTOMERSAVINGSACCOUNTSINUSE, request))
 						.size());
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savingsBO = TestObjectFactory.getObject(SavingsBO.class,
 				savingsBO.getAccountId());
 	}
 
@@ -667,7 +667,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				new Integer(actionForm.getCustomerId()).intValue());
 		assertEquals(false, fm.isFlowValid(flowKey));
 	}
@@ -722,7 +722,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				new Integer(actionForm.getCustomerId()).intValue());
 		assertEquals(false, fm.isFlowValid(flowKey));
 

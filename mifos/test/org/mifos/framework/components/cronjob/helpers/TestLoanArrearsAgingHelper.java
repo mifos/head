@@ -133,7 +133,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 		assertForLoanArrearsAgingEntity(loanAccount1);
 		assertForLoanArrearsAgingEntity(loanAccount2);
 		
-		group=(CustomerBO)TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
+		group=TestObjectFactory.getObject(CustomerBO.class, group.getCustomerId());
 		center = group.getParentCustomer();
 	}
 

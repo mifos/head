@@ -9,22 +9,12 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
-import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.Money;
 
 
 public class TestLoanScheduleEntity extends TestAccount {
 
-	private TestObjectPersistence testObjectPersistence;
-	
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		testObjectPersistence = new TestObjectPersistence();
-	}
-	
 	public void testGetPrincipalDue() {
-		Money principal = null;
 		LoanScheduleEntity accountActionDate = (LoanScheduleEntity) accountBO
 				.getAccountActionDates().toArray()[0];
 		accountActionDate.setPrincipalPaid(new Money("10.0"));

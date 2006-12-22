@@ -239,7 +239,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 		TestObjectFactory.updateObject(customerAccountBO);
 		TestObjectFactory.flushandCloseSession();
-		customerAccountBO = (CustomerAccountBO) TestObjectFactory.getObject(
+		customerAccountBO = TestObjectFactory.getObject(
 				CustomerAccountBO.class, customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,client,request);

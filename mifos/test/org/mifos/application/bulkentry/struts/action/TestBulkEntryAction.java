@@ -201,21 +201,21 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		assertEquals(request.getAttribute(BulkEntryConstants.CENTER), center
 				.getDisplayName());
 
-		groupAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		groupAccount = TestObjectFactory.getObject(LoanBO.class,
 				groupAccount.getAccountId());
-		clientAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		clientAccount = TestObjectFactory.getObject(LoanBO.class,
 				clientAccount.getAccountId());
-		centerSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+		centerSavingsAccount = TestObjectFactory.getObject(
 				SavingsBO.class, centerSavingsAccount.getAccountId());
-		clientSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+		clientSavingsAccount = TestObjectFactory.getObject(
 				SavingsBO.class, clientSavingsAccount.getAccountId());
-		groupSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+		groupSavingsAccount = TestObjectFactory.getObject(
 				SavingsBO.class, groupSavingsAccount.getAccountId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 
 		assertEquals(client.getClientAttendances().size(), 1);
@@ -255,15 +255,15 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		HibernateUtil.closeSession();
 
-		groupAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		groupAccount = TestObjectFactory.getObject(LoanBO.class,
 				groupAccount.getAccountId());
-		clientAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		clientAccount = TestObjectFactory.getObject(LoanBO.class,
 				clientAccount.getAccountId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 
 		verifyActionErrors(new String[] { "errors.update" });
@@ -300,21 +300,21 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		verifyForward("preview_success");
 		HibernateUtil.closeSession();
 
-		groupAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		groupAccount = TestObjectFactory.getObject(LoanBO.class,
 				groupAccount.getAccountId());
-		clientAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		clientAccount = TestObjectFactory.getObject(LoanBO.class,
 				clientAccount.getAccountId());
-		centerSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+		centerSavingsAccount = TestObjectFactory.getObject(
 				SavingsBO.class, centerSavingsAccount.getAccountId());
-		clientSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+		clientSavingsAccount = TestObjectFactory.getObject(
 				SavingsBO.class, clientSavingsAccount.getAccountId());
-		groupSavingsAccount = (SavingsBO) TestObjectFactory.getObject(
+		groupSavingsAccount = TestObjectFactory.getObject(
 				SavingsBO.class, groupSavingsAccount.getAccountId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 
 	}

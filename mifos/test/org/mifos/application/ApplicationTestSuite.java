@@ -92,6 +92,10 @@ public class ApplicationTestSuite extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite suite = new ApplicationTestSuite();
+
+		// Put fast tests at the top for quick feedback if they fail
+		suite.addTest(FastTests.suite());
+
 		suite.addTest(SecurityTestSuite.suite());
 		suite.addTest(CollectionSheetTestSuite.suite());
 		suite.addTest(CustomerTestSuite.suite());
@@ -99,7 +103,6 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(MasterTestSuite.suite());
 		suite.addTest(AccountTestSuite.suite());
 		suite.addTest(FinancialTestSuite.suite());
-		suite.addTest(FastTests.suite());
 		suite.addTestSuite(OfficeListTagTest.class);
 		suite.addTestSuite(StringToMoneyConverterTest.class);
 		suite.addTest(ConfigurationTestSuite.suite());

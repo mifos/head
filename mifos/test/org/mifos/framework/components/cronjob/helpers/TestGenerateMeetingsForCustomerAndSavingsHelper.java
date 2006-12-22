@@ -59,7 +59,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		createCenter();
 		int noOfInstallments=center.getCustomerAccount().getAccountActionDates().size();
 		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		assertEquals(noOfInstallments+10,center.getCustomerAccount().getAccountActionDates().size());
 		
@@ -70,9 +70,9 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		int noOfInstallments=savings.getAccountActionDates().size();
 		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(savings);
 		TestObjectFactory.flushandCloseSession();
-		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
 		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
-		savings=(SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
+		savings=TestObjectFactory.getObject(SavingsBO.class,savings.getAccountId());
 		assertEquals(noOfInstallments+20,savings.getAccountActionDates().size());
 	}
 	
@@ -95,16 +95,16 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				.changeInstallmentDatesToPreviousDateExceptLastInstallment(
 						savings, 6);
 		TestObjectFactory.flushandCloseSession();
-		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
 		new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper()
 				.execute(System.currentTimeMillis());
 		HibernateUtil.closeSession();
-		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		assertEquals(noOfInstallments + 10, savings.getAccountActionDates()
 				.size());
@@ -121,7 +121,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				meeting, feeView);
 		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());	
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 	}
 	

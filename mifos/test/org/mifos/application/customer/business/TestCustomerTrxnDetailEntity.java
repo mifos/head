@@ -104,7 +104,7 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		
 		TestObjectFactory.updateObject(customerAccountBO);
 		TestObjectFactory.flushandCloseSession();
-		customerAccountBO= (CustomerAccountBO)TestObjectFactory.getObject(CustomerAccountBO.class,customerAccountBO.getAccountId());
+		customerAccountBO= TestObjectFactory.getObject(CustomerAccountBO.class,customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer();
 		PersonnelBO loggedInUser = new PersonnelPersistence().getPersonnel(userContext.getId());
 		for(AccountTrxnEntity accntTrxn : customerAccountBO.getLastPmnt().getAccountTrxns()){

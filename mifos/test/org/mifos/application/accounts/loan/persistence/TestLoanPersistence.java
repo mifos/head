@@ -56,7 +56,6 @@ public class TestLoanPersistence extends MifosTestCase {
 		loanPersistence = new LoanPersistance();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingHelper(1, 1, 4, 2));
-		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 
@@ -100,7 +99,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		assertEquals(1, list.size());
 		HibernateUtil.closeSession();
 
-		LoanBO testBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, list
+		LoanBO testBO = TestObjectFactory.getObject(LoanBO.class, list
 				.get(0));
 		assertEquals(Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING),
 				testBO.getAccountState().getId());
@@ -114,7 +113,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		assertEquals(0, list.size());
 
 		HibernateUtil.closeSession();
-		loanAccount = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		loanAccount = TestObjectFactory.getObject(LoanBO.class,
 				loanAccount.getAccountId());
 	}
 
@@ -157,7 +156,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		List<Integer> list = loanPersistence
 				.getLoanAccountsInArrearsInGoodStanding(latenessDays);
 		assertNotNull(list);
-		LoanBO testBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, list
+		LoanBO testBO = TestObjectFactory.getObject(LoanBO.class, list
 				.get(0));
 		assertEquals(Short.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING),
 				testBO.getAccountState().getId());

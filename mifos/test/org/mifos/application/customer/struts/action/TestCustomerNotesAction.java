@@ -364,9 +364,9 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 	}
 
 	private void getobjects(){
-		client = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
-		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		center = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		client = TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
 	}
 
 	public void testLoadForGroup() {

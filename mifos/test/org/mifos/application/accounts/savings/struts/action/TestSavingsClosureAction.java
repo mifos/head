@@ -290,7 +290,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward("close_success");
-		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
 		
 		assertEquals(new Money(), savings.getSavingsBalance());

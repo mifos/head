@@ -192,8 +192,8 @@ public class TestObjectPersistence {
 		HibernateUtil.closeSession();
 	}
 
-	public Object getObject(Class clazz, Integer pk) {
-		return HibernateUtil.getSessionTL().get(clazz, pk);
+	public <T> T getObject(Class<T> clazz, Integer pk) {
+		return (T)HibernateUtil.getSessionTL().get(clazz, pk);
 	}
 	
 	public Object getObject(Class clazz, Short pk) {

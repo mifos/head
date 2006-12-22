@@ -112,7 +112,7 @@ public class TestAccountService extends MifosTestCase {
 
 		loan.applyPayment(accountPaymentDataView);
 		TestObjectFactory.flushandCloseSession();
-		loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		loan.setUserContext(uc);
 
@@ -142,7 +142,7 @@ public class TestAccountService extends MifosTestCase {
 			break;
 		}
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+		accountBO = TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());
 
 	}
@@ -160,11 +160,11 @@ public class TestAccountService extends MifosTestCase {
 		AccountBusinessService accountBusinessService = new AccountBusinessService();
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		List<ApplicableCharge> applicableChargeList = accountBusinessService
@@ -177,11 +177,11 @@ public class TestAccountService extends MifosTestCase {
 		AccountBusinessService accountBusinessService = new AccountBusinessService();
 		accountBO = getLoanAccountWithAllTypesOfFees();
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		List<ApplicableCharge> applicableChargeList = accountBusinessService
@@ -218,11 +218,11 @@ public class TestAccountService extends MifosTestCase {
 				AccountState.LOANACC_DBTOLOANOFFICER.getValue(),null,"");
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		List<ApplicableCharge> applicableChargeList = accountBusinessService
@@ -254,7 +254,7 @@ public class TestAccountService extends MifosTestCase {
 		AccountBusinessService accountBusinessService = new AccountBusinessService();
 		CustomerAccountBO customerAccountBO = getCustomerAccountWithAllTypesOfFees();
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		List<ApplicableCharge> applicableChargeList = accountBusinessService
@@ -372,15 +372,13 @@ public class TestAccountService extends MifosTestCase {
 	public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			List<CustomFieldDefinitionEntity> customFields = service
-			.retrieveCustomFieldsDefinition(EntityType.LOAN);
+			service.retrieveCustomFieldsDefinition(EntityType.LOAN);
 			fail();
 		} catch (ServiceException e) {
-			assertTrue(true);
+			assertEquals("exception.framework.ApplicationException", e.getKey());
 		} finally {
 			HibernateUtil.closeSession();
 		}
-
 	}
 
 	private AccountBO getLoanAccount() {
@@ -418,7 +416,7 @@ public class TestAccountService extends MifosTestCase {
 		loanScheduleEntity.addAccountFeesAction(accountUpfrontFeesaction);
 		TestObjectFactory.updateObject(accountBO);
 
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		loanScheduleEntity = (LoanScheduleEntity) accountBO
 				.getAccountActionDate(Short.valueOf("1"));
@@ -436,7 +434,7 @@ public class TestAccountService extends MifosTestCase {
 		loanScheduleEntity.addAccountFeesAction(accountDisbursmentFeesaction);
 		TestObjectFactory.updateObject(accountBO);
 
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		loanScheduleEntity = (LoanScheduleEntity) accountBO
 				.getAccountActionDate(Short.valueOf("1"));
@@ -455,7 +453,7 @@ public class TestAccountService extends MifosTestCase {
 				.addAccountFeesAction(accountTimeOfFirstLoanRepaymentFeesaction);
 		TestObjectFactory.updateObject(accountBO);
 
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "200", RecurrenceType.WEEKLY,
@@ -563,13 +561,13 @@ public class TestAccountService extends MifosTestCase {
 	}
 
 	private void fetchAccounts() {
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
-		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savingsBO = TestObjectFactory.getObject(SavingsBO.class,
 				savingsBO.getAccountId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 	}
 }

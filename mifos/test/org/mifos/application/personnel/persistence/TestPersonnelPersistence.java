@@ -128,7 +128,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
 		assertTrue(!persistence.getActiveChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 	}
 	
@@ -139,7 +139,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
+		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
 		assertTrue(persistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 	}
 	

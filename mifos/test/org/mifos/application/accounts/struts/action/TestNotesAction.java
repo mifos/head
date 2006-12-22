@@ -215,14 +215,14 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		assertEquals("Size of the search result should be 2", 2, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
 		HibernateUtil.closeSession();
-		savingsBO = (SavingsBO)TestObjectFactory.getObject(SavingsBO.class,savingsBO.getAccountId());
+		savingsBO = TestObjectFactory.getObject(SavingsBO.class,savingsBO.getAccountId());
 		getobjects();
 	}
 	private void getobjects(){
 		
-		client = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
-		group = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
-		center = (CustomerBO)TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
+		client = TestObjectFactory.getObject(CustomerBO.class,client.getCustomerId());
+		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
 	
 	}
 	public void testLoad_Loan() {
@@ -344,7 +344,7 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 
 		assertEquals("Size of the search result should be 1", 1, ((QueryResult)SessionUtils.getAttribute(Constants.SEARCH_RESULTS,request)).getSize());
 		HibernateUtil.closeSession();
-		loanBO = (LoanBO)TestObjectFactory.getObject(LoanBO.class,loanBO.getAccountId());
+		loanBO = TestObjectFactory.getObject(LoanBO.class,loanBO.getAccountId());
 
 		getobjects();
 		

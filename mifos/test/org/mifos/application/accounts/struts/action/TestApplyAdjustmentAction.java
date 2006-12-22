@@ -105,7 +105,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
-		return (LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		return TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
 	}
 
 	private void applyPayment(LoanBO loan,double amnt)throws Exception{
@@ -170,10 +170,10 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan,212);
-		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,
+		loan =TestObjectFactory.getObject(LoanBO.class,
 				loan.getAccountId());
 		applyPayment(loan,700);
-		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,
+		loan =TestObjectFactory.getObject(LoanBO.class,
 				loan.getAccountId());
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
 				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
@@ -182,7 +182,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
-		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,	loan.getAccountId());
+		loan =TestObjectFactory.getObject(LoanBO.class,	loan.getAccountId());
 		loan.setUserContext(userContext);
 		for (AccountStatusChangeHistoryEntity accountStatus : loan.getAccountStatusChangeHistory()) {
 			assertEquals(loan.getAccountId(),accountStatus.getAccount().getAccountId());
@@ -215,10 +215,9 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan,212);
-		loan =(LoanBO) TestObjectFactory.getObject(AccountBO.class,
-				loan.getAccountId());
+		loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
 		applyPayment(loan,700);
-		loan=(LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		loan=TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
 		AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(
 				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
 				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
@@ -226,7 +225,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
-		loan=(LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());		
+		loan=TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());		
 		historyEntity = new AccountStatusChangeHistoryEntity(
 				new AccountStateEntity(AccountState.LOANACC_BADSTANDING),
 				new AccountStateEntity(AccountState.LOANACC_ACTIVEINGOODSTANDING),
@@ -234,7 +233,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestAccountBO.addToAccountStatusChangeHistory(loan,historyEntity);
 		TestObjectFactory.updateObject(loan);
 		HibernateUtil.closeSession();
-		loan=(LoanBO)TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
+		loan=TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan,request);
 		setRequestPathInfo("/applyAdjustment");
 		addRequestParameter("method", "applyAdjustment");

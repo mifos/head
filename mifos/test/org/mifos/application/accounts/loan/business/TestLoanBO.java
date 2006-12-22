@@ -87,6 +87,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class TestLoanBO extends MifosTestCase {
 	
 	LoanOfferingBO loanOffering = null;
+	
+	// TODO: probably should be of type LoanBO
 	protected AccountBO accountBO = null;
 
 	protected CustomerBO center = null;
@@ -195,7 +197,7 @@ public class TestLoanBO extends MifosTestCase {
 	public void testWaiveMiscPenaltyAfterPayment() throws Exception {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		accountBO=(AccountBO)TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
+		accountBO=TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
 		accountBO.setUserContext(TestObjectFactory.getUserContext());
 		Date currentDate = new Date(System.currentTimeMillis());
 		LoanBO loan = (LoanBO) accountBO;
@@ -657,7 +659,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		assertNull(((LoanBO) accountBO).getLoanArrearsAgingEntity());
 
@@ -665,7 +667,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		LoanArrearsAgingEntity agingEntity = ((LoanBO) accountBO)
 				.getLoanArrearsAgingEntity();
@@ -709,7 +711,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 
 		assertNotNull(((LoanBO) accountBO).getLoanArrearsAgingEntity());
@@ -718,7 +720,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		LoanArrearsAgingEntity agingEntity = ((LoanBO) accountBO)
 				.getLoanArrearsAgingEntity();
@@ -758,7 +760,7 @@ public class TestLoanBO extends MifosTestCase {
 				Short.valueOf("2"), Integer.valueOf("2"), "Added note", null,null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -1363,7 +1365,7 @@ public class TestLoanBO extends MifosTestCase {
 				break;
 			}
 		}
-		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -1781,7 +1783,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccount();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		((LoanBO) accountBO).handleArrears();
 		assertEquals(
@@ -1854,7 +1856,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.updateObject(accountBO);
 
 		HibernateUtil.closeSession();
-		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		LoanBO loanBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 
 		UserContext userContext = TestObjectFactory.getUserContext();
@@ -1862,7 +1864,7 @@ public class TestLoanBO extends MifosTestCase {
 		loanBO.waiveAmountDue(WaiveEnum.PENALTY);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
+		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
 		for (AccountActionDateEntity accountAction : loanBO
 				.getAccountActionDates()) {
@@ -1908,7 +1910,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.updateObject(accountBO);
 
 		HibernateUtil.closeSession();
-		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		LoanBO loanBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
@@ -1932,13 +1934,13 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(loanBO);
 		HibernateUtil.closeSession();
-		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
+		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		loanBO.setUserContext(userContext);
 		loanBO.waiveAmountOverDue(WaiveEnum.PENALTY);
 		TestObjectFactory.flushandCloseSession();
-		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
+		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
 		for (AccountActionDateEntity accountAction : loanBO
 				.getAccountActionDates()) {
@@ -1963,14 +1965,14 @@ public class TestLoanBO extends MifosTestCase {
 	public void testWaiveFeeChargeDue() throws Exception {
 		accountBO = getLoanAccount();
 		HibernateUtil.closeSession();
-		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		LoanBO loanBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		loanBO.setUserContext(userContext);
 		loanBO.waiveAmountDue(WaiveEnum.FEES);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
+		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
 		
 		 //Change this to more clearly separate what we are testing for from the
@@ -2013,7 +2015,7 @@ public class TestLoanBO extends MifosTestCase {
 	public void testWaiveFeeChargeOverDue() throws Exception {
 		accountBO = getLoanAccount();
 		HibernateUtil.closeSession();
-		LoanBO loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		LoanBO loanBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(DateUtils.getCurrentDateWithoutTimeStamp());
@@ -2037,13 +2039,13 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(loanBO);
 		HibernateUtil.closeSession();
-		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
+		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		loanBO.setUserContext(userContext);
 		loanBO.waiveAmountOverDue(WaiveEnum.FEES);
 		TestObjectFactory.flushandCloseSession();
-		loanBO = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loanBO
+		loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO
 				.getAccountId());
 		
 		 //Change this to more clearly separate what we are testing for from the
@@ -2083,7 +2085,7 @@ public class TestLoanBO extends MifosTestCase {
 	public void testRegenerateFutureInstallments() throws Exception {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getDetailsOfNextInstallment();
@@ -2143,7 +2145,7 @@ public class TestLoanBO extends MifosTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getDetailsOfNextInstallment();
@@ -2193,7 +2195,7 @@ public class TestLoanBO extends MifosTestCase {
 			throws Exception {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		java.sql.Date intallment2ndDate = null;
 		java.sql.Date intallment3ndDate = null;
@@ -2269,7 +2271,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(
 				"The amount returned for the payment should have been 700",
 				700.0, loan.getLastPmntAmnt());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				loan.getAccountId());
 		loan = (LoanBO) accountBO;
 		loan.getLoanSummary().getOriginalPrincipal().subtract(
@@ -2326,7 +2328,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 
 		Date startDate = new Date(System.currentTimeMillis());
@@ -2339,7 +2341,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO.applyPayment(paymentData);
 		TestObjectFactory.flushandCloseSession();
 
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 
 		assertEquals(Integer.valueOf("2"), ((LoanBO) accountBO)
@@ -2351,7 +2353,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccountWithPerformanceHistory();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -2369,7 +2371,7 @@ public class TestLoanBO extends MifosTestCase {
 				null, "1", uc.getId());
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -2384,7 +2386,7 @@ public class TestLoanBO extends MifosTestCase {
 		assertEquals(totalRepaymentAmount, clientPerfHistory
 				.getLastLoanAmount());
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,	client.getCustomerId());
+		client = TestObjectFactory.getObject(CustomerBO.class,	client.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 	}
 
@@ -2392,7 +2394,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccountWithPerformanceHistory();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -2407,7 +2409,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -2435,7 +2437,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -2455,9 +2457,9 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = getLoanAccountWithPerformanceHistory();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
 				.getCustomer().getPerformanceHistory();
@@ -2466,7 +2468,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -2487,9 +2489,9 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.updateObject(accountBO);
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
 				.getCustomer().getPerformanceHistory();
@@ -2499,7 +2501,7 @@ public class TestLoanBO extends MifosTestCase {
 		Integer noOfPayments = loanPerfHistory.getNoOfPayments();
 		accountBO = applyPaymentandRetrieveAccount();
 		LoanBO loan = (LoanBO) accountBO;
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		clientPerfHistory = (ClientPerformanceHistoryEntity) loan.getCustomer()
 				.getPerformanceHistory();
@@ -2522,7 +2524,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -2539,7 +2541,7 @@ public class TestLoanBO extends MifosTestCase {
 			SystemException {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		((LoanBO) accountBO).getLoanOffering().setPrinDueLastInst(false);
 		List<Short> installmentIdList = new ArrayList<Short>();
@@ -2555,7 +2557,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
 
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 
 		Set<AccountActionDateEntity> actionDateEntities = accountBO
@@ -2631,7 +2633,7 @@ public class TestLoanBO extends MifosTestCase {
 		TestCustomerBO.setCustomerStatus(group,new CustomerStatusEntity(
 				CustomerStatus.GROUP_CLOSED));
 		TestObjectFactory.updateObject(group);
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 
 		LoanOfferingBO loanOffering = createLoanOffering(false);
@@ -3141,7 +3143,7 @@ public class TestLoanBO extends MifosTestCase {
 		Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary()
 				.getOriginalFees();
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
@@ -3168,7 +3170,7 @@ public class TestLoanBO extends MifosTestCase {
 		Money intialTotalFeeAmount = ((LoanBO) accountBO).getLoanSummary()
 				.getOriginalFees();
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		for (AccountActionDateEntity accountActionDateEntity : accountBO
 				.getAccountActionDates()) {
@@ -3209,7 +3211,7 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.LOAN, "200", RecurrenceType.WEEKLY,
 				Short.valueOf("2"));
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
@@ -3218,7 +3220,7 @@ public class TestLoanBO extends MifosTestCase {
 						.getAmountDoubleValue());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		Date lastAppliedDate = null;
 
@@ -3273,7 +3275,7 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee(
 				"Upfront Fee", FeeCategory.LOAN, Double.valueOf("20"),
 				FeeFormula.AMOUNT, FeePayment.UPFRONT);
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
@@ -3281,7 +3283,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getRate());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		Date lastAppliedDate = null;
 		Money feeAmountApplied = new Money();
@@ -3349,7 +3351,7 @@ public class TestLoanBO extends MifosTestCase {
 				null,null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -3378,7 +3380,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -4078,7 +4080,7 @@ public class TestLoanBO extends MifosTestCase {
 		FeeBO oneTimeFee = TestObjectFactory.createOneTimeRateFee(
 				"Onetime Fee", FeeCategory.LOAN, new Double("0.09"),
 				FeeFormula.AMOUNT, FeePayment.TIME_OF_FIRSTLOANREPAYMENT);
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		UserContext uc = TestObjectFactory.getUserContext();
 		accountBO.setUserContext(uc);
@@ -4086,7 +4088,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getRate());
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 
 		HashMap fees2 = new HashMap();
@@ -4576,7 +4578,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		assertEquals(Short.valueOf("21"), ((LoanBO) accountBO)
 				.getDaysInArrears());
@@ -4610,7 +4612,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		assertEquals(interest, ((LoanBO) accountBO)
 				.getTotalInterestAmountInArrears());
@@ -4639,7 +4641,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		assertEquals(new Money("200"), ((LoanBO) accountBO)
 				.getTotalPrincipalAmountInArrears());
@@ -4957,7 +4959,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				loan.getAccountId());
 		return (LoanBO) accountBO;
 	}
@@ -5060,7 +5062,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
-		return (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		return TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -5085,7 +5087,7 @@ public class TestLoanBO extends MifosTestCase {
 				.getOriginalPenalty().add(miscPenalty));
 		TestObjectPersistence testObjectPersistence = new TestObjectPersistence();
 		testObjectPersistence.update(accountBO);
-		return (LoanBO) testObjectPersistence.getObject(LoanBO.class, accountBO
+		return testObjectPersistence.getObject(LoanBO.class, accountBO
 				.getAccountId());
 	}
 

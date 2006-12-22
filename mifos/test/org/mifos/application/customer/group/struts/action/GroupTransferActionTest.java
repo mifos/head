@@ -110,7 +110,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		actionPerform();
 		verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER});
 		verifyForward(ActionForwards.transferToBranch_failure.toString());
-		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());		 
+		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());		 
 	}
 	
 	public void testSuccessful_transferToBranch() throws Exception {
@@ -134,7 +134,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
 		
-		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
 		assertEquals(office.getOfficeId(), group.getOffice().getOfficeId());
 		assertEquals(CustomerStatus.GROUP_HOLD, group.getStatus());
 		
@@ -200,9 +200,9 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_PARENT_TRANSFER});
 		verifyForward(ActionForwards.transferToCenter_failure.toString());
 		
-		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		center1 = (CenterBO)TestObjectFactory.getObject(CenterBO.class,center1.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		center = TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		center1 = TestObjectFactory.getObject(CenterBO.class,center1.getCustomerId());
 		office = TestObjectFactory.getOffice(office.getOfficeId());
 	}
 	
@@ -226,9 +226,9 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		verifyNoActionMessages();
 		HibernateUtil.closeSession();
 		
-		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		center1 = (CenterBO)TestObjectFactory.getObject(CenterBO.class,center1.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		center = TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		center1 = TestObjectFactory.getObject(CenterBO.class,center1.getCustomerId());
 		office = TestObjectFactory.getOffice(office.getOfficeId());
 		
 		assertEquals(center1.getCustomerId(), group.getParentCustomer().getCustomerId());
@@ -308,8 +308,4 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		return TestObjectFactory.createGroupUnderCenter(name, CustomerStatus.GROUP_ACTIVE, center);
 	}
 	
-	private void createCustomers(){
-		center = createCenter("center1", officeId);
-		group = createGroup("group", center);
-	}
 }

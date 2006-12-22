@@ -530,7 +530,7 @@ public class LoanBO extends AccountBO {
 	}
 
 	@Override
-	protected Money updateAccountActionDateEntity(List<Short> intallmentIdList,
+	public Money updateAccountActionDateEntity(List<Short> intallmentIdList,
 			Short feeId) {
 		Money totalFeeAmount = new Money();
 		Set<AccountActionDateEntity> accountActionDateEntitySet = this

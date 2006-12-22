@@ -44,7 +44,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 
 	public void testWaiveCharges() {
 		HibernateUtil.closeSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 
 		CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group
@@ -59,11 +59,11 @@ public class TestAccountActionDateEntity extends TestAccount {
 		}
 		assertEquals(new Money("120.0"), chargeWaived);
 		HibernateUtil.closeSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -80,7 +80,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 		TestObjectFactory.updateObject(group);
 
 		TestObjectFactory.flushandCloseSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 
 		CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) group
@@ -106,7 +106,7 @@ public class TestAccountActionDateEntity extends TestAccount {
 		TestObjectFactory.updateObject(group);
 		TestObjectFactory.flushandCloseSession();
 
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		CustomerScheduleEntity firstInstallment = (CustomerScheduleEntity) group
 				.getCustomerAccount().getAccountActionDates().toArray()[0];
@@ -120,9 +120,9 @@ public class TestAccountActionDateEntity extends TestAccount {
 			}
 		}
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(LoanBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
 	
@@ -146,7 +146,6 @@ public class TestAccountActionDateEntity extends TestAccount {
 		int month = currentDateCalendar.get(Calendar.MONTH);
 		int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
 		currentDateCalendar = new GregorianCalendar(year, month, day - 1);
-		int size = accountBO.getAccountActionDates().size();
 		for (int i = 1; i <=noOfInstallmentsToBeChanged; i++) {
 			AccountActionDateEntity accountActionDateEntity = accountBO
 					.getAccountActionDate(Integer.valueOf(i).shortValue());

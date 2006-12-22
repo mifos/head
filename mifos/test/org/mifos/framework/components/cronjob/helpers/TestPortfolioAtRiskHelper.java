@@ -49,9 +49,9 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 	public void testExecute() throws Exception {
 		createInitialObject();
 
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		for (AccountBO account : group.getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
@@ -74,15 +74,15 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				.getTaskHelper();
 		portfolioAtRiskHelper.execute(System.currentTimeMillis());
 		HibernateUtil.closeSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
-		account1 = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		account1 = TestObjectFactory.getObject(AccountBO.class,
 				account1.getAccountId());
-		account2 = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		account2 = TestObjectFactory.getObject(AccountBO.class,
 				account2.getAccountId());
 	}
 

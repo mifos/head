@@ -114,11 +114,11 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		group.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
 		for (CustomerPositionEntity customerPositionEntity2 : group
@@ -192,11 +192,11 @@ public class CustomerUIHelperFnTest extends MifosMockStrutsTestCase {
 		group.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
 		String positionName = CustomerUIHelperFn.getClientPosition(group

@@ -121,7 +121,7 @@ public class TestAccountAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward("getTransactionHistory_success");
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+		accountBO = TestObjectFactory.getObject(AccountBO.class, loan
 				.getAccountId());
 		List<TransactionHistoryView> trxnHistoryList = (List<TransactionHistoryView>) SessionUtils
 				.getAttribute(SavingsConstants.TRXN_HISTORY_LIST, request);

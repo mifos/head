@@ -161,9 +161,9 @@ public class TestCenterBusinessService extends MifosTestCase {
 	}
 	
 	private void retrieveAccountsToDelete() {
-		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class,	client.getCustomerId());
+		savingsBO = TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
+		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class,	client.getCustomerId());
 	}
 }

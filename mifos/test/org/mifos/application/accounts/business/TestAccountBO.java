@@ -152,7 +152,7 @@ public class TestAccountBO extends TestAccount {
 
 	public void testGetLastLoanPmntAmnt() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
-		LoanBO loan = (LoanBO) accountBO;
+		LoanBO loan = accountBO;
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
@@ -167,14 +167,14 @@ public class TestAccountBO extends TestAccount {
 		assertEquals(
 				"The amount returned for the payment should have been 1272",
 				700.0, loan.getLastPmntAmnt());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				loan.getAccountId());
 	}
 
 	public void testLoanAdjustment() throws Exception {
 		HibernateUtil.closeSession();
 		Date currentDate = new Date(System.currentTimeMillis());
-		LoanBO loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		LoanBO loan = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
@@ -187,7 +187,7 @@ public class TestAccountBO extends TestAccount {
 		loan.applyPayment(accountPaymentDataView);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		loan.applyPayment(TestObjectFactory.getLoanAccountPaymentData(null,
@@ -196,7 +196,7 @@ public class TestAccountBO extends TestAccount {
 				currentDate, currentDate));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		loan.adjustPmnt("loan account has been adjusted by test code");
@@ -213,13 +213,13 @@ public class TestAccountBO extends TestAccount {
 		assertEquals(
 				"The installment adjusted should now be marked unpaid(due).",
 				installment.getPaymentStatus(), PaymentStatus.UNPAID.getValue());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				loan.getAccountId());
 	}
 
 	public void testAdjustmentForClosedAccnt() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
-		LoanBO loan = (LoanBO) accountBO;
+		LoanBO loan = accountBO;
 
 		loan.setAccountState(new AccountStateEntity(
 				AccountState.LOANACC_OBLIGATIONSMET));
@@ -244,7 +244,7 @@ public class TestAccountBO extends TestAccount {
 
 	public void testRetrievalOfNullMonetaryValue() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
-		LoanBO loan = (LoanBO) accountBO;
+		LoanBO loan = accountBO;
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
@@ -257,7 +257,7 @@ public class TestAccountBO extends TestAccount {
 		loan.applyPayment(accountPaymentDataView);
 		TestObjectFactory.updateObject(loan);
 		TestObjectFactory.flushandCloseSession();
-		loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 
 		Money pmntAmnt = null;
@@ -272,7 +272,7 @@ public class TestAccountBO extends TestAccount {
 
 	public void testGetTransactionHistoryView() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
-		LoanBO loan = (LoanBO) accountBO;
+		LoanBO loan = accountBO;
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
@@ -283,7 +283,7 @@ public class TestAccountBO extends TestAccount {
 						currentDate, currentDate);
 		loan.applyPayment(accountPaymentDataView);
 		TestObjectFactory.flushandCloseSession();
-		loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		List<Integer> ids = new ArrayList<Integer>();
 		for (AccountPaymentEntity accountPaymentEntity : loan
@@ -311,12 +311,12 @@ public class TestAccountBO extends TestAccount {
 			i++;
 		}
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+		accountBO = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 	}
 	public void testGetTransactionHistoryViewByOtherUser() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
-		LoanBO loan = (LoanBO) accountBO;
+		LoanBO loan = accountBO;
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
@@ -328,7 +328,7 @@ public class TestAccountBO extends TestAccount {
 						currentDate, currentDate);
 		loan.applyPayment(accountPaymentDataView);
 		TestObjectFactory.flushandCloseSession();
-		loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		loan.setUserContext(TestObjectFactory.getUserContext());
 		List<TransactionHistoryView> trxnHistlist = loan
@@ -342,7 +342,7 @@ public class TestAccountBO extends TestAccount {
 			assertEquals(transactionHistoryView.getPostedBy(),personnel.getDisplayName());
 		}
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan
+		accountBO = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 	}
 	public void testGetPeriodicFeeList() throws PersistenceException {
@@ -354,7 +354,7 @@ public class TestAccountBO extends TestAccount {
 		accountBO.addAccountFees(accountOneTimeFee);
 		accountPersistence.createOrUpdate(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		assertEquals(1, accountBO.getPeriodicFeeList().size());
 	}
@@ -376,9 +376,9 @@ public class TestAccountBO extends TestAccount {
 	public void testHandleChangeInMeetingSchedule()
 			throws ApplicationException, SystemException {
 		TestObjectFactory.flushandCloseSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		MeetingBO meeting = center.getCustomerMeeting().getMeeting();
 		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
@@ -393,9 +393,9 @@ public class TestAccountBO extends TestAccount {
 		accountBO.handleChangeInMeetingSchedule();
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		Calendar calendar = new GregorianCalendar();
 		int dayOfWeek = calendar.get(calendar.DAY_OF_WEEK);
@@ -431,12 +431,12 @@ public class TestAccountBO extends TestAccount {
 	public void testDeleteFutureInstallments() throws HibernateException,
 			SystemException, AccountException {
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		accountBO.deleteFutureInstallments();
 		HibernateUtil.getTransaction().commit();
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 		assertEquals(1, accountBO.getAccountActionDates().size());
 
@@ -444,8 +444,8 @@ public class TestAccountBO extends TestAccount {
 
 	public void testUpdate() throws Exception {
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
+		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+				LoanBO.class, accountBO.getAccountId());
 		accountBO.setUserContext(TestObjectFactory.getUserContext());
 
 		java.sql.Date currentDate = new java.sql.Date(System
@@ -457,8 +457,8 @@ public class TestAccountBO extends TestAccount {
 		accountBO.addAccountNotes(accountNotesEntity);
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
+		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+				LoanBO.class, accountBO.getAccountId());
 		for (AccountNotesEntity accountNotes : accountBO
 				.getRecentAccountNotes()) {
 			assertEquals("Last note added is account updated","account updated", accountNotes.getComment());
@@ -479,7 +479,7 @@ public class TestAccountBO extends TestAccount {
 		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		HibernateUtil.closeSession();
-		centerBO = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+		centerBO = TestObjectFactory.getObject(CenterBO.class,
 				centerBO.getCustomerId());
 		for (AccountActionDateEntity actionDate : centerBO.getCustomerAccount()
 				.getAccountActionDates()) {
@@ -496,8 +496,8 @@ public class TestAccountBO extends TestAccount {
 	public void testUpdatePerformanceHistoryOnAdjustment() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
+		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+				LoanBO.class, accountBO.getAccountId());
 
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
@@ -508,7 +508,7 @@ public class TestAccountBO extends TestAccount {
 		accountBO.applyPayment(paymentData);
 
 		HibernateUtil.commitTransaction();
-		LoanBO loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		LoanBO loan = TestObjectFactory.getObject(LoanBO.class,
 				accountBO.getAccountId());
 
 		loan.applyPayment(TestObjectFactory.getLoanAccountPaymentData(null,
@@ -517,20 +517,20 @@ public class TestAccountBO extends TestAccount {
 				currentDate, currentDate));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
+		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+				LoanBO.class, accountBO.getAccountId());
 		accountBO.setUserContext(TestObjectFactory.getUserContext());
 		accountBO.adjustPmnt("loan account has been adjusted by test code");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
-				AccountBO.class, accountBO.getAccountId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		accountBO = (LoanBO) HibernateUtil.getSessionTL().get(
+				LoanBO.class, accountBO.getAccountId());
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		assertEquals(1, ((LoanBO) accountBO).getPerformanceHistory().getNoOfPayments().intValue());
+		assertEquals(1, accountBO.getPerformanceHistory().getNoOfPayments().intValue());
 
 	}
 	

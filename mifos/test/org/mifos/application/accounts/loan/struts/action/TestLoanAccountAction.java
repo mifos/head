@@ -242,7 +242,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 						accountActionDateEntity.getActionDate(), -7));
 		}
 		TestObjectFactory.updateObject(loan);
-		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 
 		setRequestPathInfo("/loanAccountAction.do");
@@ -567,7 +567,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 					FeeBO.class, fee.getFeeId()));
 		}
 
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
 
@@ -627,7 +627,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 					FeeBO.class, fee.getFeeId()));
 		}
 
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
 	
@@ -702,7 +702,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
 				.getObject(LoanOfferingBO.class, loanOffering
 						.getPrdOfferingId()));
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
 
@@ -765,7 +765,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 					FeeBO.class, fee.getFeeId()));
 		}
 
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
 
@@ -796,7 +796,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
 				.getObject(LoanOfferingBO.class, loanOffering
 						.getPrdOfferingId()));
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
 
@@ -832,7 +832,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
 				.getObject(LoanOfferingBO.class, loanOffering
 						.getPrdOfferingId()));
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
 
@@ -985,7 +985,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.create_success.toString());
 		LoanAccountActionForm actionForm = (LoanAccountActionForm) request
 				.getSession().getAttribute("loanAccountActionForm");
-		LoanBO loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class,
+		LoanBO loan = TestObjectFactory.getObject(LoanBO.class,
 				new Integer(actionForm.getAccountId()).intValue());
 		assertEquals(loanOffering.getDefaultLoanAmount().toString(), loan
 				.getLoanAmount().toString());
@@ -1178,7 +1178,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("collateralNote", "test");
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
-		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		assertEquals("test", loan.getCollateralNote());
 		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
@@ -1218,7 +1218,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
 
-		loan = (LoanBO) TestObjectFactory.getObject(LoanBO.class, loan
+		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 		assertEquals("test", loan.getCollateralNote());
 		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());

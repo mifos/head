@@ -91,14 +91,14 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 		}
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				center.getCustomerId());
 		ApplyCustomerFeeTask applyCustomerFeeTask = new ApplyCustomerFeeTask();
 		ApplyCustomerFeeHelper customerFeeHelper = (ApplyCustomerFeeHelper) applyCustomerFeeTask
 				.getTaskHelper();
 		customerFeeHelper.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				center.getCustomerId());
 
 		Set<AccountFeesEntity> periodicFeeSet = center.getCustomerAccount()
@@ -151,13 +151,13 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 		TestObjectFactory.updateObject(center);
 		TestObjectFactory.flushandCloseSession();
 
-		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				center.getCustomerId());
 		ApplyCustomerFeeHelper customerFeeHelper = new ApplyCustomerFeeHelper(
 				new ApplyCustomerFeeTask());
 		customerFeeHelper.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				center.getCustomerId());
 		Date lastAppliedFeeDate = null;
 		for (AccountActionDateEntity accountActionDateEntity : center

@@ -8,7 +8,6 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -19,7 +18,6 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -32,17 +30,6 @@ public class TestAuditInterceptor extends MifosTestCase {
 	protected CustomerBO group = null;
 
 	private CustomerBO client = null;
-
-	private AccountPersistence accountPersistence = null;
-
-	private UserContext userContext;
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		userContext = TestObjectFactory.getContext();
-		accountPersistence = new AccountPersistence();
-	}
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -64,7 +51,6 @@ public class TestAuditInterceptor extends MifosTestCase {
 	}
 
 	public void testUpdateLoanForLogging() throws Exception {
-		Date startDate = new Date(System.currentTimeMillis());
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();
 		accountBO.setUserContext(TestObjectFactory.getUserContext());
@@ -77,7 +63,7 @@ public class TestAuditInterceptor extends MifosTestCase {
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());

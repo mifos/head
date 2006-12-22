@@ -205,7 +205,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		List<CustomerRecentActivityView> customerActivityViewList = service
 				.getAllActivityView(center.getGlobalCustNum());
@@ -214,7 +214,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		center.getCustomerAccount().setUserContext(uc);
 		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		Set<CustomerActivityEntity> customerActivityDetails = center
 				.getCustomerAccount().getCustomerActivitDetails();
@@ -238,7 +238,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -255,7 +255,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				.getMeetingHelper(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		List<CustomerRecentActivityView> customerActivityViewList = service
 				.getAllActivityView(center.getGlobalCustNum());
@@ -265,7 +265,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		for (AccountActionDateEntity accountAction : center
 				.getCustomerAccount().getAccountActionDates()) {
@@ -287,7 +287,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		for (AccountActionDateEntity accountAction : center
 				.getCustomerAccount().getAccountActionDates()) {
@@ -309,7 +309,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		for (AccountActionDateEntity accountAction : center
 				.getCustomerAccount().getAccountActionDates()) {
@@ -330,7 +330,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		Set<CustomerActivityEntity> customerActivityDetails = center
 				.getCustomerAccount().getCustomerActivitDetails();
@@ -364,11 +364,11 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(), group
 				.getCustomerStatus().getId());
 		HibernateUtil.closeSession();
-		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savingsBO = TestObjectFactory.getObject(SavingsBO.class,
 				savingsBO.getAccountId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
 
@@ -388,11 +388,11 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(), group
 				.getCustomerStatus().getId());
 		HibernateUtil.closeSession();
-		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savingsBO = TestObjectFactory.getObject(SavingsBO.class,
 				savingsBO.getAccountId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 	}
 
@@ -409,9 +409,9 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(), center
 				.getCustomerStatus().getId());
 		HibernateUtil.closeSession();
-		savingsBO = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savingsBO = TestObjectFactory.getObject(SavingsBO.class,
 				savingsBO.getAccountId());
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 	}
 
@@ -485,12 +485,12 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				CustomerStatus.CLIENT_CLOSED));
 		
 		TestObjectFactory.updateObject(client2);
-		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+		client2 = TestObjectFactory.getObject(ClientBO.class,
 				client2.getCustomerId());
 		TestCustomerBO.setCustomerStatus(client3,new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CANCELLED));
 		TestObjectFactory.updateObject(client3);
-		client3 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+		client3 = TestObjectFactory.getObject(ClientBO.class,
 				client3.getCustomerId());
 
 		CenterPerformanceHistory centerPerformanceHistory = service

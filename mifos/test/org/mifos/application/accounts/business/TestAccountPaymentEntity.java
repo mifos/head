@@ -21,7 +21,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -78,7 +77,6 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO,TestObjectFactory.getMoneyForMFICurrency(100),"1111",currentDate,new PaymentTypeEntity(Short.valueOf("1")));
 		
-		Money totalFees = new Money();
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
 			(AccountActionEntity) masterPersistenceService
 				.findById(AccountActionEntity.class,AccountConstants.ACTION_PAYMENT),Short.valueOf("1"),
@@ -97,14 +95,15 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 							.getAccountFee(), accountFeesActionDetailEntity
 							.getFeeAmount());
 			TestCustomerTrxnDetailEntity.addFeesTrxnDetail(accountTrxnEntity,feeTrxn);
-			totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
+			//TODO: is there anything to assert on here?
+			//totalFees = accountFeesActionDetailEntity.getFeeAmountPaid();
 		}
 		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
 		customerAccountBO.addAccountPayment(accountPaymentEntity);
 		
 		TestObjectFactory.updateObject(customerAccountBO);
 		TestObjectFactory.flushandCloseSession();
-		customerAccountBO= (CustomerAccountBO)TestObjectFactory.getObject(CustomerAccountBO.class,customerAccountBO.getAccountId());
+		customerAccountBO= TestObjectFactory.getObject(CustomerAccountBO.class,customerAccountBO.getAccountId());
 		client = customerAccountBO.getCustomer(); 
 		
 		PersonnelBO loggedInUser = new PersonnelPersistence().getPersonnel(userContext.getId());

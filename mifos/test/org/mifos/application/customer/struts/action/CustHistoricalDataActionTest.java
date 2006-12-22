@@ -198,7 +198,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.updateHistoricalData_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals("Test", group.getHistoricalData().getProductName());
 		assertEquals("Test notes", group.getHistoricalData().getNotes());
@@ -246,7 +246,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.updateHistoricalData_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals("Test", group.getHistoricalData().getProductName());
 		assertEquals("Test notes", group.getHistoricalData().getNotes());

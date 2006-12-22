@@ -90,7 +90,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 		assertEquals("The size of attendance ", ((ClientBO) client)
 				.getClientAttendances().size(), 1);
@@ -114,7 +114,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		}
 
 		HibernateUtil.closeSession();
-		client = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(CustomerBO.class,
 				client.getCustomerId());
 	}
 
@@ -130,7 +130,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 		account = (LoanBO) accountPersistence
 				.getAccount(account.getAccountId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		assertEquals(account.getLoanOffering().getPrdOfferingName(), "Loan");
 		assertEquals(account.getLoanSummary().getFeesPaid()
@@ -217,7 +217,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 						.valueOf("1"), null, currentDate);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
 		assertEquals("The size of the payments done is", customerAccount
@@ -242,7 +242,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 			assertTrue("A paid installment cannot be paid again", true);
 		}
 		HibernateUtil.closeSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 	}
 
@@ -321,7 +321,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		account = (LoanBO) TestObjectFactory.getObject(LoanBO.class, account
+		account = TestObjectFactory.getObject(LoanBO.class, account
 				.getAccountId());
 		assertEquals(AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue(),
 				account.getAccountState().getId());
@@ -428,7 +428,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				"65463", (short) 1, null, currentDate);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		return customerAccountView;
 	}

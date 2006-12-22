@@ -193,9 +193,9 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		actionPerform();
 		verifyForward("loan_detail_page");
 		
-		center =(CenterBO) TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
-		group =(GroupBO) TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
+		center = TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		accountBO = TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		assertEquals(new Money(), accountBO.getTotalPaymentDue());
 		assertEquals(0, accountBO.getTotalInstallmentsDue().size());
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());

@@ -134,19 +134,19 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		regenerateScheduleHelper.execute(System.currentTimeMillis());
 		HibernateUtil.closeSession();
 
-		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		center1 = (CenterBO) TestObjectFactory.getObject(CenterBO.class,
+		center1 = TestObjectFactory.getObject(CenterBO.class,
 				center1.getCustomerId());
-		group1 = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group1
+		group1 = TestObjectFactory.getObject(GroupBO.class, group1
 				.getCustomerId());
-		client = (CustomerBO) TestObjectFactory.getObject(ClientBO.class,
+		client = TestObjectFactory.getObject(ClientBO.class,
 				client.getCustomerId());
-		client2 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+		client2 = TestObjectFactory.getObject(ClientBO.class,
 				client2.getCustomerId());
-		client3 = (ClientBO) TestObjectFactory.getObject(ClientBO.class,
+		client3 = TestObjectFactory.getObject(ClientBO.class,
 				client3.getCustomerId());
 
 		for (AccountActionDateEntity actionDateEntity : center
@@ -189,9 +189,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 	public void testExecuteWithLoanAccount() throws Exception {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
@@ -219,9 +219,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		regenerateScheduleHelper.execute(System.currentTimeMillis());
 
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -273,9 +273,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				.getUpdatedFlag());
 
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -285,9 +285,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 			throws Exception {
 		accountBO = getLoanAccount();
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CenterBO.class,
+		center = TestObjectFactory.getObject(CenterBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
@@ -323,9 +323,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		regenerateScheduleHelper.execute(System.currentTimeMillis());
 
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -377,9 +377,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				.getUpdatedFlag());
 
 		TestObjectFactory.flushandCloseSession();
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
@@ -388,15 +388,15 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 	public void testExecuteWithSavingsAccount() throws Exception {
 		savings = getSavingAccount();
 		TestObjectFactory.flushandCloseSession();
-		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client1 = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client1 = TestObjectFactory.getObject(CustomerBO.class,
 				client1.getCustomerId());
-		client2 = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client2 = TestObjectFactory.getObject(CustomerBO.class,
 				client2.getCustomerId());
 
 		center.getCustomerMeeting().getMeeting().getMeetingDetails()
@@ -423,15 +423,15 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		regenerateScheduleHelper.execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
 
-		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client1 = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client1 = TestObjectFactory.getObject(CustomerBO.class,
 				client1.getCustomerId());
-		client2 = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client2 = TestObjectFactory.getObject(CustomerBO.class,
 				client2.getCustomerId());
 
 		for (AccountBO account : center.getAccounts()) {
@@ -509,15 +509,15 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 
 		TestObjectFactory.flushandCloseSession();
 
-		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
-		center = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		group = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
-		client1 = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client1 = TestObjectFactory.getObject(CustomerBO.class,
 				client1.getCustomerId());
-		client2 = (CustomerBO) TestObjectFactory.getObject(CustomerBO.class,
+		client2 = TestObjectFactory.getObject(CustomerBO.class,
 				client2.getCustomerId());
 	}
 

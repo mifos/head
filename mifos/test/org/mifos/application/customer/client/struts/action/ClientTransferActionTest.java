@@ -102,7 +102,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER});
 		verifyForward(ActionForwards.transferToBranch_failure.toString());		
 		HibernateUtil.closeSession();
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
 	}
 	
 	public void testSuccessful_transferToBranch() throws Exception {
@@ -118,7 +118,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.update_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
 		assertEquals(client.getOffice().getOfficeId(), office.getOfficeId());
 		assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
 		office = client.getOffice();
@@ -172,9 +172,9 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.updateParent_failure.toString());
-		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		group1 = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group1.getCustomerId());
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		group1 = TestObjectFactory.getObject(GroupBO.class,group1.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
 	}
 	
 	public void testSuccessful_transferToParent() throws Exception {
@@ -188,10 +188,10 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		group1 = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group1.getCustomerId());
-		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		group1 = TestObjectFactory.getObject(GroupBO.class,group1.getCustomerId());
+		center = TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
 		assertEquals(group1.getCustomerId(),client.getParentCustomer().getCustomerId());
 		assertEquals(0, group.getMaxChildCount().intValue());
 		assertEquals(1, group1.getMaxChildCount().intValue());
@@ -211,10 +211,10 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.update_success.toString());
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
-		group = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
-		group1 = (GroupBO)TestObjectFactory.getObject(GroupBO.class,group1.getCustomerId());
-		center = (CenterBO)TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class,group.getCustomerId());
+		group1 = TestObjectFactory.getObject(GroupBO.class,group1.getCustomerId());
+		center = TestObjectFactory.getObject(CenterBO.class,center.getCustomerId());
 		assertEquals(group1.getCustomerId(),client.getParentCustomer().getCustomerId());
 		assertEquals(0, group.getMaxChildCount().intValue());
 		assertEquals(1, group1.getMaxChildCount().intValue());
@@ -247,7 +247,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.update_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		client = (ClientBO)TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
+		client = TestObjectFactory.getObject(ClientBO.class,client.getCustomerId());
 		assertEquals(client.getOffice().getOfficeId(), office.getOfficeId());
 		assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
 		office = client.getOffice();

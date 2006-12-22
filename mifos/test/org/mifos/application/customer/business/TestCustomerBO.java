@@ -160,7 +160,7 @@ public class TestCustomerBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		center = (CenterBO) HibernateUtil.getSessionTL().get(CenterBO.class,
 				center.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
 				EntityType.GROUP.getValue(), group.getCustomerId());
@@ -197,11 +197,11 @@ public class TestCustomerBO extends MifosTestCase {
 		assertEquals(new Money("100"), group.getPerformanceHistory()
 				.getLastGroupLoanAmount());
 		HibernateUtil.closeSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 	}
 
@@ -238,23 +238,23 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);
 		TestObjectFactory.flushandCloseSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		assertEquals(new Money(), group.getBalanceForAccountsAtRisk());
 		changeFirstInstallmentDate(accountBO, 31);
 		assertEquals(new Money("300"), group.getBalanceForAccountsAtRisk());
 		TestObjectFactory.flushandCloseSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -262,22 +262,22 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		accountBO = getLoanAccount(client, meeting);
 		TestObjectFactory.flushandCloseSession();
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 		setActionDateToPastDate();
 		TestObjectFactory.updateObject(accountBO);
 		TestObjectFactory.flushandCloseSession();
-		client = (ClientBO) TestObjectFactory.getObject(CustomerBO.class,
+		client = TestObjectFactory.getObject(ClientBO.class,
 				client.getCustomerId());
 		assertEquals(new Money("0.7"), client.getDelinquentPortfolioAmount());
 		TestObjectFactory.flushandCloseSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -285,17 +285,17 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);
 		TestObjectFactory.flushandCloseSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(new Money("300.0"), group.getOutstandingLoanAmount());
 		TestObjectFactory.flushandCloseSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -303,17 +303,17 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);
 		TestObjectFactory.flushandCloseSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(1, group.getActiveLoanCounts().intValue());
 		TestObjectFactory.flushandCloseSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -321,40 +321,40 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);
 		TestObjectFactory.flushandCloseSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		List<LoanBO> loans = group.getOpenLoanAccounts();
 		assertEquals(1, loans.size());
 		assertEquals(accountBO.getAccountId(), loans.get(0).getAccountId());
 		TestObjectFactory.flushandCloseSession();
 
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
 
 	public void testGetSavingsAccountInUse() throws Exception {
 		accountBO = getSavingsAccount("fsaf6", "ads6");
 		TestObjectFactory.flushandCloseSession();
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		List<SavingsBO> savings = client.getOpenSavingAccounts();
 		assertEquals(1, savings.size());
 		assertEquals(accountBO.getAccountId(), savings.get(0).getAccountId());
 		TestObjectFactory.flushandCloseSession();
 
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -362,34 +362,34 @@ public class TestCustomerBO extends MifosTestCase {
 		createInitialObjects();
 		accountBO = getLoanAccount(group, meeting);
 		TestObjectFactory.flushandCloseSession();
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertTrue(group.isAnyLoanAccountOpen());
 		TestObjectFactory.flushandCloseSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
 
 	public void testHasAnySavingsAccountInUse() throws Exception {
 		accountBO = getSavingsAccount("fsaf5", "ads5");
 		TestObjectFactory.flushandCloseSession();
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		assertTrue(client.isAnySavingsAccountOpen());
 		TestObjectFactory.flushandCloseSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		accountBO = (AccountBO) TestObjectFactory.getObject(AccountBO.class,
+		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
 	}
 
@@ -399,20 +399,20 @@ public class TestCustomerBO extends MifosTestCase {
 		savings.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		assertEquals(new Money("1000.0"), savings.getSavingsBalance());
 		assertEquals(new Money("1000.0"), client.getSavingsBalance());
 		TestObjectFactory.flushandCloseSession();
-		center = (CenterBO) TestObjectFactory.getObject(CenterBO.class, center
+		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		group = (GroupBO) TestObjectFactory.getObject(GroupBO.class, group
+		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		client = (ClientBO) TestObjectFactory.getObject(ClientBO.class, client
+		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
-		savings = (SavingsBO) TestObjectFactory.getObject(SavingsBO.class,
+		savings = TestObjectFactory.getObject(SavingsBO.class,
 				savings.getAccountId());
 		TestObjectFactory.cleanUp(savings);
 	}

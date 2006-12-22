@@ -2,7 +2,7 @@ package org.mifos.application.accounts;
 
 import java.util.Date;
 
-import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -12,7 +12,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccount extends MifosTestCase {
-	protected AccountBO accountBO=null;
+	protected LoanBO accountBO=null;
 	protected CustomerBO center=null;
 	protected CustomerBO group=null;
 	protected AccountPersistence accountPersistence;
@@ -41,7 +41,7 @@ public class TestAccount extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public AccountBO getLoanAccount()
+	public LoanBO getLoanAccount()
 	{ 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
         center=TestObjectFactory.createCenter("Center",meeting);
