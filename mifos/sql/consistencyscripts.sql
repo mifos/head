@@ -48,7 +48,7 @@ drop table loan_check;
 
 
 /**Payment status check script **/
-select a.account_id, a.installment_id from account_actions_date a, account_fees_action_detail b
+select a.account_id, a.installment_id from loan_schedule a, loan_fee_schedule b
 where a.id=b.id
 and a.installment_id=b.installment_id
 and (
