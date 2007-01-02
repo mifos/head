@@ -126,13 +126,13 @@ public class AccountBusinessService extends BusinessService {
 		List<ApplicableCharge> applicableChargeList = null;
 		try {
 			AccountBO account = new AccountPersistence().getAccount(accountId);
-			Short categoryType = getCategoryType(account.getCustomer());
+			FeeCategory categoryType = getCategoryType(account.getCustomer());
 
 			if (account.getAccountType().getAccountTypeId().equals(
 					AccountTypes.LOANACCOUNT.getValue())) {
 				applicableChargeList = getLoanApplicableCharges(
-						new AccountPersistence().getAllAppllicableFees(
-								accountId, FeeCategory.LOAN.getValue()),
+						new AccountPersistence().getAllApplicableFees(
+								accountId, FeeCategory.LOAN),
 						userContext, (LoanBO) account);
 			} else if (account.getAccountType().getAccountTypeId().equals(
 					AccountTypes.CUSTOMERACCOUNT.getValue())) {
@@ -140,9 +140,9 @@ public class AccountBusinessService extends BusinessService {
 					throw new ServiceException(
 							AccountExceptionConstants.APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION);
 				applicableChargeList = getCustomerApplicableCharges(
-						new AccountPersistence().getAllAppllicableFees(
-								accountId, getCategoryType(account
-										.getCustomer())), userContext,
+						new AccountPersistence().getAllApplicableFees(
+								accountId, categoryType), 
+								userContext,
 						((CustomerAccountBO) account).getCustomer()
 								.getCustomerMeeting().getMeeting()
 								.getMeetingDetails().getRecurrenceType()
@@ -155,16 +155,16 @@ public class AccountBusinessService extends BusinessService {
 		return applicableChargeList;
 	}
 
-	private Short getCategoryType(CustomerBO customer) {
+	private FeeCategory getCategoryType(CustomerBO customer) {
 		if (customer.getCustomerLevel().getId().equals(
 				CustomerLevel.CLIENT.getValue()))
-			return FeeCategory.CLIENT.getValue();
+			return FeeCategory.CLIENT;
 		else if (customer.getCustomerLevel().getId().equals(
 				CustomerLevel.GROUP.getValue()))
-			return FeeCategory.GROUP.getValue();
+			return FeeCategory.GROUP;
 		else if (customer.getCustomerLevel().getId().equals(
 				CustomerLevel.CENTER.getValue()))
-			return FeeCategory.CENTER.getValue();
+			return FeeCategory.CENTER;
 		return null;
 	}
 

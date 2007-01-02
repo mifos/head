@@ -146,14 +146,14 @@ public class AccountPersistence extends Persistence {
 				queryParameters);
 	}
 
-	public List<FeeBO> getAllAppllicableFees(Integer accountId,
-			Short categoryType) throws PersistenceException {
+	public List<FeeBO> getAllApplicableFees(Integer accountId,
+			FeeCategory categoryType) throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("accountId", accountId);
 		queryParameters.put("feeFrequencyTypeId", FeeFrequencyType.PERIODIC
 				.getValue());
 		queryParameters.put("active", FeeStatus.ACTIVE.getValue());
-		if (categoryType.equals(FeeCategory.LOAN.getValue())) {
+		if (categoryType.getValue().equals(FeeCategory.LOAN.getValue())) {
 			queryParameters.put("category", FeeCategory.LOAN.getValue());
 			return executeNamedQuery(
 					NamedQueryConstants.GET_ALL_APPLICABLE_LOAN_FEE,
@@ -161,7 +161,7 @@ public class AccountPersistence extends Persistence {
 		} else {
 			queryParameters.put("category1", FeeCategory.ALLCUSTOMERS
 					.getValue());
-			queryParameters.put("category2", categoryType);
+			queryParameters.put("category2", categoryType.getValue());
 			return executeNamedQuery(
 					NamedQueryConstants.GET_ALL_APPLICABLE_CUSTOMER_FEE,
 					queryParameters);
@@ -219,7 +219,7 @@ public class AccountPersistence extends Persistence {
 			Short entityType) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(AccountConstants.ENTITY_TYPE, entityType);
-		return (List<CustomFieldDefinitionEntity>) executeNamedQuery(
+		return executeNamedQuery(
 				NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
 	}
 
