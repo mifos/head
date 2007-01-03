@@ -1,12 +1,9 @@
 package org.mifos.application.accounts.loan.struts.uihelpers;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.struts.action.LoanAccountAction;
-import org.mifos.application.accounts.loan.util.helpers.EqualsObjectComparator;
 import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -20,8 +17,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 
 	private UserContext userContext;
-
-	private String flowKey;
 
 	@Override
 	protected void tearDown() throws Exception {
@@ -40,7 +35,7 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
-		flowKey = createFlow(request, LoanAccountAction.class);
+		createFlow(request, LoanAccountAction.class);
 	}
 
 	public void testGetCurrrentDate() {
@@ -60,23 +55,6 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 	public void testGetDoubleValue() {
 		assertEquals("2.2", LoanUIHelperFn.getDoubleValue(new Double(2.2)));
 		assertEquals("0.0", LoanUIHelperFn.getDoubleValue(null));
-	}
-
-	public void testLoanActivityView() {
-		LoanActivityView loanActivityView = new LoanActivityView();
-		LoanActivityView loanActivityView1 = new LoanActivityView();
-		long l = System.currentTimeMillis();
-		loanActivityView.setTimeStamp(new Timestamp(l));
-		loanActivityView1.setTimeStamp(new Timestamp(l));
-		assertEquals(-1, new EqualsObjectComparator().compare(loanActivityView,
-				loanActivityView1));
-		loanActivityView1.setTimeStamp(new Timestamp(l - 1));
-		assertEquals(-1, new EqualsObjectComparator().compare(loanActivityView,
-				loanActivityView1));
-		loanActivityView.setTimeStamp(new Timestamp(l - 1));
-		loanActivityView1.setTimeStamp(new Timestamp(l));
-		assertEquals(1, new EqualsObjectComparator().compare(loanActivityView,
-				loanActivityView1));
 	}
 
 	public void testRepaymentScheduleInstallment() {
