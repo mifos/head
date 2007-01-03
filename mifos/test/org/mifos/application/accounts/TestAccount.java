@@ -21,7 +21,7 @@ public class TestAccount extends MifosTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 
-		accountBO=getLoanAccount();
+		accountBO = createLoanAccount();
 		accountPersistence = new AccountPersistence();
 	}
 
@@ -41,7 +41,7 @@ public class TestAccount extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public LoanBO getLoanAccount()
+	public LoanBO createLoanAccount()
 	{ 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
         center=TestObjectFactory.createCenter("Center",meeting);

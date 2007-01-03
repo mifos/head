@@ -93,7 +93,7 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl
     	java.util.List list = new java.util.ArrayList();
     	try
     	{
-    		session=QuerySession.getSession();
+    		session=QuerySession.openSession();
     		Query query=prepareQuery(session,queryInputs.getQueryStrings()[1]);        	
         	query.setFirstResult(position);
         	query.setMaxResults(noOfObjects);        	
@@ -139,7 +139,7 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl
     	Session session = null;
     	try
     	{
-    		session=QuerySession.getSession();
+    		session=QuerySession.openSession();
 	   		if(this.queryInputs == null)
 	   		{
 	   			  throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);

@@ -86,12 +86,11 @@ public class HibernateUtil {
 			if (session != null && session.isOpen()) {
 				session.close();
 			}
-
-		} catch (HibernateException e) {
+		}
+		catch (HibernateException e) {
 			throw new HibernateProcessException(
 					HibernateConstants.FAILED_CLOSINGSESSION, e);
 		}
-
 	}
 
 	/**

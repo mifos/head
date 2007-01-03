@@ -1353,6 +1353,10 @@ public class TestObjectFactory {
 		return personnel.login(session, "mifos");
 	}
 	
+	/**
+	 * Also see {@link TestUtils#makeUser(int)} which should be faster (this
+	 * method involves several database accesses).
+	 */
 	public static UserContext getUserContext() throws SystemException,
 			ApplicationException {
 		return getUserContext(HibernateUtil.getSessionTL());

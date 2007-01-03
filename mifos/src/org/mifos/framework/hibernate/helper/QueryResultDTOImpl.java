@@ -92,7 +92,7 @@ public class QueryResultDTOImpl implements QueryResult {
 	 * 
 	 */
 	public Session getSession() throws HibernateProcessException {
-		hibernateSession = QuerySession.getSession();
+		hibernateSession = QuerySession.openSession();
 		return hibernateSession;
 	}
 
