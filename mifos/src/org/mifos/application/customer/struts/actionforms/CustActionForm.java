@@ -2,6 +2,9 @@ package org.mifos.application.customer.struts.actionforms;
 
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
+/**
+ * What's the difference between this and {@link CustomerActionForm} ?
+ */
 public class CustActionForm extends BaseActionForm {
 	private String customerId;
 

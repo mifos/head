@@ -38,6 +38,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.mifos.application.customer.business.CustomFieldViewTest;
+import org.mifos.application.customer.struts.actionforms.CustomerActionFormTest;
 import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.framework.MifosTestCase;
@@ -79,6 +80,8 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(CustomFieldViewTest.class);
 		suite.addTestSuite(MifosTagUtilsTest.class);
 		suite.addTestSuite(FrameworkExceptionTest.class);
+		
+		suite.addTestSuite(CustomerActionFormTest.class);
 
 		//Currently this one is slow (extends MifosTestCase).
 		//suite.addTestSuite(OfficeListTagTest.class);

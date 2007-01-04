@@ -418,6 +418,7 @@ public class CenterCustAction extends CustAction {
 						.getId()), request);
 	}
 
+	@Override
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward search(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -448,8 +449,9 @@ public class CenterCustAction extends CustAction {
 
 	private void setLocaleIdToSavingsStatus(List<SavingsBO> accountList,
 			Short localeId) {
-		for (SavingsBO accountBO : accountList)
-			setLocaleForAccount((AccountBO) accountBO, localeId);
+		for (SavingsBO accountBO : accountList) {
+			setLocaleForAccount(accountBO, localeId);
+		}
 	}
 
 	private void setLocaleForAccount(AccountBO account, Short localeId) {

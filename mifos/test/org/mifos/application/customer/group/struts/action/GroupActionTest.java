@@ -460,7 +460,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
 		
-		group = TestObjectFactory.getObject(GroupBO.class, Integer.valueOf(actionForm.getCustomerId()).intValue());
+		group = TestObjectFactory.getObject(GroupBO.class, actionForm.getCustomerIdAsInt());
 		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
 		actionForm.setParentCustomer(null);
 	}
@@ -502,7 +502,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
 		
-		group = TestObjectFactory.getObject(GroupBO.class, Integer.valueOf(actionForm.getCustomerId()).intValue());
+		group = TestObjectFactory.getObject(GroupBO.class, actionForm.getCustomerIdAsInt());
 		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
 		actionForm.setParentCustomer(null);
 	}

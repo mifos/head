@@ -927,7 +927,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		ClientCustActionForm actionForm = (ClientCustActionForm) request
 				.getSession().getAttribute("clientCustActionForm");
 		client = TestObjectFactory.getObject(ClientBO.class,
-				new Integer(actionForm.getCustomerId()).intValue());
+				actionForm.getCustomerIdAsInt());
 		assertNotNull(client);
 		assertNotNull(client.getOfferingsAssociatedInCreate());
 		assertEquals(1,client.getOfferingsAssociatedInCreate().size());
@@ -995,7 +995,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		ClientCustActionForm actionForm = (ClientCustActionForm) request
 				.getSession().getAttribute("clientCustActionForm");
 		client = TestObjectFactory.getObject(ClientBO.class,
-				new Integer(actionForm.getCustomerId()).intValue());
+				actionForm.getCustomerIdAsInt());
 		removeFees(feesToRemove);
 	}
 
@@ -1062,7 +1062,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			ClientCustActionForm actionForm = (ClientCustActionForm) request
 					.getSession().getAttribute("clientCustActionForm");
 			client = TestObjectFactory.getObject(ClientBO.class,
-					new Integer(actionForm.getCustomerId()).intValue());
+					actionForm.getCustomerIdAsInt());
 	}
 	
 	public void testGet() throws Exception {
@@ -1647,7 +1647,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			ClientCustActionForm actionForm = (ClientCustActionForm) request
 					.getSession().getAttribute("clientCustActionForm");
 			client = TestObjectFactory.getObject(ClientBO.class,
-					new Integer(actionForm.getCustomerId()).intValue());
+					actionForm.getCustomerIdAsInt());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

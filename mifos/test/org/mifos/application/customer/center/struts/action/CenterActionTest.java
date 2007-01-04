@@ -383,7 +383,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
 		center = TestObjectFactory.getObject(CenterBO.class,
-				new Integer(actionForm.getCustomerId()).intValue());
+				actionForm.getCustomerIdAsInt());
 	}
 
 	public void testManage() throws Exception {
@@ -668,7 +668,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
 		center = TestObjectFactory.getObject(CenterBO.class,
-				Integer.valueOf(actionForm.getCustomerId()).intValue());
+				actionForm.getCustomerIdAsInt());
 		assertEquals(false, fm.isFlowValid(flowKey));
 	}
 
@@ -723,7 +723,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
 		center = TestObjectFactory.getObject(CenterBO.class,
-				Integer.valueOf(actionForm.getCustomerId()).intValue());
+				actionForm.getCustomerIdAsInt());
 		assertEquals(false, fm.isFlowValid(flowKey));
 
 		setRequestPathInfo("/centerCustAction.do");

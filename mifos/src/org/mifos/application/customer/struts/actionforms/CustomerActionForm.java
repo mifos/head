@@ -71,7 +71,10 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
-public abstract class CustomerActionForm extends BaseActionForm{
+/**
+ * What's the difference between this and {@link CustActionForm} ?
+ */
+public abstract class CustomerActionForm extends BaseActionForm {
 
 	protected String input;
 	
@@ -138,6 +141,13 @@ public abstract class CustomerActionForm extends BaseActionForm{
 
 	public String getCustomerId() {
 		return customerId;
+	}
+	
+	public int getCustomerIdAsInt() {
+		if (customerId == null) {
+			throw new NullPointerException("customerId is not set");
+		}
+		return Integer.parseInt(customerId);
 	}
 
 	public void setCustomerId(String customerId) {
@@ -280,7 +290,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		while(i>=customFields.size()){
 			customFields.add(new CustomFieldView());
 		}
-		return (CustomFieldView)(customFields.get(i));
+		return customFields.get(i);
 	}
 
 	public String getFormedByPersonnel() {
@@ -295,7 +305,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		while(i>=defaultFees.size()){
 			defaultFees.add(new FeeView());
 		}
-		return (FeeView)(defaultFees.get(i));
+		return defaultFees.get(i);
 	}
 
 	public List<FeeView> getFeesToApply(){
@@ -312,7 +322,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 	public FeeView getSelectedFee(int index){
 		while(index>=additionalFees.size())
 			additionalFees.add(new FeeView());
-		return (FeeView)additionalFees.get(index);
+		return additionalFees.get(index);
 	}
 
 	@Override
@@ -340,7 +350,7 @@ public abstract class CustomerActionForm extends BaseActionForm{
 		while(index>=customerPositions.size()){
 			customerPositions.add(new CustomerPositionView());
 		}
-		return (CustomerPositionView)customerPositions.get(index);
+		return customerPositions.get(index);
 	}
 
 	@Override
