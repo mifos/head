@@ -114,7 +114,7 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward(Constants.UPDATE_SUCCESS);
 		
-		assertEquals(accountBO.getAccountState().getId(),new Short(AccountStates.LOANACC_OBLIGATIONSMET));
+		assertEquals(accountBO.getAccountState().getId(),Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
 		
 		LoanSummaryEntity loanSummaryEntity=((LoanBO)accountBO).getLoanSummary();
 		assertEquals(amount,loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(loanSummaryEntity.getInterestPaid()).add(loanSummaryEntity.getPenaltyPaid()));
@@ -135,7 +135,7 @@ public class TestRepayLoanAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyForward(Constants.UPDATE_SUCCESS);
 		
-		assertEquals(accountBO.getAccountState().getId(),new Short(AccountStates.LOANACC_OBLIGATIONSMET));
+		assertEquals(accountBO.getAccountState().getId(),Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
 		
 		LoanSummaryEntity loanSummaryEntity=((LoanBO)accountBO).getLoanSummary();
 		assertEquals(amount,loanSummaryEntity.getPrincipalPaid().add(loanSummaryEntity.getFeesPaid()).add(loanSummaryEntity.getInterestPaid()).add(loanSummaryEntity.getPenaltyPaid()));

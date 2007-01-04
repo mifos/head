@@ -460,7 +460,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
 		
-		group = TestObjectFactory.getObject(GroupBO.class, new Integer(actionForm.getCustomerId()).intValue());
+		group = TestObjectFactory.getObject(GroupBO.class, Integer.valueOf(actionForm.getCustomerId()).intValue());
 		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
 		actionForm.setParentCustomer(null);
 	}
@@ -502,7 +502,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		
 		GroupCustActionForm actionForm = (GroupCustActionForm)request.getSession().getAttribute("groupCustActionForm");
 		
-		group = TestObjectFactory.getObject(GroupBO.class, new Integer(actionForm.getCustomerId()).intValue());
+		group = TestObjectFactory.getObject(GroupBO.class, Integer.valueOf(actionForm.getCustomerId()).intValue());
 		center = TestObjectFactory.getObject(CenterBO.class, center.getCustomerId());
 		actionForm.setParentCustomer(null);
 	}
@@ -566,11 +566,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.get_success.toString());
 
 		center = TestObjectFactory.getObject(CenterBO.class,
-				new Integer(center.getCustomerId()).intValue());
+				Integer.valueOf(center.getCustomerId()).intValue());
 		group = TestObjectFactory.getObject(GroupBO.class,
-				new Integer(group.getCustomerId()).intValue());
+				Integer.valueOf(group.getCustomerId()).intValue());
 		client = TestObjectFactory.getObject(ClientBO.class,
-				new Integer(client.getCustomerId()).intValue());
+				Integer.valueOf(client.getCustomerId()).intValue());
 		loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO
 				.getAccountId());
 		savingsBO = (SavingsBO) new AccountPersistence()
@@ -595,11 +595,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		TestObjectFactory.removeCustomerFromPosition(group);
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class,
-				new Integer(center.getCustomerId()).intValue());
+				Integer.valueOf(center.getCustomerId()).intValue());
 		group = TestObjectFactory.getObject(GroupBO.class,
-				new Integer(group.getCustomerId()).intValue());
+				Integer.valueOf(group.getCustomerId()).intValue());
 		client = TestObjectFactory.getObject(ClientBO.class,
-				new Integer(client.getCustomerId()).intValue());
+				Integer.valueOf(client.getCustomerId()).intValue());
 		loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO
 				.getAccountId());
 		savingsBO = (SavingsBO) new AccountPersistence()
@@ -800,7 +800,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		group = TestObjectFactory.getObject(GroupBO.class, new Integer(group.getCustomerId()).intValue());
+		group = TestObjectFactory.getObject(GroupBO.class, Integer.valueOf(group.getCustomerId()).intValue());
 		assertTrue(group.isTrained());
 		assertEquals(newDisplayName ,group.getDisplayName());
 	}
@@ -841,7 +841,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		group = TestObjectFactory.getObject(GroupBO.class, new Integer(group.getCustomerId()).intValue());
+		group = TestObjectFactory.getObject(GroupBO.class, Integer.valueOf(group.getCustomerId()).intValue());
 		assertTrue(group.isTrained());
 		assertEquals(newDisplayName ,group.getDisplayName());
 		TestObjectFactory.cleanUpChangeLog();
@@ -944,9 +944,9 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	private void createGroupWithCenterAndSetInSession() throws Exception {
 		createGroupWithCenter();
 		center = TestObjectFactory.getObject(CenterBO.class,
-				new Integer(center.getCustomerId()).intValue());
+				Integer.valueOf(center.getCustomerId()).intValue());
 		group = TestObjectFactory.getObject(GroupBO.class,
-				new Integer(group.getCustomerId()).intValue());
+				Integer.valueOf(group.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 	}
 

@@ -1676,7 +1676,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class,
-				new Integer(client.getCustomerId()).intValue());
+				Integer.valueOf(client.getCustomerId()).intValue());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}
@@ -1688,11 +1688,11 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				CustomerStatus.CLIENT_ACTIVE.getValue(), group, new Date());
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class,
-				new Integer(center.getCustomerId()).intValue());
+				Integer.valueOf(center.getCustomerId()).intValue());
 		group = TestObjectFactory.getObject(GroupBO.class,
-				new Integer(group.getCustomerId()).intValue());
+				Integer.valueOf(group.getCustomerId()).intValue());
 		client = TestObjectFactory.getObject(ClientBO.class,
-				new Integer(client.getCustomerId()).intValue());
+				Integer.valueOf(client.getCustomerId()).intValue());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}

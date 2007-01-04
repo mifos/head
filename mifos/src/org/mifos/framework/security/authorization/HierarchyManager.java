@@ -139,7 +139,7 @@ public class HierarchyManager implements Observer {
 			String userOfficeSearchId = hierarchyMap.get(uc.getBranchId())
 					.getSearchId();
 			String operatedOfficeSearchId = hierarchyMap.get(
-					new Short(officeId)).getSearchId();
+					Short.valueOf(officeId)).getSearchId();
 
 			if (operatedOfficeSearchId.startsWith(userOfficeSearchId)) {
 				return Constants.BRANCH_BELOW;
@@ -150,7 +150,7 @@ public class HierarchyManager implements Observer {
 
 	}
 	public String getSearchId(short branchId) {
-		return hierarchyMap.get(new Short(branchId)).getSearchId().toString();
+		return hierarchyMap.get(Short.valueOf(branchId)).getSearchId();
 	}
 
 	public Short getParentOfficeId(Short officeId) {

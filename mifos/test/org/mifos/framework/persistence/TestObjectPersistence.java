@@ -130,7 +130,7 @@ public class TestObjectPersistence {
 		Session session = HibernateUtil.getSessionTL();
 		return (MifosCurrency)session.get(
 			MifosCurrency.class, 
-			new Short((short)2));
+			Short.valueOf((short)2));
 	}
 	
 	public MifosCurrency getCurrency(Short currencyId) {

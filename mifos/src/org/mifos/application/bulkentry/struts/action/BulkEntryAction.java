@@ -493,9 +493,9 @@ public class BulkEntryAction extends BaseAction {
 		Short customerLevel;
 		if (Configuration.getInstance().getCustomerConfig(officeId)
 				.isCenterHierarchyExists())
-			customerLevel = new Short(CustomerConstants.CENTER_LEVEL_ID);
+			customerLevel = Short.valueOf(CustomerConstants.CENTER_LEVEL_ID);
 		else
-			customerLevel = new Short(CustomerConstants.GROUP_LEVEL_ID);
+			customerLevel = Short.valueOf(CustomerConstants.GROUP_LEVEL_ID);
 		List<CustomerView> activeParentUnderLoanOfficer = masterService
 				.getListOfActiveParentsUnderLoanOfficer(personnelId,
 						customerLevel, officeId);

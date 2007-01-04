@@ -301,8 +301,8 @@ public class CustomerPersistence extends Persistence {
 		paramList.add(typeNameValue("Boolean", "GROUP_LOAN_ALLOWED",
 				Configuration.getInstance().getCustomerConfig(
 						personnel.getOffice().getOfficeId())
-						.canGroupApplyForLoan() == true ? new Boolean(true)
-						: new Boolean(false)));
+						.canGroupApplyForLoan() == true ? Boolean.valueOf(true)
+						: Boolean.valueOf(false)));
 
 		String[] aliasNames = { "clientName", "clientId", "groupName",
 				"centerName", "officeName", "globelNo" };

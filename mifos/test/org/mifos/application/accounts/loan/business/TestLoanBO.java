@@ -879,7 +879,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 
-		assertEquals(accountBO.getAccountState().getId(), new Short(
+		assertEquals(accountBO.getAccountState().getId(), Short.valueOf(
 				AccountStates.LOANACC_OBLIGATIONSMET));
 		LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
 		assertEquals(totalRepaymentAmount, loanSummaryEntity.getPrincipalPaid()
@@ -960,7 +960,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 
-		assertEquals(accountBO.getAccountState().getId(), new Short(
+		assertEquals(accountBO.getAccountState().getId(), Short.valueOf(
 				AccountStates.LOANACC_OBLIGATIONSMET));
 		LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
 		assertEquals(totalRepaymentAmount, loanSummaryEntity.getPrincipalPaid()
@@ -1080,7 +1080,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 
-		assertEquals(accountBO.getAccountState().getId(), new Short(
+		assertEquals(accountBO.getAccountState().getId(), Short.valueOf(
 				AccountStates.LOANACC_OBLIGATIONSMET));
 		LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
 		assertEquals(new Money(), loanSummaryEntity.getPrincipalDue().add(
@@ -1205,7 +1205,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
 				AccountBO.class, accountBO.getAccountId());
 
-		assertEquals(accountBO.getAccountState().getId(), new Short(
+		assertEquals(accountBO.getAccountState().getId(), Short.valueOf(
 				AccountStates.LOANACC_OBLIGATIONSMET));
 		LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
 		assertEquals(new Money(), loanSummaryEntity.getPrincipalDue().add(

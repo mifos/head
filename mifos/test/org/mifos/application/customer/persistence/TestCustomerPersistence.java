@@ -741,11 +741,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 				center.getCustomerStatus().getId(),
 				center.getCustomerLevel().getId()).size());
 		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
-				new Integer(client.getCustomerId())));
+				Integer.valueOf(client.getCustomerId())));
 		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
-				new Integer(group.getCustomerId())));
+				Integer.valueOf(group.getCustomerId())));
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
-				new Integer(center.getCustomerId())));
+				Integer.valueOf(center.getCustomerId())));
 		checklistCenter = (CustomerCheckListBO) (HibernateUtil.getSessionTL()
 				.get(CheckListBO.class, new Short(checklistCenter
 						.getChecklistId())));
@@ -791,7 +791,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 					.getPersonnel().getPersonnelId());
 		}
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
-				new Integer(center.getCustomerId())));
+				Integer.valueOf(center.getCustomerId())));
 	}
 
 	public void testGetAllCustomerNotesWithZeroNotes() throws Exception {

@@ -183,7 +183,7 @@ public class RoleTempleteBuilder {
 			for (int i = 0; i < lst.size(); i++) {
 				buff.append("<tr >");
 				String name1 = name
-						+ new String("_" + new Integer(i).toString());
+						+ "_" + Integer.toString(i);
 				for (int j = 0; j < level; j++) {
 					buff
 							.append("<td bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\">&nbsp; </td> ");
@@ -265,13 +265,13 @@ public class RoleTempleteBuilder {
 		buildCheckedItems(l);
 		// by this time child map has been built
 		short start = 0;
-		List<ActivityEntity> li = childMap.get(new Short(start));
+		List<ActivityEntity> li = childMap.get(Short.valueOf(start));
 		
 		buff
 		.append("<script language=\"javascript\" src=\"pages/application/rolesandpermission/js/checkBoxLogic.js\"  type=\"text/javascript\">   </script>");
 
 		for (int i = 0; i < li.size(); i++) {
-			String name = new Integer(i).toString();
+			String name = Integer.toString(i);
 			Short index = getIndex(li.get(i).getId());
 
 			buff

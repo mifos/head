@@ -85,7 +85,7 @@ public class SavingsPerformanceEntity extends PersistentObject {
 
 	void addMissedDeposits(int missedDeposits) {
 		if (this.missedDeposits == null) {
-			this.missedDeposits = new Integer(0);
+			this.missedDeposits = Integer.valueOf(0);
 		}
 		this.missedDeposits = this.missedDeposits + missedDeposits;
 	}

@@ -1013,7 +1013,7 @@ public class LoanBO extends AccountBO {
 			if (!getDetailsOfInstallmentsInArrears().isEmpty()) {
 				AccountActionDateEntity accountActionDateEntity = getDetailsOfInstallmentsInArrears()
 						.get(0);
-				daysInArrears = Short.valueOf(new Long(calculateDays(
+				daysInArrears = Short.valueOf(Long.valueOf(calculateDays(
 						accountActionDateEntity.getActionDate(), DateUtils
 								.getCurrentDateWithoutTimeStamp())).toString());
 			}

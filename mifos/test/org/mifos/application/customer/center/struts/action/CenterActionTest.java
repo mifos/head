@@ -569,7 +569,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 				getMeeting());
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class,
-				new Integer(center.getCustomerId()).intValue());
+				Integer.valueOf(center.getCustomerId()).intValue());
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
 	}
 
@@ -668,7 +668,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
 		center = TestObjectFactory.getObject(CenterBO.class,
-				new Integer(actionForm.getCustomerId()).intValue());
+				Integer.valueOf(actionForm.getCustomerId()).intValue());
 		assertEquals(false, fm.isFlowValid(flowKey));
 	}
 
@@ -723,7 +723,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
 		center = TestObjectFactory.getObject(CenterBO.class,
-				new Integer(actionForm.getCustomerId()).intValue());
+				Integer.valueOf(actionForm.getCustomerId()).intValue());
 		assertEquals(false, fm.isFlowValid(flowKey));
 
 		setRequestPathInfo("/centerCustAction.do");

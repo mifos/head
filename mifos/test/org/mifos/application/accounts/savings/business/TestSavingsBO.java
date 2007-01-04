@@ -946,7 +946,7 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		session = HibernateUtil.getSessionTL();
 		SavingsBO savingsNew = (SavingsBO) (session.get(SavingsBO.class,
-				new Integer(savings.getAccountId())));
+				Integer.valueOf(savings.getAccountId())));
 		assertEquals(savingsNew.getAccountFlags().size(), 3);
 		session.evict(savingsNew);
 		HibernateUtil.closeSession();

@@ -507,41 +507,41 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(new Money("0.5"), totalPortfolioAtRisk);
 
 		account1 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account1.getAccountId())));
+				AccountBO.class, Integer.valueOf(account1.getAccountId())));
 		account2 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account2.getAccountId())));
+				AccountBO.class, Integer.valueOf(account2.getAccountId())));
 		account3 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account3.getAccountId())));
+				AccountBO.class, Integer.valueOf(account3.getAccountId())));
 		account4 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account4.getAccountId())));
+				AccountBO.class, Integer.valueOf(account4.getAccountId())));
 		account5 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account5.getAccountId())));
+				AccountBO.class, Integer.valueOf(account5.getAccountId())));
 		account6 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account6.getAccountId())));
+				AccountBO.class, Integer.valueOf(account6.getAccountId())));
 		account7 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account7.getAccountId())));
+				AccountBO.class, Integer.valueOf(account7.getAccountId())));
 		account8 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account8.getAccountId())));
+				AccountBO.class, Integer.valueOf(account8.getAccountId())));
 		account9 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account9.getAccountId())));
+				AccountBO.class, Integer.valueOf(account9.getAccountId())));
 		account10 = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account10.getAccountId())));
+				AccountBO.class, Integer.valueOf(account10.getAccountId())));
 		account = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(account.getAccountId())));
+				AccountBO.class, Integer.valueOf(account.getAccountId())));
 		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
-				new Integer(client.getCustomerId())));
+				Integer.valueOf(client.getCustomerId())));
 		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
-				new Integer(group.getCustomerId())));
+				Integer.valueOf(group.getCustomerId())));
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
-				new Integer(center.getCustomerId())));
+				Integer.valueOf(center.getCustomerId())));
 		client2 = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
-				new Integer(client2.getCustomerId())));
+				Integer.valueOf(client2.getCustomerId())));
 		client3 = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
-				new Integer(client3.getCustomerId())));
+				Integer.valueOf(client3.getCustomerId())));
 		group1 = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
-				new Integer(group1.getCustomerId())));
+				Integer.valueOf(group1.getCustomerId())));
 		center1 = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
-				new Integer(center1.getCustomerId())));
+				Integer.valueOf(center1.getCustomerId())));
 		TestObjectFactory.cleanUp(account3);
 		TestObjectFactory.cleanUp(account2);
 		TestObjectFactory.cleanUp(account1);
@@ -583,11 +583,11 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				center.getCustomerStatus().getId(),
 				center.getCustomerLevel().getId()).size());
 		client = (ClientBO) (HibernateUtil.getSessionTL().get(ClientBO.class,
-				new Integer(client.getCustomerId())));
+				Integer.valueOf(client.getCustomerId())));
 		group = (GroupBO) (HibernateUtil.getSessionTL().get(GroupBO.class,
-				new Integer(group.getCustomerId())));
+				Integer.valueOf(group.getCustomerId())));
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
-				new Integer(center.getCustomerId())));
+				Integer.valueOf(center.getCustomerId())));
 		checklistCenter = (CustomerCheckListBO) (HibernateUtil.getSessionTL()
 				.get(CheckListBO.class, new Short(checklistCenter
 						.getChecklistId())));
@@ -687,7 +687,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 					.getPersonnel().getPersonnelId());
 		}
 		center = (CenterBO) (HibernateUtil.getSessionTL().get(CenterBO.class,
-				new Integer(center.getCustomerId())));
+				Integer.valueOf(center.getCustomerId())));
 	}
 
 	public void testGetAllCustomerNotesWithZeroNotes() throws Exception {
@@ -967,7 +967,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		SavingsBO savingsNew = (SavingsBO) (HibernateUtil.getSessionTL().get(
-				SavingsBO.class, new Integer(savingsBO.getAccountId())));
+				SavingsBO.class, Integer.valueOf(savingsBO.getAccountId())));
 		return savingsNew;
 
 	}
@@ -975,7 +975,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	private void changeFirstInstallmentDateToPastDate(AccountBO accountBO)
 			throws Exception {
 		accountBO = (AccountBO) (HibernateUtil.getSessionTL().get(
-				AccountBO.class, new Integer(accountBO.getAccountId())));
+				AccountBO.class, Integer.valueOf(accountBO.getAccountId())));
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
 		int month = currentDateCalendar.get(Calendar.MONTH);

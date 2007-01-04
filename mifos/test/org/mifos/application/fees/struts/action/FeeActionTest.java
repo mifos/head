@@ -768,7 +768,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 
 	public void testFeeCategory() throws Exception {
 		try {
-			FeeCategory.getFeeCategory(new Short((short)999));
+			FeeCategory.getFeeCategory(Short.valueOf((short)999));
 			fail();
 		} catch (PropertyNotFoundException pnfe) {
 		}

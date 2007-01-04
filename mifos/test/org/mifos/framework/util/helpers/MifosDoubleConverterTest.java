@@ -10,7 +10,7 @@ public class MifosDoubleConverterTest extends MifosTestCase {
 		mifosDoubleConverter = new MifosDoubleConverter();
 		Double test = new Double(2.0);
 		assertEquals(test, mifosDoubleConverter.convert(String.class, "2.0"));
-		assertEquals(test, mifosDoubleConverter.convert(String.class, new Integer(2)));
+		assertEquals(test, mifosDoubleConverter.convert(String.class, Integer.valueOf(2)));
 	}
 
 }

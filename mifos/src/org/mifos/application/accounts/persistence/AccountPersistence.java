@@ -43,7 +43,7 @@ public class AccountPersistence extends Persistence {
 	public Integer getAccountRunningNumber() throws PersistenceException {
 		Object queryResult = execUniqueResultNamedQuery(
 				NamedQueryConstants.GET_MAX_ACCOUNT_ID, null);
-		Integer accountRunningNumber = queryResult == null ? new Integer(0)
+		Integer accountRunningNumber = queryResult == null ? Integer.valueOf(0)
 				: (Integer) queryResult;
 		return accountRunningNumber + 1;
 	}
