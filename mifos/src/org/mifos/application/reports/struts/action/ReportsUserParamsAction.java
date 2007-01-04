@@ -80,18 +80,10 @@ public class ReportsUserParamsAction extends BaseAction {
 	protected BusinessService getService() {
 		return reportsBusinessService;
 	}
+
 	/**
 	 * Loads the Parameter Add page
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
-	
-  
-
 public ActionForward loadAddList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 	logger.debug("In ReportsUserParamsAction:load Method: ");		
 	request.getSession().setAttribute("listOfAllParameters", reportsBusinessService.getAllReportParams());

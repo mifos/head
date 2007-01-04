@@ -58,10 +58,9 @@ import org.mifos.application.reports.business.ReportsParams;
 public class ReportsParamQueryDAO {
 	/**
 	 * This method lists all the values of parameter
-	 * @param rps
-	 * @return
 	 */
 	public List listValuesOfParameters(ReportsParams rps)
+	throws Exception
 	{
 		List<ReportsParamQuery> alValues = new ArrayList();
 		ReportsDataSource rds = rps.getReportsDataSource();
@@ -100,11 +99,8 @@ public class ReportsParamQueryDAO {
 					 }
 				 }
 			}
-		}catch(Exception e)
-		{
-			System.out.println("Exception caughti n listValuesOfParameters "+e.getMessage());
 		}
-		finally{
+		finally {
 			try{
 				if(con!=null)
 				con.close();

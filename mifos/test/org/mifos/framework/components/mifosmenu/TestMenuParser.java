@@ -5,6 +5,8 @@ import org.mifos.framework.MifosTestCase;
 public class TestMenuParser extends MifosTestCase {
 
 	public void testParse() {
+		// TODO: we probably want two tests, one for the live
+		// menu.xml, and one (or more) which passes in XML from the test.
 
 		MenuParser parser = new MenuParser();
 
@@ -20,16 +22,15 @@ public class TestMenuParser extends MifosTestCase {
 				for (int j = 0; j < menuGroups.length; j++) {
 
 					if (j == 0) {
-						System.out.println(menuGroups[j].getDisplayName());
+//						System.out.println(menuGroups[j].getDisplayName());
 						MenuItem[] menuItems = menuGroups[j].getMenuItems();
 
 						assertNotNull(menuItems);
 
 						for (MenuItem item : menuItems) {
-							
-							System.out.println(item.getLinkValue());
-							System.out.println(item.getDisplayName());
-
+							assertNotNull(item);
+//							System.out.println(item.getLinkValue());
+//							System.out.println(item.getDisplayName());
 						}
 
 					}

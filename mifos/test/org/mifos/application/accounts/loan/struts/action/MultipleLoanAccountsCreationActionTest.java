@@ -45,9 +45,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
-		setConfigFile(ResourceLoader.getURI(
-				"org/mifos/application/accounts/struts-config.xml").getPath());
+		loadAccountStrutsConfig();
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");

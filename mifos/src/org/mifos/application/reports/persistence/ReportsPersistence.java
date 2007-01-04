@@ -106,7 +106,8 @@ public class ReportsPersistence extends Persistence {
      * @throws SystemException
      */
     
-     public void createReportParams(ReportsParamsValue reportsParams) throws ApplicationException,SystemException
+     public void createReportParams(ReportsParamsValue reportsParams) 
+     throws ApplicationException,SystemException
     {
     	
       Session session = null;
@@ -123,9 +124,8 @@ public class ReportsPersistence extends Persistence {
     		throw new ApplicationException(hpe);
     	}
     	catch (HibernateException hpe) 
-    	{ 
-    		hpe.printStackTrace();
-    	trxn.rollback();
+    	{
+    		trxn.rollback();
     		
     		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
     	}
@@ -140,12 +140,10 @@ public class ReportsPersistence extends Persistence {
      
      /**
       * Deletes Report Parameter
-      * @param reportsParams
-      * @throws ApplicationException
-      * @throws SystemException
       */
      
-     public void deleteReportParams(ReportsParamsValue reportsParams) throws ApplicationException,SystemException
+     public void deleteReportParams(ReportsParamsValue reportsParams) 
+     throws ApplicationException,SystemException
      {
        Session session = null;
      	Transaction trxn = null;

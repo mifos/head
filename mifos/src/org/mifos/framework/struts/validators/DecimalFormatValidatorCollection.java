@@ -153,13 +153,8 @@ public class DecimalFormatValidatorCollection {
 		return returnable;
 	}
 	
-	
-	/**
-	 * @param propertyNamesNesting
-	 * @param obj
-	 * @return
-	 */
-	public static Double getFieldToBeValidated(String[] propertyNamesNesting ,Object obj){
+	public static Double getFieldToBeValidated(
+			String[] propertyNamesNesting, Object obj){
 		Double returnable = null; 
 		
 		Object targetReturned = obj;
@@ -169,23 +164,17 @@ public class DecimalFormatValidatorCollection {
 				methodName.append(propertyNamesNesting[index]);
 				//char firstCharOfMethod = methodName.charAt(0);
 				//methodName = methodName.replaceFirst(String.valueOf(firstCharOfMethod), methodName)
-				System.out.println("Method name is " + methodName);
-				System.out.println("target object is " + targetReturned);
 				targetReturned = MethodInvoker.invokeWithNoException(targetReturned,methodName.toString(),new Object[]{},new Class[]{});
-				
-				
 			} catch (SystemException e) {
-				
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			} catch (ApplicationException e) {
-				
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		
 		returnable = (Double)targetReturned;
 		
-		return  returnable;
+		return returnable;
 	}	
 	
 	

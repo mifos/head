@@ -38,6 +38,7 @@
 
 package org.mifos.framework;
 
+import java.net.URISyntaxException;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -50,6 +51,7 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -133,6 +135,12 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);
 		return flowKey;
+	}
+
+	protected void loadAccountStrutsConfig() throws URISyntaxException {
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/accounts/struts-config.xml").getPath());
 	}
 
 }

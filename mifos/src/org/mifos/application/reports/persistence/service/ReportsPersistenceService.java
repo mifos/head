@@ -58,12 +58,9 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.persistence.service.PersistenceService;
+
 /**
  * class associated with Report Persistence Services
- * @author zankar
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class ReportsPersistenceService extends PersistenceService {
 	
@@ -71,14 +68,9 @@ public class ReportsPersistenceService extends PersistenceService {
 	
 	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
-	public ReportsPersistenceService(){
+	public ReportsPersistenceService() {
 		reportsPersistence = new ReportsPersistence();
-	}	
-	/**
-	 * Lists all the Report Categories.
-	 * @return
-	 */
-	
+	}
 
 	public List<ReportsCategoryBO> getAllReportCategories()
 	{
@@ -88,37 +80,29 @@ public class ReportsPersistenceService extends PersistenceService {
 	
 	/**
 	 * List all Report Parameters
-	 * @return
 	 */
-	
 	public List<ReportsParams> getAllReportParams()
     {
         logger.debug("In getAllReportParams of ReportPersistenceService ");
         return reportsPersistence.getAllReportParams();
     }
-	
-	
     
     /**
      * Create Report Parameter
-     * @param reportsParams
      */
-    
     public void createReportParams(ReportsParamsValue reportsParams)
     {
-        System.out.println("vvv-->"+reportsParams.getDatasourceId());
+        //System.out.println("vvv-->"+reportsParams.getDatasourceId());
     	//logger.debug("In createReportParams of ReportPersistenceService ");
-        System.out.println("In createReportParams of ReportPersistenceService");
         
-        try{
-        	System.out.println("111 in persister");
+        try {
         	reportsPersistence.createReportParams(reportsParams);
-        }catch(ApplicationException ape)
-        {
-        	ape.printStackTrace();
-        }catch(SystemException se)
-        {
-        	se.printStackTrace();
+        }
+        catch (ApplicationException e) {
+        	throw new RuntimeException(e);
+        }
+        catch (SystemException e) {
+        	throw new RuntimeException(e);
         }
     }
     

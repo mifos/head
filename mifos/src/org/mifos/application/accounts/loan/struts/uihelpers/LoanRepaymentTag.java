@@ -45,7 +45,6 @@ public class LoanRepaymentTag extends BodyTagSupport {
 					
 			/*LoanBO loanBO = (LoanBO) pageContext.getRequest().getAttribute(
 					Constants.BUSINESS_KEY);*/
-			System.out.println("Loan bo: "+loanBO.getAccountId());
 			if (loanBO != null) {
 				List<AccountActionDateEntity> list = new ArrayList<AccountActionDateEntity>();
 				list.addAll(loanBO.getAccountActionDates());
