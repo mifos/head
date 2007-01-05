@@ -605,5 +605,6 @@ public interface NamedQueryConstants {
 	public String FETCH_ALL_RECURRENCE_TYPES="meeting.fetchAllReccurenceTypes";
 	
 	public String ACTIVE_CLIENTS_UNDER_PARENT="Customer.getActiveClientsUnderParent";
+	public String LAST_LOAN_AMOUNT_CUSTOMER="account.lastLoanAmountForCustomer";
 	
 }

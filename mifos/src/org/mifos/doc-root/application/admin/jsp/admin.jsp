@@ -222,6 +222,17 @@
 						</tr>
 					</table>
 					<br>
+					<span class="headingorange"><mifos:mifoslabel name="admin.Manage" /> <mifos:mifoslabel name="admin.accounts" /></span><br>
+                <span class="fontnormalbold"><mifos:mifoslabel name="admin.Manage" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="admin.accounts" /></span><br>
+                <table width="90%" border="0" cellspacing="0" cellpadding="0">
+                  <tr class="fontnormal">
+                    <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
+                    <td width="97%"><html-el:link
+								href="reverseloandisbaction.do?method=search&recordOfficeId=${UserContext.branchId}&recordLoanOfficerId=${UserContext.id}&randomNUm=${sessionScope.randomNUm}"><mifos:mifoslabel name="admin.reverse" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" /> <mifos:mifoslabel name="admin.disbursal" /></html-el:link></td>
+
+                  </tr>
+                </table>
+                <br>
 					</td>
 					</html-el:form>
 					</tiles:put>

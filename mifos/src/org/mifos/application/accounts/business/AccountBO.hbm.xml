@@ -334,5 +334,16 @@
 		and (account.accountType.accountTypeId=:loanAccountTypeId or account.accountType.accountTypeId=:savingsAccountTypeId) 
 		and account.globalAccountNum=:searchString ]]>
 	</query>
+	<query name="account.lastLoanAmountForCustomer">
+		<![CDATA[select loan.loanAmount
+				from org.mifos.application.accounts.loan.business.LoanBO loan 
+				where loan.accountId=(select atxn.account.accountId from 
+				org.mifos.application.accounts.business.AccountTrxnEntity atxn
+				where atxn.accountTrxnId=(select max(at.accountTrxnId)
+				from org.mifos.application.accounts.business.AccountTrxnEntity at
+				left outer join at.account.accountId where at.account.customer.customerId=:customerId 
+				and at.account.accountState.id in (5,6,7,8,9) and at.accountActionEntity.id=10))
+		]]>
+	</query>
 
 </hibernate-mapping>

@@ -302,15 +302,13 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
+	//TODO: to be changed to adjustLastPayment
 	public final void adjustPmnt(String adjustmentComment)
 			throws AccountException {
 		if (isAdjustPossibleOnLastTrxn()) {
 			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 					"Adjustment is possible hence attempting to adjust.");
-			List<AccountTrxnEntity> reversedTrxns = getLastPmnt()
-					.reversalAdjustment(getLoggedInUser(), adjustmentComment);
-			updateInstallmentAfterAdjustment(reversedTrxns);
-			buildFinancialEntries(new HashSet(reversedTrxns));
+			adjustPayment(getLastPmnt(), getLoggedInUser(), adjustmentComment);
 			try {
 				(new AccountPersistence()).createOrUpdate(this);
 			} catch (PersistenceException e) {
@@ -321,6 +319,15 @@ public class AccountBO extends BusinessObject {
 			throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
 	}
 
+	protected final void adjustPayment(AccountPaymentEntity accountPayment,
+			PersonnelBO personnel, String adjustmentComment)
+			throws AccountException {
+		List<AccountTrxnEntity> reversedTrxns = accountPayment
+				.reversalAdjustment(personnel, adjustmentComment);
+		updateInstallmentAfterAdjustment(reversedTrxns);
+		buildFinancialEntries(new HashSet(reversedTrxns));
+	}
+	
 	public final void handleChangeInMeetingSchedule() throws AccountException {
 		AccountActionDateEntity accountActionDateEntity = getDetailsOfNextInstallment();
 		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();

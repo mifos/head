@@ -46,11 +46,4 @@ public class CustomerFeesAdjustmentAccountingEntry extends
 						.getApplicableCreditCharts()), FinancialConstants.DEBIT);
 
 	}
-	
-	private Money removeSign(Money amount){
-		if(amount!=null && amount.getAmountDoubleValue()<0)
-			return amount.negate();
-		else
-			return amount;
-	}
 }

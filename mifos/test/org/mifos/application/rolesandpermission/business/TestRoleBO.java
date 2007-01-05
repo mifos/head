@@ -20,19 +20,19 @@ public class TestRoleBO extends MifosTestCase {
 		RoleBO roleBO=RolesPermissionsPersistence.getRole("Admin");
 		assertNotNull(roleBO);
 		assertEquals("Admin",roleBO.getName());
-		assertEquals(156,roleBO.getActivities().size());
+		assertEquals(157,roleBO.getActivities().size());
 	}
 
 	public void testCreateRole() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
-		assertEquals(177,roleBO.getActivities().size());
+		assertEquals(178,roleBO.getActivities().size());
 		assertEquals(roleBO.getCreatedBy(),Short.valueOf("1"));
 		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(roleBO.getCreatedDate().getTime()));
 
@@ -46,7 +46,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testCreateFailureWhenRoleNameIsNull() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = null;
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),null,activities);
@@ -69,7 +69,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testCreateFailureForEmptyRoleName() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = null;
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),"",activities);
@@ -84,7 +84,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testCreateFailureForDuplicateRoleName() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = null;
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),"Admin",activities);
@@ -99,7 +99,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testCreateFailureForNullActivities() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = null;
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",null);
@@ -114,7 +114,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testCreateFailureForEmptyActivities() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = null;
 		try{
 			roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",new ArrayList<ActivityEntity>());
@@ -129,13 +129,13 @@ public class TestRoleBO extends MifosTestCase {
 	public void testDeleteRole() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
-		assertEquals(177,roleBO.getActivities().size());
+		assertEquals(178,roleBO.getActivities().size());
 		assertEquals(roleBO.getCreatedBy(),Short.valueOf("1"));
 		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(roleBO.getCreatedDate().getTime()));
 		roleBO.delete();
@@ -164,7 +164,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testUpdateRemoveActivities() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
@@ -190,7 +190,7 @@ public class TestRoleBO extends MifosTestCase {
 
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 
-		assertEquals(175,roleBO.getActivities().size());
+		assertEquals(176,roleBO.getActivities().size());
 		assertEquals(roleBO.getUpdatedBy(),Short.valueOf("1"));
 		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(roleBO.getUpdatedDate().getTime()));
 		RoleActivityEntity roleActivityEntity = getRoleActivity(roleBO.getId(),activity_1.getId());
@@ -207,35 +207,35 @@ public class TestRoleBO extends MifosTestCase {
 	public void testUpdateAddingActivities() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		ActivityEntity activity_1=activities.get(0);
 		activities.remove(0);
 		ActivityEntity activity_2=activities.get(1);
 		activities.remove(1);
-		assertEquals(175,activities.size());
+		assertEquals(176,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
-		assertEquals(175,roleBO.getActivities().size());
+		assertEquals(176,roleBO.getActivities().size());
 		RoleActivityEntity roleActivityEntity = getRoleActivity(roleBO.getId(),activity_1.getId());
 		assertNull(roleActivityEntity);
 		roleActivityEntity = getRoleActivity(roleBO.getId(),activity_2.getId());
 		assertNull(roleActivityEntity);
 
-		assertEquals(175,activities.size());
+		assertEquals(176,activities.size());
 		activities.add(activity_1);
 		activities.add(activity_2);
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 
 		roleBO.update(TestObjectFactory.getUserContext().getId(),"Test Role",activities);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 
-		assertEquals(177,roleBO.getActivities().size());
+		assertEquals(178,roleBO.getActivities().size());
 		assertEquals(roleBO.getUpdatedBy(),Short.valueOf("1"));
 		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(roleBO.getUpdatedDate().getTime()));
 		roleActivityEntity = getRoleActivity(roleBO.getId(),activity_1.getId());
@@ -251,7 +251,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testUpdateForChangingName() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
@@ -263,7 +263,7 @@ public class TestRoleBO extends MifosTestCase {
 		roleBO = RolesPermissionsPersistence.getRole("New role");
 
 		assertEquals("New role",roleBO.getName());
-		assertEquals(177,roleBO.getActivities().size());
+		assertEquals(178,roleBO.getActivities().size());
 		assertEquals(roleBO.getUpdatedBy(),Short.valueOf("1"));
 		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(),DateUtils.getDateWithoutTimeStamp(roleBO.getUpdatedDate().getTime()));
 
@@ -276,7 +276,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testUpdateFailureForDuplicateName() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
@@ -300,7 +300,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testUpdateFailureForRoleNameAsNull() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
@@ -324,7 +324,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testUpdateFailureForRoleNameAsEmptyString() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
@@ -348,7 +348,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testUpdateFailureForNullActivities() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
@@ -373,7 +373,7 @@ public class TestRoleBO extends MifosTestCase {
 	public void testUpdateFailureForEmptyActivities() throws Exception{
 		RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 		List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-		assertEquals(177,activities.size());
+		assertEquals(178,activities.size());
 		RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 		roleBO.save();
 		HibernateUtil.commitTransaction();
@@ -412,7 +412,7 @@ public class TestRoleBO extends MifosTestCase {
 		try {
 			RolesPermissionsPersistence RolesPermissionsPersistence = new RolesPermissionsPersistence();
 			List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
-			assertEquals(177,activities.size());
+			assertEquals(178,activities.size());
 			RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(),"Test Role",activities);
 			TestObjectFactory.simulateInvalidConnection();
 			roleBO.save();

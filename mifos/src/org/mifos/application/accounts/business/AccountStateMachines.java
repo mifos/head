@@ -39,6 +39,7 @@ package org.mifos.application.accounts.business;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -122,6 +123,7 @@ public class AccountStateMachines implements StateMachine {
 						AccountStates.TRANSITION_CONFIG_FILE_PATH_LOAN,
 						configName);
 				accountStateEntityListForLoan = retrieveAllAccountStateList(accountType);
+				removeLoanReversalFlagForCancelState();
 				populateLoanStatesViewMap();
 			} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
 				statesMapForSavings = loadMap(
@@ -301,6 +303,25 @@ public class AccountStateMachines implements StateMachine {
 			}
 		}
 		return null;
+	}
+	
+	private void removeLoanReversalFlagForCancelState() {
+		if (accountStateEntityListForLoan != null
+				&& accountStateEntityListForLoan.size() > 0) {
+			for (AccountStateEntity accountState : accountStateEntityListForLoan) {
+				if (accountState.getId().equals(AccountState.LOANACC_CANCEL.getValue())) {
+					for (Iterator<AccountStateFlagEntity> iter = accountState
+							.getFlagSet().iterator(); iter.hasNext();) {
+						AccountStateFlagEntity accountStateFlag = iter.next();
+						if (accountStateFlag.getId().equals(
+								AccountStateFlag.LOAN_REVERSAL.getValue())) {
+							iter.remove();
+						}
+					}
+
+				}
+			}
+		}
 	}
 
 	private String getConfigurationName(Short officeId,

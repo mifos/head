@@ -193,6 +193,16 @@ public class TestLoanPersistence extends MifosTestCase {
 		assertEquals(loanOfferingBO.getPrdOfferingId(),loanOffering.getPrdOfferingId());
 		TestObjectFactory.removeObject(loanOfferingBO);
 	}
+	
+	public void testGetLastLoanAmountForCustomer() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
+		loanAccountForDisbursement = getLoanAccount(
+				AccountState.LOANACC_APPROVED.getValue(), startDate, 1);
+		disburseLoan(startDate);
+		assertEquals(((LoanBO) loanAccountForDisbursement).getLoanAmount(),
+				loanPersistence.getLastLoanAmountForCustomer(group
+						.getCustomerId()));
+	}
 
 	private void disburseLoan(Date startDate) throws Exception {
 		((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate,

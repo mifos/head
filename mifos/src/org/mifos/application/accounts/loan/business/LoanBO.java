@@ -72,6 +72,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.FeeInstallment;
@@ -1041,6 +1042,28 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(pe);
 		}
 	}
+	
+	public final void reverseLoanDisbursal(final PersonnelBO loggedInUser,
+			final String note) throws AccountException {
+		changeStatus(AccountState.LOANACC_CANCEL.getValue(),
+				AccountStateFlag.LOAN_REVERSAL.getValue(), note);
+		if (getAccountPayments() != null && getAccountPayments().size() > 0) {
+			for (AccountPaymentEntity accountPayment : getAccountPayments()) {
+				if (accountPayment.getAmount().getAmountDoubleValue() > 0.0) {
+					adjustPayment(accountPayment, loggedInUser, note);
+				}
+			}
+		}
+		addLoanActivity(buildLoanActivity(loanAmount, loggedInUser,
+				"Disbursal Adjusted", DateUtils
+						.getCurrentDateWithoutTimeStamp()));
+		updateCustomerHistoryOnReverseLoan();
+		try {
+			new LoanPersistance().createOrUpdate(this);
+		} catch (PersistenceException pe) {
+			throw new AccountException(pe);
+		}
+	}
 
 	protected void updatePerformanceHistoryOnAdjustment() {
 		if (getPerformanceHistory() != null) {
@@ -1142,40 +1165,62 @@ public class LoanBO extends AccountBO {
 			List<AccountTrxnEntity> reversedTrxns) throws AccountException {
 		if (null != reversedTrxns && reversedTrxns.size() > 0) {
 			for (AccountTrxnEntity accntTrxn : reversedTrxns) {
-				LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) accntTrxn;
+				if (!accntTrxn.getAccountActionEntity().getId().equals(
+						AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL
+								.getValue())) {
+					LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) accntTrxn;
 
-				loanSummary.updatePaymentDetails(loanTrxn.getPrincipalAmount(),
-						loanTrxn.getInterestAmount(), loanTrxn
-								.getPenaltyAmount().add(
-										loanTrxn.getMiscPenaltyAmount()),
-						loanTrxn.getFeeAmount()
-								.add(loanTrxn.getMiscFeeAmount()));
-				LoanScheduleEntity accntActionDate = (LoanScheduleEntity) getAccountActionDate(loanTrxn
-						.getInstallmentId());
-				accntActionDate.updatePaymentDetails(loanTrxn
-						.getPrincipalAmount(), loanTrxn.getInterestAmount(),
-						loanTrxn.getPenaltyAmount(), loanTrxn
+					loanSummary.updatePaymentDetails(loanTrxn
+							.getPrincipalAmount(),
+							loanTrxn.getInterestAmount(), loanTrxn
+									.getPenaltyAmount().add(
+											loanTrxn.getMiscPenaltyAmount()),
+							loanTrxn.getFeeAmount().add(
+									loanTrxn.getMiscFeeAmount()));
+					if (loanTrxn.getInstallmentId() != null
+							&& !loanTrxn.getInstallmentId().equals(
+									Short.valueOf("0"))) {
+						LoanScheduleEntity accntActionDate = (LoanScheduleEntity) getAccountActionDate(loanTrxn
+								.getInstallmentId());
+						accntActionDate.updatePaymentDetails(loanTrxn
+								.getPrincipalAmount(), loanTrxn
+								.getInterestAmount(), loanTrxn
+								.getPenaltyAmount(), loanTrxn
 								.getMiscPenaltyAmount(), loanTrxn
 								.getMiscFeeAmount());
-				if(accntActionDate.getPaymentStatus().equals(PaymentStatus.PAID.getValue()))
-					updatePerformanceHistoryOnAdjustment();
-				accntActionDate.setPaymentStatus(PaymentStatus.UNPAID
-						.getValue());
-				accntActionDate.setPaymentDate(null);
-				if (null != accntActionDate.getAccountFeesActionDetails()
-						&& accntActionDate.getAccountFeesActionDetails().size() > 0) {
-					for (AccountFeesActionDetailEntity accntFeesAction : accntActionDate
-							.getAccountFeesActionDetails()) {
-						Money feeAmntAdjusted = loanTrxn.getFeesTrxn(
-								accntFeesAction.getAccountFee()
-										.getAccountFeeId()).getFeeAmount();
-						((LoanFeeScheduleEntity)accntFeesAction).setFeeAmountPaid(accntFeesAction
-								.getFeeAmountPaid().add(feeAmntAdjusted));
+						if (accntActionDate.getPaymentStatus().equals(
+								PaymentStatus.PAID.getValue()))
+							updatePerformanceHistoryOnAdjustment();
+						accntActionDate.setPaymentStatus(PaymentStatus.UNPAID
+								.getValue());
+						accntActionDate.setPaymentDate(null);
+						if (null != accntActionDate
+								.getAccountFeesActionDetails()
+								&& accntActionDate
+										.getAccountFeesActionDetails().size() > 0) {
+							for (AccountFeesActionDetailEntity accntFeesAction : accntActionDate
+									.getAccountFeesActionDetails()) {
+								FeesTrxnDetailEntity feesTrxnDetailEntity = loanTrxn
+										.getFeesTrxn(accntFeesAction
+												.getAccountFee()
+												.getAccountFeeId());
+								if (feesTrxnDetailEntity != null) {
+									Money feeAmntAdjusted = feesTrxnDetailEntity
+											.getFeeAmount();
+									((LoanFeeScheduleEntity) accntFeesAction)
+											.setFeeAmountPaid(accntFeesAction
+													.getFeeAmountPaid().add(
+															feeAmntAdjusted));
+								}
+							}
+						}
 					}
 				}
 			}
 			if (getAccountStatusChangeHistory() != null
-					&& getAccountStatusChangeHistory().size() > 0) {
+					&& getAccountStatusChangeHistory().size() > 0
+					&& !getAccountState().getId().equals(
+							AccountState.LOANACC_CANCEL.getValue())) {
 				List<Object> objectList = Arrays
 						.asList(getAccountStatusChangeHistory().toArray());
 				AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = (AccountStatusChangeHistoryEntity) objectList
@@ -1194,7 +1239,8 @@ public class LoanBO extends AccountBO {
 				addLoanActivity(buildLoanActivity(reversedTrxns, personnel,
 						AccountConstants.LOAN_ADJUSTED, DateUtils
 								.getCurrentDateWithoutTimeStamp()));
-			} catch (PersistenceException e) {
+			}
+			catch (PersistenceException e) {
 				throw new AccountException(e);
 			}
 		}
@@ -1334,15 +1380,28 @@ public class LoanBO extends AccountBO {
 		Money penalty = new Money();
 		Money fees = new Money();
 		for (AccountTrxnEntity accountTrxn : accountTrxnDetails) {
-			LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) accountTrxn;
-			principal = principal
-					.add(removeSign(loanTrxn.getPrincipalAmount()));
-			interest = interest.add(removeSign(loanTrxn.getInterestAmount()));
-			penalty = penalty.add(removeSign(loanTrxn.getPenaltyAmount())).add(
-					removeSign(loanTrxn.getMiscPenaltyAmount()));
-			fees = fees.add(removeSign(loanTrxn.getMiscFeeAmount()));
-			for (FeesTrxnDetailEntity feesTrxn : loanTrxn.getFeesTrxnDetails()) {
-				fees = fees.add(removeSign(feesTrxn.getFeeAmount()));
+			if (!accountTrxn.getAccountActionEntity().getId().equals(
+					AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL
+							.getValue())) {
+				LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) accountTrxn;
+				principal = principal.add(removeSign(loanTrxn
+						.getPrincipalAmount()));
+				interest = interest
+						.add(removeSign(loanTrxn.getInterestAmount()));
+				penalty = penalty.add(removeSign(loanTrxn.getPenaltyAmount()))
+						.add(removeSign(loanTrxn.getMiscPenaltyAmount()));
+				fees = fees.add(removeSign(loanTrxn.getMiscFeeAmount()));
+				for (FeesTrxnDetailEntity feesTrxn : loanTrxn
+						.getFeesTrxnDetails()) {
+					fees = fees.add(removeSign(feesTrxn.getFeeAmount()));
+				}
+			}
+			if (accountTrxn.getAccountActionEntity().getId().equals(
+					AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL
+							.getValue())
+					|| accountTrxn.getAccountActionEntity().getId().equals(
+							AccountActionTypes.LOAN_REVERSAL.getValue())) {
+				comments = "Loan Reversal";
 			}
 		}
 		return new LoanActivityEntity(this, personnel, comments, principal,
@@ -2385,6 +2444,33 @@ public class LoanBO extends AccountBO {
 			clientPerfHistory.updateLoanCounter(getLoanOffering(),YesNoFlag.NO);
 			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
 					.getNoOfActiveLoans() - 1);
+		}
+	}
+	
+	private void updateCustomerHistoryOnReverseLoan() {
+		Money lastLoanAmount = new Money();
+		try {
+			lastLoanAmount = new LoanPersistance()
+					.getLastLoanAmountForCustomer(getCustomer().getCustomerId());
+		} catch (PersistenceException e) {
+		}
+		if (getCustomer().getCustomerLevel().getId().equals(
+				Short.valueOf(CustomerConstants.CLIENT_LEVEL_ID))
+				&& getCustomer().getPerformanceHistory() != null) {
+			ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) getCustomer()
+					.getPerformanceHistory();
+			clientPerfHistory
+					.updateLoanCounter(getLoanOffering(), YesNoFlag.NO);
+			clientPerfHistory.setNoOfActiveLoans(clientPerfHistory
+					.getNoOfActiveLoans() - 1);
+			clientPerfHistory.setLastLoanAmount(lastLoanAmount);
+		} else if (getCustomer().getCustomerLevel().getId().equals(
+				Short.valueOf(CustomerConstants.GROUP_LEVEL_ID))
+				&& getCustomer().getPerformanceHistory() != null) {
+			GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) getCustomer()
+					.getPerformanceHistory();
+			groupPerformanceHistoryEntity
+					.setLastGroupLoanAmount(lastLoanAmount);
 		}
 	}
 	

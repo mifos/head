@@ -666,6 +666,18 @@ public class TestOfficeBO extends MifosTestCase {
 		assertEquals("Hifos HO", officeView2.getLevelName());
 		assertEquals("Hifos HO(headOffice)", officeView2.getDisplayName());
 	}
+	
+	public void testIsParent() throws Exception {
+		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		assertTrue(ho.isParent(branchOffice));
+	}
+	
+	public void testIsNotParent() throws Exception {
+		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		assertFalse(branchOffice.isParent(ho));
+	}
 
 	private void resetOffices() throws Exception {
 		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));

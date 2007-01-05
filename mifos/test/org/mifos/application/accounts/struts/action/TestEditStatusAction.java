@@ -94,6 +94,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
 						SavingsConstants.STATUS_LIST, request)).size());
+		HibernateUtil.closeSession();
 	}
 
 	public void testPreviewSuccess() throws Exception {
@@ -115,7 +116,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
 						SavingsConstants.STATUS_LIST, request)).size());
-
+		
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
@@ -135,6 +136,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		assertNull("Since new Status is not cancel,so flag should be null.",
 				SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request
 						.getSession()));
+		HibernateUtil.closeSession();
 	}
 
 	public void testPreviewFailure() throws Exception {
@@ -156,7 +158,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		assertEquals("Size of the status list should be 2", 2,
 				((List<AccountStateEntity>) SessionUtils.getAttribute(
 						SavingsConstants.STATUS_LIST, request)).size());
-
+		HibernateUtil.closeSession();
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("input", "loan");
@@ -234,7 +236,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		verifyForward("preview_success");
-
+		
+		HibernateUtil.closeSession();
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "update");
 		addRequestParameter("notes", "Test");
@@ -248,6 +251,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.loan_detail_page.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
+		
+		accountBO = TestObjectFactory.getObject(AccountBO.class,accountBO.getAccountId());
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
 				EntityType.LOAN.getValue(), accountBO.getAccountId());
 		assertEquals(1, auditLogList.size());

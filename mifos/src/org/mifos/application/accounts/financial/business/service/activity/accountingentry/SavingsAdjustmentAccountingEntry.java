@@ -61,13 +61,6 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
 			adjustDeposit(savings,savingsTrxn);
 	}
 	
-	private Money removeSign(Money amount){
-		if(amount!=null && amount.getAmountDoubleValue()<0)
-			return amount.negate();
-		else
-			return amount;
-	}
-	
 	private boolean isAdjustmentForWithdrawal(SavingsBO savings){
 		return (new SavingsHelper().getPaymentActionType(savings.getLastPmnt()).equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL));		
 	}

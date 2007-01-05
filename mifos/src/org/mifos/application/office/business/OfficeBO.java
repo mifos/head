@@ -319,8 +319,10 @@ public class OfficeBO extends BusinessObject {
 	private String generateOfficeGlobalNo() throws OfficeException {
 
 		try {
-			/* TODO: Why not auto-increment?  Fetching the max and adding
-			   one would seem to have a race condition.  */
+			/*
+			 * TODO: Why not auto-increment? Fetching the max and adding one
+			 * would seem to have a race condition.
+			 */
 			String officeGlobelNo = String.valueOf(new OfficePersistence()
 					.getMaxOfficeId().intValue() + 1);
 			if (officeGlobelNo.length() > 4) {
@@ -426,11 +428,11 @@ public class OfficeBO extends BusinessObject {
 			throws OfficeException {
 		changeOfficeName(newName);
 		changeOfficeShortName(newShortName);
-		
+
 		updateLevel(newLevel);
-		if(! this.getOfficeLevel().equals(OfficeLevel.HEADOFFICE))
+		if (!this.getOfficeLevel().equals(OfficeLevel.HEADOFFICE))
 			updateParent(newParent);
-		
+
 		changeStatus(newStatus);
 		updateAddress(address);
 		updateCustomFields(customFileds);
@@ -477,9 +479,11 @@ public class OfficeBO extends BusinessObject {
 				if (!this.getParentOffice().getOfficeId().equals(
 						newParent.getOfficeId())) {
 					OfficeBO oldParent = this.getParentOffice();
-					
-					if( this.getOfficeLevel().getValue().shortValue()<newParent.getOfficeLevel().getValue().shortValue())
-						throw new OfficeException(OfficeConstants.ERROR_INVLID_PARENT);
+
+					if (this.getOfficeLevel().getValue().shortValue() < newParent
+							.getOfficeLevel().getValue().shortValue())
+						throw new OfficeException(
+								OfficeConstants.ERROR_INVLID_PARENT);
 					OfficeBO oldParent1 = getIfChildPresent(newParent,
 							oldParent);
 					if (oldParent1 == null)
@@ -595,5 +599,21 @@ public class OfficeBO extends BusinessObject {
 
 		}
 		return null;
+	}
+
+	public boolean isParent(final OfficeBO child) {
+		boolean isParent = false;
+		if (getChildren() != null) {
+			for (OfficeBO children : getChildren()) {
+				if (children.equals(child)) {
+					return true;
+				} else {
+					isParent = children.isParent(child);
+					if (isParent)
+						return true;
+				}
+			}
+		}
+		return isParent;
 	}
 }

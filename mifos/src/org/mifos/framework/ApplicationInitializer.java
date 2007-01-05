@@ -75,7 +75,6 @@ public class ApplicationInitializer implements ServletContextListener {
 					EntityMasterData.getInstance().init();
 					initializeEntityMaster();
 					(new MifosScheduler()).registerTasks();
-					registerConverterWithBeanUtils();
 					
 					Configuration.getInstance();
 					configureAuditLogValues();
@@ -206,18 +205,6 @@ public class ApplicationInitializer implements ServletContextListener {
 		EntityMasterData.getInstance().init();
 	}
 	
-	/**
-	 * This method creates an instance of StringToMoney converter and registers
-	 * it with BeanUtils so that when struts uses this bean utils to populate
-	 * action form from request parameters it can use this converter.
-	 */
-	private void registerConverterWithBeanUtils() {
-		Converter stringToMoney = new StringToMoneyConverter();
-		BeanUtilsBean.getInstance().getConvertUtils().register(stringToMoney,
-				Money.class);
-
-	}
-
 	private void syncDatabaseVersion() throws SQLException, Exception {
 		DatabaseVersionPersistence persistance = new DatabaseVersionPersistence();
 		persistance.upgradeDatabase();

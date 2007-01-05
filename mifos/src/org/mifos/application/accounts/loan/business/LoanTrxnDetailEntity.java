@@ -46,11 +46,14 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountFeesEntity;
+import org.mifos.application.accounts.business.AccountFlagMapping;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.LoanPaymentData;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -165,8 +168,8 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 	}
 
 	@Override
-	protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment)
-			throws AccountException {
+	protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser,
+			String adjustmentComment) throws AccountException {
 		MifosLogManager
 				.getLogger(LoggerConstants.ACCOUNTSLOGGER)
 				.debug(
@@ -178,17 +181,17 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 			comment = adjustmentComment;
 
 		LoanTrxnDetailEntity reverseAccntTrxn;
+		Short actionId = getReverseTransctionActionType().getValue();
 		try {
 			reverseAccntTrxn = new LoanTrxnDetailEntity(getAccountPayment(),
 					(AccountActionEntity) new MasterPersistence()
 							.getPersistentObject(AccountActionEntity.class,
-									AccountConstants.ACTION_LOAN_ADJUSTMENT),
-					getInstallmentId(), getDueDate(), loggedInUser,
-					getActionDate(), getAmount().negate(), comment, this,
-					getPrincipalAmount().negate(),
-					getInterestAmount().negate(), getPenaltyAmount().negate(),
-					getMiscFeeAmount().negate(), getMiscPenaltyAmount()
-							.negate(), null);
+									actionId), getInstallmentId(),
+					getDueDate(), loggedInUser, getActionDate(), getAmount()
+							.negate(), comment, this, getPrincipalAmount()
+							.negate(), getInterestAmount().negate(),
+					getPenaltyAmount().negate(), getMiscFeeAmount().negate(),
+					getMiscPenaltyAmount().negate(), null);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -229,4 +232,32 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 		return null;
 	}
 
+	private boolean isAccountCancelled() {
+		if (getAccount().getAccountState().getId().equals(
+				AccountState.LOANACC_CANCEL.getValue())) {
+			Set<AccountFlagMapping> accountFlags = getAccount()
+					.getAccountFlags();
+			if (accountFlags != null && accountFlags.size() > 0) {
+				for (AccountFlagMapping accountFlagMapping : accountFlags) {
+					if (accountFlagMapping.getFlag().getId().equals(
+							AccountStateFlag.LOAN_REVERSAL.getValue())) {
+						return true;
+					}
+
+				}
+			}
+		}
+		return false;
+	}
+
+	private AccountActionTypes getReverseTransctionActionType() {
+		if (getAccountActionEntity().getId().equals(
+				AccountActionTypes.DISBURSAL.getValue())) {
+			return AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL;
+		} else if (isAccountCancelled()) {
+			return AccountActionTypes.LOAN_REVERSAL;
+		} else {
+			return AccountActionTypes.LOAN_ADJUSTMENT;
+		}
+	}
 }

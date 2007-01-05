@@ -965,7 +965,18 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/multipleloansaction-get", SecurityConstants.VIEW);
 		activityMap.put("/multipleloansaction-create", SecurityConstants.VIEW);
-
+		
+		activityMap.put("/reverseloandisbaction-search",
+				SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL);
+		activityMap.put("/reverseloandisbaction-load",
+				SecurityConstants.VIEW);
+		activityMap.put("/reverseloandisbaction-preview",
+				SecurityConstants.VIEW);
+		activityMap.put("/reverseloandisbaction-update",
+				SecurityConstants.VIEW);
+		activityMap.put("/reverseloandisbaction-cancel", SecurityConstants.VIEW);
+		activityMap.put("/reverseloandisbaction-validate", SecurityConstants.VIEW);
+		
 		// ADDED BY MFTECH
 		activityMap.put("/reportsAction-load", SecurityConstants.VIEW);
 

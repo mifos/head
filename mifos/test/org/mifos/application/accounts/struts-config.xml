@@ -26,6 +26,7 @@
 		<form-bean name="repayLoanActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.RepayLoanActionForm"></form-bean>
 		<form-bean name="accountStatusActionForm" type="org.mifos.application.accounts.loan.struts.actionforms.AccountStatusActionForm"></form-bean>
 		<form-bean name="multipleloansactionform" type="org.mifos.application.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm"></form-bean>
+		<form-bean name="reverseloandisbactionform" type="org.mifos.application.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm"></form-bean>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
@@ -172,6 +173,19 @@
 			<forward name="create_failure" path="/pages/application/loan/jsp/CreateMultipleLoanAccountsSearchResults.jsp" />
 			<forward name="cancel_success" path="/custSearchAction.do?method=loadMainSearch" />
 			<forward name="cancel_failure" path="/pages/application/loan/jsp/CreateMultipleLoanAccounts.jsp" />
+		</action>
+		<action path="/reverseloandisbaction" type="org.mifos.application.accounts.loan.struts.action.ReverseLoanDisbursalAction" name="reverseloandisbactionform" parameter="method" input="/reverseloandisbaction.do?method=validate"
+			validate="true" scope="session">
+			<forward name="search_success" path="/pages/application/loan/jsp/undoloandisbursalsearch.jsp" />
+			<forward name="search_failure" path="/AdminAction.do?method=load" />
+			<forward name="load_success" path="/pages/application/loan/jsp/undoloandisbursal.jsp" />
+			<forward name="load_failure" path="/pages/application/loan/jsp/undoloandisbursalsearch.jsp" />
+			<forward name="preview_success" path="/pages/application/loan/jsp/undoloandisbursalpreview.jsp" />
+			<forward name="preview_failure" path="/pages/application/loan/jsp/undoloandisbursal.jsp" />
+			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_failure" path="/pages/application/loan/jsp/undoloandisbursalpreview.jsp" />
+			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
 		</action>
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">

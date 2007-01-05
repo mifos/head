@@ -180,4 +180,16 @@ public class LoanPersistance extends Persistence {
 		Object[] obj1 = (Object[]) obj.get(0);
 		return (AccountBO) obj1[0];
 	}
+	
+	public Money getLastLoanAmountForCustomer(Integer customerId)
+			throws PersistenceException {
+		Map<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put("customerId", customerId);
+		Object obj = execUniqueResultNamedQuery(
+				NamedQueryConstants.LAST_LOAN_AMOUNT_CUSTOMER, queryParameters);
+		if (null != obj) {
+			return (Money) obj;
+		}
+		return null;
+	}
 }

@@ -398,4 +398,5 @@ public interface SecurityConstants {
     public final short CENTER_CAN_APPLY_CHARGES = 200;
     
     public final short CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS = 201;
+    public final short CAN_REVERSE_LOAN_DISBURSAL = 202;
 }

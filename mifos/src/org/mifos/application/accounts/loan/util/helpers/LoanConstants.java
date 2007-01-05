@@ -176,4 +176,9 @@ public interface LoanConstants {
 	public String LOAN_AMOUNT_FOR="Loan Amount for ";
 	public String APPL_RECORDS="applicableRecords";
 	
+	public final String REVERSE_LOAN_DIBURSAL_ACTION_FORM = "reverseloandisbactionform";
+	public static final String ERROR_LOAN_ACCOUNT_ID="errors.specifyloanaccountId";
+	public static final String NOTE="Note";
+	public static final String PAYMENTS_LIST="payments";
+	public static final String PAYMENTS_SIZE="paymentssize";
 }

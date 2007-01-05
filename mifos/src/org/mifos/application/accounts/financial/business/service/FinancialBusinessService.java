@@ -49,6 +49,7 @@ import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.financial.business.service.activity.BaseFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.CustomerAccountRepaymentFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.CustomerAdjustmentFinancialActivity;
+import org.mifos.application.accounts.financial.business.service.activity.DisbursalAmountReversalFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.FeeRepaymentFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.LoanAdjustmentFinancialActivity;
 import org.mifos.application.accounts.financial.business.service.activity.LoanDisbursementFinantialActivity;
@@ -109,11 +110,15 @@ public class FinancialBusinessService extends BusinessService {
 		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_CUSTOMER_ADJUSTMENT) {
 			baseFinancialActivity = new CustomerAdjustmentFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_LOAN_ADJUSTMENT) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_LOAN_ADJUSTMENT ||
+				accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_LOAN_REVERSAL) {
 			baseFinancialActivity = new LoanAdjustmentFinancialActivity(
 					accounttrxn);
 		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_WRITEOFF) {
 			baseFinancialActivity = new WriteOffFinancialActivity(
+					accounttrxn);
+		}else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_LOAN_DISBURSAL_AMOUNT_REVERSAL) {
+			baseFinancialActivity = new DisbursalAmountReversalFinancialActivity(
 					accounttrxn);
 		}
 		if (baseFinancialActivity != null)

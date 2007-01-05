@@ -112,6 +112,8 @@ public interface AccountConstants {
 	public static final short ACTION_WRITEOFF=15;
 	public static final short ACTION_WAIVEOFFDUE=16;
 	public static final short ACTION_WAIVEOFFOVERDUE=17;
+	public static final short ACTION_LOAN_REVERSAL=18;
+	public static final short ACTION_LOAN_DISBURSAL_AMOUNT_REVERSAL=19;
 	//exceptions
 	public static final String UNKNOWN_EXCEPTION="error.unnkownexception";
 	

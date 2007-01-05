@@ -44,7 +44,8 @@ public enum AccountActionTypes {
 			(short) 9), DISBURSAL((short) 10), SAVINGS_INTEREST_POSTING(
 			(short) 11), CUSTOMER_ACCOUNT_REPAYMENT((short) 12), CUSTOMER_ADJUSTMENT(
 			(short) 13), SAVINGS_ADJUSTMENT((short) 14), WRITEOFF((short) 15), WAIVEOFFDUE(
-			(short) 16), WAIVEOFFOVERDUE((short) 17);
+			(short) 16), WAIVEOFFOVERDUE((short) 17), LOAN_REVERSAL((short) 18), LOAN_DISBURSAL_AMOUNT_REVERSAL(
+			(short) 19);
 
 	Short value;
 

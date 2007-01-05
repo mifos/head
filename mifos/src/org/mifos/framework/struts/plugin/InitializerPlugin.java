@@ -42,6 +42,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.UnavailableException;
 
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.Converter;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ModuleConfig;
@@ -52,6 +54,8 @@ import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.StringToMoneyConverter;
 
 /**
  * This plugin is called when the system starts up. 
@@ -75,6 +79,7 @@ public class InitializerPlugin implements PlugIn {
 		try {
 			initializeConfiguration(servlet);
 			initializeFieldConfiguration(servlet);
+			registerConverterWithBeanUtils();
 			
 		} catch (Exception ane) {
 			ane.printStackTrace();
@@ -125,5 +130,17 @@ public class InitializerPlugin implements PlugIn {
 
 	private String getKey(String key) {
 		return "LABEL_" + key.toUpperCase();
+	}
+	
+	/**
+	 * This method creates an instance of StringToMoney converter and registers
+	 * it with BeanUtils so that when struts uses this bean utils to populate
+	 * action form from request parameters it can use this converter.
+	 */
+	private void registerConverterWithBeanUtils() {
+		Converter stringToMoney = new StringToMoneyConverter();
+		BeanUtilsBean.getInstance().getConvertUtils().register(stringToMoney,
+				Money.class);
+
 	}
 }

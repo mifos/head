@@ -154,7 +154,7 @@
 													<tr class="fontnormal">
 														<td align="right">
 															<span class="mandatorytext"></span>
-															<mifos:mifoslabel name="bulkEntry.loanofficer" mandatory="yes" isColonRequired="Yes" />
+															<mifos:mifoslabel name="loan.loanOfficer" mandatory="yes" isColonRequired="Yes" />
 														</td>
 														<td>
 															<mifos:select property="loanOfficerId" onchange="fnLoadCustomers(this.form)" style="width:136px;">
