@@ -41,8 +41,6 @@
 		<pathelement location="${build.classes}"/>
 	</path>
 
-	<taskdef  name="junit" classpathref="class.path" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
-
 	<!--<echo level="debug">CLASSPATH - ${java.class.path}</echo>-->
   
 	<target name="init">
@@ -222,7 +220,8 @@
 
 	</target>
 
-	<target name="run_test" depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
+	<target name="run_test" 
+		depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Run tests. Does not initiate clean build">
 		<junit printsummary="on" fork="true" maxmemory="350M" 
 			dir="${basedir}"

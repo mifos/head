@@ -94,7 +94,7 @@ Detailed Instructions
        Java 2 Standard Edition SDK 5.0 or later
        MySQL 4.1.16 or later
        JBoss 4.0.3SP1 or later, or tomcat or jetty
-       Apache Ant 1.6.5 or later
+       Apache Ant 1.7.0 or later
 
 If you are just deploying, Java, mySQL, and JBOSS are required. 
 
@@ -267,7 +267,14 @@ Now, time to try it out!  You should be able to go to:
 
 
 
+---------------
+Notes for installing in other ways
+---------------
 
+1.  For ant 1.6.x: copy lib/junit.jar from your MIFOS
+checkout to $ANT_HOME/lib (another solution is to list lib/junit.jar
+in a CLASSPATH environment variable).
+With ant 1.7 or later, this should not be necessary.
 
 ---------------
 Developer Notes
