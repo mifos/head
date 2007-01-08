@@ -52,15 +52,15 @@ import org.mifos.framework.business.BusinessObject;
  * find?).
  */
 public class COABO extends BusinessObject {
-	private final Short categoryId;
+	private Short categoryId;
 
-	private final String categoryName;
+	private String categoryName;
 
-	private final Set subCategory;
+	private Set subCategory;
 
-	private final GLCodeEntity associatedGlcode;
+	private GLCodeEntity associatedGlcode;
 
-	private final COAHierarchyEntity coaHierarchy;
+	private COAHierarchyEntity coaHierarchy;
 
 	protected COABO() {
 		super();
@@ -69,6 +69,11 @@ public class COABO extends BusinessObject {
 		subCategory = new HashSet();
 		associatedGlcode = null;
 		coaHierarchy = null;
+	}
+	
+	public COABO(int categoryId, String categoryName) {
+		this.categoryId = (short) categoryId;
+		this.categoryName = categoryName;
 	}
 
 	public Short getCategoryId() {
@@ -131,11 +136,25 @@ public class COABO extends BusinessObject {
 
 	@Override
 	public boolean equals(Object otherObject) {
+        if (otherObject == null) {
+			return false;
+		}
+
 		COABO other = (COABO) otherObject;
 		if (other.getCategoryId().shortValue() == this.categoryId
 				.shortValue())
 			return true;
 		return false;
 	}
+
+    @Override
+    public int hashCode() {
+        if (this.getCategoryId() == null) {
+            return super.hashCode();
+        }
+        else {
+            return(this.getCategoryId().hashCode());
+        }
+    }
 
 }

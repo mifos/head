@@ -65,7 +65,12 @@ public class TestUtils {
         }
     }
 
-    public static void assertIsEqual(Object one, Object two) {
+    /**
+     * The reason this method should only be called from 
+     * {@link #assertAllEqual(Object[])} is that the 
+     * latter checks for reflexive and null.
+     */
+    private static void assertIsEqual(Object one, Object two) {
     	Assert.assertTrue(one.equals(two));
     	Assert.assertTrue(two.equals(one));
     	Assert.assertEquals(one.hashCode(), two.hashCode());
