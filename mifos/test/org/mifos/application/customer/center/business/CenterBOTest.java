@@ -3,6 +3,7 @@ package org.mifos.application.customer.center.business;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomFieldView;
@@ -75,12 +76,10 @@ public class CenterBOTest extends MifosTestCase {
 	public void testSuccessfulUpdateForLogging() throws Exception {
 		createCustomers();
 		Date mfiJoiningDate = getDate("11/12/2005");
-		String city = "Bangalore";
-		String addressLine1 = "Aditi";
 		String externalId = "1234";
 		Address address = new Address();
-		address.setCity(city);
-		address.setLine1(addressLine1);
+		address.setCity("Bangalore");
+		address.setLine1("Aditi");
 		center.setUserContext(TestObjectFactory.getUserContext());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.update(TestObjectFactory.getUserContext(), personnel,
@@ -93,29 +92,36 @@ public class CenterBOTest extends MifosTestCase {
 
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
 				EntityType.CENTER.getValue(), center.getCustomerId());
-		assertEquals(EntityType.CENTER.getValue(), auditLogList.get(0)
-				.getEntityType());
-		for (AuditLogRecord auditLogRecord : auditLogList.get(0)
-				.getAuditLogRecords()) {
-			if (auditLogRecord.getFieldName().equalsIgnoreCase("Address1")) {
-				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("-"));
-				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("Aditi"));
-			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
+		assertEquals(1, auditLogList.size());
+		AuditLog auditLog = auditLogList.get(0);
+
+		assertEquals(EntityType.CENTER.getValue(), auditLog.getEntityType());
+		Set<AuditLogRecord> records = auditLog.getAuditLogRecords();
+		assertEquals(5, records.size());
+		for (AuditLogRecord auditLogRecord : records) {
+			String fieldName = auditLogRecord.getFieldName();
+			if (fieldName.equalsIgnoreCase("Address1")) {
+				assertEquals("-", auditLogRecord.getOldValue());
+				assertEquals("Aditi", auditLogRecord.getNewValue());
+			} else if (fieldName.equalsIgnoreCase(
 					"City/District")) {
-				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("-"));
-				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("Bangalore"));
-			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
+				assertEquals("-", auditLogRecord.getOldValue());
+				assertEquals("Bangalore", auditLogRecord.getNewValue());
+			} else if (fieldName.equalsIgnoreCase(
 					"Loan Officer Assigned")) {
-				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("mifos"));
-				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("loan officer"));
-			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
+				assertEquals("mifos", auditLogRecord.getOldValue());
+				assertEquals("loan officer", auditLogRecord.getNewValue());
+			} else if (fieldName.equalsIgnoreCase(
 					"MFI Joining Date")) {
-				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("-"));
-				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("11/12/2005"));
-			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
+				assertEquals("-", auditLogRecord.getOldValue());
+				assertEquals("11/12/2005", auditLogRecord.getNewValue());
+			} else if (fieldName.equalsIgnoreCase(
 					"External Id")) {
-				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("-"));
-				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("1234"));
+				assertEquals("-", auditLogRecord.getOldValue());
+				assertEquals("1234", auditLogRecord.getNewValue());
+			}
+			else {
+				fail("unrecognized field name " + fieldName);
 			}
 		}
 
@@ -123,7 +129,6 @@ public class CenterBOTest extends MifosTestCase {
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 		TestObjectFactory.cleanUpChangeLog();
-
 	}
 
 	public void testCreateWithoutName() throws Exception {
