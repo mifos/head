@@ -98,24 +98,24 @@ public class CenterBOTest extends MifosTestCase {
 		for (AuditLogRecord auditLogRecord : auditLogList.get(0)
 				.getAuditLogRecords()) {
 			if (auditLogRecord.getFieldName().equalsIgnoreCase("Address1")) {
-				auditLogRecord.getOldValue().equalsIgnoreCase("-");
-				auditLogRecord.getNewValue().equalsIgnoreCase("Aditi");
+				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("-"));
+				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("Aditi"));
 			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
 					"City/District")) {
-				auditLogRecord.getOldValue().equalsIgnoreCase("-");
-				auditLogRecord.getNewValue().equalsIgnoreCase("Bangalore");
+				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("-"));
+				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("Bangalore"));
 			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
 					"Loan Officer Assigned")) {
-				auditLogRecord.getOldValue().equalsIgnoreCase("mifos");
-				auditLogRecord.getNewValue().equalsIgnoreCase("loan officer");
+				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("mifos"));
+				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("loan officer"));
 			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
 					"MFI Joining Date")) {
-				auditLogRecord.getOldValue().equalsIgnoreCase("-");
-				auditLogRecord.getNewValue().equalsIgnoreCase("11/12/2005");
+				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("-"));
+				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("11/12/2005"));
 			} else if (auditLogRecord.getFieldName().equalsIgnoreCase(
 					"External Id")) {
-				auditLogRecord.getOldValue().equalsIgnoreCase("-");
-				auditLogRecord.getNewValue().equalsIgnoreCase("1234");
+				assertTrue(auditLogRecord.getOldValue().equalsIgnoreCase("-"));
+				assertTrue(auditLogRecord.getNewValue().equalsIgnoreCase("1234"));
 			}
 		}
 
