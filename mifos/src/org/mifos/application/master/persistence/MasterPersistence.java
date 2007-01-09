@@ -82,18 +82,17 @@ public class MasterPersistence extends Persistence {
 	}
 
 	private List<LookUpMaster> lookUpValue(String entityName, Short localeId,
-			String classPath, String column, Session session) {
-
-		String q = "select new org.mifos.application.master.business.LookUpMaster(mainTable.";
-		String q2 = " ,lookup.lookUpId,lookupvalue.lookUpValue) " +
-				"from org.mifos.application.master.business.LookUpValueEntity lookup," +
-				"org.mifos.application.master.business.LookUpValueLocaleEntity lookupvalue,";
-		String q3 = " mainTable where mainTable.lookUpId =lookup.lookUpId and lookup.lookUpEntity.entityType =?" +
-				" and lookup.lookUpId=lookupvalue.lookUpId and lookupvalue.localeId=?";
-
-		q = q + column + q2 + classPath + q3;
-
-		Query queryEntity = session.createQuery(q);
+			String entityClass, String column, Session session) {
+		Query queryEntity = session.createQuery(
+			"select new org.mifos.application.master.business.LookUpMaster(" +
+			"mainTable." + column + " ,lookup.lookUpId,lookupvalue.lookUpValue) " +
+			"from org.mifos.application.master.business.LookUpValueEntity lookup," +
+			"org.mifos.application.master.business.LookUpValueLocaleEntity lookupvalue," +
+			entityClass + " mainTable " +
+			"where mainTable.lookUpId = lookup.lookUpId" +
+			" and lookup.lookUpEntity.entityType = ?" +
+			" and lookup.lookUpId = lookupvalue.lookUpId" +
+			" and lookupvalue.localeId = ?");
 		queryEntity.setString(0, entityName);
 		queryEntity.setShort(1, localeId);
 		List<LookUpMaster> entityList = queryEntity.list();

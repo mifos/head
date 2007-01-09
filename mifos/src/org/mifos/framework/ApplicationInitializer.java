@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.commons.beanutils.Converter;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -38,9 +36,7 @@ import org.mifos.framework.security.util.PersonRoles;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.FilePaths;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
-import org.mifos.framework.util.helpers.StringToMoneyConverter;
 /**
  * This class should prepare all the sub-systems that are required by the app.
  * Cleanup should also happen here, when the application is shutdown. 

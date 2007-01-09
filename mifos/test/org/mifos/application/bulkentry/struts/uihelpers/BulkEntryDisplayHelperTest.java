@@ -19,6 +19,7 @@ import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.master.business.CustomerAttendance;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -106,7 +107,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		StringAssert.assertContains("<td", result);
 		StringAssert.assertContains("</td", result);
 	}
-
+	
 	public void testBuildForCenterForGetMethod() throws Exception {
 		BulkEntryBO bulkEntry = createBulkEntry();
 		StringBuilder builder = new StringBuilder();

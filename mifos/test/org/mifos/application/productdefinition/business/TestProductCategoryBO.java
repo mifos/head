@@ -61,11 +61,12 @@ public class TestProductCategoryBO extends MifosTestCase {
 	}
 	
 	private List<ProductCategoryBO> getProductCategory() {
-		return (List<ProductCategoryBO>) HibernateUtil
-				.getSessionTL()
-				.createQuery(
-						"from org.mifos.application.productdefinition.business.ProductCategoryBO pcb order by pcb.productCategoryID")
-				.list();
+		return HibernateUtil
+			.getSessionTL()
+			.createQuery(
+				"from org.mifos.application.productdefinition.business.ProductCategoryBO pcb " +
+				"order by pcb.productCategoryID")
+			.list();
 	}
 	
 	private void deleteProductCategory(ProductCategoryBO productCategoryBO) {

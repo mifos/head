@@ -38,6 +38,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
 	 */
 	private static final long serialVersionUID = 75674564734673651L;
 	
+	@Override
 	public String getMessage(Locale locale, String key) {
 		
 	
@@ -107,8 +108,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
 				}
 				
 			} catch (Exception e) {
-				//logger.error(e.getMessage());
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			} 
 		
 	}

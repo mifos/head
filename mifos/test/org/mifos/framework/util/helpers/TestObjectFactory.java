@@ -1916,11 +1916,12 @@ public class TestObjectFactory {
 
 	public static List<AuditLog> getChangeLog(Short entityType, Integer entityId) {
 		return HibernateUtil
-				.getSessionTL()
-				.createQuery(
-						"from org.mifos.framework.components.audit.business.AuditLog al where al.entityType="
-								+ entityType + " and al.entityId=" + entityId)
-				.list();
+			.getSessionTL()
+			.createQuery(
+				"from org.mifos.framework.components.audit.business.AuditLog al " +
+				"where al.entityType=" + entityType + 
+				" and al.entityId=" + entityId)
+			.list();
 	}
 
 	public static void cleanUp(AuditLog auditLog) {

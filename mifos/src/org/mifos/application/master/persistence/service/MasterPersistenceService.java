@@ -15,15 +15,11 @@ public class MasterPersistenceService extends PersistenceService {
 
 	private MasterPersistence serviceImpl = new MasterPersistence();
 
-	
-
 	public EntityMaster retrieveMasterData(String entityName, Short localeId,
 			String classPath, String column) throws SystemException,
 			ApplicationException {
-		EntityMaster entityMaster = null;
-		entityMaster = serviceImpl.getLookUpEntity(entityName, localeId,
+		return serviceImpl.getLookUpEntity(entityName, localeId,
 				classPath, column);
-		return entityMaster;
 	}
 
 	public MasterDataEntity findById(Class clazz, Short pk)

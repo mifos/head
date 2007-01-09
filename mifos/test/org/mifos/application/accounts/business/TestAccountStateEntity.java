@@ -14,10 +14,12 @@ public class TestAccountStateEntity extends MifosTestCase {
 	private AccountStateEntity accountStateEntity;
 	private Session session;
 
+	@Override
 	protected void setUp() throws Exception {
 		session = HibernateUtil.getSessionTL();
 	}
 	
+	@Override
 	protected void tearDown() throws Exception {
 		HibernateUtil.closeSession();
 		session=null;		
@@ -62,10 +64,11 @@ public class TestAccountStateEntity extends MifosTestCase {
 	}
 	
 	private AccountStateEntity getAccountStateEntityObject(Short id) {
-		Query query = session.createQuery("from org.mifos.application.accounts.business.AccountStateEntity ac_state where ac_state.id=?");
+		Query query = session.createQuery(
+			"from org.mifos.application.accounts.business.AccountStateEntity ac_state " +
+			"where ac_state.id = ?");
 		query.setString(0,id.toString());
-		AccountStateEntity accStateEntity = (AccountStateEntity) query.uniqueResult();
-		return accStateEntity;
+		return (AccountStateEntity) query.uniqueResult();
 	}
 
 }

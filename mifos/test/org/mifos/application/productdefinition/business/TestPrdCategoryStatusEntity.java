@@ -13,10 +13,12 @@ public class TestPrdCategoryStatusEntity extends MifosTestCase {
 	private PrdCategoryStatusEntity prdCategoryStatusEntity;
 	private Session session;
 
+	@Override
 	protected void setUp() throws Exception {
 		session = HibernateUtil.getSessionTL();
 	}
 	
+	@Override
 	protected void tearDown() throws Exception {
 		HibernateUtil.closeSession();
 		session=null;		
@@ -49,7 +51,9 @@ public class TestPrdCategoryStatusEntity extends MifosTestCase {
 	}
 	
 	private PrdCategoryStatusEntity getPrdCategoryStatus(Short id) {
-		Query query = session.createQuery("from org.mifos.application.productdefinition.business.PrdCategoryStatusEntity prdCatStatus where prdCatStatus.id=?");
+		Query query = session.createQuery(
+			"from org.mifos.application.productdefinition.business.PrdCategoryStatusEntity prdCatStatus " +
+			"where prdCatStatus.id = ?");
 		query.setString(0,id.toString());
 		PrdCategoryStatusEntity prdCategoryStatusEntity = (PrdCategoryStatusEntity) query.uniqueResult();
 		return prdCategoryStatusEntity;
