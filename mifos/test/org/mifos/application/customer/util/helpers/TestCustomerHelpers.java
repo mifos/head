@@ -1,6 +1,5 @@
 package org.mifos.application.customer.util.helpers;
 
-import java.sql.Date;
 import java.util.Locale;
 
 import org.mifos.application.customer.business.CustomerBO;
@@ -128,12 +127,13 @@ public class TestCustomerHelpers extends MifosTestCase {
 		assertFalse(loanCycleCounter.equals(loanCycleCounter2));
 	}
 
-	public void testCustomerRecentActivityView() {
+	public void testCustomerRecentActivityView() throws Exception {
+		java.sql.Date sampleDate = new java.sql.Date(System.currentTimeMillis());
 		CustomerRecentActivityView customerRecentActivityView = new CustomerRecentActivityView(
-				new Date(System.currentTimeMillis()), "description", "1000",
+				sampleDate, "description", "1000",
 				"mifos");
 		customerRecentActivityView.setLocale(new Locale("1"));
-		assertEquals("date", new Date(System.currentTimeMillis()),
+		assertEquals("date", sampleDate,
 				customerRecentActivityView.getActivityDate());
 		assertEquals("description",customerRecentActivityView.getDescription());
 		assertEquals("1000",customerRecentActivityView.getAmount());
