@@ -31,7 +31,7 @@
 								<c:choose>								
 								<c:when test="${not empty OfficesList}">
 								<html-el:option value="0">
-									<mifos:mifoslabel name="CustomerSearch.all"/><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/><mifos:mifoslabel name="CustomerSearch.s"/>
+									<mifos:mifoslabel name="CustomerSearch.all"/> <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/><mifos:mifoslabel name="CustomerSearch.s"/>
 								</html-el:option>																								
 								<html-el:options collection="OfficesList" property="officeId" labelProperty="officeName"/>
 								</c:when>
@@ -44,7 +44,7 @@
 								</c:when>
 								<c:when test='${sessionScope.UserContext.branchId == 1 && custSearchActionForm.officeId == null}'>
 								<html-el:option value="0">
-									<mifos:mifoslabel name="CustomerSearch.all"/><mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/><mifos:mifoslabel name="CustomerSearch.s"/>
+									<mifos:mifoslabel name="CustomerSearch.all"/> <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}"/><mifos:mifoslabel name="CustomerSearch.s"/>
 								</html-el:option>	
 								<html-el:option value="${sessionScope.UserContext.branchId}">
 									<c:out value='${Office}' />
