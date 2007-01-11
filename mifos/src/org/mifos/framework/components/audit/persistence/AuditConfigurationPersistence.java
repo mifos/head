@@ -23,69 +23,63 @@ public class AuditConfigurationPersistence extends Persistence {
 			throws PersistenceException {
 		Map<String, String> valueMap = new HashMap<String, String>();
 		try {
-			List<CustomFieldDefinitionEntity> customFields = (List<CustomFieldDefinitionEntity>) executeNamedQuery(
+			List<CustomFieldDefinitionEntity> customFields = executeNamedQuery(
 					NamedQueryConstants.RETRIEVE_ALL_CUSTOM_FIELDS, null);
-			for (Iterator<CustomFieldDefinitionEntity> iter = customFields
-					.iterator(); iter.hasNext();) {
-				CustomFieldDefinitionEntity customFieldDefinitionEntity = iter
-						.next();
-				LookUpEntity lookUpEntity = customFieldDefinitionEntity
+			for (CustomFieldDefinitionEntity field : customFields) {
+				LookUpEntity lookUpEntity = field
 						.getLookUpEntity();
 				Set<LookUpLabelEntity> lookUpLabelSet = lookUpEntity
 						.getLookUpLabelSet();
-				for (Iterator<LookUpLabelEntity> iterator = lookUpLabelSet.iterator(); iterator
-						.hasNext();) {
-					LookUpLabelEntity lookUpLabel = iterator.next();
+				for (LookUpLabelEntity lookUpLabel : lookUpLabelSet) {
 					if (lookUpLabel.getLocaleId().equals(localeId)) {
-						valueMap.put(customFieldDefinitionEntity.getFieldId()
+						valueMap.put(field.getFieldId()
 								.toString(), lookUpLabel.getLabelName());
 					}
 				}
 			}
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
 		}
 		return valueMap;
-
 	}
 	
-	public Map<String, String>  retrieveProductStatus(Short localeId) throws PersistenceException{
+	public Map<String, String> retrieveProductStatus(Short localeId) 
+	throws PersistenceException{
 		Map<String, String> valueMap = new HashMap<String, String>();
 		try {
-			List<PrdStatusEntity> productStates = (List<PrdStatusEntity>) executeNamedQuery(
+			List<PrdStatusEntity> productStates = executeNamedQuery(
 					NamedQueryConstants.ALL_PRD_STATES, null);
-			for (Iterator<PrdStatusEntity> iter = productStates
-					.iterator(); iter.hasNext();) {
-				PrdStatusEntity prdStatusEntity = iter
-						.next();
-				Set<LookUpValueLocaleEntity> lookUpValueLocaleSet= prdStatusEntity.getPrdState().getLookUpValue().getLookUpValueLocales();
-				for (Iterator<LookUpValueLocaleEntity> iterator = lookUpValueLocaleSet.iterator(); iterator
-						.hasNext();) {
-					LookUpValueLocaleEntity lookUpValueLocaleEntity = iterator.next();
-					if (lookUpValueLocaleEntity.getLocaleId().equals(localeId)) {
-						valueMap.put(prdStatusEntity.getOfferingStatusId().toString(), lookUpValueLocaleEntity.getLookUpValue());
+			for (PrdStatusEntity prdStatusEntity : productStates) {
+				Set<LookUpValueLocaleEntity> lookUpValueLocaleSet = 
+					prdStatusEntity.getPrdState()
+					    .getLookUpValue().getLookUpValueLocales();
+				for (LookUpValueLocaleEntity lookup : lookUpValueLocaleSet) {
+					if (lookup.getLocaleId().equals(localeId)) {
+						valueMap.put(
+							prdStatusEntity.getOfferingStatusId().toString(), 
+							lookup.getLookUpValue());
 					}
 				}
 			}
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
 		}
 		return valueMap;
 	}
 	
-	public Map<String, String>  retrieveRecurrenceTypes(Short localeId) throws PersistenceException{
+	public Map<String, String> retrieveRecurrenceTypes(Short localeId) 
+	throws PersistenceException {
 		Map<String, String> valueMap = new HashMap<String, String>();
 		try {
-			List<RecurrenceTypeEntity> recurrenceTypes = (List<RecurrenceTypeEntity>) executeNamedQuery(
+			List<RecurrenceTypeEntity> recurrenceTypes = executeNamedQuery(
 					NamedQueryConstants.FETCH_ALL_RECURRENCE_TYPES, null);
-			for (Iterator<RecurrenceTypeEntity> iter = recurrenceTypes
-					.iterator(); iter.hasNext();) {
-				RecurrenceTypeEntity recurrenceTypeEntity = iter
-						.next();
-				valueMap.put(recurrenceTypeEntity.getRecurrenceId().toString(), recurrenceTypeEntity.getRecurrenceName());
+			for (RecurrenceTypeEntity recurrence : recurrenceTypes) {
+				valueMap.put(
+					recurrence.getRecurrenceId().toString(), 
+					recurrence.getRecurrenceName());
 			}
-		} catch (HibernateException he) {
-			throw new PersistenceException(he);
+		} catch (HibernateException e) {
+			throw new PersistenceException(e);
 		}
 		return valueMap;
 	}
