@@ -140,6 +140,16 @@
 								action="chkListAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.defnewchecklist" /></html-el:link></td>
 						</tr>
+						<tr class="fontnormal">
+							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
+								height="11"></td>
+							<td><html-el:link
+								action="holidayAction.do?method=get">
+								<mifos:mifoslabel name="admin.viewholidays" /></html-el:link>
+							| <html-el:link
+								action="holidayAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
+								<mifos:mifoslabel name="admin.defnewholiday" /></html-el:link></td>
+						</tr>
 
 					</table>
 					<br>
