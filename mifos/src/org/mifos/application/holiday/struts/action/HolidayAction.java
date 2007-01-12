@@ -205,14 +205,16 @@ public class HolidayAction extends BaseAction {
 		
 		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
 		
-		HolidayPK holidayPK = new HolidayPK(Short.parseShort(holidayActionForm.getRepaymentRuleId()),
-											holidayActionForm.getFromDate());
+		HolidayPK holidayPK = new HolidayPK(holidayActionForm.getFromDate());
 		
 		HolidayBO accountHoliday = new HolidayBO(holidayPK, 
-				holidayActionForm.getThruDate(), holidayActionForm.getHolidayName(), 
-				getUserContext(request).getLocaleId(), "");
+				holidayActionForm.getThruDate(), 
+				holidayActionForm.getHolidayName(), 
+				getUserContext(request).getLocaleId(), 
+				Short.parseShort(holidayActionForm.getRepaymentRuleId()), "");
 
-		accountHoliday.update(holidayPK, holidayActionForm.getThruDate(), 
+		accountHoliday.update(holidayPK, 
+							  holidayActionForm.getThruDate(), 
 							  holidayActionForm.getHolidayName(), 
 							  getUserContext(request).getLocaleId());
 		if (null != request.getParameter(Constants.CURRENTFLOWKEY))

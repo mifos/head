@@ -104,16 +104,16 @@ public class HolidayActionForm extends BaseActionForm {
 							HolidayConstants.HOLIDAYFROMDATE, userContext)));
 		}
 		
-		/*
 		if (holidayThruDateString != null && !holidayThruDateString.equals("")) {			
 			thruDate = DateHelper.getLocaleDate(userLocale,
 					getHolidayThruDate());
 		} else {
+			/*
 			actionErrors.add(HolidayConstants.HOLIDAY_THRU_DATE, new ActionMessage(
 					HolidayConstants.ERRORMANDATORYFIELD, getLocaleString(
 							HolidayConstants.HOLIDAYTHRUDATE, userContext)));
+			*/
 		}
-		*/
 		
 		if(repaymentRuleId == null || repaymentRuleId.equals("")) {
 			actionErrors.add(HolidayConstants.REPAYMENT_RULE, new ActionMessage(
@@ -173,7 +173,7 @@ public class HolidayActionForm extends BaseActionForm {
 
 	public void populate(HolidayBO holidayBO) throws HolidayException {
 
-		this.repaymentRuleId = holidayBO.getHolidayPK().getRepaymentRuleId().toString();
+		this.repaymentRuleId = holidayBO.getRepaymentRuleId().toString();
 		this.holidayName = holidayBO.getHolidayName();
 		this.fromDate = holidayBO.getHolidayFromDate();
 		this.thruDate = holidayBO.getHolidayThruDate();

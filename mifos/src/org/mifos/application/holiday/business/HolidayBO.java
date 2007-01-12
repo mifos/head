@@ -17,6 +17,7 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 
 	private String holidayName;
 
+	private Short repaymentRuleId;
 	private String repaymentRule; // view property
 	
 	private SupportedLocalesEntity supportedLocales;
@@ -27,32 +28,29 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 
 	// was protected
 	public HolidayBO(HolidayPK holidayPK, Date holidayThruDate, String holidayName, 
-			            Short localeId, String repaymentRule)//, Short userId)
+			            Short localeId, Short repaymentRuleId, String repaymentRule)
 			throws HolidayException {
 		
-		//setCreateDetails(userId, new Date());
 		this.holidayPK = new HolidayPK();
 
 		if (holidayPK != null) {
-			System.out.println("holidayPK.getHolidayFromDate() = "+holidayPK.getHolidayFromDate());
 			this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
-			this.holidayPK.setRepaymentRuleId(holidayPK.getRepaymentRuleId());			
 		} else {
 			throw new HolidayException(
 					HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
 		}
 		this.holidayThruDate = holidayThruDate;
 		this.holidayName = holidayName;
+		this.repaymentRuleId = repaymentRuleId;
 		this.repaymentRule = repaymentRule;
-		//this.supportedLocales = new SupportedLocalesEntity(localeId);
 	}
 
 	public HolidayPK getHolidayPK() {
 		return this.holidayPK;
 	}
 
-	public Short getOfficeId() {
-		return this.holidayPK.getRepaymentRuleId();
+	public Short getRepaymentRuleId() {
+		return this.repaymentRuleId;
 	}
 
 	public Date getHolidayFromDate() {
@@ -71,8 +69,8 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 		this.holidayPK = holidayPK;
 	}
 
-	private void setOfficeId(Short repaymentRuleId) {
-		this.holidayPK.setRepaymentRuleId(repaymentRuleId);
+	private void setRepaymentRuleId(Short repaymentRuleId) {
+		this.repaymentRuleId = repaymentRuleId;
 	}
 
 	private void setHolidayFromDate(Date holidayFromDate) {
@@ -105,11 +103,10 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 
 	//protected 
 	public void update(HolidayPK holidayPK, Date holidayThruDate, 
-						  String holidayName, Short localeId)//, Short userId)
+						  String holidayName, Short localeId)
 			throws HolidayException {
 
 		this.holidayName = holidayName;
-		this.holidayPK.setRepaymentRuleId(holidayPK.getRepaymentRuleId());
 		this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
 		this.supportedLocales = new SupportedLocalesEntity(localeId);
 		

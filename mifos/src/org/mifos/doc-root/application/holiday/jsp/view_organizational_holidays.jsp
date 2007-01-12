@@ -121,7 +121,7 @@
               <c:forEach var="holidayItem" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey, holidayList)}" >
 	              <tr>
 	                <td width="11%" class="drawtablerow">${holidayItem.holidayPK.holidayFromDate}</td>
-	                <td width="11%" class="drawtablerow">${holidayItem.holidayThruDate}</td>
+	                <td width="11%" class="drawtablerow">${holidayItem.holidayThruDate}&nbsp;</td>
 	                <td width="28%" class="drawtablerow">${holidayItem.holidayName}</td>
 	                <td width="50%" class="drawtablerow">${holidayItem.repaymentRule}</td>
 	              </tr>

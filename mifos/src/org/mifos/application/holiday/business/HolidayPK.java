@@ -5,14 +5,11 @@ import java.util.Date;
 
 public class HolidayPK implements Serializable {
 
-	private Short repaymentRuleId;
-	
 	private Date holidayFromDate;
 	
 	public HolidayPK() {}
 	
-	public HolidayPK(Short repaymentRuleId, Date holidayFromDate) {
-		this.repaymentRuleId = repaymentRuleId;
+	public HolidayPK(Date holidayFromDate) {
 		this.holidayFromDate = holidayFromDate;
 	}
 	
@@ -20,7 +17,7 @@ public class HolidayPK implements Serializable {
 	public boolean equals(Object o) {
 		if (o != null && o instanceof HolidayPK) {
 			HolidayPK that = (HolidayPK)o;
-			return this.repaymentRuleId.equals(that.repaymentRuleId) && this.holidayFromDate.equals(that.holidayFromDate);
+			return this.holidayFromDate.equals(that.holidayFromDate);
 		} else { 
 			return false;
 		  }
@@ -28,20 +25,11 @@ public class HolidayPK implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return repaymentRuleId.hashCode() + holidayFromDate.hashCode();
-	}
-
-
-	public Short getRepaymentRuleId() {
-		return this.repaymentRuleId;
+		return holidayFromDate.hashCode();
 	}
 
 	public Date getHolidayFromDate() {
 		return this.holidayFromDate;
-	}
-
-	public void setRepaymentRuleId(Short repaymentRuleId) {
-		this.repaymentRuleId = repaymentRuleId;
 	}
 
 	public void setHolidayFromDate(Date holidayFromDate) {
