@@ -607,4 +607,8 @@ public interface NamedQueryConstants {
 	public String ACTIVE_CLIENTS_UNDER_PARENT="Customer.getActiveClientsUnderParent";
 	public String LAST_LOAN_AMOUNT_CUSTOMER="account.lastLoanAmountForCustomer";
 	
+//  holiday handling
+	public String GET_HOLIDAYS = "holiday.getHolidays";
+	public String GET_REPAYMENT_RULE_TYPES = "holiday.getRepaymentRuleLabels";
+
 }
