@@ -41,6 +41,7 @@ import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.application.customer.struts.actionforms.CustomerActionFormTest;
 import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
+import org.mifos.application.ui.DispatcherTest;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.logger.TestLogger;
@@ -92,6 +93,7 @@ public class FastTests extends TestSuite {
 //		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTestSuite(ConvertionUtilTest.class);
 		suite.addTestSuite(TableTagParserTest.class);
+		suite.addTestSuite(DispatcherTest.class);
 		
 		suite.addTestSuite(DatabaseVersionFilterTest.class);
 		

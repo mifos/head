@@ -39,8 +39,13 @@ public class TestUtils {
 
 	public static void assertWellFormedFragment(String xml) 
 	throws DocumentException {
+		assertWellFormedDocument("<root>" + xml + "</root>");
+	}
+
+	public static void assertWellFormedDocument(String xmlDocument) 
+	throws DocumentException {
 		SAXReader reader = new SAXReader();
-	    reader.read(new StringReader("<root>" + xml + "</root>"));
+		reader.read(new StringReader(xmlDocument));
 	}
 
     /**

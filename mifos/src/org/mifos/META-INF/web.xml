@@ -26,6 +26,7 @@
 	<filter-mapping>
 		<filter-name>loginfilter</filter-name>
 		<url-pattern>*.do</url-pattern>
+	    <url-pattern>/developer/*</url-pattern>
 	</filter-mapping>
 	<session-config>
 		<session-timeout>30</session-timeout>
@@ -50,6 +51,16 @@
 	<servlet-mapping>
 		<servlet-name>Controller</servlet-name>
 		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	
+	<!-- pages/actions which don't go through struts -->
+	<servlet>
+	    <servlet-name>Dispatcher</servlet-name>
+	    <servlet-class>org.mifos.application.ui.Dispatcher</servlet-class>
+	</servlet>
+	<servlet-mapping>
+	    <servlet-name>Dispatcher</servlet-name>
+	    <url-pattern>/developer/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Axis -->
