@@ -22,7 +22,8 @@ public enum BusinessServiceName {
 	RolesPermissions("org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService"),
 	Admin("org.mifos.application.admin.business.service.AdminBusinessService"),
 	fund("org.mifos.application.fund.business.service.FundBusinessService"),
-	AuditLog("org.mifos.framework.components.audit.business.service.AuditBusinessService");
+	AuditLog("org.mifos.framework.components.audit.business.service.AuditBusinessService"),
+	holiday("org.mifos.application.holiday.business.service.HolidayBusinessService");
 
 	String name;
 
