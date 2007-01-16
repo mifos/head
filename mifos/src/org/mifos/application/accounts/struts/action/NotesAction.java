@@ -34,8 +34,10 @@ public class NotesAction extends SearchAction {
 
 	@Override
 	protected BusinessService getService() {
-		return (AccountBusinessService) ServiceFactory.getInstance()
+		AccountBusinessService businessService = 
+			(AccountBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Accounts);
+		return businessService;
 	}
 
 	@Override

@@ -75,11 +75,12 @@ import org.mifos.framework.util.helpers.PersistenceServiceName;
  * This class encapsulates all the business logic related to report module 
  */
 
-public class ReportsBusinessService extends BusinessService{
+public class ReportsBusinessService extends BusinessService {
 	
 	private ReportsPersistenceService reportsPersistenceService;
 	
 	
+	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return new ReportsBO(userContext);
 	}
@@ -93,8 +94,6 @@ public class ReportsBusinessService extends BusinessService{
 	/**
 	 * Lists all the Report Categories. 
 	 * The list also contains the set of Reports within a particular category
-	 * @return List
-	 * @throws ServiceException
 	 */
 	public List<ReportsCategoryBO> getAllReportCategories() throws ServiceException{
 			return getPersistenceService().getAllReportCategories();
@@ -102,10 +101,8 @@ public class ReportsBusinessService extends BusinessService{
 	
 	/**
 	 * List all Report Parameters
-	 * @return
-	 * @throws ServiceException
 	 */
-	public List<ReportsParams> getAllReportParams() throws ServiceException{
+	public List<ReportsParams> getAllReportParams() throws ServiceException {
 		return getPersistenceService().getAllReportParams();
 	}
 	
@@ -113,10 +110,9 @@ public class ReportsBusinessService extends BusinessService{
 	
 	/**
 	 * Create Report Parameter
-	 * @param objParams
-	 * @throws ServiceException
 	 */
-	public String createReportsParams(ReportsParamsValue objParams)throws ServiceException{
+	public String createReportsParams(ReportsParamsValue objParams)
+	throws ServiceException {
 		String error = "";
 		boolean isInUse = false;
 		List<ReportsParams> reportsParams = getAllReportParams();
@@ -141,12 +137,12 @@ public class ReportsBusinessService extends BusinessService{
 			getPersistenceService().createReportParams(objParams);
 		return error;
 	}
+
 	/**
 	 * Delete Report Parameter
-	 * @param objParams
-	 * @throws ServiceException
 	 */
-	public String deleteReportsParams(ReportsParamsValue objParams)throws ServiceException,PersistenceException{
+	public String deleteReportsParams(ReportsParamsValue objParams)
+	throws ServiceException,PersistenceException{
 		String error="";
 		List<ReportsParamsMap> reportParamsMap = findInUseParameter(objParams.getParameterId());
 		if(reportParamsMap!=null && reportParamsMap.size()==0)

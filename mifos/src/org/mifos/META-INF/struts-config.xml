@@ -105,7 +105,7 @@
 		<form-bean name="multipleloansactionform" type="org.mifos.application.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm"></form-bean>
 		<form-bean name="reverseloandisbactionform" type="org.mifos.application.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm"></form-bean>
 
-		<!-- ADDED BY MFTECH -->
+		<!-- Reports -->
 		<form-bean name="reportsParamsActionForm"
 				type="org.mifos.application.reports.struts.actionforms.ReportsParamsActionForm" />
 
@@ -118,8 +118,7 @@
 				type="org.mifos.application.reports.struts.actionforms.ReportsParamsMapActionForm" />
 		<form-bean name="reportsUploadActionForm"
 				type="org.mifos.application.reports.struts.actionforms.ReportsUploadActionForm" />
-
-<!-- ENDED BY MFTECH -->
+		<!-- End reports -->
 
 	</form-beans>
 
@@ -623,14 +622,10 @@
 			<forward name="branchwise_report" path="/reportsAction.do?method=load" />
 			<forward name="analysis" path="/reportsAction.do?method=load" />
 			<forward name="kendra_meeting" path="/reportsAction.do?method=load" />
-			<!-- ADDED BY MFTECH -->
 			<forward name="administerreports_path" path="/pages/application/reports/jsp/report_designer.jsp" />
 			<forward name="administerreportslist_path" path="/reportsAction.do?method=getAdminReportPage" />
-			<!-- ENDED BY MFTECH -->
 		</action>
 		<!--  Reports Action End -->
-		<!-- ADDED BY MFTECH -->
-
 
 		<!--  Reports Params Action -->
 		<action path="/reportsParamsAction"
@@ -700,8 +695,6 @@
 <forward name="reportsuserprocess_path" path="/pages/application/reports/jsp/reportsView.jsp" />
 		</action>
 		<!--  Reports UserParams Action End -->
-
-<!-- ENDED BY MFTECH -->
 
 		<!-- LoanActivity Action -->
 		<action path="/loanActivityAction" type="org.mifos.application.accounts.loan.struts.action.LoanActivityAction" name="loanActivityActionForm" parameter="method" validate="true" input="/loanActivityAction.do?method=validate" scope="session">

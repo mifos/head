@@ -109,8 +109,62 @@ public class ActivityMapper {
 	private final short CENTER_CHANGE_STATUS = 81;
 
 	private ActivityMapper() {
+		addSearchActionMappings();
+		addCustomerSearchMappings();
+		addLoginMappings();
+		addOfficeMappings();
+		addManageRolesPermissionsMappings();
+		addCustomerHistoricalDataMappings();
+		addPersonnelMappings();
+		addCenterMappings();
+		addClientAndGroupTransferMappings();
+		addMeetingActionMappings();
+		addProductCategoryMappings();
+		addSavingProductMappings();
+		addViewLatenessMappings();
+		addLoanProductCategoryMappings();
+		addFeeMappings();
+		addChecklistMappings();
+		addSearchBeforeLoanMappings();
+		addLoanMappings();
+		addLoanActivityMappings();
+		addLoanStatusActionMappings();
+		addAccountStatusMappings();
+		addCustomerActionMappings();
+		addApplyPaymentMappings();
+		addApplyChargesMappings2();
+		addFundMappings();
+		addBulkEntryMappings();
+		addRemoveFeeMappings();
+		addSavingsAccountMappings();
+		addCloseSavingsAccountMappings();
+		addSavingsAccountAdjustmentMappings();
+		addApplyAdjustmentMappings();
+		addApplyCustomerAdjustmentMappings();
+		addRepayLoanAccountMappings();
+		addWaiveChargesMappings();
+		addPaymentMappings();
+		addLoanDisbursalMappings();
+		addSavingsDepositMappings();
+		addEditCustomerStatusMappings();
+		addApplyChargesMappings();
+		addClientCustomerMappings();
+		addChangeAccountStatusMappings();
+		addGroupMappings();
+		addYourSettingsMappings();
+		addCustomerAccountActionMappings();
+		addRolesPermissionsMappings();
+		addPersonnelNotesMappings();
+		addCustomerNotesMappings();
+		addNotesMappings();
+		addReportsMappings();
+	}
 
-		// m2 search action
+	private void addCustomerAccountActionMappings() {
+		activityMap.put("/customerAccountAction-load", SecurityConstants.VIEW);
+	}
+
+	private void addSearchActionMappings() {
 		activityMap.put("/custSearchAction-loadSearch", SecurityConstants.VIEW);
 		activityMap.put("/custSearchAction-search", SecurityConstants.VIEW);
 		activityMap.put("/custSearchAction-load", SecurityConstants.VIEW);
@@ -126,8 +180,9 @@ public class ActivityMapper {
 		activityMap.put("/custSearchAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/custSearchAction-getOfficeHomePage",
 				SecurityConstants.VIEW);
+	}
 
-		// customer search action
+	private void addCustomerSearchMappings() {
 		activityMap.put("/CustomerSearchAction-load", SecurityConstants.VIEW);
 		activityMap.put("/CustomerSearchAction-search",
 				SecurityConstants.SEARCH);
@@ -140,12 +195,15 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/CustomerSearchAction-loadAllBranches",
 				SecurityConstants.VIEW);
+	}
 
+	private void addLoginMappings() {
 		activityMap.put("/loginAction-login", SecurityConstants.VIEW);
 		activityMap.put("/loginAction-logout", SecurityConstants.VIEW);
 		activityMap.put("/loginAction-updatePassword", SecurityConstants.VIEW);
+	}
 
-		// Office related mapping
+	private void addOfficeMappings() {
 		activityMap.put("/OfficeAction-loadall", SecurityConstants.VIEW);
 		activityMap.put("/OfficeAction-load",
 				SecurityConstants.OFFICE_CREATE_OFFICE);
@@ -192,7 +250,9 @@ public class ActivityMapper {
 				SecurityConstants.OFFICE_EDIT_OFFICE);
 		activityMap.put("/offAction-getAllOffices", SecurityConstants.VIEW);
 		activityMap.put("/offAction-updateCache", SecurityConstants.VIEW);
-		// roles and permission related mappings
+	}
+
+	private void addManageRolesPermissionsMappings() {
 		activityMap.put("/manageRolesAndPermission-manage",
 				SecurityConstants.VIEW);
 		activityMap
@@ -209,8 +269,9 @@ public class ActivityMapper {
 				SecurityConstants.ROLES_DELETE_ROLES);
 		activityMap.put("/manageRolesAndPermission-delete",
 				SecurityConstants.ROLES_DELETE_ROLES);
+	}
 
-		// Customer Historical Data related mapping
+	private void addCustomerHistoricalDataMappings() {
 		activityMap.put("/custHistoricalDataAction-loadHistoricalData",
 				SecurityConstants.VIEW);
 		activityMap.put("/custHistoricalDataAction-getHistoricalData",
@@ -223,9 +284,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/custHistoricalDataAction-cancelHistoricalData",
 				SecurityConstants.VIEW);
+	}
 
-
-		// m2 personnel related mappings
+	private void addPersonnelMappings() {
 		activityMap.put("/PersonAction-get", SecurityConstants.VIEW);
 		activityMap.put("/PersonAction-loadSearch", SecurityConstants.VIEW);
 		activityMap.put("/PersonAction-search", SecurityConstants.VIEW);
@@ -257,8 +318,9 @@ public class ActivityMapper {
 		activityMap.put("/PersonAction-loadChangeLog", SecurityConstants.VIEW);
 		activityMap
 				.put("/PersonAction-cancelChangeLog", SecurityConstants.VIEW);
+	}
 
-		// For M2 Center ------------------------
+	private void addCenterMappings() {
 		activityMap.put("/centerCustAction-chooseOffice",
 				SecurityConstants.CENTER_CREATE_NEW_CENTER);
 		activityMap.put("/centerCustAction-load",
@@ -292,8 +354,9 @@ public class ActivityMapper {
 
 		activityMap.put("/centerCustAction-loadTransferSearch", SecurityConstants.VIEW);
 		activityMap.put("/centerCustAction-searchTransfer", SecurityConstants.VIEW);
-		// For M2 Center ends
+	}
 
+	private void addClientAndGroupTransferMappings() {
 		activityMap.put("/clientTransferAction-loadParents",
 				SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
 		activityMap.put("/clientTransferAction-loadBranches",
@@ -319,15 +382,18 @@ public class ActivityMapper {
 				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
 		activityMap.put("/groupTransferAction-transferToBranch",
 				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+	}
 
+	private void addMeetingActionMappings() {
 		activityMap.put("/meetingAction-load", SecurityConstants.VIEW);
 		activityMap.put("/meetingAction-create", SecurityConstants.VIEW);
 		activityMap.put("/meetingAction-update", SecurityConstants.VIEW);
 		activityMap.put("/meetingAction-edit",SecurityConstants.VIEW);
 		activityMap.put("/meetingAction-cancelCreate", SecurityConstants.VIEW);
 		activityMap.put("/meetingAction-cancelUpdate", SecurityConstants.VIEW);
-		// product categories mapping
+	}
 
+	private void addProductCategoryMappings() {
 		activityMap.put("/productCategoryAction-load",
 				SecurityConstants.DEFINE_NEW_PRODUCT_CATEGORIES);
 		activityMap.put("/productCategoryAction-createPreview",
@@ -347,8 +413,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/productCategoryAction-managePrevious",
 				SecurityConstants.VIEW);
+	}
 
-		// saving product mappeings
+	private void addSavingProductMappings() {
 		activityMap.put("/savingsprdaction-search", SecurityConstants.VIEW);
 		activityMap.put("/savingsprdaction-load",
 				SecurityConstants.DEFINE_NEW_SAVING_PRODUCT_INSTANCE);
@@ -388,8 +455,9 @@ public class ActivityMapper {
 				SecurityConstants.EDIT_SAVING_PRODUCT);
 		activityMap.put("/savingsproductaction-cancelEdit",
 				SecurityConstants.VIEW);
+	}
 
-		// view lateness mappings
+	private void addViewLatenessMappings() {
 		activityMap.put("/prdconfigurationaction-search",
 				SecurityConstants.VIEW);
 		activityMap.put("/prdconfigurationaction-update",
@@ -397,8 +465,9 @@ public class ActivityMapper {
 		activityMap.put("/prdconfaction-load", SecurityConstants.VIEW);
 		activityMap.put("/prdconfaction-update",
 				SecurityConstants.UPDATE_LATENESS_DORMANCY);
-		// loan product categories
+	}
 
+	private void addLoanProductCategoryMappings() {
 		activityMap.put("/loanprdaction-load",
 				SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
 		activityMap.put("/loanprdaction-preview", SecurityConstants.VIEW);
@@ -440,8 +509,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/loanproductaction-cancelChangeLog",
 				SecurityConstants.VIEW);
+	}
 
-		// Fee mapping
+	private void addFeeMappings() {
 		activityMap.put("/feesAction-search", SecurityConstants.VIEW);
 		activityMap.put("/feesAction-load", SecurityConstants.FEES_CREATE_FEES);
 		activityMap.put("/feesAction-preview", SecurityConstants.VIEW);
@@ -466,8 +536,9 @@ public class ActivityMapper {
 		activityMap.put("/feeaction-viewAll", SecurityConstants.VIEW);
 		activityMap.put("/feeaction-cancelCreate", SecurityConstants.VIEW);
 		activityMap.put("/feeaction-cancelEdit", SecurityConstants.VIEW);
-		// checklist mapping
+	}
 
+	private void addChecklistMappings() {
 		activityMap.put("/chkListAction-load",
 				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
 		activityMap.put("/chkListAction-getStates", SecurityConstants.VIEW);
@@ -507,12 +578,14 @@ public class ActivityMapper {
 				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
 		activityMap.put("/checkListAction-update",
 				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
+	}
 
-		// mapping for search before loan
+	private void addSearchBeforeLoanMappings() {
 		activityMap.put("/AccountsSearchAction-load", SecurityConstants.VIEW);
 		activityMap.put("/AccountsSearchAction-search", SecurityConstants.VIEW);
+	}
 
-		// mapping for loan
+	private void addLoanMappings() {
 		activityMap.put("/loanAction-getPrdOfferings", SecurityConstants.VIEW);
 		activityMap.put("/loanAction-load", SecurityConstants.VIEW);
 		activityMap.put("/loanAction-next", SecurityConstants.VIEW);
@@ -526,8 +599,9 @@ public class ActivityMapper {
 		activityMap.put("/loanAction-getLoanChangeLog", SecurityConstants.VIEW);
 		activityMap.put("/loanAction-search", SecurityConstants.VIEW);
 		activityMap.put("/loanAction-create", SecurityConstants.VIEW);
+	}
 
-		// mapping for loanActivity
+	private void addLoanActivityMappings() {
 		activityMap.put("/loanAccountAction-getAllActivity",
 				SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-get", SecurityConstants.VIEW);
@@ -558,7 +632,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-cancelChangeLog",
 				SecurityConstants.VIEW);
+	}
 
+	private void addLoanStatusActionMappings() {
 		// mapping for account status::TO BE REMOVED
 		activityMap.put("/LoanStatusAction-load", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-preview", SecurityConstants.VIEW);
@@ -566,20 +642,23 @@ public class ActivityMapper {
 		activityMap.put("/LoanStatusAction-update", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-search", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-writeOff", SecurityConstants.VIEW);
+	}
 
-		// mapping for account status
+	private void addAccountStatusMappings() {
 		activityMap.put("/editStatusAction-load", SecurityConstants.VIEW);
 		activityMap.put("/editStatusAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/editStatusAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/editStatusAction-update", SecurityConstants.VIEW);
+	}
 
-		// mapping for custAction
+	private void addCustomerActionMappings() {
 		activityMap
 				.put("/custAction-getClosedAccounts", SecurityConstants.VIEW);
 		activityMap.put("/custAction-getBackToDetailsPage",
 				SecurityConstants.VIEW);
+	}
 
-		// mapping for apply payment
+	private void addApplyPaymentMappings() {
 		activityMap.put("/accountTrxn-load",
 				SecurityConstants.APPLY_PAYMENT_TO_CLIENT_GROUP_CENTERS_LOANS);
 		activityMap.put("/accountTrxn-create",
@@ -590,14 +669,16 @@ public class ActivityMapper {
 		activityMap.put("/loanAccountAction-getInstallmentDetails",
 				SecurityConstants.VIEW);
 		activityMap.put("/accountTrxn-previous", SecurityConstants.VIEW);
+	}
 
-		// apply charges
+	private void addApplyChargesMappings2() {
 		activityMap.put("/AccountsApplyChargesAction-load",
 				SecurityConstants.APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS);
 		activityMap.put("/AccountsApplyChargesAction-create",
 				SecurityConstants.APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS);
+	}
 
-		// fund mapping
+	private void addFundMappings() {
 		activityMap.put("/fundAction-load",
 				SecurityConstants.FUNDS_CREATE_FUNDS);
 		activityMap.put("/fundAction-create",
@@ -616,8 +697,9 @@ public class ActivityMapper {
 		activityMap.put("/fundAction-update",
 				SecurityConstants.FUNDS_EDIT_FUNDS);
 		activityMap.put("/fundAction-viewAllFunds", SecurityConstants.VIEW);
+	}
 
-		// mapping for bulk entry
+	private void addBulkEntryMappings() {
 		activityMap.put("/bulkentryaction-load",
 				SecurityConstants.CAN_ENTER_COLLECTION_SHEET_DATA);
 		activityMap.put("/bulkentryaction-preview", SecurityConstants.VIEW);
@@ -631,12 +713,14 @@ public class ActivityMapper {
 		activityMap.put("/bulkentryaction-loadCustomerList",
 				SecurityConstants.VIEW);
 		activityMap.put("/bulkentryaction-validate", SecurityConstants.VIEW);
+	}
 
-		// removing fees
+	private void addRemoveFeeMappings() {
 		activityMap.put("/accountAppAction-removeFees",	SecurityConstants.VIEW);
 		activityMap.put("/accountAppAction-getTrxnHistory",	SecurityConstants.VIEW);
+	}
 
-		// mapping for savings account
+	private void addSavingsAccountMappings() {
 		activityMap.put("/savingsAction-getPrdOfferings",
 				SecurityConstants.VIEW);
 		activityMap.put("/savingsAction-load", SecurityConstants.VIEW);
@@ -668,7 +752,9 @@ public class ActivityMapper {
 		activityMap.put("/savingsAction-loadChangeLog", SecurityConstants.VIEW);
 		activityMap.put("/savingsAction-cancelChangeLog",
 				SecurityConstants.VIEW);
-		// close savings account
+	}
+
+	private void addCloseSavingsAccountMappings() {
 		activityMap.put("/savingsClosureAction-load",
 				SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
 		activityMap.put("/savingsClosureAction-preview",
@@ -677,8 +763,9 @@ public class ActivityMapper {
 				SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
 		activityMap.put("/savingsClosureAction-close",
 				SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+	}
 
-		// savings accountadjustment
+	private void addSavingsAccountAdjustmentMappings() {
 		activityMap.put("/savingsApplyAdjustmentAction-load",
 				SecurityConstants.VIEW);
 		activityMap.put("/savingsApplyAdjustmentAction-preview",
@@ -687,9 +774,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/savingsApplyAdjustmentAction-adjustLastUserAction",
 				SecurityConstants.VIEW);
+	}
 
-		// entries for apply adjustment.
-
+	private void addApplyAdjustmentMappings() {
 		activityMap.put("/applyAdjustment-loadAdjustment",
 				SecurityConstants.VIEW);
 		activityMap.put("/applyAdjustment-previewAdjustment",
@@ -698,9 +785,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/applyAdjustment-cancelAdjustment",
 				SecurityConstants.VIEW);
+	}
 
-		// entries for apply adjustment for customer.
-
+	private void addApplyCustomerAdjustmentMappings() {
 		activityMap.put("/custApplyAdjustment-loadAdjustment",
 				SecurityConstants.VIEW);
 		activityMap.put("/custApplyAdjustment-previewAdjustment",
@@ -709,8 +796,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/custApplyAdjustment-cancelAdjustment",
 				SecurityConstants.VIEW);
+	}
 
-		// mapping for repaying loan account
+	private void addRepayLoanAccountMappings() {
 		activityMap.put("/repayLoanAction-loadRepayment",
 				SecurityConstants.LOAN_CAN_REPAY_LOAN);
 		activityMap.put("/repayLoanAction-preview",
@@ -719,8 +807,9 @@ public class ActivityMapper {
 				SecurityConstants.LOAN_CAN_REPAY_LOAN);
 		activityMap.put("/repayLoanAction-makeRepayment",
 				SecurityConstants.LOAN_CAN_REPAY_LOAN);
+	}
 
-		// mapping for reports
+	private void addRunReportsMappings() {
 		activityMap.put("/reportsAction-load", SecurityConstants.VIEW);
 		activityMap.put("/reportsAction-report_designer",
 				SecurityConstants.CLIENTSDETAILVIEW);
@@ -744,10 +833,9 @@ public class ActivityMapper {
 		activityMap.put("/reportsAction-analysis", SecurityConstants.ANALYSIS);
 		activityMap.put("/reportsAction-kendra_meeting",
 				SecurityConstants.KENDRA_MEETING);
-		activityMap.put("/reportsAction-administerreports_path",
-				SecurityConstants.ADMINISTER_REPORTS);
+	}
 
-		// waive charges
+	private void addWaiveChargesMappings() {
 		activityMap.put("/customerAction-forwardWaiveChargeDue",
 				SecurityConstants.VIEW);
 		activityMap.put("/customerAction-forwardWaiveChargeOverDue",
@@ -766,15 +854,17 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/loanAccountAction-waiveChargeOverDue",
 				SecurityConstants.VIEW);
+	}
 
-		// mapping for accountPayment
+	private void addPaymentMappings() {
 		activityMap.put("/applyPaymentAction-load", SecurityConstants.VIEW);
 		activityMap.put("/applyPaymentAction-preview", SecurityConstants.VIEW);
 		activityMap.put("/applyPaymentAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/applyPaymentAction-applyPayment",
 				SecurityConstants.VIEW);
+	}
 
-		// mapping fro loan disbursal
+	private void addLoanDisbursalMappings() {
 		activityMap.put("/loanDisbursmentAction-load",
 				SecurityConstants.LOAN_CAN_DISBURSE_LOAN);
 		activityMap.put("/loanDisbursmentAction-preview",
@@ -783,8 +873,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap
 				.put("/loanDisbursmentAction-update", SecurityConstants.VIEW);
+	}
 
-		// mapping for savings deposit/withdrawal
+	private void addSavingsDepositMappings() {
 		activityMap.put("/savingsDepositWithdrawalAction-load",
 				SecurityConstants.SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL);
 		activityMap.put("/savingsDepositWithdrawalAction-reLoad",
@@ -795,8 +886,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/savingsDepositWithdrawalAction-makePayment",
 				SecurityConstants.VIEW);
+	}
 
-		// mapping for editing customer status
+	private void addEditCustomerStatusMappings() {
 		activityMap.put("/editCustomerStatusAction-loadStatus",
 				SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-preview",
@@ -813,13 +905,25 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/editCustomerStatusAction-cancelStatus",
 				SecurityConstants.VIEW);
+	}
 
-		// apply charges
+	private void addApplyChargesMappings() {
 		activityMap.put("/applyChargeAction-load", SecurityConstants.VIEW);
 		activityMap.put("/applyChargeAction-update",
 				SecurityConstants.VIEW);
+	}
 
-		// client creation action- migration
+	private void addChangeAccountStatusMappings() {
+		activityMap.put("/ChangeAccountStatus-load",
+				SecurityConstants.CAN_APPROVE_LOANS_IN_BULK);
+		activityMap.put("/ChangeAccountStatus-searchResults",
+				SecurityConstants.VIEW);
+		activityMap.put("/ChangeAccountStatus-update", SecurityConstants.VIEW);
+		activityMap.put("/ChangeAccountStatus-getLoanOfficers",
+				SecurityConstants.VIEW);
+	}
+
+	private void addClientCustomerMappings() {
 		activityMap.put("/clientCustAction-load", SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-chooseOffice",
 				SecurityConstants.VIEW);
@@ -863,16 +967,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/clientCustAction-cancelChangeLog",
 				SecurityConstants.VIEW);
+	}
 
-		activityMap.put("/ChangeAccountStatus-load",
-				SecurityConstants.CAN_APPROVE_LOANS_IN_BULK);
-		activityMap.put("/ChangeAccountStatus-searchResults",
-				SecurityConstants.VIEW);
-		activityMap.put("/ChangeAccountStatus-update", SecurityConstants.VIEW);
-		activityMap.put("/ChangeAccountStatus-getLoanOfficers",
-				SecurityConstants.VIEW);
-
-		// Group related mappings for M2
+	private void addGroupMappings() {
 		activityMap.put("/groupCustAction-hierarchyCheck",
 				SecurityConstants.VIEW);
 		activityMap
@@ -901,8 +998,9 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/groupCustAction-cancelChangeLog",
 				SecurityConstants.VIEW);
+	}
 
-		// for your settings new action class
+	private void addYourSettingsMappings() {
 		activityMap.put("/yourSettings-get", SecurityConstants.VIEW);
 		activityMap.put("/yourSettings-manage",
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
@@ -912,11 +1010,9 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
 		activityMap.put("/yourSettings-loadChangePassword",
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+	}
 
-		// for CustomerAccountAction
-		activityMap.put("/customerAccountAction-load", SecurityConstants.VIEW);
-
-		// roles permissions
+	private void addRolesPermissionsMappings() {
 		activityMap.put("/rolesPermission-viewRoles", SecurityConstants.VIEW);
 		activityMap.put("/rolesPermission-load",
 				SecurityConstants.ROLES_CREATE_ROLES);
@@ -930,83 +1026,32 @@ public class ActivityMapper {
 				SecurityConstants.ROLES_DELETE_ROLES);
 		activityMap.put("/rolesPermission-delete",
 				SecurityConstants.ROLES_DELETE_ROLES);
+	}
 
-		// M2 personnel notes
-
+	private void addPersonnelNotesMappings() {
 		activityMap.put("/personnelNoteAction-load", SecurityConstants.VIEW);
 		activityMap.put("/personnelNoteAction-preview", SecurityConstants.VIEW);
 		activityMap
 				.put("/personnelNoteAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/personnelNoteAction-create", SecurityConstants.VIEW);
 		activityMap.put("/personnelNoteAction-search", SecurityConstants.VIEW);
+	}
 
-		// mapping for adding customer notes
+	private void addCustomerNotesMappings() {
 		activityMap.put("/customerNotesAction-load", SecurityConstants.VIEW);
 		activityMap.put("/customerNotesAction-preview", SecurityConstants.VIEW);
 		activityMap
 				.put("/customerNotesAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/customerNotesAction-create", SecurityConstants.VIEW);
 		activityMap.put("/customerNotesAction-search", SecurityConstants.VIEW);
+	}
 
-		// mapping for notes
-		activityMap.put("/notesAction-load", SecurityConstants.VIEW);
-		activityMap.put("/notesAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/notesAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/notesAction-search", SecurityConstants.VIEW);
-		activityMap.put("/notesAction-create", SecurityConstants.VIEW);
-		
-		activityMap.put("/multipleloansaction-load",
-				SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS);
-		activityMap.put("/multipleloansaction-getLoanOfficers",
-				SecurityConstants.VIEW);
-		activityMap.put("/multipleloansaction-getCenters",
-				SecurityConstants.VIEW);
-		activityMap.put("/multipleloansaction-getPrdOfferings",
-				SecurityConstants.VIEW);
-		activityMap.put("/multipleloansaction-get", SecurityConstants.VIEW);
-		activityMap.put("/multipleloansaction-create", SecurityConstants.VIEW);
-		
-		activityMap.put("/reverseloandisbaction-search",
-				SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL);
-		activityMap.put("/reverseloandisbaction-load",
-				SecurityConstants.VIEW);
-		activityMap.put("/reverseloandisbaction-preview",
-				SecurityConstants.VIEW);
-		activityMap.put("/reverseloandisbaction-update",
-				SecurityConstants.VIEW);
-		activityMap.put("/reverseloandisbaction-cancel", SecurityConstants.VIEW);
-		activityMap.put("/reverseloandisbaction-validate", SecurityConstants.VIEW);
-		
-		// ADDED BY MFTECH
-		activityMap.put("/reportsAction-load", SecurityConstants.VIEW);
+	private void addReportsMappings() {
+		addRunReportsMappings();
+		addAdministerReportsMappings();
+	}
 
-		activityMap.put("/reportsAction-report_designer",
-				SecurityConstants.CLIENTSDETAILVIEW);
-		activityMap.put("/reportsAction-product_history",
-				SecurityConstants.CLIENTSPRODUCTHISTORY);
-
-		activityMap.put("/reportsAction-branch_performance",
-				SecurityConstants.BRANCHPERFORMANCE);
-		activityMap.put("/reportsAction-area_performance",
-				SecurityConstants.AREAPERFORMANCE);
-
-		activityMap.put("/reportsAction-collection_sheet",
-				SecurityConstants.COLLECTIONSHEET);
-
-		activityMap.put("/reportsAction-loan_distribution",
-				SecurityConstants.LOANDISTRIBUTION);
-		activityMap.put("/reportsAction-branch_disbursement",
-				SecurityConstants.BRANCHDISBURSEMENT);
-
-		activityMap.put("/reportsAction-staffwise_report",
-				SecurityConstants.STAFFWISEREPORT);
-		activityMap.put("/reportsAction-branchwise_report",
-				SecurityConstants.BRANCHWISEREPORT);
-
-		activityMap.put("/reportsAction-analysis", SecurityConstants.ANALYSIS);
-		activityMap.put("/reportsAction-kendra_meeting",
-				SecurityConstants.KENDRA_MEETING);
-
+	private void addAdministerReportsMappings() {
 		activityMap.put("/reportsAction-administerreports_path",
 				SecurityConstants.ADMINISTER_REPORTS);
 		activityMap.put("/reportsAction-administerreportslist_path",
@@ -1081,7 +1126,36 @@ public class ActivityMapper {
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
 		activityMap.put("/reportsUserParamsAction-reportsuserprocess_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		// END BY MFTECH
+	}
+
+	private void addNotesMappings() {
+		activityMap.put("/notesAction-load", SecurityConstants.VIEW);
+		activityMap.put("/notesAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/notesAction-previous", SecurityConstants.VIEW);
+		activityMap.put("/notesAction-search", SecurityConstants.VIEW);
+		activityMap.put("/notesAction-create", SecurityConstants.VIEW);
+		
+		activityMap.put("/multipleloansaction-load",
+				SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS);
+		activityMap.put("/multipleloansaction-getLoanOfficers",
+				SecurityConstants.VIEW);
+		activityMap.put("/multipleloansaction-getCenters",
+				SecurityConstants.VIEW);
+		activityMap.put("/multipleloansaction-getPrdOfferings",
+				SecurityConstants.VIEW);
+		activityMap.put("/multipleloansaction-get", SecurityConstants.VIEW);
+		activityMap.put("/multipleloansaction-create", SecurityConstants.VIEW);
+		
+		activityMap.put("/reverseloandisbaction-search",
+				SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL);
+		activityMap.put("/reverseloandisbaction-load",
+				SecurityConstants.VIEW);
+		activityMap.put("/reverseloandisbaction-preview",
+				SecurityConstants.VIEW);
+		activityMap.put("/reverseloandisbaction-update",
+				SecurityConstants.VIEW);
+		activityMap.put("/reverseloandisbaction-cancel", SecurityConstants.VIEW);
+		activityMap.put("/reverseloandisbaction-validate", SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

@@ -1,33 +1,60 @@
 package org.mifos.framework.util.helpers;
 
+import org.mifos.application.accounts.business.service.AccountBusinessService;
+import org.mifos.application.accounts.financial.business.service.FinancialBusinessService;
+import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
+import org.mifos.application.admin.business.service.AdminBusinessService;
+import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
+import org.mifos.application.customer.center.business.service.CenterBusinessService;
+import org.mifos.application.customer.client.business.service.ClientBusinessService;
+import org.mifos.application.customer.group.business.service.GroupBusinessService;
+import org.mifos.application.fees.business.service.FeeBusinessService;
+import org.mifos.application.fund.business.service.FundBusinessService;
+import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.meeting.business.service.MeetingBusinessService;
+import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.office.business.service.OfficeHierarchyBusinessService;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService;
+import org.mifos.application.reports.business.service.ReportsBusinessService;
+import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
+import org.mifos.framework.components.audit.business.service.AuditBusinessService;
+
 public enum BusinessServiceName {
-	Savings("org.mifos.application.accounts.savings.business.service.SavingsBusinessService"),
-	Customer("org.mifos.application.customer.business.service.CustomerBusinessService"),
-	MasterDataService("org.mifos.application.master.business.service.MasterDataService"),
-	BulkEntryService("org.mifos.application.bulkentry.business.service.BulkEntryBusinessService"),
-	Accounts("org.mifos.application.accounts.business.service.AccountBusinessService"),
-	SavingsProduct("org.mifos.application.productdefinition.business.service.SavingsPrdBusinessService"),
-	Financial("org.mifos.application.accounts.financial.business.service.FinancialBusinessService"),
-	Loan("org.mifos.application.accounts.loan.business.service.LoanBusinessService"),
-	ReportsService("org.mifos.application.reports.business.service.ReportsBusinessService"),
-	FeesService("org.mifos.application.fees.business.service.FeeBusinessService"),
-	Personnel("org.mifos.application.personnel.business.service.PersonnelBusinessService"),
-	Center("org.mifos.application.customer.center.business.service.CenterBusinessService"),
-	Client("org.mifos.application.customer.client.business.service.ClientBusinessService"),
-	Group("org.mifos.application.customer.group.business.service.GroupBusinessService"),
-	Office("org.mifos.application.office.business.service.OfficeBusinessService"),
-	LoanProduct("org.mifos.application.productdefinition.business.service.LoanPrdBusinessService"),
-	OfficeHierarchy("org.mifos.application.office.business.service.OfficeHierarchyBusinessService"),
-	Meeting("org.mifos.application.meeting.business.service.MeetingBusinessService"),
-	RolesPermissions("org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService"),
-	Admin("org.mifos.application.admin.business.service.AdminBusinessService"),
-	fund("org.mifos.application.fund.business.service.FundBusinessService"),
-	AuditLog("org.mifos.framework.components.audit.business.service.AuditBusinessService");
+	Savings(SavingsBusinessService.class),
+	Customer(CustomerBusinessService.class),
+	MasterDataService(MasterDataService.class),
+	BulkEntryService(BulkEntryBusinessService.class),
+	Accounts(AccountBusinessService.class),
+	SavingsProduct(SavingsPrdBusinessService.class),
+	Financial(FinancialBusinessService.class),
+	Loan(LoanBusinessService.class),
+	ReportsService(ReportsBusinessService.class),
+	FeesService(FeeBusinessService.class),
+	Personnel(PersonnelBusinessService.class),
+	Center(CenterBusinessService.class),
+	Client(ClientBusinessService.class),
+	Group(GroupBusinessService.class),
+	Office(OfficeBusinessService.class),
+	LoanProduct(LoanPrdBusinessService.class),
+	OfficeHierarchy(OfficeHierarchyBusinessService.class),
+	Meeting(MeetingBusinessService.class),
+	RolesPermissions(RolesPermissionsBusinessService.class),
+	Admin(AdminBusinessService.class),
+	fund(FundBusinessService.class),
+	AuditLog(AuditBusinessService.class);
 
-	String name;
+	private String name;
 
-	BusinessServiceName(String name) {
+	private BusinessServiceName(String name) {
 		this.name = name;
+	}
+
+	private BusinessServiceName(Class service) {
+		this(service.getName());
 	}
 
 	public String getName() {
