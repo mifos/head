@@ -48,7 +48,7 @@ public class CustomerException extends ApplicationException{
 		super(key);
 	}
 	
-	public CustomerException(String key,Object[] values) {
+	public CustomerException(String key, Object[] values) {
 		super(key, values);
 	}
 
@@ -56,8 +56,8 @@ public class CustomerException extends ApplicationException{
 		super(cause);
 	}
 	
-	public CustomerException(String key ,Throwable cause) {
-		super(key , cause);
+	public CustomerException(String key, Throwable cause) {
+		super(key, cause);
 	}
 
 }

@@ -559,11 +559,12 @@ public class ClientBO extends CustomerBO {
 		if (isAnyLoanAccountOpen() || isAnySavingsAccountOpen()) {
 			ConfigurationIntf labelConfig = MifosConfiguration.getInstance();
 			try {
-				Object[] args = new Object[] { labelConfig.getLabel(
-						ConfigurationConstants.GROUP, userContext
-								.getPereferedLocale()) };
 				throw new CustomerException(
-						ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, args);
+					ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT, 
+					new Object[] { 
+						labelConfig.getLabel(
+							ConfigurationConstants.GROUP, 
+							userContext.getPereferedLocale()) });
 			} catch (ConfigurationException ce) {
 				new CustomerException(ce);
 			}
@@ -609,13 +610,13 @@ public class ClientBO extends CustomerBO {
 		if (isGroupStatusLower(getStatus(), groupStatus)) {
 			ConfigurationIntf labelConfig = MifosConfiguration.getInstance();
 			try {
-				Object[] args = new Object[] {
+				throw new CustomerException(
+					ClientConstants.ERRORS_LOWER_GROUP_STATUS, 
+					new Object[] {
 						labelConfig.getLabel(ConfigurationConstants.GROUP,
 								userContext.getPereferedLocale()),
 						labelConfig.getLabel(ConfigurationConstants.CLIENT,
-								userContext.getPereferedLocale()) };
-				throw new CustomerException(
-						ClientConstants.ERRORS_LOWER_GROUP_STATUS, args);
+								userContext.getPereferedLocale()) });
 			} catch (ConfigurationException ce) {
 				new CustomerException(ce);
 			}
@@ -654,7 +655,7 @@ public class ClientBO extends CustomerBO {
 			custId = getCustomerId();
 		}
 
-		checkForDuplicacy(displayName, dateOfBirth, governmentId, custId);
+		checkForDuplicates(displayName, dateOfBirth, governmentId, custId);
 
 	}
 
@@ -668,7 +669,7 @@ public class ClientBO extends CustomerBO {
 		}
 	}
 
-	private void checkForDuplicacy(String name, Date dob, String governmentId,
+	private void checkForDuplicates(String name, Date dob, String governmentId,
 			Integer customerId) throws CustomerException {
 		ClientPersistence clientPersistence = new ClientPersistence();
 
@@ -676,14 +677,16 @@ public class ClientBO extends CustomerBO {
 			try {
 				if (clientPersistence.checkForDuplicacyOnGovtId(governmentId,
 						customerId) == true) {
-					Object[] values = new Object[2];
-					values[0] = governmentId;
-					values[1] = MifosConfiguration.getInstance().getLabel(
+					String label = 
+						MifosConfiguration.getInstance().getLabel(
 							ConfigurationConstants.GOVERNMENT_ID,
 							userContext.getPereferedLocale());
 					throw new CustomerException(
 							CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION,
-							values);
+							new Object[] {
+								governmentId,
+								label
+							});
 				}
 			} catch (ConfigurationException ce) {
 				throw new CustomerException(ce);
@@ -694,11 +697,9 @@ public class ClientBO extends CustomerBO {
 			try {
 				if (clientPersistence.checkForDuplicacyOnName(name, dob,
 						customerId) == true) {
-					Object[] values = new Object[1];
-					values[0] = name;
 					throw new CustomerException(
-							CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
-							values);
+						CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
+						new Object[] { name });
 				}
 			} catch (PersistenceException e) {
 				throw new CustomerException(e);

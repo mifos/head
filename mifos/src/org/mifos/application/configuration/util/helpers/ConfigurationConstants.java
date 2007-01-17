@@ -25,7 +25,8 @@ public static final String EXTERNALID="ExternalId";
 public static final String SAVINGS="Savings";
 public static final String INTEREST="Interest";
 public static final String LOAN="Loan";
-public static final String KEY_NO_MESSAGE_FOR_THIS_KEY="No message exist for this key";
+public static final String KEY_NO_MESSAGE_FOR_THIS_KEY=
+	"No message exist for this key";
 public static final String SERVICE_CHARGE="Service Charge";
 public static final short INTEREST_DAYS=360;
 }
