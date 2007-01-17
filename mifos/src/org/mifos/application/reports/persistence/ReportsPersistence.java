@@ -36,7 +36,6 @@
 
  */
 
-
 package org.mifos.application.reports.persistence;
 
 import java.sql.Connection;
@@ -63,458 +62,362 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
-/**
- * Class associated with report Persistence
- * @author zankar
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
-public class ReportsPersistence extends Persistence {	
-	
-	public ReportsPersistence(){
-		
-	}	
+
+public class ReportsPersistence extends Persistence {
+
+	public ReportsPersistence() {
+
+	}
+
 	/**
-	 * Lists all the Report Categories. 
-	 * The list also contains the set of Reports within a particular category
-	 * @return
-	 */	
-	public List<ReportsCategoryBO> getAllReportCategories()
-	{					
-		Query query = HibernateUtil.getSessionTL().getNamedQuery(ReportsConstants.GETALLREPORTS);
+	 * Lists all the Report Categories. The list also contains the set of
+	 * Reports within a particular category
+	 */
+	public List<ReportsCategoryBO> getAllReportCategories() {
+		Query query = HibernateUtil.getSessionTL().getNamedQuery(
+				ReportsConstants.GETALLREPORTS);
 		return query.list();
 	}
-	
+
+	public List<ReportsParams> getAllReportParams() {
+		Query query = HibernateUtil.getSessionTL().getNamedQuery(
+				ReportsConstants.GETALLREPORTSPARAMS);
+		return query.list();
+	}
+
+	public void createReportParams(ReportsParamsValue reportsParams)
+			throws ApplicationException, SystemException {
+		Session session = null;
+		Transaction trxn = null;
+		try {
+			session = HibernateUtil.openSession();
+			trxn = session.beginTransaction();
+			session.save(reportsParams);
+			session.flush();
+			trxn.commit();
+		}
+		catch (HibernateProcessException hpe) {
+			trxn.rollback();
+			throw new ApplicationException(hpe);
+		}
+		catch (HibernateException hpe) {
+			trxn.rollback();
+
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+		}
+		catch (Exception e) {
+			trxn.rollback();
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
+		}
+		finally {
+			HibernateUtil.closeSession(session);
+		}
+	}
+
+	public void deleteReportParams(ReportsParamsValue reportsParams)
+			throws ApplicationException, SystemException {
+		Session session = null;
+		Transaction trxn = null;
+		try {
+			session = HibernateUtil.openSession();
+			trxn = session.beginTransaction();
+			session.delete(reportsParams);
+			session.flush();
+			trxn.commit();
+		}
+		catch (HibernateProcessException hpe) {
+			trxn.rollback();
+			throw new ApplicationException(hpe);
+		}
+		catch (HibernateException hpe) {
+			hpe.printStackTrace();
+			trxn.rollback();
+
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+		}
+		catch (Exception e) {
+			trxn.rollback();
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
+		}
+		finally {
+			HibernateUtil.closeSession(session);
+		}
+	}
+
+	public List<ReportsDataSource> getAllReportDataSource() {
+		Query query = HibernateUtil.getSessionTL().getNamedQuery(
+				ReportsConstants.GETALLREPORTSDATASOURCE);
+		return query.list();
+	}
+
+	public void createReportsDataSource(ReportsDataSource reportsDataSource)
+			throws ApplicationException, SystemException {
+		Session session = null;
+		Transaction trxn = null;
+		try {
+			session = HibernateUtil.openSession();
+			trxn = session.beginTransaction();
+			session.save(reportsDataSource);
+			session.flush();
+			trxn.commit();
+		}
+		catch (HibernateProcessException hpe) {
+			trxn.rollback();
+			throw new ApplicationException(hpe);
+		}
+		catch (HibernateException hpe) {
+			hpe.printStackTrace();
+			trxn.rollback();
+
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+		}
+		catch (Exception e) {
+			trxn.rollback();
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
+		}
+		finally {
+			HibernateUtil.closeSession(session);
+		}
+	}
+
+	public void deleteReportsDataSource(ReportsDataSource reportsDataSource)
+			throws ApplicationException, SystemException {
+		Session session = null;
+		Transaction trxn = null;
+		try {
+			session = HibernateUtil.openSession();
+			trxn = session.beginTransaction();
+			session.delete(reportsDataSource);
+			session.flush();
+			trxn.commit();
+		}
+		catch (HibernateProcessException hpe) {
+			trxn.rollback();
+			throw new ApplicationException(hpe);
+		}
+		catch (HibernateException hpe) {
+			hpe.printStackTrace();
+			trxn.rollback();
+
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+		}
+		catch (Exception e) {
+			trxn.rollback();
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
+		}
+		finally {
+			HibernateUtil.closeSession(session);
+		}
+	}
+
+	public List<ReportsParamsMap> getAllReportParamsMap() {
+		Query query = HibernateUtil.getSessionTL().getNamedQuery(
+				ReportsConstants.GETALLREPORTSPARAMSMAP);
+		return query.list();
+	}
+
+	public List<ReportsParamsMap> findParamsOfReportId(int reportId)
+			throws PersistenceException {
+		Map<String, String> queryParameters = new HashMap<String, String>();
+		List<ReportsParamsMap> queryResult = null;
+		queryParameters.put("reportId", reportId + "");
+		queryResult = executeNamedQuery(
+				ReportsConstants.FIND_PARAMS_OF_REPORTID, queryParameters);
+		return queryResult;
+
+	}
+
+	public List<ReportsParamsMap> findInUseParameter(int parameterId)
+			throws PersistenceException {
+		Map<String, String> queryParameters = new HashMap<String, String>();
+		List<ReportsParamsMap> queryResult = null;
+		queryParameters.put("parameterId", parameterId + "");
+		queryResult = executeNamedQuery(ReportsConstants.FIND_IN_USE_PARAMETER,
+				queryParameters);
+		return queryResult;
+
+	}
+
+	public List<ReportsParams> findInUseDataSource(int dataSourceId)
+			throws PersistenceException {
+		Map<String, String> queryParameters = new HashMap<String, String>();
+		List<ReportsParams> queryResult = null;
+		queryParameters.put("dataSourceId", dataSourceId + "");
+		queryResult = executeNamedQuery(
+				ReportsConstants.FIND_IN_USE_DATASOURCE, queryParameters);
+		return queryResult;
+
+	}
+
+	public List<ReportsParams> viewParameter(int parameterId)
+			throws PersistenceException {
+		Map<String, String> queryParameters = new HashMap<String, String>();
+		queryParameters.put("parameterId", parameterId + "");
+		return executeNamedQuery(ReportsConstants.VIEW_PARAMETER,
+				queryParameters);
+	}
+
+	public List<ReportsDataSource> viewDataSource(int dataSourceId)
+			throws PersistenceException {
+		Map<String, String> queryParameters = new HashMap<String, String>();
+		List<ReportsDataSource> queryResult = null;
+		queryParameters.put("dataSourceId", dataSourceId + "");
+		queryResult = executeNamedQuery(ReportsConstants.VIEW_DATASOURCE,
+				queryParameters);
+		return queryResult;
+
+	}
+
 	/**
-	 * List all Report Parameters
-	 * @return
+	 * Creates a link between a report and a parameter
 	 */
-	
-	public List<ReportsParams> getAllReportParams()
-    {
-    	Query query = HibernateUtil.getSessionTL().getNamedQuery(ReportsConstants.GETALLREPORTSPARAMS);
-        return query.list();
-    }
-	
-	
-    
-    /**
-     * Create Report Parameter
-     * @param reportsParams
-     * @throws ApplicationException
-     * @throws SystemException
-     */
-    
-     public void createReportParams(ReportsParamsValue reportsParams) 
-     throws ApplicationException,SystemException
-    {
-    	
-      Session session = null;
-    	Transaction trxn = null;
-    	try {
-    	
-    		session = HibernateUtil.openSession();
-    		trxn = session.beginTransaction();
-    		session.save(reportsParams);
-    		session.flush();
-    		trxn.commit();
-    	} catch (HibernateProcessException hpe) {
-    		trxn.rollback();
-    		throw new ApplicationException(hpe);
-    	}
-    	catch (HibernateException hpe) 
-    	{
-    		trxn.rollback();
-    		
-    		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
-    	}
-    	catch (Exception e) 
-    	{ 	trxn.rollback();
-    		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,e);
-    	}
-    	finally {
-    		HibernateUtil.closeSession(session);
-    	}
-    }
-     
-     /**
-      * Deletes Report Parameter
-      */
-     
-     public void deleteReportParams(ReportsParamsValue reportsParams) 
-     throws ApplicationException,SystemException
-     {
-       Session session = null;
-     	Transaction trxn = null;
-     	try {
-     		session = HibernateUtil.openSession();
-     		trxn = session.beginTransaction();
-     		session.delete(reportsParams);
-     		session.flush();
-     		trxn.commit();
-     	} catch (HibernateProcessException hpe) {
-     		trxn.rollback();
-     		throw new ApplicationException(hpe);
-     	}
-     	catch (HibernateException hpe) 
-     	{ 
-     		hpe.printStackTrace();
-     	trxn.rollback();
-     		
-     		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
-     	}
-     	catch (Exception e) 
-     	{ 	trxn.rollback();
-     		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,e);
-     	}
-     	finally {
-     		HibernateUtil.closeSession(session);
-     	}
-     }
-     
-     /**
- 	 * List all DataSource
- 	 * @return
- 	 */
- 	 
- 	
-     public List<ReportsDataSource> getAllReportDataSource()
-     {
-     	Query query = HibernateUtil.getSessionTL().getNamedQuery(ReportsConstants.GETALLREPORTSDATASOURCE);
-         return query.list();
-     }
-     
-     /**
-      * Create Report DataSource
-      * @param reportsDataSource
-      * @throws ApplicationException
-      * @throws SystemException
-      */
-     
-      public void createReportsDataSource(ReportsDataSource reportsDataSource) throws ApplicationException,SystemException
-     {
-       Session session = null;
-     	Transaction trxn = null;
-     	try {
-     		session = HibernateUtil.openSession();
-     		trxn = session.beginTransaction();
-     		session.save(reportsDataSource);
-     		session.flush();
-     		trxn.commit();
-     	} catch (HibernateProcessException hpe) {
-     		trxn.rollback();
-     		throw new ApplicationException(hpe);
-     	}
-     	catch (HibernateException hpe) 
-     	{ 
-     		hpe.printStackTrace();
-     	trxn.rollback();
-     		
-     		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
-     	}
-     	catch (Exception e) 
-     	{ 	trxn.rollback();
-     		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,e);
-     	}
-     	finally {
-     		HibernateUtil.closeSession(session);
-     	}
-     }
-      
-      /**
-       * Deletes Report DataSource
-       * @param reportsDataSource
-       * @throws ApplicationException
-       * @throws SystemException
-       */
-      
-      public void deleteReportsDataSource(ReportsDataSource reportsDataSource) throws ApplicationException,SystemException
-      {
-        Session session = null;
-      	Transaction trxn = null;
-      	try {
-      		session = HibernateUtil.openSession();
-      		trxn = session.beginTransaction();
-      		session.delete(reportsDataSource);
-      		session.flush();
-      		trxn.commit();
-      	} catch (HibernateProcessException hpe) {
-      		trxn.rollback();
-      		throw new ApplicationException(hpe);
-      	}
-      	catch (HibernateException hpe) 
-      	{ 
-      		hpe.printStackTrace();
-      	trxn.rollback();
-      		
-      		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
-      	}
-      	catch (Exception e) 
-      	{ 	trxn.rollback();
-      		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,e);
-      	}
-      	finally {
-      		HibernateUtil.closeSession(session);
-      	}
-      }
-      
-      /**
-   	 * List all ReportParamsMap
-   	 * @return
-   	 */
-   	 
-   	
-       public List<ReportsParamsMap> getAllReportParamsMap()
-       {
-       	Query query = HibernateUtil.getSessionTL().getNamedQuery(ReportsConstants.GETALLREPORTSPARAMSMAP);
-           return query.list();
-       }
-       
-   /**
-  	 * List all Parameters of given Report Id
-  	 * @return
-  	 */
-      	 
-      	
-      public List<ReportsParamsMap> findParamsOfReportId(int reportId) throws PersistenceException
-      {
-    	  Map<String,String> queryParameters = new HashMap<String,String>();
-    	  List<ReportsParamsMap> queryResult = null;
-    	  queryParameters.put("reportId", reportId+"");
-  		  queryResult = executeNamedQuery(ReportsConstants.FIND_PARAMS_OF_REPORTID,queryParameters);
-  		  return queryResult;
+	public void createReportsParamsMap(
+			ReportsParamsMapValue reportsParamsMapValue)
+			throws ApplicationException, SystemException {
+		Session session = null;
+		Transaction trxn = null;
+		try {
+			session = HibernateUtil.openSession();
+			trxn = session.beginTransaction();
+			session.save(reportsParamsMapValue);
+			session.flush();
+			trxn.commit();
+		}
+		catch (HibernateProcessException hpe) {
+			trxn.rollback();
+			throw new ApplicationException(hpe);
+		}
+		catch (HibernateException hpe) {
+			hpe.printStackTrace();
+			trxn.rollback();
 
-      }
-      
-      /**
-    	 * Finds is in use parameter
-    	 * @return
-    	 */
-        	 
-        	
-        public List<ReportsParamsMap> findInUseParameter(int parameterId) throws PersistenceException
-        {
-      	  Map<String,String> queryParameters = new HashMap<String,String>();
-      	  List<ReportsParamsMap> queryResult = null;
-      	  queryParameters.put("parameterId", parameterId+"");
-    		  queryResult = executeNamedQuery(ReportsConstants.FIND_IN_USE_PARAMETER,queryParameters);
-    		  return queryResult;
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+		}
+		catch (Exception e) {
+			trxn.rollback();
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
+		}
+		finally {
+			HibernateUtil.closeSession(session);
+		}
+	}
 
-        }
-        
-     /**
-   	 * Finds is in use DataSource
-   	 * @return
-   	 */
-       	 
-       	
-       public List<ReportsParams> findInUseDataSource(int dataSourceId) throws PersistenceException
-       {
-     	  Map<String,String> queryParameters = new HashMap<String,String>();
-     	  List<ReportsParams> queryResult = null;
-     	  queryParameters.put("dataSourceId", dataSourceId+"");
-     	  queryResult = executeNamedQuery(ReportsConstants.FIND_IN_USE_DATASOURCE,queryParameters);
-     	  return queryResult;
+	/**
+	 * Deletes a link between report and a parameter
+	 */
+	public void deleteReportsParamsMap(
+			ReportsParamsMapValue reportsParamsMapValue)
+			throws ApplicationException, SystemException {
+		Session session = null;
+		Transaction trxn = null;
+		try {
+			session = HibernateUtil.openSession();
+			trxn = session.beginTransaction();
+			session.delete(reportsParamsMapValue);
+			session.flush();
+			trxn.commit();
+		}
+		catch (HibernateProcessException hpe) {
+			trxn.rollback();
+			throw new ApplicationException(hpe);
+		}
+		catch (HibernateException hpe) {
+			hpe.printStackTrace();
+			trxn.rollback();
 
-       }
-       
-       /**
-      	 * view parameter
-      	 * @return
-      	 */
-          	 
-          	
-          public List<ReportsParams> viewParameter(int parameterId) throws PersistenceException
-          {
-        	  //System.out.println("VP11");
-        	  Map<String,String> queryParameters = new HashMap<String,String>();
-        	  //System.out.println("VP22");
-        	  List<ReportsParams> queryResult = null;
-        	  //System.out.println("VP33");
-        	  queryParameters.put("parameterId", parameterId+"");
-        	  //System.out.println("VP44");
-        	  queryResult = executeNamedQuery(ReportsConstants.VIEW_PARAMETER,queryParameters);
-        	  //System.out.println("VP55");
-        	  return queryResult;
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+		}
+		catch (Exception e) {
+			trxn.rollback();
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
+		}
+		finally {
+			HibernateUtil.closeSession(session);
+		}
+	}
 
-          }
-       
-          /**
-        	 * view DATASOURCE
-        	 * @return
-        	 */
-            	 
-            	
-            public List<ReportsDataSource> viewDataSource(int dataSourceId) throws PersistenceException
-            {
-          	  Map<String,String> queryParameters = new HashMap<String,String>();
-          	  List<ReportsDataSource> queryResult = null;
-          	  queryParameters.put("dataSourceId", dataSourceId+"");
-        		  queryResult = executeNamedQuery(ReportsConstants.VIEW_DATASOURCE,queryParameters);
-        		  return queryResult;
+	/**
+	 * sets a link between report and a jasper file
+	 */
+	public void updateReportsJasperMap(ReportsJasperMap reportsJasperMap)
+			throws ApplicationException, SystemException {
+		Session session = null;
+		Transaction trxn = null;
+		try {
+			session = HibernateUtil.openSession();
+			trxn = session.beginTransaction();
+			session.update(reportsJasperMap);
+			session.flush();
+			trxn.commit();
+		}
+		catch (HibernateProcessException hpe) {
+			trxn.rollback();
+			throw new ApplicationException(hpe);
+		}
+		catch (HibernateException hpe) {
+			hpe.printStackTrace();
+			trxn.rollback();
 
-            }
-       
-       /**
-        * Creates a link between a report and a parameter
-        * @param reportsParamsMapValue
-        * @throws ApplicationException
-        * @throws SystemException
-        */
-       
-        public void createReportsParamsMap(ReportsParamsMapValue reportsParamsMapValue) throws ApplicationException,SystemException
-       {
-         Session session = null;
-       	Transaction trxn = null;
-       	try {
-       		session = HibernateUtil.openSession();
-       		trxn = session.beginTransaction();
-       		session.save(reportsParamsMapValue);
-       		session.flush();
-       		trxn.commit();
-       	} catch (HibernateProcessException hpe) {
-       		trxn.rollback();
-       		throw new ApplicationException(hpe);
-       	}
-       	catch (HibernateException hpe) 
-       	{ 
-       		hpe.printStackTrace();
-       	trxn.rollback();
-       		
-       		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
-       	}
-       	catch (Exception e) 
-       	{ 	trxn.rollback();
-       		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,e);
-       	}
-       	finally {
-       		HibernateUtil.closeSession(session);
-       	}
-       }
-        
-        /**
-         * Deletes a link between report and a parameter
-         * @param reportsParamsMapValue
-         * @throws ApplicationException
-         * @throws SystemException
-         */
-        
-        public void deleteReportsParamsMap(ReportsParamsMapValue reportsParamsMapValue) throws ApplicationException,SystemException
-        {
-          Session session = null;
-        	Transaction trxn = null;
-        	try {
-        		session = HibernateUtil.openSession();
-        		trxn = session.beginTransaction();
-        		session.delete(reportsParamsMapValue);
-        		session.flush();
-        		trxn.commit();
-        	} catch (HibernateProcessException hpe) {
-        		trxn.rollback();
-        		throw new ApplicationException(hpe);
-        	}
-        	catch (HibernateException hpe) 
-        	{ 
-        		hpe.printStackTrace();
-        	trxn.rollback();
-        		
-        		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
-        	}
-        	catch (Exception e) 
-        	{ 	trxn.rollback();
-        		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,e);
-        	}
-        	finally {
-        		HibernateUtil.closeSession(session);
-        	}
-        }
-       /**
-        * sets a link between report and a jasper file
-        * @param reportsJasperMap
-        * @throws ApplicationException
-        * @throws SystemException
-        */
-        
-        public void updateReportsJasperMap(ReportsJasperMap reportsJasperMap) throws ApplicationException,SystemException
-        {
-          Session session = null;
-        	Transaction trxn = null;
-        	try {
-        		session = HibernateUtil.openSession();
-        		trxn = session.beginTransaction();
-        		session.update(reportsJasperMap);
-        		session.flush();
-        		trxn.commit();
-        	} catch (HibernateProcessException hpe) {
-        		trxn.rollback();
-        		throw new ApplicationException(hpe);
-        	}
-        	catch (HibernateException hpe) 
-        	{ 
-        		hpe.printStackTrace();
-        	trxn.rollback();
-        		
-        		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
-        	}
-        	catch (Exception e) 
-        	{ 	trxn.rollback();
-        		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,e);
-        	}
-        	finally {
-        		HibernateUtil.closeSession(session);
-        	}
-        }
-        
-        
-        /**
-      	 * List a Jasper of given Report Id
-      	 * @return
-      	 */
-          	 
-          	
-          public List<ReportsJasperMap> findJasperOfReportId(int reportId) throws PersistenceException
-          {
-        	  Map<String,String> queryParameters = new HashMap<String,String>();
-        	  List<ReportsJasperMap> queryResult = null;
-        	  queryParameters.put("reportId", reportId+"");
-      		  queryResult = executeNamedQuery(ReportsConstants.FIND_JASPER_OF_REPORTID,queryParameters);
-      		
-      		  return queryResult;
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+		}
+		catch (Exception e) {
+			trxn.rollback();
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
+		}
+		finally {
+			HibernateUtil.closeSession(session);
+		}
+	}
 
-          }
-          
-          /**
-           * Creates a connection
-           * @return
-           * @throws ApplicationException
-           * @throws SystemException
-           */
-          
-          public Connection getJasperConnection() throws ApplicationException,SystemException
-          {
-            Session session = null;
-            Connection con = null;
-          	try {
-          		session = HibernateUtil.openSession();
-          		con = session.connection();
-          		
-          	} catch (HibernateProcessException hpe) {
-          		throw new ApplicationException(hpe);
-          	}
-          	catch (HibernateException hpe) 
-          	{ 
-          		hpe.printStackTrace();
-          	
-          		throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
-          	}
-          	catch (Exception e) 
-          	{ 	throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,e);
-          	}
-          	finally {
-          		HibernateUtil.closeSession(session);
-          	}
-          	return con;
-          }
-          
+	public List<ReportsJasperMap> findJasperOfReportId(int reportId)
+			throws PersistenceException {
+		Map<String, String> queryParameters = new HashMap<String, String>();
+		List<ReportsJasperMap> queryResult = null;
+		queryParameters.put("reportId", reportId + "");
+		queryResult = executeNamedQuery(
+				ReportsConstants.FIND_JASPER_OF_REPORTID, queryParameters);
+
+		return queryResult;
+
+	}
+
+	/**
+	 * Creates a connection.
+	 * (Is this actually used?  I don't see how it could do anything
+	 * useful, since it calls HibernateUtil.closeSession before
+	 * returning).
+	 */
+	public Connection getJasperConnection() throws ApplicationException,
+			SystemException {
+		Session session = null;
+		Connection con = null;
+		try {
+			session = HibernateUtil.openSession();
+			con = session.connection();
+		}
+		catch (HibernateProcessException hpe) {
+			throw new ApplicationException(hpe);
+		}
+		catch (HibernateException hpe) {
+			hpe.printStackTrace();
+
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+		}
+		catch (Exception e) {
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
+		}
+		finally {
+			HibernateUtil.closeSession(session);
+		}
+		return con;
+	}
+
 }
