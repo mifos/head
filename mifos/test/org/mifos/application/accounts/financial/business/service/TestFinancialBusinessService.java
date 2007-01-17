@@ -43,7 +43,6 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -94,9 +93,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				loan, TestObjectFactory.getMoneyForMFICurrency(630), "1111",
 				currentDate, new PaymentTypeEntity(Short.valueOf("1")));
-		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
-				.getInstance()
-				.getBusinessService(BusinessServiceName.Financial);
+		FinancialBusinessService financialBusinessService = 
+			new FinancialBusinessService();
 		AccountTrxnEntity accountTrxnEntity = getAccountTrxnObj(accountPaymentEntity);
 		accountPaymentEntity.addAcountTrxn(accountTrxnEntity);
 		TestAccountPaymentEntity.addAccountPayment(accountPaymentEntity,loan);
@@ -214,9 +212,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		payment.addAcountTrxn(accountTrxn);
 		TestSavingsBO.setBalance(savings,balanceAmount);
 
-		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
-				.getInstance()
-				.getBusinessService(BusinessServiceName.Financial);
+		FinancialBusinessService financialBusinessService = 
+			new FinancialBusinessService();
 		financialBusinessService.buildAccountingEntries(accountTrxn);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
@@ -291,9 +288,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		payment.addAcountTrxn(accountTrxn);
 		TestSavingsBO.setBalance(savings,balanceAmount);
 
-		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
-				.getInstance()
-				.getBusinessService(BusinessServiceName.Financial);
+		FinancialBusinessService financialBusinessService = 
+			new FinancialBusinessService();
 		financialBusinessService.buildAccountingEntries(accountTrxn);
 		savings.update();
 		HibernateUtil.getSessionTL().flush();
@@ -351,9 +347,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 
 			assertEquals(Integer.valueOf(1).intValue(), payment
 					.getAccountTrxns().size());
-			FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.Financial);
+			FinancialBusinessService financialBusinessService = 
+				new FinancialBusinessService();
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			SavingsTrxnDetailEntity accountTrxn = null;
 			for (AccountTrxnEntity trxn : payment.getAccountTrxns())
@@ -409,9 +404,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				loan, TestObjectFactory.getMoneyForMFICurrency(630), null,
 				null, new PaymentTypeEntity(Short.valueOf("1")));
-		FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
-				.getInstance()
-				.getBusinessService(BusinessServiceName.Financial);
+		FinancialBusinessService financialBusinessService = 
+			new FinancialBusinessService();
 		AccountActionDateEntity accountActionDateEntity = loan
 				.getAccountActionDate(Short.valueOf("1"));
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(loan

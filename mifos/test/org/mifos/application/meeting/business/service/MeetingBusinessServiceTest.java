@@ -9,10 +9,8 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class MeetingBusinessServiceTest extends MifosTestCase{
@@ -24,25 +22,26 @@ public class MeetingBusinessServiceTest extends MifosTestCase{
 	}
 	
 	public void testGetWeekDaysList() throws Exception{
-		MeetingBusinessService service = (MeetingBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Meeting);
+		MeetingBusinessService service = new MeetingBusinessService();
 		List<WeekDaysEntity> weekDaysList = service.getWorkingDays(Short.valueOf("1"));
 		assertNotNull(weekDaysList);
-		assertEquals(Integer.valueOf("6").intValue(),weekDaysList.size());
+		assertEquals(6, weekDaysList.size());
 	}
 	
 	public void testFailureGetWeekDaysList() throws Exception{
-		MeetingBusinessService service = (MeetingBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Meeting);
+		MeetingBusinessService service = new MeetingBusinessService();
 		TestObjectFactory.simulateInvalidConnection();
-		try{
-			service.getWorkingDays(Short.valueOf("1"));
-		}catch (ServiceException e) {
+		try {
+			service.getWorkingDays((short) 1);
+		} catch (ServiceException e) {
 			assertTrue(true);
 		}
 	}
 	
 	public void testGetMeeting() throws Exception{
-		MeetingBusinessService service = (MeetingBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Meeting);
-		MeetingBO meeting  = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBusinessService service = new MeetingBusinessService();
+		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
+			new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -55,7 +54,8 @@ public class MeetingBusinessServiceTest extends MifosTestCase{
 	public void testGetMeetingForInvalidConnection() throws Exception {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			MeetingBO meeting  = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+			MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
+				new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
 			meeting.save();
 			fail();
 		} catch (MeetingException e) {
@@ -66,17 +66,19 @@ public class MeetingBusinessServiceTest extends MifosTestCase{
 	}
 	
 	public void testFailureGetMeeting() throws Exception {
-		MeetingBusinessService service = (MeetingBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Meeting);
-		MeetingBO meeting  = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBusinessService service = new MeetingBusinessService();
+		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
+			new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			meeting = service.getMeeting(meeting.getMeetingId());
-			assertTrue(false);
+			fail();
 		} catch (ServiceException e) {
-			assertTrue(true);
+			assertEquals("exception.framework.ApplicationException", e.getKey());
 		}
 	}
+
 }

@@ -40,8 +40,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		service = (SavingsBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Savings);
+		service = new SavingsBusinessService();
 	}
 
 	@Override

@@ -113,13 +113,9 @@ public class SavingsAction extends AccountAppAction {
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
 	public SavingsAction() throws Exception {
-		savingsService = (SavingsBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Savings);
-		masterDataService = (MasterDataService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.MasterDataService);
-		savingsPrdService = (SavingsPrdBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.SavingsProduct);
+		savingsService = new SavingsBusinessService();
+		masterDataService = new MasterDataService();
+		savingsPrdService = new SavingsPrdBusinessService();
 	}
 
 	@Override

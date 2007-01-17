@@ -24,6 +24,12 @@ public class ServiceFactory {
 		return instance;
 	}
 
+	/**
+	 * This method is deprecated.
+	 * 
+	 * Instead just call the constructor of the business service directly.
+	 * for example, new ConfigurationBusinessService();
+	 */
 	public BusinessService getBusinessService(BusinessServiceName key)
 			throws ServiceUnavailableException {
 		if (!businessServicesMap.containsKey(key)) {

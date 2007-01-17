@@ -79,13 +79,11 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.business.BusinessObject;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -749,14 +747,13 @@ public class AccountBO extends BusinessObject {
 	protected final void buildFinancialEntries(
 			Set<AccountTrxnEntity> accountTrxns) throws AccountException {
 		try {
-			FinancialBusinessService financialBusinessService = (FinancialBusinessService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.Financial);
+			FinancialBusinessService financialBusinessService = 
+				new FinancialBusinessService();
 			for (AccountTrxnEntity accountTrxn : accountTrxns) {
 				financialBusinessService.buildAccountingEntries(accountTrxn);
 			}
-		} catch (FinancialException fe) {
-			throw new AccountException("errors.update", fe);
+		} catch (FinancialException e) {
+			throw new AccountException("errors.update", e);
 		}
 	}
 

@@ -89,10 +89,8 @@ public class SavingsClosureAction extends BaseAction {
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
 	public SavingsClosureAction() throws ServiceException {
-		savingsService = (SavingsBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Savings);
-		masterDataService = (MasterDataService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.MasterDataService);
+		savingsService = new SavingsBusinessService();
+		masterDataService = new MasterDataService();
 	}
 
 	@Override

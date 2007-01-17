@@ -196,7 +196,7 @@ public class FundAction extends BaseAction {
 	}
 	
 	private FundBusinessService getFundBizService() {
-		return (FundBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.fund);
+		return new FundBusinessService();
 	}
 	
 	private void doCleanUp(HttpServletRequest request) {

@@ -96,7 +96,10 @@ public class MeetingBO extends BusinessObject {
 		this.meetingStartDate = null;
 	}
 	
-	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
+	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, 
+			WeekDay weekDay, RankType rank, Short recurAfter, 
+			Date startDate, MeetingType meetingType, String meetingPlace)
+	throws MeetingException {
 		this.validateFields(recurrenceType,startDate,meetingType,meetingPlace);
 		this.meetingDetails =  new MeetingDetailsEntity(new RecurrenceTypeEntity(recurrenceType), dayNumber, weekDay, rank, recurAfter, this);
 		//TODO: remove this check after meeting create is migrated.

@@ -125,8 +125,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		savingsInSession=null;
 		logger.debug("In SavingsDepositWithdrawalAction::reload(), accountId: "
 				+ savings.getAccountId());
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm) form;
 		if (actionForm.getTrxnTypeId() != null
 				&& actionForm.getTrxnTypeId() != "") {
@@ -264,26 +262,23 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 	}
 
 	private MasterDataService getMasterDataService() throws ServiceException {
-		if (masterDataService == null)
-			masterDataService = (MasterDataService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.MasterDataService);
+		if (masterDataService == null) {
+			masterDataService = new MasterDataService();
+		}
 		return masterDataService;
 	}
 
 	private SavingsBusinessService getSavingsService() throws ServiceException {
-		if (savingsService == null)
-			savingsService = (SavingsBusinessService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.Savings);
+		if (savingsService == null) {
+			savingsService = new SavingsBusinessService();
+		}
 		return savingsService;
 	}
 
 	private AccountBusinessService getAccountsService() throws ServiceException {
-		if (accountsService == null)
-			accountsService = (AccountBusinessService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.Accounts);
+		if (accountsService == null) {
+			accountsService = new AccountBusinessService();
+		}
 		return accountsService;
 	}
 }

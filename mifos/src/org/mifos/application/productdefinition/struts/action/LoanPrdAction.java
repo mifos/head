@@ -394,14 +394,9 @@ public class LoanPrdAction extends BaseAction {
 	private void loadMasterData(HttpServletRequest request) throws Exception {
 		prdDefLogger
 				.debug("start Load master data method of Loan Product Action ");
-		LoanPrdBusinessService service = (LoanPrdBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.LoanProduct);
-		FeeBusinessService feeService = (FeeBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.FeesService);
-		FundBusinessService fundService = (FundBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.fund);
+		LoanPrdBusinessService service = new LoanPrdBusinessService();
+		FeeBusinessService feeService = new FeeBusinessService();
+		FundBusinessService fundService = new FundBusinessService();
 		List<FeeBO> fees = feeService.getAllAppllicableFeeForLoanCreation();
 		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setCollectionAttribute(

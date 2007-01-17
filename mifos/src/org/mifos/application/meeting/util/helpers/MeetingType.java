@@ -39,8 +39,11 @@ package org.mifos.application.meeting.util.helpers;
 
 
 public enum MeetingType {
-	LOANFREQUENCYOFINSTALLMENTS((short) 1), SAVINGSTIMEPERFORINTCALC((short) 2), SAVINGSFRQINTPOSTACC(
-			(short) 3), CUSTOMERMEETING((short) 4), FEEMEETING((short) 5);
+	LOANFREQUENCYOFINSTALLMENTS((short) 1), 
+	SAVINGSTIMEPERFORINTCALC((short) 2), 
+	SAVINGSFRQINTPOSTACC((short) 3), 
+	CUSTOMERMEETING((short) 4), 
+	FEEMEETING((short) 5);
 
 	Short value;
 

@@ -98,7 +98,6 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 			throws Exception {
 		clearActionForm(form);
 		doCleanUp(request);
-		SavingsApplyAdjustmentActionForm actionForm = (SavingsApplyAdjustmentActionForm) form;
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(
@@ -225,10 +224,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 	}
 
 	private SavingsBusinessService getSavingsService() throws ServiceException {
-		if (savingsService == null)
-			savingsService = (SavingsBusinessService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.Savings);
+		if (savingsService == null) {
+			savingsService = new SavingsBusinessService();
+		}
 		return savingsService;
 	}
 

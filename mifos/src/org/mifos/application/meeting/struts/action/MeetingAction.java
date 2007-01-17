@@ -263,8 +263,7 @@ public class MeetingAction extends BaseAction {
 
 	private MeetingBusinessService getMeetingBusinessService()
 			throws ServiceException {
-		return (MeetingBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Meeting);
+		return new MeetingBusinessService();
 	}
 
 	private void loadMasterData(HttpServletRequest request) throws Exception {
