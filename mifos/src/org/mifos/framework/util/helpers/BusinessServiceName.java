@@ -6,6 +6,7 @@ import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.admin.business.service.AdminBusinessService;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
+import org.mifos.application.configuration.business.service.ConfigurationBusinessService;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.service.CenterBusinessService;
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
@@ -45,7 +46,8 @@ public enum BusinessServiceName {
 	RolesPermissions(RolesPermissionsBusinessService.class),
 	Admin(AdminBusinessService.class),
 	fund(FundBusinessService.class),
-	AuditLog(AuditBusinessService.class);
+	AuditLog(AuditBusinessService.class),
+	Configuration(ConfigurationBusinessService.class);
 
 	private String name;
 

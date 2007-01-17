@@ -158,6 +158,7 @@ public class ActivityMapper {
 		addCustomerNotesMappings();
 		addNotesMappings();
 		addReportsMappings();
+		addLabelConfigurationMappings();
 	}
 
 	private void addCustomerAccountActionMappings() {
@@ -1156,6 +1157,17 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/reverseloandisbaction-cancel", SecurityConstants.VIEW);
 		activityMap.put("/reverseloandisbaction-validate", SecurityConstants.VIEW);
+	}
+	
+	private void addLabelConfigurationMappings() {
+		activityMap.put("/labelconfigurationaction-load",
+				SecurityConstants.CAN_DEFINE_LABELS);
+		activityMap.put("/labelconfigurationaction-update",
+				SecurityConstants.VIEW);
+		activityMap.put("/labelconfigurationaction-cancel",
+				SecurityConstants.VIEW);
+		activityMap.put("/labelconfigurationaction-validate",
+				SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

@@ -39,7 +39,10 @@
 package org.mifos.application.productdefinition.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
+import org.mifos.framework.exceptions.PersistenceException;
 
 public class GracePeriodTypeEntity extends MasterDataEntity {
 
@@ -51,4 +54,14 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
 		super();
 	}
 
+	public void update(String name, Short localeId)
+			throws ProductDefinitionException {
+		setName(localeId, name);
+		try {
+			new LoanPrdPersistence().createOrUpdate(this);
+		}
+		catch (PersistenceException e) {
+			throw new ProductDefinitionException(e);
+		}
+	}
 }

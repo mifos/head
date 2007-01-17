@@ -77,7 +77,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.load_success.toString());
 		List<ActivityEntity> activities=(List<ActivityEntity>)SessionUtils.getAttribute(RolesAndPermissionConstants.ACTIVITYLIST,request);
 		assertNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY,request));
-		assertEquals(178,activities.size());
+		assertEquals(180,activities.size());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 

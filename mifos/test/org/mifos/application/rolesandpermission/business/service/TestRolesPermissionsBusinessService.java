@@ -31,7 +31,7 @@ public class TestRolesPermissionsBusinessService extends MifosTestCase {
 	}
 
 	public void testGetActivities() throws Exception{
-		assertEquals(178,rolesPermissionsBusinessService.getActivities().size());
+		assertEquals(180,rolesPermissionsBusinessService.getActivities().size());
 	}
 
 	public void testGetActivitiesFailure() {
@@ -47,7 +47,7 @@ public class TestRolesPermissionsBusinessService extends MifosTestCase {
 	public void testGetRoleForGivenId() throws Exception{
 		RoleBO role = rolesPermissionsBusinessService.getRole(Short.valueOf("1"));
 		assertNotNull(role);
-		assertEquals(157,role.getActivities().size());
+		assertEquals(159,role.getActivities().size());
 	}
 
 	public void testGetRoleForGivenIdFailure() {

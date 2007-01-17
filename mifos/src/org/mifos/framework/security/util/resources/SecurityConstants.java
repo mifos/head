@@ -399,4 +399,6 @@ public interface SecurityConstants {
     
     public final short CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS = 201;
     public final short CAN_REVERSE_LOAN_DISBURSAL = 202;
+    
+    public final short CAN_DEFINE_LABELS = 204;
 }

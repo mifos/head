@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+"http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
+<struts-config>
+	<form-beans>
+		<form-bean name="labelconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm"></form-bean>
+	</form-beans>
+	<global-exceptions>
+		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
+		<exception type="org.mifos.framework.exceptions.ApplicationException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.ApplicationException" scope="request" />
+		<exception type="org.mifos.framework.exceptions.PageExpiredException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.PageExpiredException" scope="request" path="/pages/framework/jsp/pageexpirederror.jsp" />
+	</global-exceptions>
+	<action-mappings>
+		<action path="/labelconfigurationaction" type="org.mifos.application.configuration.struts.action.LabelConfigurationAction" name="labelconfigurationactionform" parameter="method" input="/labelconfigurationaction.do?method=validate" validate="true"
+			scope="session">
+			<forward name="load_success" path="/pages/application/configuration/jsp/definelabels.jsp" />
+			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_failure" path="/pages/application/configuration/jsp/definelabels.jsp" />
+			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+		</action>
+	</action-mappings>
+	<!-- Configuration -->
+	<message-resources key="configurationUIResources" parameter="org.mifos.application.configuration.util.resources.ConfigurationUIResources"></message-resources>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames" value="org/mifos/application/configuration/validation.xml,org/mifos/application/configuration/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
+</struts-config>

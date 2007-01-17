@@ -107,9 +107,20 @@ public class OfficeLevelEntity extends MasterDataEntity {
 				addConfigured(configured);
 				new OfficeHierarchyPersistence().createOrUpdate(this);
 			}
-		} catch (PersistenceException e) {
+		}
+		catch (PersistenceException e) {
 			throw new OfficeException(e);
 		}
 
+	}
+
+	public void update(String name, Short localeId) throws OfficeException {
+		setName(localeId, name);
+		try {
+			new OfficeHierarchyPersistence().createOrUpdate(this);
+		}
+		catch (PersistenceException e) {
+			throw new OfficeException(e);
+		}
 	}
 }

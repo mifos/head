@@ -1157,5 +1157,172 @@
 				<arg key="Savings.notes" />
 			</field>
 		</form>
+		
+		<form name="/labelconfigurationaction">
+			<field property="headOffice" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.headoffice" />
+			</field>
+			<field property="regionalOffice" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.regoffice" />
+			</field>
+			<field property="subRegionalOffice" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.subregoffice" />
+			</field>
+			<field property="areaOffice" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.areaoffice" />
+			</field>
+			<field property="branchOffice" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.branchoffice" />
+			</field>
+			<field property="client" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.client" />
+			</field>
+			<field property="group" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.group" />
+			</field>
+			<field property="center" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.center" />
+			</field>
+			<field property="cash" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.cash" />
+			</field>
+			<field property="check" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.check" />
+			</field>
+			<field property="vouchers" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.vouchers" />
+			</field>
+			<field property="loans" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.loans" />
+			</field>
+			<field property="savings" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.savings" />
+			</field>
+			<field property="state" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.state" />
+			</field>
+			<field property="postalCode" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.postalcode" />
+			</field>
+			<field property="ethnicity" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.ethnicity" />
+			</field>
+			<field property="citizenship" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.citizenship" />
+			</field>
+			<field property="handicapped" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.handicapped" />
+			</field>
+			<field property="govtId" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.govtId" />
+			</field>
+			<field property="address1" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.address1" />
+			</field>
+			<field property="address2" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.address2" />
+			</field>
+			<field property="address3" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.address3" />
+			</field>
+			<field property="partialApplication" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.partialappl" />
+			</field>
+			<field property="pendingApproval" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.pendingappr" />
+			</field>
+			<field property="approved" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.approved" />
+			</field>
+			<field property="cancel" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.cancel" />
+			</field>
+			<field property="closed" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.closed" />
+			</field>
+			<field property="onhold" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.onhold" />
+			</field>
+			<field property="active" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.active" />
+			</field>
+			<field property="inActive" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.inactive" />
+			</field>
+			<field property="activeInGoodStanding" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.activegoodstand" />
+			</field>
+			<field property="activeInBadStanding" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.activebadstand" />
+			</field>
+			<field property="closedObligationMet" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.closeobligmet" />
+			</field>
+			<field property="closedRescheduled" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.closeresch" />
+			</field>
+			<field property="closedWrittenOff" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.closewriteoff" />
+			</field>
+			<field property="none" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.none" />
+			</field>
+			<field property="graceOnAllRepayments" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.graceallrepay" />
+			</field>
+			<field property="principalOnlyGrace" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.pringrace" />
+			</field>
+			<field property="interest" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.interest" />
+			</field>
+			<field property="externalId" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.externalId" />
+			</field>
+			<field property="bulkEntry" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="configurationUIResources" />
+				<arg key="configuration.bulkentry" />
+			</field>
+		</form>
 	</formset>
 </form-validation>

@@ -104,6 +104,7 @@
 		
 		<form-bean name="multipleloansactionform" type="org.mifos.application.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm"></form-bean>
 		<form-bean name="reverseloandisbactionform" type="org.mifos.application.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm"></form-bean>
+		<form-bean name="labelconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm"></form-bean>
 
 		<!-- Reports -->
 		<form-bean name="reportsParamsActionForm"
@@ -1047,6 +1048,15 @@
 			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
 		</action>
+		<action path="/labelconfigurationaction" type="org.mifos.application.configuration.struts.action.LabelConfigurationAction" name="labelconfigurationactionform" parameter="method" input="/labelconfigurationaction.do?method=validate"
+			validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/configuration/jsp/definelabels.jsp" />
+			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_failure" path="/pages/application/configuration/jsp/definelabels.jsp" />
+			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+		</action>
 	</action-mappings>
 
 	<controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
@@ -1092,6 +1102,8 @@
 	<message-resources key="reportsUIResources" parameter="org.mifos.application.reports.util.resources.ReportsUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
 	<!-- Change Account Status resources -->
 	<message-resources key="accountStatusUIResources" parameter="org.mifos.application.accounts.loan.util.resources.AccountStatusUIResources"></message-resources>
+	<!-- Configuration -->
+	<message-resources key="configurationUIResources" parameter="org.mifos.application.configuration.util.resources.ConfigurationUIResources"></message-resources>
 
 	<plug-in className="org.mifos.framework.struts.plugin.InitializerPlugin"/>
 	<plug-in className="org.apache.struts.tiles.TilesPlugin">

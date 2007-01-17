@@ -148,4 +148,8 @@ public class MenuRepository {
 		}
 		return null;
 	}
+	
+	public void removeLocaleMenu(Locale lc){
+		localeMenuMap.remove(lc);
+	}
 }
