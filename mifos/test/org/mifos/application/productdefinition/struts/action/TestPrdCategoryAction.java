@@ -82,11 +82,12 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 		addRequestParameter("productCategoryDesc", "created a category");
 		addRequestParameter("productCategoryStatus", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+		performNoErrors();
 		verifyForward("preview_success");
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-		assertEquals(2,((List<ProductTypeEntity>)SessionUtils.getAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, request)).size());
+		List<ProductTypeEntity> productTypes = 
+			(List<ProductTypeEntity>)SessionUtils.getAttribute(
+				ProductDefinitionConstants.PRODUCTTYPELIST, request);
+		assertEquals(2, productTypes.size());
 	}
 
 	public void testCreatePrevious() throws PersistenceException, PageExpiredException {
@@ -117,10 +118,8 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 		addRequestParameter("productCategoryDesc", "created a category");
 		addRequestParameter("productCategoryStatus", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
+		performNoErrors();
 		verifyForward("create_success");
-		verifyNoActionErrors();
-		verifyNoActionMessages();
 		ProductCategoryBO productCategoryBO=getProductCategory().get(2);
 		assertEquals("product category",productCategoryBO.getProductCategoryName());
 		assertEquals("created a category",productCategoryBO.getProductCategoryDesc());

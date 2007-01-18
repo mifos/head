@@ -65,6 +65,11 @@ import org.mifos.framework.util.helpers.MoneyTest;
  * {@link MifosTestCase}, call Hibernate, or other things
  * which take many seconds to start up.
  * 
+ * It is also true that tests here do not depend on the MySQL
+ * test database.  We probably want to keep it that way (partly
+ * for speed, partly for isolation from other test runs and the
+ * like).
+ * 
  * If your only reason for wanting {@link MifosTestCase} is logging,
  * it might be possible to just call
  * {@link DatabaseSetup#configureLogging()} (haven't verified this

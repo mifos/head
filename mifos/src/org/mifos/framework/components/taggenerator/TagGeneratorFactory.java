@@ -102,7 +102,7 @@ public class TagGeneratorFactory {
 	public TagGenerator getGenerator(BusinessObject bo) throws PageExpiredException {
 		try {
 			
-			if ( bo==null) throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
+			if ( bo==null) throw new PageExpiredException();
 			return (TagGenerator) Class.forName(
 					getGeneratorNames().get(getClassName(bo))).newInstance();
 		} catch (ClassNotFoundException e) {

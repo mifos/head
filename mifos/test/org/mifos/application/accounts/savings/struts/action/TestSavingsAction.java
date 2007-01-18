@@ -44,8 +44,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestSavingsAction extends MifosMockStrutsTestCase {
 
-	private String flowKey;
-
 	private UserContext userContext;
 
 	private CustomerBO group;
@@ -76,9 +74,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		request.getSession(false).setAttribute("ActivityContext",
 				TestObjectFactory.getActivityContext());
-		flowKey = createFlow(request, SavingsAction.class);
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		createFlowAndAddToRequest(SavingsAction.class);
 	}
 
 	@Override
@@ -362,10 +358,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		addRequestParameter("stateSelected", Short
 				.toString(AccountStates.SAVINGS_ACC_PARTIALAPPLICATION));
 		addRequestParameter("method", "create");
-		actionPerform();
+		performNoErrors();
 		verifyForward("create_success");
-		verifyNoActionErrors();
-		verifyNoActionMessages();
 		String globalAccountNum = (String) request
 				.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
 		assertNotNull(globalAccountNum);
@@ -427,7 +421,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		addRequestParameter("globalAccountNum",savings.getGlobalAccountNum());
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "get");
-		actionPerform();
+		performNoErrors();
 		verifyForward("get_success");
 		SavingsBO savingsObj = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
@@ -437,8 +431,6 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				.getAmountDoubleValue(), savingsObj.getRecommendedAmount()
 				.getAmountDoubleValue());
 		savingsOffering = null;
-		verifyNoActionErrors();
-		verifyNoActionMessages();
 		assertNotNull(SessionUtils.getAttribute(MasterConstants.SAVINGS_TYPE,
 				request));
 		assertNotNull(SessionUtils.getAttribute(
@@ -462,12 +454,10 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "edit");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
+		performNoErrors();
 		verifyForward("edit_success");
-		verifyNoActionErrors();
-		verifyNoActionMessages();
 		SavingsActionForm actionForm = (SavingsActionForm) request.getSession()
-		.getAttribute("savingsActionForm");
+			.getAttribute("savingsActionForm");
 		assertEquals(new Money("300"), actionForm.getRecommendedAmntValue());
 	}
 
@@ -476,10 +466,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savingsOffering = null;
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "editPrevious");
-		actionPerform();
+		performNoErrors();
 		verifyForward("editPrevious_success");
-		verifyNoActionErrors();
-		verifyNoActionMessages();
 	}
 
 	public void testSuccessfulUpdate() throws Exception {
@@ -633,10 +621,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "getDepositDueDetails");
 		addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());
-		actionPerform();
+		performNoErrors();
 		verifyForward("depositduedetails_success");
-		verifyNoActionErrors();
-		verifyNoActionMessages();
 
 		HibernateUtil.closeSession();
 		savings = new SavingsBusinessService().findBySystemId(savings

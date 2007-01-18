@@ -23,7 +23,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -68,9 +67,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 	public void testLoad() throws Exception {
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "load");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 		assertNotNull(SessionUtils.getAttribute(
 				LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
@@ -95,9 +92,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter("branchOfficeId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 		assertNotNull(SessionUtils.getAttribute(
 				LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
@@ -133,9 +128,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter("loanOfficerId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 		assertNotNull(SessionUtils.getAttribute(
 				LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
@@ -188,9 +181,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter("centerId", center.getCustomerId().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 		assertNotNull(SessionUtils.getAttribute(
 				LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, request));
@@ -223,9 +214,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS,
 				Constants.YES, request);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 		assertEquals(1, ((List<LoanOfferingBO>) SessionUtils.getAttribute(
 				LoanConstants.LOANPRDOFFERINGS, request)).size());
@@ -258,10 +247,10 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(LoanConstants.IS_CENTER_HEIRARCHY_EXISTS,
 				Constants.YES, request);
+		/* Why two calls to actionPerform?  Are we trying to test the
+		   case where the user clicks twice or is this just a mistake? */
 		actionPerform();
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 		assertEquals(3, ((List<LoanOfferingBO>) SessionUtils.getAttribute(
 				LoanConstants.LOANPRDOFFERINGS, request)).size());
@@ -331,9 +320,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		addRequestParameter("centerId", center.getCustomerId().toString());
 		addRequestParameter("centerSearchId", center.getSearchId().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.get_success.toString());
 
 		assertEquals(1, ((List) SessionUtils.getAttribute(
@@ -412,9 +399,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("method", "create");
 		addRequestParameter("stateSelected", "1");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.create_success.toString());
 
 		List<String> accountNumbers = ((List<String>) request

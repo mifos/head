@@ -38,47 +38,24 @@ package org.mifos.application.reports.exceptions;
 
  */
 
-
-
 import org.mifos.framework.exceptions.ApplicationException;
-/**
- * This is general exception for the report
- */
-public class ReportException extends ApplicationException{
+
+public class ReportException extends ApplicationException {
 	
-	/** Constructor for ReportException
-	 * @param key
-	 */
 	public ReportException(String key) {
 		super(key);
 	}
 	
-	/** Constructor for ReportException
-	 * @param key
-	 * @param values
-	 */
-	public ReportException(String key,Object[] values) {
+	public ReportException(String key, Object[] values) {
 		super(key, values);
 	}
 
-	/** Constructor for ReportException
-	 * @param cause
-	 */
 	public ReportException(Throwable cause) {
 		super(cause);
 	}
 	
-	/** Constructor for ReportException
-	 * @param values
-	 */
-	public ReportException(Object[] values) {
-		super(values);
-	}
-/** Constructor for ReportException
-	 * @param cause
-	 */
-	public ReportException(String key ,Throwable cause) {
-		super(key , cause);
+	public ReportException(String key, Throwable cause) {
+		super(key, cause);
 	}
 
 }

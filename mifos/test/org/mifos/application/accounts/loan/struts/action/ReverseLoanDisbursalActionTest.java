@@ -19,7 +19,6 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -63,9 +62,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 	public void testSearch() throws Exception {
 		setRequestPathInfo("/reverseloandisbaction.do");
 		addRequestParameter("method", "search");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.search_success.toString());
 	}
 
@@ -108,10 +105,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "load");
 		addRequestParameter("searchString", loan.getGlobalAccountNum());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 
 		assertNotNull(SessionUtils
@@ -193,10 +187,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter("note", "0123456789012345678901234567890123456789");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.preview_success.toString());
 	}
 
@@ -218,9 +209,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/reverseloandisbaction.do");
 		addRequestParameter("method", "update");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.update_success.toString());
 		
 		HibernateUtil.closeSession();
@@ -234,9 +223,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "cancel");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.cancel_success.toString());
 	}
 
@@ -244,9 +231,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/reverseloandisbaction.do");
 		addRequestParameter("method", "validate");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.search_success.toString());
 	}
 
@@ -256,9 +241,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		request.setAttribute("methodCalled", Methods.preview.toString());
 
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 	}
 
@@ -268,9 +251,7 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		request.setAttribute("methodCalled", Methods.update.toString());
 
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.preview_success.toString());
 	}
 

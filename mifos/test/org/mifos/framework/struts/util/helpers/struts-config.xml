@@ -22,6 +22,7 @@
 		<form-bean name="savingsprdactionform"
 			type="org.mifos.application.productdefinition.struts.actionforms.SavingsProductActionForm">
 		</form-bean>
+		<form-bean name="savingsActionForm" type="org.mifos.application.accounts.savings.struts.actionforms.SavingsActionForm" />
 		<form-bean name="savingsproductactionform" type="org.mifos.application.productdefinition.struts.actionforms.SavingsPrdActionForm"></form-bean>
 		<!-- Payment Types -->
 

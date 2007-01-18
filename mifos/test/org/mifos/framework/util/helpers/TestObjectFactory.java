@@ -1297,9 +1297,8 @@ public class TestObjectFactory {
 			}
 			return userContext;
 		} catch (Exception e) {
-
+			throw new RuntimeException(e);
 		}
-		return null;
 	}
 
 	private static ActivityContext activityContext;

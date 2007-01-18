@@ -143,9 +143,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("method", "previous");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward("load_success");
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
@@ -154,9 +152,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("method", "preview");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward("preview_success");
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
@@ -166,9 +162,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("method", "forwardWaiveCharge");
 		addRequestParameter("type", "LoanAccount");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward("waiveLoanAccountCharges_Success");
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
@@ -353,9 +347,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.getPrdOfferigs_success.toString());
 		assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(
 				LoanConstants.LOANACCOUNTOWNER, request)).getDisplayName());
@@ -373,9 +365,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.getPrdOfferigs_success.toString());
 
 		assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(
@@ -405,9 +395,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.getPrdOfferigs_success.toString());
 
 		assertEquals("Group", ((CustomerBO) SessionUtils.getAttribute(
@@ -474,9 +462,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
 				.toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 		assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING,
 				request));
@@ -502,9 +488,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
 				.toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 
 		assertEquals(2, ((List) SessionUtils.getAttribute(
@@ -532,9 +516,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
 				.toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) request
 				.getSession().getAttribute("loanAccountActionForm");
@@ -590,9 +572,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
 				.toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
 		LoanAccountActionForm loanActionForm = (LoanAccountActionForm) request
 				.getSession().getAttribute("loanAccountActionForm");
@@ -745,9 +725,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 			i++;
 		}
 		addRequestParameter("method", "schedulePreview");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.schedulePreview_success.toString());
 
 		LoanBO loan = (LoanBO) SessionUtils.getAttribute(
@@ -860,9 +838,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "schedulePreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.schedulePreview_success.toString());
 		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
 				.getObject(LoanOfferingBO.class, loanOffering
@@ -895,9 +871,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "schedulePreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.schedulePreview_success.toString());
 		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
 				.getObject(LoanOfferingBO.class, loanOffering
@@ -932,9 +906,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "schedulePreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.schedulePreview_success.toString());
 		LoanAccountActionForm actionForm = (LoanAccountActionForm) request
 		.getSession().getAttribute("loanAccountActionForm");
@@ -976,9 +948,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		addRequestParameter("method", "create");
 		addRequestParameter("stateSelected", "1");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.create_success.toString());
 		LoanAccountActionForm actionForm = (LoanAccountActionForm) request
 				.getSession().getAttribute("loanAccountActionForm");
@@ -998,8 +968,6 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		TestObjectFactory.cleanUp(loan);
 	}
-	
-	
 
 	public void testCreateWithoutPermission() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

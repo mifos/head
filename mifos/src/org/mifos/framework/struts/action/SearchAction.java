@@ -20,7 +20,6 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
 public class SearchAction extends BaseAction {
@@ -43,7 +42,7 @@ public class SearchAction extends BaseAction {
 		checkForValidData(request);
 		SessionUtils.setRemovableAttribute("meth","previous",TableTagConstants.PATH,request.getSession());
 		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
-		if( forwardkey ==null)throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		if( forwardkey ==null)throw new PageExpiredException();
 		return mapping.findForward(forwardkey);
 	}
 	
@@ -56,7 +55,9 @@ public class SearchAction extends BaseAction {
 		checkForValidData(request);
 		SessionUtils.setRemovableAttribute("meth","next",TableTagConstants.PATH,request.getSession());
 		String forwardkey = (String)SessionUtils.getAttribute("forwardkey",request.getSession());
-		if( forwardkey ==null)throw new PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
+		if (forwardkey == null) {
+			throw new PageExpiredException();
+		}
 		return mapping.findForward(forwardkey);
 	}
 	

@@ -21,7 +21,6 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -84,9 +83,7 @@ public class TestAccountStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("type", "loan");
 		addRequestParameter("currentStatus", account.getAccountState().getId()
 				.toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.changeAccountStatusSearch_success
 				.toString());
 		assertNotNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));

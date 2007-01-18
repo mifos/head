@@ -14,11 +14,9 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -73,7 +71,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 		savingsOffering2 = createSavingsOffering("SavingPrd2", "a1lt");
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			List<PrdOfferingView> products = service.getSavingProducts(null,
+			service.getSavingProducts(null,
 					group.getCustomerLevel(), CustomerConstants.GROUP_LEVEL_ID);
 			fail();
 		} catch (ServiceException e) {
@@ -94,8 +92,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 	public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			List<CustomFieldDefinitionEntity> customFields = service
-					.retrieveCustomFieldsDefinition();
+			service.retrieveCustomFieldsDefinition();
 			fail();
 		} catch (ServiceException e) {
 			assertTrue(true);
@@ -148,7 +145,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			SavingsBO savings1 = service.findBySystemId("YYYY");
+			service.findBySystemId("YYYY");
 			fail();
 		} catch (ServiceException e) {
 			assertTrue(true);
@@ -196,8 +193,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				savingsOffering);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			List<SavingsBO> savingsAccounts = service
-					.getAllClosedAccounts(center.getCustomerId());
+			service.getAllClosedAccounts(center.getCustomerId());
 			fail();
 		} catch (ServiceException e) {
 			assertTrue(true);
@@ -213,7 +209,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 
-	private SavingsOfferingBO createSavingsOffering(String offeringName,
+	public static SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));

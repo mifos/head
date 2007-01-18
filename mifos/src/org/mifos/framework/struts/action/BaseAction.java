@@ -42,7 +42,6 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ConvertionUtil;
-import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
@@ -81,9 +80,10 @@ public abstract class BaseAction extends DispatchAction {
 				.getAttribute(Constants.USER_CONTEXT_KEY);
 		Locale locale = getLocale(userContext);
 		BusinessObject object = getBusinessObjectFromSession(request);
-		if (!skipActionFormToBusinessObjectConversion((String) request
-				.getParameter("method")))
+		if (!skipActionFormToBusinessObjectConversion(
+				request.getParameter("method"))) {
 			ConvertionUtil.populateBusinessObject(actionForm, object, locale);
+		}
 	}
 
 	protected TransactionDemarcate getTransaction(ActionForm actionForm,
@@ -157,8 +157,12 @@ public abstract class BaseAction extends DispatchAction {
 		FlowManager flowManager = (FlowManager) request.getSession()
 				.getAttribute(Constants.FLOWMANAGER);
 		if (flowKey == null || !flowManager.isFlowValid(flowKey)) {
-			throw new PageExpiredException(
-					ExceptionConstants.PAGEEXPIREDEXCEPTION);
+			/* I suppose in the null case we could even have the message
+			   say "you are probably writing a test which needs to call
+			   createFlowAndAddToRequest(Class)", but perhaps that goes
+			   too far in terms of guessing what situation the developer is in.
+			 */
+			throw new PageExpiredException("no flow for key " + flowKey);
 		}
 
 	}

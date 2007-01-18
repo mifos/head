@@ -96,9 +96,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.get.toString());
 		addRequestParameter("globalPersonnelNum", personnel
 				.getGlobalPersonnelNum());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyMasterData();
 		verifyForward(ActionForwards.get_success.toString());
 	}
@@ -115,9 +113,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.manage.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.manage_success.toString());
 	}
 
@@ -330,9 +326,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("emailId", personnel.getEmailId());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.preview_success.toString());
 	}
 	
@@ -341,9 +335,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.previous.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.previous_success.toString());
 	}
 
@@ -383,9 +375,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.update.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.updateSettings_success.toString());
 
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -411,9 +401,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
 		setRequestPathInfo("/yourSettings.do");
 		addRequestParameter("method", Methods.loadChangePassword.toString());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
 	}
 
@@ -424,9 +412,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.get.toString());
 		addRequestParameter("globalPersonnelNum", personnel
 				.getGlobalPersonnelNum());
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyMasterData();
 		verifyForward(ActionForwards.get_success.toString());
 	}

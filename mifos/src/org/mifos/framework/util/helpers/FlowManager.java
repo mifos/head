@@ -72,8 +72,7 @@ public class FlowManager implements Serializable{
 
 	public Flow getFlowWithValidation(String key) throws PageExpiredException {
 		if (!isFlowValid(key)) {
-			throw new PageExpiredException(
-					ExceptionConstants.PAGEEXPIREDEXCEPTION);
+			throw new PageExpiredException();
 		}
 		return getFlow(key);
 	}
@@ -104,8 +103,7 @@ public class FlowManager implements Serializable{
 	public Object getFromFlow(String flowKey, String key)
 			throws PageExpiredException {
 		if (!isFlowValid(flowKey)) {
-			throw new PageExpiredException(
-					ExceptionConstants.PAGEEXPIREDEXCEPTION);
+			throw new PageExpiredException();
 		}
 		Flow flow = getFlow(flowKey);
 		return flow.getObjectFromSession(key);
@@ -119,8 +117,7 @@ public class FlowManager implements Serializable{
 	public void removeFromFlow(String flowKey, String key)
 			throws PageExpiredException {
 		if (!isFlowValid(flowKey)) {
-			throw new PageExpiredException(
-					ExceptionConstants.PAGEEXPIREDEXCEPTION);
+			throw new PageExpiredException();
 		}
 		Flow flow = getFlow(flowKey);
 		flow.removeFromSession(key);

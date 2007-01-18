@@ -57,27 +57,30 @@ public class ApplicationException extends Exception {
 	 */
 	protected final Object[] values;
 	
-	/**
-	    Pass arguments, but no key.  I don't think this is ever being
-	    called (and I don't see how it would make sense).
-	*/
-	public ApplicationException(Object[] values) {
-		this(null, values);
-	}
-	
 	public ApplicationException(Throwable cause) {
 		this(null, cause, null);
 	}
 	
-	public ApplicationException(String key ) {
+	public ApplicationException(String key) {
 		this(key, (Object[])null);
 	}
 	
-	public ApplicationException(String key, Object[] values) {
-		// Putting the key in the message will make debugging easier.
-		//super(key);
+	/**
+	 * @param internalMessage A message which is intended to be informative
+	 * during development.  It is not internationalized, and the key should
+	 * still point to something appropriate for the end user (perhaps a
+	 * generic "internal error" if that is appropriate).
+	 */
+	public ApplicationException(String key, Object[] values,
+		String internalMessage) {
+		super(internalMessage);
 		this.key = key;
 		this.values = values;
+	}
+	
+	public ApplicationException(String key, Object[] values) {
+		// Putting the key in the message is to make debugging easier.
+		this(key, values, key);
 	}
 	
 	public ApplicationException(String key, Throwable cause) {

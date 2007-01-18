@@ -137,10 +137,23 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 		return flowKey;
 	}
 
+	protected String createFlowAndAddToRequest(Class flowClass) {
+		String key = createFlow(request, flowClass);
+		request.setAttribute(Constants.CURRENTFLOWKEY, key);
+		addRequestParameter(Constants.CURRENTFLOWKEY, key);
+		return key;
+	}
+
 	protected void loadAccountStrutsConfig() throws URISyntaxException {
 		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
 		setConfigFile(ResourceLoader.getURI(
 				"org/mifos/application/accounts/struts-config.xml").getPath());
+	}
+
+	protected void performNoErrors() {
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
 	}
 
 }
