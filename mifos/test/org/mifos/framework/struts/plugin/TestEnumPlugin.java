@@ -1,6 +1,5 @@
 package org.mifos.framework.struts.plugin;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -20,14 +19,10 @@ public class TestEnumPlugin extends MifosMockStrutsTestCase {
 	private SavingsOfferingBO offering;
 
 	@Override
-	public void setUp()throws Exception{
+	public void setUp()throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
-			setConfigFile(ResourceLoader.getURI("org/mifos/framework/struts/util/helpers/struts-config.xml").getPath());
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml").getPath());
+		setConfigFile(ResourceLoader.getURI("org/mifos/framework/struts/util/helpers/struts-config.xml").getPath());
 		request.getSession(true);
 		createFlowAndAddToRequest(SavingsAction.class);
 		request.getSession().setAttribute(Constants.USERCONTEXT, 
@@ -51,7 +46,7 @@ public class TestEnumPlugin extends MifosMockStrutsTestCase {
 		addRequestParameter("method","load");
 		addRequestParameter("recordOfficeId","0");
 		addRequestParameter("recordLoanOfficerId","0");
-		actionPerform();
+		performNoErrors();
 		Map constantMap = (Map)context.getAttribute("CustomFieldType");
 		assertNotNull(constantMap);
 		assertEquals("NUMERIC", constantMap.get("NUMERIC").toString());
