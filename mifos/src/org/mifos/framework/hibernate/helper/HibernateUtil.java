@@ -162,7 +162,7 @@ public class HibernateUtil {
 
 	}
 
-	public static void closeandFlushSession() {
+	public static void flushAndCloseSession() {
 		SessionHolder sessionHolder = getSessionHolder();
 		if (sessionHolder != null) {
 			Session session = sessionHolder.getSession();

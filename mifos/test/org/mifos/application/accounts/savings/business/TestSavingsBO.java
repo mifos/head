@@ -704,6 +704,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
 		HibernateUtil.closeSession();
+
 		/*
 		 * TODO: this is throwing org.hibernate.NonUniqueObjectException
 		 * (now bogusly caught in TestObjectFactory).  Why?
@@ -713,7 +714,8 @@ public class TestSavingsBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
-		savings.generateAndUpdateDepositActionsForClient(new ClientPersistence().getClient(client1.getCustomerId()));
+		savings.generateAndUpdateDepositActionsForClient(
+			new ClientPersistence().getClient(client1.getCustomerId()));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 		assertEquals(10, savings.getAccountActionDates().size());

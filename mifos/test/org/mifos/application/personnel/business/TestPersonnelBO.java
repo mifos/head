@@ -204,7 +204,7 @@ public class TestPersonnelBO extends MifosTestCase {
 				getAddress(), userContext.getId());
 		personnel.save();
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeandFlushSession();
+		HibernateUtil.flushAndCloseSession();
 		PersonnelBO personnelSaved = (PersonnelBO) HibernateUtil.getSessionTL()
 				.get(PersonnelBO.class, personnel.getPersonnelId());
 		assertEquals("RAJ", personnelSaved.getUserName());

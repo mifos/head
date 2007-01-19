@@ -44,7 +44,7 @@ public class TestLoanRepayTag extends MifosTestCase {
 		
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
-		HibernateUtil.closeandFlushSession();
+		HibernateUtil.flushAndCloseSession();
 		accountBO =TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
 		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
 		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
@@ -56,7 +56,7 @@ public class TestLoanRepayTag extends MifosTestCase {
 	public void testcreateRunningBalanceRow(){
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
-		HibernateUtil.closeandFlushSession();
+		HibernateUtil.flushAndCloseSession();
 		accountBO =TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
 		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
 		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());

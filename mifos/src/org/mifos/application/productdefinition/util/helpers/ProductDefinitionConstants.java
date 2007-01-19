@@ -168,7 +168,7 @@ public interface ProductDefinitionConstants {
 	public String ERRORDEFINTRATE="errors.defIntRate";
 	public String ERRORINTRATE="errors.intRateValue";
 	public String PRDINVALID="errors.invalid";
-	public String DUPLCATEGORYNAME="errors.duplcategoryname";
+	public String DUPLICATE_CATEGORY_NAME="errors.duplcategoryname";
 	public String DUPLPRDINSTNAME="errors.duplprdinstname";
 	public String DUPLPRDINSTSHORTNAME="errors.duplprdinstshortname";
 	public String INVALIDSTARTDATE="errors.startdateexception";

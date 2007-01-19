@@ -71,7 +71,7 @@ public class TestOfficeBO extends MifosTestCase {
 				OperationMode.REMOTE_SERVER);
 		officeBO.save();
 		HibernateUtil.commitTransaction();
-		HibernateUtil.closeandFlushSession();
+		HibernateUtil.flushAndCloseSession();
 		officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
 		assertEquals("1.1.2", officeBO.getSearchId());
 		assertEquals("abcd", officeBO.getOfficeName());

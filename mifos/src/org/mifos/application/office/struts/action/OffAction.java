@@ -109,7 +109,7 @@ public class OffAction extends BaseAction {
 				parentOffice, offActionForm.getCustomFields(), offActionForm
 						.getOfficeName(), offActionForm.getShortName(),
 				offActionForm.getAddress(), OperationMode.REMOTE_SERVER);
-		HibernateUtil.closeandFlushSession();
+		HibernateUtil.flushAndCloseSession();
 		officeBO.save();
 
 		offActionForm.setOfficeId(officeBO.getOfficeId().toString());

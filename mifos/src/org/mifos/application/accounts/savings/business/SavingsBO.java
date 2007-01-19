@@ -409,20 +409,6 @@ public class SavingsBO extends AccountBO {
 						+ getAccountId());
 	}
 
-	private void updateAndGenerateSchedule() throws AccountException {
-		logger.debug("In SavingsBO::updateSchedule(), accountId: "
-				+ getAccountId());
-		for (AccountActionDateEntity accountDate : this.getAccountActionDates()) {
-			if (accountDate.getActionDate().compareTo(helper.getCurrentDate()) >= 0)
-				((SavingsScheduleEntity) accountDate)
-						.setDeposit(getRecommendedAmount());
-		}
-		update();
-		logger
-				.info("In SavingsBO::updateSchedule(), successfully updated Deposit Schedule, accountId: "
-						+ getAccountId());
-	}
-
 	public boolean isMandatory() {
 		logger.debug("In SavingsBO::isMandatory(), savingTypeId: "
 				+ getSavingsType().getId());
@@ -899,7 +885,7 @@ public class SavingsBO extends AccountBO {
 		Date oldMeetingStartDate = meeting.getStartDate();
 		meeting.setStartDate(DateUtils.getCurrentDateWithoutTimeStamp());
 		
-		List<Date> depositDates = null;
+		List<Date> depositDates;
 		try {
 			depositDates = meeting.getAllDates((short) 10);
 		} catch (MeetingException e) {
@@ -907,14 +893,14 @@ public class SavingsBO extends AccountBO {
 		}
 		meeting.setStartDate(oldMeetingStartDate);
 		short installmentNumber = 1;
-		for (Date dt : depositDates) {
+		for (Date date : depositDates) {
 			AccountActionDateEntity actionDate = helper.createActionDateObject(
-					this, customer, installmentNumber++, dt, userContext
+					this, customer, installmentNumber++, date, userContext
 							.getId(), getRecommendedAmount());
 			addAccountActionDate(actionDate);
 			logger
 					.debug("In SavingsBO::generateDepositAccountActions(), Successfully added account action on date: "
-							+ dt);
+							+ date);
 		}
 	}
 

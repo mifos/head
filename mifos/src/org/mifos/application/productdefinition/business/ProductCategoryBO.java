@@ -165,7 +165,7 @@ public class ProductCategoryBO extends BusinessObject {
 			if (!new ProductCategoryPersistence().getProductCategory(
 					productCategoryName).equals(Integer.valueOf("0")))
 				throw new ProductDefinitionException(
-						ProductDefinitionConstants.DUPLCATEGORYNAME);
+						ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}
@@ -180,7 +180,7 @@ public class ProductCategoryBO extends BusinessObject {
 					productCategoryName, productCategoryId).equals(
 					Integer.valueOf("0")))
 				throw new ProductDefinitionException(
-						ProductDefinitionConstants.DUPLCATEGORYNAME);
+						ProductDefinitionConstants.DUPLICATE_CATEGORY_NAME);
 		} catch (PersistenceException e) {
 			throw new ProductDefinitionException(e);
 		}

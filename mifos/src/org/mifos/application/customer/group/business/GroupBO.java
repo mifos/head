@@ -540,5 +540,6 @@ public class GroupBO extends CustomerBO {
 			this.setTrainedDate(trainedDate);
 		if (getStatus().equals(CustomerStatus.GROUP_ACTIVE))
 			this.setCustomerActivationDate(this.getCreatedDate());
-	}	
+	}
+	
 }
