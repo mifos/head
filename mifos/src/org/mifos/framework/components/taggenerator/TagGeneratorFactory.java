@@ -53,7 +53,6 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.util.helpers.ExceptionConstants;
 
 public class TagGeneratorFactory {
 

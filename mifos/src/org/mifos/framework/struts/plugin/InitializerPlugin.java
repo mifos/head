@@ -48,8 +48,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ModuleConfig;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
@@ -118,10 +117,10 @@ public class InitializerPlugin implements PlugIn {
 	
 	private void initializeFieldConfiguration(ActionServlet servlet)
 			throws HibernateProcessException, ApplicationException {
-		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();
+		FieldConfig fieldConfig = FieldConfig.getInstance();
+		fieldConfig.init();
 		servlet.getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,
-				fieldConfigItf.getEntityMandatoryFieldMap());
+				fieldConfig.getEntityMandatoryFieldMap());
 	}
 
 	private void setAttribute(ServletContext servletContext, String key) {

@@ -12,20 +12,25 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
-public class FieldConfigImplementer implements FieldConfigItf {
+public class FieldConfig {
 
-	private static FieldConfigurationPersistenceService fieldConfigurationPersistenceService = new FieldConfigurationPersistenceService();
+	private static FieldConfigurationPersistenceService 
+		fieldConfigurationPersistenceService = 
+			new FieldConfigurationPersistenceService();
 
-	private static FieldConfigImplementer fieldConfigImplementer = new FieldConfigImplementer();
+	private static FieldConfig fieldConfigImplementer = 
+		new FieldConfig();
 
-	private Map<Short, List<FieldConfigurationEntity>> entityFieldMap = new HashMap<Short, List<FieldConfigurationEntity>>();
+	private Map<Short, List<FieldConfigurationEntity>> entityFieldMap = 
+		new HashMap<Short, List<FieldConfigurationEntity>>();
 
-	private Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = new HashMap<Short, List<FieldConfigurationEntity>>();
+	private Map<Short, List<FieldConfigurationEntity>> entityMandatoryFieldMap = 
+		new HashMap<Short, List<FieldConfigurationEntity>>();
 
 	private Map<Object, Object> entityMap = EntityMasterData
 			.getEntityMasterMap();;
 
-	private FieldConfigImplementer() {
+	private FieldConfig() {
 	}
 
 	public Map<Short, List<FieldConfigurationEntity>> getEntityMandatoryFieldMap() {
@@ -40,7 +45,7 @@ public class FieldConfigImplementer implements FieldConfigItf {
 		return entityMap;
 	}
 
-	public static FieldConfigImplementer getInstance() {
+	public static FieldConfig getInstance() {
 		return fieldConfigImplementer;
 	}
 
@@ -131,7 +136,8 @@ public class FieldConfigImplementer implements FieldConfigItf {
 	private List<FieldConfigurationEntity> getMandatoryFieldList(Short entityId) {
 		List<FieldConfigurationEntity> fieldList = getEntityFieldMap().get(
 				entityId);
-		List<FieldConfigurationEntity> mandatoryFieldList = new ArrayList<FieldConfigurationEntity>();
+		List<FieldConfigurationEntity> mandatoryFieldList = 
+			new ArrayList<FieldConfigurationEntity>();
 		for (FieldConfigurationEntity fieldConfigurationEntity : fieldList) {
 			if (isFieldManadatory(fieldConfigurationEntity.getLabel())) {
 				mandatoryFieldList.add(fieldConfigurationEntity);

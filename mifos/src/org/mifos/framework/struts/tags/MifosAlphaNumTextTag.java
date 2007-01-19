@@ -43,8 +43,7 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.struts.taglib.TagUtils;
 import org.apache.strutsel.taglib.html.ELTextTag;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**
@@ -58,7 +57,8 @@ public class MifosAlphaNumTextTag extends ELTextTag {
 	 */
 	private static final long serialVersionUID = 1645345439876082736L;
 	
-	private FieldConfigItf fieldConfigItf=FieldConfigImplementer.getInstance();
+	private FieldConfig fieldConfig =
+		FieldConfig.getInstance();
 	
 	private String keyhm;
 	
@@ -78,13 +78,13 @@ public class MifosAlphaNumTextTag extends ELTextTag {
 	/**
 	 * Set the onBlur and onKeyPress events of the element. 
 	 * @return doStart of super class
-	 * @exception JspException if a JSP exception has occurred
 	 * @see javax.servlet.jsp.tagext.Tag#doStartTag()
 	 */
+	@Override
 	public int doStartTag() throws JspException {
-		if(fieldConfigItf.isFieldHidden(getKeyhm()))
+		if(fieldConfig.isFieldHidden(getKeyhm()))
 			return EVAL_PAGE;
-		else if (!fieldConfigItf.isFieldHidden(getKeyhm()) && fieldConfigItf.isFieldManadatory(getKeyhm()) ){
+		else if (!fieldConfig.isFieldHidden(getKeyhm()) && fieldConfig.isFieldManadatory(getKeyhm()) ){
 			StringBuffer inputsForhidden=new StringBuffer();
 			inputsForhidden.append("<input type=\"hidden\"  name=\""+getKeyhm()+"\" value=\""+getPropertyExpr()+"\"/>");
 		    TagUtils.getInstance().write(this.pageContext,inputsForhidden.toString());

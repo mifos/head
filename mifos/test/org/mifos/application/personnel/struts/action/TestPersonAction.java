@@ -25,8 +25,7 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -68,12 +67,11 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		flowKey = createFlow(request, PersonAction.class);
 
 		EntityMasterData.getInstance().init();
-		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();
-		FieldConfigImplementer.getInstance();
+		FieldConfig fieldConfig = FieldConfig.getInstance();
+		fieldConfig.init();
 		getActionServlet().getServletContext().setAttribute(
 				Constants.FIELD_CONFIGURATION,
-				fieldConfigItf.getEntityMandatoryFieldMap());
+				fieldConfig.getEntityMandatoryFieldMap());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("input", "CreateUser");

@@ -6,7 +6,6 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCach
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
-import org.mifos.framework.util.helpers.Money;
 
 public class CustomerPenaltyAdjustmentAccountingEntry extends
 		BaseAccountingEntry {

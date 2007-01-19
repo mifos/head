@@ -73,8 +73,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
@@ -125,12 +124,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
 		flowKey = createFlow(request, GroupCustAction.class);
 		EntityMasterData.getInstance().init();
-		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();
-		FieldConfigImplementer.getInstance();
+		FieldConfig fieldConfig = FieldConfig.getInstance();
+		fieldConfig.init();
 		getActionServlet().getServletContext().setAttribute(
 				Constants.FIELD_CONFIGURATION,
-				fieldConfigItf.getEntityMandatoryFieldMap());
+				fieldConfig.getEntityMandatoryFieldMap());
 	}
 
 	@Override

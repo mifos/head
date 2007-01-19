@@ -1,6 +1,5 @@
 package org.mifos.application.accounts.loan.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountBO;
@@ -13,7 +12,6 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanActivityAction extends MifosMockStrutsTestCase {

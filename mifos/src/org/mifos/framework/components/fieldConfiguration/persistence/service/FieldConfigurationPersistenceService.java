@@ -8,9 +8,10 @@ import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfig
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.service.PersistenceService;
 
-public class FieldConfigurationPersistenceService extends PersistenceService{
+public class FieldConfigurationPersistenceService extends PersistenceService {
 	
-	private static FieldConfigurationPersistence fieldConfigurationPersistence = new FieldConfigurationPersistence();
+	private static FieldConfigurationPersistence fieldConfigurationPersistence =
+		new FieldConfigurationPersistence();
 
 	public List<EntityMaster> getEntityMasterList() throws PersistenceException{
 		return fieldConfigurationPersistence.getEntityMasterList();

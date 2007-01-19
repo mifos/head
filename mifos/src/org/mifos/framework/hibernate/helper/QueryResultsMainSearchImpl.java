@@ -5,7 +5,6 @@ package org.mifos.framework.hibernate.helper;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.type.Type;
 import org.mifos.application.customer.business.CustomerSearch;
 import org.mifos.framework.exceptions.HibernateSearchException;
 

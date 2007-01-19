@@ -48,15 +48,14 @@ import javax.servlet.jsp.JspException;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.taglib.html.BaseInputTag;
 import org.mifos.application.login.util.helpers.LoginConstants;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.security.util.UserContext;
 
 public class DateTag extends BaseInputTag {
 
 	private static final long serialVersionUID = 8328811567470903924L;
 
-	private FieldConfigItf fieldConfigItf = FieldConfigImplementer
+	private FieldConfig fieldConfig = FieldConfig
 			.getInstance();
 
 	private String keyhm;
@@ -86,7 +85,7 @@ public class DateTag extends BaseInputTag {
 
 	@Override
 	public int doStartTag() throws JspException {
-		if (fieldConfigItf.isFieldHidden(getKeyhm())) {
+		if (fieldConfig.isFieldHidden(getKeyhm())) {
 			StringBuffer inputsForhidden = new StringBuffer();
 			inputsForhidden.append("<input type=\"hidden\"  name=\""
 					+ getProperty() + "\" value=\"\"/>");
@@ -97,8 +96,8 @@ public class DateTag extends BaseInputTag {
 			TagUtils.getInstance().write(this.pageContext,
 					inputsForhidden.toString());
 			return EVAL_PAGE;
-		} else if (!fieldConfigItf.isFieldHidden(getKeyhm())
-				&& fieldConfigItf.isFieldManadatory(getKeyhm())) {
+		} else if (!fieldConfig.isFieldHidden(getKeyhm())
+				&& fieldConfig.isFieldManadatory(getKeyhm())) {
 			StringBuffer inputsForhidden = new StringBuffer();
 			inputsForhidden.append("<input type=\"hidden\"  name=\""
 					+ getKeyhm() + "\" value=\"" + getProperty() + "\"/>");

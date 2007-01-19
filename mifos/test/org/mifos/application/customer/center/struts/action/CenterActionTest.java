@@ -1,6 +1,5 @@
 package org.mifos.application.customer.center.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,8 +33,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
@@ -82,12 +80,11 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
 		EntityMasterData.getInstance().init();
-		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();
-		FieldConfigImplementer.getInstance();
+		FieldConfig fieldConfig = FieldConfig.getInstance();
+		fieldConfig.init();
 		getActionServlet().getServletContext().setAttribute(
 				Constants.FIELD_CONFIGURATION,
-				fieldConfigItf.getEntityMandatoryFieldMap());
+				fieldConfig.getEntityMandatoryFieldMap());
 	}
 
 	@Override

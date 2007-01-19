@@ -83,8 +83,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -133,12 +132,11 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 
 		EntityMasterData.getInstance().init();
-		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();
-		FieldConfigImplementer.getInstance();
+		FieldConfig fieldConfig = FieldConfig.getInstance();
+		fieldConfig.init();
 		getActionServlet().getServletContext().setAttribute(
 				Constants.FIELD_CONFIGURATION,
-				fieldConfigItf.getEntityMandatoryFieldMap());
+				fieldConfig.getEntityMandatoryFieldMap());
 	}
 
 	@Override

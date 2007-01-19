@@ -19,8 +19,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.cronjobs.MifosTask;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -59,12 +58,12 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		request.getSession(false).setAttribute("ActivityContext", ac);
 		flowKey = createFlow(request, PersonnelSettingsAction.class);
 		EntityMasterData.getInstance().init();
-		FieldConfigItf fieldConfigItf = FieldConfigImplementer.getInstance();
-		fieldConfigItf.init();
-		FieldConfigImplementer.getInstance();
+		FieldConfig fieldConfig = FieldConfig.getInstance();
+		fieldConfig.init();
+		FieldConfig.getInstance();
 		getActionServlet().getServletContext().setAttribute(
 				Constants.FIELD_CONFIGURATION,
-				fieldConfigItf.getEntityMandatoryFieldMap());
+				fieldConfig.getEntityMandatoryFieldMap());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("input", "CreateUser");

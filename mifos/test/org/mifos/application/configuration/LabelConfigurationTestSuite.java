@@ -1,10 +1,10 @@
 package org.mifos.application.configuration;
 
-import org.mifos.application.configuration.struts.action.LabelConfigurationActionTest;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
+import org.mifos.application.configuration.struts.action.LabelConfigurationActionTest;
 
 public class LabelConfigurationTestSuite extends TestSuite {
 	

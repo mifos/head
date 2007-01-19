@@ -8,13 +8,13 @@ import javax.servlet.jsp.JspException;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.taglib.html.Constants;
 import org.apache.strutsel.taglib.html.ELSelectTag;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 public class MifosSelectTag extends ELSelectTag {
 	private static final long serialVersionUID = 1L;
 	
-	private FieldConfigImplementer fieldConfig = FieldConfigImplementer.getInstance();
+	private FieldConfig fieldConfig = FieldConfig.getInstance();
 	
 	private String keyhm=null;
 	

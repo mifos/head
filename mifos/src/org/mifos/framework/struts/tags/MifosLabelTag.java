@@ -42,8 +42,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.struts.taglib.TagUtils;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigImplementer;
-import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigItf;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**
@@ -58,7 +57,7 @@ public class MifosLabelTag extends BodyTagSupport {
 	 */
 	private static final long serialVersionUID = 1098346743243323316L;
 
-	private FieldConfigItf fieldConfigItf = FieldConfigImplementer
+	private FieldConfig fieldConfig = FieldConfig
 			.getInstance();
 
 	// ----------------------------------------------------- Instance Variables
@@ -158,7 +157,7 @@ public class MifosLabelTag extends BodyTagSupport {
 	@Override
 	public int doStartTag() throws JspException {
 
-		if (fieldConfigItf.isFieldHidden(getKeyhm())) {
+		if (fieldConfig.isFieldHidden(getKeyhm())) {
 			StringBuilder label = new StringBuilder();
 			hideLabelColumn(label);
 			TagUtils.getInstance().write(pageContext, label.toString());
@@ -202,7 +201,7 @@ public class MifosLabelTag extends BodyTagSupport {
 
 		// check if the field is mandatory by default
 		if ((null != mandatory && "yes".equalsIgnoreCase(mandatory))
-				|| fieldConfigItf.isFieldManadatory(getKeyhm())) {
+				|| fieldConfig.isFieldManadatory(getKeyhm())) {
 			// if it is mandatory add a *.
 			if (getIsManadatoryIndicationNotRequired() != null
 					&& getIsManadatoryIndicationNotRequired().equalsIgnoreCase(
