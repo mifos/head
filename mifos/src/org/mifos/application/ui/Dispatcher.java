@@ -15,6 +15,18 @@ import org.mifos.framework.struts.tags.XmlBuilder;
 
 public class Dispatcher extends HttpServlet {
 	
+	/**
+	   HTTP status to send when we are redirecting from a POST which
+	   creates a resource to the URL of that new resource.
+
+	   RFC2616 seems to say 201 ("created") is
+	   the right status for this.  But with Firefox 2.0.0.1, 201
+	   didn't seem to work (I think it was ignoring the Location
+	   header).  So we'll stick with the 303; that seems
+	   appropriate (if less specific).
+	 */
+	public static final int CREATED = 303;
+
 	@Override
 	protected void doGet(
 		HttpServletRequest request, HttpServletResponse response)
@@ -22,29 +34,75 @@ public class Dispatcher extends HttpServlet {
 		XmlBuilder html = new XmlBuilder();
 		String pathInfo = request.getPathInfo();
 		if (pathInfo == null) {
-			redirectTo(response, urlOf(request) + "/");
+			redirectTo(response, stringUrlOf(request) + "/");
 			return;
 		}
 		else if (pathInfo.equals("/")) {
-			developerPage(html);
+			String contextPath = request.getContextPath();
+			developerPage(contextPath, html);
 		}
-		else if (pathInfo.equals("/reports/create")) {
-			createPage(html);
+		else if (isCreateReport(pathInfo)) {
+			new CreateReport().createPage(html);
 		}
 		else {
 			errorPage(html, pathInfo);
 			response.setStatus(404);
-			return;
 		}
 		response.getWriter().write(html.getOutput());
 	}
 
-	private String urlOf(HttpServletRequest request) throws ServletException {
+	@Override
+	protected void doPost(
+		HttpServletRequest request, HttpServletResponse response) 
+	throws ServletException, IOException {
+		String pathInfo = request.getPathInfo();
+
+		if (isCreateReport(pathInfo)) {
+			String url = new CreateReport().post();
+			response.setStatus(CREATED);
+			response.setHeader("Location", absolutify(url, request));
+		}
+		else {
+			XmlBuilder html = new XmlBuilder();
+			/* Normally a POST should result in a redirect to a GET.
+			   But I guess this is an exception (?).  It doesn't seem like
+			   users would get to this page nearly as often as the GET 404.
+			 */
+			errorPage(html, pathInfo);
+			response.setStatus(404);
+	
+			response.getWriter().write(html.getOutput());
+		}
+	}
+
+	private String absolutify(String url, HttpServletRequest request) 
+	throws ServletException {
 		try {
+			URL base = urlOf(request);
+			return new URL(base, url).toExternalForm();
+		}
+		catch (MalformedURLException e) {
+			throw new ServletException(e);
+		}
+	}
+
+	private boolean isCreateReport(String pathInfo) {
+		return pathInfo.equals("/reports/create");
+	}
+
+	private String stringUrlOf(HttpServletRequest request) 
+	throws ServletException {
+		return urlOf(request).toExternalForm();
+	}
+
+	private URL urlOf(HttpServletRequest request) throws ServletException {
+		try {
+			String pathInfo = request.getPathInfo();
 			URL url = new URL(request.getScheme(), 
 				request.getServerName(), request.getServerPort(),
-				request.getContextPath() + request.getServletPath());
-			return url.toExternalForm();
+				request.getContextPath() + request.getServletPath() +
+				(pathInfo == null ? "" : pathInfo));
+			return url;
 		}
 		catch (MalformedURLException e) {
 			throw new ServletException(e);
@@ -58,52 +116,31 @@ public class Dispatcher extends HttpServlet {
 
 	private void errorPage(XmlBuilder html, String pathInfo) {
 		html.startTag("html");
-		head(html, "Create report");
+		Page.head(html, "Not found");
 
 		html.startTag("body");
-		html.text("Did not find page for " + pathInfo);
+		html.text(pathInfo + " not found");
 		html.endTag("body");
 
 		html.endTag("html");
 	}
 
-	private void createPage(XmlBuilder html) {
+	private void developerPage(String contextPath, XmlBuilder html) {
 		html.startTag("html");
-		head(html, "Create report");
+		Page.head(html, "Developer page");
 
 		html.startTag("body");
-		createReportBody(html);
+		body(contextPath, html);
 		html.endTag("body");
 
 		html.endTag("html");
 	}
 
-	private void createReportBody(XmlBuilder html) {
-	}
-
-	private void developerPage(XmlBuilder html) {
-		html.startTag("html");
-		head(html, "Developer page");
-
-		html.startTag("body");
-		body(html);
-		html.endTag("body");
-
-		html.endTag("html");
-	}
-
-	private void head(XmlBuilder html, String title) {
-		html.startTag("head");
-		html.startTag("title");
-		html.text(title);
-		html.endTag("title");
-		html.endTag("head");
-	}
-
-	private void body(XmlBuilder html) {
+	private void body(String contextPath, XmlBuilder html) {
 		html.startTag("p");
 		html.startTag("a", "href", 
-			"custSearchAction.do?method=" + CustomerConstants.GETHOMEPAGE);
+			contextPath +
+			"/custSearchAction.do?method=" + CustomerConstants.GETHOMEPAGE);
 		html.text("Home");
 		html.endTag("a");
 		html.endTag("p");

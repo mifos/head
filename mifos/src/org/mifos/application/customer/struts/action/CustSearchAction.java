@@ -298,6 +298,7 @@ public class CustSearchAction extends SearchAction {
 
 	}
 
+	@Override
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward search(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)

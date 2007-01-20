@@ -99,6 +99,7 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(ConvertionUtilTest.class);
 		suite.addTestSuite(TableTagParserTest.class);
 		suite.addTestSuite(DispatcherTest.class);
+		suite.addTestSuite(CreateReportTest.class);
 		
 		suite.addTestSuite(DatabaseVersionFilterTest.class);
 		
