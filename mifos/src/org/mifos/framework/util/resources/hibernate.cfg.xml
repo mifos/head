@@ -196,6 +196,9 @@
 		<mapping resource="org/mifos/application/fund/business/FundBO.hbm.xml" />
 		<mapping resource="org/mifos/application/master/business/FundCodeEntity.hbm.xml" />
 
+        <mapping resource="org/mifos/application/holiday/business/HolidayBO.hbm.xml" />
+    	<mapping resource="org/mifos/application/holiday/business/RepaymentRuleEntity.hbm.xml" />
+
 	</session-factory>
 
 </hibernate-configuration>

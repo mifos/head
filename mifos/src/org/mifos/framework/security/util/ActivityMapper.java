@@ -159,6 +159,7 @@ public class ActivityMapper {
 		addNotesMappings();
 		addReportsMappings();
 		addLabelConfigurationMappings();
+		addHolidayMappings();
 	}
 
 	private void addCustomerAccountActionMappings() {
@@ -1168,6 +1169,16 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/labelconfigurationaction-validate",
 				SecurityConstants.VIEW);
+	}
+	
+	private void addHolidayMappings() {
+		activityMap.put("/holidayAction-load", SecurityConstants.VIEW);
+		activityMap.put("/holidayAction-get", SecurityConstants.VIEW);		
+		activityMap.put("/holidayAction-preview", SecurityConstants.VIEW);
+		activityMap.put("/holidayAction-getHolidays", SecurityConstants.VIEW);
+		activityMap.put("/holidayAction-addHoliday", SecurityConstants.VIEW);
+		activityMap.put("/holidayAction-previous", SecurityConstants.VIEW);
+		activityMap.put("/holidayAction-update", SecurityConstants.VIEW);		
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

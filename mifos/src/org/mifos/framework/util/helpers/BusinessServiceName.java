@@ -20,6 +20,7 @@ import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
+import org.mifos.application.holiday.business.service.HolidayBusinessService;
 
 /**
  * This class is deprecated.
@@ -47,7 +48,8 @@ public enum BusinessServiceName {
 	RolesPermissions(RolesPermissionsBusinessService.class),
 	Admin(AdminBusinessService.class),
 	AuditLog(AuditBusinessService.class),
-	Configuration(ConfigurationBusinessService.class);
+	Configuration(ConfigurationBusinessService.class),
+	Holiday(HolidayBusinessService.class);
 
 	private String name;
 
