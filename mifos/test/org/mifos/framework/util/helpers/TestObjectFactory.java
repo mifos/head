@@ -175,6 +175,8 @@ import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.application.holiday.business.HolidayPK;
 
 /**
  * This class assumes that you are connected to the model database, which has
@@ -1377,6 +1379,18 @@ public class TestObjectFactory {
 
 	}
 
+	public static Object getObject(Class clazz, HolidayPK pk) {
+		return addObject(testObjectPersistence.getObject(clazz, pk));
+
+	}
+	
+	public static void cleanUpHolidays(List<HolidayBO> holidayList) {
+		if (null != holidayList) {
+			deleteHolidays(holidayList);
+			holidayList = null;
+		}
+	}
+	
 	public static CustomerCheckListBO createCustomerChecklist(
 			Short customerLevel, Short customerStatus, Short checklistStatus)
 			throws Exception {
@@ -1436,6 +1450,44 @@ public class TestObjectFactory {
 
 	}
 
+	public static HolidayBO createHoliday(HolidayPK holidayPK,
+			Date holidayThruDate, String holidayName, Short repaymentRuleId, 
+			Short localeId)	throws Exception {
+		
+		HolidayBO accountHoliday = new HolidayBO(holidayPK, holidayThruDate, holidayName,
+								   localeId, repaymentRuleId, "");
+
+		accountHoliday.save();
+		
+		HibernateUtil.commitTransaction();
+		return accountHoliday;
+	}
+	
+	public static void cleanUp(HolidayBO holidayBO) {
+		if (null != holidayBO) {
+			deleteHoliday(holidayBO);
+			holidayBO = null;
+		}
+	}
+	
+	public static void deleteHoliday(HolidayBO holidayBO) {
+		Session session = HibernateUtil.getSessionTL();
+		Transaction transaction = HibernateUtil.startTransaction();
+		session.delete(holidayBO);
+		transaction.commit();
+	}
+	
+	private static void deleteHolidays(List<HolidayBO> holidayList) {
+		for (HolidayBO holidayBO : holidayList) {
+			Session session = HibernateUtil.getSessionTL();
+			session.lock(holidayBO, LockMode.UPGRADE);
+			Transaction transaction = HibernateUtil.startTransaction();
+			deleteHoliday(holidayBO);
+			transaction.commit();
+		}
+		holidayList = null;
+	}
+	
 	public static void cleanUp(ReportsCategoryBO reportsCategoryBO) {
 		if (null != reportsCategoryBO) {
 			deleteReportCategory(reportsCategoryBO);

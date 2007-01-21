@@ -79,6 +79,7 @@ import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
+import org.mifos.application.holiday.HolidayTestSuite;
 
 public class ApplicationTestSuite extends TestSuite {
 
@@ -135,6 +136,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTestSuite(TestPersistence.class);
 		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTest(FrameworkUtilsSuite.suite());
+		suite.addTest(HolidayTestSuite.suite());
 		return suite;
 	}
 }

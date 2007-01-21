@@ -49,6 +49,7 @@ import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.application.holiday.business.HolidayPK;
 
 /**
  * This class is used to persist objects created by TestObjectFactory.
@@ -197,6 +198,10 @@ public class TestObjectPersistence {
 	}
 	
 	public Object getObject(Class clazz, Short pk) {
+		return HibernateUtil.getSessionTL().get(clazz, pk);
+	}
+
+	public Object getObject(Class clazz, HolidayPK pk) {
 		return HibernateUtil.getSessionTL().get(clazz, pk);
 	}
 }
