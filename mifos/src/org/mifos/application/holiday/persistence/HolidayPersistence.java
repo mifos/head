@@ -6,13 +6,9 @@ import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
-import org.mifos.application.customer.business.CustomerStatusEntity;
-import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
 
 public class HolidayPersistence extends MasterPersistence {
 
@@ -30,10 +26,6 @@ public class HolidayPersistence extends MasterPersistence {
 		parameters.put("LOCALE_ID", localId);
 		parameters.put("START_OF_YEAR", year + "-01-01");
 		parameters.put("END_OF_YEAR", year + "-12-31");
-		
-		System.out.println("LOCALE_ID = " + localId);
-		System.out.println("START_OF_YEAR = " + year + "-01-01");
-		System.out.println("END_OF_YEAR = " + year + "-12-31");
 		
 		return executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS, parameters);
 	}

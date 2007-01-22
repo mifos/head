@@ -2,23 +2,11 @@ package org.mifos.application.holiday.struts.action;
 
 import java.util.List;
 
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.checklist.business.AccountCheckListBO;
-import org.mifos.application.checklist.business.CheckListBO;
-import org.mifos.application.checklist.business.CustomerCheckListBO;
-import org.mifos.application.checklist.persistence.CheckListPersistence;
-import org.mifos.application.checklist.util.helpers.CheckListStatesView;
-import org.mifos.application.checklist.util.helpers.CheckListType;
-import org.mifos.application.checklist.util.resources.CheckListConstants;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;

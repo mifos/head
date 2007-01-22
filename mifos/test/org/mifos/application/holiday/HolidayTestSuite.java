@@ -17,7 +17,6 @@ public class HolidayTestSuite extends TestSuite {
 	}
 
 	public static Test suite() {
-		System.out.println("\n\nTesting Holiday \n");
 		TestSuite testSuite = new HolidayTestSuite();
 		testSuite.addTestSuite(TestHolidayBO.class);
 		testSuite.addTestSuite(TestHolidayBusinessService.class);

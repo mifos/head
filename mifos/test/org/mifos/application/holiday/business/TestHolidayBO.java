@@ -1,24 +1,12 @@
 package org.mifos.application.holiday.business;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.mifos.application.accounts.business.AccountStateEntity;
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.holiday.exceptions.HolidayException;
-import org.mifos.application.holiday.util.resources.HolidayConstants;
-import org.mifos.application.productdefinition.business.ProductTypeEntity;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import sun.misc.Cleaner;
-
 public class TestHolidayBO extends MifosTestCase {
-
-	private HolidayBO accountHoliday = null;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -27,7 +15,6 @@ public class TestHolidayBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		//TestObjectFactory.cleanUp(accountHoliday);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}

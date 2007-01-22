@@ -899,15 +899,13 @@ public class TestObjectFactory {
 	 */
 	public static MeetingBO getMeetingHelper(int frequency, int recurAfter,
 			int meetingTypeId) {
-		MeetingBO meeting = null;
 		try {
-			meeting = getMeeting(Integer.toString(frequency), Integer
+			return getMeeting(Integer.toString(frequency), Integer
 					.toString(recurAfter), new Integer(meetingTypeId)
 					.shortValue());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		return meeting;
 	}
 
 	/**
