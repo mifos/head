@@ -280,7 +280,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 	public void testGetWithoutClients() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		LoanOfferingBO loanOffering1 = getLoanOffering("vcxvxc", "a123",
 				PrdApplicableMaster.CLIENTS.getValue().toString(), 1, 1);
@@ -496,7 +496,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 	private LoanOfferingBO getLoanOffering(String name, String shortName,
 			String prdApplicableTo, int meetingFrequency, int recurAfter) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(meetingFrequency, recurAfter, 4, 2));
+				.getMeetingForToday(meetingFrequency, recurAfter, 4, 2));
 		Date currentDate = new Date(System.currentTimeMillis());
 		return TestObjectFactory.createLoanOffering(name, shortName, Short
 				.valueOf(prdApplicableTo), currentDate, Short.valueOf("1"),
@@ -507,7 +507,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 
 	private void createInitialCustomers() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);

@@ -43,7 +43,7 @@ public class TestAccount extends MifosTestCase {
 
 	public LoanBO createLoanAccount()
 	{ 
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1,1,4,2));
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingForToday(1,1,4,2));
         center=TestObjectFactory.createCenter("Center",meeting);
         group=TestObjectFactory.createGroupUnderCenter(
         	"Group", CustomerStatus.GROUP_ACTIVE, center);

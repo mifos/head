@@ -55,7 +55,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		super.setUp();
 		loanPersistence = new LoanPersistance();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 
@@ -253,7 +253,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.GROUPS);
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil

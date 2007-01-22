@@ -475,7 +475,7 @@ public class TestAccountBO extends TestAccount {
 	public void testGetPastInstallments() {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		HibernateUtil.closeSession();

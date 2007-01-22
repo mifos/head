@@ -119,7 +119,7 @@ public class TestCustomerBO extends MifosTestCase {
 		createPersonnel(PersonnelLevel.LOAN_OFFICER);
 
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 
 		center = TestObjectFactory.createCenter("Center", meeting, getBranchOffice().getOfficeId(), loanOfficer
 		.getPersonnelId());
@@ -436,7 +436,7 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testValidateStatusForClientWithCancelledGroups()
 			throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_CANCELLED, center);
 		client = TestObjectFactory.createClient("Client",
@@ -455,7 +455,7 @@ public class TestCustomerBO extends MifosTestCase {
 
 	public void testValidateStatusForClientWithPartialGroups() throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_PARTIAL, center);
 		client = TestObjectFactory.createClient("Client",
@@ -476,7 +476,7 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testValidateStatusForClientWithActiveAccounts()
 			throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
@@ -700,7 +700,7 @@ public class TestCustomerBO extends MifosTestCase {
 
 	private void createInitialObjects() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -761,14 +761,14 @@ public class TestCustomerBO extends MifosTestCase {
 
 	private void createCenter(Short officeId, Short personnelId) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 
 		center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
 	}
 
 	private void createGroup() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

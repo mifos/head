@@ -940,9 +940,9 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(prdOfferingName,
 				shortName, (short) 1, new Date(System.currentTimeMillis()),
 				(short) 2, 300.0, (short) 1, 1.2, 200.0, 200.0, (short) 2,
@@ -951,7 +951,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 
 	private MeetingBO getMeeting() {
 		return TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 	}
 
 	private java.sql.Date offSetCurrentDate(int noOfDays) {
@@ -978,9 +978,9 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 			InterestCalcType interestCalcType) {
 
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(prdOfferingName,
 				shortName, applicableTo.getValue(), startDate, offeringStatus
 						.getValue(), 300.0, (short) 1, 1.2, 200.0, 200.0,

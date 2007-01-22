@@ -195,7 +195,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 
 	private void createInitialObjects() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 

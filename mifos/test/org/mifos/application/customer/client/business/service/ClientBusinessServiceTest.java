@@ -111,7 +111,7 @@ public class ClientBusinessServiceTest extends MifosTestCase {
 
 	public void testGetActiveClientsUnderParent() throws ServiceException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		CenterBO center = TestObjectFactory.createCenter("Center", meeting);
 		GroupBO group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);
@@ -132,7 +132,7 @@ public class ClientBusinessServiceTest extends MifosTestCase {
 
 	public void testGetActiveClientsUnderParentforInvalidConnection() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		CenterBO center = TestObjectFactory.createCenter("Center", meeting);
 		GroupBO group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);

@@ -248,7 +248,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	public void testGetLastMeetingDateForCustomer() throws ServiceException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		java.util.Date lastMeetingDate = bulkEntryBusinessService
 				.getLastMeetingDateForCustomer(center.getCustomerId());
@@ -259,7 +259,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	public void testGetLastMeetingDateForCustomerForInvalidConnection() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -329,7 +329,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	private void createCenter() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 	}
 
@@ -364,7 +364,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient(
@@ -389,9 +389,9 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	private SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), currentDate, Short.valueOf("2"), 300.0,
 				(short) 1, 1.2, 200.0, 200.0, Short.valueOf("2"), (short) 1,
@@ -445,7 +445,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	private LoanBO getLoanAccount(Short accountSate, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(

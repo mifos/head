@@ -178,7 +178,7 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 	
 	private CenterBO createCenter(String name) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createCenter(name, meeting);
 	}
 	

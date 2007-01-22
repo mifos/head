@@ -140,7 +140,7 @@ public class TestCenterBusinessService extends MifosTestCase {
 	
 	private CenterBO createCenter(String name) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createCenter(name, meeting);
 	}
 	

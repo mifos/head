@@ -12,6 +12,7 @@ import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.customer.business.CustomerBO;
@@ -20,8 +21,14 @@ import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.helpers.CollectionSheetHelper;
 import org.mifos.framework.components.cronjobs.helpers.CollectionSheetTask;
@@ -63,27 +70,48 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 		createInitialObjects();
 		loanBO = getLoanAccount(group, meeting);
 		savingsBO = getSavingsAccount(center,"SAVINGS_OFFERING", "SAV");
+		CollectionSheetHelper collectionSheetHelper = new CollectionSheetHelper(new CollectionSheetTask());
+
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
 			TestCustomerAccountBO.setActionDate(accountActionDateEntity,offSetDate(
-					accountActionDateEntity.getActionDate(), 1));
+					accountActionDateEntity.getActionDate(), collectionSheetHelper.getDaysInAdvance()));
 		}
 		
 		for(AccountActionDateEntity accountActionDateEntity : loanBO.getAccountActionDates()) {
 			TestLoanBO.setActionDate(accountActionDateEntity,offSetDate(
-					accountActionDateEntity.getActionDate(), 1));
+					accountActionDateEntity.getActionDate(), collectionSheetHelper.getDaysInAdvance()));
 		}
 		
 		for(AccountActionDateEntity accountActionDateEntity : savingsBO.getAccountActionDates()) {
 			TestSavingsBO.setActionDate(accountActionDateEntity,offSetDate(
-					accountActionDateEntity.getActionDate(), 1));
+					accountActionDateEntity.getActionDate(), collectionSheetHelper.getDaysInAdvance()));
 		}
 		
-		CollectionSheetHelper collectionSheetHelper = new CollectionSheetHelper(new CollectionSheetTask());
-		collectionSheetHelper.execute(System.currentTimeMillis());
+		long runTime = System.currentTimeMillis();
+		collectionSheetHelper.execute(runTime);
 		
 		List<CollectionSheetBO> collectionSheets = getCollectionSheets();
 		assertEquals("Size of collectionSheets should be 1",1,collectionSheets.size());
+		
+		CollectionSheetBO collectionSheet = collectionSheets.get(0);
+		
+		// we need to trim off time information so that we can 
+		// match the value returned by a java.sql.Date object which
+		// also truncates all time information
+		Calendar collectionSheetDate = new GregorianCalendar();
+		collectionSheetDate.setTimeInMillis(runTime);
+		collectionSheetDate.set(Calendar.HOUR_OF_DAY, 0);
+		collectionSheetDate.set(Calendar.MINUTE, 0);
+		collectionSheetDate.set(Calendar.SECOND, 0);
+		collectionSheetDate.set(Calendar.MILLISECOND, 0);
+		long normalizedRunTime = collectionSheetDate.getTimeInMillis();
+		
+		collectionSheetDate.roll(Calendar.DATE, collectionSheetHelper.getDaysInAdvance());
+		long normalizedCollectionSheetTime = collectionSheetDate.getTimeInMillis();
+		
+		assertEquals(collectionSheet.getRunDate().getTime(), normalizedRunTime);  
+		assertEquals(collectionSheet.getCollSheetDate().getTime(), normalizedCollectionSheetTime); 
 		
 		clearCollectionSheets(collectionSheets);
 	}
@@ -103,21 +131,42 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 
 	private void createInitialObjects() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, Calendar.DAY_OF_WEEK));
-		center = TestObjectFactory.createCenter("Center",
-				meeting);
+				.getMeetingHelper(RecurrenceType.WEEKLY, (short)1, MeetingType.CUSTOMERMEETING, WeekDay.MONDAY));
+		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 	}
 
 	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
+		final double LOAN_AMOUNT = 300.0;
+		final double INTEREST_RATE = 1.2;
+		final short  NUMBER_OF_INSTALLMENTS = 3;
+		final short  FLAT_INTEREST = 1;
+		final short  DECLINING_INTEREST = 2;
+		final short  GRACE_PERIOD = 1;  // is this one meeting cycle?
+		final short  INTEREST_DED_DISB_YES = 1;  // not clear what this is
+		final short  INTEREST_DED_DISB_NO = 0;
+		final short  PRINCIPLE_DUE_LAST_INSTALLMENT_YES = 1;
+		final short  PRINCIPLE_DUE_LAST_INSTALLMENT_NO = 1;
+		
+		
 		Date startDate = new Date(System.currentTimeMillis());
+		// createLoanOffering should be changed to take enums
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loan", 
+				PrdApplicableMaster.GROUPS.getValue(),
+				startDate, 
+				PrdStatus.LOANACTIVE.getValue(),
+				LOAN_AMOUNT, 
+				INTEREST_RATE,
+				NUMBER_OF_INSTALLMENTS,  
+				FLAT_INTEREST,
+				GRACE_PERIOD,
+				INTEREST_DED_DISB_YES, 
+				PRINCIPLE_DUE_LAST_INSTALLMENT_YES,
+				InterestCalcType.MINIMUM_BALANCE.getValue(), // appears to be unused
+				meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				Short.valueOf("5"), startDate, loanOffering);
+				AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue(), startDate, loanOffering);
 
 	}
 	
@@ -136,6 +185,6 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 				.getSessionTL()
 				.createQuery(
 						"from org.mifos.application.collectionsheet.business.CollectionSheetBO");
-		return (List<CollectionSheetBO>) query.list();
+		return query.list();
 	}
 }

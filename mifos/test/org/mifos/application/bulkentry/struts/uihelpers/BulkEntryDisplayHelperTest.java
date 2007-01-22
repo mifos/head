@@ -138,7 +138,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 1, 2));
+				.getMeetingForToday(1, 1, 1, 2));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
@@ -149,9 +149,9 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(prdOfferingName,
 				shortName, (short) 1, new Date(System.currentTimeMillis()),
 				(short) 2, 300.0, (short) 1, 1.2, 200.0, 200.0, (short) 2,
@@ -160,7 +160,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 
 	private BulkEntryBO createBulkEntry() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -278,9 +278,9 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 	private SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,

@@ -1305,7 +1305,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 1, 2));
+				.getMeetingForToday(1, 1, 1, 2));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short

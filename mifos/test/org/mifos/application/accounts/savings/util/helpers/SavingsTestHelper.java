@@ -128,9 +128,9 @@ public class SavingsTestHelper {
 			String shortName, Short interestCalcType, Short savingsTypeId,
 			Short depGLCode, Short intGLCode) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, Short.valueOf("1"), 24.0, 200.0,
@@ -141,9 +141,9 @@ public class SavingsTestHelper {
 	public SavingsOfferingBO createSavingsOffering(String offeringName,
 			Short interestCalcType, Short savingsTypeId) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory
 				.createSavingsOffering(offeringName, Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short

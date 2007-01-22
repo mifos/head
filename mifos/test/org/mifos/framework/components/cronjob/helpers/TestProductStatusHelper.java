@@ -187,7 +187,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 	private void createInactiveLoanOffering() throws PersistenceException {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 1, 2));
+				.getMeetingForToday(1, 1, 1, 2));
 		loanOffering = TestObjectFactory.createLoanOffering("Loan Offering",
 				"LOAN", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),

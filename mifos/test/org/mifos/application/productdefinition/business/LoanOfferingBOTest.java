@@ -603,7 +603,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				intglCodeEntity, new Money("100"), false, TestObjectFactory
-						.createMeeting(TestObjectFactory.getMeetingHelper(2, 1,
+						.createMeeting(TestObjectFactory.getMeetingForToday(2, 1,
 								4, 2)));
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(fee);
@@ -632,7 +632,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				intglCodeEntity, new Money("100"), false, TestObjectFactory
-						.createMeeting(TestObjectFactory.getMeetingHelper(1, 1,
+						.createMeeting(TestObjectFactory.getMeetingForToday(1, 1,
 								4, 2)));
 		FeeBO fee1 = new AmountFeeBO(TestObjectFactory.getContext(),
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
@@ -1085,7 +1085,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				intglCodeEntity, new Money("100"), false, TestObjectFactory
-						.createMeeting(TestObjectFactory.getMeetingHelper(2, 1,
+						.createMeeting(TestObjectFactory.getMeetingForToday(2, 1,
 								4, 2)));
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(fee);
@@ -1114,7 +1114,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				intglCodeEntity, new Money("100"), false, TestObjectFactory
-						.createMeeting(TestObjectFactory.getMeetingHelper(1, 1,
+						.createMeeting(TestObjectFactory.getMeetingForToday(1, 1,
 								4, 2)));
 		FeeBO fee1 = new AmountFeeBO(TestObjectFactory.getContext(),
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
@@ -1253,7 +1253,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
     
 	private MeetingBO getMeeting() {
 		return TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 	}
 
 	private java.sql.Date offSetCurrentDate(int noOfDays) {
@@ -1268,7 +1268,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 1, 2));
+				.getMeetingForToday(1, 1, 1, 2));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short

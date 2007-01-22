@@ -498,7 +498,7 @@ public class CenterBOTest extends MifosTestCase {
 
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		return meeting;
 	}
 

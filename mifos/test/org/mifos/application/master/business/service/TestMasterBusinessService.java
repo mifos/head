@@ -83,7 +83,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 
 	public void testGetListOfActiveParentsUnderLoanOfficer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		CustomerBO center = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		List<CustomerView> customers = masterService
@@ -96,7 +96,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 	public void testGetListOfActiveParentsUnderLoanOfficerForInvalidConnection()
 			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		CustomerBO center = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		TestObjectFactory.simulateInvalidConnection();
@@ -127,11 +127,11 @@ public class TestMasterBusinessService extends MifosTestCase {
 	
 	public void testGetSavingsProductsAsOfMeetingDate() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 
 		Date startDate = new Date(System.currentTimeMillis());
 		CustomerBO center = TestObjectFactory.createCenter("Center", meeting);
@@ -155,11 +155,11 @@ public class TestMasterBusinessService extends MifosTestCase {
 	public void testGetSavingsProductsAsOfMeetingDateForInvalidConnection()
 			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 
 		Date startDate = new Date(System.currentTimeMillis());
 		CustomerBO center = TestObjectFactory.createCenter("Center", meeting);

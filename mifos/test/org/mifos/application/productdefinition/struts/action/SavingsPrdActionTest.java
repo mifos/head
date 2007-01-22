@@ -1037,9 +1037,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		savingsOffering = TestObjectFactory.createSavingsOffering(
 				prdOfferingName, shortName, (short) 1, new Date(System
 						.currentTimeMillis()), (short) 2, 300.0, (short) 1,

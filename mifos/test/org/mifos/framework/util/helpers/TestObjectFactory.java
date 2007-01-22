@@ -705,9 +705,9 @@ public class TestObjectFactory {
 			String shortName, SavingsType savingsTypeId,
 			PrdApplicableMaster applicableTo) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return createSavingsOffering(offeringName, shortName, applicableTo
 				.getValue(), new Date(System.currentTimeMillis()), Short
 				.valueOf("2"), 300.0, RecommendedAmountUnit.PERINDIVIDUAL
@@ -885,9 +885,14 @@ public class TestObjectFactory {
 		return (FeeBO) addObject(testObjectPersistence.createFee(fee));
 	}
 
+	
+	// NOTE: There are too many methods that create Meeting objects!  More clean
+	// up is needed to reduce these.  Call to deprecated methods should be 
+	// replaced by calls to current methods that take enum arguments.
 	/**
+	 * Deprecated: use getMeeting(RecurrenceType, short, MeetingType) instead.
 	 * This is a helper method which returns a fresh meeting object based on the
-	 * parameters passed to it.
+	 * parameters passed to it. 
 	 * 
 	 * @param frequency -
 	 *            Weekly(1)/Monthly(2)
@@ -896,21 +901,94 @@ public class TestObjectFactory {
 	 * @param meetingTypeId -
 	 *            1 -loan repayment,2 -savings interest calculation,3 -savings
 	 *            interest posting 4 - customer meeting,5 - fees meeting.
+	 * 
 	 */
 	public static MeetingBO getMeetingHelper(int frequency, int recurAfter,
 			int meetingTypeId) {
+		if (recurAfter > Short.MAX_VALUE) {
+			throw new RuntimeException("recurAfter value exceeded Short.MAX_VALUE");
+		}
 		try {
-			return getMeeting(Integer.toString(frequency), Integer
-					.toString(recurAfter), new Integer(meetingTypeId)
-					.shortValue());
+			return getMeeting(
+					RecurrenceType.getRecurrenceType((short)frequency),
+					(short)recurAfter, 
+					MeetingType.getMeetingType((short)meetingTypeId));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/**
+	 * Return a new meeting object with a meeting that occurs on Mondays.
+	 * @param frequency WEEKLY, MONTHLY, DAILY
+	 * @param recurAfter if frequency is WEEKLY, then 1 means every week, 2 means every other week, etc. 
+	 * @param meetingType
+	 * @return a new MeetingBO object
+	 */
+	public static MeetingBO getMeetingHelper(RecurrenceType frequency, short recurAfter,
+			MeetingType meetingType) {
+		MeetingBO meeting;
+		try {
+			meeting = getMeeting(frequency, recurAfter, meetingType);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return meeting;
+	}
 
 	/**
-	 * This is a helper method which returns a fresh meeting object based on the
-	 * parameters passed to it.
+	 * Return a new meeting object.
+	 * @param frequency WEEKLY, MONTHLY, DAILY
+	 * @param recurAfter if frequency is WEEKLY, then 1 means every week, 2 means every other week, etc. 
+	 * @param meetingType
+	 * @param weekday the day on which the meeting occurs
+	 * @return a new MeetingBO object
+	 */
+	public static MeetingBO getMeetingHelper(RecurrenceType frequency, short recurAfter,
+			MeetingType meetingType, WeekDay weekday) {
+		MeetingBO meeting = getMeetingHelper(frequency, recurAfter,	meetingType);
+		WeekDaysEntity weekDays = new WeekDaysEntity(weekday);
+		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDays);
+		return meeting;		
+	}
+	
+	/**
+	 * Return a new meeting object that occurs on Mondays.
+	 * @param frequency WEEKLY, MONTHLY, DAILY
+	 * @param recurAfter if frequency is WEEKLY, then 1 means every week, 2 means every other week, etc. 
+	 * @param meetingType
+	 * @return a new MeetingBO object
+	 * @exception Exception
+	 */
+	public static MeetingBO getMeeting(RecurrenceType frequency, short recurAfter,
+			MeetingType meetingType) throws Exception {
+		MeetingBO meeting = new MeetingBO(frequency, recurAfter, new Date(), meetingType);
+		meeting.setMeetingPlace("Loan Meeting Place");
+		return meeting;
+	}
+
+	/**
+	 * Return a new meeting which occurs on today's day of the week.
+	 * @param frequency WEEKLY, MONTHLY, DAILY
+	 * @param recurAfter if frequency is WEEKLY, then 1 means every week, 2 means every other week, etc. 
+	 * @param meetingType
+	 * @return a new MeetingBO object
+	 * @exception Exception
+	 */
+	public static MeetingBO getMeetingForToday(RecurrenceType frequency, short recurAfter,
+			MeetingType meetingType) throws Exception {
+		Calendar calendar = new GregorianCalendar();
+		return getMeetingHelper(frequency, recurAfter, meetingType, WeekDay.getWeekDay((short)calendar.get(Calendar.DAY_OF_WEEK)));
+	}
+
+	/**
+	 * This is an obsolete method which returns a new meeting object. It ignores
+	 * the final dayOfWeek parameter and creates a meeting for today's day of the 
+	 * week instead.  Whereever this method is used it should be replaced by either
+	 * {@link #getMeetingForToday(RecurrenceType,short,MeetingType)} if the final 
+	 * argument really should be ignored or 
+	 * {@link #getMeetingHelper(RecurrenceType, short, MeetingType, WeekDay)}
+	 * if the dayOfWeek argument should be taken into account.
 	 * 
 	 * @param frequency -
 	 *            Weekly(1)/Monthly(2)
@@ -922,34 +1000,49 @@ public class TestObjectFactory {
 	 * @param dayOfWeek -
 	 *            1 - Sunday .... ,7 Saturday.
 	 */
-	public static MeetingBO getMeetingHelper(int frequency, int recurAfter,
+	public static MeetingBO getMeetingForToday(int frequency, int recurAfter,
 			int meetingTypeId, int dayOfWeek) {
-		MeetingBO meeting = getMeetingHelper(frequency, recurAfter,
-				meetingTypeId);
 		Calendar cal = new GregorianCalendar();
-		WeekDaysEntity weekDays = new WeekDaysEntity(WeekDay.getWeekDay(Short
-				.valueOf(Integer.toString(cal.get(Calendar.DAY_OF_WEEK)))));
-		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(weekDays);
-		return meeting;
+
+		return getMeetingHelper(
+				RecurrenceType.getRecurrenceType((short)frequency),
+				(short)recurAfter, 
+				MeetingType.getMeetingType((short)meetingTypeId), 
+				WeekDay.getWeekDay((short) cal.get(Calendar.DAY_OF_WEEK)));
 	}
 
+	/**
+	 * Persist a meeting object using Hibernate.
+	 */
 	public static MeetingBO createMeeting(MeetingBO meeting) {
 		return (MeetingBO) addObject(testObjectPersistence.persist(meeting));
 	}
 
 	/**
-	 * This is a helper method to return MeetingBO object.
+	 * This is an outdated helper method to return MeetingBO object.
+	 * Deprecated: use getMeeting(RecurrenceType, short, MeetingType) or
+	 * getMeetingForToday(RecurrenceType, short, MeetingType) instead.
 	 */
 	public static MeetingBO getMeeting(String frequency, String recurAfter,
 			Short meetingTypeId) throws Exception {
-		MeetingBO meeting = new MeetingBO(RecurrenceType
+		MeetingBO meeting = getMeeting(RecurrenceType
 				.getRecurrenceType(Short.valueOf(frequency)), Short
-				.valueOf(recurAfter), new Date(), MeetingType
+				.parseShort(recurAfter), MeetingType
 				.getMeetingType(meetingTypeId));
-		meeting.setMeetingPlace("Loan Meeting Place");
 		return meeting;
 	}
 
+	/**
+	 * Return a new meeting object.
+	 * @param recurrenceType
+	 * @param dayNumber
+	 * @param weekDay
+	 * @param dayRank this parameter is ignored
+	 * @param recurAfter
+	 * @param meetingType
+	 * @return a new MeetingBO object.
+	 * @throws Exception
+	 */
 	public static MeetingBO getMeeting(RecurrenceType recurrenceType,
 			Short dayNumber, Short weekDay, Short dayRank, Short recurAfter,
 			MeetingType meetingType) throws Exception {
@@ -1991,4 +2084,13 @@ public class TestObjectFactory {
 		return dateCalendar;
 	}
 
+	/**
+	 * Return the int corresponding to the day of the week of the date
+	 * parameter. Returns Calendar.SUNDAY (1), Calendar.MONDAY (2), etc.
+	 */
+	public static int getDayForDate(Date date) {
+		Calendar dateConversionCalendar = new GregorianCalendar();
+		dateConversionCalendar.setTime(date);
+		return dateConversionCalendar.get(Calendar.DAY_OF_WEEK);
+	}
 }

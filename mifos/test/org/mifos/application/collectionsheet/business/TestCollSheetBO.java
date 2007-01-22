@@ -310,7 +310,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	private List<AccountActionDateEntity> getAccountActionDates(
 			AccountBO account, Short installmentId) {
 
-		MeetingBO meeting = TestObjectFactory.getMeetingHelper(1, 1, 4, 2);
+		MeetingBO meeting = TestObjectFactory.getMeetingForToday(1, 1, 4, 2);
 		TestObjectFactory.createMeeting(meeting);
 		CustomerBO center = TestObjectFactory.createCenter("ashCenter", meeting);
 
@@ -347,7 +347,7 @@ public class TestCollSheetBO extends MifosTestCase {
 
 	private List<CustomerBO> getCustomers() {
 
-		MeetingBO meeting = TestObjectFactory.getMeetingHelper(1, 1, 4, 2);
+		MeetingBO meeting = TestObjectFactory.getMeetingForToday(1, 1, 4, 2);
 		TestObjectFactory.createMeeting(meeting);
 		CustomerBO center = TestObjectFactory.createCenter("ashCenter", meeting);
 
@@ -365,7 +365,7 @@ public class TestCollSheetBO extends MifosTestCase {
 
 	private List<AccountActionDateEntity> getCustomerAccntDetails() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center1", meeting);
 		AccountBO accountBO = center.getCustomerAccount();
 
@@ -455,7 +455,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	private AccountBO getLoanAccount(Short accountSate, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -517,11 +517,11 @@ public class TestCollSheetBO extends MifosTestCase {
 
 	private SavingsBO createSavingsAccount(short savingsType) throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
 				.createSavingsOffering("SavingPrd1", (short) 2, new Date(System
 						.currentTimeMillis()), (short) 2, 300.0, (short) 1,

@@ -46,9 +46,22 @@ import org.mifos.framework.components.cronjobs.TaskHelper;
  */
 public class CollectionSheetTask extends MifosTask {
 	
+	/**
+	 * The number of days in advance to generate a collection sheet.
+	 */
+	private int daysInAdvance = 1;
+	
 	@Override
 	public TaskHelper getTaskHelper() {
 		return new CollectionSheetHelper(this);
+	}
+
+	public int getDaysInAdvance() {
+		return daysInAdvance;
+	}
+
+	public void setDaysInAdvance(int daysInAdvance) {
+		this.daysInAdvance = daysInAdvance;
 	}
 
 }

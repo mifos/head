@@ -404,7 +404,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 
 	private void createInitialObjects() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
@@ -426,9 +426,9 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 
 	private SavingsOfferingBO createSavingsOffering() {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering("SavingPrd1", Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short
 				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,

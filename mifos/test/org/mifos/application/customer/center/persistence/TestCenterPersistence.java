@@ -43,7 +43,7 @@ public class TestCenterPersistence extends MifosTestCase{
 	
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}

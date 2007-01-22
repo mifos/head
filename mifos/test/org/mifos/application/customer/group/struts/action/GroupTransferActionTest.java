@@ -290,13 +290,13 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	
 	private GroupBO createGroupUnderBranch(CustomerStatus groupStatus, Short officeId){
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createGroupUnderBranch("group1",groupStatus, officeId, meeting, personnelId);
 	}
 	
 	private CenterBO createCenter(String name, Short officeId){
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		return  TestObjectFactory.createCenter(name, meeting, officeId, personnelId);
 	}
 	

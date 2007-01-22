@@ -151,7 +151,7 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 	
 	private void createInitialObjects() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",CustomerStatus.CLIENT_ACTIVE,group);

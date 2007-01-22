@@ -69,6 +69,7 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
  * day and todays data would be lost.
  */
 public class CollectionSheetHelper extends TaskHelper {
+	private int daysInAdvance = 1;
 
 	public CollectionSheetHelper(MifosTask mifosTask) {
 		super(mifosTask);
@@ -77,7 +78,7 @@ public class CollectionSheetHelper extends TaskHelper {
 	private CollectionSheetBO getNewCollectionSheet(Date currentDate) {
 		Calendar meeting = new GregorianCalendar();
 		meeting.setTimeInMillis(currentDate.getTime());
-		meeting.roll(Calendar.DATE, 1);
+		meeting.roll(Calendar.DATE, getDaysInAdvance());
 
 		CollectionSheetBO collectionSheet = new CollectionSheetBO();
 		collectionSheet.setCollSheetDate(new Date(meeting.getTimeInMillis()));
@@ -169,6 +170,14 @@ public class CollectionSheetHelper extends TaskHelper {
 					.debug("After updating collective totals");
 		}
 
+	}
+
+	public int getDaysInAdvance() {
+		return daysInAdvance;
+	}
+
+	private void setDaysInAdvance(int daysInAdvance) {
+		this.daysInAdvance = daysInAdvance;
 	}
 
 }

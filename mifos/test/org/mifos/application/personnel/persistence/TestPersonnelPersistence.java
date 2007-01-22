@@ -230,7 +230,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	}
 	private void createInitialObjects(Short officeId, Short personnelId) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 
 		center = TestObjectFactory.createCenter("Center", meeting, officeId, personnelId);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -270,7 +270,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
   }
 	
 	private void createCustomers(Short centerStatus, CustomerStatus groupStatus, Short clientStatus){
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("group", groupStatus, center);
 		client = TestObjectFactory.createClient("client",clientStatus,group,new Date());

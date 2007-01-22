@@ -301,7 +301,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
@@ -319,9 +319,9 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 
 	private SavingsOfferingBO createSavingsOffering() {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering("SavingPrd1", Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short
 				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,

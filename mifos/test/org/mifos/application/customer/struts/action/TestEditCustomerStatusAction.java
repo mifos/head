@@ -234,7 +234,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 
 	public void testUpdateCenterStatus() throws PageExpiredException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.loadStatus.toString());
@@ -1056,7 +1056,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -1067,7 +1067,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 	private void createInitialObjects(CustomerStatus centerStatus,
 			CustomerStatus groupStatus, CustomerStatus clientStatus) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
 		client = TestObjectFactory.createClient("Client", clientStatus,
@@ -1133,7 +1133,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		return meeting;
 	}
 

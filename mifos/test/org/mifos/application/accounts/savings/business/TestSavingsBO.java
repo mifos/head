@@ -172,7 +172,7 @@ public class TestSavingsBO extends MifosTestCase {
 	
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
@@ -357,9 +357,9 @@ public class TestSavingsBO extends MifosTestCase {
 			Short depGLCode, Short intGLCode,
 			RecommendedAmountUnit recommendedAmountUnit) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, recommendedAmountUnit.getValue(),
@@ -729,7 +729,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testSuccessfulWithdraw() throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
@@ -760,7 +760,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testSuccessfulApplyPayment() throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
@@ -801,7 +801,7 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testSuccessfulDepositForCenterAccount()
 			throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
@@ -891,7 +891,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testMaxWithdrawAmount() throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
@@ -1844,11 +1844,11 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testGetOverDueDepositAmountForMandatoryAccounts()
 			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
 				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
@@ -1882,7 +1882,7 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testGetOverDueDepositAmountForVoluntaryAccounts()
 			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		SavingsOfferingBO savingsOffering = helper.createSavingsOffering(
 				"dfasdasd1", "sad1");
 		center = TestObjectFactory.createCenter("Center", meeting);
@@ -2255,7 +2255,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private void createCustomerObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",	CustomerStatus.CLIENT_ACTIVE, group);
@@ -3852,7 +3852,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private SavingsBO getSavingAccount() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",
@@ -3860,9 +3860,9 @@ public class TestSavingsBO extends MifosTestCase {
 		client2 = TestObjectFactory.createClient("client2",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, Short.valueOf("1"), 24.0, 200.0,
@@ -4068,7 +4068,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testGenerateMeetingForNextYear() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 
 		center = TestObjectFactory.createCenter("center1", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

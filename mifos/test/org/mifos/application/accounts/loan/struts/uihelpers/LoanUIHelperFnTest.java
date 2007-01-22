@@ -46,8 +46,7 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 
 	public void testGetMeetingRecurrence() throws Exception {
 		UserContext userContext = TestObjectFactory.getContext();
-		MeetingBO meeting = TestObjectFactory.getMeeting("2", "2", Short
-				.valueOf("2"));
+		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2, 2, 2);
 		assertEquals("2 month(s)", LoanUIHelperFn.getMeetingRecurrence(meeting,
 				userContext));
 	}

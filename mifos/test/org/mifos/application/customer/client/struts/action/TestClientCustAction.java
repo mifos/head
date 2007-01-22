@@ -1706,14 +1706,14 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		// meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 
 	private void createInitialCustomers() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client",
@@ -1722,7 +1722,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 
 	private void createParentCustomer() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 	}
@@ -1731,7 +1731,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		Short officeId = 3;
 		Short personnel = 3;
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		group = TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_ACTIVE,
 				officeId, meeting, personnel);
 		
@@ -1740,7 +1740,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	private void createParentGroup(CustomerStatus status, Short personnel) {
 		Short officeId = 3;
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		group = TestObjectFactory.createGroupUnderBranch("group1", status,
 				officeId, meeting, personnel);
 		

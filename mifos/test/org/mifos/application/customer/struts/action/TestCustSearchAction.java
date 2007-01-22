@@ -243,7 +243,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 	}
 	private LoanBO getLoanAccount() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -258,7 +258,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 	}	
 	private void createParentCustomer() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 	}

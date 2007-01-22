@@ -106,7 +106,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 	public void testExcuteWithCustomerAccounts() throws NumberFormatException,
 			SystemException, ApplicationException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);
@@ -535,9 +535,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		client2 = TestObjectFactory.createClient("client2",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, Short.valueOf("1"), 24.0, 200.0,
@@ -554,7 +554,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 
 	private AccountBO getLoanAccount() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 2, 4, 2));
+				.getMeetingForToday(1, 2, 4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);

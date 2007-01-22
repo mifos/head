@@ -48,7 +48,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 		LoanArrearsAgingTask loanArrearsAgingTask = new LoanArrearsAgingTask();
 		loanArrearsAgingHelper = (LoanArrearsAgingHelper)loanArrearsAgingTask.getTaskHelper();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(RecurrenceType.WEEKLY.getValue(), recurAfter,
+				.getMeetingForToday(RecurrenceType.WEEKLY.getValue(), recurAfter,
 						4, 2));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

@@ -122,9 +122,9 @@ public class TestAccountPersistence extends TestAccount {
 
 	private SavingsOfferingBO createSavingsOffering(String offeringName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingHelper(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
 		return TestObjectFactory.createSavingsOffering(offeringName, Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short
 				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,

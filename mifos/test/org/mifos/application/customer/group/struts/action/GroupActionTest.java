@@ -956,7 +956,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	
 	private void createParentCustomer() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(1, 1, 4, 2));
+				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 	}
