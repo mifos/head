@@ -37,7 +37,11 @@
  */
 package org.mifos.application.meeting.util.helpers;
 
+import org.mifos.application.meeting.business.MeetingTypeEntity;
 
+/**
+ * See also {@link MeetingTypeEntity}.
+ */
 public enum MeetingType {
 	LOANFREQUENCYOFINSTALLMENTS((short) 1), 
 	SAVINGSTIMEPERFORINTCALC((short) 2), 
