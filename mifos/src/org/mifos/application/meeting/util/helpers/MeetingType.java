@@ -40,13 +40,32 @@ package org.mifos.application.meeting.util.helpers;
 import org.mifos.application.meeting.business.MeetingTypeEntity;
 
 /**
+ * When ever we require a frequency(recurrence pattern) to be stored, 
+ * we create a "meeting" (this is not necessarily a meeting in the
+ * sense we present to the users).
+ * 
  * See also {@link MeetingTypeEntity}.
  */
 public enum MeetingType {
+	/* Schedule of loan installment payments for an account */
+	/* LOAN_INSTALLMENT */
 	LOANFREQUENCYOFINSTALLMENTS((short) 1), 
+	
+	/* This is not to generate a schedule, but to calculate the 
+	 * interest after the specified time period.*/
+	/* SAVINGS_INTEREST_CALCULATION_TIME_PERIOD */
 	SAVINGSTIMEPERFORINTCALC((short) 2), 
+
+	/* Schedule for posting interest to an account */
+	/* SAVINGS_INTEREST_POSTING */
 	SAVINGSFRQINTPOSTACC((short) 3), 
+	
+	/* This is what we call a "meeting" in the user interface. */
+	/* CUSTOMER_MEETING */
 	CUSTOMERMEETING((short) 4), 
+	
+	/* Recurrence of a fee. Can be for either a loan or a customer. */
+	/* PERIODIC_FEE */
 	FEEMEETING((short) 5);
 
 	Short value;
