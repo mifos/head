@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import junitx.framework.ObjectAssert;
+import junitx.framework.StringAssert;
+
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
@@ -28,6 +31,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -79,8 +83,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testSuccessfulSaveAttendance() throws NumberFormatException,
-			Exception {
+	public void testSuccessfulSaveAttendance() throws Exception {
 		createInitialObjects();
 		List<ClientBO> clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
@@ -96,7 +99,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				.getClientAttendances().size(), 1);
 	}
 
-	public void testSaveAttendanceForNoMeetingDate() {
+	public void testSaveAttendanceForNoMeetingDate() throws Exception {
 		createInitialObjects();
 		List<ClientBO> clients = new ArrayList<ClientBO>();
 		try {
@@ -105,12 +108,12 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 			HibernateUtil.closeSession();
 			bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 			HibernateUtil.commitTransaction();
-			assertTrue("The attendance has been update for meeting date null",
-					false);
-		} catch (Exception e) {
-			assertTrue(
-					"The attendance has not been update for meeting date null",
-					true);
+			fail("The attendance has been update for meeting date null");
+		} catch (ServiceException e) {
+			// What should we report to the user? errors.updatefailed?
+			// The exception here is a null in a NOT NULL column
+			ObjectAssert.assertInstanceOf(
+				PersistenceException.class, e.getCause());
 		}
 
 		HibernateUtil.closeSession();
@@ -119,7 +122,6 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	}
 
 	public void testSuccessfulSaveLoanAccount() throws Exception {
-
 		createLoanAccount();
 
 		bulkEntryBusinessService.saveLoanAccount(getAccountView(account),
@@ -135,7 +137,6 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		assertEquals(account.getLoanOffering().getPrdOfferingName(), "Loan");
 		assertEquals(account.getLoanSummary().getFeesPaid()
 				.getAmountDoubleValue(), Double.valueOf("100.0"));
-
 	}
 
 	public void testLoanAccountInstallmentPayableOnlyOnce() throws Exception {
@@ -151,9 +152,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		} catch (ServiceException be) {
 			HibernateUtil.rollbackTransaction();
 			account.getAccountPayments().clear();
-			assertNotNull(be);
-			assertEquals(be.getKey(), "errors.update");
-			assertTrue("A paid installment cannot be paid again", true);
+			assertUpdateError(be);
 		}
 	}
 
@@ -220,11 +219,12 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
 		customerAccount = center.getCustomerAccount();
-		assertEquals("The size of the payments done is", customerAccount
-				.getAccountPayments().size(), 1);
+		assertEquals("The size of the payments done is", 
+				1, customerAccount.getAccountPayments().size());
 		assertEquals("The size of the due insallments after payment is",
+				0,
 				TestObjectFactory.getDueActionDatesForAccount(
-						customerAccount.getAccountId(), currentDate).size(), 0);
+						customerAccount.getAccountId(), currentDate).size());
 	}
 
 	public void testCustomerAccountInstallmentPayableOnlyOnce()
@@ -237,13 +237,21 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 					center.getPersonnel().getPersonnelId(), "65463", Short
 							.valueOf("1"), null, new Date(System
 							.currentTimeMillis()));
-			assertTrue("A paid installment can be paid again", false);
+			fail("A paid installment can be paid again");
 		} catch (ServiceException e) {
-			assertTrue("A paid installment cannot be paid again", true);
+			assertUpdateError(e);
 		}
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
+	}
+
+	private void assertUpdateError(ServiceException e) {
+		assertEquals("errors.update", e.getKey());
+		assertEquals(1, e.getValues().length);
+		String accountNumber = (String) e.getValues()[0];
+		assertEquals(15, accountNumber.length());
+		StringAssert.assertStartsWith("000", accountNumber);
 	}
 
 	public void testGetLastMeetingDateForCustomer() throws ServiceException {
@@ -257,7 +265,8 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				lastMeetingDate.toString());
 	}
 
-	public void testGetLastMeetingDateForCustomerForInvalidConnection() {
+	public void testGetLastMeetingDateForCustomerForInvalidConnection() 
+	throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getMeetingForToday(1, 1, 4, 2));
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
@@ -267,7 +276,9 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 					.getCustomerId());
 			fail();
 		} catch (ServiceException e) {
-			assertTrue(true);
+			// What should we report to the user here?
+			ObjectAssert.assertInstanceOf(
+					PersistenceException.class, e.getCause());
 		} finally {
 			HibernateUtil.closeSession();
 		}
@@ -289,7 +300,9 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 							.valueOf("1"), null, currentDate);
 			fail();
 		} catch (ServiceException e) {
-			assertTrue(true);
+			// What should we report to the user here?
+			ObjectAssert.assertInstanceOf(
+					PersistenceException.class, e.getCause());
 		} finally {
 			HibernateUtil.closeSession();
 		}
@@ -303,7 +316,12 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 					currentDate, (short) 1,new ArrayList<ClientBO>());
 			fail();
 		} catch (ServiceException e) {
-			assertTrue(true);
+			// errors.update doesn't seem right,
+			// rather than errors.updatefailed or something like that.
+			assertEquals("errors.update", e.getKey());
+			assertEquals(1, e.getValues().length);
+			String accountNumber = (String) e.getValues()[0];
+			assertEquals("" + client.getCustomerId(), accountNumber);
 		} finally {
 			HibernateUtil.closeSession();
 		}
