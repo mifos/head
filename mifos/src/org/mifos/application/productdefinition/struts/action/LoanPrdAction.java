@@ -211,7 +211,7 @@ public class LoanPrdAction extends BaseAction {
 								.getFreqOfInstallmentsValue()),
 						loanPrdActionForm.getRecurAfterValue(),
 						loanPrdActionForm.getStartDateValue(locale),
-						MeetingType.LOANFREQUENCYOFINSTALLMENTS),
+						MeetingType.LOAN_INSTALLMENT),
 				findGLCodeEntity(request,
 						ProductDefinitionConstants.LOANPRICIPALGLCODELIST,
 						loanPrdActionForm.getPrincipalGLCode()),

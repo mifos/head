@@ -156,7 +156,7 @@ public abstract class TaskHelper {
 			Query query = session.createQuery(hqlSelect);
 			query.setString("taskName", mifosTask.name);
 			query.setString("finishedSuccessfully",
-					SchedulerConstants.FINISHEDSUCCESSFULLY);
+					SchedulerConstants.FINISHED_SUCCESSFULLY);
 			if (query.uniqueResult() == null) {
 				// When schedular starts for the first time
 				timeInMillis = System.currentTimeMillis();
@@ -180,7 +180,7 @@ public abstract class TaskHelper {
 		try {
 			registerStartup(timeInMillis);
 			execute(timeInMillis);
-			registerCompletion(0, SchedulerConstants.FINISHEDSUCCESSFULLY,
+			registerCompletion(0, SchedulerConstants.FINISHED_SUCCESSFULLY,
 					TaskStatus.COMPLETE);
 		} catch (CronJobException e) {
 			registerCompletion(timeInMillis, e.getErrorMessage(),

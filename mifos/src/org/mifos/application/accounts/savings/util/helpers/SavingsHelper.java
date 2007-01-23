@@ -130,9 +130,9 @@ public class SavingsHelper {
 	private void setDetailsForMeeting(MeetingBO meeting){
 		meeting.setStartDate(getFiscalStartDate());
 		if(meeting.isMonthly()){
-			if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingType.SAVINGSTIMEPERFORINTCALC.getValue()))
+			if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD.getValue()))
 				meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(Short.valueOf(new Integer(getFiscalStartDayNumber()).toString()));
-			else if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingType.SAVINGSFRQINTPOSTACC.getValue()))
+			else if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingType.SAVINGS_INTEREST_POSTING.getValue()))
 				meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(SavingsConstants.POSTING_DAY);
 		}
 	}

@@ -209,7 +209,7 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task
 					.getStatus());
 			assertEquals("ApplyCustomerFeeTask", task.getTask());
-			assertEquals(SchedulerConstants.FINISHEDSUCCESSFULLY, task
+			assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
 					.getDescription());
 			TestObjectFactory.removeObject(task);
 		}

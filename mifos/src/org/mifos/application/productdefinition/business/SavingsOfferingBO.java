@@ -123,9 +123,9 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
 		savingsOfferingMeetings = new HashSet<PrdOfferingMeetingEntity>();
 		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,
-				this, MeetingType.SAVINGSTIMEPERFORINTCALC));
+				this, MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
 		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,
-				this, MeetingType.SAVINGSFRQINTPOSTACC));
+				this, MeetingType.SAVINGS_INTEREST_POSTING));
 		this.recommendedAmount = recommendedAmount;
 		this.interestRate = interestRate;
 		this.maxAmntWithdrawl = maxAmntWithdrawl;
@@ -148,7 +148,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
 	public PrdOfferingMeetingEntity getFreqOfPostIntcalc()
 			throws ProductDefinitionException {
-		return getPrdOfferingMeeting(MeetingType.SAVINGSFRQINTPOSTACC);
+		return getPrdOfferingMeeting(MeetingType.SAVINGS_INTEREST_POSTING);
 	}
 
 	public void setFreqOfPostIntcalc(PrdOfferingMeetingEntity freqOfPostIntcalc) {
@@ -157,7 +157,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
 	public PrdOfferingMeetingEntity getTimePerForInstcalc()
 			throws ProductDefinitionException {
-		return getPrdOfferingMeeting(MeetingType.SAVINGSTIMEPERFORINTCALC);
+		return getPrdOfferingMeeting(MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
 	}
 
 	public void setTimePerForInstcalc(
@@ -269,9 +269,9 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		this.recommendedAmntUnit = recommendedAmntUnit;
 		this.savingsOfferingMeetings.clear();
 		setTimePerForInstcalc(new PrdOfferingMeetingEntity(timePerForInstcalc,
-				this, MeetingType.SAVINGSTIMEPERFORINTCALC));
+				this, MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
 		setFreqOfPostIntcalc(new PrdOfferingMeetingEntity(freqOfPostIntcalc,
-				this, MeetingType.SAVINGSFRQINTPOSTACC));
+				this, MeetingType.SAVINGS_INTEREST_POSTING));
 		this.recommendedAmount = recommendedAmount;
 		this.interestRate = interestRate;
 		this.maxAmntWithdrawl = maxAmntWithdrawl;

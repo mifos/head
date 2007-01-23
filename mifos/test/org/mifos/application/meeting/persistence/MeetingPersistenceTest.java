@@ -19,7 +19,7 @@ public class MeetingPersistenceTest extends MifosTestCase{
 	}
 	
 	public void testGetMeeting() throws Exception{
-		MeetingBO meeting  = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBO meeting  = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

@@ -318,10 +318,10 @@ public class FeeAction extends BaseAction {
 		MeetingBO feeFrequency = actionForm.getFeeRecurrenceTypeValue().equals(
 				RecurrenceType.MONTHLY) ? new MeetingBO(actionForm
 				.getFeeRecurrenceTypeValue(), actionForm
-				.getMonthRecurAfterValue(), new Date(), MeetingType.FEEMEETING)
+				.getMonthRecurAfterValue(), new Date(), MeetingType.PERIODIC_FEE)
 				: new MeetingBO(actionForm.getFeeRecurrenceTypeValue(),
 						actionForm.getWeekRecurAfterValue(), new Date(),
-						MeetingType.FEEMEETING);
+						MeetingType.PERIODIC_FEE);
 		if (actionForm.isRateFee()) {
 			FeeFormulaEntity feeFormula = (FeeFormulaEntity) findMasterEntity(
 					request, FeeConstants.FORMULALIST, actionForm

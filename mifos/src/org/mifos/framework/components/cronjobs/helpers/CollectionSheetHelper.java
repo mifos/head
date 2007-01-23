@@ -103,7 +103,7 @@ public class CollectionSheetHelper extends TaskHelper {
 			collectionSheet.create();
 			generateCollectionSheetForDate(collectionSheet);
 			collectionSheet
-					.update(CollectionSheetConstants.COLLECTIONSHEETGENERATIONSUCCESSFUL);
+					.update(CollectionSheetConstants.COLLECTION_SHEET_GENERATION_SUCCESSFUL);
 			HibernateUtil.commitTransaction();
 		} catch (Exception e) {
 			// if there is an exception roll back the transaction, close the
@@ -117,7 +117,7 @@ public class CollectionSheetHelper extends TaskHelper {
 			collectionSheet = getNewCollectionSheet(currentDate);
 			try {
 				collectionSheet
-						.update(CollectionSheetConstants.COLLECTIONSHEETGENERATIONSFAILED);
+						.update(CollectionSheetConstants.COLLECTION_SHEET_GENERATION_FAILED);
 				HibernateUtil.commitTransaction();
 			} catch (Exception ae) {
 				HibernateUtil.rollbackTransaction();

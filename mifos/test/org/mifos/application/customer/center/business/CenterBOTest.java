@@ -398,7 +398,7 @@ public class CenterBOTest extends MifosTestCase {
 		String meetingPlace = "Bangalore";
 		MeetingBO newMeeting = new MeetingBO(WeekDay.MONDAY, centerMeeting
 				.getMeetingDetails().getRecurAfter(), centerMeeting
-				.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+				.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
 		HibernateUtil.closeSession();
 
 		center = TestObjectFactory.getObject(CenterBO.class, center
@@ -488,7 +488,7 @@ public class CenterBOTest extends MifosTestCase {
 	}
 	private void createCustomers() throws Exception {
 		meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"),
-				new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+				new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

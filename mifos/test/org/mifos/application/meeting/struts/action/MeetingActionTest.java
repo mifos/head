@@ -839,14 +839,14 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 	}
 
 	private MeetingBO createWeeklyMeeting(WeekDay weekDay, Short recurAfer, Date startDate) throws MeetingException{
-		return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMERMEETING, "MeetingPlace");
+		return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
 	}
 
 	private MeetingBO createMonthlyMeetingOnDate(Short dayNumber, Short recurAfer, Date startDate) throws MeetingException{
-		return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMERMEETING,"MeetingPlace");
+		return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMER_MEETING,"MeetingPlace");
 	}
 
 	private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate) throws MeetingException{
-		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMERMEETING, "MeetingPlace");
+		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
 	}
 }

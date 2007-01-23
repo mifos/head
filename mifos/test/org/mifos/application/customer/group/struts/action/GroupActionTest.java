@@ -962,7 +962,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 	}
 	
 	private void createCenterWithoutFee()throws Exception{
-		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		center  = new CenterBO(userContext, "MyCenter", null, null, null, "1234", null, officeId, meeting, Short.valueOf("3"));
 		center.save();
 		HibernateUtil.commitTransaction();

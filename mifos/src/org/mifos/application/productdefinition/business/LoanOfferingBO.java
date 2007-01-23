@@ -179,7 +179,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			}
 		}
 		this.loanOfferingMeeting = new PrdOfferingMeetingEntity(meeting, this,
-				MeetingType.LOANFREQUENCYOFINSTALLMENTS);
+				MeetingType.LOAN_INSTALLMENT);
 		this.loanOfferingFees = new HashSet<LoanOfferingFeesEntity>();
 		if (fees != null && fees.size() > 0) {
 			for (FeeBO fee : fees) {
@@ -421,7 +421,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 			try {
 				this.loanOfferingMeeting.setMeeting(new MeetingBO(
 						recurrenceType, recurAfter, startDate,
-						MeetingType.LOANFREQUENCYOFINSTALLMENTS));
+						MeetingType.LOAN_INSTALLMENT));
 			} catch (MeetingException e) {
 				throw new ProductDefinitionException(e);
 			}

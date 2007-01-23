@@ -292,7 +292,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
 				new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"),
-						new Date(), MeetingType.CUSTOMERMEETING), request);
+						new Date(), MeetingType.CUSTOMER_MEETING), request);
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
 		List<FeeView> feeList = (List<FeeView>) SessionUtils.getAttribute(
@@ -767,7 +767,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 	private MeetingBO getMeeting() throws Exception {
 		MeetingBO meeting = new MeetingBO(Short.valueOf("2"), Short
-				.valueOf("2"), new Date(), MeetingType.CUSTOMERMEETING,
+				.valueOf("2"), new Date(), MeetingType.CUSTOMER_MEETING,
 				"MeetingPlace");
 		return meeting;
 	}

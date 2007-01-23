@@ -183,7 +183,7 @@ public class FeeBOTest extends MifosTestCase {
 
 	public void testCreatePeriodicAmountFee() throws Exception {
 		MeetingBO feefrequency = new MeetingBO(RecurrenceType.WEEKLY, Short
-				.valueOf("2"), new Date(), MeetingType.FEEMEETING);
+				.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
 		fee = createPeriodicAmountFee("Customer_Periodic_AmountFee",
 				FeeCategory.CENTER, "100", false, feefrequency);
 		fee.save();
@@ -198,7 +198,7 @@ public class FeeBOTest extends MifosTestCase {
 
 	public void testCreatePeriodicRateFee() throws Exception {
 		MeetingBO feefrequency = new MeetingBO(RecurrenceType.WEEKLY, Short
-				.valueOf("2"), new Date(), MeetingType.FEEMEETING);
+				.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
 		fee = createPeriodicRateFee("Customer_Periodic_RateFee",
 				FeeCategory.CENTER, 100.0, FeeFormula.AMOUNT, false,
 				feefrequency);
@@ -230,7 +230,7 @@ public class FeeBOTest extends MifosTestCase {
 
 	public void testCreatePeriodicDefaultFee() throws Exception {
 		MeetingBO feefrequency = new MeetingBO(RecurrenceType.WEEKLY, Short
-				.valueOf("2"), new Date(), MeetingType.FEEMEETING);
+				.valueOf("2"), new Date(), MeetingType.PERIODIC_FEE);
 		fee = createPeriodicRateFee("Customer_Periodic_DefaultFee",
 				FeeCategory.ALLCUSTOMERS, 100.0, FeeFormula.AMOUNT, true,
 				feefrequency);

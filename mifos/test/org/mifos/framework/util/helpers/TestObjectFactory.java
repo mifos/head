@@ -839,7 +839,7 @@ public class TestObjectFactory {
 					GLCodeEntity.class, Short.valueOf("24"));
 			MeetingBO meeting = 
 				new MeetingBO(meetingFrequency, recurAfter, new Date(),
-					MeetingType.FEEMEETING);
+					MeetingType.PERIODIC_FEE);
 			FeeBO fee = new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
 					new CategoryTypeEntity(feeCategory),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),

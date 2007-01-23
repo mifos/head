@@ -13,7 +13,7 @@ public class MeetingHelperTest extends MifosTestCase{
 	
 	public void testGetWeekMessage()throws Exception{
 		String str ="Recur every 5 Week(s) on Monday";
-		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -23,7 +23,7 @@ public class MeetingHelperTest extends MifosTestCase{
 	
 	public void testGetMonthMessage()throws Exception{
 		String str ="Recur on First Monday of every 5 month(s)";
-		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, RankType.FIRST, Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, RankType.FIRST, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -33,7 +33,7 @@ public class MeetingHelperTest extends MifosTestCase{
 
 	public void testGetMonthlyOnDayMessage()throws Exception{
 		String str ="Recur on day 7 of every 2 month(s)";
-		MeetingBO meeting = new MeetingBO(Short.valueOf("7"), Short.valueOf("2"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBO meeting = new MeetingBO(Short.valueOf("7"), Short.valueOf("2"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -43,7 +43,7 @@ public class MeetingHelperTest extends MifosTestCase{
 	
 	public void testGetWeekFrequency()throws Exception{
 		String str ="5 week(s)";
-		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -53,7 +53,7 @@ public class MeetingHelperTest extends MifosTestCase{
 	
 	public void testGetMonthFrequecny()throws Exception{
 		String str ="5 month(s)";
-		MeetingBO meeting = new MeetingBO(Short.valueOf("7"), Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBO meeting = new MeetingBO(Short.valueOf("7"), Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -63,7 +63,7 @@ public class MeetingHelperTest extends MifosTestCase{
 	
 	public void testGetDetailWeekFrequency()throws Exception{
 		String str ="Recur every 5 week(s)";
-		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -73,7 +73,7 @@ public class MeetingHelperTest extends MifosTestCase{
 	
 	public void testGetDetailMonthFrequecny()throws Exception{
 		String str ="Recur every 5 month(s)";
-		MeetingBO meeting = new MeetingBO(Short.valueOf("7"), Short.valueOf("5"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		MeetingBO meeting = new MeetingBO(Short.valueOf("7"), Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

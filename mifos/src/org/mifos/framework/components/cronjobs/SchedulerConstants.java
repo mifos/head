@@ -41,13 +41,13 @@ package org.mifos.framework.components.cronjobs;
 public interface SchedulerConstants {
 
 	public static final String PATH="org/mifos/framework/util/resources/cronjobs/task.xml";
-	public static final String SCHEDULERTASKS="scheduler-tasks";
+	public static final String SCHEDULER_TASKS="scheduler-tasks";
 	public static final String SCHEDULER="scheduler";
-	public static final String TASKCLASSNAME="task-class-name";
-	public static final String INITIALTIME="initial-time";
-	public static final String DELAYTIME="delay-time";
+	public static final String TASK_CLASS_NAME="task-class-name";
+	public static final String INITIAL_TIME="initial-time";
+	public static final String DELAY_TIME="delay-time";
 	public static final String START="Start";
-	public static final String FINISHEDSUCCESSFULLY="Finished Successfully";
+	public static final String FINISHED_SUCCESSFULLY="Finished Successfully";
 	public static final String FAILURE="Failure";
 	
 }

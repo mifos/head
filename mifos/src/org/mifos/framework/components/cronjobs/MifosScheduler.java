@@ -84,7 +84,7 @@ public class MifosScheduler extends Timer {
 		Document document = builder.parse(ResourceLoader.getURI(
 				SchedulerConstants.PATH).toString());
 		NodeList rootSchedulerTasks = document
-				.getElementsByTagName(SchedulerConstants.SCHEDULERTASKS);
+				.getElementsByTagName(SchedulerConstants.SCHEDULER_TASKS);
 		Element rootNodeName = (Element) rootSchedulerTasks.item(0);
 		NodeList collectionOfScheduledTasks = rootNodeName
 				.getElementsByTagName(SchedulerConstants.SCHEDULER);
@@ -92,21 +92,21 @@ public class MifosScheduler extends Timer {
 			Element scheduledTask = (Element) collectionOfScheduledTasks
 					.item(i);
 			Element subNodeName1 = (Element) scheduledTask
-					.getElementsByTagName(SchedulerConstants.TASKCLASSNAME)
+					.getElementsByTagName(SchedulerConstants.TASK_CLASS_NAME)
 					.item(0);
 			String taskName = ((Text) subNodeName1.getFirstChild()).getData()
 					.trim();
 			Element subNodeName2 = (Element) scheduledTask
-					.getElementsByTagName(SchedulerConstants.INITIALTIME).item(
+					.getElementsByTagName(SchedulerConstants.INITIAL_TIME).item(
 							0);
 			String initialTime = ((Text) subNodeName2.getFirstChild())
 					.getData().trim();
 			Element subNodeName3 = null;
 			String delayTime = null;
 			if ((scheduledTask
-					.getElementsByTagName(SchedulerConstants.DELAYTIME)) != null) {
+					.getElementsByTagName(SchedulerConstants.DELAY_TIME)) != null) {
 				subNodeName3 = (Element) scheduledTask.getElementsByTagName(
-						SchedulerConstants.DELAYTIME).item(0);
+						SchedulerConstants.DELAY_TIME).item(0);
 				if (subNodeName3.getFirstChild() != null) {
 					delayTime = ((Text) subNodeName3.getFirstChild()).getData()
 							.trim();

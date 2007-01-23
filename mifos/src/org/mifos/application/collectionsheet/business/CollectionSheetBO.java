@@ -224,7 +224,7 @@ public class CollectionSheetBO extends BusinessObject {
 	 * the object it implicitly sets the state to started.
 	 */
 	public void create() throws PersistenceException {
-		this.statusFlag = CollectionSheetConstants.COLLECTIONSHEETGENERATIONSTARTED;
+		this.statusFlag = CollectionSheetConstants.COLLECTION_SHEET_GENERATION_STARTED;
 		new CollectionSheetPersistence().createOrUpdate(this);
 	}
 

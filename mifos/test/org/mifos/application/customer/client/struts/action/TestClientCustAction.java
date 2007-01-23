@@ -669,7 +669,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
 				new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"),
-						new Date(), MeetingType.CUSTOMERMEETING), request);
+						new Date(), MeetingType.CUSTOMER_MEETING), request);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals("Duplicate Offerings", 1, getErrrorSize(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));		
@@ -726,7 +726,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
 				new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"),
-						new Date(), MeetingType.CUSTOMERMEETING), request);
+						new Date(), MeetingType.CUSTOMER_MEETING), request);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
@@ -780,7 +780,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
 				new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"),
-						new Date(), MeetingType.CUSTOMERMEETING), request);
+						new Date(), MeetingType.CUSTOMER_MEETING), request);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyNoActionErrors();
@@ -836,7 +836,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
 				new MeetingBO(RecurrenceType.MONTHLY, Short.valueOf("2"),
-						new Date(), MeetingType.CUSTOMERMEETING), request);
+						new Date(), MeetingType.CUSTOMER_MEETING), request);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.preview_success.toString());
@@ -1788,7 +1788,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 	
 	private void createGroupWithoutFee()throws Exception{
-		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		group = new GroupBO(userContext, "groupName", CustomerStatus.GROUP_PENDING,
 				"1234", false, null, null, null,null, Short.valueOf("3"),Short.valueOf("3"), meeting, Short.valueOf("3"));
 		group.save();

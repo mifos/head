@@ -40,9 +40,9 @@ package org.mifos.application.collectionsheet.util.helpers;
 public interface CollectionSheetConstants {
 	
 	// states in which collection sheet generation can be at any given point in time.
-	public static final Short COLLECTIONSHEETGENERATIONSTARTED = 1;
-	public static final Short COLLECTIONSHEETGENERATIONSUCCESSFUL = 2;
-	public static final Short COLLECTIONSHEETGENERATIONSFAILED = 3;
+	public static final Short COLLECTION_SHEET_GENERATION_STARTED = 1;
+	public static final Short COLLECTION_SHEET_GENERATION_SUCCESSFUL = 2;
+	public static final Short COLLECTION_SHEET_GENERATION_FAILED = 3;
 	
 	// parameters for query
 	public static final String MEETING_DATE = "meeting_date";

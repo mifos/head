@@ -41,7 +41,7 @@ public class MeetingBusinessServiceTest extends MifosTestCase{
 	public void testGetMeeting() throws Exception{
 		MeetingBusinessService service = new MeetingBusinessService();
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
-			new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+			new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -55,7 +55,7 @@ public class MeetingBusinessServiceTest extends MifosTestCase{
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
-				new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+				new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 			meeting.save();
 			fail();
 		} catch (MeetingException e) {
@@ -68,7 +68,7 @@ public class MeetingBusinessServiceTest extends MifosTestCase{
 	public void testFailureGetMeeting() throws Exception {
 		MeetingBusinessService service = new MeetingBusinessService();
 		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, 
-			new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+			new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		meeting.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

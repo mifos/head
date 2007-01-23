@@ -60,7 +60,7 @@ public class CustomerMeetingEntity extends PersistentObject {
 	private MeetingBO updatedMeeting;
 	
 	public CustomerMeetingEntity(CustomerBO customer, MeetingBO meeting){
-		meeting.setMeetingType(new MeetingTypeEntity(MeetingType.CUSTOMERMEETING));
+		meeting.setMeetingType(new MeetingTypeEntity(MeetingType.CUSTOMER_MEETING));
 		this.customer = customer;
 		this.meeting = meeting;
 		this.custMeetingId = null;

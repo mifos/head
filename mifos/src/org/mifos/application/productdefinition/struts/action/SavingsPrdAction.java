@@ -136,10 +136,10 @@ public class SavingsPrdAction extends BaseAction {
 				new MeetingBO(RecurrenceType.getRecurrenceType(savingsprdForm
 						.getRecurTypeFortimeForInterestCaclValue()),
 						savingsprdForm.getTimeForInterestCalcValue(),
-						new Date(), MeetingType.SAVINGSTIMEPERFORINTCALC),
+						new Date(), MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD),
 				new MeetingBO(RecurrenceType.MONTHLY, savingsprdForm
 						.getFreqOfInterestValue(), new Date(),
-						MeetingType.SAVINGSFRQINTPOSTACC), savingsprdForm
+						MeetingType.SAVINGS_INTEREST_POSTING), savingsprdForm
 						.getRecommendedAmountValue(), savingsprdForm
 						.getMaxAmntWithdrawlValue(), savingsprdForm
 						.getMinAmntForIntValue(), savingsprdForm
@@ -284,10 +284,10 @@ public class SavingsPrdAction extends BaseAction {
 												.getRecurTypeFortimeForInterestCaclValue()),
 								savingsprdForm.getTimeForInterestCalcValue(),
 								new Date(),
-								MeetingType.SAVINGSTIMEPERFORINTCALC),
+								MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD),
 						new MeetingBO(RecurrenceType.MONTHLY, savingsprdForm
 								.getFreqOfInterestValue(), new Date(),
-								MeetingType.SAVINGSFRQINTPOSTACC),
+								MeetingType.SAVINGS_INTEREST_POSTING),
 						savingsprdForm.getRecommendedAmountValue(),
 						savingsprdForm.getMaxAmntWithdrawlValue(),
 						savingsprdForm.getMinAmntForIntValue(), savingsprdForm

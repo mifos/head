@@ -230,15 +230,15 @@ public class MeetingAction extends BaseAction {
 		if (form.getRecurrenceType().equals(RecurrenceType.WEEKLY)) {
 			meeting = new MeetingBO(form.getWeekDayValue(), form
 					.getRecurWeekValue(), startDate,
-					MeetingType.CUSTOMERMEETING, form.getMeetingPlace());
+					MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
 		} else if (form.isMonthlyOnDate()) {
 			meeting = new MeetingBO(form.getMonthDayValue(), form
 					.getDayRecurMonthValue(), startDate,
-					MeetingType.CUSTOMERMEETING, form.getMeetingPlace());
+					MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
 		} else {
 			meeting = new MeetingBO(form.getMonthWeekValue(), form
 					.getMonthRankValue(), form.getRecurMonthValue(), startDate,
-					MeetingType.CUSTOMERMEETING, form.getMeetingPlace());
+					MeetingType.CUSTOMER_MEETING, form.getMeetingPlace());
 		}
 		return meeting;
 	}

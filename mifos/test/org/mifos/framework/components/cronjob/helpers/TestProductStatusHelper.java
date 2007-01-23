@@ -85,7 +85,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task
 					.getStatus());
 			assertEquals("ProductStatus", task.getTask());
-			assertEquals(SchedulerConstants.FINISHEDSUCCESSFULLY, task
+			assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
 					.getDescription());
 			TestObjectFactory.removeObject(task);
 		}
@@ -147,7 +147,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 	public void testRegisterCompletion() throws CronJobException {
 		productStatusHelper.registerStartup(System.currentTimeMillis());
 		productStatusHelper.registerCompletion(0,
-				SchedulerConstants.FINISHEDSUCCESSFULLY, TaskStatus.COMPLETE);
+				SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
 		Query query = HibernateUtil.getSessionTL().createQuery(
 				"from org.mifos.framework.components.cronjobs.business.Task");
 		List<Task> tasks = query.list();
@@ -157,7 +157,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task
 					.getStatus());
 			assertEquals("ProductStatus", task.getTask());
-			assertEquals(SchedulerConstants.FINISHEDSUCCESSFULLY, task
+			assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
 					.getDescription());
 			TestObjectFactory.removeObject(task);
 		}
@@ -168,7 +168,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 		TestObjectFactory.simulateInvalidConnection();
 		productStatusHelper.registerCompletion(0,
-				SchedulerConstants.FINISHEDSUCCESSFULLY, TaskStatus.COMPLETE);
+				SchedulerConstants.FINISHED_SUCCESSFULLY, TaskStatus.COMPLETE);
 		HibernateUtil.closeSession();
 
 		Query query = HibernateUtil.getSessionTL().createQuery(

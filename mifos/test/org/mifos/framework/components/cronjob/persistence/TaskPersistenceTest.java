@@ -30,7 +30,7 @@ public class TaskPersistenceTest extends MifosTestCase {
 		Task task = new Task();
 		task.setCreatedBy((short) 1);
 		task.setCreatedDate(new Date(System.currentTimeMillis()));
-		task.setDescription(SchedulerConstants.FINISHEDSUCCESSFULLY);
+		task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
 		task.setStartTime(new Timestamp(System.currentTimeMillis()));
 		task.setEndTime(new Timestamp(System.currentTimeMillis()));
 		task.setStatus(TaskStatus.COMPLETE.getValue());
@@ -46,7 +46,7 @@ public class TaskPersistenceTest extends MifosTestCase {
 			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task1
 					.getStatus());
 			assertEquals("ProductStatus", task1.getTask());
-			assertEquals(SchedulerConstants.FINISHEDSUCCESSFULLY, task1
+			assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task1
 					.getDescription());
 			TestObjectFactory.removeObject(task1);
 		}
@@ -57,7 +57,7 @@ public class TaskPersistenceTest extends MifosTestCase {
 		task.setId(1);
 		task.setCreatedBy((short) 1);
 		task.setCreatedDate(new Date(System.currentTimeMillis()));
-		task.setDescription(SchedulerConstants.FINISHEDSUCCESSFULLY);
+		task.setDescription(SchedulerConstants.FINISHED_SUCCESSFULLY);
 		task.setStartTime(new Timestamp(System.currentTimeMillis()));
 		task.setEndTime(new Timestamp(System.currentTimeMillis()));
 		task.setStatus(TaskStatus.COMPLETE.getValue());

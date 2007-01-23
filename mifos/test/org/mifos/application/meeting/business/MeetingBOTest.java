@@ -856,7 +856,7 @@ public class MeetingBOTest extends MifosTestCase{
 	public void testFailureCreateWeeklyMeeting_meetingPlaceIsNull(){
 		try{
 			recurAfter = Short.valueOf("1");
-			meeting = new MeetingBO(WeekDay.MONDAY, recurAfter, new Date(), MeetingType.CUSTOMERMEETING, "");
+			meeting = new MeetingBO(WeekDay.MONDAY, recurAfter, new Date(), MeetingType.CUSTOMER_MEETING, "");
 			assertNull(meeting);
 			fail();
 		}catch(MeetingException me){
@@ -1083,19 +1083,19 @@ public class MeetingBOTest extends MifosTestCase{
 	}
 	
 	private MeetingBO createDailyMeeting(Short recurAfer, Date startDate) throws MeetingException{
-		return new MeetingBO(RecurrenceType.DAILY, recurAfer, startDate, MeetingType.CUSTOMERMEETING);
+		return new MeetingBO(RecurrenceType.DAILY, recurAfer, startDate, MeetingType.CUSTOMER_MEETING);
 	}
 	
 	private MeetingBO createWeeklyMeeting(WeekDay weekDay, Short recurAfer, Date startDate) throws MeetingException{
-		return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMERMEETING, "MeetingPlace");
+		return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
 	}
 	
 	private MeetingBO createMonthlyMeetingOnDate(Short dayNumber, Short recurAfer, Date startDate) throws MeetingException{
-		return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMERMEETING,"MeetingPlace");	
+		return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMER_MEETING,"MeetingPlace");	
 	}
 	
 	private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate) throws MeetingException{
-		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMERMEETING, "MeetingPlace");
+		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
 	}
 	
 	private List createExpectedList(String dates)throws Exception{

@@ -118,7 +118,7 @@ public class GroupBOTest extends MifosTestCase {
 	
 	public void testChangeUpdatedMeeting()throws Exception{
 		String oldMeetingPlace = "Delhi";
-		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, oldMeetingPlace);
+		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
 		group = TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_ACTIVE,
 				officeId, weeklyMeeting, personnel);
 		
@@ -130,7 +130,7 @@ public class GroupBOTest extends MifosTestCase {
 		MeetingBO groupMeeting = group.getCustomerMeeting().getMeeting();
 		
 		String meetingPlace = "Bangalore";
-		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, groupMeeting.getMeetingDetails().getRecurAfter(), groupMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, groupMeeting.getMeetingDetails().getRecurAfter(), groupMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
 		
 		group.updateMeeting(newMeeting);
 		HibernateUtil.commitTransaction();
@@ -1157,7 +1157,7 @@ public class GroupBOTest extends MifosTestCase {
 	
 	public void testUpdateMeeting_SavedToUpdateLater()throws Exception{
 		String oldMeetingPlace = "Delhi";
-		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMERMEETING, oldMeetingPlace);
+		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
 		group = TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_ACTIVE,
 				officeId, weeklyMeeting, personnel);
 		
@@ -1169,7 +1169,7 @@ public class GroupBOTest extends MifosTestCase {
 		MeetingBO groupMeeting = group.getCustomerMeeting().getMeeting();
 		
 		String meetingPlace = "Bangalore";
-		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, groupMeeting.getMeetingDetails().getRecurAfter(), groupMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, groupMeeting.getMeetingDetails().getRecurAfter(), groupMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
 		
 		group.updateMeeting(newMeeting);
 		HibernateUtil.commitTransaction();
@@ -1212,7 +1212,7 @@ public class GroupBOTest extends MifosTestCase {
 		MeetingBO groupMeeting = group.getCustomerMeeting().getMeeting();
 		String oldMeetingPlace = "Delhi";
 		String meetingPlace = "Bangalore";
-		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, groupMeeting.getMeetingDetails().getRecurAfter(), groupMeeting.getStartDate(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		MeetingBO newMeeting = new MeetingBO(WeekDay.THURSDAY, groupMeeting.getMeetingDetails().getRecurAfter(), groupMeeting.getStartDate(), MeetingType.CUSTOMER_MEETING, meetingPlace);
 		HibernateUtil.closeSession();
 		
 		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
@@ -1250,7 +1250,7 @@ public class GroupBOTest extends MifosTestCase {
 		group.setUserContext(TestObjectFactory.getContext());
 		String meetingPlace = "newPlace";
 		Short recurAfter = Short.valueOf("4");
-		MeetingBO newMeeting = new MeetingBO(WeekDay.FRIDAY, recurAfter, new Date(), MeetingType.CUSTOMERMEETING, meetingPlace);
+		MeetingBO newMeeting = new MeetingBO(WeekDay.FRIDAY, recurAfter, new Date(), MeetingType.CUSTOMER_MEETING, meetingPlace);
 		group.updateMeeting(newMeeting);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1312,7 +1312,7 @@ public class GroupBOTest extends MifosTestCase {
 	}
 
 	private CenterBO createCenter(String name, Short officeId, WeekDay weekDay) throws Exception{
-		meeting = new MeetingBO(weekDay, Short.valueOf("1"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		meeting = new MeetingBO(weekDay, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		return TestObjectFactory.createCenter(name, meeting, officeId,
 				personnel);
 	}
@@ -1344,7 +1344,7 @@ public class GroupBOTest extends MifosTestCase {
 
 	private GroupBO createGroupUnderBranch(CustomerStatus groupStatus,
 			Short officeId) throws Exception{
-		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMERMEETING, "Delhi");
+		meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
 		return TestObjectFactory.createGroupUnderBranch("group1", groupStatus,
 				officeId, meeting, personnel);
 	}
@@ -1498,10 +1498,10 @@ public class GroupBOTest extends MifosTestCase {
 	}
 	
 	private MeetingBO createMonthlyMeetingOnDate(Short dayNumber, Short recurAfer, Date startDate) throws MeetingException{
-		return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMERMEETING,"MeetingPlace");	
+		return new MeetingBO(dayNumber, recurAfer, startDate, MeetingType.CUSTOMER_MEETING,"MeetingPlace");	
 	}
 	
 	private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate) throws MeetingException{
-		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMERMEETING, "MeetingPlace");
+		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
 	}
 }

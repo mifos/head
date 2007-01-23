@@ -71,7 +71,7 @@ public class TestLoanArrearsTask extends MifosTestCase {
 		for (Task task : tasks) {
 			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task
 					.getStatus());
-			assertEquals(SchedulerConstants.FINISHEDSUCCESSFULLY, task
+			assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
 					.getDescription());
 			TestObjectFactory.removeObject(task);
 		}

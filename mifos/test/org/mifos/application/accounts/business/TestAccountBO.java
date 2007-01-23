@@ -558,7 +558,7 @@ public class TestAccountBO extends TestAccount {
 	public void testGetInstalmentDates() throws Exception {
 		AccountBO account = new AccountBO();
 		MeetingBO meeting = new MeetingBO(RecurrenceType.DAILY, (short)1, 
-			getDate("18/08/2005"), MeetingType.CUSTOMERMEETING);
+			getDate("18/08/2005"), MeetingType.CUSTOMER_MEETING);
 		/* make sure we can handle case where the number of
 		   installments is zero */
 		account.getInstallmentDates(meeting, (short)0, (short)0);		
