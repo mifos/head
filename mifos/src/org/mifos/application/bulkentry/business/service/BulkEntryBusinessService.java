@@ -113,7 +113,8 @@ public class BulkEntryBusinessService extends BusinessService {
 			Short personnelId, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate, Date meetingDate) {
 		StringBuffer isThreadDone = new StringBuffer();
-		BulkEntryClientAttendanceThread bulkEntryClientAttendanceThread = new BulkEntryClientAttendanceThread(
+		BulkEntryClientAttendanceThread bulkEntryClientAttendanceThread = 
+			new BulkEntryClientAttendanceThread(
 				customerViews, clients, customerNames, meetingDate,
 				isThreadDone);
 		Thread thread = new Thread(bulkEntryClientAttendanceThread);

@@ -1,15 +1,10 @@
 package org.mifos.application.holiday.business.service;
 
-import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.fund.persistence.FundPersistence;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.util.resources.HolidayConstants;
-import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;

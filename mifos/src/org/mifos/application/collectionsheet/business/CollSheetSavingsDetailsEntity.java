@@ -66,8 +66,6 @@ public class CollSheetSavingsDetailsEntity extends PersistentObject {
 	
 	private Short installmentId;
 	
-	private Money totalSavingsAmntDue;
-
 	public Money getAccountBalance() {
 		return accountBalance;
 	}
@@ -126,20 +124,15 @@ public class CollSheetSavingsDetailsEntity extends PersistentObject {
 	}
 
 	public Money getTotalSavingsAmntDue() {
-		return getAmntOverDue() .add(getRecommendedAmntDue());
+		return getAmntOverDue().add(getRecommendedAmntDue());
 	}
 
-	public void setTotalSavingsAmntDue(Money totalSavingsAmntDue) {
-		this.totalSavingsAmntDue = totalSavingsAmntDue;
-	}
-	
-/**
-	 * If the loanDetailsId is not null it compares for equality based on it else it checks for collectionSheetCustomer not being
-	 * null in which case it returns true if both loanDetailsId and collectionSheetLoanDetails.collSheetCustomer is equal to the corresponding 
-	 * properties of the passed object else it calls super.equals();
-	 * @param obj - Object to be compared for equality.
-	 * @return - Returns true if the objects are equal else returns false.
+	/**
+	 * Is this column in the database used for anything?  Reports?
 	 */
+	public void setTotalSavingsAmntDue(Money totalSavingsAmntDue) {
+	}
+
 	@Override
 	public boolean equals(Object obj){
 		CollSheetSavingsDetailsEntity collSheetSavingsDetailsObj = (CollSheetSavingsDetailsEntity)obj;

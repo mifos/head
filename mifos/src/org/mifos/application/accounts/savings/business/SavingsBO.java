@@ -354,8 +354,6 @@ public class SavingsBO extends AccountBO {
 			(new SavingsPersistence()).createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
-		} catch (AccountException e) {
-			throw new AccountException(e);
 		}
 		logger.info("In SavingsBO::save(), Successfully saved , accountId: "
 				+ getAccountId());
