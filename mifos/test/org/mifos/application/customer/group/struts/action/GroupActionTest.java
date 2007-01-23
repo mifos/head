@@ -586,7 +586,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 						GroupConstants.CLIENT_LIST, request)).size());
 		for (CustomerPositionEntity customerPosition : group
 				.getCustomerPositions()) {
-			assertEquals("Kendra Leader", customerPosition.getPosition()
+			assertEquals("Center Leader", customerPosition.getPosition()
 					.getName());
 			break;
 		}

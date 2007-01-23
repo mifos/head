@@ -33,7 +33,7 @@ public class TestReportsPersistenceService extends MifosTestCase {
 				.get(1)).getReportCategoryName());
 		assertEquals("3", ((ReportsCategoryBO) listOfReportCategories.get(2))
 				.getReportCategoryId().toString());
-		assertEquals("Kendra", ((ReportsCategoryBO) listOfReportCategories
+		assertEquals("Center", ((ReportsCategoryBO) listOfReportCategories
 				.get(2)).getReportCategoryName());
 		assertEquals("4", ((ReportsCategoryBO) listOfReportCategories.get(3))
 				.getReportCategoryId().toString());
