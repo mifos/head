@@ -43,7 +43,8 @@ public class BulkEntryCustomerAccountThread implements Runnable {
 
 	public void run() {
 		try {
-			BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
+			BulkEntryBusinessService bulkEntryBusinessService = 
+				new BulkEntryBusinessService();
 			for (CustomerAccountView customerAccountView : customerAccounts) {
 				if (null != customerAccountView) {
 					String amount = customerAccountView

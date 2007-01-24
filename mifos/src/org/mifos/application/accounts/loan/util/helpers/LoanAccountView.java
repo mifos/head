@@ -138,6 +138,12 @@ public class LoanAccountView extends View {
 	}
 
 	public void setAmountPaidAtDisbursement(Double amountPaidAtDisbursement) {
+		/* Would this check be a good idea?  If not, what does null mean?
+		if (amountPaidAtDisbursement == null) {
+			throw new NullPointerException(
+				"amount paid at disbursement is required");
+		}
+		*/
 		this.amountPaidAtDisbursement = amountPaidAtDisbursement;
 	}
 

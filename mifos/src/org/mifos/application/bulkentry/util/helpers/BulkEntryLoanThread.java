@@ -26,6 +26,8 @@ public class BulkEntryLoanThread implements Runnable {
 
 	StringBuffer isActivityDone;
 
+//	public Exception exception;
+
 	public BulkEntryLoanThread(List<LoanAccountsProductView> accountViews,
 			Short personnelId, String recieptId, Short paymentId,
 			Date receiptDate, Date transactionDate, List<String> accountNums,
@@ -59,6 +61,11 @@ public class BulkEntryLoanThread implements Runnable {
 					}
 				}
 			}
+		/* Commented out until we can figure out what is up
+		   with TestBulkEntryAction#SUPPLY_ENTERED_AMOUNT_PARAMETERS
+		} catch (Exception e) {
+			this.exception = e;
+			*/
 		} finally {
 			isActivityDone.append("Done");
 		}

@@ -115,6 +115,13 @@ public class LoanAccountsProductView extends View {
 	}
 
 	public void setDisBursementAmountEntered(String disBursementAmountEntered) {
+		/* This is causing test failures.  Which is right?  The check or the
+		  tests?  If the latter, what does null mean?
+		if (disBursementAmountEntered == null) {
+			throw new NullPointerException(
+				"Disbursement amount entered is required");
+		}
+		 */
 		this.disBursementAmountEntered = disBursementAmountEntered;
 	}
 

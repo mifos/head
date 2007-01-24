@@ -38,15 +38,12 @@
 
 package org.mifos.application.bulkentry.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -55,6 +52,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
+import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
@@ -82,6 +80,7 @@ import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -97,6 +96,18 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestBulkEntryAction extends MifosMockStrutsTestCase {
+	
+	/* Setting this to true fixes the printing of stack traces to
+	   standard out, but seems to cause failures (MySQL threw a
+	   "Deadlock found when trying to get lock; try restarting transaction"
+	   exception) only if 
+	   TestBulkEntryBusinessService is run previously as part of
+	   the same suite.  
+	   
+	   This is presumably a second problem which was always there but
+	   was masked by the first one.  */
+	private static final boolean SUPPLY_ENTERED_AMOUNT_PARAMETERS = false;
+
 	UserContext userContext;
 
 	CustomerBO center;
@@ -121,15 +132,20 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	@Override
 	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(centerSavingsAccount);
-		TestObjectFactory.cleanUp(groupSavingsAccount);
-		TestObjectFactory.cleanUp(clientSavingsAccount);
-		TestObjectFactory.cleanUp(groupAccount);
-		TestObjectFactory.cleanUp(clientAccount);
-		TestObjectFactory.cleanUp(account);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
+		try {
+			TestObjectFactory.cleanUp(centerSavingsAccount);
+			TestObjectFactory.cleanUp(groupSavingsAccount);
+			TestObjectFactory.cleanUp(clientSavingsAccount);
+			TestObjectFactory.cleanUp(groupAccount);
+			TestObjectFactory.cleanUp(clientAccount);
+			TestObjectFactory.cleanUp(account);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+		} catch (Exception e) {
+			// Throwing here may mask earlier failures.
+			e.printStackTrace();
+		}
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -137,27 +153,13 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/bulkentry/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		userContext = new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		Locale locale = new Locale("en", "US");
-		userContext.setPereferedLocale(locale);
-		Set<Short> set = new HashSet<Short>();
-		set.add(Short.valueOf("1"));
-		userContext.setRoles(set);
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		userContext.setPereferedLocale(new Locale("en", "US"));
-		userContext.setBranchId(new Short("1"));
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/bulkentry/struts-config.xml")
+				.getPath());
+
+		userContext = TestUtils.makeUser(1);
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
@@ -174,16 +176,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		int month = meetinDateCalendar.get(Calendar.MONTH);
 		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
 		meetinDateCalendar = new GregorianCalendar(year, month, day);
-		
-		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
-				request);
-		setRequestPathInfo("/bulkentryaction.do");
-		addRequestParameter("method", "preview");
-		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
-				+ year);
-		actionPerform();
+
+		preview(bulkEntry, year, month, day);
 
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/bulkentryaction.do");
@@ -193,9 +187,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
 				+ year);
 
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward("create_success");
 		assertNotNull(request.getAttribute(BulkEntryConstants.CENTER));
 		assertEquals(request.getAttribute(BulkEntryConstants.CENTER), center
@@ -224,13 +216,47 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				.getAttendance().toString());
 	}
 
+	private void preview(BulkEntryBO bulkEntry, 
+			int year, int zeroBasedMonth, int day) 
+	throws PageExpiredException {
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
+				request);
+		setRequestPathInfo("/bulkentryaction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		addRequestParameter("transactionDate", 
+				day + "/" + (zeroBasedMonth + 1) + "/" + year);
+
+		if (SUPPLY_ENTERED_AMOUNT_PARAMETERS) {
+			addParametersForEnteredAmount();
+			addParametersForDisbursalEnteredAmount();
+		}
+
+		performNoErrors();
+	}
+
+	private void addParametersForEnteredAmount() {
+		for (int i = 0; i < 4; ++i) {
+			addRequestParameter("enteredAmount[" + i + "][0]", "300.0");
+			addRequestParameter("enteredAmount[" + i + "][1]", "300.0");
+		}
+	}
+
+	private void addParametersForDisbursalEnteredAmount() {
+		for (int i = 0; i < 4; ++i) {
+			addRequestParameter("enteredAmount[" + i + "][5]", "300.0");
+			addRequestParameter("enteredAmount[" + i + "][6]", "300.0");
+		}
+	}
+
 	public void testFailureCreate() throws Exception {
 		BulkEntryBO bulkEntry = getFailureBulkEntry();
 		Calendar meetinDateCalendar = new GregorianCalendar();
 		int year = meetinDateCalendar.get(Calendar.YEAR);
-		int month = meetinDateCalendar.get(Calendar.MONTH);
+		int zeroBasedMonth = meetinDateCalendar.get(Calendar.MONTH);
 		int day = meetinDateCalendar.get(Calendar.DAY_OF_MONTH);
-		meetinDateCalendar = new GregorianCalendar(year, month, day);
+		meetinDateCalendar = new GregorianCalendar(year, zeroBasedMonth, day);
 		
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(BulkEntryConstants.BULKENTRY, bulkEntry,
@@ -238,8 +264,12 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
-				+ year);
+		addRequestParameter("transactionDate", 
+				day + "/" + (zeroBasedMonth + 1) + "/" + year);
+		if (SUPPLY_ENTERED_AMOUNT_PARAMETERS) {
+			addParametersForEnteredAmount();
+			addParametersForDisbursalEnteredAmount();
+		}
 		TestObjectFactory.simulateInvalidConnection();
 		actionPerform();
 
@@ -248,7 +278,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "create");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("attendenceSelected[0]", "2");
-		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
+		addRequestParameter("transactionDate", day + "/" + (zeroBasedMonth + 1) + "/"
 				+ year);
 
 		
@@ -294,9 +324,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		addRequestParameter("depositAmountEntered[0][0]", "100.0");
 		addRequestParameter("transactionDate", day + "/" + (month + 1) + "/"
 				+ year);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward("preview_success");
 		HibernateUtil.closeSession();
 
@@ -680,13 +708,17 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		bulkEntryChild.addChildNode(bulkEntrySubChild);
 		bulkEntryParent.addChildNode(bulkEntryChild);
 
-		bulkEntryChild.getLoanAccountDetails().get(0).setPrdOfferingId(
+		LoanAccountsProductView childView = 
+			bulkEntryChild.getLoanAccountDetails().get(0);
+		childView.setPrdOfferingId(
 				groupLoanAccountView.getPrdOfferingId());
-		bulkEntryChild.getLoanAccountDetails().get(0).setEnteredAmount("100.0");
-		bulkEntrySubChild.getLoanAccountDetails().get(0)
+		childView.setEnteredAmount("100.0");
+		LoanAccountsProductView subchildView = 
+			bulkEntrySubChild.getLoanAccountDetails().get(0);
+		subchildView
 				.setDisBursementAmountEntered(
 						clientAccount.getLoanAmount().toString());
-		bulkEntrySubChild.getLoanAccountDetails().get(0).setPrdOfferingId(
+		subchildView.setPrdOfferingId(
 				clientLoanAccountView.getPrdOfferingId());
 		List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
 		loanProducts.add(loanOffering1);

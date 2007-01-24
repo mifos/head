@@ -131,6 +131,11 @@ public class BulkEntryBusinessService extends BusinessService {
 							.getCustomerDetail().getCustomerId(), savingsCache);
 		}
 		while (!isThreadDone.toString().equals("Done")) {
+			try {
+				Thread.sleep(100L);
+			}
+			catch (InterruptedException e) {
+			}
 		}
 	}
 
@@ -236,7 +241,8 @@ public class BulkEntryBusinessService extends BusinessService {
 				transactionDate, accountNums, isThreadOneDone);
 		Thread threadOne = new Thread(bulkEntryLoanThreadOne);
 		threadOne.start();
-		BulkEntryCustomerAccountThread bulkEntryCustomerAccountThread = new BulkEntryCustomerAccountThread(
+		BulkEntryCustomerAccountThread bulkEntryCustomerAccountThread = 
+			new BulkEntryCustomerAccountThread(
 				customerAccounts, personnelId, recieptId, paymentId,
 				receiptDate, transactionDate, customerAccountNums,
 				isCustomerAccountThreadDone);
@@ -246,8 +252,21 @@ public class BulkEntryBusinessService extends BusinessService {
 		saveAttendance(clients, customerNames);
 		saveSavingsAccount(savings, savingsNames);
 		while ((!isThreadOneDone.toString().equals("Done"))
-				&& (!isCustomerAccountThreadDone.toString().equals("Done"))) {
+				|| (!isCustomerAccountThreadDone.toString().equals("Done"))) {
+			try {
+				Thread.sleep(100L);
+			}
+			catch (InterruptedException e) {
+			}
 		}
+		
+		/* Commented out until we can figure out what is up
+		   with TestBulkEntryAction#SUPPLY_ENTERED_AMOUNT_PARAMETERS
+		Exception exception = bulkEntryLoanThreadOne.exception;
+		if (exception != null) {
+			throw new RuntimeException(exception);
+		}
+		 */
 	}
 
 	private void saveAttendance(List<ClientBO> clients,

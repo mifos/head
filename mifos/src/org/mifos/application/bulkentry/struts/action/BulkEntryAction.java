@@ -313,7 +313,8 @@ public class BulkEntryAction extends BaseAction {
 		List<String> savingsWithNames = new ArrayList<String>();
 		Map<Integer, BulkEntrySavingsCache> savingsCache = new HashMap<Integer, BulkEntrySavingsCache>();
 		List<LoanAccountsProductView> loanAccprdViews = new ArrayList<LoanAccountsProductView>();
-		List<CustomerAccountView> customerAccViews = new ArrayList<CustomerAccountView>();
+		List<CustomerAccountView> customerAccViews = 
+			new ArrayList<CustomerAccountView>();
 		Date meetingDate = Date.valueOf(DateHelper
 				.convertUserToDbFmt(((BulkEntryActionForm) form)
 						.getTransactionDate(), "dd/MM/yyyy"));
@@ -428,9 +429,11 @@ public class BulkEntryAction extends BaseAction {
 				BulkEntryConstants.CLIENTS, request);
 		List<SavingsBO> savings = (List<SavingsBO>) SessionUtils.getAttribute(
 				BulkEntryConstants.SAVINGS, request);
-		List<LoanAccountsProductView> loans = (List<LoanAccountsProductView>) SessionUtils
+		List<LoanAccountsProductView> loans = (List<LoanAccountsProductView>) 
+			SessionUtils
 				.getAttribute(BulkEntryConstants.LOANS, request);
-		List<CustomerAccountView> customerAccounts = (List<CustomerAccountView>) SessionUtils
+		List<CustomerAccountView> customerAccounts = (List<CustomerAccountView>) 
+			SessionUtils
 				.getAttribute(BulkEntryConstants.CUSTOMERACCOUNTS, request);
 		bulkEntryService.saveData(loans, personnelId, bulkEntry.getReceiptId(),
 				bulkEntry.getPaymentType().getPaymentTypeId(), bulkEntry
