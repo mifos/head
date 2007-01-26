@@ -8,6 +8,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -55,7 +56,8 @@ public class TestLoanTrxnDetailEntity extends MifosTestCase {
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = new AccountPersistence().getAccount(account

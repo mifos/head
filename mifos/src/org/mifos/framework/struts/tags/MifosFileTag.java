@@ -8,8 +8,8 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 
 public class MifosFileTag extends ELFileTag {
 	
-	private FieldConfig fieldConfig=
-		FieldConfig.getInstance();
+	private FieldConfig fieldConfig = FieldConfig.getInstance();
+
 	private String keyhm;
 
 	public String getKeyhm() {

@@ -137,7 +137,7 @@ public class ChkListAction extends BaseAction {
 				}
 			}
 			AccountStateEntity accountStateEntity = new AccountStateEntity(
-					AccountState.getStatus(getShortValue(chkListActionForm
+					AccountState.fromShort(getShortValue(chkListActionForm
 							.getStateId())));
 			AccountCheckListBO accountCheckListBO = new AccountCheckListBO(
 					productTypeEntity, accountStateEntity, chkListActionForm
@@ -318,7 +318,7 @@ public class ChkListAction extends BaseAction {
 				}
 			}
 			AccountStateEntity accountStateEntity = new AccountStateEntity(
-					AccountState.getStatus(getShortValue(chkListActionForm
+					AccountState.fromShort(getShortValue(chkListActionForm
 							.getStateId())));
 			AccountCheckListBO accountCheckList = (AccountCheckListBO) SessionUtils
 					.getAttribute(Constants.BUSINESS_KEY, request);

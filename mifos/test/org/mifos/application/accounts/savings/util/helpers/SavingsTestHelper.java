@@ -170,7 +170,7 @@ public class SavingsTestHelper {
 			CustomerBO customer, Short accountState, UserContext userContext)
 			throws Exception {
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
-				customer, AccountState.getStatus(accountState), new Money(
+				customer, AccountState.fromShort(accountState), new Money(
 						"500.0"), null);
 		savings.save();
 		return savings;

@@ -16,8 +16,7 @@ public class TestFieldConfigImplementer extends MifosTestCase{
 	
 	private static FieldConfigurationPersistenceService fieldConfigurationPersistenceService=new FieldConfigurationPersistenceService();
 	
-	private static FieldConfig fieldConfig =
-		FieldConfig.getInstance();
+	private static FieldConfig fieldConfig = FieldConfig.getInstance();
 	
 	public void testIsFieldHidden() throws HibernateProcessException, PersistenceException {
 		EntityMasterData.getInstance().init();

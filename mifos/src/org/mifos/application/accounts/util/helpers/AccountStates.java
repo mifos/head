@@ -38,6 +38,14 @@
 
 package org.mifos.application.accounts.util.helpers;
 
+import org.mifos.framework.security.util.ActivityMapper;
+
+/**
+ * For most purposes this is obsolete and should be replaced by
+ * {@link AccountState} (can replace it completely once we figure
+ * out how to handle the switch statements, for example in
+ * {@link ActivityMapper#getActivityIdForNewStateId(short, short)}).
+ */
 public interface AccountStates {
 
 	public final short CUSTOMERACCOUNT_ACTIVE = 11;

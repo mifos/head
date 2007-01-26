@@ -55,8 +55,7 @@ public class DateTag extends BaseInputTag {
 
 	private static final long serialVersionUID = 8328811567470903924L;
 
-	private FieldConfig fieldConfig = FieldConfig
-			.getInstance();
+	private FieldConfig fieldConfig = FieldConfig.getInstance();
 
 	private String keyhm;
 

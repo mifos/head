@@ -18,8 +18,7 @@ public class FieldConfig {
 		fieldConfigurationPersistenceService = 
 			new FieldConfigurationPersistenceService();
 
-	private static FieldConfig fieldConfigImplementer = 
-		new FieldConfig();
+	private static FieldConfig instance = new FieldConfig();
 
 	private Map<Short, List<FieldConfigurationEntity>> entityFieldMap = 
 		new HashMap<Short, List<FieldConfigurationEntity>>();
@@ -28,7 +27,7 @@ public class FieldConfig {
 		new HashMap<Short, List<FieldConfigurationEntity>>();
 
 	private Map<Object, Object> entityMap = EntityMasterData
-			.getEntityMasterMap();;
+			.getEntityMasterMap();
 
 	private FieldConfig() {
 	}
@@ -46,7 +45,7 @@ public class FieldConfig {
 	}
 
 	public static FieldConfig getInstance() {
-		return fieldConfigImplementer;
+		return instance;
 	}
 
 	public boolean isFieldHidden(String labelName) {

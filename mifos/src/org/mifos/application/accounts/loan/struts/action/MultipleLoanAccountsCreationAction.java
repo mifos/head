@@ -290,7 +290,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 						.getCustomer(getIntegerValue(clientDetail.getClientId()));
 				LoanBO loan = new LoanBO(getUserContext(request), loanOffering,
 						client, AccountState
-								.getStatus(getShortValue(loanActionForm
+								.fromShort(getShortValue(loanActionForm
 										.getStateSelected())),
 						getMoney(clientDetail.getLoanAmount()), loanOffering
 								.getDefNoInstallments(), center

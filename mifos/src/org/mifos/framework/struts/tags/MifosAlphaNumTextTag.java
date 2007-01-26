@@ -57,8 +57,7 @@ public class MifosAlphaNumTextTag extends ELTextTag {
 	 */
 	private static final long serialVersionUID = 1645345439876082736L;
 	
-	private FieldConfig fieldConfig =
-		FieldConfig.getInstance();
+	private FieldConfig fieldConfig = FieldConfig.getInstance();
 	
 	private String keyhm;
 	

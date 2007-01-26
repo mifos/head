@@ -5,6 +5,7 @@ import java.util.Date;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerScheduleEntity;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -85,8 +86,9 @@ public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), new Date(System.currentTimeMillis()),
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING,
+				new Date(System.currentTimeMillis()),
 				loanOffering);
 	}
 

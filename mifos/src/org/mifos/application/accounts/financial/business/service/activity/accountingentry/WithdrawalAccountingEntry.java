@@ -44,12 +44,13 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialActionCons
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.util.helpers.Money;
 
 public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 
+	@Override
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity
 				.getAccountTrxn();
@@ -66,8 +67,9 @@ public class WithdrawalAccountingEntry extends BaseAccountingEntry {
 					.getFinancialAction(FinancialActionConstants.VOLUNTORYWITHDRAWAL);
 		}
 
-		if(savings.getAccountState().getId().equals(AccountStates.SAVINGS_ACC_CLOSED))
+		if (savings.getState() == AccountState.SAVINGS_ACC_CLOSED) {
 			handleRoundingForWithdrawal(savings,savingsTrxn);
+		}
 		
 		addAccountEntryDetails(savingsTrxn.getWithdrawlAmount(),
 				finActionWithrawal, savings.getSavingsOffering()

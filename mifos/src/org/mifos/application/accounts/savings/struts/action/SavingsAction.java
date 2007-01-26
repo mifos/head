@@ -293,7 +293,7 @@ public class SavingsAction extends AccountAppAction {
 				.getPereferedLocale());
 		
 		SavingsBO saving = new SavingsBO(uc, savingsOfferingBO, customer,
-				AccountState.getStatus(getShortValue(savingsActionForm
+				AccountState.fromShort(getShortValue(savingsActionForm
 						.getStateSelected())), savingsActionForm
 						.getRecommendedAmntValue(),
 						customFields);

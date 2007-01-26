@@ -61,7 +61,7 @@ public enum AccountState {
 
 	Short value;
 
-	AccountState(Short value) {
+	private AccountState(Short value) {
 		this.value = value;
 	}
 
@@ -69,10 +69,14 @@ public enum AccountState {
 		return value;
 	}
 	
-	public static AccountState getStatus(Short value){
-		for(AccountState status : AccountState.values())
-			if(status.getValue().equals(value))
-				return status;
+	public static AccountState fromShort(Short value){
+		for (AccountState candidate : AccountState.values()) {
+			if (candidate.getValue().equals(value)) {
+				return candidate;
+			}
+		}
+		/* Do we really want null rather than an exception?  I suspect
+		   IllegalArgumentException would make more sense. */
 		return null;
 	}
 }

@@ -190,7 +190,7 @@ public class EditStatusAction extends BaseAction {
 				.getNewStatusId()))
 			newStatusName = getAccountBusinessService().getStatusName(
 					userContext.getLocaleId(),
-					AccountState.getStatus(getShortValue(editStatusActionForm
+					AccountState.fromShort(getShortValue(editStatusActionForm
 							.getNewStatusId())),
 					AccountTypes.getAccountType(accountBO.getAccountType()
 							.getAccountTypeId()));

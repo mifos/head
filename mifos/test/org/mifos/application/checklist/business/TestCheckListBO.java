@@ -257,7 +257,7 @@ public class TestCheckListBO extends MifosTestCase {
 				CheckListConstants.STATUS_ACTIVE);
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountState
-						.getStatus(AccountState.LOANACC_APPROVED.getValue()));
+						.fromShort(AccountState.LOANACC_APPROVED.getValue()));
 		HibernateUtil.closeSession();
 		accountCheckList = (AccountCheckListBO) TestObjectFactory.getObject(
 				AccountCheckListBO.class, accountCheckList.getChecklistId());

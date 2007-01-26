@@ -246,18 +246,12 @@ public class AccountBusinessService extends BusinessService {
 				Short paymentType = feePaymentEntity.getId();
 				if (paymentType.equals(FeePayment.TIME_OF_DISBURSMENT
 						.getValue())) {
-					Short accountState = account.getAccountState().getId();
-					if ((accountState
-							.equals(AccountState.LOANACC_PARTIALAPPLICATION
-									.getValue())
-							|| accountState
-									.equals(AccountState.LOANACC_PENDINGAPPROVAL
-											.getValue())
-							|| accountState
-									.equals(AccountState.LOANACC_APPROVED
-											.getValue()) || accountState
-							.equals(AccountState.LOANACC_DBTOLOANOFFICER
-									.getValue()))) {
+					AccountState accountState = account.getState();
+					if (accountState == AccountState.LOANACC_PARTIALAPPLICATION
+						|| accountState == AccountState.LOANACC_PENDINGAPPROVAL
+						|| accountState == AccountState.LOANACC_APPROVED 
+						|| accountState == AccountState.LOANACC_DBTOLOANOFFICER
+						) {
 						continue;
 					} else {
 						iter.remove();

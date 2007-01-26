@@ -57,8 +57,7 @@ public class MifosLabelTag extends BodyTagSupport {
 	 */
 	private static final long serialVersionUID = 1098346743243323316L;
 
-	private FieldConfig fieldConfig = FieldConfig
-			.getInstance();
+	private FieldConfig fieldConfig = FieldConfig.getInstance();
 
 	// ----------------------------------------------------- Instance Variables
 

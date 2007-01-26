@@ -190,6 +190,10 @@ public class AccountBO extends BusinessObject {
 		return accountStatusChangeHistory;
 	}
 
+	/**
+	 * For most purposes this is deprecated and one should call
+	 * {@link #getState()} instead.
+	 */
 	public AccountStateEntity getAccountState() {
 		return accountState;
 	}
@@ -682,8 +686,8 @@ public class AccountBO extends BusinessObject {
 		}
 	}
 
-	public AccountState getState() throws AccountException {
-		return AccountState.getStatus(getAccountState().getId());
+	public AccountState getState() {
+		return AccountState.fromShort(getAccountState().getId());
 	}
 
 	protected void updateAccountActivity(Money principal, Money interest,

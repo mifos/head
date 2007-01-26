@@ -361,8 +361,9 @@ public class TestAccountService extends MifosTestCase {
 				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), new Date(System.currentTimeMillis()),
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				new Date(System.currentTimeMillis()),
 				loanOffering);
 	}
 

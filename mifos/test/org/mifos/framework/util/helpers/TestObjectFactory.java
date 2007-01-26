@@ -192,9 +192,15 @@ import org.mifos.application.holiday.business.HolidayPK;
  */
 public class TestObjectFactory {
 
-	private static TestObjectPersistence testObjectPersistence = new TestObjectPersistence();
+	private static TestObjectPersistence testObjectPersistence = 
+		new TestObjectPersistence();
 	
-	// constants to make calls to getNewMeeting and getNewMeetingForToday more readable
+	/**
+	 * Constants to make calls to 
+	 * {@link #getNewMeeting(RecurrenceType, short, MeetingType, WeekDay)}
+	 * and {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)}
+	 * more readable.
+	 */
 	public static final short EVERY_WEEK = 1; 
 	public static final short EVERY_MONTH = 1; 
 	public static final short EVERY_DAY = 1;
@@ -601,11 +607,23 @@ public class TestObjectFactory {
 				.getLoanPrdCategory());
 	}
 
+	/**
+	 * Deprecated; call 
+	 * {@link #createLoanAccount(String, CustomerBO, AccountState, Date, LoanOfferingBO)} 
+	 * instead.
+	 */
 	public static LoanBO createLoanAccount(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering) {
+		AccountState state = AccountState.fromShort(accountStateId);
+		return createLoanAccount(globalNum, customer, state, startDate, loanOfering);
+	}
+
+	public static LoanBO createLoanAccount(String globalNum, 
+			CustomerBO customer, AccountState state, Date startDate, 
+			LoanOfferingBO offering) {
 		LoanBO loan = TestLoanBO.createLoanAccount(globalNum, customer,
-				accountStateId, startDate, loanOfering);
+				state, startDate, offering);
 		try {
 			loan.save();
 		} catch (AccountException e) {
@@ -764,7 +782,7 @@ public class TestObjectFactory {
 			throws Exception {
 		userContext = getUserContext();
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
-				customer, AccountState.getStatus(accountStateId),
+				customer, AccountState.fromShort(accountStateId),
 				savingsOffering.getRecommendedAmount(), getCustomFieldView());
 		savings.save();
 		TestSavingsBO.setActivationDate(savings,new Date(System.currentTimeMillis()));

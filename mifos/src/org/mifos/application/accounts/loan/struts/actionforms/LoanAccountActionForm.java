@@ -307,7 +307,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 	}
 
 	public AccountState getState() throws PropertyNotFoundException {
-		return AccountState.getStatus(getShortValue(getStateSelected()));
+		return AccountState.fromShort(getShortValue(getStateSelected()));
 	}
 
 	public Integer getCustomerIdValue() {

@@ -60,7 +60,6 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		EntityMasterData.getInstance().init();
 		FieldConfig fieldConfig = FieldConfig.getInstance();
 		fieldConfig.init();
-		FieldConfig.getInstance();
 		getActionServlet().getServletContext().setAttribute(
 				Constants.FIELD_CONFIGURATION,
 				fieldConfig.getEntityMandatoryFieldMap());

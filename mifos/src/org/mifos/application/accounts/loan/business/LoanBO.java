@@ -932,11 +932,9 @@ public class LoanBO extends AccountBO {
 				loanSummary.getPrincipalPaid());
 	}
 
-	public Boolean isAccountActive() {
-		return (getAccountState().getId().equals(
-				AccountStates.LOANACC_ACTIVEINGOODSTANDING) || getAccountState()
-				.getId().equals(AccountStates.LOANACC_BADSTANDING)) ? true
-				: false;
+	public boolean isAccountActive() {
+		return getState() == AccountState.LOANACC_ACTIVEINGOODSTANDING
+				|| getState() == AccountState.LOANACC_BADSTANDING;
 	}
 
 	public void save() throws AccountException {
@@ -1007,10 +1005,7 @@ public class LoanBO extends AccountBO {
 	
 	public Short getDaysInArrears() {
 		Short daysInArrears = 0;
-		if (getAccountState().getId().equals(
-				AccountStates.LOANACC_ACTIVEINGOODSTANDING)
-				|| getAccountState().getId().equals(
-						AccountStates.LOANACC_BADSTANDING)) {
+		if (isAccountActive()) {
 			if (!getDetailsOfInstallmentsInArrears().isEmpty()) {
 				AccountActionDateEntity accountActionDateEntity = getDetailsOfInstallmentsInArrears()
 						.get(0);

@@ -214,12 +214,14 @@ public class MasterPersistence extends Persistence {
 		return queryResult;
 	}
 	
-	public MasterDataEntity getMasterDataEntity(Class clazz,Short id) throws PersistenceException {
-		return (MasterDataEntity)getPersistentObject(clazz,id);
+	public MasterDataEntity getMasterDataEntity(Class clazz, Short id) 
+	throws PersistenceException {
+		return (MasterDataEntity)getPersistentObject(clazz, id);
 	}
 
 	@Override
-	public Object getPersistentObject(Class clazz, Short persistentObjectId) throws PersistenceException {
+	public Object getPersistentObject(Class clazz, Short persistentObjectId) 
+	throws PersistenceException {
 		if(clazz.getName().startsWith(MasterConstants.PATH_ACCOUNTACTIONENTITY))
 			return Cache.getCacheValue().get(persistentObjectId);
 		return super.getPersistentObject(clazz, persistentObjectId);
