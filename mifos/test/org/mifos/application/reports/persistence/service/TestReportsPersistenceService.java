@@ -12,6 +12,7 @@ public class TestReportsPersistenceService extends MifosTestCase {
 
 	private ReportsPersistenceService reportsPersistenceService;
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}

@@ -54,8 +54,8 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
-import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -490,12 +490,12 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				|| (!intDedDisbursement
 						&& gracePeriodType != null
 						&& !gracePeriodType.getId().equals(
-								GraceTypeConstants.NONE.getValue()) && gracePeriodDuration == null)) {
+								GraceType.NONE.getValue()) && gracePeriodDuration == null)) {
 			throw new ProductDefinitionException("errors.create");
 		}
 
 		if (interestTypes.getId().equals(
-				InterestTypeConstants.DECLININGINTEREST.getValue())
+				InterestType.DECLINING.getValue())
 				&& intDedDisbursement) {
 			throw new ProductDefinitionException(
 					ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION);
@@ -511,9 +511,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		if (intDedDisbursement
 				|| gracePeriodType == null
 				|| gracePeriodType.getId().equals(
-						GraceTypeConstants.NONE.getValue())) {
+						GraceType.NONE.getValue())) {
 			this.gracePeriodType = new GracePeriodTypeEntity(
-					GraceTypeConstants.NONE);
+					GraceType.NONE);
 			this.gracePeriodDuration = (short) 0;
 		} else {
 			this.gracePeriodType = gracePeriodType;
@@ -579,7 +579,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 				|| (!intDedDisbursement
 						&& gracePeriodType != null
 						&& !gracePeriodType.getId().equals(
-								GraceTypeConstants.NONE.getValue()) && gracePeriodDuration == null)) {
+								GraceType.NONE.getValue()) && gracePeriodDuration == null)) {
 			throw new ProductDefinitionException("errors.update");
 		}
 	}

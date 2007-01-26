@@ -23,6 +23,7 @@ public class TestMasterPersistence extends MifosTestCase {
 		super.setUp();
 	}
 
+	@Override
 	public void tearDown() {
 		HibernateUtil.closeSession();
 

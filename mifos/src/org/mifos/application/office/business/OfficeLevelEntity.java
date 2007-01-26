@@ -78,10 +78,6 @@ public class OfficeLevelEntity extends MasterDataEntity {
 		return this.interactionFlag > 0;
 	}
 
-	private void addInteractionFlag(boolean interactionFlag) {
-		this.interactionFlag = (short) (interactionFlag ? 1 : 0);
-	}
-
 	public OfficeLevelEntity getParent() {
 		return parent;
 	}

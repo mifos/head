@@ -109,8 +109,8 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
-import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -968,7 +968,7 @@ public class LoanBO extends AccountBO {
 					throw new AccountException(
 							LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
 				setGracePeriodType((GracePeriodTypeEntity) new MasterPersistence()
-						.retrieveMasterEntity(GraceTypeConstants.NONE
+						.retrieveMasterEntity(GraceType.NONE
 								.getValue(), GracePeriodTypeEntity.class,
 								getUserContext().getLocaleId()));
 			} catch (PersistenceException e) {
@@ -1433,9 +1433,9 @@ public class LoanBO extends AccountBO {
 			return (short) 0;
         else{
             if (getGracePeriodType().getId().equals(
-                GraceTypeConstants.PRINCIPALONLYGRACE.getValue()) 
+                GraceType.PRINCIPALONLYGRACE.getValue()) 
                     || getGracePeriodType().getId().equals(
-                    GraceTypeConstants.NONE.getValue())) {
+                    GraceType.NONE.getValue())) {
                         return (short) 1;
             }
         }
@@ -1451,12 +1451,12 @@ public class LoanBO extends AccountBO {
 		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
 				"getGracePeriod gracePeriod " + gracePeriod);
 
-		if (graceType.equals(GraceTypeConstants.NONE.getValue()))
+		if (graceType.equals(GraceType.NONE.getValue()))
 			return (short) 0;
-		else if (graceType.equals(GraceTypeConstants.GRACEONALLREPAYMENTS
+		else if (graceType.equals(GraceType.GRACEONALLREPAYMENTS
 				.getValue()))
 			return gracePeriod;
-		else if (graceType.equals(GraceTypeConstants.PRINCIPALONLYGRACE
+		else if (graceType.equals(GraceType.PRINCIPALONLYGRACE
 				.getValue()))
 			return (short) 0;
 		return null;
@@ -1529,10 +1529,10 @@ public class LoanBO extends AccountBO {
 	private Money getLoanInterest(Date installmentEndDate)
 			throws AccountException {
 		if (getLoanOffering().getInterestTypes().getId().equals(
-				InterestTypeConstants.FLATINTERST.getValue()))
+				InterestType.FLAT.getValue()))
 			return getFlatInterestAmount(installmentEndDate);
         if (getLoanOffering().getInterestTypes().getId().equals(
-                InterestTypeConstants.DECLININGINTEREST.getValue()))
+                InterestType.DECLINING.getValue()))
             return getDecliningInterestAmount(installmentEndDate);
 
 		return null;
@@ -1570,7 +1570,7 @@ public class LoanBO extends AccountBO {
                
         int usedPeriods = getNoOfInstallments();
         if (getGracePeriodType().getId().equals(
-                GraceTypeConstants.PRINCIPALONLYGRACE.getValue())) {
+                GraceType.PRINCIPALONLYGRACE.getValue())) {
             usedPeriods = usedPeriods - getGracePeriodDuration();
         }
                
@@ -1753,10 +1753,10 @@ public class LoanBO extends AccountBO {
 		if (getLoanOffering().isPrinDueLastInst()
                 && !isInterestDeductedAtDisbursement()){
             if (getLoanOffering().getInterestTypes().getId().equals(
-                    InterestTypeConstants.FLATINTERST.getValue())){
+                    InterestType.FLAT.getValue())){
                 return principalInLastPayment(loanInterest);
             } else if (getLoanOffering().getInterestTypes().getId().equals(
-                    InterestTypeConstants.DECLININGINTEREST.getValue())){
+                    InterestType.DECLINING.getValue())){
                 return principalInLastPaymentDecliningInterest(loanInterest);
             }  
 		}
@@ -1764,10 +1764,10 @@ public class LoanBO extends AccountBO {
 		if (!getLoanOffering().isPrinDueLastInst()
 		        && !isInterestDeductedAtDisbursement()){
 		    if (getLoanOffering().getInterestTypes().getId().equals(
-		            InterestTypeConstants.FLATINTERST.getValue())){
+		            InterestType.FLAT.getValue())){
 		        return allInstallments(loanInterest);
 		    } else if (getLoanOffering().getInterestTypes().getId().equals(
-		            InterestTypeConstants.DECLININGINTEREST.getValue())){
+		            InterestType.DECLINING.getValue())){
 		        return allDecliningInstallments(loanInterest);
 		    }  
 		}   
@@ -1784,14 +1784,14 @@ public class LoanBO extends AccountBO {
 		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
 		// grace can only be none
 		if (getGracePeriodType().getId().equals(
-				GraceTypeConstants.GRACEONALLREPAYMENTS.getValue())
+				GraceType.GRACEONALLREPAYMENTS.getValue())
 				|| getGracePeriodType().getId().equals(
-						GraceTypeConstants.PRINCIPALONLYGRACE.getValue()))
+						GraceType.PRINCIPALONLYGRACE.getValue()))
 			throw new AccountException(
 					AccountConstants.INTERESTDEDUCTED_INVALIDGRACETYPE);
 
 		if (getGracePeriodType().getId().equals(
-				GraceTypeConstants.NONE.getValue())) {
+				GraceType.NONE.getValue())) {
 			Money interestFirstInstallment = loanInterest;
 			// principal starts only from the second installment
 			Money principalPerInstallment = new Money(Double
@@ -1817,13 +1817,13 @@ public class LoanBO extends AccountBO {
 		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
 		// grace can only be none
 		if (getGracePeriodType().getId().equals(
-				GraceTypeConstants.PRINCIPALONLYGRACE.getValue()))
+				GraceType.PRINCIPALONLYGRACE.getValue()))
 			throw new AccountException(
 					AccountConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE);
 		if (getGracePeriodType().getId().equals(
-				GraceTypeConstants.NONE.getValue())
+				GraceType.NONE.getValue())
 				|| getGracePeriodType().getId().equals(
-						GraceTypeConstants.GRACEONALLREPAYMENTS.getValue())) {
+						GraceType.GRACEONALLREPAYMENTS.getValue())) {
 			Money principalLastInstallment = getLoanAmount();
 			// principal starts only from the second installment
 			Money interestPerInstallment = new Money(Double
@@ -1851,13 +1851,13 @@ public class LoanBO extends AccountBO {
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
           // grace can only be none
         if (getGracePeriodType().getId().equals(
-                GraceTypeConstants.PRINCIPALONLYGRACE.getValue()))
+                GraceType.PRINCIPALONLYGRACE.getValue()))
             throw new AccountException(
                     AccountConstants.PRINCIPALLASTPAYMENT_INVALIDGRACETYPE);
         if (getGracePeriodType().getId().equals(
-                GraceTypeConstants.NONE.getValue())
+                GraceType.NONE.getValue())
                 || getGracePeriodType().getId().equals(
-                        GraceTypeConstants.GRACEONALLREPAYMENTS.getValue())) {
+                        GraceType.GRACEONALLREPAYMENTS.getValue())) {
             Money principalLastInstallment = getLoanAmount();
                        
             Money interestPerInstallment = new Money(Double
@@ -1885,9 +1885,9 @@ public class LoanBO extends AccountBO {
 			throws AccountException {
 		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
 		if (getGracePeriodType().getId().equals(
-				GraceTypeConstants.GRACEONALLREPAYMENTS.getValue())
+				GraceType.GRACEONALLREPAYMENTS.getValue())
 				|| getGracePeriodType().getId().equals(
-						GraceTypeConstants.NONE.getValue())) {
+						GraceType.NONE.getValue())) {
 			Money principalPerInstallment = new Money(Double
 					.toString(getLoanAmount().getAmountDoubleValue()
 							/ getNoOfInstallments()));
@@ -1905,7 +1905,7 @@ public class LoanBO extends AccountBO {
 		}
 
 		if (getGracePeriodType().getId().equals(
-				GraceTypeConstants.PRINCIPALONLYGRACE.getValue())) {
+				GraceType.PRINCIPALONLYGRACE.getValue())) {
 			Money principalPerInstallment = new Money(
 					Double
 							.toString(getLoanAmount().getAmountDoubleValue()
@@ -1936,9 +1936,9 @@ public class LoanBO extends AccountBO {
        
         List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
         if (getGracePeriodType().getId().equals(
-                GraceTypeConstants.GRACEONALLREPAYMENTS.getValue())
+                GraceType.GRACEONALLREPAYMENTS.getValue())
                 || getGracePeriodType().getId().equals(
-                        GraceTypeConstants.NONE.getValue())) {
+                        GraceType.NONE.getValue())) {
            
             double principalBalance = getLoanAmount().getAmountDoubleValue();
            
@@ -1967,7 +1967,7 @@ public class LoanBO extends AccountBO {
          }
        
         if (getGracePeriodType().getId().equals(
-               GraceTypeConstants.PRINCIPALONLYGRACE.getValue())) {
+               GraceType.PRINCIPALONLYGRACE.getValue())) {
             double principalBalance = getLoanAmount().getAmountDoubleValue();
             double interestPerInstallment = Math.abs(principalBalance *  ((getInterestRate().doubleValue()/100) /getDecliningInterestAnnualPeriods()));
             Money interestPerInstallmentM = new Money(Double.toString(interestPerInstallment));
@@ -2005,13 +2005,13 @@ public class LoanBO extends AccountBO {
 			Money loanInterest) throws AccountException {
 		List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
 		if (getGracePeriodType().getId().equals(
-				GraceTypeConstants.GRACEONALLREPAYMENTS.getValue())
+				GraceType.GRACEONALLREPAYMENTS.getValue())
 				|| getGracePeriodType().getId().equals(
-						GraceTypeConstants.PRINCIPALONLYGRACE.getValue()))
+						GraceType.PRINCIPALONLYGRACE.getValue()))
 			throw new AccountException(
 					AccountConstants.INTERESTDEDUCTED_PRINCIPALLAST);
 		if (getGracePeriodType().getId().equals(
-				GraceTypeConstants.NONE.getValue())) {
+				GraceType.NONE.getValue())) {
 			Money principalLastInstallment = getLoanAmount();
 			Money interestFirstInstallment = loanInterest;
 
@@ -2352,11 +2352,11 @@ public class LoanBO extends AccountBO {
 			Short noOfInstallments) throws AccountException {
 		if (interestDeductedAtDisbursement) {
 			this.gracePeriodType = new GracePeriodTypeEntity(
-					GraceTypeConstants.NONE);
+					GraceType.NONE);
 			this.gracePeriodDuration = (short) 0;
 		} else {
 			if (!loanOffering.getGracePeriodType().getId().equals(
-					GraceTypeConstants.NONE.getValue()))
+					GraceType.NONE.getValue()))
 				if (gracePeriodDuration == null
 						|| gracePeriodDuration >= noOfInstallments)
 					throw new AccountException("errors.gracePeriod");

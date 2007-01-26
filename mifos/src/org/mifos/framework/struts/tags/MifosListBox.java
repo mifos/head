@@ -193,7 +193,8 @@ public class MifosListBox extends BodyTagSupport {
      * 
      * @throws JspException 
      */
-    public int doEndTag() throws JspException {
+    @Override
+	public int doEndTag() throws JspException {
 
         //String mifosLocale=null;
     	MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Inside doEndTag of MifosListBox Tag");

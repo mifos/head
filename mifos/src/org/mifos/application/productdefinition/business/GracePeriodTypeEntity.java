@@ -41,12 +41,12 @@ package org.mifos.application.productdefinition.business;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class GracePeriodTypeEntity extends MasterDataEntity {
 
-	public GracePeriodTypeEntity(GraceTypeConstants graceType) {
+	public GracePeriodTypeEntity(GraceType graceType) {
 		super(graceType.getValue());
 	}
 

@@ -1,5 +1,9 @@
 package org.mifos.application.accounts.business;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -19,9 +23,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 
 public class TestAccountFeesEntity extends MifosTestCase {

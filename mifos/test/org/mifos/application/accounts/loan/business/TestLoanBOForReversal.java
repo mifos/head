@@ -1,5 +1,9 @@
 package org.mifos.application.accounts.loan.business;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,9 +27,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestLoanBOForReversal extends MifosTestCase {
 

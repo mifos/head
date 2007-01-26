@@ -53,6 +53,7 @@ public class LoanRepaymentFinancialActivity extends BaseFinancialActivity {
 		super(accountTrxn);
 	}
 
+	@Override
 	protected List<BaseAccountingEntry> getFinancialActionEntry() {
 		List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();
 		financialActionEntryList.add(new PrincipalAccountingEntry());

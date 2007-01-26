@@ -1,5 +1,13 @@
 package org.mifos.framework.components.cronjob.helpers;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -39,10 +47,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
-import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class TestRegenerateScheduleHelper extends MifosTestCase {
 

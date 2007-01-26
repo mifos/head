@@ -49,6 +49,7 @@ import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public class PrincipalAccountingEntry extends BaseAccountingEntry {
+	@Override
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity
 				.getAccountTrxn();

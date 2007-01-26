@@ -231,7 +231,8 @@
 
                     
                            _operationClient.setCallback(new org.apache.axis2.client.async.Callback() {
-                    public void onComplete(
+                    @Override
+					public void onComplete(
                             org.apache.axis2.client.async.AsyncResult result) {
                         java.lang.Object object = fromOM(getElement(
                                 result.getResponseEnvelope(), "document"),
@@ -241,7 +242,8 @@
                         callback.receiveResultfindLoan((org.mifos.api.MifosServiceStub.FindLoanResponse) object);
                     }
 
-                    public void onError(java.lang.Exception e) {
+                    @Override
+					public void onError(java.lang.Exception e) {
                         callback.receiveErrorfindLoan(e);
                     }
                 });

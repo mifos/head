@@ -1,7 +1,7 @@
 package org.mifos.application.holiday.business;
 
-import org.mifos.framework.business.BusinessObject;
 import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.framework.business.BusinessObject;
 
 public class RepaymentRuleEntity extends BusinessObject {
 

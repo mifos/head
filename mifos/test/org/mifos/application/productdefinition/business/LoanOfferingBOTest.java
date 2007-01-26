@@ -37,6 +37,14 @@
  */
 package org.mifos.application.productdefinition.business;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,8 +66,8 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
-import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -72,10 +80,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
-import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class LoanOfferingBOTest extends MifosTestCase {
 
@@ -550,7 +554,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				principalglCodeEntity, intglCodeEntity);
 		assertNotNull(loanOffering.getGracePeriodType());
 		assertNotNull(loanOffering.getGracePeriodDuration());
-		assertEquals(GraceTypeConstants.NONE.getValue(), loanOffering
+		assertEquals(GraceType.NONE.getValue(), loanOffering
 				.getGracePeriodType().getId());
 		assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
 	}
@@ -559,7 +563,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws ProductDefinitionException {
 		createIntitalObjects();
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceTypeConstants.PRINCIPALONLYGRACE);
+				GraceType.PRINCIPALONLYGRACE);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		try {
@@ -580,7 +584,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws ProductDefinitionException {
 		createIntitalObjects();
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceTypeConstants.NONE);
+				GraceType.NONE);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
@@ -591,7 +595,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				(short) 17, false, false, false, null, null, frequency,
 				principalglCodeEntity, intglCodeEntity);
 		assertNotNull(loanOffering.getGracePeriodDuration());
-		assertEquals(GraceTypeConstants.NONE.getValue(), loanOffering
+		assertEquals(GraceType.NONE.getValue(), loanOffering
 				.getGracePeriodType().getId());
 		assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
 	}
@@ -600,7 +604,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws ProductDefinitionException, FeeException {
 		createIntitalObjects();
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceTypeConstants.NONE);
+				GraceType.NONE);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(),
@@ -629,7 +633,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			FeeException {
 		createIntitalObjects();
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceTypeConstants.GRACEONALLREPAYMENTS);
+				GraceType.GRACEONALLREPAYMENTS);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(),
@@ -662,7 +666,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			FeeException {
 		createIntitalObjects();
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceTypeConstants.GRACEONALLREPAYMENTS);
+				GraceType.GRACEONALLREPAYMENTS);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		periodicFee = TestObjectFactory.createPeriodicAmountFee(
@@ -696,10 +700,10 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertEquals(startDate, loanOffering.getStartDate());
 		assertEquals(endDate, loanOffering.getEndDate());
 		assertEquals("1234", loanOffering.getDescription());
-		assertEquals(GraceTypeConstants.GRACEONALLREPAYMENTS.getValue(),
+		assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(),
 				loanOffering.getGracePeriodType().getId());
 		assertEquals(Short.valueOf("2"), loanOffering.getGracePeriodDuration());
-		assertEquals(InterestTypeConstants.FLATINTERST.getValue(), loanOffering
+		assertEquals(InterestType.FLAT.getValue(), loanOffering
 				.getInterestTypes().getId());
 		assertEquals(new Money("1000"), loanOffering.getMinLoanAmount());
 		assertEquals(new Money("3000"), loanOffering.getMaxLoanAmount());
@@ -1072,7 +1076,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 
 		assertNotNull(loanOffering.getGracePeriodType());
 		assertNotNull(loanOffering.getGracePeriodDuration());
-		assertEquals(GraceTypeConstants.NONE.getValue(), loanOffering
+		assertEquals(GraceType.NONE.getValue(), loanOffering
 				.getGracePeriodType().getId());
 		assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
 	}
@@ -1081,7 +1085,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws ProductDefinitionException, FeeException {
 		createIntitalObjects();
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceTypeConstants.NONE);
+				GraceType.NONE);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(),
@@ -1110,7 +1114,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws ProductDefinitionException, FeeException {
 		createIntitalObjects();
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceTypeConstants.GRACEONALLREPAYMENTS);
+				GraceType.GRACEONALLREPAYMENTS);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
 		FeeBO fee = new AmountFeeBO(TestObjectFactory.getContext(),
@@ -1176,10 +1180,10 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertEquals(startDate, loanOffering.getStartDate());
 		assertEquals(endDate, loanOffering.getEndDate());
 		assertEquals("Loan Product updated", loanOffering.getDescription());
-		assertEquals(GraceTypeConstants.NONE.getValue(), loanOffering
+		assertEquals(GraceType.NONE.getValue(), loanOffering
 				.getGracePeriodType().getId());
 		assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
-		assertEquals(InterestTypeConstants.FLATINTERST.getValue(), loanOffering
+		assertEquals(InterestType.FLAT.getValue(), loanOffering
 				.getInterestTypes().getId());
 		assertEquals(new Money("1000"), loanOffering.getMinLoanAmount());
 		assertEquals(new Money("3000"), loanOffering.getMaxLoanAmount());
@@ -1207,7 +1211,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	    try {
 	        createIntitalObjects();
 	        interestTypes = new InterestTypesEntity(
-	                InterestTypeConstants.DECLININGINTEREST);
+	                InterestType.DECLINING);
 	        Date startDate = offSetCurrentDate(0);
 	        Date endDate = offSetCurrentDate(2);
 	        LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
@@ -1227,7 +1231,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	    try {
 	        createIntitalObjects();
 	        interestTypes = new InterestTypesEntity(
-	                InterestTypeConstants.DECLININGINTEREST);
+	                InterestType.DECLINING);
 	        Date startDate = offSetCurrentDate(0);
 	        Date endDate = offSetCurrentDate(2);
 	        LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
@@ -1289,7 +1293,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				GLCodeEntity.class, (short) 7);
 		productCategory = TestObjectFactory.getLoanPrdCategory();
 		interestTypes = new InterestTypesEntity(
-				InterestTypeConstants.FLATINTERST);
+				InterestType.FLAT);
 	}
 
 }

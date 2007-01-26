@@ -49,7 +49,9 @@ public class AccountTagGenerator extends TagGenerator {
 		setAssociatedGenerator(new CustomerTagGenerator());
 	}	
 	
-	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum){
+	@Override
+	protected StringBuilder build(BusinessObject obj, boolean selfLinkRequired, 
+			Object randomNum){
 		AccountBO account = (AccountBO)obj;
 		StringBuilder strBuilder = getAssociatedGenerator().build(account.getCustomer(),randomNum);
 		strBuilder.append(" / ");

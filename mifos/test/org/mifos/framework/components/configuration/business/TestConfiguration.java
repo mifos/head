@@ -10,11 +10,13 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 public class TestConfiguration extends MifosTestCase{
 	private Configuration configuration ;
 	
+	@Override
 	protected void setUp() throws Exception {
 		configuration = Configuration.getInstance();
 		super.setUp();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		HibernateUtil.closeSession();

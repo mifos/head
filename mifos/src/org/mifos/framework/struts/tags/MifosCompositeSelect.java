@@ -341,7 +341,8 @@ public class MifosCompositeSelect extends BodyTagSupport {
      * @exception JspException throws  JspException
      */
 
-    public int doEndTag() throws JspException {
+    @Override
+	public int doEndTag() throws JspException {
 
 
         StringBuffer results = new StringBuffer();

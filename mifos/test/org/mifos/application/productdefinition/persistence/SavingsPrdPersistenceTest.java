@@ -28,6 +28,7 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 
 	private SavingsOfferingBO savingsOffering;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 	}

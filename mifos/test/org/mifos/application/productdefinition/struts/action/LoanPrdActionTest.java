@@ -37,6 +37,11 @@
  */
 package org.mifos.application.productdefinition.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.net.URISyntaxException;
 import java.sql.Date;
 import java.text.DateFormat;
@@ -58,7 +63,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -75,10 +80,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
-import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 
@@ -550,7 +551,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("defInterestRate", "4");
 		addRequestParameter("freqOfInstallments", "2");
 		addRequestParameter("gracePeriodType",
-				GraceTypeConstants.PRINCIPALONLYGRACE.getValue().toString());
+				GraceType.PRINCIPALONLYGRACE.getValue().toString());
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter("prinDueLastInstFlag", YesNoFlag.YES.getValue()
 				.toString());
@@ -992,7 +993,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("freqOfInstallments", "2");
 		addRequestParameter("prdStatus", "2");
 		addRequestParameter("gracePeriodType",
-				GraceTypeConstants.PRINCIPALONLYGRACE.getValue().toString());
+				GraceType.PRINCIPALONLYGRACE.getValue().toString());
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter("prinDueLastInstFlag", YesNoFlag.YES.getValue()
 				.toString());

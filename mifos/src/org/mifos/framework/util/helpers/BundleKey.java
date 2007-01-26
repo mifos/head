@@ -12,6 +12,7 @@ public class BundleKey {
 		this.key = key;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof BundleKey))
 			return false;
@@ -25,6 +26,7 @@ public class BundleKey {
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		return this.locale.hashCode() + this.key.hashCode();
 	}

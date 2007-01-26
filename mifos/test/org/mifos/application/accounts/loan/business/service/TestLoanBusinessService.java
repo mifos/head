@@ -2,12 +2,15 @@ package org.mifos.application.accounts.loan.business.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -16,6 +19,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
@@ -81,17 +85,12 @@ public class TestLoanBusinessService extends MifosTestCase {
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				new Date(System.currentTimeMillis()),
 				loanOffering);
 		HibernateUtil.closeSession();
 
-		for (AccountActionDateEntity actionDate : accountBO
-				.getAccountActionDates()) {
-			accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-			PaymentData paymentData = createPaymentViewObject(accountBO);
-			accountBO.applyPayment(paymentData);
-			TestObjectFactory.updateObject(accountBO);
-		}
+		applyPayments();
 
 		accountBO = accountPersistence.getAccount(accountBO.getAccountId());
 		List<LoanActivityView> loanRecentActivityView = loanBusinessService
@@ -100,6 +99,20 @@ public class TestLoanBusinessService extends MifosTestCase {
 
 		assertEquals(3, loanRecentActivityView.size());
 		assertNotNull(loanRecentActivityView);
+	}
+
+	private void applyPayments() throws PersistenceException, AccountException {
+		Set<AccountActionDateEntity> actionDates = 
+			accountBO.getAccountActionDates();
+		// Is this always true or does it depend on System.currentTimeMillis?
+//		assertEquals(6, actionDates.size());
+		for (AccountActionDateEntity actionDate : actionDates) {
+			assertNotNull(actionDate);
+			accountBO = accountPersistence.getAccount(accountBO.getAccountId());
+			PaymentData paymentData = createPaymentViewObject(accountBO);
+			accountBO.applyPayment(paymentData);
+			TestObjectFactory.updateObject(accountBO);
+		}
 	}
 
 	public void testGetAllActivityView() throws SystemException,
@@ -119,13 +132,7 @@ public class TestLoanBusinessService extends MifosTestCase {
 				loanOffering);
 		HibernateUtil.closeSession();
 
-		for (AccountActionDateEntity actionDate : accountBO
-				.getAccountActionDates()) {
-			accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-			PaymentData paymentData = createPaymentViewObject(accountBO);
-			accountBO.applyPayment(paymentData);
-			TestObjectFactory.updateObject(accountBO);
-		}
+		applyPayments();
 
 		accountBO = accountPersistence.getAccount(accountBO.getAccountId());
 		List<LoanActivityView> loanAllActivityView = loanBusinessService

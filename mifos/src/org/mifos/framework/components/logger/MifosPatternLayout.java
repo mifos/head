@@ -35,6 +35,7 @@ public class MifosPatternLayout extends PatternLayout {
 	/**
 	 * Overridden method which returns an instance of the MifosPatternParser
 	 */
+	@Override
 	protected PatternParser createPatternParser(String pattern){
 		return new MifosPatternParser(pattern);
 	}

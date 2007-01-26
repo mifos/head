@@ -1,5 +1,10 @@
 package org.mifos.framework.components.cronjob.helpers;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.sql.Date;
 import java.util.List;
 
@@ -19,10 +24,6 @@ import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
-import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class TestProductStatusHelper extends MifosTestCase {
 

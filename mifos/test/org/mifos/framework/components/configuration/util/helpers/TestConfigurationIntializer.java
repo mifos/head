@@ -15,11 +15,13 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class TestConfigurationIntializer extends MifosTestCase{
 	private ConfigurationInitializer configInitializer;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		configInitializer= new ConfigurationInitializer();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		HibernateUtil.closeSession();

@@ -15,10 +15,12 @@ public class TestAccountActionEntity extends MifosTestCase {
 	private CustomerBO group=null;
 	private AccountPersistence accountPersistence;
 
+	@Override
 	protected void setUp() throws Exception {
 		session = HibernateUtil.getSessionTL();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);

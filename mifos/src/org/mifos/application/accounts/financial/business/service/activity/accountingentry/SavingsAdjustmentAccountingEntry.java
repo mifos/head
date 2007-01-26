@@ -49,6 +49,7 @@ import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 
 public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
+	@Override
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity
 				.getAccountTrxn();

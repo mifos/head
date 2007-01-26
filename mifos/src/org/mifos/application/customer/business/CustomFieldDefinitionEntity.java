@@ -110,6 +110,7 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 		return mandatoryFlag.equals(YesNoFlag.YES.getValue());
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		CustomFieldDefinitionEntity customFieldDefinition = (CustomFieldDefinitionEntity) obj;
 		if (this.entityType.equals(customFieldDefinition.getEntityType())
@@ -128,6 +129,7 @@ public class CustomFieldDefinitionEntity extends PersistentObject {
 				: CustomerConstants.NO_SMALL);
 	}
 
+	@Override
 	public int hashCode() {
 		return entityType.hashCode() * levelId.hashCode()
 				* fieldType.hashCode();

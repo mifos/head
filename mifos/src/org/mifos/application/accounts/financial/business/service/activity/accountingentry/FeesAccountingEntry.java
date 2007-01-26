@@ -50,6 +50,7 @@ import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 
 public class FeesAccountingEntry extends BaseAccountingEntry {
+	@Override
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) financialActivity
 				.getAccountTrxn();

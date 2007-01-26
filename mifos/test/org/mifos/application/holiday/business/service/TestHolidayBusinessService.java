@@ -4,22 +4,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.checklist.business.AccountCheckListBO;
-import org.mifos.application.checklist.business.CheckListBO;
-import org.mifos.application.checklist.business.CustomerCheckListBO;
-import org.mifos.application.checklist.util.helpers.CheckListMasterView;
-import org.mifos.application.checklist.util.helpers.CheckListStatesView;
-import org.mifos.application.checklist.util.resources.CheckListConstants;
-import org.mifos.application.customer.util.helpers.CustomerLevel;
-import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
-import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

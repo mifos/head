@@ -254,6 +254,7 @@ public class MifosMasterTag extends BodyTagSupport {
      * @exception JspException if a JSP exception has occurred
 	 * @see javax.servlet.jsp.tagext.Tag#doStartTag()
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 		//get the source files of javascript
 		TagUtils.getInstance().write(this.pageContext, getJavaScriptSource());
@@ -284,6 +285,7 @@ public class MifosMasterTag extends BodyTagSupport {
      * @exception JspException if a JSP exception has occurred
 	 * @see javax.servlet.jsp.tagext.IterationTag#doAfterBody()
 	 */
+	@Override
 	public int doAfterBody() throws JspException {
 		 if (bodyContent != null) {
             String value = bodyContent.getString();
@@ -300,6 +302,7 @@ public class MifosMasterTag extends BodyTagSupport {
      * @exception JspException if a JSP exception has occurred
 	 * @see javax.servlet.jsp.tagext.Tag#doEndTag()
 	 */
+	@Override
 	public int doEndTag() throws JspException {
 		 // Remove the page scope attributes we created
         pageContext.removeAttribute(Constants.SELECT_KEY);
@@ -331,7 +334,8 @@ public class MifosMasterTag extends BodyTagSupport {
 	/**
      * Release any acquired resources.
      */
-    public void release() {
+    @Override
+	public void release() {
         super.release();
         textProperty = null;
         addButtonProperty = null;

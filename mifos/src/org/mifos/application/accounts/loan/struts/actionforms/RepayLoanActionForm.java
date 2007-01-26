@@ -70,6 +70,7 @@ public class RepayLoanActionForm extends ValidatorActionForm {
 		this.recieptDate = recieptDate;
 	}
 
+	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String method = request.getParameter("method");
 		ActionErrors errors = null;

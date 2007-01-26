@@ -90,11 +90,13 @@ public class ApplyAdjustmentActionForm extends ValidatorActionForm {
 		
 	}
 	
+	@Override
 	public void reset(ActionMapping actionMapping,HttpServletRequest request){
 		this.adjustcheckbox = false;
 		
 	}
 	
+	@Override
 	public ActionErrors validate(ActionMapping actionMapping,HttpServletRequest request){
 		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
 			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));

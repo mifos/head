@@ -13,11 +13,13 @@ public class TestConfigurationPersistenceService extends MifosTestCase {
 
 	private ConfigurationPersistenceService configurationPersistenceService;
 	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		configurationPersistenceService = new ConfigurationPersistenceService();
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		HibernateUtil.closeSession();

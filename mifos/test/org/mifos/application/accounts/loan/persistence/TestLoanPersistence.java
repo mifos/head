@@ -1,5 +1,9 @@
 package org.mifos.application.accounts.loan.persistence;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,17 +31,14 @@ import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
-import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestLoanPersistence extends MifosTestCase {
 
@@ -264,9 +265,9 @@ public class TestLoanPersistence extends MifosTestCase {
 		ProductCategoryBO productCategory = TestObjectFactory
 				.getLoanPrdCategory();
 		InterestTypesEntity interestTypes = new InterestTypesEntity(
-				InterestTypeConstants.FLATINTERST);
+				InterestType.FLAT);
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceTypeConstants.GRACEONALLREPAYMENTS);
+				GraceType.GRACEONALLREPAYMENTS);
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		List<FundBO> funds = new ArrayList<FundBO>();
 		FundBO fundBO = (FundBO) HibernateUtil.getSessionTL().get(FundBO.class,

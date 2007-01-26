@@ -140,6 +140,7 @@ public class RawButton {
 	}
 	/* This funtion Returns the HTML representation of the button 
 	 */
+	@Override
 	public String toString() {
 		super.toString();
 		StringBuffer results = new StringBuffer();

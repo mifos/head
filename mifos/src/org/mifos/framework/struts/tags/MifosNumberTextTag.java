@@ -103,6 +103,7 @@ public class MifosNumberTextTag extends ELTextTag {
 	 *  
 	 * @see javax.servlet.jsp.tagext.Tag#doStartTag()
 	 */
+	@Override
 	public int doStartTag() throws JspException {
 		//get User Preferred Locale
 		String preferredUserLocale=LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);
@@ -123,7 +124,8 @@ public class MifosNumberTextTag extends ELTextTag {
 	/**
      * Release any acquired resources.
      */
-    public void release() {
+    @Override
+	public void release() {
 
         super.release();
         maxValue=null;

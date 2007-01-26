@@ -67,11 +67,13 @@ public class MifosImageTag extends TagSupport
 		
 		/** Used to set the id given in the JSP file */
 	
-		 public void setId(String id) 
+		 @Override
+		public void setId(String id) 
 		 {
 		           this.id = id;
 		 }
 		 
+		@Override
 		public String getId() 
 		{
 		        return (this.id);
@@ -104,7 +106,8 @@ public class MifosImageTag extends TagSupport
 		 * 
 		 * @throws JspException
 		 */	   
-	    public int doStartTag() throws JspException 
+	    @Override
+		public int doStartTag() throws JspException 
 		{
 	    	JspWriter out = pageContext.getOut();
 	    			

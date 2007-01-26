@@ -219,9 +219,6 @@ public class TableTagTest extends TestCase {
 		}
 	}
 
-	private void getCustomerType() {
-	}
-
 	public void testTabletag(){
 
 		TableTag tableTag = new TableTag();

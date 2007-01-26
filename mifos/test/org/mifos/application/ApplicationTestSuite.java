@@ -54,6 +54,7 @@ import org.mifos.application.configuration.LabelConfigurationTestSuite;
 import org.mifos.application.customer.CustomerTestSuite;
 import org.mifos.application.fees.FeeTestSuite;
 import org.mifos.application.fund.FundTestSuite;
+import org.mifos.application.holiday.HolidayTestSuite;
 import org.mifos.application.login.LoginTestSuite;
 import org.mifos.application.master.MasterTestSuite;
 import org.mifos.application.meeting.MeetingTestSuite;
@@ -79,7 +80,6 @@ import org.mifos.framework.struts.StrutsTestSuite;
 import org.mifos.framework.util.helpers.FrameworkUtilsSuite;
 import org.mifos.framework.util.helpers.MethodInvokerTest;
 import org.mifos.framework.util.helpers.StringToMoneyConverterTest;
-import org.mifos.application.holiday.HolidayTestSuite;
 
 public class ApplicationTestSuite extends TestSuite {
 

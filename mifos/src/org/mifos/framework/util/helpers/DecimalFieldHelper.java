@@ -57,13 +57,8 @@ public class DecimalFieldHelper {
 	 * the number is less than or equal to 9999999.999 else it would return false.
 	 * @param value -- value to be validated.
 	 * @param format -- format against which the value is to be validated e.g. (10,3) 
-	 * @return
 	 */
-	public static boolean validate(Double value,String format){
-		
-		
-		String valueToValidate = value.toString();
-		
+	public static boolean validate(Double value, String format) {
 		MifosLogManager.getLogger(LoggerConstants.FRAMEWORKLOGGER).debug("Format is " + format);
 		// it gets the total possible digits by getting a substring from the format 
 		// the substring is from '(' to ',' characters.

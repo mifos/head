@@ -51,8 +51,8 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
-import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -953,7 +953,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 
 		if (getInterestTypes() != null
 				&& getInterestTypes().equals(
-						InterestTypeConstants.DECLININGINTEREST.getValue()
+						InterestType.DECLINING.getValue()
 								.toString())) {
 
 			if (null != getIntDedDisbursementFlag()
@@ -973,7 +973,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 	private void validatePrincDueOnLastInstAndPrincGraceType(ActionErrors errors) {
 		if (getGracePeriodTypeValue() != null
 				&& getGracePeriodTypeValue().equals(
-						GraceTypeConstants.PRINCIPALONLYGRACE.getValue())
+						GraceType.PRINCIPALONLYGRACE.getValue())
 				&& isPrinDueLastInstValue()) {
 			addError(
 					errors,

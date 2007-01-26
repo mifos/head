@@ -26,7 +26,8 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
@@ -141,31 +142,22 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 		final double LOAN_AMOUNT = 300.0;
 		final double INTEREST_RATE = 1.2;
 		final short  NUMBER_OF_INSTALLMENTS = 3;
-		final short  FLAT_INTEREST = 1;
-		final short  DECLINING_INTEREST = 2;
-		final short  GRACE_PERIOD = 1;  // is this one meeting cycle?
-		final short  INTEREST_DED_DISB_YES = 1;  // not clear what this is
-		final short  INTEREST_DED_DISB_NO = 0;
-		final short  PRINCIPLE_DUE_LAST_INSTALLMENT_YES = 1;
-		final short  PRINCIPLE_DUE_LAST_INSTALLMENT_NO = 1;
-		
 		
 		Date startDate = new Date(System.currentTimeMillis());
-		// createLoanOffering should be changed to take enums
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", 
-				PrdApplicableMaster.GROUPS.getValue(),
+				"Loan",
+				"L",
+				PrdApplicableMaster.GROUPS,
 				startDate, 
 				PrdStatus.LOANACTIVE.getValue(),
 				LOAN_AMOUNT, 
 				INTEREST_RATE,
 				NUMBER_OF_INSTALLMENTS,  
-				FLAT_INTEREST,
-				GRACE_PERIOD,
-				INTEREST_DED_DISB_YES, 
-				PRINCIPLE_DUE_LAST_INSTALLMENT_YES,
-				InterestCalcType.MINIMUM_BALANCE.getValue(), // appears to be unused
-				meeting);
+				InterestType.FLAT,
+				true, 
+				true,
+				meeting,
+				GraceType.GRACEONALLREPAYMENTS);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue(), startDate, loanOffering);
 

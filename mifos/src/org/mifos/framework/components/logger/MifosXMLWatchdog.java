@@ -51,7 +51,8 @@ public class MifosXMLWatchdog extends FileWatchdog {
 	 * and calls the doConfigure on it.
 	 */
 	  
-	  protected void doOnChange() {
+	  @Override
+	protected void doOnChange() {
 		  new MifosDOMConfigurator().doConfigure(filename,LogManager.getLoggerRepository());
 	  }//end-method doOnChange
 	

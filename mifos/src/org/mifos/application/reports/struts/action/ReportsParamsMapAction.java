@@ -68,6 +68,7 @@ public class ReportsParamsMapAction extends BaseAction {
 		reportsBusinessService = (ReportsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.ReportsService);		
 	}
 	
+	@Override
 	protected BusinessService getService() {
 		return reportsBusinessService;
 	}

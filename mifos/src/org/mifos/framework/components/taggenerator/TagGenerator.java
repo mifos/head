@@ -61,5 +61,6 @@ public abstract class TagGenerator {
 		return build(obj, false,randomNum);		
 	}
 	
-	protected abstract StringBuilder build(BusinessObject obj, boolean selfLinkRequired, Object randomNum);
+	protected abstract StringBuilder build(BusinessObject obj, 
+			boolean selfLinkRequired, Object randomNum);
 }

@@ -126,7 +126,8 @@ public class MifosDecimalInput extends ELTextTag {
      * @return int
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
-    public int doStartTag() throws JspException {
+    @Override
+	public int doStartTag() throws JspException {
     	
         // TODO Auto-generated method stub
     	String preferredUserLocale=LabelTagUtils.getInstance().getUserPreferredLocale(pageContext);

@@ -1,8 +1,6 @@
 package org.mifos.application.holiday.struts.action;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,20 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.fund.business.FundBO;
-import org.mifos.application.fund.business.service.FundBusinessService;
-import org.mifos.application.fund.util.helpers.FundConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
-import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;

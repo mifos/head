@@ -1,5 +1,12 @@
 package org.mifos.application.accounts.loan.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,8 +54,8 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.application.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
-import org.mifos.application.productdefinition.util.helpers.InterestTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -71,10 +78,6 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
-import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
@@ -1374,9 +1377,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		ProductCategoryBO productCategory = TestObjectFactory
 				.getLoanPrdCategory();
 		InterestTypesEntity interestTypes = new InterestTypesEntity(
-				InterestTypeConstants.FLATINTERST);
+				InterestType.FLAT);
 		GracePeriodTypeEntity gracePeriodType = new GracePeriodTypeEntity(
-				GraceTypeConstants.GRACEONALLREPAYMENTS);
+				GraceType.GRACEONALLREPAYMENTS);
 		Date startDate = offSetCurrentDate(0);
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		List<FundBO> funds = new ArrayList<FundBO>();

@@ -10,6 +10,7 @@ import org.mifos.application.customer.center.business.service.CenterBusinessServ
 import org.mifos.application.customer.client.business.service.ClientBusinessService;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
 import org.mifos.application.fees.business.service.FeeBusinessService;
+import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.office.business.service.OfficeHierarchyBusinessService;
@@ -20,7 +21,6 @@ import org.mifos.application.reports.business.service.ReportsBusinessService;
 import org.mifos.application.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
-import org.mifos.application.holiday.business.service.HolidayBusinessService;
 
 /**
  * This class is deprecated.

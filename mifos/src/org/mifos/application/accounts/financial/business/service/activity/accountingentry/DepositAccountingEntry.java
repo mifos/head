@@ -48,6 +48,7 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 
 public class DepositAccountingEntry extends BaseAccountingEntry {
 
+	@Override
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity
 				.getAccountTrxn();

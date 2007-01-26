@@ -64,6 +64,7 @@ public class ReportsUserParamsActionForm extends BaseActionForm {
 	 * @see org.apache.struts.validator.ValidatorForm#reset(org.apache.struts.action.ActionMapping,
 	 *      javax.servlet.http.HttpServletRequest)
 	 */
+	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		MifosLogManager.getLogger(LoggerConstants.REPORTSLOGGER).info(
 				"In Login Reset");

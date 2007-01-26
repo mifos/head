@@ -63,7 +63,8 @@ public class Message {
    * This method is overridden to append the user id and office id to the actual message passed by the user.
    * @return The string with the message, userid and office id 
    */
-  public String toString() {
+  @Override
+public String toString() {
 	  String str=this.message + ApplicationConfig.getUserIdMarker() + this.loggedUser + " " + ApplicationConfig.getOfficeMarker()  + this.userOffice;
 	  return(str);
   }//end-method toString

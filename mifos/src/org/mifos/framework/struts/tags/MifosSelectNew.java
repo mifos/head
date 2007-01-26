@@ -101,6 +101,7 @@ public class MifosSelectNew extends ELSelectTag{
 	}
 
 
+	@Override
 	public int doEndTag() throws JspException {
 		StringBuilder builder = new StringBuilder();
 		Collection values = null;
@@ -149,6 +150,7 @@ public class MifosSelectNew extends ELSelectTag{
         return (EVAL_PAGE);
 	}
 
+	@Override
 	public void setStyleClassExpr(String arg0) {
 		super.setStyleClassExpr(arg0);
 	}

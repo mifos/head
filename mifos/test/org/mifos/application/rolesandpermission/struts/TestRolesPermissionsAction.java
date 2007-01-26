@@ -129,7 +129,6 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
 
-		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("activity(1)", "checkbox");
@@ -149,7 +148,6 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
 
-		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("name", "");
@@ -170,7 +168,6 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
 
-		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("name", "New Role");
@@ -188,7 +185,6 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.load_success.toString());
 
-		Map<String, String> activities = new HashMap<String, String>();
 		setRequestPathInfo("/rolesPermission.do");
 		addRequestParameter("method", "create");
 		addRequestParameter("name", "New Role");

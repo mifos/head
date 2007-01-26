@@ -72,7 +72,7 @@ import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.application.office.business.service.OfficeHierarchyBusinessService;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
-import org.mifos.application.productdefinition.util.helpers.GraceTypeConstants;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
@@ -233,18 +233,18 @@ public class LabelConfigurationAction extends BaseAction {
 		for (MasterDataEntity masterDataEntity : gracePeriodTypes) {
 			GracePeriodTypeEntity gracePeriodType = (GracePeriodTypeEntity) masterDataEntity;
 			if (gracePeriodType.getId().equals(
-					GraceTypeConstants.NONE.getValue())) {
+					GraceType.NONE.getValue())) {
 				labelConfigurationActionForm.setNone(gracePeriodType
 						.getName(localeId));
 			}
 			else if (gracePeriodType.getId().equals(
-					GraceTypeConstants.PRINCIPALONLYGRACE.getValue())) {
+					GraceType.PRINCIPALONLYGRACE.getValue())) {
 				labelConfigurationActionForm
 						.setPrincipalOnlyGrace(gracePeriodType
 								.getName(localeId));
 			}
 			else if (gracePeriodType.getId().equals(
-					GraceTypeConstants.GRACEONALLREPAYMENTS.getValue())) {
+					GraceType.GRACEONALLREPAYMENTS.getValue())) {
 				labelConfigurationActionForm
 						.setGraceOnAllRepayments(gracePeriodType
 								.getName(localeId));
@@ -513,17 +513,17 @@ public class LabelConfigurationAction extends BaseAction {
 		for (MasterDataEntity masterDataEntity : gracePeriodTypes) {
 			GracePeriodTypeEntity gracePeriodType = (GracePeriodTypeEntity) masterDataEntity;
 			if (gracePeriodType.getId().equals(
-					GraceTypeConstants.NONE.getValue())) {
+					GraceType.NONE.getValue())) {
 				gracePeriodType.update(labelConfigurationActionForm.getNone(),
 						localeId);
 			}
 			else if (gracePeriodType.getId().equals(
-					GraceTypeConstants.PRINCIPALONLYGRACE.getValue())) {
+					GraceType.PRINCIPALONLYGRACE.getValue())) {
 				gracePeriodType.update(labelConfigurationActionForm
 						.getPrincipalOnlyGrace(), localeId);
 			}
 			else if (gracePeriodType.getId().equals(
-					GraceTypeConstants.GRACEONALLREPAYMENTS.getValue())) {
+					GraceType.GRACEONALLREPAYMENTS.getValue())) {
 				gracePeriodType.update(labelConfigurationActionForm
 						.getGraceOnAllRepayments(), localeId);
 			}

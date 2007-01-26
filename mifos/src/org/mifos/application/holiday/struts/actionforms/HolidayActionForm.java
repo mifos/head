@@ -1,8 +1,6 @@
 package org.mifos.application.holiday.struts.actionforms;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -13,21 +11,15 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
-import org.mifos.application.customer.business.CustomFieldView;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.exceptions.HolidayException;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -141,6 +133,7 @@ public class HolidayActionForm extends BaseActionForm {
 
 	}
 
+	@Override
 	protected UserContext getUserContext(HttpServletRequest request) {
 		return (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());

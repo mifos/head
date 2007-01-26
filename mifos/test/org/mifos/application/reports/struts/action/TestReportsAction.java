@@ -15,6 +15,7 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 public class TestReportsAction extends MifosMockStrutsTestCase {
 	private UserContext userContext;
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		try {

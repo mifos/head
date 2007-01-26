@@ -50,6 +50,7 @@ import org.mifos.framework.util.helpers.Money;
 public class PenaltyAccountingEntry extends BaseAccountingEntry {
 
 
+	@Override
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		Money amount = new Money();
 		if(financialActivity.getAccountTrxn().getAccount().getAccountType().getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue())) 

@@ -54,6 +54,7 @@ public class MifosPatternParser extends PatternParser {
 	 * required method based on whether the line number, method name or class name is needed
 	 * @param c The specifier
 	 */
+	@Override
 	protected void finalizeConverter(char c){
 		PatternConverter pc = null;
 		switch(c){
@@ -108,6 +109,7 @@ public class MifosPatternParser extends PatternParser {
 				this.precision = precision;
 			}
 			
+			@Override
 			protected String convert(LoggingEvent event) {
 				//The MifosLogger is passed as the FQN. 
 				LocationInfo locationInfo = new LocationInfo(new Throwable(),"org.mifos.framework.components.logger.MifosLogger");

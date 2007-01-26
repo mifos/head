@@ -48,6 +48,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 
 public class InterestPostingAccountingEntry extends BaseAccountingEntry {
 
+	@Override
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		
 		SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity

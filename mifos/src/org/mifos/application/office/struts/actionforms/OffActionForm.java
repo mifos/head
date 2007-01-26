@@ -182,6 +182,7 @@ public class OffActionForm extends BaseActionForm {
 
 	}
 
+	@Override
 	protected UserContext getUserContext(HttpServletRequest request) {
 		return (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());

@@ -50,6 +50,7 @@ public class SavingsInterestPostingFinancialActivity extends BaseFinancialActivi
 		super(accountTrxn);
 	}
 
+	@Override
 	protected List<BaseAccountingEntry> getFinancialActionEntry() {
 		
 		List<BaseAccountingEntry> financialActionEntryList = new ArrayList<BaseAccountingEntry>();

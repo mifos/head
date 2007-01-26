@@ -42,6 +42,7 @@ import org.hibernate.Transaction;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeFrequencyTypeEntity;
+import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -49,7 +50,6 @@ import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.application.holiday.business.HolidayPK;
 
 /**
  * This class is used to persist objects created by TestObjectFactory.

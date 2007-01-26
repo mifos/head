@@ -43,6 +43,7 @@ public class LoanCycleCounter  implements Serializable{
 	/** 
 	 * This method return true even if the offering name is same , it does not bother about the counter value.
 	 */
+	@Override
 	public boolean equals(Object obj){
 		if(null != obj){
 			LoanCycleCounter otherObj = (LoanCycleCounter)obj;

@@ -1,14 +1,16 @@
 package org.mifos.application.accounts.savings.util.helpers;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD;
+import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_POSTING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestSavingsHelper extends MifosTestCase{
 	SavingsHelper helper = new SavingsHelper(); 

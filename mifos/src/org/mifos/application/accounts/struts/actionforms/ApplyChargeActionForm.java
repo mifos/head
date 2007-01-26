@@ -63,6 +63,7 @@ public class ApplyChargeActionForm extends ValidatorActionForm {
 		this.selectedChargeFormula = selectedChargeFormula;
 	}
 
+	@Override
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();

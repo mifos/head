@@ -1,13 +1,11 @@
 package org.mifos.application.productdefinition.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
-
 public enum PrdApplicableMaster {
 	CLIENTS((short) 1), GROUPS((short) 2),CENTERS((short)3),ALLCUSTOMERS((short)4);
 
-	Short value;
+	private Short value;
 
-	PrdApplicableMaster(Short value) {
+	private PrdApplicableMaster(Short value) {
 		this.value = value;
 	}
 
@@ -15,12 +13,12 @@ public enum PrdApplicableMaster {
 		return value;
 	}
 
-	public static PrdApplicableMaster getPrdApplicableMaster(Short value)
-			throws PropertyNotFoundException {
-		for (PrdApplicableMaster prdApplicableMaster : PrdApplicableMaster
-				.values())
-			if (prdApplicableMaster.getValue().equals(value))
-				return prdApplicableMaster;
-		throw new PropertyNotFoundException("PrdApplicableMaster");
+	public static PrdApplicableMaster fromInt(int value) {
+		for (PrdApplicableMaster candidate : PrdApplicableMaster.values()) {
+			if (candidate.getValue() == value)
+				return candidate;
+		}
+		throw new RuntimeException("no applicable master for " + value);
 	}
+
 }

@@ -97,7 +97,6 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		String newName = "Savings_offeringChanged";
 		String shortName = "S";
 		String newShortName = "S1";
-		String desc = "Desc";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
@@ -159,12 +158,11 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 
 	public void testBuildSavingsOfferingWithoutData() {
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(null,
+			new SavingsOfferingBO(null,
 					null, null, null, null, null, null, null, null, null, null,
 					null, null, null);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
-			assertTrue(true);
 		}
 	}
 
@@ -185,13 +183,13 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), null, "S",
 					productCategory, prdApplicableMaster, new Date(System
 							.currentTimeMillis()), savingsType, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"), 10.0,
 					depglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
 			assertTrue(true);
 		}
@@ -212,13 +210,13 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings offering",
 					"S", productCategory, prdApplicableMaster, new Date(System
 							.currentTimeMillis()), null, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"), 10.0,
 					depglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
 			assertTrue(true);
 		}
@@ -237,13 +235,13 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings offering",
 					"S", productCategory, prdApplicableMaster, new Date(System
 							.currentTimeMillis()), savingsType, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"), 10.0,
 					null, null);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
 			assertTrue(true);
 		}
@@ -267,13 +265,13 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings Offering",
 					"Savings", productCategory, prdApplicableMaster, new Date(
 							System.currentTimeMillis()), savingsType,
 					intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
 			assertTrue(true);
 		}
@@ -298,12 +296,12 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(-2);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings Offering",
 					"Savi", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
 			assertTrue(true);
 		}
@@ -387,14 +385,14 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(-2);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings Offering",
 					"Savi", productCategory, prdApplicableMaster, startDate,
 					endDate, "dssf", null, savingsType, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"),
 					new Money(), new Money(), 10.0, depglCodeEntity,
 					intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
 			assertTrue(true);
 		}
@@ -421,12 +419,12 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings Product",
 					"Savi", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
 			assertEquals(ProductDefinitionConstants.DUPLPRDINSTNAME, pde
@@ -455,12 +453,12 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings Product1",
 					"SAVP", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
 			assertEquals(ProductDefinitionConstants.DUPLPRDINSTSHORTNAME, pde
@@ -487,12 +485,12 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(-2);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings Product1",
 					"SAVP", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					null, 10.0, depglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
 			assertTrue(true);
 		}
@@ -517,12 +515,12 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(-2);
 		try {
-			SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
+			new SavingsOfferingBO(
 					TestObjectFactory.getUserContext(), "Savings Product1",
 					"SAVP", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10.0"), 10.0, depglCodeEntity, intglCodeEntity);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException e) {
 			assertTrue(true);
 		}
@@ -612,7 +610,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		try {
 			savingsOffering.update(Short.valueOf("1"), null, null, null, null,
 					null, null, null, null);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
 			assertEquals(ProductDefinitionConstants.ERROR_CREATE, pde.getKey());
@@ -624,7 +622,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		try {
 			savingsOffering.update(Short.valueOf("1"), "Savings_Changed", null,
 					null, null, null, null, null, null);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
 			assertEquals(ProductDefinitionConstants.ERROR_CREATE, pde.getKey());
@@ -653,7 +651,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 					endDate, "Desc", PrdStatus.SAVINGSACTIVE, null,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), new Money("100"), new Money("1"), 10.0);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
 			assertEquals(ProductDefinitionConstants.DUPLPRDINSTNAME, pde
@@ -684,7 +682,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 					PrdStatus.SAVINGSACTIVE, null, savingsType, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"), new Money(
 							"100"), new Money("1"), 10.0);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
 			assertEquals(ProductDefinitionConstants.DUPLPRDINSTSHORTNAME, pde
@@ -756,7 +754,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 					endDate, "Desc", PrdStatus.SAVINGSINACTIVE, null,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), new Money("100"), new Money("1"), 10.0);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
 			assertEquals(ProductDefinitionConstants.STARTDATEUPDATEEXCEPTION,
@@ -793,7 +791,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 					endDate, "Desc", PrdStatus.SAVINGSINACTIVE, null,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), new Money("100"), new Money("1"), 10.0);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException pde) {
 			assertTrue(true);
 			assertEquals(ProductDefinitionConstants.INVALIDSTARTDATE, pde
@@ -829,9 +827,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 					"Desc", PrdStatus.SAVINGSACTIVE, null, savingsType,
 					intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), new Money("100"), new Money("1"), 10.0);
-			assertTrue(false);
+			fail();
 		} catch (ProductDefinitionException pde) {
-			assertTrue(true);
 			assertEquals(ProductDefinitionConstants.INVALIDENDDATE, pde
 					.getKey());
 		}

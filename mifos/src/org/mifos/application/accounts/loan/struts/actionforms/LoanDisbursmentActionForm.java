@@ -61,6 +61,7 @@ public class LoanDisbursmentActionForm extends AccountApplyPaymentActionForm {
 		this.loanAmount = loanAmount;
 	}
 
+	@Override
 	public void clear() {
 		super.clear();
 		this.loanAmount = null;

@@ -101,7 +101,8 @@ public class MifosMasterButtonTag extends ButtonTag {
      *
      * @return The opening part of the element.
      */
-    protected String getElementOpen() {
+    @Override
+	protected String getElementOpen() {
         return "<input type=\"button\"";
     }
     
@@ -109,7 +110,8 @@ public class MifosMasterButtonTag extends ButtonTag {
      * Prepare the name element
      * @return The element name.
      */
-    protected String prepareName() throws JspException {
+    @Override
+	protected String prepareName() throws JspException {
 
         if (property == null) {
             return null;
@@ -132,7 +134,8 @@ public class MifosMasterButtonTag extends ButtonTag {
      * StringBuffer.
      * @param handlers The StringBuffer that output will be appended to.
      */
-    protected void prepareAttribute(StringBuffer handlers, String name, Object value) {
+    @Override
+	protected void prepareAttribute(StringBuffer handlers, String name, Object value) {
         if (value != null) {
             handlers.append(" ");
             handlers.append(name);
@@ -146,7 +149,8 @@ public class MifosMasterButtonTag extends ButtonTag {
      * Render the button attributes
      * @param results The StringBuffer that output will be appended to.
      */
-    protected void prepareButtonAttributes(StringBuffer results) 
+    @Override
+	protected void prepareButtonAttributes(StringBuffer results) 
                       throws JspException {
         prepareAttribute(results, "accesskey", getAccesskey());
         prepareAttribute(results, "tabindex", getTabindex());
@@ -158,14 +162,16 @@ public class MifosMasterButtonTag extends ButtonTag {
      *  additional attributes added.
      * @param handlers The StringBuffer that output will be appended to.
      */
-    protected void prepareOtherAttributes(StringBuffer handlers) {
+    @Override
+	protected void prepareOtherAttributes(StringBuffer handlers) {
     }
     
     /**
      * Render the value element
      * @param results The StringBuffer that output will be appended to.
      */
-    protected void prepareValue(StringBuffer results) {
+    @Override
+	protected void prepareValue(StringBuffer results) {
 
         // Acquire the label value we will be generating
         String label = value;
@@ -182,7 +188,8 @@ public class MifosMasterButtonTag extends ButtonTag {
      * Return the default value.
      * @return The default value if none supplied.
      */
-    protected String getDefaultValue() {
+    @Override
+	protected String getDefaultValue() {
         return "Submit";
     }
 }
