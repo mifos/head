@@ -61,6 +61,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	protected AccountBO accountBO;
@@ -258,7 +261,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	
 	private AccountBO createLoanAccount() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(

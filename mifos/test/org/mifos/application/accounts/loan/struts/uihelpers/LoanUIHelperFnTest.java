@@ -13,6 +13,10 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 
@@ -46,7 +50,8 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 
 	public void testGetMeetingRecurrence() throws Exception {
 		UserContext userContext = TestObjectFactory.getContext();
-		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2, 2, 2);
+		MeetingBO meeting = TestObjectFactory.getNewMeeting(MONTHLY, 
+				EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
 		assertEquals("2 month(s)", LoanUIHelperFn.getMeetingRecurrence(meeting,
 				userContext));
 	}

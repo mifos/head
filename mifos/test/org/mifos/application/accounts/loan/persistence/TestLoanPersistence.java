@@ -35,6 +35,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestLoanPersistence extends MifosTestCase {
 
@@ -55,7 +58,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		super.setUp();
 		loanPersistence = new LoanPersistance();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 
@@ -253,7 +256,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
 				PrdApplicableMaster.GROUPS);
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, (short) 7);
 		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil

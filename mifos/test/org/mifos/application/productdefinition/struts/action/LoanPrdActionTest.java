@@ -75,6 +75,10 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 
@@ -1305,7 +1309,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 1, 2));
+				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short

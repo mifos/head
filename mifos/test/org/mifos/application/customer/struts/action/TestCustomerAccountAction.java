@@ -87,7 +87,7 @@ public class TestCustomerAccountAction extends MifosMockStrutsTestCase {
 
 	private void initialization(String customer) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 
 		center = TestObjectFactory.createCenter("Center", meeting);
 		if (!(customer == "Center"))

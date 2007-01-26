@@ -55,6 +55,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestAccountService extends MifosTestCase {
 
@@ -349,7 +352,7 @@ public class TestAccountService extends MifosTestCase {
 
 	private AccountBO getLoanAccount() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -435,7 +438,7 @@ public class TestAccountService extends MifosTestCase {
 
 	private CustomerAccountBO getCustomerAccountWithAllTypesOfFees() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		CustomerAccountBO customerAccountBO = center.getCustomerAccount();
 

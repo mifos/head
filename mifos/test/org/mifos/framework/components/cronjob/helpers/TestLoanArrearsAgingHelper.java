@@ -22,6 +22,10 @@ import org.mifos.framework.components.cronjobs.helpers.LoanArrearsAgingTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class TestLoanArrearsAgingHelper extends MifosTestCase {
 	private LoanArrearsAgingHelper loanArrearsAgingHelper;
@@ -40,7 +44,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 
 	private LoanBO loanAccount4;
 	
-	private int recurAfter = 1;
+	private short recurAfter = 1;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -48,8 +52,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 		LoanArrearsAgingTask loanArrearsAgingTask = new LoanArrearsAgingTask();
 		loanArrearsAgingHelper = (LoanArrearsAgingHelper)loanArrearsAgingTask.getTaskHelper();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(RecurrenceType.WEEKLY.getValue(), recurAfter,
-						4, 2));
+				.getNewMeetingForToday(WEEKLY, recurAfter, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 	}

@@ -206,7 +206,7 @@ public class LoanPrdBusinessServiceTest extends MifosTestCase {
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short

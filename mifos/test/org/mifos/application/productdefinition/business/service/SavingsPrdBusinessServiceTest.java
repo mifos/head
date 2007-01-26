@@ -116,9 +116,9 @@ public class SavingsPrdBusinessServiceTest extends MifosTestCase {
 
 	private SavingsOfferingBO createSavingsOfferingBO() {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		return TestObjectFactory.createSavingsOffering("Savings Product",
 				"SAVP", (short) 1, new Date(System.currentTimeMillis()),
 				(short) 2, 300.0, (short) 1, 1.2, 200.0, 200.0, (short) 2,

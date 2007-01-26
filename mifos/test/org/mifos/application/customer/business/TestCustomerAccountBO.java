@@ -47,6 +47,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestCustomerAccountBO extends MifosTestCase {
 	protected CustomerAccountBO customerAccountBO = null;
@@ -503,7 +506,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testRemoveFeeWithNonActiveCustomer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
@@ -725,7 +728,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testApplyMiscCharge() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
@@ -760,7 +763,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testApplyMiscChargeWithNonActiveCustomer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
@@ -784,7 +787,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testApplyMiscChargeWithFirstInstallmentPaid() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
@@ -829,7 +832,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testApplyPeriodicFee() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
@@ -888,7 +891,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testApplyPeriodicFeeToPartialPending() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PENDING, center);
@@ -947,7 +950,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testApplyUpfrontFee() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
@@ -1000,7 +1003,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public void testGetNextDueAmount() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
 		assertEquals(100.00, center.getCustomerAccount().getNextDueAmount()
@@ -1009,7 +1012,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testGenerateMeetingSchedule() throws AccountException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		List<FeeView> feeView = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",
@@ -1070,7 +1073,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public void testGenerateMeetingScheduleWithRecurAfterEveryTwoWeeks()
 			throws AccountException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 2, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		List<FeeView> feeView = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "100",
@@ -1162,7 +1165,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public void testGenerateMeetingScheduleWhenFirstTwoMeeingDatesOfCenterIsPassed()
 			throws ApplicationException, SystemException {
 		MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meetingBO);
 		changeAllInstallmentDateToPreviousDate(center.getCustomerAccount(), 14);
@@ -1191,7 +1194,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public void testGenerateMeetingScheduleForGroupWhenMeeingDatesOfCenterIsPassed()
 			throws ApplicationException, SystemException {
 		MeetingBO meetingBO = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meetingBO);
 		changeFirstInstallmentDateToPreviousDate(center.getCustomerAccount());
@@ -1219,7 +1222,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	private void createCenter() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 	}
 
@@ -1243,7 +1246,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);

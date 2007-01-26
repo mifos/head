@@ -72,6 +72,10 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class LoanOfferingBOTest extends MifosTestCase {
 
@@ -603,8 +607,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				intglCodeEntity, new Money("100"), false, TestObjectFactory
-						.createMeeting(TestObjectFactory.getMeetingForToday(2, 1,
-								4, 2)));
+						.createMeeting(TestObjectFactory
+						.getNewMeeting(MONTHLY, EVERY_MONTH, CUSTOMER_MEETING, MONDAY)));
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(fee);
 		try {
@@ -632,8 +636,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				intglCodeEntity, new Money("100"), false, TestObjectFactory
-						.createMeeting(TestObjectFactory.getMeetingForToday(1, 1,
-								4, 2)));
+						.createMeeting(TestObjectFactory.getTypicalMeeting()));
 		FeeBO fee1 = new AmountFeeBO(TestObjectFactory.getContext(),
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
@@ -1085,8 +1088,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				intglCodeEntity, new Money("100"), false, TestObjectFactory
-						.createMeeting(TestObjectFactory.getMeetingForToday(2, 1,
-								4, 2)));
+						.createMeeting(TestObjectFactory
+						.getNewMeeting(MONTHLY, EVERY_MONTH, CUSTOMER_MEETING, MONDAY)));
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(fee);
 		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
@@ -1114,8 +1117,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				intglCodeEntity, new Money("100"), false, TestObjectFactory
-						.createMeeting(TestObjectFactory.getMeetingForToday(1, 1,
-								4, 2)));
+						.createMeeting(TestObjectFactory
+						.getTypicalMeeting()));
 		FeeBO fee1 = new AmountFeeBO(TestObjectFactory.getContext(),
 				"Loan Periodic", new CategoryTypeEntity(FeeCategory.LOAN),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
@@ -1253,7 +1256,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
     
 	private MeetingBO getMeeting() {
 		return TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 	}
 
 	private java.sql.Date offSetCurrentDate(int noOfDays) {
@@ -1268,7 +1271,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
 			String shortName) {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 1, 2));
+				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short

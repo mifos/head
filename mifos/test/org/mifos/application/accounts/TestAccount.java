@@ -10,6 +10,9 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestAccount extends MifosTestCase {
 	protected LoanBO accountBO=null;
@@ -43,7 +46,7 @@ public class TestAccount extends MifosTestCase {
 
 	public LoanBO createLoanAccount()
 	{ 
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingForToday(1,1,4,2));
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
         center=TestObjectFactory.createCenter("Center",meeting);
         group=TestObjectFactory.createGroupUnderCenter(
         	"Group", CustomerStatus.GROUP_ACTIVE, center);

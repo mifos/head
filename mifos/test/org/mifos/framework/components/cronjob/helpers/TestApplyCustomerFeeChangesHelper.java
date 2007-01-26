@@ -39,7 +39,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("center1", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

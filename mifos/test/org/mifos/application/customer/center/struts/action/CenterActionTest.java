@@ -578,7 +578,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 	public void testGet() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		savingsBO = getSavingsAccount("fsaf6", "ads6", center);
@@ -738,7 +738,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 	}
 	public void testSearch() throws Exception{
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("SearchCenter", meeting);
 		addActionAndMethod(Methods.search.toString());
 		addRequestParameter("searchString", "Sear");

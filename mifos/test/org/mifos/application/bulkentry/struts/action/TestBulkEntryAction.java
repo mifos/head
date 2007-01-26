@@ -94,6 +94,9 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	
@@ -407,7 +410,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	public void testLoadCustomers() throws PageExpiredException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "loadCustomerList");
@@ -426,7 +429,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	public void testGetLastMeetingDateForCustomer() throws PageExpiredException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "getLastMeetingDateForCustomer");
@@ -479,7 +482,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				.getInstance().getBusinessService(
 						BusinessServiceName.MasterDataService);
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -631,7 +634,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	private BulkEntryBO getSuccessfulBulkEntry() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
@@ -744,7 +747,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	private BulkEntryBO getFailureBulkEntry() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient(
@@ -769,9 +772,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering2);
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
 				.createSavingsOffering("SavingPrd123c", "ased", Short
 						.valueOf("2"), new Date(System.currentTimeMillis()),
@@ -933,9 +938,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	private SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,

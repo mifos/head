@@ -4,9 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestSavingsHelper extends MifosTestCase{
 	SavingsHelper helper = new SavingsHelper(); 
@@ -47,7 +49,7 @@ public class TestSavingsHelper extends MifosTestCase{
 			Date date;
 			Date resultDate;
 			Date accountActivationDate = df.parse("05/04/2006");
-			MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"1",MeetingConstants.INTEREST_CALC_FREQ);
+			MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,EVERY_MONTH,SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
 			
 			resultDate=helper.getNextScheduleDate(accountActivationDate,null, meeting);
 			date = df.parse("01/05/2006");
@@ -86,7 +88,8 @@ public class TestSavingsHelper extends MifosTestCase{
 		Date date;
 		Date resultDate;
 		Date accountActivationDate = df.parse("25/01/2006");
-		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"3",MeetingConstants.INTEREST_CALC_FREQ);
+		final short EVERY_THREE_MONTHS = 3; 
+		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,EVERY_THREE_MONTHS,SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
 		
 		resultDate=helper.getNextScheduleDate(accountActivationDate,null, meeting);
 		date = df.parse("01/04/2006");
@@ -118,7 +121,7 @@ public class TestSavingsHelper extends MifosTestCase{
 		Date date;
 		Date resultDate;
 		Date accountActivationDate = df.parse("05/07/2006");
-		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"1",MeetingConstants.INTEREST_POST_FREQ);
+		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,EVERY_MONTH,SAVINGS_INTEREST_POSTING);
 		
 		resultDate=helper.getNextScheduleDate(accountActivationDate,null, meeting);
 		date = df.parse("31/07/2006");
@@ -158,7 +161,8 @@ public class TestSavingsHelper extends MifosTestCase{
 		Date date;
 		Date resultDate;
 		Date accountActivationDate = df.parse("25/12/2007");
-		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"4",MeetingConstants.INTEREST_POST_FREQ);
+		final short EVERY_FOUR_MONTHS = 4;
+		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,EVERY_FOUR_MONTHS,SAVINGS_INTEREST_POSTING);
 		
 		resultDate=helper.getNextScheduleDate(accountActivationDate,null, meeting);
 		date = df.parse("31/01/2008");
@@ -182,7 +186,7 @@ public class TestSavingsHelper extends MifosTestCase{
 		Date date;
 		Date resultDate;
 		//Date accountActivationDate = df.parse("05/04/2006");
-		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"1",MeetingConstants.INTEREST_CALC_FREQ);
+		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,EVERY_MONTH,SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
 		
 		resultDate=helper.getPrevScheduleDate(df.parse("01/04/2006"), df.parse("01/07/2006"), meeting);
 		date = df.parse("01/06/2006");
@@ -198,7 +202,8 @@ public class TestSavingsHelper extends MifosTestCase{
 		Date date;
 		Date resultDate;
 		//Date accountActivationDate = df.parse("25/01/2006");
-		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"3",MeetingConstants.INTEREST_CALC_FREQ);
+		final short EVERY_THREE_MONTHS = 3; 
+		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,EVERY_THREE_MONTHS,SAVINGS_INTEREST_CALCULATION_TIME_PERIOD);
 		
 		resultDate=helper.getPrevScheduleDate(df.parse("01/04/2006"), df.parse("01/07/2006"), meeting);
 		date = df.parse("01/04/2006");
@@ -213,7 +218,7 @@ public class TestSavingsHelper extends MifosTestCase{
 		Date date;
 		Date resultDate;
 		//	Date accountActivationDate = df.parse("05/07/2006");
-		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"1",MeetingConstants.INTEREST_POST_FREQ);
+		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,EVERY_MONTH,SAVINGS_INTEREST_POSTING);
 
 		resultDate=helper.getPrevScheduleDate(df.parse("01/07/2006"),df.parse("31/01/2007"), meeting);
 		date = df.parse("31/12/2006");
@@ -230,7 +235,8 @@ public class TestSavingsHelper extends MifosTestCase{
 		Date date;
 		Date resultDate;
 		//Date accountActivationDate = df.parse("25/12/2007");
-		MeetingBO meeting = TestObjectFactory.getMeeting(MeetingConstants.MONTHLY,"4",MeetingConstants.INTEREST_POST_FREQ);
+		final short EVERY_FOUR_MONTHS = 4;
+		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY,EVERY_FOUR_MONTHS,SAVINGS_INTEREST_POSTING);
 	
 		resultDate=helper.getPrevScheduleDate(df.parse("01/07/2006"),df.parse("31/05/2008"), meeting);
 		date = df.parse("31/01/2008");

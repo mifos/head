@@ -24,6 +24,9 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.util.helpers.TestConstants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestMasterBusinessService extends MifosTestCase {
 
@@ -83,7 +86,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 
 	public void testGetListOfActiveParentsUnderLoanOfficer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		CustomerBO center = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		List<CustomerView> customers = masterService
@@ -96,7 +99,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 	public void testGetListOfActiveParentsUnderLoanOfficerForInvalidConnection()
 			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		CustomerBO center = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		TestObjectFactory.simulateInvalidConnection();
@@ -127,11 +130,13 @@ public class TestMasterBusinessService extends MifosTestCase {
 	
 	public void testGetSavingsProductsAsOfMeetingDate() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 
 		Date startDate = new Date(System.currentTimeMillis());
 		CustomerBO center = TestObjectFactory.createCenter("Center", meeting);
@@ -155,11 +160,13 @@ public class TestMasterBusinessService extends MifosTestCase {
 	public void testGetSavingsProductsAsOfMeetingDateForInvalidConnection()
 			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 
 		Date startDate = new Date(System.currentTimeMillis());
 		CustomerBO center = TestObjectFactory.createCenter("Center", meeting);

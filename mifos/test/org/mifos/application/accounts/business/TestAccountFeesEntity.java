@@ -18,6 +18,10 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+
 
 public class TestAccountFeesEntity extends MifosTestCase {
 	protected AccountBO accountBO=null;
@@ -50,7 +54,8 @@ public class TestAccountFeesEntity extends MifosTestCase {
 
 	public AccountBO getLoanAccount()
 	{ 
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingForToday(1,1,4,2));
+        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+        		.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
         center=TestObjectFactory.createCenter("Center",meeting);
         group=TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan",Short.valueOf("2"),
@@ -74,7 +79,8 @@ public class TestAccountFeesEntity extends MifosTestCase {
 	
 	public void testGetApplicableDatesCount() throws Exception{
 		accountPersistence = new AccountPersistence();
-		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getMeetingForToday(1,1,4,2));
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
         center=TestObjectFactory.createCenter("Center",meeting);
         FeeBO trainingFee = TestObjectFactory.createPeriodicAmountFee("Training_Fee", FeeCategory.LOAN, "100", RecurrenceType.WEEKLY, Short.valueOf("2"));
         AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center.getCustomerAccount(),trainingFee,new Double("100.0"));

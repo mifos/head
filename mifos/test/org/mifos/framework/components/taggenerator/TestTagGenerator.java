@@ -155,7 +155,7 @@ public class TestTagGenerator extends MifosTestCase {
 
 	private void createInitialObjectsForSavings() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		SavingsTestHelper helper = new SavingsTestHelper();

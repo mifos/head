@@ -35,6 +35,9 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 public class TestCustomerFeeHelper extends MifosTestCase {
 
@@ -54,7 +57,7 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 
 	public void testExecute() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, Calendar.DAY_OF_WEEK));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("center1_Active_test", meeting);
 
 		for (AccountActionDateEntity accountActionDateEntity : center
@@ -120,7 +123,7 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 
 	public void testExecuteToApplyPeriodicFee() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 2, 4, Calendar.DAY_OF_WEEK));
+				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("center1_Active_test", meeting);
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
@@ -213,7 +216,6 @@ public class TestCustomerFeeHelper extends MifosTestCase {
 					.getDescription());
 			TestObjectFactory.removeObject(task);
 		}
-
 	}
 
 	public void testExecuteFailure() {

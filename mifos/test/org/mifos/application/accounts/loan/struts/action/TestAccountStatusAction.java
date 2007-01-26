@@ -170,7 +170,7 @@ public class TestAccountStatusAction extends MifosMockStrutsTestCase {
 	
 	private void createParentCustomer() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 

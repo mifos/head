@@ -725,7 +725,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("selectedFee[0].amount", fee.getAmount());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING,
-				new MeetingBO(RecurrenceType.WEEKLY, Short.valueOf("2"),
+				new MeetingBO(RecurrenceType.WEEKLY, (short)2,
 						new Date(), MeetingType.CUSTOMER_MEETING), request);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
@@ -1706,14 +1706,14 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		// meeting.setMeetingStartDate(new GregorianCalendar());
 		return meeting;
 	}
 
 	private void createInitialCustomers() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client",
@@ -1722,7 +1722,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 
 	private void createParentCustomer() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
 	}
@@ -1731,7 +1731,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		Short officeId = 3;
 		Short personnel = 3;
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		group = TestObjectFactory.createGroupUnderBranch("group1", CustomerStatus.GROUP_ACTIVE,
 				officeId, meeting, personnel);
 		
@@ -1740,7 +1740,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	private void createParentGroup(CustomerStatus status, Short personnel) {
 		Short officeId = 3;
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		group = TestObjectFactory.createGroupUnderBranch("group1", status,
 				officeId, meeting, personnel);
 		

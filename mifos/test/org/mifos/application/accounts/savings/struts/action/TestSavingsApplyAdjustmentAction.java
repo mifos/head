@@ -323,16 +323,16 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 
 	private SavingsOfferingBO createSavingsOffering() {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		return TestObjectFactory.createSavingsOffering("SavingPrd1", Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short
 				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,

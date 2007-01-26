@@ -30,6 +30,10 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class SavingsTestHelper {
 
@@ -104,7 +108,7 @@ public class SavingsTestHelper {
 	}
 
 	public CenterBO createCenter() {
-		MeetingBO meeting = TestObjectFactory.getMeetingHelper(2, 2, 4);
+		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(MONTHLY, EVERY_SECOND_MONTH, CUSTOMER_MEETING);
 		meeting.setMeetingStartDate(Calendar.getInstance());
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
 				new Short("1"));
@@ -128,9 +132,9 @@ public class SavingsTestHelper {
 			String shortName, Short interestCalcType, Short savingsTypeId,
 			Short depGLCode, Short intGLCode) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, Short.valueOf("1"), 24.0, 200.0,
@@ -141,9 +145,9 @@ public class SavingsTestHelper {
 	public SavingsOfferingBO createSavingsOffering(String offeringName,
 			Short interestCalcType, Short savingsTypeId) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		return TestObjectFactory
 				.createSavingsOffering(offeringName, Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
@@ -206,11 +210,10 @@ public class SavingsTestHelper {
 		return actionDate;
 	}
 
-	public MeetingBO getMeeting(String frequency, Short recurAfter,
-			Short meetingTypeId) throws Exception {
+	public MeetingBO getMeeting(RecurrenceType frequency, short recurAfter,
+			MeetingType meetingType) throws Exception {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		MeetingBO meeting = TestObjectFactory.getMeeting(frequency, String
-				.valueOf(recurAfter), Short.valueOf(meetingTypeId));
+		MeetingBO meeting = TestObjectFactory.getNewMeetingForToday(frequency, recurAfter, meetingType);
 		Calendar cal = Calendar.getInstance(Configuration.getInstance()
 				.getSystemConfig().getMifosTimeZone());
 		cal.setTime(df.parse("01/01/2006"));
@@ -218,6 +221,7 @@ public class SavingsTestHelper {
 		return meeting;
 	}
 
+	/*
 	public MeetingBO getMeeting(RecurrenceType recurrenceType, Short dayNumber,
 			Short weekDay, Short dayRank, Short recurAfter,
 			MeetingType meetingType) throws Exception {
@@ -230,4 +234,5 @@ public class SavingsTestHelper {
 		meeting.setMeetingStartDate(cal);
 		return meeting;
 	}
+	*/
 }

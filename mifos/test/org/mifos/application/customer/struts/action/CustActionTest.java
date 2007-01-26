@@ -148,7 +148,7 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 
 	private void createCustomers() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);

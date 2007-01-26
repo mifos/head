@@ -19,6 +19,10 @@ import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class TestProductStatusHelper extends MifosTestCase {
 
@@ -187,7 +191,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 	private void createInactiveLoanOffering() throws PersistenceException {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 1, 2));
+				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		loanOffering = TestObjectFactory.createLoanOffering("Loan Offering",
 				"LOAN", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),

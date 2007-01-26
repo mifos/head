@@ -120,7 +120,7 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 	
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		// TODO: Is CLIENT_ACTIVE really right?  Shouldn't it be GROUP_ACTIVE?
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.CENTER_ACTIVE, center);

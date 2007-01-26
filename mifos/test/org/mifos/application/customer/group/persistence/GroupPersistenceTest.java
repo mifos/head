@@ -55,7 +55,7 @@ public class GroupPersistenceTest extends MifosTestCase {
 
 	private CenterBO createCenter(String name) {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		return TestObjectFactory.createCenter(name, meeting);
 	}
 	private void createGroup(){

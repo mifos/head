@@ -131,7 +131,8 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 
 	private void createInitialObjects() {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingHelper(RecurrenceType.WEEKLY, (short)1, MeetingType.CUSTOMER_MEETING, WeekDay.MONDAY));
+				.getNewMeeting(RecurrenceType.WEEKLY, TestObjectFactory.EVERY_WEEK, 
+						MeetingType.CUSTOMER_MEETING, WeekDay.MONDAY));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 	}

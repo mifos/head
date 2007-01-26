@@ -53,6 +53,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
@@ -71,6 +72,10 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class TestSavingsBO extends MifosTestCase {
 	private UserContext userContext;
@@ -172,7 +177,7 @@ public class TestSavingsBO extends MifosTestCase {
 	
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
@@ -357,9 +362,9 @@ public class TestSavingsBO extends MifosTestCase {
 			Short depGLCode, Short intGLCode,
 			RecommendedAmountUnit recommendedAmountUnit) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, recommendedAmountUnit.getValue(),
@@ -729,7 +734,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testSuccessfulWithdraw() throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
@@ -760,7 +765,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testSuccessfulApplyPayment() throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
@@ -801,7 +806,7 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testSuccessfulDepositForCenterAccount()
 			throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
@@ -891,7 +896,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testMaxWithdrawAmount() throws AccountException, Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
@@ -1844,11 +1849,11 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testGetOverDueDepositAmountForMandatoryAccounts()
 			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
 				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
 						new Date(System.currentTimeMillis()), Short
@@ -1882,7 +1887,7 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testGetOverDueDepositAmountForVoluntaryAccounts()
 			throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		SavingsOfferingBO savingsOffering = helper.createSavingsOffering(
 				"dfasdasd1", "sad1");
 		center = TestObjectFactory.createCenter("Center", meeting);
@@ -2255,7 +2260,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private void createCustomerObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",	CustomerStatus.CLIENT_ACTIVE, group);
@@ -2267,8 +2272,8 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
-				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"), "3",
-				Short.valueOf("1"));
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"), DAILY,
+				EVERY_DAY);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setNextIntCalcDate(helper.getDate("06/03/2006"));
@@ -2312,8 +2317,8 @@ public class TestSavingsBO extends MifosTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
-				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"), "3",
-				Short.valueOf("1"));
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"), DAILY,
+				EVERY_DAY);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setNextIntCalcDate(helper.getDate("06/03/2006"));
@@ -2355,10 +2360,11 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testCalculateInterest_IntCalcFreqTenDays_minbal()
 			throws Exception {
+		final short TEN_DAYS = 10;
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
-				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"), "3",
-				Short.valueOf("10"));
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"), DAILY,
+				TEN_DAYS);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setNextIntCalcDate(helper.getDate("12/03/2006"));
@@ -2408,10 +2414,11 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testCalculateInterest_IntCalcFreqTenDays_avg() throws Exception {
+		final short TEN_DAYS = 10;
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
-				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"), "3",
-				Short.valueOf("10"));
+				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"), DAILY,
+				TEN_DAYS);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setNextIntCalcDate(helper.getDate("12/03/2006"));
@@ -2462,13 +2469,13 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private SavingsOfferingBO createSavingsOfferingForIntCalc(
 			String offeringName, String shortName, Short savingsType,
-			Short interestCalcType, String freqeuncyIntCalc,
-			Short recurAfterIntCalc) throws Exception {
+			Short interestCalcType, RecurrenceType freqeuncyIntCalc,
+			short recurAfterIntCalc) throws Exception {
 		MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(helper
-				.getMeeting(freqeuncyIntCalc, recurAfterIntCalc, Short
-						.valueOf("2")));
+				.getMeeting(freqeuncyIntCalc, recurAfterIntCalc, 
+						SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
 		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(helper
-				.getMeeting("2", Short.valueOf("1"), Short.valueOf("3")));
+				.getMeeting(MONTHLY, EVERY_MONTH, SAVINGS_INTEREST_POSTING));
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, Short.valueOf("1"), 12.0, 200.0,
@@ -2503,7 +2510,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -2573,7 +2580,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -2658,7 +2665,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -2752,7 +2759,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -2847,7 +2854,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -2927,7 +2934,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -3008,7 +3015,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -3098,7 +3105,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.MANDATORY.getValue(), Short.valueOf("2"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -3240,7 +3247,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.MANDATORY.getValue(), Short.valueOf("2"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -3383,7 +3390,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.MANDATORY.getValue(), Short.valueOf("1"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -3524,7 +3531,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.MANDATORY.getValue(), Short.valueOf("1"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -3626,7 +3633,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOfferingForIntCalc("prd1", "cfgh",
 				SavingsType.MANDATORY.getValue(), Short.valueOf("2"),
-				MeetingConstants.MONTHLY, Short.valueOf("1"));
+				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
@@ -3852,7 +3859,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private SavingsBO getSavingAccount() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("client1",
@@ -3860,9 +3867,9 @@ public class TestSavingsBO extends MifosTestCase {
 		client2 = TestObjectFactory.createClient("client2",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, Short.valueOf("1"), 24.0, 200.0,
@@ -4068,7 +4075,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testGenerateMeetingForNextYear() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 
 		center = TestObjectFactory.createCenter("center1", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

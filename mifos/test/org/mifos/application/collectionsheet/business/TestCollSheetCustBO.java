@@ -79,7 +79,7 @@ public class TestCollSheetCustBO extends MifosTestCase {
 
 	public void testPopulateCustomerDetails() {
 		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
-		MeetingBO meeting = TestObjectFactory.getMeetingForToday(1, 1, 4, 2);
+		MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
 		TestObjectFactory.createMeeting(meeting);
 		CustomerBO centerBO = TestObjectFactory.createCenter("ash", meeting);
 		CustomerBO groupBO = TestObjectFactory.createClient("ashGrp", 
@@ -212,7 +212,7 @@ public class TestCollSheetCustBO extends MifosTestCase {
 	private AccountBO createLoanAccount() {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center1", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(

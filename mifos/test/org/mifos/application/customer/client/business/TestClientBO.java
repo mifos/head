@@ -1062,7 +1062,7 @@ public class TestClientBO extends MifosTestCase {
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
 		HibernateUtil.closeSession();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center1 = TestObjectFactory.createCenter("Center1", meeting, office.getOfficeId(), Short.valueOf("1"));
 		group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
 		HibernateUtil.closeSession();
@@ -1121,7 +1121,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	private void createParentObjects(CustomerStatus groupStatus) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
 		HibernateUtil.closeSession();

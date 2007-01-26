@@ -278,9 +278,9 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	
 	private void createObjectsForTransferringClientInGroup()throws Exception{
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		MeetingBO meeting1 = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", 
 				CustomerStatus.GROUP_ACTIVE, center);
@@ -296,7 +296,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	
 	private MeetingBO getMeeting() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		return meeting;
 	}
 }

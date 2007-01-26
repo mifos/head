@@ -67,7 +67,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	public void testGetAccount() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -87,7 +87,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 	public void testSuccessfulApplyPayment() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -125,7 +125,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	public void testSuccessfulLoanUpdate() throws Exception {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter(
 				"Group", CustomerStatus.GROUP_ACTIVE,
@@ -160,7 +160,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 	public void testFailureApplyPayment() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -227,7 +227,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 
-		.getMeetingForToday(1, 1, 4, 2));
+		.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);

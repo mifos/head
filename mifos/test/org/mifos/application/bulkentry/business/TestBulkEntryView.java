@@ -31,6 +31,10 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+
 
 public class TestBulkEntryView extends MifosTestCase {
 
@@ -71,7 +75,7 @@ public class TestBulkEntryView extends MifosTestCase {
 			throws SystemException, ApplicationException {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
@@ -122,7 +126,7 @@ public class TestBulkEntryView extends MifosTestCase {
 			throws SystemException, ApplicationException {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
@@ -174,7 +178,7 @@ public class TestBulkEntryView extends MifosTestCase {
 			throws SystemException, ApplicationException {
 		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
@@ -221,7 +225,7 @@ public class TestBulkEntryView extends MifosTestCase {
 	
 	public void testPopulateForCustomerAccount() throws PersistenceException {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
 		List<BulkEntryInstallmentView> bulkEntryAccountActionViews = bulkEntryPersistanceService
@@ -254,7 +258,7 @@ public class TestBulkEntryView extends MifosTestCase {
     throws SystemException, ApplicationException{
         BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-                    .getMeetingForToday(1, 1, 4, 2));
+                    .getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter("Center", meeting);
         group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", 

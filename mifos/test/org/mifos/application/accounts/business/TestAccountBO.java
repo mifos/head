@@ -77,6 +77,10 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+
 
 public class TestAccountBO extends TestAccount {
 	public TestAccountBO() {
@@ -475,7 +479,7 @@ public class TestAccountBO extends TestAccount {
 	public void testGetPastInstallments() {
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		CenterBO centerBO = TestObjectFactory.createCenter("Center_Active",
 				meeting);
 		HibernateUtil.closeSession();

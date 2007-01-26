@@ -25,6 +25,8 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetPersiste
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -35,6 +37,9 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
 
 
 public class TestCollSheetBO extends MifosTestCase {
@@ -310,7 +315,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	private List<AccountActionDateEntity> getAccountActionDates(
 			AccountBO account, Short installmentId) {
 
-		MeetingBO meeting = TestObjectFactory.getMeetingForToday(1, 1, 4, 2);
+		MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
 		TestObjectFactory.createMeeting(meeting);
 		CustomerBO center = TestObjectFactory.createCenter("ashCenter", meeting);
 
@@ -347,7 +352,7 @@ public class TestCollSheetBO extends MifosTestCase {
 
 	private List<CustomerBO> getCustomers() {
 
-		MeetingBO meeting = TestObjectFactory.getMeetingForToday(1, 1, 4, 2);
+		MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
 		TestObjectFactory.createMeeting(meeting);
 		CustomerBO center = TestObjectFactory.createCenter("ashCenter", meeting);
 
@@ -365,7 +370,7 @@ public class TestCollSheetBO extends MifosTestCase {
 
 	private List<AccountActionDateEntity> getCustomerAccntDetails() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center1", meeting);
 		AccountBO accountBO = center.getCustomerAccount();
 
@@ -455,7 +460,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	private AccountBO getLoanAccount(Short accountSate, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
@@ -517,11 +522,11 @@ public class TestCollSheetBO extends MifosTestCase {
 
 	private SavingsBO createSavingsAccount(short savingsType) throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		SavingsOfferingBO savingsOffering = TestObjectFactory
 				.createSavingsOffering("SavingPrd1", (short) 2, new Date(System
 						.currentTimeMillis()), (short) 2, 300.0, (short) 1,

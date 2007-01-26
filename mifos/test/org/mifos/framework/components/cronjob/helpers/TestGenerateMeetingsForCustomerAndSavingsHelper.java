@@ -78,7 +78,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 	
 	public void testExecuteForSavingsAccountForGroup() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test",
 				CustomerStatus.GROUP_ACTIVE, center);
@@ -116,7 +116,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 	private void createCenter() {
 		List<FeeView> feeView = new ArrayList<FeeView>();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test",
 				meeting, feeView);
 		TestAccountActionDateEntity.changeInstallmentDatesToPreviousDate(center.getCustomerAccount());	
@@ -128,7 +128,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 	
 	private void createInitialObjects() {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
@@ -150,9 +150,9 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 			Short depGLCode, Short intGLCode,
 			RecommendedAmountUnit recommendedAmountUnit) {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeetingForToday(1, 1, 4, 2));
+				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, recommendedAmountUnit.getValue(),

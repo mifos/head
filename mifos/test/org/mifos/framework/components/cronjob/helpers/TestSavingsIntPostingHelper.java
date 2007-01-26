@@ -27,6 +27,10 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class TestSavingsIntPostingHelper extends MifosTestCase {
 	private UserContext userContext;
@@ -160,9 +164,10 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 
 	private void createInitialObjects() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getMeetingForToday(1, 1, 4, 2));
+				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", 
+				CustomerStatus.GROUP_ACTIVE, center);
 
 		savingsOffering1 = createSavingsOffering("prd1", "ssdr", Short
 				.valueOf("1"));
@@ -185,11 +190,12 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 	private SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName, Short interestCalcType) throws Exception {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeeting("2", "2", Short
-						.valueOf("2")));
+				.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY, 
+						EVERY_SECOND_MONTH, SAVINGS_INTEREST_CALCULATION_TIME_PERIOD,
+						MONDAY));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getMeeting("2", "2", Short
-						.valueOf("3")));
+				.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY, 
+						EVERY_SECOND_MONTH, SAVINGS_INTEREST_POSTING, MONDAY));
 		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, Short.valueOf("1"), 12.0, 200.0,
