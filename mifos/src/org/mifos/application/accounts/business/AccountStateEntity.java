@@ -7,6 +7,9 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
 
+/**
+ * Should be replaced by {@link AccountState}
+ */
 public class AccountStateEntity extends StateEntity {
 
 	private ProductTypeEntity prdType;

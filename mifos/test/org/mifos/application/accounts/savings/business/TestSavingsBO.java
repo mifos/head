@@ -1,5 +1,15 @@
 package org.mifos.application.accounts.savings.business;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD;
+import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_POSTING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.DAILY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_DAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,7 +62,6 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -72,10 +81,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
-import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class TestSavingsBO extends MifosTestCase {
 	private UserContext userContext;
@@ -187,7 +192,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering("2333dsf", "2132");
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 
 		Money initialBal = new Money(currency, "5500");
 		payment = helper.createAccountPayment(savings, null, new Money(
@@ -224,7 +229,7 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering("2333dsf", "2132");
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 
 		Money initialBal = new Money(currency, "5500");
 		payment = helper.createAccountPayment(savings, null, new Money(
@@ -376,7 +381,8 @@ public class TestSavingsBO extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering("dfasdasd1", "sad1",
 				RecommendedAmountUnit.COMPLETEGROUP);
-		savings = helper.createSavingsAccount(savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
+		savings = helper.createSavingsAccount(savingsOffering, group, 
+				AccountState.SAVINGS_ACC_APPROVED,
 				userContext);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -401,7 +407,8 @@ public class TestSavingsBO extends MifosTestCase {
 	 	createInitialObjects();
 		savingsOffering = createSavingsOffering("dfasdasd1", "sad1",
 				RecommendedAmountUnit.COMPLETEGROUP);
-		savings = helper.createSavingsAccount(savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
+		savings = helper.createSavingsAccount(savingsOffering, group, 
+				AccountState.SAVINGS_ACC_APPROVED,
 				userContext);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -2275,7 +2282,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"), DAILY,
 				EVERY_DAY);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setNextIntCalcDate(helper.getDate("06/03/2006"));
 		savings.setActivationDate(helper.getDate("05/03/2006"));
 		HibernateUtil.commitTransaction();
@@ -2320,7 +2327,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"), DAILY,
 				EVERY_DAY);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setNextIntCalcDate(helper.getDate("06/03/2006"));
 		savings.setActivationDate(helper.getDate("05/03/2006"));
 		HibernateUtil.commitTransaction();
@@ -2366,7 +2373,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"), DAILY,
 				TEN_DAYS);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setNextIntCalcDate(helper.getDate("12/03/2006"));
 		savings.setActivationDate(helper.getDate("05/03/2006"));
 		HibernateUtil.commitTransaction();
@@ -2420,7 +2427,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"), DAILY,
 				TEN_DAYS);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setNextIntCalcDate(helper.getDate("12/03/2006"));
 		savings.setActivationDate(helper.getDate("05/03/2006"));
 		HibernateUtil.commitTransaction();
@@ -2512,7 +2519,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
@@ -2582,7 +2589,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
@@ -2667,7 +2674,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 		// add deposit trxn
@@ -2761,7 +2768,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 		// add deposit trxn
@@ -2856,7 +2863,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 		// add deposit trxn
@@ -2936,7 +2943,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("2"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
@@ -3017,7 +3024,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.VOLUNTARY.getValue(), Short.valueOf("1"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
@@ -3107,7 +3114,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.MANDATORY.getValue(), Short.valueOf("2"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
@@ -3249,7 +3256,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.MANDATORY.getValue(), Short.valueOf("2"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
@@ -3392,7 +3399,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.MANDATORY.getValue(), Short.valueOf("1"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
@@ -3533,7 +3540,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.MANDATORY.getValue(), Short.valueOf("1"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
@@ -3635,7 +3642,7 @@ public class TestSavingsBO extends MifosTestCase {
 				SavingsType.MANDATORY.getValue(), Short.valueOf("2"),
 				MONTHLY, EVERY_MONTH);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings.setActivationDate(helper.getDate("20/02/2006"));
 		savings.setNextIntCalcDate(helper.getDate("01/03/2006"));
 
@@ -3931,7 +3938,7 @@ public class TestSavingsBO extends MifosTestCase {
 		savingsOffering = helper.createSavingsOffering("prd1df", Short
 				.valueOf("1"), savingsTypeId);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
+				AccountState.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
 		cal2.setLenient(true);
@@ -4037,7 +4044,7 @@ public class TestSavingsBO extends MifosTestCase {
 				CustomerStatus.CLIENT_ACTIVE, group);
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		return helper.createSavingsAccount(savingsOffering, center,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 	}
 
 	public void testGetRecentAccountNotes() throws Exception {
@@ -4087,7 +4094,7 @@ public class TestSavingsBO extends MifosTestCase {
 		TestSavingsOfferingBO.setRecommendedAmntUnit(savingsOfferingBO,
 				RecommendedAmountUnit.COMPLETEGROUP);
 		SavingsBO savingsBO = SavingsTestHelper.createSavingsAccount(
-				savingsOfferingBO, group, Short.valueOf("16"),
+				savingsOfferingBO, group, AccountState.SAVINGS_ACC_APPROVED,
 				TestObjectFactory.getUserContext());
 
 		Short LastInstallmentId = savingsBO.getLastInstallmentId();

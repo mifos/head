@@ -222,13 +222,22 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				meetingIntPost);
 	}
 
+	/**
+	 * Deprecated in favor of 
+	 * {@link #createSavingsAccount(String, SavingsOfferingBO, AccountState)}
+	 */
 	private SavingsBO createSavingsAccount(String globalAccountNum,
 			SavingsOfferingBO savingsOffering, short accountStateId)
 			throws Exception {
+		AccountState state = AccountState.fromShort(accountStateId);
+		return createSavingsAccount(globalAccountNum, savingsOffering, state);
+	}
+
+	private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering, AccountState state) throws Exception {
 		UserContext userContext = new UserContext();
 		userContext.setId(new Short("1"));
 		userContext.setBranchGlobalNum("1001");
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
-				accountStateId, new Date(), savingsOffering, userContext);
+				state, new Date(), savingsOffering, userContext);
 	}
 }

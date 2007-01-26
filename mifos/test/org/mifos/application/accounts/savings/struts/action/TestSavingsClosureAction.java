@@ -107,7 +107,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		savingsOffering = TestObjectFactory.createSavingsOffering(
 			"Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				client1, AccountStates.SAVINGS_ACC_APPROVED);
+				client1, AccountState.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsClosureAction.do");
@@ -143,7 +143,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		createClients();
 		savingsOffering = createSavingsOffering();
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				group, AccountStates.SAVINGS_ACC_APPROVED);
+				group, AccountState.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsClosureAction.do");
@@ -331,8 +331,8 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,
 			SavingsOfferingBO savingsOffering, CustomerBO group,
-			short accountStateId) throws Exception {
+			AccountState state) throws Exception {
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
-				accountStateId, new Date(), savingsOffering, userContext);
+				state, new Date(), savingsOffering, userContext);
 	}
 }

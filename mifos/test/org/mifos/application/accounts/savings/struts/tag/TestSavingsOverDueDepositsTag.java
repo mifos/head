@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -65,7 +65,8 @@ public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering = helper.createSavingsOffering("2333dsf", "2132");
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, TestObjectFactory.getUserContext());
+				AccountState.SAVINGS_ACC_APPROVED, 
+				TestObjectFactory.getUserContext());
 
 	}
 }

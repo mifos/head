@@ -1,5 +1,9 @@
 package org.mifos.application.accounts.savings.util.helpers;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,10 +34,6 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
-import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class SavingsTestHelper {
 
@@ -159,19 +159,22 @@ public class SavingsTestHelper {
 	public SavingsBO createSavingsAccount(String globalAccountNum,
 			SavingsOfferingBO savingsOffering, CustomerBO customer,
 			short accountStateId, UserContext userContext) throws Exception {
+		return createSavingsAccount(globalAccountNum, savingsOffering, customer, AccountState.fromShort(accountStateId), userContext);
+	}
+
+	private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering, CustomerBO customer, AccountState state, UserContext userContext) throws Exception {
 		SavingsBO savings = TestObjectFactory.createSavingsAccount(
-				globalAccountNum, customer, accountStateId, new Date(),
+				globalAccountNum, customer, state, new Date(),
 				savingsOffering, userContext);
 		savings.setUserContext(userContext);
 		return savings;
 	}
 
 	public SavingsBO createSavingsAccount(SavingsOfferingBO savingsOffering,
-			CustomerBO customer, Short accountState, UserContext userContext)
+			CustomerBO customer, AccountState accountState, UserContext userContext)
 			throws Exception {
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
-				customer, AccountState.fromShort(accountState), new Money(
-						"500.0"), null);
+				customer, accountState, new Money("500.0"), null);
 		savings.save();
 		return savings;
 	}

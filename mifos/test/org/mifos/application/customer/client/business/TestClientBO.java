@@ -128,7 +128,10 @@ public class TestClientBO extends MifosTestCase {
 	public void testGenerateScheduleForClient_CenterSavingsAccount_OnChangeStatus()throws Exception{
 		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CENTERS);
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
-		accountBO = TestObjectFactory.createSavingsAccount("globalNum", center, AccountState.SAVINGS_ACC_APPROVED.getValue(), new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
+		accountBO = TestObjectFactory.createSavingsAccount("globalNum", 
+				center, AccountState.SAVINGS_ACC_APPROVED, 
+				new java.util.Date(), savingsOffering, 
+				TestObjectFactory.getContext());
 		client = createClient(CustomerStatus.CLIENT_PENDING);
 		HibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
@@ -159,7 +162,10 @@ public class TestClientBO extends MifosTestCase {
 	public void testGenerateScheduleForClient_GroupSavingsAccount_OnChangeStatus()throws Exception{
 		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.GROUPS);
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
-		accountBO = TestObjectFactory.createSavingsAccount("globalNum", group, AccountState.SAVINGS_ACC_APPROVED.getValue(), new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
+		accountBO = TestObjectFactory.createSavingsAccount(
+				"globalNum", group, AccountState.SAVINGS_ACC_APPROVED, 
+				new java.util.Date(), savingsOffering, 
+				TestObjectFactory.getContext());
 		client = createClient(CustomerStatus.CLIENT_PENDING);
 		HibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
@@ -189,7 +195,10 @@ public class TestClientBO extends MifosTestCase {
 	public void testGenerateScheduleForClient_OnClientCreate()throws Exception{
 		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.GROUPS);
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
-		accountBO = TestObjectFactory.createSavingsAccount("globalNum", center, AccountState.SAVINGS_ACC_APPROVED.getValue(), new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
+		accountBO = TestObjectFactory.createSavingsAccount("globalNum", 
+				center, AccountState.SAVINGS_ACC_APPROVED, 
+				new java.util.Date(), savingsOffering, 
+				TestObjectFactory.getContext());
 		assertEquals(0,accountBO.getAccountActionDates().size());
 		client = createClient(CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.closeSession();

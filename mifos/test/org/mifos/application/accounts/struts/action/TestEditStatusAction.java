@@ -11,7 +11,6 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -304,7 +303,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
 
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "load");
@@ -353,7 +352,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue());
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "update");
@@ -379,7 +378,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		accountBO = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue());
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
 		SessionUtils.setAttribute(Constants.USERCONTEXT, createUser(), request
 				.getSession());
@@ -437,10 +436,10 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 	}
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,
-			SavingsOfferingBO savingsOffering, short accountStateId)
+			SavingsOfferingBO savingsOffering, AccountState state)
 			throws Exception {
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
-				accountStateId, new Date(System.currentTimeMillis()),
+				state, new Date(System.currentTimeMillis()),
 				savingsOffering, userContext);
 	}
 }

@@ -72,6 +72,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -776,13 +777,18 @@ public class TestObjectFactory {
 		return customFields;
 	}
 
+	/**
+	 * Also see 
+	 * {@link SavingsTestHelper#createSavingsAccount(SavingsOfferingBO, CustomerBO, AccountState, UserContext)}
+	 * which is less elaborate.
+	 */
 	public static SavingsBO createSavingsAccount(String globalNum,
-			CustomerBO customer, Short accountStateId, Date startDate,
+			CustomerBO customer, AccountState state, Date startDate,
 			SavingsOfferingBO savingsOffering, UserContext userContext)
 			throws Exception {
 		userContext = getUserContext();
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering,
-				customer, AccountState.fromShort(accountStateId),
+				customer, state,
 				savingsOffering.getRecommendedAmount(), getCustomFieldView());
 		savings.save();
 		TestSavingsBO.setActivationDate(savings,new Date(System.currentTimeMillis()));
@@ -1512,12 +1518,25 @@ public class TestObjectFactory {
 		transaction.commit();
 	}
 
+	/**
+	 * Deprecated in favor of
+	 * {@link #createLoanAccountWithDisbursement(String, CustomerBO, AccountState, Date, LoanOfferingBO, int)}
+	 */
 	public static LoanBO createLoanAccountWithDisbursement(String globalNum,
 			CustomerBO customer, Short accountStateId, Date startDate,
 			LoanOfferingBO loanOfering, int disbursalType) {
+		AccountState state = AccountState.fromShort(accountStateId);
+		return createLoanAccountWithDisbursement(
+			globalNum, customer, state, startDate, loanOfering, disbursalType);
+	}
+
+	public static LoanBO createLoanAccountWithDisbursement(
+		String globalNum, CustomerBO customer, AccountState state, 
+		Date startDate, LoanOfferingBO loanOfering, int disbursalType) {
 		LoanBO loan = TestLoanBO
 				.createLoanAccountWithDisbursement(globalNum, customer,
-						accountStateId, startDate, loanOfering, disbursalType,Short.valueOf("6"));
+						state, startDate, loanOfering, disbursalType,
+						Short.valueOf("6"));
 		try {
 			loan.save();
 		} catch (AccountException e) {

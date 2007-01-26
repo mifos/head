@@ -12,6 +12,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.customer.business.CustomerBO;
@@ -187,7 +188,8 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, Short.valueOf("5"),
 				new Date(System.currentTimeMillis()), loanOffering1);
-		clientAccount = getLoanAccount(Short.valueOf("3"), startDate, 1,
+		clientAccount = getLoanAccount(AccountState.LOANACC_APPROVED, 
+				startDate, 1,
 				loanOffering2);
 		SavingsOfferingBO savingsOffering1 = createSavingsOffering(
 				"SavingPrd1", "ased");
@@ -272,10 +274,10 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 
 	}
 
-	private LoanBO getLoanAccount(Short accountSate, Date startDate,
+	private LoanBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType, LoanOfferingBO loanOfferingBO) {
 		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOfferingBO,
+				"99999999999", group, state, startDate, loanOfferingBO,
 				disbursalType);
 
 	}

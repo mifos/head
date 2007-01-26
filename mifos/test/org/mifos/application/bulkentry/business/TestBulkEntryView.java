@@ -7,6 +7,7 @@ import java.util.List;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
 import org.mifos.application.customer.business.CustomerBO;
@@ -137,7 +138,8 @@ public class TestBulkEntryView extends MifosTestCase {
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
 		account2 = TestObjectFactory.createLoanAccountWithDisbursement(
-				"42423142341", group, Short.valueOf("3"), new Date(System
+				"42423142341", group, AccountState.LOANACC_APPROVED, 
+				new Date(System
 						.currentTimeMillis()), loanOffering, 1);
 		HibernateUtil.closeSession();
 
@@ -186,10 +188,12 @@ public class TestBulkEntryView extends MifosTestCase {
 				.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short
 				.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
 		account1 = TestObjectFactory.createLoanAccountWithDisbursement(
-				"42423142341", group, Short.valueOf("3"), new Date(System
-						.currentTimeMillis()), loanOffering, 1);
+				"42423142341", group, 
+				AccountState.LOANACC_APPROVED, 
+				new Date(System.currentTimeMillis()), loanOffering, 1);
 		account2 = TestObjectFactory.createLoanAccountWithDisbursement(
-				"42423142341", group, Short.valueOf("3"), new Date(System
+				"42423142341", group, AccountState.LOANACC_APPROVED, 
+				new Date(System
 						.currentTimeMillis()), loanOffering, 1);
 		HibernateUtil.closeSession();
 

@@ -449,7 +449,8 @@ public class TestSavingsPersistence extends MifosTestCase {
 		userContext.setId(new Short("1"));
 		userContext.setBranchGlobalNum("1001");
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
-				new Short("14"), new Date(), savingsOffering, userContext);
+				AccountState.SAVINGS_ACC_PENDINGAPPROVAL, 
+				new Date(), savingsOffering, userContext);
 	}
 
 	private java.sql.Date offSetCurrentDate(int noOfDays) {

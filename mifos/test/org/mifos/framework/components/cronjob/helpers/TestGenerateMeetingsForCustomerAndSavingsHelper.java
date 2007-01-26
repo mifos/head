@@ -7,7 +7,7 @@ import java.util.List;
 import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
@@ -87,7 +87,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				.valueOf("1"), Short.valueOf("2"), Short.valueOf("1"), Short
 				.valueOf("2"), RecommendedAmountUnit.COMPLETEGROUP);
 		savings = helper.createSavingsAccount(savingsOffering, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		Date meetingStartDate = savings.getCustomer().getCustomerMeeting()
 				.getMeeting().getStartDate();
 		int noOfInstallments = savings.getAccountActionDates().size();
@@ -142,7 +142,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
 		return helper.createSavingsAccount(savingsOffering, center,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 	}
 	
 	private SavingsOfferingBO createSavingsOffering(String offeringName,

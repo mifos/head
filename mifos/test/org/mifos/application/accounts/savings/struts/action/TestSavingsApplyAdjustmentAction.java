@@ -14,7 +14,7 @@ import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.CustomerBO;
@@ -89,8 +89,8 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
-		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				group, AccountStates.SAVINGS_ACC_APPROVED);
+		savings = createSavingsAccount("000X00000000017", savingsOffering, group, 
+				AccountState.SAVINGS_ACC_APPROVED);
 		PersonnelBO createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 		Money depositAmount = new Money(Configuration.getInstance()
@@ -130,8 +130,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
-		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				group, AccountStates.SAVINGS_ACC_APPROVED);
+		savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACC_APPROVED);
 		PersonnelBO createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 		Money withdrawalAmount = new Money(Configuration.getInstance()
@@ -172,8 +171,8 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	public void testSuccessfullLoad_WithoutValidLastPayment() throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
-		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				group, AccountStates.SAVINGS_ACC_APPROVED);
+		savings = createSavingsAccount("000X00000000017", savingsOffering, group, 
+				AccountState.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
@@ -199,7 +198,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		savings = createSavingsAccountWithPayment("000X00000000017", savingsOffering,
-				group, AccountStates.SAVINGS_ACC_APPROVED);
+				group, AccountState.SAVINGS_ACC_APPROVED);
 		
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		HibernateUtil.closeSession();
@@ -225,8 +224,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	public void testSuccessfullPreviewFailure_NoLastPayment() throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
-		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				group, AccountStates.SAVINGS_ACC_APPROVED);
+		savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsApplyAdjustmentAction.do");
@@ -239,7 +237,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
 		savings = createSavingsAccountWithPayment("000X00000000017", savingsOffering,
-				group, AccountStates.SAVINGS_ACC_APPROVED);
+				group, AccountState.SAVINGS_ACC_APPROVED);
 		
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		HibernateUtil.closeSession();
@@ -286,8 +284,8 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 			throws Exception {
 		createInitialObjects();
 		savingsOffering = createSavingsOffering();
-		savings = createSavingsAccount("000X00000000017", savingsOffering,
-				group, AccountStates.SAVINGS_ACC_APPROVED);
+		savings = createSavingsAccount("000X00000000017", savingsOffering, group, 
+				AccountState.SAVINGS_ACC_APPROVED);
 		PersonnelBO createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 		Money depositAmount = new Money(Configuration.getInstance()
@@ -342,9 +340,10 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	private SavingsBO createSavingsAccountWithPayment(String globalAccountNum,
 			SavingsOfferingBO savingsOffering, CustomerBO group,
-			short accountStateId) throws Exception {
-		SavingsBO savings =  TestObjectFactory.createSavingsAccount(globalAccountNum, group,
-				accountStateId, new Date(), savingsOffering, userContext);
+			AccountState state) throws Exception {
+		SavingsBO savings =  TestObjectFactory.createSavingsAccount(
+				globalAccountNum, group,
+				state, new Date(), savingsOffering, userContext);
 		PaymentData paymentData = new PaymentData(new Money("100"), savings
 				.getPersonnel(), Short.valueOf("1"), new Date(System
 				.currentTimeMillis()));
@@ -359,12 +358,9 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		return new SavingsPersistence().findById(savings.getAccountId());
 	}
 	
-	
-	private SavingsBO createSavingsAccount(String globalAccountNum,
-			SavingsOfferingBO savingsOffering, CustomerBO group,
-			short accountStateId) throws Exception {
+	private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering, CustomerBO group, AccountState state) throws Exception {
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
-				accountStateId, new Date(), savingsOffering, userContext);
+				state, new Date(), savingsOffering, userContext);
 	}
 	
 }

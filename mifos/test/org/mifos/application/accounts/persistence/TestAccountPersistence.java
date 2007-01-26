@@ -75,7 +75,8 @@ public class TestAccountPersistence extends TestAccount {
 
 	public void testGetActiveCustomerAndSavingsAccounts() throws Exception {
 		SavingsBO savingsBO = TestObjectFactory.createSavingsAccount(
-				"12345678910", group, new Short("16"), new Date(),
+				"12345678910", group, AccountState.SAVINGS_ACC_APPROVED, 
+				new Date(),
 				createSavingsOffering("qqqqq"), TestObjectFactory
 						.getUserContext());
 		List<Integer> customerAccounts = accountPersistence
@@ -114,7 +115,7 @@ public class TestAccountPersistence extends TestAccount {
 	
 	private SavingsBO createSavingsAccount() throws Exception {
 		return TestObjectFactory.createSavingsAccount("12345678910", group,
-				new Short("16"), new Date(), createSavingsOffering("qqqqq"),
+				AccountState.SAVINGS_ACC_APPROVED, new Date(), createSavingsOffering("qqqqq"),
 				TestObjectFactory.getUserContext());
 	}
 

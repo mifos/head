@@ -1,5 +1,11 @@
 package org.mifos.framework.components.cronjob.helpers;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD;
+import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_POSTING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -12,7 +18,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.MifosCurrency;
@@ -27,10 +33,6 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import static org.mifos.framework.util.helpers.TestObjectFactory.*; 
-import static org.mifos.application.meeting.util.helpers.MeetingType.*;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
-import static org.mifos.application.meeting.util.helpers.WeekDay.*;
 
 public class TestSavingsIntPostingHelper extends MifosTestCase {
 	private UserContext userContext;
@@ -178,13 +180,13 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 		savingsOffering4 = createSavingsOffering("prd4", "wsas", Short
 				.valueOf("2"));
 		savings1 = helper.createSavingsAccount(savingsOffering1, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings2 = helper.createSavingsAccount(savingsOffering2, group,
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		savings3 = helper.createSavingsAccount(savingsOffering3, group,
-				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
+				AccountState.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 		savings4 = helper.createSavingsAccount(savingsOffering4, group,
-				AccountStates.SAVINGS_ACC_APPROVED, userContext);
+				AccountState.SAVINGS_ACC_APPROVED, userContext);
 	}
 
 	private SavingsOfferingBO createSavingsOffering(String offeringName,
