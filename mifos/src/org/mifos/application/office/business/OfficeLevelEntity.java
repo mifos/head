@@ -45,6 +45,14 @@ import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
+/**
+ * As with the other *Entity classes, this one corresponds
+ * to {@link OfficeLevel}.  The extra complication is
+ * that with office levels, the user can configure which
+ * are in use (for example, are there subregional offices?).
+ * The {@link #configured} flag is set/clear for levels which
+ * are/are-not in use.
+ */
 public class OfficeLevelEntity extends MasterDataEntity {
 
 	private final OfficeLevelEntity parent;
