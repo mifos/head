@@ -31,7 +31,7 @@ public class QueryResultsMainSearchImpl extends QueryResultSearchDTOImpl {
 				"from org.mifos.application.accounts.business.AccountBO account " +
 				"where account.customer.customerId=:customerId" +
 				" and account.accountType.accountTypeId=:accountTypeId" +
-				" and account.accountState.id not in (6,7,9,10,15,17,18) ");
+				" and account.accountState.id not in (6,7,10,15,17,18) ");
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
 					if (buildDTO) {

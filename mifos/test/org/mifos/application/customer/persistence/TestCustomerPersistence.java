@@ -70,8 +70,9 @@ public class TestCustomerPersistence extends MifosTestCase {
 	private CustomerBO center;
 
 	private CustomerBO client;
-	
+
 	private CustomerBO group2;
+
 	private CustomerBO group;
 
 	private AccountBO account;
@@ -148,7 +149,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		account = getLoanAccount(group, meeting, "adsfdsfsd", "3saf");
 		// Date actionDate = new Date(2006,03,13);
 		Date meetingDate = customerPersistence
@@ -163,7 +165,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		account = getLoanAccount(group, meeting, "Loan342423", "1wed");
 		Date meetingDate = customerPersistence
 				.getLastMeetingDateForCustomer(center.getCustomerId());
@@ -189,11 +192,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
+						EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY,
+						EVERY_WEEK, CUSTOMER_MEETING));
 
 		Date startDate = new Date(System.currentTimeMillis());
 		center = createCenter();
@@ -214,7 +217,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testGetChildernOtherThanClosed() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -242,7 +246,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testGetChildernActiveAndHold() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -273,7 +278,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testGetChildernOtherThanClosedAndCancelled() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -301,7 +307,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testGetAllChildern() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -328,7 +335,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testRetrieveSavingsAccountForCustomer() throws Exception {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center);
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
@@ -341,8 +349,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 		UserContext uc = new UserContext();
 		uc.setId(Short.valueOf("1"));
 		account = TestObjectFactory.createSavingsAccount("000100000000020",
-				group, AccountState.SAVINGS_ACC_APPROVED,
-				new java.util.Date(), savingsOffering, uc);
+				group, AccountState.SAVINGS_ACC_APPROVED, new java.util.Date(),
+				savingsOffering, uc);
 		HibernateUtil.closeSession();
 		List<SavingsBO> savingsList = customerPersistence
 				.retrieveSavingsAccountForCustomer(group.getCustomerId());
@@ -358,21 +366,24 @@ public class TestCustomerPersistence extends MifosTestCase {
 		BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
 
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
-				group);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE, group);
 		HibernateUtil.closeSession();
 		List<ClientBO> clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
-				new Date(System.currentTimeMillis()), Short.valueOf("2"),clients);
+				new Date(System.currentTimeMillis()), Short.valueOf("2"),
+				clients);
 		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		
+
 		clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),clients);
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				clients);
 		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
@@ -383,7 +394,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 		clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
-				new Date(currentDate.getTimeInMillis()), Short.valueOf("4"),clients);
+				new Date(currentDate.getTimeInMillis()), Short.valueOf("4"),
+				clients);
 		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
@@ -395,21 +407,23 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(2, customerPerformanceHistoryView.getMeetingsAttended()
 				.intValue());
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		client = TestObjectFactory.getObject(CustomerBO.class, client
+				.getCustomerId());
 	}
 
 	public void testNumberOfMeetingsMissed() throws Exception {
 		BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
 
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
-				group);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE, group);
 		HibernateUtil.closeSession();
 		List<ClientBO> clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),clients);
+				new Date(System.currentTimeMillis()), Short.valueOf("1"),
+				clients);
 		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
@@ -417,7 +431,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 		clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
-				new Date(System.currentTimeMillis()), Short.valueOf("2"),clients);
+				new Date(System.currentTimeMillis()), Short.valueOf("2"),
+				clients);
 		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
@@ -427,7 +442,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 		currentDate.roll(Calendar.DATE, 1);
 		clients = new ArrayList<ClientBO>();
 		bulkEntryBusinessService.setClientAttendance(client.getCustomerId(),
-				new Date(currentDate.getTimeInMillis()), Short.valueOf("3"),clients);
+				new Date(currentDate.getTimeInMillis()), Short.valueOf("3"),
+				clients);
 		HibernateUtil.closeSession();
 		bulkEntryBusinessService.saveClientAttendance(clients.get(0));
 		HibernateUtil.commitTransaction();
@@ -439,16 +455,17 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(2, customerPerformanceHistoryView.getMeetingsMissed()
 				.intValue());
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(CustomerBO.class,
-				client.getCustomerId());
+		client = TestObjectFactory.getObject(CustomerBO.class, client
+				.getCustomerId());
 	}
 
-	public void testLastLoanAmount() throws PersistenceException, AccountException {
+	public void testLastLoanAmount() throws PersistenceException,
+			AccountException {
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client", 
-				CustomerStatus.CLIENT_ACTIVE,
-				group);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
@@ -465,8 +482,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		AccountStateEntity accountStateEntity = new AccountStateEntity(
 				AccountState.LOANACC_OBLIGATIONSMET);
 		account.setUserContext(TestObjectFactory.getContext());
-		account.changeStatus(accountStateEntity.getId(),
-				null, "");
+		account.changeStatus(accountStateEntity.getId(), null, "");
 		TestObjectFactory.updateObject(account);
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = customerPersistence
@@ -478,7 +494,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testFindBySystemId() throws PersistenceException,
 			ServiceException {
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test",
+				CustomerStatus.GROUP_ACTIVE, center);
 		GroupBO groupBO = (GroupBO) customerPersistence.findBySystemId(group
 				.getGlobalCustNum());
 		assertEquals(groupBO.getDisplayName(), group.getDisplayName());
@@ -487,7 +504,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testGetBySystemId() throws PersistenceException,
 			ServiceException {
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test",
+				CustomerStatus.GROUP_ACTIVE, center);
 		GroupBO groupBO = (GroupBO) customerPersistence.findBySystemId(group
 				.getGlobalCustNum(), group.getCustomerLevel().getId());
 		assertEquals(groupBO.getDisplayName(), group.getDisplayName());
@@ -505,8 +523,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testGetCustomersWithUpdatedMeetings() throws Exception {
 		center = createCenter();
-		group = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
-		TestCustomerBO.setUpdatedFlag(group.getCustomerMeeting(),YesNoFlag.YES.getValue());
+		group = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center);
+		TestCustomerBO.setUpdatedFlag(group.getCustomerMeeting(), YesNoFlag.YES
+				.getValue());
 		TestObjectFactory.updateObject(group);
 		List<Integer> customerIds = customerPersistence
 				.getCustomersWithUpdatedMeetings();
@@ -537,9 +557,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = createCenter("center");
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		CenterBO center1 = createCenter("center1");
-		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
+		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center1);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -554,17 +576,17 @@ public class TestCustomerPersistence extends MifosTestCase {
 		AccountBO account3 = getLoanAccount(client3, meeting, "fdsgdfgfd",
 				"543g");
 		AccountBO account4 = getLoanAccount(group1, meeting, "fasdf23", "3fds");
-		TestCustomerBO.setCustomerStatus(client2,new CustomerStatusEntity(
+		TestCustomerBO.setCustomerStatus(client2, new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CLOSED));
-		
+
 		TestObjectFactory.updateObject(client2);
-		client2 = TestObjectFactory.getObject(ClientBO.class,
-				client2.getCustomerId());
-		TestCustomerBO.setCustomerStatus(client3,new CustomerStatusEntity(
+		client2 = TestObjectFactory.getObject(ClientBO.class, client2
+				.getCustomerId());
+		TestCustomerBO.setCustomerStatus(client3, new CustomerStatusEntity(
 				CustomerStatus.CLIENT_CANCELLED));
 		TestObjectFactory.updateObject(client3);
-		client3 = TestObjectFactory.getObject(ClientBO.class,
-				client3.getCustomerId());
+		client3 = TestObjectFactory.getObject(ClientBO.class, client3
+				.getCustomerId());
 
 		List<AccountBO> loansForCenter = customerPersistence
 				.retrieveAccountsUnderCustomer(center.getSearchId(), Short
@@ -593,9 +615,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = createCenter("new_center");
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		CenterBO center1 = createCenter("new_center1");
-		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
+		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center1);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -644,9 +668,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testGetAllChildrenForParent() throws NumberFormatException,
 			PersistenceException {
 		center = createCenter("Center");
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		CenterBO center1 = createCenter("center11");
-		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
+		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center1);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -672,9 +698,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testGetChildrenForParent() throws NumberFormatException,
 			SystemException, ApplicationException {
 		center = createCenter("center");
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		CenterBO center1 = createCenter("center1");
-		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
+		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center1);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -684,14 +712,14 @@ public class TestCustomerPersistence extends MifosTestCase {
 		List<Integer> customerIds = customerPersistence.getChildrenForParent(
 				center.getSearchId(), Short.valueOf("3"));
 		assertEquals(3, customerIds.size());
-		CustomerBO customer = TestObjectFactory.getObject(
-				CustomerBO.class, customerIds.get(0));
+		CustomerBO customer = TestObjectFactory.getObject(CustomerBO.class,
+				customerIds.get(0));
 		assertEquals("Group", customer.getDisplayName());
-		customer = TestObjectFactory.getObject(CustomerBO.class,
-				customerIds.get(1));
+		customer = TestObjectFactory.getObject(CustomerBO.class, customerIds
+				.get(1));
 		assertEquals("client1", customer.getDisplayName());
-		customer = TestObjectFactory.getObject(CustomerBO.class,
-				customerIds.get(2));
+		customer = TestObjectFactory.getObject(CustomerBO.class, customerIds
+				.get(2));
 		assertEquals("client2", customer.getDisplayName());
 
 		TestObjectFactory.cleanUp(client3);
@@ -703,9 +731,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 	public void testGetCustomers() throws NumberFormatException,
 			SystemException, ApplicationException {
 		center = createCenter("center");
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		CenterBO center1 = createCenter("center11");
-		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center1);
+		GroupBO group1 = TestObjectFactory.createGroupUnderCenter("Group1",
+				CustomerStatus.GROUP_ACTIVE, center1);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		ClientBO client2 = TestObjectFactory.createClient("client2",
@@ -726,7 +756,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 			SystemException, ApplicationException, Exception {
 
 		center = createCenter("center");
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		CustomerCheckListBO checklistCenter = TestObjectFactory
@@ -894,7 +925,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		customerPersistence.deleteCustomerMeeting(client);
-		TestCustomerBO.setCustomerMeeting(client,null);
+		TestCustomerBO.setCustomerMeeting(client, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client
@@ -907,15 +938,15 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getTypicalMeeting());
 		HibernateUtil.closeSession();
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
-		
+
 		customerPersistence.deleteMeeting(meeting);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		
+
 		meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
 		assertNull(meeting);
 	}
-	
+
 	public void testSearchWithOfficeId() throws Exception {
 		createCustomers(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
@@ -951,7 +982,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	}
 
-	public void testSearchWithCancelLoanAccounts()throws Exception{
+	public void testSearchWithCancelLoanAccounts() throws Exception {
 		groupAccount = getLoanAccount();
 		groupAccount.changeStatus(AccountState.LOANACC_CANCEL.getValue(),
 				AccountStateFlag.LOAN_WITHDRAW.getValue(),
@@ -959,9 +990,12 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.updateObject(groupAccount);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		groupAccount =TestObjectFactory.getObject(LoanBO.class,groupAccount.getAccountId());
-		center = TestObjectFactory.getObject(CustomerBO.class,center.getCustomerId());
-		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
+		groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount
+				.getAccountId());
+		center = TestObjectFactory.getObject(CustomerBO.class, center
+				.getCustomerId());
+		group = TestObjectFactory.getObject(CustomerBO.class, group
+				.getCustomerId());
 		QueryResult queryResult = new CustomerPersistence().search(group
 				.getGlobalCustNum(), Short.valueOf("3"), Short.valueOf("1"),
 				Short.valueOf("1"));
@@ -969,9 +1003,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals(1, queryResult.getSize());
 		List results = queryResult.get(0, 10);
 		assertEquals(1, results.size());
-		CustomerSearch customerSearch =(CustomerSearch) results.get(0);
-		assertEquals(0,customerSearch.getLoanGlobalAccountNum().size());
+		CustomerSearch customerSearch = (CustomerSearch) results.get(0);
+		assertEquals(0, customerSearch.getLoanGlobalAccountNum().size());
 	}
+
 	public void testSearchWithAccountGlobalNo() throws Exception {
 		getCustomer();
 		HibernateUtil.commitTransaction();
@@ -984,43 +1019,54 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	}
 
-	
 	public void testSearchGropAndClient() throws Exception {
 		createCustomers(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.commitTransaction();
-		QueryResult queryResult = new CustomerPersistence().searchGroupClient("C",  Short.valueOf("1"));
+		QueryResult queryResult = new CustomerPersistence().searchGroupClient(
+				"C", Short.valueOf("1"));
 		assertNotNull(queryResult);
 		assertEquals(1, queryResult.getSize());
 		assertEquals(1, queryResult.get(0, 10).size());
 
 	}
+
 	public void testSearchGropAndClientForLoNoResults() throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting, Short.valueOf("3"), Short.valueOf("3"));	
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE,
-				"1234",true,new java.util.Date(),null,null,null,Short.valueOf("3"), center);
+		center = TestObjectFactory.createCenter("Center", meeting, Short
+				.valueOf("3"), Short.valueOf("3"));
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, "1234", true,
+				new java.util.Date(), null, null, null, Short.valueOf("3"),
+				center);
 		HibernateUtil.commitTransaction();
-		QueryResult queryResult = new CustomerPersistence().searchGroupClient("C",  Short.valueOf("3"));
+		QueryResult queryResult = new CustomerPersistence().searchGroupClient(
+				"C", Short.valueOf("3"));
 		assertNotNull(queryResult);
 		assertEquals(0, queryResult.getSize());
 		assertEquals(0, queryResult.get(0, 10).size());
 
 	}
+
 	public void testSearchGropAndClientForLo() throws Exception {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting, Short.valueOf("3"), Short.valueOf("3"));	
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE,
-				"1234",true,new java.util.Date(),null,null,null,Short.valueOf("3"), center);
+		center = TestObjectFactory.createCenter("Center", meeting, Short
+				.valueOf("3"), Short.valueOf("3"));
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, "1234", true,
+				new java.util.Date(), null, null, null, Short.valueOf("3"),
+				center);
 		HibernateUtil.commitTransaction();
-		QueryResult queryResult = new CustomerPersistence().searchGroupClient("G",  Short.valueOf("3"));
+		QueryResult queryResult = new CustomerPersistence().searchGroupClient(
+				"G", Short.valueOf("3"));
 		assertNotNull(queryResult);
 		assertEquals(1, queryResult.getSize());
 		assertEquals(1, queryResult.get(0, 10).size());
 
 	}
+
 	public void testSearchCustForSavings() throws Exception {
 		createCustomers(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
@@ -1053,12 +1099,12 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertNotNull(accountList);
 		assertEquals(1, accountList.size());
 		// get all objects again
-		groupAccount = TestObjectFactory.getObject(LoanBO.class,
-				groupAccount.getAccountId());
-		group = TestObjectFactory.getObject(CustomerBO.class,
-				group.getCustomerId());
-		center = TestObjectFactory.getObject(CustomerBO.class,
-				center.getCustomerId());
+		groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount
+				.getAccountId());
+		group = TestObjectFactory.getObject(CustomerBO.class, group
+				.getCustomerId());
+		center = TestObjectFactory.getObject(CustomerBO.class, center
+				.getCustomerId());
 	}
 
 	public void testRetrieveCustomerAccountActionDetails() throws Exception {
@@ -1071,35 +1117,68 @@ public class TestCustomerPersistence extends MifosTestCase {
 		assertEquals("The size of the due insallments is ", actionDates.size(),
 				1);
 	}
-	
-	public  void testGetActiveCentersUnderUser() throws Exception{
+
+	public void testGetActiveCentersUnderUser() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("center",meeting,Short.valueOf("1"),Short.valueOf("1"));
-		PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
-		List<CustomerBO>  customers = new CustomerPersistence().getActiveCentersUnderUser(personnel);
+		center = TestObjectFactory.createCenter("center", meeting, Short
+				.valueOf("1"), Short.valueOf("1"));
+		PersonnelBO personnel = TestObjectFactory.getPersonnel(Short
+				.valueOf("1"));
+		List<CustomerBO> customers = new CustomerPersistence()
+				.getActiveCentersUnderUser(personnel);
 		assertNotNull(customers);
-		assertEquals(1,customers.size());
+		assertEquals(1, customers.size());
 	}
-	public  void testgetGroupsUnderUser() throws Exception{
+
+	public void testgetGroupsUnderUser() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("center",meeting,Short.valueOf("1"),Short.valueOf("1"));
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		group2 = TestObjectFactory.createGroupUnderCenter("Group33", CustomerStatus.GROUP_CANCELLED, center);
-		PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
-		List<CustomerBO>  customers = new CustomerPersistence().getGroupsUnderUser(personnel);
+		center = TestObjectFactory.createCenter("center", meeting, Short
+				.valueOf("1"), Short.valueOf("1"));
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		group2 = TestObjectFactory.createGroupUnderCenter("Group33",
+				CustomerStatus.GROUP_CANCELLED, center);
+		PersonnelBO personnel = TestObjectFactory.getPersonnel(Short
+				.valueOf("1"));
+		List<CustomerBO> customers = new CustomerPersistence()
+				.getGroupsUnderUser(personnel);
 		assertNotNull(customers);
-		assertEquals(1,customers.size());
+		assertEquals(1, customers.size());
 	}
+
+	public void testSearchForActiveInBadStandingLoanAccount() throws Exception {
+		groupAccount = getLoanAccount();
+		groupAccount.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+				null, "Changing to badStanding");
+		TestObjectFactory.updateObject(groupAccount);
+		HibernateUtil.closeSession();
+		groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount
+				.getAccountId());
+		center = TestObjectFactory.getObject(CustomerBO.class, center
+				.getCustomerId());
+		group = TestObjectFactory.getObject(CustomerBO.class, group
+				.getCustomerId());
+		QueryResult queryResult = new CustomerPersistence().search(group
+				.getGlobalCustNum(), Short.valueOf("3"), Short.valueOf("1"),
+				Short.valueOf("1"));
+		assertNotNull(queryResult);
+		assertEquals(1, queryResult.getSize());
+		List results = queryResult.get(0, 10);
+		assertEquals(1, results.size());
+		CustomerSearch customerSearch = (CustomerSearch) results.get(0);
+		assertEquals(1, customerSearch.getLoanGlobalAccountNum().size());
+	}
+
 	private void getCustomer() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client", 
-				CustomerStatus.CLIENT_ACTIVE,
-				group);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
 				"Loanwer", "43fs", Short.valueOf("2"), new Date(System
 						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
@@ -1147,17 +1226,18 @@ public class TestCustomerPersistence extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus, center);
-		client = TestObjectFactory.createClient("Client", clientStatus,
-				group);
+		group = TestObjectFactory.createGroupUnderCenter("Group", groupStatus,
+				center);
+		client = TestObjectFactory.createClient("Client", clientStatus, group);
 	}
-	
+
 	private static java.util.Date getMeetingDates(MeetingBO meeting) {
 		List<java.util.Date> dates = new ArrayList<java.util.Date>();
 		try {
 			dates = meeting.getAllDates(new java.util.Date(System
 					.currentTimeMillis()));
-		} catch (MeetingException e) {
+		}
+		catch (MeetingException e) {
 			e.printStackTrace();
 		}
 		return dates.get(dates.size() - 1);
@@ -1177,7 +1257,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group",
+				CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),

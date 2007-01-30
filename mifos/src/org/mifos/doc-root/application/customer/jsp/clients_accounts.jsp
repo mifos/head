@@ -67,7 +67,7 @@
 									<td class="paddingleft05notop"><html-el:select
 										style="width:136px;" property="officeId">
 										<html-el:option value="0">
-											<mifos:mifoslabel name="CustomerSearch.all" /><mifos:mifoslabel	name="${ConfigurationConstants.BRANCHOFFICE}" /><mifos:mifoslabel name="CustomerSearch.s" />
+											<mifos:mifoslabel name="CustomerSearch.all" /> <mifos:mifoslabel name="${ConfigurationConstants.BRANCHOFFICE}" /><mifos:mifoslabel name="CustomerSearch.s" />
 										</html-el:option>
 										<html-el:options collection="OfficesList" property="officeId"
 											labelProperty="officeName" />
