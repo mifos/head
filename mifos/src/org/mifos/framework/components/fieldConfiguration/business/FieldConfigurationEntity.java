@@ -1,5 +1,8 @@
 package org.mifos.framework.components.fieldConfiguration.business;
 
+import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
+import org.mifos.framework.exceptions.PersistenceException;
+
 
 
 
@@ -72,4 +75,10 @@ public class FieldConfigurationEntity {
 		return this.getEntityMaster().getEntityType()+"."+this.getFieldName();
 	}
 	
+	public void update(Short mandatoryFlag, Short hiddenFlag)
+			throws PersistenceException {
+		this.mandatoryFlag = mandatoryFlag;
+		this.hiddenFlag = hiddenFlag;
+		new FieldConfigurationPersistence().createOrUpdate(this);
+	}
 }

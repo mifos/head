@@ -105,7 +105,7 @@ public class TestLoanArrearsTask extends MifosTestCase {
 		TestLoanBO.modifyDisbursmentDate(loan,startDate);
 		for (AccountActionDateEntity actionDate : loan.getAccountActionDates())
 			TestLoanBO.setActionDate(actionDate,offSetGivenDate(
-					actionDate.getActionDate(), 15));
+					actionDate.getActionDate(), 18));
 	}
 
 	private java.sql.Date offSetGivenDate(Date date, int numberOfDays) {

@@ -72,8 +72,8 @@ the location of Mifos_log.log.
   
   <!-- Category type org.mifos. -->
   <category name="org.mifos" additivity="false"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
-	<priority value="WARN"/> 
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
+	<priority value="ERROR"/> 
 	
 	<!-- Denotes the console appender -->
 	<appender-ref ref="MifosAppender"/> 
@@ -88,89 +88,89 @@ the location of Mifos_log.log.
  
  <!-- Category type org.mifos.framework -->
   <category name="org.mifos.framework" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
   <!-- Category type org.mifos.application.customer.customernote for CustomerNote -->
   <category name="org.mifos.application.customer.customernote" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
   <category name="org.mifos.application.customer.business.CustomerBO" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
 
     <!-- Category type org.mifos.application.personnel for Personnel  -->
   <category name="org.mifos.application.personnel" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
 
   <!-- Category type org.mifos.framework.components.configuration for Configuration  -->
   <category name="org.mifos.framework.components.configuration" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
     <!-- Category type org.mifos.application.group for Group  -->
   <category name="org.mifos.application.group" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
     <!-- Category type org.mifos.application.center for Center  -->
   <category name="org.mifos.application.center" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
    <!-- Category type org.mifos.application.center for Center  -->
   <category name="org.mifos.application.client" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
   <!-- Category type org.mifos.application.login for Login  -->
   <category name="org.mifos.application.login" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
   <!-- Category type org.mifos.application.productdefinition for Product Definition  -->
   <category name="org.mifos.application.productdefinition" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
   <!-- Logger for  Accounts  -->
   <category name="org.mifos.application.accounts" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
   <!-- Logger for  Customer Search  -->
   <category name="org.mifos.application.customersearch" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
   <!-- Logger for  Fees  -->
   <category name="org.mifos.application.fees" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   <!-- roles and permission logger -->
   <category name="org.mifos.application.roleandpermission" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
 <!-- roles and permission logger -->   
 
    <!-- meeting logger --> 
    <category name="org.mifos.application.meeting" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>  
    
@@ -178,42 +178,42 @@ the location of Mifos_log.log.
 
   <!-- office logger -->
    <category name="org.mifos.application.office" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
   <!--  office logger -->
   <category name="org.mifos.framework.components.repaymentschedule" additivity="true"> 
-  	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+  	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
   	<priority value="ERROR"/> 
   </category>
   
   <category name="org.mifos.framework.components.audit" additivity="true"> 
-  	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+  	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
   	<priority value="ERROR"/> 
   </category>
    
    <!-- collection sheet logger -->
    <category name="org.mifos.application.collsheet" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
    
    <!-- Bulk Entry logger -->
    <category name="org.mifos.application.bulkentry" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
 	<priority value="ERROR"/> 
   </category>
   
   <!-- CollectionSheet  logger -->
    <category name="org.mifos.application.collectionsheet" additivity="true"> 
-	<!-- Level of logging. Any log statement of level less than WARN will not be logged -->
-	<priority value="DEBUG"/> 
+	<!-- Level of logging. Any log statement of level less than ERROR will not be logged -->
+	<priority value="ERROR"/> 
   </category>
    
   <!-- Root Logger -->
   <root>
-    <priority value ="WARN" />
+    <priority value ="ERROR" />
     <appender-ref ref="MifosAppender"/>
   </root>
 

@@ -18,5 +18,8 @@
          <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce where 
          			fce.entityMaster=:entityId]]>
  </query>
+ <query name="getAllFieldConfigurationList">
+         <![CDATA[from org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity fce]]>
+ </query>
 </hibernate-mapping>
  

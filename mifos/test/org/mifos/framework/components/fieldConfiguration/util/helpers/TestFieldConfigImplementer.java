@@ -36,7 +36,6 @@ public class TestFieldConfigImplementer extends MifosTestCase{
 			fieldConfig.getEntityFieldMap().put(entityMaster.getId(),fieldConfigurationPersistenceService.getListOfFields(entityMaster.getId()));
 		}
 		assertEquals(fieldConfig.isFieldManadatory("Loan.PurposeOfLoan"),true);
-		assertEquals(fieldConfig.isFieldManadatory("Center.PostalCode"),true);
 		fieldConfig.getEntityFieldMap().clear();
 	}
 	

@@ -26,7 +26,7 @@ public class TestActivityTag extends MifosTestCase {
 		
 		Set<Short> activities =new ActivityTag().convertToIdSet(getActivities());
 		assertNotNull(activities);
-		assertEquals(180,activities.size());
+		assertEquals(181,activities.size());
 		
 	}
 	

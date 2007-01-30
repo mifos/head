@@ -401,4 +401,6 @@ public interface SecurityConstants {
     public final short CAN_REVERSE_LOAN_DISBURSAL = 202;
     
     public final short CAN_DEFINE_LABELS = 204;
+    
+    public final short CAN_DEFINE_HIDDEN_MANDATORY_FIELDS = 205;
 }

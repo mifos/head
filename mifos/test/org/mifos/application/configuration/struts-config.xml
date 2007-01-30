@@ -5,6 +5,7 @@
 <struts-config>
 	<form-beans>
 		<form-bean name="labelconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm"></form-bean>
+		<form-bean name="hiddenmandatoryconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.HiddenMandatoryConfigurationActionForm"></form-bean>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
@@ -18,6 +19,15 @@
 			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="update_failure" path="/pages/application/configuration/jsp/definelabels.jsp" />
+			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+		</action>
+		<action path="/hiddenmandatoryconfigurationaction" type="org.mifos.application.configuration.struts.action.HiddenMandatoryConfigurationAction" name="hiddenmandatoryconfigurationactionform" parameter="method" input="/hiddenmandatoryconfigurationaction.do?method=validate"
+			validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/configuration/jsp/definehiddenmandatoryfields.jsp" />
+			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_failure" path="/pages/application/configuration/jsp/definehiddenmandatoryfields.jsp" />
 			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
 		</action>

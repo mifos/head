@@ -23,5 +23,10 @@ public class FieldConfigurationPersistence extends Persistence {
 		queryParameter.put(FieldConfigurationConstant.ENTITY_ID,entityId);
 		return executeNamedQuery(NamedQueryConstants.GET_FIELD_LIST, queryParameter);
 	}
+	
+	public List<FieldConfigurationEntity> getAllConfigurationFieldList() 
+	throws PersistenceException {
+		return executeNamedQuery(NamedQueryConstants.GET_ALL_FIELD_CONFIGURATION_LIST, null);
+	}
 
 }

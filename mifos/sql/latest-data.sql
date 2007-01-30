@@ -9,7 +9,7 @@
 -- merge add-version.sql
 -- merge all upgrade_to_*.sql files to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(105);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(106);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -4671,3 +4671,10 @@ UPDATE REPORT SET REPORT_NAME='Center Summary Report' WHERE REPORT_ID=15;
 UPDATE REPORT SET REPORT_NAME='Center Meeting Schedule' WHERE REPORT_ID=26;
 UPDATE REPORT_JASPER_MAP SET REPORT_NAME='Center Summary Report' WHERE REPORT_ID=15;
 UPDATE REPORT_JASPER_MAP SET REPORT_NAME='Center Meeting Schedule' WHERE REPORT_ID=26;
+
+INSERT INTO LOOKUP_VALUE VALUES(579,87,' ');
+INSERT INTO LOOKUP_VALUE_LOCALE VALUES(924,1,579,'Can define hidden/mandatory fields');
+INSERT INTO ACTIVITY(ACTIVITY_ID,PARENT_ID,ACTIVITY_NAME_LOOKUP_ID,DESCRIPTION_LOOKUP_ID) VALUES(205,203,579,579);
+INSERT INTO ROLES_ACTIVITY VALUES (205,1);
+INSERT INTO FIELD_CONFIGURATION(FIELD_CONFIG_ID,FIELD_NAME,ENTITY_ID,MANDATORY_FLAG,HIDDEN_FLAG)
+VALUES(74,'AssignClients',1,0,0);

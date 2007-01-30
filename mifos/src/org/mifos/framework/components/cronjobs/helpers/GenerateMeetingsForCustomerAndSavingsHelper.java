@@ -76,4 +76,9 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 				- nextInstallmentId + 1;
 		return totalInstallmentDatesToBeChanged <= 5;
 	}
+	
+	@Override
+	public boolean isTaskAllowedToRun() {
+		return true;
+	}
 }

@@ -105,6 +105,7 @@
 		<form-bean name="multipleloansactionform" type="org.mifos.application.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm"></form-bean>
 		<form-bean name="reverseloandisbactionform" type="org.mifos.application.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm"></form-bean>
 		<form-bean name="labelconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm"></form-bean>
+		<form-bean name="hiddenmandatoryconfigurationactionform" type="org.mifos.application.configuration.struts.actionform.HiddenMandatoryConfigurationActionForm"></form-bean>
 
 		<!-- Reports -->
 		<form-bean name="reportsParamsActionForm"
@@ -1056,6 +1057,15 @@
 			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="update_failure" path="/pages/application/configuration/jsp/definelabels.jsp" />
+			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
+		</action>
+		<action path="/hiddenmandatoryconfigurationaction" type="org.mifos.application.configuration.struts.action.HiddenMandatoryConfigurationAction" name="hiddenmandatoryconfigurationactionform" parameter="method" input="/hiddenmandatoryconfigurationaction.do?method=validate"
+			validate="true" scope="session">
+			<forward name="load_success" path="/pages/application/configuration/jsp/definehiddenmandatoryfields.jsp" />
+			<forward name="load_failure" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_success" path="/pages/application/admin/jsp/admin.jsp" />
+			<forward name="update_failure" path="/pages/application/configuration/jsp/definehiddenmandatoryfields.jsp" />
 			<forward name="cancel_success" path="/pages/application/admin/jsp/admin.jsp" />
 			<forward name="cancel_failure" path="/pages/application/admin/jsp/admin.jsp" />
 		</action>

@@ -160,6 +160,7 @@ public class ActivityMapper {
 		addReportsMappings();
 		addLabelConfigurationMappings();
 		addHolidayMappings();
+		addHiddenMandatoryConfigurationMappings();
 	}
 
 	private void addCustomerAccountActionMappings() {
@@ -1168,6 +1169,17 @@ public class ActivityMapper {
 		activityMap.put("/labelconfigurationaction-cancel",
 				SecurityConstants.VIEW);
 		activityMap.put("/labelconfigurationaction-validate",
+				SecurityConstants.VIEW);
+	}
+	
+	private void addHiddenMandatoryConfigurationMappings() {
+		activityMap.put("/hiddenmandatoryconfigurationaction-load",
+				SecurityConstants.CAN_DEFINE_HIDDEN_MANDATORY_FIELDS);
+		activityMap.put("/hiddenmandatoryconfigurationaction-update",
+				SecurityConstants.VIEW);
+		activityMap.put("/hiddenmandatoryconfigurationaction-cancel",
+				SecurityConstants.VIEW);
+		activityMap.put("/hiddenmandatoryconfigurationaction-validate",
 				SecurityConstants.VIEW);
 	}
 	

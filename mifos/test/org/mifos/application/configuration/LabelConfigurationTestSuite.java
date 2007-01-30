@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigurationActionTest;
 import org.mifos.application.configuration.struts.action.LabelConfigurationActionTest;
 
 public class LabelConfigurationTestSuite extends TestSuite {
@@ -22,6 +23,7 @@ public class LabelConfigurationTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestConfigurationPersistenceService.class);
 		testSuite.addTestSuite(TestConfiguration.class);
 		testSuite.addTestSuite(LabelConfigurationActionTest.class);
+		testSuite.addTestSuite(HiddenMandatoryConfigurationActionTest.class);
 		return testSuite;
 		
 	}
