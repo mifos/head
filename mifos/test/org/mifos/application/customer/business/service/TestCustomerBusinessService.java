@@ -923,7 +923,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				offeringName, shortName, Short.valueOf("2"), startDate, Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				Short.valueOf("5"), startDate, loanOffering);
 
@@ -1012,8 +1012,8 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
 				.valueOf("2"), new Date(System.currentTimeMillis()), Short
 				.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-				.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), Short
-				.valueOf("1"), Short.valueOf("1"), meeting);
+				.valueOf("1"), Short.valueOf("1"), Short
+				.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
@@ -1033,14 +1033,12 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				"Loanwer", "43fs", Short.valueOf("2"), new Date(System
 						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
 				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				meeting);
+				Short.valueOf("1"), meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loancd123", "vfr", Short.valueOf("2"), new Date(System
 						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
 				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				meeting);
+				Short.valueOf("1"), meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, Short.valueOf("5"),
 				new Date(System.currentTimeMillis()), loanOffering1);

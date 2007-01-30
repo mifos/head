@@ -478,8 +478,8 @@ public class TestObjectFactory {
 	public static LoanOfferingBO createLoanOffering(String name,
 			Short applicableTo, Date startDate, Short offeringStatusId,
 			Double defLnAmnt, Double defIntRate, Short defInstallments,
-			Short interestTypeId, Short penaltyGrace, Short intDedAtDisb,
-			Short princDueLastInst, Short intCalcRuleId, MeetingBO meeting) {
+			Short interestTypeId, Short intDedAtDisb, Short princDueLastInst,
+			MeetingBO meeting) {
 		return createLoanOffering(name, name.substring(0, 1), applicableTo,
 				startDate, offeringStatusId, defLnAmnt, defIntRate,
 				defInstallments, interestTypeId, intDedAtDisb, princDueLastInst,
@@ -489,9 +489,8 @@ public class TestObjectFactory {
 	public static LoanOfferingBO createLoanOffering(String name,
 			String shortName, Short applicableTo, Date startDate,
 			Short offeringStatusId, Double defLnAmnt, Double defIntRate,
-			Short defInstallments, Short interestTypeId, Short penaltyGrace,
-			Short intDedAtDisb, Short princDueLastInst, Short intCalcRuleId,
-			MeetingBO meeting) {
+			Short defInstallments, Short interestTypeId, Short intDedAtDisb,
+			Short princDueLastInst, MeetingBO meeting) {
 		return createLoanOffering(name, shortName, applicableTo, startDate,
 				offeringStatusId, defLnAmnt, defIntRate, defInstallments,
 				interestTypeId, intDedAtDisb, princDueLastInst, meeting,

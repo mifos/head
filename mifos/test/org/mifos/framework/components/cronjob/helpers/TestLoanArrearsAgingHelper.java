@@ -172,9 +172,7 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 	private LoanOfferingBO createLoanOffering(String offName){
 		return TestObjectFactory.createLoanOffering(
 				offName, offName, Short.valueOf("2"), new Date(), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
 	}
 	
 	private void setDisbursementDateAsOldDate(LoanBO account, int days, Short installmentSize) {

@@ -163,7 +163,7 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 				"Loan", Short.valueOf("2"), startDate, Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer, Short
 				.valueOf("5"), startDate, loanOffering);
 

@@ -43,6 +43,7 @@ import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.application.ui.DispatcherTest;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.cronjobs.business.TaskTest;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
@@ -104,6 +105,7 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(DatabaseVersionFilterTest.class);
 		
 		suite.addTestSuite(RoleActivityEntityTest.class);
+		suite.addTestSuite(TaskTest.class);
 		return suite;
 	}
 

@@ -182,7 +182,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				offeringName, shortName, Short.valueOf("2"), startDate, Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), startDate, loanOffering);
 
@@ -469,9 +469,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
 		LoanBO loanBO = TestObjectFactory.createLoanAccount("42423142341",
 				client, Short.valueOf("5"),
 				new Date(System.currentTimeMillis()), loanOffering);
@@ -1183,14 +1181,12 @@ public class TestCustomerPersistence extends MifosTestCase {
 				"Loanwer", "43fs", Short.valueOf("2"), new Date(System
 						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
 				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				meeting);
+				Short.valueOf("1"), meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loancd123", "vfr", Short.valueOf("2"), new Date(System
 						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
 				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				meeting);
+				Short.valueOf("1"), meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, Short.valueOf("5"),
 				new Date(System.currentTimeMillis()), loanOffering1);
@@ -1262,9 +1258,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);

@@ -196,9 +196,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 		loanOffering = TestObjectFactory.createLoanOffering("Loan Offering",
 				"LOAN", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
-				Short.valueOf("1"), frequency);
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), frequency);
 		LoanOfferingBOTest.setStatus(loanOffering,new PrdOfferingPersistence()
 				.getPrdStatus(PrdStatus.LOANINACTIVE));
 		TestObjectFactory.updateObject(loanOffering);

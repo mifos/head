@@ -41,6 +41,7 @@ package org.mifos.framework.components.cronjobs.business;
 import java.sql.Timestamp;
 
 import org.mifos.framework.business.PersistentObject;
+import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
 
 public class Task extends PersistentObject {
 
@@ -99,9 +100,17 @@ public class Task extends PersistentObject {
 	public short getStatus() {
 		return status;
 	}
+	
+	public TaskStatus getStatusEnum() {
+		return TaskStatus.fromInt(status);
+	}
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	public void setStatus(TaskStatus status) {
+		this.status = status.getValue();
 	}
 
 }

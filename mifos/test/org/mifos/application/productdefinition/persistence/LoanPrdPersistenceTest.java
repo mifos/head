@@ -90,8 +90,8 @@ public class LoanPrdPersistenceTest extends MifosTestCase {
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("0"), Short.valueOf("1"), frequency);
+						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
+				frequency);
 	}
 
 }

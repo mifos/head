@@ -97,8 +97,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				"Loan", "LOAN", Short.valueOf("2"), new Date(System
 						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
 				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				meeting);
+				Short.valueOf("1"), meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
@@ -106,7 +105,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				Short.valueOf("1"), new Date(System.currentTimeMillis()), Short
 						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
 						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				meeting);
 		account2 = TestObjectFactory.createLoanAccount("42427777341", client,
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);

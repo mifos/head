@@ -23,7 +23,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -165,7 +168,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 	public void testGetPrdOfferings() throws Exception {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering1 = getLoanOffering("Loan Offering123",
-				"LOOF", PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				"LOOF", PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "load");
 		actionPerform();
@@ -208,11 +211,11 @@ public class MultipleLoanAccountsCreationActionTest extends
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialCustomers();
 		LoanOfferingBO loanOffering1 = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering2 = getLoanOffering("rwrfdb", "1qsd",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering3 = getLoanOffering("mksgfgfd", "9u78",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -237,15 +240,15 @@ public class MultipleLoanAccountsCreationActionTest extends
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialCustomers();
 		LoanOfferingBO loanOffering1 = getLoanOffering("vcxvxc", "a123",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering2 = getLoanOffering("fgdsghdh", "4fdh",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering3 = getLoanOffering("mgkkkj", "6tyu",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering4 = getLoanOffering("aq12sfdsf", "456j",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), MONTHLY, EVERY_MONTH);
+				PrdApplicableMaster.CLIENTS, MONTHLY, EVERY_MONTH);
 		LoanOfferingBO loanOffering5 = getLoanOffering("bdfhgfh", "6yu7",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, (short)3);
+				PrdApplicableMaster.CLIENTS, WEEKLY, (short)3);
 
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -291,7 +294,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		LoanOfferingBO loanOffering1 = getLoanOffering("vcxvxc", "a123",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -314,7 +317,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -346,7 +349,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -381,7 +384,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("vcxvxc", "a123",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -433,7 +436,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/multipleloansaction.do");
 		addRequestParameter("method", "get");
 		addRequestParameter("branchOfficeId", center.getOffice().getOfficeId()
@@ -502,15 +505,17 @@ public class MultipleLoanAccountsCreationActionTest extends
 	}
 
 	private LoanOfferingBO getLoanOffering(String name, String shortName,
-			String prdApplicableTo, RecurrenceType meetingFrequency, short recurAfter) {
+			PrdApplicableMaster applicableTo, RecurrenceType meetingFrequency, 
+			short recurAfter) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(meetingFrequency, recurAfter, CUSTOMER_MEETING, WeekDay.MONDAY));
 		Date currentDate = new Date(System.currentTimeMillis());
-		return TestObjectFactory.createLoanOffering(name, shortName, Short
-				.valueOf(prdApplicableTo), currentDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanOffering(name, shortName, 
+				applicableTo, currentDate, PrdStatus.LOANACTIVE.getValue(),
+				300.0, 1.2, (short)3, 
+				InterestType.FLAT, true, true, 
+				meeting,
+				GraceType.GRACEONALLREPAYMENTS);
 	}
 
 	private void createInitialCustomers() {

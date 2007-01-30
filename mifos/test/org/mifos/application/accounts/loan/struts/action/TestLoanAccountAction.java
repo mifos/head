@@ -1267,9 +1267,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, accountSate, startDate, loanOffering,
 				disbursalType);
@@ -1298,9 +1296,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		return TestObjectFactory.createLoanOffering(name, shortName, Short
 				.valueOf(prdApplicableTo), currentDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
 	}
 
 	private List<FeeBO> getFee() {
@@ -1357,9 +1353,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
 				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
 		return TestObjectFactory.createLoanAccount("42423142341", client, Short
 				.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);

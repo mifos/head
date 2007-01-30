@@ -12,11 +12,15 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.GraceType;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.business.Task;
@@ -43,7 +47,6 @@ public class TestLoanArrearsTask extends MifosTestCase {
 		loanArrearTask = new LoanArrearsTask();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
-		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanAccount = getLoanAccount(group, meeting);
@@ -59,26 +62,25 @@ public class TestLoanArrearsTask extends MifosTestCase {
 		super.tearDown();
 	}
 
-	public void testexecute() throws Exception {
+	public void testExecute() throws Exception {
 		int statusChangeHistorySize = loanAccount
 				.getAccountStatusChangeHistory().size();
 		loanArrearTask.run();
 		Query query = HibernateUtil.getSessionTL().createQuery(
-				"from org.mifos.framework.components.cronjobs.business.Task");
+				"from " + Task.class.getName());
 		List<Task> tasks = query.list();
-		assertNotNull(tasks);
 		assertEquals(1, tasks.size());
-		for (Task task : tasks) {
-			assertEquals(TaskStatus.COMPLETE.getValue().shortValue(), task
-					.getStatus());
-			assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
-					.getDescription());
-			TestObjectFactory.removeObject(task);
-		}
+		
+		Task task = tasks.get(0);
+		assertEquals(TaskStatus.COMPLETE, task.getStatusEnum());
+		assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
+				.getDescription());
+		TestObjectFactory.removeObject(task);
+
 		loanAccount = new AccountPersistence().getAccount(loanAccount
 				.getAccountId());
-		assertEquals(Short.valueOf(AccountStates.LOANACC_BADSTANDING),
-				loanAccount.getAccountState().getId());
+		assertEquals(AccountState.LOANACC_BADSTANDING,
+				loanAccount.getState());
 		assertEquals(statusChangeHistorySize + 1, loanAccount
 				.getAccountStatusChangeHistory().size());
 	}
@@ -87,10 +89,13 @@ public class TestLoanArrearsTask extends MifosTestCase {
 			throws AccountException {
 		Date currentdate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), currentdate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loan", "L", PrdApplicableMaster.GROUPS, currentdate, 
+				PrdStatus.LOANACTIVE.getValue(),
+				300.0, 1.2, 
+				(short)3, 
+				InterestType.FLAT, 
+				true, true, meeting,
+				GraceType.GRACEONALLREPAYMENTS);
 		loanAccount = TestObjectFactory.createLoanAccount("42423142341",
 				customer, Short.valueOf("5"), currentdate, loanOffering);
 		setDisbursementDateAsOldDate(loanAccount);

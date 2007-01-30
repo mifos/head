@@ -34,6 +34,7 @@ import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -218,10 +219,11 @@ public class TestLoanPersistence extends MifosTestCase {
 	private AccountBO getLoanAccount(Short accountSate, Date startDate,
 			int disbursalType) {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loanvcfg", "bhgf", Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				"Loanvcfg", "bhgf", PrdApplicableMaster.GROUPS, startDate, 
+				PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2, (short)3, 
+				InterestType.FLAT, true, true,
+				meeting,
+				GraceType.GRACEONALLREPAYMENTS);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, accountSate, startDate, loanOffering,
 				disbursalType);
@@ -231,10 +233,11 @@ public class TestLoanPersistence extends MifosTestCase {
 			MeetingBO meeting, Short accountSate) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan123", shortName, Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				"Loan123", shortName, PrdApplicableMaster.GROUPS, startDate, 
+				PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2, (short)3, 
+				InterestType.FLAT, true, true,
+				meeting,
+				GraceType.GRACEONALLREPAYMENTS);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"42423142341", customer, accountSate, startDate, loanOffering,
 				1);
@@ -244,10 +247,12 @@ public class TestLoanPersistence extends MifosTestCase {
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loancfgb", "dhsq", Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), Short.valueOf("1"), meeting);
+				"Loancfgb", "dhsq", PrdApplicableMaster.GROUPS, 
+				startDate, PrdStatus.LOANACTIVE.getValue(), 
+				300.0, 1.2, (short)3, 
+				InterestType.FLAT, true, true,
+				meeting,
+				GraceType.GRACEONALLREPAYMENTS);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				Short.valueOf("5"), startDate, loanOffering);
 
