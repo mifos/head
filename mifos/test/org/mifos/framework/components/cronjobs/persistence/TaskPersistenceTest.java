@@ -1,4 +1,4 @@
-package org.mifos.framework.components.cronjob.persistence;
+package org.mifos.framework.components.cronjobs.persistence;
 
 import java.sql.Date;
 import java.sql.Timestamp;

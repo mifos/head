@@ -1,4 +1,4 @@
-package org.mifos.framework.components.cronjob.helpers;
+package org.mifos.framework.components.cronjobs.helpers;
 
 import java.sql.Date;
 import java.util.Calendar;

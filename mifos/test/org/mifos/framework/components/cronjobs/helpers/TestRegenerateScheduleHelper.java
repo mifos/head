@@ -1,4 +1,4 @@
-package org.mifos.framework.components.cronjob.helpers;
+package org.mifos.framework.components.cronjobs.helpers;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;

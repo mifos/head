@@ -1,4 +1,4 @@
-package org.mifos.framework.components.cronjob;
+package org.mifos.framework.components.cronjobs;
 
 import java.util.List;
 

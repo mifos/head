@@ -1,4 +1,4 @@
-package org.mifos.framework.components.cronjob.helpers;
+package org.mifos.framework.components.cronjobs.helpers;
 
 import java.util.ArrayList;
 import java.util.Date;

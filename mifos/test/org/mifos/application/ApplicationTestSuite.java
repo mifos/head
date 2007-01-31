@@ -67,7 +67,7 @@ import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.TestAuditLogSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
-import org.mifos.framework.components.cronjob.CronjobTestSuite;
+import org.mifos.framework.components.cronjobs.CronjobTestSuite;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
 import org.mifos.framework.hibernate.HibernateTest;

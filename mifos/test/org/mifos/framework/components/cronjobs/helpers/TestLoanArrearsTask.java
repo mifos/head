@@ -1,9 +1,11 @@
-package org.mifos.framework.components.cronjob.helpers;
+package org.mifos.framework.components.cronjobs.helpers;
 
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
+import org.hibernate.Query;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -20,14 +22,16 @@ import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.cronjobs.helpers.LoanArrearsHelper;
+import org.mifos.framework.components.cronjobs.SchedulerConstants;
+import org.mifos.framework.components.cronjobs.business.Task;
 import org.mifos.framework.components.cronjobs.helpers.LoanArrearsTask;
+import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestLoanArrearsHelper extends MifosTestCase {
+public class TestLoanArrearsTask extends MifosTestCase {
 
-	private LoanArrearsHelper loanArrearHelper;
+	private LoanArrearsTask loanArrearTask;
 
 	CustomerBO center = null;
 
@@ -40,8 +44,7 @@ public class TestLoanArrearsHelper extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		LoanArrearsTask arrearsTask = new LoanArrearsTask();
-		loanArrearHelper = (LoanArrearsHelper)arrearsTask.getTaskHelper();
+		loanArrearTask = new LoanArrearsTask();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
@@ -54,7 +57,7 @@ public class TestLoanArrearsHelper extends MifosTestCase {
 		TestObjectFactory.cleanUp(loanAccount);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
-		loanArrearHelper = null;
+		loanArrearTask = null;
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -62,7 +65,18 @@ public class TestLoanArrearsHelper extends MifosTestCase {
 	public void testExecute() throws Exception {
 		int statusChangeHistorySize = loanAccount
 				.getAccountStatusChangeHistory().size();
-		loanArrearHelper.execute(System.currentTimeMillis());
+		loanArrearTask.run();
+		Query query = HibernateUtil.getSessionTL().createQuery(
+				"from " + Task.class.getName());
+		List<Task> tasks = query.list();
+		assertEquals(1, tasks.size());
+		
+		Task task = tasks.get(0);
+		assertEquals(TaskStatus.COMPLETE, task.getStatusEnum());
+		assertEquals(SchedulerConstants.FINISHED_SUCCESSFULLY, task
+				.getDescription());
+		TestObjectFactory.removeObject(task);
+
 		loanAccount = new AccountPersistence().getAccount(loanAccount
 				.getAccountId());
 		assertEquals(AccountState.LOANACC_BADSTANDING,
@@ -77,8 +91,10 @@ public class TestLoanArrearsHelper extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", "L", PrdApplicableMaster.GROUPS, currentdate, 
 				PrdStatus.LOANACTIVE.getValue(),
-				300.0, 1.2, (short)3, 
-				InterestType.FLAT, true, true, meeting,
+				300.0, 1.2, 
+				(short)3, 
+				InterestType.FLAT, 
+				true, true, meeting,
 				GraceType.GRACEONALLREPAYMENTS);
 		loanAccount = TestObjectFactory.createLoanAccount("42423142341",
 				customer, Short.valueOf("5"), currentdate, loanOffering);
@@ -115,5 +131,4 @@ public class TestLoanArrearsHelper extends MifosTestCase {
 		currentDateCalendar = new GregorianCalendar(year, month, day - noOfDays);
 		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
 	}
-
 }
