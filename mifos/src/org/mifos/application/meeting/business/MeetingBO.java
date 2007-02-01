@@ -54,6 +54,7 @@ import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.application.holiday.util.helpers.HolidayUtils;
 
 /**
  * This class encapsulate the meeting
@@ -240,9 +241,18 @@ public class MeetingBO extends BusinessObject {
 		for(; currentScheduleDate.compareTo(meetingDate)<=0;
 			currentScheduleDate=getNextDate(currentScheduleDate));
 		
-		return currentScheduleDate;
+		return HolidayUtils.adjustDate(DateUtils.getCalendar(currentScheduleDate), this).getTime();
 	}
 	
+	public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(Date meetingDate)throws MeetingException{
+		validateMeetingDate(meetingDate);
+		Date currentScheduleDate=getNextDate(getStartDate());
+		for(; currentScheduleDate.compareTo(meetingDate)<=0;
+			currentScheduleDate=getNextDate(currentScheduleDate));
+		
+		return currentScheduleDate;
+	}
+
 	public Date getPrevScheduleDateAfterRecurrence(Date meetingDate)throws MeetingException{
 		validateMeetingDate(meetingDate);
 		Date prevScheduleDate=null;
@@ -268,7 +278,7 @@ public class MeetingBO extends BusinessObject {
 		Date meetingDate = getFirstDate(getStartDate());
 		
 		for(int dateCount=0;dateCount<occurrences ;dateCount++){
-			meetingDates.add(meetingDate);
+			meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendar(meetingDate), this).getTime());
 			meetingDate = getNextDate(meetingDate);
 		}
 		return meetingDates;

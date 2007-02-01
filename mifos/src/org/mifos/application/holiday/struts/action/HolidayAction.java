@@ -143,9 +143,6 @@ public class HolidayAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
-		Short localeId = getUserContext(request).getLocaleId();
-
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		
@@ -159,7 +156,6 @@ public class HolidayAction extends BaseAction {
 	public ActionForward getEditStates(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {		
-		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
@@ -167,8 +163,6 @@ public class HolidayAction extends BaseAction {
 	public ActionForward managePreview(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
-		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
 
 		return mapping.findForward(ActionForwards.managepreview_success
 				.toString());

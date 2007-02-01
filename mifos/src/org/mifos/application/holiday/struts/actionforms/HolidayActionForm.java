@@ -12,7 +12,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.exceptions.HolidayException;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.Methods;
@@ -22,6 +21,7 @@ import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 
 public class HolidayActionForm extends BaseActionForm {
 
@@ -100,11 +100,7 @@ public class HolidayActionForm extends BaseActionForm {
 			thruDate = DateHelper.getLocaleDate(userLocale,
 					getHolidayThruDate());
 		} else {
-			/*
-			actionErrors.add(HolidayConstants.HOLIDAY_THRU_DATE, new ActionMessage(
-					HolidayConstants.ERRORMANDATORYFIELD, getLocaleString(
-							HolidayConstants.HOLIDAYTHRUDATE, userContext)));
-			*/
+			// Do nothing
 		}
 		
 		if(repaymentRuleId == null || repaymentRuleId.equals("")) {
@@ -164,7 +160,7 @@ public class HolidayActionForm extends BaseActionForm {
 
 	}
 
-	public void populate(HolidayBO holidayBO) throws HolidayException {
+	public void populate(HolidayBO holidayBO) throws ApplicationException {
 
 		this.repaymentRuleId = holidayBO.getRepaymentRuleId().toString();
 		this.holidayName = holidayBO.getHolidayName();
@@ -191,7 +187,6 @@ public class HolidayActionForm extends BaseActionForm {
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		super.reset(mapping, request);
-		String method = request.getParameter("method");
 		this.holidayFromDateString = "";
 		this.holidayName = "";
 		this.holidayThruDateString = "";
