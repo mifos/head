@@ -2,13 +2,12 @@ package org.mifos.application.holiday.business;
 
 import java.util.Date;
 
+import org.mifos.application.holiday.exceptions.HolidayException;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
-import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ApplicationException;
 
 public /*abstract*/ class HolidayBO extends BusinessObject {
 
@@ -30,7 +29,7 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 	// was protected
 	public HolidayBO(HolidayPK holidayPK, Date holidayThruDate, String holidayName, 
 			            Short localeId, Short repaymentRuleId, String repaymentRule)
-			throws ApplicationException {
+			throws HolidayException {
 		
 		this.holidayPK = new HolidayPK();
 
@@ -38,7 +37,7 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 			this.holidayPK.setOfficeId(holidayPK.getOfficeId());
 			this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
 		} else {
-			throw new ApplicationException(
+			throw new HolidayException(
 					HolidayConstants.HOLIDAY_CREATION_EXCEPTION);
 		}
 		this.holidayThruDate = holidayThruDate;
@@ -95,18 +94,18 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 		this.supportedLocales = supportedLocales;
 	}
 
-	public void save() throws ApplicationException {
+	public void save() throws HolidayException {
 		try {
 			new HolidayPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
-			throw new ApplicationException(e);
+			throw new HolidayException(e);
 		}
 	}
 
 	//protected 
 	public void update(HolidayPK holidayPK, Date holidayThruDate, 
 						  String holidayName, Short localeId)
-			throws ApplicationException {
+			throws HolidayException {
 
 		this.holidayName = holidayName;
 		this.holidayPK.setOfficeId(holidayPK.getOfficeId());
@@ -116,30 +115,28 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 		// this block should not be here
 		try {
 			new HolidayPersistence().createOrUpdate(this);
-			HolidayUtils.rescheduleLoanRepaymentDates(this);
 		} catch (PersistenceException e) {
-			throw new ApplicationException(e);
+			throw new HolidayException(e);
 		}
 		// end of block
 	}
 
 	protected void validateHolidayState(Short masterTypeId, Short stateId,
-			boolean isCustomer) throws ApplicationException {
+			boolean isCustomer) throws HolidayException {
 		Integer records;
 		try {
 			records = new HolidayPersistence().isValidHolidayState(
 					masterTypeId, stateId, isCustomer);
 			if (records.intValue() != 0)
-				throw new ApplicationException(
+				throw new HolidayException(
 						HolidayConstants.EXCEPTION_STATE_ALREADY_EXIST);
 		} catch (PersistenceException pe) {
-			throw new ApplicationException(pe);
+			throw new HolidayException(pe);
 		}
 	}
 
 	public String getRepaymentRule() {
 		return repaymentRule;
 	}
-	
 
 }

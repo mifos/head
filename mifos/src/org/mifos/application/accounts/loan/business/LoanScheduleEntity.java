@@ -459,7 +459,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 	}
 
 	@Override
-	public void setActionDate(Date actionDate) {
+	protected void setActionDate(Date actionDate) {
 		super.setActionDate(actionDate);
 	}
 

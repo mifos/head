@@ -462,7 +462,6 @@ public interface NamedQueryConstants {
 	public String ACTIVE_CUSTOMERS_WITH_SEARCH_ID = "Customer.getActiveCustomerWithSearchId";
 	
 	public String ALL_LOAN_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllLoanAcounts";
-	public String ALL_LOAN_SCHEDULE = "account.getAllLoanSchedules";
 	public String ALL_SAVINGS_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllSavingsAccounts";
 	public String ALL_CUSTOMER_SCHEDULE_DETAILS = "account.getAllInstallmentsForAllCustomerAcounts";
 	public String CUSTOMER_SCHEDULE_DETAILS = "account.getAllInstallmentsForCustomerAcount";
