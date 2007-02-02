@@ -41,12 +41,13 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 
 public enum FeePayment {
-	UPFRONT((short) 1), TIME_OF_DISBURSMENT((short) 2), TIME_OF_FIRSTLOANREPAYMENT(
-			(short) 3);
+	UPFRONT((short) 1), 
+	TIME_OF_DISBURSMENT((short) 2), 
+	TIME_OF_FIRSTLOANREPAYMENT((short) 3);
 
-	Short value;
+	private Short value;
 
-	FeePayment(Short value) {
+	private FeePayment(Short value) {
 		this.value = value;
 	}
 
@@ -54,10 +55,13 @@ public enum FeePayment {
 		return value;
 	}
 	
-	public static FeePayment getFeePayment(Short value)throws PropertyNotFoundException{
-		for (FeePayment feePayment : FeePayment.values()) 
-			if (feePayment.getValue().equals(value))
+	public static FeePayment getFeePayment(Short value)
+	throws PropertyNotFoundException {
+		for (FeePayment feePayment : FeePayment.values()) {
+			if (feePayment.getValue().equals(value)) {
 				return feePayment;
+			}
+		}
 		throw new PropertyNotFoundException("FeePayment");
 	}
 }

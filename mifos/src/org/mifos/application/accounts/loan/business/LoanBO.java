@@ -181,7 +181,8 @@ public class LoanBO extends AccountBO {
 			CustomerBO customer, AccountState accountState, Money loanAmount,
 			Short noOfinstallments, Date disbursementDate,
 			boolean interestDeductedAtDisbursement, Double interesRate,
-			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,List<CustomFieldView> customFields)
+			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
+			List<CustomFieldView> customFields)
 			throws AccountException {
 		super(userContext, customer, AccountTypes.LOANACCOUNT, accountState);
 		validate(loanOffering, loanAmount, noOfinstallments, disbursementDate,

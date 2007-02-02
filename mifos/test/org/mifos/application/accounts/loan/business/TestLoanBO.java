@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
+import org.joda.time.DateMidnight;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
@@ -3820,28 +3822,46 @@ public class TestLoanBO extends MifosTestCase {
 	public void testCreateNormalLoanAccountWithMonthlyInstallments()
 			throws Exception {
 		Short dayOfMonth = (short) 1;
+
+		/* A date in the past won't work (we don't yet have a way of telling
+		   the validation code "pretend it is such-and-such a date").
+		   The errors.startdateexception message says the date must be
+		   less than a year in the future (it really means an end date
+		   less than the end of next year). */
+		long sampleTime = new DateMidnight(2008, 11, 25).getMillis();
+
 		MeetingBO meeting = TestObjectFactory
 			.getNewMeeting(MONTHLY, EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
-		meeting.setMeetingStartDate(Calendar.getInstance());
+		Calendar meetingStart = Calendar.getInstance();
+		meetingStart.setTimeInMillis(sampleTime);
+		meeting.setMeetingStartDate(meetingStart);
 		meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(
 				dayOfMonth);
 		TestObjectFactory.createMeeting(meeting);
 		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter("Group", 
+			CustomerStatus.GROUP_ACTIVE, center);
+		Date loanStart = new Date(sampleTime);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), center.getCustomerMeeting().getMeeting());
+				loanStart, Short.valueOf("1"),
+				300.0, 1.2, Short.valueOf("3"), 
+				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), 
+				center.getCustomerMeeting().getMeeting());
 
 		Calendar disbursementDate = new GregorianCalendar();
+		disbursementDate.setTimeInMillis(sampleTime);
 		int year = disbursementDate.get(Calendar.YEAR);
-		int month = disbursementDate.get(Calendar.MONTH);
-		int day = disbursementDate.get(0);
+		int zeroBasedMonth = disbursementDate.get(Calendar.MONTH);
+		/* TODO: this if is a relic from when sampleTime was based on
+		   when the test was run.  We should test these two cases somehow. */
 		if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth
-				.intValue())
-			disbursementDate = new GregorianCalendar(year, month, day);
-		else
-			disbursementDate = new GregorianCalendar(year, month + 1, day);
+				.intValue()) {
+			disbursementDate = new GregorianCalendar(year, zeroBasedMonth, dayOfMonth);
+		}
+		else {
+			disbursementDate = new GregorianCalendar(year, zeroBasedMonth + 1, dayOfMonth);
+		}
 		UserContext userContext = TestObjectFactory.getUserContext();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3876,9 +3896,10 @@ public class TestLoanBO extends MifosTestCase {
 		fees3.put("Upfront Fee", "60.0");
 		fees3.put("First Repayment Fee", "1.4");
 
-		Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO)
-				.getAccountActionDates();
-		LoanScheduleEntity[] paymentsArray = getSortedAccountActionDateEntity(actionDateEntities);
+		Set<AccountActionDateEntity> actionDateEntities = 
+			((LoanBO) accountBO).getAccountActionDates();
+		LoanScheduleEntity[] paymentsArray = 
+			getSortedAccountActionDateEntity(actionDateEntities);
 
 		checkLoanScheduleEntity(null, "50.0", "0.6", fees3, paymentsArray[0]);
 		checkLoanScheduleEntity(null, "50.4", "0.6", fees1, paymentsArray[1]);
@@ -5309,11 +5330,14 @@ public class TestLoanBO extends MifosTestCase {
 
 	private void checkFees(Map expected, LoanScheduleEntity loanScheduleEntity,
 			boolean checkPaid) {
-		assertEquals(expected.size(), loanScheduleEntity
-				.getAccountFeesActionDetails().size());
+		Set<AccountFeesActionDetailEntity> accountFeesActionDetails = 
+			loanScheduleEntity.getAccountFeesActionDetails();
+		assertEquals("fees were " + feeNames(accountFeesActionDetails),
+			expected.size(), 
+			accountFeesActionDetails.size());
 
-		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : loanScheduleEntity
-				.getAccountFeesActionDetails()) {
+		for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : 
+			accountFeesActionDetails) {
 
 			if (expected.get(accountFeesActionDetailEntity.getFee()
 					.getFeeName()) != null) {
@@ -5332,18 +5356,32 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 
+	private String feeNames(Collection<AccountFeesActionDetailEntity> details) {
+		StringBuilder debugString = new StringBuilder();
+		for (Iterator<AccountFeesActionDetailEntity> iter = details.iterator(); 
+			iter.hasNext(); ) {
+			AccountFeesActionDetailEntity detail = iter.next();
+			debugString.append(detail.getFee().getFeeName());
+			if (iter.hasNext()) {
+				debugString.append(", ");
+			}
+		}
+		return debugString.toString();
+	}
+
 	protected LoanScheduleEntity[] getSortedAccountActionDateEntity(
 			Set<AccountActionDateEntity> actionDateCollection) {
 
-		LoanScheduleEntity[] sortedList = new LoanScheduleEntity[actionDateCollection
-				.size()];
+		LoanScheduleEntity[] sortedList = 
+			new LoanScheduleEntity[actionDateCollection.size()];
 
 		// Don't know whether it will always be 6 for future tests, but
 		// right now it is...
 		assertEquals(6, actionDateCollection.size());
 
 		for (AccountActionDateEntity actionDateEntity : actionDateCollection) {
-			sortedList[actionDateEntity.getInstallmentId().intValue() - 1] = (LoanScheduleEntity) actionDateEntity;
+			sortedList[actionDateEntity.getInstallmentId().intValue() - 1] = 
+				(LoanScheduleEntity) actionDateEntity;
 		}
 
 		return sortedList;

@@ -55,6 +55,26 @@ public class TestUtils {
      * it often gets confused about which equals method it is testing
      * (e.g. the one from Object or the one under test) and similar
      * problems.
+     * 
+     * Ideas for improvement:
+     * - some kind of simplified interface which makes it more clear
+     *   what to pass in (like the way gsbase.sourceforge.net's equals
+     *   tester is hardcoded at 4 objects, each of which has a particular
+     *   meaning).  Might make it easier to call, but does it discourage
+     *   people from writing all the tests they need to?  Or encourage
+     *   them to pass in dummy arguments?
+     * - checkEquals(Object[]... objects)
+     *   for example checkEquals(new Object[] { a1, a2, a3 },
+     *      new Object[] { b1, b2 },
+     *      new Object[] { c1, c2, c3});
+     *   where the a's are to be equals to each other, the b's are
+     *   to be equals to each other, etc.  But no a is to be equals
+     *   to one of the b's or c's, and so on.
+     *   This does a bit more thorough job of checking transitivity than
+     *   {@link #assertIsNotEqual(Object, Object)}, but is it harder to
+     *   understand/read?
+     * - hardcoded check that nothing is equals to an unrelated class
+     *   (say, an object of type String)?
      */
     
     public static void assertAllEqual(Object[] objects) {
