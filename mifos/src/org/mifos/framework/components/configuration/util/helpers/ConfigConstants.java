@@ -41,11 +41,12 @@ package org.mifos.framework.components.configuration.util.helpers;
  * This interface will hold the constants related to configurable items.
  */
 public interface ConfigConstants {
-	 public String SESSION_TIMEOUT = "sessionTimeout";
-	 public Short SESSION_TIMEOUT_DEFAULT = 15;
-	 public String MFI_LOCALE = "mfiLocale";
-	 public String CURRENCY = "currency";
-	 public String TIMEZONE = "timezonet";
+	 // constants for System configuration
+	 public static final String SESSION_TIMEOUT = "sessionTimeout";
+	 public static final Short SESSION_TIMEOUT_DEFAULT = 15;
+	 public static final String MFI_LOCALE = "mfiLocale";
+	 public static final String CURRENCY = "currency";
+	 public static final String TIMEZONE = "timezonet";
 	 
 	 //constants for Customer configuration
 	 public static final  String PENDING_APPROVAL_DEFINED_FOR_CLIENT="PendingApprovalDefinedForClient";
