@@ -1,3 +1,9 @@
+/* mifosmasterdata.sql
+   This script creates the master data as of roughly October 2006.
+   Future changes need to be done by upgrade scripts.
+   See http://wiki.java.net/bin/view/Javatools/DatabaseStandards
+   */
+
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
 /* To set how Mifos handles rounding, enter 1 in ROUNDING_MODE to round up, and 2 to round down.  Enter NULL if no rounding is desired.  */

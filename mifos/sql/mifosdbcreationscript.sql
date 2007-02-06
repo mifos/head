@@ -1,3 +1,9 @@
+/* mifosmasterdata.sql
+   This script creates the schema as of roughly October 2006.
+   Future changes need to be done by upgrade scripts.
+   See http://wiki.java.net/bin/view/Javatools/DatabaseStandards
+   */
+   
 -- THIS TABLE HAS BEEN MADE MYISAM BECAUSE 
 -- WE DO NOT NEED TO HAVE TRANSACTIONS ON THIS TABLE
 CREATE TABLE LOGMESSAGES (
