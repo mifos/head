@@ -5,6 +5,7 @@ import junit.framework.TestSuite;
 
 import org.mifos.application.master.business.TestMifosCurrency;
 import org.mifos.framework.components.configuration.business.TestConfiguration;
+import org.mifos.framework.components.configuration.cache.TestKey;
 import org.mifos.framework.components.configuration.persistence.TestConfigurationPersistence;
 import org.mifos.framework.components.configuration.persistence.service.TestConfigurationPersistenceService;
 import org.mifos.framework.components.configuration.util.helpers.TestConfigurationIntializer;
@@ -25,6 +26,7 @@ public class ConfigurationTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestMifosCurrency.class);
 		testSuite.addTestSuite(TestConfigurationIntializer.class);
 		testSuite.addTestSuite(TestConfiguration.class);
+		testSuite.addTestSuite(TestKey.class);
 		return testSuite;
 		
 	}

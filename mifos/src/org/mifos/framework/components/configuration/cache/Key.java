@@ -67,15 +67,37 @@ public class Key {
 	public void setOfficeId(Short officeId) {
 		this.officeId = officeId;
 	}
-	
-	@Override		  
-	public boolean equals(Object obj){
-		Key keyObj = (Key)obj;
-		return (this.officeId.equals(keyObj.getOfficeId()) && this.key.equalsIgnoreCase(keyObj.getKey()));
-	}
-	
+
 	@Override
 	public int hashCode() {
-		return officeId.hashCode()+key.hashCode();
+		final int PRIME = 31;
+		int result = 17;
+		result = PRIME * result + ((key == null) ? 0 : key.toLowerCase().hashCode());
+		result = PRIME * result + ((officeId == null) ? 0 : officeId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		final Key other = (Key) obj;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		}
+		else if (!key.equalsIgnoreCase(other.key))
+			return false;
+		if (officeId == null) {
+			if (other.officeId != null)
+				return false;
+		}
+		else if (!officeId.equals(other.officeId))
+			return false;
+		return true;
 	}
 }
