@@ -10,7 +10,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import junit.framework.Assert;
-import junitx.extensions.EqualsHashCodeTestCase;
 
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -52,7 +51,7 @@ public class TestUtils {
     /**
      * Here is our equals/hashCode testing framework.  Is there really
      * not just one to download?  This wheel gets reinvented so often.
-     * The one in {@link EqualsHashCodeTestCase} is seriously broken -
+     * The one in junitx.extensions.EqualsHashCodeTestCase is seriously broken -
      * it often gets confused about which equals method it is testing
      * (e.g. the one from Object or the one under test) and similar
      * problems.
