@@ -113,10 +113,12 @@ public interface Constants {
 	
 	/**
 	 * There is a large amount of code which generates randomNum,
-	 * writes it to the session, and puts it in URLs.  Is there any
-	 * place where randomNum is actually consulted for anything?
-	 * Does it have to do with avoiding browser caches?
-	 * Or is there some place we look at it?
+	 * writes it to the session, and puts it in URLs.  Mifos does
+	 * not actually consult this value - it is to turn off caching
+	 * in the browser (why not just use the various "don't cache" headers?)
+	 * See http://wiki.java.net/bin/view/Javatools/BackButton
+	 * 
+	 * A related machanism is {@link TransactionDemarcate}.
 	 */
 	public static final String RANDOMNUM="randomNUm";
 
