@@ -1,6 +1,7 @@
 package org.mifos.application.ui;
 
 import static junit.framework.Assert.assertEquals;
+import static junitx.framework.StringAssert.assertContains;
 
 import java.io.IOException;
 
@@ -40,7 +41,8 @@ public class DispatchTestUtil {
 		return dispatch(path, HttpServletRequestSimulator.POST);
 	}
 
-	private static HttpServletResponseSimulator dispatch(String path, int method) throws ServletException, IOException {
+	private static HttpServletResponseSimulator dispatch(String path, int method) 
+	throws ServletException, IOException {
 		HttpServletResponseSimulator response = 
 			new HttpServletResponseSimulator();
 		HttpServletRequestSimulator request = makeRequest(path, method);
@@ -61,6 +63,13 @@ public class DispatchTestUtil {
 		request.setServletPath("/developer");
 		request.setPathInfo(path);
 		return request;
+	}
+
+	public static void verifyNotFound(String badUrl) throws Exception {
+		HttpServletResponseSimulator response = dispatch(badUrl);
+		assertEquals(404, response.getStatusCode());
+		String out = getBody(response);
+		assertContains(badUrl + " not found", out);
 	}
 
 }

@@ -3,7 +3,6 @@ package org.mifos.application.ui;
 import static junitx.framework.StringAssert.assertContains;
 import static org.mifos.application.ui.DispatchTestUtil.dispatch;
 import static org.mifos.application.ui.DispatchTestUtil.dispatchPost;
-import static org.mifos.application.ui.DispatchTestUtil.getBody;
 import static org.mifos.application.ui.DispatchTestUtil.getSuccessfulDocument;
 import junit.framework.TestCase;
 
@@ -35,10 +34,7 @@ public class DispatcherTest extends TestCase {
 	}
 
 	public void testGetNotFound() throws Exception {
-		HttpServletResponseSimulator response = dispatch("/foo/bar");
-		assertEquals(404, response.getStatusCode());
-		String out = getBody(response);
-		assertContains("/foo/bar not found", out);
+		DispatchTestUtil.verifyNotFound("/foo/bar");
 	}
 
 	public void testPostNotFound() throws Exception {

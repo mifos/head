@@ -44,11 +44,40 @@ public class Dispatcher extends HttpServlet {
 		else if (isCreateReport(pathInfo)) {
 			new CreateReport().createPage(html);
 		}
+		else if (pathInfo.startsWith("/reports/")) {
+			String reportIdString = pathInfo.substring("/reports/".length());
+			try {
+				int reportId = Integer.parseInt(reportIdString);
+				redirectToReport(response, request, reportId);
+			}
+			catch (NumberFormatException notValidNumber) {
+				errorPage(html, pathInfo);
+				response.setStatus(404);
+			}
+		}
 		else {
 			errorPage(html, pathInfo);
 			response.setStatus(404);
 		}
 		response.getWriter().write(html.getOutput());
+	}
+
+	private void redirectToReport(
+		HttpServletResponse response, HttpServletRequest request, 
+		int reportId) throws ServletException {
+		URL url;
+		try {
+			url = new URL(request.getScheme(), 
+					request.getServerName(), request.getServerPort(),
+					request.getContextPath() +
+					"/reportsUserParamsAction.do" +
+						"?method=loadAddList&reportId=" + reportId
+					);
+		}
+		catch (MalformedURLException e) {
+			throw new ServletException(e);
+		}
+		redirectTo(response, url.toExternalForm());
 	}
 
 	@Override
