@@ -12,8 +12,9 @@ public class TestKey extends TestCase {
 		Key equal3 = new Key((short)1,"A");
 		Key notEqual1 = new Key((short)1,"b");
 		Key notEqual2 = new Key((short)2,"a");
+		Key notEqual3 = new Key(null,null);
 		
 		TestUtils.verifyBasicEqualsContract(new Key[]{equal1, equal2, equal3}, 
-				new Key[]{notEqual1, notEqual2}, new Key((short)1,"a"){});
+				new Key[]{notEqual1, notEqual2, notEqual3});
 	}
 }
