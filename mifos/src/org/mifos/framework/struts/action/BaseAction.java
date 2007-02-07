@@ -343,6 +343,6 @@ public abstract class BaseAction extends DispatchAction {
 	
 	protected void checkVersionMismatch(Integer oldVersionNum, Integer newVersionNum) throws ApplicationException {
 		if(!oldVersionNum.equals(newVersionNum))
-			throw new ApplicationException(Constants.ERROR_VARSIONMISMATCH);
+			throw new ApplicationException(Constants.ERROR_VERSION_MISMATCH);
 	}
 }

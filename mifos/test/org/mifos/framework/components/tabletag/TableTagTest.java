@@ -202,9 +202,8 @@ public class TableTagTest extends TestCase {
 	}
 
 	public void testTableTagTypeParserException()throws Exception{
-		Files files = null;
 		try {
-			files = TypeParser.getInstance().parser("org/mifos/framework/components/tabletag/type.xml");
+			TypeParser.getInstance().parser("org/mifos/framework/components/tabletag/type.xml");
 			fail();
 		} catch (TableTagTypeParserException tttpe) {
 			assertEquals("exception.framework.SystemException.TypeParseException", tttpe.getKey());

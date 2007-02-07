@@ -73,8 +73,6 @@ public class LoginAction extends BaseAction {
 
 	public ActionForward logout(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		loginLogger.info("Inside logout of LoginAction");
-		UserContext userContext =(UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
-		userContext = null;
 		request.getSession(false).invalidate();
 		ActionErrors error = new ActionErrors();
 		error.add(LoginConstants.LOGOUTOUT,new ActionMessage(LoginConstants.LOGOUTOUT));

@@ -38,7 +38,8 @@
 package org.mifos.framework.util.helpers;
 
 /**
- * This interface has all the constants used in the system.
+ * Selected constants.  This class is deprecated; constants should
+ * instead be in a more specific place.
  */
 public interface Constants {
 	public final static String DELEGATOR = "Delegator";
@@ -48,11 +49,6 @@ public interface Constants {
 	public final static String MIFOSLOCALE = "Mifos_Locale";
 	public final static String PREVIOUS_REQUEST = "Previous_Request";
 	public final static String PATH = "path";
-	public final static String DTO = "DTO";
-	public final static String DAO = "DAO";
-	public final static String INT = "int";
-	public final static String STRING = "string";
-	public final static String LONG = "long";
 	public final static String CREATE_SUCCESS="create_success";
 	public final static String UPDATE_SUCCESS="update_success";
 	public final static String NEXT_SUCCESS="next_success";
@@ -64,7 +60,8 @@ public interface Constants {
 	public final static String CANCEL_SUCCESS = "cancel_success";
 	public final static String MANAGE_SUCCESS = "manage_success";
 	public final static String DELETE_SUCCESS = "delete_success";
-	public final static String BUSINESSPROCESSORIMPLEMENTATION = "BusinessProcessorImplementation";
+	public final static String BUSINESSPROCESSORIMPLEMENTATION = 
+		"BusinessProcessorImplementation";
 	public final static String SKIPVALIDATION = "skipValidation";
 	public final static String MANAGE_PREVIOUS = "manage_previous";
 	public final static String MANAGE_PREVIEW = "manage_preview";
@@ -73,8 +70,6 @@ public interface Constants {
 	// end of additions by ashish
 	public final static String FAILURE="failure";
 	public final static String MASTERINFO = "masterinfo";
-
-	public final static String DSN = "DSN";
 
 	public final static String USER_ID="user_id";
 	public final static String BRANCH_ID="branch_id";
@@ -108,14 +103,23 @@ public interface Constants {
 	public static final short YES = 1;
 //	--------------------added for new framework
 	public static final String USER_CONTEXT_KEY="UserContext";
-	public String ACTIVITYCONTEXT="ActivityContext";
+	public static final String ACTIVITYCONTEXT="ActivityContext";
 	public static final String BUSINESS_KEY="BusinessKey";
 	
 	public static final String FIELD_CONFIGURATION="FieldConfiguration";
 	
 	public static final String CURRENTFLOWKEY="currentFlowKey";
 	public static final String FLOWMANAGER="flowManager";
+	
+	/**
+	 * There is a large amount of code which generates randomNum,
+	 * writes it to the session, and puts it in URLs.  Is there any
+	 * place where randomNum is actually consulted for anything?
+	 * Does it have to do with avoiding browser caches?
+	 * Or is there some place we look at it?
+	 */
 	public static final String RANDOMNUM="randomNUm";
+
 	public static final String INPUT="input";
-	public static final String ERROR_VARSIONMISMATCH="error.versionnodonotmatch";
+	public static final String ERROR_VERSION_MISMATCH="error.versionnodonotmatch";
 }

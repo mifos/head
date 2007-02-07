@@ -65,16 +65,6 @@ import org.mifos.framework.util.helpers.Constants;
  */
 public class LoginFilter implements Filter {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.servlet.Filter#destroy()
-	 */
-	public void destroy() {
-		// TODO Auto-generated method stub
-
-	}
-
 	/**
 	 * This function implements the login filter it checks if user is not login
 	 * it forces the user to login by redirecting him to login page
@@ -121,7 +111,8 @@ public class LoginFilter implements Filter {
 					return;
 
 				} else {
-					((HttpServletRequest) req).getSession(false).setAttribute("randomNUm", new Random().nextLong());
+					((HttpServletRequest) req).getSession(false)
+						.setAttribute(Constants.RANDOMNUM, new Random().nextLong());
 					fch.doFilter(req, res);
 				}
 
@@ -139,12 +130,10 @@ public class LoginFilter implements Filter {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
-	 */
-	public void init(FilterConfig fc) throws ServletException {
-
+	public void init(FilterConfig config) throws ServletException {
 	}
+
+	public void destroy() {
+	}
+
 }

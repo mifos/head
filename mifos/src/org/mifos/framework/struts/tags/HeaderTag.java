@@ -71,7 +71,7 @@ public class HeaderTag extends TagSupport {
 	@Override
 	public int doStartTag() throws JspException {
 		BusinessObject obj=null;
-		Object randomNum = pageContext.getSession().getAttribute("randomNUm");
+		Object randomNum = pageContext.getSession().getAttribute(Constants.RANDOMNUM);
 		try {
 			obj = (BusinessObject)SessionUtils.getAttribute(Constants.BUSINESS_KEY,(HttpServletRequest)pageContext.getRequest());
 		} catch (PageExpiredException pex) {
