@@ -2,9 +2,6 @@
 	function fnLogout() {
 		location.href="loginAction.do?method=logout";
 	}
-    function fnYourSetting() {
-		location.href="PersonnelAction.do?method=get";
-	}
 </script>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>

@@ -2,9 +2,6 @@
 	function fnLogout() {
 		location.href="loginAction.do?method=logout";
 	}
-    function fnYourSetting() {
-		location.href="PersonnelAction.do?method=getDetails";
-	}
 </script>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
@@ -18,7 +15,7 @@
           <td class="tablightorange"><a href="custSearchAction.do?method=getHomePage">Home</a></td>
           <td class="tablightorange"><a href="custSearchAction.do?method=loadMainSearch">Clients &amp; Accounts </a></td>
           <td class="taborange"><a href="reportsAction.do?method=load" class="tabfontwhite">Reports</a></td>
-          <td class="tablightorange"><a href="AdminAction.do?method=load" >Admin</a></td>
+          <td class="tablightorange"><a href="AdminAction.do?method=load">Admin</a></td>
         </tr>
       </table>
     </td>
