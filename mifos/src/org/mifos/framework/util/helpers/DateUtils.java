@@ -126,6 +126,10 @@ public class DateUtils {
 		return cal1;
 	}
 	
+	/**
+	 * Not sure why this is just copying over the year, month, and day.
+	 * Also see {@link #getCalendarDate(long)}.
+	 */
 	public static Calendar getCalendar(Date date) {
 		Calendar dateCalendar = new GregorianCalendar();
 		dateCalendar.setTimeInMillis(date.getTime());
