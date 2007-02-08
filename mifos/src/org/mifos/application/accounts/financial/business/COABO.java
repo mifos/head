@@ -135,8 +135,8 @@ public class COABO extends BusinessObject {
 	}
 
 	@Override
-	public boolean equals(Object otherObject) {
-        if (otherObject == null) {
+	public final boolean equals(Object otherObject) {
+        if (!(otherObject instanceof COABO)) {
 			return false;
 		}
 

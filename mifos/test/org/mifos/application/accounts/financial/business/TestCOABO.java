@@ -32,8 +32,11 @@ public class TestCOABO extends MifosTestCase {
         COABO chart53 = new COABO(53, "Example 1");
         COABO chart54 = new COABO(54, "Example 1");
         COABO chart53b = new COABO(53, "ChangedName");
-        TestUtils.assertAllEqual(new Object[] {chart53, chart53b});
-        TestUtils.assertIsNotEqual(chart53, chart54);
+        COABO subclass = new COABO(53, "Example 1") { };
+
+        TestUtils.verifyBasicEqualsContract(
+        	new COABO[] { chart53, chart53b, subclass }, 
+        	new COABO[] { chart54 });
     }
 
 }
