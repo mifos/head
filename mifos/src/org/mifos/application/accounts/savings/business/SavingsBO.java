@@ -314,9 +314,8 @@ public class SavingsBO extends AccountBO {
 
 	private MeetingBO getMeeting(MeetingBO offeringMeeting)
 			throws MeetingException {
-		RecurrenceType recurrenceType = RecurrenceType
-				.getRecurrenceType(offeringMeeting.getMeetingDetails()
-						.getRecurrenceType().getRecurrenceId());
+		RecurrenceType recurrenceType =
+			offeringMeeting.getMeetingDetails().getRecurrenceTypeEnum();
 		MeetingType meetingType = MeetingType.getMeetingType(offeringMeeting
 				.getMeetingType().getMeetingTypeId());
 		return new MeetingBO(recurrenceType, offeringMeeting

@@ -12,4 +12,9 @@ public class PrdApplicableMasterEntity extends MasterDataEntity {
 	public PrdApplicableMasterEntity(PrdApplicableMaster prdApplicableMaster) {
 		super(prdApplicableMaster.getValue());
 	}
+
+	public PrdApplicableMaster asEnum() {
+		return PrdApplicableMaster.fromInt(getId());
+	}
+
 }

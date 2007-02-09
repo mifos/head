@@ -815,7 +815,8 @@ public class MeetingBOTest extends MifosTestCase{
 		meeting = (MeetingBO)HibernateUtil.getSessionTL().get(MeetingBO.class,meeting.getMeetingId());
 		assertNotNull(meeting);
 		assertEquals(recurAfter,meeting.getMeetingDetails().getRecurAfter());
-		assertEquals(RecurrenceType.DAILY.getValue(), meeting.getMeetingDetails().getRecurrenceType().getRecurrenceId());		
+		assertEquals(RecurrenceType.DAILY, 
+			meeting.getMeetingDetails().getRecurrenceTypeEnum());
 	}
 	
 	public void testFailureCreateWeeklyMeeting_weekDayIsNull(){

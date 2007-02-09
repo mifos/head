@@ -1588,14 +1588,9 @@ public class LoanBO extends AccountBO {
         return new Money(Double.toString(interest));
     }
             
-    private double getDecliningInterestAnnualPeriods(){
-        
-        
-              
-        RecurrenceType meetingFrequency = RecurrenceType
-        .getRecurrenceType(getLoanMeeting().getMeetingDetails()
-                .getRecurrenceType().getRecurrenceId());
-        
+    private double getDecliningInterestAnnualPeriods() {
+        RecurrenceType meetingFrequency = 
+        	getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum();
         
         short recurAfter = getLoanMeeting().getMeetingDetails().getRecurAfter();
           
@@ -2239,9 +2234,8 @@ public class LoanBO extends AccountBO {
 						.getRecurAfter(), customerMeeting.getMeetingDetails()
 						.getRecurAfter())) {
 
-			RecurrenceType meetingFrequency = RecurrenceType
-					.getRecurrenceType(customerMeeting.getMeetingDetails()
-							.getRecurrenceType().getRecurrenceId());
+			RecurrenceType meetingFrequency = 
+				customerMeeting.getMeetingDetails().getRecurrenceTypeEnum();
 			MeetingType meetingType = MeetingType
 					.getMeetingType(customerMeeting.getMeetingType()
 							.getMeetingTypeId());

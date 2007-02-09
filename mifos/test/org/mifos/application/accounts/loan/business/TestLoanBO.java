@@ -3746,7 +3746,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 			"Loan", "Loan".substring(0, 1), PrdApplicableMaster.GROUPS,
 			new Date(System.currentTimeMillis()), 
-			PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2,
+			PrdStatus.LOANACTIVE, 300.0, 1.2,
 			(short)3, InterestType.FLAT, true, false,
 			center.getCustomerMeeting().getMeeting(),
 			GraceType.PRINCIPALONLYGRACE);
@@ -4707,14 +4707,16 @@ public class TestLoanBO extends MifosTestCase {
 	public void testCreateLoanAccountWithDecliningInterestNoGracePeriod()
 			throws NumberFormatException, 
 			PropertyNotFoundException, SystemException, ApplicationException {
+		Date startDate = new Date(System.currentTimeMillis());
+
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 			"Loan", "L", PrdApplicableMaster.GROUPS,
-			new Date(System.currentTimeMillis()), 
-			PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2,
+			startDate, 
+			PrdStatus.LOANACTIVE, 300.0, 1.2,
 			(short)3, 
 			InterestType.DECLINING, false, false,
 			center.getCustomerMeeting().getMeeting(), GraceType.NONE);
@@ -4724,7 +4726,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				Short.valueOf("6"), startDate,
 				false, // 6 installments
 				1.2, (short) 0, new FundBO(), feeViewList,null);
 		new TestObjectPersistence().persist(accountBO);
@@ -4772,13 +4774,12 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-			"Loan", "L", PrdApplicableMaster.GROUPS,
+			"Loan", PrdApplicableMaster.GROUPS,
 			new Date(System.currentTimeMillis()), 
-			PrdStatus.LOANACTIVE.getValue(), 
+			PrdStatus.LOANACTIVE, 
 			300.0, 1.2,
 			(short)3, InterestType.DECLINING, false,
-			false, center.getCustomerMeeting().getMeeting(), 
-			GraceType.GRACEONALLREPAYMENTS);
+			false, center.getCustomerMeeting().getMeeting());
 
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 
@@ -4833,7 +4834,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 			"Loan", "L", PrdApplicableMaster.GROUPS,
 			new Date(System.currentTimeMillis()), 
-			PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2,
+			PrdStatus.LOANACTIVE, 300.0, 1.2,
 			(short)3, InterestType.DECLINING, false, false,
 			center.getCustomerMeeting().getMeeting(), 
 			GraceType.PRINCIPALONLYGRACE);
@@ -4883,6 +4884,7 @@ public class TestLoanBO extends MifosTestCase {
 	public void testCreateLoanAccountWithDecliningInterestPrincipalDueOnLastInstallment()
 			throws NumberFormatException, 
 			PropertyNotFoundException, SystemException, ApplicationException {
+		Date startDate = new Date(System.currentTimeMillis());
 
 		short graceDuration = (short) 2;
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
@@ -4891,8 +4893,8 @@ public class TestLoanBO extends MifosTestCase {
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 			"Loan", "Loan".substring(0, 1), PrdApplicableMaster.GROUPS,
-			new Date(System.currentTimeMillis()), 
-			PrdStatus.LOANACTIVE.getValue(), 300.0, 1.2,
+			startDate, 
+			PrdStatus.LOANACTIVE, 300.0, 1.2,
 			(short)3, InterestType.DECLINING, false, true,
 			center.getCustomerMeeting().getMeeting(), GraceType.NONE);
 
@@ -4901,7 +4903,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				Short.valueOf("6"), startDate,
 				false, // 6 installments
 				1.2, graceDuration, new FundBO(), feeViewList,null);
 		new TestObjectPersistence().persist(accountBO);

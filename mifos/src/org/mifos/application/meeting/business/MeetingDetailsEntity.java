@@ -40,6 +40,7 @@ package org.mifos.application.meeting.business;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.RankType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.business.PersistentObject;
 
@@ -98,6 +99,10 @@ public class MeetingDetailsEntity extends PersistentObject {
 
 	public RecurrenceTypeEntity getRecurrenceType() {
 		return recurrenceType;
+	}
+	
+	public RecurrenceType getRecurrenceTypeEnum() {
+		return recurrenceType.asEnum();
 	}
 
 	public boolean isWeekly(){

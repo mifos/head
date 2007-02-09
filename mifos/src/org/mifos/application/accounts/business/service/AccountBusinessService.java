@@ -230,7 +230,7 @@ public class AccountBusinessService extends BusinessService {
 					FeeFrequencyType.PERIODIC.getValue())) {
 				Short feeRecurrance = fee.getFeeFrequency()
 						.getFeeMeetingFrequency().getMeetingDetails()
-						.getRecurrenceType().getRecurrenceId();
+						.getRecurrenceTypeEnum().getValue();
 				if (!feeRecurrance.equals(accountMeetingRecurrance))
 					iter.remove();
 			}

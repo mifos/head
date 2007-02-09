@@ -920,10 +920,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 			String offeringName, String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				offeringName, shortName, Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				meeting);
+				offeringName, shortName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				Short.valueOf("5"), startDate, loanOffering);
 
@@ -1026,22 +1023,18 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	private void getCustomer() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
+
 		createInitialCustomers();
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
-				"Loanwer", "43fs", Short.valueOf("2"), new Date(System
-						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
-				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loanwer", "43fs", startDate, meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loancd123", "vfr", Short.valueOf("2"), new Date(System
-						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
-				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loancd123", "vfr", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, Short.valueOf("5"),
-				new Date(System.currentTimeMillis()), loanOffering1);
+				startDate, loanOffering1);
 		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering2);
 		clientSavingsAccount = getSavingsAccount(client, "SavingPrd11", "abc2");
 	}

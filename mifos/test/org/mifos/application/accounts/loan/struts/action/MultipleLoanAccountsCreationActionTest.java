@@ -511,11 +511,10 @@ public class MultipleLoanAccountsCreationActionTest extends
 				.getNewMeeting(meetingFrequency, recurAfter, CUSTOMER_MEETING, WeekDay.MONDAY));
 		Date currentDate = new Date(System.currentTimeMillis());
 		return TestObjectFactory.createLoanOffering(name, shortName, 
-				applicableTo, currentDate, PrdStatus.LOANACTIVE.getValue(),
+				applicableTo, currentDate, PrdStatus.LOANACTIVE,
 				300.0, 1.2, (short)3, 
 				InterestType.FLAT, true, true, 
-				meeting,
-				GraceType.GRACEONALLREPAYMENTS);
+				meeting);
 	}
 
 	private void createInitialCustomers() {

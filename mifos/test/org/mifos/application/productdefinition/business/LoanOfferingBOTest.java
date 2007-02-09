@@ -719,9 +719,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertFalse(loanOffering.isPrinDueLastInst());
 		assertEquals(2, loanOffering.getLoanOfferingFees().size());
 		assertNotNull(loanOffering.getLoanOfferingMeeting());
-		assertEquals(RecurrenceType.WEEKLY.getValue(), loanOffering
+		assertEquals(RecurrenceType.WEEKLY, loanOffering
 				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
-				.getRecurrenceType().getRecurrenceId());
+				.getRecurrenceTypeEnum());
 		assertNotNull(loanOffering.getPrincipalGLcode());
 		assertNotNull(loanOffering.getInterestGLcode());
 	}
@@ -1175,16 +1175,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertEquals("LOAN", loanOffering.getPrdOfferingShortName());
 		assertEquals(Short.valueOf("1"), loanOffering.getPrdCategory()
 				.getProductCategoryID());
-		assertEquals(PrdApplicableMaster.CLIENTS.getValue(), loanOffering
-				.getPrdApplicableMaster().getId());
+		assertEquals(PrdApplicableMaster.CLIENTS, 
+				loanOffering.getPrdApplicableMasterEnum());
 		assertEquals(startDate, loanOffering.getStartDate());
 		assertEquals(endDate, loanOffering.getEndDate());
 		assertEquals("Loan Product updated", loanOffering.getDescription());
-		assertEquals(GraceType.NONE.getValue(), loanOffering
-				.getGracePeriodType().getId());
+		assertEquals(GraceType.NONE, loanOffering.getGraceType());
 		assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
-		assertEquals(InterestType.FLAT.getValue(), loanOffering
-				.getInterestTypes().getId());
+		assertEquals(InterestType.FLAT, loanOffering.getInterestType());
 		assertEquals(new Money("1000"), loanOffering.getMinLoanAmount());
 		assertEquals(new Money("3000"), loanOffering.getMaxLoanAmount());
 		assertEquals(new Money("1000"), loanOffering.getDefaultLoanAmount());
@@ -1199,9 +1197,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertFalse(loanOffering.isPrinDueLastInst());
 		assertEquals(2, loanOffering.getLoanOfferingFees().size());
 		assertNotNull(loanOffering.getLoanOfferingMeeting());
-		assertEquals(RecurrenceType.MONTHLY.getValue(), loanOffering
+		assertEquals(RecurrenceType.MONTHLY, loanOffering
 				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
-				.getRecurrenceType().getRecurrenceId());
+				.getRecurrenceTypeEnum());
 		assertNotNull(loanOffering.getPrincipalGLcode());
 		assertNotNull(loanOffering.getInterestGLcode());
 	}
@@ -1214,37 +1212,35 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	                InterestType.DECLINING);
 	        Date startDate = offSetCurrentDate(0);
 	        Date endDate = offSetCurrentDate(2);
-	        LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+	        new LoanOfferingBO(TestObjectFactory
 	                .getContext(), "Loan Offering", "LOAP", productCategory,
 	                prdApplicableMaster, startDate, endDate, null, null, null,
 	                interestTypes, new Money("1000"), new Money("3000"), new Money(
 	                "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
 	                (short) 17, false, true, false, null, null, frequency,
 	                principalglCodeEntity, intglCodeEntity);
-	        assertTrue(false);
+	        fail();
 	    } catch (ProductDefinitionException e) {
-	        assertTrue(true);
+	    	assertEquals("exceptions.declineinterestdisbursementdeduction", 
+	    		e.getKey());
 	    }
 	}
 	
-	public void testLoanOfferingWithDecliningInterestNoDeductionAtDisbursement() {
-	    try {
-	        createIntitalObjects();
-	        interestTypes = new InterestTypesEntity(
-	                InterestType.DECLINING);
-	        Date startDate = offSetCurrentDate(0);
-	        Date endDate = offSetCurrentDate(2);
-	        LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
-	                .getContext(), "Loan Offering", "LOAP", productCategory,
-	                prdApplicableMaster, startDate, endDate, null, null, null,
-	                interestTypes, new Money("1000"), new Money("3000"), new Money(
-	                "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
-	                (short) 17, false, false, false, null, null, frequency,
-	                principalglCodeEntity, intglCodeEntity);
-	        assertTrue(true);
-	    } catch (ProductDefinitionException e) {
-	        assertTrue(false);
-	    }
+	public void testLoanOfferingWithDecliningInterestNoDeductionAtDisbursement() 
+	throws Exception {
+        createIntitalObjects();
+        interestTypes = new InterestTypesEntity(
+                InterestType.DECLINING);
+        Date startDate = offSetCurrentDate(0);
+        Date endDate = offSetCurrentDate(2);
+        LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+                .getContext(), "Loan Offering", "LOAP", productCategory,
+                prdApplicableMaster, startDate, endDate, null, null, null,
+                interestTypes, new Money("1000"), new Money("3000"), new Money(
+                "2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
+                (short) 17, false, false, false, null, null, frequency,
+                principalglCodeEntity, intglCodeEntity);
+		assertEquals(InterestType.DECLINING, loanOffering.getInterestType());
 	}
 	
        
@@ -1274,12 +1270,13 @@ public class LoanOfferingBOTest extends MifosTestCase {
 
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,
 			String shortName) {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
+				PrdApplicableMaster.GROUPS, startDate, 
+				PrdStatus.LOANACTIVE, 300.0, 1.2, 3, 
+				InterestType.FLAT, true, false,
 				frequency);
 	}
 

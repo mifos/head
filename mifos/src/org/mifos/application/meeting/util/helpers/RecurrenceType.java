@@ -43,9 +43,9 @@ public enum RecurrenceType {
 	MONTHLY((short) 2), 
 	DAILY((short) 3);
 
-	Short value;
+	private Short value;
 
-	RecurrenceType(Short value) {
+	private RecurrenceType(Short value) {
 		this.value = value;
 	}
 
@@ -53,10 +53,13 @@ public enum RecurrenceType {
 		return value;
 	}
 	
-	public static RecurrenceType getRecurrenceType(Short value){
-		for (RecurrenceType frequency : RecurrenceType.values()) 
-			if (frequency.getValue().equals(value))
+	public static RecurrenceType fromInt(Short target) {
+		for (RecurrenceType frequency : RecurrenceType.values()) {
+			if (frequency.getValue().equals(target)) {
 				return frequency;
-		return null;
+			}
+		}
+		throw new RuntimeException("no recurrence type " + target);
 	}
+
 }

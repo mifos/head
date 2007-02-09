@@ -435,13 +435,12 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	private LoanBO createLoanAccount(CustomerBO customerBO,String name,String shortName) {
+		Date currentTime = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				name,shortName, Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), customerBO.getCustomerMeeting()
-								.getMeeting());
+				name, shortName, currentTime, 
+				customerBO.getCustomerMeeting().getMeeting());
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), currentTime,
 				loanOffering);
 
 	}

@@ -26,13 +26,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.GraceType;
-import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
-import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.cronjobs.helpers.CollectionSheetHelper;
-import org.mifos.framework.components.cronjobs.helpers.CollectionSheetTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -139,25 +133,10 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 	}
 
 	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
-		final double LOAN_AMOUNT = 300.0;
-		final double INTEREST_RATE = 1.2;
-		final short  NUMBER_OF_INSTALLMENTS = 3;
-		
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan",
-				"L",
-				PrdApplicableMaster.GROUPS,
 				startDate, 
-				PrdStatus.LOANACTIVE.getValue(),
-				LOAN_AMOUNT, 
-				INTEREST_RATE,
-				NUMBER_OF_INSTALLMENTS,  
-				InterestType.FLAT,
-				true, 
-				true,
-				meeting,
-				GraceType.GRACEONALLREPAYMENTS);
+				meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue(), startDate, loanOffering);
 

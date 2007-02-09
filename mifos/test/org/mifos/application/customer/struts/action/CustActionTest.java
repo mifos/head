@@ -159,8 +159,7 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 	private LoanBO getLoanAccount(CustomerBO customerBO,String offeringName,String shortName ) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				offeringName,shortName, Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				offeringName, shortName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO, AccountState.LOANACC_APPROVED.getValue(), startDate, loanOffering);
 
 	}

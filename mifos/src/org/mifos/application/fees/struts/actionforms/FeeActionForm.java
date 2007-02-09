@@ -197,7 +197,7 @@ public class FeeActionForm extends BaseActionForm {
 	public RecurrenceType getFeeRecurrenceTypeValue()
 			throws PropertyNotFoundException {
 		return StringUtils.isNullAndEmptySafe(feeRecurrenceType) ? RecurrenceType
-				.getRecurrenceType(Short.valueOf(feeRecurrenceType))
+				.fromInt(Short.valueOf(feeRecurrenceType))
 				: null;
 	}
 

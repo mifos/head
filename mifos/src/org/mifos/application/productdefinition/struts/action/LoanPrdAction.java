@@ -207,7 +207,7 @@ public class LoanPrdAction extends BaseAction {
 				getFeeList((List<FeeBO>) SessionUtils.getAttribute(
 						ProductDefinitionConstants.LOANPRDFEE, request),
 						loanPrdActionForm.getPrdOfferinFees()), new MeetingBO(
-						RecurrenceType.getRecurrenceType(loanPrdActionForm
+						RecurrenceType.fromInt(loanPrdActionForm
 								.getFreqOfInstallmentsValue()),
 						loanPrdActionForm.getRecurAfterValue(),
 						loanPrdActionForm.getStartDateValue(locale),
@@ -348,7 +348,7 @@ public class LoanPrdAction extends BaseAction {
 						ProductDefinitionConstants.LOANPRDFEE, request),
 						loanPrdActionForm.getPrdOfferinFees()),
 				loanPrdActionForm.getRecurAfterValue(), RecurrenceType
-						.getRecurrenceType(loanPrdActionForm
+						.fromInt(loanPrdActionForm
 								.getFreqOfInstallmentsValue()));
 		prdDefLogger.debug("update method of Loan Product Action called"
 				+ loanPrdActionForm.getPrdOfferingId());

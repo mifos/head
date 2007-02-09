@@ -17,15 +17,9 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.GraceType;
-import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
-import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.business.Task;
-import org.mifos.framework.components.cronjobs.helpers.LoanArrearsTask;
-import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -89,13 +83,7 @@ public class TestLoanArrearsTask extends MifosTestCase {
 			throws AccountException {
 		Date currentdate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", "L", PrdApplicableMaster.GROUPS, currentdate, 
-				PrdStatus.LOANACTIVE.getValue(),
-				300.0, 1.2, 
-				(short)3, 
-				InterestType.FLAT, 
-				true, true, meeting,
-				GraceType.GRACEONALLREPAYMENTS);
+				currentdate, meeting);
 		loanAccount = TestObjectFactory.createLoanAccount("42423142341",
 				customer, Short.valueOf("5"), currentdate, loanOffering);
 		setDisbursementDateAsOldDate(loanAccount);

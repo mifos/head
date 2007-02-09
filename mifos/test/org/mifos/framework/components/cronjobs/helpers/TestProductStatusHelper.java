@@ -13,6 +13,8 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
@@ -191,12 +193,15 @@ public class TestProductStatusHelper extends MifosTestCase {
 	}
 
 	private void createInactiveLoanOffering() throws PersistenceException {
+		Date startDate = new Date(System.currentTimeMillis());
+
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		loanOffering = TestObjectFactory.createLoanOffering("Loan Offering",
-				"LOAN", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), frequency);
+				"LOAN", PrdApplicableMaster.GROUPS,
+				startDate, PrdStatus.LOANACTIVE,
+				300.0, 1.2, 3, 
+				InterestType.FLAT, true, false, frequency);
 		LoanOfferingBOTest.setStatus(loanOffering,new PrdOfferingPersistence()
 				.getPrdStatus(PrdStatus.LOANINACTIVE));
 		TestObjectFactory.updateObject(loanOffering);

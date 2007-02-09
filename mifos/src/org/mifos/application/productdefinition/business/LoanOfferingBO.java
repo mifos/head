@@ -66,6 +66,15 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
 
+/**
+ * A loan product is a set of rules (interest rate, number of installments,
+ * maximum amount, etc) which describes a particular kind of loan that
+ * an MFI offers.
+ * 
+ * Although we may sometimes call these "offerings", it is probably better
+ * to call them "loan products" (as that seems to be the terminology in
+ * the functional spec and elsewhere).
+ */
 public class LoanOfferingBO extends PrdOfferingBO {
 
 	private GracePeriodTypeEntity gracePeriodType;
@@ -201,8 +210,16 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		return gracePeriodType;
 	}
 
+	public GraceType getGraceType() {
+		return gracePeriodType.asEnum();
+	}
+
 	public InterestTypesEntity getInterestTypes() {
 		return interestTypes;
+	}
+	
+	public InterestType getInterestType() {
+		return interestTypes.asEnum();
 	}
 
 	public Short getGracePeriodDuration() {

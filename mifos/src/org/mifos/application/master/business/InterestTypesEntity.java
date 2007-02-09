@@ -30,6 +30,9 @@ public class InterestTypesEntity extends MasterDataEntity {
 	public void setProductType(ProductTypeEntity productType) {
 		this.productType = productType;
 	}
-	
+
+	public InterestType asEnum() {
+		return InterestType.fromInt(getId());
+	}
 	
 }

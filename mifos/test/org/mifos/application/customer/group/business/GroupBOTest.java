@@ -43,6 +43,9 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -1451,6 +1454,8 @@ public class GroupBOTest extends MifosTestCase {
 	}
 
 	private void createInitialObject() {
+		Date startDate = new Date(System.currentTimeMillis());
+
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
@@ -1458,20 +1463,17 @@ public class GroupBOTest extends MifosTestCase {
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loandsdasd", "fsad", Short.valueOf("2"), new Date(System
-						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
-				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loandsdasd", "fsad", startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering);
 		loanOffering = TestObjectFactory.createLoanOffering("Loandfas", "dsvd",
-				Short.valueOf("1"), new Date(System.currentTimeMillis()), Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
+				PrdApplicableMaster.CLIENTS, startDate, 
+				PrdStatus.LOANACTIVE, 300.0, 1.2, 3, 
+				InterestType.FLAT, true, true,
 				meeting);
 		account2 = TestObjectFactory.createLoanAccount("42427777341", client,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering);
 	}
 

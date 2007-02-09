@@ -7,9 +7,9 @@ public enum InterestType {
 	DECLINING((short) 2), 
 	COMPOUND((short) 3);
 
-	Short value;
+	private Short value;
 
-	InterestType(Short value) {
+	private InterestType(Short value) {
 		this.value = value;
 	}
 

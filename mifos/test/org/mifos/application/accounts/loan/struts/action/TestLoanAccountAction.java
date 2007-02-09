@@ -363,11 +363,11 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testGetPrdOfferingsApplicableForCustomer() throws Exception {
 		createInitialObjects();
 		LoanOfferingBO loanOffering1 = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering2 = getLoanOffering("rwrfdb", "1qsd",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering3 = getLoanOffering("mksgfgfd", "9u78",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -389,15 +389,15 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 			throws Exception {
 		createInitialObjects();
 		LoanOfferingBO loanOffering1 = getLoanOffering("vcxvxc", "a123",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering2 = getLoanOffering("fgdsghdh", "4fdh",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering3 = getLoanOffering("mgkkkj", "6tyu",
-				PrdApplicableMaster.CLIENTS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.CLIENTS, WEEKLY, EVERY_WEEK);
 		LoanOfferingBO loanOffering4 = getLoanOffering("aq12sfdsf", "456j",
-				PrdApplicableMaster.GROUPS.getValue().toString(), MONTHLY, EVERY_MONTH);
+				PrdApplicableMaster.GROUPS, MONTHLY, EVERY_MONTH);
 		LoanOfferingBO loanOffering5 = getLoanOffering("bdfhgfh", "6yu7",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, (short)3); //every third week
+				PrdApplicableMaster.GROUPS, WEEKLY, (short)3); //every third week
 
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -429,7 +429,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testLoadWithoutCustomer() throws Exception {
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
@@ -456,7 +456,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testLoad() throws Exception {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
@@ -509,7 +509,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testLoadWithFee() throws Exception {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		List<FeeBO> fees = getFee();
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -561,7 +561,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		List<FeeBO> fees = getFee();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		loanOffering.addPrdOfferingFee(new LoanOfferingFeesEntity(loanOffering,
 				fees.get(0)));
 		TestObjectFactory.updateObject(loanOffering);
@@ -618,7 +618,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreviewFailureWhenLoanProductFrequencyChanges() throws Exception {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
 		addRequestParameter("customerId", group.getCustomerId().toString());
@@ -694,7 +694,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	public void testSchedulePreview() throws Exception {
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		List<FeeBO> fees = getFee();
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getPrdOfferings");
@@ -755,7 +755,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -786,7 +786,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -822,7 +822,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -889,7 +889,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -927,7 +927,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -983,7 +983,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		createInitialObjects();
 		LoanOfferingBO loanOffering = getLoanOffering("fdfsdfsd", "ertg",
-				PrdApplicableMaster.GROUPS.getValue().toString(), WEEKLY, EVERY_WEEK);
+				PrdApplicableMaster.GROUPS, WEEKLY, EVERY_WEEK);
 		SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering,
 				request);
 		SessionUtils.setAttribute(LoanConstants.LOANFUNDS,
@@ -1289,13 +1289,15 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 	}
 
 	private LoanOfferingBO getLoanOffering(String name, String shortName,
-			String prdApplicableTo, RecurrenceType meetingFrequency, short recurAfter) {
+			PrdApplicableMaster applicableTo, RecurrenceType meetingFrequency, 
+			short recurAfter) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(meetingFrequency, recurAfter, CUSTOMER_MEETING, MONDAY));
 		Date currentDate = new Date(System.currentTimeMillis());
-		return TestObjectFactory.createLoanOffering(name, shortName, Short
-				.valueOf(prdApplicableTo), currentDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+		return TestObjectFactory.createLoanOffering(name, shortName, 
+				applicableTo, currentDate, PrdStatus.LOANACTIVE,
+				300.0, 1.2, 3, 
+				InterestType.FLAT, true, true, meeting);
 	}
 
 	private List<FeeBO> getFee() {

@@ -48,6 +48,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
@@ -127,6 +128,10 @@ public class TestObjectPersistence {
 		return (PrdStatusEntity)session.get(PrdStatusEntity.class, offeringStatusId);
 	}
 	
+	public PrdStatusEntity retrievePrdStatus(PrdStatus status) {
+		return retrievePrdStatus(status.getValue());
+	}
+
 	public MifosCurrency getCurrency() {
 		Session session = HibernateUtil.getSessionTL();
 		return (MifosCurrency)session.get(
@@ -204,4 +209,5 @@ public class TestObjectPersistence {
 	public Object getObject(Class clazz, HolidayPK pk) {
 		return HibernateUtil.getSessionTL().get(clazz, pk);
 	}
+
 }

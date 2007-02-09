@@ -179,10 +179,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 			String offeringName, String shortName) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				offeringName, shortName, Short.valueOf("2"), startDate, Short
-						.valueOf("1"), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"),
-				meeting);
+				offeringName, shortName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), startDate, loanOffering);
 
@@ -1169,6 +1166,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 	}
 
 	private void getCustomer() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
+
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
@@ -1177,20 +1176,14 @@ public class TestCustomerPersistence extends MifosTestCase {
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
-				"Loanwer", "43fs", Short.valueOf("2"), new Date(System
-						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
-				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loanwer", "43fs", startDate, meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loancd123", "vfr", Short.valueOf("2"), new Date(System
-						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
-				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loancd123", "vfr", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, Short.valueOf("5"),
-				new Date(System.currentTimeMillis()), loanOffering1);
+				startDate, loanOffering1);
 		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering2);
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -1198,22 +1191,20 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		SavingsOfferingBO savingsOffering = TestObjectFactory
 				.createSavingsOffering("SavingPrd12", "abc1", Short
-						.valueOf("2"), new Date(System.currentTimeMillis()),
+						.valueOf("2"), startDate,
 						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
 		SavingsOfferingBO savingsOffering1 = TestObjectFactory
 				.createSavingsOffering("SavingPrd11", "abc2", Short
-						.valueOf("2"), new Date(System.currentTimeMillis()),
+						.valueOf("2"), startDate,
 						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
-				center, Short.valueOf("16"), new Date(System
-						.currentTimeMillis()), savingsOffering);
+				center, Short.valueOf("16"), startDate, savingsOffering);
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
-				client, Short.valueOf("16"), new Date(System
-						.currentTimeMillis()), savingsOffering1);
+				client, Short.valueOf("16"), startDate, savingsOffering1);
 	}
 
 	private void createCustomers(CustomerStatus centerStatus,

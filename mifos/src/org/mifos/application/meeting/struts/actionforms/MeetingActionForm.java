@@ -188,7 +188,7 @@ public class MeetingActionForm extends BaseActionForm {
 	}
 	
 	public RecurrenceType getRecurrenceType() {
-		return StringUtils.isNullAndEmptySafe(getFrequency())?RecurrenceType.getRecurrenceType(Short.valueOf(getFrequency())):null;
+		return StringUtils.isNullAndEmptySafe(getFrequency())?RecurrenceType.fromInt(Short.valueOf(getFrequency())):null;
 	}
 	
 	public boolean isMonthlyOnDate() {

@@ -44,6 +44,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
@@ -56,6 +57,14 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
+/**
+ * A product is a set of rules (interest rate, number of installments,
+ * maximum amount, etc) which describes what an MFI offers.
+ * 
+ * Although we may sometimes call these "offerings", it is probably better
+ * to call them "products" (as that seems to be the terminology in
+ * the functional spec and elsewhere).
+ */
 public abstract class PrdOfferingBO extends BusinessObject {
 
 	private final Short prdOfferingId;
@@ -164,6 +173,10 @@ public abstract class PrdOfferingBO extends BusinessObject {
 
 	public PrdApplicableMasterEntity getPrdApplicableMaster() {
 		return prdApplicableMaster;
+	}
+	
+	public PrdApplicableMaster getPrdApplicableMasterEnum() {
+		return prdApplicableMaster.asEnum();
 	}
 
 	public Date getStartDate() {

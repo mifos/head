@@ -64,4 +64,9 @@ public class GracePeriodTypeEntity extends MasterDataEntity {
 			throw new ProductDefinitionException(e);
 		}
 	}
+
+	public GraceType asEnum() {
+		return GraceType.fromInt(getId());
+	}
+
 }

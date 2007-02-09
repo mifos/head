@@ -42,6 +42,7 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * This class encapsulate the RecurrenceType for a meeting
+ * See also {@link RecurrenceType}.
  */
 public class RecurrenceTypeEntity extends PersistentObject {
 	
@@ -76,5 +77,9 @@ public class RecurrenceTypeEntity extends PersistentObject {
 
 	public boolean isMonthly(){
 		return recurrenceId.equals(RecurrenceType.MONTHLY.getValue());
+	}
+
+	public RecurrenceType asEnum() {
+		return RecurrenceType.fromInt(recurrenceId);
 	}
 }

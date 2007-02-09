@@ -475,66 +475,6 @@ public class TestObjectFactory {
 		return client;
 	}
 
-	/**
-	 * Deprecated in favor of the ones which take enums
-	 */
-	public static LoanOfferingBO createLoanOffering(String name,
-			String shortName, Short applicableTo, Date startDate,
-			Short offeringStatusId, Double defLnAmnt, Double defIntRate,
-			Short defInstallments, Short interestTypeId, Short intDedAtDisb,
-			Short princDueLastInst, MeetingBO meeting) {
-		return createLoanOffering(name, shortName, applicableTo, startDate,
-				offeringStatusId, defLnAmnt, defIntRate, defInstallments,
-				interestTypeId, intDedAtDisb, princDueLastInst, meeting,
-				GraceType.GRACEONALLREPAYMENTS
-						.getValue());
-	}
-
-	/**
-	 * Deprecated in favor of the ones which take enums
-	 * @param name -
-	 *            name of the prd offering
-	 * @param applicableTo -
-	 * @param startDate -
-	 *            start date of the product
-	 * @param offeringStatusId -
-	 *            primary key of prd_status table
-	 * @param defLnAmnt -
-	 *            same would be set as min and max amounts
-	 * @param defIntRate -
-	 *            same would be set as min and max amounts
-	 * @param interestTypeId -
-	 *            primary key of interest types table
-	 * @param intDedAtDisb -
-	 *            Is interest deducted as disbursement? (1=yes,0=no)
-	 * @param princDueLastInst -
-	 *            Is the principal due in the last installment? (1=yes,0=no)
-	 * @param meeting -
-	 *            meeting associated with the product offering
-	 * @param graceTypeInt -
-	 *            grace period Type associated with the product offering
-	 * @param defInstallments-be
-	 *            set as min and max amounts
-	 */
-	private static LoanOfferingBO createLoanOffering(String name,
-			String shortName, Short applicableTo, Date startDate,
-			Short offeringStatusId, Double defLnAmnt, Double defIntRate,
-			Short defInstallments, Short interestTypeId, Short intDedAtDisb,
-			Short princDueLastInst, MeetingBO meeting, Short graceTypeInt) {
-		InterestType interestType = InterestType.fromInt(interestTypeId);
-		PrdApplicableMaster productMaster = PrdApplicableMaster.fromInt(applicableTo);
-		GraceType graceType = GraceType.fromInt(graceTypeInt);
-		boolean interestDisAtDisb = intDedAtDisb.equals(YesNoFlag.YES
-				.getValue()) ? true : false;
-		boolean principalDueLastInst = princDueLastInst.equals(YesNoFlag.YES
-				.getValue()) ? true : false;
-
-		return createLoanOffering(name, shortName, productMaster, startDate, 
-			offeringStatusId, defLnAmnt, defIntRate, defInstallments, 
-			interestType, interestDisAtDisb, principalDueLastInst, meeting, 
-			graceType);
-	}
-
 	public static LoanOfferingBO createLoanOffering(String name,
 			PrdApplicableMaster applicableTo, Date startDate, 
 			PrdStatus offeringStatus,
@@ -557,31 +497,47 @@ public class TestObjectFactory {
 		boolean intDedAtDisb, boolean princDueLastInst,
 		MeetingBO meeting) {
 		return createLoanOffering(name, shortName, applicableTo,
-			startDate, offeringStatus.getValue(), defLnAmnt, defIntRate,
+			startDate, offeringStatus, defLnAmnt, defIntRate,
 			(short)defInstallments, interestType, intDedAtDisb, princDueLastInst,
 			meeting, GraceType.GRACEONALLREPAYMENTS);
 	}
 
 	public static LoanOfferingBO createLoanOffering(
 		Date currentTime, MeetingBO meeting) {
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-			"Loan", PrdApplicableMaster.GROUPS,
+		return TestObjectFactory.createLoanOffering(
+			"Loan", "L", currentTime, meeting);
+	}
+
+	public static LoanOfferingBO createLoanOffering(
+		String name, String shortName, Date currentTime, MeetingBO meeting) {
+		return TestObjectFactory.createLoanOffering(
+			name, shortName, PrdApplicableMaster.GROUPS,
 			currentTime, PrdStatus.LOANACTIVE,
 			300.0, 1.2, 3, 
 			InterestType.FLAT, true, true, meeting);
-		return loanOffering;
 	}
 
 	/**
+	 * Deprecated in favor of the ones which take enums
+	 * @param defLnAmnt -
+	 *            Loan Amount
+	 *            same would be set as min and max amounts
+	 * @param defIntRate -
+	 *            Interest Rate
+	 *            same would be set as min and max amounts
+	 * @param defInstallments
+	 *            Number of installments
+	 *            set as min and max amounts
 	 * @param offeringStatusId See {@link PrdStatus}.
 	 */
 	public static LoanOfferingBO createLoanOffering(
 		String name, String shortName, 
 		PrdApplicableMaster applicableTo, Date startDate, 
-		Short offeringStatusId, Double defLnAmnt, Double defIntRate, 
+		PrdStatus offeringStatus, Double defLnAmnt, Double defIntRate, 
 		Short defInstallments, 
 		InterestType interestType, 
-		boolean interestDisAtDisb, boolean principalDueLastInst, 
+		boolean interestDeductedAtDisbursement, 
+		boolean principalDueInLastInstallment, 
 		MeetingBO meeting, GraceType graceType) {
 		PrdApplicableMasterEntity prdApplicableMaster = 
 			new PrdApplicableMasterEntity(applicableTo);
@@ -604,8 +560,8 @@ public class TestObjectFactory {
 							defLnAmnt.toString()), new Money(defLnAmnt
 							.toString()), new Money(defLnAmnt.toString()),
 					defIntRate, defIntRate, defIntRate, defInstallments,
-					defInstallments, defInstallments, true, interestDisAtDisb,
-					principalDueLastInst, new ArrayList<FundBO>(),
+					defInstallments, defInstallments, true, interestDeductedAtDisbursement,
+					principalDueInLastInstallment, new ArrayList<FundBO>(),
 					new ArrayList<FeeBO>(), meeting, glCodePrincipal,
 					glCodeInterest);
 		} catch (ProductDefinitionException e) {
@@ -613,7 +569,7 @@ public class TestObjectFactory {
 		}
 
 		PrdStatusEntity prdStatus = testObjectPersistence
-				.retrievePrdStatus(offeringStatusId);
+				.retrievePrdStatus(offeringStatus);
 		LoanOfferingBOTest.setStatus(loanOffering,prdStatus);
 		LoanOfferingBOTest.setGracePeriodType(loanOffering,gracePeriodType);
 		return (LoanOfferingBO) addObject(testObjectPersistence
@@ -815,7 +771,7 @@ public class TestObjectFactory {
 		MeetingBO meetingToReturn = null;
 		try {
 			RecurrenceType recurrenceType = RecurrenceType
-					.getRecurrenceType(customerMeeting.getMeetingDetails()
+					.fromInt(customerMeeting.getMeetingDetails()
 							.getRecurrenceType().getRecurrenceId());
 			MeetingType meetingType = MeetingType
 					.getMeetingType(customerMeeting.getMeetingType()

@@ -133,7 +133,7 @@ public class SavingsPrdAction extends BaseAction {
 				(InterestCalcTypeEntity) findMasterEntity(request,
 						ProductDefinitionConstants.INTCALCTYPESLIST,
 						savingsprdForm.getInterestCalcTypeValue()),
-				new MeetingBO(RecurrenceType.getRecurrenceType(savingsprdForm
+				new MeetingBO(RecurrenceType.fromInt(savingsprdForm
 						.getRecurTypeFortimeForInterestCaclValue()),
 						savingsprdForm.getTimeForInterestCalcValue(),
 						new Date(), MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD),
@@ -280,7 +280,7 @@ public class SavingsPrdAction extends BaseAction {
 								savingsprdForm.getInterestCalcTypeValue()),
 						new MeetingBO(
 								RecurrenceType
-										.getRecurrenceType(savingsprdForm
+										.fromInt(savingsprdForm
 												.getRecurTypeFortimeForInterestCaclValue()),
 								savingsprdForm.getTimeForInterestCalcValue(),
 								new Date(),
