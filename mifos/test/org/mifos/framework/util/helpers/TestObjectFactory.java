@@ -475,17 +475,9 @@ public class TestObjectFactory {
 		return client;
 	}
 
-	public static LoanOfferingBO createLoanOffering(String name,
-			Short applicableTo, Date startDate, Short offeringStatusId,
-			Double defLnAmnt, Double defIntRate, Short defInstallments,
-			Short interestTypeId, Short intDedAtDisb, Short princDueLastInst,
-			MeetingBO meeting) {
-		return createLoanOffering(name, name.substring(0, 1), applicableTo,
-				startDate, offeringStatusId, defLnAmnt, defIntRate,
-				defInstallments, interestTypeId, intDedAtDisb, princDueLastInst,
-				meeting, GraceType.GRACEONALLREPAYMENTS.getValue());
-	}
-
+	/**
+	 * Deprecated in favor of the ones which take enums
+	 */
 	public static LoanOfferingBO createLoanOffering(String name,
 			String shortName, Short applicableTo, Date startDate,
 			Short offeringStatusId, Double defLnAmnt, Double defIntRate,
@@ -499,7 +491,7 @@ public class TestObjectFactory {
 	}
 
 	/**
-	 * Deprecated in favor of the one which takes enums
+	 * Deprecated in favor of the ones which take enums
 	 * @param name -
 	 *            name of the prd offering
 	 * @param applicableTo -
@@ -524,7 +516,7 @@ public class TestObjectFactory {
 	 * @param defInstallments-be
 	 *            set as min and max amounts
 	 */
-	public static LoanOfferingBO createLoanOffering(String name,
+	private static LoanOfferingBO createLoanOffering(String name,
 			String shortName, Short applicableTo, Date startDate,
 			Short offeringStatusId, Double defLnAmnt, Double defIntRate,
 			Short defInstallments, Short interestTypeId, Short intDedAtDisb,
@@ -541,6 +533,43 @@ public class TestObjectFactory {
 			offeringStatusId, defLnAmnt, defIntRate, defInstallments, 
 			interestType, interestDisAtDisb, principalDueLastInst, meeting, 
 			graceType);
+	}
+
+	public static LoanOfferingBO createLoanOffering(String name,
+			PrdApplicableMaster applicableTo, Date startDate, 
+			PrdStatus offeringStatus,
+			Double defLnAmnt, Double defIntRate, int defInstallments,
+			InterestType interestType, 
+			boolean intDedAtDisb, boolean princDueLastInst,
+			MeetingBO meeting) {
+		return createLoanOffering(name, name.substring(0, 1),
+				applicableTo, startDate, offeringStatus, 
+				defLnAmnt, defIntRate, defInstallments, 
+				interestType, intDedAtDisb, princDueLastInst, meeting);
+	}
+
+	public static LoanOfferingBO createLoanOffering(String name,
+		String shortName,
+		PrdApplicableMaster applicableTo, Date startDate, 
+		PrdStatus offeringStatus,
+		Double defLnAmnt, Double defIntRate, int defInstallments,
+		InterestType interestType, 
+		boolean intDedAtDisb, boolean princDueLastInst,
+		MeetingBO meeting) {
+		return createLoanOffering(name, shortName, applicableTo,
+			startDate, offeringStatus.getValue(), defLnAmnt, defIntRate,
+			(short)defInstallments, interestType, intDedAtDisb, princDueLastInst,
+			meeting, GraceType.GRACEONALLREPAYMENTS);
+	}
+
+	public static LoanOfferingBO createLoanOffering(
+		Date currentTime, MeetingBO meeting) {
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+			"Loan", PrdApplicableMaster.GROUPS,
+			currentTime, PrdStatus.LOANACTIVE,
+			300.0, 1.2, 3, 
+			InterestType.FLAT, true, true, meeting);
+		return loanOffering;
 	}
 
 	/**

@@ -461,18 +461,17 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	public void testLastLoanAmount() throws PersistenceException,
 			AccountException {
+		Date startDate = new Date(System.currentTimeMillis());
 		center = createCenter();
 		group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+				startDate, center.getCustomerMeeting().getMeeting());
 		LoanBO loanBO = TestObjectFactory.createLoanAccount("42423142341",
 				client, Short.valueOf("5"),
-				new Date(System.currentTimeMillis()), loanOffering);
+				startDate, loanOffering);
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
 		account = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
@@ -1250,17 +1249,16 @@ public class TestCustomerPersistence extends MifosTestCase {
 	}
 
 	private LoanBO getLoanAccount() {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group",
 				CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), new Date(System.currentTimeMillis()),
+				.valueOf("5"), startDate,
 				loanOffering);
 	}
 }

@@ -82,6 +82,9 @@ import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -643,17 +646,14 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				CustomerStatus.CLIENT_ACTIVE,
 				group);
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loan2345", "313f", Short.valueOf("2"), new Date(System
-						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
-				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
-				Short.valueOf("1"), meeting);
+				"Loan2345", "313f", PrdApplicableMaster.GROUPS, startDate, 
+				PrdStatus.LOANACTIVE, 300.0, 1.2, 3, 
+				InterestType.FLAT, true, true, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, Short.valueOf("5"),
-				new Date(System.currentTimeMillis()), loanOffering1);
+				startDate, loanOffering1);
 		clientAccount = getLoanAccount(Short.valueOf("3"), startDate, 1,
 				loanOffering2);
 		SavingsOfferingBO savingsOffering1 = createSavingsOffering(
@@ -743,6 +743,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	private BulkEntryBO getFailureBulkEntry() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
@@ -752,19 +753,16 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"Client", CustomerStatus.CLIENT_ACTIVE,
 				group);
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loan2345", "313f", Short.valueOf("2"), new Date(System
-						.currentTimeMillis()), Short.valueOf("1"), 300.0, 1.2,
+				"Loan2345", "313f", Short.valueOf("2"), startDate, Short.valueOf("1"), 300.0, 1.2,
 				Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"),
 				Short.valueOf("1"), meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, Short.valueOf("5"),
-				new Date(System.currentTimeMillis()), loanOffering1);
+				startDate, loanOffering1);
 		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering2);
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory
@@ -774,24 +772,20 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		SavingsOfferingBO savingsOffering = TestObjectFactory
 				.createSavingsOffering("SavingPrd123c", "ased", Short
-						.valueOf("2"), new Date(System.currentTimeMillis()),
+						.valueOf("2"), startDate,
 						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
 		SavingsOfferingBO savingsOffering1 = TestObjectFactory
 				.createSavingsOffering("SavingPrd1we", "vbgr", Short
-						.valueOf("2"), new Date(System.currentTimeMillis()),
+						.valueOf("2"), startDate,
 						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
 						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
 						meetingIntCalc, meetingIntPost);
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
-				center, Short.valueOf("16"), new Date(System
-						.currentTimeMillis()), savingsOffering);
+				center, Short.valueOf("16"), startDate, savingsOffering);
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
-				client, Short.valueOf("16"), new Date(System
-						.currentTimeMillis()), savingsOffering1);
-
-		// java.sql.Date transactionDate = new Date(System.currentTimeMillis());
+				client, Short.valueOf("16"), startDate, savingsOffering1);
 
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 
@@ -833,12 +827,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		bulkEntry.setSavingsProducts(savingsProducts);
 		bulkEntry.setTotalCustomers(3);
 		bulkEntry.setBulkEntryParent(bulkEntryParent);
-		bulkEntry.setReceiptDate(new java.sql.Date(System.currentTimeMillis()));
+		bulkEntry.setReceiptDate(new java.sql.Date(startDate.getTime()));
 		bulkEntry.setReceiptId("324343242");
 		bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
 		bulkEntry.setPaymentType(getPaymentTypeView());
-		bulkEntry.setTransactionDate(new java.sql.Date(System
-				.currentTimeMillis()));
+		bulkEntry.setTransactionDate(new java.sql.Date(startDate.getTime()));
 
 		return bulkEntry;
 	}
@@ -908,11 +901,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	}
 
 	private AccountBO getLoanAccount(CustomerBO group, MeetingBO meeting) {
-
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
 				.valueOf("5"), startDate, loanOffering);
 	}

@@ -397,39 +397,41 @@ public class TestLoanBO extends MifosTestCase {
 
 	}
 
-	public void testCreateLoanAccountWithIntersetDeductedAtDisbursementFailure()throws Exception{
-		
+	public void testCreateLoanAccountWithIntersetDeductedAtDisbursementFailure()
+			throws Exception {
+
 		createInitialCustomers();
 		MeetingBO meeting = TestObjectFactory.createLoanMeeting(group
 				.getCustomerMeeting().getMeeting());
-		
-		 loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
-			List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 1);
-			MifosCurrency currency = TestObjectFactory.getCurrency();
-		 try{
-			 new LoanBO(TestObjectFactory.getUserContext(), loanOffering,
-						group, AccountState.LOANACC_PARTIALAPPLICATION,
-						new Money(currency, "300.0"), Short.valueOf("1"),
-						meetingDates.get(0), true, 10.0, (short) 0, new FundBO(),
-						new ArrayList<FeeView>(),null);
-			 
-			 fail();
-		 }
-		 catch (AccountException e) {
+
+		Date startDate = new Date(System.currentTimeMillis());
+		loanOffering = TestObjectFactory.createLoanOffering("Loan",
+			PrdApplicableMaster.GROUPS, startDate, PrdStatus.LOANACTIVE,
+			300.0, 1.2, 1, 
+			InterestType.FLAT, true, true, meeting);
+		List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 1);
+		MifosCurrency currency = TestObjectFactory.getCurrency();
+		try {
+			new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
+					AccountState.LOANACC_PARTIALAPPLICATION, new Money(
+							currency, "300.0"), Short.valueOf("1"),
+					meetingDates.get(0), true, 10.0, (short) 0, new FundBO(),
+					new ArrayList<FeeView>(), null);
+
+			fail();
+		}
+		catch (AccountException e) {
 			assertTrue(true);
 		}
-
-		
 	}
 
 	/**
 	 * Like
 	 * {@link #createLoanAccountWithDisbursement(String, CustomerBO, AccountState, Date, LoanOfferingBO, int, Short)}
 	 * but differs in various ways.
-	 * @param globalNum Currently ignored (TODO: remove it or honor it)
+	 * 
+	 * @param globalNum
+	 *            Currently ignored (TODO: remove it or honor it)
 	 */
 	public static LoanBO createLoanAccount(String globalNum,
 			CustomerBO customer, AccountState state, Date startDate,
@@ -1032,14 +1034,13 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testMakeEarlyRepaymentOnPartiallyPaidAccount() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), center.getCustomerMeeting().getMeeting());
+		LoanOfferingBO loanOffering = 
+			createOfferingNoPrincipalInLastInstallment(startDate, center.getCustomerMeeting().getMeeting());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -1055,7 +1056,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				Short.valueOf("6"), startDate,
 				false, 1.2, (short) 0, new FundBO(), feeViewList,getCustomFields());
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
@@ -1066,9 +1067,7 @@ public class TestLoanBO extends MifosTestCase {
 				AccountBO.class, accountBO.getAccountId());
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("160"), accountBO.getCustomer(), accountBO
-						.getPersonnel(), "432423", (short) 1, new Date(System
-						.currentTimeMillis()), new Date(System
-						.currentTimeMillis())));
+						.getPersonnel(), "432423", (short) 1, startDate, startDate));
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1153,16 +1152,26 @@ public class TestLoanBO extends MifosTestCase {
 		}
 	}
 
+	private LoanOfferingBO createOfferingNoPrincipalInLastInstallment(
+			Date startDate, MeetingBO meeting) {
+		return TestObjectFactory.createLoanOffering(
+			"Loan", PrdApplicableMaster.GROUPS,
+			startDate, PrdStatus.LOANACTIVE,
+			300.0, 1.2, 3, 
+			InterestType.FLAT, true, false, 
+			meeting);
+	}
+
 	public void testMakeEarlyRepaymentOnPartiallyPaidPricipal()
 			throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), center.getCustomerMeeting().getMeeting());
+		group = TestObjectFactory.createGroupUnderCenter(
+			"Group", CustomerStatus.GROUP_ACTIVE, center);
+		LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(
+				startDate, center.getCustomerMeeting().getMeeting());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -1178,7 +1187,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				Short.valueOf("6"), startDate,
 				false, 1.2, (short) 0, new FundBO(), feeViewList,null);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
@@ -1189,9 +1198,7 @@ public class TestLoanBO extends MifosTestCase {
 				AccountBO.class, accountBO.getAccountId());
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("180.1"), accountBO.getCustomer(), accountBO
-						.getPersonnel(), "432423", (short) 1, new Date(System
-						.currentTimeMillis()), new Date(System
-						.currentTimeMillis())));
+						.getPersonnel(), "432423", (short) 1, startDate, startDate));
 
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -1630,8 +1637,7 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
@@ -1653,8 +1659,7 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
@@ -2137,12 +2142,11 @@ public class TestLoanBO extends MifosTestCase {
 		MeetingBO loanOfferingMeeting = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
+		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), loanOfferingMeeting);
+				startDate, loanOfferingMeeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering);
 		TestObjectFactory.flushandCloseSession();
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
@@ -2594,7 +2598,7 @@ public class TestLoanBO extends MifosTestCase {
 			SystemException, ApplicationException {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false,
-				PrdStatus.LOANINACTIVE.getValue());
+				PrdStatus.LOANINACTIVE);
 		try {
 			new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
 					AccountState.LOANACC_APPROVED, new Money("300.0"), Short
@@ -2659,17 +2663,15 @@ public class TestLoanBO extends MifosTestCase {
 		createInitialCustomers();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(MONTHLY, EVERY_MONTH, CUSTOMER_MEETING));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), PrdStatus.LOANACTIVE
-						.getValue(), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(
+				startDate,
 				meeting);
 		try {
 			new LoanBO(TestObjectFactory.getUserContext(), loanOffering, null,
 					AccountState.LOANACC_APPROVED, new Money("300.0"), Short
 							.valueOf("6"),
-					new Date(System.currentTimeMillis()), false, 10.0,
+					startDate, false, 10.0,
 					(short) 0, new FundBO(), new ArrayList<FeeView>(),new ArrayList<CustomFieldView>());
 			assertFalse(
 					"The Loan object is created even if meetings do not match",
@@ -2685,18 +2687,15 @@ public class TestLoanBO extends MifosTestCase {
 	public void testMeetingRecurrenceOfLoanOfferingInMultipleOfCustomer()
 			throws NumberFormatException, 
 			SystemException, ApplicationException {
+		Date startDate = new Date(System.currentTimeMillis());
 		createInitialCustomers();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), PrdStatus.LOANACTIVE
-						.getValue(), 300.0, 1.2, Short.valueOf("3"), Short
-						.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"),
-				meeting);
+		LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(
+			startDate, meeting);
 		new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
 				AccountState.LOANACC_APPROVED, new Money("300.0"), Short
-						.valueOf("6"), new Date(System.currentTimeMillis()),
+						.valueOf("6"), startDate,
 				false, 10.0, (short) 0, new FundBO(), new ArrayList<FeeView>(),new ArrayList<CustomFieldView>());
 		assertTrue(
 				"The Loan object is created if meeting recurrence of loan offering is in multiples of customer",
@@ -3394,14 +3393,14 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testCreateLoanAccountWithPrincipalDueInLastPayment()
 			throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+				startDate, 
+				center.getCustomerMeeting().getMeeting());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3421,7 +3420,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				Short.valueOf("6"), startDate,
 				false, 1.2, (short) 0, new FundBO(), feeViewList,null);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
@@ -3478,14 +3477,18 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testCreateLoanAccountWithInterestDeductedAtDisbursment()
 			throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), center.getCustomerMeeting().getMeeting());
+				"Loan", PrdApplicableMaster.GROUPS,
+				startDate,  
+				PrdStatus.LOANACTIVE,
+				300.0, 1.2, 3, 
+				InterestType.FLAT, true, false, 
+				center.getCustomerMeeting().getMeeting());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3505,7 +3508,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()), true,
+				Short.valueOf("6"), startDate, true,
 				1.2, (short) 0, new FundBO(), feeViewList,null);
 		new TestObjectPersistence().persist(accountBO);
 
@@ -3562,14 +3565,13 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testCreateLoanAccountWithIDADAndPDILI() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+				startDate, center.getCustomerMeeting().getMeeting());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3589,7 +3591,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()), true,
+				Short.valueOf("6"), startDate, true,
 				1.2, (short) 0, new FundBO(), feeViewList,null);
 		new TestObjectPersistence().persist(accountBO);
 
@@ -3650,14 +3652,17 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testCreateNormalLoanAccount() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), center.getCustomerMeeting().getMeeting());
+				"Loan", PrdApplicableMaster.GROUPS,
+				startDate, PrdStatus.LOANACTIVE,
+				300.0, 1.2, 3, 
+				InterestType.FLAT, true, false, 
+				center.getCustomerMeeting().getMeeting());
 		UserContext userContext = TestObjectFactory.getUserContext();
 		userContext.setLocaleId(null);
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
@@ -3677,7 +3682,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				Short.valueOf("6"), startDate,
 				false, 1.2, (short) 0, new FundBO(), feeViewList,null);
 		new TestObjectPersistence().persist(accountBO);
 
@@ -3843,17 +3848,17 @@ public class TestLoanBO extends MifosTestCase {
 			CustomerStatus.GROUP_ACTIVE, center);
 		Date loanStart = new Date(sampleTime);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				loanStart, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), 
-				Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), 
+				"Loan", PrdApplicableMaster.GROUPS,
+				loanStart, PrdStatus.LOANACTIVE,
+				300.0, 1.2, 3, 
+				InterestType.FLAT, true, false, 
 				center.getCustomerMeeting().getMeeting());
 
 		Calendar disbursementDate = new GregorianCalendar();
 		disbursementDate.setTimeInMillis(sampleTime);
 		int year = disbursementDate.get(Calendar.YEAR);
 		int zeroBasedMonth = disbursementDate.get(Calendar.MONTH);
-		/* TODO: this if is a relic from when sampleTime was based on
+		/* TODO: this "if" is a relic from when sampleTime was based on
 		   when the test was run.  We should test these two cases somehow. */
 		if (disbursementDate.get(Calendar.DAY_OF_MONTH) == dayOfMonth
 				.intValue()) {
@@ -3944,6 +3949,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testDisburseLoanWithAllTypeOfFees() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		Short dayOfMonth = (short) 25;
 		MeetingBO meeting = TestObjectFactory
 			.getNewMeeting(MONTHLY, EVERY_MONTH, CUSTOMER_MEETING, MONDAY);
@@ -3955,9 +3961,11 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), center.getCustomerMeeting().getMeeting());
+				"Loan", PrdApplicableMaster.GROUPS,
+				startDate, PrdStatus.LOANACTIVE,
+				300.0, 1.2, 3, 
+				InterestType.FLAT, true, false, 
+				center.getCustomerMeeting().getMeeting());
 
 		Calendar disbursementDate = new GregorianCalendar();
 		int year = disbursementDate.get(Calendar.YEAR);
@@ -4013,14 +4021,12 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testUpdateLoanFailure() {
+		Date startDate = new Date(System.currentTimeMillis());
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+				startDate, center.getCustomerMeeting().getMeeting());
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_PENDINGAPPROVAL.getValue(), new Date(
-						System.currentTimeMillis()), loanOffering);
+				AccountState.LOANACC_PENDINGAPPROVAL.getValue(), startDate, loanOffering);
 		try {
 			LoanBO loanBO = (LoanBO) accountBO;
 			((LoanBO) accountBO).updateLoan(loanBO
@@ -4030,13 +4036,10 @@ public class TestLoanBO extends MifosTestCase {
 					loanBO.getGracePeriodDuration(), loanBO
 							.getBusinessActivityId(), "Loan account updated",
 					null,null);
-			assertFalse(
-					"The Loan object is created for invalid disbursement date",
-					true);
-		} catch (AccountException ae) {
-			assertTrue(
-					"The Loan object is created for invalid disbursement date",
-					true);
+			fail("The Loan object is created for invalid disbursement date");
+		} catch (AccountException expected) {
+			assertEquals("exceptions.application.loan.invalidDisbursementDate", 
+				expected.getKey());
 		}
 	}
 
@@ -4303,14 +4306,14 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testRemoveFeeForPartiallyPaidFeesAccount() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), center.getCustomerMeeting().getMeeting());
+		LoanOfferingBO loanOffering = createOfferingNoPrincipalInLastInstallment(
+				startDate,
+				center.getCustomerMeeting().getMeeting());
 
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
@@ -4322,7 +4325,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				Short.valueOf("6"), startDate,
 				false, 1.2, (short) 0, new FundBO(), feeViewList,null);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
@@ -4333,9 +4336,7 @@ public class TestLoanBO extends MifosTestCase {
 
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("60"), accountBO.getCustomer(), accountBO
-						.getPersonnel(), "432423", (short) 1, new Date(System
-						.currentTimeMillis()), new Date(System
-						.currentTimeMillis())));
+						.getPersonnel(), "432423", (short) 1, startDate, startDate));
 		HibernateUtil.commitTransaction();
 
 		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
@@ -4384,14 +4385,17 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testApplyChargeForPartiallyPaidFeesAccount() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_SECOND_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("0"), center.getCustomerMeeting().getMeeting());
+				"Loan", PrdApplicableMaster.GROUPS,
+				startDate, PrdStatus.LOANACTIVE,
+				300.0, 1.2, 3, 
+				InterestType.FLAT, true, false, 
+				center.getCustomerMeeting().getMeeting());
 
 		List<FeeView> feeViewList = new ArrayList<FeeView>();
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
@@ -4403,7 +4407,7 @@ public class TestLoanBO extends MifosTestCase {
 		accountBO = new LoanBO(TestObjectFactory.getUserContext(),
 				loanOffering, group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Money("300.0"),
-				Short.valueOf("6"), new Date(System.currentTimeMillis()),
+				Short.valueOf("6"), startDate,
 				false, 1.2, (short) 0, new FundBO(), feeViewList,null);
 		new TestObjectPersistence().persist(accountBO);
 		assertEquals(6, accountBO.getAccountActionDates().size());
@@ -4414,9 +4418,7 @@ public class TestLoanBO extends MifosTestCase {
 
 		accountBO.applyPayment(TestObjectFactory.getLoanAccountPaymentData(
 				null, new Money("60"), accountBO.getCustomer(), accountBO
-						.getPersonnel(), "432423", (short) 1, new Date(System
-						.currentTimeMillis()), new Date(System
-						.currentTimeMillis())));
+						.getPersonnel(), "432423", (short) 1, startDate, startDate));
 		HibernateUtil.commitTransaction();
 
 		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
@@ -4965,19 +4967,17 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst) {
-		return createLoanOffering(isPrincipalAtLastInst, PrdStatus.LOANACTIVE
-				.getValue());
+		return createLoanOffering(isPrincipalAtLastInst, PrdStatus.LOANACTIVE);
 	}
 
-	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst,
-			Short statusId) {
-		Short principalAtLastInst = isPrincipalAtLastInst ? (short) 1
-				: (short) 0;
+	private LoanOfferingBO createLoanOffering(boolean principalAtLastInst,
+			PrdStatus status) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createLoanOffering("Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), statusId, 300.0, 1.2,
-				(short)3, Short.valueOf("1"), Short.valueOf("1"),
+		return TestObjectFactory.createLoanOffering("Loan", 
+				PrdApplicableMaster.GROUPS,
+				new Date(System.currentTimeMillis()), status, 300.0, 1.2,
+				3, InterestType.FLAT, true,
 				principalAtLastInst, meeting);
 	}
 
@@ -5006,13 +5006,13 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	private AccountBO getLoanAccount() {
+		Date startDate = new Date(System.currentTimeMillis());
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, (short)3, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+				startDate, 
+				center.getCustomerMeeting().getMeeting());
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), new Date(System.currentTimeMillis()),
+				.valueOf("5"), startDate,
 				loanOffering);
 	}
 
@@ -5101,6 +5101,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	private AccountBO getLoanAccountWithPerformanceHistory() {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
@@ -5110,11 +5111,9 @@ public class TestLoanBO extends MifosTestCase {
 		/*((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
 		TestObjectFactory.updateObject(client);*/
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, (short)3, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", client,
-				(short)3, new Date(System.currentTimeMillis()),
+				(short)3, startDate,
 				loanOffering);
 		((ClientBO) client).getPerformanceHistory().updateLoanCounter(loanOffering,YesNoFlag.YES);
 		TestObjectFactory.updateObject(client);
@@ -5131,8 +5130,7 @@ public class TestLoanBO extends MifosTestCase {
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, (short)3, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		//((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", client, accountSate, startDate, loanOffering,
@@ -5149,8 +5147,10 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("1"), startDate, Short.valueOf("1"),
-				300.0, 1.2, (short)3, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				"Loan", PrdApplicableMaster.CLIENTS, startDate, 
+				PrdStatus.LOANACTIVE,
+				300.0, 1.2, 3, 
+				InterestType.FLAT, true, true, meeting);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, accountSate, startDate, loanOffering,
 				disbursalType);
@@ -5227,8 +5227,7 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, (short)3, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, accountSate, startDate, loanOffering,
 				disbursalType);
@@ -5401,8 +5400,7 @@ public class TestLoanBO extends MifosTestCase {
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, (short)3, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				Short.valueOf("5"), startDate, loanOffering);
 
@@ -5415,10 +5413,9 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, (short)3, Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		return accountBO;
 	}

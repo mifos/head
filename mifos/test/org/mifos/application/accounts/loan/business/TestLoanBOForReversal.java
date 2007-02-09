@@ -78,14 +78,12 @@ public class TestLoanBOForReversal extends MifosTestCase {
 	}
 
 	private void createLoanAccount() {
+		Date startDate = new Date(System.currentTimeMillis());
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), center.getCustomerMeeting().getMeeting());
+				startDate, center.getCustomerMeeting().getMeeting());
 		loan = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_APPROVED.getValue(), new Date(System
-						.currentTimeMillis()), loanOffering);
+				AccountState.LOANACC_APPROVED.getValue(), startDate, loanOffering);
 	}
 
 	private void disburseLoan() throws AccountException {

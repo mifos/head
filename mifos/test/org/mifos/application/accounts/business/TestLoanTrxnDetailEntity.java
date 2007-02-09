@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanSummaryEntity;
-import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -49,13 +48,12 @@ public class TestLoanTrxnDetailEntity extends MifosTestCase {
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		Date sampleDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+			sampleDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
-				new Date(System.currentTimeMillis()),
+				sampleDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = new AccountPersistence().getAccount(account
@@ -70,19 +68,16 @@ public class TestLoanTrxnDetailEntity extends MifosTestCase {
 				accountActionsToBeUpdated, new Money(TestObjectFactory
 						.getMFICurrency(), "700.0"), null, account
 						.getPersonnel(), "423423", Short.valueOf("1"),
-				new Date(System.currentTimeMillis()), new Date(System
-						.currentTimeMillis()));
+				sampleDate, sampleDate);
 		account.applyPayment(paymentData);
 		HibernateUtil.commitTransaction();
-		LoanTrxnDetailEntity loanTrxnDetailEntity = null;
-		for (AccountPaymentEntity accountPaymentEntity : account
-				.getAccountPayments()) {
-			for (AccountTrxnEntity accountTrxnEntity : accountPaymentEntity
-					.getAccountTrxns()) {
-				loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
-				break;
-			}
-		}
+
+		assertEquals(1, account.getAccountPayments().size());
+		AccountPaymentEntity payment = 
+			account.getAccountPayments().iterator().next();
+		assertEquals(4, payment.getAccountTrxns().size());
+		// Should we assert something about each of those transactions?
+
 		LoanSummaryEntity loanSummaryEntity = ((LoanBO) account)
 				.getLoanSummary();
 		assertEquals(loanSummaryEntity.getOriginalPrincipal().subtract(

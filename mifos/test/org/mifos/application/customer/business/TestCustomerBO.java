@@ -711,8 +711,7 @@ public class TestCustomerBO extends MifosTestCase {
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
 				Short.valueOf("5"), startDate, loanOffering);
 

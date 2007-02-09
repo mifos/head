@@ -65,17 +65,16 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	}
 
 	public void testGetAccount() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
@@ -88,12 +87,11 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
@@ -102,7 +100,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.add(account.getAccountActionDates().iterator().next());
-		Date currentDate = new Date(System.currentTimeMillis());
+		Date currentDate = startDate;
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
 						"100.0"), null, account.getPersonnel(), "423423", Short
@@ -119,6 +117,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	}
 
 	public void testSuccessfulLoanUpdate() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
@@ -127,11 +126,9 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 				"Group", CustomerStatus.GROUP_ACTIVE,
 				center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
@@ -140,7 +137,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.add(account.getAccountActionDates().iterator().next());
-		Date currentDate = new Date(System.currentTimeMillis());
+		Date currentDate = startDate;
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
 						"100.0"), null, account.getPersonnel(), "423423", Short
@@ -153,16 +150,15 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	}
 
 	public void testFailureApplyPayment() throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
@@ -176,11 +172,10 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		}
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(account.getAccountActionDates());
-		Date currentDate = new Date(System.currentTimeMillis());
 		PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(
 				accntActionDates, new Money(TestObjectFactory.getMFICurrency(),
 						"3000.0"), null, account.getPersonnel(), "423423",
-				Short.valueOf("1"), currentDate, currentDate);
+				Short.valueOf("1"), startDate, startDate);
 
 		try {
 			account.applyPayment(paymentData);

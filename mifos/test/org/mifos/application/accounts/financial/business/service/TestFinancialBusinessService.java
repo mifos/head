@@ -160,17 +160,16 @@ public class TestFinancialBusinessService extends MifosTestCase {
 	}
 
 	private LoanBO getLoanAccount() {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 
 				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
-				new Date(System.currentTimeMillis()),
+				startDate,
 				loanOffering);
 	}
 

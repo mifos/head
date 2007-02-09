@@ -44,7 +44,10 @@ import java.util.GregorianCalendar;
 
 public class DateUtils {
 
-	public DateUtils() {
+	/**
+	 * Nothing to instantiate here.
+	 */
+	private DateUtils() {
 	}
 
 	public static Date getCurrentDateWithoutTimeStamp() {
@@ -71,8 +74,8 @@ public class DateUtils {
 		dateCalendar.setTimeInMillis(timeInMills);
 		return dateCalendar;
 	}
+
 	public static Date getLastDayOfCurrentYear(){
-		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH,Calendar.DECEMBER);
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DATE));

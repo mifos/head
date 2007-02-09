@@ -359,8 +359,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		createInitialObjects();
 
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), currentDate, (short) 1, 300.0, 1.2,
-				Short.valueOf("3"), (short) 1, (short) 1, (short) 1,
+				currentDate,
 				center.getCustomerMeeting().getMeeting());
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
 				Short.valueOf("5"), currentDate, loanOffering);
@@ -473,8 +472,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
 				"99999999999", group, accountSate, startDate, loanOffering,
 				disbursalType);

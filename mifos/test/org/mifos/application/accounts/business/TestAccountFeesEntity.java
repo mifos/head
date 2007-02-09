@@ -19,6 +19,9 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.InterestType;
+import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -60,9 +63,11 @@ public class TestAccountFeesEntity extends MifosTestCase {
         		.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
         center=TestObjectFactory.createCenter("Center",meeting);
         group=TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan",Short.valueOf("2"),
-        		new Date(System.currentTimeMillis()),Short.valueOf("1"),300.0,1.2,Short.valueOf("3"),
-        		Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("1"),meeting);
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+        	"Loan", PrdApplicableMaster.GROUPS,
+        	new Date(System.currentTimeMillis()),
+        	PrdStatus.LOANACTIVE,300.0,1.2, 3,
+        	InterestType.FLAT, true, true, meeting);
         return TestObjectFactory.createLoanAccount("42423142341",group,
         	AccountState.LOANACC_ACTIVEINGOODSTANDING,
         	new Date(System.currentTimeMillis()),loanOffering);

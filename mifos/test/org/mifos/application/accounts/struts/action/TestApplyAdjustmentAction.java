@@ -91,16 +91,15 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	}
 
 	private AccountBO getLoanAccount() {
+		Date startDate = new Date(System.currentTimeMillis());
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
-		LoanBO loan = TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), new Date(System.currentTimeMillis()),
+				startDate, meeting);
+		LoanBO loan = TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		return TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
@@ -319,12 +318,11 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"),
-				new Date(System.currentTimeMillis()), Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), new Date(System.currentTimeMillis()),
+				.valueOf("5"), startDate,
 				loanOffering);
 	}
 	

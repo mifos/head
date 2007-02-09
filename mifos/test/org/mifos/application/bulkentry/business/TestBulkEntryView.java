@@ -80,10 +80,8 @@ public class TestBulkEntryView extends MifosTestCase {
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
-				.valueOf("2"), startDate, Short.valueOf("1"), 300.0, 1.2, Short
-				.valueOf("3"), Short.valueOf("1"), Short
-				.valueOf("1"), Short.valueOf("1"), meeting);
+		loanOffering = TestObjectFactory.createLoanOffering(
+				startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
 				Short.valueOf("5"), new Date(System.currentTimeMillis()),
 				loanOffering);
@@ -131,25 +129,21 @@ public class TestBulkEntryView extends MifosTestCase {
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
-				.valueOf("2"), startDate, Short.valueOf("1"), 300.0, 1.2, Short
-				.valueOf("3"), Short.valueOf("1"), Short
-				.valueOf("1"), Short.valueOf("1"), meeting);
+		loanOffering = TestObjectFactory.createLoanOffering(
+				startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				Short.valueOf("5"), startDate,
 				loanOffering);
 		account2 = TestObjectFactory.createLoanAccountWithDisbursement(
 				"42423142341", group, AccountState.LOANACC_APPROVED, 
-				new Date(System
-						.currentTimeMillis()), loanOffering, 1);
+				startDate, loanOffering, 1);
 		HibernateUtil.closeSession();
 
 		BulkEntryBO bulkEntry = new BulkEntryBO();
 		bulkEntry.setOffice(getOfficeView(center.getOffice()));
 		bulkEntry.setLoanOfficer(getPersonnelView(center.getPersonnel()));
 		bulkEntry.setPaymentType(getPaymentTypeView());
-		bulkEntry.setTransactionDate(new java.sql.Date(System
-				.currentTimeMillis()));
+		bulkEntry.setTransactionDate(new java.sql.Date(startDate.getTime()));
 		CustomerView parentCustomer = getCustomerView(center);
 		bulkEntry.buildBulkEntryView(parentCustomer);
 
@@ -184,10 +178,8 @@ public class TestBulkEntryView extends MifosTestCase {
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		loanOffering = TestObjectFactory.createLoanOffering("Loan", Short
-				.valueOf("2"), startDate, Short.valueOf("1"), 300.0, 1.2, Short
-				.valueOf("3"), Short.valueOf("1"), Short
-				.valueOf("1"), Short.valueOf("1"), meeting);
+		loanOffering = TestObjectFactory.createLoanOffering(
+				startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccountWithDisbursement(
 				"42423142341", group, 
 				AccountState.LOANACC_APPROVED, 

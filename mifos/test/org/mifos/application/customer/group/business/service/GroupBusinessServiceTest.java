@@ -191,8 +191,7 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 	private LoanBO getLoanAccount(CustomerBO customerBO) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", Short.valueOf("2"), startDate, Short.valueOf("1"),
-				300.0, 1.2, Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"), Short.valueOf("1"), meeting);
+				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO, Short
 				.valueOf("5"), startDate, loanOffering);
 
