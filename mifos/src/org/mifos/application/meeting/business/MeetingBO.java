@@ -72,6 +72,9 @@ public class MeetingBO extends BusinessObject {
 
 	private String meetingPlace;
 	
+	/* TODO: This looks like it should be a local variable in
+	   each of the places which uses it.  I don't see it being
+	   used outside a single method. */
 	private GregorianCalendar gc = new GregorianCalendar();
 	
 	public MeetingBO(RecurrenceType recurrenceType, Short recurAfter, Date startDate, MeetingType meetingType)throws MeetingException{

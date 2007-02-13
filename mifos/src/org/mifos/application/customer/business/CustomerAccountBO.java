@@ -894,10 +894,10 @@ public class CustomerAccountBO extends AccountBO {
 	private void addTonextInstallment(AccountFeesEntity fee)
 			throws AccountException {
 		CustomerScheduleEntity nextInstallment = (CustomerScheduleEntity) getDetailsOfNextInstallment();
-		AccountFeesActionDetailEntity accountFeesaction = new CustomerFeeScheduleEntity(
+		CustomerFeeScheduleEntity accountFeesaction = 
+			new CustomerFeeScheduleEntity(
 				nextInstallment, fee.getFees(), fee, fee.getAccountFeeAmount());
-		((CustomerFeeScheduleEntity) accountFeesaction)
-				.setFeeAmountPaid(new Money("0.0"));
+		accountFeesaction.setFeeAmountPaid(new Money("0.0"));
 		nextInstallment.addAccountFeesAction(accountFeesaction);
 		String description = fee.getFees().getFeeName() + " "
 				+ AccountConstants.FEES_APPLIED;
