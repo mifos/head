@@ -251,13 +251,6 @@ public class TestHolidayUtils extends MifosTestCase {
     }
     */
     
-    /**
-	 * @param holidayDateList
-	 * @param holidayEndDate
-	 * @param holidays
-	 * @throws HolidayException
-	 * @throws ParseException 
-	 */
 	private HolidayBO[] createHolidayCollection(String holidayDateList, String ruleList) throws HolidayException, ParseException {
 		
 		Date holidayStartDate, holidayEndDate;
@@ -285,12 +278,6 @@ public class TestHolidayUtils extends MifosTestCase {
 		return holidays;
 	}
 
-	/**
-	 * @param holidayStartDate
-	 * @param holidayEndDate
-	 * @return
-	 * @throws HolidayException
-	 */
 	private HolidayBO createHoliday(Date holidayStartDate, Date holidayEndDate, 
 									Short repaymentRule, String holidayName) throws HolidayException {
 		// Create Holiday
