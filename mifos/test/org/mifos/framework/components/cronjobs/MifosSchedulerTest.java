@@ -3,7 +3,6 @@ package org.mifos.framework.components.cronjobs;
 import java.util.List;
 
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.cronjobs.MifosScheduler;
 
 public class MifosSchedulerTest extends MifosTestCase {
 

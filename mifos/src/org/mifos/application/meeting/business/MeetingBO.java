@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
@@ -96,10 +97,7 @@ public class MeetingBO extends BusinessObject {
 		this.meetingStartDate = null;
 	}
 	
-	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, 
-			WeekDay weekDay, RankType rank, Short recurAfter, 
-			Date startDate, MeetingType meetingType, String meetingPlace)
-	throws MeetingException {
+	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
 		this.validateFields(recurrenceType,startDate,meetingType,meetingPlace);
 		this.meetingDetails =  new MeetingDetailsEntity(new RecurrenceTypeEntity(recurrenceType), dayNumber, weekDay, rank, recurAfter, this);
 		//TODO: remove this check after meeting create is migrated.
@@ -240,6 +238,18 @@ public class MeetingBO extends BusinessObject {
 		for(; currentScheduleDate.compareTo(meetingDate)<=0;
 			currentScheduleDate=getNextDate(currentScheduleDate));
 		
+		//return HolidayUtils.adjustDate(HolidayUtils.getCalendar(currentScheduleDate), this).getTime();
+		return HolidayUtils.adjustDate(DateUtils.getCalendarDate(currentScheduleDate.getTime()), this).getTime();
+		//return currentScheduleDate;
+	}
+	
+	
+	public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(Date meetingDate)throws MeetingException{
+		validateMeetingDate(meetingDate);
+		Date currentScheduleDate=getNextDate(getStartDate());
+		for(; currentScheduleDate.compareTo(meetingDate)<=0;
+			currentScheduleDate=getNextDate(currentScheduleDate));
+		
 		return currentScheduleDate;
 	}
 	
@@ -268,7 +278,8 @@ public class MeetingBO extends BusinessObject {
 		Date meetingDate = getFirstDate(getStartDate());
 		
 		for(int dateCount=0;dateCount<occurrences ;dateCount++){
-			meetingDates.add(meetingDate);
+			//meetingDates.add(meetingDate);
+			meetingDates.add(HolidayUtils.adjustDate(DateUtils.getCalendarDate(meetingDate.getTime()), this).getTime());
 			meetingDate = getNextDate(meetingDate);
 		}
 		return meetingDates;

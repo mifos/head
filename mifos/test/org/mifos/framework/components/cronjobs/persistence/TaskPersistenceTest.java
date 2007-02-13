@@ -9,7 +9,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.business.Task;
 import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
-import org.mifos.framework.components.cronjobs.persistence.TaskPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;

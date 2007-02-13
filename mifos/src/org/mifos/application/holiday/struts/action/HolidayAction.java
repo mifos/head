@@ -143,8 +143,7 @@ public class HolidayAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		
-		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
-		Short localeId = getUserContext(request).getLocaleId();
+//		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
 
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
@@ -158,8 +157,7 @@ public class HolidayAction extends BaseAction {
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward getEditStates(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {		
-		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
+			throws Exception {
 		return mapping.findForward(ActionForwards.manage_success.toString());
 	}
 
@@ -168,7 +166,7 @@ public class HolidayAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
+//		HolidayActionForm holidayActionForm = (HolidayActionForm) form;
 
 		return mapping.findForward(ActionForwards.managepreview_success
 				.toString());
@@ -201,8 +199,7 @@ public class HolidayAction extends BaseAction {
 
 		accountHoliday.update(holidayPK, 
 							  holidayActionForm.getThruDate(), 
-							  holidayActionForm.getHolidayName(), 
-							  getUserContext(request).getLocaleId());
+							  holidayActionForm.getHolidayName());
 		if (null != request.getParameter(Constants.CURRENTFLOWKEY))
 			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
 		

@@ -29,8 +29,6 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.cronjobs.helpers.SavingsIntCalcHelper;
-import org.mifos.framework.components.cronjobs.helpers.SavingsIntCalcTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;

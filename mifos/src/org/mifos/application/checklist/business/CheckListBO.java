@@ -63,6 +63,7 @@ public abstract class CheckListBO extends BusinessObject {
 		return this.checklistName;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setChecklistName(String checklistName) {
 		this.checklistName = checklistName;
 	}
@@ -71,6 +72,7 @@ public abstract class CheckListBO extends BusinessObject {
 		return this.checklistStatus;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setChecklistStatus(Short checklistStatus) {
 		this.checklistStatus = checklistStatus;
 	}
@@ -80,6 +82,7 @@ public abstract class CheckListBO extends BusinessObject {
 
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setChecklistDetails(
 			Set<CheckListDetailEntity> checklistDetailSet) {
 		this.checklistDetails = checklistDetailSet;
@@ -89,6 +92,7 @@ public abstract class CheckListBO extends BusinessObject {
 		return this.supportedLocales;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setSupportedLocales(SupportedLocalesEntity supportedLocales) {
 		this.supportedLocales = supportedLocales;
 	}

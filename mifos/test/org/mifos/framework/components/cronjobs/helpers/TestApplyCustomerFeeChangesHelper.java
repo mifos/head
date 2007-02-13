@@ -25,8 +25,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
-import org.mifos.framework.components.cronjobs.helpers.ApplyCustomerFeeChangesHelper;
-import org.mifos.framework.components.cronjobs.helpers.ApplyCustomerFeeChangesTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;

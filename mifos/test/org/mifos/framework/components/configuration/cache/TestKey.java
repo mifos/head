@@ -1,7 +1,8 @@
 package org.mifos.framework.components.configuration.cache;
 
-import org.mifos.framework.TestUtils;
 import junit.framework.TestCase;
+
+import org.mifos.framework.TestUtils;
 
 
 public class TestKey extends TestCase {

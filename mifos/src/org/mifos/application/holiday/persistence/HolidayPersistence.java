@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -20,6 +21,13 @@ public class HolidayPersistence extends MasterPersistence {
 		return (HolidayBO) getPersistentObject(HolidayBO.class, holidayId);
 	}
 	
+	/* we need a way to make this worx
+	 * because our PK is the HolidayPK
+	 * public HolidayBO getHoliday(HolidayPK holidayPK)
+		throws PersistenceException {
+		return (HolidayBO) getPersistentObject(HolidayBO.class, holidayPK);
+	}*/
+
 	public List<HolidayBO> getHolidays(int year, int localId) throws PersistenceException {
 		
 		Map<String, Object> parameters = new HashMap<String, Object>();
@@ -36,6 +44,16 @@ public class HolidayPersistence extends MasterPersistence {
 		parameters.put("LOCALE_ID", localId);
 		
 		return executeNamedQuery(NamedQueryConstants.GET_REPAYMENT_RULE_TYPES, parameters);
+	}
+	
+	// getAllLoanScheduales
+	public List<LoanScheduleEntity> getAllLoanScheduales(HolidayBO holiday) throws PersistenceException{
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("FROM_DATE", holiday.getHolidayFromDate());
+		parameters.put("THRU_DATE", holiday.getHolidayThruDate());
+		
+		return executeNamedQuery( NamedQueryConstants.ALL_LOAN_SCHEDULE,
+									parameters);
 	}
 	
 	public int isValidHolidayState(Short levelId, Short stateId,

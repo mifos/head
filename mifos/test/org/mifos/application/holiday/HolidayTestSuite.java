@@ -8,6 +8,7 @@ import org.mifos.application.holiday.business.TestHolidayBO;
 import org.mifos.application.holiday.business.service.TestHolidayBusinessService;
 import org.mifos.application.holiday.persistence.TestHolidayPersistence;
 import org.mifos.application.holiday.struts.action.TestHolidayAction;
+import org.mifos.application.holiday.util.helpers.TestHolidayUtils;
 
 public class HolidayTestSuite extends TestSuite {
 
@@ -22,6 +23,8 @@ public class HolidayTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestHolidayBusinessService.class);
 		testSuite.addTestSuite(TestHolidayPersistence.class);
 		testSuite.addTestSuite(TestHolidayAction.class);
+		testSuite.addTestSuite(TestHolidayUtils.class);
+		
 		return testSuite;
 	}
 }

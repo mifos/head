@@ -38,8 +38,10 @@
 package org.mifos.application.meeting.business;
 
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Constants;
 
 /**
@@ -66,4 +68,44 @@ public class WeekDaysEntity extends MasterDataEntity {
 	public boolean isStartOfFiscalWeek(){
 		return (startOfWeek!=null&& startOfWeek.equals(Constants.YES));
 	}
+		
+	
+	public Short getStartOfWeek() {
+		return startOfWeek;
+	}
+
+	public void setStartOfWeek(Short startOfWeek) {
+		this.startOfWeek = startOfWeek;
+	}
+
+	public Short getWorkDay() {
+		return workDay;
+	}
+
+	public void setWorkDay(Short workDay) {
+		this.workDay = workDay;
+	}
+
+	public void save() throws RuntimeException {
+		try {
+			new MasterPersistence().createOrUpdate(this);
+			} catch (PersistenceException e) {
+				// TODO Auto-generated catch block
+				throw new RuntimeException(e);
+			}		
+	}
+ 
+	public void update(Short startOfWeek, Short workDay)
+			throws RuntimeException {
+		this.startOfWeek = startOfWeek;
+		this.workDay = workDay;
+		// this block should not be here
+		try {
+			new MasterPersistence().createOrUpdate(this);			
+		} catch (PersistenceException e) {
+			throw new RuntimeException(e);
+		}
+		// end of block
+	}
+
 }

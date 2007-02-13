@@ -15,7 +15,8 @@ public class MeetingPersistenceTest extends MifosTestCase{
 	public void testGetWeekDaysList() throws Exception{
 		List<WeekDaysEntity> weekDaysList = new MeetingPersistence().getWorkingDays(Short.valueOf("1"));
 		assertNotNull(weekDaysList);
-		assertEquals(Integer.valueOf("6").intValue(),weekDaysList.size());
+		//assertEquals(Integer.valueOf("6").intValue(),weekDaysList.size());
+		assertEquals(Integer.valueOf("7").intValue(),weekDaysList.size());
 	}
 	
 	public void testGetMeeting() throws Exception{

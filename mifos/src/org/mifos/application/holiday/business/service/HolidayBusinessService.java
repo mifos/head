@@ -2,9 +2,11 @@ package org.mifos.application.holiday.business.service;
 
 import java.util.List;
 
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
+import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -17,7 +19,7 @@ public class HolidayBusinessService extends BusinessService {
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return null;
 	}
-/*
+
 	public void isValidHolidayState(Short levelId, Short stateId,
 			boolean isCustomer) throws ServiceException {
 		try {
@@ -30,8 +32,9 @@ public class HolidayBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
-*/
+
 	public List<HolidayBO> 	getHolidays(int year, int localId) throws ServiceException {
+		//HolidayBO.isWorkingDay(Calendar.getInstance());		
 		try {
 			return new HolidayPersistence().getHolidays(year, localId);
 		} catch (PersistenceException pe) {
@@ -39,7 +42,7 @@ public class HolidayBusinessService extends BusinessService {
 		}
 	}
 	
-	public List<RepaymentRuleEntity> getRepaymentRuleTypes(int localId) throws ServiceException{
+	public List<RepaymentRuleEntity> getRepaymentRuleTypes(int localId) throws ServiceException{		
 		try {
 			return new HolidayPersistence().getRepaymentRuleTypes(localId);
 		} catch (PersistenceException pe) {
@@ -47,4 +50,11 @@ public class HolidayBusinessService extends BusinessService {
 		}
 	}
 	
+	public List<LoanScheduleEntity>	getAllLoanSchedule(HolidayBO holiday) throws ServiceException {	
+		try {
+			return new HolidayPersistence().getAllLoanScheduales(holiday);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
 }

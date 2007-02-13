@@ -4,12 +4,12 @@ import java.util.Date;
 
 import org.mifos.application.holiday.exceptions.HolidayException;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
+import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 
-public /*abstract*/ class HolidayBO extends BusinessObject {
+public class HolidayBO extends BusinessObject {
 
 	private HolidayPK holidayPK;
 
@@ -20,8 +20,6 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 	private Short repaymentRuleId;
 	private String repaymentRule; // view property
 	
-	private SupportedLocalesEntity supportedLocales;
-
 	protected HolidayBO() {
 		this.holidayPK = null;
 	}
@@ -70,28 +68,24 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 		this.holidayPK = holidayPK;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setRepaymentRuleId(Short repaymentRuleId) {
 		this.repaymentRuleId = repaymentRuleId;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setHolidayFromDate(Date holidayFromDate) {
 		this.holidayPK.setHolidayFromDate(holidayFromDate);
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setHolidayThruDate(Date holidayThruDate) {
 		this.holidayThruDate = holidayThruDate;
 	}
 
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setHolidayName(String holidayName) {
 		this.holidayName = holidayName;
-	}
-
-	public SupportedLocalesEntity getSupportedLocales() {
-		return this.supportedLocales;
-	}
-
-	private void setSupportedLocales(SupportedLocalesEntity supportedLocales) {
-		this.supportedLocales = supportedLocales;
 	}
 
 	public void save() throws HolidayException {
@@ -104,17 +98,16 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 
 	//protected 
 	public void update(HolidayPK holidayPK, Date holidayThruDate, 
-						  String holidayName, Short localeId)
+						  String holidayName)
 			throws HolidayException {
-
 		this.holidayName = holidayName;
 		this.holidayPK.setOfficeId(holidayPK.getOfficeId());
 		this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
-		this.supportedLocales = new SupportedLocalesEntity(localeId);
 		
 		// this block should not be here
 		try {
 			new HolidayPersistence().createOrUpdate(this);
+			HolidayUtils.rescheduleLoanRepaymentDates(this);
 		} catch (PersistenceException e) {
 			throw new HolidayException(e);
 		}
@@ -138,5 +131,6 @@ public /*abstract*/ class HolidayBO extends BusinessObject {
 	public String getRepaymentRule() {
 		return repaymentRule;
 	}
+	
 
 }

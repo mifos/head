@@ -42,6 +42,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.mifos.framework.struts.action.BaseAction;
+
 /**
  * This interface is used to annotate methods in the struts action class for transaction boundries
  * specifying when a new transaction is begining so that based on that a token can be generated and saved

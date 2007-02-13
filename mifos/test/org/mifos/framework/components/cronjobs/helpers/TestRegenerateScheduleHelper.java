@@ -39,8 +39,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.cronjobs.helpers.RegenerateScheduleHelper;
-import org.mifos.framework.components.cronjobs.helpers.RegenerateScheduleTask;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;

@@ -26,8 +26,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.cronjobs.helpers.SavingsIntPostingHelper;
-import org.mifos.framework.components.cronjobs.helpers.SavingsIntPostingTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;

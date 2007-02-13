@@ -458,8 +458,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 		return false;
 	}
 
+	/** altered become public instead of protected 
+	 *  reschedule LoanSchedules need it to be public
+	 */
 	@Override
-	protected void setActionDate(Date actionDate) {
+	public void setActionDate(Date actionDate) {
 		super.setActionDate(actionDate);
 	}
 

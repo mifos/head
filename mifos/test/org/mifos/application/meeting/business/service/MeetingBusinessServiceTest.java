@@ -25,7 +25,8 @@ public class MeetingBusinessServiceTest extends MifosTestCase{
 		MeetingBusinessService service = new MeetingBusinessService();
 		List<WeekDaysEntity> weekDaysList = service.getWorkingDays(Short.valueOf("1"));
 		assertNotNull(weekDaysList);
-		assertEquals(6, weekDaysList.size());
+		//assertEquals(6, weekDaysList.size());
+		assertEquals(7, weekDaysList.size());
 	}
 	
 	public void testFailureGetWeekDaysList() throws Exception{

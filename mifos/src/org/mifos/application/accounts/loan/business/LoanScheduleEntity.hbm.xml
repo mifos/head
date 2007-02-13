@@ -85,6 +85,14 @@
 			accountAction.account.accountId,accountAction.actionDate
 		]]>
 	</query>
+	
+	<query name="account.getAllLoanSchedules">
+		<![CDATA[ from org.mifos.application.accounts.loan.business.LoanScheduleEntity loanSchedule
+				 where loanSchedule.actionDate >= :FROM_DATE
+				   and loanSchedule.actionDate <= :THRU_DATE
+		]]>
+	</query>
+	
 
 	
 </hibernate-mapping>

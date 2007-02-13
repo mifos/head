@@ -1,8 +1,8 @@
 package org.mifos.framework.components.cronjobs.business;
 
-import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
-
 import junit.framework.TestCase;
+
+import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
 
 public class TaskTest extends TestCase {
 	

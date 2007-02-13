@@ -610,6 +610,7 @@ public interface NamedQueryConstants {
 //  holiday handling
 	public String GET_HOLIDAYS = "holiday.getHolidays";
 	public String GET_REPAYMENT_RULE_TYPES = "holiday.getRepaymentRuleLabels";
+	public String ALL_LOAN_SCHEDULE = "account.getAllLoanSchedules";
 	
 	public String GET_ALL_FIELD_CONFIGURATION_LIST = "getAllFieldConfigurationList";
 	
