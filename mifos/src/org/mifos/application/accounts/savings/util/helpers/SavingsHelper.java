@@ -64,13 +64,18 @@ public class SavingsHelper {
 	private Calendar cal;
 
 	// TODO: pick from configuration
+	/** I assume the hardcoding of 1 Jan 2006 is trying to say 
+	   that the default fiscal year is January 1 to December 31.
+	   Do we use the year?
+	   What does this control, versus 
+	   {@link SavingsConstants#POSTING_DAY}? */
 	public Date getFiscalStartDate() {
 		try {
-			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-			return df.parse("01/01/2006");
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			return format.parse("01/01/2006");
 		} catch (ParseException pe) {
+			throw new RuntimeException(pe);
 		}
-		return null;
 	}
 
 	private int getFiscalStartDayNumber() {
@@ -129,18 +134,25 @@ public class SavingsHelper {
 
 	private void setDetailsForMeeting(MeetingBO meeting){
 		meeting.setStartDate(getFiscalStartDate());
-		if(meeting.isMonthly()){
-			if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD.getValue()))
-				meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(Short.valueOf(new Integer(getFiscalStartDayNumber()).toString()));
-			else if(meeting.getMeetingType().getMeetingTypeId().equals(MeetingType.SAVINGS_INTEREST_POSTING.getValue()))
-				meeting.getMeetingDetails().getMeetingRecurrence().setDayNumber(SavingsConstants.POSTING_DAY);
+		if (meeting.isMonthly()) {
+			if (meeting.getMeetingTypeEnum() == 
+				MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD) {
+				meeting.getMeetingDetails().getMeetingRecurrence()
+					.setDayNumber((short) getFiscalStartDayNumber());
+			}
+			else if(meeting.getMeetingTypeEnum() == 
+				MeetingType.SAVINGS_INTEREST_POSTING) {
+				meeting.getMeetingDetails().getMeetingRecurrence()
+					.setDayNumber(SavingsConstants.POSTING_DAY);
+			}
 		}
 	}
 	
 	public int calculateDays(Date fromDate, Date toDate) {
-		long y = 1000 * 60 * 60 * 24;
-		long x = (getMFITime(toDate) / y) - (getMFITime(fromDate) / y);
-		return (int) x;
+		long oneDay = 1000 * 60 * 60 * 24;
+		long days = 
+			(getMFITime(toDate) / oneDay) - (getMFITime(fromDate) / oneDay);
+		return (int) days;
 	}
 
 	private long getMFITime(Date date) {

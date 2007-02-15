@@ -68,7 +68,9 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 		this.detailsId = null;
 	}
 	
-	public MeetingRecurrenceEntity(Short dayNumber, WeekDay weekDay, RankType rank, MeetingDetailsEntity meetingDetails) throws MeetingException {
+	public MeetingRecurrenceEntity(Short dayNumber, WeekDay weekDay, 
+			RankType rank, MeetingDetailsEntity meetingDetails) 
+	throws MeetingException {
 		validateFields(dayNumber, weekDay, rank);
 		if(dayNumber!=null)
 			this.dayNumber = dayNumber;

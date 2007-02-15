@@ -144,6 +144,11 @@ public class TestObjectPersistence {
 		return (MifosCurrency)session.get(MifosCurrency.class, currencyId);
 	}
 	
+	/**
+	 * TODO: This should just call {@link #update(PersistentObject)},
+	 * right?  Or is the difference between save and saveOrUpdate
+	 * relevant here?
+	 */
 	public LoanBO getLoanAccount(LoanBO loan) {
 		Session session = HibernateUtil.getSessionTL();
 		session.save(loan);

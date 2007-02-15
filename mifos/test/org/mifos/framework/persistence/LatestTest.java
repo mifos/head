@@ -93,6 +93,10 @@ public class LatestTest extends TestCase {
 	    persistence.execute(scripts, conn);
 	}
 
+	/**
+	 * Similar to what we get from {@link DatabaseSetup#getStandardStore()}
+	 * but without testdbinsertionscript.sql.
+	 */
 	private void loadRealLatest(Database database) {
 	    DatabaseSetup.executeScript(database, "sql/latest-schema.sql");
 	    DatabaseSetup.executeScript(database, "sql/latest-data.sql");

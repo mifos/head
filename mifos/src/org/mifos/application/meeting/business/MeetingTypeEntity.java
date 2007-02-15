@@ -69,5 +69,9 @@ public class MeetingTypeEntity extends PersistentObject {
 
 	public Short getMeetingTypeId() {
 		return meetingTypeId;
+	}
+
+	public MeetingType asEnum() {
+		return MeetingType.fromInt(meetingTypeId);
 	}	
 }

@@ -77,20 +77,32 @@ public class MeetingBO extends BusinessObject {
 	   used outside a single method. */
 	private GregorianCalendar gc = new GregorianCalendar();
 	
-	public MeetingBO(RecurrenceType recurrenceType, Short recurAfter, Date startDate, MeetingType meetingType)throws MeetingException{
-		this(recurrenceType, Short.valueOf("1"), WeekDay.MONDAY, null, recurAfter, startDate, meetingType, "meetingPlace");
+	public MeetingBO(RecurrenceType recurrenceType, Short recurAfter, 
+			Date startDate, MeetingType meetingType)
+	throws MeetingException {
+		this(recurrenceType, Short.valueOf("1"), WeekDay.MONDAY, null, 
+				recurAfter, startDate, meetingType, "meetingPlace");
 	}
 	
-	public MeetingBO(WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
-		this(RecurrenceType.MONTHLY, null, weekDay, rank, recurAfter, startDate, meetingType,meetingPlace);
+	public MeetingBO(WeekDay weekDay, RankType rank, Short recurAfter, 
+			Date startDate, MeetingType meetingType, String meetingPlace)
+	throws MeetingException {
+		this(RecurrenceType.MONTHLY, null, weekDay, rank, recurAfter, 
+				startDate, meetingType,meetingPlace);
 	}
 	
-	public MeetingBO(Short dayNumber, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
-		this(RecurrenceType.MONTHLY, dayNumber, null, null, recurAfter, startDate, meetingType, meetingPlace);
+	public MeetingBO(Short dayNumber, Short recurAfter, Date startDate, 
+			MeetingType meetingType, String meetingPlace)
+	throws MeetingException {
+		this(RecurrenceType.MONTHLY, dayNumber, null, null, recurAfter, 
+				startDate, meetingType, meetingPlace);
 	}
 	
-	public MeetingBO(WeekDay weekDay, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
-		this(RecurrenceType.WEEKLY, null, weekDay, null, recurAfter, startDate, meetingType, meetingPlace);
+	public MeetingBO(WeekDay weekDay, Short recurAfter, Date startDate, 
+			MeetingType meetingType, String meetingPlace)
+	throws MeetingException {
+		this(RecurrenceType.WEEKLY, null, weekDay, null, recurAfter, 
+				startDate, meetingType, meetingPlace);
 	}
 	
 	protected MeetingBO() {
@@ -100,9 +112,14 @@ public class MeetingBO extends BusinessObject {
 		this.meetingStartDate = null;
 	}
 	
-	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, Date startDate, MeetingType meetingType, String meetingPlace)throws MeetingException{
+	private MeetingBO(RecurrenceType recurrenceType, Short dayNumber, 
+			WeekDay weekDay, RankType rank, Short recurAfter, 
+			Date startDate, MeetingType meetingType, String meetingPlace)
+	throws MeetingException {
 		this.validateFields(recurrenceType,startDate,meetingType,meetingPlace);
-		this.meetingDetails =  new MeetingDetailsEntity(new RecurrenceTypeEntity(recurrenceType), dayNumber, weekDay, rank, recurAfter, this);
+		this.meetingDetails =  new MeetingDetailsEntity(
+				new RecurrenceTypeEntity(recurrenceType), dayNumber, 
+				weekDay, rank, recurAfter, this);
 		//TODO: remove this check after meeting create is migrated.
 		if(meetingType!=null)
 			this.meetingType = new MeetingTypeEntity(meetingType);
@@ -151,6 +168,10 @@ public class MeetingBO extends BusinessObject {
 
 	public MeetingTypeEntity getMeetingType() {
 		return meetingType;
+	}
+
+	public MeetingType getMeetingTypeEnum() {
+		return meetingType.asEnum();
 	}
 
 	public void setMeetingType(MeetingTypeEntity meetingType) {

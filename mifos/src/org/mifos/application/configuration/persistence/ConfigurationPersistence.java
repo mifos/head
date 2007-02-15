@@ -50,13 +50,7 @@ import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
-/**
- * 
- *
- */
 public class ConfigurationPersistence extends Persistence {
-	
-	
 	
 	public List<MifosLookUpEntity> getLookupEntities(){
 		
@@ -81,6 +75,7 @@ public class ConfigurationPersistence extends Persistence {
 		
 		return entities;
 	}
+
 	public List<LookUpValueEntity> getLookupValues(){
 		List<LookUpValueEntity> values=null;
 		try{
@@ -109,7 +104,7 @@ public class ConfigurationPersistence extends Persistence {
 	
 	public List<SupportedLocalesEntity> getSupportedLocale(){
 		List<SupportedLocalesEntity> locales=null;
-		try{
+		try {
 		Session session = HibernateUtil.getSessionTL();
 
 		 locales = session.getNamedQuery(
@@ -122,12 +117,11 @@ public class ConfigurationPersistence extends Persistence {
 				locale.getLocaleId();
 
 			}
-		} finally{
+		} finally {
 			HibernateUtil.closeSession();
-
 		}
 		
 		return locales;
-
 	}
+
 }

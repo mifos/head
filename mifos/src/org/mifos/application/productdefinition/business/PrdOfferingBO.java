@@ -61,9 +61,9 @@ import org.mifos.framework.util.helpers.StringUtils;
  * A product is a set of rules (interest rate, number of installments,
  * maximum amount, etc) which describes what an MFI offers.
  * 
- * Although we may sometimes call these "offerings", it is probably better
- * to call them "products" (as that seems to be the terminology in
- * the functional spec and elsewhere).
+ * Although we may sometimes call these "offerings", the preferred
+ * word is "products" (that is what they are called in the functional
+ * specification, and the wider microfinance industry).
  */
 public abstract class PrdOfferingBO extends BusinessObject {
 

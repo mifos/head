@@ -73,10 +73,13 @@ public enum MeetingType {
 		return value;
 	}
 
-	public static MeetingType getMeetingType(Short value) {
-		for (MeetingType meetingType : MeetingType.values())
-			if (meetingType.getValue().equals(value))
+	public static MeetingType fromInt(int value) {
+		for (MeetingType meetingType : MeetingType.values()) {
+			if (meetingType.getValue() == value) {
 				return meetingType;
-		return null;
+			}
+		}
+		throw new RuntimeException("meeting type " + value + " unrecognized");
 	}
+
 }

@@ -2237,7 +2237,7 @@ public class LoanBO extends AccountBO {
 			RecurrenceType meetingFrequency = 
 				customerMeeting.getMeetingDetails().getRecurrenceTypeEnum();
 			MeetingType meetingType = MeetingType
-					.getMeetingType(customerMeeting.getMeetingType()
+					.fromInt(customerMeeting.getMeetingType()
 							.getMeetingTypeId());
 			Short recurAfter = loanOfferingMeeting.getMeetingDetails()
 					.getRecurAfter();

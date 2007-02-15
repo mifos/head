@@ -59,7 +59,10 @@ public class MeetingDetailsEntity extends PersistentObject {
 
 	private final MeetingBO meeting;
 
-	public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, MeetingBO meeting)throws MeetingException {
+	public MeetingDetailsEntity(RecurrenceTypeEntity recurrenceType, 
+			Short dayNumber, WeekDay weekDay, RankType rank, Short recurAfter, 
+			MeetingBO meeting)
+	throws MeetingException {
 		this.validateFields(recurAfter);
 		this.recurrenceType = recurrenceType;
 		this.recurAfter = recurAfter;
@@ -67,7 +70,8 @@ public class MeetingDetailsEntity extends PersistentObject {
 		if(recurrenceType.isWeekly())
 			this.meetingRecurrence = new MeetingRecurrenceEntity(weekDay, this);
 		else if(recurrenceType.isMonthly())
-			this.meetingRecurrence = new MeetingRecurrenceEntity(dayNumber, weekDay, rank, this);			
+			this.meetingRecurrence = new MeetingRecurrenceEntity(dayNumber, 
+					weekDay, rank, this);			
 		else
 			this.meetingRecurrence = new MeetingRecurrenceEntity(this);
 			

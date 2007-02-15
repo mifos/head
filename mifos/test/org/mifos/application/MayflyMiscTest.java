@@ -35,13 +35,9 @@ public class MayflyMiscTest extends TestCase {
 		System.out.println("total = " + (end - start) / 1000.0 + " s");
 	}
     
-    public void xtestMayflyDump() throws Exception {
-    	/* not yet passing.  Something wrong in the mayfly dump
-    	   code which sorts by foreign keys, it would seem.
-    	 */
+    public void testMayflyDump() throws Exception {
         checkRoundTrip(DatabaseSetup.getStandardStore());
     }
-    
 
     /**
      * From a datastore, dump it, then load from that dump,

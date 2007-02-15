@@ -316,7 +316,7 @@ public class SavingsBO extends AccountBO {
 			throws MeetingException {
 		RecurrenceType recurrenceType =
 			offeringMeeting.getMeetingDetails().getRecurrenceTypeEnum();
-		MeetingType meetingType = MeetingType.getMeetingType(offeringMeeting
+		MeetingType meetingType = MeetingType.fromInt(offeringMeeting
 				.getMeetingType().getMeetingTypeId());
 		return new MeetingBO(recurrenceType, offeringMeeting
 				.getMeetingDetails().getRecurAfter(), helper

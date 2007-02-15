@@ -71,7 +71,7 @@ public class PrdOfferingMeetingEntity extends PersistentObject {
 	}
 
 	public MeetingType getprdOfferingMeetingType() {
-		return MeetingType.getMeetingType(meetingType);
+		return MeetingType.fromInt(meetingType);
 	}
 
 	private PrdOfferingBO getPrdOffering() {

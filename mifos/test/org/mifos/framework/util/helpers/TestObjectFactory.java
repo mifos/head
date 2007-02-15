@@ -774,7 +774,7 @@ public class TestObjectFactory {
 					.fromInt(customerMeeting.getMeetingDetails()
 							.getRecurrenceType().getRecurrenceId());
 			MeetingType meetingType = MeetingType
-					.getMeetingType(customerMeeting.getMeetingType()
+					.fromInt(customerMeeting.getMeetingType()
 							.getMeetingTypeId());
 			Short recurAfter = customerMeeting.getMeetingDetails()
 					.getRecurAfter();
