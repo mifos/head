@@ -45,12 +45,25 @@ public class LoanCycleCounter  implements Serializable{
 	 */
 	@Override
 	public boolean equals(Object obj){
-		if(null != obj){
+		if(null != obj && obj instanceof LoanCycleCounter){
 			LoanCycleCounter otherObj = (LoanCycleCounter)obj;
 			return this.offeringName.equals(otherObj.offeringName);
 		}
 		return super.equals(obj);
 		
+	}
+	/*
+	 * Since equals uses the offeringName String for Equality, use the same for hashcode
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+
+			if(null != this.offeringName){
+				return this.offeringName.hashCode();
+			}
+			return super.hashCode();
+
 	}
 
 	public void incrementCounter() {

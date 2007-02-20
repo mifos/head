@@ -96,4 +96,16 @@ public class BulkEntryAccountFeeActionView extends View {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		//null case, should never happen, but some one could put in a null constructor
+		if(null == this.getActionDateId()){
+			return (super.hashCode());
+		}
+		return this.getActionDateId().intValue();
+	}
+
 }
