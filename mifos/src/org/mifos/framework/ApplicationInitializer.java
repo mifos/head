@@ -164,10 +164,9 @@ public class ApplicationInitializer implements ServletContextListener {
 	private void configureAdminUser() throws XMLReaderException,
 			URISyntaxException, HibernateProcessException, SystemException {
 		Session session = null;
-		byte[] password;
-
-		password = EncryptionService.getInstance().createEncryptedPassword(
-				"mifos");
+		byte[] password = 
+			EncryptionService.getInstance().createEncryptedPassword(
+				"testmifos");
 		try {
 			session = HibernateUtil.openSession();
 			Transaction trxn = session.beginTransaction();
