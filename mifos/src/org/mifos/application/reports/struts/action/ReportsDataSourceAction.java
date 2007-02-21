@@ -46,71 +46,62 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.reports.business.ReportsDataSource;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
+import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.ReportsDataSourceActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 
 /**
  * Control Class for Report DataSource
  */
 public class ReportsDataSourceAction extends BaseAction {
 	
-	private ReportsBusinessService reportsBusinessService ;
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+	private ReportsBusinessService reportsBusinessService;
+	private ReportsPersistence reportsPersistence;
+	private MifosLogger logger = 
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
 	public ReportsDataSourceAction() throws ServiceException {
-		reportsBusinessService = (ReportsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.ReportsService);		
+		reportsBusinessService = new ReportsBusinessService();
+		reportsPersistence = new ReportsPersistence();
 	}
 	
 	@Override
 	protected BusinessService getService() {
 		return reportsBusinessService;
 	}
+
 	/**
 	 * Loads the DataSource Add page
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
 	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		logger.debug("In ReportsDataSourceAction:load Method: ");		
 		return mapping.findForward(ReportsConstants.ADDREPORTSDATASOURCE);
 	}
+
 	/**
 	 * Loads DataSource List Page
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
-	public ActionForward loadList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+	public ActionForward loadList(ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response)
+	throws Exception {
 		logger.debug("In ReportsDataSourceAction:loadList Method: ");		
-		request.getSession().setAttribute("listOfReportsDataSource", reportsBusinessService.getAllReportDataSource());
+		request.getSession().setAttribute("listOfReportsDataSource", 
+				reportsPersistence.getAllReportDataSource());
 		return mapping.findForward(ReportsConstants.LISTREPORTSDATASOURCE);
 	}
 	
 	/**
 	 * Veiw DataSource
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
-	public ActionForward loadView(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+	public ActionForward loadView(ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response)	
+	throws Exception {
 		logger.debug("In ReportsDataSourceAction:loadView Method: ");		
 		ReportsDataSourceActionForm actionForm=(ReportsDataSourceActionForm)form;
 		String strDataSourceId = request.getParameter("dataSourceId");
@@ -120,22 +111,17 @@ public class ReportsDataSourceAction extends BaseAction {
 			strDataSourceId = "0";
 		int dataSourceId = Integer.parseInt(strDataSourceId);
 		 actionForm.setDatasourceId(dataSourceId);
-		request.getSession().setAttribute("viewDataSource", reportsBusinessService.viewDataSource(dataSourceId));
+		request.getSession().setAttribute("viewDataSource", 
+			reportsPersistence.viewDataSource(dataSourceId));
 		return mapping.findForward(ReportsConstants.VIEWREPORTSDATASOURCE);
 	}
 	
     /**
      * Controls the creation of DataSource 
-     * @param mapping
-     * @param form
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
      */
-    
-    public ActionForward createDataSource(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		
+    public ActionForward createDataSource(ActionMapping mapping, ActionForm form, 
+    		HttpServletRequest request, HttpServletResponse response)	
+    throws Exception {
     	logger.debug("In ReportsDataSourceAction:createDataSource Method: ");
     	ReportsDataSourceActionForm actionForm=(ReportsDataSourceActionForm)form;
     	ReportsDataSource objDs = new ReportsDataSource();
@@ -144,20 +130,16 @@ public class ReportsDataSourceAction extends BaseAction {
     	objDs.setUrl(actionForm.getUrl());
     	objDs.setPassword(actionForm.getPassword());
     	objDs.setUsername(actionForm.getUsername());
-    	reportsBusinessService.createReportsDataSource(objDs);
+    	reportsPersistence.createReportsDataSource(objDs);
 		return mapping.findForward("reportdatasource_path");
 	}
+
     /**
      * Controls the deletion of DataSource
-     * @param mapping
-     * @param form
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
      */
-public ActionForward deleteDataSource(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		
+    public ActionForward deleteDataSource(ActionMapping mapping, ActionForm form, 
+    		HttpServletRequest request, HttpServletResponse response)	
+    throws Exception {
     	logger.debug("In ReportsDataSourceAction:deleteDataSource Method: ");
     	ReportsDataSourceActionForm actionForm=(ReportsDataSourceActionForm)form;
     	ReportsDataSource objDs = new ReportsDataSource();
@@ -167,8 +149,4 @@ public ActionForward deleteDataSource(ActionMapping mapping, ActionForm form, Ht
     	return mapping.findForward("reportdatasource_path");
 	}
     
-   
-    
-
-
 }

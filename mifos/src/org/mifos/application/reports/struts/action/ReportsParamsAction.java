@@ -46,68 +46,61 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.reports.business.ReportsParamsValue;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
+import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.ReportsParamsActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
+
 /**
  * Control Class for Report Params 
  */
 public class ReportsParamsAction extends BaseAction {
 	
 	private ReportsBusinessService reportsBusinessService ;
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+	private ReportsPersistence reportsPersistence;
+	private MifosLogger logger = 
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
 	public ReportsParamsAction() throws ServiceException {
-		reportsBusinessService = (ReportsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.ReportsService);		
+		reportsBusinessService = new ReportsBusinessService();
+		reportsPersistence = new ReportsPersistence();
 	}
 	
 	@Override
 	protected BusinessService getService() {
 		return reportsBusinessService;
 	}
+
 	/**
 	 * Loads the Parameter Add page
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
-	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+	public ActionForward load(ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response)	
+	throws Exception {
 		logger.debug("In ReportsParamsAction:load Method: ");		
-		request.getSession().setAttribute("listOfReportsDataSource", reportsBusinessService.getAllReportDataSource());
+		request.getSession().setAttribute("listOfReportsDataSource", 
+				reportsPersistence.getAllReportDataSource());
 		return mapping.findForward(ReportsConstants.ADDREPORTSPARAMS);
 	}
+
 	/**
 	 * Loads Parameter List Page
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
-	public ActionForward loadList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+	public ActionForward loadList(ActionMapping mapping, ActionForm form, 
+			HttpServletRequest request, HttpServletResponse response)	
+	throws Exception {
 		logger.debug("In ReportsParamsAction:loadList Method: ");		
 		request.getSession().setAttribute("listOfReportsParams", reportsBusinessService.getAllReportParams());
 		return mapping.findForward(ReportsConstants.LISTREPORTSPARAMS);
 	}
+
 	/**
-	 * Veiw parameter
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
+	 * View parameter
 	 */
 	public ActionForward loadView(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		logger.debug("In ReportsParamsAction:loadView Method: ");		
@@ -119,24 +112,20 @@ public class ReportsParamsAction extends BaseAction {
 			strParameterId = "0";
 		int parameterId = Integer.parseInt(strParameterId);
 		 actionForm.setParameterId(parameterId);
-		request.getSession().setAttribute("viewParams", reportsBusinessService.viewParameter(parameterId));
+		request.getSession().setAttribute("viewParams", 
+				reportsPersistence.viewParameter(parameterId));
 		return mapping.findForward(ReportsConstants.VIEWREPORTSPARAMS);
 	}
 	
     /**
      * Controls the creation of Parameter 
-     * @param mapping
-     * @param form
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
      */
     
-    public ActionForward createParams(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		
+    public ActionForward createParams(ActionMapping mapping, ActionForm form, 
+    	HttpServletRequest request, HttpServletResponse response)
+    throws Exception {
     	logger.debug("In ReportsParamsAction:createParams Method: ");
-    	ReportsParamsActionForm actionForm=(ReportsParamsActionForm)form;
+    	ReportsParamsActionForm actionForm = (ReportsParamsActionForm)form;
     	ReportsParamsValue objParams = new ReportsParamsValue();
     	objParams.setClassname(actionForm.getClassname());
     	objParams.setData(actionForm.getData());
@@ -153,17 +142,13 @@ public class ReportsParamsAction extends BaseAction {
     		forward = "reportparams_path";
     	return mapping.findForward(forward);
 	}
+
     /**
      * Controls the deletion of Parameter
-     * @param mapping
-     * @param form
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
      */
-public ActionForward deleteParams(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		
+    public ActionForward deleteParams(ActionMapping mapping, ActionForm form, 
+    	HttpServletRequest request, HttpServletResponse response)
+    throws Exception {
     	logger.debug("In ReportsParamsAction:deleteParams Method: ");
     	ReportsParamsActionForm actionForm=(ReportsParamsActionForm)form;
     	ReportsParamsValue objParams = new ReportsParamsValue();
@@ -173,8 +158,4 @@ public ActionForward deleteParams(ActionMapping mapping, ActionForm form, HttpSe
 		return mapping.findForward("reportparams_path");
 	}
     
-   
-    
-
-
 }

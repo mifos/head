@@ -46,40 +46,38 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.reports.business.ReportsParamsMapValue;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
+import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.ReportsParamsMapActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
+
 /**
  * Control Class for Report Params 
  */
 public class ReportsParamsMapAction extends BaseAction {
 	
 	private ReportsBusinessService reportsBusinessService ;
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+	private ReportsPersistence reportsPersistence;
+	private MifosLogger logger = 
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
 	public ReportsParamsMapAction() throws ServiceException {
-		reportsBusinessService = (ReportsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.ReportsService);		
+		reportsBusinessService = new ReportsBusinessService();
+		reportsPersistence = new ReportsPersistence();
 	}
 	
 	@Override
 	protected BusinessService getService() {
 		return reportsBusinessService;
 	}
+
 	/**
 	 * Loads the Parameter Map AddList page
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
 	public ActionForward loadAddList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		logger.debug("In ReportsParamsMapAction:load Method: ");		
@@ -92,23 +90,18 @@ public class ReportsParamsMapAction extends BaseAction {
 			strReportId = "0";
 		int reportId = Integer.parseInt(strReportId);
 		 actionForm.setReportId(reportId);
-		 request.getSession().setAttribute("listOfAllParametersForReportId", reportsBusinessService.findParamsOfReportId(reportId));
+		 request.getSession().setAttribute("listOfAllParametersForReportId", 
+				 reportsPersistence.findParamsOfReportId(reportId));
     	return mapping.findForward(ReportsConstants.ADDLISTREPORTSPARAMSMAP);
 	}
 	
 	
     /**
-     * Controls the creation of a link between parameter and  a report
-     * @param mapping
-     * @param form
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
+     * Controls the creation of a link between parameter and a report
      */
-    
-    public ActionForward createParamsMap(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		
+    public ActionForward createParamsMap(ActionMapping mapping, ActionForm form, 
+    	HttpServletRequest request, HttpServletResponse response)
+    throws Exception {
     	logger.debug("In ReportsParamsAction:createParamsMap Method: ");
     	ReportsParamsMapActionForm actionForm=(ReportsParamsMapActionForm)form;
     	ReportsParamsMapValue objParams = new ReportsParamsMapValue();
@@ -118,28 +111,19 @@ public class ReportsParamsMapAction extends BaseAction {
     	request.getSession().setAttribute("addError",error);
 		return mapping.findForward("reportparamsmap_path");
 	}
+
     /**
      * Controls the deletion of a link between Parameter and a report
-     * @param mapping
-     * @param form
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
      */
-public ActionForward deleteParamsMap(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		
+    public ActionForward deleteParamsMap(ActionMapping mapping, ActionForm form, 
+   		HttpServletRequest request, HttpServletResponse response)
+    throws Exception {
     	logger.debug("In ReportsParamsAction:deleteParams Method: ");
     	ReportsParamsMapActionForm actionForm=(ReportsParamsMapActionForm)form;
     	ReportsParamsMapValue objParams = new ReportsParamsMapValue();
     	objParams.setMapId(actionForm.getMapId());
-    	reportsBusinessService.deleteReportsParamsMap(objParams);
+    	reportsPersistence.deleteReportsParamsMap(objParams);
 		return mapping.findForward("reportparamsmap_path");
 	}
     
-   
-    
-
-
 }
-

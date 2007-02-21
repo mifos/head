@@ -62,48 +62,43 @@ import org.mifos.application.reports.business.ReportsParams;
 import org.mifos.application.reports.business.ReportsParamsMap;
 import org.mifos.application.reports.business.ReportsParamsMapValue;
 import org.mifos.application.reports.business.ReportsParamsValue;
-import org.mifos.application.reports.persistence.service.ReportsPersistenceService;
+import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 /**
- * This class encapsulates all the business logic related to report module 
+ * This class encapsulates all the business logic related to report module.
+ * Where there is no logic, it is OK to bypass this class and call
+ * {@link ReportsPersistence} directly.
  */
-
 public class ReportsBusinessService extends BusinessService {
 	
-	private ReportsPersistenceService reportsPersistenceService;
-	
-	
+	private ReportsPersistence reportsPersistence = new ReportsPersistence();
+
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
 		return new ReportsBO(userContext);
 	}
 	
-	private ReportsPersistenceService getPersistenceService()throws ServiceException{
-		if(reportsPersistenceService==null){
-			reportsPersistenceService=(ReportsPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.Reports);
-		}
-		return reportsPersistenceService;
-	}
 	/**
 	 * Lists all the Report Categories. 
 	 * The list also contains the set of Reports within a particular category
 	 */
-	public List<ReportsCategoryBO> getAllReportCategories() throws ServiceException{
-			return getPersistenceService().getAllReportCategories();
+	public List<ReportsCategoryBO> getAllReportCategories() 
+	throws ServiceException {
+		return new ReportsPersistence().getAllReportCategories();
 	}
 	
 	/**
 	 * List all Report Parameters
 	 */
 	public List<ReportsParams> getAllReportParams() throws ServiceException {
-		return getPersistenceService().getAllReportParams();
+		return reportsPersistence.getAllReportParams();
 	}
 	
 	
@@ -112,7 +107,7 @@ public class ReportsBusinessService extends BusinessService {
 	 * Create Report Parameter
 	 */
 	public String createReportsParams(ReportsParamsValue objParams)
-	throws ServiceException {
+	throws ApplicationException {
 		String error = "";
 		boolean isInUse = false;
 		List<ReportsParams> reportsParams = getAllReportParams();
@@ -134,7 +129,7 @@ public class ReportsBusinessService extends BusinessService {
 		else if(objParams.getDescription()==null || objParams.getDescription().equals("") || isInUse)
 			error = "Description cannot be blank";
 		else
-			getPersistenceService().createReportParams(objParams);
+			reportsPersistence.createReportParams(objParams);
 		return error;
 	}
 
@@ -142,165 +137,59 @@ public class ReportsBusinessService extends BusinessService {
 	 * Delete Report Parameter
 	 */
 	public String deleteReportsParams(ReportsParamsValue objParams)
-	throws ServiceException,PersistenceException{
-		String error="";
-		List<ReportsParamsMap> reportParamsMap = findInUseParameter(objParams.getParameterId());
-		if(reportParamsMap!=null && reportParamsMap.size()==0)
-		{
-			getPersistenceService().deleteReportParams(objParams);
-			error="";
+	throws SystemException, ApplicationException {
+		List<ReportsParamsMap> reportParamsMap = 
+			reportsPersistence.findInUseParameter(objParams.getParameterId());
+		if (reportParamsMap!=null && reportParamsMap.size()==0) {
+			reportsPersistence.deleteReportParams(objParams);
+			return "";
 		}
-		else
-			error = "Parameter in Use";
-		return error;
+		else {
+			return "Parameter in Use";
+		}
 	}
 	
-	/**
-	 * List all DataSource
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<ReportsDataSource> getAllReportDataSource() throws ServiceException{
-		return getPersistenceService().getAllReportDataSource();
-	}
-	
-	/**
-	 * Create Report DataSource
-	 * @param objDataSource
-	 * @throws ServiceException
-	 */
-	public void createReportsDataSource(ReportsDataSource objDataSource)throws ServiceException{
-		getPersistenceService().createReportsDataSource(objDataSource);
-	}
 	/**
 	 * Delete Report DataSource
-	 * @param objDataSource
-	 * @throws ServiceException
 	 */
-	public String deleteReportsDataSource(ReportsDataSource objDataSource)throws ServiceException,PersistenceException{
-		
-		String error="";
-		List<ReportsParams> reportParams = findInUseDataSource(objDataSource.getDatasourceId());
-		if(reportParams!=null && reportParams.size()==0)
-		{
-			getPersistenceService().deleteReportsDataSource(objDataSource);
-			error="";
+	public String deleteReportsDataSource(ReportsDataSource objDataSource)
+	throws SystemException, ApplicationException {
+		List<ReportsParams> reportParams = 
+			reportsPersistence.findInUseDataSource(objDataSource.getDatasourceId());
+		if(reportParams!=null && reportParams.size()==0) {
+			reportsPersistence.deleteReportsDataSource(objDataSource);
+			return "";
 		}
-		else
-			error = "DataSource in Use";
-		return error;
-		
-		
-	}
-	
-	/**
-	 * List all Reports PArams Map
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<ReportsParamsMap> getAllReportParamsMap() throws ServiceException{
-		return getPersistenceService().getAllReportParamsMap();
-	}
-	
-	/**
-	 * List all Parameters of given Report Id
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<ReportsParamsMap> findParamsOfReportId(int reportId) throws ServiceException,PersistenceException{
-		return getPersistenceService().findParamsOfReportId(reportId);
-	}
-	
-	/**
-	 * List all Parameters of given Report Id
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<ReportsParamsMap> findInUseParameter(int parameterId) throws ServiceException,PersistenceException{
-		return getPersistenceService().findInUseParameter(parameterId);
-	}
-	
-	/**
-	 * view datasource
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<ReportsDataSource> viewDataSource(int dataSourceId) throws ServiceException,PersistenceException{
-		return getPersistenceService().viewDataSource(dataSourceId);
-	}
-	/**
-	 * view Parameer
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<ReportsParams> viewParameter(int parameterId) throws ServiceException,PersistenceException{
-		return getPersistenceService().viewParameter(parameterId);
-	}
-	/**
-	 * List all DataSource of given Report Id
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<ReportsParams> findInUseDataSource(int dataSourceId) throws ServiceException,PersistenceException{
-		return getPersistenceService().findInUseDataSource(dataSourceId);
+		else {
+			return "DataSource in Use";
+		}
 	}
 	
 	/**
 	 * Create a link between report and parameter
-	 * @param objReportParamsMapValue
-	 * @throws ServiceException
 	 */
-	public String createReportsParamsMap(ReportsParamsMapValue objReportParamsMapValue)throws ServiceException{
-		String error = "";
-		if(objReportParamsMapValue.getParameterId()==0)
-			error = "No Parameter is selected";
-		else if(objReportParamsMapValue.getReportId()==0)
-			error = "No Report Selected";
-		else
-			getPersistenceService().createReportsParamsMap(objReportParamsMapValue);
-		return error;
+	public String createReportsParamsMap(ReportsParamsMapValue objReportParamsMapValue)
+	throws SystemException, ApplicationException{
+		if (objReportParamsMapValue.getParameterId() == 0) {
+			return "No Parameter is selected";
+		}
+		else if (objReportParamsMapValue.getReportId() ==0) {
+			return "No Report Selected";
+		}
+		else {
+			reportsPersistence.createReportsParamsMap(objReportParamsMapValue);
+			return "";
+		}
 	}
-	/**
-	 * Delete a link between report and parameter
-	 * @param objReportParamsMapValue
-	 * @throws ServiceException
-	 */
-	public void deleteReportsParamsMap(ReportsParamsMapValue objReportParamsMapValue)throws ServiceException{
-		getPersistenceService().deleteReportsParamsMap(objReportParamsMapValue);
-	}
-	
-	/**
-     * Sets link between report and jasper report file
-     * @param reportsJasperMap
-     */
-	public void updateReportsJasperMap(ReportsJasperMap reportsJasperMap)throws ServiceException{
-		getPersistenceService().updateReportsJasperMap(reportsJasperMap);
-		
-	}
-	
-	/**
-	 * Find Jasper of report 
-	 * @param reportId
-	 * @return
-	 * @throws ServiceException
-	 */
-	public List<ReportsJasperMap> findJasperOfReportId(int reportId) throws ServiceException,PersistenceException{
-		return getPersistenceService().findJasperOfReportId(reportId);
-	}
-	/**
-	 * Runs the Report 
-	 * @param reportId
-	 * @param request
-	 * @param applPath
-	 * @param exportType
-	 * @return
-	 * @throws ServiceException
-	 */
-	public String runReport(int reportId,HttpServletRequest request,String applPath,String exportType)throws ServiceException,PersistenceException{
+
+	public String runReport(int reportId, HttpServletRequest request,
+			String applPath, String exportType)
+	throws ServiceException, PersistenceException {
 		String exportFileName="";
 		String error = "";
 		Connection conn =null;
-		List<ReportsJasperMap> reportJasperMap = findJasperOfReportId(reportId);
+		List<ReportsJasperMap> reportJasperMap = 
+			reportsPersistence.findJasperOfReportId(reportId);
 		ReportsJasperMap rjm = null;
 		Object[] obj = reportJasperMap.toArray();
 		if(obj!=null && obj.length>0)
@@ -357,7 +246,7 @@ public class ReportsBusinessService extends BusinessService {
 					if(rjm!=null)
 						jaspername = rjm.getReportJasper()==null?"":rjm.getReportJasper();
 					jaspername = jaspername.replaceAll(".jasper",".jrxml");
-					conn = getPersistenceService().getJasperConnection();
+					conn = reportsPersistence.getJasperConnection();
 					
 					String fullpath = applPath+jaspername;
 					JasperDesign jasperDesign = JRXmlLoader.load(fullpath);
@@ -379,15 +268,15 @@ public class ReportsBusinessService extends BusinessService {
 					
 				}catch(Exception e)
 				{
-					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 				finally{
 					try{
 						/*if(conn!=null)
 							conn.close();*/
-					}catch(Exception se)
+					}catch(Exception e)
 					{
-						se.printStackTrace();
+						throw new RuntimeException(e);
 					}
 				}
 			} 
@@ -400,7 +289,7 @@ public class ReportsBusinessService extends BusinessService {
 				if(rjm!=null)
 					jaspername = rjm.getReportJasper()==null?"":rjm.getReportJasper();
 				jaspername = jaspername.replaceAll(".jasper",".jrxml");
-				conn = getPersistenceService().getJasperConnection();
+				conn = reportsPersistence.getJasperConnection();
 				
 				String fullpath = applPath+jaspername;
 				JasperDesign jasperDesign = JRXmlLoader.load(fullpath);
@@ -422,7 +311,7 @@ public class ReportsBusinessService extends BusinessService {
 				
 			}catch(Exception e)
 			{
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 			finally{
 				try{
@@ -430,7 +319,7 @@ public class ReportsBusinessService extends BusinessService {
 						conn.close();*/
 				}catch(Exception se)
 				{
-					se.printStackTrace();
+					throw new RuntimeException(se);
 				}
 			}
 			

@@ -52,26 +52,28 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
+import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 /**
  * Control Class for Uploading Report
  */
 
 public class ReportsUploadAction extends BaseAction{
 	 
-	private ReportsBusinessService reportsBusinessService ;
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+	private final ReportsBusinessService reportsBusinessService ;
+	private final ReportsPersistence reportsPersistence;
+	private MifosLogger logger = 
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
 	public ReportsUploadAction() throws ServiceException {
-		reportsBusinessService = (ReportsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.ReportsService);		
+		reportsBusinessService = new ReportsBusinessService();		
+		reportsPersistence = new ReportsPersistence();
 	}
 	
 	@Override
@@ -129,7 +131,7 @@ public class ReportsUploadAction extends BaseAction{
 			ReportsJasperMap objmap = new ReportsJasperMap();
 			objmap.setReportId((short)reportId);
 			objmap.setReportJasper(fname);
-			reportsBusinessService.updateReportsJasperMap(objmap);
+			reportsPersistence.updateReportsJasperMap(objmap);
 			request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,reportsBusinessService.getAllReportCategories());
 		}
 

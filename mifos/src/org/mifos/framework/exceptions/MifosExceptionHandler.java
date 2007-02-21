@@ -64,7 +64,6 @@ public class MifosExceptionHandler extends ExceptionHandler {
 	 * This method is used to log the exceptions. If the exception is of type
 	 * {@link SystemException} or {@link ApplicationException} it logs exception
 	 * using MifosLogger else calls <code>super.logException()</code>
-	 * 
 	 */
 	@Override
 	protected void logException(Exception e) {
@@ -86,7 +85,7 @@ public class MifosExceptionHandler extends ExceptionHandler {
 	 * Figures the type of exception and thus gets the page to which it should
 	 * be forwarded. If the exception is of type {@link SystemException} it is
 	 * forwarded to standard page which is obtained using Exception Config. If
-	 * the exception is of type {@link ApplicationException}the page to which
+	 * the exception is of type {@link ApplicationException} the page to which
 	 * the request is forwarded is figured out using the string
 	 * <method_invoked>+failure which should be defined in the ActionConfig.
 	 */

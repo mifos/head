@@ -38,11 +38,7 @@
 
 package org.mifos.application.reports.struts.action;
 
-
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,28 +49,29 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.application.reports.business.ReportsParamsMap;
 import org.mifos.application.reports.business.dao.ReportsParamQueryDAO;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
+import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.struts.actionforms.ReportsUserParamsActionForm;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
-
 
 /**
  * Control Class for Report Params 
  */
 public class ReportsUserParamsAction extends BaseAction {
 	
-	private ReportsBusinessService reportsBusinessService ;
+	private final ReportsBusinessService reportsBusinessService;
+	private final ReportsPersistence reportsPersistence;
+
 	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
 	public ReportsUserParamsAction() throws ServiceException {
-		reportsBusinessService = (ReportsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.ReportsService);		
+		reportsBusinessService = new ReportsBusinessService();
+		reportsPersistence = new ReportsPersistence();
 	}
 	
 	@Override
@@ -97,22 +94,23 @@ public ActionForward loadAddList(ActionMapping mapping, ActionForm form, HttpSer
 		strReportId = "0";
 	int reportId = Integer.parseInt(strReportId);
 	 actionForm.setReportId(reportId);
-	 request.getSession().setAttribute("listOfAllParametersForReportId", reportsBusinessService.findParamsOfReportId(reportId));
-	 request.getSession().setAttribute("listOfReportJasper", reportsBusinessService.findJasperOfReportId(reportId));
+	 request.getSession().setAttribute("listOfAllParametersForReportId", 
+			 reportsPersistence.findParamsOfReportId(reportId));
+	 request.getSession().setAttribute("listOfReportJasper", 
+			 reportsPersistence.findJasperOfReportId(reportId));
 	 
 	 List<ReportsParamsMap> reportParams =(List) request.getSession().getAttribute("listOfAllParametersForReportId");
 	 Object[] obj = reportParams.toArray();
-	 Map parameters = new HashMap();
 	 if(obj!=null && obj.length>0)
 	 {
 		
 		for(int i=0;i<obj.length;i++)
 		{
 			ReportsParamsMap rp = (ReportsParamsMap) obj[i];
-			String paramname = rp.getReportsParams().getName();
 			if(rp.getReportsParams().getType().equalsIgnoreCase("Query"))
 			{
-				request.getSession().setAttribute("para"+(i+1),paramDAO.listValuesOfParameters(rp.getReportsParams()));
+				request.getSession().setAttribute("para"+(i+1),
+					paramDAO.listValuesOfParameters(rp.getReportsParams()));
 			}
 		}
 	 }

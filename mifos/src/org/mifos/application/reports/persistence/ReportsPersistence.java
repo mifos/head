@@ -80,7 +80,11 @@ public class ReportsPersistence extends Persistence {
 	}
 
 	public List<ReportsParams> getAllReportParams() {
-		Query query = HibernateUtil.getSessionTL().getNamedQuery(
+		return getAllReportParams(HibernateUtil.getSessionTL());
+	}
+
+	public List<ReportsParams> getAllReportParams(Session session) {
+		Query query = session.getNamedQuery(
 				ReportsConstants.GETALLREPORTSPARAMS);
 		return query.list();
 	}
@@ -214,6 +218,7 @@ public class ReportsPersistence extends Persistence {
 		}
 	}
 
+	/* What is this for?  I don't see anyone calling it. */
 	public List<ReportsParamsMap> getAllReportParamsMap() {
 		Query query = HibernateUtil.getSessionTL().getNamedQuery(
 				ReportsConstants.GETALLREPORTSPARAMSMAP);

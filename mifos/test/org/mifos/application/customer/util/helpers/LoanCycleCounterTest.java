@@ -1,9 +1,10 @@
 package org.mifos.application.customer.util.helpers;
 
-import org.mifos.framework.MifosTestCase;
+import junit.framework.TestCase;
+
 import org.mifos.framework.TestUtils;
 
-public class LoanCycleCounterTest extends MifosTestCase {
+public class LoanCycleCounterTest extends TestCase {
 
 	public void testEqualsObject() {
 		LoanCycleCounter loanCycleCounter1 = new LoanCycleCounter();
