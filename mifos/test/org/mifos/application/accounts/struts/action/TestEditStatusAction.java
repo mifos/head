@@ -416,7 +416,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				accountState.getValue(), startDate, loanOffering);
+				accountState, startDate, loanOffering);
 
 	}
 

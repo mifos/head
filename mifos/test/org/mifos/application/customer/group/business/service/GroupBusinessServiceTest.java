@@ -5,6 +5,7 @@ import java.sql.Date;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
@@ -192,9 +193,9 @@ public class GroupBusinessServiceTest extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customerBO, Short
-				.valueOf("5"), startDate, loanOffering);
-
+		return TestObjectFactory.createLoanAccount("42423142341", customerBO, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate, loanOffering);
 	}
 
 	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) throws Exception {

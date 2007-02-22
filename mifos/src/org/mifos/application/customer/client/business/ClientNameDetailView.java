@@ -49,6 +49,7 @@ public class ClientNameDetailView {
 
 	private Short nameType;
 
+	/* 47=Mr, 48=Mrs, 228=Ms (is this right?)*/
 	private Integer salutation;
 
 	private StringBuilder displayName;
@@ -65,11 +66,12 @@ public class ClientNameDetailView {
 		super();
 	}
 
-	public ClientNameDetailView(Short nameType, Integer salutation,
+	public ClientNameDetailView(NameType nameType, Integer salutation,
 			String firstName, String middleName, String lastName,
 			String secondLastName) {
-		this(nameType, salutation, new StringBuilder(), firstName, middleName,
-				lastName, secondLastName);
+		this(nameType.getValue(), salutation, 
+			new StringBuilder(), firstName, middleName,
+			lastName, secondLastName);
 	}
 
 	public ClientNameDetailView(Short nameType, Integer salutation,

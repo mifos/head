@@ -10,6 +10,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
@@ -74,7 +75,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
@@ -91,7 +92,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
@@ -128,7 +129,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());
@@ -158,7 +159,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 		account = accountPersistence.getAccount(account.getAccountId());

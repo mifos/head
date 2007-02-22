@@ -23,6 +23,7 @@ import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
@@ -440,7 +441,7 @@ public class TestCollSheetBO extends MifosTestCase {
 				name, shortName, currentTime, 
 				customerBO.getCustomerMeeting().getMeeting());
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO,
-				Short.valueOf("5"), currentTime,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, currentTime,
 				loanOffering);
 
 	}

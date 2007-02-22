@@ -207,7 +207,7 @@ public class EditCustomerStatusAction extends BaseAction {
 	private String getStatusName(CustomerBO customerBO, Short localeId,
 			String statusId, Short statusIdValue){
 		if (StringUtils.isNullAndEmptySafe(statusId)) {
-			return customerService.getStatusName(localeId, CustomerStatus.getStatus(statusIdValue),
+			return customerService.getStatusName(localeId, CustomerStatus.fromInt(statusIdValue),
 					customerBO.getLevel());
 		}
 		return null;

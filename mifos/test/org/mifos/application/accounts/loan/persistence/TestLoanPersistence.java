@@ -251,7 +251,8 @@ public class TestLoanPersistence extends MifosTestCase {
 				InterestType.FLAT, true, true,
 				meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				Short.valueOf("5"), startDate, loanOffering);
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate, loanOffering);
 
 	}
 	

@@ -821,8 +821,8 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 
 	private ClientBO createClient(String clientName, GroupBO group, 
 			CustomerStatus clientStatus) {
-		return TestObjectFactory.createClient(clientName, clientStatus
-				.getValue(), group, new Date());
+		return TestObjectFactory.createClient(clientName, clientStatus,
+				group, new Date());
 	}
 
 	private void loadMeetingPage(){

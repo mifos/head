@@ -268,8 +268,8 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), startDate,
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 	}
 }

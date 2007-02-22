@@ -103,6 +103,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
+import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -208,6 +209,13 @@ public class TestObjectFactory {
 	public static final short EVERY_DAY = 1;
 	public static final short EVERY_SECOND_WEEK = 2;
 	public static final short EVERY_SECOND_MONTH = 2;
+
+	/**
+	 * We supply this for the salutation in a lot of test data, but I'm not
+	 * sure a value of 1 really has a well-defined meaning given our master
+	 * data.
+	 */
+	public static final int SAMPLE_SALUTATION = 1;
 	
 	/**
 	 * @return - Returns the office created by test data scripts. If the row
@@ -264,7 +272,7 @@ public class TestObjectFactory {
 	public static CenterBO createCenter(
 		String customerName, MeetingBO meeting, 
 		Short officeId, Short personnelId, List<FeeView> fees) {
-		CenterBO center = null;
+		CenterBO center;
 		try {
 			center = new CenterBO(getUserContext(), customerName, null, null,
 					fees, null, null, officeId, meeting, personnelId);
@@ -320,7 +328,7 @@ public class TestObjectFactory {
 			Date trainedDate, Address address,
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, CustomerBO parentCustomer) {
-		GroupBO group = null;
+		GroupBO group;
 		try {
 			group = new GroupBO(getUserContext(), customerName, customerStatus,
 					externalId, trained, trainedDate, address, customFields,
@@ -371,10 +379,10 @@ public class TestObjectFactory {
 			Short office = new Short("3");
 			Short personnel = new Short("1");
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-					Short.valueOf("1"), 1, customerName,
+					NameType.MAYBE_CLIENT, SAMPLE_SALUTATION, customerName,
 					"middle", customerName, "secondLast");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-					Short.valueOf("2"), 1, customerName,
+					NameType.SPOUSE, SAMPLE_SALUTATION, customerName,
 					"middle", customerName, "secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
@@ -421,10 +429,12 @@ public class TestObjectFactory {
 			Short office = new Short("3");
 			Short personnel = new Short("1");
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-					Short.valueOf("3"), 1, customerName,
+					NameType.CLIENT, 
+					SAMPLE_SALUTATION, customerName,
 					"middle", customerName, "secondLast");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-					Short.valueOf("2"), 1, customerName,
+					NameType.SPOUSE, SAMPLE_SALUTATION, 
+					customerName,
 					"middle", customerName, "secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
@@ -444,21 +454,22 @@ public class TestObjectFactory {
 		return client;
 	}
 
-	public static ClientBO createClient(String customerName, Short statusId,
+	public static ClientBO createClient(String customerName, CustomerStatus status,
 			CustomerBO parentCustomer, Date startDate) {
 		ClientBO client;
 		Short personnel = new Short("1");
 		try {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-					Short.valueOf("1"), 1, customerName, "", customerName, "");
+					NameType.MAYBE_CLIENT, SAMPLE_SALUTATION, 
+					customerName, "", customerName, "");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-					Short.valueOf("2"), 1, customerName,
+					NameType.SPOUSE, SAMPLE_SALUTATION, customerName,
 					"middle", customerName, "secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
 							.valueOf("41"));
 			client = new ClientBO(getUserContext(), clientNameDetailView
-					.getDisplayName(), CustomerStatus.getStatus(statusId),
+					.getDisplayName(), status,
 					null, null, null, null, getFees(), null, personnel,
 					parentCustomer.getOffice().getOfficeId(), parentCustomer,
 					null, null, null, null, YesNoFlag.YES.getValue(),
@@ -518,7 +529,6 @@ public class TestObjectFactory {
 	}
 
 	/**
-	 * Deprecated in favor of the ones which take enums
 	 * @param defLnAmnt -
 	 *            Loan Amount
 	 *            same would be set as min and max amounts
@@ -579,18 +589,6 @@ public class TestObjectFactory {
 	public static ProductCategoryBO getLoanPrdCategory() {
 		return (ProductCategoryBO) addObject(testObjectPersistence
 				.getLoanPrdCategory());
-	}
-
-	/**
-	 * Deprecated; call 
-	 * {@link #createLoanAccount(String, CustomerBO, AccountState, Date, LoanOfferingBO)} 
-	 * instead.
-	 */
-	public static LoanBO createLoanAccount(String globalNum,
-			CustomerBO customer, Short accountStateId, Date startDate,
-			LoanOfferingBO loanOfering) {
-		AccountState state = AccountState.fromShort(accountStateId);
-		return createLoanAccount(globalNum, customer, state, startDate, loanOfering);
 	}
 
 	public static LoanBO createLoanAccount(String globalNum, 
@@ -1369,7 +1367,7 @@ public class TestObjectFactory {
 		CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(
 				CustomerLevel.getLevel(customerLevel));
 		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
-				CustomerStatus.getStatus(customerStatus));
+				CustomerStatus.fromInt(customerStatus));
 		CustomerCheckListBO customerChecklist = new CustomerCheckListBO(
 				customerLevelEntity, customerStatusEntity, "productchecklist",
 				checklistStatus, details, Short.valueOf("1"), TestObjectFactory

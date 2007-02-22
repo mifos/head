@@ -91,7 +91,7 @@ public class ReportsBusinessService extends BusinessService {
 	 */
 	public List<ReportsCategoryBO> getAllReportCategories() 
 	throws ServiceException {
-		return new ReportsPersistence().getAllReportCategories();
+		return reportsPersistence.getAllReportCategories();
 	}
 	
 	/**

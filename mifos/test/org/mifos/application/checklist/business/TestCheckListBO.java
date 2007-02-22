@@ -283,7 +283,7 @@ public class TestCheckListBO extends MifosTestCase {
 				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
 						.getValue(), CheckListConstants.STATUS_ACTIVE);
 		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
-				CustomerStatus.getStatus(CustomerStatus.CENTER_INACTIVE
+				CustomerStatus.fromInt(CustomerStatus.CENTER_INACTIVE
 						.getValue()));
 		HibernateUtil.closeSession();
 		customerCheckList = (CustomerCheckListBO) TestObjectFactory.getObject(

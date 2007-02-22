@@ -854,8 +854,8 @@ public class ClientBO extends CustomerBO {
 	}
 	
 	private boolean isGroupStatusLower(Short clientStatusId, Short parentStatus) {
-		return isGroupStatusLower(CustomerStatus.getStatus(clientStatusId),
-				CustomerStatus.getStatus(parentStatus));
+		return isGroupStatusLower(CustomerStatus.fromInt(clientStatusId),
+				CustomerStatus.fromInt(parentStatus));
 	}
 
 	private void validateOfferings(List<SavingsOfferingBO> offeringsSelected) throws CustomerException {

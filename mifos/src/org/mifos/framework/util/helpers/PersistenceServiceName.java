@@ -11,7 +11,6 @@ import org.mifos.framework.persistence.service.PersistenceService;
 public enum PersistenceServiceName {
 	MasterDataService("org.mifos.application.master.persistence.service.MasterPersistenceService"), 
 	BulkEntryPersistanceService("org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService"),
-	Reports("org.mifos.application.reports.persistence.service.ReportsPersistenceService"),
 	Configuration("org.mifos.framework.components.configuration.persistence.service.ConfigurationPersistenceService");
 
 	String name;

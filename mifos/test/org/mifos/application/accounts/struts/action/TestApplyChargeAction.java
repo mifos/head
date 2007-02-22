@@ -8,6 +8,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -161,8 +162,8 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customer, Short
-				.valueOf("5"), startDate, loanOffering);
+		return TestObjectFactory.createLoanAccount("42423142341", customer, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate, loanOffering);
 
 	}
 	

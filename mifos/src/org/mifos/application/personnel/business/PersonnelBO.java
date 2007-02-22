@@ -24,7 +24,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.rolesandpermission.business.RoleBO;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -131,7 +130,7 @@ public class PersonnelBO extends BusinessObject {
 		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 		this.passwordChanged = Constants.NO;
 		this.locked = LockStatus.UNLOCK.getValue();
-		this.noOfTries = Short.valueOf("0");
+		this.noOfTries = 0;
 		this.encriptedPassword = getEncryptedPassword(password);
 		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 	}
@@ -703,7 +702,7 @@ public class PersonnelBO extends BusinessObject {
 		logger.info("Trying to unlock Personnel");
 		if(isLocked()){
 			this.unLock();
-			this.noOfTries = YesNoFlag.NO.getValue();
+			this.noOfTries = 0;
 			try {
 				setUpdateDetails(updatedById);
 				new PersonnelPersistence().createOrUpdate(this);
@@ -735,7 +734,7 @@ public class PersonnelBO extends BusinessObject {
 	private void resetNoOfTries(Session session) throws PersonnelException {
 		logger.info("Reseting  no of tries");
 		if(noOfTries.intValue()>0) {
-			this.noOfTries = YesNoFlag.NO.getValue();
+			this.noOfTries = 0;
 			try {
 				new PersonnelPersistence().createOrUpdate(session, this);
 			} catch (PersistenceException pe) {

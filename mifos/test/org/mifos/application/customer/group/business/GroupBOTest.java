@@ -12,6 +12,7 @@ import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomFieldView;
@@ -448,7 +449,7 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(group.getCustomerId(), group.getPerformanceHistory()
 				.getGroup().getCustomerId());
 		client = TestObjectFactory.createClient("new client",
-				CustomerStatus.CLIENT_ACTIVE.getValue(), group,
+				CustomerStatus.CLIENT_ACTIVE, group,
 				new java.util.Date());
 		assertEquals(1, group.getPerformanceHistory().getActiveClientCount()
 				.intValue());
@@ -1425,8 +1426,8 @@ public class GroupBOTest extends MifosTestCase {
 	}
 
 	private ClientBO createClient(GroupBO group, CustomerStatus clientStatus) {
-		return TestObjectFactory.createClient("client1", clientStatus
-				.getValue(), group, new Date());
+		return TestObjectFactory.createClient("client1", clientStatus,
+				group, new Date());
 	}
 
 	private GroupBO createGroup(String name, CenterBO center) {
@@ -1465,7 +1466,7 @@ public class GroupBOTest extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loandsdasd", "fsad", startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		loanOffering = TestObjectFactory.createLoanOffering("Loandfas", "dsvd",
 				PrdApplicableMaster.CLIENTS, startDate, 
@@ -1473,7 +1474,7 @@ public class GroupBOTest extends MifosTestCase {
 				InterestType.FLAT, true, true,
 				meeting);
 		account2 = TestObjectFactory.createLoanAccount("42427777341", client,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 	}
 

@@ -163,17 +163,16 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 	
 	private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting,
 			AccountState accountState, String offName) throws AccountException {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO product = 
+			TestObjectFactory.createLoanOffering(
+				offName, offName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341",
-				customer, accountState.getValue(), new Date(), createLoanOffering(offName));		
+				customer, accountState, startDate, product);		
 	}
 
-	private LoanOfferingBO createLoanOffering(String offName){
-		Date startDate = new Date(System.currentTimeMillis());
-		return TestObjectFactory.createLoanOffering(
-				offName, offName, startDate, meeting);
-	}
-	
-	private void setDisbursementDateAsOldDate(LoanBO account, int days, Short installmentSize) {
+	private void setDisbursementDateAsOldDate(LoanBO account, int days, 
+			Short installmentSize) {
 		Date startDate = offSetCurrentDate(days);
 		LoanBO loan = account;
 		TestLoanBO.modifyDisbursmentDate(loan,startDate);

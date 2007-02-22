@@ -48,6 +48,7 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
@@ -56,6 +57,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.ClientDetailView;
 import org.mifos.application.customer.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.application.customer.client.business.ClientNameDetailView;
+import org.mifos.application.customer.client.business.NameType;
 import org.mifos.application.customer.client.business.TestClientBO;
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
@@ -1332,7 +1334,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		Short officeId = 1;
 		Short personnel = 3;
 		meeting = getMeeting();
-		Integer salutaion = 47;
+		Integer salutation = 47;
 		Integer ethincity = 218;
 		Integer citizenship = 130;
 		Integer handicapped = 138;
@@ -1344,16 +1346,18 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		Short povertyStatus = Short.valueOf("41");
 		
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-				Short.valueOf("3"), salutaion, "Client", "", "1",
+				NameType.CLIENT, salutation, "Client", "", "1",
 				"");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-				Short.valueOf("2"), 1, "first",
+				NameType.SPOUSE, TestObjectFactory.SAMPLE_SALUTATION, "first",
 				"middle", "last", "secondLast");
-		ClientDetailView clientDetailView = new ClientDetailView(ethincity, citizenship,handicapped, businessActivities, maritalStatus,
+		ClientDetailView clientDetailView = new ClientDetailView(
+				ethincity, citizenship,handicapped, businessActivities, 
+				maritalStatus,
 				educationLevel, numChildren, gender, povertyStatus);
 		client = new ClientBO(TestObjectFactory.getUserContext(),
 				clientNameDetailView.getDisplayName(), CustomerStatus
-						.getStatus(new Short("1")), null, null, new Address(),
+						.fromInt(new Short("1")), null, null, new Address(),
 				getCustomFields(), null, null, personnel, officeId, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
@@ -1656,16 +1660,16 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		Short personnel = 3;
 		meeting = getMeeting();
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
-				Short.valueOf("3"), 1, "Client", "", "1",
+				NameType.CLIENT, 1, "Client", "", "1",
 				"");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
-				Short.valueOf("2"), 1, "first",
+				NameType.SPOUSE, 1, "first",
 				"middle", "last", "secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1,
 				1, Short.valueOf("1"), Short.valueOf("1"),Short.valueOf("41"));
 		client = new ClientBO(TestObjectFactory.getUserContext(),
 				clientNameDetailView.getDisplayName(), CustomerStatus
-						.getStatus(new Short("1")), null, null, new Address(),
+						.fromInt(new Short("1")), null, null, new Address(),
 				getCustomFields(), null, null, personnel, officeId, meeting,
 				personnel, new java.util.Date(), null, null, null, YesNoFlag.NO
 						.getValue(), clientNameDetailView,
@@ -1683,14 +1687,14 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		String name = "Client 1";
 		createParentCustomer();
 		client = TestObjectFactory.createClient(name,
-				CustomerStatus.CLIENT_ACTIVE.getValue(), group, new Date());
+				CustomerStatus.CLIENT_ACTIVE, group, new Date());
 		HibernateUtil.closeSession();
 		center = TestObjectFactory.getObject(CenterBO.class,
-				Integer.valueOf(center.getCustomerId()).intValue());
+				center.getCustomerId());
 		group = TestObjectFactory.getObject(GroupBO.class,
-				Integer.valueOf(group.getCustomerId()).intValue());
+				group.getCustomerId());
 		client = TestObjectFactory.getObject(ClientBO.class,
-				Integer.valueOf(client.getCustomerId()).intValue());
+				client.getCustomerId());
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 	}
@@ -1761,7 +1765,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				Short.valueOf("5"), startDate, loanOffering);
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate, loanOffering);
 
 	}
 

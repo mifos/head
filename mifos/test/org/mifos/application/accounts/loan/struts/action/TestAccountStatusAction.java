@@ -189,7 +189,7 @@ public class TestAccountStatusAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO,
-				AccountState.LOANACC_PENDINGAPPROVAL.getValue(), startDate,
+				AccountState.LOANACC_PENDINGAPPROVAL, startDate,
 				loanOffering);
 
 	}

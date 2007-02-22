@@ -160,15 +160,16 @@ public class CustActionTest extends MifosMockStrutsTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				offeringName, shortName, startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", customerBO, AccountState.LOANACC_APPROVED.getValue(), startDate, loanOffering);
-
+		return TestObjectFactory.createLoanAccount("42423142341", customerBO, 
+			AccountState.LOANACC_APPROVED, startDate, loanOffering);
 	}
 
 	private SavingsBO getSavingsAccount(CustomerBO customerBO,String offeringName,String shortName) throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
 		savingsOffering = helper.createSavingsOffering(offeringName,shortName);
 		return TestObjectFactory.createSavingsAccount("000100000000017", customerBO,
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue(), new Date(System
-						.currentTimeMillis()), savingsOffering);
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION.getValue(), 
+				startDate, savingsOffering);
 	}
 	
 	private void createAccounts() throws Exception  {

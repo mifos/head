@@ -570,8 +570,8 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		loanOfferingBO = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), startDate,
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOfferingBO);
 	}
 

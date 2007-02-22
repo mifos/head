@@ -51,6 +51,7 @@ public class ClientNameDetailEntity extends PersistentObject {
 
 	private Short nameType;
 
+	/* 47=Mr, 48=Mrs, 228=Ms (is this right?)*/
 	private Integer salutation;
 
 	private String secondMiddleName;

@@ -44,6 +44,7 @@ import java.util.List;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerFlagDetailEntity;
 import org.mifos.application.customer.business.CustomerPositionEntity;
@@ -784,7 +785,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		assertEquals(getStatusName(CustomerStatus
-				.getStatus(Short.valueOf("10"))), (String) SessionUtils
+				.fromInt(Short.valueOf("10"))), (String) SessionUtils
 				.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
 		assertNull("Since new Status is not Closed,so flag should be null.",
 				SessionUtils.getAttribute(SavingsConstants.FLAG_NAME, request));
@@ -1059,7 +1060,8 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center",
 				meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		group = TestObjectFactory.createGroupUnderCenter(
+				"Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient("Client",
 				CustomerStatus.CLIENT_ACTIVE, group);
 	}
@@ -1080,8 +1082,8 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		Short personnel = new Short("1");
 		group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus,
 				officeId, getMeeting(), personnel);
-		client = TestObjectFactory.createClient("new client", clientStatus
-				.getValue(), group, new java.util.Date());
+		client = TestObjectFactory.createClient("new client", clientStatus,
+				group, new java.util.Date());
 	}
 
 	private void createInitialObjectsWhenCenterHierarchyNotExistWithNoLO(
@@ -1089,8 +1091,8 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		Short officeId = new Short("3");
 		group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus,
 				officeId, getMeeting(), null);
-		client = TestObjectFactory.createClient("new client", clientStatus
-				.getValue(), group, new java.util.Date());
+		client = TestObjectFactory.createClient("new client", clientStatus,
+				group, new java.util.Date());
 	}
 
 	private void createObjectsForClient(String name) throws Exception {
@@ -1117,8 +1119,8 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				"customer_office", "cust");
 		group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus,
 				office.getOfficeId(), getMeeting(), null);
-		client = TestObjectFactory.createClient("new client", clientStatus
-				.getValue(), group, new java.util.Date());
+		client = TestObjectFactory.createClient("new client", clientStatus,
+				group, new java.util.Date());
 	}
 
 	private void createInitialObjectsWhenCenterHierarchyNotExistWithNoMeeting(
@@ -1127,8 +1129,8 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		Short personnel = new Short("1");
 		group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus,
 				officeId, null, personnel);
-		client = TestObjectFactory.createClient("new client", clientStatus
-				.getValue(), group, new java.util.Date());
+		client = TestObjectFactory.createClient("new client", clientStatus,
+				group, new java.util.Date());
 	}
 
 	private MeetingBO getMeeting() {
@@ -1143,7 +1145,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				offeringName, shortName, startDate,
 				center.getCustomerMeeting().getMeeting());
 		return TestObjectFactory.createLoanAccount("42423142341", customerBO,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 	}
 

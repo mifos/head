@@ -59,6 +59,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.struts.actionforms.BulkEntryActionForm;
@@ -652,7 +653,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				PrdStatus.LOANACTIVE, 300.0, 1.2, 3, 
 				InterestType.FLAT, true, true, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, Short.valueOf("5"),
+				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
 				startDate, loanOffering1);
 		clientAccount = getLoanAccount(Short.valueOf("3"), startDate, 1,
 				loanOffering2);
@@ -757,10 +758,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loan2345", "313f", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, Short.valueOf("5"),
+				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
 				startDate, loanOffering1);
 		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering2);
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory
@@ -902,8 +903,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), startDate, loanOffering);
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate, loanOffering);
 	}
 
 	private static java.util.Date getMeetingDates(MeetingBO meeting) {

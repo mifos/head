@@ -180,11 +180,9 @@ public class MasterPersistence extends Persistence {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("entityType", entityName);
 		queryParameters.put("localeId", localeId);
-		List<BusinessActivityEntity> queryResult = null;
-		queryResult = executeNamedQuery(
-					NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_VALUE,
-					queryParameters);
-		return queryResult;
+		return executeNamedQuery(
+			NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_VALUE,
+			queryParameters);
 	}
 
 	public String retrieveMasterEntities(Integer entityId, Short localeId)
@@ -192,10 +190,9 @@ public class MasterPersistence extends Persistence {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("lookUpId", entityId);
 		queryParameters.put("localeId", localeId);
-		List queryResult = null;
-		queryResult = executeNamedQuery(
-					NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_NAME,
-					queryParameters);
+		List queryResult = executeNamedQuery(
+			NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_NAME,
+			queryParameters);
 		return (String) queryResult.get(0);
 	}
 	

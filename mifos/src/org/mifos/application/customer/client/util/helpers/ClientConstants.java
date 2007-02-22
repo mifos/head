@@ -38,6 +38,8 @@
 
 package org.mifos.application.customer.client.util.helpers;
 
+import org.mifos.application.customer.client.business.NameType;
+
 public interface ClientConstants {
 	
 	/**Forwards*/
@@ -52,7 +54,10 @@ public interface ClientConstants {
 	public static final short CLIENT_CATEGORY_ID =2;
 	public static final short CLIENT_ENTITY_TYPE =1;
 	public static final short LOAN_OFFICER_LEVEL =1;
-	public static final Short CLIENT_NAME_TYPE =3;
+	
+	public static final Short CLIENT_NAME_TYPE = NameType.CLIENT.getValue();
+	public static final Short SPOUSE_NAME_TYPE = NameType.SPOUSE.getValue();
+
 	public static final String CLIENTVO ="clientVO";
 	/**Request parameter names*/
 	public static final String SALUTATION_ENTITY  = "salutationEntity";

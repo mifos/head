@@ -259,7 +259,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
 	}
 
 	public CustomerStatus getStatusValue() {
-			return StringUtils.isNullAndEmptySafe(status)? CustomerStatus.getStatus(Short.valueOf(status)):null;
+			return StringUtils.isNullAndEmptySafe(status)? CustomerStatus.fromInt(Short.valueOf(status)):null;
 	}
 
 	public Short getFormedByPersonnelValue() {

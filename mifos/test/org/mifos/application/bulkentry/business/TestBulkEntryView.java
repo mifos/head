@@ -83,10 +83,12 @@ public class TestBulkEntryView extends MifosTestCase {
 		loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate,
 				loanOffering);
 		account2 = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate,
 				loanOffering);
 		HibernateUtil.closeSession();
 
@@ -132,7 +134,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		account2 = TestObjectFactory.createLoanAccountWithDisbursement(
 				"42423142341", group, AccountState.LOANACC_APPROVED, 

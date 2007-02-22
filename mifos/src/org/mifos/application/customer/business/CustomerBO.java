@@ -425,7 +425,7 @@ public abstract class CustomerBO extends BusinessObject {
 	}
 
 	public CustomerStatus getStatus() {
-		return CustomerStatus.getStatus(customerStatus.getId());
+		return CustomerStatus.fromInt(customerStatus.getId());
 	}
 
 	public void save() throws CustomerException {
@@ -669,7 +669,7 @@ public abstract class CustomerBO extends BusinessObject {
 		if (getPersonnel() != null)
 			validateLoanOfficerAssigned();
 		if (checkStatusChangeCancelToPartial(CustomerStatus
-				.getStatus(oldStatusId), CustomerStatus.getStatus(newStatusId))) {
+				.fromInt(oldStatusId), CustomerStatus.fromInt(newStatusId))) {
 			if (!isBlackListed())
 				getCustomerFlags().clear();
 		}

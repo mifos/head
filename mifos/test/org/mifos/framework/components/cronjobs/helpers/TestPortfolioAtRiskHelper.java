@@ -7,6 +7,7 @@ import java.util.GregorianCalendar;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -99,7 +100,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan", "LOAN", startDate, meeting);
 		account1 = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		loanOffering = TestObjectFactory.createLoanOffering("Loan123", "LOAP",
 				PrdApplicableMaster.CLIENTS, startDate, 
@@ -107,7 +108,7 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				InterestType.FLAT, true, true,
 				meeting);
 		account2 = TestObjectFactory.createLoanAccount("42427777341", client,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 	}
 

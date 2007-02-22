@@ -362,7 +362,8 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 				currentDate,
 				center.getCustomerMeeting().getMeeting());
 		account = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), currentDate, loanOffering);
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				currentDate, loanOffering);
 		HibernateUtil.closeSession();
 
 	}

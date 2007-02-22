@@ -185,7 +185,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loan2345", "313f", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, Short.valueOf("5"),
+				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
 				startDate, loanOffering1);
 		clientAccount = getLoanAccount(AccountState.LOANACC_APPROVED, 
 				startDate, 1,

@@ -1639,7 +1639,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Date(System.currentTimeMillis()),
 				loanOffering);
 		Calendar currentDateCalendar = new GregorianCalendar();
 		int year = currentDateCalendar.get(Calendar.YEAR);
@@ -1661,7 +1661,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), new Date(System.currentTimeMillis()),
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, new Date(System.currentTimeMillis()),
 				loanOffering);
 		AccountActionDateEntity accountActionDateEntity = accountBO
 				.getAccountActionDate(Short.valueOf("1"));
@@ -2146,7 +2146,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, loanOfferingMeeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 		TestObjectFactory.flushandCloseSession();
 		accountBO = TestObjectFactory.getObject(LoanBO.class,
@@ -4026,7 +4026,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-				AccountState.LOANACC_PENDINGAPPROVAL.getValue(), startDate, loanOffering);
+				AccountState.LOANACC_PENDINGAPPROVAL, startDate, loanOffering);
 		try {
 			LoanBO loanBO = (LoanBO) accountBO;
 			((LoanBO) accountBO).updateLoan(loanBO
@@ -5013,8 +5013,8 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, 
 				center.getCustomerMeeting().getMeeting());
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), startDate,
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 	}
 
@@ -5115,7 +5115,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccount("42423142341", client,
-				(short)3, startDate,
+				AccountState.LOANACC_APPROVED, startDate,
 				loanOffering);
 		((ClientBO) client).getPerformanceHistory().updateLoanCounter(loanOffering,YesNoFlag.YES);
 		TestObjectFactory.updateObject(client);
@@ -5404,7 +5404,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				Short.valueOf("5"), startDate, loanOffering);
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate, loanOffering);
 
 	}
 

@@ -562,12 +562,11 @@ public class TestPersonnelBO extends MifosTestCase {
 		String password = "WRONG_PASSWORD";
 		try {
 			userContext = personnel.login(password);
-			assertFalse(true);
-		} catch (PersonnelException le) {
-			assertTrue(true);
+			fail();
+		} catch (PersonnelException e) {
 			assertEquals(1,personnel.getNoOfTries().intValue());
 			assertFalse(personnel.isLocked());
-			assertEquals(LoginConstants.INVALIDOLDPASSWORD, le.getKey());
+			assertEquals(LoginConstants.INVALIDOLDPASSWORD, e.getKey());
 		}
 	}
 
@@ -591,12 +590,11 @@ public class TestPersonnelBO extends MifosTestCase {
 		try {
 			userContext = personnel.login(password);
 			HibernateUtil.commitTransaction();
-			assertFalse(true);
-		} catch (PersonnelException le) {
-			assertTrue(true);
+			fail();
+		} catch (PersonnelException e) {
 			assertEquals(0, personnel.getNoOfTries().intValue());
 			assertFalse(personnel.isLocked());
-			assertEquals(LoginConstants.KEYUSERINACTIVE, le.getKey());
+			assertEquals(LoginConstants.KEYUSERINACTIVE, e.getKey());
 		}
 	}
 
@@ -618,12 +616,11 @@ public class TestPersonnelBO extends MifosTestCase {
 			HibernateUtil.closeSession();
 			personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
 					PersonnelBO.class, personnel.getPersonnelId());
-			assertFalse(true);
-		} catch (PersonnelException le) {
-			assertTrue(true);
+			fail();
+		} catch (PersonnelException e) {
 			assertEquals(5, personnel.getNoOfTries().intValue());
 			assertTrue(personnel.isLocked());
-			assertEquals(LoginConstants.INVALIDOLDPASSWORD, le.getKey());
+			assertEquals(LoginConstants.INVALIDOLDPASSWORD, e.getKey());
 		}
 	}
 	
@@ -668,12 +665,11 @@ public class TestPersonnelBO extends MifosTestCase {
 			HibernateUtil.closeSession();
 			personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
 					PersonnelBO.class, personnel.getPersonnelId());
-			assertFalse(true);
-		} catch (PersonnelException le) {
-			assertTrue(true);
+			fail();
+		} catch (PersonnelException e) {
 			assertEquals(5, personnel.getNoOfTries().intValue());
 			assertTrue(personnel.isLocked());
-			assertEquals(LoginConstants.KEYUSERLOCKED, le.getKey());
+			assertEquals(LoginConstants.KEYUSERLOCKED, e.getKey());
 		}
 	}
 	
@@ -693,10 +689,9 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertNull(personnel.getLastLogin());
 		try {
 			personnel.updatePassword("WRONGOLD_PASSWORD","NEW_PASSWORD", Short.valueOf("1"));
-			assertFalse(true);
-		} catch (PersonnelException le) {
-			assertTrue(true);
-			assertEquals(LoginConstants.INVALIDOLDPASSWORD, le.getKey());
+			fail();
+		} catch (PersonnelException e) {
+			assertEquals(LoginConstants.INVALIDOLDPASSWORD, e.getKey());
 			assertFalse(personnel.isPasswordChanged());
 		}
 	}

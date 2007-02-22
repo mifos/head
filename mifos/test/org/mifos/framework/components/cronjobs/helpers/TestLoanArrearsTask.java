@@ -85,7 +85,8 @@ public class TestLoanArrearsTask extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				currentdate, meeting);
 		loanAccount = TestObjectFactory.createLoanAccount("42423142341",
-				customer, Short.valueOf("5"), currentdate, loanOffering);
+				customer, AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				currentdate, loanOffering);
 		setDisbursementDateAsOldDate(loanAccount);
 		loanAccount.update();
 		HibernateUtil.commitTransaction();

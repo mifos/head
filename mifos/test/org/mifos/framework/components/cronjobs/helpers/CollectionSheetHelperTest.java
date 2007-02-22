@@ -138,7 +138,8 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 				startDate, 
 				meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				AccountState.LOANACC_ACTIVEINGOODSTANDING.getValue(), startDate, loanOffering);
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate, loanOffering);
 
 	}
 	

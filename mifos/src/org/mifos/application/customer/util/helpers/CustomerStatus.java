@@ -19,9 +19,9 @@ public enum CustomerStatus {
 
 	CENTER_ACTIVE(Short.valueOf("13")), CENTER_INACTIVE(Short.valueOf("14"));
 
-	Short value;
+	private Short value;
 
-	CustomerStatus(Short value) {
+	private CustomerStatus(Short value) {
 		this.value = value;
 	}
 
@@ -29,10 +29,13 @@ public enum CustomerStatus {
 		return value;
 	}
 	
-	public static CustomerStatus getStatus(Short value){
-		for(CustomerStatus status : CustomerStatus.values())
-			if(status.getValue().equals(value))
+	public static CustomerStatus fromInt(int value){
+		for (CustomerStatus status : CustomerStatus.values()) {
+			if (status.getValue() == value) {
 				return status;
-		return null;
+			}
+		}
+		throw new RuntimeException("no customer status " + value);
 	}
+
 }

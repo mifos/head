@@ -9,6 +9,7 @@ import java.util.Set;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -373,8 +374,8 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", client, Short
-				.valueOf("5"), startDate, loanOffering);
-
+		return TestObjectFactory.createLoanAccount("42423142341", client, 
+			AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+			startDate, loanOffering);
 	}
 }

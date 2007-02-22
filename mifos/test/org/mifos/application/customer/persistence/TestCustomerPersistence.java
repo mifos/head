@@ -180,8 +180,9 @@ public class TestCustomerPersistence extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				offeringName, shortName, startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), startDate, loanOffering);
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate, loanOffering);
 
 	}
 
@@ -467,7 +468,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, center.getCustomerMeeting().getMeeting());
 		LoanBO loanBO = TestObjectFactory.createLoanAccount("42423142341",
-				client, Short.valueOf("5"),
+				client, AccountState.LOANACC_ACTIVEINGOODSTANDING,
 				startDate, loanOffering);
 		HibernateUtil.getSessionTL().flush();
 		HibernateUtil.closeSession();
@@ -1180,10 +1181,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loancd123", "vfr", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, Short.valueOf("5"),
+				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
 				startDate, loanOffering1);
 		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering2);
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -1248,8 +1249,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 				CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), startDate,
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 	}
 }

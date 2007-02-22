@@ -922,7 +922,8 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				offeringName, shortName, startDate, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", customer,
-				Short.valueOf("5"), startDate, loanOffering);
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate, loanOffering);
 
 	}
 
@@ -1009,8 +1010,8 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
-		return TestObjectFactory.createLoanAccount("42423142341", group, Short
-				.valueOf("5"), startDate,
+		return TestObjectFactory.createLoanAccount("42423142341", group, 
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering);
 	}
 
@@ -1031,10 +1032,10 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
 				"Loancd123", "vfr", startDate, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
-				group, Short.valueOf("5"),
+				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
 				startDate, loanOffering1);
 		clientAccount = TestObjectFactory.createLoanAccount("3243", client,
-				Short.valueOf("5"), startDate,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, startDate,
 				loanOffering2);
 		clientSavingsAccount = getSavingsAccount(client, "SavingPrd11", "abc2");
 	}

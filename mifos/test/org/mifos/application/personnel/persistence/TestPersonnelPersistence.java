@@ -118,12 +118,14 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	}
 	
 	public void testActiveCustomerUnderLO() throws Exception{
-		createCustomers(CustomerStatus.CENTER_ACTIVE.getValue() ,CustomerStatus.GROUP_ACTIVE,CustomerStatus.CLIENT_ACTIVE.getValue());
+		createCustomers(
+			CustomerStatus.GROUP_ACTIVE, CustomerStatus.CLIENT_ACTIVE);
 		assertTrue(persistence.getActiveChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 	}
 	
 	public void testClosedCustomerUnderLO() throws Exception{
-		createCustomers(CustomerStatus.CENTER_ACTIVE.getValue() ,CustomerStatus.GROUP_CLOSED ,CustomerStatus.CLIENT_CANCELLED.getValue());
+		createCustomers(
+			CustomerStatus.GROUP_CLOSED, CustomerStatus.CLIENT_CANCELLED);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(),null,"check inactive");
 		center.update();
 		HibernateUtil.commitTransaction();
@@ -133,7 +135,8 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	}
 	
 	public void testGetAllCustomerUnderLO() throws Exception{
-		createCustomers(CustomerStatus.CENTER_ACTIVE.getValue() ,CustomerStatus.GROUP_CLOSED ,CustomerStatus.CLIENT_CANCELLED.getValue());
+		createCustomers(
+			CustomerStatus.GROUP_CLOSED ,CustomerStatus.CLIENT_CANCELLED);
 		assertTrue(persistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(),null,"check inactive");
 		center.update();
@@ -269,11 +272,15 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		return personnel;
   }
 	
-	private void createCustomers(Short centerStatus, CustomerStatus groupStatus, Short clientStatus){
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
+	private void createCustomers(CustomerStatus groupStatus, 
+			CustomerStatus clientStatus) {
+		meeting = TestObjectFactory.createMeeting(
+				TestObjectFactory.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("group", groupStatus, center);
-		client = TestObjectFactory.createClient("client",clientStatus,group,new Date());
+		group = TestObjectFactory.createGroupUnderCenter(
+				"group", groupStatus, center);
+		client = TestObjectFactory.createClient("client",clientStatus,
+				group,new Date());
 	}
 	
 	

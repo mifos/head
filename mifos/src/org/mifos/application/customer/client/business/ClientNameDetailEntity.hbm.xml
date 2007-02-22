@@ -6,8 +6,10 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.customer.client.business.ClientNameDetailEntity" table="CUSTOMER_NAME_DETAIL">
-        <id name="customerNameId" column="CUSTOMER_NAME_ID" type="integer" access="field">
+    <class name="org.mifos.application.customer.client.business.ClientNameDetailEntity" 
+        table="CUSTOMER_NAME_DETAIL">
+        <id name="customerNameId" column="CUSTOMER_NAME_ID" 
+            type="integer" access="field">
             <generator class="native"/>
         </id>
         <property name="nameType" column="NAME_TYPE" type="short" />
