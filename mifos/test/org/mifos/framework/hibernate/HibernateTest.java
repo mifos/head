@@ -1,5 +1,9 @@
 package org.mifos.framework.hibernate;
 
+import java.io.FileNotFoundException;
+
+import junitx.framework.ObjectAssert;
+
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.hibernate.factory.HibernateSessionFactory;
@@ -7,22 +11,18 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 public class HibernateTest extends MifosTestCase {
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	public void testInitializeHibernateStartUpForInvalidPath() {
 		try {
 			HibernateStartUp.initialize("");
 			fail();
-		} catch (HibernateStartUpException he) {
-			assertTrue(true);
+		} catch (HibernateStartUpException outer) {
+			// What do we want the user to see?
+//			assertEquals(HibernateConstants.STARTUPEXCEPTION, outer.getKey());
+			assertEquals("exception.framework.SystemException",
+					outer.getKey());
+			ObjectAssert.assertInstanceOf(
+				FileNotFoundException.class, 
+				outer.getCause());
 		}
 	}
 
@@ -30,8 +30,12 @@ public class HibernateTest extends MifosTestCase {
 		try {
 			HibernateSessionFactory.setConfiguration(null);
 			fail();
-		} catch (HibernateStartUpException he) {
-			assertTrue(true);
+		} catch (HibernateStartUpException outer) {
+			assertEquals("exception.framework.SystemException",
+					outer.getKey());
+			ObjectAssert.assertInstanceOf(
+				NullPointerException.class, 
+				outer.getCause());
 		}
 	}
 
@@ -45,6 +49,5 @@ public class HibernateTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 		assertFalse(HibernateUtil.isSessionOpen());
 	}
-
 
 }

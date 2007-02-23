@@ -246,7 +246,8 @@
 
 	<target name="war" depends="compile,copy_files">
 		<delete file="${dist.dir}/${webapplication.name}.war"/>
-		<war destfile="${dist.dir}/${webapplication.name}.war" webxml="${src.dir}/org/mifos/META-INF/web.xml">
+		<war destfile="${dist.dir}/${webapplication.name}.war" 
+			webxml="${src.dir}/org/mifos/META-INF/web.xml">
 			<fileset dir="${build.src.dir}/"/>
 		</war>
 	</target>

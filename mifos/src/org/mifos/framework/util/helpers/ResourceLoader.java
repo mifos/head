@@ -52,6 +52,9 @@ public class ResourceLoader {
 	 * Returns the URI for the file name specified.
 	 * It tries to load the file using the class loader and then 
 	 * returns the URI corresponding to the file.
+	 *
+	 * Returns null if the file is not found (or, perhaps, if we aren't
+	 * allowed to see it).
 	 */
 	public static URI getURI(String fileName) throws URISyntaxException{
 		ClassLoader parent = ResourceLoader.class.getClassLoader().getParent();

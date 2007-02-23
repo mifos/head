@@ -51,7 +51,6 @@ public class HibernateStartUpException extends SystemException {
 
 	public HibernateStartUpException(String key, Throwable cause) {
 		super(key, cause);
-
 	}
 
 }
