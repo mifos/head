@@ -76,12 +76,13 @@ machine:
 2. Install the prerequisite software
 3. Set up the environment
 4. Create a Mifos server instance under JBoss
-5. Install the mifos database
-6. Build the software
-7. Deploy Mifos
-8. Start Mifos
-9. Stopping Mifos
-10. Securing Mifos
+5. Configure the mifos build
+6. Install the mifos database
+7. Build the software
+8. Deploy Mifos
+9. Start Mifos
+10. Stopping Mifos
+11. Securing Mifos
 
 If you only want to deploy Mifos without doing the build, then these instructions will be overkill. 
 
@@ -146,8 +147,20 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
    Explorer, renaming it to $JBOSS_HOME/server/mifos.  Also, you do need 
    a full copy of the default and not the "all" or "minimal". (case sensitive)
 
-5. Install the mifos database
+5. Configure the mifos build
 
+   There are some configuration files in the directory called conf.
+   You shouldn't need to change very many things here.  The files 
+   are heavily commented to explain the use of each configuration variable.
+   
+   In "build.properties" you at least need to check the values 
+   of "db.*" and "testdb.*" so they match the settings of your mysql server.
+   
+   In the files "hibernate.properties" and "HibernateTest.properties" the 
+   settings "hibernate.connection.username" and "hibernate.connection.password"
+   should also be adjusted to match the configuration of your mysql server.
+   
+6. Install the mifos database
    Invoke the ant target 'build_db' to install the mifos
    database:
 
@@ -155,35 +168,19 @@ PATH	Ensure that JAVA_HOME/bin, JBOSS_HOME/bin, and ANT_HOME/bin are in your pat
 
    In some cases it might be necessary to perform some steps manually:
 
-       Start a mysql session: 
+   Start a mysql session: 
 
-           mysql -u root -p
+       mysql -u root -p
 
-       Execute the following sequence of commands in the mysql client:
+   Execute the following sequence of commands in the mysql client:
 
-           drop database if exists mifos
-           create database mifos
-           grant all privileges on mifos.* to mifos identified by 'mifos'  
-           \. sql/mifosdbcreationscript.sql
-           \. sql/mifosmasterdata.sql 
-           
-       However, you'll need to look at the build_db target in
-       build.xml for the specific
-       set of *.sql files needed to create the database (or upgrade
-       a database for a previous version of MIFOS).  The above
-       list of .sql files are not all the ones needed to create
-       a database.
+       drop database if exists mifos
+       create database mifos
+       grant all privileges on mifos.* to mifos identified by 'mifos'
 
-note: if you issue the above commands one by one, you need to issue this command: 
-mySQL> use mifos ;  
+   Then reinvoke the ant build_db target.
 
-
-Important Note:  If you are changing the passwords for the database access 
-in your installation of mysql, you must currently change these in the 
-build.properties, hibernate.properties files as well, prior to doing the build. 
-
-
-6. Build the software
+7. Build the software
 
    Invoke the build:
 
@@ -203,7 +200,7 @@ If you want to skip running the junit tests, you can do so with:
 ant clean copy_files compile war 
 
 
-7. Deploy Mifos
+8. Deploy Mifos
 
    copy dist/mifos.war to $JBOSS_HOME/server/mifos/deploy
 
@@ -234,7 +231,7 @@ ant clean copy_files compile war
    takes the default parameters 
    present in the war file for database connection.
 
-8. Start Mifos
+9. Start Mifos
 
    Start JBoss, specifying 'mifos' as the server configuration. For
    example:
@@ -252,14 +249,14 @@ Now, time to try it out!  You should be able to go to:
       http://localhost:8080/mifos
 
 
-9. Stopping Mifos
+10. Stopping Mifos
 
    Stop the JBoss/jetty/tomcat web server as described in the web
    server documentation, with CTRL-C at
    the console, or using the shutdown scripts provided with the web
    server distribution.
 
-10. Securing Mifos
+11. Securing Mifos
 
    The default install of JBoss exposes a JMX management
    console. Consult the JBoss documentation for steps on how to secure
