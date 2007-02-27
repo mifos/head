@@ -51,6 +51,15 @@ public class CountryEntity extends PersistentObject {
 	public CountryEntity() {
 		super();
 	}
+	
+	public CountryEntity(Short countryId, 
+			String countryName, String countryShortName) {
+		this.countryId = countryId;
+		this.countryName = countryName;
+		this.countryShortName = countryShortName;
+	}
+
+
 
 	public Short getCountryId() {
 		return countryId;

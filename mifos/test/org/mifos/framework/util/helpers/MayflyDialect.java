@@ -46,6 +46,15 @@ public class MayflyDialect extends Dialect {
 		return "default";
 	}
 
+	// I think we need to enable this, and the related
+	// things like supportsSequences(), if we want to be
+	// able to insert into a table like glcode, which
+	// has an auto-increment column.
+//	@Override
+//	public Class getNativeIdentifierGeneratorClass() {
+//		return SequenceGenerator.class;
+//	}
+	
 	@Override
 	public boolean supportsLimit() {
 		return true;

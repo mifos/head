@@ -48,10 +48,13 @@ public class GLCodeEntity extends PersistentObject {
 	private final COABO associatedCOA;
 
 	protected GLCodeEntity() {
-		super();
-		glcodeId = null;
-		glcode = null;
-		associatedCOA = null;
+		this(null, null);
+	}
+
+	public GLCodeEntity(Short glcodeId, String glcode) {
+		this.glcodeId = glcodeId;
+		this.glcode = glcode;
+		this.associatedCOA = null;
 	}
 
 	public String getGlcode() {
@@ -59,7 +62,6 @@ public class GLCodeEntity extends PersistentObject {
 	}
 
 	public Short getGlcodeId() {
-
 		return glcodeId;
 	}
 
