@@ -52,7 +52,8 @@ public class HibernateUtil {
 
 	private static final SessionFactory sessionFactory;
 
-	private static final ThreadLocal<SessionHolder> threadLocal = new ThreadLocal<SessionHolder>();
+	private static final ThreadLocal<SessionHolder> threadLocal = 
+		new ThreadLocal<SessionHolder>();
 
 	static {
 		try {

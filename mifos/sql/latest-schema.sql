@@ -43,6 +43,8 @@ ENGINE=InnoDB CHARACTER SET utf8;
 CREATE TABLE LOOKUP_ENTITY (
   ENTITY_ID SMALLINT NOT NULL,
   ENTITY_NAME VARCHAR(100) NOT NULL,
+
+  -- Is this used for anything?  It seems like it should just be removed.
   DESCRIPTION VARCHAR(200),
   PRIMARY KEY(ENTITY_ID)
 )

@@ -4,19 +4,22 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
   
 <hibernate-mapping > 
-  <class name="org.mifos.application.master.business.MifosLookUpEntity" table="LOOKUP_ENTITY" >
+  <class name="org.mifos.application.master.business.MifosLookUpEntity" 
+  	table="LOOKUP_ENTITY" >
   	<id column="ENTITY_ID" name="entityId" type="java.lang.Short" > 
 		<generator class="native"></generator>
     </id>
     <property column="ENTITY_NAME"  name="entityType"  type="java.lang.String"/>
     
     <set name="lookUpLabels"  cascade="all" 	lazy="false" outer-join="true" >  
-            <key column="ENTITY_ID" update="false"  />
-            <one-to-many   class="org.mifos.application.master.business.LookUpLabelEntity"  />
+    	<key column="ENTITY_ID" update="false"  />
+    	<one-to-many
+    		class="org.mifos.application.master.business.LookUpLabelEntity" />
     </set>
     <set name="lookUpValues"  cascade="all" 	lazy="false">
-            <key column="ENTITY_ID" update="false"  />
-            <one-to-many   class="org.mifos.application.master.business.LookUpValueEntity"    />
+    	<key column="ENTITY_ID" update="false"  />
+    	<one-to-many 
+    		class="org.mifos.application.master.business.LookUpValueEntity" />
     </set>	
 	
 

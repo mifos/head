@@ -12,7 +12,10 @@ public enum EntityType {
 	CUSTOMER(Short.valueOf("11")),
 	SAVINGS(Short.valueOf("21")),
 	LOANPRODUCT(Short.valueOf("2")),
-	SAVINGSPRODUCT(Short.valueOf("3"));
+	SAVINGSPRODUCT(Short.valueOf("3")),
+	
+	ACCOUNT_ACTION((short)69),
+	;
 
 	Short value;
 

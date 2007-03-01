@@ -7,10 +7,13 @@
 
 <hibernate-mapping>
 
-    <class name="org.mifos.application.accounts.business.AccountActionEntity" table="ACCOUNT_ACTION">
-        <id name="id" column="ACCOUNT_ACTION_ID"  unsaved-value="-1">
+    <class name="org.mifos.application.accounts.business.AccountActionEntity" 
+    	table="ACCOUNT_ACTION">
+        <id name="id" column="ACCOUNT_ACTION_ID" unsaved-value="-1">
             <generator class="native"/>
         </id>
-  	<many-to-one name="lookUpValue" column="LOOKUP_ID" class="org.mifos.application.master.business.LookUpValueEntity" cascade="none" update="false"/>
+  	<many-to-one name="lookUpValue" column="LOOKUP_ID" 
+  		class="org.mifos.application.master.business.LookUpValueEntity" 
+  		cascade="none" update="false" />
   	</class>
 </hibernate-mapping>

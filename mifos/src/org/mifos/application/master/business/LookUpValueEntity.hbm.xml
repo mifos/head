@@ -4,14 +4,16 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="org.mifos.application.master.business.LookUpValueEntity" table="LOOKUP_VALUE">
+	<class name="org.mifos.application.master.business.LookUpValueEntity" 
+		table="LOOKUP_VALUE">
 		<id column="LOOKUP_ID" name="lookUpId" type="java.lang.Integer">
 			<generator class="native"></generator>
 		</id>
 
-
 		<property name="lookUpName" type="java.lang.String" column="LOOKUP_NAME" />
-		<many-to-one name="lookUpEntity" column="ENTITY_ID" class="org.mifos.application.master.business.MifosLookUpEntity" unique="true" lazy="true" />
+		<many-to-one name="lookUpEntity" column="ENTITY_ID" 
+			class="org.mifos.application.master.business.MifosLookUpEntity" 
+			unique="true" lazy="true" />
 
 		<set name="lookUpValueLocales" cascade="all" lazy="false">
 			<key column="LOOKUP_ID" update="false" />

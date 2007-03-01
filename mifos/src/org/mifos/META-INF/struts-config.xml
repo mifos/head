@@ -808,7 +808,9 @@
 			<forward name="cancelLoanChangeLog" path="/loanAccountAction.do?method=get" />
 
 		</action>
-		<action path="/savingsDepositWithdrawalAction" type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" name="savingsDepositWithdrawalForm" parameter="method"
+		<action path="/savingsDepositWithdrawalAction" 
+			type="org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction" 
+			name="savingsDepositWithdrawalForm" parameter="method"
 			input="/savingsDepositWithdrawalAction.do?method=validate" scope="session" validate="true">
 			<forward name="load_success" path="/pages/application/savings/jsp/applypayment_savingsaccount.jsp" />
 			<forward name="preview_success" path="/pages/application/savings/jsp/review_transaction_savings.jsp" />
