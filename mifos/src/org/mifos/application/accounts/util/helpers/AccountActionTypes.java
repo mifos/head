@@ -38,19 +38,30 @@
 package org.mifos.application.accounts.util.helpers;
 
 public enum AccountActionTypes {
-	LOAN_REPAYMENT((short) 1), LOAN_PENALTY((short) 2), LOAN_PENALTY_MISC(
-			(short) 3), FEE_REPAYMENT((short) 4), FEE_REPAYMENT_MISC((short) 5), SAVINGS_DEPOSIT(
-			(short) 6), SAVINGS_WITHDRAWAL((short) 7), PAYMENT((short) 8), LOAN_ADJUSTMENT(
-			(short) 9), DISBURSAL((short) 10), SAVINGS_INTEREST_POSTING(
-			(short) 11), CUSTOMER_ACCOUNT_REPAYMENT((short) 12), CUSTOMER_ADJUSTMENT(
-			(short) 13), SAVINGS_ADJUSTMENT((short) 14), WRITEOFF((short) 15), WAIVEOFFDUE(
-			(short) 16), WAIVEOFFOVERDUE((short) 17), LOAN_REVERSAL((short) 18), LOAN_DISBURSAL_AMOUNT_REVERSAL(
-			(short) 19);
+	LOAN_REPAYMENT(1),
+	LOAN_PENALTY(2),
+	LOAN_PENALTY_MISC(3),
+	FEE_REPAYMENT(4),
+	FEE_REPAYMENT_MISC(5),
+	SAVINGS_DEPOSIT(6),
+	SAVINGS_WITHDRAWAL(7),
+	PAYMENT(8),
+	LOAN_ADJUSTMENT(9),
+	DISBURSAL(10),
+	SAVINGS_INTEREST_POSTING(11),
+	CUSTOMER_ACCOUNT_REPAYMENT(12),
+	CUSTOMER_ADJUSTMENT(13),
+	SAVINGS_ADJUSTMENT(14),
+	WRITEOFF(15),
+	WAIVEOFFDUE(16),
+	WAIVEOFFOVERDUE(17),
+	LOAN_REVERSAL(18),
+	LOAN_DISBURSAL_AMOUNT_REVERSAL(19);
 
-	Short value;
+	private Short value;
 
-	AccountActionTypes(Short value) {
-		this.value = value;
+	private AccountActionTypes(int value) {
+		this.value = (short) value;
 	}
 
 	public Short getValue() {

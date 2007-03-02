@@ -90,7 +90,9 @@ public interface AccountConstants {
 	public static final String METHOD_PREVIEW="preview";
 	public static final String METHOD_PREVIOUS="previous";
 	public static final String METHOD_UPDATE="update";
-	public static final short ACTION_LOAN_REPAYMENT=1;
+	
+	public static final short ACTION_LOAN_REPAYMENT =
+		AccountActionTypes.LOAN_REPAYMENT.getValue();
 	public static final short ACTION_LOAN_PENALTY=2;
 	public static final short ACTION_LOAN_PENALTY_MISC=3;
 	public static final short ACTION_FEE_REPAYMENT=4;

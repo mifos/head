@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountStateEntity;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -274,10 +275,13 @@ public class TestMasterBusinessService extends MifosTestCase {
 			HibernateUtil.closeSession();
 		}
 	}
-	public void testgetMasterDataEntity(){
+
+	public void testGetMasterDataEntity(){
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			masterService.getMasterDataEntity(AccountStateEntity.class,Short.valueOf("1"));
+			masterService.getMasterDataEntity(
+				AccountStateEntity.class,
+				AccountState.LOANACC_PARTIALAPPLICATION.getValue());
 			fail();
 		} catch (ServiceException e) {
 			assertTrue(true);
