@@ -315,8 +315,8 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 				|| interestGLCode == null
 				|| (savingsType.getId()
 						.equals(SavingsType.MANDATORY.getValue()) && recommendedAmount == null)
-				|| (getPrdApplicableMaster().getId().equals(
-						PrdApplicableMaster.GROUPS.getValue()) && recommendedAmntUnit == null)) {
+				|| (getPrdApplicableMasterEnum() ==
+						PrdApplicableMaster.GROUPS && recommendedAmntUnit == null)) {
 			throw new ProductDefinitionException("errors.create");
 		}
 		prdLogger.debug("Validating the fields in savings Offering done");

@@ -47,7 +47,7 @@ public class LoanPrdBusinessService extends BusinessService {
 			List<MasterDataEntity> applList = new MasterPersistence()
 					.retrieveMasterEntities(PrdApplicableMasterEntity.class,
 							localeId);
-			if (applList != null && applList.size() > 0) {
+			if (applList != null) {
 				for (Iterator<MasterDataEntity> iter = applList.iterator(); iter
 						.hasNext();) {
 					MasterDataEntity masterData = iter.next();

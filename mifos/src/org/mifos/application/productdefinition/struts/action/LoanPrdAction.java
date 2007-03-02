@@ -177,7 +177,7 @@ public class LoanPrdAction extends BaseAction {
 								.getPrdCategoryValue()),
 				(PrdApplicableMasterEntity) findMasterEntity(request,
 						ProductDefinitionConstants.LOANAPPLFORLIST,
-						loanPrdActionForm.getPrdApplicableMasterValue()),
+						loanPrdActionForm.getPrdApplicableMasterEnum().getValue()),
 				loanPrdActionForm.getStartDateValue(locale), loanPrdActionForm
 						.getEndDateValue(locale), loanPrdActionForm
 						.getDescription(),
@@ -316,7 +316,7 @@ public class LoanPrdAction extends BaseAction {
 						request)), loanPrdActionForm.getPrdCategoryValue()),
 				(PrdApplicableMasterEntity) findMasterEntity(request,
 						ProductDefinitionConstants.LOANAPPLFORLIST,
-						loanPrdActionForm.getPrdApplicableMasterValue()),
+						loanPrdActionForm.getPrdApplicableMasterEnum().getValue()),
 				loanPrdActionForm.getStartDateValue(locale), loanPrdActionForm
 						.getEndDateValue(locale), loanPrdActionForm
 						.getDescription(), PrdStatus
@@ -586,8 +586,8 @@ public class LoanPrdAction extends BaseAction {
 				.getPrdCategory().getProductCategoryID()));
 		loanPrdActionForm.setPrdStatus(getStringValue(loanOffering
 				.getPrdStatus().getOfferingStatusId()));
-		loanPrdActionForm.setPrdApplicableMaster(getStringValue(loanOffering
-				.getPrdApplicableMaster().getId()));
+		loanPrdActionForm.setPrdApplicableMaster(
+				loanOffering.getPrdApplicableMasterEnum());
 		loanPrdActionForm.setStartDate(DateHelper.getUserLocaleDate(
 				getUserContext(request).getPereferedLocale(), DateHelper
 						.toDatabaseFormat(loanOffering.getStartDate())));

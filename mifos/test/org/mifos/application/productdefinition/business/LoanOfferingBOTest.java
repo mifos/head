@@ -695,8 +695,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		assertEquals("LOAP", loanOffering.getPrdOfferingShortName());
 		assertEquals(Short.valueOf("1"), loanOffering.getPrdCategory()
 				.getProductCategoryID());
-		assertEquals(PrdApplicableMaster.CLIENTS.getValue(), loanOffering
-				.getPrdApplicableMaster().getId());
+		assertEquals(PrdApplicableMaster.CLIENTS, 
+				loanOffering.getPrdApplicableMasterEnum());
 		assertEquals(startDate, loanOffering.getStartDate());
 		assertEquals(endDate, loanOffering.getEndDate());
 		assertEquals("1234", loanOffering.getDescription());

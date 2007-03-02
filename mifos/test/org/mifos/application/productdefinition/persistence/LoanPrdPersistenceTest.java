@@ -51,15 +51,17 @@ public class LoanPrdPersistenceTest extends MifosTestCase {
 		loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
 		HibernateUtil.closeSession();
 
+		short localeId = 1;
 		loanOffering = new LoanPrdPersistence().getLoanOffering(loanOffering
-				.getPrdOfferingId(), (short) 1);
+				.getPrdOfferingId(), localeId);
 		assertNotNull(loanOffering);
 		assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
 		assertEquals("Loan", loanOffering.getPrdOfferingShortName());
 
 		assertEquals("Other", loanOffering.getPrdCategory()
 				.getProductCategoryName());
-		assertEquals("Groups", loanOffering.getPrdApplicableMaster().getName());
+		assertEquals(PrdApplicableMaster.GROUPS, 
+				loanOffering.getPrdApplicableMasterEnum());
 		assertEquals("Active", loanOffering.getPrdStatus().getPrdState()
 				.getName());
 		assertEquals("Grace on all repayments", loanOffering

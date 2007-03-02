@@ -42,6 +42,7 @@ import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.application.customer.struts.actionforms.CustomerActionFormTest;
 import org.mifos.application.customer.util.helpers.LoanCycleCounterTest;
 import org.mifos.application.master.business.MifosCurrencyTest;
+import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionFormTest;
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.application.ui.DispatcherTest;
 import org.mifos.framework.MifosTestCase;
@@ -92,6 +93,7 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(FrameworkExceptionTest.class);
 		
 		suite.addTestSuite(CustomerActionFormTest.class);
+		suite.addTestSuite(LoanPrdActionFormTest.class);
 
 		//Currently this one is slow (extends MifosTestCase).
 		//suite.addTestSuite(OfficeListTagTest.class);

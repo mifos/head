@@ -42,7 +42,6 @@ import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
-import java.net.URISyntaxException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -105,16 +104,12 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader
-					.getURI(
-							"org/mifos/application/productdefinition/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader
+				.getURI(
+						"org/mifos/application/productdefinition/struts-config.xml")
+				.getPath());
 		userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
@@ -728,9 +723,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
 				.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.manage_success.toString());
 
 		List<ProductCategoryBO> productCategories = (List<ProductCategoryBO>) SessionUtils
@@ -797,19 +790,21 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				.toString(), loanPrdActionForm.getPrdCategory());
 		assertEquals(loanOffering.getPrdStatus().getOfferingStatusId()
 				.toString(), loanPrdActionForm.getPrdStatus());
-		assertEquals(loanOffering.getPrdApplicableMaster().getId().toString(),
-				loanPrdActionForm.getPrdApplicableMaster());
+		assertEquals(loanOffering.getPrdApplicableMasterEnum(),
+				loanPrdActionForm.getPrdApplicableMasterEnum());
 		assertEquals(DateHelper.getUserLocaleDate(TestObjectFactory
 				.getContext().getPereferedLocale(), DateHelper
 				.toDatabaseFormat(loanOffering.getStartDate())),
 				loanPrdActionForm.getStartDate());
-		if (loanOffering.getEndDate() != null)
+		if (loanOffering.getEndDate() != null) {
 			assertEquals(DateHelper.getUserLocaleDate(TestObjectFactory
 					.getContext().getPereferedLocale(), DateHelper
 					.toDatabaseFormat(loanOffering.getEndDate())),
 					loanPrdActionForm.getEndDate());
-		else
+		}
+		else {
 			assertNull(loanPrdActionForm.getEndDate());
+		}
 		assertEquals(loanOffering.getDescription(), loanPrdActionForm
 				.getDescription());
 		assertEquals(loanOffering.getGracePeriodType().getId().toString(),
@@ -858,7 +853,6 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				.size());
 		assertEquals(loanOffering.getLoanOfferingFunds().size(),
 				(selectedFunds).size());
-
 	}
 
 	public void testEditPreviewWithOutData() throws Exception {
@@ -1128,7 +1122,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertNotNull(loanOffering1.getPrdOfferingShortName());
 		assertNotNull(loanOffering1.getPrdCategory().getProductCategoryName());
 		assertNotNull(loanOffering1.getPrdStatus().getPrdState().getName());
-		assertNotNull(loanOffering1.getPrdApplicableMaster().getName());
+		assertNotNull(loanOffering1.getPrdApplicableMasterEnum());
 		assertNotNull(loanOffering1.getStartDate());
 		assertNotNull(loanOffering1.getGracePeriodType().getName());
 		assertNotNull(loanOffering1.getGracePeriodDuration());

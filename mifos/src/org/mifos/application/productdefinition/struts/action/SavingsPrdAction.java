@@ -338,7 +338,7 @@ public class SavingsPrdAction extends BaseAction {
 					.toString()));
 		if (savingsOffering.getPrdApplicableMaster() != null)
 			actionForm.setPrdApplicableMaster(savingsOffering
-					.getPrdApplicableMaster().getId().toString());
+					.getPrdApplicableMasterEnum().getValue().toString());
 		if (savingsOffering.getSavingsType() != null)
 			actionForm.setSavingsType(savingsOffering.getSavingsType().getId()
 					.toString());

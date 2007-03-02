@@ -597,8 +597,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		assertNotNull(savingsOffering.getGlobalPrdOfferingNum());
 		assertEquals(PrdStatus.SAVINGSACTIVE.getValue(), savingsOffering
 				.getPrdStatus().getOfferingStatusId());
-		assertEquals(PrdApplicableMaster.CLIENTS.getValue(), savingsOffering
-				.getPrdApplicableMaster().getId());
+		assertEquals(PrdApplicableMaster.CLIENTS,
+				savingsOffering.getPrdApplicableMasterEnum());
 		assertEquals(SavingsType.MANDATORY.getValue(), savingsOffering
 				.getSavingsType().getId());
 		assertEquals(InterestCalcType.AVERAGE_BALANCE.getValue(),
