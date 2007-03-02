@@ -12,7 +12,7 @@ import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -53,7 +53,7 @@ public class TestAccountPersistence extends TestAccount {
 		AccountActionEntity accountAction = 
 			(AccountActionEntity) new MasterPersistence()
 				.getPersistentObject(AccountActionEntity.class,
-						AccountConstants.ACTION_SAVINGS_INTEREST_POSTING);
+						AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue());
 		assertNotNull(accountAction);
 	}
 

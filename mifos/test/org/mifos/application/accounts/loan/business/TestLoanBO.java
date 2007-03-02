@@ -37,6 +37,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.persistence.AccountPersistence;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -1337,7 +1338,7 @@ public class TestLoanBO extends MifosTestCase {
 			assertEquals(2, accountTrxns.size());
 			for (AccountTrxnEntity accountTrxn : accountTrxns) {
 
-				if (accountTrxn.getAccountActionEntity().getId() == AccountConstants.ACTION_FEE_REPAYMENT) {
+				if (accountTrxn.getAccountActionEntity().getId() == AccountActionTypes.FEE_REPAYMENT.getValue()) {
 					assertEquals(30.0, accountTrxn.getAmount()
 							.getAmountDoubleValue());
 					// it should have two feetrxn's
@@ -1345,7 +1346,7 @@ public class TestLoanBO extends MifosTestCase {
 							.getFeesTrxnDetails();
 					assertEquals(2, feesTrxnDetails.size());
 				}
-				if (accountTrxn.getAccountActionEntity().getId() == AccountConstants.ACTION_DISBURSAL)
+				if (accountTrxn.getAccountActionEntity().getId() == AccountActionTypes.DISBURSAL.getValue())
 					assertEquals(300.0, accountTrxn.getAmount()
 							.getAmountDoubleValue());
 
@@ -1405,7 +1406,7 @@ public class TestLoanBO extends MifosTestCase {
 			Set<AccountTrxnEntity> accountTrxns = entity.getAccountTrxns();
 			assertEquals(1, accountTrxns.size());
 			for (AccountTrxnEntity accountTrxn : accountTrxns) {
-				if (accountTrxn.getAccountActionEntity().getId() == AccountConstants.ACTION_DISBURSAL)
+				if (accountTrxn.getAccountActionEntity().getId() == AccountActionTypes.DISBURSAL.getValue())
 					assertEquals(300.0, accountTrxn.getAmount()
 							.getAmountDoubleValue());
 				assertEquals(accountBO.getAccountId(), accountTrxn.getAccount()
@@ -1443,7 +1444,7 @@ public class TestLoanBO extends MifosTestCase {
 		int finTransaction = 0;
 		for (AccountTrxnEntity accountTrxn : accountTrxns) {
 			finTransaction += accountTrxn.getFinancialTransactions().size();
-			if (accountTrxn.getAccountActionEntity().getId() == AccountConstants.ACTION_FEE_REPAYMENT) {
+			if (accountTrxn.getAccountActionEntity().getId() == AccountActionTypes.FEE_REPAYMENT.getValue()) {
 				assertEquals(40.0, accountTrxn.getAmount()
 						.getAmountDoubleValue());
 				// it should have two feetrxn's
@@ -1451,7 +1452,7 @@ public class TestLoanBO extends MifosTestCase {
 						.getFeesTrxnDetails();
 				assertEquals(2, feesTrxnDetails.size());
 			}
-			if (accountTrxn.getAccountActionEntity().getId() == AccountConstants.ACTION_DISBURSAL)
+			if (accountTrxn.getAccountActionEntity().getId() == AccountActionTypes.DISBURSAL.getValue())
 				assertEquals(300.0, accountTrxn.getAmount()
 						.getAmountDoubleValue());
 
@@ -2310,7 +2311,7 @@ public class TestLoanBO extends MifosTestCase {
 			Set<AccountTrxnEntity> accountTrxns = entity.getAccountTrxns();
 			assertEquals(1, accountTrxns.size());
 			for (AccountTrxnEntity accountTrxn : accountTrxns) {
-				if (accountTrxn.getAccountActionEntity().getId() == AccountConstants.ACTION_DISBURSAL)
+				if (accountTrxn.getAccountActionEntity().getId() == AccountActionTypes.DISBURSAL.getValue())
 					assertEquals(300.0, accountTrxn.getAmount()
 							.getAmountDoubleValue());
 				assertEquals(accountBO.getAccountId(), accountTrxn.getAccount()

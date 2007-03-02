@@ -10,6 +10,7 @@ import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
@@ -164,7 +165,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
 		addRequestParameter("method", "reLoad");
-		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_WITHDRAWAL));
+		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()));
 		actionPerform();
 		verifyForward("load_success");
 	}
@@ -179,7 +180,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
 		addRequestParameter("method", "reLoad");
-		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_DEPOSIT));
+		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
 		actionPerform();
 		verifyForward("load_success");
 	}
@@ -197,7 +198,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("customerId", "");
 		addRequestParameter("trxnDate", "");
 		addRequestParameter("paymentTypeId", "1");
-		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_DEPOSIT));
+		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
 		actionPerform();
 		assertEquals(3,getErrrorSize());
 		assertEquals(3,getErrrorSize(AccountConstants.ERROR_MANDATORY));
@@ -216,7 +217,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
 		addRequestParameter("paymentTypeId", "1");
-		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_DEPOSIT));
+		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
 		actionPerform();
 		verifyForward(ActionForwards.preview_success.toString());
 	}
@@ -239,7 +240,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
 		addRequestParameter("paymentTypeId", "1");
-		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_DEPOSIT));
+		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
 		actionPerform();
 		
 		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
@@ -277,7 +278,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("customerId", group.getCustomerId().toString());
 		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
 		addRequestParameter("paymentTypeId", "1");
-		addRequestParameter("trxnTypeId", String.valueOf(AccountConstants.ACTION_SAVINGS_WITHDRAWAL));
+		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()));
 		actionPerform();
 		
 		setRequestPathInfo("/savingsDepositWithdrawalAction.do");

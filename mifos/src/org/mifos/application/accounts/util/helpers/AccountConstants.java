@@ -91,34 +91,8 @@ public interface AccountConstants {
 	public static final String METHOD_PREVIOUS="previous";
 	public static final String METHOD_UPDATE="update";
 	
-	public static final short ACTION_LOAN_REPAYMENT =
-		AccountActionTypes.LOAN_REPAYMENT.getValue();
-	public static final short ACTION_LOAN_PENALTY=2;
-	public static final short ACTION_LOAN_PENALTY_MISC=3;
-	public static final short ACTION_FEE_REPAYMENT=4;
-	public static final short ACTION_FEE_REPAYMENT_MISC=5;
-	public static final short ACTION_SAVINGS_DEPOSIT=6;
-	public static final short ACTION_SAVINGS_WITHDRAWAL=7;
-	
-	
-	//Contants for payment and adjusment
-	public static final short ACTION_PAYMENT=8;
-	public static final short ACTION_LOAN_ADJUSTMENT=9;
-	public static final short ACTION_DISBURSAL=10;
-	
-	public static final short ACTION_SAVINGS_INTEREST_POSTING=11;
-	public static final short ACTION_CUSTOMER_ACCOUNT_REPAYMENT=12;
-	public static final short ACTION_CUSTOMER_ADJUSTMENT=13;
-	
-	public static final short ACTION_SAVINGS_ADJUSTMENT=14;
-	public static final short ACTION_WRITEOFF=15;
-	public static final short ACTION_WAIVEOFFDUE=16;
-	public static final short ACTION_WAIVEOFFOVERDUE=17;
-	public static final short ACTION_LOAN_REVERSAL=18;
-	public static final short ACTION_LOAN_DISBURSAL_AMOUNT_REVERSAL=19;
 	//exceptions
 	public static final String UNKNOWN_EXCEPTION="error.unnkownexception";
-	
 	/**
 	 * key string for putting business result account action date
 	 */

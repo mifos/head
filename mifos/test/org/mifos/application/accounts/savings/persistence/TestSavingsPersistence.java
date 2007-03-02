@@ -18,7 +18,7 @@ import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -197,7 +197,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							Configuration.getInstance().getSystemConfig()
 									.getCurrency(), "1700.0"), helper
 							.getDate("15/01/2006"),
-							AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+							AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings,
 							createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.save();
@@ -209,7 +209,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							.getCurrency(), "1000.0"), new Money(Configuration
 							.getInstance().getSystemConfig().getCurrency(),
 							"2700.0"), helper.getDate("20/02/2006"),
-					AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+					AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings,
 					createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
@@ -223,7 +223,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							.getCurrency(), "500.0"), new Money(Configuration
 							.getInstance().getSystemConfig().getCurrency(),
 							"2200.0"), helper.getDate("10/03/2006"),
-					AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings,
+					AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings,
 					createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
@@ -237,7 +237,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							.getCurrency(), "1200.0"), new Money(Configuration
 							.getInstance().getSystemConfig().getCurrency(),
 							"3400.0"), helper.getDate("15/03/2006"),
-					AccountConstants.ACTION_SAVINGS_DEPOSIT, savings,
+					AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings,
 					createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();
@@ -251,7 +251,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 							.getCurrency(), "2500.0"), new Money(Configuration
 							.getInstance().getSystemConfig().getCurrency(),
 							"900.0"), helper.getDate("25/03/2006"),
-					AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings,
+					AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings,
 					createdBy, group);
 			TestAccountPaymentEntity.addAccountPayment(payment,savings);
 			savings.update();

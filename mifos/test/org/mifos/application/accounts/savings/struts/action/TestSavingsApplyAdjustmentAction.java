@@ -13,6 +13,7 @@ import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -98,7 +99,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings, depositAmount, depositAmount, helper
 						.getDate("20/05/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,depositAmount);
@@ -117,9 +118,10 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		assertNotNull(savings.getLastPmnt());
 		assertNotNull(SessionUtils.getAttribute(
 				SavingsConstants.ACCOUNT_ACTION,request ));
-		AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION,request);
-		assertEquals(AccountConstants.ACTION_SAVINGS_DEPOSIT, accountAction
-				.getId().shortValue());
+		AccountActionEntity accountAction = (AccountActionEntity) 
+			SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION,request);
+		assertEquals(AccountActionTypes.SAVINGS_DEPOSIT,
+				accountAction.asEnum());
 		assertEquals(Short.valueOf("1"),  SessionUtils
 				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
 		group = savings.getCustomer();
@@ -140,7 +142,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings, withdrawalAmount, balance, helper
 						.getDate("20/05/2006"),
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
+				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,balance);
@@ -160,8 +162,8 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		assertNotNull(SessionUtils.getAttribute(
 				SavingsConstants.ACCOUNT_ACTION,request));
 		AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION,request);
-		assertEquals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL, accountAction
-				.getId().shortValue());
+		assertEquals(AccountActionTypes.SAVINGS_WITHDRAWAL, 
+				accountAction.asEnum());
 		assertEquals(Short.valueOf("1"), SessionUtils
 				.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID,request));
 		group = savings.getCustomer();
@@ -293,7 +295,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings, depositAmount, depositAmount, helper
 						.getDate("20/05/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,depositAmount);

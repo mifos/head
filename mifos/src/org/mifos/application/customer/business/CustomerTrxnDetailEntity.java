@@ -10,7 +10,7 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -136,7 +136,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 					getAccountPayment(),
 					(AccountActionEntity) masterPersistence
 							.getPersistentObject(AccountActionEntity.class,
-									AccountConstants.ACTION_CUSTOMER_ADJUSTMENT),
+									AccountActionTypes.CUSTOMER_ADJUSTMENT.getValue()),
 					getInstallmentId(), getDueDate(), loggedInUser,
 					getActionDate(), getAmount().negate(), comment, this,
 					getMiscFeeAmount().negate(), getMiscPenaltyAmount()

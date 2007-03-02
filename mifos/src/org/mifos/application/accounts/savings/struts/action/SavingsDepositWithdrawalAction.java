@@ -18,6 +18,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
@@ -84,9 +85,9 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
 		List<AccountActionEntity> trxnTypes = new ArrayList<AccountActionEntity>();
 		trxnTypes.add(getAccountsService().getAccountAction(
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, uc.getLocaleId()));
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), uc.getLocaleId()));
 		trxnTypes.add(getAccountsService().getAccountAction(
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, uc.getLocaleId()));
+				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), uc.getLocaleId()));
 		SessionUtils.setCollectionAttribute(AccountConstants.TRXN_TYPES, trxnTypes,
 				request);
 
@@ -129,7 +130,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		if (actionForm.getTrxnTypeId() != null
 				&& actionForm.getTrxnTypeId() != "") {
 			Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
-			if (trxnTypeId.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT)) {
+			if (trxnTypeId.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
 				if (actionForm.getCustomerId() != null
 						&& actionForm.getCustomerId() != "")
 					actionForm.setAmount(savings.getTotalPaymentDue(Integer
@@ -189,11 +190,11 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 			throw new AccountException(AccountConstants.ERROR_INVALID_TRXN);
 
 		Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
-		if (trxnTypeId.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT)) {
+		if (trxnTypeId.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
 			savings.applyPayment(createPaymentDataForDeposit(actionForm, uc,
 					savings));
 		} else if (trxnTypeId
-				.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL))
+				.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()))
 			savings.withdraw(createPaymentData(actionForm, uc));
 
 		return mapping.findForward(ActionForwards.account_details_page

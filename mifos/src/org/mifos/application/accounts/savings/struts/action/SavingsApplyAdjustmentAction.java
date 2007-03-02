@@ -52,7 +52,7 @@ import org.mifos.application.accounts.savings.business.service.SavingsBusinessSe
 import org.mifos.application.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -111,9 +111,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		if (null != lastPayment
 				&& lastPayment.getAmount().getAmountDoubleValue() != 0
 				&& (new SavingsHelper().getPaymentActionType(lastPayment)
-						.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT) || new SavingsHelper()
+						.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue()) || new SavingsHelper()
 						.getPaymentActionType(lastPayment).equals(
-								AccountConstants.ACTION_SAVINGS_WITHDRAWAL))) {
+								AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()))) {
 			//actionForm.setLastPaymentAmount(savings.getLastPmnt().getAmount());
 			AccountActionEntity accountAction = (AccountActionEntity) new MasterPersistence()
 					.getPersistentObject(AccountActionEntity.class,

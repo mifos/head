@@ -19,13 +19,10 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
  */
 public class AccountActionEntityTest extends TestCase {
 
-	@Override
-	protected void setUp() throws Exception {
+	public void testBasics() throws Exception {
 		DatabaseSetup.configureLogging();
 		DatabaseSetup.initializeHibernate();
-	}
 
-	public void testBasics() throws Exception {
 		SessionFactory factory = DatabaseSetup.mayflySessionFactory();
 		Database database = new Database(DatabaseSetup.getStandardStore());
 		
@@ -52,6 +49,25 @@ public class AccountActionEntityTest extends TestCase {
 
 		assertEquals("Payment", action.getName((short)1));
 		session.close();
+	}
+	
+	public void testEnum() throws Exception {
+		AccountActionTypes myEnum = AccountActionTypes.FEE_REPAYMENT;
+		AccountActionEntity entity = new AccountActionEntity(myEnum);
+		assertEquals(myEnum.getValue(), entity.getId());
+		
+		AccountActionTypes out = entity.asEnum();
+		assertEquals(myEnum, out);
+	}
+	
+	public void testFromBadInt() throws Exception {
+		try {
+			AccountActionTypes.fromInt(9999);
+			fail();
+		}
+		catch (RuntimeException e) {
+			assertEquals("no account action 9999", e.getMessage());
+		}
 	}
 
 }

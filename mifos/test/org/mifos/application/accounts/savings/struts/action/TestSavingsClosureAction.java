@@ -13,7 +13,7 @@ import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
@@ -237,7 +237,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				new Money(TestObjectFactory.getMFICurrency(), "1000.0"),
 				new Money(TestObjectFactory.getMFICurrency(), "1000.0"), helper
 						.getDate("30/05/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment1,savings);
 		savings.update();
@@ -250,7 +250,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				savings,
 				new Money(TestObjectFactory.getMFICurrency(), "500.0"),
 				balanceAmount, helper.getDate("15/06/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment2,savings);
 		savings.update();

@@ -7,5 +7,17 @@ import org.mifos.application.master.business.MasterDataEntity;
  * Also see {@link AccountActionTypes}.
  */
 public class AccountActionEntity extends MasterDataEntity {
+	
+	public AccountActionEntity() {
+		super();
+	}
+
+	public AccountActionEntity(AccountActionTypes myEnum) {
+		super(myEnum.getValue());
+	}
+
+	public AccountActionTypes asEnum() {
+		return AccountActionTypes.fromInt(getId());
+	}
 
 }

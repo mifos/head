@@ -67,4 +67,14 @@ public enum AccountActionTypes {
 	public Short getValue() {
 		return value;
 	}
+
+	public static AccountActionTypes fromInt(int id) {
+		for (AccountActionTypes candidate : AccountActionTypes.values()) {
+			if (candidate.getValue() == id) {
+				return candidate;
+			}
+		}
+		throw new RuntimeException("no account action " + id);
+	}
+
 }

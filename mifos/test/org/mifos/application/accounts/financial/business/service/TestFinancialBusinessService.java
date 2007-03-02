@@ -24,7 +24,7 @@ import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountStates;
@@ -134,7 +134,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				accountPaymentEntity,
 				(AccountActionEntity) masterPersistenceService.findById(
 						AccountActionEntity.class,
-						AccountConstants.ACTION_LOAN_ADJUSTMENT), Short
+						AccountActionTypes.LOAN_ADJUSTMENT.getValue()), Short
 						.valueOf("1"), accountAction.getActionDate(),
 				TestObjectFactory.getPersonnel(TestObjectFactory
 						.getUserContext().getId()), currentDate,
@@ -189,7 +189,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings, depositAmount, balanceAmount, trxnDate,
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		
@@ -205,7 +205,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				.getCurrency(), "4000.0");
 		AccountTrxnEntity accountTrxn = helper.createAccountTrxn(payment,
 				depositAmount.negate(), balanceAmount, trxnDate, trxnDate,
-				AccountConstants.ACTION_SAVINGS_ADJUSTMENT, savings, createdBy,
+				AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy,
 				group, "", null);
 		payment.addAcountTrxn(accountTrxn);
 		TestSavingsBO.setBalance(savings,balanceAmount);
@@ -224,7 +224,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				.size());
 		for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
 			if (trxn.getAccountActionEntity().getId().equals(
-					AccountConstants.ACTION_SAVINGS_ADJUSTMENT)) {
+					AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
 				assertTrue(true);
 				assertEquals(Integer.valueOf(2).intValue(), trxn
 						.getFinancialTransactions().size());
@@ -266,7 +266,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings, withdrawalAmount, balanceAmount, trxnDate,
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings, createdBy,
+				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings);
 		TestSavingsBO.setBalance(savings,balanceAmount);
@@ -281,7 +281,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				.getCurrency(), "6000.0");
 		AccountTrxnEntity accountTrxn = helper.createAccountTrxn(payment,
 				withdrawalAmount, balanceAmount, trxnDate, trxnDate,
-				AccountConstants.ACTION_SAVINGS_ADJUSTMENT, savings, createdBy,
+				AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy,
 				group, "correction entry", null);
 		payment.addAcountTrxn(accountTrxn);
 		TestSavingsBO.setBalance(savings,balanceAmount);
@@ -300,7 +300,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				.size());
 		for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
 			if (trxn.getAccountActionEntity().getId().equals(
-					AccountConstants.ACTION_SAVINGS_ADJUSTMENT)) {
+					AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
 				assertTrue(true);
 				assertEquals(Integer.valueOf(2).intValue(), trxn
 						.getFinancialTransactions().size());
@@ -340,7 +340,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 			AccountPaymentEntity payment = helper
 					.createAccountPaymentToPersist(savings, withdrawalAmount,
 							new Money(), trxnDate,
-							AccountConstants.ACTION_SAVINGS_WITHDRAWAL,
+							AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(),
 							savings, createdBy, group);
 
 			assertEquals(Integer.valueOf(1).intValue(), payment
@@ -412,7 +412,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 				accountPaymentEntity,
 				(AccountActionEntity) new MasterPersistence()
 						.getPersistentObject(AccountActionEntity.class,
-								AccountConstants.ACTION_WRITEOFF),
+								AccountActionTypes.WRITEOFF.getValue()),
 				accountActionDateEntity.getInstallmentId(),
 				accountActionDateEntity.getActionDate(), personnel, new Date(
 						System.currentTimeMillis()),

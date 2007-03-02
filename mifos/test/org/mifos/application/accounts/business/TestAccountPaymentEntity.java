@@ -3,7 +3,7 @@ package org.mifos.application.accounts.business;
 import java.sql.Date;
 import java.util.List;
 
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
@@ -79,7 +79,7 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
 			(AccountActionEntity) masterPersistenceService
-				.findById(AccountActionEntity.class,AccountConstants.ACTION_PAYMENT),Short.valueOf("1"),
+				.findById(AccountActionEntity.class,AccountActionTypes.PAYMENT.getValue()),Short.valueOf("1"),
 			accountAction.getActionDate(), TestObjectFactory.getPersonnel(userContext.getId()),
 			currentDate, TestObjectFactory.getMoneyForMFICurrency(200), 
 			"payment done", null,

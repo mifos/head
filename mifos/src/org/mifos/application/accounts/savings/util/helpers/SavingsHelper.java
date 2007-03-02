@@ -49,7 +49,7 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -211,7 +211,7 @@ public class SavingsHelper {
 	public Short getPaymentActionType(AccountPaymentEntity payment) {
 		for (AccountTrxnEntity accntTrxn : payment.getAccountTrxns()) {
 			if (!accntTrxn.getAccountActionEntity().getId().equals(
-					AccountConstants.ACTION_SAVINGS_ADJUSTMENT))
+					AccountActionTypes.SAVINGS_ADJUSTMENT.getValue()))
 				return accntTrxn.getAccountActionEntity().getId();
 		}
 		return null;

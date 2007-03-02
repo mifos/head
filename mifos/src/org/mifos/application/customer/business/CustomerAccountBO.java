@@ -231,7 +231,7 @@ public class CustomerAccountBO extends AccountBO {
 
 		for (AccountTrxnEntity accntTrxn : getLastPmnt().getAccountTrxns()) {
 			if (accntTrxn.getAccountActionEntity().getId().equals(
-					AccountConstants.ACTION_CUSTOMER_ADJUSTMENT))
+					AccountActionTypes.CUSTOMER_ADJUSTMENT.getValue()))
 				return false;
 		}
 

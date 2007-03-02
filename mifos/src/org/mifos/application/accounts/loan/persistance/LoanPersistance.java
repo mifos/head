@@ -17,7 +17,7 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -123,7 +123,7 @@ public class LoanPersistance extends Persistence {
 			Set<AccountTrxnEntity> accountTrxnSet = accountPayment
 					.getAccountTrxns();
 			for (AccountTrxnEntity accountTrxn : accountTrxnSet) {
-				if (accountTrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_DISBURSAL) {
+				if (accountTrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.DISBURSAL.getValue()) {
 					return accountTrxn.getAccountActionEntity().getId();
 				}
 			}

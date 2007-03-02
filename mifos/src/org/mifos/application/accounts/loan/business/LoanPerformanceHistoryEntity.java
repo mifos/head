@@ -7,7 +7,7 @@ import java.util.Set;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -82,7 +82,7 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 					.getAccountTrxns();
 			for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntityList) {
 				if (accountTrxnEntity.getAccountActionEntity().getId().equals(
-						AccountConstants.ACTION_LOAN_REPAYMENT)
+						AccountActionTypes.LOAN_REPAYMENT.getValue())
 						&& DateUtils
 								.getDateWithoutTimeStamp(
 										accountTrxnEntity.getActionDate()
@@ -94,7 +94,7 @@ public class LoanPerformanceHistoryEntity extends PersistentObject {
 					noOfMissedPayments++;
 				}
 				if (accountTrxnEntity.getAccountActionEntity().getId().equals(
-						AccountConstants.ACTION_LOAN_ADJUSTMENT)
+						AccountActionTypes.LOAN_ADJUSTMENT.getValue())
 						&& DateUtils
 								.getDateWithoutTimeStamp(
 										accountTrxnEntity.getRelatedTrxn()

@@ -28,7 +28,7 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -148,7 +148,7 @@ public class TestAccountService extends MifosTestCase {
 		AccountBusinessService service = (AccountBusinessService) ServiceFactory
 				.getInstance().getBusinessService(BusinessServiceName.Accounts);
 		AccountActionEntity accountaction = service.getAccountAction(
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, Short.valueOf("1"));
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), Short.valueOf("1"));
 		assertNotNull(accountaction);
 		assertEquals(Short.valueOf("1"), accountaction.getLocaleId());
 	}

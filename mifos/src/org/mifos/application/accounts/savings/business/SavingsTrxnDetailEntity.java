@@ -5,7 +5,7 @@ import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -63,17 +63,17 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 				null);
 		this.balance = balance;
 		if (accountActionEntity.getId().equals(
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
+				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
 			this.depositAmount = new Money();
 			this.withdrawlAmount = amount;
 			this.interestAmount = new Money();
 		} else if (accountActionEntity.getId().equals(
-				AccountConstants.ACTION_SAVINGS_DEPOSIT)) {
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
 			this.depositAmount = amount;
 			this.withdrawlAmount = new Money();
 			this.interestAmount = new Money();
 		} else if (accountActionEntity.getId().equals(
-				AccountConstants.ACTION_SAVINGS_INTEREST_POSTING)) {
+				AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
 			this.depositAmount = new Money();
 			this.withdrawlAmount = new Money();
 			this.interestAmount = amount;
@@ -96,17 +96,17 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 		Short lastAccountAction = new SavingsHelper()
 				.getPaymentActionType(accountPaymentEntity);
 		if (lastAccountAction
-				.equals(AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
+				.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
 			this.depositAmount = new Money();
 			this.withdrawlAmount = amount;
 			this.interestAmount = new Money();
 		} else if (lastAccountAction
-				.equals(AccountConstants.ACTION_SAVINGS_DEPOSIT)) {
+				.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
 			this.depositAmount = amount;
 			this.withdrawlAmount = new Money();
 			this.interestAmount = new Money();
 		} else if (lastAccountAction
-				.equals(AccountConstants.ACTION_SAVINGS_INTEREST_POSTING)) {
+				.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
 			this.depositAmount = new Money();
 			this.withdrawlAmount = new Money();
 			this.interestAmount = amount;
@@ -125,26 +125,26 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 			SavingsTrxnDetailEntity reverseAccntTrxn = null;
 			Money balAfterAdjust = null;
 			if (getAccountActionEntity().getId().equals(
-					AccountConstants.ACTION_SAVINGS_DEPOSIT)) {
+					AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
 				balAfterAdjust = getBalance().subtract(getDepositAmount());
 				reverseAccntTrxn = new SavingsTrxnDetailEntity(
 						getAccountPayment(),
 						(AccountActionEntity) masterPersistence
 								.getPersistentObject(
 										AccountActionEntity.class,
-										AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
+										AccountActionTypes.SAVINGS_ADJUSTMENT.getValue()),
 						getDepositAmount().negate(), balAfterAdjust,
 						loggedInUser, getCustomer(), getDueDate(),
 						getActionDate(), adjustmentComment, this);
 			} else if (getAccountActionEntity().getId().equals(
-					AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
+					AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
 				balAfterAdjust = getBalance().add(getWithdrawlAmount());
 				reverseAccntTrxn = new SavingsTrxnDetailEntity(
 						getAccountPayment(),
 						(AccountActionEntity) masterPersistence
 								.getPersistentObject(
 										AccountActionEntity.class,
-										AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
+										AccountActionTypes.SAVINGS_ADJUSTMENT.getValue()),
 						getWithdrawlAmount().negate(), balAfterAdjust,
 						loggedInUser, getCustomer(), getDueDate(),
 						getActionDate(), adjustmentComment, this);
@@ -155,7 +155,7 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 						(AccountActionEntity) masterPersistence
 								.getPersistentObject(
 										AccountActionEntity.class,
-										AccountConstants.ACTION_SAVINGS_ADJUSTMENT),
+										AccountActionTypes.SAVINGS_ADJUSTMENT.getValue()),
 						getAmount().negate(), balAfterAdjust, getPersonnel(),
 						getCustomer(), getDueDate(), getActionDate(),
 						adjustmentComment, this);

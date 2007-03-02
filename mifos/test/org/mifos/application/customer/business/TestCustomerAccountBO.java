@@ -23,6 +23,7 @@ import org.mifos.application.accounts.business.TestAccountFeesEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -1283,7 +1284,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 				accountPaymentEntity,
 				(AccountActionEntity) masterPersistenceService.findById(
 						AccountActionEntity.class,
-						AccountConstants.ACTION_PAYMENT), Short.valueOf("1"),
+						AccountActionTypes.PAYMENT.getValue()), Short.valueOf("1"),
 				accountAction.getActionDate(), TestObjectFactory
 						.getPersonnel(userContext.getId()), currentDate,
 				TestObjectFactory.getMoneyForMFICurrency(300), "payment done",

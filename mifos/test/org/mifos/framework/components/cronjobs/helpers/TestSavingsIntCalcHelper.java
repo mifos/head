@@ -18,7 +18,7 @@ import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -102,7 +102,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		AccountPaymentEntity payment = helper.createAccountPaymentToPersist(
 				savings1, new Money(currency, "1000.0"), new Money(currency,
 						"1000.0"), helper.getDate("10/03/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings1, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings1, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		
@@ -112,7 +112,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		payment = helper.createAccountPaymentToPersist(savings1, new Money(
 				currency, "500.0"), new Money(currency, "1500.0"), helper
 				.getDate("20/03/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings1, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings1, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		savings1.update();
@@ -121,7 +121,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		payment = helper.createAccountPaymentToPersist(savings1, new Money(
 				currency, "600.0"), new Money(currency, "900.0"), helper
 				.getDate("10/04/2006"),
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings1,
+				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings1,
 				createdBy, group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		savings1.update();
@@ -130,7 +130,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		payment = helper.createAccountPaymentToPersist(savings1, new Money(
 				currency, "800.0"), new Money(currency, "1700.0"), helper
 				.getDate("20/04/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings1, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings1, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings1);
 		savings1.update();
@@ -142,7 +142,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "1000.0"), new Money(currency, "1000.0"), helper
 				.getDate("20/04/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings4, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings4, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
@@ -151,7 +151,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "500.0"), new Money(currency, "1500.0"), helper
 				.getDate("25/04/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings4, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings4, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
@@ -160,7 +160,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "600.0"), new Money(currency, "900.0"), helper
 				.getDate("28/04/2006"),
-				AccountConstants.ACTION_SAVINGS_WITHDRAWAL, savings4,
+				AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings4,
 				createdBy, group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();
@@ -169,7 +169,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		payment = helper.createAccountPaymentToPersist(savings4, new Money(
 				currency, "800.0"), new Money(currency, "1700.0"), helper
 				.getDate("30/04/2006"),
-				AccountConstants.ACTION_SAVINGS_DEPOSIT, savings4, createdBy,
+				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings4, createdBy,
 				group);
 		TestAccountPaymentEntity.addAccountPayment(payment,savings4);
 		savings4.update();

@@ -666,7 +666,7 @@ public class LoanBO extends AccountBO {
 					accountPaymentEntity,
 					(AccountActionEntity) new MasterPersistence()
 							.getPersistentObject(AccountActionEntity.class,
-									AccountConstants.ACTION_DISBURSAL), Short
+									AccountActionTypes.DISBURSAL.getValue()), Short
 							.valueOf("0"), transactionDate, personnel,
 					transactionDate, this.loanAmount, "-", null,
 					this.loanAmount, new Money(), new Money(), new Money(),
@@ -2635,7 +2635,7 @@ public class LoanBO extends AccountBO {
 					accountPaymentEntity,
 					(AccountActionEntity) new MasterPersistence()
 							.getPersistentObject(AccountActionEntity.class,
-									AccountConstants.ACTION_FEE_REPAYMENT),
+									AccountActionTypes.FEE_REPAYMENT.getValue()),
 					Short.valueOf("0"), recieptDate, personnel, recieptDate,
 					totalPayment, "-", null, new Money(), new Money(),
 					new Money(), new Money(), new Money(),

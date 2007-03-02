@@ -8,7 +8,7 @@ import org.mifos.application.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.TestAccountPaymentEntity;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerAccountBO;
 import org.mifos.application.customer.business.CustomerBO;
@@ -215,7 +215,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				accountPaymentEntity,
 				(AccountActionEntity) masterPersistenceService.findById(
 						AccountActionEntity.class,
-						AccountConstants.ACTION_PAYMENT), Short.valueOf("1"),
+						AccountActionTypes.PAYMENT.getValue()), Short.valueOf("1"),
 				accountAction.getActionDate(), TestObjectFactory
 						.getPersonnel(userContext.getId()), currentDate,
 				TestObjectFactory.getMoneyForMFICurrency(200), "payment done",

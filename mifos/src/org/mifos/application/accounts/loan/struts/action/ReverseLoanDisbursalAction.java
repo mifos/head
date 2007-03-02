@@ -55,7 +55,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
@@ -234,9 +234,9 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 						for (AccountTrxnEntity accountTrxn : accountPayment
 								.getAccountTrxns()) {
 							if (accountTrxn.getAccountActionEntity().getId()
-									.shortValue() == AccountConstants.ACTION_LOAN_REPAYMENT
+									.shortValue() == AccountActionTypes.LOAN_REPAYMENT.getValue()
 									|| accountTrxn.getAccountActionEntity()
-											.getId().shortValue() == AccountConstants.ACTION_FEE_REPAYMENT) {
+											.getId().shortValue() == AccountActionTypes.FEE_REPAYMENT.getValue()) {
 								amount = amount.add(accountTrxn.getAmount());
 							}
 						}

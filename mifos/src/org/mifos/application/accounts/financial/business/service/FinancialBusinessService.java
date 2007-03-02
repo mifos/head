@@ -62,7 +62,7 @@ import org.mifos.application.accounts.financial.business.service.activity.WriteO
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.financial.util.helpers.FinancialActionCache;
 import org.mifos.application.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -83,41 +83,41 @@ public class FinancialBusinessService extends BusinessService {
 	public void buildAccountingEntries(AccountTrxnEntity accounttrxn)
 			throws FinancialException {
 		BaseFinancialActivity baseFinancialActivity = null;
-		if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_LOAN_REPAYMENT) {
+		if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.LOAN_REPAYMENT.getValue()) {
 			baseFinancialActivity = new LoanRepaymentFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == (AccountConstants.ACTION_SAVINGS_INTEREST_POSTING)) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == (AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
 			baseFinancialActivity = new SavingsInterestPostingFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == (AccountConstants.ACTION_SAVINGS_WITHDRAWAL)) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == (AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
 			baseFinancialActivity = new SavingsWithdrawalFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_SAVINGS_DEPOSIT) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.SAVINGS_DEPOSIT.getValue()) {
 			baseFinancialActivity = new SavingsDepositFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_DISBURSAL) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.DISBURSAL.getValue()) {
 			baseFinancialActivity = new LoanDisbursementFinantialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_FEE_REPAYMENT) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.FEE_REPAYMENT.getValue()) {
 			baseFinancialActivity = new FeeRepaymentFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_CUSTOMER_ACCOUNT_REPAYMENT) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT.getValue()) {
 			baseFinancialActivity = new CustomerAccountRepaymentFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_SAVINGS_ADJUSTMENT) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.SAVINGS_ADJUSTMENT.getValue()) {
 			baseFinancialActivity = new SavingsAdjustmentFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_CUSTOMER_ADJUSTMENT) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.CUSTOMER_ADJUSTMENT.getValue()) {
 			baseFinancialActivity = new CustomerAdjustmentFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_LOAN_ADJUSTMENT ||
-				accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_LOAN_REVERSAL) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.LOAN_ADJUSTMENT.getValue() ||
+				accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.LOAN_REVERSAL.getValue()) {
 			baseFinancialActivity = new LoanAdjustmentFinancialActivity(
 					accounttrxn);
-		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_WRITEOFF) {
+		} else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.WRITEOFF.getValue()) {
 			baseFinancialActivity = new WriteOffFinancialActivity(
 					accounttrxn);
-		}else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountConstants.ACTION_LOAN_DISBURSAL_AMOUNT_REVERSAL) {
+		}else if (accounttrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL.getValue()) {
 			baseFinancialActivity = new DisbursalAmountReversalFinancialActivity(
 					accounttrxn);
 		}
