@@ -14,6 +14,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -549,7 +550,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals(prdName, savingsOffering.getPrdOfferingName());
 		assertEquals(prdShortName, savingsOffering.getPrdOfferingShortName());
 		assertEquals(prdShortName, savingsOffering.getPrdOfferingShortName());
-		assertEquals(PrdStatus.SAVINGSACTIVE.getValue(), savingsOffering
+		assertEquals(PrdStatus.SAVINGS_ACTIVE.getValue(), savingsOffering
 				.getPrdStatus().getOfferingStatusId());
 		assertEquals(2, savingsOffering.getSavingsType().getId().shortValue());
 	}
@@ -924,7 +925,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals("SAVP", savingsOffering.getPrdOfferingShortName());
 		assertEquals(2, savingsOffering.getPrdCategory().getProductCategoryID()
 				.intValue());
-		assertEquals(PrdStatus.SAVINGSINACTIVE.getValue().shortValue(),
+		assertEquals(PrdStatus.SAVINGS_INACTIVE.getValue().shortValue(),
 				savingsOffering.getPrdStatus().getOfferingStatusId()
 						.shortValue());
 		assertEquals(1, savingsOffering.getSavingsType().getId().intValue());
@@ -1000,7 +1001,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		assertEquals(PrdStatus.SAVINGSINACTIVE.getValue().shortValue(),
+		assertEquals(PrdStatus.SAVINGS_INACTIVE.getValue().shortValue(),
 				savingsOffering.getPrdStatus().getOfferingStatusId()
 						.shortValue());
 		setRequestPathInfo("/savingsproductaction.do");
@@ -1040,11 +1041,11 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		savingsOffering = TestObjectFactory.createSavingsOffering(
-				prdOfferingName, shortName, (short) 1, new Date(System
-						.currentTimeMillis()), (short) 2, 300.0, (short) 1,
-				1.2, 200.0, 200.0, (short) 2, (short) 1, meetingIntCalc,
-				meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering(prdOfferingName, shortName, ApplicableTo.CLIENTS, new Date(System
+						.currentTimeMillis()), 
+		((short) 2), 300.0, ((short) 1), 1.2, 
+		200.0, 200.0, ((short) 2), ((short) 1), 
+		meetingIntCalc, meetingIntPost);
 		return savingsOffering;
 	}
 

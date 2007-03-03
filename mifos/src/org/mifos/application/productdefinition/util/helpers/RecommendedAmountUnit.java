@@ -1,13 +1,12 @@
 package org.mifos.application.productdefinition.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum RecommendedAmountUnit {
-	PERINDIVIDUAL((short) 1), COMPLETEGROUP((short) 2);
+	PER_INDIVIDUAL((short) 1), COMPLETE_GROUP((short) 2);
 
-	Short value;
+	private Short value;
 
-	RecommendedAmountUnit(Short value) {
+	private RecommendedAmountUnit(Short value) {
 		this.value = value;
 	}
 
@@ -15,12 +14,13 @@ public enum RecommendedAmountUnit {
 		return value;
 	}
 
-	public static RecommendedAmountUnit getRecommendedAmountUnit(Short value)
-			throws PropertyNotFoundException {
-		for (RecommendedAmountUnit recommendedAmountUnit : RecommendedAmountUnit
-				.values())
-			if (recommendedAmountUnit.getValue().equals(value))
-				return recommendedAmountUnit;
-		throw new PropertyNotFoundException("RecommendedAmountUnit");
+	public static RecommendedAmountUnit fromInt(int value) {
+		for (RecommendedAmountUnit candidate : RecommendedAmountUnit.values()) {
+			if (candidate.getValue() == value) {
+				return candidate;
+			}
+		}
+		throw new RuntimeException("no recommended amount unit " + value);
 	}
+
 }

@@ -45,7 +45,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -73,13 +73,13 @@ public class ClientPersistenceTest extends MifosTestCase {
 
 	public void testRetrieveOfferingsApplicableToClient() throws Exception {
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1",
-				"s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
 		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2",
-				"s2", SavingsType.VOLUNTARY, PrdApplicableMaster.CLIENTS);
+				"s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS);
 		savingsOffering3 = TestObjectFactory.createSavingsOffering("Offering3",
-				"s3", SavingsType.MANDATORY, PrdApplicableMaster.GROUPS);
+				"s3", SavingsType.MANDATORY, ApplicableTo.GROUPS);
 		savingsOffering4 = TestObjectFactory.createSavingsOffering("Offering4",
-				"s4", SavingsType.VOLUNTARY, PrdApplicableMaster.CENTERS);
+				"s4", SavingsType.VOLUNTARY, ApplicableTo.CENTERS);
 		HibernateUtil.closeSession();
 		List<SavingsOfferingBO> offerings = new ClientPersistence()
 				.retrieveOfferingsApplicableToClient();

@@ -39,7 +39,7 @@ package org.mifos.application.customer.business;
 
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 
 /**
  * This class represents customer level e.g client,center etc
@@ -72,11 +72,11 @@ public class CustomerLevelEntity extends MasterDataEntity {
 	 */
 	public Short getProductApplicableType() {
 		if (getId().equals(CustomerLevel.CLIENT.getValue())) {
-			return PrdApplicableMaster.CLIENTS.getValue();
+			return ApplicableTo.CLIENTS.getValue();
 		} else if (getId().equals(CustomerLevel.GROUP.getValue())) {
-			return PrdApplicableMaster.GROUPS.getValue();
+			return ApplicableTo.GROUPS.getValue();
 		} else
-			return PrdApplicableMaster.CENTERS.getValue();
+			return ApplicableTo.CENTERS.getValue();
 	}
 	
 	public boolean isCenter(){

@@ -197,7 +197,7 @@ public class BulkEntryBusinessService extends BusinessService {
 											.getRecommendedAmntUnit()
 											.getId()
 											.equals(
-													RecommendedAmountUnit.PERINDIVIDUAL
+													RecommendedAmountUnit.PER_INDIVIDUAL
 															.getValue()))) {
 								isCenterGroupIndvAccount = true;
 							}

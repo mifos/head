@@ -114,7 +114,7 @@ public class LoanPrdPersistence extends Persistence {
 	public List<LoanOfferingBO> getApplicablePrdOfferings(
 			CustomerLevelEntity customerLevel) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOANACTIVE
+		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE
 				.getValue());
 		queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,
 				customerLevel.getProductApplicableType());

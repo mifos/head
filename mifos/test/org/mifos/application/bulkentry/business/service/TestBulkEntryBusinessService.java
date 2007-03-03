@@ -33,6 +33,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -416,9 +417,9 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
-				Short.valueOf("2"), currentDate, Short.valueOf("2"), 300.0,
-				(short) 1, 1.2, 200.0, 200.0, Short.valueOf("2"), (short) 1,
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, currentDate, 
+				Short.valueOf("2"), 300.0, ((short) 1), 1.2, 
+				200.0, 200.0, Short.valueOf("2"), ((short) 1), 
 				meetingIntCalc, meetingIntPost);
 	}
 

@@ -136,7 +136,7 @@ public class SavingsClosureAction extends BaseAction {
 				|| (savings.getCustomer().getCustomerLevel().getId()
 						.shortValue() == CustomerConstants.GROUP_LEVEL_ID && savings
 						.getRecommendedAmntUnit().getId().equals(
-								RecommendedAmountUnit.PERINDIVIDUAL.getValue())))
+								RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))
 			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(CustomerLevel.CLIENT,
 							ChildrenStateType.ACTIVE_AND_ONHOLD), request);

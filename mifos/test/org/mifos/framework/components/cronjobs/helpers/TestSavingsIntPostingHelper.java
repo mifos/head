@@ -24,6 +24,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -196,10 +197,10 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY, 
 						EVERY_SECOND_MONTH, SAVINGS_INTEREST_POSTING, MONDAY));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 12.0, 200.0,
-				200.0, Short.valueOf("2"), interestCalcType, meetingIntCalc,
-				meetingIntPost);
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
+				Short
+										.valueOf("2"), 300.0, Short.valueOf("1"), 12.0, 
+				200.0, 200.0, Short.valueOf("2"), interestCalcType, 
+				meetingIntCalc, meetingIntPost);
 	}
 }

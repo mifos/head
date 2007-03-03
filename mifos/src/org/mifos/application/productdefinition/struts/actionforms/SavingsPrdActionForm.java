@@ -20,7 +20,6 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
@@ -247,12 +246,8 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	}
 
 	public SavingsType getSavingsTypeValue() {
-		try {
-			return getSavingsType() != null ? SavingsType
-					.getSavingsType(getShortValue(getSavingsType())) : null;
-		} catch (PropertyNotFoundException e) {
-			return null;
-		}
+		return getSavingsType() != null ? SavingsType
+				.fromInt(getShortValue(getSavingsType())) : null;
 	}
 
 	public Money getRecommendedAmountValue() {

@@ -369,7 +369,7 @@ public class BulkEntryView extends View {
 		for (SavingsAccountView savingsAccountView : savingsAccountDetails) {
 			if (!(customerDetail.isCustomerGroup() && savingsAccountView
 					.getSavingsOffering().getRecommendedAmntUnit()
-					.getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue()))) {
+					.getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue()))) {
 				addAccountActionToSavingsView(savingsAccountView, customerId,
 						transactionDate, bulkEntryAccountActionViews);
 			}

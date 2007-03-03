@@ -52,7 +52,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -103,7 +103,7 @@ public class ClientPersistence extends Persistence {
 	throws PersistenceException{
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("prdApplicableTo",
-				PrdApplicableMaster.CLIENTS.getValue());
+				ApplicableTo.CLIENTS.getValue());
 		return executeNamedQuery(
 				NamedQueryConstants.GET_ACTIVE_OFFERINGS_FOR_CUSTOMER, 
 				queryParameters);

@@ -3,7 +3,7 @@ package org.mifos.framework.struts.plugin;
 import org.mifos.application.accounts.savings.struts.action.SavingsAction;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -31,7 +31,7 @@ public class TestInitializerPlugin extends MifosMockStrutsTestCase {
 		
 		offering = TestObjectFactory.createSavingsOffering(
 			"Offering1", "s1", 
-			SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+			SavingsType.MANDATORY, ApplicableTo.CLIENTS);
 		addRequestParameter("selectedPrdOfferingId", 
 			offering.getPrdOfferingId().toString());
 	}

@@ -349,7 +349,7 @@ public class BulkEntryDisplayHelper {
 									.getRecommendedAmntUnit() || accountView
 									.getSavingsOffering()
 									.getRecommendedAmntUnit()
-									.getId().equals(RecommendedAmountUnit.PERINDIVIDUAL.getValue()));
+									.getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue()));
 				} else {
 					isIdMatched = prdOffering.getPrdOfferingId()
 							.equals(

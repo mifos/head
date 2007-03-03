@@ -14,7 +14,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -84,9 +84,9 @@ public class TestAccountFeesActionDetailEntity extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", PrdApplicableMaster.GROUPS,
+				"Loan", ApplicableTo.GROUPS,
 				new Date(System.currentTimeMillis()), 
-				PrdStatus.LOANACTIVE,
+				PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, true, meeting);
 		return TestObjectFactory.createLoanAccount("42423142341", group, 

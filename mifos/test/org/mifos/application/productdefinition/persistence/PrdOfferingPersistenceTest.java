@@ -46,7 +46,7 @@ public class PrdOfferingPersistenceTest extends MifosTestCase {
 
 	public void testGetPrdStatus() throws PersistenceException {
 		PrdStatusEntity prdStatus = new PrdOfferingPersistence()
-				.getPrdStatus(PrdStatus.SAVINGSACTIVE);
+				.getPrdStatus(PrdStatus.SAVINGS_ACTIVE);
 		assertNotNull(prdStatus);
 		assertEquals(ProductType.SAVINGS.getValue(), prdStatus.getPrdType()
 				.getProductTypeID());

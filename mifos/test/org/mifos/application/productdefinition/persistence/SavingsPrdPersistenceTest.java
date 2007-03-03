@@ -12,6 +12,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -102,10 +103,10 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering("Savings Product",
-				"SAVP", (short) 1, new Date(System.currentTimeMillis()),
-				(short) 2, 300.0, (short) 1, 1.2, 200.0, 200.0, (short) 2,
-				(short) 1, meetingIntCalc, meetingIntPost);
+		return TestObjectFactory.createSavingsOffering("Savings Product", "SAVP", ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()), 
+				((short) 2), 300.0, ((short) 1), 1.2, 
+				200.0, 200.0, ((short) 2), ((short) 1), 
+				meetingIntCalc, meetingIntPost);
 	}
 
 }

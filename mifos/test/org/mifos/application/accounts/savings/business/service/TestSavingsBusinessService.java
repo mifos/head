@@ -12,6 +12,7 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ServiceException;
@@ -162,11 +163,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 
 		Date startDate = new Date(System.currentTimeMillis());
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
-				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
-				meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
+		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
 		savings = TestObjectFactory.createSavingsAccount("432434", center,
 				AccountState.SAVINGS_ACC_CLOSED.getValue(), startDate,
 				savingsOffering);
@@ -183,11 +181,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 
 		Date startDate = new Date(System.currentTimeMillis());
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
-				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
-				meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
+		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
 		savings = TestObjectFactory.createSavingsAccount("432434", center,
 				AccountState.SAVINGS_ACC_CLOSED.getValue(), startDate,
 				savingsOffering);
@@ -215,11 +210,11 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
-				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
-				meetingIntPost);
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
+				Short
+										.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
+				200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
+				meetingIntCalc, meetingIntPost);
 	}
 
 	/**

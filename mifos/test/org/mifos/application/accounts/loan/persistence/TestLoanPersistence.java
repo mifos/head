@@ -33,7 +33,7 @@ import org.mifos.application.productdefinition.business.PrdApplicableMasterEntit
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -219,8 +219,8 @@ public class TestLoanPersistence extends MifosTestCase {
 	private AccountBO getLoanAccount(Short accountSate, Date startDate,
 			int disbursalType) {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loanvcfg", "bhgf", PrdApplicableMaster.GROUPS, startDate, 
-				PrdStatus.LOANACTIVE, 300.0, 1.2, (short)3, 
+				"Loanvcfg", "bhgf", ApplicableTo.GROUPS, startDate, 
+				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short)3, 
 				InterestType.FLAT, true, true,
 				meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
@@ -232,8 +232,8 @@ public class TestLoanPersistence extends MifosTestCase {
 			MeetingBO meeting, Short accountSate) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan123", shortName, PrdApplicableMaster.GROUPS, startDate, 
-				PrdStatus.LOANACTIVE, 300.0, 1.2, (short)3, 
+				"Loan123", shortName, ApplicableTo.GROUPS, startDate, 
+				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short)3, 
 				InterestType.FLAT, true, true,
 				meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
@@ -245,8 +245,8 @@ public class TestLoanPersistence extends MifosTestCase {
 	private AccountBO getLoanAccount(CustomerBO customer, MeetingBO meeting) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loancfgb", "dhsq", PrdApplicableMaster.GROUPS, 
-				startDate, PrdStatus.LOANACTIVE, 
+				"Loancfgb", "dhsq", ApplicableTo.GROUPS, 
+				startDate, PrdStatus.LOAN_ACTIVE, 
 				300.0, 1.2, (short)3, 
 				InterestType.FLAT, true, true,
 				meeting);
@@ -258,7 +258,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	
 	private LoanOfferingBO getCompleteLoanOfferingObject() throws Exception {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.GROUPS);
+				ApplicableTo.GROUPS);
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		GLCodeEntity principalglCodeEntity = (GLCodeEntity) HibernateUtil

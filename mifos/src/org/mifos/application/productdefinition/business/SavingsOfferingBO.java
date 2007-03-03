@@ -47,7 +47,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -243,7 +243,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 	}
 
 	public boolean isActive(){
-		return getPrdStatus().getOfferingStatusId().equals(PrdStatus.SAVINGSACTIVE.getValue());
+		return getPrdStatus().getOfferingStatusId().equals(PrdStatus.SAVINGS_ACTIVE.getValue());
 	}
 	
 	public void update(Short userId, String prdOfferingName,
@@ -316,7 +316,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 				|| (savingsType.getId()
 						.equals(SavingsType.MANDATORY.getValue()) && recommendedAmount == null)
 				|| (getPrdApplicableMasterEnum() ==
-						PrdApplicableMaster.GROUPS && recommendedAmntUnit == null)) {
+						ApplicableTo.GROUPS && recommendedAmntUnit == null)) {
 			throw new ProductDefinitionException("errors.create");
 		}
 		prdLogger.debug("Validating the fields in savings Offering done");

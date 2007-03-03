@@ -3,11 +3,11 @@ package org.mifos.application.productdefinition.util.helpers;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum PrdStatus {
-	LOANACTIVE((short) 1), 
-	SAVINGSACTIVE((short) 2), 
+	LOAN_ACTIVE((short) 1), 
+	SAVINGS_ACTIVE((short) 2), 
 
-	LOANINACTIVE((short) 4), 
-	SAVINGSINACTIVE((short) 5);
+	LOAN_INACTIVE((short) 4), 
+	SAVINGS_INACTIVE((short) 5);
 
 	Short value;
 

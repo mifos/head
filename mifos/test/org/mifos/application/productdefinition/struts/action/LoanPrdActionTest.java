@@ -64,7 +64,7 @@ import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -1310,8 +1310,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
-				PrdApplicableMaster.GROUPS, startDate, 
-				PrdStatus.LOANACTIVE, 300.0, 1.2, 3, 
+				ApplicableTo.GROUPS, startDate, 
+				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
 				InterestType.FLAT, true, false,
 				frequency);
 	}

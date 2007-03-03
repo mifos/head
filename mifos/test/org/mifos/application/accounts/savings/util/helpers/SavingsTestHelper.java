@@ -30,6 +30,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
@@ -148,12 +149,8 @@ public class SavingsTestHelper {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory
-				.createSavingsOffering(offeringName, Short.valueOf("2"),
-						new Date(System.currentTimeMillis()), Short
-								.valueOf("2"), 300.0, Short.valueOf("1"), 24.0,
-						200.0, 200.0, savingsTypeId, interestCalcType,
-						meetingIntCalc, meetingIntPost);
+		return TestObjectFactory.createSavingsOffering(offeringName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
+										.valueOf("2"), 300.0, Short.valueOf("1"), 24.0, 200.0, 200.0, savingsTypeId, interestCalcType, meetingIntCalc, meetingIntPost);
 	}
 
 	public SavingsBO createSavingsAccount(String globalAccountNum,

@@ -84,7 +84,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		SavingsTestHelper helper = new SavingsTestHelper();
 		savingsOffering = createSavingsOffering("dfasdasd1", "sad1", Short
 				.valueOf("1"), Short.valueOf("2"), Short.valueOf("1"), Short
-				.valueOf("2"), RecommendedAmountUnit.COMPLETEGROUP);
+				.valueOf("2"), RecommendedAmountUnit.COMPLETE_GROUP);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		Date meetingStartDate = savings.getCustomer().getCustomerMeeting()

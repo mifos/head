@@ -75,7 +75,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.CustomFieldType;
@@ -153,7 +153,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testLoad() throws Exception {
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsoffering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsoffering1","s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -195,7 +195,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	
 	public void testLoadWithGroupHavingNoLoanOfficer() throws Exception {
 		createParentGroup(CustomerStatus.GROUP_PARTIAL,null);
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsoffering1","s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsoffering1","s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -624,7 +624,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testPreviewFailure_DuplicateOfferingsSelected() throws Exception {
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsPrd1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsPrd1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -792,7 +792,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testSuccessfulPreviewWithSavingsOfferingsSelected() throws Exception {
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsPrd1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsPrd1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
 		addRequestParameter("officeId", "3");
@@ -865,7 +865,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	}
 
 	public void testCreateSuccessWithAssociatedSavingsOfferings() throws Exception {
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsPrd1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("savingsPrd1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
 		List<FeeView> feesToRemove = getFees(RecurrenceType.WEEKLY);
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");

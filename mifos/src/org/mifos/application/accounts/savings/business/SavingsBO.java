@@ -838,7 +838,7 @@ public class SavingsBO extends AccountBO {
 		if (client.getCustomerMeeting().getMeeting() != null) {
 			if (!(getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.GROUP_LEVEL_ID && getRecommendedAmntUnit()
 					.getId().equals(
-							RecommendedAmountUnit.COMPLETEGROUP.getValue()))) {
+							RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
 				generateDepositAccountActions(client, client
 						.getCustomerMeeting().getMeeting());
 				this.update();
@@ -860,7 +860,7 @@ public class SavingsBO extends AccountBO {
 					|| (getCustomer().getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
 							.getId().equals(
-									RecommendedAmountUnit.COMPLETEGROUP
+									RecommendedAmountUnit.COMPLETE_GROUP
 											.getValue()))) {
 				generateDepositAccountActions(getCustomer(), depositSchedule);
 			} else {
@@ -1965,7 +1965,7 @@ public class SavingsBO extends AccountBO {
 					|| (getCustomer().getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
 							.getId().equals(
-									RecommendedAmountUnit.COMPLETEGROUP
+									RecommendedAmountUnit.COMPLETE_GROUP
 											.getValue()))) {
 				for (int count = 0; count < meetingDates.size(); count++) {
 					short installmentId = (short) (nextInstallmentId.intValue() + count);
@@ -2089,7 +2089,7 @@ public class SavingsBO extends AccountBO {
 					|| (customerBO.getCustomerLevel().getId().equals(
 							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
 							.getId().equals(
-									RecommendedAmountUnit.COMPLETEGROUP
+									RecommendedAmountUnit.COMPLETE_GROUP
 											.getValue()))) {
 				generateDepositAccountActions(customerBO, depositSchedule,
 						lastInstallment);

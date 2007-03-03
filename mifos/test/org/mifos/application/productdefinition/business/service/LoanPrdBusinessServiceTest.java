@@ -7,7 +7,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ServiceException;
@@ -128,7 +128,7 @@ public class LoanPrdBusinessServiceTest extends MifosTestCase {
 
 		assertEquals("Other", loanOffering.getPrdCategory()
 				.getProductCategoryName());
-		assertEquals(PrdApplicableMaster.GROUPS, 
+		assertEquals(ApplicableTo.GROUPS, 
 				loanOffering.getPrdApplicableMasterEnum());
 		assertEquals("Active", loanOffering.getPrdStatus().getPrdState()
 				.getName());
@@ -215,8 +215,8 @@ public class LoanPrdBusinessServiceTest extends MifosTestCase {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
-				PrdApplicableMaster.GROUPS, startDate, 
-				PrdStatus.LOANACTIVE, 300.0, 1.2, 3, 
+				ApplicableTo.GROUPS, startDate, 
+				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
 				InterestType.FLAT, true, false,
 				frequency);
 	}

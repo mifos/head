@@ -41,7 +41,7 @@ public class SavingsPersistence extends Persistence {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(AccountConstants.PRDTYPEID, ProductType.SAVINGS
 				.getValue());
-		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGSACTIVE
+		queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE
 				.getValue());
 		queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO,
 				customerLevel.getProductApplicableType());

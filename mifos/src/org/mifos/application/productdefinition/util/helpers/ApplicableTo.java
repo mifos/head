@@ -1,11 +1,14 @@
 package org.mifos.application.productdefinition.util.helpers;
 
-public enum PrdApplicableMaster {
-	CLIENTS((short) 1), GROUPS((short) 2),CENTERS((short)3),ALLCUSTOMERS((short)4);
+public enum ApplicableTo {
+	CLIENTS((short)1), 
+	GROUPS((short)2),
+	CENTERS((short)3),
+	ALLCUSTOMERS((short)4);
 
 	private Short value;
 
-	private PrdApplicableMaster(Short value) {
+	private ApplicableTo(Short value) {
 		this.value = value;
 	}
 
@@ -13,8 +16,8 @@ public enum PrdApplicableMaster {
 		return value;
 	}
 
-	public static PrdApplicableMaster fromInt(int value) {
-		for (PrdApplicableMaster candidate : PrdApplicableMaster.values()) {
+	public static ApplicableTo fromInt(int value) {
+		for (ApplicableTo candidate : ApplicableTo.values()) {
 			if (candidate.getValue() == value)
 				return candidate;
 		}

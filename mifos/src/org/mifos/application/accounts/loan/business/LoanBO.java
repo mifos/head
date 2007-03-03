@@ -2319,7 +2319,7 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
 		if (!loanOffering.getPrdStatus().getOfferingStatusId().equals(
-				PrdStatus.LOANACTIVE.getValue()))
+				PrdStatus.LOAN_ACTIVE.getValue()))
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
 		if (isDisbursementDateLessThanCurrentDate(disbursementDate))

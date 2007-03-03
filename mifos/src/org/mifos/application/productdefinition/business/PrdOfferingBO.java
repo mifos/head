@@ -44,7 +44,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
@@ -175,7 +175,7 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		return prdApplicableMaster;
 	}
 	
-	public PrdApplicableMaster getPrdApplicableMasterEnum() {
+	public ApplicableTo getPrdApplicableMasterEnum() {
 		return prdApplicableMaster.asEnum();
 	}
 
@@ -319,9 +319,9 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		prdLogger.debug("getting the Active Product status for product Type :"
 				+ prdType.getProductTypeID());
 		if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
-			return PrdStatus.LOANACTIVE;
+			return PrdStatus.LOAN_ACTIVE;
 		else
-			return PrdStatus.SAVINGSACTIVE;
+			return PrdStatus.SAVINGS_ACTIVE;
 	}
 
 	private PrdStatus getInActivePrdStatus(ProductTypeEntity prdType) {
@@ -329,9 +329,9 @@ public abstract class PrdOfferingBO extends BusinessObject {
 				.debug("getting the In Active Product status for product Type :"
 						+ prdType.getProductTypeID());
 		if (prdType.getProductTypeID().equals(ProductType.LOAN.getValue()))
-			return PrdStatus.LOANINACTIVE;
+			return PrdStatus.LOAN_INACTIVE;
 		else
-			return PrdStatus.SAVINGSINACTIVE;
+			return PrdStatus.SAVINGS_INACTIVE;
 	}
 
 	private void validateDuplicateProductOfferingName(String productOfferingName)

@@ -24,7 +24,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -105,7 +105,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		createClients();
 		savingsOffering = TestObjectFactory.createSavingsOffering(
-			"Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+			"Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
 				client1, AccountState.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
@@ -322,11 +322,8 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering("SavingPrd1", Short
-				.valueOf("2"), new Date(System.currentTimeMillis()), Short
-				.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0,
-				Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
-				meetingIntPost);
+		return TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
+						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
 	}
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,

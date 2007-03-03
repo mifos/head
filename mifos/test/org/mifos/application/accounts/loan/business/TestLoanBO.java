@@ -76,7 +76,7 @@ import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
@@ -407,7 +407,7 @@ public class TestLoanBO extends MifosTestCase {
 
 		Date startDate = new Date(System.currentTimeMillis());
 		loanOffering = TestObjectFactory.createLoanOffering("Loan",
-			PrdApplicableMaster.GROUPS, startDate, PrdStatus.LOANACTIVE,
+			ApplicableTo.GROUPS, startDate, PrdStatus.LOAN_ACTIVE,
 			300.0, 1.2, 1, 
 			InterestType.FLAT, true, true, meeting);
 		List<Date> meetingDates = TestObjectFactory.getMeetingDates(meeting, 1);
@@ -1156,8 +1156,8 @@ public class TestLoanBO extends MifosTestCase {
 	private LoanOfferingBO createOfferingNoPrincipalInLastInstallment(
 			Date startDate, MeetingBO meeting) {
 		return TestObjectFactory.createLoanOffering(
-			"Loan", PrdApplicableMaster.GROUPS,
-			startDate, PrdStatus.LOANACTIVE,
+			"Loan", ApplicableTo.GROUPS,
+			startDate, PrdStatus.LOAN_ACTIVE,
 			300.0, 1.2, 3, 
 			InterestType.FLAT, true, false, 
 			meeting);
@@ -2599,7 +2599,7 @@ public class TestLoanBO extends MifosTestCase {
 			SystemException, ApplicationException {
 		createInitialCustomers();
 		LoanOfferingBO loanOffering = createLoanOffering(false,
-				PrdStatus.LOANINACTIVE);
+				PrdStatus.LOAN_INACTIVE);
 		try {
 			new LoanBO(TestObjectFactory.getUserContext(), loanOffering, group,
 					AccountState.LOANACC_APPROVED, new Money("300.0"), Short
@@ -3484,9 +3484,9 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", PrdApplicableMaster.GROUPS,
+				"Loan", ApplicableTo.GROUPS,
 				startDate,  
-				PrdStatus.LOANACTIVE,
+				PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, false, 
 				center.getCustomerMeeting().getMeeting());
@@ -3659,8 +3659,8 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", PrdApplicableMaster.GROUPS,
-				startDate, PrdStatus.LOANACTIVE,
+				"Loan", ApplicableTo.GROUPS,
+				startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, false, 
 				center.getCustomerMeeting().getMeeting());
@@ -3745,9 +3745,9 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-			"Loan", "Loan".substring(0, 1), PrdApplicableMaster.GROUPS,
+			"Loan", "Loan".substring(0, 1), ApplicableTo.GROUPS,
 			new Date(System.currentTimeMillis()), 
-			PrdStatus.LOANACTIVE, 300.0, 1.2,
+			PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
 			(short)3, InterestType.FLAT, true, false,
 			center.getCustomerMeeting().getMeeting(),
 			GraceType.PRINCIPALONLYGRACE);
@@ -3849,8 +3849,8 @@ public class TestLoanBO extends MifosTestCase {
 			CustomerStatus.GROUP_ACTIVE, center);
 		Date loanStart = new Date(sampleTime);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", PrdApplicableMaster.GROUPS,
-				loanStart, PrdStatus.LOANACTIVE,
+				"Loan", ApplicableTo.GROUPS,
+				loanStart, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, false, 
 				center.getCustomerMeeting().getMeeting());
@@ -3962,8 +3962,8 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", PrdApplicableMaster.GROUPS,
-				startDate, PrdStatus.LOANACTIVE,
+				"Loan", ApplicableTo.GROUPS,
+				startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, false, 
 				center.getCustomerMeeting().getMeeting());
@@ -4392,8 +4392,8 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", PrdApplicableMaster.GROUPS,
-				startDate, PrdStatus.LOANACTIVE,
+				"Loan", ApplicableTo.GROUPS,
+				startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, false, 
 				center.getCustomerMeeting().getMeeting());
@@ -4715,9 +4715,9 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-			"Loan", "L", PrdApplicableMaster.GROUPS,
+			"Loan", "L", ApplicableTo.GROUPS,
 			startDate, 
-			PrdStatus.LOANACTIVE, 300.0, 1.2,
+			PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
 			(short)3, 
 			InterestType.DECLINING, false, false,
 			center.getCustomerMeeting().getMeeting(), GraceType.NONE);
@@ -4775,9 +4775,9 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-			"Loan", PrdApplicableMaster.GROUPS,
+			"Loan", ApplicableTo.GROUPS,
 			new Date(System.currentTimeMillis()), 
-			PrdStatus.LOANACTIVE, 
+			PrdStatus.LOAN_ACTIVE, 
 			300.0, 1.2,
 			(short)3, InterestType.DECLINING, false,
 			false, center.getCustomerMeeting().getMeeting());
@@ -4833,9 +4833,9 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-			"Loan", "L", PrdApplicableMaster.GROUPS,
+			"Loan", "L", ApplicableTo.GROUPS,
 			new Date(System.currentTimeMillis()), 
-			PrdStatus.LOANACTIVE, 300.0, 1.2,
+			PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
 			(short)3, InterestType.DECLINING, false, false,
 			center.getCustomerMeeting().getMeeting(), 
 			GraceType.PRINCIPALONLYGRACE);
@@ -4893,9 +4893,9 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-			"Loan", "Loan".substring(0, 1), PrdApplicableMaster.GROUPS,
+			"Loan", "Loan".substring(0, 1), ApplicableTo.GROUPS,
 			startDate, 
-			PrdStatus.LOANACTIVE, 300.0, 1.2,
+			PrdStatus.LOAN_ACTIVE, 300.0, 1.2,
 			(short)3, InterestType.DECLINING, false, true,
 			center.getCustomerMeeting().getMeeting(), GraceType.NONE);
 
@@ -4970,7 +4970,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	private LoanOfferingBO createLoanOffering(boolean isPrincipalAtLastInst) {
-		return createLoanOffering(isPrincipalAtLastInst, PrdStatus.LOANACTIVE);
+		return createLoanOffering(isPrincipalAtLastInst, PrdStatus.LOAN_ACTIVE);
 	}
 
 	private LoanOfferingBO createLoanOffering(boolean principalAtLastInst,
@@ -4978,7 +4978,7 @@ public class TestLoanBO extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		return TestObjectFactory.createLoanOffering("Loan", 
-				PrdApplicableMaster.GROUPS,
+				ApplicableTo.GROUPS,
 				new Date(System.currentTimeMillis()), status, 300.0, 1.2,
 				3, InterestType.FLAT, true,
 				principalAtLastInst, meeting);
@@ -5150,8 +5150,8 @@ public class TestLoanBO extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
-				"Loan", PrdApplicableMaster.CLIENTS, startDate, 
-				PrdStatus.LOANACTIVE,
+				"Loan", ApplicableTo.CLIENTS, startDate, 
+				PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, true, meeting);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(

@@ -14,7 +14,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBOTest;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
@@ -53,7 +53,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
 				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals(PrdStatus.LOANACTIVE.getValue(), loanOffering
+		assertEquals(PrdStatus.LOAN_ACTIVE.getValue(), loanOffering
 				.getPrdStatus().getOfferingStatusId());
 	}
 
@@ -71,7 +71,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
 				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals(PrdStatus.LOANINACTIVE.getValue(), loanOffering
+		assertEquals(PrdStatus.LOAN_INACTIVE.getValue(), loanOffering
 				.getPrdStatus().getOfferingStatusId());
 	}
 
@@ -96,7 +96,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
 				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals(PrdStatus.LOANACTIVE.getValue(), loanOffering
+		assertEquals(PrdStatus.LOAN_ACTIVE.getValue(), loanOffering
 				.getPrdStatus().getOfferingStatusId());
 	}
 
@@ -114,7 +114,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
 				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals(PrdStatus.LOANINACTIVE.getValue(), loanOffering
+		assertEquals(PrdStatus.LOAN_INACTIVE.getValue(), loanOffering
 				.getPrdStatus().getOfferingStatusId());
 	}
 
@@ -195,12 +195,12 @@ public class TestProductStatusHelper extends MifosTestCase {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		loanOffering = TestObjectFactory.createLoanOffering("Loan Offering",
-				"LOAN", PrdApplicableMaster.GROUPS,
-				startDate, PrdStatus.LOANACTIVE,
+				"LOAN", ApplicableTo.GROUPS,
+				startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, false, frequency);
 		LoanOfferingBOTest.setStatus(loanOffering,new PrdOfferingPersistence()
-				.getPrdStatus(PrdStatus.LOANINACTIVE));
+				.getPrdStatus(PrdStatus.LOAN_INACTIVE));
 		TestObjectFactory.updateObject(loanOffering);
 		HibernateUtil.closeSession();
 	}

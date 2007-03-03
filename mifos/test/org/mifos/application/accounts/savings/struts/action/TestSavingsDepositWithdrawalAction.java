@@ -19,7 +19,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -84,7 +84,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 	public void testSuccessfullLoad_ForClientAccount() throws Exception {
 		createCenterAndGroup();
 		createClients();
-		savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, PrdApplicableMaster.CLIENTS);
+		savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
 		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, client1, AccountStates.SAVINGS_ACC_APPROVED, userContext);
 		HibernateUtil.closeSession();
 		

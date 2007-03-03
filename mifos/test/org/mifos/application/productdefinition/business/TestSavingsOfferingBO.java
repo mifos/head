@@ -46,7 +46,7 @@ import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
@@ -98,7 +98,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		String shortName = "S";
 		String newShortName = "S1";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -111,14 +111,14 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
 		savingsOffering = createSavingsOfferingBO(name, shortName,
-				PrdApplicableMaster.CLIENTS, startDate,
-				PrdStatus.SAVINGSACTIVE, SavingsType.VOLUNTARY,
+				ApplicableTo.CLIENTS, startDate,
+				PrdStatus.SAVINGS_ACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.MINIMUM_BALANCE);
 		savingsOffering.setUserContext(TestObjectFactory.getUserContext());
 		HibernateUtil.getInterceptor().createInitialValueMap(savingsOffering);
 		savingsOffering.update(Short.valueOf("1"), newName, newShortName,
 				productCategory, prdApplicableMaster, startDate, endDate,
-				"Desc", PrdStatus.SAVINGSINACTIVE, null, savingsType,
+				"Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType,
 				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
 				new Money("100"), new Money("1"), 10.0);
 		HibernateUtil.commitTransaction();
@@ -169,7 +169,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testBuildSavingsOfferingWithoutName()
 			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
@@ -198,7 +198,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testBuildSavingsOfferingWithoutSavingsType()
 			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
@@ -227,7 +227,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
@@ -250,7 +250,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testBuildSavingsOfferingWithShortNameGreaterThanFourDig()
 			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -280,7 +280,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testBuildSavingsOfferingWithStartDateLessThanCurrentDate()
 			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -310,7 +310,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testBuildSavingsOfferingWithStartDateEqualToCurrentDate()
 			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -331,7 +331,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
 				10.0, depglCodeEntity, intglCodeEntity);
 		assertNotNull(savingsOffering.getGlobalPrdOfferingNum());
-		assertEquals(PrdStatus.SAVINGSACTIVE.getValue(), savingsOffering
+		assertEquals(PrdStatus.SAVINGS_ACTIVE.getValue(), savingsOffering
 				.getPrdStatus().getOfferingStatusId());
 
 	}
@@ -339,7 +339,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testBuildSavingsOfferingWithStartDateGreaterThanCurrentDate()
 			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -360,7 +360,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
 				10.0, depglCodeEntity, intglCodeEntity);
 		assertNotNull(savingsOffering.getGlobalPrdOfferingNum());
-		assertEquals(PrdStatus.SAVINGSINACTIVE.getValue(), savingsOffering
+		assertEquals(PrdStatus.SAVINGS_INACTIVE.getValue(), savingsOffering
 				.getPrdStatus().getOfferingStatusId());
 
 	}
@@ -368,7 +368,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testBuildSavingsOfferingWithEndDateLessThanStartDate()
 			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -403,7 +403,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		savingsOffering = createSavingsOfferingBO("Savings Product", "SAVP");
 
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -437,7 +437,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		savingsOffering = createSavingsOfferingBO("Savings Product", "SAVP");
 
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -469,7 +469,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testBuildSavingsOfferingWithNoRecommendedAmountForMandatoryOffering()
 			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -499,7 +499,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testBuildSavingsOfferingWithNoRecommendedAmountUnitForGroupOffering()
 			throws  SystemException, ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.GROUPS);
+				ApplicableTo.GROUPS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -529,7 +529,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testCreateSavingsOfferingForInvalidConnection()
 			throws Exception {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -565,7 +565,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testCreateSavingsOffering() throws SystemException,
 			ApplicationException {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -595,9 +595,9 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		assertEquals("Savings Offering", savingsOffering.getPrdOfferingName());
 		assertEquals("Savi", savingsOffering.getPrdOfferingShortName());
 		assertNotNull(savingsOffering.getGlobalPrdOfferingNum());
-		assertEquals(PrdStatus.SAVINGSACTIVE.getValue(), savingsOffering
+		assertEquals(PrdStatus.SAVINGS_ACTIVE.getValue(), savingsOffering
 				.getPrdStatus().getOfferingStatusId());
-		assertEquals(PrdApplicableMaster.CLIENTS,
+		assertEquals(ApplicableTo.CLIENTS,
 				savingsOffering.getPrdApplicableMasterEnum());
 		assertEquals(SavingsType.MANDATORY.getValue(), savingsOffering
 				.getSavingsType().getId());
@@ -631,7 +631,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 
 	public void testUpdateSavingsOfferingWithDuplicateName() throws Exception {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -648,7 +648,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		try {
 			savingsOffering.update(Short.valueOf("1"), "Savings_offering1",
 					"S", productCategory, prdApplicableMaster, startDate,
-					endDate, "Desc", PrdStatus.SAVINGSACTIVE, null,
+					endDate, "Desc", PrdStatus.SAVINGS_ACTIVE, null,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), new Money("100"), new Money("1"), 10.0);
 			fail();
@@ -662,7 +662,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	public void testUpdateSavingsOfferingWithDuplicateShortName()
 			throws Exception {
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
@@ -679,7 +679,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 			savingsOffering.update(Short.valueOf("1"),
 					"Savings_offeringChanged", "S1", productCategory,
 					prdApplicableMaster, startDate, endDate, "Desc",
-					PrdStatus.SAVINGSACTIVE, null, savingsType, intCalType,
+					PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"), new Money(
 							"100"), new Money("1"), 10.0);
 			fail();
@@ -695,7 +695,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		String name = "Savings_offering";
 		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -708,14 +708,14 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
 		savingsOffering = createSavingsOfferingBO(name, "S",
-				PrdApplicableMaster.CLIENTS, startDate,
-				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				ApplicableTo.CLIENTS, startDate,
+				PrdStatus.SAVINGS_INACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.AVERAGE_BALANCE);
 		savingsOffering.setStartDate(reduceCurrentDate(1));
 		savingsOffering.update(Short.valueOf("1"), newName, "S1",
 				productCategory, prdApplicableMaster, savingsOffering
 						.getStartDate(), endDate, "Desc",
-				PrdStatus.SAVINGSINACTIVE, null, savingsType, intCalType,
+				PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType,
 				intCalcMeeting, intPostMeeting, new Money("10"), new Money(
 						"100"), new Money("1"), 10.0);
 		HibernateUtil.commitTransaction();
@@ -730,7 +730,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		String name = "Savings_offering";
 		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -743,15 +743,15 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(10);
 		savingsOffering = createSavingsOfferingBO(name, "S",
-				PrdApplicableMaster.CLIENTS, startDate,
-				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				ApplicableTo.CLIENTS, startDate,
+				PrdStatus.SAVINGS_INACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.AVERAGE_BALANCE);
 		savingsOffering.setStartDate(reduceCurrentDate(1));
 		Date newStartDate = offSetCurrentDate(1);
 		try {
 			savingsOffering.update(Short.valueOf("1"), newName, "S1",
 					productCategory, prdApplicableMaster, newStartDate,
-					endDate, "Desc", PrdStatus.SAVINGSINACTIVE, null,
+					endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), new Money("100"), new Money("1"), 10.0);
 			fail();
@@ -768,7 +768,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		String name = "Savings_offering";
 		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -781,14 +781,14 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(5);
 		Date endDate = offSetCurrentDate(15);
 		savingsOffering = createSavingsOfferingBO(name, "S",
-				PrdApplicableMaster.CLIENTS, startDate,
-				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				ApplicableTo.CLIENTS, startDate,
+				PrdStatus.SAVINGS_INACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.AVERAGE_BALANCE);
 		Date newStartDate = reduceCurrentDate(1);
 		try {
 			savingsOffering.update(Short.valueOf("1"), newName, "S1",
 					productCategory, prdApplicableMaster, newStartDate,
-					endDate, "Desc", PrdStatus.SAVINGSINACTIVE, null,
+					endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), new Money("100"), new Money("1"), 10.0);
 			fail();
@@ -805,7 +805,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		String name = "Savings_offering";
 		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -818,13 +818,13 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(5);
 		Date endDate = offSetCurrentDate(3);
 		savingsOffering = createSavingsOfferingBO(name, "S",
-				PrdApplicableMaster.CLIENTS, startDate,
-				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				ApplicableTo.CLIENTS, startDate,
+				PrdStatus.SAVINGS_INACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.AVERAGE_BALANCE);
 		try {
 			savingsOffering.update(Short.valueOf("1"), newName, "S1",
 					productCategory, prdApplicableMaster, startDate, endDate,
-					"Desc", PrdStatus.SAVINGSACTIVE, null, savingsType,
+					"Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType,
 					intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), new Money("100"), new Money("1"), 10.0);
 			fail();
@@ -839,7 +839,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		String name = "Savings_offering";
 		String newName = "Savings_offeringChanged";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 		InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(
@@ -851,13 +851,13 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(5);
 		Date endDate = offSetCurrentDate(15);
 		savingsOffering = createSavingsOfferingBO(name, "S",
-				PrdApplicableMaster.CLIENTS, startDate,
-				PrdStatus.SAVINGSINACTIVE, SavingsType.VOLUNTARY,
+				ApplicableTo.CLIENTS, startDate,
+				PrdStatus.SAVINGS_INACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.AVERAGE_BALANCE);
 		Date newStartDate = offSetCurrentDate(6);
 		savingsOffering.update(Short.valueOf("1"), newName, "S1",
 				productCategory, prdApplicableMaster, newStartDate, endDate,
-				"Desc", PrdStatus.SAVINGSACTIVE, null, savingsType, intCalType,
+				"Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType,
 				intCalcMeeting, intPostMeeting, new Money("10"), new Money(
 						"100"), new Money("1"), 10.0);
 		HibernateUtil.commitTransaction();
@@ -874,7 +874,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		String newShortName = "S1";
 		String desc = "Desc";
 		PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(
-				PrdApplicableMaster.CLIENTS);
+				ApplicableTo.CLIENTS);
 		SavingsTypeEntity savingsType = new SavingsTypeEntity(
 				SavingsType.MANDATORY);
 
@@ -887,12 +887,12 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
 		savingsOffering = createSavingsOfferingBO(name, shortName,
-				PrdApplicableMaster.CLIENTS, startDate,
-				PrdStatus.SAVINGSACTIVE, SavingsType.VOLUNTARY,
+				ApplicableTo.CLIENTS, startDate,
+				PrdStatus.SAVINGS_ACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.MINIMUM_BALANCE);
 		savingsOffering.update(Short.valueOf("1"), newName, newShortName,
 				productCategory, prdApplicableMaster, startDate, endDate,
-				"Desc", PrdStatus.SAVINGSINACTIVE, null, savingsType,
+				"Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType,
 				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
 				new Money("100"), new Money("1"), 10.0);
 		HibernateUtil.commitTransaction();
@@ -907,7 +907,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		assertEquals(productCategory.getProductCategoryID().intValue(),
 				savingsOffering.getPrdCategory().getProductCategoryID()
 						.intValue());
-		assertEquals(PrdStatus.SAVINGSINACTIVE.getValue(), savingsOffering
+		assertEquals(PrdStatus.SAVINGS_INACTIVE.getValue(), savingsOffering
 				.getPrdStatus().getOfferingStatusId());
 		assertEquals(ProductType.SAVINGS.getValue(), savingsOffering
 				.getPrdStatus().getPrdType().getProductTypeID());
@@ -940,10 +940,10 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(prdOfferingName,
-				shortName, (short) 1, new Date(System.currentTimeMillis()),
-				(short) 2, 300.0, (short) 1, 1.2, 200.0, 200.0, (short) 2,
-				(short) 1, meetingIntCalc, meetingIntPost);
+		return TestObjectFactory.createSavingsOffering(prdOfferingName, shortName, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()), 
+				((short) 2), 300.0, ((short) 1), 1.2, 
+				200.0, 200.0, ((short) 2), ((short) 1), 
+				meetingIntCalc, meetingIntPost);
 	}
 
 	private MeetingBO getMeeting() {
@@ -970,7 +970,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 	}
 
 	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
-			String shortName, PrdApplicableMaster applicableTo, Date startDate,
+			String shortName, ApplicableTo applicableTo, Date startDate,
 			PrdStatus offeringStatus, SavingsType savingType,
 			InterestCalcType interestCalcType) {
 
@@ -978,10 +978,10 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(prdOfferingName,
-				shortName, applicableTo.getValue(), startDate, offeringStatus
-						.getValue(), 300.0, (short) 1, 1.2, 200.0, 200.0,
-				savingType.getValue(), interestCalcType.getValue(),
+		return TestObjectFactory.createSavingsOffering(prdOfferingName, shortName, applicableTo, startDate, 
+				offeringStatus
+										.getValue(), 300.0, ((short) 1), 1.2, 
+				200.0, 200.0, savingType.getValue(), interestCalcType.getValue(), 
 				meetingIntCalc, meetingIntPost);
 	}
 

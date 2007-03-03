@@ -15,7 +15,7 @@ import org.mifos.application.productdefinition.business.PrdStatusEntity;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.persistence.PrdOfferingPersistence;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.business.BusinessObject;
@@ -52,7 +52,7 @@ public class LoanPrdBusinessService extends BusinessService {
 						.hasNext();) {
 					MasterDataEntity masterData = iter.next();
 					if (masterData.getId().equals(
-							PrdApplicableMaster.CENTERS.getValue()))
+							ApplicableTo.CENTERS.getValue()))
 						iter.remove();
 				}
 			}

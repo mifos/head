@@ -84,7 +84,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -649,8 +649,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering1 = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		LoanOfferingBO loanOffering2 = TestObjectFactory.createLoanOffering(
-				"Loan2345", "313f", PrdApplicableMaster.GROUPS, startDate, 
-				PrdStatus.LOANACTIVE, 300.0, 1.2, 3, 
+				"Loan2345", "313f", ApplicableTo.GROUPS, startDate, 
+				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
 				InterestType.FLAT, true, true, meeting);
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
@@ -769,18 +769,14 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering("SavingPrd123c", "ased", Short
-						.valueOf("2"), startDate,
-						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
-						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
-						meetingIntCalc, meetingIntPost);
-		SavingsOfferingBO savingsOffering1 = TestObjectFactory
-				.createSavingsOffering("SavingPrd1we", "vbgr", Short
-						.valueOf("2"), startDate,
-						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
-						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
-						meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd123c", "ased", ApplicableTo.GROUPS, startDate, 
+		Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
+		200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
+		meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering1 = TestObjectFactory.createSavingsOffering("SavingPrd1we", "vbgr", ApplicableTo.GROUPS, startDate, 
+		Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
+		200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
+		meetingIntCalc, meetingIntPost);
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
 				center, Short.valueOf("16"), startDate, savingsOffering);
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
@@ -927,11 +923,11 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
-				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
-				meetingIntPost);
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
+				Short
+										.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
+				200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
+				meetingIntCalc, meetingIntPost);
 	}
 
 	private void setMasterListInSession(Integer customerId)

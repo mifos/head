@@ -28,6 +28,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -142,11 +143,12 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(prdOfferingName,
-				shortName, Short.valueOf("2"), new Date(System
-						.currentTimeMillis()), Short.valueOf("2"), 300.0, Short
-						.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"),
-				Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		return TestObjectFactory.createSavingsOffering(prdOfferingName, shortName, ApplicableTo.GROUPS, new Date(System
+								.currentTimeMillis()), 
+				Short.valueOf("2"), 300.0, Short
+										.valueOf("1"), 1.2, 
+				200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
+				meetingIntCalc, meetingIntPost);
 	}
 
 	/** Deprecated in favor of

@@ -36,7 +36,7 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosTestCase;
@@ -153,8 +153,8 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
 		return TestObjectFactory.createLoanOffering(prdOfferingName, shortName,
-				PrdApplicableMaster.GROUPS, startDate, 
-				PrdStatus.LOANACTIVE, 300.0, 1.2, 3, 
+				ApplicableTo.GROUPS, startDate, 
+				PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, 
 				InterestType.FLAT, true, false,
 				frequency);
 	}
@@ -165,10 +165,10 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createSavingsOffering(prdOfferingName,
-				shortName, (short) 1, new Date(System.currentTimeMillis()),
-				(short) 2, 300.0, (short) 1, 1.2, 200.0, 200.0, (short) 2,
-				(short) 1, meetingIntCalc, meetingIntPost);
+		return TestObjectFactory.createSavingsOffering(prdOfferingName, shortName, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()), 
+				((short) 2), 300.0, ((short) 1), 1.2, 
+				200.0, 200.0, ((short) 2), ((short) 1), 
+				meetingIntCalc, meetingIntPost);
 	}
 
 	private BulkEntryBO createBulkEntry() throws Exception {
@@ -289,11 +289,11 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
-				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
-				meetingIntPost);
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
+				Short
+										.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
+				200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
+				meetingIntCalc, meetingIntPost);
 	}
 
 	private LoanAccountView getLoanAccountView(LoanBO account) {

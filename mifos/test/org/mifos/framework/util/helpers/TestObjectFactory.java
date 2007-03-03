@@ -157,7 +157,7 @@ import org.mifos.application.productdefinition.exceptions.ProductDefinitionExcep
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
@@ -173,7 +173,6 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
@@ -217,6 +216,9 @@ public class TestObjectFactory {
 	 */
 	public static final int SAMPLE_SALUTATION = 1;
 	
+	private static final short SAMPLE_CATEGORY = 2;
+	private static final short SAMPLE_GENERAL_LEDGER_CODE_ID = 7;
+
 	/**
 	 * @return - Returns the office created by test data scripts. If the row
 	 *         does not already exist in the database it returns null. defaults
@@ -487,7 +489,7 @@ public class TestObjectFactory {
 	}
 
 	public static LoanOfferingBO createLoanOffering(String name,
-			PrdApplicableMaster applicableTo, Date startDate, 
+			ApplicableTo applicableTo, Date startDate, 
 			PrdStatus offeringStatus,
 			Double defLnAmnt, Double defIntRate, int defInstallments,
 			InterestType interestType, 
@@ -501,7 +503,7 @@ public class TestObjectFactory {
 
 	public static LoanOfferingBO createLoanOffering(String name,
 		String shortName,
-		PrdApplicableMaster applicableTo, Date startDate, 
+		ApplicableTo applicableTo, Date startDate, 
 		PrdStatus offeringStatus,
 		Double defLnAmnt, Double defIntRate, int defInstallments,
 		InterestType interestType, 
@@ -522,8 +524,8 @@ public class TestObjectFactory {
 	public static LoanOfferingBO createLoanOffering(
 		String name, String shortName, Date currentTime, MeetingBO meeting) {
 		return TestObjectFactory.createLoanOffering(
-			name, shortName, PrdApplicableMaster.GROUPS,
-			currentTime, PrdStatus.LOANACTIVE,
+			name, shortName, ApplicableTo.GROUPS,
+			currentTime, PrdStatus.LOAN_ACTIVE,
 			300.0, 1.2, 3, 
 			InterestType.FLAT, true, true, meeting);
 	}
@@ -542,7 +544,7 @@ public class TestObjectFactory {
 	 */
 	public static LoanOfferingBO createLoanOffering(
 		String name, String shortName, 
-		PrdApplicableMaster applicableTo, Date startDate, 
+		ApplicableTo applicableTo, Date startDate, 
 		PrdStatus offeringStatus, Double defLnAmnt, Double defIntRate, 
 		Short defInstallments, 
 		InterestType interestType, 
@@ -604,78 +606,93 @@ public class TestObjectFactory {
 		HibernateUtil.commitTransaction();
 		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
 	}
-
+	
 	public static SavingsOfferingBO createSavingsOffering(String name,
-			Short applicableTo, Date startDate, Short offeringStatusId,
+			ApplicableTo applicableTo, Date startDate, 
+			Short offeringStatusId,
 			Double recommenededAmt, Short recomAmtUnitId, Double intRate,
 			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
 			Short intCalTypeId, MeetingBO intCalcMeeting,
 			MeetingBO intPostMeeting) {
-		return createSavingsOffering(name, name.substring(0, 1), applicableTo,
+		return createSavingsOffering(name, name.substring(0, 1), 
+				applicableTo.getValue(),
 				startDate, offeringStatusId, recommenededAmt, recomAmtUnitId,
 				intRate, maxAmtWithdrawl, minAmtForInt, savingsTypeId,
-				intCalTypeId, intCalcMeeting, intPostMeeting, (short) 7,
-				(short) 7);
+				intCalTypeId, intCalcMeeting, intPostMeeting, 
+				SAMPLE_GENERAL_LEDGER_CODE_ID,
+				SAMPLE_GENERAL_LEDGER_CODE_ID);
 	}
-
+	
+	// added by greg to help in refactoring
 	public static SavingsOfferingBO createSavingsOffering(String name,
-			String shortName, Short applicableTo, Date startDate,
+			String shortName, ApplicableTo applicableTo, Date startDate,
 			Short offeringStatusId, Double recommenededAmt,
 			Short recomAmtUnitId, Double intRate, Double maxAmtWithdrawl,
 			Double minAmtForInt, Short savingsTypeId, Short intCalTypeId,
 			MeetingBO intCalcMeeting, MeetingBO intPostMeeting) {
-		return createSavingsOffering(name, shortName, applicableTo, startDate,
+		return createSavingsOffering(name, shortName, applicableTo.getValue(), 
+				startDate,
 				offeringStatusId, recommenededAmt, recomAmtUnitId, intRate,
 				maxAmtWithdrawl, minAmtForInt, savingsTypeId, intCalTypeId,
-				intCalcMeeting, intPostMeeting, (short) 7, (short) 7);
+				intCalcMeeting, intPostMeeting, 
+				SAMPLE_GENERAL_LEDGER_CODE_ID, SAMPLE_GENERAL_LEDGER_CODE_ID);
 	}
 
+	/**
+	 * Deprecated in favor of the one which takes enums.
+	 */
 	public static SavingsOfferingBO createSavingsOffering(String name,
-			String shortName, Short applicableTo, Date startDate,
+			String shortName, Short applicableInt, Date startDate,
 			Short offeringStatusId, Double recommenededAmt,
 			Short recomAmtUnitId, Double intRate, Double maxAmtWithdrawl,
 			Double minAmtForInt, Short savingsTypeId, Short intCalTypeId,
 			MeetingBO intCalcMeeting, MeetingBO intPostMeeting,
 			Short depGLCode, Short withGLCode) {
-		PrdApplicableMaster productMaster = 
-			PrdApplicableMaster.fromInt(applicableTo);
-		PrdApplicableMasterEntity prdApplicableMaster = 
-			new PrdApplicableMasterEntity(productMaster);
+		ApplicableTo applicableTo = 
+			ApplicableTo.fromInt(applicableInt);
+		SavingsType savingsType = SavingsType.fromInt(savingsTypeId);
+		InterestCalcType interestCalculationType = 
+			InterestCalcType.fromInt(intCalTypeId);
+		RecommendedAmountUnit recommendedAmountUnit = 
+			RecommendedAmountUnit.fromInt(recomAmtUnitId);
 
-		SavingsTypeEntity savingsType = null;
-		try {
-			savingsType = new SavingsTypeEntity(SavingsType
-					.getSavingsType(savingsTypeId));
-		} catch (PropertyNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+		return createSavingsOffering(name, shortName, applicableTo, 
+				startDate, offeringStatusId, recommenededAmt, 
+				recommendedAmountUnit, intRate, maxAmtWithdrawl, minAmtForInt, 
+				savingsType, interestCalculationType, 
+				intCalcMeeting, intPostMeeting, depGLCode, withGLCode);
+	}
 
-		InterestCalcTypeEntity intCalType = null;
-		try {
-			intCalType = new InterestCalcTypeEntity(InterestCalcType
-					.getInterestCalcType(intCalTypeId));
-		} catch (PropertyNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		RecommendedAmntUnitEntity amountUnit = null;
-		try {
-			amountUnit = new RecommendedAmntUnitEntity(RecommendedAmountUnit
-					.getRecommendedAmountUnit(recomAmtUnitId));
-		} catch (PropertyNotFoundException e) {
-			throw new RuntimeException(e);
-		}
+	private static SavingsOfferingBO createSavingsOffering(
+			String name, String shortName, ApplicableTo applicableTo, 
+			Date startDate, Short offeringStatusId, 
+			Double recommendedAmount, 
+			RecommendedAmountUnit recommendedAmountUnit, 
+			Double intRate, Double maxAmtWithdrawl, Double minAmtForInt, 
+			SavingsType savingsType, InterestCalcType interestCalculationType, 
+			MeetingBO intCalcMeeting, MeetingBO intPostMeeting, 
+			Short depGLCode, Short withGLCode) {
 		GLCodeEntity depglCodeEntity = (GLCodeEntity) HibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, depGLCode);
 		GLCodeEntity intglCodeEntity = (GLCodeEntity) HibernateUtil
 				.getSessionTL().get(GLCodeEntity.class, withGLCode);
 		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
-				.getObject(ProductCategoryBO.class, (short) 2);
-		SavingsOfferingBO savingsOffering = null;
+				.getObject(ProductCategoryBO.class, SAMPLE_CATEGORY);
+
+
+		PrdApplicableMasterEntity prdApplicableMaster = 
+			new PrdApplicableMasterEntity(applicableTo);
+		SavingsTypeEntity savingsTypeEntity = new SavingsTypeEntity(savingsType);
+		InterestCalcTypeEntity intCalType = 
+			new InterestCalcTypeEntity(interestCalculationType);
+		RecommendedAmntUnitEntity amountUnit = 
+			new RecommendedAmntUnitEntity(recommendedAmountUnit);
+		SavingsOfferingBO savingsOffering;
 		try {
 			savingsOffering = new SavingsOfferingBO(getUserContext(), name,
 					shortName, productCategory, prdApplicableMaster, startDate,
-					null, null, amountUnit, savingsType, intCalType,
-					intCalcMeeting, intPostMeeting, new Money(recommenededAmt
+					null, null, amountUnit, savingsTypeEntity, intCalType,
+					intCalcMeeting, intPostMeeting, new Money(recommendedAmount
 							.toString()),
 					new Money(maxAmtWithdrawl.toString()), new Money(
 							minAmtForInt.toString()), intRate, depglCodeEntity,
@@ -697,17 +714,17 @@ public class TestObjectFactory {
 
 	public static SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName, SavingsType savingsTypeId,
-			PrdApplicableMaster applicableTo) {
+			ApplicableTo applicableTo) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return createSavingsOffering(offeringName, shortName, applicableTo
-				.getValue(), new Date(System.currentTimeMillis()), Short
-				.valueOf("2"), 300.0, RecommendedAmountUnit.PERINDIVIDUAL
-				.getValue(), 24.0, 200.0, 200.0, savingsTypeId.getValue(),
-				InterestCalcType.MINIMUM_BALANCE.getValue(), meetingIntCalc,
-				meetingIntPost);
+		return createSavingsOffering(offeringName, shortName, applicableTo, new Date(System.currentTimeMillis()), 
+				Short
+								.valueOf("2"), 300.0, RecommendedAmountUnit.PER_INDIVIDUAL
+								.getValue(), 24.0, 
+				200.0, 200.0, savingsTypeId.getValue(), InterestCalcType.MINIMUM_BALANCE.getValue(), 
+				meetingIntCalc, meetingIntPost);
 	}
 
 	public static SavingsBO createSavingsAccount(String globalNum,

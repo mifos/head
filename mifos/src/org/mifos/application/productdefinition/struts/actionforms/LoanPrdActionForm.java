@@ -53,7 +53,7 @@ import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fund.business.FundBO;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdApplicableMaster;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -302,20 +302,20 @@ public class LoanPrdActionForm extends BaseActionForm {
 		return prdApplicableMaster;
 	}
 
-	public PrdApplicableMaster getPrdApplicableMasterEnum() {
-		return PrdApplicableMaster.fromInt(
+	public ApplicableTo getPrdApplicableMasterEnum() {
+		return ApplicableTo.fromInt(
 			Integer.parseInt(prdApplicableMaster));
 	}
 
 	/** Called via reflection from jsp's (I think).
 	 * Most/all java code should instead call
-	 * {@link #setPrdApplicableMaster(PrdApplicableMaster)}
+	 * {@link #setPrdApplicableMaster(ApplicableTo)}
 	 */
 	public void setPrdApplicableMaster(String prdApplicableMaster) {
 		this.prdApplicableMaster = prdApplicableMaster;
 	}
 
-	public void setPrdApplicableMaster(PrdApplicableMaster applicableTo) {
+	public void setPrdApplicableMaster(ApplicableTo applicableTo) {
 		this.prdApplicableMaster = "" + applicableTo.getValue();
 	}
 

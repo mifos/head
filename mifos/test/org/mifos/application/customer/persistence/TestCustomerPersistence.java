@@ -52,6 +52,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -198,12 +199,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 		Date startDate = new Date(System.currentTimeMillis());
 		center = createCenter();
-		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering("SavingPrd1", Short.valueOf("2"),
-						new Date(System.currentTimeMillis()), Short
-								.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
-						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
-						meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
+		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
 		account = TestObjectFactory.createSavingsAccount("432434", center,
 				Short.valueOf("16"), startDate, savingsOffering);
 		List<PrdOfferingBO> productList = customerPersistence
@@ -339,11 +336,8 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1",
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0,
-				200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc,
-				meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
+		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
 		UserContext uc = new UserContext();
 		uc.setId(Short.valueOf("1"));
 		account = TestObjectFactory.createSavingsAccount("000100000000020",
@@ -536,12 +530,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering(prdOfferingname, shortName, Short
-						.valueOf("2"), new Date(System.currentTimeMillis()),
-						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
-						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
-						meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering(prdOfferingname, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
+		Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
+		200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
+		meetingIntCalc, meetingIntPost);
 		return TestObjectFactory.createSavingsAccount("432434", customer, Short
 				.valueOf("16"), startDate, savingsOffering);
 
@@ -1190,18 +1182,18 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		SavingsOfferingBO savingsOffering = TestObjectFactory
-				.createSavingsOffering("SavingPrd12", "abc1", Short
-						.valueOf("2"), startDate,
-						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
-						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
-						meetingIntCalc, meetingIntPost);
-		SavingsOfferingBO savingsOffering1 = TestObjectFactory
-				.createSavingsOffering("SavingPrd11", "abc2", Short
-						.valueOf("2"), startDate,
-						Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2,
-						200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"),
-						meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering = 
+			TestObjectFactory.createSavingsOffering("SavingPrd12", "abc1", 
+					ApplicableTo.GROUPS, startDate, 
+		Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
+		200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
+		meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering1 = 
+			TestObjectFactory.createSavingsOffering("SavingPrd11", "abc2", 
+					ApplicableTo.GROUPS, startDate, 
+		Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
+		200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
+		meetingIntCalc, meetingIntPost);
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
 				center, Short.valueOf("16"), startDate, savingsOffering);
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434",

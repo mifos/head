@@ -67,7 +67,7 @@ public class ProductStatusHelper extends TaskHelper {
 			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:activeLoanStatus "
 					+ "where p.prdType.productTypeID=:loan and p.startDate=:currentDate";
 			query = session.createQuery(hqlUpdate);
-			query.setShort("activeLoanStatus", PrdStatus.LOANACTIVE.getValue());
+			query.setShort("activeLoanStatus", PrdStatus.LOAN_ACTIVE.getValue());
 			query.setShort("loan", ProductType.LOAN.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
 			query.executeUpate();
@@ -75,7 +75,7 @@ public class ProductStatusHelper extends TaskHelper {
 			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:inActiveLoanStatus "
 					+ "where p.prdType.productTypeID=:loan and p.endDate=:currentDate";
 			query = session.createQuery(hqlUpdate);
-			query.setShort("inActiveLoanStatus", PrdStatus.LOANINACTIVE
+			query.setShort("inActiveLoanStatus", PrdStatus.LOAN_INACTIVE
 					.getValue());
 			query.setShort("loan", ProductType.LOAN.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
@@ -84,7 +84,7 @@ public class ProductStatusHelper extends TaskHelper {
 			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:activeSavingStatus "
 					+ "where p.prdType.productTypeID=:saving and p.startDate=:currentDate";
 			query = session.createQuery(hqlUpdate);
-			query.setShort("activeSavingStatus", PrdStatus.SAVINGSACTIVE
+			query.setShort("activeSavingStatus", PrdStatus.SAVINGS_ACTIVE
 					.getValue());
 			query.setShort("saving", ProductType.SAVINGS.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
@@ -93,7 +93,7 @@ public class ProductStatusHelper extends TaskHelper {
 			hqlUpdate = "update PrdOfferingBO p set p.prdStatus=:inActiveSavingStatus "
 					+ "where p.prdType.productTypeID=:saving and p.endDate=:currentDate";
 			query = session.createQuery(hqlUpdate);
-			query.setShort("inActiveSavingStatus", PrdStatus.SAVINGSINACTIVE
+			query.setShort("inActiveSavingStatus", PrdStatus.SAVINGS_INACTIVE
 					.getValue());
 			query.setShort("saving", ProductType.SAVINGS.getValue());
 			query.setDate("currentDate", new Date(timeInMillis));
