@@ -38,6 +38,10 @@
 
 package org.mifos.application.master.business;
 
+/**
+ * This is a deprecated piece of the code which is being
+ * replaced by enums.
+ */
 public class StateEntity extends MasterDataEntity {
 
 	protected StateEntity() {
@@ -46,16 +50,10 @@ public class StateEntity extends MasterDataEntity {
 
 	public StateEntity(Short id) {
 		super(id);
-
 	}
 
-	public boolean equals(StateEntity obj) {
+	public boolean sameId(StateEntity obj) {
 		return obj.getId().equals(this.getId());
-	}
-
-	@Override
-	public int hashCode() {
-		return this.getId().hashCode();
 	}
 
 }

@@ -62,13 +62,17 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
-import org.mifos.framework.components.stateMachineFactory.StateMachine;
 import org.mifos.framework.components.stateMachineFactory.StateXMLParser;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 
-public class AccountStateMachines implements StateMachine {
+/**
+ * At first glance this code seems to be part of the excessively
+ * complicated machinery ({@link StateEntity} for example), which is
+ * being replaced by enums ({@link AccountState} for example).
+ */
+public class AccountStateMachines {
 
 	private static AccountStateMachines statemachine = new AccountStateMachines();
 	
@@ -91,7 +95,8 @@ public class AccountStateMachines implements StateMachine {
 
 	private Map<Short, List<CustomerStatusEntity>> statesViewMapForCenter = new HashMap<Short, List<CustomerStatusEntity>>();
 
-	private Map<StateEntity, List<StateEntity>> statesMapForClient = new HashMap<StateEntity, List<StateEntity>>();
+	private Map<StateEntity, List<StateEntity>> statesMapForClient = 
+		new HashMap<StateEntity, List<StateEntity>>();
 
 	private Map<Short, List<CustomerStatusEntity>> statesViewMapForClient = new HashMap<Short, List<CustomerStatusEntity>>();
 
@@ -396,7 +401,7 @@ public class AccountStateMachines implements StateMachine {
 					for (StateEntity customerStateEntity : customerStatusEntityKeySet) {
 						for (CustomerStatusEntity customerStateEntityQueryResultObj : customerStatusListForCenter) {
 							if (customerStateEntity
-									.equals(customerStateEntityQueryResultObj)) {
+									.sameId(customerStateEntityQueryResultObj)) {
 								statesViewMapForCenter
 										.put(
 												customerStateEntityQueryResultObj
@@ -430,7 +435,7 @@ public class AccountStateMachines implements StateMachine {
 					for (StateEntity customerStateEntity : customerStatusEntityKeySet) {
 						for (CustomerStatusEntity customerStateEntityQueryResultObj : customerStatusListForGroup) {
 							if (customerStateEntity
-									.equals(customerStateEntityQueryResultObj)) {
+									.sameId(customerStateEntityQueryResultObj)) {
 								statesViewMapForGroup
 										.put(
 												customerStateEntityQueryResultObj
@@ -464,7 +469,7 @@ public class AccountStateMachines implements StateMachine {
 					for (StateEntity customerStateEntity : customerStatusEntityKeySet) {
 						for (CustomerStatusEntity customerStateEntityQueryResultObj : customerStatusListForClient) {
 							if (customerStateEntity
-									.equals(customerStateEntityQueryResultObj)) {
+									.sameId(customerStateEntityQueryResultObj)) {
 								statesViewMapForClient
 										.put(
 												customerStateEntityQueryResultObj
@@ -495,7 +500,7 @@ public class AccountStateMachines implements StateMachine {
 			if (null != stateList) {
 				for (StateEntity customerStateEntity : stateList) {
 					for (CustomerStatusEntity customerStatusEntry : customerStatusListForCenter) {
-						if (customerStatusEntry.equals(customerStateEntity)) {
+						if (customerStatusEntry.sameId(customerStateEntity)) {
 							stateEntityList.add(customerStatusEntry);
 							break;
 						}
@@ -520,7 +525,7 @@ public class AccountStateMachines implements StateMachine {
 			if (null != stateList) {
 				for (StateEntity customerStateEntity : stateList) {
 					for (CustomerStatusEntity customerStatusEntry : customerStatusListForGroup) {
-						if (customerStatusEntry.equals(customerStateEntity)) {
+						if (customerStatusEntry.sameId(customerStateEntity)) {
 							stateEntityList.add(customerStatusEntry);
 							break;
 						}
@@ -545,7 +550,7 @@ public class AccountStateMachines implements StateMachine {
 			if (null != stateList) {
 				for (StateEntity customerStateEntity : stateList) {
 					for (CustomerStatusEntity customerStatusEntry : customerStatusListForClient) {
-						if (customerStatusEntry.equals(customerStateEntity)) {
+						if (customerStatusEntry.sameId(customerStateEntity)) {
 							stateEntityList.add(customerStatusEntry);
 							break;
 						}
@@ -570,7 +575,7 @@ public class AccountStateMachines implements StateMachine {
 			if (null != stateList) {
 				for (StateEntity accountStateEntity : stateList) {
 					for (AccountStateEntity accountStateEnty : accountStateEntityListForLoan) {
-						if (accountStateEntity.equals(accountStateEnty)) {
+						if (accountStateEntity.sameId(accountStateEnty)) {
 							stateEntityList.add(accountStateEnty);
 							break;
 						}
@@ -595,7 +600,7 @@ public class AccountStateMachines implements StateMachine {
 			if (null != stateList) {
 				for (StateEntity accountStateEntity : stateList) {
 					for (AccountStateEntity accountStateEnty : accountStateEntityListForSavings) {
-						if (accountStateEntity.equals(accountStateEnty)) {
+						if (accountStateEntity.sameId(accountStateEnty)) {
 							stateEntityList.add(accountStateEnty);
 							break;
 						}
@@ -633,7 +638,7 @@ public class AccountStateMachines implements StateMachine {
 					for (StateEntity accountStateEntity : accountStateEntityKeySet) {
 						for (AccountStateEntity accountStateEntityQueryResultObj : accountStateEntityListForLoan) {
 							if (accountStateEntity
-									.equals(accountStateEntityQueryResultObj)) {
+									.sameId(accountStateEntityQueryResultObj)) {
 								statesViewMapForLoan
 										.put(
 												accountStateEntityQueryResultObj
@@ -663,7 +668,7 @@ public class AccountStateMachines implements StateMachine {
 					for (StateEntity accountStateEntity : accountStateEntityKeySet) {
 						for (AccountStateEntity accountStateEntityQueryResultObj : accountStateEntityListForSavings) {
 							if (accountStateEntity
-									.equals(accountStateEntityQueryResultObj)) {
+									.sameId(accountStateEntityQueryResultObj)) {
 								statesViewMapForSavings
 										.put(
 												accountStateEntityQueryResultObj

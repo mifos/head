@@ -61,14 +61,17 @@ public class TestUtils {
 	 * suffice to test equals and hashCode.  Just make sure to pass in
 	 * enough examples of equal and not-equal objects to cover each of
 	 * the cases in your equals implementation.  Generally there should be
-	 * an instance of a subclass somewhere in the data you pass.
+	 * an instance of a subclass somewhere in the data you pass.  The null case
+	 * is always checked and should not be passed in either the 
+	 * equalArray or noEqualArray.
 	 * 
 	 * @param equalArray - an array of class T containing at least 2 elements
 	 * which are all equal to one another (eg. new Foo[] {new Foo(5), new Foo(5)})
 	 * @param notEqualArray - an array of class T containing at least 1 element all of which
 	 * are not equal to the equalArray[0] parameter (eg. new Foo[] {Foo(4)} )
 	 */
-	public static <T> void verifyBasicEqualsContract(T[] equalArray, T[] notEqualArray) {
+	public static <T> void verifyBasicEqualsContract(
+			T[] equalArray, T[] notEqualArray) {
 		if (equalArray.length < 2) {
 			Assert.fail("equalArray requires at least 2 elements (but only had "
 							+ equalArray.length + ")");

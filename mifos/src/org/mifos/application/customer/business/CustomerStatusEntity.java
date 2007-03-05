@@ -7,6 +7,9 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.application.util.helpers.YesNoFlag;
 
+/**
+ * Should be replaced by {@link CustomerStatus}.
+ */
 public class CustomerStatusEntity extends StateEntity {
 
 	private String description;

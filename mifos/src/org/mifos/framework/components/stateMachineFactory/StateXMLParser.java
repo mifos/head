@@ -49,6 +49,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.w3c.dom.Document;
@@ -61,6 +62,11 @@ import org.xml.sax.SAXParseException;
 
 import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
 
+/**
+ * At first glance this code seems to be part of the excessively
+ * complicated machinery ({@link StateEntity} for example), which is
+ * being replaced by enums ({@link AccountState} for example).
+ */
 public class StateXMLParser {
 
 	private StateXMLParser() {
