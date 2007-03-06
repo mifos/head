@@ -99,6 +99,9 @@ public class TestUtils {
          * transitive per the contract of {@link Object#equals(java.lang.Object)}.
          */
         for (int i = 0; i < objects.length; i++) {
+        	Assert.assertNotNull(
+            	"You don't need to pass null; null is checked for you", 
+            	objects[i]);
             Assert.assertFalse(objects[i].equals(null));
             for (int j = 0; j < objects.length; j++) {
                 assertIsEqual(objects[i], objects[j]);
@@ -130,6 +133,8 @@ public class TestUtils {
     }
 
     public static void assertReflexiveAndNull(Object object) {
+    	Assert.assertNotNull(
+    		"You don't need to pass null; null is checked for you", object);
     	Assert.assertTrue(object.equals(object));
     	Assert.assertFalse(object.equals(null));
     }

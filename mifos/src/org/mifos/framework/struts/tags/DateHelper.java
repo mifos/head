@@ -65,6 +65,11 @@ public class DateHelper {
 		if( value!=null && !value.equals("")){
 			try {
 				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				// Enable this once we've taken a bit more of a look
+				// at where this gets called, run the tests, etc.
+				// But when the user types "13" for the month, for example,
+				// that should be an error not January of the next year.
+				//format.setLenient(false);
 				return format.parse(value);
 			} catch (Exception e) {
 				throw new FrameworkRuntimeException(e);
