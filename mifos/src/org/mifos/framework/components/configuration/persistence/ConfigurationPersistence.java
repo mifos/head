@@ -37,13 +37,17 @@
  */
 package org.mifos.framework.components.configuration.persistence;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.WeekDaysEntity;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.components.configuration.business.ConfigEntity;
+import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
+import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -55,6 +59,10 @@ import org.mifos.framework.persistence.Persistence;
 public class ConfigurationPersistence extends Persistence{
 	private MifosLogger logger = 
 		MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
+	
+	private static final String KEY_QUERY_PARAMETER = "KEY";
+	
+	public static final String CONFIGURATION_KEY_DAYS_IN_ADVANCE = "CollectionSheetHelper.daysInAdvance";
 	
 	public MifosCurrency getDefaultCurrency() throws PersistenceException {
 		List queryResult = executeNamedQuery(
@@ -84,7 +92,17 @@ public class ConfigurationPersistence extends Persistence{
 		return new FrameworkRuntimeException(null, message);
 	}
 
-	
+	/**
+	 * TODO: getSystemConfiguration is a candidate for removal.  The only thing retrieved from this
+	 * is a session timeout value and it does not appear to be used anywhere other
+	 * than in test code.  If it should be used somewhere, then the session timeout
+	 * value should become a configuration key value pair.  Right now this value is
+	 * stored in the SYSTEM_CONFIGURATION table which stores office specific config
+	 * data and has a special case of null office id to indicate the row where session
+	 * timeout is stored.  This single null office id row is the only row that uses 
+	 * the SESSION_TIME_OUT column.  If this method is removed (or rewritten to use a
+	 * configuration key value pair, then the SESSION_TIME_OUT column can be removed. 
+	 */
 	public ConfigEntity getSystemConfiguration() throws PersistenceException{
 		List<ConfigEntity> queryResult = executeNamedQuery(
 			NamedQueryConstants.GET_SYSTEM_CONFIG, null);
@@ -123,5 +141,62 @@ public class ConfigurationPersistence extends Persistence{
 			throw new FrameworkRuntimeException(null, "WeekDays List Not Specified");
 		}
 		return queryResult;
+	}
+	
+	/**
+	 * Lookup an integer valued, persistent configuration key-value pair based on the key.
+	 * This is intended to be more of a helper method than to be used directly.
+	 * @return if the key is found return the corresponding ConfigurationKeyValueInteger,
+	 * if not then return null.
+	 */
+	public ConfigurationKeyValueInteger getConfigurationKeyValueInteger(String key)
+		throws PersistenceException {
+		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+		queryParameters.put(KEY_QUERY_PARAMETER, key);
+		ConfigurationKeyValueInteger keyValue = (ConfigurationKeyValueInteger)
+			execUniqueResultNamedQuery(NamedQueryConstants.GET_CONFIGURATION_KEYVALUE_BY_KEY, queryParameters);		
+		return keyValue;
+	}
+
+	/**
+	 * Lookup a known persistent integer configuration value.
+	 * @throws RuntimeException thrown if no value is found for the key.
+	 */
+	public int getConfigurationValueInteger(String key)
+		throws PersistenceException {
+		ConfigurationKeyValueInteger keyValue =  getConfigurationKeyValueInteger(key);
+		if (keyValue != null) {
+			return keyValue.getValue();
+		} else {
+			throw new RuntimeException("Configuration parameter not found for key: " + "'" + key + "'");
+		}
+	}
+
+	/**
+	 * Update the value of a persistent integer configuration value;
+	 */
+	public void updateConfigurationKeyValueInteger(String key, int value) 
+		throws PersistenceException {
+		ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
+		keyValue.setValue(value);
+		createOrUpdate(keyValue);
+	}
+	
+	/**
+	 * Create a new persistent integer configuration key value pair.
+	 */
+	public void addConfigurationKeyValueInteger(String key, int value) 
+		throws PersistenceException {
+		ConfigurationKeyValueInteger keyValue = new ConfigurationKeyValueInteger(key, value);
+		createOrUpdate(keyValue);
+	}
+	
+	/**
+	 * Delete a persistent integer configuration key value pair.
+	 */
+	public void deleteConfigurationKeyValueInteger(String key) 
+		throws PersistenceException {
+		ConfigurationKeyValueInteger keyValue = getConfigurationKeyValueInteger(key);
+		delete(keyValue);	
 	}
 }

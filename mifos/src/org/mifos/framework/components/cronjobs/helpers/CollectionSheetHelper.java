@@ -48,6 +48,7 @@ import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.collectionsheet.business.CollectionSheetBO;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;
@@ -55,6 +56,7 @@ import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
@@ -69,13 +71,13 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
  * day and todays data would be lost.
  */
 public class CollectionSheetHelper extends TaskHelper {
-	private int daysInAdvance = 1;
+	private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 
 	public CollectionSheetHelper(MifosTask mifosTask) {
 		super(mifosTask);
 	}
 
-	private CollectionSheetBO getNewCollectionSheet(Date currentDate) {
+	private CollectionSheetBO getNewCollectionSheet(Date currentDate) throws PersistenceException {
 		Calendar meeting = new GregorianCalendar();
 		meeting.setTimeInMillis(currentDate.getTime());
 		meeting.roll(Calendar.DATE, getDaysInAdvance());
@@ -98,8 +100,9 @@ public class CollectionSheetHelper extends TaskHelper {
 	public void execute(long timeInMillis) throws CronJobException {
 		List<String> errorList = new ArrayList<String>();
 		Date currentDate = new Date(timeInMillis);
-		CollectionSheetBO collectionSheet = getNewCollectionSheet(currentDate);
+		CollectionSheetBO collectionSheet = null;
 		try {
+			collectionSheet = getNewCollectionSheet(currentDate);
 			collectionSheet.create();
 			generateCollectionSheetForDate(collectionSheet);
 			collectionSheet
@@ -114,8 +117,8 @@ public class CollectionSheetHelper extends TaskHelper {
 					+ collectionSheet.getCollSheetDate() + "Coll Sheet Date"
 					+ collectionSheet.getCollSheetID() + "Coll Sheet Run Date"
 					+ collectionSheet.getRunDate());
-			collectionSheet = getNewCollectionSheet(currentDate);
 			try {
+				collectionSheet = getNewCollectionSheet(currentDate);
 				collectionSheet
 						.update(CollectionSheetConstants.COLLECTION_SHEET_GENERATION_FAILED);
 				HibernateUtil.commitTransaction();
@@ -172,12 +175,8 @@ public class CollectionSheetHelper extends TaskHelper {
 
 	}
 
-	public int getDaysInAdvance() {
-		return daysInAdvance;
-	}
-
-	private void setDaysInAdvance(int daysInAdvance) {
-		this.daysInAdvance = daysInAdvance;
+	public int getDaysInAdvance() throws PersistenceException {
+		return configurationPersistence.getConfigurationValueInteger(ConfigurationPersistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE);
 	}
 
 }

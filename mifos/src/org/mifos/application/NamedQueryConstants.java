@@ -411,6 +411,8 @@ public interface NamedQueryConstants {
 	public String GET_MFI_LOCALE="getMFILocale";
 	public String GET_SYSTEM_CONFIG = "getSystemConfig";
 	public String GET_OFFICE_CONFIG = "getOfficeConfig";
+	public final String GET_CONFIGURATION_KEYVALUE_BY_KEY = "getConfigurationKeyValueByKey";
+	
 
 	//Fething fees with formula
 	public String GET_FEES_WITH_FORMULA_FOR_LOAN="getFeesWithFormmulaForLoan";

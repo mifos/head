@@ -170,6 +170,7 @@
 
 		<!--Configuration-->
 		<mapping resource="org/mifos/framework/components/configuration/business/ConfigEntity.hbm.xml" />
+		<mapping resource="org/mifos/framework/components/configuration/business/ConfigurationKeyValueInteger.hbm.xml" />
 
 		<mapping resource="org/mifos/application/accounts/savings/business/SavingsActivityEntity.hbm.xml" />
 

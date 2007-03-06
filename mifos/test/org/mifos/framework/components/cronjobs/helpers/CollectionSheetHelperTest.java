@@ -27,32 +27,31 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CollectionSheetHelperTest extends MifosTestCase {
 
 	private CenterBO center;
-
 	private GroupBO group;
-
 	private MeetingBO meeting;
-
 	private SavingsTestHelper helper = new SavingsTestHelper();
-
 	private SavingsOfferingBO savingsOffering;
-	
 	private LoanBO loanBO;
-	
 	private SavingsBO savingsBO;
-	
+	private ConfigurationPersistence persistence = new ConfigurationPersistence();
+	private int initialDaysInAdvance;
+
 	@Override
 	protected void setUp() throws Exception {
+		initialDaysInAdvance = persistence.getConfigurationValueInteger(persistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE);
 		super.setUp();
 	}
 
 	@Override
 	public void tearDown()throws Exception  {
+		persistence.updateConfigurationKeyValueInteger(persistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE, initialDaysInAdvance);
 		TestObjectFactory.cleanUp(loanBO);
 		TestObjectFactory.cleanUp(savingsBO);
 		TestObjectFactory.cleanUp(group);
@@ -61,11 +60,25 @@ public class CollectionSheetHelperTest extends MifosTestCase {
 		super.tearDown();
 	}
 	
-	public void testExecute() throws Exception {
+	public void testOneDayInAdvance() throws Exception {
+		int daysInAdvance = 1;
+		persistence.updateConfigurationKeyValueInteger(persistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE, daysInAdvance);
+		basicTest(daysInAdvance);
+	}
+	
+	public void testFiveDaysInAdvance() throws Exception {
+		int daysInAdvance = 5;
+		persistence.updateConfigurationKeyValueInteger(persistence.CONFIGURATION_KEY_DAYS_IN_ADVANCE, daysInAdvance);
+		basicTest(daysInAdvance);
+	}
+	
+	private void basicTest(int daysInAdvance) throws Exception {
 		createInitialObjects();
 		loanBO = getLoanAccount(group, meeting);
 		savingsBO = getSavingsAccount(center,"SAVINGS_OFFERING", "SAV");
 		CollectionSheetHelper collectionSheetHelper = new CollectionSheetHelper(new CollectionSheetTask());
+		
+		assertEquals(collectionSheetHelper.getDaysInAdvance(), daysInAdvance);
 
 		for (AccountActionDateEntity accountActionDateEntity : center
 				.getCustomerAccount().getAccountActionDates()) {
