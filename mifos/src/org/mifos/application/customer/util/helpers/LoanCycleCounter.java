@@ -40,8 +40,9 @@ public class LoanCycleCounter  implements Serializable{
 		this.offeringName = offeringName;
 	}
 	
-	/** 
-	 * This method return true even if the offering name is same , it does not bother about the counter value.
+	/**
+	 * This method return true even if the offering name is same,
+	 * it does not bother about the counter value.
 	 */
 	@Override
 	public boolean equals(Object obj){
@@ -52,18 +53,17 @@ public class LoanCycleCounter  implements Serializable{
 		return super.equals(obj);
 		
 	}
+
 	/*
-	 * Since equals uses the offeringName String for Equality, use the same for hashcode
-	 * @see java.lang.Object#hashCode()
+	 * Since equals uses the offeringName String for Equality, 
+	 * use the same for hashcode
 	 */
 	@Override
 	public int hashCode() {
-
 			if(null != this.offeringName){
 				return this.offeringName.hashCode();
 			}
 			return super.hashCode();
-
 	}
 
 	public void incrementCounter() {

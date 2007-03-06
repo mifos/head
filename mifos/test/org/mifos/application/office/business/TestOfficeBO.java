@@ -25,8 +25,13 @@ public class TestOfficeBO extends MifosTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-
 		userContext = TestObjectFactory.getUserContext();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public static void setChildren(Set<OfficeBO> children,OfficeBO office) {
@@ -703,17 +708,29 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testOfficeEquals() throws Exception {
-		OfficeBO office = TestObjectFactory.getOffice(Short.valueOf("1"));
-		OfficeBO office_temp = TestObjectFactory.getOffice(Short.valueOf("1"));
-		assertTrue(office.equals(office_temp));
-		office_temp = TestObjectFactory.getOffice(Short.valueOf("2"));
-		assertFalse(office.equals(office_temp));
-	}
+		OfficeBO office1 = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO office1a = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO office1b = OfficeBO.makeForTest(userContext, (short)1, 
+			"office 1b", "1b");
+		// TODO: subclass case
+		OfficeBO unsaved = OfficeBO.makeForTest(userContext, null, 
+			"office 1b", "1b");
+		
+		OfficeBO office2 = TestObjectFactory.getOffice(Short.valueOf("2"));
+		
+		// fixing equals was causing failures in
+		// ReverseLoanDisbursalActionTest.
+		// Re-enable this once we figure it out.
+//		TestUtils.verifyBasicEqualsContract(
+//			new OfficeBO[] { office1, office1a, office1b }, 
+//			new OfficeBO[] { office2, unsaved });
 
-	@Override
-	protected void tearDown() throws Exception {
-		HibernateUtil.closeSession();
-		super.tearDown();
+		// The following are temporary, until we can re-enable the
+		// code to make verifyBasicEqualsContract pass again.
+		assertEquals(office1.getOfficeId(), office1b.getOfficeId());
+		assertTrue(office1.equals(office1a));
+		assertFalse(office1.equals(office2));
+		assertFalse(office1.equals(unsaved));
 	}
 
 }

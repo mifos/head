@@ -122,6 +122,11 @@ public class TestUtils {
         assertReflexiveAndNull(two);
         Assert.assertFalse(one.equals(two));
         Assert.assertFalse(two.equals(one));
+        
+        /* The hashCodes may or may not be equal, but they shouldn't
+           throw an exception. */
+        one.hashCode();
+        two.hashCode();
     }
 
     public static void assertReflexiveAndNull(Object object) {

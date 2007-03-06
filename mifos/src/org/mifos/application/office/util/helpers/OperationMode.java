@@ -37,33 +37,30 @@
  */
 package org.mifos.application.office.util.helpers;
 
-import org.mifos.application.office.util.resources.OfficeConstants;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
-
 /**
  * Represent the operating mode of the office
  */
 public enum OperationMode {
-	LOCAL_SERVER(Short.valueOf("0")), REMOTE_SERVER(Short.valueOf("1"));
-	Short value;
+	LOCAL_SERVER(0), 
+	REMOTE_SERVER(1);
+	
+	private short value;
 
-	OperationMode(Short value) {
-		this.value = value;
+	private OperationMode(int value) {
+		this.value = (short) value;
 	}
 
 	public Short getValue() {
 		return value;
 	}
 
-	public static OperationMode getOperationMode(Short id)
-			throws PropertyNotFoundException {
-		for (OperationMode operationMode : OperationMode.values())
-		{
-			
-			if (operationMode.value.equals( id))
-				return operationMode;
+	public static OperationMode fromInt(int id) {
+		for (OperationMode candidate : OperationMode.values()) {
+			if (candidate.value == id) {
+				return candidate;
+			}
 		}
-		
-		throw new PropertyNotFoundException(OfficeConstants.ERROR_OPERATION_MODE);
+		throw new RuntimeException("no operation mode " + id);
 	}
+
 }

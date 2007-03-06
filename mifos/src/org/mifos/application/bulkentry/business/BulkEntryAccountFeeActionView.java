@@ -81,29 +81,28 @@ public class BulkEntryAccountFeeActionView extends View {
 	}
 
 	public Money getFeeDue() {
-
 		return getFeeAmount().subtract(getFeeAmountPaid());
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj != null && obj instanceof BulkEntryAccountFeeActionView) {
-			BulkEntryAccountFeeActionView bulkEntryAccountFeeActionView = (BulkEntryAccountFeeActionView) obj;
-			if (bulkEntryAccountFeeActionView.getActionDateId().equals(
+			BulkEntryAccountFeeActionView otherView = 
+				(BulkEntryAccountFeeActionView) obj;
+			if (otherView.getActionDateId().equals(
 					getActionDateId()))
 				return true;
 		}
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		//null case, should never happen, but some one could put in a null constructor
+		// (or just pass null to the constructor we have...)
 		if(null == this.getActionDateId()){
 			return (super.hashCode());
+//			throw new NullPointerException("shouldn't happen");
 		}
 		return this.getActionDateId().intValue();
 	}

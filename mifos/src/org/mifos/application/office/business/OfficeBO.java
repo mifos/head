@@ -77,18 +77,30 @@ public class OfficeBO extends BusinessObject {
 			OfficeLevel level, OfficeBO parentOffice,
 			List<CustomFieldView> customFields, String officeName,
 			String shortName, Address address, OperationMode operationMode,
-			OfficeStatus status) throws OfficeException {
-		return new OfficeBO(userContext, level, parentOffice, customFields,
-				officeName, shortName, address, operationMode, status);
+			OfficeStatus status) 
+	throws OfficeException {
+		return new OfficeBO(userContext, null, level, parentOffice,
+				customFields, officeName, shortName, address, 
+				operationMode, status);
+	}
+	
+	public static OfficeBO makeForTest(UserContext userContext,
+			Short officeId,
+			String officeName, String shortName) 
+	throws OfficeException {
+		return new OfficeBO(userContext, 
+				officeId, OfficeLevel.AREAOFFICE, null,
+				null, officeName, shortName, null, 
+				OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
 	}
 
 	/**
-	 * For tests.
+	 * Construct an object without validating it against the database.
 	 */
-	private OfficeBO(UserContext userContext, OfficeLevel level,
-			OfficeBO parentOffice, List<CustomFieldView> customFields,
-			String officeName, String shortName, Address address,
-			OperationMode operationMode, OfficeStatus status)
+	private OfficeBO(UserContext userContext, Short officeId,
+			OfficeLevel level, OfficeBO parentOffice,
+			List<CustomFieldView> customFields, String officeName, String shortName,
+			Address address, OperationMode operationMode, OfficeStatus status)
 			throws OfficeException {
 		super(userContext);
 		verifyFieldsNoDatabase(level, operationMode, parentOffice);
@@ -99,7 +111,7 @@ public class OfficeBO extends BusinessObject {
 		this.operationMode = operationMode.getValue();
 		this.maxChildCount = 0;
 		this.searchId = null;
-		this.officeId = null;
+		this.officeId = officeId;
 		this.level = new OfficeLevelEntity(level);
 		this.status = new OfficeStatusEntity(status);
 		this.parentOffice = parentOffice;
@@ -120,8 +132,9 @@ public class OfficeBO extends BusinessObject {
 			OfficeBO parentOffice, List<CustomFieldView> customFields,
 			String officeName, String shortName, Address address,
 			OperationMode operationMode) throws OfficeException {
-		this(userContext, level, parentOffice, customFields, officeName,
-				shortName, address, operationMode, OfficeStatus.ACTIVE);
+		this(userContext, null, level, parentOffice, customFields,
+				officeName, shortName, address, operationMode, 
+				OfficeStatus.ACTIVE);
 		verifyFields(officeName, shortName, level, operationMode, parentOffice);
 	}
 
@@ -171,12 +184,8 @@ public class OfficeBO extends BusinessObject {
 		return officeId;
 	}
 
-	public OperationMode getMode() throws OfficeException {
-		try {
-			return OperationMode.getOperationMode(operationMode);
-		} catch (PropertyNotFoundException e) {
-			throw new OfficeException(e);
-		}
+	public OperationMode getMode() {
+		return OperationMode.fromInt(operationMode);
 	}
 
 	public OfficeBO getParentOffice() {
@@ -580,11 +589,32 @@ public class OfficeBO extends BusinessObject {
 
 	@Override
 	public boolean equals(Object obj) {
+//		if (null == obj) {
+//			return false;
+//		}
+//
+//		if (!(obj instanceof OfficeBO)) {
+//			return false;
+//		}
 
-		if (this.officeId.equals(((OfficeBO) obj).getOfficeId()))
+		OfficeBO otherOffice = (OfficeBO) obj;
+/*		if (officeId == null) {
+			return otherOffice.getOfficeId() == null;
+		}
+		else*/ if (this.officeId.equals(otherOffice.getOfficeId())) {
 			return true;
+		}
+
 		return false;
 	}
+	
+//	@Override
+//	public int hashCode() {
+//		if (this.officeId == null) {
+//			return super.hashCode();
+//		}
+//		return this.officeId.hashCode();
+//	}
 
 	public OfficeBO getIfChildPresent(OfficeBO parent, OfficeBO child) {
 		if (parent.getChildren() != null) {

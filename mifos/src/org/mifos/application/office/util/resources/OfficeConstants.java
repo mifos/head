@@ -170,7 +170,6 @@ public interface OfficeConstants {
 	public static final String ERROR_INVALID_LEVEL="error.office.childhasmorelevel";
 	public static final String ERROR_LEVEL="error.noofficelevel";
 	public static final String ERROR_STATUS="error.noofficestatus";
-	public static final String ERROR_OPERATION_MODE="error.noofficeoperationmode";
 	
 	public static final String ERROR_INVLID_PARENT="error.office.invalidparentoffice";
 }

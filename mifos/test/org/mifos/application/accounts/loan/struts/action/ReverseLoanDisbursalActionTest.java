@@ -55,11 +55,18 @@ public class ReverseLoanDisbursalActionTest extends MifosMockStrutsTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(loan);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		try {
+			TestObjectFactory.cleanUp(loan);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			HibernateUtil.closeSession();
+		}
+		catch (Exception e) {
+			/* throwing exceptions here will often mask whatever the
+			   real failure was */
+			e.printStackTrace();
+		}
 		super.tearDown();
 	}
 
