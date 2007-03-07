@@ -43,5 +43,12 @@
 			accountAction.account.accountId,accountAction.actionDate
 		]]>
 	</query>
+			
+	<query name="account.getAllSavingSchedules">
+		<![CDATA[ from org.mifos.application.accounts.savings.business.SavingsScheduleEntity savingSchedule
+				 where savingSchedule.actionDate >= :FROM_DATE
+				   and savingSchedule.actionDate <= :THRU_DATE
+		]]>
+	</query>
 
 </hibernate-mapping>

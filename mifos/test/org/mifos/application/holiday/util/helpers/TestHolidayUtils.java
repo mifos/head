@@ -1,10 +1,24 @@
 package org.mifos.application.holiday.util.helpers;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.loan.business.TestLoanBO;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
+import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
 import org.mifos.application.holiday.exceptions.HolidayException;
@@ -15,25 +29,28 @@ import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestHolidayUtils extends MifosTestCase {
-
+	
 	private MeetingBO meeting;
 	private Short recurAfter = Short.valueOf("1"); // recur After January
 	private Date startDate;
 	
-	private String[] inputDates    = 
-			{"21/08/2007",                         "21/08/2007",
-			 "21/08/2007", 						   "26/08/2007",
+	private String[] inputDates       = 
+			{"21/08/2007", "21/08/2007", "21/08/2007", "26/08/2007",
 			 "23/08/2007"}, 
-	                 outputDates   = 
-	        {"21/08/2007",                         "25/08/2007",
-	         "27/08/2007", 						   "29/08/2007",
-	         "08/09/2007"};
+	                 outputDates      = 
+	        {"21/08/2007", "25/08/2007","27/08/2007", "29/08/2007",
+	         "06/09/2007"};//"08/09/2007"};
+	
 	private String[] holidyRanges  = 
 	        {"20/08/2007 - 22/08/2007, 22/08/2007 - 24/08/2007", // [Holiday - Holiday] [Same Day - Same Day] case
              "20/08/2007 - 22/08/2007, 22/08/2007 - 24/08/2007", // [Holiday - Holiday] [Next Working Day - Next Working Day] case
@@ -41,6 +58,7 @@ public class TestHolidayUtils extends MifosTestCase {
              "27/08/2007 - 28/08/2007",  // [Non-Working Day - Holiday] [Next Working Day - Next Working Day] case
              "20/08/2007 - 25/08/2007, 27/08/2007 - 01/09/2007" // [Holiday - Non-Working Day - Holiday] [Next Meeting - Next Meeting] case
 			} ;
+	
 	private String[] rpaymentRules = 
 	        {"1,1",                                "3,3",
 			 "3,3",                                "3,3", 
@@ -49,7 +67,12 @@ public class TestHolidayUtils extends MifosTestCase {
 	        {"Monthly-18/08/2007", "Monthly-18/08/2007", 
 			 "Monthly-18/08/2007", "Monthly-18/08/2007",
 			 "Weekly-18/08/2007"};
-	               
+
+	private CenterBO center;
+	private GroupBO group;
+	private SavingsOfferingBO savingsProduct;
+	private Integer accountId;
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -57,44 +80,36 @@ public class TestHolidayUtils extends MifosTestCase {
 		meeting = createWeeklyMeeting(WeekDay.THURSDAY, recurAfter, startDate);
 		
 		/////////////////////
-		List<WeekDaysEntity> weekDays = new MeetingPersistence().getWorkingDays(Short.valueOf("1"));
-		for(WeekDaysEntity weekDay: weekDays){
-			if(weekDay.getId().equals(Short.valueOf("1")) &&
-					weekDay.isWorkingDay())
-				weekDay.setWorkDay(Short.valueOf("0"));
-			    weekDay.save();
-		}
-		/////////////////////
-//		System.out.println("#\n#\n#\n#\nUPDATING values in Mysql database table!\n#\n#\n#\n#");
-//		
-//	    Connection con = null;
-//	    String url = "jdbc:mysql://localhost:3306/";
-//	    String db = "test";
-//	    String driver = "com.mysql.jdbc.Driver";
-//	    try{
-//	      Class.forName(driver);
-//	      con = DriverManager.getConnection(url+db,"root","mysql");
-//	      try{
-//	        Statement st = con.createStatement();
-//	        int val = st.executeUpdate("UPDATE WEEK_DAYS_MASTER SET WORKING_DAY = 0 WHERE WEEK_DAYS_MASTER_ID = 1;");
-//	        System.out.println("1 row affected");
-//	        st.close();
-//	        con.close();
-//	      }
-//	      catch (SQLException s){
-//	        System.out.println("SQL statement is not executed!");
-//	      }
-//	    }
-//	    catch (Exception e){
-//	      e.printStackTrace();
-//	    }
+		// Make SUNDAY as Non Working Day
+		toggleFirstDayOnOff(Short.valueOf("0"));
 		/////////////////////
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
+		try {
+			TestObjectFactory.cleanUpAccount(accountId);
+			HibernateUtil.closeSession();
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			// why no clean up of savingsOffering?
+			HibernateUtil.closeSession();
+		}
+		catch (Exception e) {
+			/* Throwing from a finally block, which tearDown is called from,
+			   will often hide the real failure.
+			 */
+			e.printStackTrace();
+		}
 		super.tearDown();
-		HibernateUtil.closeSession();
+	}
+
+	private void toggleFirstDayOnOff(Short state) throws PersistenceException {
+		
+		WeekDaysEntity weekDay = (WeekDaysEntity) new MeetingPersistence()
+		                         .getPersistentObject(WeekDaysEntity.class, Short.valueOf("1"));
+		weekDay.setWorkDay(state);
+		weekDay.save();
 	}
 
 	public void testNonWorkingDay() throws Exception {
@@ -108,7 +123,6 @@ public class TestHolidayUtils extends MifosTestCase {
 	}
 	
 	public void testSameDay() throws Exception {
-				
 		Date holidayStartDate = getDate("20/08/2007");
 		Date holidayEndDate = getDate("22/08/2007");
 		
@@ -137,13 +151,12 @@ public class TestHolidayUtils extends MifosTestCase {
 		// Clean up the Holiday that was created
 		TestObjectFactory.cleanUp(holidayEntity);
 	}
-	
+
 	public void testNexteMeetingOrRepayment() throws Exception {
-		
 		Date holidayStartDate = getDate("20/08/2007");
-		Date holidayEndDate = getDate("22/08/2007");
+		Date holidayEndDate = getDate("24/08/2007");
 		
-		Date testDate = getDate("21/08/2007");
+		Date testDate = getDate("22/08/2007");
 		
 		// Create Holiday
 		HolidayPK holidayPK = new HolidayPK((short)1, holidayStartDate);
@@ -160,18 +173,18 @@ public class TestHolidayUtils extends MifosTestCase {
 		// assert that the holiday is created
 		assertEquals("Next Meeting Or Repayment Holiday", holidayEntity.getHolidayName());		
 		
-		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendar(testDate), meeting);
+		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendarDate(testDate.getTime()), meeting);
+		
 		
 		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), 
-				DateUtils.getDateWithoutTimeStamp(getDate("25/08/2007").getTime()).getTime());
+				DateUtils.getDateWithoutTimeStamp(getDate("30/08/2007").getTime()).getTime()); // was 25/08/2006
 
 		// Clean up the Holiday that was created
 		TestObjectFactory.cleanUp(holidayEntity);
 	}
 	
 	public void testNextWorkingDay() throws Exception {
-				
-		Date holidayStartDate = getDate("20/08/2007");
+    	Date holidayStartDate = getDate("20/08/2007");
 		Date holidayEndDate = getDate("22/08/2007");
 		
 		Date testDate = getDate("21/08/2007");
@@ -185,8 +198,8 @@ public class TestHolidayUtils extends MifosTestCase {
 		// assert that the holiday is created
 		assertEquals("Next Working Day Holiday", holidayEntity.getHolidayName());		
 		
-		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendar(testDate), meeting);
-		
+		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendarDate(testDate.getTime()), meeting);
+
 		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), 
 				DateUtils.getDateWithoutTimeStamp(getDate("23/08/2007").getTime()).getTime());
 
@@ -195,7 +208,6 @@ public class TestHolidayUtils extends MifosTestCase {
 	}
 
     public void testHolidayCombinations() throws Exception {
-		
     	for(int i=0; i<inputDates.length; i++) {
     		
     		Date inputDate = getDate(inputDates[i]);
@@ -215,8 +227,9 @@ public class TestHolidayUtils extends MifosTestCase {
     		}
     		/////////////////////////////////////////////////////////
     		
-    		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendar(inputDate), meeting);
-    		
+    		Calendar adjustedCalendar = HolidayUtils.adjustDate(DateUtils.getCalendarDate(inputDate.getTime()), 
+    															meeting);
+
     		assertEquals(DateUtils.getDateWithoutTimeStamp(adjustedCalendar.getTimeInMillis()).getTime(), 
     				DateUtils.getDateWithoutTimeStamp(outputDate.getTime()).getTime());
     		
@@ -226,30 +239,183 @@ public class TestHolidayUtils extends MifosTestCase {
     	}
 	}
 	
-    /*
     public void testRescheduleLoanRepaymentDates() throws Exception{
-    	
-    	Date holidayStartDate = getDate("21/03/2007"), 
-    	     holidayEndDate   = getDate("31/03/2007");
-    	
-    	HolidayBO holiday = createHoliday(holidayStartDate, holidayEndDate, Short.valueOf("3"), 
-									"testRescheduleLoanRepaymentDates");
-    	
-    	holiday = (HolidayBO) TestObjectFactory.getObject(
-							HolidayBO.class, holiday.getHolidayPK());
+    	// Make SUNDAY (FirstDay) as Working Day.
+    	toggleFirstDayOnOff(Short.valueOf("1"));
+		
+		// Create the Schedule to be used in testing
+		Calendar startDate = Calendar.getInstance();
+		// TODO: It is ugly to call into another test like this,
+		// and this code also isn't cleaning up the data correctly.
+		TestLoanBO testLoanBO = new TestLoanBO();
+		
+		LoanScheduleEntity[] loanRepaymentSchedule = testLoanBO.createLoanRepaymentSchedule();
+		
+		AccountBO accountBO = (AccountBO) new MeetingPersistence()
+        .getPersistentObject(AccountBO.class, loanRepaymentSchedule[0].getAccount().getAccountId());
+		
+		loanRepaymentSchedule = testLoanBO.getSortedAccountActionDateEntity(
+									accountBO.getAccountActionDates());
+		
+		startDate.setTime(loanRepaymentSchedule[0].getActionDate());
+		
+		for (int i = 0; i < loanRepaymentSchedule.length; i++) { 
+			//System.out.println("[DATE] ActionDate     = " + loanRepaymentSchedule[i].getActionDate().toLocaleString());
+			assertEquals(startDate, DateUtils.getCalendarDate(loanRepaymentSchedule[i]
+			                                      .getActionDate().getTime()));
+			
+			startDate.add(Calendar.DAY_OF_MONTH, 7);
+		}
+		/////////////////////////////////////////////////////////////
+		
+		// Create Holiday that the first ActionDate fall in it. 
+		Date holidayStartDate =  loanRepaymentSchedule[0].getActionDate();
+								
+		Calendar end = DateUtils.getCalendarDate(loanRepaymentSchedule[0].getActionDate().getTime());
+		end.add(Calendar.DAY_OF_MONTH, 3);
+	    Date holidayEndDate   =  end.getTime();//getDate("31/03/2007");
+	
+	    // Holiday RepaymentRule is Next Working Day.
+		HolidayBO holiday = createHoliday(holidayStartDate, holidayEndDate, Short.valueOf("3"), 
+								"testRescheduleLoanRepaymentDates");
+
+		holiday = (HolidayBO) TestObjectFactory.getObject(
+						HolidayBO.class, holiday.getHolidayPK());
 
 		// assert that the holiday is created
 		assertEquals("testRescheduleLoanRepaymentDates", holiday.getHolidayName());
 		///////////////////////////////////////////////////////////////
-		// Create the Schedule to be used in testing
-		new TestLoanBO().testDisbursalLoanRegeneteRepaymentSchedule();
-		/////////////////////////////////////////////////////////////
 		HolidayUtils.rescheduleLoanRepaymentDates(holiday);
+		/////////////////////////////////////////////////////////////
+		
+		accountBO = loanRepaymentSchedule[0].getAccount();
+		
+		accountBO = (AccountBO) new MeetingPersistence()
+         .getPersistentObject(AccountBO.class, loanRepaymentSchedule[0].getAccount().getAccountId());
+		
+		Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
+		
+		loanRepaymentSchedule = testLoanBO.getSortedAccountActionDateEntity(actionDateEntities);
+		startDate.setTime(holidayStartDate); // for calculating the other dates correctly
+
+		for (int i = 0; i < loanRepaymentSchedule.length; i++) {			 
+			//System.out.println("[RE_DATE] ActionDate     = " + loanRepaymentSchedule[i].getActionDate().toLocaleString());
+			
+			if(i==0) { // the one that we made it fall in holiday
+				Calendar adjustedDate = 
+					DateUtils.getCalendarDate(holidayStartDate.getTime());
+				adjustedDate.add(Calendar.DAY_OF_MONTH, 4);
+				//System.out.println("[RE_DATE] CalculatedDate = " + adjustedDate.getTime().toLocaleString());
+				assertEquals(adjustedDate, DateUtils.getCalendarDate(loanRepaymentSchedule[i].getActionDate().getTime()));
+			}else {
+				//System.out.println("[RE_DATE] CalculatedDate = " + startDate.getTime().toLocaleString());
+				assertEquals(startDate, DateUtils.getCalendarDate(loanRepaymentSchedule[i].getActionDate().getTime()));
+			}
+			
+			startDate.add(Calendar.DAY_OF_MONTH, 7);
+		}
+		
+		/////////////////////////////////////////////////////////////
 		
 		// Clean up the Holiday that was created
 		TestObjectFactory.cleanUp(holiday);
+		
+		// Create Non Working Day
+		toggleFirstDayOnOff(Short.valueOf("0"));
     }
-    */
+
+    public void testRescheduleSavingDates() throws Exception{
+    	// Make SUNDAY (FirstDay) as Working Day.
+    	toggleFirstDayOnOff(Short.valueOf("1"));
+		
+		// Create the Schedule to be used in testing
+		Calendar startDate = Calendar.getInstance();		
+		
+		SavingsBO savingBO = createSavingSchedule();
+		
+		Set<AccountActionDateEntity> actionDateEntities = savingBO.getAccountActionDates();
+		
+		AccountActionDateEntity[] savingSchedule = new AccountActionDateEntity[actionDateEntities
+		                                                    				.size()];
+		// Sort Dates
+		for (AccountActionDateEntity actionDateEntity : actionDateEntities) {
+			savingSchedule[actionDateEntity.getInstallmentId().intValue() - 1] 
+			               = actionDateEntity;
+		}
+		
+		startDate.setTime(savingSchedule[0].getActionDate());
+	
+		for(int i=0; i< savingSchedule.length; i++){
+			//System.out.println("[SAVING] ActionDate = " + savingSchedule[i].getActionDate().toLocaleString());
+			assertEquals(startDate, DateUtils.getCalendarDate(savingSchedule[i]
+			                                      .getActionDate().getTime()));			
+			startDate.add(Calendar.DAY_OF_MONTH, 7);
+		}
+		/////////////////////////////////////////////////////////////
+		
+		// Create Holiday that the first ActionDate fall in it. 
+		Date holidayStartDate =  savingSchedule[0].getActionDate();
+								
+		Calendar end = DateUtils.getCalendarDate(savingSchedule[0].getActionDate().getTime());
+		end.add(Calendar.DAY_OF_MONTH, 3);
+	    Date holidayEndDate   =  end.getTime();
+	
+	    // Holiday RepaymentRule is Next Working Day.
+		HolidayBO holiday = createHoliday(holidayStartDate, holidayEndDate, Short.valueOf("3"), 
+								"testRescheduleSavingDates");
+		
+		holiday = (HolidayBO) TestObjectFactory.getObject(
+						HolidayBO.class, holiday.getHolidayPK());
+
+		// assert that the holiday is created
+		assertEquals("testRescheduleSavingDates", holiday.getHolidayName());
+		///////////////////////////////////////////////////////////////
+
+		HolidayUtils.rescheduleSavingDates(holiday);
+		
+		/////////////////////////////////////////////////////////////
+		
+		AccountBO accountBO = savingSchedule[0].getAccount();
+		
+		accountBO = (AccountBO) new MeetingPersistence()
+         .getPersistentObject(AccountBO.class, savingSchedule[0].getAccount().getAccountId());
+		
+		actionDateEntities = accountBO.getAccountActionDates();
+		
+		savingSchedule = new AccountActionDateEntity[actionDateEntities.size()];
+		// Sort Dates
+		for (AccountActionDateEntity actionDateEntity : actionDateEntities) {
+			savingSchedule[actionDateEntity.getInstallmentId().intValue() - 1] 
+			               = actionDateEntity;
+		}
+		
+		startDate.setTime(holidayStartDate); // for calculating the other dates correctly
+
+		for (int i = 0; i < savingSchedule.length; i++) {
+			if(i==0) { // the actionDate that falls in the created holiday.			
+				Calendar adjustedDate = 
+					DateUtils.getCalendarDate(holidayStartDate.getTime());
+				adjustedDate.add(Calendar.DAY_OF_MONTH, 4);
+				
+				//System.out.println("[RE_SAVING] CalculatedDate = " + adjustedDate.getTime().toLocaleString());
+				assertEquals(adjustedDate, DateUtils.getCalendarDate(savingSchedule[i].getActionDate().getTime()));
+			}else {
+				//System.out.println("[RE_SAVING] CalculatedDate = " + startDate.getTime().toLocaleString());
+				assertEquals(startDate, DateUtils.getCalendarDate(savingSchedule[i].getActionDate().getTime()));
+			}
+			
+			startDate.add(Calendar.DAY_OF_MONTH, 7);
+		}
+		
+		/////////////////////////////////////////////////////////////
+		
+		// Clean up the Holiday that was created
+		// TODO: This should be in tearDown
+		TestObjectFactory.cleanUp(holiday);
+		
+		// Create Non Working Day
+		toggleFirstDayOnOff(Short.valueOf("0"));
+    }
     
 	private HolidayBO[] createHolidayCollection(String holidayDateList, String ruleList) throws HolidayException, ParseException {
 		
@@ -294,7 +460,33 @@ public class TestHolidayUtils extends MifosTestCase {
 	private MeetingBO createWeeklyMeeting(WeekDay weekDay, Short recurAfer, Date startDate) throws MeetingException{
 		return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
 	}
+
 	private MeetingBO createMonthlyMeetingOnWeekDay(WeekDay weekDay, RankType rank, Short recurAfer, Date startDate) throws MeetingException{
 		return new MeetingBO(weekDay, rank, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
 	}
+
+	private SavingsBO createSavingSchedule() throws Exception {
+	 	createInitialObjects();
+		savingsProduct = TestObjectFactory.createSavingsOffering(
+				"dfasdasd1", "sad1",
+				RecommendedAmountUnit.COMPLETE_GROUP);
+		SavingsBO savings = new SavingsTestHelper()
+			.createSavingsAccount(savingsProduct, group, 
+				AccountState.SAVINGS_ACC_APPROVED,
+				TestUtils.makeUser(1));
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		
+		accountId = savings.getAccountId();
+		return TestObjectFactory.getObject(SavingsBO.class, accountId);
+	}
+	
+	private void createInitialObjects() {
+		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
+		group = TestObjectFactory.createGroupUnderCenter(
+				"Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
+	}
+	
 }

@@ -5,9 +5,15 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
+import org.mifos.application.accounts.business.AccountBO;
+import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.savings.business.SavingsBO;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -104,7 +110,7 @@ public class HolidayUtils {
 		return adjustedDate;
 	}
 	
-	public static void rescheduleLoanRepaymentDates(HolidayBO holiday) throws RuntimeException{//, MeetingBO meeting) {
+	public static void rescheduleLoanRepaymentDates(HolidayBO holiday) throws RuntimeException{
 		try {
 			List<LoanScheduleEntity> loanSchedulsList = new HolidayBusinessService().getAllLoanSchedule(holiday);
 			for (LoanScheduleEntity loanScheduleEntity : loanSchedulsList) {
@@ -130,9 +136,35 @@ public class HolidayUtils {
 		}
 	}
 
-	public static Calendar getCalendar(Date date) {
-		Calendar dateCalendar = new GregorianCalendar();
-		dateCalendar.setTimeInMillis(date.getTime());
-		return dateCalendar;
+	public static void rescheduleSavingDates(HolidayBO holiday) throws RuntimeException{
+		try {
+			List<SavingsScheduleEntity> savingSchedulsList = new HolidayBusinessService()
+																.getAllSavingSchedule(holiday);
+			for (SavingsScheduleEntity savingScheduleEntity : savingSchedulsList) {
+				
+				SavingsBO saving = (SavingsBO) new AccountBusinessService()
+								.getAccount(savingScheduleEntity.getAccount().getAccountId());
+				
+				//new SavingsBusinessService().getAccount(savingScheduleEntity.getAccount().getAccountId());
+				MeetingBO loadedMeeting = saving.getCustomer().getCustomerMeeting().getMeeting();
+				//TimePerForInstcalc();//LoanMeeting();
+				
+				Date adjustedDate = HolidayUtils.adjustDate(DateUtils.getCalendar(savingScheduleEntity.getActionDate()), 
+						loadedMeeting).getTime();
+				
+				savingScheduleEntity.setActionDate(new java.sql.Date(adjustedDate.getTime()));
+			}
+		}
+		catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		catch (MeetingException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
+
 }

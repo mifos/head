@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -53,6 +55,16 @@ public class HolidayPersistence extends MasterPersistence {
 		parameters.put("THRU_DATE", holiday.getHolidayThruDate());
 		
 		return executeNamedQuery( NamedQueryConstants.ALL_LOAN_SCHEDULE,
+									parameters);
+	}
+	
+    // getAllSavingScheduales
+	public List<SavingsScheduleEntity> getAllSavingScheduales(HolidayBO holiday) throws PersistenceException{
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("FROM_DATE", holiday.getHolidayFromDate());
+		parameters.put("THRU_DATE", holiday.getHolidayThruDate());
+		
+		return executeNamedQuery( NamedQueryConstants.ALL_SAVING_SCHEDULE,
 									parameters);
 	}
 	

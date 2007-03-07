@@ -37,6 +37,9 @@
  */
 package org.mifos.framework.util.helpers;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -154,10 +157,10 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
 import org.mifos.application.productdefinition.business.TestSavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
@@ -982,6 +985,18 @@ public class TestObjectFactory {
 			account = null;
 		}
 	}
+	
+	public static void cleanUpAccount(Integer accountId) {
+		if (null != accountId) {
+			Session session = HibernateUtil.openSession();
+			Transaction transaction = session.beginTransaction();
+			AccountBO account = (AccountBO) 
+				session.get(AccountBO.class, accountId);
+			deleteAccount(account, session);
+			transaction.commit();
+			session.close();
+		}
+	}
 
 	private static void deleteFee(FeeBO fee) {
 		Session session = HibernateUtil.getSessionTL();
@@ -1012,8 +1027,8 @@ public class TestObjectFactory {
 		}
 	}
 
-	private static void deleteAccountActionDates(AccountBO account) {
-		Session session = HibernateUtil.getSessionTL();
+	private static void deleteAccountActionDates(
+			AccountBO account, Session session) {
 		AccountTypeEntity accountType = account.getAccountType();
 		for (AccountActionDateEntity actionDates : account
 				.getAccountActionDates()) {
@@ -1021,7 +1036,8 @@ public class TestObjectFactory {
 					.getAccountTypeId()
 					.equals(
 							org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT)) {
-				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) actionDates;
+				LoanScheduleEntity loanScheduleEntity = 
+					(LoanScheduleEntity) actionDates;
 				for (AccountFeesActionDetailEntity actionFees : loanScheduleEntity
 						.getAccountFeesActionDetails()) {
 					session.delete(actionFees);
@@ -1048,8 +1064,8 @@ public class TestObjectFactory {
 		}
 	}
 
-	private static void deleteSpecificAccount(AccountBO account) {
-		Session session = HibernateUtil.getSessionTL();
+	private static void deleteSpecificAccount(
+			AccountBO account, Session session) {
 		if (account instanceof LoanBO) {
 
 			LoanBO loan = (LoanBO) account;
@@ -1090,10 +1106,12 @@ public class TestObjectFactory {
 	}
 
 	private static void deleteAccountWithoutFee(AccountBO account) {
+		Session session = HibernateUtil.getSessionTL();
+
 		deleteAccountPayments(account);
-		deleteAccountActionDates(account);
+		deleteAccountActionDates(account, session);
 		deleteAccountFees(account);
-		deleteSpecificAccount(account);
+		deleteSpecificAccount(account, session);
 	}
 
 	private static void deleteAccount(AccountBO account, Session session) {
@@ -1107,14 +1125,15 @@ public class TestObjectFactory {
 
 		List<FeeBO> feeList = new ArrayList<FeeBO>();
 		for (AccountFeesEntity accountFees : account.getAccountFees()) {
-			if (!feeList.contains(accountFees.getFees()))
+			if (!feeList.contains(accountFees.getFees())) {
 				feeList.add(accountFees.getFees());
+			}
 		}
 
 		deleteAccountPayments(account);
-		deleteAccountActionDates(account);
+		deleteAccountActionDates(account, session);
 		deleteAccountFees(account);
-		deleteSpecificAccount(account);
+		deleteSpecificAccount(account, session);
 		deleteFees(feeList);
 
 		if (newSession) {
@@ -1999,5 +2018,32 @@ public class TestObjectFactory {
 		Calendar dateConversionCalendar = new GregorianCalendar();
 		dateConversionCalendar.setTime(date);
 		return dateConversionCalendar.get(Calendar.DAY_OF_WEEK);
+	}
+
+	public static SavingsOfferingBO createSavingsOffering(String offeringName,
+			String shortName, Short interestCalcType, Short savingsTypeId,
+			Short depGLCode, Short intGLCode,
+			RecommendedAmountUnit recommendedAmountUnit) {
+		MeetingBO meetingIntCalc = createMeeting(getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+		MeetingBO meetingIntPost = createMeeting(getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+		return createSavingsOffering(offeringName, shortName,
+				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
+						.valueOf("2"), 300.0, recommendedAmountUnit.getValue(),
+				24.0, 200.0, 200.0, savingsTypeId, interestCalcType,
+				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
+	}
+
+	public static SavingsOfferingBO createSavingsOffering(String offeringName,
+			String shortName, Short depGLCode, Short intGLCode,
+			RecommendedAmountUnit recommendedAmountUnit) {
+		return createSavingsOffering(offeringName, shortName, Short
+				.valueOf("1"), Short.valueOf("2"), depGLCode, intGLCode,
+				recommendedAmountUnit);
+	}
+
+	public static SavingsOfferingBO createSavingsOffering(String offeringName,
+			String shortName, RecommendedAmountUnit recommendedAmountUnit) {
+		return createSavingsOffering(offeringName, shortName, Short
+				.valueOf("1"), Short.valueOf("2"), recommendedAmountUnit);
 	}
 }

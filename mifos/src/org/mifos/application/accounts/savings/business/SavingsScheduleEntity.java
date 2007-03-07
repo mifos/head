@@ -58,8 +58,9 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
 		setPaymentStatus(PaymentStatus.PAID.getValue());
 	}
 	
+	// Was protected
 	@Override
-	protected void setActionDate(Date actionDate) {
+	public void setActionDate(Date actionDate) {
 		super.setActionDate(actionDate);
 	}
 

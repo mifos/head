@@ -2,7 +2,9 @@ package org.mifos.application.holiday.business.service;
 
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.RepaymentRuleEntity;
 import org.mifos.application.holiday.persistence.HolidayPersistence;
@@ -53,6 +55,14 @@ public class HolidayBusinessService extends BusinessService {
 	public List<LoanScheduleEntity>	getAllLoanSchedule(HolidayBO holiday) throws ServiceException {	
 		try {
 			return new HolidayPersistence().getAllLoanScheduales(holiday);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
+	
+	public List<SavingsScheduleEntity> getAllSavingSchedule(HolidayBO holiday) throws ServiceException {	
+		try {
+			return new HolidayPersistence().getAllSavingScheduales(holiday);
 		} catch (PersistenceException pe) {
 			throw new ServiceException(pe);
 		}

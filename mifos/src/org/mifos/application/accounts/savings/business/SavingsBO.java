@@ -1647,7 +1647,8 @@ public class SavingsBO extends AccountBO {
 		Short installmentId = savingsTrxn.getInstallmentId();
 		setSavingsBalance(getSavingsBalance().subtract(
 				savingsTrxn.getDepositAmount()));
-		SavingsScheduleEntity accntActionDate = (SavingsScheduleEntity) getAccountActionDate(
+		SavingsScheduleEntity accntActionDate = (SavingsScheduleEntity) 
+			getAccountActionDate(
 				installmentId, accntTrxn.getCustomer().getCustomerId());
 		if (accntActionDate != null) {
 			accntActionDate.setDepositPaid(accntActionDate.getDepositPaid()

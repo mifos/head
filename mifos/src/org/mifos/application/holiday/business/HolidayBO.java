@@ -108,6 +108,7 @@ public class HolidayBO extends BusinessObject {
 		try {
 			new HolidayPersistence().createOrUpdate(this);
 			HolidayUtils.rescheduleLoanRepaymentDates(this);
+			HolidayUtils.rescheduleSavingDates(this);
 		} catch (PersistenceException e) {
 			throw new HolidayException(e);
 		}

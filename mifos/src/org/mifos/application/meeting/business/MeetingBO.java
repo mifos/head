@@ -258,7 +258,8 @@ public class MeetingBO extends BusinessObject {
 	
 	public Date getNextScheduleDateAfterRecurrence(Date meetingDate)throws MeetingException{
 		validateMeetingDate(meetingDate);
-		Date currentScheduleDate=getNextDate(getStartDate());
+		Date currentScheduleDate=getNextDate(getFirstDate(getStartDate()));
+		//Date currentScheduleDate=getNextDate(getStartDate());
 		for(; currentScheduleDate.compareTo(meetingDate)<=0;
 			currentScheduleDate=getNextDate(currentScheduleDate));
 		
@@ -270,7 +271,8 @@ public class MeetingBO extends BusinessObject {
 	
 	public Date getNextScheduleDateAfterRecurrenceWithoutAdjustment(Date meetingDate)throws MeetingException{
 		validateMeetingDate(meetingDate);
-		Date currentScheduleDate=getNextDate(getStartDate());
+		Date currentScheduleDate=getNextDate(getFirstDate(getStartDate()));
+		//Date currentScheduleDate=getNextDate(getStartDate());
 		for(; currentScheduleDate.compareTo(meetingDate)<=0;
 			currentScheduleDate=getNextDate(currentScheduleDate));
 		

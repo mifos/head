@@ -7,6 +7,7 @@ import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.struts.action.TestApplyAdjustmentAction;
 import org.mifos.application.fees.persistence.FeePersistenceTest;
 import org.mifos.application.fees.struts.action.FeeActionTest;
+import org.mifos.application.holiday.util.helpers.TestHolidayUtils;
 import org.mifos.framework.persistence.DatabaseVersionPersistenceTest;
 import org.mifos.framework.persistence.LatestTest;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -37,6 +38,7 @@ public class MayflyTests extends TestSuite {
 		suite.addTestSuite(TestSavingsBO.class);
 		suite.addTestSuite(TestApplyAdjustmentAction.class);
 		suite.addTestSuite(FeeActionTest.class);
+		suite.addTestSuite(TestHolidayUtils.class);
 		
 		suite.addTestSuite(MayflyMiscTest.class);
 		return suite;
