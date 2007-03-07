@@ -14,6 +14,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import org.mifos.application.customer.center.util.helpers.ValidateMethods;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 
@@ -181,15 +182,41 @@ public class DateHelper {
 		return new String[]{day,month,year};
 	}
 
+	public static java.sql.Date getDateAsSentFromBrowser(String value) {
+		/* This is just a fixed format we use for historical reasons.
+		 * Would make more sense to change the javascript and this to both
+		 * use yyyy-mm-dd.
+		 */
+		return getLocaleDate(Locale.UK, value);
+	}
+	
+	// validate a date string according to UK D/M/Y format, our internal standard
+	public static boolean isValidDate(String value) {
+		try {
+			SimpleDateFormat shortFormat = (SimpleDateFormat)
+				DateFormat.getDateInstance(DateFormat.SHORT, Locale.UK);
+			shortFormat.setLenient(false);
+			shortFormat.parse(value);
+			return true;
+		}
+		
+		catch (java.text.ParseException e) {
+			return false;
+		}
+	}
+
+
 	public static java.sql.Date getLocaleDate(Locale locale,String value) {
 		if (locale!=null && value!=null && !value.equals("")) {
 			try{
-
 				SimpleDateFormat shortFormat = (SimpleDateFormat)
 					DateFormat.getDateInstance(DateFormat.SHORT, locale);
+				shortFormat.setLenient(false);
 				String userPattern = shortFormat.toPattern();
 				String dbDate = convertUserToDbFmt(value, userPattern);
 				return java.sql.Date.valueOf(dbDate);
+			} catch (RuntimeException alreadyRuntime) {
+				throw alreadyRuntime;
 			} catch (Exception e) {
 				throw new FrameworkRuntimeException(e);
 			}

@@ -98,11 +98,8 @@ public class UserContext implements Serializable {
 	 */
 	private Short mfiLocaleId;
 	
-	/**
-	 * This would hold the mfi loacle
-	 */
-
 	private Locale mfiLocale;
+
 	/**
 	 * This would hold the last login time of the user
 	 */

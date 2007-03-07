@@ -58,8 +58,7 @@
   }
 	</script>
 
-		<html-el:form action="clientCustAction.do?method=previewEditMfiInfo"
-			onsubmit="return (validateMyForm(trainedDate,trainedDateFormat,trainedDateYY))">
+		<html-el:form action="clientCustAction.do?method=previewEditMfiInfo">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"
 				   var="BusinessKey" />
 			<html-el:hidden property="input" value="editMfiInfo" />

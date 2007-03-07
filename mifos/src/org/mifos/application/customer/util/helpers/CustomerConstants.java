@@ -230,6 +230,7 @@ public interface CustomerConstants {
 	public static final String INVALID_OFFICE="errors.Customer.invalidOffice";
 	public static final String INVALID_PARENT="errors.Customer.invalidParent";
 	public static final String INVALID_TRAINED_OR_TRAINEDDATE="errors.Customer.invalidTrainedOrTrainedDate";
+	public static final String INVALID_TRAINED_DATE = "errors.InvalidTrainedDate";
 
 	public final String TRANSITION_CONFIG_FILE_PATH_CENTER="org/mifos/framework/util/resources/stateMachine/StateMachine_center.xml";
 	public final String TRANSITION_CONFIG_FILE_PATH_GROUP="org/mifos/framework/util/resources/stateMachine/StateMachine_group.xml";
@@ -268,7 +269,8 @@ public interface CustomerConstants {
 	public static final String SPOUSE_TYPE = "Spouse/Father Relationship";
 	public static final String FORMED_BY_LOANOFFICER = "Formed By Loan officer";
 	public static final String TRAINED_CHECKED = "errors.TrainedCheckbox";
-	public static final String TRAINED_DATE_MANDATORY = "errors.TrainedDateNeeded";	
+	public static final String TRAINED_DATE_MANDATORY = "errors.TrainedDateNeeded";
+	
 	//Customer Account 
 	public static final String CUSTOMER_ACCOUNT = "customerAccount";	
 	public static final String RECENT_ACTIVITIES = "recentActivities";

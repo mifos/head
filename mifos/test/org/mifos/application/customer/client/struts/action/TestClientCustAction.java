@@ -48,6 +48,7 @@ import java.util.Locale;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
@@ -411,7 +412,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.next_success.toString());
 	}
-
+	
 	public void testPreviewFailureForTrainedDate() throws Exception {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "load");
@@ -431,7 +432,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "03/20/2006"); // an invalid date
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -1458,6 +1459,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.previewEditMfiInfo_success.toString());
 
 	}
+	
 
 	public void testPrevEditMfiInfo() throws Exception {
 
@@ -1526,9 +1528,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 	}
-
+	
 	public void testUpdateMfiInfoWithTrained() throws Exception {
-
 		createClientWithGroupAndSetInSession();
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "editMfiInfo");
@@ -1537,7 +1538,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
 		addRequestParameter("trained", "1");
-		addRequestParameter("trainedDate", "03/21/2006");
+		addRequestParameter("trainedDate", "03/2/2006"); // a valid date
 		addRequestParameter("externalId", "3");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
@@ -1556,6 +1557,31 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				.getCustomerId());
 	}
 
+	public void testUpdateMfiInfoWithTrainedDateValidation() throws Exception {
+
+		createClientWithGroupAndSetInSession();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "editMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("method", "previewEditMfiInfo");
+		addRequestParameter("trained", "1");
+		addRequestParameter("trainedDate", "03/20/2006"); // an invalid date (D/M/Y)
+		addRequestParameter("externalId", "3");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		setRequestPathInfo("/clientCustAction.do");
+		addRequestParameter("loanOfficerId", "3");
+		addRequestParameter("groupFlag", "1");
+		addRequestParameter("method", "updateMfiInfo");
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+		verifyActionErrors(new String[] {CustomerConstants.INVALID_TRAINED_DATE});
+		verifyNoActionMessages();
+		
+	}
+
 	public void testUpdateMfiInfoWithLoanOfficer() throws Exception {
 
 		createAndSetClientInSession();
@@ -1566,7 +1592,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
 		addRequestParameter("trained", "1");
-		addRequestParameter("trainedDate", "03/21/2006");
+		addRequestParameter("trainedDate", "03/2/2006");
 		addRequestParameter("externalId", "3");
 		addRequestParameter("loanOfficerId", "3");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

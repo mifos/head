@@ -66,6 +66,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -513,6 +514,12 @@ public abstract class CustomerActionForm extends BaseActionForm {
 				}
 				errors.add(CustomerConstants.TRAINED_DATE_MANDATORY,new ActionMessage(CustomerConstants.TRAINED_DATE_MANDATORY));
 			}
+			
+			else { // if marked trained and a date is supplied
+				if (!DateHelper.isValidDate(trainedDate)) {
+					errors.add(CustomerConstants.INVALID_TRAINED_DATE, new ActionMessage(CustomerConstants.INVALID_TRAINED_DATE));
+				}
+			}
 
 		}
 		//if training date is entered and trained is not selected, throw an error
@@ -523,13 +530,6 @@ public abstract class CustomerActionForm extends BaseActionForm {
 			errors.add(CustomerConstants.TRAINED_CHECKED,new ActionMessage(CustomerConstants.TRAINED_CHECKED));
 		}
 
-	}
-	
-	protected void validateTrainedAndTrainedDate() {
-		if(!isCustomerTrained() || ValidateMethods.isNullOrBlank(getTrainedDate())) {
-			setTrained(null);
-			setTrainedDate(null);
-		}
 	}
 
 	private boolean isSelectedFeePeriodic(FeeView selectedFee, List<FeeView> additionalFeeList){

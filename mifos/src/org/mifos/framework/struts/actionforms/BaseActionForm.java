@@ -84,10 +84,10 @@ public class BaseActionForm extends ValidatorActionForm {
 	}
 
 	protected Date getDateFromString(String strDate, Locale locale) {
-		Date date = null;
-		if (StringUtils.isNullAndEmptySafe(strDate))
-			date = new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
-		return date;
+		if (StringUtils.isNullAndEmptySafe(strDate)) {
+			return new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
+		}
+		return null;
 	}
 
 	protected UserContext getUserContext(HttpServletRequest request) {

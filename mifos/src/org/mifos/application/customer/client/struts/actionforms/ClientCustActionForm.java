@@ -260,8 +260,9 @@ public class ClientCustActionForm extends CustomerActionForm {
 			checkForMandatoryFields(EntityType.CLIENT.getValue(), errors,request);
 			validateTrained(request, errors);
 		}
-		if (method.equals(Methods.updateMfiInfo.toString())) 
-			validateTrainedAndTrainedDate();
+		if (method.equals(Methods.updateMfiInfo.toString())) {
+			validateTrained(request, errors);   
+		}
 		return errors;
 	}
 
