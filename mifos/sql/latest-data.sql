@@ -16,7 +16,7 @@
 -- merge add-version.sql
 -- merge all upgrade_to_*.sql files to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(107);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(108);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -192,7 +192,7 @@ VALUES(78,'SavingsAccountFlag ','SavingsAccountFlag');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(79,'Address3','Address3');
 INSERT INTO LOOKUP_ENTITY 
-VALUES(80,'City ','City');
+VALUES(80,'City','City');
 INSERT INTO LOOKUP_ENTITY 
 VALUES(81,'Interest','Interest');
 INSERT INTO LOOKUP_ENTITY 
