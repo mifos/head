@@ -37,6 +37,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
@@ -184,31 +185,22 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	public void testPouplateCustomers() {
-		try{
 		CollectionSheetBO collSheet = new CollectionSheetBO();
-		List<AccountActionDateEntity> accountActionDates = getCustomerAccntDetails();
+		List<AccountActionDateEntity> accountActionDates = 
+			getCustomerAccntDetails();
 		collSheet.pouplateCustAndCustAccntDetails(accountActionDates);
 		assertEquals(collSheet.getCollectionSheetCustomers().size(), 3);
 		for (AccountActionDateEntity entity : accountActionDates) {
 			TestObjectFactory.cleanUp(entity.getCustomer());
 		}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
 	}
 
-	public void testPopulateLoanAccounts() {
+	public void testPopulateLoanAccounts() throws Exception {
 		CollectionSheetBO collSheet = new CollectionSheetBO();
 		List<AccountActionDateEntity> accountActionDates = getLnAccntDetails();
 		collSheet.pouplateCustAndCustAccntDetails(accountActionDates);
 
-		try {
-			collSheet.populateLoanAccounts(accountActionDates);
-		} catch (SystemException e) {
-			e.printStackTrace();
-		} catch (ApplicationException ae) {
-			ae.printStackTrace();
-		}
+		collSheet.populateLoanAccounts(accountActionDates);
 
 		Set<CollSheetCustBO> collSheetCustBOs = collSheet
 				.getCollectionSheetCustomers();
@@ -219,43 +211,34 @@ public class TestCollSheetBO extends MifosTestCase {
 		doCleanUp(accountActionDates);
 	}
 
-	public void testUpdateCollectiveTotals() {
-
+	public void testUpdateCollectiveTotals() throws Exception {
 		CollectionSheetBO collSheet = new CollectionSheetBO();
 		List<AccountActionDateEntity> accountActionDates = getLnAccntDetails();
 		collSheet.pouplateCustAndCustAccntDetails(accountActionDates);
-		try {
-			collSheet.populateLoanAccounts(accountActionDates);
-		} catch (SystemException e) {
-			e.printStackTrace();
-		} catch (ApplicationException ae) {
-			ae.printStackTrace();
-		}
+		collSheet.populateLoanAccounts(accountActionDates);
 		doCleanUp(accountActionDates);
-
 	}
 
-	public void testCreateSucess() throws Exception {
+	public void testCreateSuccess() throws Exception {
 		collectionSheet = createCollectionSheet();
 		Session session = HibernateUtil.getSessionTL();
 		CollectionSheetBO collectionSheetBO = (CollectionSheetBO) session.get(
 				CollectionSheetBO.class, collectionSheet.getCollSheetID());
 		assertNotNull(collectionSheetBO);
-
 	}
 
 	public void testCreateFailure() throws Exception {
 		CollectionSheetBO collSheet = new CollectionSheetBO();
+
+		HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
 		try {
-			HibernateUtil.getSessionTL();
-			HibernateUtil.startTransaction();
 			collSheet.create();
-			HibernateUtil.getTransaction().commit();
-
-		} catch (Exception e) {
-		} finally {
-
+			fail();
 		}
+		catch (PersistenceException expected) {
+		}
+
 		assertNull(collSheet.getCollSheetID());
 	}
 
@@ -472,46 +455,40 @@ public class TestCollSheetBO extends MifosTestCase {
 	/**
 	 * It queries the database for valid customers which have the meeting date
 	 * tomorrow and populates its corresponding fields with the data.
-	 * 
-	 * @param currentDate
 	 */
 	private void generateCollectionSheetForDate(
-			CollectionSheetBO collectionSheet) throws SystemException,
-			ApplicationException {
-		try {
-			List<AccountActionDateEntity> accountActionDates = new CollectionSheetPersistence()
-					.getCustFromAccountActionsDate(collectionSheet
-							.getCollSheetDate());
+			CollectionSheetBO collectionSheet) 
+	throws SystemException, ApplicationException {
+		List<AccountActionDateEntity> accountActionDates = new CollectionSheetPersistence()
+				.getCustFromAccountActionsDate(collectionSheet
+						.getCollSheetDate());
+		MifosLogManager
+				.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
+				.debug(
+						"After retrieving account action date objects for next meeting date. ");
+		if (null != accountActionDates && accountActionDates.size() > 0) {
+			collectionSheet.populateAccountActionDates(accountActionDates);
+
+		}
+		List<LoanBO> loanBOs = new CollectionSheetPersistence()
+				.getLnAccntsWithDisbursalDate(collectionSheet
+						.getCollSheetDate());
+		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
+				.debug("After retrieving loan accounts due for disbursal");
+		if (null != loanBOs && loanBOs.size() > 0) {
+			collectionSheet.addLoanDetailsForDisbursal(loanBOs);
 			MifosLogManager
 					.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
 					.debug(
-							"After retrieving account action date objects for next meeting date. ");
-			if (null != accountActionDates && accountActionDates.size() > 0) {
-				collectionSheet.populateAccountActionDates(accountActionDates);
+							"After processing loan accounts which had disbursal due.");
+		}
 
-			}
-			List<LoanBO> loanBOs = new CollectionSheetPersistence()
-					.getLnAccntsWithDisbursalDate(collectionSheet
-							.getCollSheetDate());
-			MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-					.debug("After retrieving loan accounts due for disbursal");
-			if (null != loanBOs && loanBOs.size() > 0) {
-				collectionSheet.addLoanDetailsForDisbursal(loanBOs);
-				MifosLogManager
-						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-						.debug(
-								"After processing loan accounts which had disbursal due.");
-			}
-
-			if (null != collectionSheet.getCollectionSheetCustomers()
-					&& collectionSheet.getCollectionSheetCustomers().size() > 0) {
-				collectionSheet.updateCollectiveTotals();
-				MifosLogManager
-						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
-						.debug("After updating collective totals");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (null != collectionSheet.getCollectionSheetCustomers()
+				&& collectionSheet.getCollectionSheetCustomers().size() > 0) {
+			collectionSheet.updateCollectiveTotals();
+			MifosLogManager
+					.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
+					.debug("After updating collective totals");
 		}
 	}
 
