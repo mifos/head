@@ -11,6 +11,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
@@ -230,7 +231,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering, AccountState state) throws Exception {
 		UserContext userContext = new UserContext();
-		userContext.setId(new Short("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		userContext.setBranchGlobalNum("1001");
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
 				state, new Date(), savingsOffering, userContext);

@@ -49,6 +49,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -338,11 +339,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
 		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
-		UserContext uc = new UserContext();
-		uc.setId(Short.valueOf("1"));
+		UserContext user = new UserContext();
+		user.setId(PersonnelConstants.SYSTEM_USER);
 		account = TestObjectFactory.createSavingsAccount("000100000000020",
 				group, AccountState.SAVINGS_ACC_APPROVED, new java.util.Date(),
-				savingsOffering, uc);
+				savingsOffering, user);
 		HibernateUtil.closeSession();
 		List<SavingsBO> savingsList = customerPersistence
 				.retrieveSavingsAccountForCustomer(group.getCustomerId());

@@ -50,6 +50,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -98,7 +99,7 @@ public class TestAccountService extends MifosTestCase {
 		accountBO = getLoanAccount();
 		LoanBO loan = (LoanBO) accountBO;
 
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.addAll(loan.getAccountActionDates());
 		PaymentData accountPaymentDataView = TestObjectFactory
@@ -163,7 +164,7 @@ public class TestAccountService extends MifosTestCase {
 				group.getCustomerId());
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		List<ApplicableCharge> applicableChargeList = accountBusinessService
 				.getAppllicableFees(accountBO.getAccountId(), uc);
 		assertEquals(2, applicableChargeList.size());
@@ -180,7 +181,7 @@ public class TestAccountService extends MifosTestCase {
 				group.getCustomerId());
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		List<ApplicableCharge> applicableChargeList = accountBusinessService
 				.getAppllicableFees(accountBO.getAccountId(), uc);
 		assertEquals(4, applicableChargeList.size());
@@ -221,7 +222,7 @@ public class TestAccountService extends MifosTestCase {
 				group.getCustomerId());
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
 				accountBO.getAccountId());
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		List<ApplicableCharge> applicableChargeList = accountBusinessService
 				.getAppllicableFees(accountBO.getAccountId(), uc);
 		assertEquals(6, applicableChargeList.size());
@@ -253,7 +254,7 @@ public class TestAccountService extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getObject(CustomerBO.class,
 				center.getCustomerId());
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		List<ApplicableCharge> applicableChargeList = accountBusinessService
 				.getAppllicableFees(customerAccountBO.getAccountId(), uc);
 		assertEquals(4, applicableChargeList.size());
@@ -317,7 +318,7 @@ public class TestAccountService extends MifosTestCase {
 				Short.valueOf("1"), AccountTypes.SAVINGSACCOUNT, null);
 		List<AccountStateEntity> statusListForSavings = service.getStatusList(
 				new AccountStateEntity(AccountState.SAVINGS_ACC_PARTIALAPPLICATION),
-				AccountTypes.SAVINGSACCOUNT, TestObjectFactory.getUserContext()
+				AccountTypes.SAVINGSACCOUNT, TestUtils.makeUser()
 						.getLocaleId());
 		assertEquals(2, statusListForSavings.size());
 

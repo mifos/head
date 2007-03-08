@@ -9,6 +9,7 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.fees.util.helpers.FeeChangeType;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;
@@ -49,7 +50,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 					}
 					fee.updateFeeChangeType(FeeChangeType.NOT_UPDATED);
 					UserContext userContext = new UserContext();
-					userContext.setId(Short.valueOf("1"));
+					userContext.setId(PersonnelConstants.SYSTEM_USER);
 					fee.setUserContext(userContext);
 					fee.save();
 					HibernateUtil.commitTransaction();

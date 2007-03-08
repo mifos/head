@@ -8,9 +8,6 @@ import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MO
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.savings.business.SavingsActivityEntity;
@@ -26,6 +23,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -66,17 +64,7 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		userContext = new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		Set<Short> set = new HashSet<Short>();
-		set.add(Short.valueOf("1"));
-		userContext.setRoles(set);
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		userContext.setPereferedLocale(new Locale("en", "US"));
-		userContext.setBranchId(new Short("1"));
-		userContext.setBranchGlobalNum("0001");
+		userContext = TestUtils.makeUser();
 	}
 
 	@Override

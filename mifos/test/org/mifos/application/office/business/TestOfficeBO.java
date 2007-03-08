@@ -12,6 +12,7 @@ import org.mifos.application.office.util.helpers.OfficeStatus;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -25,7 +26,7 @@ public class TestOfficeBO extends MifosTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 	}
 
 	@Override

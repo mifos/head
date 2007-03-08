@@ -276,7 +276,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 				.getGlobalPersonnelNum());
 		actionPerform();
 
-		userContext.setId(Short.valueOf("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		setRequestPathInfo("/yourSettings.do");
 		addRequestParameter("method", Methods.manage.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -348,7 +348,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 				.getGlobalPersonnelNum());
 		actionPerform();
 
-		userContext.setId(Short.valueOf("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		setRequestPathInfo("/yourSettings.do");
 		addRequestParameter("method", Methods.manage.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request

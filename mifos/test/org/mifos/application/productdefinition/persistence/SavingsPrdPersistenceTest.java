@@ -10,6 +10,7 @@ import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
@@ -48,7 +49,7 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 		createInitialObjects();
 		savingsOffering = helper.createSavingsOffering("fsaf6", "ads6");
 		UserContext userContext = new UserContext();
-		userContext.setId(Short.valueOf("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);

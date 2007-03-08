@@ -14,6 +14,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -133,7 +134,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 	}	
 	public void testMainSearch()throws Exception{
 		createGroupWithCenter();
-		userContext.setId(Short.valueOf("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		addActionAndMethod(Methods.mainSearch.toString());
 		addRequestParameter("searchString", "gr");
 		addRequestParameter("officeId", "0");
@@ -146,7 +147,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 	}
 	public void testMainSearchFailure()throws Exception{
 		//createGroupWithCenter();
-		userContext.setId(Short.valueOf("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		addActionAndMethod(Methods.mainSearch.toString());
 		addRequestParameter("searchString", "");
 		addRequestParameter("officeId", "0");
@@ -157,7 +158,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 	}
 	public void testMainIdSearch()throws Exception{
 		createGroupWithCenter();
-		userContext.setId(Short.valueOf("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		addActionAndMethod(Methods.mainSearch.toString());
 		addRequestParameter("searchString", center.getGlobalCustNum());
 		addRequestParameter("officeId", "0");
@@ -168,7 +169,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		veryfyResults();
 	}
 	public void testMainAccountIdSearch()throws Exception{
-		userContext.setId(Short.valueOf("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		addActionAndMethod(Methods.mainSearch.toString());
 		account = getLoanAccount();
 		addRequestParameter("searchString", account.getGlobalAccountNum());

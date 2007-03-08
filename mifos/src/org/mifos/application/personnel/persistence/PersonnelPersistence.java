@@ -256,7 +256,7 @@ public class PersonnelPersistence extends Persistence {
 				PersonnelLevel.LOAN_OFFICER.getValue());
 		queryParameters.put(PersonnelConstants.LOANOFFICERACTIVE,
 				PersonnelStatus.ACTIVE.getValue());
-		return (List<PersonnelBO>) executeNamedQuery(
+		return executeNamedQuery(
 				NamedQueryConstants.GET_ACTIVE_LOAN_OFFICER_UNDER_USER,
 				queryParameters);
 	}

@@ -111,7 +111,7 @@ public class TestSavingsBO extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		userContext = TestUtils.makeUser(1);
+		userContext = TestUtils.makeUser();
 		createdBy = new PersonnelPersistence()
 				.getPersonnel(userContext.getId());
 	}

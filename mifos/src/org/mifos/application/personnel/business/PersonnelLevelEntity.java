@@ -3,6 +3,9 @@ package org.mifos.application.personnel.business;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 
+/**
+ * See also {@link PersonnelLevel}.
+ */
 public class PersonnelLevelEntity extends MasterDataEntity {
 
 	private Short interactionFlag;

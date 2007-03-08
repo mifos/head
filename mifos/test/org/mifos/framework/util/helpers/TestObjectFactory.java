@@ -420,7 +420,11 @@ public class TestObjectFactory {
 			else {
 				throw new RuntimeException(customerException);
 			}
-		} catch (ApplicationException e) {
+		}
+		catch (SystemException e) {
+			throw new RuntimeException(e);
+		}
+		catch (ApplicationException e) {
 			throw new RuntimeException(e);
 		}
 		addObject(client);
@@ -704,7 +708,8 @@ public class TestObjectFactory {
 			throw new RuntimeException(e);
 		} catch (SystemException e) {
 			throw new RuntimeException(e);
-		} catch (ApplicationException e) {
+		}
+		catch (ApplicationException e) {
 			throw new RuntimeException(e);
 		}
 
@@ -1345,11 +1350,11 @@ public class TestObjectFactory {
 	}
 
 	/**
-	 * Also see {@link TestUtils#makeUser(int)} which should be faster (this
+	 * Also see {@link TestUtils#makeUser()} which should be faster (this
 	 * method involves several database accesses).
 	 */
-	public static UserContext getUserContext(Session session) throws SystemException,
-			 ApplicationException {
+	private static UserContext getUserContext(Session session) 
+	throws SystemException, ApplicationException {
 		byte[] password = EncryptionService.getInstance()
 				.createEncryptedPassword("mifos");
 		PersonnelBO personnel = getPersonnel(session, Short.valueOf("1"));
@@ -1357,13 +1362,13 @@ public class TestObjectFactory {
 		updateObject(session, personnel);
 		return personnel.login(session, "mifos");
 	}
-	
+
 	/**
-	 * Also see {@link TestUtils#makeUser(int)} which should be faster (this
+	 * Also see {@link TestUtils#makeUser()} which should be faster (this
 	 * method involves several database accesses).
 	 */
-	public static UserContext getUserContext() throws SystemException,
-			ApplicationException {
+	public static UserContext getUserContext() 
+	throws SystemException, ApplicationException {
 		return getUserContext(HibernateUtil.getSessionTL());
 	}
 

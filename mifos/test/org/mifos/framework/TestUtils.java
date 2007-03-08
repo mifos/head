@@ -12,10 +12,18 @@ import junit.framework.Assert;
 
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestUtils {
+	
+	public static final int ADMIN_ROLE = 1;
+
+	public static UserContext makeUser() {
+		return makeUser(ADMIN_ROLE);
+	}
 
 	/**
 	 * Also see {@link TestObjectFactory#getUserContext()} which should be
@@ -23,12 +31,12 @@ public class TestUtils {
 	 */
 	public static UserContext makeUser(int role) {
 		UserContext user = new UserContext();
-		user.setId(new Short("1"));
+		user.setId(PersonnelConstants.SYSTEM_USER);
 		user.setLocaleId(new Short("1"));
 		Set<Short> set = new HashSet<Short>();
 		set.add((short) role);
 		user.setRoles(set);
-		user.setLevelId(Short.valueOf("2"));
+		user.setLevel(PersonnelLevel.NON_LOAN_OFFICER);
 		user.setName("mifos");
 		user.setPereferedLocale(new Locale("en", "US"));
 		user.setBranchId(new Short("1"));

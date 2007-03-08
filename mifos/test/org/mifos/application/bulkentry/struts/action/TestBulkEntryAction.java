@@ -80,6 +80,7 @@ import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -167,7 +168,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				"org/mifos/application/bulkentry/struts-config.xml")
 				.getPath());
 
-		userContext = TestUtils.makeUser(1);
+		userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
@@ -389,7 +390,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 	public void testLoadForNonLoanOfficerInBranch() throws PageExpiredException {
 		userContext.setBranchId(Short.valueOf("3"));
 		userContext.setId(Short.valueOf("2"));
-		userContext.setLevelId(Short.valueOf("2"));
+		userContext.setLevel(PersonnelLevel.NON_LOAN_OFFICER);
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		setRequestPathInfo("/bulkentryaction.do");
 		addRequestParameter("method", "load");

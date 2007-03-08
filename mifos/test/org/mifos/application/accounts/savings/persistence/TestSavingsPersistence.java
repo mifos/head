@@ -30,10 +30,12 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -73,17 +75,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		super.setUp();
 		savingsPersistence = new SavingsPersistence();
 		accountPersistence = new AccountPersistence();
-		userContext = new UserContext();
-		userContext.setId(new Short("1"));
-		userContext.setLocaleId(new Short("1"));
-		Set<Short> set = new HashSet<Short>();
-		set.add(Short.valueOf("1"));
-		userContext.setRoles(set);
-		userContext.setLevelId(Short.valueOf("2"));
-		userContext.setName("mifos");
-		userContext.setPereferedLocale(new Locale("en", "US"));
-		userContext.setBranchId(new Short("1"));
-		userContext.setBranchGlobalNum("0001");
+		userContext = TestUtils.makeUser();
 
 	}
 
@@ -447,7 +439,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 			SavingsOfferingBO savingsOffering) throws NumberFormatException,
 			Exception {
 		UserContext userContext = new UserContext();
-		userContext.setId(new Short("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		userContext.setBranchGlobalNum("1001");
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
 				AccountState.SAVINGS_ACC_PENDINGAPPROVAL, 

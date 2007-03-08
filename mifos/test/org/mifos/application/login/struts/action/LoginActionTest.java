@@ -8,6 +8,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -116,7 +117,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
-		userContext.setId(Short.valueOf("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		setRequestPathInfo("/loginAction.do");
 		addRequestParameter("method", Methods.updatePassword.toString());
 		addRequestParameter("userName", personnel.getUserName());
@@ -243,7 +244,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 		assertNull(SessionUtils.getAttribute(Constants.USERCONTEXT,request.getSession()));
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
-		userContext.setId(Short.valueOf("1"));
+		userContext.setId(PersonnelConstants.SYSTEM_USER);
 		setRequestPathInfo("/loginAction.do");
 		addRequestParameter("method", Methods.updatePassword.toString());
 		addRequestParameter("userName", personnel.getUserName());

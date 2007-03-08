@@ -43,6 +43,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+
 /**
  * Information about a user, including ID's of their roles.
  */
@@ -145,6 +147,10 @@ public class UserContext implements Serializable {
 
 	public void setLevelId(Short levelId) {
 		this.levelId = levelId;
+	}
+	
+	public void setLevel(PersonnelLevel level) {
+		setLevelId(level.getValue());
 	}
 
 	public Short getBranchId() {

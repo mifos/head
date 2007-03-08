@@ -30,7 +30,7 @@ public class OfficeListTagTest extends MifosTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		result = new XmlBuilder();
-		userContext = TestUtils.makeUser(1);
+		userContext = TestUtils.makeUser();
 	}
 
 	public void testNoBranches() throws Exception {

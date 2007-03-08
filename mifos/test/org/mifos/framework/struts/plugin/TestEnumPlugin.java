@@ -26,7 +26,7 @@ public class TestEnumPlugin extends MifosMockStrutsTestCase {
 		request.getSession(true);
 		createFlowAndAddToRequest(SavingsAction.class);
 		request.getSession().setAttribute(Constants.USERCONTEXT, 
-			TestUtils.makeUser(1));
+			TestUtils.makeUser());
 		
 		offering = TestObjectFactory.createSavingsOffering(
 			"Offering1", "s1", 

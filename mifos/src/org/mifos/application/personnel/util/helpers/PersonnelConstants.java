@@ -193,4 +193,11 @@ public interface PersonnelConstants {
 	public static final String ERROR_STATUS="errors.status";
 	public static final String ERROR_NO_LEVEL="error.nolevel";
 
+	/**
+	 * This is a user which we set up as part of master data.
+	 * It is used a lot for tests, but also certain batch jobs
+	 * specify this user.
+	 */
+	public static final Short SYSTEM_USER = 1;
+
 }
