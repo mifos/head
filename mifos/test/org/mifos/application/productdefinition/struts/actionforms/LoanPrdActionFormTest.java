@@ -1,9 +1,9 @@
 package org.mifos.application.productdefinition.struts.actionforms;
 
+import junit.framework.TestCase;
+
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.components.logger.TestLogger;
-
-import junit.framework.TestCase;
 
 public class LoanPrdActionFormTest extends TestCase {
 	

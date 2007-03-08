@@ -1,8 +1,8 @@
 package org.mifos.application.bulkentry.business;
 
-import org.mifos.framework.TestUtils;
-
 import junit.framework.TestCase;
+
+import org.mifos.framework.TestUtils;
 
 public class BulkEntryAccountFeeActionViewTest extends TestCase {
 

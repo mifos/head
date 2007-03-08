@@ -4,9 +4,9 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.framework.exceptions.FrameworkRuntimeException;
-
 import junit.framework.TestCase;
+
+import org.mifos.framework.exceptions.FrameworkRuntimeException;
 
 public class DateHelperTest extends TestCase {
 	

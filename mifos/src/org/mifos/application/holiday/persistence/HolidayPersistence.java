@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -30,8 +29,8 @@ public class HolidayPersistence extends MasterPersistence {
 		return (HolidayBO) getPersistentObject(HolidayBO.class, holidayPK);
 	}*/
 
-	public List<HolidayBO> getHolidays(int year, int localId) throws PersistenceException {
-		
+	public List<HolidayBO> getHolidays(int year, int localId) 
+	throws PersistenceException {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("LOCALE_ID", localId);
 		parameters.put("START_OF_YEAR", year + "-01-01");
@@ -48,8 +47,8 @@ public class HolidayPersistence extends MasterPersistence {
 		return executeNamedQuery(NamedQueryConstants.GET_REPAYMENT_RULE_TYPES, parameters);
 	}
 	
-	// getAllLoanScheduales
-	public List<LoanScheduleEntity> getAllLoanScheduales(HolidayBO holiday) throws PersistenceException{
+	public List<LoanScheduleEntity> getAllLoanSchedules(HolidayBO holiday) 
+	throws PersistenceException{
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("FROM_DATE", holiday.getHolidayFromDate());
 		parameters.put("THRU_DATE", holiday.getHolidayThruDate());
@@ -58,8 +57,7 @@ public class HolidayPersistence extends MasterPersistence {
 									parameters);
 	}
 	
-    // getAllSavingScheduales
-	public List<SavingsScheduleEntity> getAllSavingScheduales(HolidayBO holiday) throws PersistenceException{
+	public List<SavingsScheduleEntity> getAllSavingSchedules(HolidayBO holiday) throws PersistenceException{
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("FROM_DATE", holiday.getHolidayFromDate());
 		parameters.put("THRU_DATE", holiday.getHolidayThruDate());

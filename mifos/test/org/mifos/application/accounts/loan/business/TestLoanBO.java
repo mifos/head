@@ -5215,7 +5215,7 @@ public class TestLoanBO extends MifosTestCase {
 
 	private AccountBO getLoanAccountWithMiscFeeAndPenalty(Short accountSate,
 			Date startDate, int disbursalType, Money miscFee, Money miscPenalty) {
-		LoanBO accountBO = (LoanBO) getLoanAccount(accountSate, startDate, disbursalType);
+		LoanBO accountBO = getLoanAccount(accountSate, startDate, disbursalType);
 		for (AccountActionDateEntity accountAction : accountBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;

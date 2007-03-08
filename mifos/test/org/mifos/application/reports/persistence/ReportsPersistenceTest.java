@@ -10,7 +10,6 @@ import org.hibernate.classic.Session;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsParams;
-import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 

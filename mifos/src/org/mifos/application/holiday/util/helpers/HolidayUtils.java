@@ -2,18 +2,14 @@ package org.mifos.application.holiday.util.helpers;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.mifos.application.accounts.business.AccountActionDateEntity;
-import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.service.AccountBusinessService;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.application.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayBusinessService;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -39,15 +35,12 @@ public class HolidayUtils {
 			weekDaysList = meetingService.getWorkingDays((short)1);
 		}
 		catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			throw new RuntimeException(e);
-		}		
+		}
 		
 		int dayOfWeek = day.get(Calendar.DAY_OF_WEEK);
 		
 		for (WeekDaysEntity weekDaysEntity : weekDaysList) {		
-			
 			if ( WeekDay.getWeekDay(Short.valueOf(dayOfWeek+"")).name().equalsIgnoreCase(weekDaysEntity.getName()) &&
 			     weekDaysEntity.isWorkingDay()) {			
 				return true;
@@ -58,15 +51,15 @@ public class HolidayUtils {
 	}
 
 	public static HolidayBO inHoliday(Calendar pday) throws RuntimeException{	
-		
 		Calendar day = Calendar.getInstance();
 		day.setTimeInMillis(0);
 		day.set(pday.get(Calendar.YEAR), pday.get(Calendar.MONTH), pday.get(Calendar.DAY_OF_MONTH));
 		
-		HolidayBusinessService holidayService =  new HolidayBusinessService();
-		List<HolidayBO> holidayList = null;
+		HolidayBusinessService holidayService = new HolidayBusinessService();
 		try {			
-			holidayList = holidayService.getHolidays(Calendar.getInstance().get(Calendar.YEAR), 1);			
+			List<HolidayBO> holidayList = 
+				holidayService.getHolidays(
+					Calendar.getInstance().get(Calendar.YEAR), 1);			
 			holidayList.addAll(holidayService.getHolidays(Calendar.getInstance().get(Calendar.YEAR)+1, 1));
 			for (HolidayBO holidayEntity : holidayList) {				
 				if((DateUtils.getDateWithoutTimeStamp(day.getTimeInMillis())
@@ -79,11 +72,8 @@ public class HolidayUtils {
 					return holidayEntity;
 				}
 			}
-			
 		}
 		catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 		return null;
@@ -125,13 +115,9 @@ public class HolidayUtils {
 			}
 		}
 		catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 		catch (MeetingException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
@@ -156,13 +142,9 @@ public class HolidayUtils {
 			}
 		}
 		catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 		catch (MeetingException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

@@ -39,8 +39,6 @@
 package org.mifos.application.customer.group.struts.actionforms;
 
 
-import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;

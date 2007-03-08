@@ -7,6 +7,7 @@ package org.mifos.framework.components.configuration.business;
  * {@link org.mifos.framework.components.configuration.persistence.ConfigurationPersistence}
  */
 public class ConfigurationKeyValueInteger {
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private Integer configurationId;
 	private String key;
 	private Integer value;
@@ -26,6 +27,7 @@ public class ConfigurationKeyValueInteger {
 		return key;
 	}
 	
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private void setKey(String key) {
 		this.key = key;
 	}
