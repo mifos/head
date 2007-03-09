@@ -1,10 +1,7 @@
 package org.mifos.application.accounts.financial.business.service;
 
 import java.sql.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountActionEntity;

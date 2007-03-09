@@ -1,9 +1,6 @@
 package org.mifos.application.admin.struts.action;
 
 import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;

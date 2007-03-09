@@ -4,7 +4,6 @@ import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_ME
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
@@ -21,7 +20,6 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.HolidayPK;
-import org.mifos.application.holiday.exceptions.HolidayException;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -33,6 +31,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -417,8 +416,9 @@ public class TestHolidayUtils extends MifosTestCase {
 		toggleFirstDayOnOff(Short.valueOf("0"));
     }
     
-	private HolidayBO[] createHolidayCollection(String holidayDateList, String ruleList) throws HolidayException, ParseException {
-		
+	private HolidayBO[] createHolidayCollection(
+		String holidayDateList, String ruleList) 
+	throws Exception {
 		Date holidayStartDate, holidayEndDate;
 		String[] holidayRanges = holidayDateList.split(",");
 		HolidayBO[] holidays = new HolidayBO[holidayRanges.length];
@@ -445,7 +445,8 @@ public class TestHolidayUtils extends MifosTestCase {
 	}
 
 	private HolidayBO createHoliday(Date holidayStartDate, Date holidayEndDate, 
-									Short repaymentRule, String holidayName) throws HolidayException {
+									Short repaymentRule, String holidayName) 
+	throws ApplicationException {
 		// Create Holiday
 		HolidayPK holidayPK = new HolidayPK((short)1, holidayStartDate);
 		HolidayBO holidayEntity = new HolidayBO(holidayPK, holidayEndDate, holidayName,

@@ -2,9 +2,6 @@ package org.mifos.application.accounts.struts.action;
 
 import java.net.URISyntaxException;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
