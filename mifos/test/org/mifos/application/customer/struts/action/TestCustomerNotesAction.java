@@ -116,9 +116,9 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		getRequest().getSession().setAttribute("security_param", "Center");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
+				getErrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
 		verifyInputForward();
 	}
 
@@ -142,9 +142,9 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		getRequest().getSession().setAttribute("security_param", "Center");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MAXIMUM_LENGTH));
+				getErrorSize(CustomerConstants.MAXIMUM_LENGTH));
 		verifyInputForward();
 	}
 
@@ -240,9 +240,9 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		getRequest().getSession().setAttribute("security_param", "Client");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
+				getErrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
 		verifyInputForward();
 	}
 
@@ -388,9 +388,9 @@ public class TestCustomerNotesAction extends MifosMockStrutsTestCase {
 		getRequest().getSession().setAttribute("security_param", "Group");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
+				getErrorSize(CustomerConstants.ERROR_MANDATORY_TEXT_AREA));
 		verifyInputForward();
 	}
 

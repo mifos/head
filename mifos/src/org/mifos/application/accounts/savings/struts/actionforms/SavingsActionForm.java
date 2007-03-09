@@ -81,16 +81,15 @@ public class SavingsActionForm extends AccountAppActionForm {
 	public ActionErrors validate(ActionMapping mapping,
 			HttpServletRequest request) {
 		String method = request.getParameter("method");
-		ActionErrors errors = null;
+		ActionErrors errors = new ActionErrors();
 		request.setAttribute(Constants.CURRENTFLOWKEY, request
 				.getParameter(Constants.CURRENTFLOWKEY));
 
-		if (method != null && method.equals("getPrdOfferings")
+		if (method.equals("getPrdOfferings")
 				|| method.equals("create") || method.equals("edit")
 				|| method.equals("update") || method.equals("get")
 				|| method.equals("validate")) {
 		} else {
-			errors = new ActionErrors();
 			errors.add(super.validate(mapping, request));
 			if (method.equals("preview") || method.equals("editPreview")) {
 				try {
@@ -114,7 +113,7 @@ public class SavingsActionForm extends AccountAppActionForm {
 			}
 		}
 
-		if (null != errors && !errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
 		}

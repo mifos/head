@@ -124,10 +124,10 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("officeId", "3");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Center Name", 1, getErrrorSize(CustomerConstants.NAME));
+		assertEquals("Center Name", 1, getErrorSize(CustomerConstants.NAME));
 		assertEquals("Loan Officer", 1,
-				getErrrorSize(CustomerConstants.LOAN_OFFICER));
-		assertEquals("Meeting", 1, getErrrorSize(CustomerConstants.MEETING));
+				getErrorSize(CustomerConstants.LOAN_OFFICER));
+		assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
 		verifyInputForward();
 	}
 
@@ -138,10 +138,10 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("displayName", "center");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Center Name", 0, getErrrorSize(CustomerConstants.NAME));
+		assertEquals("Center Name", 0, getErrorSize(CustomerConstants.NAME));
 		assertEquals("Loan Officer", 1,
-				getErrrorSize(CustomerConstants.LOAN_OFFICER));
-		assertEquals("Meeting", 1, getErrrorSize(CustomerConstants.MEETING));
+				getErrorSize(CustomerConstants.LOAN_OFFICER));
+		assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
 		verifyInputForward();
 	}
 
@@ -153,10 +153,10 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("loanOfficerId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Center Name", 0, getErrrorSize(CustomerConstants.NAME));
+		assertEquals("Center Name", 0, getErrorSize(CustomerConstants.NAME));
 		assertEquals("Loan Officer", 0,
-				getErrrorSize(CustomerConstants.LOAN_OFFICER));
-		assertEquals("Meeting", 1, getErrrorSize(CustomerConstants.MEETING));
+				getErrorSize(CustomerConstants.LOAN_OFFICER));
+		assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
 		verifyInputForward();
 	}
 
@@ -174,7 +174,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals("Meeting", 1, getErrrorSize(CustomerConstants.MEETING));
+		assertEquals("Meeting", 1, getErrorSize(CustomerConstants.MEETING));
 		verifyInputForward();
 	}
 
@@ -212,10 +212,10 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 		if (isCustomFieldMandatory)
 			assertEquals("CustomField", 1,
-					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+					getErrorSize(CustomerConstants.CUSTOM_FIELD));
 		else
 			assertEquals("CustomField", 0,
-					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+					getErrorSize(CustomerConstants.CUSTOM_FIELD));
 	}
 
 	public void testFailurePreview_WithDuplicateFee() throws Exception {
@@ -237,7 +237,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
+		assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
 		removeFees(feesToRemove);
 	}
 
@@ -258,7 +258,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
+		assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
 		removeFees(feesToRemove);
 	}
 
@@ -279,7 +279,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("selectedFee[0].amount", "200");
 		actionPerform();
 		assertEquals("Fee", 1,
-				getErrrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+				getErrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
 		removeFees(feesToRemove);
 	}
 
@@ -315,7 +315,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("selectedFee[0].amount", fee.getAmount());
 		actionPerform();
 
-		assertEquals(0, getErrrorSize());
+		assertEquals(0, getErrorSize());
 
 		verifyForward(ActionForwards.preview_success.toString());
 		verifyNoActionErrors();
@@ -418,7 +418,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals("Loan Officer", 1,
-				getErrrorSize(CustomerConstants.LOAN_OFFICER));
+				getErrorSize(CustomerConstants.LOAN_OFFICER));
 		verifyInputForward();
 	}
 
@@ -455,10 +455,10 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		if (isCustomFieldMandatory)
 			assertEquals("CustomField", 1,
-					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+					getErrorSize(CustomerConstants.CUSTOM_FIELD));
 		else
 			assertEquals("CustomField", 0,
-					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+					getErrorSize(CustomerConstants.CUSTOM_FIELD));
 		verifyInputForward();
 	}
 
@@ -486,7 +486,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
-		assertEquals(0, getErrrorSize());
+		assertEquals(0, getErrorSize());
 
 		verifyForward(ActionForwards.editpreview_success.toString());
 		verifyNoActionErrors();
@@ -538,7 +538,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		}
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(0, getErrrorSize());
+		assertEquals(0, getErrorSize());
 
 		setRequestPathInfo("/centerCustAction.do");
 		addRequestParameter("method", "update");

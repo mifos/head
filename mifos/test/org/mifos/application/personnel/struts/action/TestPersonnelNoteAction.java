@@ -87,9 +87,9 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(PersonnelConstants.ERROR_MANDATORY_TEXT_AREA));
+				getErrorSize(PersonnelConstants.ERROR_MANDATORY_TEXT_AREA));
 		verifyInputForward();
 	}
 
@@ -113,9 +113,9 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(PersonnelConstants.MAXIMUM_LENGTH));
+				getErrorSize(PersonnelConstants.MAXIMUM_LENGTH));
 		verifyInputForward();
 	}
 

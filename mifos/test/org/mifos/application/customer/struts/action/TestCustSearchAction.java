@@ -153,7 +153,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		addRequestParameter("officeId", "0");
 		actionPerform();
 		assertEquals("SearchString", 1,
-				getErrrorSize(CustomerSearchConstants.NAMEMANDATORYEXCEPTION));
+				getErrorSize(CustomerSearchConstants.NAMEMANDATORYEXCEPTION));
 		verifyForward(ActionForwards.mainSearch_success.toString());
 	}
 	public void testMainIdSearch()throws Exception{

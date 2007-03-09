@@ -151,13 +151,13 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	public void testPreviewFailure() throws Exception {
 		addActionAndMethod(Methods.preview.toString());
 		actionPerform();
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_FIRSTNAME));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_LASTNAME));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_GENDER));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_LEVEL));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_USER_NAME));
-		assertEquals(1, getErrrorSize(PersonnelConstants.PASSWORD));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_DOB));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_FIRSTNAME));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LASTNAME));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_GENDER));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LEVEL));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_USER_NAME));
+		assertEquals(1, getErrorSize(PersonnelConstants.PASSWORD));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_DOB));
 		verifyInputForward();
 	}
 
@@ -166,7 +166,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		setRequestData();
 		addRequestParameter("userPassword", "XXX");
 		actionPerform();
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_PASSWORD_LENGTH));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_PASSWORD_LENGTH));
 		verifyInputForward();
 	}
 
@@ -177,7 +177,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("userPassword", "XXXXXX");
 		addRequestParameter("passwordRepeat", "XXXXXZ");
 		actionPerform();
-		assertEquals(1, getErrrorSize(PersonnelConstants.PASSWORD));
+		assertEquals(1, getErrorSize(PersonnelConstants.PASSWORD));
 		verifyInputForward();
 	}
 
@@ -280,7 +280,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addActionAndMethod(Methods.search.toString());
 		addRequestParameter("input", "");
 		actionPerform();
-		assertEquals(1, getErrrorSize(PersonnelConstants.NO_SEARCH_STRING));
+		assertEquals(1, getErrorSize(PersonnelConstants.NO_SEARCH_STRING));
 		verifyInputForward();
 	}
 
@@ -368,15 +368,15 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	public void testManagePreviewFailure() throws Exception {
 		addActionAndMethod(Methods.previewManage.toString());
 		actionPerform();
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_FIRSTNAME));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_LASTNAME));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_GENDER));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_LEVEL));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_USER_NAME));
-		assertEquals(1, getErrrorSize(PersonnelConstants.PASSWORD));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_DOB));
-		assertEquals(1, getErrrorSize(PersonnelConstants.OFFICE));
-		assertEquals(1, getErrrorSize(PersonnelConstants.STATUS));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_FIRSTNAME));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LASTNAME));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_GENDER));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_LEVEL));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_USER_NAME));
+		assertEquals(1, getErrorSize(PersonnelConstants.PASSWORD));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_DOB));
+		assertEquals(1, getErrorSize(PersonnelConstants.OFFICE));
+		assertEquals(1, getErrorSize(PersonnelConstants.STATUS));
 		verifyInputForward();
 	}
 
@@ -385,7 +385,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		setRequestData();
 		addRequestParameter("userPassword", "XXX");
 		actionPerform();
-		assertEquals(2, getErrrorSize("password"));
+		assertEquals(2, getErrorSize("password"));
 		verifyInputForward();
 	}
 
@@ -394,7 +394,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		setRequestData();
 		addRequestParameter("loginName", "XYZ PQR");
 		actionPerform();
-		assertEquals(1, getErrrorSize(PersonnelConstants.INVALID_USER_NAME));
+		assertEquals(1, getErrorSize(PersonnelConstants.INVALID_USER_NAME));
 		verifyInputForward();
 	}
 
@@ -406,7 +406,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("userPassword", "XXXXXX");
 		addRequestParameter("passwordRepeat", "XXXXXZ");
 		actionPerform();
-		assertEquals(1, getErrrorSize("password"));
+		assertEquals(1, getErrorSize("password"));
 		verifyInputForward();
 	}
 

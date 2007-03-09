@@ -202,8 +202,7 @@ public class DateHelper {
 		catch (java.text.ParseException e) {
 			return false;
 		}
-	}
-
+	} 
 
 	public static java.sql.Date getLocaleDate(Locale locale,String value) {
 		if (locale!=null && value!=null && !value.equals("")) {

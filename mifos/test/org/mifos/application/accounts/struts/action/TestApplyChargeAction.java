@@ -136,7 +136,7 @@ public class TestApplyChargeAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 		assertEquals("Rate", 1,
-				getErrrorSize(AccountConstants.RATE));
+				getErrorSize(AccountConstants.RATE));
 		
 	}
 	

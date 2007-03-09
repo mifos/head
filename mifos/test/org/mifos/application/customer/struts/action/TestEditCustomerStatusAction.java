@@ -142,11 +142,11 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.previewStatus.toString());
 		actionPerform();
-		assertEquals(2, getErrrorSize());
+		assertEquals(2, getErrorSize());
 		assertEquals("Status id", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_SELECT));
+				getErrorSize(CustomerConstants.MANDATORY_SELECT));
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+				getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
 		verifyInputForward();
 	}
 
@@ -155,11 +155,11 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.previewStatus.toString());
 		addRequestParameter("newStatusId", "11");
 		actionPerform();
-		assertEquals(2, getErrrorSize());
+		assertEquals(2, getErrorSize());
 		assertEquals("flag id", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_SELECT));
+				getErrorSize(CustomerConstants.MANDATORY_SELECT));
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+				getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
 		verifyInputForward();
 	}
 
@@ -169,9 +169,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("newStatusId", "11");
 		addRequestParameter("flagId", "1");
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+				getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
 		verifyInputForward();
 	}
 
@@ -195,9 +195,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 						+ "Testing for comment length exceeding by 500 characters"
 						+ "Testing for comment length exceeding by 500 characters");
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MAXIMUM_LENGTH));
+				getErrorSize(CustomerConstants.MAXIMUM_LENGTH));
 		verifyInputForward();
 	}
 
@@ -297,11 +297,11 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/editCustomerStatusAction.do");
 		addRequestParameter("method", Methods.previewStatus.toString());
 		actionPerform();
-		assertEquals(2, getErrrorSize());
+		assertEquals(2, getErrorSize());
 		assertEquals("Status id", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_SELECT));
+				getErrorSize(CustomerConstants.MANDATORY_SELECT));
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+				getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
 		verifyInputForward();
 	}
 
@@ -310,11 +310,11 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", Methods.previewStatus.toString());
 		addRequestParameter("newStatusId", "6");
 		actionPerform();
-		assertEquals(2, getErrrorSize());
+		assertEquals(2, getErrorSize());
 		assertEquals("flag id", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_SELECT));
+				getErrorSize(CustomerConstants.MANDATORY_SELECT));
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+				getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
 		verifyInputForward();
 	}
 
@@ -325,9 +325,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("newStatusId", "6");
 		addRequestParameter("flagId", "10");
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+				getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
 		verifyInputForward();
 	}
 
@@ -801,11 +801,11 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("flagId", "20");
 		actionPerform();
-		assertEquals(2, getErrrorSize());
+		assertEquals(2, getErrorSize());
 		assertEquals("Status id", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_SELECT));
+				getErrorSize(CustomerConstants.MANDATORY_SELECT));
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+				getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
 		verifyInputForward();
 	}
 
@@ -820,9 +820,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("newStatusId", "12");
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("flag id", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_SELECT));
+				getErrorSize(CustomerConstants.MANDATORY_SELECT));
 		verifyInputForward();
 	}
 
@@ -837,9 +837,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("flagId", "20");
 		addRequestParameter("notes", "Test");
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Status", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_SELECT));
+				getErrorSize(CustomerConstants.MANDATORY_SELECT));
 		verifyInputForward();
 	}
 
@@ -854,9 +854,9 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("newStatusId", "12");
 		addRequestParameter("flagId", "20");
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Notes", 1,
-				getErrrorSize(CustomerConstants.MANDATORY_TEXTBOX));
+				getErrorSize(CustomerConstants.MANDATORY_TEXTBOX));
 		verifyInputForward();
 	}
 

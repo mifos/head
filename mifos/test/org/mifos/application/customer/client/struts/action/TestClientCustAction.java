@@ -310,19 +310,19 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("input", "personalInfo");
 		actionPerform();
 		assertEquals("Client salutation", 1,
-				getErrrorSize(CustomerConstants.SALUTATION));
+				getErrorSize(CustomerConstants.SALUTATION));
 		assertEquals("Client first Name", 1,
-				getErrrorSize(CustomerConstants.FIRST_NAME));
+				getErrorSize(CustomerConstants.FIRST_NAME));
 		assertEquals("Client last Name", 1,
-				getErrrorSize(CustomerConstants.LAST_NAME));
+				getErrorSize(CustomerConstants.LAST_NAME));
 		assertEquals("spouse first Name", 1,
-				getErrrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
+				getErrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
 		assertEquals("spouse last Name", 1,
-				getErrrorSize(CustomerConstants.SPOUSE_LAST_NAME));
+				getErrorSize(CustomerConstants.SPOUSE_LAST_NAME));
 		assertEquals("spouse type", 1,
-				getErrrorSize(CustomerConstants.SPOUSE_TYPE));
-		assertEquals("Gender", 1, getErrrorSize(CustomerConstants.GENDER));
-		assertEquals("DOB", 1, getErrrorSize(CustomerConstants.DOB));
+				getErrorSize(CustomerConstants.SPOUSE_TYPE));
+		assertEquals("Gender", 1, getErrorSize(CustomerConstants.GENDER));
+		assertEquals("DOB", 1, getErrorSize(CustomerConstants.DOB));
 		verifyInputForward();
 	}
 
@@ -368,10 +368,10 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 
 		if (isCustomFieldMandatory)
 			assertEquals("CustomField", 1,
-					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+					getErrorSize(CustomerConstants.CUSTOM_FIELD));
 		else
 			assertEquals("CustomField", 0,
-					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+					getErrorSize(CustomerConstants.CUSTOM_FIELD));
 
 	}
 
@@ -449,9 +449,9 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("trained", "1");
 		addRequestParameter("input", "mfiInfo");
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Client Trained date not present", 1,
-				getErrrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
+				getErrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
 
 	}
 
@@ -492,9 +492,9 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("input", "mfiInfo");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Client formed by not present", 1,
-				getErrrorSize(CustomerConstants.FORMED_BY_LOANOFFICER));
+				getErrorSize(CustomerConstants.FORMED_BY_LOANOFFICER));
 
 	}
 
@@ -532,7 +532,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("selectedFee[1].amount", "150");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
+		assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
 		removeFees(feesToRemove);
 	}
 
@@ -583,7 +583,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals("Fee", 1,
-				getErrrorSize(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
+				getErrorSize(CustomerConstants.MEETING_REQUIRED_EXCEPTION));
 		removeFees(feesToRemove);
 	}
 
@@ -619,7 +619,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("selectedFee[0].amount", "");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
+		assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
 		removeFees(feesToRemove);
 	}
 
@@ -674,7 +674,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 						new Date(), MeetingType.CUSTOMER_MEETING), request);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Duplicate Offerings", 1, getErrrorSize(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));		
+		assertEquals("Duplicate Offerings", 1, getErrorSize(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));		
 	}
 	
 	public void testFailurePreview_FeeFrequencyMismatch() throws Exception{
@@ -731,7 +731,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 						new Date(), MeetingType.CUSTOMER_MEETING), request);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
+		assertEquals("Fee", 1, getErrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
 		removeFees(feesToRemove);
 	}
 	
@@ -1163,19 +1163,19 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals("Client salutation", 1,
-				getErrrorSize(CustomerConstants.SALUTATION));
+				getErrorSize(CustomerConstants.SALUTATION));
 		assertEquals("Client first Name", 1,
-				getErrrorSize(CustomerConstants.FIRST_NAME));
+				getErrorSize(CustomerConstants.FIRST_NAME));
 		assertEquals("Client last Name", 1,
-				getErrrorSize(CustomerConstants.LAST_NAME));
+				getErrorSize(CustomerConstants.LAST_NAME));
 		assertEquals("spouse first Name", 1,
-				getErrrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
+				getErrorSize(CustomerConstants.SPOUSE_FIRST_NAME));
 		assertEquals("spouse last Name", 1,
-				getErrrorSize(CustomerConstants.SPOUSE_LAST_NAME));
+				getErrorSize(CustomerConstants.SPOUSE_LAST_NAME));
 		assertEquals("spouse type", 1,
-				getErrrorSize(CustomerConstants.SPOUSE_TYPE));
-		assertEquals("Gender", 1, getErrrorSize(CustomerConstants.GENDER));
-		assertEquals("DOB", 1, getErrrorSize(CustomerConstants.DOB));
+				getErrorSize(CustomerConstants.SPOUSE_TYPE));
+		assertEquals("Gender", 1, getErrorSize(CustomerConstants.GENDER));
+		assertEquals("DOB", 1, getErrorSize(CustomerConstants.DOB));
 		verifyInputForward();
 
 	}
@@ -1201,7 +1201,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		}
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(0, getErrrorSize());
+		assertEquals(0, getErrorSize());
 		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -1230,7 +1230,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		}
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(0, getErrrorSize());
+		assertEquals(0, getErrorSize());
 		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
 
 		setRequestPathInfo("/clientCustAction.do");
@@ -1286,7 +1286,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		}
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(0, getErrrorSize());
+		assertEquals(0, getErrorSize());
 		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
 
 		setRequestPathInfo("/clientCustAction.do");

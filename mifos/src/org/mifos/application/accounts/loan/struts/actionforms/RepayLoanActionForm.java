@@ -71,20 +71,22 @@ public class RepayLoanActionForm extends ValidatorActionForm {
 	}
 
 	@Override
-	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+	public ActionErrors validate(ActionMapping mapping, 
+			HttpServletRequest request) {
 		String method = request.getParameter("method");
-		ActionErrors errors = null;
-		if(method!=null && method.equals("loadRepayment")||
-						method.equals("makeRepayment")||
-						method.equals("validate")||
-						method.equals("previous")||
-						method.equals("cancel")){
-		}else{
-			errors = new ActionErrors();
+		ActionErrors errors = new ActionErrors();
+		if (method.equals("loadRepayment")||
+			method.equals("makeRepayment")||
+			method.equals("validate")||
+			method.equals("previous")||
+			method.equals("cancel")) {
+			// nothing to validate (apparently)
+		}
+		else {
 			errors.add(super.validate(mapping,request));			
 		}
 		
-		if (null != errors && !errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
 		}

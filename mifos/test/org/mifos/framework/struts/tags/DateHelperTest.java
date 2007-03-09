@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
+import org.joda.time.DateMidnight;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 
 public class DateHelperTest extends TestCase {
@@ -22,16 +23,20 @@ public class DateHelperTest extends TestCase {
 		);
 	}
 	
+	// test that getLocaleDate is parsing various localized date strings into 
+	// java.sql.Date objects in our localization setting
 	public void testGetLocaleDate() throws Exception {
-		check(1109912400000L, Locale.GERMANY, "04.03.2005");
-		check(1109912400000L, Locale.US, "03/04/2005");
-		check(1109912400000L, Locale.UK, "04/03/2005");
+		long expectedDate = new DateMidnight(2005, 03, 4).getMillis();
+		assertEquals(expectedDate, DateHelper.getLocaleDate(Locale.GERMANY, "04.03.2005").getTime());
+		assertEquals(expectedDate, DateHelper.getLocaleDate(Locale.US, "03/04/2005").getTime());
+		assertEquals(expectedDate, DateHelper.getLocaleDate(Locale.UK, "04/03/2005").getTime());
 		checkException(Locale.US, "04.03.2005");
 	}
 	
 	public void testGetDateFromBrowser() throws Exception {
+		long expectedDate = new DateMidnight(2005, 03, 04).getMillis();
 		java.sql.Date result = DateHelper.getDateAsSentFromBrowser("04/03/2005");
-		assertEquals(1109912400000L, result.getTime());
+		assertEquals(expectedDate, result.getTime());
 	}
 	
 	public void testIsValidDate() throws Exception {
@@ -52,11 +57,6 @@ public class DateHelperTest extends TestCase {
 			ParseException inner = (ParseException) outer.getCause();
 			assertEquals("Unparseable date: \"04.03.2005\"", inner.getMessage());
 		}
-	}
-
-	private void check(long expectedMillis, Locale locale, String input) {
-		java.sql.Date result = DateHelper.getLocaleDate(locale, input);
-		assertEquals(expectedMillis, result.getTime());
 	}
 
 }

@@ -200,8 +200,8 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
 		actionPerform();
-		assertEquals(3,getErrrorSize());
-		assertEquals(3,getErrrorSize(AccountConstants.ERROR_MANDATORY));
+		assertEquals(3,getErrorSize());
+		assertEquals(3,getErrorSize(AccountConstants.ERROR_MANDATORY));
 	}
 	
 	public void testSuccessfulPreview() throws Exception {

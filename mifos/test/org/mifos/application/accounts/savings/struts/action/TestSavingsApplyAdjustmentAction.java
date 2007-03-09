@@ -259,9 +259,9 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 				"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz" +
 				"abcdefghijklmnopqrstuvwxyz");
 		actionPerform();
-		assertEquals(2, getErrrorSize());
-		assertEquals(1, getErrrorSize(AccountConstants.MAX_NOTE_LENGTH));
-		assertEquals(1, getErrrorSize(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
+		assertEquals(2, getErrorSize());
+		assertEquals(1, getErrorSize(AccountConstants.MAX_NOTE_LENGTH));
+		assertEquals(1, getErrorSize(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());
 		group = savings.getCustomer();

@@ -117,9 +117,9 @@ public class SavingsClosureActionForm extends ValidatorActionForm{
 	@Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
 		String method = request.getParameter("method");
-		ActionErrors errors = null;
+		ActionErrors errors = new ActionErrors();
 		
-		if(method!=null && method.equals("load")||
+		if(method.equals("load")||
 						method.equals("previous")||
 						method.equals("validate")||
 						method.equals("close")||
@@ -127,7 +127,6 @@ public class SavingsClosureActionForm extends ValidatorActionForm{
 		}else{
 			UserContext userContext= (UserContext)SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY,request.getSession());
 			ResourceBundle resources = ResourceBundle.getBundle ("org.mifos.application.accounts.savings.util.resources.SavingsUIResources", userContext.getPereferedLocale());
-			errors = new ActionErrors();
 			if( StringUtils.isNullOrEmpty(getPaymentTypeId()))
 				errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,resources.getString("Savings.paymentType")));
 			
@@ -146,7 +145,7 @@ public class SavingsClosureActionForm extends ValidatorActionForm{
 			}
 		}
 		
-		if (null != errors && !errors.isEmpty()) {
+		if (!errors.isEmpty()) {
 			request.setAttribute(Globals.ERROR_KEY, errors);
 			request.setAttribute("methodCalled", method);
 		}
@@ -154,25 +153,29 @@ public class SavingsClosureActionForm extends ValidatorActionForm{
 		return errors;
 	}
 	
-	private ActionErrors validateDate(String date ,String fieldName,UserContext userContext){
-		ActionErrors errors =null;
-		java.sql.Date sqlDate=null;
-		if( date!=null&&!date.equals("")){
-			sqlDate=DateHelper.getLocaleDate(userContext.getPereferedLocale(),date);
+	private ActionErrors validateDate(String date, String fieldName, 
+			UserContext userContext){
+		ActionErrors errors = new ActionErrors();
+		java.sql.Date sqlDate = null;
+		if (date!=null && !date.equals("")){
+			sqlDate = DateHelper.getLocaleDate(
+				userContext.getPereferedLocale(), date);
 			Calendar currentCalendar = new GregorianCalendar();
 			int year=currentCalendar.get(Calendar.YEAR);
 			int month=currentCalendar.get(Calendar.MONTH);
 			int day=currentCalendar.get(Calendar.DAY_OF_MONTH);
-			currentCalendar = new GregorianCalendar(year,month,day);
+			currentCalendar = new GregorianCalendar(year, month, day);
 			java.sql.Date currentDate=new java.sql.Date(currentCalendar.getTimeInMillis());
 			if(currentDate.compareTo(sqlDate) < 0 ) {
 				errors = new ActionErrors();
-				errors.add(AccountConstants.ERROR_FUTUREDATE,new ActionMessage(AccountConstants.ERROR_FUTUREDATE,fieldName));
+				errors.add(AccountConstants.ERROR_FUTUREDATE,
+					new ActionMessage(AccountConstants.ERROR_FUTUREDATE,fieldName));
 			}
 		}
-		else
-		{	errors = new ActionErrors();
-			errors.add(AccountConstants.ERROR_MANDATORY,new ActionMessage(AccountConstants.ERROR_MANDATORY,fieldName));
+		else {
+			errors = new ActionErrors();
+			errors.add(AccountConstants.ERROR_MANDATORY,
+				new ActionMessage(AccountConstants.ERROR_MANDATORY,fieldName));
 		}
 		return errors;
 	}

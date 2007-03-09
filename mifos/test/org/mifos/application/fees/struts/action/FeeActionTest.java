@@ -155,14 +155,14 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(5, getErrrorSize());
-		assertEquals("Fee Name", 1, getErrrorSize("feeName"));
+		assertEquals(5, getErrorSize());
+		assertEquals("Fee Name", 1, getErrorSize("feeName"));
 		assertEquals("Fee Applies to Product/Customer", 1,
-				getErrrorSize("categoryType"));
+				getErrorSize("categoryType"));
 		assertEquals("Periodic or OneTime Fee", 1,
-				getErrrorSize("feeFrequencyType"));
-		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
+				getErrorSize("feeFrequencyType"));
+		assertEquals("Fee Amount", 1, getErrorSize("amount"));
+		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -173,14 +173,14 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
-		assertEquals(4, getErrrorSize());
-		assertEquals("Fee Name", 0, getErrrorSize("feeName"));
+		assertEquals(4, getErrorSize());
+		assertEquals("Fee Name", 0, getErrorSize("feeName"));
 		assertEquals("Fee Applies to Product/Customer", 1,
-				getErrrorSize("categoryType"));
+				getErrorSize("categoryType"));
 		assertEquals("Periodic or OneTime Fee", 1,
-				getErrrorSize("feeFrequencyType"));
-		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
+				getErrorSize("feeFrequencyType"));
+		assertEquals("Fee Amount", 1, getErrorSize("amount"));
+		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -193,11 +193,11 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 				.toString());
 		actionPerform();
 
-		assertEquals(3, getErrrorSize());
+		assertEquals(3, getErrorSize());
 		assertEquals("Periodic or OneTime Fee", 1,
-				getErrrorSize("feeFrequencyType"));
-		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
+				getErrorSize("feeFrequencyType"));
+		assertEquals("Fee Amount", 1, getErrorSize("amount"));
+		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -214,9 +214,9 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
-		assertEquals(2, getErrrorSize());
-		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
+		assertEquals(2, getErrorSize());
+		assertEquals("Fee Amount", 1, getErrorSize("amount"));
+		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -234,9 +234,9 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
-		assertEquals(2, getErrrorSize());
-		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
-		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
+		assertEquals(2, getErrorSize());
+		assertEquals("Fee Amount", 1, getErrorSize("amount"));
+		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -256,9 +256,9 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
-		assertEquals(2, getErrrorSize());
-		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
-		assertEquals("Fee Rate or Formula", 1, getErrrorSize("RateAndFormula"));
+		assertEquals(2, getErrorSize());
+		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
+		assertEquals("Fee Rate or Formula", 1, getErrorSize("RateAndFormula"));
 		verifyInputForward();
 	}
 
@@ -280,8 +280,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
-		assertEquals(1, getErrrorSize());
-		assertEquals("Fee Rate or Formula", 1, getErrrorSize(FeeConstants.RATE_OR_AMOUNT));
+		assertEquals(1, getErrorSize());
+		assertEquals("Fee Rate or Formula", 1, getErrorSize(FeeConstants.RATE_OR_AMOUNT));
 		verifyInputForward();
 	}
 
@@ -300,8 +300,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 
-		assertEquals(1, getErrrorSize());
-		assertEquals("Fee GlCode", 1, getErrrorSize(FeeConstants.INVALID_GLCODE));
+		assertEquals(1, getErrorSize());
+		assertEquals("Fee GlCode", 1, getErrorSize(FeeConstants.INVALID_GLCODE));
 		verifyInputForward();
 	}
 
@@ -327,7 +327,7 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("glCode", GLOCDE_ID);
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(0, getErrrorSize());
+		assertEquals(0, getErrorSize());
 		verifyForward(ActionForwards.preview_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -581,8 +581,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("amount", "");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(1, getErrrorSize());
-		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
+		assertEquals(1, getErrorSize());
+		assertEquals("Fee Amount", 1, getErrorSize("amount"));
 		verifyInputForward();
 	}
 
@@ -600,8 +600,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("amount", "0");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(1, getErrrorSize());
-		assertEquals("Fee Amount", 1, getErrrorSize("amount"));
+		assertEquals(1, getErrorSize());
+		assertEquals("Fee Amount", 1, getErrorSize("amount"));
 		verifyInputForward();
 	}
 
@@ -620,8 +620,8 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("rate", "");
 		actionPerform();
-		assertEquals(1, getErrrorSize());
-		assertEquals("RateAndFormula", 1, getErrrorSize("RateAndFormula"));
+		assertEquals(1, getErrorSize());
+		assertEquals("RateAndFormula", 1, getErrorSize("RateAndFormula"));
 		verifyInputForward();
 	}
 

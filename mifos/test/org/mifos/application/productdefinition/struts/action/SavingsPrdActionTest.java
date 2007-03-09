@@ -619,21 +619,21 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "previewManage");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals("error size", 12, getErrrorSize());
-		assertEquals("prdOfferingName", 1, getErrrorSize("prdOfferingName"));
+		assertEquals("error size", 12, getErrorSize());
+		assertEquals("prdOfferingName", 1, getErrorSize("prdOfferingName"));
 		assertEquals("prdOfferingShortName", 1,
-				getErrrorSize("prdOfferingShortName"));
-		assertEquals("prdCategory", 1, getErrrorSize("prdCategory"));
-		assertEquals("startDate", 1, getErrrorSize("startDate"));
+				getErrorSize("prdOfferingShortName"));
+		assertEquals("prdCategory", 1, getErrorSize("prdCategory"));
+		assertEquals("startDate", 1, getErrorSize("startDate"));
 		assertEquals("prdApplicableMaster", 1,
-				getErrrorSize("prdApplicableMaster"));
-		assertEquals("savingsType", 1, getErrrorSize("savingsType"));
-		assertEquals("interestRate", 1, getErrrorSize("interestRate"));
-		assertEquals("interestCalcType", 1, getErrrorSize("interestCalcType"));
-		assertEquals("timeForInterestCacl", 1, getErrrorSize("timeForInterestCacl"));
-		assertEquals("freqOfInterest", 1, getErrrorSize("freqOfInterest"));
-		assertEquals("depositGLCode", 1, getErrrorSize("depositGLCode"));
-		assertEquals("interest", 1, getErrrorSize("interest"));
+				getErrorSize("prdApplicableMaster"));
+		assertEquals("savingsType", 1, getErrorSize("savingsType"));
+		assertEquals("interestRate", 1, getErrorSize("interestRate"));
+		assertEquals("interestCalcType", 1, getErrorSize("interestCalcType"));
+		assertEquals("timeForInterestCacl", 1, getErrorSize("timeForInterestCacl"));
+		assertEquals("freqOfInterest", 1, getErrorSize("freqOfInterest"));
+		assertEquals("depositGLCode", 1, getErrorSize("depositGLCode"));
+		assertEquals("interest", 1, getErrorSize("interest"));
 		verifyInputForward();
 	}
 
@@ -661,7 +661,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 
 		actionPerform();
 		assertEquals("recommendedAmntUnit", 1,
-				getErrrorSize("recommendedAmntUnit"));
+				getErrorSize("recommendedAmntUnit"));
 		verifyInputForward();
 	}
 
@@ -689,7 +689,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("interestGLCode", "57");
 
 		actionPerform();
-		assertEquals("Manadatory amount", 1, getErrrorSize("recommendedAmount"));
+		assertEquals("Manadatory amount", 1, getErrorSize("recommendedAmount"));
 		verifyInputForward();
 	}
 
@@ -722,7 +722,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 
 		actionPerform();
 		assertEquals("Manadatory amount is 0", 1,
-				getErrrorSize("recommendedAmount"));
+				getErrorSize("recommendedAmount"));
 		verifyInputForward();
 	}
 
@@ -751,7 +751,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("recommendedAmount", "120.0");
 
 		actionPerform();
-		assertEquals("interestRate >100", 1, getErrrorSize("interestRate"));
+		assertEquals("interestRate >100", 1, getErrorSize("interestRate"));
 		verifyInputForward();
 	}
 
@@ -780,7 +780,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("recommendedAmount", "120.0");
 
 		actionPerform();
-		assertEquals("start date", 1, getErrrorSize("startDate"));
+		assertEquals("start date", 1, getErrorSize("startDate"));
 		verifyInputForward();
 	}
 
@@ -811,7 +811,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("recommendedAmount", "120.0");
 
 		actionPerform();
-		assertEquals("endDate", 1, getErrrorSize("endDate"));
+		assertEquals("endDate", 1, getErrorSize("endDate"));
 		verifyInputForward();
 	}
 

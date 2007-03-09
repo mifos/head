@@ -503,30 +503,27 @@ public abstract class CustomerActionForm extends BaseActionForm {
 		}
 	}
 
-	protected void validateTrained(HttpServletRequest request ,ActionErrors errors) {
+	protected void validateTrained(HttpServletRequest request,
+			ActionErrors errors) {
 		if(request.getParameter("trained")==null) {
 			trained=null;
 		}
 		else if(isCustomerTrained()){
 			if(ValidateMethods.isNullOrBlank(trainedDate)){
-				if(errors == null){
-					errors = new ActionErrors();
-				}
-				errors.add(CustomerConstants.TRAINED_DATE_MANDATORY,new ActionMessage(CustomerConstants.TRAINED_DATE_MANDATORY));
+				errors.add(CustomerConstants.TRAINED_DATE_MANDATORY,
+					new ActionMessage(CustomerConstants.TRAINED_DATE_MANDATORY));
 			}
 			
 			else { // if marked trained and a date is supplied
 				if (!DateHelper.isValidDate(trainedDate)) {
-					errors.add(CustomerConstants.INVALID_TRAINED_DATE, new ActionMessage(CustomerConstants.INVALID_TRAINED_DATE));
+					errors.add(CustomerConstants.INVALID_TRAINED_DATE, 
+						new ActionMessage(CustomerConstants.INVALID_TRAINED_DATE));
 				}
 			}
 
 		}
 		//if training date is entered and trained is not selected, throw an error
 		if(!ValidateMethods.isNullOrBlank(trainedDate)&&ValidateMethods.isNullOrBlank(trained)){
-			if(errors == null){
-				errors = new ActionErrors();
-			}
 			errors.add(CustomerConstants.TRAINED_CHECKED,new ActionMessage(CustomerConstants.TRAINED_CHECKED));
 		}
 

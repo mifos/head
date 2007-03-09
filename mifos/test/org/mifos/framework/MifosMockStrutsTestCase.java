@@ -66,14 +66,14 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 		}
 	}
 	
-	protected int getErrrorSize(String field){
+	protected int getErrorSize(String field){
 		ActionErrors errors = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
-		return errors!=null ? errors.size(field) : 0;
+		return errors != null ? errors.size(field) : 0;
 	}
 	
-	protected int getErrrorSize(){
+	protected int getErrorSize(){
 		ActionErrors errors = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
-		return (errors == null || errors.isEmpty()) ? 0 : errors.size();
+		return errors == null ? 0 : errors.size();
 	}
 	
 	protected void matchValues(AuditLogRecord auditLogRecord, String oldValue, String newValue){

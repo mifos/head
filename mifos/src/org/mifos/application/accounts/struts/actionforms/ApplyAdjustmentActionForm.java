@@ -101,7 +101,8 @@ public class ApplyAdjustmentActionForm extends ValidatorActionForm {
 		if (null == request.getAttribute(Constants.CURRENTFLOWKEY))
 			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
 		ActionErrors actionErrors = new ActionErrors();
-		if(null != request.getParameter("method") && request.getParameter("method").equals("previewAdjustment")){
+		String method = request.getParameter("method");
+		if(null != method && method.equals("previewAdjustment")){
 			if(!adjustcheckbox){
 				request.setAttribute("method", "loadAdjustment");
 				 actionErrors.add("", new ActionMessage("errors.mandatorycheckbox"));
@@ -116,9 +117,6 @@ public class ApplyAdjustmentActionForm extends ValidatorActionForm {
 			if(!actionErrors.isEmpty()){
 				return actionErrors;
 			}
-			 
-			
-		
 		}
 		return super.validate(actionMapping, request);
 	}

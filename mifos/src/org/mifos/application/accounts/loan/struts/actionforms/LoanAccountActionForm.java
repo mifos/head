@@ -429,6 +429,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 			else if (method.equals(Methods.managePreview.toString()))
 				checkValidationForManagePreview(errors, request);
 		} catch (ApplicationException ae) {
+			// Discard other errors (is that right?)
 			errors = new ActionErrors();
 			errors.add(ae.getKey(), new ActionMessage(ae.getKey(), ae
 					.getValues()));

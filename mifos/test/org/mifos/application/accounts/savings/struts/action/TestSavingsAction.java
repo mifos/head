@@ -80,14 +80,21 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	@Override
 	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(savings);
-		TestObjectFactory.cleanUp(savings3);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		TestObjectFactory.removeObject(savingsOffering);
-		TestObjectFactory.removeObject(savingsOffering1);
-		TestObjectFactory.removeObject(savingsOffering2);
-		HibernateUtil.closeSession();
+		try {
+			TestObjectFactory.cleanUp(savings);
+			TestObjectFactory.cleanUp(savings3);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			TestObjectFactory.removeObject(savingsOffering);
+			TestObjectFactory.removeObject(savingsOffering1);
+			TestObjectFactory.removeObject(savingsOffering2);
+			HibernateUtil.closeSession();
+		}
+		catch (Exception e) {
+			/* If this was caused by an underlying failure, we don't want
+			   to swallow the underlying failure. */
+			e.printStackTrace();
+		}
 		super.tearDown();
 	}
 
@@ -314,10 +321,10 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		if (isCustomFieldMandatory)
 			assertEquals("CustomField", 1,
-					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+					getErrorSize(CustomerConstants.CUSTOM_FIELD));
 		else
 			assertEquals("CustomField", 0,
-					getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+					getErrorSize(CustomerConstants.CUSTOM_FIELD));
 
 	}
 

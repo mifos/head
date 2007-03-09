@@ -217,7 +217,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "create");
 		actionPerform();
 
-		assertEquals("RecurrenceType", 1, getErrrorSize(MeetingConstants.INVALID_RECURRENCETYPE));
+		assertEquals("RecurrenceType", 1, getErrorSize(MeetingConstants.INVALID_RECURRENCETYPE));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);
@@ -235,8 +235,8 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "create");
 
 		actionPerform();
-		assertEquals("Week Recurrence", 1, getErrrorSize(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
-		assertEquals("Meeting Place", 1, getErrrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+		assertEquals("Week Recurrence", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
+		assertEquals("Meeting Place", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);
@@ -254,8 +254,8 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "create");
 		actionPerform();
 
-		assertEquals("Week Recurrence", 1, getErrrorSize(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
-		assertEquals("Meeting Place", 1, getErrrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+		assertEquals("Week Recurrence", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_WEEKDAY_AND_RECURAFTER));
+		assertEquals("Meeting Place", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);
@@ -273,7 +273,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "create");
 		actionPerform();
 
-		assertEquals("Meeting Place", 1, getErrrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+		assertEquals("Meeting Place", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);
@@ -315,7 +315,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "create");
 		actionPerform();
 
-		assertEquals("Month Recurrence On Date", 1, getErrrorSize(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
+		assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);
@@ -335,7 +335,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "create");
 		actionPerform();
 
-		assertEquals("Month Recurrence On Date", 1, getErrrorSize(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
+		assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_DAYNUM_AND_RECURAFTER));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);
@@ -354,7 +354,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("meetingPlace", "");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals("Month Recurrence On Date", 1, getErrrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+		assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);
@@ -402,7 +402,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "create");
 		actionPerform();
 
-		assertEquals("Month Recurrence On WeekDay", 1, getErrrorSize(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
+		assertEquals("Month Recurrence On WeekDay", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);
@@ -422,7 +422,7 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "create");
 		actionPerform();
 
-		assertEquals("Month Recurrence On WeekDay", 1, getErrrorSize(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
+		assertEquals("Month Recurrence On WeekDay", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);
@@ -442,8 +442,8 @@ public class MeetingActionTest extends MifosMockStrutsTestCase{
 		addRequestParameter("input", "create");
 		actionPerform();
 
-		assertEquals("Month Recurrence On WeekDay", 1, getErrrorSize(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
-		assertEquals("Month Recurrence On Date", 1, getErrrorSize(MeetingConstants.INVALID_MEETINGPLACE));
+		assertEquals("Month Recurrence On WeekDay", 1, getErrorSize(MeetingConstants.ERRORS_SPECIFY_MONTHLY_MEETING_ON_WEEKDAY));
+		assertEquals("Month Recurrence On Date", 1, getErrorSize(MeetingConstants.INVALID_MEETINGPLACE));
 		verifyInputForward();
 		MeetingBO meeting = (MeetingBO)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 		assertNull(meeting);

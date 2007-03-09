@@ -248,7 +248,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals("Group Name", 1, getErrrorSize(CustomerConstants.NAME));
+		assertEquals("Group Name", 1, getErrorSize(CustomerConstants.NAME));
 		verifyInputForward();
 		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
 	}
@@ -278,7 +278,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 			i++;
 		}
 		actionPerform();
-		assertEquals("Trained Date", 1, getErrrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
+		assertEquals("Trained Date", 1, getErrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
 		verifyInputForward();
 		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
 	}
@@ -315,11 +315,11 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		actionPerform();
 		
 		if(isCustomFieldMandatory){
-			assertEquals("CustomField", 1, getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+			assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
 			verifyInputForward();
 		}
 		else{
-			assertEquals("CustomField", 0, getErrrorSize(CustomerConstants.CUSTOM_FIELD));
+			assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
 			verifyForward(ActionForwards.preview_success.toString());
 		}
 		center = TestObjectFactory.getObject(CenterBO.class,
@@ -345,7 +345,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("selectedFee[1].amount", "150");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
+		assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
 		verifyInputForward();
 		removeFees(feesToRemove);
 		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
@@ -368,7 +368,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("selectedFee[0].amount", "");		
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals("Fee", 1, getErrrorSize(CustomerConstants.FEE));
+		assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
 		verifyInputForward();
 		removeFees(feesToRemove);
 		center = TestObjectFactory.getObject(CenterBO.class,	center.getCustomerId());		
@@ -404,7 +404,7 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
 		addRequestParameter("selectedFee[0].amount", fee.getAmount());
 		actionPerform();
-		assertEquals(0, getErrrorSize());
+		assertEquals(0, getErrorSize());
 		verifyForward(ActionForwards.preview_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -666,9 +666,9 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("trained", "1");
 		addRequestParameter("trainedDate", "20/03/2006");
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Group Name not present", 1,
-				getErrrorSize(CustomerConstants.NAME));
+				getErrorSize(CustomerConstants.NAME));
 
 	}
 
@@ -697,9 +697,9 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Group Trained date not present", 1,
-				getErrrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
+				getErrorSize(CustomerConstants.TRAINED_DATE_MANDATORY));
 
 	}
 
@@ -728,9 +728,9 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		assertEquals("Group Trained checkbox not checked ", 1,
-				getErrrorSize(CustomerConstants.TRAINED_CHECKED));
+				getErrorSize(CustomerConstants.TRAINED_CHECKED));
 
 	}
 	

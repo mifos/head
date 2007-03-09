@@ -128,13 +128,13 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		assertEquals("Office Name", 1,
-				getErrrorSize(OfficeConstants.OFFICE_NAME));
+				getErrorSize(OfficeConstants.OFFICE_NAME));
 		assertEquals("Office Short  Name", 1,
-				getErrrorSize(OfficeConstants.OFFICESHORTNAME));
+				getErrorSize(OfficeConstants.OFFICESHORTNAME));
 		assertEquals("Office level", 1,
-				getErrrorSize(OfficeConstants.OFFICETYPE));
+				getErrorSize(OfficeConstants.OFFICETYPE));
 		assertEquals("Office parent", 1,
-				getErrrorSize(OfficeConstants.PARENTOFFICE));
+				getErrorSize(OfficeConstants.PARENTOFFICE));
 		verifyInputForward();
 	}
 

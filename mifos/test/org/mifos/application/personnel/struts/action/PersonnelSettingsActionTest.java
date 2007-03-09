@@ -129,10 +129,10 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize("firstName"));
-		assertEquals(1, getErrrorSize("lastName"));
-		assertEquals(1, getErrrorSize("gender"));
-		assertEquals(1, getErrrorSize(PersonnelConstants.ERROR_VALID_EMAIL));
+		assertEquals(1, getErrorSize("firstName"));
+		assertEquals(1, getErrorSize("lastName"));
+		assertEquals(1, getErrorSize("gender"));
+		assertEquals(1, getErrorSize(PersonnelConstants.ERROR_VALID_EMAIL));
 		verifyInputForward();
 	}
 
@@ -154,7 +154,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize("firstName"));
+		assertEquals(1, getErrorSize("firstName"));
 		verifyInputForward();
 	}
 
@@ -186,7 +186,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize("firstName"));
+		assertEquals(1, getErrorSize("firstName"));
 		verifyInputForward();
 	}
 
@@ -217,7 +217,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize("lastName"));
+		assertEquals(1, getErrorSize("lastName"));
 		verifyInputForward();
 	}
 
@@ -239,7 +239,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize("lastName"));
+		assertEquals(1, getErrorSize("lastName"));
 		verifyInputForward();
 	}
 
@@ -261,7 +261,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize("gender"));
+		assertEquals(1, getErrorSize("gender"));
 		verifyInputForward();
 	}
 
@@ -301,7 +301,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
 
-		assertEquals(1, getErrrorSize("displayName"));
+		assertEquals(1, getErrorSize("displayName"));
 		verifyInputForward();
 	}
 

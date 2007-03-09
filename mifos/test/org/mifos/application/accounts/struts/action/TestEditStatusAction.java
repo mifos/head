@@ -169,7 +169,7 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		assertEquals(1, getErrrorSize());
+		assertEquals(1, getErrorSize());
 		verifyActionErrors(new String[] { LoanConstants.MANDATORY_TEXTBOX });
 	}
 
