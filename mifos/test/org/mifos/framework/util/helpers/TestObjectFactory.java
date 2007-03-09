@@ -223,6 +223,11 @@ public class TestObjectFactory {
 	private static final short SAMPLE_GENERAL_LEDGER_CODE_ID = 7;
 
 	/**
+	 * Corresponds to a locale we set up in latest-data.
+	 */
+	public static final Short TEST_LOCALE = 1;
+
+	/**
 	 * @return - Returns the office created by test data scripts. If the row
 	 *         does not already exist in the database it returns null. defaults
 	 *         created are 1- Head Office , 2 - Area Office , 3 - BranchOffice.
@@ -2051,4 +2056,5 @@ public class TestObjectFactory {
 		return createSavingsOffering(offeringName, shortName, Short
 				.valueOf("1"), Short.valueOf("2"), recommendedAmountUnit);
 	}
+
 }

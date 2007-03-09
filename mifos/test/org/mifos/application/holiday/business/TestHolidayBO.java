@@ -2,6 +2,8 @@ package org.mifos.application.holiday.business;
 
 import java.util.Date;
 
+import org.joda.time.DateMidnight;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -34,6 +36,41 @@ public class TestHolidayBO extends MifosTestCase {
 		assertEquals("Test Holiday", holidayEntity.getHolidayName());
 		
 		TestObjectFactory.cleanUp(holidayEntity);
+	}
+	
+	/* Do we need an update script like
+	   UPDATE HOLIDAY SET HOLIDAY_THRU_DATE = HOLIDAY_FROM_DATE WHERE 
+       HOLIDAY_THRU_DATE is NULL;
+       ?  Doing this for save and update will fix it for future cases.
+	 */
+	public void testSaveSuppliesThruDate() throws Exception {
+		long startDate = new DateMidnight(2003, 1, 26).getMillis();
+		HolidayBO holiday =
+			new HolidayBO(
+				new HolidayPK((short)1, new Date(startDate)),
+				null,
+				"Test Day",
+				TestObjectFactory.TEST_LOCALE,
+				RepaymentRuleTypes.SAME_DAY.getValue(),
+				null
+			);
+		holiday.save();
+		assertEquals(startDate, holiday.getHolidayThruDate().getTime());
+	}
+
+	public void testUpdateSuppliesThruDate() throws Exception {
+		long startDate = new DateMidnight(2003, 1, 26).getMillis();
+		HolidayBO holiday =
+			new HolidayBO(
+				new HolidayPK((short)1, new Date(startDate)),
+				null,
+				"Test Day",
+				TestObjectFactory.TEST_LOCALE,
+				RepaymentRuleTypes.SAME_DAY.getValue(),
+				null
+			);
+		holiday.update(holiday.getHolidayPK(), null, "New Name");
+		assertEquals(startDate, holiday.getHolidayThruDate().getTime());
 	}
 
 	/*public void testUpdateForNullHolidayName() throws Exception {

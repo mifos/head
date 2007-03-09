@@ -32,14 +32,14 @@ public class TestUtils {
 	public static UserContext makeUser(int role) {
 		UserContext user = new UserContext();
 		user.setId(PersonnelConstants.SYSTEM_USER);
-		user.setLocaleId(new Short("1"));
+		user.setLocaleId(TestObjectFactory.TEST_LOCALE);
 		Set<Short> set = new HashSet<Short>();
 		set.add((short) role);
 		user.setRoles(set);
 		user.setLevel(PersonnelLevel.NON_LOAN_OFFICER);
 		user.setName("mifos");
 		user.setPereferedLocale(new Locale("en", "US"));
-		user.setBranchId(new Short("1"));
+		user.setBranchId((short)1);
 		user.setBranchGlobalNum("0001");
 		return user;
 	}

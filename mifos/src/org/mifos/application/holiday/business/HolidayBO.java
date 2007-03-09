@@ -24,7 +24,6 @@ public class HolidayBO extends BusinessObject {
 		this.holidayPK = null;
 	}
 
-	// was protected
 	public HolidayBO(HolidayPK holidayPK, Date holidayThruDate, String holidayName, 
 			            Short localeId, Short repaymentRuleId, String repaymentRule)
 			throws HolidayException {
@@ -90,13 +89,15 @@ public class HolidayBO extends BusinessObject {
 
 	public void save() throws HolidayException {
 		try {
+			if (this.getHolidayThruDate() == null) {
+				this.setHolidayThruDate(this.getHolidayFromDate());
+			}
 			new HolidayPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new HolidayException(e);
 		}
 	}
 
-	//protected 
 	public void update(HolidayPK holidayPK, Date holidayThruDate, 
 						  String holidayName)
 			throws HolidayException {
@@ -104,6 +105,10 @@ public class HolidayBO extends BusinessObject {
 		this.holidayPK.setOfficeId(holidayPK.getOfficeId());
 		this.holidayPK.setHolidayFromDate(holidayPK.getHolidayFromDate());
 		
+		if (this.getHolidayThruDate() == null) {
+			this.setHolidayThruDate(this.getHolidayFromDate());
+		}
+
 		// this block should not be here
 		try {
 			new HolidayPersistence().createOrUpdate(this);
