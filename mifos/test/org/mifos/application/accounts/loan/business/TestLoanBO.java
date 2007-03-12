@@ -2866,22 +2866,21 @@ public class TestLoanBO extends MifosTestCase {
 	public void testGracePeriodForInterestNotDedAtDisb()
 			throws NumberFormatException, AccountException, Exception {
 		createInitialCustomers();
-		LoanOfferingBO loanOffering = createLoanOffering(false);
+		LoanOfferingBO product = createLoanOffering(false);
 
 		LoanBO loan = new LoanBO(TestObjectFactory.getUserContext(),
-				loanOffering, group, AccountState.LOANACC_APPROVED, new Money(
+				product, group, AccountState.LOANACC_APPROVED, new Money(
 						"300.0"), Short.valueOf("6"), new Date(System
 						.currentTimeMillis()), false, 10.0, (short) 1,
 				new FundBO(), new ArrayList<FeeView>(),
 				new ArrayList<CustomFieldView>());
-		assertEquals(loanOffering.getGracePeriodType().getId(), loan
-				.getGracePeriodType().getId());
+		assertEquals(product.getGraceType(), loan.getGraceType());
 		assertEquals(1, loan.getGracePeriodDuration().intValue());
 		assertNotSame(new java.sql.Date(DateUtils
 				.getCurrentDateWithoutTimeStamp().getTime()).toString(), loan
 				.getAccountActionDate((short) 1).getActionDate().toString());
 
-		TestObjectFactory.removeObject(loanOffering);
+		TestObjectFactory.removeObject(product);
 	}
 
 	public void testGracePeriodForInterestDedAtDisb()
@@ -2897,7 +2896,7 @@ public class TestLoanBO extends MifosTestCase {
 				new ArrayList<CustomFieldView>());
 		assertEquals(
 				"For interest ded at disb, grace period type should be none",
-				GraceType.NONE.getValue(), loan.getGracePeriodType().getId());
+				GraceType.NONE, loan.getGraceType());
 		assertEquals(0, loan.getGracePeriodDuration().intValue());
 		assertEquals(new java.sql.Date(DateUtils
 				.getCurrentDateWithoutTimeStamp().getTime()).toString(), loan

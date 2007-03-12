@@ -1,9 +1,3 @@
-/*
- * Created on Jul 7, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package org.mifos.framework.struts.tags;
 
 import java.text.DateFormat;

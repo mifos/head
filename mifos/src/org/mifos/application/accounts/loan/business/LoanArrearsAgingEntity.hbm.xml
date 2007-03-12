@@ -6,7 +6,8 @@
 
 <hibernate-mapping>
 
-	<class name="org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity" table="LOAN_ARREARS_AGING">
+	<class name="org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity" 
+		table="LOAN_ARREARS_AGING">
 		<id name="id" column="ID" type="integer" unsaved-value="null" access="field">
 			<generator class="native" />
 		</id>

@@ -458,8 +458,10 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	private void setLocaleForMasterEntities(LoanBO loanBO, Short localeId) {
-		if (loanBO.getGracePeriodType() != null)
+		if (loanBO.getGracePeriodType() != null) {
+			// Is this locale ever consulted?  I don't see a place...
 			loanBO.getGracePeriodType().setLocaleId(localeId);
+		}
 		if (loanBO.getCollateralType() != null)
 			loanBO.getCollateralType().setLocaleId(localeId);
 		loanBO.getInterestType().setLocaleId(localeId);

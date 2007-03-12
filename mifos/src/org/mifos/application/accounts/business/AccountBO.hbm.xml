@@ -8,38 +8,72 @@
 		<id name="accountId" column="ACCOUNT_ID" type="integer" access="field">
 			<generator class="native" />
 		</id>
-		<version name="versionNo" column="VERSION_NO" type="integer" unsaved-value="null" />
+		<version name="versionNo" column="VERSION_NO" type="integer" 
+			unsaved-value="null" />
 
-		<property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM" access="field" />
-		<property name="createdBy" column="CREATED_BY" not-null="true" update="false" lazy="true" />
-		<property name="createdDate" column="CREATED_DATE" not-null="true" update="false" lazy="true" />
+		<property name="globalAccountNum" column="GLOBAL_ACCOUNT_NUM" 
+			access="field" />
+		<property name="createdBy" column="CREATED_BY" not-null="true" 
+			update="false" lazy="true" />
+		<property name="createdDate" column="CREATED_DATE" not-null="true" 
+			update="false" lazy="true" />
 		<property name="updatedBy" column="UPDATED_BY" lazy="true" />
 		<property name="updatedDate" column="UPDATED_DATE" lazy="true" />
 		<property name="closedDate" column="CLOSED_DATE" lazy="true" />
 
-		<many-to-one name="customer" column="CUSTOMER_ID" class="org.mifos.application.customer.business.CustomerBO" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
-		<many-to-one name="office" column="OFFICE_ID" class="org.mifos.application.office.business.OfficeBO" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
-		<many-to-one name="accountState" column="ACCOUNT_STATE_ID" class="org.mifos.application.accounts.business.AccountStateEntity" cascade="none" update="true" insert="true" unique="true" lazy="true" />
-		<many-to-one name="accountType" column="ACCOUNT_TYPE_ID" class="org.mifos.application.accounts.business.AccountTypeEntity" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
-		<many-to-one name="personnel" column="PERSONNEL_ID" class="org.mifos.application.personnel.business.PersonnelBO" cascade="none" update="false" insert="true" unique="true" lazy="true" access="field" />
+		<many-to-one name="customer" column="CUSTOMER_ID" 
+			class="org.mifos.application.customer.business.CustomerBO" 
+			cascade="none" update="false" insert="true" unique="true" 
+			lazy="true" access="field" />
+		<many-to-one name="office" column="OFFICE_ID" 
+			class="org.mifos.application.office.business.OfficeBO" 
+			cascade="none" update="false" insert="true" unique="true" 
+			lazy="true" access="field" />
+		<many-to-one name="accountState" column="ACCOUNT_STATE_ID" 
+			class="org.mifos.application.accounts.business.AccountStateEntity" 
+			cascade="none" update="true" insert="true" unique="true" 
+			lazy="true" />
+		<many-to-one name="accountType" column="ACCOUNT_TYPE_ID" 
+			class="org.mifos.application.accounts.business.AccountTypeEntity" 
+			cascade="none" update="false" insert="true" unique="true" 
+			lazy="true" access="field" />
+		<many-to-one name="personnel" column="PERSONNEL_ID" 
+			class="org.mifos.application.personnel.business.PersonnelBO" 
+			cascade="none" update="false" insert="true" unique="true" 
+			lazy="true" access="field" />
 
-		<set name="accountNotes" cascade="all" inverse="true" table="ACCOUNT_NOTES" lazy="true" order-by="ACCOUNT_NOTES_ID desc" access="field">
+		<set name="accountNotes" cascade="all" inverse="true" 
+			table="ACCOUNT_NOTES" lazy="true" 
+			order-by="ACCOUNT_NOTES_ID desc" access="field">
 			<key column="ACCOUNT_ID" />
-			<many-to-many class="org.mifos.application.accounts.business.AccountNotesEntity" column="ACCOUNT_NOTES_ID" />
+			<many-to-many 
+				class="org.mifos.application.accounts.business.AccountNotesEntity" 
+				column="ACCOUNT_NOTES_ID" />
 		</set>
-		<set name="accountFees" cascade="all" inverse="true" lazy="true" table="ACCOUNT_FEES" access="field">
+		<set name="accountFees" cascade="all" inverse="true" lazy="true" 
+			table="ACCOUNT_FEES" access="field">
 			<key column="ACCOUNT_ID" />
-			<many-to-many class="org.mifos.application.accounts.business.AccountFeesEntity" column="ACCOUNT_FEE_ID" />
+			<many-to-many 
+				class="org.mifos.application.accounts.business.AccountFeesEntity" 
+				column="ACCOUNT_FEE_ID" />
 		</set>
-		<set name="accountPayments" cascade="all" inverse="true" table="ACCOUNT_PAYMENT" lazy="true" order-by="PAYMENT_ID desc">
+		<set name="accountPayments" cascade="all" inverse="true" 
+			table="ACCOUNT_PAYMENT" lazy="true" order-by="PAYMENT_ID desc">
 			<key column="ACCOUNT_ID" />
-			<one-to-many class="org.mifos.application.accounts.business.AccountPaymentEntity" />
+			<one-to-many 
+				class="org.mifos.application.accounts.business.AccountPaymentEntity" 
+			/>
 		</set>
-		<set name="accountCustomFields" cascade="all" inverse="true" lazy="true" access="field">
+		<set name="accountCustomFields" cascade="all" inverse="true" 
+			lazy="true" access="field">
 			<key column="ACCOUNT_ID" />
-			<one-to-many class="org.mifos.application.accounts.business.AccountCustomFieldEntity" />
+			<one-to-many 
+				class="org.mifos.application.accounts.business.AccountCustomFieldEntity" 
+			/>
 		</set>
-		<set name="accountStatusChangeHistory" cascade="all" inverse="true" table="ACCOUNT_STATUS_CHANGE_HISTORY" lazy="true" order-by="ACCOUNT_STATUS_CHANGE_ID asc" access="field">
+		<set name="accountStatusChangeHistory" cascade="all" inverse="true" 
+			table="ACCOUNT_STATUS_CHANGE_HISTORY" lazy="true" 
+			order-by="ACCOUNT_STATUS_CHANGE_ID asc" access="field">
 			<key column="ACCOUNT_ID" />
 			<one-to-many class="org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity" />
 		</set>
@@ -48,7 +82,9 @@
 			<one-to-many class="org.mifos.application.accounts.business.AccountFlagMapping" />
 		</set>
 		<!-- This is for loan account-->
-		<joined-subclass name="org.mifos.application.accounts.loan.business.LoanBO" table="LOAN_ACCOUNT">
+		<joined-subclass 
+			name="org.mifos.application.accounts.loan.business.LoanBO" 
+			table="LOAN_ACCOUNT">
 			<key column="ACCOUNT_ID" />
 
 			<property name="groupFlag" column="GROUP_FLAG" />
@@ -74,8 +110,13 @@
 			<many-to-one name="fund" column="FUND_ID" class="org.mifos.application.fund.business.FundBO" cascade="none" insert="true" update="false" unique="true" />
 			<many-to-one name="loanMeeting" column="MEETING_ID" access="field" class="org.mifos.application.meeting.business.MeetingBO" unique="true" insert="true" cascade="all" update="false" />
 			<many-to-one name="collateralType" column="COLLATERAL_TYPE_ID" class="org.mifos.application.master.business.CollateralTypeEntity" unique="true" lazy="true" cascade="none" insert="true" update="true" />
-			<many-to-one name="gracePeriodType" column="GRACE_PERIOD_TYPE_ID" class="org.mifos.application.productdefinition.business.GracePeriodTypeEntity" unique="true" lazy="true" cascade="none" insert="true" update="true" />
-			<many-to-one name="interestType" column="INTEREST_TYPE_ID" class="org.mifos.application.master.business.InterestTypesEntity" cascade="none" update="false" insert="true" unique="true" />
+			<many-to-one name="gracePeriodType" column="GRACE_PERIOD_TYPE_ID" 
+				class="org.mifos.application.productdefinition.business.GracePeriodTypeEntity" 
+				unique="true" lazy="true" cascade="none" 
+				insert="true" update="true" />
+			<many-to-one name="interestType" column="INTEREST_TYPE_ID" 
+				class="org.mifos.application.master.business.InterestTypesEntity" 
+				cascade="none" update="false" insert="true" unique="true" />
 			<one-to-one name="loanSummary" class="org.mifos.application.accounts.loan.business.LoanSummaryEntity" cascade="all" lazy="true" access="field" />
 			<one-to-one name="performanceHistory" class="org.mifos.application.accounts.loan.business.LoanPerformanceHistoryEntity" cascade="all" lazy="true" property-ref="loan" access="field" />
 			<one-to-one name="loanArrearsAgingEntity" class="org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity" cascade="all" lazy="true"  property-ref="loan"/>

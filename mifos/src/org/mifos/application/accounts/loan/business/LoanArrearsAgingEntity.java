@@ -44,12 +44,10 @@ import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanArrearsAgingEntity extends PersistentObject {
-	@SuppressWarnings("unused")
-	// see .hbm.xml file
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final Integer id;
 
-	@SuppressWarnings("unused")
-	// see .hbm.xml file
+	@SuppressWarnings("unused") // see .hbm.xml file
 	private final LoanBO loan;
 
 	private final CustomerBO customer;
