@@ -635,7 +635,12 @@ public class TestObjectFactory {
 				SAMPLE_GENERAL_LEDGER_CODE_ID);
 	}
 	
-	// added by greg to help in refactoring
+	/**
+	 * Deprecated in favor of the one which takes enums.
+	 * Also, some callers should be calling
+	 * {@link #createSavingsOffering(String, String)} (just to get rid
+	 * of the long argument list and hopefully make the test more readable).
+	 */
 	public static SavingsOfferingBO createSavingsOffering(String name,
 			String shortName, ApplicableTo applicableTo, Date startDate,
 			Short offeringStatusId, Double recommenededAmt,
@@ -648,6 +653,21 @@ public class TestObjectFactory {
 				maxAmtWithdrawl, minAmtForInt, savingsTypeId, intCalTypeId,
 				intCalcMeeting, intPostMeeting, 
 				SAMPLE_GENERAL_LEDGER_CODE_ID, SAMPLE_GENERAL_LEDGER_CODE_ID);
+	}
+
+	public static SavingsOfferingBO createSavingsOffering(String name,
+			String shortName, ApplicableTo applicableTo, Date startDate,
+			PrdStatus status, Double recommendedAmount,
+			RecommendedAmountUnit unit, Double intRate, Double maxAmtWithdrawl,
+			Double minAmtForInt, SavingsType savingsType, 
+			InterestCalcType interestCalculation,
+			MeetingBO intCalcMeeting, MeetingBO intPostMeeting) {
+		return createSavingsOffering(name, shortName, applicableTo,
+			startDate, status.getValue(), recommendedAmount,
+			unit.getValue(), intRate, maxAmtWithdrawl, minAmtForInt,
+			savingsType.getValue(), interestCalculation.getValue(),
+			intCalcMeeting, intPostMeeting
+			);
 	}
 
 	/**
@@ -727,16 +747,17 @@ public class TestObjectFactory {
 
 	public static SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName, SavingsType savingsTypeId,
-			ApplicableTo applicableTo) {
+			ApplicableTo applicableTo, Date currentDate) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return createSavingsOffering(offeringName, shortName, applicableTo, new Date(System.currentTimeMillis()), 
-				Short
-								.valueOf("2"), 300.0, RecommendedAmountUnit.PER_INDIVIDUAL
-								.getValue(), 24.0, 
-				200.0, 200.0, savingsTypeId.getValue(), InterestCalcType.MINIMUM_BALANCE.getValue(), 
+		return createSavingsOffering(offeringName, shortName, applicableTo, 
+				new Date(System.currentTimeMillis()), 
+				Short.valueOf("2"), 300.0, 
+				RecommendedAmountUnit.PER_INDIVIDUAL.getValue(), 24.0, 
+				200.0, 200.0, savingsTypeId.getValue(), 
+				InterestCalcType.MINIMUM_BALANCE.getValue(), 
 				meetingIntCalc, meetingIntPost);
 	}
 
@@ -940,6 +961,12 @@ public class TestObjectFactory {
 	
 	/**
 	 * Return a new meeting object which occurs on today's day of the week.
+
+	 * Not recommended: New tests should call 
+	 * {@link #getNewMeeting(RecurrenceType, short, MeetingType, WeekDay)}
+	 * instead to avoid bugs where the test will pass on one day but
+	 * not another.
+
 	 * @param frequency DAILY, WEEKLY, MONTHLY
 	 * @param recurAfter 1 means every day/week/month,
 	 * 2 means every second day/week/month... 
@@ -958,7 +985,8 @@ public class TestObjectFactory {
 	 * meeting type in the unit tests.
 	 */
 	public static MeetingBO getTypicalMeeting() {
-		return getNewMeeting(RecurrenceType.WEEKLY, EVERY_WEEK, MeetingType.CUSTOMER_MEETING, WeekDay.MONDAY);
+		return getNewMeeting(RecurrenceType.WEEKLY, EVERY_WEEK, 
+			MeetingType.CUSTOMER_MEETING, WeekDay.MONDAY);
 	}
 	
 	/**
@@ -2030,12 +2058,18 @@ public class TestObjectFactory {
 		return dateConversionCalendar.get(Calendar.DAY_OF_WEEK);
 	}
 
+	/**
+	 * This method is not recommended because it calls 
+	 * {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)}.
+	 */
 	public static SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName, Short interestCalcType, Short savingsTypeId,
 			Short depGLCode, Short intGLCode,
 			RecommendedAmountUnit recommendedAmountUnit) {
-		MeetingBO meetingIntCalc = createMeeting(getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		MeetingBO meetingIntPost = createMeeting(getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+		MeetingBO meetingIntCalc = createMeeting(
+				getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
+		MeetingBO meetingIntPost = createMeeting(
+				getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		return createSavingsOffering(offeringName, shortName,
 				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
 						.valueOf("2"), 300.0, recommendedAmountUnit.getValue(),
@@ -2043,6 +2077,10 @@ public class TestObjectFactory {
 				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
 	}
 
+	/**
+	 * This method is not recommended because it indirectly calls 
+	 * {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)}.
+	 */
 	public static SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName, Short depGLCode, Short intGLCode,
 			RecommendedAmountUnit recommendedAmountUnit) {
@@ -2055,6 +2093,19 @@ public class TestObjectFactory {
 			String shortName, RecommendedAmountUnit recommendedAmountUnit) {
 		return createSavingsOffering(offeringName, shortName, Short
 				.valueOf("1"), Short.valueOf("2"), recommendedAmountUnit);
+	}
+
+	public static SavingsOfferingBO createSavingsOffering(String offeringName,
+			String shortName) {
+		MeetingBO meetingIntCalc = createMeeting(getTypicalMeeting());
+		MeetingBO meetingIntPost = createMeeting(getTypicalMeeting());
+		return createSavingsOffering(offeringName, shortName, 
+				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
+				PrdStatus.SAVINGS_ACTIVE, 300.0,
+				RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 
+				200.0, 200.0, SavingsType.VOLUNTARY, 
+				InterestCalcType.MINIMUM_BALANCE, 
+				meetingIntCalc, meetingIntPost);
 	}
 
 }

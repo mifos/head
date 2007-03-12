@@ -34,6 +34,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -417,9 +421,13 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, currentDate, 
-				Short.valueOf("2"), 300.0, ((short) 1), 1.2, 
-				200.0, 200.0, Short.valueOf("2"), ((short) 1), 
+		return TestObjectFactory.createSavingsOffering(offeringName, shortName, 
+				ApplicableTo.GROUPS, currentDate, 
+				PrdStatus.SAVINGS_ACTIVE, 300.0, 
+				RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 
+				200.0, 200.0, 
+				SavingsType.VOLUNTARY, 
+				InterestCalcType.MINIMUM_BALANCE, 
 				meetingIntCalc, meetingIntPost);
 	}
 

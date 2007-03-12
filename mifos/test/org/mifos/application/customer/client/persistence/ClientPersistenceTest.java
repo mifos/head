@@ -37,6 +37,7 @@
  */
 package org.mifos.application.customer.client.persistence;
 
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.center.business.CenterBO;
@@ -72,14 +73,15 @@ public class ClientPersistenceTest extends MifosTestCase {
 	}
 
 	public void testRetrieveOfferingsApplicableToClient() throws Exception {
+		Date currentTimestamp = new Date(System.currentTimeMillis());
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1",
-				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
+				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, currentTimestamp);
 		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2",
-				"s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS);
+				"s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS, currentTimestamp);
 		savingsOffering3 = TestObjectFactory.createSavingsOffering("Offering3",
-				"s3", SavingsType.MANDATORY, ApplicableTo.GROUPS);
+				"s3", SavingsType.MANDATORY, ApplicableTo.GROUPS, currentTimestamp);
 		savingsOffering4 = TestObjectFactory.createSavingsOffering("Offering4",
-				"s4", SavingsType.VOLUNTARY, ApplicableTo.CENTERS);
+				"s4", SavingsType.VOLUNTARY, ApplicableTo.CENTERS, currentTimestamp);
 		HibernateUtil.closeSession();
 		List<SavingsOfferingBO> offerings = new ClientPersistence()
 				.retrieveOfferingsApplicableToClient();

@@ -40,6 +40,9 @@ package org.mifos.application.productdefinition.business;
 
 import org.mifos.framework.business.PersistentObject;
 
+/**
+ * Should generally (always?) be replaced with {@link PrdStatus}.
+ */
 public class PrdStatusEntity extends PersistentObject {
 
 	private final Short offeringStatusId;

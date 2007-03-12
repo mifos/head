@@ -56,8 +56,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testGetSavingProducts() throws Exception {
 		createInitialObjects();
-		savingsOffering1 = createSavingsOffering("SavingPrd1", "cadf");
-		savingsOffering2 = createSavingsOffering("SavingPrd2", "a1lt");
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("SavingPrd1", "cadf");
+		savingsOffering2 = TestObjectFactory.createSavingsOffering("SavingPrd2", "a1lt");
 		List<PrdOfferingView> products = service.getSavingProducts(null, group
 				.getCustomerLevel(), CustomerConstants.GROUP_LEVEL_ID);
 		assertEquals(Integer.valueOf("2").intValue(), products.size());
@@ -69,8 +69,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testGetSavingProductsForInvalidConnection() {
 		createInitialObjects();
-		savingsOffering1 = createSavingsOffering("SavingPrd1", "cadf");
-		savingsOffering2 = createSavingsOffering("SavingPrd2", "a1lt");
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("SavingPrd1", "cadf");
+		savingsOffering2 = TestObjectFactory.createSavingsOffering("SavingPrd2", "a1lt");
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.getSavingProducts(null,
@@ -106,7 +106,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindById() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1", "kh6y");
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "kh6y");
 		savings = createSavingsAccount("FFFF", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		SavingsBO savings1 = service.findById(savings.getAccountId());
@@ -115,7 +115,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindByIdForInvalidConnection() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1", "kh6y");
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "kh6y");
 		savings = createSavingsAccount("FFFF", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		TestObjectFactory.simulateInvalidConnection();
@@ -132,7 +132,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindBySystemId() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1", "cadf");
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "cadf");
 		savings = createSavingsAccount("YYYY", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		SavingsBO savings1 = service.findBySystemId(savings.getGlobalAccountNum());
@@ -142,7 +142,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindBySystemIdForInvalidConnection() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1", "cadf");
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "cadf");
 		savings = createSavingsAccount("YYYY", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		TestObjectFactory.simulateInvalidConnection();
@@ -203,19 +203,6 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-	}
-
-	public static SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName) {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
-				Short
-										.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
-				200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
-				meetingIntCalc, meetingIntPost);
 	}
 
 	/**

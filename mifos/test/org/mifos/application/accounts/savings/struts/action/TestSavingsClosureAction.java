@@ -105,7 +105,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		createInitialObjects();
 		createClients();
 		savingsOffering = TestObjectFactory.createSavingsOffering(
-			"Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
+			"Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
 		savings = createSavingsAccount("000X00000000017", savingsOffering,
 				client1, AccountState.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();

@@ -126,7 +126,7 @@ public class TestClientBO extends MifosTestCase {
 	}	
 	
 	public void testGenerateScheduleForClient_CenterSavingsAccount_OnChangeStatus()throws Exception{
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CENTERS);
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CENTERS, new Date(System.currentTimeMillis()));
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
 		accountBO = TestObjectFactory.createSavingsAccount("globalNum", 
 				center, AccountState.SAVINGS_ACC_APPROVED, 
@@ -160,7 +160,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testGenerateScheduleForClient_GroupSavingsAccount_OnChangeStatus()throws Exception{
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.GROUPS);
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
 		accountBO = TestObjectFactory.createSavingsAccount(
 				"globalNum", group, AccountState.SAVINGS_ACC_APPROVED, 
@@ -193,7 +193,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testGenerateScheduleForClient_OnClientCreate()throws Exception{
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.GROUPS);
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
 		createParentObjects(CustomerStatus.GROUP_ACTIVE);
 		accountBO = TestObjectFactory.createSavingsAccount("globalNum", 
 				center, AccountState.SAVINGS_ACC_APPROVED, 
@@ -218,7 +218,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testFailure_InitialSavingsOfferingAtCreate()throws Exception{
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
 		ClientNameDetailView clientView = 
 			new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"Client","","1","");
 		ClientNameDetailView spouseView = 
@@ -238,8 +238,8 @@ public class TestClientBO extends MifosTestCase {
 	}		
 	
 	public void testInitialSavingsOfferingAtCreate()throws Exception{
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
-		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2", "s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
+		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2", "s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
@@ -404,7 +404,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testSuccessfulCreateInActiveState_WithAssociatedSavingsOffering() throws Exception {
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("offering1","s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("offering1","s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
 		HibernateUtil.closeSession();
 		List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
 		selectedOfferings.add(savingsOffering1);
@@ -436,8 +436,8 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	public void testSavingsAccountOnChangeStatusToActive() throws Exception {
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("offering1","s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
-		savingsOffering2 = TestObjectFactory.createSavingsOffering("offering2","s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS);
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("offering1","s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
+		savingsOffering2 = TestObjectFactory.createSavingsOffering("offering2","s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
 		HibernateUtil.closeSession();
 		List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
 		selectedOfferings.add(savingsOffering1);

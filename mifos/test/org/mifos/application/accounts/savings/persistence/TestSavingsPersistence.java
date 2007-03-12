@@ -29,7 +29,6 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
@@ -99,8 +98,8 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 	public void testGetSavingsProducts() throws Exception {
 		createInitialObjects();
-		savingsOffering1 = createSavingsOffering("SavingPrd1", "sdcf");
-		savingsOffering2 = createSavingsOffering("SavingPrd2", "1asq");
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("SavingPrd1", "sdcf");
+		savingsOffering2 = TestObjectFactory.createSavingsOffering("SavingPrd2", "1asq");
 		List<PrdOfferingView> products = savingsPersistence.getSavingsProducts(
 				null, group.getCustomerLevel(), new Short("2"));
 		assertEquals(2, products.size());
@@ -121,7 +120,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 	public void testFindById() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1", "xdsa");
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "xdsa");
 		savings = createSavingsAccount("FFFF", savingsOffering);
 		SavingsBO savings1 = savingsPersistence
 				.findById(savings.getAccountId());
@@ -160,7 +159,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 	public void testFindBySystemId() throws Exception {
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("SavingPrd1", "v1ws");
+		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "v1ws");
 		savings = createSavingsAccount("kkk", savingsOffering);
 		SavingsBO savings1 = savingsPersistence.findBySystemId(savings.getGlobalAccountNum());
 		assertEquals(savings.getAccountId(), savings1.getAccountId());
@@ -265,9 +264,9 @@ public class TestSavingsPersistence extends MifosTestCase {
 	public void testGetAccountsPendingForIntCalc() throws Exception {
 		SavingsTestHelper helper = new SavingsTestHelper();
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("prd1", "sagf");
-		savingsOffering1 = createSavingsOffering("prd2", "q14f");
-		savingsOffering2 = createSavingsOffering("prd3", "z1as");
+		savingsOffering = TestObjectFactory.createSavingsOffering("prd1", "sagf");
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("prd2", "q14f");
+		savingsOffering2 = TestObjectFactory.createSavingsOffering("prd3", "z1as");
 		savings = helper.createSavingsAccount("000100000000021",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -308,9 +307,9 @@ public class TestSavingsPersistence extends MifosTestCase {
 	public void testGetAccountsPendingForIntPost() throws Exception {
 		SavingsTestHelper helper = new SavingsTestHelper();
 		createInitialObjects();
-		savingsOffering = createSavingsOffering("prd1", "lv4r");
-		savingsOffering1 = createSavingsOffering("prd2", "tj81");
-		savingsOffering2 = createSavingsOffering("prd3", "nvr4");
+		savingsOffering = TestObjectFactory.createSavingsOffering("prd1", "lv4r");
+		savingsOffering1 = TestObjectFactory.createSavingsOffering("prd2", "tj81");
+		savingsOffering2 = TestObjectFactory.createSavingsOffering("prd3", "nvr4");
 		savings = helper.createSavingsAccount("000100000000021",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -417,19 +416,6 @@ public class TestSavingsPersistence extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 
-	}
-
-	private SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName) {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
-				Short
-										.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
-				200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
-				meetingIntCalc, meetingIntPost);
 	}
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,

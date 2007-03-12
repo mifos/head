@@ -2,6 +2,7 @@ package org.mifos.framework.struts.plugin;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import org.mifos.application.accounts.savings.struts.action.SavingsAction;
@@ -17,7 +18,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestConstPlugin extends MifosMockStrutsTestCase {
 
-	private SavingsOfferingBO offering;
+	private SavingsOfferingBO product;
 
 	@Override
 	public void setUp()throws Exception {
@@ -30,16 +31,17 @@ public class TestConstPlugin extends MifosMockStrutsTestCase {
 		request.getSession().setAttribute(Constants.USERCONTEXT, 
 			TestUtils.makeUser());
 		
-		offering = TestObjectFactory.createSavingsOffering(
+		product = TestObjectFactory.createSavingsOffering(
 			"Offering1", "s1", 
-			SavingsType.MANDATORY, ApplicableTo.CLIENTS);
+			SavingsType.MANDATORY, ApplicableTo.CLIENTS, 
+			new Date(System.currentTimeMillis()));
 		addRequestParameter("selectedPrdOfferingId", 
-			offering.getPrdOfferingId().toString());
+			product.getPrdOfferingId().toString());
 	}
 	
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(offering);
+		TestObjectFactory.removeObject(product);
 		super.tearDown();
 	}
 

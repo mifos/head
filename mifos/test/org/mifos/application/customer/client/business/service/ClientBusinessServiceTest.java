@@ -1,5 +1,6 @@
 package org.mifos.application.customer.client.business.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.center.business.CenterBO;
@@ -73,7 +74,7 @@ public class ClientBusinessServiceTest extends MifosTestCase {
 
 	public void testFailureRetrieveOfferings() throws Exception {
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1",
-				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
+				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
 		HibernateUtil.closeSession();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
@@ -87,13 +88,13 @@ public class ClientBusinessServiceTest extends MifosTestCase {
 
 	public void testRetrieveOfferingsApplicableToClient() throws Exception {
 		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1",
-				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS);
+				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
 		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2",
-				"s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS);
+				"s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
 		savingsOffering3 = TestObjectFactory.createSavingsOffering("Offering3",
-				"s3", SavingsType.MANDATORY, ApplicableTo.GROUPS);
+				"s3", SavingsType.MANDATORY, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()));
 		savingsOffering4 = TestObjectFactory.createSavingsOffering("Offering4",
-				"s4", SavingsType.VOLUNTARY, ApplicableTo.CENTERS);
+				"s4", SavingsType.VOLUNTARY, ApplicableTo.CENTERS, new Date(System.currentTimeMillis()));
 		HibernateUtil.closeSession();
 		List<SavingsOfferingBO> offerings = service
 				.retrieveOfferingsApplicableToClient();
@@ -143,12 +144,12 @@ public class ClientBusinessServiceTest extends MifosTestCase {
 		TestObjectFactory.simulateInvalidConnection();
 
 		try {
-			List<ClientBO> clients = new ClientBusinessService()
+			new ClientBusinessService()
 					.getActiveClientsUnderParent(center.getSearchId(), center
 							.getOffice().getOfficeId());
 			fail();
 		} catch (ServiceException e) {
-			assertTrue(true);
+			assertEquals("exception.framework.ApplicationException", e.getKey());
 		}
 		HibernateUtil.closeSession();
 		TestObjectFactory.cleanUp(client);

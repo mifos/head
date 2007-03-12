@@ -1,5 +1,7 @@
 package org.mifos.framework.struts.plugin;
 
+import java.util.Date;
+
 import org.mifos.application.accounts.savings.struts.action.SavingsAction;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -13,7 +15,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestInitializerPlugin extends MifosMockStrutsTestCase {
 
-	private SavingsOfferingBO offering;
+	private SavingsOfferingBO product;
 
 	@Override
 	public void setUp()throws Exception{
@@ -29,16 +31,17 @@ public class TestInitializerPlugin extends MifosMockStrutsTestCase {
 		request.getSession().setAttribute(Constants.USERCONTEXT, 
 			TestUtils.makeUser());
 		
-		offering = TestObjectFactory.createSavingsOffering(
+		product = TestObjectFactory.createSavingsOffering(
 			"Offering1", "s1", 
-			SavingsType.MANDATORY, ApplicableTo.CLIENTS);
+			SavingsType.MANDATORY, ApplicableTo.CLIENTS, 
+			new Date(System.currentTimeMillis()));
 		addRequestParameter("selectedPrdOfferingId", 
-			offering.getPrdOfferingId().toString());
+			product.getPrdOfferingId().toString());
 	}
 	
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(offering);
+		TestObjectFactory.removeObject(product);
 		super.tearDown();
 	}
 
@@ -49,7 +52,8 @@ public class TestInitializerPlugin extends MifosMockStrutsTestCase {
 		addRequestParameter("recordLoanOfficerId","0");
 		performNoErrors();
 		assertEquals(ConfigurationConstants.BRANCHOFFICE,
-				(String)context.getAttribute("LABEL_"+ ConfigurationConstants.BRANCHOFFICE.toUpperCase()));
+			(String)context.getAttribute(
+				"LABEL_"+ ConfigurationConstants.BRANCHOFFICE.toUpperCase()));
 	}
 
 }

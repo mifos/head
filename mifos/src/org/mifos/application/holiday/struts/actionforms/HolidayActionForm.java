@@ -12,7 +12,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.application.holiday.exceptions.HolidayException;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.Methods;
@@ -164,7 +163,7 @@ public class HolidayActionForm extends BaseActionForm {
 
 	}
 
-	public void populate(HolidayBO holidayBO) throws HolidayException {
+	public void populate(HolidayBO holidayBO) {
 
 		this.repaymentRuleId = holidayBO.getRepaymentRuleId().toString();
 		this.holidayName = holidayBO.getHolidayName();
@@ -191,14 +190,14 @@ public class HolidayActionForm extends BaseActionForm {
 	@Override
 	public void reset(ActionMapping mapping, HttpServletRequest request) {
 		super.reset(mapping, request);
-		String method = request.getParameter("method");
 		this.holidayFromDateString = "";
 		this.holidayName = "";
 		this.holidayThruDateString = "";
 		this.repaymentRuleId = "";
 			
 		if (null != request.getParameter(Constants.CURRENTFLOWKEY))
-			request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter("currentFlowKey"));
+			request.setAttribute(Constants.CURRENTFLOWKEY, 
+				request.getParameter("currentFlowKey"));
 	}
 	
 	protected Locale getUserLocale(HttpServletRequest request) {
