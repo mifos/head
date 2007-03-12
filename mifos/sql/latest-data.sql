@@ -16,7 +16,7 @@
 -- merge add-version.sql
 -- merge all upgrade_to_*.sql files to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(108);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(109);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -3819,15 +3819,12 @@ VALUES(73,'PovertyStatus',1,1,0);
 /* The table System Configuration will contain the different configuration 
 items required for MFI like CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS 
 etc - Configuration */
-/* The row with OFFICE_ID of null is special: MIFOS gets 
-the session time out from there. */
-INSERT INTO SYSTEM_CONFIGURATION(OFFICE_ID,SESSION_TIME_OUT,SCHEDULE_MEETING_ON_HOLIDAY,DAYS_FOR_CAL_DEFINITION,NAME_SEQUENCE,BACK_DATED_TXN_ALLOWED,CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS,CLIENT_CAN_EXIST_OUTSIDE_GROUP,NO_OF_INTEREST_DAYS)
-VALUES(null,60,null,null,null,null,null,null,null,null);
-INSERT INTO SYSTEM_CONFIGURATION(OFFICE_ID,SESSION_TIME_OUT,SCHEDULE_MEETING_ON_HOLIDAY,DAYS_FOR_CAL_DEFINITION,NAME_SEQUENCE,BACK_DATED_TXN_ALLOWED,CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS,CLIENT_CAN_EXIST_OUTSIDE_GROUP,NO_OF_INTEREST_DAYS)
-VALUES(1,1,'same_day',30,'first_name,middle_name,last_name,second_last_name',1,1,1,1,365);
+INSERT INTO SYSTEM_CONFIGURATION(OFFICE_ID,SCHEDULE_MEETING_ON_HOLIDAY,DAYS_FOR_CAL_DEFINITION,NAME_SEQUENCE,BACK_DATED_TXN_ALLOWED,CENTER_HIERARCHY_EXIST,GROUP_CAN_APPLY_LOANS,CLIENT_CAN_EXIST_OUTSIDE_GROUP,NO_OF_INTEREST_DAYS)
+VALUES(1,'same_day',30,'first_name,middle_name,last_name,second_last_name',1,1,1,1,365);
 
 /* The table CONFIG_KEY_VALUE_INTEGER holds generic key-value pair configuration data for integer values */
 INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('CollectionSheetHelper.daysInAdvance',1);
+INSERT INTO CONFIG_KEY_VALUE_INTEGER(CONFIGURATION_KEY, CONFIGURATION_VALUE) VALUES ('sessionTimeout',60);
 
 /*Added Table Personnel_Role */
 /* The table Personnel role will contain the role associated to the Admin user of the MFI - Configuration */

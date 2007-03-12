@@ -13,7 +13,6 @@
 		        </generator>
 		    </id>
 			<one-to-one name="office" class="org.mifos.application.office.business.OfficeBO" constrained="false"/>	 
-	        <property name="sessionTimeOut" column="SESSION_TIME_OUT" type="short" />
 	        <property name="scheduleMeetingOnHoliday" column="SCHEDULE_MEETING_ON_HOLIDAY" type="string" />
 	        <property name="daysForCalDefinition" column="DAYS_FOR_CAL_DEFINITION" type="short" />
 	        <property name="nameSequence" column="NAME_SEQUENCE" type="string" />
@@ -23,6 +22,5 @@
 	        <property name="clientCanExistOutsideGroup" column="CLIENT_CAN_EXIST_OUTSIDE_GROUP" type="short" />
 		    <property name="noOfInterestDays" column="NO_OF_INTEREST_DAYS" type="short" />	     																																															  
 	     </class>
-  <query name="getSystemConfig"><![CDATA[select new ConfigEntity(config.sessionTimeOut) from org.mifos.framework.components.configuration.business.ConfigEntity config where config.office.officeId is null]]></query>
   <query name="getOfficeConfig"><![CDATA[from org.mifos.framework.components.configuration.business.ConfigEntity config where config.office.officeId is not null]]></query>
    </hibernate-mapping>

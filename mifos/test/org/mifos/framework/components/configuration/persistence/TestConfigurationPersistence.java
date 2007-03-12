@@ -66,12 +66,6 @@ public class TestConfigurationPersistence extends MifosTestCase {
 		}
 	}
 
-	public void testGetSystemConfiguration() throws Exception {
-		ConfigEntity systemConfig =
-			configurationPersistence.getSystemConfiguration();
-		assertNotNull(systemConfig);
-	}
-
 	public void testGetOfficeConfiguration() throws Exception {
 		List<ConfigEntity> configList =
 			configurationPersistence.getOfficeConfiguration();

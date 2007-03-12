@@ -46,6 +46,7 @@ import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.framework.components.configuration.business.ConfigEntity;
 import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
+import org.mifos.framework.components.configuration.util.helpers.ConfigConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -61,6 +62,7 @@ public class ConfigurationPersistence extends Persistence{
 	private static final String KEY_QUERY_PARAMETER = "KEY";
 	
 	public static final String CONFIGURATION_KEY_DAYS_IN_ADVANCE = "CollectionSheetHelper.daysInAdvance";
+	public static final String CONFIGURATION_KEY_SESSION_TIMEOUT = ConfigConstants.SESSION_TIMEOUT;
 	
 	public MifosCurrency getDefaultCurrency() throws PersistenceException {
 		List queryResult = executeNamedQuery(
@@ -90,27 +92,6 @@ public class ConfigurationPersistence extends Persistence{
 		return new FrameworkRuntimeException(null, message);
 	}
 
-	/**
-	 * TODO: getSystemConfiguration is a candidate for removal.  The only thing retrieved from this
-	 * is a session timeout value and it does not appear to be used anywhere other
-	 * than in test code.  If it should be used somewhere, then the session timeout
-	 * value should become a configuration key value pair.  Right now this value is
-	 * stored in the SYSTEM_CONFIGURATION table which stores office specific config
-	 * data and has a special case of null office id to indicate the row where session
-	 * timeout is stored.  This single null office id row is the only row that uses 
-	 * the SESSION_TIME_OUT column.  If this method is removed (or rewritten to use a
-	 * configuration key value pair, then the SESSION_TIME_OUT column can be removed. 
-	 */
-	public ConfigEntity getSystemConfiguration() throws PersistenceException{
-		List<ConfigEntity> queryResult = executeNamedQuery(
-			NamedQueryConstants.GET_SYSTEM_CONFIG, null);
-		if (queryResult==null || queryResult.size()==0) {
-			logger.error("No System Configuration Specified");
-			throw new FrameworkRuntimeException(null, "No System Configuration Specified");
-		}
-		return queryResult.get(0);
-	}
-	
 	public SupportedLocalesEntity getSupportedLocale()throws PersistenceException{
 		  List<SupportedLocalesEntity> supportedLocaleList = HibernateUtil.getSessionTL().getNamedQuery(NamedQueryConstants.GET_MFI_LOCALE).list();
 		  if (supportedLocaleList==null || supportedLocaleList.size()==0) {

@@ -7,7 +7,6 @@ public class ConfigEntity extends Persistence {
 
 	private Short systemConfigId;
 	private OfficeBO office;
-	private Short sessionTimeOut;
 	private String scheduleMeetingOnHoliday; 
 	private Short daysForCalDefinition; 
 	private String nameSequence; 
@@ -19,10 +18,6 @@ public class ConfigEntity extends Persistence {
 
 	public ConfigEntity(){}
 
-	
-	public ConfigEntity(Short sessionTimeOut){
-		this.sessionTimeOut = sessionTimeOut;
-	}
 	
 	public Short getBackDatedTrxnAllowed() {
 		return backDatedTrxnAllowed;
@@ -93,14 +88,6 @@ public class ConfigEntity extends Persistence {
 	
 	public void setScheduleMeetingOnHoliday(String scheduleMeetingOnHoliday) {
 		this.scheduleMeetingOnHoliday = scheduleMeetingOnHoliday;
-	}
-	
-	public Short getSessionTimeOut() {
-		return sessionTimeOut;
-	}
-	
-	public void setSessionTimeOut(Short sessionTimeOut) {
-		this.sessionTimeOut = sessionTimeOut;
 	}
 	
 	public Short getSystemConfigId() {

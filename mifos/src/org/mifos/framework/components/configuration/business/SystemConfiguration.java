@@ -12,10 +12,10 @@ public class SystemConfiguration{
 	  private MifosCurrency currency;
 	  private SupportedLocalesEntity mfiLocale;
 	  private Locale locale;
-	  private Short sessionTimeOut;
+	  private Integer sessionTimeOut;
 	  private TimeZone timeZone;
 
-	  public SystemConfiguration(SupportedLocalesEntity mfiLocale, MifosCurrency currency, Short sessionTimeOut, int timeZoneOffSet){
+	  public SystemConfiguration(SupportedLocalesEntity mfiLocale, MifosCurrency currency, int sessionTimeOut, int timeZoneOffSet){
 		  this.mfiLocale = mfiLocale;
 		  this.currency = currency;
 		  this.sessionTimeOut = sessionTimeOut;
@@ -35,7 +35,7 @@ public class SystemConfiguration{
 		  return currency;
 	  }
 	  
-	  public Short getSessionTimeOut() {
+	  public Integer getSessionTimeOut() {
 		  return sessionTimeOut;
 	  }
 	  

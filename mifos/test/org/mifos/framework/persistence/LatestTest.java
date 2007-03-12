@@ -123,7 +123,7 @@ public class LatestTest extends TestCase {
 	private DataStore upAndBack(DataStore current, int nextVersion) 
 	throws Exception {
 		Database database = new Database(current);
-		String before = new SqlDumper().dump(database.dataStore());
+		String before = new SqlDumper(false).dump(database.dataStore());
 		new DatabaseVersionPersistence().execute(
 			new FileInputStream("sql/upgrade_to_" + nextVersion + ".sql"), 
 			database.openConnection());
@@ -131,7 +131,7 @@ public class LatestTest extends TestCase {
 		new DatabaseVersionPersistence().execute(
 			new FileInputStream("sql/downgrade_from_" + nextVersion + ".sql"), 
 			database.openConnection());
-		String after = new SqlDumper().dump(database.dataStore());
+		String after = new SqlDumper(false).dump(database.dataStore());
 		assertEquals(before, after);
 		
 		return upgraded;

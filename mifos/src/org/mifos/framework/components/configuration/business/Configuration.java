@@ -75,7 +75,7 @@ public class Configuration {
   private void initializeSystemConfiguration(){
 	 systemConfig = new SystemConfiguration((SupportedLocalesEntity)cacheRepo.getValueFromSystemCache(ConfigConstants.MFI_LOCALE),
 			  (MifosCurrency)cacheRepo.getValueFromSystemCache(ConfigConstants.CURRENCY),
-			  (Short)cacheRepo.getValueFromSystemCache(ConfigConstants.SESSION_TIMEOUT),
+			  (Integer)cacheRepo.getValueFromSystemCache(ConfigConstants.SESSION_TIMEOUT),
 			  (Integer)cacheRepo.getValueFromSystemCache(ConfigConstants.TIMEZONE));
   }
   

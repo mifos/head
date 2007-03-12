@@ -61,13 +61,12 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.ConfigEntity;
 import org.mifos.framework.components.configuration.cache.Cache;
 import org.mifos.framework.components.configuration.cache.CacheRepository;
 import org.mifos.framework.components.configuration.cache.Key;
 import org.mifos.framework.components.configuration.cache.OfficeCache;
-import org.mifos.framework.components.configuration.persistence.service.ConfigurationPersistenceService;
+import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ConstantsNotLoadedException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -75,22 +74,13 @@ import org.mifos.framework.exceptions.StartUpException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class ConfigurationInitializer {
-	private ConfigurationPersistenceService dbService;
+	private ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
 
 	private OfficeBO headOffice;
 
 	private Map<String, String> officeConfigConstants;
-
-	private ConfigurationPersistenceService getDBService() {
-		if (dbService == null)
-			dbService = (ConfigurationPersistenceService) ServiceFactory
-					.getInstance().getPersistenceService(
-							PersistenceServiceName.Configuration);
-		return dbService;
-	}
 
 	private OfficeBO getHeadOffice() throws ApplicationException {
 		if (headOffice == null)
@@ -101,17 +91,14 @@ public class ConfigurationInitializer {
 	protected Cache createSystemCache() throws SystemException,
 			ApplicationException {
 		Map<String, Object> systemConfigMap = new HashMap<String, Object>();
-		ConfigEntity systemConfiguration = getDBService()
-				.getSystemConfiguration();
-		if (systemConfiguration.getSessionTimeOut() != null)
-			systemConfigMap.put(ConfigConstants.SESSION_TIMEOUT,
-					systemConfiguration.getSessionTimeOut());
-		else
-			systemConfigMap.put(ConfigConstants.SESSION_TIMEOUT,
-					ConfigConstants.SESSION_TIMEOUT_DEFAULT);
-		systemConfigMap.put(ConfigConstants.CURRENCY, getDBService()
+
+		systemConfigMap.put(ConfigConstants.SESSION_TIMEOUT,
+			Integer.valueOf(configurationPersistence.getConfigurationValueInteger(
+				configurationPersistence.CONFIGURATION_KEY_SESSION_TIMEOUT)));
+
+		systemConfigMap.put(ConfigConstants.CURRENCY, configurationPersistence
 				.getDefaultCurrency());
-		systemConfigMap.put(ConfigConstants.MFI_LOCALE, getDBService()
+		systemConfigMap.put(ConfigConstants.MFI_LOCALE, configurationPersistence
 				.getSupportedLocale());
 
 		// TODO: pick timezone offset from database
@@ -122,7 +109,7 @@ public class ConfigurationInitializer {
 	protected OfficeCache createOfficeCache() throws SystemException,
 			ApplicationException {
 		Map<Key, Object> officeConfigMap = new HashMap<Key, Object>();
-		List<ConfigEntity> systemConfigList = getDBService()
+		List<ConfigEntity> systemConfigList = configurationPersistence
 				.getOfficeConfiguration();
 		for (int i = 0; i < systemConfigList.size(); i++) {
 			createOfficeCache(officeConfigMap, systemConfigList.get(i));
@@ -141,7 +128,7 @@ public class ConfigurationInitializer {
 				.getAccountStates(ConfigConstants.OPTIONAL_FLAG);
 		setAccountOptionalStates(officeConfigMap, accountOptionalStates);
 
-		List<WeekDaysEntity> weekDaysList = getDBService().getWeekDaysList();
+		List<WeekDaysEntity> weekDaysList = configurationPersistence.getWeekDaysList();
 
 		setFiscalStartOfWeek(officeConfigMap, weekDaysList);
 		setWeekOffList(officeConfigMap, weekDaysList);
