@@ -59,6 +59,10 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
 
+/*
+ * For Hibernate 3.2.2 or so, we'd just extend EmptyInterceptor.
+ * But that doesn't exist in 3.0 beta4.
+ */
 public class AuditInterceptor implements Interceptor {
 
 	private AuditLog auditLog;

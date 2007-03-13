@@ -1,6 +1,5 @@
 package org.mifos.application.accounts.savings.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -49,15 +48,11 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/accounts/savings/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/accounts/savings/struts-config.xml")
+				.getPath());
 		userContext = TestObjectFactory.getContext();
 		userContext.setPereferedLocale(new Locale("en", "US"));
 		addRequestParameter("recordLoanOfficerId", "1");
