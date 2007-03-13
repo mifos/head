@@ -117,4 +117,7 @@ public interface HolidayConstants {
 	public static final String HOLIDAYTHRUDATE = "holiday.HolidayThruDate";
 	public static final String HOLIDAYOFFICEID = "holiday.HolidayOfficeId";
 	public static final String HOLIDAYREPAYMENTRULE = "holiday.HolidayRepaymentRule";
+	
+	public static final String INVALIDFROMDATE = "errors.fromdateexception";
+	public static final String INVALIDTHRUDATE = "errors.thrudateexception";
 }

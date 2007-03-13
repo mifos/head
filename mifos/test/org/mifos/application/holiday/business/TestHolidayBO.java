@@ -1,10 +1,12 @@
 package org.mifos.application.holiday.business;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.joda.time.DateMidnight;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -13,6 +15,7 @@ public class TestHolidayBO extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		
 	}
 
 	@Override
@@ -22,7 +25,61 @@ public class TestHolidayBO extends MifosTestCase {
 	}
 
 	public void testAddHoliday() throws Exception {
+		long fromDateMillis = new DateMidnight().getMillis();
+		HolidayPK holidayPK = new HolidayPK((short)1, new Date(fromDateMillis));
+		HolidayBO holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
+				(short) 1, (short) 1, "Same Day");// the last string has no effect.
+		
+		// Disable date Validation because startDate is less than today
+		holidayEntity.setValidationEnabled(false);
+
+		holidayEntity.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		holidayEntity = (HolidayBO) TestObjectFactory.getObject(
+				HolidayBO.class, holidayEntity.getHolidayPK());
+
+		assertEquals("Test Holiday", holidayEntity.getHolidayName());
+		assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
+		assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
+		TestObjectFactory.cleanUp(holidayEntity);
+	}
+	
+	/**
+	 * test Holiday From Date Validations Failure.
+	 */
+	public void testHolidayFromDateValidationFailure() throws Exception {
 		HolidayPK holidayPK = new HolidayPK((short)1, new Date());
+		HolidayBO holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
+				(short) 1, (short) 1, "Same Day");// the last string has no effect.
+		
+		try {
+			holidayEntity.save();
+			HibernateUtil.commitTransaction();
+			HibernateUtil.closeSession();
+			
+			TestObjectFactory.cleanUp(holidayEntity);
+			// If it succedded to create this holiday
+			// Asssert false as it shouldn't by validations.
+			assertTrue(false); 
+		} catch(ApplicationException e) {
+			return;
+		}
+	}
+	
+	/**
+	 * test Holiday From Date Validations Success.
+	 */
+	public void testHolidayFromDateValidationSuccess() throws Exception {
+		long fromDateMillis = new DateMidnight().getMillis();
+		Calendar fromDate = Calendar.getInstance();
+		fromDate.setTimeInMillis(fromDateMillis);
+		fromDate.add(Calendar.DAY_OF_MONTH, 1);
+		fromDateMillis = fromDate.getTimeInMillis();
+		
+		HolidayPK holidayPK = new HolidayPK((short)1, new Date(fromDateMillis));
+		
 		HolidayBO holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
 				(short) 1, (short) 1, "Same Day");// the last string has no effect.
 		
@@ -34,6 +91,71 @@ public class TestHolidayBO extends MifosTestCase {
 				HolidayBO.class, holidayEntity.getHolidayPK());
 
 		assertEquals("Test Holiday", holidayEntity.getHolidayName());
+		assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
+		// automatically Fromdate is copied into thruDate if thrudate is null.
+		assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
+		
+		TestObjectFactory.cleanUp(holidayEntity);
+	}
+	
+	/** 
+	 * test Holiday From Date Against Thru Date Failure.
+	 */
+	public void testHolidayFromDateAgainstThruDateFailure() throws Exception {
+		HolidayPK holidayPK = new HolidayPK((short)1, Calendar.getInstance().getTime());
+		Calendar thruDate = Calendar.getInstance();
+		thruDate.add(Calendar.DAY_OF_MONTH, -1);
+		
+		HolidayBO holidayEntity = new HolidayBO(holidayPK, thruDate.getTime(), "Test Holiday",
+				(short) 1, (short) 1, "Same Day");// the last string has no effect.
+		
+		try {
+			holidayEntity.save();
+			
+			HibernateUtil.commitTransaction();
+			HibernateUtil.closeSession();
+			
+			TestObjectFactory.cleanUp(holidayEntity);
+			
+			// If it succedded to create this holiday
+			// Asssert false as it shouldn't by validation rules.
+			assertTrue(false); 
+		} catch(ApplicationException e) {
+			return;
+		}
+	}
+	
+	/** 
+	 * test Holiday From Date Against Thru Date Success.
+	 */
+	public void testHolidayFromDateAgainstThruDateSucces() throws Exception {
+		long fromDateMillis = new DateMidnight().getMillis();
+		Calendar fromDate = Calendar.getInstance();
+		fromDate.setTimeInMillis(fromDateMillis);
+		fromDate.add(Calendar.DAY_OF_MONTH, 1);
+		fromDateMillis = fromDate.getTimeInMillis();
+		
+		HolidayPK holidayPK = new HolidayPK((short)1, new Date(fromDateMillis));
+		
+		Calendar thruDate = Calendar.getInstance();
+		long thruDateMillis = new DateMidnight().getMillis();
+		thruDate.setTimeInMillis(thruDateMillis);
+		thruDate.add(Calendar.DAY_OF_MONTH, 1);
+		thruDateMillis = thruDate.getTimeInMillis();
+		
+		HolidayBO holidayEntity = new HolidayBO(holidayPK, thruDate.getTime(), "Test Holiday",
+				(short) 1, (short) 1, "Same Day");// the last string has no effect.
+		
+		holidayEntity.save();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+
+		holidayEntity = (HolidayBO) TestObjectFactory.getObject(
+				HolidayBO.class, holidayEntity.getHolidayPK());
+
+		assertEquals("Test Holiday", holidayEntity.getHolidayName());
+		assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
+		assertEquals(thruDateMillis, holidayEntity.getHolidayThruDate().getTime());
 		
 		TestObjectFactory.cleanUp(holidayEntity);
 	}
@@ -43,7 +165,7 @@ public class TestHolidayBO extends MifosTestCase {
        HOLIDAY_THRU_DATE is NULL;
        ?  Doing this for save and update will fix it for future cases.
 	 */
-	public void testSaveSuppliesThruDate() throws Exception {
+	public void testSaveSuppliesThruDate() throws Exception {		
 		long startDate = new DateMidnight(2003, 1, 26).getMillis();
 		HolidayBO holiday =
 			new HolidayBO(
@@ -54,6 +176,10 @@ public class TestHolidayBO extends MifosTestCase {
 				RepaymentRuleTypes.SAME_DAY.getValue(),
 				null
 			);
+		
+		// Disable date Validation because startDate is less than today
+		holiday.setValidationEnabled(false);
+		
 		holiday.save();
 		assertEquals(startDate, holiday.getHolidayThruDate().getTime());
 	}
@@ -69,176 +195,11 @@ public class TestHolidayBO extends MifosTestCase {
 				RepaymentRuleTypes.SAME_DAY.getValue(),
 				null
 			);
+
+		// Disable date Validation because startDate is less than today
+		holiday.setValidationEnabled(false);
+		
 		holiday.update(holiday.getHolidayPK(), null, "New Name");
 		assertEquals(startDate, holiday.getHolidayThruDate().getTime());
 	}
-
-	/*public void testUpdateForNullHolidayName() throws Exception {
-		accountHoliday = TestObjectFactory.createCustomerHoliday(
-				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
-						.getValue(), HolidayConstants.STATUS_ACTIVE);
-		try {
-			holidayEntity.update(customerHoliday.getCustomerLevel(),
-					customerHoliday.getCustomerStatus(), null,
-					customerHoliday.getHolidayStatus(),
-					getHolidayDetails(), (short) 1, (short) 1);
-			fail();
-		} catch (HolidayException e) {
-			assertTrue(true);
-		}
-		HibernateUtil.closeSession();
-		customerHoliday = (CustomerHolidayBO) TestObjectFactory.getObject(
-				CustomerHolidayBO.class, customerHoliday.getHolidayId());
-	}
-
-	public void testUpdateForNullHolidayDetails() throws Exception {
-		customerHoliday = TestObjectFactory.createCustomerHoliday(
-				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
-						.getValue(), HolidayConstants.STATUS_ACTIVE);
-		try {
-			customerHoliday.update(customerHoliday.getCustomerLevel(),
-					customerHoliday.getCustomerStatus(), customerHoliday
-							.getHolidayName(), customerHoliday
-							.getHolidayStatus(), null, (short) 1, (short) 1);
-			fail();
-		} catch (HolidayException e) {
-			assertTrue(true);
-		}
-		HibernateUtil.closeSession();
-		customerHoliday = (CustomerHolidayBO) TestObjectFactory.getObject(
-				CustomerHolidayBO.class, customerHoliday.getHolidayId());
-	}
-
-	public void testUpdateForEmptyHolidayDetails() throws Exception {
-		customerHoliday = TestObjectFactory.createCustomerHoliday(
-				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
-						.getValue(), HolidayConstants.STATUS_ACTIVE);
-		try {
-			customerHoliday.update(customerHoliday.getCustomerLevel(),
-					customerHoliday.getCustomerStatus(), customerHoliday
-							.getHolidayName(), customerHoliday
-							.getHolidayStatus(), new ArrayList<String>(),
-					(short) 1, (short) 1);
-			fail();
-		} catch (HolidayException e) {
-			assertTrue(true);
-		}
-		HibernateUtil.closeSession();
-		customerHoliday = (CustomerHolidayBO) TestObjectFactory.getObject(
-				CustomerHolidayBO.class, customerHoliday.getHolidayId());
-	}
-
-	public void testUpdateCustomerHoliday() throws Exception {
-		customerHoliday = TestObjectFactory.createCustomerHoliday(
-				CustomerLevel.CENTER.getValue(), CustomerStatus.CENTER_ACTIVE
-						.getValue(), HolidayConstants.STATUS_ACTIVE);
-		HibernateUtil.closeSession();
-		customerHoliday = (CustomerHolidayBO) TestObjectFactory.getObject(
-				CustomerHolidayBO.class, customerHoliday.getHolidayId());
-
-		customerHoliday.update(customerHoliday.getCustomerLevel(),
-				customerHoliday.getCustomerStatus(), "Customer Holiday",
-				HolidayConstants.STATUS_INACTIVE, getHolidayDetails(),
-				(short) 1, (short) 1);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		customerHoliday = (CustomerHolidayBO) TestObjectFactory.getObject(
-				CustomerHolidayBO.class, customerHoliday.getHolidayId());
-
-		assertEquals("Customer Holiday", customerHoliday.getHolidayName());
-		assertEquals(HolidayConstants.STATUS_INACTIVE, customerHoliday
-				.getHolidayStatus());
-		assertEquals(3, customerHoliday.getHolidayDetails().size());
-		assertEquals(HolidayType.CUSTOMER_CHECKLIST, customerHoliday
-				.getHolidayType());
-	}
-
-	public void testUpdateAccountHoliday() throws Exception {
-		accountHoliday = TestObjectFactory.createAccountHoliday(
-				ProductType.LOAN.getValue(),
-				AccountState.LOANACC_ACTIVEINGOODSTANDING,
-				HolidayConstants.STATUS_ACTIVE);
-		HibernateUtil.closeSession();
-		accountHoliday = (AccountHolidayBO) TestObjectFactory.getObject(
-				AccountHolidayBO.class, accountHoliday.getHolidayId());
-
-		accountHoliday.update(accountHoliday.getProductTypeEntity(),
-				accountHoliday.getAccountStateEntity(), "Account Holiday",
-				HolidayConstants.STATUS_INACTIVE, getHolidayDetails(),
-				(short) 1, (short) 1);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		accountHoliday = (AccountHolidayBO) TestObjectFactory.getObject(
-				AccountHolidayBO.class, accountHoliday.getHolidayId());
-
-		assertEquals("Account Holiday", accountHoliday.getHolidayName());
-		assertEquals(HolidayConstants.STATUS_INACTIVE, accountHoliday
-				.getHolidayStatus());
-		assertEquals(3, accountHoliday.getHolidayDetails().size());
-		assertEquals(HolidayType.ACCOUNT_CHECKLIST, accountHoliday
-				.getHolidayType());
-	}
-
-	public void testSaveInValidConnection() throws HolidayException {
-		ProductTypeEntity productTypeEntity = (ProductTypeEntity) TestObjectFactory
-				.getObject(ProductTypeEntity.class, (short) 2);
-		AccountStateEntity accountStateEntity = new AccountStateEntity(
-				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
-		AccountHolidayBO accountHoliday = new AccountHolidayBO(productTypeEntity,
-				accountStateEntity, "Account Holiday", Short.valueOf("1"),
-				getHolidayDetails(), Short.valueOf("1"), (short) 1);
-		HibernateUtil.commitTransaction();
-		HibernateUtil.closeSession();
-		TestObjectFactory.simulateInvalidConnection();
-		try {
-			accountHoliday.save();
-			fail();
-		} catch (HolidayException e) {
-			assertTrue(true);
-		} finally {
-			HibernateUtil.closeSession();
-		}
-	}
-	
-	public void testCreateHolidayExceptionForCustomer() throws Exception {
-		CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(
-				CustomerLevel.CENTER);
-		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
-				CustomerStatus.CENTER_ACTIVE);
-		try {
-			customerHoliday = new CustomerHolidayBO(customerLevelEntity,
-					customerStatusEntity, null,
-					HolidayConstants.STATUS_ACTIVE, getHolidayDetails(),
-					(short) 1, (short) 1);
-			fail();
-		} catch (HolidayException ce) {
-			assertTrue(true);
-		}
-	}
-	
-	public void testCreateHolidayExceptionForCustomerZeroDetails() throws Exception {
-		CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(
-				CustomerLevel.CENTER);
-		CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(
-				CustomerStatus.CENTER_ACTIVE);
-		try {
-			customerHoliday = new CustomerHolidayBO(customerLevelEntity,
-					customerStatusEntity, null,
-					HolidayConstants.STATUS_ACTIVE, new ArrayList<String>(),
-					(short) 1, (short) 1);
-			fail();
-		} catch (HolidayException ce) {
-			assertTrue(true);
-		}
-	}
-
-
-
-	private List<String> getHolidayDetails() {
-		List<String> details = new ArrayList();
-		details.add("new detail1");
-		details.add("new detail2");
-		details.add("new detail3");
-		return details;
-	}*/
 }

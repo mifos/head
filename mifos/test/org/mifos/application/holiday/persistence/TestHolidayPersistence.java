@@ -31,6 +31,9 @@ public class TestHolidayPersistence extends MifosTestCase {
 		HolidayBO holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
 				(short) 1, (short) 1, "Same Day");// the last string has no effect.
 		
+		// Disable date Validation because startDate is less than today
+		holidayEntity.setValidationEnabled(false);
+		
 		holidayEntity.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

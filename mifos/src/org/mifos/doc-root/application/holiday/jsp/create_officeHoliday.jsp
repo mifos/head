@@ -67,7 +67,8 @@
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<html-el:form method="post"
 			action="/holidayAction.do?method=preview"
-			
+			onsubmit="return (validateMyForm(holidayFromDate,holidayFromDateFormat,holidayFromDateYY) &&
+							  validateMyForm(holidayThruDate,holidayThruDateFormat,holidayThruDateYY))"
 			focus="repaymentRuleId">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE form-validation PUBLIC
+          "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+
+<form-validation>
+	<formset>
+		<!-- product definition-->
+		<form name="/holidayAction">
+			<field property="holidayName" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="HolidayUIResources" />
+				<arg key="holiday.HolidayName" />
+			</field>
+			<field property="holidayFromDate" depends="required">
+				<msg name="required" key="errors.mandatory" bundle="HolidayUIResources" />
+				<arg0 key="holiday.HolidayFromDate" />
+			</field>
+			<field property="holidayThruDate" depends="">
+				<!--msg name="required" key="errors.mandatory" bundle="HolidayUIResources" /-->
+				<arg key="holiday.HolidayThruDate" />
+			</field>
+			<field property="repaymentRuleId" depends="required">
+				<msg name="required" key="errors.select" bundle="HolidayUIResources" />
+				<arg key="holiday.HolidayRepaymentRule" />
+			</field>			
+		</form>
+	</formset>
+</form-validation>

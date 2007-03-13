@@ -132,6 +132,10 @@ public class TestHolidayUtils extends MifosTestCase {
 		HolidayBO holidayEntity = new HolidayBO(holidayPK, holidayEndDate, "Same Day Holiday",
 				(short) 1, (short) 1, "Same Day");// the last string has no effect.
 		
+		// disable holiday Validation because we are creating Holiday with fixed dates 
+		// which one day it may violate the validation rules.
+		holidayEntity.setValidationEnabled(false);
+		
 		holidayEntity.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -161,6 +165,10 @@ public class TestHolidayUtils extends MifosTestCase {
 		HolidayPK holidayPK = new HolidayPK((short)1, holidayStartDate);
 		HolidayBO holidayEntity = new HolidayBO(holidayPK, holidayEndDate, "Next Meeting Or Repayment Holiday",
 				(short) 1, (short) 2, "Next MeetingOrRepayment");// the last string has no effect.
+		
+		// Disable holiday Validation because we are creating Holiday with fixed dates 
+		// which one day it may violate the validation rules.
+		holidayEntity.setValidationEnabled(false);
 		
 		holidayEntity.save();
 		HibernateUtil.commitTransaction();
@@ -451,6 +459,10 @@ public class TestHolidayUtils extends MifosTestCase {
 		HolidayPK holidayPK = new HolidayPK((short)1, holidayStartDate);
 		HolidayBO holidayEntity = new HolidayBO(holidayPK, holidayEndDate, holidayName,
 				(short) 1, repaymentRule, "repaymentRule");// the last string has no effect.
+		
+		// Disable holiday Validation because we are creating Holiday with fixed dates 
+		// which one day it may violate the validation rules.
+		holidayEntity.setValidationEnabled(false);
 		
 		holidayEntity.save();
 		HibernateUtil.commitTransaction();

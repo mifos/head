@@ -42,6 +42,11 @@
 		 	<forward name="load_success" path="/pages/application/holiday/jsp/create_officeHoliday.jsp" />
 		</action>
 	</action-mappings>
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames"
+			value="org/mifos/application/holiday/validation.xml,org/mifos/application/holiday/validator-rules.xml" />
+		<set-property property="stopOnFirstError" value="false" />
+	</plug-in>
 	<!-- Holiday resources -->
 	<message-resources key="holidayUIResources" parameter="org.mifos.application.holiday.util.resources.HolidayUIResources" />
 </struts-config>

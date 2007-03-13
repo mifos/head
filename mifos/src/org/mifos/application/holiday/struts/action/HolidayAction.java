@@ -90,7 +90,7 @@ public class HolidayAction extends BaseAction {
 		SessionUtils.setCollectionAttribute(HolidayConstants.REPAYMENTRULETYPES, 
 				getRepaymentRuleTypes(userContext.getLocaleId()),request);		
 		
-		return mapping.findForward("create_office_holiday");
+		return mapping.findForward(ActionForwards.load_success.toString());//"create_office_holiday");
 	}
 		
 	private HolidayBusinessService getHolidayBizService() {
