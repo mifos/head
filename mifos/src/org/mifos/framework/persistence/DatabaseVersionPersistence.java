@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseVersionPersistence extends Persistence {
 
-	public static final int APPLICATION_VERSION = 109;
+	public static final int APPLICATION_VERSION = 110;
 
 	public int read() throws SQLException {
 		return read(getConnection());
@@ -23,10 +23,11 @@ public class DatabaseVersionPersistence extends Persistence {
 
 	public int read(Connection connection) throws SQLException {
 		Statement statement = connection.createStatement();
-		ResultSet results = statement.executeQuery("select DATABASE_VERSION from DATABASE_VERSION");
+		ResultSet results = statement.executeQuery(
+			"select DATABASE_VERSION from DATABASE_VERSION");
 		if (results.next()) {
 			int version = results.getInt("DATABASE_VERSION");
-			if(results.next()) {
+			if (results.next()) {
 				throw new RuntimeException("too many rows in DATABASE_VERSION");
 			}
 			statement.close();
