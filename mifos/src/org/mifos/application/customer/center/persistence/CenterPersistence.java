@@ -26,7 +26,7 @@ public class CenterPersistence extends Persistence {
 		queryParameters.put(CustomerConstants.DISPLAY_NAME, name);
 		List queryResult = executeNamedQuery(
 				NamedQueryConstants.GET_CENTER_COUNT_BY_NAME, queryParameters);
-		return ((Integer) queryResult.get(0)).intValue() > 0;
+		return ((Number) queryResult.get(0)).longValue() > 0;
 	}
 
 	public CenterBO getCenter(Integer customerId) throws PersistenceException {

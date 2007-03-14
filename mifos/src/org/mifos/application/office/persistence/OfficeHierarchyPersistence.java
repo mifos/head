@@ -67,10 +67,10 @@ public class OfficeHierarchyPersistence extends Persistence {
 		try {
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("LEVEL_ID", levelId);
-			Integer count = (Integer) execUniqueResultNamedQuery(NamedQueryConstants.GET_OFFICE_COUNT,
+			Number count = (Number) execUniqueResultNamedQuery(NamedQueryConstants.GET_OFFICE_COUNT,
 					queryParameters);
 			if (count != null) {
-				return count > 0 ? true : false;
+				return count.longValue() > 0;
 			}
 		} catch (HibernateException e) {
 			throw new PersistenceException(e);

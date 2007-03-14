@@ -731,7 +731,7 @@ public class CustomerPersistence extends Persistence {
 				NamedQueryConstants.GET_CUSTOMER_COUNT_FOR_OFFICE,
 				queryParameters);
 		if (queryResult.size() > 0 && queryResult.get(0) != null)
-			count = (Integer) queryResult.get(0);
+			count = ((Number) queryResult.get(0)).intValue();
 
 		return count;
 	}
@@ -865,6 +865,10 @@ public class CustomerPersistence extends Persistence {
 			Short parentOfficeId) {
 		String hql = "update CustomerBO customer " +
 				" set customer.personnel = :parentLoanOfficer " +
+
+				// This is for Hibernate 3.2.x instead of 3.0beta4 (?)
+//				" set customer.personnel.personnelId = :parentLoanOfficer " +
+
 				" where customer.searchId like :parentSearchId" +
 				" and customer.office.officeId = :parentOfficeId";
 		Session session = HibernateUtil.getSessionTL();

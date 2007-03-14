@@ -164,7 +164,7 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
 			}
 			Query query = prepareQuery(session,
 					queryInputs.getQueryStrings()[0]);
-			Integer resultSetCount = (Integer) query.uniqueResult();
+			Integer resultSetCount = ((Number) query.uniqueResult()).intValue();
 			this.queryInputs.setTypes(query.getReturnTypes());
 			dtoBuilder.setInputs(queryInputs);
 			if (resultSetCount != null && resultSetCount > 0)

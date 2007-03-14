@@ -20,7 +20,6 @@ public class OfficePersistence extends Persistence {
 
 	public OfficePersistence() {
 		super();
-
 	}
 
 	public List<OfficeView> getActiveOffices(Short officeId)
@@ -51,7 +50,6 @@ public class OfficePersistence extends Persistence {
 			searchId = queryResult.get(0);
 		}
 		return searchId;
-
 	}
 
 	/**
@@ -89,7 +87,7 @@ public class OfficePersistence extends Persistence {
 		List queryResult = executeNamedQuery(NamedQueryConstants.GETCHILDCOUNT,
 				queryParameters);
 		if (queryResult != null && queryResult.size() != 0) {
-			return (Integer) queryResult.get(0);
+			return ((Number) queryResult.get(0)).intValue();
 		}
 		return null;
 
@@ -102,7 +100,7 @@ public class OfficePersistence extends Persistence {
 		List queryResult = executeNamedQuery(
 				NamedQueryConstants.CHECKOFFICENAMEUNIQUENESS, queryParameters);
 		if (queryResult != null && queryResult.size() != 0) {
-			return (Integer) queryResult.get(0) > 0 ? true : false;
+			return ((Number) queryResult.get(0)).longValue() > 0;
 		}
 		return false;
 	}
@@ -115,7 +113,7 @@ public class OfficePersistence extends Persistence {
 				NamedQueryConstants.CHECKOFFICESHORTNAMEUNIQUENESS,
 				queryParameters);
 		if (queryResult != null && queryResult.size() != 0) {
-			return (Integer) queryResult.get(0) > 0 ? true : false;
+			return ((Number) queryResult.get(0)).longValue() > 0;
 		}
 		return false;
 	}
@@ -128,7 +126,7 @@ public class OfficePersistence extends Persistence {
 		List queryResult = executeNamedQuery(
 				NamedQueryConstants.GETCOUNTOFACTIVECHILDERN, queryParameters);
 		if (queryResult != null && queryResult.size() != 0) {
-			return (Integer) queryResult.get(0) > 0 ? true : false;
+			return ((Number) queryResult.get(0)).longValue() > 0;
 		}
 		return false;
 	}
@@ -142,7 +140,7 @@ public class OfficePersistence extends Persistence {
 		List queryResult = executeNamedQuery(
 				NamedQueryConstants.GETOFFICEACTIVEPERSONNEL, queryParameters);
 		if (queryResult != null && queryResult.size() != 0) {
-			return (Integer) queryResult.get(0) > 0 ? true : false;
+			return ((Number) queryResult.get(0)).longValue() > 0;
 		}
 		return false;
 	}
@@ -155,7 +153,7 @@ public class OfficePersistence extends Persistence {
 		List queryResult = executeNamedQuery(
 				NamedQueryConstants.GETOFFICEINACTIVE, queryParameters);
 		if (queryResult != null && queryResult.size() != 0) {
-			return (Integer) queryResult.get(0) > 0 ? true : false;
+			return ((Number) queryResult.get(0)).longValue() > 0;
 		}
 		return false;
 	}

@@ -86,7 +86,7 @@ public class ClientPersistence extends Persistence {
 			List queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_CLIENT_BASEDON_NAME_DOB, 
 					queryParameters);
-			return ((Integer)queryResult.get(0)).intValue()>0;
+			return ((Number)queryResult.get(0)).intValue()>0;
 			
 	}
 

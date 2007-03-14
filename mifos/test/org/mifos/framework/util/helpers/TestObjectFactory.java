@@ -1514,6 +1514,7 @@ public class TestObjectFactory {
 	
 	public static void deleteHoliday(HolidayBO holidayBO) {
 		Session session = HibernateUtil.getSessionTL();
+		session.lock(holidayBO, LockMode.UPGRADE);
 		Transaction transaction = HibernateUtil.startTransaction();
 		session.delete(holidayBO);
 		transaction.commit();
@@ -1521,11 +1522,7 @@ public class TestObjectFactory {
 	
 	private static void deleteHolidays(List<HolidayBO> holidayList) {
 		for (HolidayBO holidayBO : holidayList) {
-			Session session = HibernateUtil.getSessionTL();
-			session.lock(holidayBO, LockMode.UPGRADE);
-			Transaction transaction = HibernateUtil.startTransaction();
 			deleteHoliday(holidayBO);
-			transaction.commit();
 		}
 		holidayList = null;
 	}

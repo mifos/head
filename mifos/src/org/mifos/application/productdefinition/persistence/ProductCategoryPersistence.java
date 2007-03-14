@@ -24,9 +24,9 @@ public class ProductCategoryPersistence extends Persistence {
 		Map<Object, Object> queryParameters = new HashMap<Object, Object>();
 		queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYNAME,
 				productCategoryName);
-		return (Integer) execUniqueResultNamedQuery(
+		return ((Number) execUniqueResultNamedQuery(
 				NamedQueryConstants.PRODUCTCATEGORIES_COUNT_CREATE,
-				queryParameters);
+				queryParameters)).intValue();
 
 	}
 
@@ -37,11 +37,12 @@ public class ProductCategoryPersistence extends Persistence {
 				productCategoryName);
 		queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYID,
 				productCategoryId);
-		return (Integer) execUniqueResultNamedQuery(
+		return ((Number) execUniqueResultNamedQuery(
 				NamedQueryConstants.PRODUCTCATEGORIES_COUNT_UPDATE,
-				queryParameters);
+				queryParameters)).intValue();
 	}
 
+	@SuppressWarnings("cast")
 	public List<ProductTypeEntity> getProductTypes()
 			throws PersistenceException {
 		return (List<ProductTypeEntity>) executeNamedQuery(
@@ -57,6 +58,7 @@ public class ProductCategoryPersistence extends Persistence {
 
 	}
 
+	@SuppressWarnings("cast")
 	public List<PrdCategoryStatusEntity> getProductCategoryStatusList()
 			throws PersistenceException {
 		return (List<PrdCategoryStatusEntity>) executeNamedQuery(
@@ -64,6 +66,7 @@ public class ProductCategoryPersistence extends Persistence {
 
 	}
 
+	@SuppressWarnings("cast")
 	public List<ProductCategoryBO> getAllCategories()
 			throws PersistenceException {
 		return (List<ProductCategoryBO>) executeNamedQuery(

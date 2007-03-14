@@ -40,9 +40,9 @@ public class PrdOfferingPersistence extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(ProductDefinitionConstants.PRDOFFERINGNAME,
 				productOfferingName);
-		return (Integer) execUniqueResultNamedQuery(
+		return ((Number) execUniqueResultNamedQuery(
 				NamedQueryConstants.PRODUCTOFFERING_CREATEOFFERINGNAMECOUNT,
-				queryParameters);
+				queryParameters)).intValue();
 	}
 
 	public Integer getProductOfferingShortNameCount(
@@ -52,9 +52,9 @@ public class PrdOfferingPersistence extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(ProductDefinitionConstants.PRDOFFERINGSHORTNAME,
 				productOfferingShortName);
-		return (Integer) execUniqueResultNamedQuery(
+		return ((Number) execUniqueResultNamedQuery(
 				NamedQueryConstants.PRODUCTOFFERING_CREATEOFFERINGSHORTNAMECOUNT,
-				queryParameters);
+				queryParameters)).intValue();
 	}
 
 	public List<ProductCategoryBO> getApplicableProductCategories(
@@ -79,6 +79,7 @@ public class PrdOfferingPersistence extends Persistence {
 		return queryResult;
 	}
 
+	@SuppressWarnings("cast")
 	public List<PrdStatusEntity> getApplicablePrdStatus(
 			ProductType productType, Short localeId)
 			throws PersistenceException {

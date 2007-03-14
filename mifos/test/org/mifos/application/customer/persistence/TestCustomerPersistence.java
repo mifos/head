@@ -100,17 +100,23 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 	@Override
 	public void tearDown() throws Exception {
-		TestObjectFactory.cleanUp(centerSavingsAccount);
-		TestObjectFactory.cleanUp(groupSavingsAccount);
-		TestObjectFactory.cleanUp(clientSavingsAccount);
-		TestObjectFactory.cleanUp(groupAccount);
-		TestObjectFactory.cleanUp(clientAccount);
-		TestObjectFactory.cleanUp(account);
-		TestObjectFactory.cleanUp(client);
-		TestObjectFactory.cleanUp(group2);
-		TestObjectFactory.cleanUp(group);
-		TestObjectFactory.cleanUp(center);
-		HibernateUtil.closeSession();
+		try {
+			TestObjectFactory.cleanUp(centerSavingsAccount);
+			TestObjectFactory.cleanUp(groupSavingsAccount);
+			TestObjectFactory.cleanUp(clientSavingsAccount);
+			TestObjectFactory.cleanUp(groupAccount);
+			TestObjectFactory.cleanUp(clientAccount);
+			TestObjectFactory.cleanUp(account);
+			TestObjectFactory.cleanUp(client);
+			TestObjectFactory.cleanUp(group2);
+			TestObjectFactory.cleanUp(group);
+			TestObjectFactory.cleanUp(center);
+			HibernateUtil.closeSession();
+		}
+		catch (Exception e) {
+			// Throwing from tearDown will tend to mask the real failure.
+			e.printStackTrace();
+		}
 		super.tearDown();
 	}
 

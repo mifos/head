@@ -57,9 +57,9 @@ public class ProductStatusHelper extends TaskHelper {
 
 	@Override
 	public void execute(long timeInMillis) throws CronJobException {
-		Session session = null;
-		String hqlUpdate = null;
-		Query query = null;
+		Session session;
+		String hqlUpdate;
+		Query query;
 		try {
 			session = HibernateUtil.getSessionTL();
 			HibernateUtil.startTransaction();

@@ -1,5 +1,7 @@
 package org.mifos.application.holiday.persistence;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +33,16 @@ public class HolidayPersistence extends MasterPersistence {
 
 	public List<HolidayBO> getHolidays(int year, int localId) 
 	throws PersistenceException {
+		SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("LOCALE_ID", localId);
-		parameters.put("START_OF_YEAR", year + "-01-01");
-		parameters.put("END_OF_YEAR", year + "-12-31");
+		parameters.put("LOCALE_ID", new Short((short) localId));
+		try {
+			parameters.put("START_OF_YEAR", isoDateFormat.parse(year + "-01-01"));
+			parameters.put("END_OF_YEAR", isoDateFormat.parse(year + "-12-31"));
+		}
+		catch (ParseException e) {
+			throw new PersistenceException(e);
+		}
 		
 		return executeNamedQuery(NamedQueryConstants.GET_HOLIDAYS, parameters);
 	}

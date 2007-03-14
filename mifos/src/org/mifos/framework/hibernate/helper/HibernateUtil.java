@@ -140,7 +140,13 @@ public class HibernateUtil {
 		if (transaction == null) {
 			transaction = getSessionHolder().getSession().beginTransaction();
 			getSessionHolder().setTranasction(transaction);
-		}
+		} 
+
+		// Not sure this is right.  If startTransaction is paired with
+		// commitTransaction, transaction will get set to null....
+		/*else if (!transaction.isActive()) {
+			transaction.begin();
+		}*/
 		return transaction;
 	}
 

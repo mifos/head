@@ -145,7 +145,7 @@ public class QueryResultSearchDTOImpl extends QueryResultDTOImpl
 	   			  throw new HibernateSearchException(HibernateConstants.SEARCH_INPUTNULL);
 	   		}	   			   		
 	   		Query query=prepareQuery(session,queryInputs.getQueryStrings()[0]);	   		
-	   		Integer resultSetCount=(Integer) query.uniqueResult();
+	   		Integer resultSetCount=((Number) query.uniqueResult()).intValue();
 	   		logger.debug("\n\nInside get of QueryResultSearchDTOImpl.java . size of count query="+resultSetCount);
 	   		this.queryInputs.setTypes(query.getReturnTypes());
 	   		dtoBuilder.setInputs(queryInputs);	   		

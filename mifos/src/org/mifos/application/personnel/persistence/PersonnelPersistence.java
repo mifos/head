@@ -55,10 +55,10 @@ public class PersonnelPersistence extends Persistence {
 
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("USER_NAME", userName);
-		Integer count = (Integer) execUniqueResultNamedQuery(
+		Number count = (Number) execUniqueResultNamedQuery(
 				NamedQueryConstants.GET_PERSONNEL_WITH_NAME, queryParameters);
 		if (count != null) {
-			return count > 0 ? true : false;
+			return count.longValue() > 0;
 		}
 
 		return false;
@@ -69,11 +69,11 @@ public class PersonnelPersistence extends Persistence {
 
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("GOVT_ID", governmentId);
-		Integer count = (Integer) execUniqueResultNamedQuery(
+		Number count = (Number) execUniqueResultNamedQuery(
 				NamedQueryConstants.GET_PERSONNEL_WITH_GOVERNMENTID,
 				queryParameters);
 		if (count != null) {
-			return count > 0 ? true : false;
+			return count.longValue() > 0;
 		}
 		return false;
 	}
@@ -83,11 +83,11 @@ public class PersonnelPersistence extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("DISPLAY_NAME", displayName);
 		queryParameters.put("DOB", dob);
-		Integer count = (Integer) execUniqueResultNamedQuery(
+		Number count = (Number) execUniqueResultNamedQuery(
 				NamedQueryConstants.GET_PERSONNEL_WITH_DOB_AND_DISPLAYNAME,
 				queryParameters);
 		if (count != null) {
-			return count > 0 ? true : false;
+			return count.longValue() > 0;
 		}
 		return false;
 	}
@@ -97,11 +97,11 @@ public class PersonnelPersistence extends Persistence {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("userId", personnelId);
 		queryParameters.put("officeId", officeId);
-		Integer count = (Integer) execUniqueResultNamedQuery(
+		Number count = (Number) execUniqueResultNamedQuery(
 				NamedQueryConstants.GET_ACTIVE_CUSTOMERS_FOR_LO,
 				queryParameters);
 		if (count != null) {
-			return count > 0 ? true : false;
+			return count.longValue() > 0;
 		}
 		return false;
 	}
@@ -155,9 +155,9 @@ public class PersonnelPersistence extends Persistence {
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("roleId", roleId);
-		Integer count = (Integer) execUniqueResultNamedQuery(
-				NamedQueryConstants.GET_PERSONNEL_ROLE_COUNT, queryParameters);
-		return count;
+		Number count = (Number) execUniqueResultNamedQuery(
+			NamedQueryConstants.GET_PERSONNEL_ROLE_COUNT, queryParameters);
+		return count.intValue();
 	}
 
 	public PersonnelBO getPersonnel(String personnelName)

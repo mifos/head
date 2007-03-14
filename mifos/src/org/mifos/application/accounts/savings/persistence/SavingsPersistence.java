@@ -167,7 +167,7 @@ public class SavingsPersistence extends Persistence {
 		if (null != queryResult && queryResult.size() > 0) {
 			Object obj = queryResult.get(0);
 			if (obj != null)
-				count = (Integer) obj;
+				count = ((Number) obj).intValue();
 		}
 		return count.intValue();
 	}
