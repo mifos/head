@@ -19,15 +19,21 @@ public class LatestTest extends TestCase {
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public void testSimple() throws Exception {
-		Database database = new Database();
+		Database database = makeDatabase();
 		loadLatest(database);
 		String latestDump = new SqlDumper().dump(database.dataStore());
 
-		database = new Database();
+		database = makeDatabase();
 		applyUpgrades(database);
 		String upgradeDump = new SqlDumper().dump(database.dataStore());
 		
 		assertEquals(latestDump, upgradeDump);
+	}
+
+	public static Database makeDatabase() {
+		Database database = new Database();
+		database.tableNamesCaseSensitive(true);
+		return database;
 	}
 
 	private void applyUpgrades(Database database) {
@@ -42,7 +48,7 @@ public class LatestTest extends TestCase {
 	}
 	
 	public void testRealSchema() throws Exception {
-		Database database = new Database();
+		Database database = makeDatabase();
 		loadRealLatest(database);
 		String latestDump = new SqlDumper().dump(database.dataStore());
 
@@ -60,7 +66,7 @@ public class LatestTest extends TestCase {
 	}
 
 	private DataStore upgradeToFirstNumberedVersion() {
-		Database database = new Database();
+		Database database = makeDatabase();
 		DatabaseSetup.executeScript(database, "sql/mifosdbcreationscript.sql");
 	    DatabaseSetup.executeScript(database, "sql/mifosmasterdata.sql");
 	    DatabaseSetup.executeScript(database, "sql/rmpdbcreationscript.sql");
@@ -103,7 +109,7 @@ public class LatestTest extends TestCase {
 	}
 
 	public void testDropTables() throws Exception {
-		Database database = new Database();
+		Database database = makeDatabase();
 		String blankDB = new SqlDumper().dump(database.dataStore());
 		DatabaseSetup.executeScript(database, "sql/latest-schema.sql");
 		DatabaseSetup.executeScript(database, "sql/mifosdroptables.sql");
