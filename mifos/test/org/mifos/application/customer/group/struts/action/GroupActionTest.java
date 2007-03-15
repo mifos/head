@@ -796,7 +796,6 @@ public class GroupActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "update");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String)request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
-		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
 		group = TestObjectFactory.getObject(GroupBO.class, Integer.valueOf(group.getCustomerId()).intValue());

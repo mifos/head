@@ -38,6 +38,7 @@
 
 package org.mifos.application.productdefinition.business;
 
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.business.PersistentObject;
 
 /**

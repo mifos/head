@@ -59,7 +59,7 @@
 		}
 	</script>
 
-<html-el:form method="post" action="/savingsDepositWithdrawalAction.do?method=preview" onsubmit="return (validateMyForm(receiptDate,receiptDateFormat,receiptDateYY) && validateMyForm(trxnDate,trxnDateFormat,trxnDateYY))">
+<html-el:form method="post" action="/savingsDepositWithdrawalAction.do?method=preview">
     <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 	<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'isBackDatedTrxnAllowed')}" var="isBackDatedTrxnAllowed" />

@@ -213,7 +213,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "preview");
 		addRequestParameter("amount", "200");
 		addRequestParameter("customerId", group.getCustomerId().toString());
-		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
+		addRequestParameter("trxnDate", DateHelper.makeDateAsSentFromBrowser());
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
 		actionPerform();

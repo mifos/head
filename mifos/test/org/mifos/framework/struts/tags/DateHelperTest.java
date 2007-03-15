@@ -1,13 +1,12 @@
 package org.mifos.framework.struts.tags;
 
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
 import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
-import org.mifos.framework.exceptions.FrameworkRuntimeException;
+import org.mifos.framework.exceptions.InvalidDateException;
 
 public class DateHelperTest extends TestCase {
 	
@@ -53,9 +52,8 @@ public class DateHelperTest extends TestCase {
 			DateHelper.getLocaleDate(locale, input);
 			fail("did not get exception for " + input + " in " + locale);
 		}
-		catch (FrameworkRuntimeException outer) {
-			ParseException inner = (ParseException) outer.getCause();
-			assertEquals("Unparseable date: \"04.03.2005\"", inner.getMessage());
+		catch (InvalidDateException e) {
+			assertEquals(input, e.getDateString());
 		}
 	}
 

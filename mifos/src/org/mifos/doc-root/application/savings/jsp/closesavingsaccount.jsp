@@ -55,7 +55,7 @@
 			form.submit();
 		}
 	</script>
-		<html-el:form method="post" action="/savingsClosureAction.do?method=preview" onsubmit="return validateMyForm(receiptDate,receiptDateFormat,receiptDateYY)">
+		<html-el:form method="post" action="/savingsClosureAction.do?method=preview">
 		 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountPayment')}" var="accountPayment" />

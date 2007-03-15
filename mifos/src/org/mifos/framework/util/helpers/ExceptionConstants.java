@@ -52,4 +52,5 @@ public interface ExceptionConstants {
 	public static String STARTUP_EXCEPTION = "exception.framework.StartUpException";
 	public static String ENUMSNOTLOADEDEXCEPTION = "exception.framework.EnumsNotLoadedException";
 	public static String PAGEEXPIREDEXCEPTION = "exception.framework.PageExpiredException" ;
+	public static String INVALIDDATEEXCEPTION = "exception.validation.InvalidDate";
 }

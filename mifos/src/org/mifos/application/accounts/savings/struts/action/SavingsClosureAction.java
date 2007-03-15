@@ -97,7 +97,7 @@ public class SavingsClosureAction extends BaseAction {
 	}
 
 	@Override
-	protected boolean skipActionFormToBusinessObjectConversion(String method) {		
+	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
 	}
 
@@ -135,14 +135,14 @@ public class SavingsClosureAction extends BaseAction {
 		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.CENTER_LEVEL_ID
 				|| (savings.getCustomer().getCustomerLevel().getId()
 						.shortValue() == CustomerConstants.GROUP_LEVEL_ID && savings
-						.getRecommendedAmntUnit().getId().equals(
-								RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))
-			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings
-					.getCustomer().getChildren(CustomerLevel.CLIENT,
+						.getRecommendedAmntUnit()
+						.getId()
+						.equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))
+			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST,
+					savings.getCustomer().getChildren(CustomerLevel.CLIENT,
 							ChildrenStateType.ACTIVE_AND_ONHOLD), request);
-		else
-			SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
-					request);
+		else SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null,
+				request);
 
 		Money interestAmount = savings
 				.calculateInterestForClosure(new SavingsHelper()
@@ -175,15 +175,13 @@ public class SavingsClosureAction extends BaseAction {
 			accountPaymentEntity = new AccountPaymentEntity(payment
 					.getAccount(), payment.getAmount(), actionForm
 					.getReceiptId(), new java.util.Date(DateHelper
-					.getLocaleDate(uc.getPereferedLocale(),
-							actionForm.getReceiptDate()).getTime()),
-					new PaymentTypeEntity(Short.valueOf(actionForm
-							.getPaymentTypeId())));
-		else
-			accountPaymentEntity = new AccountPaymentEntity(payment
-					.getAccount(), payment.getAmount(), actionForm
-					.getReceiptId(), null, new PaymentTypeEntity(Short
-					.valueOf(actionForm.getPaymentTypeId())));
+					.getDateAsSentFromBrowser(actionForm.getReceiptDate())
+					.getTime()), new PaymentTypeEntity(Short.valueOf(actionForm
+					.getPaymentTypeId())));
+		else accountPaymentEntity = new AccountPaymentEntity(payment
+				.getAccount(), payment.getAmount(), actionForm.getReceiptId(),
+				null, new PaymentTypeEntity(Short.valueOf(actionForm
+						.getPaymentTypeId())));
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT,
 				accountPaymentEntity, request);
 		return mapping.findForward("preview_success");
@@ -206,8 +204,10 @@ public class SavingsClosureAction extends BaseAction {
 				.getAttribute(SavingsConstants.ACCOUNT_PAYMENT, request);
 		SavingsBO savingsInSession = (SavingsBO) SessionUtils.getAttribute(
 				Constants.BUSINESS_KEY, request);
-		SavingsBO savings = savingsService.findById(savingsInSession.getAccountId());
-		checkVersionMismatch(savingsInSession.getVersionNo(),savings.getVersionNo());
+		SavingsBO savings = savingsService.findById(savingsInSession
+				.getAccountId());
+		checkVersionMismatch(savingsInSession.getVersionNo(), savings
+				.getVersionNo());
 		savings.setUserContext(getUserContext(request));
 		logger.debug("In SavingsClosureAction::close(), accountId: "
 				+ savings.getAccountId());
@@ -237,7 +237,7 @@ public class SavingsClosureAction extends BaseAction {
 			List<CustomerBO> customerList = (List<CustomerBO>) obj;
 			for (CustomerBO customer : customerList) {
 				if (customer.getCustomerId()
-						.equals(Integer.valueOf(customerId))){
+						.equals(Integer.valueOf(customerId))) {
 					client = customer;
 					break;
 				}
@@ -280,7 +280,8 @@ public class SavingsClosureAction extends BaseAction {
 		savingsService.initialize(glCode.getAssociatedCOA());
 
 		savingsService.initialize(glCode.getAssociatedCOA().getCOAHead());
-		savingsService.initialize(glCode.getAssociatedCOA().getAssociatedGlcode());
+		savingsService.initialize(glCode.getAssociatedCOA()
+				.getAssociatedGlcode());
 		savingsService.initialize(glCode.getAssociatedCOA().getSubCategory());
 
 	}

@@ -180,14 +180,14 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		addRequestParameter("receiptId", "101");
-		addRequestParameter("receiptDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+		addRequestParameter("receiptDate", DateHelper.makeDateAsSentFromBrowser());
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("customerId", "1");
 		addRequestParameter("notes", "notes");
 		setRequestPathInfo("/savingsClosureAction.do");
 		addRequestParameter("method", "preview");
 		actionPerform();
+		verifyNoActionErrors();
 		verifyForward("preview_success");
 	}
 
@@ -275,8 +275,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		verifyForward("load_success");
 
 		addRequestParameter("receiptId", "101");
-		addRequestParameter("receiptDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+		addRequestParameter("receiptDate", DateHelper.makeDateAsSentFromBrowser());
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("customerId", "1");
 		addRequestParameter("notes", "closing account");
