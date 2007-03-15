@@ -33,6 +33,7 @@ import org.mifos.application.master.persistence.service.MasterPersistenceService
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
@@ -77,7 +78,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 	public void testLoanAdjustmentAccountingEntries() throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
 		loan = getLoanAccount();
-		loan.setUserContext(TestObjectFactory.getUserContext());
+		loan.setUserContext(TestUtils.makeUser());
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				loan, TestObjectFactory.getMoneyForMFICurrency(630), "1111",
 				currentDate, new PaymentTypeEntity(Short.valueOf("1")));
@@ -124,8 +125,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 						AccountActionEntity.class,
 						AccountActionTypes.LOAN_ADJUSTMENT.getValue()), Short
 						.valueOf("1"), accountAction.getActionDate(),
-				TestObjectFactory.getPersonnel(TestObjectFactory
-						.getUserContext().getId()), currentDate,
+				TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), 
+				currentDate,
 				TestObjectFactory.getMoneyForMFICurrency(630),
 				"test for loan adjustment", null, TestObjectFactory
 						.getMoneyForMFICurrency(200), TestObjectFactory
@@ -386,7 +387,7 @@ public class TestFinancialBusinessService extends MifosTestCase {
 
 	public void testLoanWriteOffAccountingEntries() throws Exception {
 		loan = getLoanAccount();
-		loan.setUserContext(TestObjectFactory.getUserContext());
+		loan.setUserContext(TestUtils.makeUser());
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				loan, TestObjectFactory.getMoneyForMFICurrency(630), null,
 				null, new PaymentTypeEntity(Short.valueOf("1")));

@@ -61,6 +61,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
@@ -978,7 +979,7 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 
 	public void testCreateWithoutPermission() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		UserContext userContext = TestObjectFactory.getUserContext();
+		UserContext userContext = TestUtils.makeUser();
 		userContext.setRoles(new HashSet());
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		createInitialObjects();

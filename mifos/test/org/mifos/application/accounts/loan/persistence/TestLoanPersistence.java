@@ -193,8 +193,9 @@ public class TestLoanPersistence extends MifosTestCase {
 	
 	public void testGetLoanOffering() throws Exception {
 		LoanOfferingBO loanOffering = getCompleteLoanOfferingObject();
-		LoanOfferingBO loanOfferingBO = loanPersistence.getLoanOffering(loanOffering.getPrdOfferingId(),
-				TestObjectFactory.getUserContext().getLocaleId());
+		LoanOfferingBO loanOfferingBO = loanPersistence.getLoanOffering(
+				loanOffering.getPrdOfferingId(),
+				TestObjectFactory.TEST_LOCALE);
 		assertEquals(loanOfferingBO.getPrdOfferingId(),loanOffering.getPrdOfferingId());
 		TestObjectFactory.removeObject(loanOfferingBO);
 	}

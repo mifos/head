@@ -29,6 +29,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -430,7 +431,7 @@ public class MultipleLoanAccountsCreationActionTest extends
 
 	public void testCreateWithoutPermission() throws Exception {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		UserContext userContext = TestObjectFactory.getUserContext();
+		UserContext userContext = TestUtils.makeUser();
 		userContext.setRoles(new HashSet());
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		createInitialCustomers();
