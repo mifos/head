@@ -81,6 +81,8 @@ public class HolidayActionForm extends BaseActionForm {
 	public void clear() {
 		this.repaymentRuleId = "";
 		this.holidayName = "";
+		this.holidayFromDateString = "";
+		this.holidayThruDateString = "";
 		this.fromDate = null;
 		this.thruDate = null;
 	}
@@ -108,12 +110,7 @@ public class HolidayActionForm extends BaseActionForm {
 					getHolidayThruDate());
 		}
 		else {
-			/*
-			 * actionErrors.add(HolidayConstants.HOLIDAY_THRU_DATE, new
-			 * ActionMessage( HolidayConstants.ERRORMANDATORYFIELD,
-			 * getLocaleString( HolidayConstants.HOLIDAYTHRUDATE,
-			 * userContext)));
-			 */
+			thruDate = null;
 		}
 
 		if (repaymentRuleId == null || repaymentRuleId.equals("")) {
