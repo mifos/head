@@ -72,33 +72,13 @@ public class Log4jLogger extends MifosLogger {
 	}
 	
 	@Override
-	protected void logMessage(Level level, String key, boolean asString, 
-			Object[] args, Throwable t) {
-		if (!asString) {
-			//creating message object. the userId and the officeID will be appended to the message string
-			Message m = new Message(key, getUserID(),getOfficeID());
-			
-			logger.log(level,m.toString(),t);
-		}
-		else{
-			//if argument list is not empty then the key is used to retrieve the string from the resource bundle 
-			//and the place holders are replaced. The userId and OfficeId are also attached to the list of arguments. 
-			//If the log statement doesnt have any placeholders then the argument list contains only the userid and office id 
-			int length = 0;
-			if (args!=null && args.length != 0)
-				length=args.length;
-			
-			Object[] args1=new Object[length+2];
-			//copies the list of arguments to new array and the userid and office are attached
-			if (args!=null && args.length != 0)
-				System.arraycopy(args, 0, args1, 0, length);
-			
-			args1[length] = getUserID();
-			args1[length+1] = getOfficeID();
-			
-			logger.l7dlog(level, key, args1, t );
-			
-		}
+	protected void logKey(Level level, String key, Object[] args1, Throwable exception) {
+		logger.l7dlog(level, key, args1, exception );
+	}
+
+	@Override
+	protected void logNonKey(Level level, String message, Throwable exception) {
+		logger.log(level, message, exception);
 	}
 	
 }

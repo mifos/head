@@ -38,7 +38,6 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 	protected void setUp() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
-		Date startDate = new Date(System.currentTimeMillis());
 		center = TestObjectFactory.createCenter("center1", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 	}
@@ -79,8 +78,8 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
 		trainingFee.save();
 		TestObjectFactory.flushandCloseSession();
-		ApplyCustomerFeeChangesTask applyCustomerFeeChangesTask = new ApplyCustomerFeeChangesTask();
-		((ApplyCustomerFeeChangesHelper) applyCustomerFeeChangesTask
+		ApplyCustomerFeeChangesTask task = new ApplyCustomerFeeChangesTask();
+		((ApplyCustomerFeeChangesHelper) task
 				.getTaskHelper()).execute(System.currentTimeMillis());
 		TestObjectFactory.flushandCloseSession();
 		center = (CustomerBO) HibernateUtil.getSessionTL().get(

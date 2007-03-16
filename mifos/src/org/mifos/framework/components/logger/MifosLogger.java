@@ -179,7 +179,45 @@ public abstract class MifosLogger {
 	 * 				in a message. 
 	 * @param t Throwable object containing the exception
 	 */
-	protected abstract void logMessage(Level level, String key, boolean asString, 
-		Object[] args, Throwable t);
+	protected void logMessage(Level level, 
+		String key, boolean asString, Object[] args, Throwable t) {
+		if (!asString) {
+			//creating message object. the userId and the officeID will be appended to the message string
+			Message message = new Message(key, getUserID(), getOfficeID());
+			
+			logNonKey(level, message.toString(), t);
+		}
+		else{
+			//if argument list is not empty then the key is used to retrieve the string from the resource bundle 
+			//and the place holders are replaced. The userId and OfficeId are also attached to the list of arguments. 
+			//If the log statement doesnt have any placeholders then the argument list contains only the userid and office id 
+			int length = 0;
+			if (args!=null && args.length != 0)
+				length=args.length;
+			
+			Object[] args1=new Object[length+2];
+			//copies the list of arguments to new array and the userid and office are attached
+			if (args!=null && args.length != 0)
+				System.arraycopy(args, 0, args1, 0, length);
+			
+			args1[length] = getUserID();
+			args1[length+1] = getOfficeID();
+			
+			logKey(level, key, args1, t);
+			
+		}
+	}
+
+	/**
+	 * Low-level method to log, when a message is supplied (not a key).
+	 */
+	protected abstract void logNonKey(Level level, 
+		String message, Throwable exception);
+
+	/**
+	 * Low-level method to log, when a key is supplied (not a message).
+	 */
+	protected abstract void logKey(Level level, 
+		String key, Object[] args1, Throwable exception);
 
 }

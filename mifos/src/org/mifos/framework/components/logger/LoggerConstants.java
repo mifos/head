@@ -29,48 +29,31 @@ package org.mifos.framework.components.logger;
 public interface LoggerConstants {
 	/**Location of the resource bundle*/
 	public String LOGGERRESOURCEBUNDLE = "org.mifos.framework.util.resources.loggerresources.LoggerStatements";
-	/**Root logger name*/
-	public String ROOTLOGGER = "org.mifos";
-	/**Framework logger name*/
-	public String FRAMEWORKLOGGER = "org.mifos.framework";
 
-/**Login logger name*/
+	public String ROOTLOGGER = "org.mifos";
+	public String FRAMEWORKLOGGER = "org.mifos.framework";
 	public String LOGINLOGGER = "org.mifos.application.login";
 
-/**Product Definition logger name*/
+	/**Product Definition logger name*/
 	public String PRDDEFINITIONLOGGER = "org.mifos.application.productdefinition";
 
-	/**Customer Search logger name*/
 	public String CUSTOMERSEARCHLOGGER = "org.mifos.application.customersearch";
 
-	/**Office logger name*/
 	public String OFFICELOGGER = "org.mifos.application.office";
-	/**RoleAndPermission logger name*/
 	public String ROLEANDPERMISSIONLOGGER = "org.mifos.application.roleandpermission";
 
-	/**
-	 * CustomerNote logger name
-	 */
 	public String CUSTOMERNOTELOGGER = "org.mifos.application.customer.customernote";
-	
-	/** Personnel logger name*/
 	public String PERSONNEL_LOGGER = "org.mifos.application.personnel";
-	/** Group logger name	 */
 	public String GROUP_LOGGER = "org.mifos.application.group";
-	/**
-	 * Center logger name
-	 */
+
 	public String CENTERLOGGER = "org.mifos.application.center";
-	/**
-	 * Fund logger name
-	 */
+
 	public String FUNDLOGGER = "org.mifos.application.fund";
-	/**
-	 * Center logger name
-	 */
+
 	public String CLIENTLOGGER = "org.mifos.application.client";
 
-	/**The number of milliseconds after which the logger configuration file will be checked for changes*/
+	/** The number of milliseconds after which the logger configuration 
+	    file will be checked for changes. */
 	public long DELAY = 3600000;
 
 	/**
@@ -80,14 +63,9 @@ public interface LoggerConstants {
 	public String ACCOUNTSLOGGER = "org.mifos.application.accounts";
 
 	public String CONFIGURATION_LOGGER ="org.mifos.framework.components.configuration";
-	/**
-	 * Logges for Fees Module
-	 */
+
 	public String FEESLOGGER="org.mifos.application.fees";
 
-	/**
-		 * Logges for Repayment
-		 */
 	public String REPAYMENTSCHEDULAR ="org.mifos.framework.components.repaymentschedule";
 
 	/**
@@ -95,16 +73,11 @@ public interface LoggerConstants {
 	 */
 	public String MEETINGLOGGER="org.mifos.application.meeting";
 
-
 	/**
 	 * Logger for Audit Log
 	 */
 	public String AUDITLOGGER="org.mifos.framework.components.audit";
 	
-	
-	/**
-	 * Logger for Bulk Entry
-	 */
 	public String BULKENTRYLOGGER="org.mifos.application.bulkentry";
 	
 	/**
@@ -113,12 +86,10 @@ public interface LoggerConstants {
 	public String COLLECTIONSHEETLOGGER="org.mifos.application.collectionsheet";
 	
 	public String CUSTOMERLOGGER = "org.mifos.application.customer.business.CustomerBO";
-	
-	//////////Added by Mftech////////////////
-	/**
-	 * Logger for Reports
-	 */
-	
+
 	public String REPORTSLOGGER="org.mifos.application.reports";
-	////////////////////////////////////
+	
+	public static final String CRONJOBS = 
+		"org.mifos.framework.components.cronjobs";
+
 }

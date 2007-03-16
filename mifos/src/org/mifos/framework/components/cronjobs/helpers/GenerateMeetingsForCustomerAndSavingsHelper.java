@@ -41,16 +41,21 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 				AccountBO accountBO = accountPersistence.getAccount(accountId);
 				if (isScheduleToBeGenerated(accountBO.getLastInstallmentId(),
 						accountBO.getDetailsOfNextInstallment())) {
-					if (accountBO instanceof CustomerAccountBO)
+					if (accountBO instanceof CustomerAccountBO) {
 						((CustomerAccountBO) accountBO)
 								.generateNextSetOfMeetingDates();
-					else if (accountBO instanceof SavingsBO)
+					}
+					else if (accountBO instanceof SavingsBO) {
 						((SavingsBO) accountBO).generateNextSetOfMeetingDates();
+					}
 				}
 				HibernateUtil.commitTransaction();
 			} catch (Exception e) {
 				HibernateUtil.rollbackTransaction();
 				errorList.add(accountId.toString());
+				getLogger().error(
+					"Unable to generate schedules for account with ID" + 
+					accountId, false, null, e);
 			} finally {
 				HibernateUtil.closeSession();
 			}
@@ -81,4 +86,5 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 	public boolean isTaskAllowedToRun() {
 		return true;
 	}
+
 }

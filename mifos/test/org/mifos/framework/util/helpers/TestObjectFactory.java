@@ -155,7 +155,6 @@ import org.mifos.application.productdefinition.business.ProductTypeEntity;
 import org.mifos.application.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
-import org.mifos.application.productdefinition.business.TestSavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
@@ -753,7 +752,7 @@ public class TestObjectFactory {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		return createSavingsOffering(offeringName, shortName, applicableTo, 
-				new Date(System.currentTimeMillis()), 
+				currentDate, 
 				Short.valueOf("2"), 300.0, 
 				RecommendedAmountUnit.PER_INDIVIDUAL.getValue(), 24.0, 
 				200.0, 200.0, savingsTypeId.getValue(), 

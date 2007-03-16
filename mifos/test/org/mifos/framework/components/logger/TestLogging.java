@@ -1,13 +1,17 @@
 package org.mifos.framework.components.logger;
 
-import org.mifos.framework.MifosTestCase;
+import junit.framework.TestCase;
+
+import org.apache.log4j.Level;
 import org.mifos.framework.exceptions.ResourceBundleNotFoundException;
+import org.mifos.framework.util.helpers.DatabaseSetup;
 
 
-public class TestLogging extends MifosTestCase {
+public class TestLogging extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
+		DatabaseSetup.configureLogging();
 		super.setUp();
 	}
 
@@ -38,4 +42,15 @@ public class TestLogging extends MifosTestCase {
 		} catch (ResourceBundleNotFoundException ex) {
 		}
 	}
+	
+	public void testNonKey() throws Exception {
+		TestLogger logger = new TestLogger();
+		logger.debug("test debug message", false, null);
+		assertEquals(1, logger.nonKeyCount());
+		assertEquals(Level.DEBUG, logger.nonKeyLevel(0));
+		assertEquals("test debug message " +
+			"Logged in user is test-user  from test-office", 
+			logger.nonKeyMessage(0));
+	}
+
 }

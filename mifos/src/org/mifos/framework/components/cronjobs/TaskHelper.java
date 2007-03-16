@@ -48,6 +48,7 @@ import org.mifos.framework.components.cronjobs.helpers.TaskStatus;
 import org.mifos.framework.components.cronjobs.persistence.TaskPersistence;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
+import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
@@ -58,9 +59,16 @@ public abstract class TaskHelper {
 	private Task task;
 
 	long timeInMillis = 0;
+	
+	private MifosLogger logger;
 
 	public TaskHelper(MifosTask mifosTask) {
 		this.mifosTask = mifosTask;
+		this.logger = MifosLogManager.getLogger(LoggerConstants.CRONJOBS);
+	}
+	
+	protected MifosLogger getLogger() {
+		return logger;
 	}
 
 	/**

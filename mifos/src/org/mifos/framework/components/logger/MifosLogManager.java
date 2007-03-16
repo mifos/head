@@ -115,7 +115,7 @@ public class MifosLogManager {
 	public static MifosLogger getLoggerHelper(String name,
 			String resourceBundleName) {
 
-		MifosLogger logger = null;
+		MifosLogger logger;
 		// checks to see if the logger repository already contains an instance
 		// of the logger.
 		// If it does that instance is returned
@@ -139,8 +139,8 @@ public class MifosLogManager {
 						try {
 							logger = new Log4jLogger(name,
 									getResourceBundle(resourceBundleName));
-						} catch (ResourceBundleNotFoundException rbnfe) {
-							rbnfe.printStackTrace();
+						} catch (ResourceBundleNotFoundException e) {
+							throw new RuntimeException(e);
 						}
 					} else {
 						logger = new Log4jLogger(name);
@@ -174,17 +174,11 @@ public class MifosLogManager {
 	 */
 	public static void readConfiguration(String fileName)
 	throws MalformedURLException, URISyntaxException {
-		URL url;
-		try {
-			url = ResourceLoader.getURI(fileName).toURL();
-		} catch (MalformedURLException e) {
-			throw e;
-		} catch (URISyntaxException e) {
-			throw e;
-		}
+		URL url = ResourceLoader.getURI(fileName).toURL();
 		//url = MifosLogManager.class.getClassLoader().getResource(fileName);
 
-		MifosDOMConfigurator.configureAndWatch(url.getPath(),LoggerConstants.DELAY);
+		MifosDOMConfigurator.configureAndWatch(
+			url.getPath(), LoggerConstants.DELAY);
 	}
 
 	public static Locale getMFILocale(){
