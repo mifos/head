@@ -60,20 +60,22 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 
 /**
- * Control Class for Report Params 
+ * Control Class for Report Params
  */
 public class ReportsUserParamsAction extends BaseAction {
-	
+
 	private final ReportsBusinessService reportsBusinessService;
+
 	private final ReportsPersistence reportsPersistence;
 
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	
+	private MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+
 	public ReportsUserParamsAction() throws ServiceException {
 		reportsBusinessService = new ReportsBusinessService();
 		reportsPersistence = new ReportsPersistence();
 	}
-	
+
 	@Override
 	protected BusinessService getService() {
 		return reportsBusinessService;
@@ -82,68 +84,71 @@ public class ReportsUserParamsAction extends BaseAction {
 	/**
 	 * Loads the Parameter Add page
 	 */
-public ActionForward loadAddList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-	logger.debug("In ReportsUserParamsAction:load Method: ");		
-	request.getSession().setAttribute("listOfAllParameters", reportsBusinessService.getAllReportParams());
-	ReportsParamQueryDAO paramDAO = new ReportsParamQueryDAO();
-	ReportsUserParamsActionForm actionForm=(ReportsUserParamsActionForm)form;
-	String strReportId = request.getParameter("reportId");
-	if(strReportId==null)
-		strReportId = actionForm.getReportId()+"";
-	if(strReportId==null || strReportId.equals(""))
-		strReportId = "0";
-	int reportId = Integer.parseInt(strReportId);
-	 actionForm.setReportId(reportId);
-	 request.getSession().setAttribute("listOfAllParametersForReportId", 
-			 reportsPersistence.findParamsOfReportId(reportId));
-	 request.getSession().setAttribute("listOfReportJasper", 
-			 reportsPersistence.findJasperOfReportId(reportId));
-	 
-	 List<ReportsParamsMap> reportParams =(List) request.getSession().getAttribute("listOfAllParametersForReportId");
-	 Object[] obj = reportParams.toArray();
-	 if(obj!=null && obj.length>0)
-	 {
-		
-		for(int i=0;i<obj.length;i++)
-		{
-			ReportsParamsMap rp = (ReportsParamsMap) obj[i];
-			if(rp.getReportsParams().getType().equalsIgnoreCase("Query"))
-			{
-				request.getSession().setAttribute("para"+(i+1),
-					paramDAO.listValuesOfParameters(rp.getReportsParams()));
+	public ActionForward loadAddList(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In ReportsUserParamsAction:load Method: ");
+		request.getSession().setAttribute("listOfAllParameters",
+				reportsBusinessService.getAllReportParams());
+		ReportsParamQueryDAO paramDAO = new ReportsParamQueryDAO();
+		ReportsUserParamsActionForm actionForm = (ReportsUserParamsActionForm) form;
+		String strReportId = request.getParameter("reportId");
+		if (strReportId == null) {
+			strReportId = actionForm.getReportId() + "";
+		}
+		if (strReportId == null || strReportId.equals("")) {
+			strReportId = "0";
+		}
+		int reportId = Integer.parseInt(strReportId);
+		actionForm.setReportId(reportId);
+		request.getSession().setAttribute("listOfAllParametersForReportId",
+				reportsPersistence.findParamsOfReportId(reportId));
+		request.getSession().setAttribute("listOfReportJasper",
+				reportsPersistence.findJasperOfReportId(reportId));
+
+		List<ReportsParamsMap> reportParams = (List) request.getSession()
+				.getAttribute("listOfAllParametersForReportId");
+		Object[] obj = reportParams.toArray();
+		if (obj != null && obj.length > 0) {
+
+			for (int i = 0; i < obj.length; i++) {
+				ReportsParamsMap rp = (ReportsParamsMap) obj[i];
+				if (rp.getReportsParams().getType().equalsIgnoreCase("Query")) {
+					request.getSession().setAttribute(
+							"para" + (i + 1),
+							paramDAO.listValuesOfParameters(rp
+									.getReportsParams()));
+				}
 			}
 		}
-	 }
-	 
-	 return mapping.findForward(ReportsConstants.ADDLISTREPORTSUSERPARAMS);
-}
-   /**
-    * Generate report in given export format
-    * @param mapping
-    * @param form
-    * @param request
-    * @param response
-    * @return
-    * @throws Exception
-    */
-public ActionForward processReport(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-	logger.debug("In ReportsUserParamsAction:processReport Method: ");	
-	ReportsUserParamsActionForm actionForm=(ReportsUserParamsActionForm)form;
-	int reportId = actionForm.getReportId();
-	String applPath = actionForm.getApplPath();
-	String expType = actionForm.getExpFormat();
-	String expFilename = reportsBusinessService.runReport(reportId,request,applPath,expType);
-	request.getSession().setAttribute("expFileName",expFilename);
-	actionForm.setExpFileName(expFilename);
-	String forward = "";
-	String error = (String)request.getSession().getAttribute("paramerror");
-	if(error==null || error.equals(""))
-		forward = ReportsConstants.PROCESSREPORTSUSERPARAMS;
-	else
-		forward = ReportsConstants.ADDLISTREPORTSUSERPARAMS;
-	return mapping.findForward(forward);
-}
-    
 
+		return mapping.findForward(ReportsConstants.ADDLISTREPORTSUSERPARAMS);
+	}
+
+	/**
+	 * Generate report in given export format
+	 */
+	public ActionForward processReport(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In ReportsUserParamsAction:processReport Method: ");
+		ReportsUserParamsActionForm actionForm = (ReportsUserParamsActionForm) form;
+		int reportId = actionForm.getReportId();
+		String applPath = actionForm.getApplPath();
+		String expType = actionForm.getExpFormat();
+		String expFilename = reportsBusinessService.runReport(reportId,
+				request, applPath, expType);
+		request.getSession().setAttribute("expFileName", expFilename);
+		actionForm.setExpFileName(expFilename);
+		String forward = "";
+		String error = (String) request.getSession().getAttribute("paramerror");
+		if (error == null || error.equals("")) {
+			forward = ReportsConstants.PROCESSREPORTSUSERPARAMS;
+		}
+		else {
+			forward = ReportsConstants.ADDLISTREPORTSUSERPARAMS;
+		}
+		return mapping.findForward(forward);
+	}
 
 }
