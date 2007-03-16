@@ -130,6 +130,9 @@ public class BulkEntryBusinessService extends BusinessService {
 					transactionDate, savingsWithNames, parent
 							.getCustomerDetail().getCustomerId(), savingsCache);
 		}
+		
+		/* We probably could just join the thread here (but what do
+		   we need to do with InterruptedException?). */
 		while (!isThreadDone.toString().equals("Done")) {
 			try {
 				Thread.sleep(100L);
@@ -251,6 +254,9 @@ public class BulkEntryBusinessService extends BusinessService {
 		threadCustomerAccount.start();
 		saveAttendance(clients, customerNames);
 		saveSavingsAccount(savings, savingsNames);
+
+		/* We probably could just join the threads here (but what do
+		   we need to do with InterruptedException?). */
 		while ((!isThreadOneDone.toString().equals("Done"))
 				|| (!isCustomerAccountThreadDone.toString().equals("Done"))) {
 			try {

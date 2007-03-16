@@ -45,41 +45,35 @@ package org.mifos.framework.exceptions;
  */
 public class SystemException extends RuntimeException {
 
+	/** Generic message, along the lines of "something has failed".  */
+	private static final String DEFAULT_KEY = 
+		"exception.framework.SystemException";
+
 	/**
 	 * This is a string which points to the actual message in the resource
 	 * bundle. The exception message to be shown to the user is taken from the
 	 * resource bundle and hence can be localized.
 	 */
-	protected String key = null;
-
-	/**
-	 * This is an array of object which might be needed to pass certain
-	 * parameters to the string in the resource bundle.
-	 */
-	protected Object[] values = null;
+	private final String key;
+	
+	private final Object[] values;
 
 	public SystemException(Throwable cause) {
-		this.initCause(cause);
-	}
-
-	public SystemException(Object[] values) {
-		this.values = values;
-	}
-
-	public SystemException(Object[] values, Throwable cause) {
-		this.values = values;
-		this.initCause(cause);
+		this(DEFAULT_KEY, cause.getMessage(), cause);
 	}
 
 	public SystemException(String key, Throwable cause) {
-		this.key = key;
-		this.initCause(cause);
+		this(key, cause.getMessage(), cause);
 	}
 
 	public SystemException(String key) {
-		this.key = key;
+		this(key, (String)null);
 	}
 
+	public SystemException(String key, String internalMessage) {
+		this(key, internalMessage, null);
+	}
+	
 	/**
 	 * @param key
 	 *            A key for looking up the message in
@@ -91,9 +85,20 @@ public class SystemException extends RuntimeException {
 	 *            key. Because the message is only for developers, it is not
 	 *            translated into different languages.
 	 */
-	public SystemException(String key, String internalMessage) {
-		super(internalMessage);
+	public SystemException(
+		String key, String internalMessage, Throwable cause) {
+		this(key, internalMessage, cause, null);
+	}
+
+	public SystemException(String key, Throwable cause, Object[] values) {
+		this(key, null, cause, values);
+	}
+
+	public SystemException(String key, String internalMessage, 
+		Throwable cause, Object[] values) {
+		super(internalMessage, cause);
 		this.key = key;
+		this.values = values;
 	}
 
 	/**
@@ -102,9 +107,13 @@ public class SystemException extends RuntimeException {
 	 * for displaying message to the user
 	 */
 	public String getKey() {
-		return "exception.framework.SystemException";
+		return key;
 	}
 
+	/**
+	 * This is an array of object which might be needed to pass certain
+	 * parameters to the string in the resource bundle.
+	 */
 	public Object[] getValues() {
 		return values;
 	}

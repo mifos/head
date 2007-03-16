@@ -85,8 +85,6 @@ public class TestEnumPlugin extends MifosMockStrutsTestCase {
 			enumPlugin.buildClasses(enumPluginClasses);
 			fail();
 		} catch (EnumsNotLoadedException expected) {
-			assertEquals("exception.framework.SystemException", 
-				expected.getKey());
 		}
 	}
 

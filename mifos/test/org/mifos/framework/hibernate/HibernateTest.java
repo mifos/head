@@ -18,7 +18,7 @@ public class HibernateTest extends MifosTestCase {
 		} catch (HibernateStartUpException outer) {
 			// What do we want the user to see?
 //			assertEquals(HibernateConstants.STARTUPEXCEPTION, outer.getKey());
-			assertEquals("exception.framework.SystemException",
+			assertEquals("errors.hibernatepropnotfound",
 					outer.getKey());
 			ObjectAssert.assertInstanceOf(
 				FileNotFoundException.class, 

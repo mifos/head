@@ -75,7 +75,7 @@ public abstract class TaskHelper {
 			task = new Task();
 			task.setDescription(SchedulerConstants.START);
 			task.setTask(mifosTask.name);
-			task.setStatus(TaskStatus.INCOMPLETE.getValue());
+			task.setStatus(TaskStatus.INCOMPLETE);
 			if (timeInMillis == 0) {
 				task.setStartTime(new Timestamp(System.currentTimeMillis()));
 			} else {
@@ -97,7 +97,7 @@ public abstract class TaskHelper {
 			TaskStatus status) {
 		try {
 			task.setDescription(description);
-			task.setStatus(status.getValue());
+			task.setStatus(status);
 			if (timeInMillis == 0) {
 				task.setEndTime(new Timestamp(System.currentTimeMillis()));
 			} else {
