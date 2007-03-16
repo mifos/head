@@ -208,10 +208,10 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		this.prdCategory = prdCategory;
 	}
 
-	void setPrdStatus(PrdStatusEntity prdStatus) {
+	public void setPrdStatus(PrdStatusEntity prdStatus) {
 		this.prdStatus = prdStatus;
 	}
-
+	
 	public void setPrdApplicableMaster(
 			PrdApplicableMasterEntity prdApplicableMaster) {
 		this.prdApplicableMaster = prdApplicableMaster;

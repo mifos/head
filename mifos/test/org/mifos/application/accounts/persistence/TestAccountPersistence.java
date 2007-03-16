@@ -20,6 +20,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.TestConstants;
@@ -78,8 +79,8 @@ public class TestAccountPersistence extends TestAccount {
 		SavingsBO savingsBO = TestObjectFactory.createSavingsAccount(
 				"12345678910", group, AccountState.SAVINGS_ACC_APPROVED, 
 				new Date(),
-				createSavingsOffering("qqqqq"), TestObjectFactory
-						.getUserContext());
+				createSavingsOffering("qqqqq"), 
+				TestUtils.makeUser());
 		List<Integer> customerAccounts = accountPersistence
 				.getActiveCustomerAndSavingsAccounts();
 		assertEquals(3, customerAccounts.size());
@@ -116,8 +117,9 @@ public class TestAccountPersistence extends TestAccount {
 	
 	private SavingsBO createSavingsAccount() throws Exception {
 		return TestObjectFactory.createSavingsAccount("12345678910", group,
-				AccountState.SAVINGS_ACC_APPROVED, new Date(), createSavingsOffering("qqqqq"),
-				TestObjectFactory.getUserContext());
+				AccountState.SAVINGS_ACC_APPROVED, new Date(), 
+				createSavingsOffering("qqqqq"),
+				TestUtils.makeUser());
 	}
 
 	private SavingsOfferingBO createSavingsOffering(String offeringName) {

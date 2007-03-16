@@ -49,6 +49,7 @@ import org.mifos.application.productdefinition.exceptions.ProductDefinitionExcep
 import org.mifos.application.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -214,6 +215,10 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		this.recommendedAmntUnit = recommendedAmntUnit;
 	}
 
+	public void setRecommendedAmntUnit(RecommendedAmountUnit unit) {
+		setRecommendedAmntUnit(new RecommendedAmntUnitEntity(unit));
+	}
+
 	public SavingsTypeEntity getSavingsType() {
 		return savingsType;
 	}
@@ -321,4 +326,5 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 		}
 		prdLogger.debug("Validating the fields in savings Offering done");
 	}
+
 }

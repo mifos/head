@@ -4059,11 +4059,10 @@ public class TestSavingsBO extends MifosTestCase {
 
 		SavingsOfferingBO savingsOfferingBO = SavingsTestHelper
 				.createSavingsOffering("dfasdasd1", "sad1");
-		TestSavingsOfferingBO.setRecommendedAmntUnit(savingsOfferingBO,
-				RecommendedAmountUnit.COMPLETE_GROUP);
+		savingsOfferingBO.setRecommendedAmntUnit(RecommendedAmountUnit.COMPLETE_GROUP);
 		SavingsBO savingsBO = SavingsTestHelper.createSavingsAccount(
 				savingsOfferingBO, group, AccountState.SAVINGS_ACC_APPROVED,
-				TestObjectFactory.getUserContext());
+				TestUtils.makeUser());
 
 		Short LastInstallmentId = savingsBO.getLastInstallmentId();
 		AccountActionDateEntity lastYearLastInstallment = savingsBO

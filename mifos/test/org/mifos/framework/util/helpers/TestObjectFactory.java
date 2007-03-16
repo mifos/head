@@ -740,7 +740,7 @@ public class TestObjectFactory {
 
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(offeringStatusId);
-		TestSavingsOfferingBO.setStatus(savingsOffering,prdStatus);
+		savingsOffering.setPrdStatus(prdStatus);
 		return (SavingsOfferingBO) addObject(testObjectPersistence
 				.persist(savingsOffering));
 	}

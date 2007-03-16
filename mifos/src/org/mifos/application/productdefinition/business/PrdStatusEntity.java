@@ -59,7 +59,7 @@ public class PrdStatusEntity extends PersistentObject {
 		prdType = null;
 		prdState = null;
 	}
-
+	
 	public Short getOfferingStatusId() {
 		return offeringStatusId;
 	}

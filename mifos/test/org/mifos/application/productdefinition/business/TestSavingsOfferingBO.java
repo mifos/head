@@ -50,7 +50,6 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
-import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
@@ -78,18 +77,6 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		super.tearDown();
 		TestObjectFactory.removeObject(savingsOffering);
 		TestObjectFactory.removeObject(savingsOffering1);
-	}
-
-	public static void setStatus(SavingsOfferingBO savingsOffering,
-			PrdStatusEntity prdStatus) {
-		savingsOffering.setPrdStatus(prdStatus);
-	}
-
-	public static void setRecommendedAmntUnit(
-			SavingsOfferingBO savingsOffering,
-			RecommendedAmountUnit recommendedAmountUnit) {
-		savingsOffering.setRecommendedAmntUnit(new RecommendedAmntUnitEntity(
-				recommendedAmountUnit));
 	}
 
 	public void testUpdateSavingsOfferingForLogging() throws Exception {

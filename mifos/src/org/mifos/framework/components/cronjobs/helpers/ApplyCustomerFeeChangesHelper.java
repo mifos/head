@@ -27,7 +27,7 @@ public class ApplyCustomerFeeChangesHelper extends TaskHelper {
 	@Override
 	public void execute(long timeInMillis) throws CronJobException {
 		List<String> errorList = new ArrayList<String>();
-		List<FeeBO> fees = null;
+		List<FeeBO> fees;
 		try {
 			fees = new FeePersistence().getUpdatedFeesForCustomer();
 		} catch (Exception e) {

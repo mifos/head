@@ -34,6 +34,7 @@ public class HolidayPersistence extends MasterPersistence {
 	public List<HolidayBO> getHolidays(int year, int localId) 
 	throws PersistenceException {
 		SimpleDateFormat isoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		isoDateFormat.setLenient(false);
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("LOCALE_ID", new Short((short) localId));
 		try {
