@@ -44,10 +44,11 @@ import org.mifos.framework.business.PersistentObject;
 
 /**
  * A class that represents a row in the 'customer flag' table.
- * 
+ * A customer may have several of these flags (rows).
  */
 public class CustomerFlagDetailEntity extends PersistentObject {
 
+	@SuppressWarnings("unused")
 	private final Integer customerFlagId;
 
 	private final CustomerStatusFlagEntity statusFlag;

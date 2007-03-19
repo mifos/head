@@ -309,9 +309,6 @@ public class ClientBO extends CustomerBO {
 	@Override
 	public void changeStatus(Short newStatusId, Short flagId, String comment)
 			throws CustomerException {
-		logger
-				.debug("In ClientBO::changeStatus(), newStatusId: "
-						+ newStatusId);
 		super.changeStatus(newStatusId, flagId, comment);
 		if (isClientUnderGroup()
 				&& (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()) || newStatusId
@@ -327,15 +324,10 @@ public class ClientBO extends CustomerBO {
 				center = null;
 			}
 		}
-		logger
-				.debug("In ClientBO::changeStatus(), successfully changed status, newStatusId: "
-						+ newStatusId);
 	}
 	
 	@Override
 	public void updateMeeting(MeetingBO meeting) throws CustomerException {
-		logger.debug("In ClientBO::updateMeeting(), customerId: "
-				+ getCustomerId());
 		if (getCustomerMeeting() == null)
 			this.setCustomerMeeting(createCustomerMeeting(meeting));
 		else
@@ -345,8 +337,6 @@ public class ClientBO extends CustomerBO {
 
 	@Override
 	protected void saveUpdatedMeeting(MeetingBO meeting)throws CustomerException{
-		logger.debug("In ClientBO::saveUpdatedMeeting(), customerId: "
-				+ getCustomerId());
 		MeetingBO newMeeting = getCustomerMeeting().getUpdatedMeeting();
 		super.saveUpdatedMeeting(meeting);
 		if(getParentCustomer()==null)
@@ -356,21 +346,18 @@ public class ClientBO extends CustomerBO {
 	@Override
 	protected void validateStatusChange(Short newStatusId)
 			throws CustomerException {
-		logger.debug("In ClientBO::validateStatusChange(), customerId: "
-				+ getCustomerId());
-		if (getParentCustomer() != null)
+		if (getParentCustomer() != null) {
 			checkIfClientStatusIsLower(newStatusId, getParentCustomer()
 					.getCustomerStatus().getId());
+		}
 
-		if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue()))
+		if (newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
 			checkIfClientCanBeClosed();
+		}
 
-		if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue()))
+		if (newStatusId.equals(CustomerStatus.CLIENT_ACTIVE.getValue())) {
 			checkIfClientCanBeActive(newStatusId);
-		
-		logger
-				.debug("In ClientBO::validateStatusChange(), successfully validated status, customerId: "
-						+ getCustomerId());
+		}
 	}
 
 	@Override

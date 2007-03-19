@@ -58,6 +58,7 @@ import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -67,7 +68,6 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsTypeEntity;
-import org.mifos.application.productdefinition.business.TestSavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
@@ -2049,7 +2049,8 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testGetTotalAmountDueForActiveCustomers() throws Exception {
 		savings = getSavingsAccountForCenter();
-		client1.changeStatus(CustomerStatus.CLIENT_CLOSED.getValue(),Short.valueOf("6"), "Client closed");
+		client1.changeStatus(CustomerStatus.CLIENT_CLOSED,
+				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, "Client closed");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		savings = new SavingsPersistence().findById(savings.getAccountId());

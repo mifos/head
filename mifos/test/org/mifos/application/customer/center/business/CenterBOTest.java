@@ -13,6 +13,7 @@ import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
@@ -325,19 +326,21 @@ public class CenterBOTest extends MifosTestCase {
 	public void testSuccessfulUpdateWithoutLO_in_InActiveState()
 			throws Exception {
 		createCustomers();
-		client.changeStatus(CustomerStatus.CLIENT_CANCELLED.getValue(), Short
-				.valueOf("1"), "client cancelled");
+		client.changeStatus(CustomerStatus.CLIENT_CANCELLED, 
+				CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW, 
+				"client cancelled");
 		client.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		group.changeStatus(CustomerStatus.GROUP_CANCELLED.getValue(), Short
-				.valueOf("11"), "group cancelled");
+		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 
+				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
+				"group cancelled");
 		group.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
-		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(), null,
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"Center_Inactive");
 		center.update();
 		HibernateUtil.commitTransaction();

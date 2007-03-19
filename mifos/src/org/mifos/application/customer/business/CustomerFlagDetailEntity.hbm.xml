@@ -6,12 +6,17 @@
 
 
 <hibernate-mapping>
-    <class name="org.mifos.application.customer.business.CustomerFlagDetailEntity" table="CUSTOMER_FLAG_DETAIL">
-        <id name="customerFlagId" column="CUSTOMER_FLAG_ID"  type="integer" access="field">
+    <class 
+    	name="org.mifos.application.customer.business.CustomerFlagDetailEntity" 
+    	table="CUSTOMER_FLAG_DETAIL">
+        <id name="customerFlagId" column="CUSTOMER_FLAG_ID"
+        	type="integer" access="field">
             <generator class="native"/>
         </id>
 	  	<property name="createdBy" column="CREATED_BY"  />
 	  	<property name="createdDate" column="CREATED_DATE"  />
-	  	<many-to-one name="statusFlag" column="FLAG_ID" class="org.mifos.application.customer.business.CustomerStatusFlagEntity"  insert="true" update="false" access="field"/>
+	  	<many-to-one name="statusFlag" column="FLAG_ID" 
+	  		class="org.mifos.application.customer.business.CustomerStatusFlagEntity"
+	  		insert="true" update="false" access="field"/>
   	 </class>
 </hibernate-mapping>

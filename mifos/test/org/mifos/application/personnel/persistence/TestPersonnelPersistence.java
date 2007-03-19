@@ -126,7 +126,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	public void testClosedCustomerUnderLO() throws Exception{
 		createCustomers(
 			CustomerStatus.GROUP_CLOSED, CustomerStatus.CLIENT_CANCELLED);
-		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(),null,"check inactive");
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive");
 		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -138,7 +138,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		createCustomers(
 			CustomerStatus.GROUP_CLOSED ,CustomerStatus.CLIENT_CANCELLED);
 		assertTrue(persistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
-		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(),null,"check inactive");
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE,null,"check inactive");
 		center.update();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

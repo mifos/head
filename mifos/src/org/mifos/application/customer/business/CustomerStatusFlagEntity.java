@@ -1,8 +1,12 @@
 package org.mifos.application.customer.business;
 
+import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.util.helpers.YesNoFlag;
 
+/**
+ * For most purposes, should be replaced by {@link CustomerStatusFlag}.
+ */
 public class CustomerStatusFlagEntity extends MasterDataEntity {
 	private Short blacklisted;
 	private String flagDescription;

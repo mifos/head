@@ -979,7 +979,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 			throws CustomerException {
 		createInitialObjects(CustomerStatus.CENTER_ACTIVE,
 				CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
-		center.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(), null,
+		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"center is inactive now");
 		HibernateUtil.commitTransaction();
 		invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_PARTIAL, null);

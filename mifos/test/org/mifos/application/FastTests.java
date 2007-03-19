@@ -40,6 +40,7 @@ import junit.framework.TestSuite;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionViewTest;
 import org.mifos.application.customer.business.CustomFieldViewTest;
 import org.mifos.application.customer.struts.actionforms.CustomerActionFormTest;
+import org.mifos.application.customer.util.helpers.CustomerStatusFlagTest;
 import org.mifos.application.customer.util.helpers.LoanCycleCounterTest;
 import org.mifos.application.master.business.MifosCurrencyTest;
 import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionFormTest;
@@ -114,6 +115,8 @@ public class FastTests extends TestSuite {
 		suite.addTestSuite(TestKey.class);
 		suite.addTestSuite(BulkEntryAccountFeeActionViewTest.class);
 		suite.addTestSuite(LoanCycleCounterTest.class);
+		
+		suite.addTestSuite(CustomerStatusFlagTest.class);
 		return suite;
 	}
 

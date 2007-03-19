@@ -26,6 +26,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
@@ -140,7 +141,7 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		client.setUserContext(TestObjectFactory.getContext());
-		client.changeStatus(CustomerStatus.CLIENT_ACTIVE.getValue(), null, "clientActive");
+		client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "clientActive");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
@@ -174,7 +175,7 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		client.setUserContext(TestObjectFactory.getContext());
-		client.changeStatus(CustomerStatus.CLIENT_ACTIVE.getValue(), null, "clientActive");
+		client.changeStatus(CustomerStatus.CLIENT_ACTIVE, null, "clientActive");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		accountBO = TestObjectFactory.getObject(AccountBO.class,
@@ -458,7 +459,8 @@ public class TestClientBO extends MifosTestCase {
 		assertEquals(1, client.getAccounts().size());
 		
 		client.setUserContext(TestObjectFactory.getContext());
-		client.changeStatus(CustomerStatus.CLIENT_ACTIVE.getValue(),null, "Client Made Active");
+		client.changeStatus(CustomerStatus.CLIENT_ACTIVE, 
+				null, "Client Made Active");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -643,7 +645,9 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testUpdateGroupFailure_GroupCancelled()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
-		group1.changeStatus(CustomerStatus.GROUP_CANCELLED.getValue(),Short.valueOf("11"), "Status Changed");
+		group1.changeStatus(CustomerStatus.GROUP_CANCELLED,
+				CustomerStatusFlag.GROUP_CANCEL_WITHDRAW, 
+				"Status Changed");
 		HibernateUtil.commitTransaction();
 		try{
 			client.transferToGroup(group1);
@@ -656,37 +660,40 @@ public class TestClientBO extends MifosTestCase {
 	
 	public void testUpdateGroupFailure_GroupClosed()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_ACTIVE);
-		group1.changeStatus(CustomerStatus.GROUP_CLOSED.getValue(),Short.valueOf("16"), "Status Changed");
+		group1.changeStatus(CustomerStatus.GROUP_CLOSED,
+				CustomerStatusFlag.GROUP_CLOSED_TRANSFERRED, 
+				"Status Changed");
 		HibernateUtil.commitTransaction();
-		try{
+		try {
 			client.transferToGroup(group1);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE,ce.getKey());
+			fail();
+		}
+		catch(CustomerException expected){
+			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE,
+				expected.getKey());
 		}
 	}
 	
 	public void testUpdateGroupFailure_GroupStatusLower()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);		
-		try{
+		try {
 			client.transferToGroup(group1);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS,ce.getKey());
+			fail();
+		}
+		catch (CustomerException expected){
+			assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS,
+				expected.getKey());
 		}
 	}
 	
 	public void testUpdateGroupFailure_GroupStatusLower_Client_OnHold()throws Exception{
 		createObjectsForTranferToGroup_SameBranch(CustomerStatus.GROUP_PARTIAL);	
-		client.changeStatus(CustomerStatus.CLIENT_HOLD.getValue(), null, "client on hold");
+		client.changeStatus(CustomerStatus.CLIENT_HOLD, null, "client on hold");
 		try{
 			client.transferToGroup(group1);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS,ce.getKey());
+			fail();
+		}catch(CustomerException e){
+			assertEquals(ClientConstants.ERRORS_LOWER_GROUP_STATUS,e.getKey());
 		}
 	}
 	

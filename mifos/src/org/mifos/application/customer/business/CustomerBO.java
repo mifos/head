@@ -56,6 +56,7 @@ import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -247,6 +248,10 @@ public abstract class CustomerBO extends BusinessObject {
 		this.displayName = displayName;
 	}
 
+	/**
+	 * Most callers will instead want an enum - call {@link #getStatus()}
+	 * for that.
+	 */
 	public CustomerStatusEntity getCustomerStatus() {
 		return customerStatus;
 	}
@@ -659,11 +664,22 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 		return amount;
 	}
+	
+	public void changeStatus(
+			CustomerStatus newStatus, CustomerStatusFlag flag, String comment) 
+	throws CustomerException {
+		changeStatus(newStatus.getValue(), 
+			flag == null ? null : flag.getValue(), 
+			comment);
+	}
 
+	/**
+	 * Most callers will want to call the enumified version
+	 * {@link #changeStatus(CustomerStatus, CustomerStatusFlag, String)} 
+	 * instead.
+	 */
 	public void changeStatus(Short newStatusId, Short flagId, String comment)
 			throws CustomerException {
-		logger.debug("In CustomerBO::changeStatus(), newStatusId: "
-				+ newStatusId);
 		Short oldStatusId = getCustomerStatus().getId();
 		validateStatusChange(newStatusId);
 		if (getPersonnel() != null)
@@ -706,9 +722,6 @@ public abstract class CustomerBO extends BusinessObject {
 		
 		handleActiveForFirstTime(oldStatusId, newStatusId);
 		this.update();
-		logger
-				.debug("In CustomerBO::changeStatus(), successfully changed status, newStatusId: "
-						+ newStatusId);
 	}
 
 	protected void handleActiveForFirstTime(Short oldStatusId, Short newStatusId) throws CustomerException{

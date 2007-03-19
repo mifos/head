@@ -26,6 +26,7 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.customer.util.helpers.CustomerStatusFlag;
 import org.mifos.application.fees.business.AmountFeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
@@ -185,7 +186,7 @@ public class GroupBOTest extends MifosTestCase {
 		
 		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
 		group.setUserContext(TestObjectFactory.getContext());
-		group.changeStatus(CustomerStatus.GROUP_CANCELLED.getValue(), null, "Group Cancelled");
+		group.changeStatus(CustomerStatus.GROUP_CANCELLED, null, "Group Cancelled");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
@@ -193,9 +194,9 @@ public class GroupBOTest extends MifosTestCase {
 		client1 = TestObjectFactory.getObject(ClientBO.class, client1.getCustomerId());
 		client2 = TestObjectFactory.getObject(ClientBO.class, client2.getCustomerId());
 		
-		assertEquals(CustomerStatus.GROUP_CANCELLED.getValue(),group.getCustomerStatus().getId());
-		assertEquals(CustomerStatus.CLIENT_PARTIAL.getValue(),client1.getCustomerStatus().getId());
-		assertEquals(CustomerStatus.CLIENT_PARTIAL.getValue(),client2.getCustomerStatus().getId());
+		assertEquals(CustomerStatus.GROUP_CANCELLED,group.getStatus());
+		assertEquals(CustomerStatus.CLIENT_PARTIAL,client1.getStatus());
+		assertEquals(CustomerStatus.CLIENT_PARTIAL,client2.getStatus());
 	}
 	
 	public void testSuccessfulUpdate_Group_UnderBranchForLoggig() throws Exception {
@@ -782,8 +783,9 @@ public class GroupBOTest extends MifosTestCase {
 		client1 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
 		client2 = createClient(group, CustomerStatus.CLIENT_PARTIAL);
 		officeBO = createOffice();
-		client2.changeStatus(CustomerStatus.CLIENT_CLOSED.getValue(), Short
-				.valueOf("6"), "comment");
+		client2.changeStatus(CustomerStatus.CLIENT_CLOSED, 
+				CustomerStatusFlag.CLIENT_CLOSED_TRANSFERRED, 
+				"comment");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -852,14 +854,13 @@ public class GroupBOTest extends MifosTestCase {
 	public void testUpdateCenterFailure_TransferInInactiveCenter() throws Exception {
 		createInitialObjects();
 		center1 = createCenter("newCenter");
-		center1.changeStatus(CustomerStatus.CENTER_INACTIVE.getValue(), null, "changeStatus");
+		center1.changeStatus(CustomerStatus.CENTER_INACTIVE, null, "changeStatus");
 		HibernateUtil.commitTransaction();
 		try {
 			group.transferToCenter(center1);
-			assertTrue(false);
-		} catch (CustomerException ce) {
-			assertTrue(true);
-			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, ce
+			fail();
+		} catch (CustomerException e) {
+			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE, e
 					.getKey());
 		}
 	}
