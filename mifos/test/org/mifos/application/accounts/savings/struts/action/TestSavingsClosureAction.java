@@ -14,6 +14,7 @@ import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
@@ -189,6 +190,24 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		actionPerform();
 		verifyNoActionErrors();
 		verifyForward("preview_success");
+	}
+	
+	public void testPreviewDateValidation()throws Exception {
+		AccountPaymentEntity payment = new AccountPaymentEntity(null,
+				new Money(Configuration.getInstance().getSystemConfig()
+						.getCurrency(), "500"), null, null, null);
+		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
+				request);
+		addRequestParameter("receiptId", "101");
+		String badDate = "3/20/2005"; // an invalid date
+		addRequestParameter("receiptDate", badDate);
+		addRequestParameter("paymentTypeId", "1");
+		addRequestParameter("customerId", "1");
+		addRequestParameter("notes", "notes");
+		setRequestPathInfo("/savingsClosureAction.do");
+		addRequestParameter("method", "preview");
+		actionPerform();
+		verifyActionErrors(new String[] {AccountConstants.ERROR_INVALIDDATE});
 	}
 
 	public void testSuccessfullPreview_withoutReceipt()throws Exception {

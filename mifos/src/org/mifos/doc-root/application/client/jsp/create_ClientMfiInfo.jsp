@@ -91,8 +91,7 @@
 	    clientCustActionForm.submit();
     }
 </script>
-		<html-el:form action="clientCustAction.do?method=preview"
-				onsubmit="return (validateMyForm(trainedDate,trainedDateFormat,trainedDateYY));" >
+		<html-el:form action="clientCustAction.do?method=preview">
 			<!-- Hidden varaibles for the locale and for the input page -->
 			<html-el:hidden property="input" value="mfiInfo" />
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">

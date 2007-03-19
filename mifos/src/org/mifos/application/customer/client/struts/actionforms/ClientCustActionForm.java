@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
@@ -68,6 +69,7 @@ import org.mifos.framework.components.fieldConfiguration.business.FieldConfigura
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationHelper;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.tags.DateHelper;
@@ -335,14 +337,25 @@ public class ClientCustActionForm extends CustomerActionForm {
 
 	private void validateDateOfBirth(HttpServletRequest request,
 			ActionErrors errors) {
-		if (StringUtils.isNullOrEmpty(dateOfBirth))
+		if (StringUtils.isNullOrEmpty(dateOfBirth)) {
 			errors.add(CustomerConstants.DOB, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY, CustomerConstants.DOB));
-		if ((isValidDOB(dateOfBirth, getUserLocale(request))) == false) {
-			errors.add(ClientConstants.INVALID_DOB_EXCEPTION,
-					new ActionMessage(ClientConstants.INVALID_DOB_EXCEPTION));
 		}
-
+		
+		else {
+			try {
+				Date date = DateHelper.getDateAsSentFromBrowser(dateOfBirth);
+				if (DateHelper.whichDirection(date) > 0) {
+					throw new InvalidDateException(dateOfBirth);
+				}
+			}
+			
+			catch (InvalidDateException e) {
+				errors.add(ClientConstants.INVALID_DOB_EXCEPTION,
+						new ActionMessage(ClientConstants.INVALID_DOB_EXCEPTION));
+			}
+			
+		}
 	}
 
 	@Override

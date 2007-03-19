@@ -33,9 +33,33 @@ public class DateHelperTest extends TestCase {
 	}
 	
 	public void testGetDateFromBrowser() throws Exception {
+		
+		// test that day and month order is correct
 		long expectedDate = new DateMidnight(2005, 03, 04).getMillis();
 		java.sql.Date result = DateHelper.getDateAsSentFromBrowser("04/03/2005");
 		assertEquals(expectedDate, result.getTime());
+		
+		expectedDate = new DateMidnight(2005, 04, 03).getMillis();
+		result = DateHelper.getDateAsSentFromBrowser("3/4/2005");
+		assertEquals(expectedDate, result.getTime());
+		
+		// test non-lenient day/month parsing (must be in the normal range, i.e. 1-12 for months)
+		String badDate = "3/15/2006";
+		try {
+			result = DateHelper.getDateAsSentFromBrowser(badDate);
+			fail();
+		}	
+		catch (InvalidDateException e) {
+			assertEquals(e.getDateString(), badDate);
+		}
+		
+		// test acceptance of two-digit years
+		expectedDate = new DateMidnight(2005, 5, 5).getMillis();
+		result = DateHelper.getDateAsSentFromBrowser("5/5/05");
+		assertEquals(expectedDate, result.getTime());
+		
+		
+		
 	}
 	
 	public void testIsValidDate() throws Exception {

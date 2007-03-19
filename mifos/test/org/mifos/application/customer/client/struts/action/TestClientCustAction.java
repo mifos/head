@@ -395,7 +395,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -431,7 +431,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006"); // an invalid date
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -475,7 +475,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		int i = 0;
@@ -515,7 +515,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -556,7 +556,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		int i = 0;
@@ -604,7 +604,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -645,7 +645,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
@@ -705,7 +705,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
@@ -757,7 +757,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
@@ -813,7 +813,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
@@ -886,7 +886,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
@@ -960,7 +960,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		addRequestParameter("spouseName.firstName", "Spouse");
 		addRequestParameter("spouseName.lastName", "LastName");
 		addRequestParameter("spouseName.nameType", "1");
-		addRequestParameter("dateOfBirth", "03/20/2006");
+		addRequestParameter("dateOfBirth", "20/3/2006");
 		addRequestParameter("clientDetailView.gender", "1");
 		addRequestParameter("input", "personalInfo");
 		addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
@@ -1024,7 +1024,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			addRequestParameter("spouseName.firstName", "Spouse");
 			addRequestParameter("spouseName.lastName", "LastName");
 			addRequestParameter("spouseName.nameType", "1");
-			addRequestParameter("dateOfBirth", "03/20/2006");
+			addRequestParameter("dateOfBirth", "20/3/2006");
 			addRequestParameter("clientDetailView.gender", "1");
 			addRequestParameter("input", "personalInfo");
 			addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());
@@ -1201,7 +1201,6 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		}
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(0, getErrorSize());
 		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
@@ -1230,7 +1229,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		}
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(0, getErrorSize());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
 		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
 
 		setRequestPathInfo("/clientCustAction.do");
@@ -1286,7 +1286,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		}
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
-		assertEquals(0, getErrorSize());
+		verifyNoActionErrors();
+		verifyNoActionMessages();
 		verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
 
 		setRequestPathInfo("/clientCustAction.do");
@@ -1566,7 +1567,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/clientCustAction.do");
 		addRequestParameter("method", "previewEditMfiInfo");
 		addRequestParameter("trained", "1");
-		addRequestParameter("trainedDate", "03/20/2006"); // an invalid date (D/M/Y)
+		addRequestParameter("trainedDate", "3/20/2006"); // an invalid date (D/M/Y)
 		addRequestParameter("externalId", "3");
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
@@ -1636,7 +1637,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			addRequestParameter("spouseName.firstName", "Spouse");
 			addRequestParameter("spouseName.lastName", "LastName");
 			addRequestParameter("spouseName.nameType", "1");
-			addRequestParameter("dateOfBirth", "03/20/2006");
+			addRequestParameter("dateOfBirth", "20/3/2006");
 			addRequestParameter("clientDetailView.gender", "1");
 			addRequestParameter("input", "personalInfo");
 			addRequestParameter("customerDetail.povertyStatus", povertyStatus.get(0).getId().toString());

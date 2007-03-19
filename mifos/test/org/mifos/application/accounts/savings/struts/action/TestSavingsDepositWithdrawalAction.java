@@ -202,6 +202,24 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		assertEquals(3,getErrorSize(AccountConstants.ERROR_MANDATORY));
 	}
 	
+	public void testPreviewDateValidation() throws Exception {
+		createCenterAndGroup();
+		savingsOffering = helper.createSavingsOffering("asfddsf","213a");
+		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED, userContext);
+		HibernateUtil.closeSession();
+		savings = new SavingsPersistence().findById(savings.getAccountId());
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
+		setRequestPathInfo("/savingsDepositWithdrawalAction.do");
+		addRequestParameter("method", "preview");
+		addRequestParameter("amount", "200");
+		addRequestParameter("customerId", group.getCustomerId().toString());
+		addRequestParameter("trxnDate", "3/20/2005");
+		addRequestParameter("paymentTypeId", "1");
+		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
+		actionPerform();
+		verifyActionErrors(new String[] {AccountConstants.ERROR_INVALIDDATE});
+	}
+	
 	public void testSuccessfulPreview() throws Exception {
 		createCenterAndGroup();
 		savingsOffering = helper.createSavingsOffering("asfddsf","213a");

@@ -200,11 +200,18 @@ public class DateHelper {
 	}
 
 	public static java.sql.Date getDateAsSentFromBrowser(String value) {
-		/*
-		 * This is just a fixed format we use for historical reasons. Would make
-		 * more sense to change the javascript and this to both use yyyy-mm-dd.
-		 */
-		return getLocaleDate(internalLocale, value);
+		if (value == null || value == "") {
+			return null;
+		}
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("d/M/yy", internalLocale);
+			format.setLenient(false);
+			return new java.sql.Date(format.parse(value).getTime());
+		}
+		
+		catch (ParseException e) {
+			throw new InvalidDateException(value);
+		}
 	}
 
 	// validate a date string according to UK D/M/Y format, our internal

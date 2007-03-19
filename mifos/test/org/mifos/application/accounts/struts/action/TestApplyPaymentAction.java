@@ -121,7 +121,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	public void testApplyPaymentPreview(){
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/applyPaymentAction");
-		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		String currentDate = DateHelper.makeDateAsSentFromBrowser();
 		addRequestParameter("receiptDate",currentDate);
 		addRequestParameter("transactionDate",currentDate);		
 		addRequestParameter("paymentTypeId","1");

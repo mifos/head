@@ -62,7 +62,6 @@
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<html-el:form method="post"
 			action="/applyPaymentAction.do?method=preview"
-			onsubmit="return (validateMyForm(transactionDate,transactionDateFormat,transactionDateYY) && validateMyForm(receiptDate,receiptDateFormat,receiptDateYY))"
 			focus="paymentTypeId">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
