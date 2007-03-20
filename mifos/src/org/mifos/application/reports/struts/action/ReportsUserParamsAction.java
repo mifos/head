@@ -89,7 +89,7 @@ public class ReportsUserParamsAction extends BaseAction {
 			throws Exception {
 		logger.debug("In ReportsUserParamsAction:load Method: ");
 		request.getSession().setAttribute("listOfAllParameters",
-				reportsBusinessService.getAllReportParams());
+				new ReportsPersistence().getAllReportParams());
 		ReportsParamQueryDAO paramDAO = new ReportsParamQueryDAO();
 		ReportsUserParamsActionForm actionForm = (ReportsUserParamsActionForm) form;
 		String strReportId = request.getParameter("reportId");

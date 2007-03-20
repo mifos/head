@@ -34,6 +34,8 @@ public class DatabaseSetup {
 	}
 
 	public static void initializeHibernate() {
+		DatabaseSetup.configureLogging();
+
 		if (HibernateSessionFactory.isConfigured()) {
 			return;
 		}

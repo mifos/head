@@ -3,15 +3,14 @@ package org.mifos.application.accounts.business;
 import java.util.Set;
 
 import junit.framework.TestCase;
-import net.sourceforge.mayfly.Database;
 
-import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.framework.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 /**
@@ -20,13 +19,10 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 public class AccountActionEntityTest extends TestCase {
 
 	public void testBasics() throws Exception {
-		DatabaseSetup.configureLogging();
 		DatabaseSetup.initializeHibernate();
-
-		SessionFactory factory = DatabaseSetup.mayflySessionFactory();
-		Database database = new Database(DatabaseSetup.getStandardStore());
+		TestDatabase database = TestDatabase.makeStandard();
 		
-		Session session = factory.openSession(database.openConnection());
+		Session session = database.openSession();
 		AccountActionEntity action = (AccountActionEntity) 
 			session.get(AccountActionEntity.class, 
 				AccountActionTypes.PAYMENT.getValue());

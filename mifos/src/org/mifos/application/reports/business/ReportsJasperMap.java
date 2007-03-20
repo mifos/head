@@ -44,44 +44,33 @@ import org.mifos.framework.security.util.UserContext;
 /**
  * This class encapsulates mapping between Jasper file and Reports
  */
-
 public class ReportsJasperMap extends BusinessObject {
 	
-	public ReportsJasperMap(){	
-		
+	private Short reportId;
+	private String reportJasper;
+	
+
+	public ReportsJasperMap() {
 	}
 	
 	public ReportsJasperMap(UserContext userContext) {
 		super(userContext);		
 	}
 	
-	private Short reportId;
-	private String reportName;
-	private String reportIdentifier;
-	private String reportJasper;
-	
+	public ReportsJasperMap(Short reportId, String reportJasper) {
+		this.reportId = reportId;
+		this.reportJasper = reportJasper;
+	}
+
 	
 	public Short getReportId() {
 		return reportId;
 	}
+
 	public void setReportId(Short reportId) {
 		this.reportId = reportId;
 	}
-	public String getReportName() {
-		return reportName;
-	}
-	public void setReportName(String reportName) {
-		this.reportName = reportName;
-	}		
 
-	public String getReportIdentifier() {
-		return reportIdentifier;
-	}
-
-	public void setReportIdentifier(String reportIdentifier) {
-		this.reportIdentifier = reportIdentifier;
-	}
-	
 	public String getReportJasper() {
 		return reportJasper;
 	}
@@ -90,9 +79,8 @@ public class ReportsJasperMap extends BusinessObject {
 		this.reportJasper = reportJasper;
 	}
 
-	
 	public Short getEntityID() {
 		return null;
-	}	
-		
+	}
+
 }

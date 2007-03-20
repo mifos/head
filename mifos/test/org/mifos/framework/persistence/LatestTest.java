@@ -12,6 +12,7 @@ import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.datastore.DataStore;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
+import org.mifos.framework.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class LatestTest extends TestCase {
@@ -19,21 +20,15 @@ public class LatestTest extends TestCase {
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public void testSimple() throws Exception {
-		Database database = makeDatabase();
+		Database database = TestDatabase.makeDatabase();
 		loadLatest(database);
 		String latestDump = new SqlDumper().dump(database.dataStore());
 
-		database = makeDatabase();
+		database = TestDatabase.makeDatabase();
 		applyUpgrades(database);
 		String upgradeDump = new SqlDumper().dump(database.dataStore());
 		
 		assertEquals(latestDump, upgradeDump);
-	}
-
-	public static Database makeDatabase() {
-		Database database = new Database();
-		database.tableNamesCaseSensitive(true);
-		return database;
 	}
 
 	private void applyUpgrades(Database database) {
@@ -48,7 +43,7 @@ public class LatestTest extends TestCase {
 	}
 	
 	public void testRealSchema() throws Exception {
-		Database database = makeDatabase();
+		Database database = TestDatabase.makeDatabase();
 		loadRealLatest(database);
 		String latestDump = new SqlDumper().dump(database.dataStore());
 
@@ -66,7 +61,7 @@ public class LatestTest extends TestCase {
 	}
 
 	private DataStore upgradeToFirstNumberedVersion() {
-		Database database = makeDatabase();
+		Database database = TestDatabase.makeDatabase();
 		DatabaseSetup.executeScript(database, "sql/mifosdbcreationscript.sql");
 	    DatabaseSetup.executeScript(database, "sql/mifosmasterdata.sql");
 	    DatabaseSetup.executeScript(database, "sql/rmpdbcreationscript.sql");
@@ -109,7 +104,7 @@ public class LatestTest extends TestCase {
 	}
 
 	public void testDropTables() throws Exception {
-		Database database = makeDatabase();
+		Database database = TestDatabase.makeDatabase();
 		String blankDB = new SqlDumper().dump(database.dataStore());
 		DatabaseSetup.executeScript(database, "sql/latest-schema.sql");
 		DatabaseSetup.executeScript(database, "sql/mifosdroptables.sql");

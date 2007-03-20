@@ -361,15 +361,14 @@ public class ReportsPersistence extends Persistence {
 			session.flush();
 			trxn.commit();
 		}
-		catch (HibernateProcessException hpe) {
+		catch (HibernateProcessException e) {
 			trxn.rollback();
-			throw new ApplicationException(hpe);
+			throw new ApplicationException(e);
 		}
-		catch (HibernateException hpe) {
-			hpe.printStackTrace();
+		catch (HibernateException e) {
 			trxn.rollback();
-
-			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
 		}
 		catch (Exception e) {
 			trxn.rollback();
@@ -381,6 +380,8 @@ public class ReportsPersistence extends Persistence {
 		}
 	}
 
+	/** Why a list?  Is it to deal with the case of "zero or one",
+	    or can there be more than one?  */
 	public List<ReportsJasperMap> findJasperOfReportId(int reportId)
 			throws PersistenceException {
 		Map<String, String> queryParameters = new HashMap<String, String>();
@@ -390,30 +391,69 @@ public class ReportsPersistence extends Persistence {
 				ReportsConstants.FIND_JASPER_OF_REPORTID, queryParameters);
 
 		return queryResult;
+	}
+	
+	public List<ReportsJasperMap> findJasperOfReportId(
+		Session session, int reportId)
+	throws PersistenceException {
+		Query query = session.getNamedQuery(
+			ReportsConstants.FIND_JASPER_OF_REPORTID);
+		query.setParameter("reportId", reportId);
+		return query.list();
+	}
 
+	public ReportsJasperMap oneJasperOfReportId(Session session, short reportId) 
+	throws PersistenceException {
+		List<ReportsJasperMap> all = findJasperOfReportId(session, reportId);
+		if (all.size() != 1) {
+			throw new RuntimeException(
+				"expected one jasper for report ID " + reportId + 
+				" but got " + all.size());
+		}
+		return all.get(0);
+	}
+
+	public ReportsJasperMap oneJasperOfReportId(short reportId) 
+	throws PersistenceException {
+		return oneJasperOfReportId(HibernateUtil.getSessionTL(), reportId);
+	}
+
+	public void createJasperMap(ReportsJasperMap map) {
+		Session session = null;
+		try {
+			session = HibernateUtil.openSession();
+			createJasperMap(session, map);
+		}
+		finally {
+			HibernateUtil.closeSession(session);
+		}
+	}
+
+	public void createJasperMap(Session session, ReportsJasperMap map) {
+		session.save(map);
+		session.flush();
 	}
 
 	/**
 	 * Creates a connection.
-	 * (Is this actually used?  I don't see how it could do anything
-	 * useful, since it calls HibernateUtil.closeSession before
-	 * returning).
+	 * (This function calls HibernateUtil.closeSession before returning.
+	 * I think what it is doing is closing the session but keeping
+	 * open the underlying connection.  Certainly looks ugly, not
+	 * sure whether it is buggy too...).
 	 */
 	public Connection getJasperConnection() throws ApplicationException,
 			SystemException {
 		Session session = null;
-		Connection con = null;
 		try {
 			session = HibernateUtil.openSession();
-			con = session.connection();
+			return session.connection();
 		}
-		catch (HibernateProcessException hpe) {
-			throw new ApplicationException(hpe);
+		catch (HibernateProcessException e) {
+			throw new ApplicationException(e);
 		}
-		catch (HibernateException hpe) {
-			hpe.printStackTrace();
-
-			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+		catch (HibernateException e) {
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
 		}
 		catch (Exception e) {
 			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
@@ -422,7 +462,6 @@ public class ReportsPersistence extends Persistence {
 		finally {
 			HibernateUtil.closeSession(session);
 		}
-		return con;
 	}
 
 }

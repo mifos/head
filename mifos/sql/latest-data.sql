@@ -4334,7 +4334,8 @@ INSERT INTO FINANCIAL_ACTION VALUES(21,370);
 INSERT INTO FINANCIAL_ACTION VALUES(22,550);
 
 
-/* The table Report Category will contain the different report category supported by the MFI like Performance, Client Detail etc - Configuration */
+/* The table Report Category will contain the different report category 
+   supported by the MFI like Performance, Client Detail etc - Configuration */
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(1,'Client Detail');
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(2,'Performance');
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) 
@@ -4344,7 +4345,9 @@ INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(5,'
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(6,'Analysis');
 INSERT INTO REPORT_CATEGORY(REPORT_CATEGORY_ID,REPORT_CATEGORY_VALUE) VALUES(7,'Miscellaneous');
 
-/* The table Report will contain the different reports supported by the MFI like Client Summary etc. The report will be linked to the category under which it belongs - Configuration */
+/* The table Report will contain the different reports supported by the MFI 
+   like Client Summary etc. The report will be linked to the category 
+   under which it belongs - Configuration */
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(1,1,'Client Summary & History Report','report_designer');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(2,1,'Client Product Wise History Report','product_history');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(3,1,'Clients Settlement info Report',null);
@@ -4353,7 +4356,8 @@ INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) V
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(6,1,'Clients pending approval report',null);
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) 
   VALUES(7,1,'Clients without Saving Accouts',null);
-INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(8,2,'Branch Performance Status Report','branch_performance');
+INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) 
+  VALUES(8,2,'Branch Performance Status Report','branch_performance');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(9,2,'Area Performance Status Report','area_performance');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(10,2,'Division Performance Status Report',null);
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(11,2,'Region Performance Status Report',null);

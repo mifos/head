@@ -95,7 +95,7 @@ public class ReportsParamsAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)	
 	throws Exception {
 		logger.debug("In ReportsParamsAction:loadList Method: ");		
-		request.getSession().setAttribute("listOfReportsParams", reportsBusinessService.getAllReportParams());
+		request.getSession().setAttribute("listOfReportsParams", new ReportsPersistence().getAllReportParams());
 		return mapping.findForward(ReportsConstants.LISTREPORTSPARAMS);
 	}
 

@@ -132,7 +132,7 @@ public class ReportsUploadAction extends BaseAction{
 			objmap.setReportId((short)reportId);
 			objmap.setReportJasper(fname);
 			reportsPersistence.updateReportsJasperMap(objmap);
-			request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,reportsBusinessService.getAllReportCategories());
+			request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,new ReportsPersistence().getAllReportCategories());
 		}
 
 		return mapping.findForward("administerreports_path");

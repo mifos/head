@@ -45,6 +45,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
+import org.mifos.application.reports.persistence.ReportsPersistence;
 import org.mifos.application.reports.util.helpers.ReportsConstants;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -55,17 +56,12 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
-/**
- * contol class for Reports
- * @author zankar
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
+
 public class ReportsAction extends BaseAction {
 	
 	private ReportsBusinessService reportsBusinessService ;
-	private  MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+	private MifosLogger logger = 
+		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
 	public ReportsAction() throws ServiceException {
 		reportsBusinessService = (ReportsBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.ReportsService);		
@@ -78,48 +74,28 @@ public class ReportsAction extends BaseAction {
 	
 	/**
 	 * loads report page
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
 	 */
-	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
+	public ActionForward load(ActionMapping mapping, ActionForm form, 
+		HttpServletRequest request, HttpServletResponse response)	
+	throws Exception {
 		logger.debug("In ReportsAction:load Method: ");		
-		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,reportsBusinessService.getAllReportCategories());
+		request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,new ReportsPersistence().getAllReportCategories());
 		return mapping.findForward(Constants.LOAD_SUCCESS);
 	}
 	
-	/**
-	 * loads Reportpage
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	public ActionForward getReportPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {	
+	public ActionForward getReportPage(ActionMapping mapping, ActionForm form, 
+		HttpServletRequest request, HttpServletResponse response) 
+	throws Exception {	
 		logger.debug("In ReportsAction:getReportPage Method: ");		
 		return mapping.findForward(request.getParameter("viewPath"));		
 	}
-	/**
-	 * loads Admin report page
-	 * @param mapping
-	 * @param form
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	public ActionForward getAdminReportPage(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
-    throws Exception
-    {
+
+	public ActionForward getAdminReportPage(ActionMapping mapping, 
+		ActionForm form, 
+		HttpServletRequest request, HttpServletResponse response)
+    throws Exception {
     	logger.debug("In ReportsAction:getAdminReportPage Method: ");
     	return mapping.findForward("administerreports_path");
     }
-	
-	
 
 }

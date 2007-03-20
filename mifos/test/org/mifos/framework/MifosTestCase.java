@@ -47,6 +47,13 @@ import junit.framework.TestCase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestCaseInitializer;
 
+/**
+ * Inheriting from this instead of TestCase is deprecated,
+ * generally speaking.  The reason is that TestCaseInitializer
+ * (a) runs too soon (it is more graceful for a long delay
+ * to happen in setUp), and (b) initializes too much (most
+ * tests don't need everything which is there).
+ */
 public class MifosTestCase extends TestCase {
 	static {
 		try {

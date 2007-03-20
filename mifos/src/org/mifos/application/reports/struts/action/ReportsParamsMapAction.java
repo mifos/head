@@ -81,7 +81,7 @@ public class ReportsParamsMapAction extends BaseAction {
 	 */
 	public ActionForward loadAddList(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		logger.debug("In ReportsParamsMapAction:load Method: ");		
-		request.getSession().setAttribute("listOfAllParameters", reportsBusinessService.getAllReportParams());
+		request.getSession().setAttribute("listOfAllParameters", new ReportsPersistence().getAllReportParams());
 		ReportsParamsMapActionForm actionForm=(ReportsParamsMapActionForm)form;
 		String strReportId = request.getParameter("reportId");
 		if(strReportId==null)

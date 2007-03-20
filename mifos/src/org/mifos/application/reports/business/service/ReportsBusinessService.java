@@ -55,7 +55,6 @@ import net.sf.jasperreports.engine.util.JRSaver;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 import org.mifos.application.reports.business.ReportsBO;
-import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.reports.business.ReportsDataSource;
 import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParams;
@@ -78,6 +77,8 @@ import org.mifos.framework.security.util.UserContext;
  */
 public class ReportsBusinessService extends BusinessService {
 	
+	public static final String PDF = "pdf";
+
 	private ReportsPersistence reportsPersistence = new ReportsPersistence();
 
 	@Override
@@ -86,31 +87,13 @@ public class ReportsBusinessService extends BusinessService {
 	}
 	
 	/**
-	 * Lists all the Report Categories. 
-	 * The list also contains the set of Reports within a particular category
-	 */
-	public List<ReportsCategoryBO> getAllReportCategories() 
-	throws ServiceException {
-		return reportsPersistence.getAllReportCategories();
-	}
-	
-	/**
-	 * List all Report Parameters
-	 */
-	public List<ReportsParams> getAllReportParams() throws ServiceException {
-		return reportsPersistence.getAllReportParams();
-	}
-	
-	
-	
-	/**
 	 * Create Report Parameter
 	 */
 	public String createReportsParams(ReportsParamsValue objParams)
 	throws ApplicationException {
 		String error = "";
 		boolean isInUse = false;
-		List<ReportsParams> reportsParams = getAllReportParams();
+		List<ReportsParams> reportsParams = new ReportsPersistence().getAllReportParams();
 		Object[] obj = reportsParams.toArray();
 		if(obj!=null && obj.length>0)
 		{
@@ -196,7 +179,8 @@ public class ReportsBusinessService extends BusinessService {
 		{
 			rjm = (ReportsJasperMap) obj[0];  
 		}
-		List<ReportsParamsMap> reportParams =(List) request.getSession().getAttribute("listOfAllParametersForReportId");
+		List<ReportsParamsMap> reportParams = (List) request.getSession()
+			.getAttribute("listOfAllParametersForReportId");
 		obj = reportParams.toArray();
 		Map parameters = new HashMap();
 		
@@ -255,7 +239,7 @@ public class ReportsBusinessService extends BusinessService {
 					fullpath = applPath+jaspername;
 					JRSaver.saveObject(jasperReport,fullpath);
 					JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,  parameters, conn);
-					if(exportType.equalsIgnoreCase("pdf"))
+					if(exportType.equalsIgnoreCase(PDF))
 					{
 						exportFileName = "Rep"+reportId+"_"+jaspername.replaceAll(".jasper",".pdf");
 						JasperExportManager.exportReportToPdfFile(jasperPrint,applPath+exportFileName);
@@ -298,7 +282,7 @@ public class ReportsBusinessService extends BusinessService {
 				fullpath = applPath+jaspername;
 				JRSaver.saveObject(jasperReport,fullpath);
 				JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,  parameters, conn);
-				if(exportType.equalsIgnoreCase("pdf"))
+				if(exportType.equalsIgnoreCase(PDF))
 				{
 					exportFileName = "Rep"+reportId+"_"+jaspername.replaceAll(".jasper",".pdf");
 					JasperExportManager.exportReportToPdfFile(jasperPrint,applPath+exportFileName);

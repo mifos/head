@@ -4,14 +4,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import net.sourceforge.mayfly.Database;
-
 import org.hibernate.classic.Session;
 import org.mifos.application.reports.business.ReportsBO;
 import org.mifos.application.reports.business.ReportsCategoryBO;
+import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParams;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.TestDatabase;
 
 public class ReportsPersistenceTest extends MifosTestCase {
 
@@ -107,13 +106,11 @@ public class ReportsPersistenceTest extends MifosTestCase {
 			assertEquals(0, parameters.size());
 		}
 		
-		Database database = new Database(DatabaseSetup.getStandardStore());
+		TestDatabase database = TestDatabase.makeStandard();
 		database.execute(
 			"insert into report_parameter(name, type, classname)" +
 			"values('my_report', 'my_type', 'my_class')");
-		Session session = 
-			DatabaseSetup.mayflySessionFactory()
-				.openSession(database.openConnection());
+		Session session = database.openSession();
 		List<ReportsParams> moreParameters = 
 			reportsPersistence.getAllReportParams(session);
 		assertEquals(1, moreParameters.size());
@@ -129,6 +126,20 @@ public class ReportsPersistenceTest extends MifosTestCase {
 				reportsPersistence.getAllReportParams();
 			assertEquals(0, parameters.size());
 		}
+	}
+	
+	public void testCreateJasper() throws Exception {
+		TestDatabase database = TestDatabase.makeStandard();
+		Session session = database.openSession();
+		ReportsJasperMap jasperMap = new ReportsJasperMap(
+			null, "report.jrxml");
+		new ReportsPersistence().createJasperMap(session, jasperMap);
+		short reportId = jasperMap.getReportId();
+
+		Session session2 = database.openSession();
+		ReportsJasperMap reRead = 
+			new ReportsPersistence().oneJasperOfReportId(session2, reportId);
+		assertEquals("report.jrxml", reRead.getReportJasper());
 	}
 
 }
