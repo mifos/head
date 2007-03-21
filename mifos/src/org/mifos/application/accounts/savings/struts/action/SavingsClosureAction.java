@@ -155,7 +155,7 @@ public class SavingsClosureAction extends BaseAction {
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		((SavingsClosureActionForm) form).setTrxnDate(DateHelper
-				.getCurrentDate(uc.getPereferedLocale()));
+				.getCurrentDate(uc.getPreferredLocale()));
 		return mapping.findForward("load_success");
 	}
 

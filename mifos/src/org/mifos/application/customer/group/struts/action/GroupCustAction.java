@@ -271,7 +271,7 @@ public class GroupCustAction extends CustAction {
 		Date trainedDate = null; 
 		if(actionForm.getTrainedDate()!=null)
 			trainedDate = getDateFromString(actionForm.getTrainedDate(), getUserContext(request)
-				.getPereferedLocale());
+				.getPreferredLocale());
 
 		GroupBO groupBO;
 		groupBO = getGroupBusinessService().findBySystemId(
@@ -464,7 +464,7 @@ public class GroupCustAction extends CustAction {
 		else 
 			 actionForm.setTrained(GroupConstants.NOT_TRAINED); 
 		if(group.getTrainedDate() != null){
-			  actionForm.setTrainedDate(DateHelper.getUserLocaleDate(getUserContext(request).getPereferedLocale(),
+			  actionForm.setTrainedDate(DateHelper.getUserLocaleDate(getUserContext(request).getPreferredLocale(),
 		      group.getTrainedDate().toString()));
 		}
 		 
@@ -507,11 +507,11 @@ public class GroupCustAction extends CustAction {
 		checkPermissionForCreate(actionForm.getStatusValue().getValue(),
 				userContext, null, actionForm.getOfficeIdValue(), personnelId);
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
-		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
+		convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 		MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(
 				CustomerConstants.CUSTOMER_MEETING, request);
 		GroupBO group = new GroupBO(userContext, actionForm.getDisplayName(), actionForm.getStatusValue(),
-				actionForm.getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext.getPereferedLocale()),
+				actionForm.getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext.getPreferredLocale()),
 				actionForm.getAddress(), customFields, actionForm.getFeesToApply(), actionForm.getFormedByPersonnelValue(), 
 				actionForm.getOfficeIdValue(), meeting, actionForm.getLoanOfficerIdValue());
 		return group;
@@ -524,10 +524,10 @@ public class GroupCustAction extends CustAction {
 				actionForm.getParentCustomer().getPersonnel().getPersonnelId());
 		
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
-		convertCustomFieldDateToUniformPattern(customFields, userContext.getPereferedLocale());
+		convertCustomFieldDateToUniformPattern(customFields, userContext.getPreferredLocale());
 		
 		GroupBO group = new GroupBO(userContext, actionForm.getDisplayName(), actionForm.getStatusValue(),
-				actionForm.getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext.getPereferedLocale()),
+				actionForm.getExternalId(), actionForm.isCustomerTrained(), actionForm.getTrainedDateValue(userContext.getPreferredLocale()),
 				actionForm.getAddress(), customFields, actionForm.getFeesToApply(), actionForm.getFormedByPersonnelValue(), actionForm.getParentCustomer());
 		return group;
 	}

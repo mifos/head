@@ -38,57 +38,36 @@
 package org.mifos.application.customer.util.helpers;
 
 public class Param {
-	private String  paramType ;
-	
-	private String ParamName;
+	private String paramType ;
+	private String name;
 	private Object value;
 
-	/**
-	 * @return Returns the paramName.
-	 */
-	public String getParamName() {
-		return ParamName;
-	}
-	/**
-	 * @param paramName The paramName to set.
-	 */
-	public void setParamName(String paramName) {
-		ParamName = paramName;
+	public String getName() {
+		return name;
 	}
 
-	/**
-	 * @param paramType
-	 * @param paramName
-	 * @param value
-	 */
+	public void setName(String paramName) {
+		name = paramName;
+	}
+
 	public Param(String paramType, String paramName, Object value) {
-		super();
-		// TODO Auto-generated constructor stub
 		this.paramType = paramType;
-		ParamName = paramName;
+		name = paramName;
 		this.value = value;
 	}
-	/**
-	 * @return Returns the paramType.
-	 */
+
 	public String getParamType() {
 		return paramType;
 	}
-	/**
-	 * @param paramType The paramType to set.
-	 */
+
 	public void setParamType(String paramType) {
 		this.paramType = paramType;
 	}
-	/**
-	 * @return Returns the value.
-	 */
+
 	public Object getValue() {
 		return value;
 	}
-	/**
-	 * @param value The value to set.
-	 */
+
 	public void setValue(Object value) {
 		this.value = value;
 	}

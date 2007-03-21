@@ -389,7 +389,7 @@ public class ClientCustAction extends CustAction {
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		UserContext userContext = getUserContext(request);
 		convertCustomFieldDateToUniformPattern(customFields, userContext
-				.getPereferedLocale());
+				.getPreferredLocale());
 		Short personnelId = null;
 		Short officeId = null;
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.YES.getValue())) {
@@ -619,7 +619,7 @@ public class ClientCustAction extends CustAction {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
 		client.updateAddress(actionForm.getAddress());
 		convertCustomFieldDateToUniformPattern(actionForm.getCustomFields(),
-				getUserContext(request).getPereferedLocale());
+				getUserContext(request).getPreferredLocale());
 		for (CustomFieldView fieldView : actionForm.getCustomFields())
 			for (CustomerCustomFieldEntity fieldEntity : client
 					.getCustomFields())

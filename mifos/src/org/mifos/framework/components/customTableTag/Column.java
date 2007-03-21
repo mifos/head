@@ -199,7 +199,7 @@ public class Column {
 		String labelText = null;
 		try {
 			labelText = labelConfig.getLabel(key, userContext
-					.getPereferedLocale());
+					.getPreferredLocale());
 		} catch (ConfigurationException e) {
 			// ignore
 
@@ -207,7 +207,7 @@ public class Column {
 		
 			if (labelText == null)try {
 				labelText = labelTagUtils.getLabel(pageContext, bundle,
-						userContext.getPereferedLocale(), key, null);
+						userContext.getPreferredLocale(), key, null);
 		} catch (Exception e) {
 		}
 		
@@ -216,7 +216,7 @@ public class Column {
 				charArray[0] = Character.toUpperCase(charArray[0]);
 				bundle = new String(charArray);
 				labelText = labelTagUtils.getLabel(pageContext, bundle,
-						userContext.getPereferedLocale(), key, null);
+						userContext.getPreferredLocale(), key, null);
 			
 		} catch (Exception e) {
 			labelText = key;

@@ -179,6 +179,10 @@ public class PersonnelBO extends BusinessObject {
 		return level;
 	}
 
+	public PersonnelLevel getLevelEnum() {
+		return PersonnelLevel.fromInt(level.getId());
+	}
+
 	public Integer getMaxChildCount() {
 		return maxChildCount;
 	}
@@ -656,7 +660,7 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	public boolean isLoanOfficer() {
-		return getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue());
+		return getLevelEnum() == PersonnelLevel.LOAN_OFFICER;
 	}
 
 	public UserContext login(String password) throws PersonnelException {
@@ -768,7 +772,7 @@ public class PersonnelBO extends BusinessObject {
 		UserContext userContext = new UserContext();
 		userContext.setId(getPersonnelId());
 		userContext.setName(getDisplayName());
-		userContext.setLevelId(getLevel().getId());
+		userContext.setLevel(getLevelEnum());
 		userContext.setRoles(getRoles());
 		userContext.setLastLogin(getLastLogin());
 		userContext.setPasswordChanged(getPasswordChanged());
@@ -781,7 +785,7 @@ public class PersonnelBO extends BusinessObject {
 			LanguageEntity lang = supportedLocales.getLanguage();
 			CountryEntity country = supportedLocales.getCountry();
 			if (null != lang && null != country) {
-				userContext.setPereferedLocale(new Locale(lang
+				userContext.setPreferredLocale(new Locale(lang
 						.getLanguageShortName(), country
 						.getCountryShortName()));
 			} else {
@@ -816,4 +820,5 @@ public class PersonnelBO extends BusinessObject {
 		logger.info("New encripted password returned.");
 		return newEncryptedPassword;
 	}
+
 }

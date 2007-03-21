@@ -551,7 +551,7 @@ public class ClientBO extends CustomerBO {
 					new Object[] { 
 						labelConfig.getLabel(
 							ConfigurationConstants.GROUP, 
-							userContext.getPereferedLocale()) });
+							userContext.getPreferredLocale()) });
 			} catch (ConfigurationException ce) {
 				new CustomerException(ce);
 			}
@@ -601,9 +601,9 @@ public class ClientBO extends CustomerBO {
 					ClientConstants.ERRORS_LOWER_GROUP_STATUS, 
 					new Object[] {
 						labelConfig.getLabel(ConfigurationConstants.GROUP,
-								userContext.getPereferedLocale()),
+								userContext.getPreferredLocale()),
 						labelConfig.getLabel(ConfigurationConstants.CLIENT,
-								userContext.getPereferedLocale()) });
+								userContext.getPreferredLocale()) });
 			} catch (ConfigurationException ce) {
 				new CustomerException(ce);
 			}
@@ -667,7 +667,7 @@ public class ClientBO extends CustomerBO {
 					String label = 
 						MifosConfiguration.getInstance().getLabel(
 							ConfigurationConstants.GOVERNMENT_ID,
-							userContext.getPereferedLocale());
+							userContext.getPreferredLocale());
 					throw new CustomerException(
 							CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION,
 							new Object[] {
@@ -727,7 +727,7 @@ public class ClientBO extends CustomerBO {
 								MifosConfiguration.getInstance().getLabel(
 										ConfigurationConstants.GROUP,
 										this.getUserContext()
-												.getPereferedLocale())});
+												.getPreferredLocale())});
 					
 					if (isGroupStatusLower(clientStatusId, groupStatus)) {
 						
@@ -737,11 +737,11 @@ public class ClientBO extends CustomerBO {
 											MifosConfiguration.getInstance().getLabel(
 													ConfigurationConstants.GROUP,
 													this.getUserContext()
-															.getPereferedLocale()),
+															.getPreferredLocale()),
 											MifosConfiguration.getInstance().getLabel(
 													ConfigurationConstants.CLIENT,
 													this.getUserContext()
-															.getPereferedLocale()) });
+															.getPreferredLocale()) });
 					}
 				} catch (ConfigurationException ce) {
 					throw new CustomerException(ce);
@@ -782,7 +782,7 @@ public class ClientBO extends CustomerBO {
 						CustomerConstants.CUSTOMER_LOAN_OFFICER_INACTIVE_EXCEPTION,
 						new Object[] { MifosConfiguration.getInstance()
 								.getLabel(ConfigurationConstants.BRANCHOFFICE,
-										getUserContext().getPereferedLocale()) });
+										getUserContext().getPreferredLocale()) });
 			} catch (ConfigurationException ce) {
 				throw new CustomerException(ce);
 			}
@@ -794,7 +794,7 @@ public class ClientBO extends CustomerBO {
 						CustomerConstants.CUSTOMER_BRANCH_INACTIVE_EXCEPTION,
 						new Object[] { MifosConfiguration.getInstance()
 								.getLabel(ConfigurationConstants.BRANCHOFFICE,
-										getUserContext().getPereferedLocale()) });
+										getUserContext().getPreferredLocale()) });
 			} catch (ConfigurationException ce) {
 				throw new CustomerException(ce);
 			}

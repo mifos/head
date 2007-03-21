@@ -370,7 +370,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 			String propertyName = request.getParameter(fieldConfigurationEntity
 					.getLabel());
 			Locale locale = ((UserContext) request.getSession().getAttribute(
-					LoginConstants.USERCONTEXT)).getPereferedLocale();
+					LoginConstants.USERCONTEXT)).getPreferredLocale();
 			if (propertyName != null && !propertyName.equals("")
 					&& !propertyName.equalsIgnoreCase("picture")) {
 				String propertyValue = request.getParameter(propertyName);

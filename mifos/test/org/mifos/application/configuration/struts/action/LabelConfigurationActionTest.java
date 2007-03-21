@@ -206,7 +206,7 @@ public class LabelConfigurationActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionMessages();
 
 		assertFalse(MenuRepository.getInstance().isMenuForLocale(
-				userContext.getPereferedLocale()));
+				userContext.getPreferredLocale()));
 
 		setRequestPathInfo("/labelconfigurationaction.do");
 		addRequestParameter("method", "load");

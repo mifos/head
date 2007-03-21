@@ -54,7 +54,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 				"org/mifos/application/accounts/savings/struts-config.xml")
 				.getPath());
 		userContext = TestObjectFactory.getContext();
-		userContext.setPereferedLocale(new Locale("en", "US"));
+		userContext.setPreferredLocale(new Locale("en", "US"));
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
@@ -254,7 +254,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "preview");
 		addRequestParameter("amount", "200");
 		addRequestParameter("customerId", group.getCustomerId().toString());
-		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
+		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPreferredLocale()));
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
 		actionPerform();
@@ -292,7 +292,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "preview");
 		addRequestParameter("amount", "30");
 		addRequestParameter("customerId", group.getCustomerId().toString());
-		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPereferedLocale()));
+		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPreferredLocale()));
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()));
 		actionPerform();

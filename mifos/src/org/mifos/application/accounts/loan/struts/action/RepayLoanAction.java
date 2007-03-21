@@ -100,7 +100,7 @@ public class RepayLoanAction extends BaseAction {
 		if (repayLoanActionForm.getRecieptDate() != null
 				&& repayLoanActionForm.getRecieptDate() != "")
 			receiptDate = new Date(DateHelper.getLocaleDate(
-					uc.getPereferedLocale(),
+					uc.getPreferredLocale(),
 					repayLoanActionForm.getRecieptDate()).getTime());
 		loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(),
 				repayLoanActionForm.getReceiptNumber(), receiptDate,

@@ -497,7 +497,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 						+ method);
 		if (method != null && method.equals(Methods.load.toString())) {
 			startDate = DateHelper.getCurrentDate(getUserContext(request)
-					.getPereferedLocale());
+					.getPreferredLocale());
 			recurAfter = "1";
 			minNoInstallments = "1";
 		}
@@ -647,7 +647,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 		} catch (PageExpiredException e) {
 		}
 		Date changedStartDate = getStartDateValue(getUserContext(request)
-				.getPereferedLocale());
+				.getPreferredLocale());
 		if (oldStartDate != null && changedStartDate != null) {
 			if (DateUtils.getDateWithoutTimeStamp(oldStartDate.getTime())
 					.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0
@@ -678,7 +678,7 @@ public class LoanPrdActionForm extends BaseActionForm {
 				.debug("start validateStartDate method of Loan Product Action form method :"
 						+ startDate);
 		Date startingDate = getStartDateValue(getUserContext(request)
-				.getPereferedLocale());
+				.getPreferredLocale());
 		if (startingDate != null
 				&& ((DateUtils.getDateWithoutTimeStamp(startingDate.getTime())
 						.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) < 0) || (DateUtils
@@ -698,9 +698,9 @@ public class LoanPrdActionForm extends BaseActionForm {
 				.debug("start validateEndDate method of Loan Product Action form method :"
 						+ startDate + "---" + endDate);
 		Date startingDate = getStartDateValue(getUserContext(request)
-				.getPereferedLocale());
+				.getPreferredLocale());
 		Date endingDate = getEndDateValue(getUserContext(request)
-				.getPereferedLocale());
+				.getPreferredLocale());
 		if (startingDate != null && endingDate != null
 				&& startingDate.compareTo(endingDate) >= 0)
 			addError(errors, "endDate",

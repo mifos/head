@@ -330,7 +330,7 @@ public class SavingsPrdActionForm extends BaseActionForm {
 		String method = request.getParameter(ProductDefinitionConstants.METHOD);
 		if (method != null && method.equals(Methods.load.toString())) {
 			startDate = DateHelper.getCurrentDate(getUserContext(request)
-					.getPereferedLocale());
+					.getPreferredLocale());
 		}
 		if (method != null && method.equals(Methods.preview.toString())) {
 			recommendedAmntUnit = null;
@@ -355,9 +355,9 @@ public class SavingsPrdActionForm extends BaseActionForm {
 				if (method.equals(Methods.preview.toString())) {
 					errors.add(super.validate(mapping, request));
 					Date startingDate = getStartDateValue(getUserContext(
-							request).getPereferedLocale());
+							request).getPreferredLocale());
 					Date endingDate = getEndDateValue(getUserContext(request)
-							.getPereferedLocale());
+							.getPreferredLocale());
 					if (startingDate != null
 							&& ((DateUtils.getDateWithoutTimeStamp(
 									startingDate.getTime()).compareTo(
@@ -387,9 +387,9 @@ public class SavingsPrdActionForm extends BaseActionForm {
 					validateMandatoryAmount(errors);
 					validateInterestRate(errors, request);
 					Date startingDate = getStartDateValue(getUserContext(
-							request).getPereferedLocale());
+							request).getPreferredLocale());
 					Date endingDate = getEndDateValue(getUserContext(request)
-							.getPereferedLocale());
+							.getPreferredLocale());
 					SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils
 							.getAttribute(Constants.BUSINESS_KEY, request);
 					validateStartDate(errors, savingsOffering.getStartDate(),

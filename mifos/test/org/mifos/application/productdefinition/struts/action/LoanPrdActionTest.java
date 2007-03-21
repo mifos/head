@@ -211,7 +211,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "1000");
@@ -246,7 +246,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -279,7 +279,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -312,7 +312,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -348,9 +348,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -383,7 +383,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(-1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -416,9 +416,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(-1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -459,9 +459,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -501,9 +501,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -536,9 +536,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -573,9 +573,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -670,9 +670,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -793,12 +793,12 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals(loanOffering.getPrdApplicableMasterEnum(),
 				loanPrdActionForm.getPrdApplicableMasterEnum());
 		assertEquals(DateHelper.getUserLocaleDate(TestObjectFactory
-				.getContext().getPereferedLocale(), DateHelper
+				.getContext().getPreferredLocale(), DateHelper
 				.toDatabaseFormat(loanOffering.getStartDate())),
 				loanPrdActionForm.getStartDate());
 		if (loanOffering.getEndDate() != null) {
 			assertEquals(DateHelper.getUserLocaleDate(TestObjectFactory
-					.getContext().getPereferedLocale(), DateHelper
+					.getContext().getPreferredLocale(), DateHelper
 					.toDatabaseFormat(loanOffering.getEndDate())),
 					loanPrdActionForm.getEndDate());
 		}
@@ -896,9 +896,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -935,9 +935,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -976,9 +976,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -1050,9 +1050,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAP");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -1193,9 +1193,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -1242,9 +1242,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");

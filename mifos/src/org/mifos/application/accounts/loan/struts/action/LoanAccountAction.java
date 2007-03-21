@@ -290,7 +290,7 @@ public class LoanAccountAction extends AccountAppAction {
 						.loanAmountValue(), loanActionForm
 						.getNoOfInstallmentsValue(), loanActionForm
 						.getDisbursementDateValue(getUserContext(request)
-								.getPereferedLocale()), loanActionForm
+								.getPreferredLocale()), loanActionForm
 						.isInterestDedAtDisbValue(), loanActionForm
 						.getInterestDoubleValue(), loanActionForm
 						.getGracePeriodDurationValue(), getFund(request,
@@ -432,7 +432,7 @@ public class LoanAccountAction extends AccountAppAction {
 				loanAccountActionForm.getInterestDoubleValue(),
 				loanAccountActionForm.getNoOfInstallmentsValue(),
 				loanAccountActionForm.getDisbursementDateValue(getUserContext(
-						request).getPereferedLocale()), loanAccountActionForm
+						request).getPreferredLocale()), loanAccountActionForm
 						.getGracePeriodDurationValue(), loanAccountActionForm
 						.getBusinessActivityIdValue(), loanAccountActionForm
 						.getCollateralNote(), getCollateralTypeEntity(form,
@@ -542,7 +542,7 @@ public class LoanAccountAction extends AccountAppAction {
 				.setGracePeriodDuration(getStringValue(loanOffering
 						.getGracePeriodDuration()));
 		loanAccountActionForm.setDisbursementDate(DateHelper.getUserLocaleDate(
-				getUserContext(request).getPereferedLocale(), SessionUtils
+				getUserContext(request).getPreferredLocale(), SessionUtils
 						.getAttribute(LoanConstants.PROPOSEDDISBDATE, request)
 						.toString()));
 	}
@@ -676,7 +676,7 @@ public class LoanAccountAction extends AccountAppAction {
 		java.util.Date proposedDisbursement = (Date) SessionUtils.getAttribute(
 				LoanConstants.PROPOSEDDISBDATE, request);
 		loanAccountActionForm.setDisbursementDate(DateHelper.getUserLocaleDate(
-				getUserContext(request).getPereferedLocale(), DateHelper
+				getUserContext(request).getPreferredLocale(), DateHelper
 						.toDatabaseFormat(proposedDisbursement)));
 
 		loanAccountActionForm.setIntDedDisbursement(loan
@@ -760,7 +760,7 @@ public class LoanAccountAction extends AccountAppAction {
 							CustomFieldType.DATE.getValue())) {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
 						DateHelper.getUserLocaleDate(getUserContext(request)
-								.getPereferedLocale(), fieldDef
+								.getPreferredLocale(), fieldDef
 								.getDefaultValue()), fieldDef.getFieldType()));
 			} else {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
@@ -782,7 +782,7 @@ public class LoanAccountAction extends AccountAppAction {
 
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-		Locale locale = getUserContext(request).getPereferedLocale();
+		Locale locale = getUserContext(request).getPreferredLocale();
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 			for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
 				if (customFieldDef.getFieldId().equals(

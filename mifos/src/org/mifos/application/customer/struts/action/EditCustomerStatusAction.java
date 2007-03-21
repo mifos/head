@@ -182,7 +182,7 @@ public class EditCustomerStatusAction extends BaseAction {
 			HttpServletRequest request, UserContext userContext) throws ApplicationException, SystemException{
 		EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
 		statusActionForm.setCommentDate(DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		String newStatusName = null;
 		String flagName = null;
 		List<CustomerCheckListBO> checklist = customerService
@@ -228,7 +228,7 @@ public class EditCustomerStatusAction extends BaseAction {
 			UserContext userContext) throws Exception{
 		EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
 		statusActionForm.setCommentDate(DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		String newStatusName = null;
 		String flagName = null;
 		List<CustomerCheckListBO> checklist = customerService

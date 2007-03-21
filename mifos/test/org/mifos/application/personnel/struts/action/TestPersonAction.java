@@ -123,7 +123,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(1, personActionForm.getCustomFields().size());
 		verifyForward(ActionForwards.load_success.toString());
 		PersonActionForm actionForm = (PersonActionForm)request.getSession().getAttribute("personActionForm");
-		String currentDate = DateHelper.getCurrentDate(TestObjectFactory.getUserContext().getPereferedLocale());
+		String currentDate = DateHelper.getCurrentDate(TestObjectFactory.getUserContext().getPreferredLocale());
 		assertEquals(currentDate,actionForm.getDateOfJoiningMFI());
 
 	}

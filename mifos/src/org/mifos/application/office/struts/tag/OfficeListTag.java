@@ -139,7 +139,7 @@ public class OfficeListTag extends BodyTagSupport {
 			ResourceBundle resources = ResourceBundle
 					.getBundle(
 							"org.mifos.application.office.util.resources.OfficeUIResources",
-							userContext.getPereferedLocale());
+							userContext.getPreferredLocale());
 			html.startTag("span", "class", "fontnormal");
 			html.text(resources.getString("Office.labelNo"));
 			html.text(" ");

@@ -123,7 +123,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 			e.printStackTrace();
 		}
 		userContext = TestObjectFactory.getContext();
-		userContext.setPereferedLocale(new Locale("en", "US"));
+		userContext.setPreferredLocale(new Locale("en", "US"));
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");

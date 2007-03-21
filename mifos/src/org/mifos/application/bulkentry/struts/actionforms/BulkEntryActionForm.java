@@ -464,7 +464,7 @@ public class BulkEntryActionForm extends ActionForm {
 		UserContext userContext = (UserContext) request.getSession()
 				.getAttribute(LoginConstants.USERCONTEXT);
 		if (null != userContext) {
-			locale = userContext.getPereferedLocale();
+			locale = userContext.getPreferredLocale();
 			if (null == locale) {
 				locale = userContext.getMfiLocale();
 			}

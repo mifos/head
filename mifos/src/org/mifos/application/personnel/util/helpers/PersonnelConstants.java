@@ -191,7 +191,6 @@ public interface PersonnelConstants {
 	public static final String ERROR_PASSWORD_LENGTH="error.passwordLength";
 
 	public static final String ERROR_STATUS="errors.status";
-	public static final String ERROR_NO_LEVEL="error.nolevel";
 
 	/**
 	 * This is a user which we set up as part of master data.

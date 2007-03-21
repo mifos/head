@@ -677,7 +677,7 @@ public class TableTag extends BodyTagSupport {
 			UserContext userContext = (UserContext) session
 					.getAttribute(LoginConstants.USERCONTEXT);
 			if (null != userContext) {
-				userPreferredLocale = userContext.getPereferedLocale();
+				userPreferredLocale = userContext.getPreferredLocale();
 				if (null == userPreferredLocale) {
 					userPreferredLocale = userContext.getMfiLocale();
 				}

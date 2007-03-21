@@ -403,7 +403,7 @@ public class GroupBO extends CustomerBO {
 						GroupConstants.CENTER_INACTIVE,
 						new Object[] { MifosConfiguration.getInstance()
 								.getLabel(ConfigurationConstants.CENTER,
-										getUserContext().getPereferedLocale()) });
+										getUserContext().getPreferredLocale()) });
 			} catch (ConfigurationException ce) {
 				throw new CustomerException(ce);
 			}
@@ -419,7 +419,7 @@ public class GroupBO extends CustomerBO {
 							GroupConstants.BRANCH_INACTIVE,
 							new Object[] { MifosConfiguration.getInstance()
 									.getLabel(ConfigurationConstants.GROUP,
-											getUserContext().getPereferedLocale()) });
+											getUserContext().getPreferredLocale()) });
 				} catch (ConfigurationException ce) {
 					throw new CustomerException(ce);
 				}
@@ -439,7 +439,7 @@ public class GroupBO extends CustomerBO {
 							GroupConstants.LOANOFFICER_INACTIVE,
 							new Object[] { MifosConfiguration.getInstance()
 									.getLabel(ConfigurationConstants.BRANCHOFFICE,
-											getUserContext().getPereferedLocale()) });
+											getUserContext().getPreferredLocale()) });
 				} catch (ConfigurationException ce) {
 					throw new CustomerException(ce);
 				}
@@ -463,7 +463,7 @@ public class GroupBO extends CustomerBO {
 								.getLabel(
 										ConfigurationConstants.CLIENT,
 										this.getUserContext()
-												.getPereferedLocale()) });
+												.getPreferredLocale()) });
 		} catch (ConfigurationException ce) {
 			throw new CustomerException(ce);
 		}

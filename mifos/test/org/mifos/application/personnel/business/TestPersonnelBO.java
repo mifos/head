@@ -214,8 +214,8 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals(generateGlobalPersonnelNum(office.getGlobalOfficeNum(),
 				personnel.getPersonnelId()), personnelSaved
 				.getGlobalPersonnelNum());
-		assertEquals(PersonnelLevel.NON_LOAN_OFFICER.getValue(), personnelSaved
-				.getLevel().getId());
+		assertEquals(PersonnelLevel.NON_LOAN_OFFICER, 
+				personnelSaved.getLevelEnum());
 		assertEquals(1, personnelSaved.getLevel().getParent().getId()
 				.intValue());
 		assertFalse(personnelSaved.getLevel().isInteractionFlag());
@@ -399,8 +399,7 @@ public class TestPersonnelBO extends MifosTestCase {
 				.getGender());
 		assertEquals(Integer.valueOf("1"), personnel.getPersonnelDetails()
 				.getMaritalStatus());
-		assertEquals(PersonnelLevel.NON_LOAN_OFFICER.getValue(), personnel
-				.getLevel().getId());
+		assertEquals(PersonnelLevel.NON_LOAN_OFFICER, personnel.getLevelEnum());
 		assertEquals(PersonnelStatus.ACTIVE.getValue(), personnel.getStatus()
 				.getId());
 		assertEquals(0, personnel.getPersonnelMovements().size());
@@ -433,8 +432,8 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals("abc@yahoo.com", personnel.getEmailId());
 		assertFalse(personnel.isPasswordChanged());
 		assertEquals(2, personnel.getTitle().intValue());
-		assertEquals(PersonnelLevel.LOAN_OFFICER.getValue(), personnel
-				.getLevel().getId());
+		assertEquals(PersonnelLevel.LOAN_OFFICER, personnel
+				.getLevelEnum());
 		assertEquals(PersonnelStatus.INACTIVE.getValue(), personnel.getStatus()
 				.getId());
 		assertEquals(2, personnel.getPersonnelMovements().size());
@@ -533,7 +532,7 @@ public class TestPersonnelBO extends MifosTestCase {
 
 		assertEquals(personnel.getPersonnelId(), userContext.getId());
 		assertEquals(personnel.getDisplayName(), userContext.getName());
-		assertEquals(personnel.getLevel().getId(), userContext.getLevelId());
+		assertEquals(personnel.getLevelEnum(), userContext.getLevel());
 		assertEquals(personnel.getLastLogin(), userContext.getLastLogin());
 		assertEquals(personnel.getPasswordChanged(), userContext
 				.getPasswordChanged());
@@ -542,10 +541,10 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals(Configuration.getInstance().getSystemConfig()
 				.getMFILocaleId(), userContext.getMfiLocaleId());
 		assertEquals(personnel.getPreferredLocale().getLanguage()
-				.getLanguageName(), userContext.getPereferedLocale()
+				.getLanguageName(), userContext.getPreferredLocale()
 				.getDisplayLanguage());
 		assertEquals(personnel.getPreferredLocale().getCountry()
-				.getCountryName(), userContext.getPereferedLocale()
+				.getCountryName(), userContext.getPreferredLocale()
 				.getDisplayCountry());
 		assertEquals(personnel.getOffice().getOfficeId(), userContext
 				.getBranchId());
@@ -573,8 +572,8 @@ public class TestPersonnelBO extends MifosTestCase {
 	public void testLoginForInactivePersonnel()
 			throws Exception {
 		personnel = createPersonnel();
-		personnel.update(PersonnelStatus.INACTIVE, PersonnelLevel
-				.getPersonnelLevel(personnel.getLevel().getId()), personnel
+		personnel.update(PersonnelStatus.INACTIVE, 
+				personnel.getLevelEnum(), personnel
 				.getOffice(), personnel.getTitle(), personnel
 				.getPreferredLocale().getLocaleId(), "PASSWORD", personnel
 				.getEmailId(), null, null, personnel.getPersonnelDetails()

@@ -216,7 +216,7 @@ public class PersonnelPersistence extends Persistence {
 		paramList.add(typeNameValue("Short", "LOID",
 				PersonnelLevel.LOAN_OFFICER.getValue()));
 		paramList.add(typeNameValue("Short", "USERLEVEL_ID", personnel
-				.getLevel().getId()));
+				.getLevelEnum().getValue()));
 
 		return paramList;
 

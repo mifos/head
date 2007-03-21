@@ -61,8 +61,8 @@ public class CenterPersistence extends Persistence {
 		paramList.add(typeNameValue("Short","LEVEL_ID",CustomerConstants.CENTER_LEVEL_ID));
 		paramList.add(typeNameValue("Short","STATUS_ID",CustomerConstants.CENTER_ACTIVE_STATE));
 		paramList.add(typeNameValue("Short","USER_ID",userId));
-		paramList.add(typeNameValue("Short","USER_LEVEL_ID",user.getLevel()
-				.getId()));
+		paramList.add(typeNameValue("Short","USER_LEVEL_ID",user.getLevelEnum()
+				.getValue()));
 		paramList.add(typeNameValue("Short","LO_LEVEL_ID",PersonnelConstants.LOAN_OFFICER));
 		String[] aliasNames = {"parentOfficeId" , "parentOfficeName" , "centerSystemId" , "centerName"};
 		queryInputs.setQueryStrings(namedQuery);

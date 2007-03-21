@@ -106,7 +106,7 @@ public class CenterBO extends CustomerBO {
 									.getLabel(
 											ConfigurationConstants.GROUP,
 											this.getUserContext()
-													.getPereferedLocale()) });
+													.getPreferredLocale()) });
 				}
 			} catch (ConfigurationException ce) {
 				throw new CustomerException(ce);

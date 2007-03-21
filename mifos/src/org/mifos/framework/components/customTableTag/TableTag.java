@@ -154,15 +154,15 @@ public class TableTag extends BodyTagSupport {
 	}
 
 	private void populateLocale(UserContext userContext) {
-		if (userContext.getPereferedLocale() != null) {
-			locale = userContext.getPereferedLocale();
+		if (userContext.getPreferredLocale() != null) {
+			locale = userContext.getPreferredLocale();
 		}
 		if (locale == null && userContext.getMfiLocale() != null) {
 			locale = userContext.getMfiLocale();
 		}
 		// Setting prefferedLocale and mfiLocale
-		if (userContext.getPereferedLocale() != null) {
-			prefferedLocale = userContext.getPereferedLocale();
+		if (userContext.getPreferredLocale() != null) {
+			prefferedLocale = userContext.getPreferredLocale();
 		}
 		if (userContext.getMfiLocale() != null) {
 			mfiLocale = userContext.getMfiLocale();

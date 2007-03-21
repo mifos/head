@@ -177,7 +177,7 @@ public class EditStatusAction extends BaseAction {
 			throws Exception {
 		EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
 		editStatusActionForm.setCommentDate(DateHelper
-				.getCurrentDate(userContext.getPereferedLocale()));
+				.getCurrentDate(userContext.getPreferredLocale()));
 		String newStatusName = null;
 		String flagName = null;
 		List<AccountCheckListBO> checklist = getAccountBusinessService()

@@ -60,50 +60,29 @@ public class UserContext implements Serializable {
 	 */
 	private Short id;
 
-	/**
-	 * This would hold the user globel no
-	 */
 	private String userGlobalNo;
 
 	/**
-	 * This would hold the set of roles id's associated with the user
+	 * Set of roles id's associated with the user
 	 */
 	private Set roles;
 
-	/**
-	 * This would hold the branchid of the user
-	 */
 	private Short branchId;
 
-	/**
-	 * This would hold the branch globel no
-	 */
 	private String branchGlobalNum;
 
-	/**
-	 * This would hold the level Id of the user
-	 */
 	private Short levelId;
 
-	/**
-	 * This would hold the User locale id
-	 */
 	private Short localeId;
 
-	/**
-	 * This would hold the perefered locale of the user
-	 */
-	private Locale pereferedLocale;
+	private Locale preferredLocale;
 
-	/**
-	 * This would hold the MFI locale
-	 */
 	private Short mfiLocaleId;
 	
 	private Locale mfiLocale;
 
 	/**
-	 * This would hold the last login time of the user
+	 * Last login time of the user
 	 */
 	private Date lastLogin;
 
@@ -143,6 +122,10 @@ public class UserContext implements Serializable {
 
 	public Short getLevelId() {
 		return levelId;
+	}
+	
+	public PersonnelLevel getLevel() {
+		return PersonnelLevel.fromInt(levelId);
 	}
 
 	public void setLevelId(Short levelId) {
@@ -201,12 +184,12 @@ public class UserContext implements Serializable {
 		this.localeId = localeId;
 	}
 
-	public Locale getPereferedLocale() {
-		return pereferedLocale;
+	public Locale getPreferredLocale() {
+		return preferredLocale;
 	}
 
-	public void setPereferedLocale(Locale pereferedLocale) {
-		this.pereferedLocale = pereferedLocale;
+	public void setPreferredLocale(Locale pereferedLocale) {
+		this.preferredLocale = pereferedLocale;
 	}
 
 	public String getUserGlobalNo() {

@@ -214,7 +214,7 @@ public class LabelTagUtils {
 		UserContext userContext = getUserContextFromSession(pageContext
 				.getSession());
 		if (null != userContext) {
-			Locale locale = userContext.getPereferedLocale();
+			Locale locale = userContext.getPreferredLocale();
 			if (null == locale) {
 				locale = userContext.getMfiLocale();
 			}
@@ -236,7 +236,7 @@ public class LabelTagUtils {
 	public static String getUserPreferredLocaleHelper(UserContext userContext) {
 		String userPreferredLocale = null;
 		if (null != userContext) {
-			Locale locale = userContext.getPereferedLocale();
+			Locale locale = userContext.getPreferredLocale();
 			if (null == locale) {
 				locale = userContext.getMfiLocale();
 			}
@@ -259,7 +259,7 @@ public class LabelTagUtils {
 		UserContext userContext = getUserContextFromSession(pageContext
 				.getSession());
 		if (null != userContext) {
-			locale = userContext.getPereferedLocale();
+			locale = userContext.getPreferredLocale();
 
 			if (null == locale) {
 				locale = userContext.getMfiLocale();

@@ -135,7 +135,7 @@ public class SavingsClosureActionForm extends ValidatorActionForm {
 			ResourceBundle resources = ResourceBundle
 					.getBundle(
 							"org.mifos.application.accounts.savings.util.resources.SavingsUIResources",
-							userContext.getPereferedLocale());
+							userContext.getPreferredLocale());
 			if (StringUtils.isNullOrEmpty(getPaymentTypeId()))
 				errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(
 						AccountConstants.ERROR_MANDATORY, resources

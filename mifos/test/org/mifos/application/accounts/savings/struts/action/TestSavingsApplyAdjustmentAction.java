@@ -63,7 +63,7 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 			e.printStackTrace();
 		}
 		userContext = TestObjectFactory.getContext();
-		userContext.setPereferedLocale(new Locale("en", "US"));
+		userContext.setPreferredLocale(new Locale("en", "US"));
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY,

@@ -112,7 +112,7 @@ public class DateTag extends BaseInputTag {
 				.getAttribute(LoginConstants.USERCONTEXT);
 		Locale locale = null;
 		if (userContext != null) {
-			locale = userContext.getPereferedLocale();
+			locale = userContext.getPreferredLocale();
 			if (null == locale) {
 				locale = userContext.getMfiLocale();
 			}

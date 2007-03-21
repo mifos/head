@@ -122,7 +122,7 @@ public class CenterCustAction extends CustAction {
 				request);
 		loadCreateMasterData(actionForm, request);
 		actionForm.setMfiJoiningDate(DateHelper.getCurrentDate(getUserContext(
-				request).getPereferedLocale()));
+				request).getPreferredLocale()));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -158,14 +158,14 @@ public class CenterCustAction extends CustAction {
 		List<CustomFieldView> customFields = actionForm.getCustomFields();
 		UserContext userContext = getUserContext(request);
 		convertCustomFieldDateToUniformPattern(customFields, userContext
-				.getPereferedLocale());
+				.getPreferredLocale());
 
 		CenterBO center = new CenterBO(userContext,
 				actionForm.getDisplayName(), actionForm.getAddress(),
 				customFields, actionForm.getFeesToApply(), actionForm
 						.getExternalId(),
 				getDateFromString(actionForm.getMfiJoiningDate(), userContext
-						.getPereferedLocale()), actionForm.getOfficeIdValue(),
+						.getPreferredLocale()), actionForm.getOfficeIdValue(),
 				meeting, actionForm.getLoanOfficerIdValue());
 		center.save();
 		actionForm.setCustomerId(center.getCustomerId().toString());
@@ -206,7 +206,7 @@ public class CenterCustAction extends CustAction {
 
 		if (center.getMfiJoiningDate() != null)
 			actionForm.setMfiJoiningDate(DateHelper.getUserLocaleDate(
-					getUserContext(request).getPereferedLocale(), center
+					getUserContext(request).getPreferredLocale(), center
 							.getMfiJoiningDate().toString()));
 
 		actionForm.setAddress(center.getAddress());
@@ -243,7 +243,7 @@ public class CenterCustAction extends CustAction {
 		Date mfiJoiningDate = null;
 		if (actionForm.getMfiJoiningDate() != null)
 			mfiJoiningDate = getDateFromString(actionForm.getMfiJoiningDate(),
-					getUserContext(request).getPereferedLocale());
+					getUserContext(request).getPreferredLocale());
 		CenterBO centerBO = ((CenterBusinessService) getService())
 				.findBySystemId(center.getGlobalCustNum());
 		checkVersionMismatch(center.getVersionNo(),centerBO.getVersionNo());
@@ -306,7 +306,7 @@ public class CenterCustAction extends CustAction {
 							CustomFieldType.DATE.getValue())) {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
 						DateHelper.getUserLocaleDate(getUserContext(request)
-								.getPereferedLocale(), fieldDef
+								.getPreferredLocale(), fieldDef
 								.getDefaultValue()), fieldDef.getFieldType()));
 			} else {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),

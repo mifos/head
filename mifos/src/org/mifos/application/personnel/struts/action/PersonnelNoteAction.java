@@ -48,7 +48,7 @@ public class PersonnelNoteAction extends SearchAction {
 	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)throws Exception {
 		clearActionForm(form);
 		PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(getShortValue(((PersonnelNoteActionForm) form).getPersonnelId()));
-		setFormAttributes(getUserContext(request).getPereferedLocale(), form,personnelBO);
+		setFormAttributes(getUserContext(request).getPreferredLocale(), form,personnelBO);
 		SessionUtils.removeAttribute(Constants.BUSINESS_KEY,request);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnelBO, request);
 		return mapping.findForward(ActionForwards.load_success.toString());

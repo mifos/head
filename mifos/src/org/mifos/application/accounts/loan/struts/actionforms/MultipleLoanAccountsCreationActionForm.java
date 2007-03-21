@@ -222,7 +222,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 				request.setAttribute(Constants.CURRENTFLOWKEY, request
 						.getParameter(Constants.CURRENTFLOWKEY));
 				checkValidationForLoad(errors, getUserContext(request)
-						.getPereferedLocale(), (Short) SessionUtils
+						.getPreferredLocale(), (Short) SessionUtils
 						.getAttribute(
 								BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 								request));
@@ -232,19 +232,19 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 				checkValidationForCreate(errors, request);
 			} else if (method.equals(Methods.getLoanOfficers.toString())) {
 				checkValidationForBranchOffice(errors, getUserContext(request)
-						.getPereferedLocale());
+						.getPreferredLocale());
 			} else if (method.equals(Methods.getCenters.toString())) {
 				checkValidationForBranchOffice(errors, getUserContext(request)
-						.getPereferedLocale());
+						.getPreferredLocale());
 				checkValidationForLoanOfficer(errors);
 			} else if (method.equals(Methods.getPrdOfferings.toString())) {
 				request.setAttribute(Constants.CURRENTFLOWKEY, request
 						.getParameter(Constants.CURRENTFLOWKEY));
 				checkValidationForBranchOffice(errors, getUserContext(request)
-						.getPereferedLocale());
+						.getPreferredLocale());
 				checkValidationForLoanOfficer(errors);
 				checkValidationForCenter(errors, getUserContext(request)
-						.getPereferedLocale(), (Short) SessionUtils
+						.getPreferredLocale(), (Short) SessionUtils
 						.getAttribute(
 								BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
 								request));
@@ -287,7 +287,7 @@ public class MultipleLoanAccountsCreationActionForm extends BaseActionForm {
 			addError(errors, LoanConstants.APPL_RECORDS,
 					LoanExceptionConstants.SELECT_ATLEAST_ONE_RECORD, getLabel(
 							ConfigurationConstants.CLIENT, getUserContext(
-									request).getPereferedLocale()));
+									request).getPreferredLocale()));
 		}
 		logger.debug("outside checkValidationForCreate method");
 	}

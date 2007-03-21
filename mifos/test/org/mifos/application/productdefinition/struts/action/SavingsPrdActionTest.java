@@ -148,7 +148,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "2");
 		addRequestParameter("savingsType", "2");
 		addRequestParameter("interestRate", "1");
@@ -173,7 +173,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "1");
@@ -198,7 +198,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "1");
@@ -228,7 +228,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.1");
@@ -254,7 +254,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(-1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.0");
@@ -280,9 +280,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(-1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.0");
@@ -308,9 +308,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.0");
@@ -342,9 +342,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.0");
@@ -390,9 +390,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "2");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.0");
@@ -439,9 +439,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "2");
 		addRequestParameter("savingsType", "2");
 		addRequestParameter("interestRate", "100.0");
@@ -648,7 +648,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "2");
 		addRequestParameter("savingsType", "2");
 		addRequestParameter("interestRate", "1");
@@ -677,7 +677,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "1");
@@ -705,7 +705,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "1");
@@ -738,7 +738,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.1");
@@ -767,7 +767,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(-1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.0");
@@ -796,9 +796,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(-1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.0");
@@ -833,9 +833,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "100.0");
@@ -859,9 +859,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 			addRequestParameter("prdOfferingShortName", "SAVP");
 			addRequestParameter("prdCategory", "2");
 			addRequestParameter("startDate", offSetCurrentDate(0, userContext
-					.getPereferedLocale()));
+					.getPreferredLocale()));
 			addRequestParameter("endDate", offSetCurrentDate(+1, userContext
-					.getPereferedLocale()));
+					.getPreferredLocale()));
 			addRequestParameter("prdApplicableMaster", "1");
 			addRequestParameter("savingsType", "1");
 			addRequestParameter("interestRate", "100.0");
@@ -897,9 +897,9 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingShortName", "SAVP");
 		addRequestParameter("prdCategory", "2");
 		addRequestParameter("startDate", offSetCurrentDate(0, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("endDate", offSetCurrentDate(+1, userContext
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("savingsType", "1");
 		addRequestParameter("interestRate", "9.0");

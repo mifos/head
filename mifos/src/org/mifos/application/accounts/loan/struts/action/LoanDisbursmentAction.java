@@ -56,7 +56,7 @@ public class LoanDisbursmentAction extends BaseAction {
 				.getDisbursementDate(), request);
 		loanDisbursmentActionForm.setTransactionDate(DateHelper
 				.getUserLocaleDate(
-						getUserContext(request).getPereferedLocale(),
+						getUserContext(request).getPreferredLocale(),
 						SessionUtils.getAttribute(
 								LoanConstants.PROPOSEDDISBDATE, request)
 								.toString()));
@@ -102,10 +102,10 @@ public class LoanDisbursmentAction extends BaseAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		Date trxnDate = getDateFromString(actionForm.getTransactionDate(), uc
-				.getPereferedLocale());
+				.getPreferredLocale());
 		trxnDate = DateUtils.getDateWithoutTimeStamp(trxnDate.getTime());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
-				.getPereferedLocale());
+				.getPreferredLocale());
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc
 				.getId());
 		if (!loan.isTrxnDateValid(trxnDate))

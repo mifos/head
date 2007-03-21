@@ -192,7 +192,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("type", "Group");
 		addRequestParameter("mfiJoiningDate", DateHelper
 				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPereferedLocale()));
+						.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.updateHistoricalData_success.toString());
@@ -240,7 +240,7 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("type", "Group");
 		addRequestParameter("mfiJoiningDate", DateHelper
 				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPereferedLocale()));
+						.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.updateHistoricalData_success.toString());

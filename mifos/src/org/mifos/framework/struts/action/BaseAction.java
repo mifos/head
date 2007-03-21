@@ -230,7 +230,7 @@ public abstract class BaseAction extends DispatchAction {
 	protected Locale getLocale(UserContext userContext) {
 		Locale locale = null;
 		if (userContext != null)
-			locale = userContext.getPereferedLocale();
+			locale = userContext.getPreferredLocale();
 		else
 			locale = Configuration.getInstance().getSystemConfig()
 					.getMFILocale();

@@ -282,15 +282,14 @@ public class CustomerPersistence extends Persistence {
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.ACCOUNTSEARCHRESULTS);
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
-		if (personnel.getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
+		if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
 			namedQuery[0] = NamedQueryConstants.SEARCH_GROUP_CLIENT_COUNT_LO;
 			namedQuery[1] = NamedQueryConstants.SEARCH_GROUP_CLIENT_LO;
 			paramList.add(typeNameValue("Short", "PERSONNEL_ID", userId));
-
-		} else {
+		}
+		else {
 			namedQuery[0] = NamedQueryConstants.SEARCH_GROUP_CLIENT_COUNT;
 			namedQuery[1] = NamedQueryConstants.SEARCH_GROUP_CLIENT;
-
 		}
 
 		paramList.add(typeNameValue("String", "SEARCH_ID", personnel
@@ -329,16 +328,14 @@ public class CustomerPersistence extends Persistence {
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.CUSTOMERSFORSAVINGSACCOUNT);
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(userId);
-		if (personnel.getLevel().getId().equals(
-				PersonnelLevel.LOAN_OFFICER.getValue())) {
+		if (personnel.getLevelEnum() ==	PersonnelLevel.LOAN_OFFICER) {
 			namedQuery[0] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_COUNT;
 			namedQuery[1] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS;
 			paramList.add(typeNameValue("Short", "PERSONNEL_ID", userId));
-
-		} else {
+		} 
+		else {
 			namedQuery[0] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_COUNT_NOLO;
 			namedQuery[1] = NamedQueryConstants.SEARCH_CUSTOMER_FOR_SAVINGS_NOLO;
-
 		}
 		paramList.add(typeNameValue("String", "SEARCH_ID", personnel
 				.getOffice().getSearchId()
@@ -409,9 +406,8 @@ public class CustomerPersistence extends Persistence {
 		paramList.add(typeNameValue("Short", "LEVELID", CustomerLevel.CLIENT
 				.getValue()));
 		paramList.add(typeNameValue("Short", "USERLEVEL_ID",
-				new PersonnelPersistence().getPersonnel(userId).getLevel()
-						.getId()));
-
+				new PersonnelPersistence().getPersonnel(userId)
+					.getLevelEnum().getValue()));
 	}
 
 	private String[] getAliasNames() {
@@ -463,7 +459,7 @@ public class CustomerPersistence extends Persistence {
 		if (officeId != null && officeId.shortValue() == 0) {
 			namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID_COUNT;
 			namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH_NOOFFICEID;
-			if (personnel.getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue()) ){
+			if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
 				paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()));
 			}
 			else {
@@ -471,11 +467,10 @@ public class CustomerPersistence extends Persistence {
 			}
 		} else {
 			paramList.add(typeNameValue("Short", "OFFICEID", officeId));
-			if (personnel.getLevel().getId().equals(PersonnelLevel.LOAN_OFFICER.getValue()) ){
+			if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER) {
 				paramList.add(typeNameValue("String", "ID", personnel.getPersonnelId()));
 				namedQuery[0] = NamedQueryConstants.CUSTOMER_ID_SEARCH_COUNT;
 				namedQuery[1] = NamedQueryConstants.CUSTOMER_ID_SEARCH;
-
 			}
 			else {
 				paramList.add(typeNameValue("String", "SEARCH_ID", personnel.getOffice().getSearchId()+"%"));

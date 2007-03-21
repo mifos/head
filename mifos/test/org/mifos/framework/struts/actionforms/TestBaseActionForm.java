@@ -16,9 +16,9 @@ public class TestBaseActionForm extends MifosTestCase {
 		UserContext userContext = TestObjectFactory.getContext();
 		BaseActionForm baseActionForm = new BaseActionForm();
 		SimpleDateFormat shortFormat = (SimpleDateFormat)DateFormat.
-					getDateInstance(DateFormat.SHORT, userContext.getPereferedLocale());
+					getDateInstance(DateFormat.SHORT, userContext.getPreferredLocale());
 		Date date = Calendar.getInstance().getTime();
-		assertNotNull(baseActionForm.getDateFromString(shortFormat.format(date), userContext.getPereferedLocale()));
+		assertNotNull(baseActionForm.getDateFromString(shortFormat.format(date), userContext.getPreferredLocale()));
 
 	}
 	public void testGetStringValue() throws Exception {

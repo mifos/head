@@ -64,13 +64,13 @@ public class CustHistoricalDataAction extends BaseAction {
 			customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
 					customerBO);
 		String currentDate = DateHelper.getCurrentDate(getUserContext(request)
-				.getPereferedLocale());
+				.getPreferredLocale());
 		SessionUtils
 				.setAttribute(
 						CustomerConstants.MFIJOININGDATE,
 						(customerHistoricalDataEntity.getMfiJoiningDate() == null ? DateHelper
 								.getLocaleDate(getUserContext(request)
-										.getPereferedLocale(), currentDate)
+										.getPreferredLocale(), currentDate)
 								: new Date(customerHistoricalDataEntity
 										.getMfiJoiningDate().getTime())),
 						request);
@@ -91,7 +91,7 @@ public class CustHistoricalDataAction extends BaseAction {
 		setFormAttributes(request, historicalActionForm,
 				customerHistoricalDataEntity);
 		historicalActionForm.setMfiJoiningDate(getMfiJoiningDate(
-				getUserContext(request).getPereferedLocale(), request));
+				getUserContext(request).getPreferredLocale(), request));
 		return mapping.findForward(ActionForwards.loadHistoricalData_success
 				.toString());
 	}
@@ -247,7 +247,7 @@ public class CustHistoricalDataAction extends BaseAction {
 				.getTotalPaymentsCountValue());
 		historicalDataEntity.setMfiJoiningDate(getDateFromString(
 				historicalActionForm.getMfiJoiningDate(), customerBO
-						.getUserContext().getPereferedLocale()));
+						.getUserContext().getPreferredLocale()));
 	}
 	
 	private CustomerBusinessService getCustomerBusinessService() {

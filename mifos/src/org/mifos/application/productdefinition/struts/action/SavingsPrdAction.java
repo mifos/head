@@ -330,11 +330,11 @@ public class SavingsPrdAction extends BaseAction {
 					.getProductCategoryID().toString());
 		if (savingsOffering.getStartDate() != null)
 			actionForm.setStartDate(DateHelper.getUserLocaleDate(
-					getUserContext(request).getPereferedLocale(),
+					getUserContext(request).getPreferredLocale(),
 					savingsOffering.getStartDate().toString()));
 		if (savingsOffering.getEndDate() != null)
 			actionForm.setEndDate(DateHelper.getUserLocaleDate(getUserContext(
-					request).getPereferedLocale(), savingsOffering.getEndDate()
+					request).getPreferredLocale(), savingsOffering.getEndDate()
 					.toString()));
 		if (savingsOffering.getPrdApplicableMaster() != null)
 			actionForm.setPrdApplicableMaster(savingsOffering

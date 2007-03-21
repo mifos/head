@@ -34,7 +34,7 @@ public class BaseActionForm extends ValidatorActionForm {
 			String propertyName=request.getParameter(fieldConfigurationEntity.getLabel());
 			if(propertyName!=null && !propertyName.equals("") ){
 				String propertyValue=request.getParameter(propertyName);
-				Locale locale=((UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT)).getPereferedLocale();
+				Locale locale=((UserContext)request.getSession().getAttribute(LoginConstants.USERCONTEXT)).getPreferredLocale();
 				if(propertyValue==null || propertyValue.equals(""))
 					errors.add(fieldConfigurationEntity.getLabel(),
 							new ActionMessage(FieldConfigurationConstant.EXCEPTION_MANDATORY,
@@ -98,7 +98,7 @@ public class BaseActionForm extends ValidatorActionForm {
 	protected String getLabel(String key, HttpServletRequest request) {
 		try {
 			return MifosConfiguration.getInstance().getLabel(key,
-					getUserContext(request).getPereferedLocale());
+					getUserContext(request).getPreferredLocale());
 		} catch (ConfigurationException e) {
 			return null;
 		}

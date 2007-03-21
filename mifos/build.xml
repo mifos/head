@@ -26,6 +26,8 @@
 	<!-- Probably need about 550M for 64-bit systems 
 	     (instead of 350M for 32-bit). -->
 	<property name="test.memory" value="350M" />
+	<!-- 550M wasn't enough for me, needs more experimentation -->
+	<property name="profile.memory" value="550M" />
 
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="src.dir" value="${basedir}/src"/>
@@ -259,7 +261,7 @@
 	<target name="profile_test" 
 		depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Profile tests">
-		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
+		<junit printsummary="on" fork="true" maxmemory="${profile.memory}" 
 			dir="${basedir}"
 			failureproperty="tests.failure">
 			<jvmarg value="-javaagent:${lib.dir}/jiprof-1.0.7.jar"/> 

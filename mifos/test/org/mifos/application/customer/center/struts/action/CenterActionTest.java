@@ -114,7 +114,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
 		String currentDate = DateHelper.getCurrentDate(TestObjectFactory
-				.getUserContext().getPereferedLocale());
+				.getUserContext().getPreferredLocale());
 		assertEquals(currentDate, actionForm.getMfiJoiningDate());
 	}
 

@@ -111,7 +111,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 						.isBackDatedTxnAllowed()), request);
 
 		actionForm.setTrxnDate(DateHelper.getCurrentDate(uc
-				.getPereferedLocale()));
+				.getPreferredLocale()));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -184,7 +184,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 
 		Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc
-				.getPereferedLocale());
+				.getPreferredLocale());
 
 		if (!savings.isTrxnDateValid(trxnDate))
 			throw new AccountException(AccountConstants.ERROR_INVALID_TRXN);
@@ -214,9 +214,9 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 			SavingsDepositWithdrawalActionForm actionForm, UserContext uc)
 			throws Exception {
 		Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc
-				.getPereferedLocale());
+				.getPreferredLocale());
 		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
-				.getPereferedLocale());
+				.getPreferredLocale());
 		PaymentData paymentData = new PaymentData(actionForm.getAmountValue(),
 				new PersonnelPersistence().getPersonnel(uc.getId()),
 				Short.valueOf(actionForm.getPaymentTypeId()), trxnDate);

@@ -199,7 +199,7 @@ public class SavingsAction extends AccountAppAction {
 							CustomFieldType.DATE.getValue())) {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
 						DateHelper.getUserLocaleDate(getUserContext(request)
-								.getPereferedLocale(), fieldDef
+								.getPreferredLocale(), fieldDef
 								.getDefaultValue()), fieldDef.getFieldType()));
 			} else {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
@@ -290,7 +290,7 @@ public class SavingsAction extends AccountAppAction {
 		List<CustomFieldView> customFields = savingsActionForm.getAccountCustomFieldSet();
 		UserContext userContext = getUserContext(request);
 		convertCustomFieldDateToUniformPattern(customFields, userContext
-				.getPereferedLocale());
+				.getPreferredLocale());
 		
 		SavingsBO saving = new SavingsBO(uc, savingsOfferingBO, customer,
 				AccountState.fromShort(getShortValue(savingsActionForm

@@ -68,7 +68,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				"org/mifos/application/accounts/savings/struts-config.xml")
 				.getPath());
 		userContext = TestObjectFactory.getContext();
-		userContext.setPereferedLocale(new Locale("en", "US"));
+		userContext.setPreferredLocale(new Locale("en", "US"));
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);

@@ -184,7 +184,7 @@ public class LabelConfigurationAction extends BaseAction {
 		HibernateUtil.commitTransaction();
 		MifosConfiguration.getInstance().init();
 		MenuRepository.getInstance().removeLocaleMenu(
-				userContext.getPereferedLocale());
+				userContext.getPreferredLocale());
 		logger.debug("Outside update method");
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}

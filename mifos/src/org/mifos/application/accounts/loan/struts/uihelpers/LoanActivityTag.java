@@ -32,7 +32,7 @@ public class LoanActivityTag extends BodyTagSupport{
 					.getAttribute(Constants.FLOWMANAGER);
 			Object object = flowManager.getFromFlow(currentFlowKey, LoanConstants.LOAN_ALL_ACTIVITY_VIEW);
 			if(null != object) {
-				locale = ((UserContext)pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY)).getPereferedLocale();
+				locale = ((UserContext)pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY)).getPreferredLocale();
 				builder.append("<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
 				builder
 						.append("<tr>")

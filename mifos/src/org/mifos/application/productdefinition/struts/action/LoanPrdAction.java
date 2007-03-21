@@ -589,12 +589,12 @@ public class LoanPrdAction extends BaseAction {
 		loanPrdActionForm.setPrdApplicableMaster(
 				loanOffering.getPrdApplicableMasterEnum());
 		loanPrdActionForm.setStartDate(DateHelper.getUserLocaleDate(
-				getUserContext(request).getPereferedLocale(), DateHelper
+				getUserContext(request).getPreferredLocale(), DateHelper
 						.toDatabaseFormat(loanOffering.getStartDate())));
 		loanPrdActionForm
 				.setEndDate(loanOffering.getEndDate() != null ? DateHelper
 						.getUserLocaleDate(getUserContext(request)
-								.getPereferedLocale(), DateHelper
+								.getPreferredLocale(), DateHelper
 								.toDatabaseFormat(loanOffering.getEndDate()))
 						: null);
 		loanPrdActionForm.setDescription(loanOffering.getDescription());

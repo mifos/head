@@ -33,7 +33,7 @@ public class MeetingHelper {
 			args[1]=meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().getName();
 			args[2]=meeting.getMeetingDetails().getRecurAfter();
 		}
-		return StringUtils.getMessageWithSubstitution(MeetingConstants.MEETING_RESOURCE, userContext.getPereferedLocale(), key, args);
+		return StringUtils.getMessageWithSubstitution(MeetingConstants.MEETING_RESOURCE, userContext.getPreferredLocale(), key, args);
 	}
 	
 	public String getMessageWithFrequency(MeetingBO meeting, UserContext userContext){
@@ -45,7 +45,7 @@ public class MeetingHelper {
 			key = MeetingConstants.MONTH_FREQUENCY;
 		args[0]=meeting.getMeetingDetails().getRecurAfter();
 		
-		return StringUtils.getMessageWithSubstitution(MeetingConstants.MEETING_RESOURCE, userContext.getPereferedLocale(), key, args);
+		return StringUtils.getMessageWithSubstitution(MeetingConstants.MEETING_RESOURCE, userContext.getPreferredLocale(), key, args);
 	}
 	
 	public String getDetailMessageWithFrequency(MeetingBO meeting, UserContext userContext){
@@ -57,7 +57,7 @@ public class MeetingHelper {
 			key = MeetingConstants.MONTH_SCHEDULE_SHORT;
 		args[0]=meeting.getMeetingDetails().getRecurAfter();
 		
-		return StringUtils.getMessageWithSubstitution(MeetingConstants.MEETING_RESOURCE, userContext.getPereferedLocale(), key, args);
+		return StringUtils.getMessageWithSubstitution(MeetingConstants.MEETING_RESOURCE, userContext.getPreferredLocale(), key, args);
 	}
 	
 	private void initializeLocale(MeetingBO meeting, Short localeId){

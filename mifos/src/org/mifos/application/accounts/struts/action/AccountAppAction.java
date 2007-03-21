@@ -184,7 +184,7 @@ public class AccountAppAction extends BaseAction {
 
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(SavingsConstants.CUSTOM_FIELDS, request);
-		Locale locale = getUserContext(request).getPereferedLocale();
+		Locale locale = getUserContext(request).getPreferredLocale();
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 			boolean customFieldPresent = false;
 			for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {

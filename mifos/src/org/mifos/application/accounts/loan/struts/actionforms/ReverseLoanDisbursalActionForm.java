@@ -55,10 +55,10 @@ public class ReverseLoanDisbursalActionForm extends BaseActionForm {
 		ActionErrors errors = new ActionErrors();
 		if (method.equals(Methods.load.toString())) {
 			checkValidationForLoad(errors, getUserContext(request)
-					.getPereferedLocale());
+					.getPreferredLocale());
 		} else if (method.equals(Methods.preview.toString())) {
 			checkValidationForPreview(errors, getUserContext(request)
-					.getPereferedLocale());
+					.getPreferredLocale());
 		}
 		if (!errors.isEmpty()) {
 			request.setAttribute("methodCalled", method);

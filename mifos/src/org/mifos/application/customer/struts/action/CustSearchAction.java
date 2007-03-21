@@ -237,8 +237,7 @@ public class CustSearchAction extends SearchAction {
 				.getPersonnel(userId);
 		SessionUtils.setAttribute(CustomerSearchConstants.OFFICE, personnel
 				.getOffice().getOfficeName(), request);
-		if (personnel.getLevel().getId().equals(
-				PersonnelLevel.LOAN_OFFICER.getValue()))
+		if (personnel.getLevelEnum() == PersonnelLevel.LOAN_OFFICER)
 			return loadLoanOfficer(personnel, request);
 		else
 			return loadNonLoanOfficer(personnel, request, form);

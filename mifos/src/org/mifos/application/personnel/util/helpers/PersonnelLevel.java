@@ -1,27 +1,28 @@
 package org.mifos.application.personnel.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum PersonnelLevel {
 
-	LOAN_OFFICER(Short.valueOf("1")), NON_LOAN_OFFICER(Short.valueOf("2"));
+	LOAN_OFFICER(1), 
+	NON_LOAN_OFFICER(2);
 
-	Short value;
+	private short value;
 
-	PersonnelLevel(Short value) {
-		this.value = value;
+	private PersonnelLevel(int value) {
+		this.value = (short) value;
 	}
 
 	public Short getValue() {
 		return value;
 	}
 
-	public static PersonnelLevel getPersonnelLevel(Short id)
-			throws PropertyNotFoundException {
-		for (PersonnelLevel level : PersonnelLevel.values()) {
-			if (level.value.equals(id))
-				return level;
+	public static PersonnelLevel fromInt(int id) {
+		for (PersonnelLevel candidate : PersonnelLevel.values()) {
+			if (candidate.value == id) {
+				return candidate;
+			}
 		}
-		throw new PropertyNotFoundException(PersonnelConstants.ERROR_NO_LEVEL);
+		throw new RuntimeException("no level " + id);
 	}
+
 }

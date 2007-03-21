@@ -960,7 +960,7 @@ public abstract class CustomerBO extends BusinessObject {
 						&& StringUtils.isNullAndEmptySafe(fieldView
 								.getFieldValue()))
 					fieldView.convertDateToUniformPattern(getUserContext()
-							.getPereferedLocale());
+							.getPreferredLocale());
 				for (CustomerCustomFieldEntity fieldEntity : getCustomFields())
 					if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
 						fieldEntity.setFieldValue(fieldView.getFieldValue());

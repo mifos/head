@@ -178,7 +178,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 			UserContext userContext = (UserContext) session
 					.getAttribute(LoginConstants.USERCONTEXT);
 			if (null != userContext) {
-				locale = userContext.getPereferedLocale();
+				locale = userContext.getPreferredLocale();
 				if (null == locale) {
 					locale = userContext.getMfiLocale();
 				}

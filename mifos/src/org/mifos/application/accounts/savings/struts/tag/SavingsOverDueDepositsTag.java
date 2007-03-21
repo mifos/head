@@ -41,7 +41,7 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 										.getDetailsOfInstallmentsInArrears(),
 								((UserContext) pageContext.getSession()
 										.getAttribute(Constants.USERCONTEXT))
-										.getPereferedLocale()).toString());
+										.getPreferredLocale()).toString());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

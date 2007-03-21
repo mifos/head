@@ -108,7 +108,7 @@ public class PersonAction extends SearchAction {
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		personActionForm.setDateOfJoiningBranch(DateHelper
-				.getCurrentDate(userContext.getPereferedLocale()));
+				.getCurrentDate(userContext.getPreferredLocale()));
 		updateRoleLists(request, (PersonActionForm) form);
 
 		return mapping.findForward(ActionForwards.preview_success.toString());
@@ -130,7 +130,7 @@ public class PersonAction extends SearchAction {
 		UserContext userContext = getUserContext(request);
 		PersonActionForm personActionForm = (PersonActionForm) form;
 		PersonnelLevel level = PersonnelLevel
-				.getPersonnelLevel(getShortValue(personActionForm.getLevel()));
+				.fromInt(getShortValue(personActionForm.getLevel()));
 		OfficeBO office = (OfficeBO) SessionUtils.getAttribute(
 				PersonnelConstants.OFFICE, request);
 		Integer title = getIntegerValue(personActionForm.getTitle());
@@ -217,7 +217,7 @@ public class PersonAction extends SearchAction {
 		UserContext userContext = getUserContext(request);
 		PersonActionForm actionForm = (PersonActionForm) form;
 		PersonnelLevel level = PersonnelLevel
-				.getPersonnelLevel(getShortValue(actionForm.getLevel()));
+				.fromInt(getShortValue(actionForm.getLevel()));
 		PersonnelStatus personnelStatus = PersonnelStatus
 				.getPersonnelStatus(getShortValue(actionForm.getStatus()));
 		OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory
@@ -438,7 +438,7 @@ public class PersonAction extends SearchAction {
 							CustomFieldType.DATE.getValue())) {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
 						DateHelper.getUserLocaleDate(userContext
-								.getPereferedLocale(), fieldDef
+								.getPreferredLocale(), fieldDef
 								.getDefaultValue()), fieldDef.getFieldType()));
 			} else {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
@@ -459,7 +459,7 @@ public class PersonAction extends SearchAction {
 		if (personnel.getTitle() != null)
 			actionForm.setTitle(personnel.getTitle().toString());
 		if (personnel.getLevel() != null)
-			actionForm.setLevel(personnel.getLevel().getId().toString());
+			actionForm.setLevel(personnel.getLevelEnum().getValue().toString());
 		if (personnel.getStatus() != null)
 			actionForm.setStatus(personnel.getStatus().getId().toString());
 		actionForm.setLoginName(personnel.getUserName());
@@ -484,12 +484,12 @@ public class PersonAction extends SearchAction {
 			actionForm.setAddress(personnelDetails.getAddress());
 			if (personnelDetails.getDateOfJoiningMFI() != null) {
 				actionForm.setDateOfJoiningMFI(DateHelper.getUserLocaleDate(
-						getUserContext(request).getPereferedLocale(),
+						getUserContext(request).getPreferredLocale(),
 						personnelDetails.getDateOfJoiningMFI().toString()));
 			}
 			if (personnelDetails.getDob() != null) {
 				actionForm.setDob(DateHelper.getUserLocaleDate(getUserContext(
-						request).getPereferedLocale(), personnelDetails
+						request).getPreferredLocale(), personnelDetails
 						.getDob().toString()));
 			}
 
@@ -511,7 +511,7 @@ public class PersonAction extends SearchAction {
 
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-		Locale locale = getUserContext(request).getPereferedLocale();
+		Locale locale = getUserContext(request).getPreferredLocale();
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 			for (PersonnelCustomFieldEntity customFieldEntity : customFieldEntities) {
 				if (customFieldDef.getFieldId().equals(
@@ -592,7 +592,7 @@ public class PersonAction extends SearchAction {
 			UserContext userContext = (UserContext) session
 					.getAttribute(LoginConstants.USERCONTEXT);
 			if (null != userContext) {
-				locale = userContext.getPereferedLocale();
+				locale = userContext.getPreferredLocale();
 				if (null == locale) {
 					locale = userContext.getMfiLocale();
 				}

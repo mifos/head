@@ -49,7 +49,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 				List<AccountActionDateEntity> list = new ArrayList<AccountActionDateEntity>();
 				list.addAll(loanBO.getAccountActionDates());
 				locale = ((UserContext) pageContext.getSession().getAttribute(
-						LoginConstants.USERCONTEXT)).getPereferedLocale();
+						LoginConstants.USERCONTEXT)).getPreferredLocale();
 				if (list != null && list.size() != 0) {
 					// topmost table
 					builder

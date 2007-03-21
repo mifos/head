@@ -38,7 +38,7 @@ public class TestUtils {
 		user.setRoles(set);
 		user.setLevel(PersonnelLevel.NON_LOAN_OFFICER);
 		user.setName("mifos");
-		user.setPereferedLocale(new Locale("en", "US"));
+		user.setPreferredLocale(new Locale("en", "US"));
 		user.setBranchId((short)1);
 		user.setBranchGlobalNum("0001");
 		return user;

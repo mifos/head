@@ -128,7 +128,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 				"org.mifos.application.master.business.CustomerAttendance",
 				"attendanceId").getLookUpMaster(), builder, Methods.get
 				.toString(), TestObjectFactory.getContext()
-				.getPereferedLocale(), (short) 1);
+				.getPreferredLocale(), (short) 1);
 		String result = builder.toString();
 
 		StringAssert.assertContains("Group", result);

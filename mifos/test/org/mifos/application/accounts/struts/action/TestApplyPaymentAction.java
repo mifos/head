@@ -134,7 +134,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	public void testApplyPaymentPreviewWithNoAmount(){
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/applyPaymentAction");
-		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		String currentDate = DateHelper.getCurrentDate(userContext.getPreferredLocale());
 		addRequestParameter("receiptDate",currentDate);
 		addRequestParameter("transactionDate",currentDate);		
 		addRequestParameter("paymentTypeId","1");
@@ -161,7 +161,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
 
-		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		String currentDate = DateHelper.getCurrentDate(userContext.getPreferredLocale());
 		addRequestParameter("receiptDate",currentDate);
 		addRequestParameter("transactionDate",currentDate);
 		addRequestParameter("paymentTypeId","1");
@@ -190,7 +190,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
 
-		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		String currentDate = DateHelper.getCurrentDate(userContext.getPreferredLocale());
 		addRequestParameter("receiptDate",currentDate);
 		addRequestParameter("transactionDate",currentDate);
 		addRequestParameter("paymentTypeId","1");
@@ -229,7 +229,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "applyPayment");
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
-		String currentDate = DateHelper.getCurrentDate(userContext.getPereferedLocale());
+		String currentDate = DateHelper.getCurrentDate(userContext.getPreferredLocale());
 		addRequestParameter("receiptDate","");
 		addRequestParameter("transactionDate",currentDate);
 

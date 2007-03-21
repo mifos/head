@@ -1225,7 +1225,7 @@ public class AccountBO extends BusinessObject {
 						&& StringUtils.isNullAndEmptySafe(fieldView
 								.getFieldValue()))
 					fieldView.convertDateToUniformPattern(getUserContext()
-							.getPereferedLocale());
+							.getPreferredLocale());
 				if(getAccountCustomFields().size()>0){
 					for (AccountCustomFieldEntity fieldEntity : getAccountCustomFields())
 						if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))

@@ -107,7 +107,7 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
 		ResourceBundle resources = ResourceBundle
 				.getBundle(
 						"org.mifos.application.accounts.savings.util.resources.SavingsUIResources",
-						userContext.getPereferedLocale());
+						userContext.getPreferredLocale());
 
 		if (method != null && method.equals(Methods.preview.toString())) {
 			errors = new ActionErrors();

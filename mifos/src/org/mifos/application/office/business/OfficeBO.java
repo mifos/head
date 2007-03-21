@@ -321,7 +321,7 @@ public class OfficeBO extends BusinessObject {
 	private String getLocaleString(String key) {
 		ResourceBundle resourceBundle = ResourceBundle.getBundle(
 				OfficeConstants.OFFICERESOURCEPATH, userContext
-						.getPereferedLocale());
+						.getPreferredLocale());
 		return resourceBundle.getString(key);
 	}
 

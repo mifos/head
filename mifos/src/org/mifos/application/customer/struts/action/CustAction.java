@@ -162,7 +162,7 @@ public class CustAction extends SearchAction {
 							CustomFieldType.DATE.getValue())) {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
 						DateHelper.getUserLocaleDate(getUserContext(request)
-								.getPereferedLocale(), fieldDef
+								.getPreferredLocale(), fieldDef
 								.getDefaultValue()), fieldDef.getFieldType()));
 			} else {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
@@ -179,7 +179,7 @@ public class CustAction extends SearchAction {
 
 		List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
 				.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-		Locale locale = getUserContext(request).getPereferedLocale();
+		Locale locale = getUserContext(request).getPreferredLocale();
 		for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
 			for (CustomerCustomFieldEntity customFieldEntity : customFieldEntities) {
 				if (customFieldDef.getFieldId().equals(

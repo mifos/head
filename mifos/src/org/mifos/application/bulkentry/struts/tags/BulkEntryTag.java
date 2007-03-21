@@ -136,7 +136,7 @@ public class BulkEntryTag extends BodyTagSupport {
 	private static Locale getCurrentLocale(PageContext pageContext) {
 		UserContext userContext = ((UserContext) pageContext.getSession()
 				.getAttribute(Constants.USERCONTEXT));
-		Locale pereferedLocale = userContext.getPereferedLocale();
+		Locale pereferedLocale = userContext.getPreferredLocale();
 		if (pereferedLocale == null) {
 			pereferedLocale = userContext.getMfiLocale();
 		}

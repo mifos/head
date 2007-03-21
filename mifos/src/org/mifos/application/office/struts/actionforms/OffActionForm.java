@@ -171,7 +171,7 @@ public class OffActionForm extends BaseActionForm {
 
 				resourceBundle = ResourceBundle.getBundle(
 						OfficeConstants.OFFICERESOURCEPATH, userContext
-								.getPereferedLocale());
+								.getPreferredLocale());
 			} catch (MissingResourceException e) {
 
 				resourceBundle = ResourceBundle

@@ -196,7 +196,7 @@ public class CustomerNotesAction extends SearchAction {
 		notesActionForm.setLevelId(customerBO.getCustomerLevel().getId().toString());
 		notesActionForm.setGlobalCustNum(customerBO.getGlobalCustNum());
 		notesActionForm.setCustomerName(customerBO.getDisplayName());
-		notesActionForm.setCommentDate(DateHelper.getCurrentDate(userContext.getPereferedLocale()));
+		notesActionForm.setCommentDate(DateHelper.getCurrentDate(userContext.getPreferredLocale()));
 		if(customerBO instanceof CenterBO)
 			notesActionForm.setInput("center");
 		else if(customerBO instanceof GroupBO)
