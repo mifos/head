@@ -15,6 +15,18 @@
 	<property file="${conf.dir}/my.build.properties"/>
 
 	<property file="${conf.dir}/build.properties"/>
+	
+	<!-- Which suite to run in the run_test and profile_test
+	     targets.  Normally the whole suite, but can be
+	     set to a portion of the tests, for example by putting
+	     test.suite=FastTests
+	     in my.build.properties.  -->
+	<property name="test.suite" value="ApplicationTestSuite" />
+
+	<!-- Probably need about 550M for 64-bit systems 
+	     (instead of 350M for 32-bit). -->
+	<property name="test.memory" value="350M" />
+
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="src.dir" value="${basedir}/src"/>
 	<property name="test.dir" value="${basedir}/test"/>
@@ -223,7 +235,7 @@
 	<target name="run_test" 
 		depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
 		description="Run tests. Does not initiate clean build">
-		<junit printsummary="on" fork="true" maxmemory="350M" 
+		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
 			dir="${basedir}"
 			failureproperty="tests.failure">
 			<classpath>
@@ -235,13 +247,38 @@
 			<formatter type="xml" />
 			<batchtest todir="${dist.dir}" >
 				<fileset dir="${test.classes}">
-					<include name="**/ApplicationTestSuite.class" />
+					<include name="**/${test.suite}.class" />
 				</fileset>
 			</batchtest>
 		</junit>
 		<fail if="tests.failure" 
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
+	</target>
 
+	<!-- Profile our tests with JIP ( http://jiprof.sourceforge.net/ ).	-->
+	<target name="profile_test" 
+		depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
+		description="Profile tests">
+		<junit printsummary="on" fork="true" maxmemory="${test.memory}" 
+			dir="${basedir}"
+			failureproperty="tests.failure">
+			<jvmarg value="-javaagent:${lib.dir}/jiprof-1.0.7.jar"/> 
+			<jvmarg value="-Dprofile.properties=${conf.dir}/profile.properties"/>
+			<classpath>
+				<path refid="class.path"/>
+				<pathelement location="${build.classes}"/>
+				<pathelement location="${test.classes}"/>
+			</classpath>
+
+			<formatter type="xml" />
+			<batchtest todir="${dist.dir}" >
+				<fileset dir="${test.classes}">
+					<include name="**/${test.suite}.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail if="tests.failure" 
+			message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
 
 	<target name="war" depends="compile,copy_files">
