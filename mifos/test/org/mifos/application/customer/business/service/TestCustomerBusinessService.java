@@ -49,7 +49,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -929,17 +928,12 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	}
 
 	private AccountBO getSavingsAccountWithBalance(CustomerBO customer,
-			MeetingBO meeting, String prdofferingName, String shortName)
+			MeetingBO meeting, String productName, String shortName)
 			throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering(prdofferingName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
-		Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
-		200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
-		meetingIntCalc, meetingIntPost);
+		Date currentDate = new Date(System.currentTimeMillis());
+		SavingsOfferingBO savingsOffering = 
+			TestObjectFactory.createSavingsProduct(productName, shortName, currentDate);
 		SavingsBO savingsBO = TestObjectFactory.createSavingsAccount("432434",
 				customer, Short.valueOf("16"), startDate, savingsOffering);
 		HibernateUtil.closeSession();

@@ -87,8 +87,8 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 	public void testBuildTableHeadings() {
 		LoanOfferingBO loanOffering = createLoanOfferingBO("Loan Offering",
 				"LOAN");
-		SavingsOfferingBO savingsOffering = createSavingsOfferingBO(
-				"Savings Offering", "SAVP");
+		java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
+		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsProduct("Savings Offering", "SAVP", currentDate);
 		List<PrdOfferingBO> loanProducts = new ArrayList<PrdOfferingBO>();
 		List<PrdOfferingBO> savingsProducts = new ArrayList<PrdOfferingBO>();
 		loanProducts.add(loanOffering);
@@ -159,18 +159,6 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 				frequency);
 	}
 
-	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
-			String shortName) {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createSavingsOffering(prdOfferingName, shortName, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()), 
-				((short) 2), 300.0, ((short) 1), 1.2, 
-				200.0, 200.0, ((short) 2), ((short) 1), 
-				meetingIntCalc, meetingIntPost);
-	}
-
 	private BulkEntryBO createBulkEntry() throws Exception {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
@@ -190,12 +178,16 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 		clientAccount = getLoanAccount(AccountState.LOANACC_APPROVED, 
 				startDate, 1,
 				loanOffering2);
-		SavingsOfferingBO savingsOffering1 = createSavingsOffering(
-				"SavingPrd1", "ased");
-		SavingsOfferingBO savingsOffering2 = createSavingsOffering(
-				"SavingPrd2", "cvdf");
-		SavingsOfferingBO savingsOffering3 = createSavingsOffering(
-				"SavingPrd3", "zxsd");
+		java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
+		SavingsOfferingBO savingsOffering1 = 
+			TestObjectFactory.createSavingsProduct(
+					"SavingPrd1", "ased", currentDate);
+		SavingsOfferingBO savingsOffering2 = 
+			TestObjectFactory.createSavingsProduct(
+					"SavingPrd2", "cvdf", currentDate);
+		SavingsOfferingBO savingsOffering3 = 
+			TestObjectFactory.createSavingsProduct(
+					"SavingPrd3", "zxsd", currentDate);
 
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount(
 				"43244334", center, Short.valueOf("16"), startDate,
@@ -279,21 +271,6 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 				"99999999999", group, state, startDate, loanOfferingBO,
 				disbursalType);
 
-	}
-
-	private SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName) {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory
-				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
-				Short
-										.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
-				200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
-				meetingIntCalc, meetingIntPost);
 	}
 
 	private LoanAccountView getLoanAccountView(LoanBO account) {

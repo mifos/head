@@ -56,8 +56,11 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testGetSavingProducts() throws Exception {
 		createInitialObjects();
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("SavingPrd1", "cadf");
-		savingsOffering2 = TestObjectFactory.createSavingsOffering("SavingPrd2", "a1lt");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering1 = TestObjectFactory.createSavingsProduct(
+				"SavingPrd1", "cadf", currentDate);
+		savingsOffering2 = TestObjectFactory.createSavingsProduct(
+				"SavingPrd2", "a1lt", currentDate);
 		List<PrdOfferingView> products = service.getSavingProducts(null, group
 				.getCustomerLevel(), CustomerConstants.GROUP_LEVEL_ID);
 		assertEquals(Integer.valueOf("2").intValue(), products.size());
@@ -69,8 +72,11 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testGetSavingProductsForInvalidConnection() {
 		createInitialObjects();
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("SavingPrd1", "cadf");
-		savingsOffering2 = TestObjectFactory.createSavingsOffering("SavingPrd2", "a1lt");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering1 = TestObjectFactory.createSavingsProduct(
+				"SavingPrd1", "cadf", currentDate);
+		savingsOffering2 = TestObjectFactory.createSavingsProduct(
+				"SavingPrd2", "a1lt", currentDate);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.getSavingProducts(null,
@@ -106,7 +112,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindById() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "kh6y");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "kh6y", currentDate);
 		savings = createSavingsAccount("FFFF", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		SavingsBO savings1 = service.findById(savings.getAccountId());
@@ -115,7 +122,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindByIdForInvalidConnection() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "kh6y");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "kh6y", currentDate);
 		savings = createSavingsAccount("FFFF", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		TestObjectFactory.simulateInvalidConnection();
@@ -132,7 +140,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindBySystemId() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "cadf");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate);
 		savings = createSavingsAccount("YYYY", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		SavingsBO savings1 = service.findBySystemId(savings.getGlobalAccountNum());
@@ -142,7 +151,8 @@ public class TestSavingsBusinessService extends MifosTestCase {
 
 	public void testFindBySystemIdForInvalidConnection() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "cadf");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate);
 		savings = createSavingsAccount("YYYY", savingsOffering,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
 		TestObjectFactory.simulateInvalidConnection();

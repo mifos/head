@@ -1190,17 +1190,13 @@ public class TestCustomerPersistence extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		SavingsOfferingBO savingsOffering = 
-			TestObjectFactory.createSavingsOffering("SavingPrd12", "abc1", 
-					ApplicableTo.GROUPS, startDate, 
-		Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
-		200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
-		meetingIntCalc, meetingIntPost);
+			TestObjectFactory.createSavingsProduct("SavingPrd12", "abc1", 
+				startDate, 
+				meetingIntCalc, meetingIntPost);
 		SavingsOfferingBO savingsOffering1 = 
-			TestObjectFactory.createSavingsOffering("SavingPrd11", "abc2", 
-					ApplicableTo.GROUPS, startDate, 
-		Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
-		200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
-		meetingIntCalc, meetingIntPost);
+			TestObjectFactory.createSavingsProduct("SavingPrd11", "abc2", 
+				startDate, 
+				meetingIntCalc, meetingIntPost);
 		centerSavingsAccount = TestObjectFactory.createSavingsAccount("432434",
 				center, Short.valueOf("16"), startDate, savingsOffering);
 		clientSavingsAccount = TestObjectFactory.createSavingsAccount("432434",

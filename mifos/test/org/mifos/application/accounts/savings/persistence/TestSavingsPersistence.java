@@ -98,8 +98,11 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 	public void testGetSavingsProducts() throws Exception {
 		createInitialObjects();
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("SavingPrd1", "sdcf");
-		savingsOffering2 = TestObjectFactory.createSavingsOffering("SavingPrd2", "1asq");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering1 = TestObjectFactory.createSavingsProduct(
+				"SavingPrd1", "sdcf", currentDate);
+		savingsOffering2 = TestObjectFactory.createSavingsProduct(
+				"SavingPrd2", "1asq", currentDate);
 		List<PrdOfferingView> products = savingsPersistence.getSavingsProducts(
 				null, group.getCustomerLevel(), new Short("2"));
 		assertEquals(2, products.size());
@@ -120,7 +123,8 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 	public void testFindById() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "xdsa");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "xdsa", currentDate);
 		savings = createSavingsAccount("FFFF", savingsOffering);
 		SavingsBO savings1 = savingsPersistence
 				.findById(savings.getAccountId());
@@ -159,7 +163,8 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 	public void testFindBySystemId() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", "v1ws");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "v1ws", currentDate);
 		savings = createSavingsAccount("kkk", savingsOffering);
 		SavingsBO savings1 = savingsPersistence.findBySystemId(savings.getGlobalAccountNum());
 		assertEquals(savings.getAccountId(), savings1.getAccountId());
@@ -264,9 +269,14 @@ public class TestSavingsPersistence extends MifosTestCase {
 	public void testGetAccountsPendingForIntCalc() throws Exception {
 		SavingsTestHelper helper = new SavingsTestHelper();
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("prd1", "sagf");
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("prd2", "q14f");
-		savingsOffering2 = TestObjectFactory.createSavingsOffering("prd3", "z1as");
+		Date currentDate = new Date(System.currentTimeMillis());
+
+		savingsOffering = TestObjectFactory.createSavingsProduct(
+				"prd1", "sagf", currentDate);
+		savingsOffering1 = TestObjectFactory.createSavingsProduct(
+				"prd2", "q14f", currentDate);
+		savingsOffering2 = TestObjectFactory.createSavingsProduct(
+				"prd3", "z1as", currentDate);
 		savings = helper.createSavingsAccount("000100000000021",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
@@ -307,9 +317,13 @@ public class TestSavingsPersistence extends MifosTestCase {
 	public void testGetAccountsPendingForIntPost() throws Exception {
 		SavingsTestHelper helper = new SavingsTestHelper();
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("prd1", "lv4r");
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("prd2", "tj81");
-		savingsOffering2 = TestObjectFactory.createSavingsOffering("prd3", "nvr4");
+		Date currentDate = new Date(System.currentTimeMillis());
+		savingsOffering = TestObjectFactory.createSavingsProduct(
+				"prd1", "lv4r", currentDate);
+		savingsOffering1 = TestObjectFactory.createSavingsProduct(
+				"prd2", "tj81", currentDate);
+		savingsOffering2 = TestObjectFactory.createSavingsProduct(
+				"prd3", "nvr4", currentDate);
 		savings = helper.createSavingsAccount("000100000000021",
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);

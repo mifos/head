@@ -637,7 +637,7 @@ public class TestObjectFactory {
 	/**
 	 * Deprecated in favor of the one which takes enums.
 	 * Also, some callers should be calling
-	 * {@link #createSavingsOffering(String, String)} (just to get rid
+	 * {@link #createSavingsProduct(String, String, Date)} (just to get rid
 	 * of the long argument list and hopefully make the test more readable).
 	 */
 	public static SavingsOfferingBO createSavingsOffering(String name,
@@ -2091,12 +2091,20 @@ public class TestObjectFactory {
 				.valueOf("1"), Short.valueOf("2"), recommendedAmountUnit);
 	}
 
-	public static SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName) {
+	public static SavingsOfferingBO createSavingsProduct(
+		String productName, String shortName, Date currentDate) {
 		MeetingBO meetingIntCalc = createMeeting(getTypicalMeeting());
 		MeetingBO meetingIntPost = createMeeting(getTypicalMeeting());
-		return createSavingsOffering(offeringName, shortName, 
-				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
+		return createSavingsProduct(
+			productName, shortName, currentDate, 
+			meetingIntCalc, meetingIntPost);
+	}
+
+	public static SavingsOfferingBO createSavingsProduct(
+		String productName, String shortName, Date currentDate, 
+		MeetingBO meetingIntCalc, MeetingBO meetingIntPost) {
+		return createSavingsOffering(productName, shortName, 
+				ApplicableTo.GROUPS, currentDate, 
 				PrdStatus.SAVINGS_ACTIVE, 300.0,
 				RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 
 				200.0, 200.0, SavingsType.VOLUNTARY, 
