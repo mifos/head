@@ -66,7 +66,7 @@
                 	<c:out value="${param.prdOfferingName}"/> # <c:out value="${param.globalAccountNum}"/> - 
                 	</span> 
                 	<mifos:mifoslabel name="loan.acc_statement"/>
-                	<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.pereferedLocale)}" />
+                	<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
                 </td>
               </tr>
               <tr><td>

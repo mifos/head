@@ -142,7 +142,7 @@
 					<tr>
 						<td width="70%" class="headingorange"><mifos:mifoslabel
 							name="Center.UpcomingCharges" bundle="CenterUIResources" /> (<c:out
-							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.upcomingChargesDate)}' />)
+							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.upcomingChargesDate)}' />)
 						</td>
 						<td width="70%" align="right" class="fontnormal"><html-el:link
 							href="accountAppAction.do?method=getTrxnHistory&statusId=${BusinessKey.customer.customerStatus.id}&globalCustNum=${BusinessKey.customer.globalCustNum}&input=ViewCenterCharges&globalAccountNum=${BusinessKey.globalAccountNum}&accountId=${BusinessKey.accountId}&accountType=${BusinessKey.accountType.accountTypeId}&prdOfferingName=${BusinessKey.customer.displayName}&headingInput=ViewCenterCharges&searchInput=ClientChargesDetails&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
@@ -230,7 +230,7 @@
 							var="recentActivities">
 							<tr>
 								<td width="11%" class="drawtablerow"><c:out
-									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,recentActivities.activityDate)}" /></td>
+									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,recentActivities.activityDate)}" /></td>
 								<td width="35%" class="drawtablerow"><c:out
 									value="${recentActivities.description}" /></td>
 								<td width="27%" align="right" class="drawtablerow"><c:out

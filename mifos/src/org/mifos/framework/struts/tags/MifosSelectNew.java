@@ -110,7 +110,7 @@ public class MifosSelectNew extends ELSelectTag{
 		
 		UserContext userContext = (UserContext)pageContext.getSession().getAttribute(LoginConstants.USERCONTEXT);
 		if(userContext!= null){
-			//Locale locale = userContext.getPereferedLocale();
+			//Locale locale = userContext.getPreferredLocale();
 			Locale locale=Locale.CANADA_FRENCH;
 	    	String uiBundle="UIResources";
 	    	String name=org.mifos.framework.util.helpers.Constants.SELECTTAG;

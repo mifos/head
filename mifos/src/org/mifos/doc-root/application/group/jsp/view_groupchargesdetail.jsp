@@ -153,7 +153,7 @@
 					<tr>
 						<td width="70%" class="headingorange"><mifos:mifoslabel
 							name="Group.upcomcharges" bundle="GroupUIResources" /> (<c:out
-							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.upcomingChargesDate)}' />)
+							value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.upcomingChargesDate)}' />)
 						<!-- c:out value='${requestScope.Context.businessResults["UpcomingChargesDate"]}'/-->
 						</td>
 						<td width="70%" align="right" class="fontnormal"><html-el:link
@@ -240,7 +240,7 @@
 							var="recentActivities">
 							<tr>
 								<td width="11%" class="drawtablerow"><c:out
-									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,recentActivities.activityDate)}" /></td>
+									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,recentActivities.activityDate)}" /></td>
 								<td width="35%" class="drawtablerow"><c:out
 									value="${recentActivities.description}" /></td>
 								<td width="27%" align="right" class="drawtablerow"><c:out

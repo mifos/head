@@ -250,7 +250,7 @@
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.proposed_date" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.disbursementDate)}" /> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.disbursementDate)}" /> </span>
 											</td>
 										</tr>
 										<tr>

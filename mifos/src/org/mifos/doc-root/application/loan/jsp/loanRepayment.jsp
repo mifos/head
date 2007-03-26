@@ -38,7 +38,7 @@
 								<c:out value="${BusinessKey.globalAccountNum}"/>-
 								</span>
 								<mifos:mifoslabel name="loan.repayment_sched" bundle="loanUIResources" /> 
-								<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.pereferedLocale)}" />
+								<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
 
 							</td>
 						</tr>

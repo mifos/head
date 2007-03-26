@@ -71,7 +71,7 @@
                 	<c:out value="${BusinessKey.savingsOffering.prdOfferingName}"/> # <c:out value="${BusinessKey.globalAccountNum}"/> - 
                 	</span> 
                 	<mifos:mifoslabel name="Savings.Accountstatementasof"/>
-                	<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.pereferedLocale)}" />
+                	<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
                 </td>
               </tr>
             </table>

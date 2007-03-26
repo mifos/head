@@ -105,7 +105,7 @@
 						<tr>
 							<td class="fontnormal"><br>
 								<mifos:mifoslabel name="product.recordCreationDate"  bundle="ProductDefUIResources"/>:&nbsp;
-								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.createdDate)}" />
+								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.createdDate)}" />
 							</td>
 						</tr>
 					</table>

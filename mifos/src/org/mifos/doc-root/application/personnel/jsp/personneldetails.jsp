@@ -88,7 +88,7 @@
 
 						<mifos:mifoslabel name="Personnel.DOB"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
-							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,personnelBO.personnelDetails.dob)}" />;
+							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelBO.personnelDetails.dob)}" />;
 						<c:out value="${personnelBO.age}" /> <mifos:mifoslabel
 							name="Personnel.YearsOld" bundle="PersonnelUIResources"></mifos:mifoslabel>
 						<br>
@@ -126,11 +126,11 @@
 						</c:if> <br>
 						<mifos:mifoslabel name="Personnel.DOJMFI"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
-							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,personnelBO.personnelDetails.dateOfJoiningMFI)}" />
+							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelBO.personnelDetails.dateOfJoiningMFI)}" />
 						<br>
 						<mifos:mifoslabel name="Personnel.DOJBranch"
 							bundle="PersonnelUIResources"></mifos:mifoslabel> <c:out
-							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,personnelBO.personnelDetails.dateOfJoiningBranch)}" />
+							value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,personnelBO.personnelDetails.dateOfJoiningBranch)}" />
 						</span><br>
 						<br>
 						<mifos:mifoslabel name="Personnel.Address"
@@ -283,7 +283,7 @@
 							<c:when test="${!empty personnelBO.recentPersonnelNotes}">
 								<c:forEach var="note" items="${personnelBO.recentPersonnelNotes}">
 									<span class="fontnormal8ptbold"> <c:out
-										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />:
+										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}" />:
 									</span>
 									<span class="fontnormal8pt"> <c:out value="${note.comment}" />
 									-<em><c:out value="${note.personnelName}" /></em><br>

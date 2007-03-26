@@ -97,7 +97,7 @@
 						<tr>
 							<td class="fontnormal"><br>
 								<mifos:mifoslabel name="client.reccredate"  bundle="ClientUIResources"/>:&nbsp;
-								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.createdDate)}" />
+								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.createdDate)}" />
 							</td>
 						</tr>
 					</table>

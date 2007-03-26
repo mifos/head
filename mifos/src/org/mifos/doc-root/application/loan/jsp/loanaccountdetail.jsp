@@ -99,7 +99,7 @@
 							<tr>
 								<td class="fontnormal">
 									<mifos:mifoslabel name="loan.proposed_date" />: 
-									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.disbursementDate)}" />
+									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.disbursementDate)}" />
 								</td>
 							</tr>
 							<tr id="Loan.PurposeOfLoan">
@@ -136,7 +136,7 @@
 								<tr>
 									<td width="58%" class="fontnormal">
 										<mifos:mifoslabel name="loan.totalAmtDue" />
-										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.nextMeetingDate)}" />:
+										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.nextMeetingDate)}" />:
 										<c:out value="${BusinessKey.totalAmountDue}" />
 									</td>
 									<%--<span
@@ -538,7 +538,7 @@
 		              	</tr>
 		              	<tr>
 		                <td class="paddingL10"><span class="fontnormal8pt"><mifos:mifoslabel
-		                	name="loan.maturity_date" /><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.performanceHistory.loanMaturityDate)}" />  </span></td>
+		                	name="loan.maturity_date" /><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.performanceHistory.loanMaturityDate)}" />  </span></td>
 		              	</tr>
 					</table>
 					<table width="95%" border="0" cellspacing="0" cellpadding="0">
@@ -562,7 +562,7 @@
 							<c:choose>
 	              				<c:when test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
 									<c:forEach var="note" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
-										<span class="fontnormal8ptbold"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}"/>:</span>
+										<span class="fontnormal8ptbold"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}"/>:</span>
 										<span class="fontnormal8pt"> 
 				                				<c:out value="${note.comment}"/>-<em>
 												<c:out value="${note.personnel.displayName}"/></em><br><br>

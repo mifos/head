@@ -156,7 +156,7 @@
 									<td><c:out
 										value="${sessionScope.clientCustActionForm.trainedDate}" />
 									<html-el:hidden property="trainedDate"
-										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.trainedDate)}" />
+										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.trainedDate)}" />
 									<html-el:hidden property="trainedDateFormat" value=""/>
 									<html-el:hidden property="trainedDateYY" value=""/>
 									</td>

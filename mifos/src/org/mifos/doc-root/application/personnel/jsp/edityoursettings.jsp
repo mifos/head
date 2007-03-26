@@ -154,7 +154,7 @@
 									<td align="right"><mifos:mifoslabel name="Personnel.DOB"
 										bundle="PersonnelUIResources"></mifos:mifoslabel></td>
 									<td><c:out
-										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,form.dob)}" />
+										value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,form.dob)}" />
 									</td>
 								</tr>
 

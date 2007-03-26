@@ -125,7 +125,7 @@
 										<mifos:mifoslabel name="client.date"
 											bundle="ClientUIResources" />&nbsp;<c:out
 											value="${closedAccount.accountState.name}" />:&nbsp; <c:out
-											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,closedAccount.closedDate)}" />
+											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,closedAccount.closedDate)}" />
 
 										</span></td>
 									</tr>
@@ -177,7 +177,7 @@
 											bundle="ClientUIResources" />&nbsp;<c:out
 											value="${closedSavingsAccount.accountState.name}" />:&nbsp;
 										<c:out
-											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,closedSavingsAccount.closedDate)}" />
+											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,closedSavingsAccount.closedDate)}" />
 										</span></td>
 									</tr>
 								</table>

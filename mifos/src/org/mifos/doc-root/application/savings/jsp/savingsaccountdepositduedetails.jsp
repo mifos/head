@@ -159,7 +159,7 @@
 									<mifos:mifoslabel name="Savings.totalAmountDue" />
 									<c:if test="${!empty BusinessKey.nextMeetingDate}">										
 										<mifos:mifoslabel name="Savings.on" />
-										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.nextMeetingDate)}" />
+										<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.nextMeetingDate)}" />
 									</c:if>
 								</td>
 								<td align="right" class="drawtablerow">

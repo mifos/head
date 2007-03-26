@@ -124,7 +124,7 @@
 									<p>
 										<span class="fontnormalbold"><mifos:mifoslabel name="loan.amount" /> <mifos:mifoslabel name="loan.disbursed" isColonRequired="Yes" /></span> <c:out value="${BusinessKey.loanAmount}"/>
 										<br>
-										<span class="fontnormalbold"><mifos:mifoslabel name="loan.proposed_date" isColonRequired="Yes" /></span> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.disbursementDate)}" />
+										<span class="fontnormalbold"><mifos:mifoslabel name="loan.proposed_date" isColonRequired="Yes" /></span> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.disbursementDate)}" />
 										<br>
 										<span class="fontnormalbold"><mifos:mifoslabel name="loan.nopaymentsmade" isColonRequired="Yes" /></span> <c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'paymentssize')}" />
 										<br>
@@ -163,7 +163,7 @@
 									<c:out value="${ctr1+1}" />
 								</td>
 								<td width="40%" class="drawtablerow">
-									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,payment.actionDate)}" />
+									<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,payment.actionDate)}" />
 								</td>
 								<td width="40%" class="drawtablerow">
 									<c:out value="${payment.total}" />

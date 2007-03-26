@@ -64,7 +64,7 @@
 										<c:if test="${sessionScope.UserContext.lastLogin!=null && !empty sessionScope.UserContext.lastLogin}">
 										<br>	<span class="fontnormal">
 												<mifos:mifoslabel name="CustomerSearch.lastlog"/>
-												<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.UserContext.lastLogin)}" /> 
+												<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,sessionScope.UserContext.lastLogin)}" /> 
 											</span>
 										</c:if>
 									</td>

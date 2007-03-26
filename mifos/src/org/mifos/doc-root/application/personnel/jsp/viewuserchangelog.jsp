@@ -94,7 +94,7 @@
               <tr>
                 <td class="fontnormal"><br>
                   <mifos:mifoslabel name="Personnel.RecordCreationDate" bundle="PersonnelUIResources"/>
-                  <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,requestScope.PersonnelVO.personnelDetails.dateOfJoiningBranch)}" /> 
+                  <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,requestScope.PersonnelVO.personnelDetails.dateOfJoiningBranch)}" /> 
                   </td>
               </tr>
             </table>

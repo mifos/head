@@ -409,7 +409,7 @@
 							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
 							<mifos:mifoslabel name="Group.approvaldate"
 								bundle="GroupUIResources"></mifos:mifoslabel> <c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.customerActivationDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.customerActivationDate)}" />
 							<br></td>
 						</tr>
 
@@ -447,7 +447,7 @@
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <c:if
 								test="${BusinessKey.trained}">
 								<c:out
-									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.trainedDate)}" />
+									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.trainedDate)}" />
 							</c:if> </span><br>
 							<br>
 							<%--  programs
@@ -541,7 +541,7 @@
 												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"
 													bundle="CenterUIResources"></mifos:mifoslabel>:
 							    	<span class="fontnormal"><c:out
-													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,cf.fieldValue)}" />
+													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,cf.fieldValue)}" />
 											</c:when>
 											<c:otherwise>
 												<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}"
@@ -727,7 +727,7 @@
 								<c:when test="${!empty BusinessKey.recentCustomerNotes}">
 									<c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
 										<span class="fontnormal8ptbold"> <c:out
-											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />:
+											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}" />:
 										</span>
 										<span class="fontnormal8pt"> <c:out value="${note.comment}" />
 										-<em><c:out value="${note.personnelName}" /></em><br>

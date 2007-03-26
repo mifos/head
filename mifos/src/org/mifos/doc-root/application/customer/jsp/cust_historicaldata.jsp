@@ -53,7 +53,7 @@
 							<td align="left" valign="top" class="fontnormalbold"><span
 								class="fontnormal"></span> <mifos:mifoslabel
 								name="label.MFIjoiningdate" bundle="CustomerUIResources"></mifos:mifoslabel>
-							<span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,mfiDate)}" />
+							<span class="fontnormal"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,mfiDate)}" />
 							<br>
 							</span> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" />
 							<mifos:mifoslabel name="label.loancyclenumber"

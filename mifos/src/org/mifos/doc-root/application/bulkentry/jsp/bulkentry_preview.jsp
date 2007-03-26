@@ -160,7 +160,7 @@
 																		<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 																	</c:otherwise>
 																</c:choose>: <c:out value="${BulkEntry.bulkEntryParent.customerDetail.displayName}" /><br> <mifos:mifoslabel name="bulkEntry.dateoftrxn" />: <c:out
-																	value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BulkEntry.transactionDate)}' /> </span>
+																	value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.transactionDate)}' /> </span>
 														</td>
 													</tr>
 												</table>
@@ -193,7 +193,7 @@
 																<tr id="BulkEntry.ReceiptDate">
 																	<td class="fontnormal">
 																		<mifos:mifoslabel name="bulkEntry.rcptdate" keyhm="BulkEntry.ReceiptDate" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-																		<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BulkEntry.receiptDate)}" />
+																		<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.receiptDate)}" />
 																	</td>
 																</tr>
 															</table>

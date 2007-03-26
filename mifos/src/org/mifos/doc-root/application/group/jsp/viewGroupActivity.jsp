@@ -85,7 +85,7 @@
 					<c:out value="${param.prdOfferingName}" /> -
 	                 </span>
 	                 <mifos:mifoslabel name="Customer.Accountstatementasof" bundle="CustomerUIResources"/>
-				     <c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.pereferedLocale)}" />
+				     <c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
                 </td>
                 </tr>
               <tr>

@@ -168,9 +168,9 @@
                 <td align="right">
 				<mifos:mifoslabel name="Personnel.DOB"  bundle="PersonnelUIResources"></mifos:mifoslabel>
 				</td>
-                <td> <%--<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.personnelDetails.dob)}" />--%>
+                <td> <%--<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.personnelDetails.dob)}" />--%>
                 <c:out value="${sessionScope.personActionForm.dob}" />
-                <html-el:hidden property="dob" value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.personnelDetails.dob)}"/> 
+                <html-el:hidden property="dob" value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.personnelDetails.dob)}"/> 
                 </td>
               </tr>
               <tr class="fontnormal">

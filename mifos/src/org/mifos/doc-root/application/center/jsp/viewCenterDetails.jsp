@@ -291,12 +291,12 @@
 								class="fontnormal"> <!-- MFI Joining date --> <mifos:mifoslabel
 								name="Center.MfiJoiningDate" />:
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.mfiJoiningDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.mfiJoiningDate)}" />
 							<br>
 							<mifos:mifoslabel name="${ConfigurationConstants.CENTER}" /> <mifos:mifoslabel
 								name="Center.CenterStartDate" />:
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.createdDate)}" /></td>
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.createdDate)}" /></td>
 						</tr>
 
 						<!-- External Id -->
@@ -440,7 +440,7 @@
 												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
 													/>:
 					         		<span class="fontnormal"><c:out
-													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,customField.fieldValue)}" /><br>
+													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,customField.fieldValue)}" /><br>
 												</span>
 											</c:when>
 											<c:otherwise>
@@ -545,7 +545,7 @@
 								<c:when test="${!empty BusinessKey.recentCustomerNotes}">
 									<c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
 										<span class="fontnormal8ptbold"> <c:out
-											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />
+											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}" />
 										</span>
 										<span class="fontnormal8pt"> <c:out value="${note.comment}" />
 										-<em><c:out value="${note.personnelName}" /></em><br>

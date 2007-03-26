@@ -151,7 +151,7 @@
 															<br>
 															<mifos:mifoslabel name="bulkEntry.dateoftrxn" />
 															:
-															<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BulkEntry.transactionDate)}' />
+															<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.transactionDate)}' />
 
 														</td>
 													</tr>
@@ -186,7 +186,7 @@
 																<tr id="BulkEntry.ReceiptDate">
 																	<td class="fontnormal">
 																		<mifos:mifoslabel name="bulkEntry.rcptdate" keyhm="BulkEntry.ReceiptDate" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-																		<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BulkEntry.receiptDate)}" />
+																		<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BulkEntry.receiptDate)}" />
 																	</td>
 																</tr>
 															</table>

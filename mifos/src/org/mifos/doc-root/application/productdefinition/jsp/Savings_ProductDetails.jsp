@@ -149,9 +149,9 @@
 														<br>
 													</c:if> <mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" />: <c:out value="${BusinessKey.prdCategory.productCategoryName}" /><br> 
 													<mifos:mifoslabel name="product.startdate"	bundle="ProductDefUIResources" />: 
-													<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.startDate)}" /> <br>
+													<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.startDate)}" /> <br>
 													 <mifos:mifoslabel name="product.enddate"	bundle="ProductDefUIResources" />: 
-													 <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.endDate)}" /> <br>
+													 <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.endDate)}" /> <br>
 													  <mifos:mifoslabel name="product.applfor"	bundle="ProductDefUIResources" />:
 													  	<c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SavingsApplForList')}" var="ApplForList">
 																<c:if test="${ApplForList.id eq BusinessKey.prdApplicableMaster.id}">

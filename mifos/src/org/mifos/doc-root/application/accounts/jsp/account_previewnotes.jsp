@@ -76,7 +76,7 @@
                 <tr>
                   <td align="left" valign="top">
 			<span class="fontnormalbold">
-			<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,AccountNotes.commentDate)}"/>
+			<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,AccountNotes.commentDate)}"/>
 			</span><br>
                       <span class="fontnormal">
 			<c:out value="${sessionScope.notesActionForm.comment}"/>

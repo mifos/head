@@ -203,7 +203,7 @@
 							<td class="drawtablerowbold">
 							<mifos:mifoslabel name="loan.totalDueOn" bundle="loanUIResources" />
 								<c:out
-									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'nextMeetingDate'))}" />
+									value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'nextMeetingDate'))}" />
 								</td>
 							<td align="right" class="drawtablerow">&nbsp;
 							<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalAmountOverDue')}" var="totalAmountOverdue" />

@@ -104,7 +104,7 @@
 						<tr>
 							<td class="fontnormal"><br>
 								<mifos:mifoslabel name="Personnel.rec_creation_date" />:&nbsp;
-								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.createdDate)}" />
+								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.createdDate)}" />
 							</td>
 						</tr>
 					</table>

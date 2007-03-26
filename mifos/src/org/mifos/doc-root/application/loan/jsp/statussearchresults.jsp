@@ -129,7 +129,7 @@
 										<c:out value="${loan.loanAmount}" />
 									</td>
 									<td width="15%" valign="top" class="drawtablerow">
-										<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,loan.disbursementDate)}' />
+										<c:out value='${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loan.disbursementDate)}' />
 									</td>
 
 

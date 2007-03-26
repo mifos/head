@@ -131,7 +131,7 @@
 											<c:otherwise>
 												<mifos:mifoslabel name="Savings.totalAmountDue"/>
 												<mifos:mifoslabel name="Savings.on"/>
-												<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.nextMeetingDate)}" />:
+												<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.nextMeetingDate)}" />:
 											</c:otherwise>
 										</c:choose>										
 										<c:if test="${BusinessKey.savingsOffering.savingsType.id == SavingsConstants.SAVINGS_MANDATORY}">
@@ -233,7 +233,7 @@
 												<c:choose>
 													<c:when test="${cfdef.fieldType == 3}">
 														<span class="fontnormal"> <mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" isColonRequired="yes"/>
-														<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,cf.fieldValue)}" />
+														<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,cf.fieldValue)}" />
 													</c:when>
 													<c:otherwise>
 														<span class="fontnormal"> <mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" isColonRequired="yes"/> 
@@ -329,7 +329,7 @@
               <tr>
                 <td class="paddingL10">
                 <span class="fontnormal8pt">
-               		<mifos:mifoslabel name="Savings.dateAccountOpened"/>: <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.activationDate)}" />
+               		<mifos:mifoslabel name="Savings.dateAccountOpened"/>: <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.activationDate)}" />
 					 </span></td>
 			  </tr>
               <tr>
@@ -379,7 +379,7 @@
                   		<c:choose>
               				<c:when test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
 								<c:forEach var="note" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'notes')}">
-									<span class="fontnormal8ptbold"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}"/>:</span>
+									<span class="fontnormal8ptbold"> <c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}"/>:</span>
 									<span class="fontnormal8pt">
 			                				<c:out value="${note.comment}"/>-<em>
 											<c:out value="${note.personnel.displayName}"/></em><br><br>

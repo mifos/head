@@ -108,7 +108,7 @@
 									:
 								</td>
 								<td width="71%" class="fontnormal">
-									<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.pereferedLocale)}" />
+									<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
 								</td>
 							</tr>
 							<tr>
@@ -183,7 +183,7 @@
 			<html-el:hidden property="globalAccountNum" value="${param.globalAccountNum}" />
 			<html-el:hidden property="prdOfferingName" value="${param.prdOfferingName}" />
 			<html-el:hidden property="amount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
-			<html-el:hidden property="dateOfPayment" value="${loanfn:getCurrrentDate(sessionScope.UserContext.pereferedLocale)}" />
+			<html-el:hidden property="dateOfPayment" value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

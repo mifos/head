@@ -347,7 +347,7 @@
 								name="client.ClientStartDate" bundle="ClientUIResources"></mifos:mifoslabel>:
 							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.customerActivationDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.customerActivationDate)}" />
 							<br>
 							</span> <span class="fontnormal"><mifos:mifoslabel
 								name="client.FormedBy" bundle="ClientUIResources"></mifos:mifoslabel></span>
@@ -368,7 +368,7 @@
 								keyhm="Client.TrainedDate"
 								isManadatoryIndicationNotRequired="yes"></mifos:mifoslabel> <!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.trainedDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.trainedDate)}" />
 							</span> <span class="fontnormal"><br>
 							<br>
 							</span> <!-- Group Membership details --></td>
@@ -461,7 +461,7 @@
 								name="client.DateOfBirth" bundle="ClientUIResources"></mifos:mifoslabel>
 							<!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 							<c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,BusinessKey.dateOfBirth)}" />;
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,BusinessKey.dateOfBirth)}" />;
 							<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'age')}" /> <mifos:mifoslabel
 								name="client.YearsOld" bundle="ClientUIResources"></mifos:mifoslabel><br></td>
 						</tr>
@@ -616,7 +616,7 @@
 												<mifos:mifoslabel name="${cf.lookUpEntity.entityType}"
 													bundle="CenterUIResources"></mifos:mifoslabel>:
 									         		<span class="fontnormal"><c:out
-													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,customField.fieldValue)}" />
+													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,customField.fieldValue)}" />
 												</span>
 											</c:when>
 											<c:otherwise>
@@ -742,7 +742,7 @@
 									<c:forEach var="note" items="${BusinessKey.recentCustomerNotes}">
 										<span class="fontnormal8ptbold"> <!-- Bug Id 27911. Changed the all the dates in the clientDetails.jsp to display as per client Locale-->
 										<c:out
-											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,note.commentDate)}" />:
+											value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,note.commentDate)}" />:
 										</span>
 										<span class="fontnormal8pt"> <c:out value="${note.comment}" />
 										-<em><c:out value="${note.personnelName}" /></em><br>

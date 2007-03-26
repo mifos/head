@@ -188,8 +188,8 @@ public class UserContext implements Serializable {
 		return preferredLocale;
 	}
 
-	public void setPreferredLocale(Locale pereferedLocale) {
-		this.preferredLocale = pereferedLocale;
+	public void setPreferredLocale(Locale preferredLocale) {
+		this.preferredLocale = preferredLocale;
 	}
 
 	public String getUserGlobalNo() {

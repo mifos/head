@@ -128,7 +128,7 @@
 	<tr id="Personnel.DOB">
 		<td class="fontnormal">
 			<mifos:mifoslabel name="Personnel.DOB"/>
-			<span class="fontnormal"><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,Personnel.personnelDetails.dob)}" /> </span>
+			<span class="fontnormal"><c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,Personnel.personnelDetails.dob)}" /> </span>
 		</td>
 	</tr>
 	<tr id="Personnel.Age">

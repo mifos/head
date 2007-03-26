@@ -115,8 +115,8 @@
 													<br>
 													<br>
 												</c:if> <mifos:mifoslabel name="product.prodcat" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.prdCategory.productCategoryName}" /><br> <mifos:mifoslabel name="product.startdate" bundle="ProductDefUIResources" />: <c:out
-													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,loanPrd.startDate)}" /> <br> <mifos:mifoslabel name="product.enddate" bundle="ProductDefUIResources" />: <c:out
-													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,loanPrd.endDate)}" /> <br> <mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.prdApplicableMaster.name}" /> <br>
+													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanPrd.startDate)}" /> <br> <mifos:mifoslabel name="product.enddate" bundle="ProductDefUIResources" />: <c:out
+													value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,loanPrd.endDate)}" /> <br> <mifos:mifoslabel name="product.applfor" bundle="ProductDefUIResources" />: <c:out value="${loanPrd.prdApplicableMaster.name}" /> <br>
 												<mifos:mifoslabel name="product.inclin" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="${ConfigurationConstants.LOAN}" bundle="ProductDefUIResources" /> <mifos:mifoslabel name="product.cyclecounter" bundle="ProductDefUIResources" />
 												: <c:choose>
 													<c:when test="${loanPrd.includeInLoanCounter}">

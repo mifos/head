@@ -137,7 +137,7 @@
 								<br>
 								<mifos:mifoslabel name="checklist.createddate" />
 								:
-								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,checkList.createdDate)}" />
+								<c:out value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,checkList.createdDate)}" />
 
 								<br>
 								<p class="fontnormal">

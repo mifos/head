@@ -64,7 +64,7 @@
 						<tr>
 							<td class="fontnormal"><br>
 							<span class="fontnormalbold"> <c:out
-								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.pereferedLocale,sessionScope.accountNotes.commentDate)}" />
+								value="${userdatefn:getUserLocaleDate(sessionScope.UserContext.preferredLocale,sessionScope.accountNotes.commentDate)}" />
 							</span> <span class="fontnormal"><br>
 							<c:out value="${sessionScope.accountNotes.comment}"/>&nbsp;-</span> 
 							<em><c:out
