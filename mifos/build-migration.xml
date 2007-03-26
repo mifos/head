@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+This build file separates out the migration related build tasks from build.xml.
+-->
+
+<project name="mifos-migration" default="convert_rng_to_xsd" basedir=".">
+
+	<import file="build.xml"/>
+
+	<path id="trang.classpath">
+		<pathelement path="${lib.dir}/trangtask.jar;${lib.dir}/trang.jar" />
+	</path>
+
+	<taskdef name="trang" 
+		classname="net.amadan.trang.ant.TrangTask" 
+		classpathref="trang.classpath" />
+
+	<property name="migration.dir" value="${basedir}/src/org/mifos/migration" />
+	<property name="schema.dir" value="${migration.dir}/schemas" />
+	<property name="generated.dir" value="${migration.dir}/generated" />
+
+	<property name="mifos_rng" value="${schema.dir}/MifosDataExchange.rng"/>
+	<property name="mifos_rnc" value="${schema.dir}/generated/MifosDataExchange.rnc"/>
+	<property name="mifos_xsd" value="${schema.dir}/generated/MifosDataExchange.xsd"/>
+
+	<target name="convert_rng_to_xsd" description="run trang to generate an xsd schema from the rng">
+		<trang
+	      failonerror="true"
+	      input="${mifos_rng}" output="${mifos_xsd}" 
+		  schemaIn="rng" schemaOut="xsd">
+			<inputModule>
+				<opt name="encoding" value="UTF-8"/>
+			</inputModule>
+			<outputModule>
+				<opt name="encoding" value="UTF-8"/>
+				<opt name="indent" value="2"/>
+			</outputModule>
+		</trang>
+	</target>
+
+	<target name="convert_rng_to_rnc" description="run trang to generate an rnc schema from the rng">
+		<trang
+	      failonerror="true"
+	      input="${mifos_rng}" output="${mifos_rnc}" 
+		  schemaIn="rng" schemaOut="rnc">
+			<inputModule>
+				<opt name="encoding" value="UTF-8"/>
+			</inputModule>
+			<outputModule>
+				<opt name="encoding" value="UTF-8"/>
+				<opt name="indent" value="2"/>
+			</outputModule>
+		</trang>
+	</target>
+
+<!--	
+	<property name="tools.dir" value="${basedir}/tools" />
+	<property name="jaxb.home" value="${tools.dir}/jaxb-ri-20070125"/>
+-->
+	<path id="xjc.path">
+		<fileset dir="${basedir}" includes="lib/*.jar" />
+	</path>
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		<classpath refid="xjc.path" />
+	</taskdef>
+	
+	<target name="generate" depends="convert_rng_to_xsd" description="run xjc to generate java files">
+		<xjc schema="${mifos_xsd}" destdir="${src.dir}" package="org.mifos.migration.generated">
+			<produces dir="${src.dir}" includes="**/*.java" />
+		</xjc>
+	</target>
+
+	<target name="run_migration_tests" 
+		depends="compile,copy_files,compile_test,copy_test_files,build_test_db" 
+		description="Run migration tests. Does not initiate clean build">
+		<junit printsummary="withOutAndErr" fork="true" maxmemory="350M" 
+			dir="${basedir}"
+			failureproperty="tests.failure">
+			<classpath>
+				<path refid="class.path"/>
+				<pathelement location="${build.classes}"/>
+				<pathelement location="${test.classes}"/>
+			</classpath>
+			<formatter usefile="false" type="plain" />
+			<batchtest todir="${dist.dir}" >
+				<fileset dir="${test.classes}">
+					<include name="**/TestMifosDataExchange.class" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail if="tests.failure" 
+			message="Unit tests failed - see output on stdout"/>
+	</target>
+</project>

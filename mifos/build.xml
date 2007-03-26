@@ -140,7 +140,9 @@
                 property="my.hibernate.properties.present" value="true" />
 		<copy todir="${build.web-inf}/lib">
 			<fileset dir="lib" 
-				excludes="javax.servlet.jar, jsp-api.jar, strutstest-2.1.3.jar, junit.jar, cobertura.jar, jetty-6.0.0.jar, jetty-util-6.0.0.jar, servlet-api-2.5-6.0.0.jar">
+				excludes="javax.servlet.jar, jsp-api.jar, strutstest-2.1.3.jar, junit.jar, 
+					cobertura.jar, jetty-6.0.0.jar, jetty-util-6.0.0.jar, servlet-api-2.5-6.0.0.jar,
+					trang.jar, trangtask.jar, jaxb-xjc.jar">
 				<exclude name="*.tld"/>
 			</fileset>
 		</copy>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mifosDataExchange>
+    <center>
+        <name>First Center</name>
+        <loanOfficerId>1234</loanOfficerId>
+        <monthlyMeeting>
+            <meetingWeekDay>Monday</meetingWeekDay>
+            <meetingWeekDayOccurence>Second</meetingWeekDayOccurence>
+            <monthsBetweenMeetings>1</monthsBetweenMeetings>
+            <location>Some Place</location>
+        </monthlyMeeting>
+        <mfiJoiningDate>2005-12-01</mfiJoiningDate>
+        <distanceFromBranchOffice>0</distanceFromBranchOffice>
+    </center>
+    <center>
+        <name>First Center</name>
+        <loanOfficerId>1234</loanOfficerId>
+        <monthlyMeeting>
+            <dayOfMonth>2</dayOfMonth>
+            <monthsBetweenMeetings>1</monthsBetweenMeetings>
+            <location>Some Place</location>
+        </monthlyMeeting>
+        <externalId>07-01-01</externalId>
+        <mfiJoiningDate>2005-12-01</mfiJoiningDate>
+        <address>
+            <address1>100 First St.</address1>
+            <address2>Suite 123</address2>
+            <address3>Attn: someone</address3>
+            <cityDistrict>Any Town</cityDistrict>
+            <state>State</state>
+            <country>Country</country>
+            <postalCode>12345</postalCode>
+            <telephone>1-123-123-1234</telephone>
+        </address>
+        <meetingTime>10 AM</meetingTime>
+        <distanceFromBranchOffice>1</distanceFromBranchOffice>
+        <fee id="12234">
+            <amount>10</amount>
+        </fee>
+    </center>
+    <center>
+        <name>First Center</name>
+        <loanOfficerId>1234</loanOfficerId>
+        <weeklyMeeting>
+            <weeksBetweenMeetings>1</weeksBetweenMeetings>
+            <meetingWeekDay>Monday</meetingWeekDay>
+            <location>Some Place</location>
+        </weeklyMeeting>
+        <externalId>07-01-01</externalId>
+        <mfiJoiningDate>2005-12-01</mfiJoiningDate>
+        <address>
+            <cityDistrict>City</cityDistrict>
+            <country>Country</country>
+        </address>
+        <meetingTime>10 AM</meetingTime>
+        <distanceFromBranchOffice>2</distanceFromBranchOffice>
+        <fee id="12234">
+            <amount>10</amount>
+        </fee>
+    </center>
+</mifosDataExchange>

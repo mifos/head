@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+    datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <define name="weekDayChoice">
+        <choice>
+            <value>Monday</value>
+            <value>Tuesday</value>
+            <value>Wednesday</value>
+            <value>Thursday</value>
+            <value>Friday</value>
+            <value>Saturday</value>
+        </choice>
+    </define>
+    <define name="address">
+        <element name="address">
+            <optional>
+                <element name="address1">
+                    <data type="token" />
+                </element>
+            </optional>
+            <optional>
+                <element name="address2">
+                    <data type="token" />
+                </element>
+            </optional>
+            <optional>
+                <element name="address3">
+                    <data type="token" />
+                </element>
+            </optional>
+            <optional>
+                <element name="cityDistrict">
+                    <data type="token" />
+                </element>
+            </optional>
+            <optional>
+                <element name="state">
+                    <data type="token" />
+                </element>
+            </optional>
+            <optional>
+                <element name="country">
+                    <data type="token" />
+                </element>
+            </optional>
+            <optional>
+                <element name="postalCode">
+                    <text />
+                </element>
+            </optional>
+            <optional>
+                <element name="telephone">
+                    <text />
+                </element>
+            </optional>
+        </element>
+    </define>
+    <define name="weeklyMeeting">
+        <element name="weeklyMeeting">
+            <element name="weeksBetweenMeetings">
+                <data type="short">
+                    <param name="minInclusive">1</param>
+                </data>
+            </element>
+            <element name="meetingWeekDay">
+                <ref name="weekDayChoice" />
+            </element>
+            <element name="location">
+                <data type="token" />
+            </element>
+        </element>
+    </define>
+    <define name="monthlyMeeting">
+        <element name="monthlyMeeting">
+            <choice>
+                <element name="dayOfMonth">
+                    <data type="short">
+                        <param name="minInclusive">1</param>
+                        <param name="maxInclusive">31</param>
+                    </data>
+                </element>
+                <group>
+                    <element name="meetingWeekDay">
+                        <ref name="weekDayChoice" />
+                    </element>
+                    <element name="meetingWeekDayOccurence">
+                        <choice>
+                            <value>First</value>
+                            <value>Second</value>
+                            <value>Third</value>
+                            <value>Fourth</value>
+                            <value>Last</value>
+                        </choice>
+                    </element>
+                </group>
+            </choice>
+            <element name="monthsBetweenMeetings">
+                <data type="short">
+                    <param name="minInclusive">1</param>
+                </data>
+            </element>
+            <element name="location">
+                <data type="token" />
+            </element>
+        </element>
+    </define>
+    <start>
+        <element name="mifosDataExchange">
+            <zeroOrMore>
+                <element name="center">
+                    <element name="name">
+                        <data type="token" />
+                    </element>
+                    <element name="loanOfficerId">
+                        <data type="short">
+                            <param name="minInclusive">0</param>
+                        </data>
+                    </element>
+                    <choice>
+                        <ref name="weeklyMeeting" />
+                        <ref name="monthlyMeeting" />
+                    </choice>
+                    <optional>
+                        <element name="externalId">
+                            <text />
+                        </element>
+                    </optional>
+                    <element name="mfiJoiningDate">
+                        <data type="date" />
+                    </element>
+                    <optional>
+                        <ref name="address" />
+                    </optional>
+                    <optional>
+                        <element name="meetingTime">
+                            <text />
+                        </element>
+                    </optional>
+                    <element name="distanceFromBranchOffice">
+                        <data type="int">
+                            <param name="minInclusive">0</param>
+                        </data>
+                    </element>
+                    <zeroOrMore>
+                        <element name="fee">
+                            <attribute name="id">
+                                <data type="short" />
+                            </attribute>
+                            <element name="amount">
+                                <data type="decimal">
+                                    <param name="minInclusive">0</param>
+                                </data>
+                            </element>
+                        </element>
+                    </zeroOrMore>
+                </element>
+            </zeroOrMore>
+        </element>
+    </start>
+</grammar>
