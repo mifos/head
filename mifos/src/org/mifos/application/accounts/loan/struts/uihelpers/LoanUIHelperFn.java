@@ -44,7 +44,7 @@ import java.util.Locale;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 
 /**
  * This class has got helper functions which could be called from jsp as part of
@@ -58,7 +58,7 @@ public class LoanUIHelperFn {
 	}
 
 	public static String getCurrrentDate(Locale locale) {
-		return DateHelper.getCurrentDate(locale);
+		return DateUtils.getCurrentDate(locale);
 	}
 
 	public static String getMeetingRecurrence(Object meeting,	Object userContext) {

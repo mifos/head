@@ -63,7 +63,7 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class InterceptHelper {
@@ -161,7 +161,7 @@ public class InterceptHelper {
 							}else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
 								try{
 									Date date=(Date)propertyValues[i];
-									initialValues.put(propertyNames[i], DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+									initialValues.put(propertyNames[i], DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 								}catch(Exception e){
 									initialValues.put(propertyNames[i],propertyValues[i].toString());
 								}
@@ -189,7 +189,7 @@ public class InterceptHelper {
 							}else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
 								try{
 									Date date=(Date)propertyValues[i];
-									changedValues.put(propertyNames[i], DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+									changedValues.put(propertyNames[i], DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 								}catch(Exception e){
 									changedValues.put(propertyNames[i],propertyValues[i].toString());
 								}
@@ -504,7 +504,7 @@ public class InterceptHelper {
 						 }else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
 							 try{
 								 Date date=(Date)propertyValues[i];
-							     initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+							     initialValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 							 }catch(Exception e){
 								 initialValues.put(name, propertyValues[i].toString());
 							 }
@@ -532,7 +532,7 @@ public class InterceptHelper {
 							 changedValues.put(name, new String((byte[])propertyValues[i]));	
 						 }else if(propertyValues[i] instanceof Date && propertyValues[i]!=null){
 							 Date date=(Date)propertyValues[i];
-							 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+							 changedValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 						 }else{
 							 changedValues.put(name, propertyValues[i]);
 						 }
@@ -566,7 +566,7 @@ public class InterceptHelper {
 					 }else if(propertyValue instanceof Date && propertyValue!=null){
 						 try{
 							 Date date=(Date)propertyValue;
-							initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+							initialValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 						 }catch(Exception e){
 							 initialValues.put(name, propertyValue.toString());
 						 }
@@ -595,7 +595,7 @@ public class InterceptHelper {
 					 }else if(propertyValue instanceof Date && propertyValue!=null){
 						 try{
 							 Date date=(Date)propertyValue;
-							 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+							 changedValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 						 }catch(Exception e){
 							 changedValues.put(name, propertyValue.toString());
 						 }
@@ -695,14 +695,14 @@ public class InterceptHelper {
 							 if(!oldValue.equals("")){
 								 try{
 									 Date date=(Date)propertyValues[i];
-									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
+									 initialValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
 								 }catch(Exception e){
 									 initialValues.put(name,propertyValues[i].toString().concat(",").concat(oldValue));
 								 }
 							 }else{
 								 try{
 									 Date date=(Date)propertyValues[i];
-									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+									 initialValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 								 }catch(Exception e){
 									 initialValues.put(name,propertyValues[i].toString());
 								 }
@@ -750,14 +750,14 @@ public class InterceptHelper {
 							 if(!oldValue.equals("")){
 								 try{
 									 Date date= (Date)propertyValues[i];	
-									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
+									 changedValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
 								 }catch(Exception e){
 									 changedValues.put(name, propertyValues[i].toString().concat(",").concat(oldValue));
 								 }
 							 }else{
 								 try{
 									 Date date= (Date)propertyValues[i];
-									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+									 changedValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 								 }catch(Exception e){
 									 changedValues.put(name, propertyValues[i].toString());
 								 }
@@ -1252,14 +1252,14 @@ public class InterceptHelper {
 							 if(!oldValue.equals("")){
 								 try{
 									 Date date=(Date)propertyValues[i];
-									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
+									 initialValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
 								 }catch(Exception e){
 									 initialValues.put(name,propertyValues[i].toString().concat(",").concat(oldValue));
 								 }
 							 }else{
 								 try{
 									 Date date=(Date)propertyValues[i];
-									 initialValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+									 initialValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 								 }catch(Exception e){
 									 initialValues.put(name,propertyValues[i].toString());
 								 }
@@ -1307,14 +1307,14 @@ public class InterceptHelper {
 							 if(!oldValue.equals("")){
 								 try{
 									 Date date= (Date)propertyValues[i];	
-									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
+									 changedValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()).toString().concat(",").concat(oldValue));
 								 }catch(Exception e){
 									 changedValues.put(name, propertyValues[i].toString().concat(",").concat(oldValue));
 								 }
 							 }else{
 								 try{
 									 Date date= (Date)propertyValues[i];
-									 changedValues.put(name, DateHelper.getUserLocaleDate(locale,new java.sql.Date(date.getTime()).toString()));
+									 changedValues.put(name, DateUtils.getUserLocaleDate(locale, new java.sql.Date(date.getTime()).toString()));
 								 }catch(Exception e){
 									 changedValues.put(name, propertyValues[i].toString());
 								 }

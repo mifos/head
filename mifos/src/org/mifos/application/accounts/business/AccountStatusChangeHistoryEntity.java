@@ -42,7 +42,7 @@ import java.util.Locale;
 
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.PersistentObject;
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class AccountStatusChangeHistoryEntity extends PersistentObject {
 	private final Integer accountStatusChangeId;
@@ -119,8 +119,8 @@ public class AccountStatusChangeHistoryEntity extends PersistentObject {
 	}
 
 	public String getUserPrefferedTransactionDate() {
-		return DateHelper.getUserLocaleDate(getLocale(), getCreatedDate()
-				.toString());
+		return DateUtils.getUserLocaleDate(getLocale(), getCreatedDate()
+		.toString());
 	}
 
 }

@@ -13,8 +13,8 @@ import org.mifos.application.accounts.loan.util.helpers.RepaymentScheduleInstall
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -45,7 +45,7 @@ public class LoanUIHelperFnTest extends MifosMockStrutsTestCase {
 
 	public void testGetCurrrentDate() {
 		Locale locale = new Locale("EN");
-		assertEquals(DateHelper.getCurrentDate(locale), LoanUIHelperFn
+		assertEquals(DateUtils.getCurrentDate(locale), LoanUIHelperFn
 				.getCurrrentDate(locale));
 	}
 

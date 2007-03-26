@@ -13,7 +13,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -33,8 +33,8 @@ public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 	}	
 	public void testBuildDateUI(){
 		Date date = new Date(System.currentTimeMillis());
-		assertTrue(new SavingsOverDueDepositsTag().buildDateUI(new Locale("en","US"),date).toString().contains(DateHelper.getUserLocaleDate(new Locale("en","US"), date
-				.toString())));
+		assertTrue(new SavingsOverDueDepositsTag().buildDateUI(new Locale("en","US"),date).toString().contains(DateUtils.getUserLocaleDate(new Locale("en","US"), date
+		.toString())));
 		
 	}
 	public void testBuildAmountUI(){
@@ -46,8 +46,8 @@ public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 		Date date = new Date(System.currentTimeMillis());
 		
 		String outString =new SavingsOverDueDepositsTag().buildDepositDueUIRow(new Locale("en","US"),date,new Money("1000")).toString();
-		assertTrue(outString.contains(DateHelper.getUserLocaleDate(new Locale("en","US"), date
-				.toString())));
+		assertTrue(outString.contains(DateUtils.getUserLocaleDate(new Locale("en","US"), date
+		.toString())));
 		
 		assertTrue(outString.contains("1000"));
 	}

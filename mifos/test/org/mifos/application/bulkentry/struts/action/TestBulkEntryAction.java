@@ -96,7 +96,6 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -458,10 +457,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 					getMeetingDates(meeting).getTime()).getTime()).toString(),
 					SessionUtils.getAttribute("LastMeetingDate", request)
 							.toString());
-			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
-					new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
-							getMeetingDates(meeting).getTime()).getTime())
-							.toString()), ((BulkEntryActionForm) request
+			assertEquals(DateUtils.getUserLocaleDate(getUserLocale(request), new java.sql.Date(DateUtils.getDateWithoutTimeStamp(
+			getMeetingDates(meeting).getTime()).getTime())
+			.toString()), ((BulkEntryActionForm) request
 					.getSession().getAttribute(
 							BulkEntryConstants.BULKENTRYACTIONFORM))
 					.getTransactionDate());
@@ -473,10 +471,9 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 					getMeetingDates(meeting).getTime()).getTime()).toString(),
 					SessionUtils.getAttribute("LastMeetingDate", request)
 							.toString());
-			assertEquals(DateHelper.getUserLocaleDate(getUserLocale(request),
-					new java.sql.Date(DateUtils
-							.getCurrentDateWithoutTimeStamp().getTime())
-							.toString()), ((BulkEntryActionForm) request
+			assertEquals(DateUtils.getUserLocaleDate(getUserLocale(request), new java.sql.Date(DateUtils
+			.getCurrentDateWithoutTimeStamp().getTime())
+			.toString()), ((BulkEntryActionForm) request
 					.getSession().getAttribute(
 							BulkEntryConstants.BULKENTRYACTIONFORM))
 					.getTransactionDate());

@@ -15,7 +15,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -190,9 +189,8 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("commentNotes", "Test notes");
 		addRequestParameter("loanCycleNumber", "1");
 		addRequestParameter("type", "Group");
-		addRequestParameter("mfiJoiningDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("mfiJoiningDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.updateHistoricalData_success.toString());
@@ -238,9 +236,8 @@ public class CustHistoricalDataActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("commentNotes", "Test notes");
 		addRequestParameter("loanCycleNumber", "2");
 		addRequestParameter("type", "Group");
-		addRequestParameter("mfiJoiningDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("mfiJoiningDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward(ActionForwards.updateHistoricalData_success.toString());

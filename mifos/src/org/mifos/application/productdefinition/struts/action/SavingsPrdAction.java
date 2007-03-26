@@ -38,9 +38,9 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -329,13 +329,11 @@ public class SavingsPrdAction extends BaseAction {
 			actionForm.setPrdCategory(savingsOffering.getPrdCategory()
 					.getProductCategoryID().toString());
 		if (savingsOffering.getStartDate() != null)
-			actionForm.setStartDate(DateHelper.getUserLocaleDate(
-					getUserContext(request).getPreferredLocale(),
-					savingsOffering.getStartDate().toString()));
+			actionForm.setStartDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), savingsOffering.getStartDate().toString()));
 		if (savingsOffering.getEndDate() != null)
-			actionForm.setEndDate(DateHelper.getUserLocaleDate(getUserContext(
-					request).getPreferredLocale(), savingsOffering.getEndDate()
-					.toString()));
+			actionForm.setEndDate(DateUtils.getUserLocaleDate(getUserContext(
+			request).getPreferredLocale(), savingsOffering.getEndDate()
+			.toString()));
 		if (savingsOffering.getPrdApplicableMaster() != null)
 			actionForm.setPrdApplicableMaster(savingsOffering
 					.getPrdApplicableMasterEnum().getValue().toString());

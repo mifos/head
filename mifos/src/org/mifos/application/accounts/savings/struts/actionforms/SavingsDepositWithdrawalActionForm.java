@@ -13,8 +13,8 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -163,8 +163,8 @@ public class SavingsDepositWithdrawalActionForm extends BaseActionForm {
 		java.sql.Date sqlDate = null;
 		if (date != null && !date.equals("")) {
 			try {
-				sqlDate = DateHelper.getDateAsSentFromBrowser(date);
-				if (DateHelper.whichDirection(sqlDate) > 0) {
+				sqlDate = DateUtils.getDateAsSentFromBrowser(date);
+				if (DateUtils.whichDirection(sqlDate) > 0) {
 					errors = new ActionErrors();
 					errors.add(AccountConstants.ERROR_FUTUREDATE,
 							new ActionMessage(

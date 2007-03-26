@@ -64,8 +64,8 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 
@@ -406,14 +406,12 @@ public class BulkEntryActionForm extends ActionForm {
 	private ActionErrors mandatoryCheck(Date meetingDate, Locale userLocale,
 			short isCenterHeirarchyExists) {
 		ActionErrors errors = new ActionErrors();
-		java.sql.Date currentDate = DateHelper.getLocaleDate(userLocale,
-				DateHelper.getCurrentDate(userLocale));
+		java.sql.Date currentDate = DateUtils.getLocaleDate(userLocale, DateUtils.getCurrentDate(userLocale));
 		java.sql.Date trxnDate = null;
 		String customerLabel = isCenterHeirarchyExists == Constants.YES ? ConfigurationConstants.CENTER
 				: ConfigurationConstants.GROUP;
 		if (transactionDate != null && !transactionDate.equals("")) {
-			trxnDate = DateHelper.getLocaleDate(userLocale,
-					getTransactionDate());
+			trxnDate = DateUtils.getLocaleDate(userLocale, getTransactionDate());
 		}
 		if (officeId == null || "".equals(officeId.trim())) {
 			errors.add(BulkEntryConstants.MANDATORYFIELDS, new ActionMessage(

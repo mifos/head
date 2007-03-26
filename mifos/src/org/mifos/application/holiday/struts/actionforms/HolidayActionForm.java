@@ -17,7 +17,6 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -95,8 +94,7 @@ public class HolidayActionForm extends BaseActionForm {
 							HolidayConstants.HOLIDAYNAME, userContext)));
 
 		if (holidayFromDateString != null && !holidayFromDateString.equals("")) {
-			fromDate = DateHelper.getLocaleDate(userLocale,
-					getHolidayFromDate());
+			fromDate = DateUtils.getLocaleDate(userLocale, getHolidayFromDate());
 		}
 		else {
 			actionErrors.add(HolidayConstants.HOLIDAY_FROM_DATE,
@@ -106,8 +104,7 @@ public class HolidayActionForm extends BaseActionForm {
 		}
 
 		if (holidayThruDateString != null && !holidayThruDateString.equals("")) {
-			thruDate = DateHelper.getLocaleDate(userLocale,
-					getHolidayThruDate());
+			thruDate = DateUtils.getLocaleDate(userLocale, getHolidayThruDate());
 		}
 		else {
 			thruDate = null;

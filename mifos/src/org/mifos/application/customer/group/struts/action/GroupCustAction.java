@@ -83,10 +83,10 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -464,8 +464,7 @@ public class GroupCustAction extends CustAction {
 		else 
 			 actionForm.setTrained(GroupConstants.NOT_TRAINED); 
 		if(group.getTrainedDate() != null){
-			  actionForm.setTrainedDate(DateHelper.getUserLocaleDate(getUserContext(request).getPreferredLocale(),
-		      group.getTrainedDate().toString()));
+			  actionForm.setTrainedDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), group.getTrainedDate().toString()));
 		}
 		 
 	}

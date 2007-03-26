@@ -65,7 +65,6 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -2057,10 +2056,10 @@ public class SavingsBO extends AccountBO {
 	}
 
 	public void getSavingPerformanceHistory() throws AccountException {
-		String systemDate = DateHelper.getCurrentDate(Configuration
-				.getInstance().getSystemConfig().getMFILocale());
-		java.sql.Date currentDate = DateHelper.getLocaleDate(Configuration
-				.getInstance().getSystemConfig().getMFILocale(), systemDate);
+		String systemDate = DateUtils.getCurrentDate(Configuration
+		.getInstance().getSystemConfig().getMFILocale());
+		java.sql.Date currentDate = DateUtils.getLocaleDate(Configuration
+		.getInstance().getSystemConfig().getMFILocale(), systemDate);
 		try {
 			getSavingsPerformance().addMissedDeposits(
 					(new SavingsPersistence()).getMissedDeposits(

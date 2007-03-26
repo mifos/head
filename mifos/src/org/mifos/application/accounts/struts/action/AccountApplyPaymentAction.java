@@ -70,10 +70,10 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -106,8 +106,8 @@ public class AccountApplyPaymentAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
 		clearActionForm(actionForm);
-		actionForm.setTransactionDate(DateHelper.getCurrentDate(uc
-				.getPreferredLocale()));
+		actionForm.setTransactionDate(DateUtils.getCurrentDate(uc
+		.getPreferredLocale()));
 		AccountBO account = getAccountBusinessService().getAccount(
 				Integer.valueOf(actionForm.getAccountId()));
 		account.setUserContext(uc);

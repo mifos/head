@@ -61,7 +61,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -400,11 +399,11 @@ public class LoanPrdActionForm extends BaseActionForm {
 	}
 
 	public Date getStartDateValue(Locale locale) {
-		return DateHelper.getLocaleDate(locale, getStartDate());
+		return DateUtils.getLocaleDate(locale, getStartDate());
 	}
 
 	public Date getEndDateValue(Locale locale) {
-		return DateHelper.getLocaleDate(locale, getEndDate());
+		return DateUtils.getLocaleDate(locale, getEndDate());
 	}
 
 	public Short getPrdCategoryValue() {
@@ -496,8 +495,8 @@ public class LoanPrdActionForm extends BaseActionForm {
 				.debug("start reset method of Savings Product Action form method :"
 						+ method);
 		if (method != null && method.equals(Methods.load.toString())) {
-			startDate = DateHelper.getCurrentDate(getUserContext(request)
-					.getPreferredLocale());
+			startDate = DateUtils.getCurrentDate(getUserContext(request)
+			.getPreferredLocale());
 			recurAfter = "1";
 			minNoInstallments = "1";
 		}

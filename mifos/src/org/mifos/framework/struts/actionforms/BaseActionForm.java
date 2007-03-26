@@ -19,8 +19,8 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.components.tabletag.TableTagConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -85,7 +85,7 @@ public class BaseActionForm extends ValidatorActionForm {
 
 	protected Date getDateFromString(String strDate, Locale locale) {
 		if (StringUtils.isNullAndEmptySafe(strDate)) {
-			return new Date(DateHelper.getLocaleDate(locale, strDate).getTime());
+			return new Date(DateUtils.getLocaleDate(locale, strDate).getTime());
 		}
 		return null;
 	}

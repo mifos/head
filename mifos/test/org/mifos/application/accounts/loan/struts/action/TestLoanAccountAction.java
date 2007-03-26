@@ -72,7 +72,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
@@ -541,9 +540,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.isInterestDedAtDisbValue());
 		assertEquals(loanOffering.getGracePeriodDuration().toString(),
 				loanActionForm.getGracePeriodDuration());
-		assertEquals(DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()),
+		assertEquals(DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()),
 				loanActionForm.getDisbursementDate());
 
 		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
@@ -599,9 +597,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.isInterestDedAtDisbValue());
 		assertEquals(loanOffering.getGracePeriodDuration().toString(),
 				loanActionForm.getGracePeriodDuration());
-		assertEquals(DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()),
+		assertEquals(DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()),
 				loanActionForm.getDisbursementDate());
 
 		TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory
@@ -664,9 +661,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("noOfInstallments", loanOffering
 				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
@@ -717,9 +713,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("noOfInstallments", loanOffering
 				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
@@ -801,9 +796,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("noOfInstallments", loanOffering
 				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 
 		addRequestParameter("method", "schedulePreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -839,9 +833,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("noOfInstallments", loanOffering
 				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter("method", "schedulePreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -872,9 +865,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("noOfInstallments", loanOffering
 				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter("method", "schedulePreview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -906,9 +898,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("noOfInstallments", loanOffering
 				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter("intDedDisbursement", "1");
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter("method", "schedulePreview");
@@ -944,9 +935,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.toString());
 		addRequestParameter("noOfInstallments", loanOffering
 				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter("gracePeriodDuration", "0");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
 				.getAttribute(Constants.CURRENTFLOWKEY));
@@ -1076,9 +1066,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getDefInterestRate().toString());
 		addRequestParameter("noOfInstallments", loan.getLoanOffering()
 				.getDefNoInstallments().toString());
-		addRequestParameter("disbursementDate", DateHelper
-				.getCurrentDate(((UserContext) request.getSession()
-						.getAttribute("UserContext")).getPreferredLocale()));
+		addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
+		.getAttribute("UserContext")).getPreferredLocale()));
 		addRequestParameter("gracePeriodDuration", "1");
 		addRequestParameter("intDedDisbursement", "1");
 		actionPerform();
@@ -1157,10 +1146,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
 		assertTrue(loan.isInterestDeductedAtDisbursement());
 		assertEquals(0, loan.getGracePeriodDuration().intValue());
-		assertEquals(newDate, DateHelper.getUserLocaleDate(TestObjectFactory
-				.getContext().getPreferredLocale(), DateHelper
-				.toDatabaseFormat(loan.getAccountActionDate(Short.valueOf("1"))
-						.getActionDate())));
+		assertEquals(newDate, DateUtils.getUserLocaleDate(TestObjectFactory
+		.getContext().getPreferredLocale(), DateUtils.toDatabaseFormat(loan.getAccountActionDate(Short.valueOf("1"))
+		.getActionDate())));
 
 	}
 
@@ -1197,9 +1185,8 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 		assertEquals(300.0, loan.getLoanAmount().getAmountDoubleValue());
 		assertFalse(loan.isInterestDeductedAtDisbursement());
 		assertEquals(1, loan.getGracePeriodDuration().intValue());
-		assertEquals(newDate, DateHelper.getUserLocaleDate(TestObjectFactory
-				.getContext().getPreferredLocale(), DateHelper
-				.toDatabaseFormat(loan.getDisbursementDate())));
+		assertEquals(newDate, DateUtils.getUserLocaleDate(TestObjectFactory
+		.getContext().getPreferredLocale(), DateUtils.toDatabaseFormat(loan.getDisbursementDate())));
 		assertEquals(firstInstallmentDate, loan.getAccountActionDate(
 				Short.valueOf("1")).getActionDate());
 	}
@@ -1325,10 +1312,9 @@ public class TestLoanAccountAction extends MifosMockStrutsTestCase {
 				.getTimeInMillis());
 		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(
 				DateFormat.SHORT, locale);
-		String userfmt = DateHelper
-				.convertToCurrentDateFormat(format
-						.toPattern());
-		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
+		String userfmt = DateUtils.convertToCurrentDateFormat(format
+		.toPattern());
+		return DateUtils.convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
 
 	private java.sql.Date offSetDate(Date date, int noOfDays) {

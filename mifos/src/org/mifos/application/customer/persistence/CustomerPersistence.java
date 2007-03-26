@@ -93,7 +93,7 @@ import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class CustomerPersistence extends Persistence {
 
@@ -605,10 +605,10 @@ public class CustomerPersistence extends Persistence {
 		Query query = null;
 		CustomerPerformanceHistoryView customerPerformanceHistoryView = new CustomerPerformanceHistoryView();
 		session = HibernateUtil.getSessionTL();
-		String systemDate = DateHelper.getCurrentDate(Configuration
-				.getInstance().getSystemConfig().getMFILocale());
-		Date localDate = DateHelper.getLocaleDate(Configuration.getInstance()
-				.getSystemConfig().getMFILocale(), systemDate);
+		String systemDate = DateUtils.getCurrentDate(Configuration
+		.getInstance().getSystemConfig().getMFILocale());
+		Date localDate = DateUtils.getLocaleDate(Configuration.getInstance()
+		.getSystemConfig().getMFILocale(), systemDate);
 		Calendar currentDate = new GregorianCalendar();
 		currentDate.setTime(localDate);
 		currentDate.add(currentDate.YEAR, -1);

@@ -66,10 +66,10 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -181,8 +181,8 @@ public class EditCustomerStatusAction extends BaseAction {
 	private void setStatusDetails(ActionForm form, CustomerBO customerBO,
 			HttpServletRequest request, UserContext userContext) throws ApplicationException, SystemException{
 		EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
-		statusActionForm.setCommentDate(DateHelper.getCurrentDate(userContext
-				.getPreferredLocale()));
+		statusActionForm.setCommentDate(DateUtils.getCurrentDate(userContext
+		.getPreferredLocale()));
 		String newStatusName = null;
 		String flagName = null;
 		List<CustomerCheckListBO> checklist = customerService
@@ -227,8 +227,8 @@ public class EditCustomerStatusAction extends BaseAction {
 			CustomerBO customerBO, HttpServletRequest request,
 			UserContext userContext) throws Exception{
 		EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
-		statusActionForm.setCommentDate(DateHelper.getCurrentDate(userContext
-				.getPreferredLocale()));
+		statusActionForm.setCommentDate(DateUtils.getCurrentDate(userContext
+		.getPreferredLocale()));
 		String newStatusName = null;
 		String flagName = null;
 		List<CustomerCheckListBO> checklist = customerService

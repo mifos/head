@@ -54,11 +54,11 @@ import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;
 import org.mifos.framework.exceptions.FrameworkExceptionTest;
 import org.mifos.framework.persistence.DatabaseVersionFilterTest;
-import org.mifos.framework.struts.tags.DateHelperTest;
 import org.mifos.framework.struts.tags.MifosTagUtilsTest;
 import org.mifos.framework.struts.tags.XmlBuilderTest;
 import org.mifos.framework.util.helpers.ConvertionUtilTest;
 import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.util.helpers.DateUtilsTest;
 import org.mifos.framework.util.helpers.MoneyTest;
 
 /**
@@ -88,7 +88,7 @@ public class FastTests extends TestSuite {
 		TestSuite suite = new FastTests();
 		suite.addTestSuite(MoneyTest.class);
 		suite.addTestSuite(MifosCurrencyTest.class);
-		suite.addTestSuite(DateHelperTest.class);
+		suite.addTestSuite(DateUtilsTest.class);
 		suite.addTestSuite(CustomFieldViewTest.class);
 		suite.addTestSuite(MifosTagUtilsTest.class);
 		suite.addTestSuite(FrameworkExceptionTest.class);

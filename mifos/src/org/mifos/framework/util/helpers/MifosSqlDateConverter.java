@@ -4,7 +4,6 @@ package org.mifos.framework.util.helpers;
 import java.util.Locale;
 
 import org.apache.commons.beanutils.Converter;
-import org.mifos.framework.struts.tags.DateHelper;
 
 public class MifosSqlDateConverter implements Converter {
 
@@ -44,7 +43,7 @@ public class MifosSqlDateConverter implements Converter {
 		}
 		return date;*/
 		if(locale!=null && value!=null && type!=null && !value.equals("")){	
-			date= DateHelper.getLocaleDate(locale,(String)value);
+			date= DateUtils.getLocaleDate(locale, ((String)value));
 		}
 		return date;
 	}

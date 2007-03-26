@@ -26,7 +26,6 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -54,12 +53,9 @@ public class LoanDisbursmentAction extends BaseAction {
 				.valueOf(loanDisbursmentActionForm.getAccountId()));
 		SessionUtils.setAttribute(LoanConstants.PROPOSEDDISBDATE, loan
 				.getDisbursementDate(), request);
-		loanDisbursmentActionForm.setTransactionDate(DateHelper
-				.getUserLocaleDate(
-						getUserContext(request).getPreferredLocale(),
-						SessionUtils.getAttribute(
-								LoanConstants.PROPOSEDDISBDATE, request)
-								.toString()));
+		loanDisbursmentActionForm.setTransactionDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), SessionUtils.getAttribute(
+		LoanConstants.PROPOSEDDISBDATE, request)
+		.toString()));
 		loan.setUserContext(uc);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 		SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,

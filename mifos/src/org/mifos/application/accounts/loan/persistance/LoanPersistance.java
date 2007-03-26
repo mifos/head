@@ -27,7 +27,7 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanPersistance extends Persistence {
@@ -57,10 +57,10 @@ public class LoanPersistance extends Persistence {
 	public List<Integer> getLoanAccountsInArrearsInGoodStanding(Short latenessDays)
 			throws PersistenceException {
 
-		String systemDate = DateHelper.getCurrentDate(Configuration
-				.getInstance().getSystemConfig().getMFILocale());
-		Date localDate = DateHelper.getLocaleDate(Configuration.getInstance()
-				.getSystemConfig().getMFILocale(), systemDate);
+		String systemDate = DateUtils.getCurrentDate(Configuration
+		.getInstance().getSystemConfig().getMFILocale());
+		Date localDate = DateUtils.getLocaleDate(Configuration.getInstance()
+		.getSystemConfig().getMFILocale(), systemDate);
 		Calendar currentDate = new GregorianCalendar();
 		currentDate.setTime(localDate);
 		int year = currentDate.get(Calendar.YEAR);

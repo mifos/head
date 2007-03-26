@@ -86,9 +86,9 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -206,11 +206,9 @@ public class BulkEntryAction extends BaseAction {
 				.getLastMeetingDateForCustomer(Integer.valueOf(actionForm
 						.getCustomerId()));
 		if (meetingDate != null && isBackDatedTrxnAllowed) {
-			actionForm.setTransactionDate(DateHelper.getUserLocaleDate(
-					getUserLocale(request), meetingDate.toString()));
+			actionForm.setTransactionDate(DateUtils.getUserLocaleDate(getUserLocale(request), meetingDate.toString()));
 		} else {
-			actionForm.setTransactionDate(DateHelper
-					.getCurrentDate(getUserLocale(request)));
+			actionForm.setTransactionDate(DateUtils.getCurrentDate(getUserLocale(request)));
 		}
 		SessionUtils.setAttribute("LastMeetingDate", meetingDate, request);
 		SessionUtils.setAttribute(BulkEntryConstants.ISBACKDATEDTRXNALLOWED,
@@ -315,9 +313,8 @@ public class BulkEntryAction extends BaseAction {
 		List<LoanAccountsProductView> loanAccprdViews = new ArrayList<LoanAccountsProductView>();
 		List<CustomerAccountView> customerAccViews = 
 			new ArrayList<CustomerAccountView>();
-		Date meetingDate = Date.valueOf(DateHelper
-				.convertUserToDbFmt(((BulkEntryActionForm) form)
-						.getTransactionDate(), "dd/MM/yyyy"));
+		Date meetingDate = Date.valueOf(DateUtils.convertUserToDbFmt(((BulkEntryActionForm) form)
+		.getTransactionDate(), "dd/MM/yyyy"));
 		List<BulkEntryView> customerViews = new ArrayList<BulkEntryView>();
 		setData(bulkEntry.getBulkEntryParent(), loanAccprdViews,
 				customerAccViews, customerViews);

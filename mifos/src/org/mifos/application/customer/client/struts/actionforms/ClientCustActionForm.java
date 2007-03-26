@@ -72,8 +72,8 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
@@ -344,8 +344,8 @@ public class ClientCustActionForm extends CustomerActionForm {
 		
 		else {
 			try {
-				Date date = DateHelper.getDateAsSentFromBrowser(dateOfBirth);
-				if (DateHelper.whichDirection(date) > 0) {
+				Date date = DateUtils.getDateAsSentFromBrowser(dateOfBirth);
+				if (DateUtils.whichDirection(date) > 0) {
 					throw new InvalidDateException(dateOfBirth);
 				}
 			}
@@ -453,7 +453,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 		boolean isValidDate = true;
 
 		if (!ValidateMethods.isNullOrBlank(dob)) {
-			sqlDOB = DateHelper.getLocaleDate(mfiLocale, dob);
+			sqlDOB = DateUtils.getLocaleDate(mfiLocale, dob);
 			Calendar currentCalendar = new GregorianCalendar();
 			int year = currentCalendar.get(Calendar.YEAR);
 			int month = currentCalendar.get(Calendar.MONTH);

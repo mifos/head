@@ -59,8 +59,8 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -121,7 +121,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	public void testApplyPaymentPreview(){
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/applyPaymentAction");
-		String currentDate = DateHelper.makeDateAsSentFromBrowser();
+		String currentDate = DateUtils.makeDateAsSentFromBrowser();
 		addRequestParameter("receiptDate",currentDate);
 		addRequestParameter("transactionDate",currentDate);		
 		addRequestParameter("paymentTypeId","1");
@@ -134,7 +134,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	public void testApplyPaymentPreviewWithNoAmount(){
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/applyPaymentAction");
-		String currentDate = DateHelper.getCurrentDate(userContext.getPreferredLocale());
+		String currentDate = DateUtils.getCurrentDate(userContext.getPreferredLocale());
 		addRequestParameter("receiptDate",currentDate);
 		addRequestParameter("transactionDate",currentDate);		
 		addRequestParameter("paymentTypeId","1");
@@ -161,7 +161,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
 
-		String currentDate = DateHelper.getCurrentDate(userContext.getPreferredLocale());
+		String currentDate = DateUtils.getCurrentDate(userContext.getPreferredLocale());
 		addRequestParameter("receiptDate",currentDate);
 		addRequestParameter("transactionDate",currentDate);
 		addRequestParameter("paymentTypeId","1");
@@ -190,7 +190,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
 
-		String currentDate = DateHelper.getCurrentDate(userContext.getPreferredLocale());
+		String currentDate = DateUtils.getCurrentDate(userContext.getPreferredLocale());
 		addRequestParameter("receiptDate",currentDate);
 		addRequestParameter("transactionDate",currentDate);
 		addRequestParameter("paymentTypeId","1");
@@ -229,7 +229,7 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "applyPayment");
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
-		String currentDate = DateHelper.getCurrentDate(userContext.getPreferredLocale());
+		String currentDate = DateUtils.getCurrentDate(userContext.getPreferredLocale());
 		addRequestParameter("receiptDate","");
 		addRequestParameter("transactionDate",currentDate);
 

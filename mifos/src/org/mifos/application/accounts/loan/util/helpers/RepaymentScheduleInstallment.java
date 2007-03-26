@@ -28,7 +28,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class RepaymentScheduleInstallment implements Serializable {
@@ -109,7 +109,7 @@ public class RepaymentScheduleInstallment implements Serializable {
 
 
 	public String getDueDateInUserLocale() {
-		return DateHelper.getDBtoUserFormatString(getDueDate(), getLocale());
+		return DateUtils.getDBtoUserFormatString(getDueDate(), getLocale());
 
 	}
 

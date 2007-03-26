@@ -21,7 +21,6 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -259,11 +258,11 @@ public class SavingsPrdActionForm extends BaseActionForm {
 	}
 
 	public Date getStartDateValue(Locale locale) {
-		return DateHelper.getLocaleDate(locale, getStartDate());
+		return DateUtils.getLocaleDate(locale, getStartDate());
 	}
 
 	public Date getEndDateValue(Locale locale) {
-		return DateHelper.getLocaleDate(locale, getEndDate());
+		return DateUtils.getLocaleDate(locale, getEndDate());
 	}
 
 	public Short getPrdCategoryValue() {
@@ -329,8 +328,8 @@ public class SavingsPrdActionForm extends BaseActionForm {
 		super.reset(mapping, request);
 		String method = request.getParameter(ProductDefinitionConstants.METHOD);
 		if (method != null && method.equals(Methods.load.toString())) {
-			startDate = DateHelper.getCurrentDate(getUserContext(request)
-					.getPreferredLocale());
+			startDate = DateUtils.getCurrentDate(getUserContext(request)
+			.getPreferredLocale());
 		}
 		if (method != null && method.equals(Methods.preview.toString())) {
 			recommendedAmntUnit = null;

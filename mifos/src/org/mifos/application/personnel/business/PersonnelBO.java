@@ -37,8 +37,8 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authentication.EncryptionService;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 
 public class PersonnelBO extends BusinessObject {
@@ -149,8 +149,8 @@ public class PersonnelBO extends BusinessObject {
 		if (this.personnelDetails != null
 				&& this.personnelDetails.getDob() != null
 				&& !this.personnelDetails.getDob().equals("")) {
-			return String.valueOf(DateHelper.DateDiffInYears(new java.sql.Date(
-					this.personnelDetails.getDob().getTime())));
+			return String.valueOf(DateUtils.DateDiffInYears(new java.sql.Date(
+			this.personnelDetails.getDob().getTime())));
 		} else
 			return "";
 	}

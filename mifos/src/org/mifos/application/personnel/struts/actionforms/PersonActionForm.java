@@ -25,8 +25,8 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -348,8 +348,8 @@ public class PersonActionForm extends BaseActionForm {
 
 	public String getAge() {
 		if (dob != null && !dob.equals("")) {
-			return String.valueOf(DateHelper.DateDiffInYears(new java.sql.Date(
-					DateHelper.getDate(dob).getTime())));
+			return String.valueOf(DateUtils.DateDiffInYears(new java.sql.Date(
+			DateUtils.getDate(dob).getTime())));
 		} else
 			return "";
 	}
@@ -517,7 +517,7 @@ public class PersonActionForm extends BaseActionForm {
 					PersonnelConstants.ERROR_DOB));
 		}
 		else if (!StringUtils.isNullOrEmpty(dob)) {
-			Date date = DateHelper.getDate(dob);
+			Date date = DateUtils.getDate(dob);
 			Calendar currentCalendar = new GregorianCalendar();
 			int year = currentCalendar.get(Calendar.YEAR);
 			int month = currentCalendar.get(Calendar.MONTH);

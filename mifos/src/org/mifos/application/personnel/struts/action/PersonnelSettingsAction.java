@@ -23,10 +23,10 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -146,7 +146,7 @@ public class PersonnelSettingsAction extends BaseAction {
 	private void setPersonnelAge(HttpServletRequest request, Date date)
 			throws PageExpiredException {
 		SessionUtils.removeAttribute(PersonnelConstants.PERSONNEL_AGE, request);
-		int age = DateHelper.DateDiffInYears(date);
+		int age = DateUtils.DateDiffInYears(date);
 		if (age < 0) {
 			age = 0;
 		}

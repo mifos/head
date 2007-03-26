@@ -31,10 +31,10 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -194,8 +194,7 @@ public class AccountAppAction extends BaseAction {
 					if (customFieldDef.getFieldType().equals(
 							CustomFieldType.DATE.getValue())) {
 						customFields.add(new CustomFieldView(customFieldEntity
-								.getFieldId(), DateHelper.getUserLocaleDate(
-								locale, customFieldEntity.getFieldValue()),
+								.getFieldId(), DateUtils.getUserLocaleDate(locale, customFieldEntity.getFieldValue()),
 								customFieldDef.getFieldType()));
 					} else {
 						customFields

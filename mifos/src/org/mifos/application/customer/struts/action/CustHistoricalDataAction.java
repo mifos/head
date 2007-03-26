@@ -28,10 +28,10 @@ import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -63,14 +63,13 @@ public class CustHistoricalDataAction extends BaseAction {
 		if (customerHistoricalDataEntity == null)
 			customerHistoricalDataEntity = new CustomerHistoricalDataEntity(
 					customerBO);
-		String currentDate = DateHelper.getCurrentDate(getUserContext(request)
-				.getPreferredLocale());
+		String currentDate = DateUtils.getCurrentDate(getUserContext(request)
+		.getPreferredLocale());
 		SessionUtils
 				.setAttribute(
 						CustomerConstants.MFIJOININGDATE,
-						(customerHistoricalDataEntity.getMfiJoiningDate() == null ? DateHelper
-								.getLocaleDate(getUserContext(request)
-										.getPreferredLocale(), currentDate)
+						(customerHistoricalDataEntity.getMfiJoiningDate() == null ? DateUtils.getLocaleDate(getUserContext(request)
+						.getPreferredLocale(), currentDate)
 								: new Date(customerHistoricalDataEntity
 										.getMfiJoiningDate().getTime())),
 						request);
@@ -223,8 +222,8 @@ public class CustHistoricalDataAction extends BaseAction {
 
 	private String getMfiJoiningDate(Locale locale, HttpServletRequest request)
 			throws ApplicationException {
-		return DateHelper.getUserLocaleDate(locale, SessionUtils.getAttribute(
-				CustomerConstants.MFIJOININGDATE, request).toString());
+		return DateUtils.getUserLocaleDate(locale, SessionUtils.getAttribute(
+		CustomerConstants.MFIJOININGDATE, request).toString());
 	}
 
 	private void setCustomerHistoricalDataEntity(CustomerBO customerBO,

@@ -49,10 +49,10 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -94,8 +94,7 @@ public class PersonAction extends SearchAction {
 		loadCreateMasterData(request, personActionForm);
 		if (office.getOfficeLevel() != OfficeLevel.BRANCHOFFICE)
 			updatePersonnelLevelList(request);
-		personActionForm.setDateOfJoiningMFI(DateHelper
-				.getCurrentDate(getUserLocale(request)));
+		personActionForm.setDateOfJoiningMFI(DateUtils.getCurrentDate(getUserLocale(request)));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -107,8 +106,7 @@ public class PersonAction extends SearchAction {
 		PersonActionForm personActionForm = (PersonActionForm) form;
 		UserContext userContext = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
-		personActionForm.setDateOfJoiningBranch(DateHelper
-				.getCurrentDate(userContext.getPreferredLocale()));
+		personActionForm.setDateOfJoiningBranch(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
 		updateRoleLists(request, (PersonActionForm) form);
 
 		return mapping.findForward(ActionForwards.preview_success.toString());
@@ -138,13 +136,13 @@ public class PersonAction extends SearchAction {
 		Date dob = null;
 		if (personActionForm.getDob() != null
 				&& !personActionForm.getDob().equals(""))
-			dob = DateHelper.getDate(personActionForm.getDob());
+			dob = DateUtils.getDate(personActionForm.getDob());
 		Date dateOfJoiningMFI = null;
 
 		if (personActionForm.getDob() != null
 				&& !personActionForm.getDob().equals(""))
-			dateOfJoiningMFI = DateHelper.getDate(personActionForm
-					.getDateOfJoiningMFI());
+			dateOfJoiningMFI = DateUtils.getDate(personActionForm
+			.getDateOfJoiningMFI());
 		PersonnelBO personnelBO = new PersonnelBO(level, office, title,
 				perefferedLocale, personActionForm.getUserPassword(),
 				personActionForm.getLoginName(), personActionForm.getEmailId(),
@@ -437,9 +435,9 @@ public class PersonAction extends SearchAction {
 					&& fieldDef.getFieldType().equals(
 							CustomFieldType.DATE.getValue())) {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
-						DateHelper.getUserLocaleDate(userContext
-								.getPreferredLocale(), fieldDef
-								.getDefaultValue()), fieldDef.getFieldType()));
+						DateUtils.getUserLocaleDate(userContext
+						.getPreferredLocale(), fieldDef
+						.getDefaultValue()), fieldDef.getFieldType()));
 			} else {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
 						fieldDef.getDefaultValue(), fieldDef.getFieldType()));
@@ -483,14 +481,12 @@ public class PersonAction extends SearchAction {
 						.toString());
 			actionForm.setAddress(personnelDetails.getAddress());
 			if (personnelDetails.getDateOfJoiningMFI() != null) {
-				actionForm.setDateOfJoiningMFI(DateHelper.getUserLocaleDate(
-						getUserContext(request).getPreferredLocale(),
-						personnelDetails.getDateOfJoiningMFI().toString()));
+				actionForm.setDateOfJoiningMFI(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), personnelDetails.getDateOfJoiningMFI().toString()));
 			}
 			if (personnelDetails.getDob() != null) {
-				actionForm.setDob(DateHelper.getUserLocaleDate(getUserContext(
-						request).getPreferredLocale(), personnelDetails
-						.getDob().toString()));
+				actionForm.setDob(DateUtils.getUserLocaleDate(getUserContext(
+				request).getPreferredLocale(), personnelDetails
+				.getDob().toString()));
 			}
 
 		}
@@ -519,8 +515,7 @@ public class PersonAction extends SearchAction {
 					if (customFieldDef.getFieldType().equals(
 							CustomFieldType.DATE.getValue())) {
 						customFields.add(new CustomFieldView(customFieldEntity
-								.getFieldId(), DateHelper.getUserLocaleDate(
-								locale, customFieldEntity.getFieldValue()),
+								.getFieldId(), DateUtils.getUserLocaleDate(locale, customFieldEntity.getFieldValue()),
 								customFieldDef.getFieldType()));
 					} else {
 						customFields

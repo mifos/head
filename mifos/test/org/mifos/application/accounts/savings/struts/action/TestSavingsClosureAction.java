@@ -31,8 +31,8 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -181,7 +181,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
 		addRequestParameter("receiptId", "101");
-		addRequestParameter("receiptDate", DateHelper.makeDateAsSentFromBrowser());
+		addRequestParameter("receiptDate", DateUtils.makeDateAsSentFromBrowser());
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("customerId", "1");
 		addRequestParameter("notes", "notes");
@@ -294,7 +294,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		verifyForward("load_success");
 
 		addRequestParameter("receiptId", "101");
-		addRequestParameter("receiptDate", DateHelper.makeDateAsSentFromBrowser());
+		addRequestParameter("receiptDate", DateUtils.makeDateAsSentFromBrowser());
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("customerId", "1");
 		addRequestParameter("notes", "closing account");

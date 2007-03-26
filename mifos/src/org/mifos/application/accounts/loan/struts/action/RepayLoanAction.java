@@ -27,10 +27,10 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -99,9 +99,7 @@ public class RepayLoanAction extends BaseAction {
 		Date receiptDate = null;
 		if (repayLoanActionForm.getRecieptDate() != null
 				&& repayLoanActionForm.getRecieptDate() != "")
-			receiptDate = new Date(DateHelper.getLocaleDate(
-					uc.getPreferredLocale(),
-					repayLoanActionForm.getRecieptDate()).getTime());
+			receiptDate = new Date(DateUtils.getLocaleDate(uc.getPreferredLocale(), repayLoanActionForm.getRecieptDate()).getTime());
 		loanBO.makeEarlyRepayment(loanBO.getTotalEarlyRepayAmount(),
 				repayLoanActionForm.getReceiptNumber(), receiptDate,
 				repayLoanActionForm.getPaymentTypeId(), uc.getId());

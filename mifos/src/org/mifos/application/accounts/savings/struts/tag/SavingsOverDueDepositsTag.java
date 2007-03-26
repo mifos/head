@@ -16,8 +16,8 @@ import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 
@@ -86,8 +86,8 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 		StringBuilder builder = new StringBuilder();
 		builder
 				.append("<td class=\"drawtablerow\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-		builder.append(DateHelper.getUserLocaleDate(locale, actionDate
-				.toString()));
+		builder.append(DateUtils.getUserLocaleDate(locale, actionDate
+		.toString()));
 		builder.append("</td>");
 		return builder;
 	}

@@ -38,8 +38,8 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -113,8 +113,8 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
-		String currentDate = DateHelper.getCurrentDate(TestObjectFactory
-				.getUserContext().getPreferredLocale());
+		String currentDate = DateUtils.getCurrentDate(TestObjectFactory
+		.getUserContext().getPreferredLocale());
 		assertEquals(currentDate, actionForm.getMfiJoiningDate());
 	}
 

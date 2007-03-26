@@ -93,10 +93,10 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -189,8 +189,7 @@ public class ClientCustAction extends CustAction {
 		else SessionUtils.setAttribute(
 				CustomerConstants.PENDING_APPROVAL_DEFINED,
 				CustomerConstants.NO, request);
-		actionForm.setAge(calculateAge(DateHelper
-				.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
+		actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
 		return mapping.findForward(ActionForwards.preview_success.toString());
 	}
 
@@ -339,8 +338,7 @@ public class ClientCustAction extends CustAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		actionForm.setAge(calculateAge(DateHelper
-				.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
+		actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
 		return mapping.findForward(ActionForwards.previewPersonalInfo_success
 				.toString());
 
@@ -414,17 +412,16 @@ public class ClientCustAction extends CustAction {
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
 			client = new ClientBO(userContext, actionForm.getClientName()
 					.getDisplayName(), actionForm.getStatusValue(), actionForm
-					.getExternalId(), DateHelper.getDateAsSentFromBrowser(actionForm
+					.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
 					.getMfiJoiningDate()),
 					actionForm.getAddress(), customFields, actionForm
 							.getFeesToApply(), selectedOfferings, actionForm
 							.getFormedByPersonnelValue(), actionForm
 							.getOfficeIdValue(), meeting, actionForm
-							.getLoanOfficerIdValue(), DateHelper
-							.getDateAsSentFromBrowser(actionForm
-									.getDateOfBirth()), actionForm
+							.getLoanOfficerIdValue(), DateUtils.getDateAsSentFromBrowser(actionForm
+							.getDateOfBirth()), actionForm
 							.getGovernmentId(), actionForm.getTrainedValue(),
-					DateHelper.getDateAsSentFromBrowser(actionForm.getTrainedDate()), actionForm
+					DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()), actionForm
 							.getGroupFlagValue(), actionForm.getClientName(),
 					actionForm.getSpouseName(), actionForm
 							.getClientDetailView(), actionForm
@@ -437,16 +434,16 @@ public class ClientCustAction extends CustAction {
 					.getVersionNo());
 			client = new ClientBO(userContext, actionForm.getClientName()
 					.getDisplayName(), actionForm.getStatusValue(), actionForm
-					.getExternalId(), DateHelper.getDateAsSentFromBrowser(actionForm
+					.getExternalId(), DateUtils.getDateAsSentFromBrowser(actionForm
 					.getMfiJoiningDate()),
 					actionForm.getAddress(), customFields, actionForm
 							.getFeesToApply(), selectedOfferings, actionForm
 							.getFormedByPersonnelValue(), parentCustomer
 							.getOffice().getOfficeId(), parentCustomer,
-					DateHelper.getDateAsSentFromBrowser(actionForm
-							.getDateOfBirth()), actionForm.getGovernmentId(),
+					DateUtils.getDateAsSentFromBrowser(actionForm
+					.getDateOfBirth()), actionForm.getGovernmentId(),
 					actionForm.getTrainedValue(),
-					DateHelper.getDateAsSentFromBrowser(actionForm.getTrainedDate()), actionForm
+					DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()), actionForm
 							.getGroupFlagValue(), actionForm.getClientName(),
 					actionForm.getSpouseName(), actionForm
 							.getClientDetailView(), actionForm
@@ -582,8 +579,7 @@ public class ClientCustAction extends CustAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		actionForm.setAge(calculateAge(DateHelper
-				.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
+		actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
 		return mapping
 				.findForward(ActionForwards.previewEditPersonalInfo_success
 						.toString());
@@ -594,7 +590,7 @@ public class ClientCustAction extends CustAction {
 			ActionForm form, HttpServletRequest request,
 			HttpServletResponse httpservletresponse) throws Exception {
 		ClientCustActionForm actionForm = (ClientCustActionForm) form;
-		actionForm.setAge(calculateAge(DateHelper.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
+		actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth())));
 		return mapping.findForward(ActionForwards.prevEditPersonalInfo_success
 				.toString());
 	}
@@ -640,8 +636,8 @@ public class ClientCustAction extends CustAction {
 		client.setUserContext(getUserContext(request));
 		client.updateClientDetails(actionForm.getClientDetailView());
 		client.updatePersonalInfo(actionForm.getClientName().getDisplayName(),
-				actionForm.getGovernmentId(), DateHelper.getDateAsSentFromBrowser(actionForm
-						.getDateOfBirth()));
+				actionForm.getGovernmentId(), DateUtils.getDateAsSentFromBrowser(actionForm
+				.getDateOfBirth()));
 
 		return mapping.findForward(ActionForwards.updatePersonalInfo_success
 				.toString());
@@ -710,7 +706,7 @@ public class ClientCustAction extends CustAction {
 			client.setTrained(true);
 		else client.setTrained(false);
 
-		client.setTrainedDate(DateHelper.getDateAsSentFromBrowser(actionForm.getTrainedDate()));
+		client.setTrainedDate(DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate()));
 		PersonnelBO personnel = null;
 
 		if (actionForm.getGroupFlagValue().equals(YesNoFlag.NO.getValue())) {
@@ -756,7 +752,7 @@ public class ClientCustAction extends CustAction {
 		actionForm.setClientDetailView(createClientDetailView(client
 				.getCustomerDetail()));
 		actionForm.setGovernmentId(client.getGovernmentId());
-		actionForm.setDateOfBirth(DateHelper.makeDateAsSentFromBrowser(client.getDateOfBirth()));
+		actionForm.setDateOfBirth(DateUtils.makeDateAsSentFromBrowser(client.getDateOfBirth()));
 
 	}
 
@@ -782,8 +778,8 @@ public class ClientCustAction extends CustAction {
 			actionForm.setTrained(ClientConstants.YES);
 		else actionForm.setTrained(ClientConstants.NO);
 		if (client.getTrainedDate() != null)
-			actionForm.setTrainedDate(DateHelper.makeDateAsSentFromBrowser(client
-							.getTrainedDate()));
+			actionForm.setTrainedDate(DateUtils.makeDateAsSentFromBrowser(client
+			.getTrainedDate()));
 	}
 
 	private void loadUpdateMfiMasterData(Short officeId,
@@ -951,7 +947,7 @@ public class ClientCustAction extends CustAction {
 	}
 
 	public int calculateAge(Date date) {
-		int age = DateHelper.DateDiffInYears(date);
+		int age = DateUtils.DateDiffInYears(date);
 		return age;
 	}
 }

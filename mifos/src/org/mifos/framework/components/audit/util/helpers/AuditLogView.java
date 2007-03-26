@@ -2,8 +2,8 @@ package org.mifos.framework.components.audit.util.helpers;
 
 import java.util.Locale;
 
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.struts.tags.MifosTagUtils;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class AuditLogView {
 
@@ -27,7 +27,7 @@ public class AuditLogView {
 		this.field = field;
 	}
 	public String getMfiDate() {
-		return DateHelper.getUserLocaleDate(getMfiLocale(),getDate().toString());
+		return DateUtils.getUserLocaleDate(getMfiLocale(), getDate().toString());
 	}
 
 	public Locale getMfiLocale() {

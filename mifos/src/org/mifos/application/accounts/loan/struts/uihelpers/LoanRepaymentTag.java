@@ -17,8 +17,8 @@ import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -284,14 +284,13 @@ public class LoanRepaymentTag extends BodyTagSupport {
 				.append("</td>")
 				.append("<td width=\"15%\" class=\"drawtablerow\">")
 				.append(
-						DateHelper.getDBtoUserFormatString(installment
-								.getActionDate(), locale))
+						DateUtils.getDBtoUserFormatString(installment
+						.getActionDate(), locale))
 				.append("</td>")
 				.append("<td width=\"15%\" class=\"drawtablerow\">")
 				.append(
-						(isPaymentMade && installment.getPaymentDate() != null ? DateHelper
-								.getDBtoUserFormatString(installment
-										.getPaymentDate(), locale)
+						(isPaymentMade && installment.getPaymentDate() != null ? DateUtils.getDBtoUserFormatString(installment
+						.getPaymentDate(), locale)
 								: "-"))
 				.append("</td>")
 				.append(

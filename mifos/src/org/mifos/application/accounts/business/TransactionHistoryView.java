@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.mifos.framework.business.View;
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class TransactionHistoryView extends View {
 	private Date transactionDate;
@@ -146,13 +146,13 @@ public class TransactionHistoryView extends View {
 	}
 
 	public String getUserPrefferedPostedDate() {
-		return DateHelper.getUserLocaleDate(getLocale(), getPostedDate()
-				.toString());
+		return DateUtils.getUserLocaleDate(getLocale(), getPostedDate()
+		.toString());
 	}
 
 	public String getUserPrefferedTransactionDate() {
-		return DateHelper.getUserLocaleDate(getLocale(), getTransactionDate()
-				.toString());
+		return DateUtils.getUserLocaleDate(getLocale(), getTransactionDate()
+		.toString());
 	}
 
 	public void setFinancialEnteries(Integer trxnId, Date trxnDate,

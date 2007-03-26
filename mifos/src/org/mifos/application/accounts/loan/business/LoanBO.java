@@ -118,7 +118,6 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -777,10 +776,10 @@ public class LoanBO extends AccountBO {
 				this.getAccountState(), stateEntity, this.getPersonnel(), this);
 		this.addAccountStatusChangeHistory(historyEntity);
 		this.setAccountState(stateEntity);
-		String systemDate = DateHelper.getCurrentDate(Configuration
-				.getInstance().getSystemConfig().getMFILocale());
-		Date currrentDate = DateHelper.getLocaleDate(Configuration
-				.getInstance().getSystemConfig().getMFILocale(), systemDate);
+		String systemDate = DateUtils.getCurrentDate(Configuration
+		.getInstance().getSystemConfig().getMFILocale());
+		Date currrentDate = DateUtils.getLocaleDate(Configuration
+		.getInstance().getSystemConfig().getMFILocale(), systemDate);
 		this.setUpdatedDate(currrentDate);
 
 		// Client performance entry

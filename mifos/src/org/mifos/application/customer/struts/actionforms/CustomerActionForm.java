@@ -66,8 +66,8 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -515,7 +515,7 @@ public abstract class CustomerActionForm extends BaseActionForm {
 			}
 			
 			else { // if marked trained and a date is supplied
-				if (!DateHelper.isValidDate(trainedDate)) {
+				if (!DateUtils.isValidDate(trainedDate)) {
 					errors.add(CustomerConstants.INVALID_TRAINED_DATE, 
 						new ActionMessage(CustomerConstants.INVALID_TRAINED_DATE));
 				}

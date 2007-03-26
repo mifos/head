@@ -71,9 +71,9 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -154,8 +154,7 @@ public class SavingsClosureAction extends BaseAction {
 				null);
 		SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment,
 				request);
-		((SavingsClosureActionForm) form).setTrxnDate(DateHelper
-				.getCurrentDate(uc.getPreferredLocale()));
+		((SavingsClosureActionForm) form).setTrxnDate(DateUtils.getCurrentDate(uc.getPreferredLocale()));
 		return mapping.findForward("load_success");
 	}
 
@@ -174,8 +173,7 @@ public class SavingsClosureAction extends BaseAction {
 				&& actionForm.getReceiptDate() != "")
 			accountPaymentEntity = new AccountPaymentEntity(payment
 					.getAccount(), payment.getAmount(), actionForm
-					.getReceiptId(), new java.util.Date(DateHelper
-					.getDateAsSentFromBrowser(actionForm.getReceiptDate())
+					.getReceiptId(), new java.util.Date(DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate())
 					.getTime()), new PaymentTypeEntity(Short.valueOf(actionForm
 					.getPaymentTypeId())));
 		else accountPaymentEntity = new AccountPaymentEntity(payment

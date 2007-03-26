@@ -25,10 +25,10 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -176,8 +176,7 @@ public class EditStatusAction extends BaseAction {
 			HttpServletRequest request, UserContext userContext)
 			throws Exception {
 		EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
-		editStatusActionForm.setCommentDate(DateHelper
-				.getCurrentDate(userContext.getPreferredLocale()));
+		editStatusActionForm.setCommentDate(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
 		String newStatusName = null;
 		String flagName = null;
 		List<AccountCheckListBO> checklist = getAccountBusinessService()

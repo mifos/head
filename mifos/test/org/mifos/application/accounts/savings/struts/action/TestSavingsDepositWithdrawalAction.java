@@ -25,8 +25,8 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -231,7 +231,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "preview");
 		addRequestParameter("amount", "200");
 		addRequestParameter("customerId", group.getCustomerId().toString());
-		addRequestParameter("trxnDate", DateHelper.makeDateAsSentFromBrowser());
+		addRequestParameter("trxnDate", DateUtils.makeDateAsSentFromBrowser());
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
 		actionPerform();
@@ -254,7 +254,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "preview");
 		addRequestParameter("amount", "200");
 		addRequestParameter("customerId", group.getCustomerId().toString());
-		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPreferredLocale()));
+		addRequestParameter("trxnDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_DEPOSIT.getValue()));
 		actionPerform();
@@ -292,7 +292,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "preview");
 		addRequestParameter("amount", "30");
 		addRequestParameter("customerId", group.getCustomerId().toString());
-		addRequestParameter("trxnDate", DateHelper.getCurrentDate(userContext.getPreferredLocale()));
+		addRequestParameter("trxnDate", DateUtils.getCurrentDate(userContext.getPreferredLocale()));
 		addRequestParameter("paymentTypeId", "1");
 		addRequestParameter("trxnTypeId", String.valueOf(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()));
 		actionPerform();

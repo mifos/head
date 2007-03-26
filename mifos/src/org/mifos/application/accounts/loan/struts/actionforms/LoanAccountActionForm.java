@@ -62,8 +62,8 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -331,7 +331,7 @@ public class LoanAccountActionForm extends BaseActionForm {
 	}
 
 	public Date getDisbursementDateValue(Locale locale) {
-		return DateHelper.getLocaleDate(locale, getDisbursementDate());
+		return DateUtils.getLocaleDate(locale, getDisbursementDate());
 	}
 
 	public boolean isInterestDedAtDisbValue() {

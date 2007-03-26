@@ -47,7 +47,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
 import org.mifos.framework.exceptions.TableTagException;
-import org.mifos.framework.struts.tags.DateHelper;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
 /**
@@ -132,7 +132,7 @@ public class TableTagUtils {
 						(Class[]) null);
 				labelValue = (Object) getList.invoke(obj, (Object[]) null);
 				if(null != labelValue) 
-					labelValue=DateHelper.getUserLocaleDate(locale,labelValue.toString());
+					labelValue=DateUtils.getUserLocaleDate(locale, labelValue.toString());
 			} catch (SecurityException se) {
 				throw new TableTagException(se);
 			} catch (NoSuchMethodException nsme) {

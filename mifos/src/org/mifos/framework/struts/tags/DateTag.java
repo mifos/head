@@ -50,6 +50,7 @@ import org.apache.struts.taglib.html.BaseInputTag;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.util.helpers.DateUtils;
 
 public class DateTag extends BaseInputTag {
 
@@ -119,7 +120,7 @@ public class DateTag extends BaseInputTag {
 			DateFormat df = DateFormat
 					.getDateInstance(DateFormat.SHORT, locale);
 			String userfmt = ((SimpleDateFormat) df).toPattern();
-			String separator = DateHelper.getSeparator(userfmt);
+			String separator = DateUtils.getSeparator(userfmt);
 			// TODO - get from ApplicationConfiguration
 			String currentDateValue = returnValue();
 			if (currentDateValue != null && !currentDateValue.equals("")) {
@@ -127,18 +128,16 @@ public class DateTag extends BaseInputTag {
 				String dmy[] = null;
 				// TODO chnage this
 				if (name.equalsIgnoreCase("org.apache.struts.taglib.html.BEAN")) {
-					String format = DateHelper.convertToDateTagFormat(userfmt);
-					dmy = DateHelper.getDayMonthYear(currentDateValue, format,
-							separator);
+					String format = DateUtils.convertToCurrentDateFormat(userfmt);
+					dmy = DateUtils.getDayMonthYear(currentDateValue, format, separator);
 				} else
-					dmy = DateHelper.getDayMonthYearDbFrmt(currentDateValue,
-							"Y-M-D");
+					dmy = DateUtils.getDayMonthYearDbFrmt(currentDateValue, "Y-M-D");
 				ddValue = dmy[0].trim();
 				mmValue = dmy[1].trim();
 				yyValue = dmy[2].trim();
 			}
 			// user format
-			String format = DateHelper.convertToDateTagFormat(userfmt);
+			String format = DateUtils.convertToCurrentDateFormat(userfmt);
 			String output = this.prepareOutputString(format, property, ddValue,
 					mmValue, yyValue, separator, userfmt);
 			TagUtils.getInstance().write(pageContext, output);
@@ -181,8 +180,7 @@ public class DateTag extends BaseInputTag {
 		if (ddValue != null && !ddValue.equals("") && mmValue != null
 				&& !mmValue.equals("") && yyValue != null
 				&& !yyValue.equals("")) {
-			date = DateHelper.createDateString(ddValue, mmValue, yyValue,
-					format);
+			date = DateUtils.createDateString(ddValue, mmValue, yyValue, format);
 		}
 		boolean disabled = getIsDisabled() != null
 				&& getIsDisabled().equalsIgnoreCase("Yes") ? true : false;

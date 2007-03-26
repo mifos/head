@@ -13,8 +13,8 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.LabelTagUtils;
 
@@ -78,7 +78,7 @@ public class LoanActivityTag extends BodyTagSupport{
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder
 		.append("<td class=\"drawtablerow\">")
-		.append(DateHelper.getUserLocaleDate(locale,loanRecentActivityView.getActionDate().toString())).append("</td>")
+		.append(DateUtils.getUserLocaleDate(locale, loanRecentActivityView.getActionDate().toString())).append("</td>")
 		.append("<td class=\"drawtablerow\">")
 		.append(loanRecentActivityView.getActivity()).append("</td>")
 		.append("<td align=\"right\" class=\"drawtablerow\">")

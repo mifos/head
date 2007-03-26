@@ -80,10 +80,10 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -121,8 +121,8 @@ public class CenterCustAction extends CustAction {
 		SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING,
 				request);
 		loadCreateMasterData(actionForm, request);
-		actionForm.setMfiJoiningDate(DateHelper.getCurrentDate(getUserContext(
-				request).getPreferredLocale()));
+		actionForm.setMfiJoiningDate(DateUtils.getCurrentDate(getUserContext(
+		request).getPreferredLocale()));
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -205,9 +205,8 @@ public class CenterCustAction extends CustAction {
 		actionForm.setExternalId(center.getExternalId());
 
 		if (center.getMfiJoiningDate() != null)
-			actionForm.setMfiJoiningDate(DateHelper.getUserLocaleDate(
-					getUserContext(request).getPreferredLocale(), center
-							.getMfiJoiningDate().toString()));
+			actionForm.setMfiJoiningDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), center
+			.getMfiJoiningDate().toString()));
 
 		actionForm.setAddress(center.getAddress());
 		actionForm.setCustomerPositions(createCustomerPositionViews(center
@@ -305,9 +304,9 @@ public class CenterCustAction extends CustAction {
 					&& fieldDef.getFieldType().equals(
 							CustomFieldType.DATE.getValue())) {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
-						DateHelper.getUserLocaleDate(getUserContext(request)
-								.getPreferredLocale(), fieldDef
-								.getDefaultValue()), fieldDef.getFieldType()));
+						DateUtils.getUserLocaleDate(getUserContext(request)
+						.getPreferredLocale(), fieldDef
+						.getDefaultValue()), fieldDef.getFieldType()));
 			} else {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
 						fieldDef.getDefaultValue(), fieldDef.getFieldType()));

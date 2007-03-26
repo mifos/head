@@ -75,8 +75,8 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ResourceLoader;
@@ -210,8 +210,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingName", "Loan Offering");
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
-		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPreferredLocale()));
+		addRequestParameter("startDate", DateUtils.getCurrentDate(userContext
+		.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "1000");
@@ -245,8 +245,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingName", "Loan Offering");
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
-		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPreferredLocale()));
+		addRequestParameter("startDate", DateUtils.getCurrentDate(userContext
+		.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -278,8 +278,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingName", "Loan Offering");
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
-		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPreferredLocale()));
+		addRequestParameter("startDate", DateUtils.getCurrentDate(userContext
+		.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -311,8 +311,8 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		addRequestParameter("prdOfferingName", "Loan Offering");
 		addRequestParameter("prdOfferingShortName", "LOAN");
 		addRequestParameter("prdCategory", "1");
-		addRequestParameter("startDate", DateHelper.getCurrentDate(userContext
-				.getPreferredLocale()));
+		addRequestParameter("startDate", DateUtils.getCurrentDate(userContext
+		.getPreferredLocale()));
 		addRequestParameter("prdApplicableMaster", "1");
 		addRequestParameter("minLoanAmount", "2000");
 		addRequestParameter("maxLoanAmount", "11000");
@@ -792,14 +792,12 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				.toString(), loanPrdActionForm.getPrdStatus());
 		assertEquals(loanOffering.getPrdApplicableMasterEnum(),
 				loanPrdActionForm.getPrdApplicableMasterEnum());
-		assertEquals(DateHelper.getUserLocaleDate(TestObjectFactory
-				.getContext().getPreferredLocale(), DateHelper
-				.toDatabaseFormat(loanOffering.getStartDate())),
+		assertEquals(DateUtils.getUserLocaleDate(TestObjectFactory
+		.getContext().getPreferredLocale(), DateUtils.toDatabaseFormat(loanOffering.getStartDate())),
 				loanPrdActionForm.getStartDate());
 		if (loanOffering.getEndDate() != null) {
-			assertEquals(DateHelper.getUserLocaleDate(TestObjectFactory
-					.getContext().getPreferredLocale(), DateHelper
-					.toDatabaseFormat(loanOffering.getEndDate())),
+			assertEquals(DateUtils.getUserLocaleDate(TestObjectFactory
+			.getContext().getPreferredLocale(), DateUtils.toDatabaseFormat(loanOffering.getEndDate())),
 					loanPrdActionForm.getEndDate());
 		}
 		else {
@@ -1299,9 +1297,9 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				.getTimeInMillis());
 		SimpleDateFormat format = (SimpleDateFormat) DateFormat
 				.getDateInstance(DateFormat.SHORT, locale);
-		String userfmt = DateHelper.convertToCurrentDateFormat(format
-				.toPattern());
-		return DateHelper.convertDbToUserFmt(currentDate.toString(), userfmt);
+		String userfmt = DateUtils.convertToCurrentDateFormat(format
+		.toPattern());
+		return DateUtils.convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
 
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,

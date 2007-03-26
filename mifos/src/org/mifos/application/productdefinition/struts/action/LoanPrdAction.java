@@ -83,10 +83,10 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -588,14 +588,10 @@ public class LoanPrdAction extends BaseAction {
 				.getPrdStatus().getOfferingStatusId()));
 		loanPrdActionForm.setPrdApplicableMaster(
 				loanOffering.getPrdApplicableMasterEnum());
-		loanPrdActionForm.setStartDate(DateHelper.getUserLocaleDate(
-				getUserContext(request).getPreferredLocale(), DateHelper
-						.toDatabaseFormat(loanOffering.getStartDate())));
+		loanPrdActionForm.setStartDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), DateUtils.toDatabaseFormat(loanOffering.getStartDate())));
 		loanPrdActionForm
-				.setEndDate(loanOffering.getEndDate() != null ? DateHelper
-						.getUserLocaleDate(getUserContext(request)
-								.getPreferredLocale(), DateHelper
-								.toDatabaseFormat(loanOffering.getEndDate()))
+				.setEndDate(loanOffering.getEndDate() != null ? DateUtils.getUserLocaleDate(getUserContext(request)
+				.getPreferredLocale(), DateUtils.toDatabaseFormat(loanOffering.getEndDate()))
 						: null);
 		loanPrdActionForm.setDescription(loanOffering.getDescription());
 		loanPrdActionForm.setGracePeriodType(getStringValue(loanOffering

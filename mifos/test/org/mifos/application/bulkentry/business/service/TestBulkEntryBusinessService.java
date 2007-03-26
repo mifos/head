@@ -43,7 +43,6 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -269,8 +268,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		java.util.Date lastMeetingDate = bulkEntryBusinessService
 				.getLastMeetingDateForCustomer(center.getCustomerId());
-		assertEquals(DateHelper.toDatabaseFormat(
-				DateUtils.getCurrentDateWithoutTimeStamp()).toString(),
+		assertEquals(DateUtils.toDatabaseFormat(DateUtils.getCurrentDateWithoutTimeStamp()).toString(),
 				lastMeetingDate.toString());
 	}
 

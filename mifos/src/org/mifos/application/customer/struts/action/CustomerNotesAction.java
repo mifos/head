@@ -67,10 +67,10 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -196,7 +196,7 @@ public class CustomerNotesAction extends SearchAction {
 		notesActionForm.setLevelId(customerBO.getCustomerLevel().getId().toString());
 		notesActionForm.setGlobalCustNum(customerBO.getGlobalCustNum());
 		notesActionForm.setCustomerName(customerBO.getDisplayName());
-		notesActionForm.setCommentDate(DateHelper.getCurrentDate(userContext.getPreferredLocale()));
+		notesActionForm.setCommentDate(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
 		if(customerBO instanceof CenterBO)
 			notesActionForm.setInput("center");
 		else if(customerBO instanceof GroupBO)

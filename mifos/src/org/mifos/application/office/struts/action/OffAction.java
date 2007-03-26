@@ -33,10 +33,10 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.authorization.HierarchyManager;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.struts.tags.DateHelper;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -331,9 +331,9 @@ public class OffAction extends BaseAction {
 					&& fieldDef.getFieldType().equals(
 							CustomFieldType.DATE.getValue())) {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
-						DateHelper.getUserLocaleDate(getUserContext(request)
-								.getPreferredLocale(), fieldDef
-								.getDefaultValue()), fieldDef.getFieldType()));
+						DateUtils.getUserLocaleDate(getUserContext(request)
+						.getPreferredLocale(), fieldDef
+						.getDefaultValue()), fieldDef.getFieldType()));
 			} else {
 				customFields.add(new CustomFieldView(fieldDef.getFieldId(),
 						fieldDef.getDefaultValue(), fieldDef.getFieldType()));
