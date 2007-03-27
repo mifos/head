@@ -1,8 +1,6 @@
 package org.mifos.migration;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
@@ -23,11 +21,12 @@ import org.mifos.migration.generated.Fee;
 import org.mifos.migration.generated.MifosDataExchange;
 import org.mifos.migration.generated.MonthlyMeeting;
 import org.mifos.migration.generated.WeeklyMeeting;
-import org.xml.sax.SAXException;
 
 public class TestMifosDataExchange extends TestCase {
-	private static final String GENERATED_CLASS_PACKAGE = "org.mifos.migration.generated";
-	private static final String MIFOS_DATA_EXCHANGE_SCHEMA_PATH = "src/org/mifos/migration/schemas/generated/MifosDataExchange.xsd";
+	private static final String GENERATED_CLASS_PACKAGE = 
+		"org.mifos.migration.generated";
+	private static final String MIFOS_DATA_EXCHANGE_SCHEMA_PATH = 
+		"src/org/mifos/migration/schemas/generated/MifosDataExchange.xsd";
 
 	private JAXBContext  jaxbContext;
 	private Marshaller   marshaller;
@@ -102,38 +101,24 @@ public class TestMifosDataExchange extends TestCase {
 		"";
 	
 	@Override
-	public void setUp() {
-    	try {
-            jaxbContext = JAXBContext.newInstance( GENERATED_CLASS_PACKAGE );
-            
-            marshaller = jaxbContext.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
-      			  Boolean.TRUE);
-            
-            unmarshaller = jaxbContext.createUnmarshaller();
-            SchemaFactory schemaFactory =
-            	SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema =
-            	schemaFactory.newSchema(new File(MIFOS_DATA_EXCHANGE_SCHEMA_PATH));
-            unmarshaller.setSchema(schema);  
-            
-            validationEventHandler = new MifosValidationEventHandler();
-            unmarshaller.setEventHandler(validationEventHandler);
-        } catch( JAXBException je ) {
-            je.printStackTrace();
-        } catch (SAXException e) {
-			throw new RuntimeException(e);
-		}	
+	public void setUp() throws Exception {
+        jaxbContext = JAXBContext.newInstance( GENERATED_CLASS_PACKAGE );
+        
+        marshaller = jaxbContext.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
+  			  Boolean.TRUE);
+        
+        unmarshaller = jaxbContext.createUnmarshaller();
+        SchemaFactory schemaFactory =
+        	SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema =
+        	schemaFactory.newSchema(new File(MIFOS_DATA_EXCHANGE_SCHEMA_PATH));
+        unmarshaller.setSchema(schema);  
+        
+        validationEventHandler = new MifosValidationEventHandler();
+        unmarshaller.setEventHandler(validationEventHandler);
 	}
 	
-	String getStringFromFile(String filename) throws IOException {
-        FileInputStream file = new FileInputStream (filename);
-        byte[] b = new byte[file.available ()];
-        file.read(b);
-        file.close ();
-        return new String (b);
-	}
-
 	private void assignAll(MifosDataExchange fromData, MifosDataExchange toData) {
 		List<Center> centers = fromData.getCenter();
 		
@@ -200,45 +185,32 @@ public class TestMifosDataExchange extends TestCase {
 		}		
 	}
 
-	private void printValidationErrors() {
-		System.out.println("Found " + validationEventHandler.getErrorCount() + " error(s):");
-		System.out.println(validationEventHandler.getErrorString());
+	private String validationErrors() {
+		return "\n" + 
+			"Found " + validationEventHandler.getErrorCount() + " error(s):"
+			+ validationEventHandler.getErrorString();
 	}
 		
-	public void testReadWriteValidXML() {
-
+	public void testReadWriteValidXML() throws Exception {
 		StringReader stringReader = new StringReader(MULTI_CENTER_VALID_XML);
 		StringWriter writer = new StringWriter();
 
-		try {
-			MifosDataExchange mifosDataExchange = 
-				(MifosDataExchange) unmarshaller.unmarshal(stringReader);
-			marshaller.marshal(mifosDataExchange, writer);
-			assertEquals(MULTI_CENTER_VALID_XML, writer.toString());
-		}
-		catch (JAXBException je) {
-			je.printStackTrace();
-			fail("Unexpected exception.");
-		}
+		MifosDataExchange mifosDataExchange = 
+			(MifosDataExchange) unmarshaller.unmarshal(stringReader);
+		marshaller.marshal(mifosDataExchange, writer);
+		assertEquals(MULTI_CENTER_VALID_XML, writer.toString());
 	}
 
-	public void testReadAssignWriteValidXML() {
-
+	public void testReadAssignWriteValidXML() throws Exception {
 		StringReader stringReader = new StringReader(MULTI_CENTER_VALID_XML);
 		StringWriter writer = new StringWriter();
 
-		try {
-			MifosDataExchange mifosDataExchange = 
-				(MifosDataExchange) unmarshaller.unmarshal(stringReader);
-			MifosDataExchange targetMifosDataExchange = new MifosDataExchange();	
-			assignAll(mifosDataExchange, targetMifosDataExchange);
-			marshaller.marshal(targetMifosDataExchange, writer);
-			assertEquals(MULTI_CENTER_VALID_XML, writer.toString());
-		}
-		catch (JAXBException je) {
-			je.printStackTrace();
-			fail("Unexpected exception.");
-		}
+		MifosDataExchange mifosDataExchange = 
+			(MifosDataExchange) unmarshaller.unmarshal(stringReader);
+		MifosDataExchange targetMifosDataExchange = new MifosDataExchange();	
+		assignAll(mifosDataExchange, targetMifosDataExchange);
+		marshaller.marshal(targetMifosDataExchange, writer);
+		assertEquals(MULTI_CENTER_VALID_XML, writer.toString());
 	}
 
 	public void testMissingElementInValidXML() {
@@ -262,13 +234,17 @@ public class TestMifosDataExchange extends TestCase {
 		StringReader stringReader = new StringReader(MISSING_NAME_ELEMENT_INVALID_XML);
 
 		try {
-			MifosDataExchange mifosDataExchange = 
-				(MifosDataExchange) unmarshaller.unmarshal(stringReader);
-			printValidationErrors();
-			fail("Invalid XML should have thrown an exception");
+			unmarshaller.unmarshal(stringReader);
+			fail("Invalid XML should have thrown an exception" + 
+				validationErrors());
 		}
-		catch (JAXBException je) {
-			printValidationErrors();
+		catch (JAXBException e) {
+			assertEquals(
+				"Message is cvc-complex-type.2.4.a: " +
+				"Invalid content was found starting with " +
+				"element 'loanOfficerId'. One of '{\"\":name}' is expected.\n" +
+				"    Column is 24 at line number 4\n", 
+				validationEventHandler.getErrorString());
 			assertTrue(validationEventHandler.getErrorCount() == 1);
 		}
 	}
@@ -295,13 +271,19 @@ public class TestMifosDataExchange extends TestCase {
 		StringReader stringReader = new StringReader(MISSPELLED_ELEMENT_INVALID_XML);
 
 		try {
-			MifosDataExchange mifosDataExchange = 
-				(MifosDataExchange) unmarshaller.unmarshal(stringReader);
-			printValidationErrors();
-			fail("Invalid XML should have thrown an exception");
+			unmarshaller.unmarshal(stringReader);
+			fail("Invalid XML should have thrown an exception" + 
+				validationErrors());
 		}
-		catch (JAXBException je) {
-			printValidationErrors();
+		catch (JAXBException e) {
+			assertEquals(
+				"Message is cvc-complex-type.2.4.a: " +
+				"Invalid content was found starting with element " +
+				"'monthlyxMeeting'. " +
+				"One of '{\"\":weeklyMeeting, \"\":monthlyMeeting}' " +
+				"is expected.\n" +
+				"    Column is 26 at line number 6\n", 
+				validationEventHandler.getErrorString());
 			assertTrue(validationEventHandler.getErrorCount() == 1);
 		}
 	}
@@ -328,13 +310,17 @@ public class TestMifosDataExchange extends TestCase {
 		StringReader stringReader = new StringReader(BAD_MONTHS_BETWEEN_INVALID_XML);
 
 		try {
-			MifosDataExchange mifosDataExchange = 
-				(MifosDataExchange) unmarshaller.unmarshal(stringReader);
-			printValidationErrors();
-			fail("Invalid XML should have thrown an exception");
+			unmarshaller.unmarshal(stringReader);
+			fail("Invalid XML should have thrown an exception" +
+				validationErrors());
 		}
 		catch (JAXBException je) {
-			printValidationErrors();
+			assertEquals(
+				"Message is cvc-minInclusive-valid: " +
+				"Value '0' is not facet-valid " +
+				"with respect to minInclusive '1' for type 'null'.\n" +
+				"    Column is 61 at line number 9\n", 
+				validationEventHandler.getErrorString());
 			assertTrue(validationEventHandler.getErrorCount() == 1);
 		}
 	}
@@ -366,16 +352,21 @@ public class TestMifosDataExchange extends TestCase {
 		StringReader stringReader = new StringReader(WEEKLY_AND_MONTHLY_ELEMENTS_INVALID_XML);
 
 		try {
-			MifosDataExchange mifosDataExchange = 
-				(MifosDataExchange) unmarshaller.unmarshal(stringReader);
-			printValidationErrors();
-			fail("Invalid XML should have thrown an exception");
+			unmarshaller.unmarshal(stringReader);
+			fail("Invalid XML should have thrown an exception" +
+				validationErrors());
 		}
 		catch (JAXBException je) {
-			printValidationErrors();
+			assertEquals(
+				"Message is cvc-complex-type.2.4.a: " +
+				"Invalid content was found starting with " +
+				"element 'weeklyMeeting'. " +
+				"One of '{\"\":externalId, \"\":mfiJoiningDate}' " +
+				"is expected.\n" +
+				"    Column is 24 at line number 12\n", 
+				validationEventHandler.getErrorString());
 			assertTrue(validationEventHandler.getErrorCount() == 1);
 		}
 	}
 	
 }
-
