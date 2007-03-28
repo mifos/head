@@ -128,7 +128,7 @@ public class DateTag extends BaseInputTag {
 				String dmy[] = null;
 				// TODO chnage this
 				if (name.equalsIgnoreCase("org.apache.struts.taglib.html.BEAN")) {
-					String format = DateUtils.convertToCurrentDateFormat(userfmt);
+					String format = DateUtils.convertToDateTagFormat(userfmt);
 					dmy = DateUtils.getDayMonthYear(currentDateValue, format, separator);
 				} else
 					dmy = DateUtils.getDayMonthYearDbFrmt(currentDateValue, "Y-M-D");
@@ -137,7 +137,7 @@ public class DateTag extends BaseInputTag {
 				yyValue = dmy[2].trim();
 			}
 			// user format
-			String format = DateUtils.convertToCurrentDateFormat(userfmt);
+			String format = DateUtils.convertToDateTagFormat(userfmt);
 			String output = this.prepareOutputString(format, property, ddValue,
 					mmValue, yyValue, separator, userfmt);
 			TagUtils.getInstance().write(pageContext, output);

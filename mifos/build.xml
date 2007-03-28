@@ -18,9 +18,8 @@
 	
 	<!-- Which suite to run in the run_test and profile_test
 	     targets.  Normally the whole suite, but can be
-	     set to a portion of the tests, for example by putting
-	     test.suite=FastTests
-	     in my.build.properties.  -->
+	     set to a sub-suite or individual test, for example by specifying
+	     -Dtest.suite=FastTests on the ant command line.  -->
 	<property name="test.suite" value="ApplicationTestSuite" />
 
 	<!-- Probably need about 550M for 64-bit systems 
