@@ -13,6 +13,11 @@ import org.mifos.framework.util.helpers.StringUtils;
 /**
  * Together with {@link EntityMasterConstants} this class provides the old way
  * of handling entity types. The new way is {@link EntityType}.
+ * 
+ * The replacement for a subclass of this class generally will be
+ * an enum.
+ * We generally expect to move looking up messages from the database
+ * for localization (language and MFI) to {@link MessageLookup}.
  */
 public abstract class MasterDataEntity extends PersistentObject {
 	private Short localeId;

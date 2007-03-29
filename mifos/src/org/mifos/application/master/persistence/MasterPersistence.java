@@ -10,6 +10,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.EntityMaster;
 import org.mifos.application.master.business.LookUpMaster;
@@ -24,13 +25,17 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
+/**
+ * This class is mostly used to look up instances of (a subclass of)
+ * {@link MasterDataEntity} in the database.  Most of what is here
+ * can better be accomplished by enums and by {@link MessageLookup}.
+ */
 public class MasterPersistence extends Persistence {
 
 	public EntityMaster getLookUpEntity(String entityName, Short localeId)
 			throws ApplicationException, SystemException {
-		Session session = null;
 		try {
-			session = HibernateUtil.getSessionTL();
+			Session session = HibernateUtil.getSessionTL();
 
 			Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
 			queryEntity.setString("entityType", entityName);

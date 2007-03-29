@@ -296,11 +296,11 @@ public class ReportsPersistence extends Persistence {
 			trxn.rollback();
 			throw new ApplicationException(hpe);
 		}
-		catch (HibernateException hpe) {
-			hpe.printStackTrace();
+		catch (HibernateException e) {
 			trxn.rollback();
 
-			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION);
+			throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION,
+					e);
 		}
 		catch (Exception e) {
 			trxn.rollback();

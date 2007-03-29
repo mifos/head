@@ -37,6 +37,7 @@
  */
 package org.mifos.application.meeting.business;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
@@ -88,11 +89,7 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 	
 	public MeetingRecurrenceEntity(WeekDay weekDay, MeetingDetailsEntity meetingDetails)throws MeetingException {
 		validateWeekDay(weekDay);
-		try {
-			this.weekDay = (WeekDaysEntity)new MasterPersistence().retrieveMasterEntity(weekDay.getValue(), WeekDaysEntity.class, null);
-		} catch (PersistenceException pe) {
-			throw new MeetingException(pe);
-		}
+		this.weekDay = new WeekDaysEntity(weekDay);
 		this.meetingDetails = meetingDetails;
 		this.detailsId = null;
 	}
@@ -126,12 +123,22 @@ public class MeetingRecurrenceEntity extends PersistentObject {
 		this.rankOfDays = rankOfDays;
 	}
 
+	/**
+	 * This method is deprecated and intended to be replaced with
+	 * {@link #getWeekDayValue()}.  If you need to look up a message,
+	 * see {@link MessageLookup}; if you need to look up something
+	 * else, we plan to make similar methods available.
+	 */
 	public WeekDaysEntity getWeekDay() {
 		return weekDay;
 	}
 	
 	public void setWeekDay(WeekDaysEntity weekDay) {
 		this.weekDay = weekDay;
+	}
+	
+	public void setWeekDay(WeekDay weekDay) {
+		this.weekDay = new WeekDaysEntity(weekDay);
 	}
 	
 	public boolean isOnDate(){

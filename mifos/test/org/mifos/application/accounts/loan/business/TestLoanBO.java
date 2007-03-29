@@ -70,6 +70,7 @@ import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.MeetingRecurrenceEntity;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
@@ -2268,15 +2269,9 @@ public class TestLoanBO extends MifosTestCase {
 		MeetingBO meeting = accountBO.getCustomer().getCustomerMeeting()
 				.getMeeting();
 
-		Short weekDay = null;
-		if (meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay()
-				.getId().equals(WeekDay.SATURDAY.getValue()))
-			weekDay = WeekDay.SUNDAY.getValue();
-		else weekDay = (short) (meeting.getMeetingDetails()
-				.getMeetingRecurrence().getWeekDay().getId() + 1);
-
-		meeting.getMeetingDetails().getMeetingRecurrence().setWeekDay(
-				new WeekDaysEntity(WeekDay.getWeekDay(weekDay)));
+		MeetingRecurrenceEntity recurrence = 
+			meeting.getMeetingDetails().getMeetingRecurrence();
+		recurrence.setWeekDay(recurrence.getWeekDayValue().next());
 
 		meeting.setMeetingStartDate(DateUtils
 				.getCalendarDate(accountActionDateEntity.getActionDate()

@@ -14,14 +14,25 @@ public enum WeekDay {
 	WeekDay(Short value) {
 		this.value = value;
 	}
+
 	public Short getValue() {
 		return value;
 	}
-	
-	public static WeekDay getWeekDay(Short value){
-		for (WeekDay weekday : WeekDay.values()) 
-			if (weekday.getValue().equals(value))
+
+	public static WeekDay getWeekDay(int value){
+		for (WeekDay weekday : WeekDay.values()) {
+			if (weekday.value == value) {
 				return weekday;
-		return null;
+			}
+		}
+		throw new RuntimeException("no week day " + value);
 	}
+
+	public WeekDay next() {
+		if (this == SATURDAY) {
+			return SUNDAY;
+		}
+		return getWeekDay(value + 1);
+	}
+
 }

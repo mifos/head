@@ -3,6 +3,7 @@
  */
 package org.mifos.application.meeting.util.helpers;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.StringUtils;
@@ -13,14 +14,16 @@ public class MeetingHelper {
 		super();
 	}
 
-	public String getMessage(MeetingBO meeting, UserContext userContext){
-		String key = null;
+	public String getMessage(MeetingBO meeting, UserContext userContext) {
+		String key;
 		Object []args = new Object[3];
 		initializeLocale(meeting, userContext.getLocaleId());
 		if(meeting.isWeekly()){
 			key = MeetingConstants.WEEK_SCHEDULE;
 			args[0]=meeting.getMeetingDetails().getRecurAfter();
-			args[1]=meeting.getMeetingDetails().getMeetingRecurrence().getWeekDay().getName();
+			WeekDay weekDay = meeting.getMeetingDetails()
+				.getMeetingRecurrence().getWeekDayValue();
+			args[1]=MessageLookup.lookup(weekDay, userContext);
 		}
 		else if(meeting.isMonthlyOnDate()){
 			key = MeetingConstants.MONTH_DAY_SCHEDULE;
