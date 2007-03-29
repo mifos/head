@@ -4,12 +4,21 @@
     datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <define name="weekDayChoice">
         <choice>
-            <value>Monday</value>
-            <value>Tuesday</value>
-            <value>Wednesday</value>
-            <value>Thursday</value>
-            <value>Friday</value>
-            <value>Saturday</value>
+            <value>MONDAY</value>
+            <value>TUESDAY</value>
+            <value>WEDNESDAY</value>
+            <value>THURSDAY</value>
+            <value>FRIDAY</value>
+            <value>SATURDAY</value>
+        </choice>
+    </define>
+    <define name="weekDayOccurence">
+        <choice>
+            <value>FIRST</value>
+            <value>SECOND</value>
+            <value>THIRD</value>
+            <value>FOURTH</value>
+            <value>LAST</value>
         </choice>
     </define>
     <define name="address">
@@ -85,13 +94,7 @@
                         <ref name="weekDayChoice" />
                     </element>
                     <element name="meetingWeekDayOccurence">
-                        <choice>
-                            <value>First</value>
-                            <value>Second</value>
-                            <value>Third</value>
-                            <value>Fourth</value>
-                            <value>Last</value>
-                        </choice>
+                        <ref name="weekDayOccurence"/>
                     </element>
                 </group>
             </choice>
@@ -111,6 +114,11 @@
                 <element name="center">
                     <element name="name">
                         <data type="token" />
+                    </element>
+                    <element name="officeId">
+                        <data type="short">
+                            <param name="minInclusive">0</param>
+                        </data>
                     </element>
                     <element name="loanOfficerId">
                         <data type="short">

@@ -53,10 +53,6 @@ This build file separates out the migration related build tasks from build.xml.
 		</trang>
 	</target>
 
-<!--	
-	<property name="tools.dir" value="${basedir}/tools" />
-	<property name="jaxb.home" value="${tools.dir}/jaxb-ri-20070125"/>
--->
 	<path id="xjc.path">
 		<fileset dir="${basedir}" includes="lib/*.jar" />
 	</path>
@@ -66,7 +62,7 @@ This build file separates out the migration related build tasks from build.xml.
 	
 	<target name="generate" depends="convert_rng_to_xsd" description="run xjc to generate java files">
 		<xjc schema="${mifos_xsd}" destdir="${src.dir}" package="org.mifos.migration.generated">
-			<produces dir="${src.dir}" includes="**/*.java" />
+			<produces dir="${generated.dir}" includes="**/*.java" />
 		</xjc>
 	</target>
 

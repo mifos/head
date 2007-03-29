@@ -2,12 +2,21 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
   <xs:simpleType name="weekDayChoice">
     <xs:restriction base="xs:token">
-      <xs:enumeration value="Monday"/>
-      <xs:enumeration value="Tuesday"/>
-      <xs:enumeration value="Wednesday"/>
-      <xs:enumeration value="Thursday"/>
-      <xs:enumeration value="Friday"/>
-      <xs:enumeration value="Saturday"/>
+      <xs:enumeration value="MONDAY"/>
+      <xs:enumeration value="TUESDAY"/>
+      <xs:enumeration value="WEDNESDAY"/>
+      <xs:enumeration value="THURSDAY"/>
+      <xs:enumeration value="FRIDAY"/>
+      <xs:enumeration value="SATURDAY"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="weekDayOccurence">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="FIRST"/>
+      <xs:enumeration value="SECOND"/>
+      <xs:enumeration value="THIRD"/>
+      <xs:enumeration value="FOURTH"/>
+      <xs:enumeration value="LAST"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:element name="address">
@@ -73,17 +82,7 @@
       </xs:restriction>
     </xs:simpleType>
   </xs:element>
-  <xs:element name="meetingWeekDayOccurence">
-    <xs:simpleType>
-      <xs:restriction base="xs:token">
-        <xs:enumeration value="First"/>
-        <xs:enumeration value="Second"/>
-        <xs:enumeration value="Third"/>
-        <xs:enumeration value="Fourth"/>
-        <xs:enumeration value="Last"/>
-      </xs:restriction>
-    </xs:simpleType>
-  </xs:element>
+  <xs:element name="meetingWeekDayOccurence" type="weekDayOccurence"/>
   <xs:element name="monthsBetweenMeetings">
     <xs:simpleType>
       <xs:restriction base="xs:short">
@@ -102,6 +101,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="name"/>
+        <xs:element ref="officeId"/>
         <xs:element ref="loanOfficerId"/>
         <xs:choice>
           <xs:element ref="weeklyMeeting"/>
@@ -117,6 +117,13 @@
     </xs:complexType>
   </xs:element>
   <xs:element name="name" type="xs:token"/>
+  <xs:element name="officeId">
+    <xs:simpleType>
+      <xs:restriction base="xs:short">
+        <xs:minInclusive value="0"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
   <xs:element name="loanOfficerId">
     <xs:simpleType>
       <xs:restriction base="xs:short">

@@ -1,10 +1,11 @@
 weekDayChoice =
-  "Monday"
-  | "Tuesday"
-  | "Wednesday"
-  | "Thursday"
-  | "Friday"
-  | "Saturday"
+  "MONDAY"
+  | "TUESDAY"
+  | "WEDNESDAY"
+  | "THURSDAY"
+  | "FRIDAY"
+  | "SATURDAY"
+weekDayOccurence = "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "LAST"
 address =
   element address {
     element address1 { xsd:token }?,
@@ -30,9 +31,7 @@ monthlyMeeting =
        xsd:short { minInclusive = "1" maxInclusive = "31" }
      }
      | (element meetingWeekDay { weekDayChoice },
-        element meetingWeekDayOccurence {
-          "First" | "Second" | "Third" | "Fourth" | "Last"
-        })),
+        element meetingWeekDayOccurence { weekDayOccurence })),
     element monthsBetweenMeetings {
       xsd:short { minInclusive = "1" }
     },
@@ -42,6 +41,9 @@ start =
   element mifosDataExchange {
     element center {
       element name { xsd:token },
+      element officeId {
+        xsd:short { minInclusive = "0" }
+      },
       element loanOfficerId {
         xsd:short { minInclusive = "0" }
       },

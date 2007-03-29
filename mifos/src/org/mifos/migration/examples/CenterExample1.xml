@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <mifosDataExchange>
     <center>
-        <name>First Center</name>
+        <name>Center 1</name>
+        <officeId>3</officeId>
         <loanOfficerId>1234</loanOfficerId>
         <monthlyMeeting>
-            <meetingWeekDay>Monday</meetingWeekDay>
-            <meetingWeekDayOccurence>Second</meetingWeekDayOccurence>
+            <meetingWeekDay>MONDAY</meetingWeekDay>
+            <meetingWeekDayOccurence>SECOND</meetingWeekDayOccurence>
             <monthsBetweenMeetings>1</monthsBetweenMeetings>
             <location>Some Place</location>
         </monthlyMeeting>
@@ -13,7 +14,8 @@
         <distanceFromBranchOffice>0</distanceFromBranchOffice>
     </center>
     <center>
-        <name>First Center</name>
+        <name>Center 2</name>
+        <officeId>3</officeId>
         <loanOfficerId>1234</loanOfficerId>
         <monthlyMeeting>
             <dayOfMonth>2</dayOfMonth>
@@ -39,11 +41,12 @@
         </fee>
     </center>
     <center>
-        <name>First Center</name>
+        <name>Center 3</name>
+        <officeId>3</officeId>
         <loanOfficerId>1234</loanOfficerId>
         <weeklyMeeting>
             <weeksBetweenMeetings>1</weeksBetweenMeetings>
-            <meetingWeekDay>Monday</meetingWeekDay>
+            <meetingWeekDay>MONDAY</meetingWeekDay>
             <location>Some Place</location>
         </weeklyMeeting>
         <externalId>07-01-01</externalId>
