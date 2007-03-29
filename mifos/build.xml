@@ -107,8 +107,8 @@
 		       destdir="${build.classes}" 
 		       debug="${debug.flag}"
 		       deprecation="on"
+		       target="1.5"
 		       includes="**/*.java"
-			
 		       excludes="${global.exclude}">
 			<classpath refid="class.path"/>
 		</javac>
