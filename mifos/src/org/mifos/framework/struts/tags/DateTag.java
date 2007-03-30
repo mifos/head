@@ -247,7 +247,7 @@ public class DateTag extends BaseInputTag {
 				+ ddValue
 				+ "\" "
 				+ dateFunction
-				+ " style=\"width:25px\" onKeyPress=\"return numbersonly(this, event)\"";
+				+ " style=\"width:1.5em\"";
 		if (disabled)
 			daytext = daytext + "disabled";
 		daytext = daytext + "/>&nbsp;DD&nbsp;";
@@ -260,7 +260,7 @@ public class DateTag extends BaseInputTag {
 				+ mmValue
 				+ "\" "
 				+ dateFunction
-				+ " style=\"width:25px\" onKeyPress=\"return numbersonly(this, event)\"";
+				+ " style=\"width:1.5em\"";
 		if (disabled)
 			monthtext = monthtext + "disabled";
 		monthtext = monthtext + "/>&nbsp;MM&nbsp;";
@@ -273,7 +273,7 @@ public class DateTag extends BaseInputTag {
 				+ yyValue
 				+ "\" "
 				+ dateFunction
-				+ " style=\"width:40px\" onKeyPress=\"return numbersonly(this, event)\"";
+				+ " style=\"width:3em\"";
 		if (disabled)
 			yeartext = yeartext + "disabled";
 		yeartext = yeartext + "/>&nbsp;YYYY&nbsp;";

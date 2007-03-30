@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-
 import junit.framework.Assert;
 
 import org.dom4j.DocumentException;
@@ -18,9 +16,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import servletunit.HttpServletRequestSimulator;
-import servletunit.ServletContextSimulator;
 
 public class TestUtils {
 	

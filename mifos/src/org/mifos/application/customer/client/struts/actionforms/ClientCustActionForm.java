@@ -447,27 +447,6 @@ public class ClientCustActionForm extends CustomerActionForm {
 					CustomerConstants.CUSTOMER_MEETING, request);
 	}
 
-	private boolean isValidDOB(String dob, Locale mfiLocale) {
-		java.sql.Date sqlDOB = null;
-		boolean isValidDate = true;
-
-		if (!ValidateMethods.isNullOrBlank(dob)) {
-			sqlDOB = DateUtils.getLocaleDate(mfiLocale, dob);
-			Calendar currentCalendar = new GregorianCalendar();
-			int year = currentCalendar.get(Calendar.YEAR);
-			int month = currentCalendar.get(Calendar.MONTH);
-			int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
-			currentCalendar = new GregorianCalendar(year, month, day);
-			java.sql.Date currentDate = new java.sql.Date(currentCalendar
-					.getTimeInMillis());
-			if (currentDate.compareTo(sqlDOB) < 0) {
-				isValidDate = false;
-
-			}
-		}
-		return isValidDate;
-	}
-	
 	public String getDateOfBirth() {
 		if (StringUtils.isNullAndEmptySafe(dateOfBirthDD)
 				&& StringUtils.isNullAndEmptySafe(dateOfBirthMM)

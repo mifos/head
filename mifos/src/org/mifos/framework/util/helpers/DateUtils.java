@@ -49,6 +49,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -251,6 +252,11 @@ public class DateUtils {
 		return getDateAsSentFromBrowser(dayStr + "/" + monthStr + "/" + yearStr);
 	}
 
+	/**
+	 * "as sent from browser" is a bit of a misnomer; it really is
+	 * (at least in many cases), as formatted by a routine on
+	 * the server side like {@link ClientCustActionForm#getDateOfBirth()}.
+	 */
 	public static java.sql.Date getDateAsSentFromBrowser(String value) {
 		if (value == null || value == "") {
 			return null;

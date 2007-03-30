@@ -31,14 +31,16 @@ public class DateTagTest extends MifosTestCase {
 		dateTag.setRenderstyle("simple");
 		assertEquals(
 			"<input type=\"text\" id=\"asdDD\" name=\"asdDD\" "
-				+ "maxlength=\"2\" size=\"2\" value=\"1\"  style=\"width:25px\" "
-				+ "onKeyPress=\"return numbersonly(this, event)\"/>&nbsp;DD&nbsp;<input type=\"text\" "
+				+ "maxlength=\"2\" size=\"2\" value=\"1\"  " 
+				+ "style=\"width:1.5em\""
+				+ "/>&nbsp;DD&nbsp;<input type=\"text\" "
 				+ "id=\"asdMM\" name=\"asdMM\" maxlength=\"2\" size=\"2\" value=\"1\"  "
-				+ "style=\"width:25px\" onKeyPress=\"return numbersonly(this, event)\"/>"
+				+ "style=\"width:1.5em\"/>"
 				+ "&nbsp;MM&nbsp;"
 				+ "<input type=\"text\" id=\"asdYY\" name=\"asdYY\" "
-				+ "maxlength=\"4\" size=\"4\" value=\"2000\"  style=\"width:40px\""
-				+ " onKeyPress=\"return numbersonly(this, event)\"/>&nbsp;YYYY&nbsp;",
+				+ "maxlength=\"4\" size=\"4\" value=\"2000\"  " 
+				+ "style=\"width:3em\""
+				+ "/>&nbsp;YYYY&nbsp;",
 			dateTag.makeUserFields("asd", "1", "1", "2000", "", "d/m/y"));
 	}
 	
@@ -79,8 +81,8 @@ public class DateTagTest extends MifosTestCase {
 		assertEquals(
 			"<input type=\"text\" id=\"asdYY\" name=\"asdYY\" maxlength=\"4\" " +
 			"size=\"4\" value=\"asd\" onBlur=\"makeDateString('asdYY','asd','asd')\" " +
-			"style=\"width:40px\" " +
-			"onKeyPress=\"return numbersonly(this, event)\"/>&nbsp;YYYY&nbsp;" +
+			"style=\"width:3em\"" +
+			"/>&nbsp;YYYY&nbsp;" +
 			"<input type=\"hidden\" id=\"asd\" name=\"asd\" value=\"asd\"/>" +
 			"<input type=\"hidden\" id=\"asdFormat\" name=\"asdFormat\" value=\"asd\"/>" +
 			"<input type=\"hidden\" id=\"datePattern\" name=\"datePattern\" value=\"asd\"/>",
@@ -90,21 +92,22 @@ public class DateTagTest extends MifosTestCase {
 	public void testDoStartTag() throws JspException {
 		UserContext userContext = new UserContext(Locale.UK);
 		dateTag.setRenderstyle("simple");
+		dateTag.setProperty("testdate");
 		assertEquals(
 			"<!-- simple style -->" +
-			"<input type=\"text\" id=\"nullDD\" name=\"nullDD\" " +
+			"<input type=\"text\" id=\"testdateDD\" name=\"testdateDD\" " +
 			"maxlength=\"2\" size=\"2\" value=\"\"  " +
-			"style=\"width:25px\" " +
-			"onKeyPress=\"return numbersonly(this, event)\"/>&nbsp;DD&nbsp;" +
+			"style=\"width:1.5em\"" +
+			"/>&nbsp;DD&nbsp;" +
 			"" +
-			"<input type=\"text\" id=\"nullMM\" name=\"nullMM\" " +
+			"<input type=\"text\" id=\"testdateMM\" name=\"testdateMM\" " +
 			"maxlength=\"2\" size=\"2\" value=\"\"  " +
-			"style=\"width:25px\" " +
-			"onKeyPress=\"return numbersonly(this, event)\"/>&nbsp;MM&nbsp;" +
+			"style=\"width:1.5em\"" +
+			"/>&nbsp;MM&nbsp;" +
 			"" +
-			"<input type=\"text\" id=\"nullYY\" name=\"nullYY\" " +
-			"maxlength=\"4\" size=\"4\" value=\"\"  style=\"width:40px\" " +
-			"onKeyPress=\"return numbersonly(this, event)\"/>&nbsp;YYYY&nbsp;", 
+			"<input type=\"text\" id=\"testdateYY\" name=\"testdateYY\" " +
+			"maxlength=\"4\" size=\"4\" value=\"\"  style=\"width:3em\"" +
+			"/>&nbsp;YYYY&nbsp;", 
 			dateTag.render(userContext, null));
 	}
 
