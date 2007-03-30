@@ -57,6 +57,8 @@ public class ClientDetailView {
 	private Short gender;
 
 	private Short povertyStatus;
+
+	public static final int MARRIED = 66;
 	
 	public ClientDetailView() {
 		super();

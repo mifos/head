@@ -47,6 +47,8 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.InvalidDateException;
@@ -235,6 +237,18 @@ public class DateUtils {
 			else year = stdt.nextToken();
 		}
 		return new String[] { day, month, year };
+	}
+
+	// parse new-style browser date format... separate m,d,y fields, no js assembling
+	public static java.sql.Date parseBrowserDateFields(HttpServletRequest request, String property) throws InvalidDateException {
+		String yearStr = request.getParameter(property + "YY");
+		String monthStr = request.getParameter(property + "MM");
+		String dayStr = request.getParameter(property + "DD");
+		return parseBrowserDateFields(yearStr, monthStr, dayStr);
+	}
+	
+	public static java.sql.Date parseBrowserDateFields(String yearStr, String monthStr, String dayStr) {
+		return getDateAsSentFromBrowser(dayStr + "/" + monthStr + "/" + yearStr);
 	}
 
 	public static java.sql.Date getDateAsSentFromBrowser(String value) {

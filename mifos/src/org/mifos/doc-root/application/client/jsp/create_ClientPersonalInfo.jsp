@@ -69,28 +69,6 @@
 	}
 
   }
-  function chkForValidDates(){
-			var dateOfBirth = document.getElementById("dateOfBirth");
-	  	 	var dateOfBirthFormat = document.getElementById("dateOfBirthFormat");
-	  	 	var dateOfBirthYY = document.getElementById("dateOfBirthYY");
-			if(! (validateMyForm(dateOfBirth,dateOfBirthFormat,dateOfBirthYY)))
-				return false;
-			if (clientCustActionForm.fieldTypeList.length!= undefined && clientCustActionForm.fieldTypeList.length!= null){
-				for(var i=0; i <=clientCustActionForm.fieldTypeList.length;i++){
-					if (clientCustActionForm.fieldTypeList[i]!= undefined){
-						if(clientCustActionForm.fieldTypeList[i].value == "3"){
-							var customFieldDate = document.getElementById("customField["+i+"].fieldValue");
-							var customFieldDateFormat = document.getElementById("customField["+i+"].fieldValueFormat");
-						 	var customFieldDateYY = document.getElementById("customField["+i+"].fieldValueYY");
-							var dateValue = customFieldDate.value;
-							if(!(validateMyForm(customFieldDate,customFieldDateFormat,customFieldDateYY)))
-								return false;
-						}
-					}
-			 	}
-		 	}
-			return true;
-  }
 </script>
 
 <script language="javascript">
@@ -399,7 +377,7 @@
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="client.DateOfBirth"
 										mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
-									<td><date:datetag property="dateOfBirth" /></td>
+									<td><date:datetag renderstyle="simple" property="dateOfBirth" /></td>
 								</tr>
 								<%-- Gender --%>
 								<tr class="fontnormal">

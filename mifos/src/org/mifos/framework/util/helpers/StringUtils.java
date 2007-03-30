@@ -71,6 +71,8 @@ public class StringUtils {
 		return String.valueOf(totalArray);
 	}
 
+	/** TODO: delegate to !{@link #isNullOrEmpty(String)} and then
+	    inline. */
 	public static boolean isNullAndEmptySafe(String stringToBeChecked) {
 		return isNullSafe(stringToBeChecked) && !isEmpty(stringToBeChecked);
 	}
@@ -79,6 +81,7 @@ public class StringUtils {
 		return !isNullSafe(stringToBeChecked) || isEmpty(stringToBeChecked);
 	}
 
+	// TODO: inline
 	public static boolean isNullSafe(String stringToBeChecked) {
 		return stringToBeChecked != null;
 	}

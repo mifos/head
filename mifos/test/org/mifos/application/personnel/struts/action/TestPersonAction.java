@@ -123,8 +123,8 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertEquals(1, personActionForm.getCustomFields().size());
 		verifyForward(ActionForwards.load_success.toString());
 		PersonActionForm actionForm = (PersonActionForm)request.getSession().getAttribute("personActionForm");
-		String currentDate = DateUtils.getCurrentDate(TestObjectFactory.getUserContext().getPreferredLocale());
-		assertEquals(currentDate,actionForm.getDateOfJoiningMFI());
+		Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
+		assertEquals(currentDate, DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfJoiningMFI()));
 
 	}
 	public void testLoadWithBranchOffice() throws Exception {
@@ -231,7 +231,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("level", "1");
 		addRequestParameter("title", "1");
 		addRequestParameter("emailId", "1@1.com");
-		addRequestParameter("dob", "20/03/76");
+		addRequestDateParameter("dob", "20/03/76");
 		addRequestParameter("loginName", "tarzen");
 		addRequestParameter("preferredLocale","1");
 		addRequestParameter("userPassword", "XXXXXXXX");
@@ -502,7 +502,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter("level", "1");
 		addRequestParameter("title", "1");
 		addRequestParameter("emailId", "1@1.com");
-		addRequestParameter("dob", "20/03/76");
+		addRequestDateParameter("dob", "20/03/76");
 		addRequestParameter("loginName", "tarzen");
 		addRequestParameter("personnelRoles", "1");
 		addRequestParameter("preferredLocale","1");

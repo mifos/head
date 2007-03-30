@@ -23,6 +23,28 @@ public class DateUtilsTest extends TestCase {
 		);
 	}
 	
+	public void testParseBrowserDateFields() throws Exception {
+		long expectedDate = new DateMidnight(2005, 03, 04).getMillis();
+		java.sql.Date result = DateUtils.parseBrowserDateFields("2005", "3", "4");
+		assertEquals(expectedDate, result.getTime());
+		
+		result = DateUtils.parseBrowserDateFields("05", "03", "04");
+		assertEquals(expectedDate, result.getTime());
+		
+		expectedDate = new DateMidnight(2005, 03, 20).getMillis();
+		result = DateUtils.parseBrowserDateFields("05", "03", "20");
+		assertEquals(expectedDate, result.getTime());
+		
+		try {
+			DateUtils.parseBrowserDateFields("2005", "20", "1");
+			fail("didn't parse month correctly");
+		}
+		
+		catch (InvalidDateException e) {
+			assertEquals(e.getDateString(), "1/20/2005");
+		}
+	}
+	
 	// test that getLocaleDate is parsing various localized date strings into 
 	// java.sql.Date objects in our localization setting
 	public void testGetLocaleDate() throws Exception {
@@ -81,5 +103,4 @@ public class DateUtilsTest extends TestCase {
 			assertEquals(input, e.getDateString());
 		}
 	}
-
 }

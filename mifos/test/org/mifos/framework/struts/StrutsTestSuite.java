@@ -7,11 +7,11 @@ import org.mifos.framework.struts.actionforms.TestBaseActionForm;
 import org.mifos.framework.struts.plugin.TestConstPlugin;
 import org.mifos.framework.struts.plugin.TestEnumPlugin;
 import org.mifos.framework.struts.plugin.TestInitializerPlugin;
-import org.mifos.framework.struts.tag.DateTagTest;
 import org.mifos.framework.struts.tag.LookUpValueTagTest;
 import org.mifos.framework.struts.tag.MifosSelectTest;
 import org.mifos.framework.struts.tag.RawButtonTest;
 import org.mifos.framework.struts.tag.RawSelectTest;
+import org.mifos.framework.struts.tags.DateTagTest;
 
 public class StrutsTestSuite extends TestSuite {
 

@@ -149,6 +149,7 @@ public interface PersonnelConstants {
 	public static final String CREATE_FAILED="error.createfailed";
 	public static final String UPDATE_FAILED="error.updatefailed";
 	public static final String INVALID_DOB="error.invaliddob";
+	public static final String INVALID_MFIDATE="error.invalidmfidate";
 	public static final String DUPLICATE_GOVT_ID="error.duplicategovtid";
 	public static final String DUPLICATE_USER_NAME_OR_DOB="error.duplicate_username_or_dob";
 	public static final String LO_ONLY_IN_BRANCHES="error.lo_only_in_branches";
@@ -188,6 +189,7 @@ public interface PersonnelConstants {
 	public static final String ERROR_USER_NAME="error.username";
 	public static final String INVALID_USER_NAME="error.invalidusername";
 	public static final String ERROR_DOB="error.dob";
+	public static final String ERROR_MFIDATE="error.mfidate";
 	public static final String ERROR_PASSWORD_LENGTH="error.passwordLength";
 
 	public static final String ERROR_STATUS="errors.status";

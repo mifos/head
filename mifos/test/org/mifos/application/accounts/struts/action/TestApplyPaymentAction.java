@@ -46,7 +46,9 @@ import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.application.accounts.struts.actionforms.AccountApplyPaymentActionForm;
+import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
@@ -122,8 +124,21 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/applyPaymentAction");
 		String currentDate = DateUtils.makeDateAsSentFromBrowser();
-		addRequestParameter("receiptDate",currentDate);
-		addRequestParameter("transactionDate",currentDate);		
+		addRequestDateParameter("receiptDate",currentDate);
+		addRequestDateParameter("transactionDate",currentDate);		
+		addRequestParameter("paymentTypeId","1");
+		addRequestParameter("method", "preview");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyForward(Constants.PREVIEW_SUCCESS);
+	}
+	
+	public void testNewStyleApplyPaymentPreview(){
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		setRequestPathInfo("/applyPaymentAction");
+		String currentDate = DateUtils.makeDateAsSentFromBrowser();
+		addRequestDateParameter("receiptDate",currentDate);
+		addRequestDateParameter("transactionDate",currentDate);		
 		addRequestParameter("paymentTypeId","1");
 		addRequestParameter("method", "preview");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -134,9 +149,9 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 	public void testApplyPaymentPreviewWithNoAmount(){
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		setRequestPathInfo("/applyPaymentAction");
-		String currentDate = DateUtils.getCurrentDate(userContext.getPreferredLocale());
-		addRequestParameter("receiptDate",currentDate);
-		addRequestParameter("transactionDate",currentDate);		
+		String currentDate = DateUtils.makeDateAsSentFromBrowser();
+		addRequestDateParameter("receiptDate",currentDate);
+		addRequestDateParameter("transactionDate",currentDate);		
 		addRequestParameter("paymentTypeId","1");
 		addRequestParameter("method", "preview");
 		addRequestParameter("accountType", "1");
@@ -161,9 +176,9 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
 
-		String currentDate = DateUtils.getCurrentDate(userContext.getPreferredLocale());
-		addRequestParameter("receiptDate",currentDate);
-		addRequestParameter("transactionDate",currentDate);
+		String currentDate = DateUtils.makeDateAsSentFromBrowser();
+		addRequestDateParameter("receiptDate", currentDate);
+		addRequestDateParameter("transactionDate", currentDate);
 		addRequestParameter("paymentTypeId","1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 		actionPerform();
@@ -171,6 +186,34 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		assertEquals(new Money(), accountBO.getTotalPaymentDue());
 		assertEquals(0, accountBO.getTotalInstallmentsDue().size());
 		assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
+	}
+	
+	public void testApplyPaymentPreviewDateValidation()throws Exception{
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
+		accountBO = createLoanAccount();
+		accountBO.setUserContext(TestObjectFactory.getContext());
+		accountBO.changeStatus(AccountState.LOANACC_BADSTANDING.getValue(),
+				null, "");
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY,accountBO,request);
+		AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
+		accountApplyPaymentActionForm.setAmount(new Money("212"));
+		request.getSession().setAttribute("applyPaymentActionForm",accountApplyPaymentActionForm);
+		setRequestPathInfo("/applyPaymentAction");
+		addRequestParameter("input","loan");
+
+		addRequestParameter("method", "preview");
+		addRequestParameter("accountId",accountBO.getAccountId().toString());
+		addRequestParameter("receiptId","101");
+
+		// date fields added individually because we're adding an invalid dat
+		addRequestParameter("transactionDateDD", "4");
+		addRequestParameter("transactionDateMM", "20");
+		addRequestParameter("transactionDateYY", "2007");
+		addRequestParameter("paymentTypeId","1");
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		actionPerform();
+		verifyActionErrors(new String[] { AccountConstants.ERROR_INVALIDDATE });
+		verifyInputForward();
 	}
 	
 	public void testApplyPaymentAndRetrievalForLoanWhenStatusIsChanged()throws Exception{
@@ -190,9 +233,9 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
 
-		String currentDate = DateUtils.getCurrentDate(userContext.getPreferredLocale());
-		addRequestParameter("receiptDate",currentDate);
-		addRequestParameter("transactionDate",currentDate);
+		String currentDate = DateUtils.makeDateAsSentFromBrowser();
+		addRequestDateParameter("receiptDate",currentDate);
+		addRequestDateParameter("transactionDate",currentDate);
 		addRequestParameter("paymentTypeId","1");
 		actionPerform();
 		verifyForward("loan_detail_page");
@@ -229,9 +272,9 @@ public class TestApplyPaymentAction extends MifosMockStrutsTestCase{
 		addRequestParameter("method", "applyPayment");
 		addRequestParameter("accountId",accountBO.getAccountId().toString());
 		addRequestParameter("receiptId","101");
-		String currentDate = DateUtils.getCurrentDate(userContext.getPreferredLocale());
-		addRequestParameter("receiptDate","");
-		addRequestParameter("transactionDate",currentDate);
+		String currentDate = DateUtils.makeDateAsSentFromBrowser();
+		addRequestDateParameter("receiptDate","");
+		addRequestDateParameter("transactionDate",currentDate);
 
 		addRequestParameter("paymentTypeId","1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));

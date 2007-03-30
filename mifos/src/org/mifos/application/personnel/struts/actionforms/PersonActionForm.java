@@ -23,6 +23,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.InvalidDateException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.Constants;
@@ -73,21 +74,31 @@ public class PersonActionForm extends BaseActionForm {
 
 	private String governmentIdNumber;
 
-	private String dob;
+	private String dobDD;
+	
+	private String dobMM;
+	
+	private String dobYY;
 
 	private int age;
 
 	private String maritalStatus;
 
 	private String gender;
-
-	private String dateOfJoiningMFI;
+	
+	private String dateOfJoiningMFIDD;
+	
+	private String dateOfJoiningMFIMM;
+	
+	private String dateOfJoiningMFIYY;
 
 	private String dateOfJoiningBranch;
 
 	private String[] personnelRoles;
 
 	private List<CustomFieldView> customFields;
+	
+	private Calendar cal = new GregorianCalendar();
 
 	public PersonActionForm() {
 		super();
@@ -122,19 +133,37 @@ public class PersonActionForm extends BaseActionForm {
 	}
 
 	public String getDateOfJoiningMFI() {
-		return dateOfJoiningMFI;
+		if (StringUtils.isNullAndEmptySafe(dateOfJoiningMFIDD)
+				&& StringUtils.isNullAndEmptySafe(dateOfJoiningMFIMM)
+				&& StringUtils.isNullAndEmptySafe(dateOfJoiningMFIYY)) {
+
+			return dateOfJoiningMFIDD + "/" + dateOfJoiningMFIMM + "/"
+				+ dateOfJoiningMFIYY;
+		}
+		else {
+			return null;
+		}
+		
 	}
 
 	public void setDateOfJoiningMFI(String dateOfJoiningMFI) {
-		this.dateOfJoiningMFI = dateOfJoiningMFI;
+		Calendar cal = new GregorianCalendar();
+		java.sql.Date date = DateUtils.getDateAsSentFromBrowser(dateOfJoiningMFI);
+		cal.setTime(date);
+		dateOfJoiningMFIDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+		dateOfJoiningMFIMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
+		dateOfJoiningMFIYY = Integer.toString(cal.get(Calendar.YEAR));
 	}
 
 	public String getDob() {
-		return dob;
-	}
-
-	public void setDob(String dob) {
-		this.dob = dob;
+		if (!StringUtils.isNullAndEmptySafe(dobDD)
+				|| !StringUtils.isNullAndEmptySafe(dobMM)
+				|| !StringUtils.isNullAndEmptySafe(dobYY)) {
+			return null;
+		}
+		else {
+			return dobDD + "/" + dobMM + "/" + dobYY;
+		}
 	}
 
 	public String getEmailId() {
@@ -262,10 +291,14 @@ public class PersonActionForm extends BaseActionForm {
 		this.userPassword = null;
 		this.emailId = null;
 		this.governmentIdNumber = null;
-		this.dob = null;
+		this.dobDD = null;
+		this.dobMM = null;
+		this.dobYY = null;
 		this.maritalStatus = null;
 		this.gender = null;
-		this.dateOfJoiningMFI = null;
+		this.dateOfJoiningMFIDD = null;
+		this.dateOfJoiningMFIMM = null;
+		this.dateOfJoiningMFIYY = null;
 		this.dateOfJoiningBranch = null;
 		this.personnelRoles = new String[10];
 		this.input=null;
@@ -347,9 +380,9 @@ public class PersonActionForm extends BaseActionForm {
 	}
 
 	public String getAge() {
-		if (dob != null && !dob.equals("")) {
+		if (getDob() != null) {
 			return String.valueOf(DateUtils.DateDiffInYears(new java.sql.Date(
-			DateUtils.getDate(dob).getTime())));
+			DateUtils.getDate(getDob()).getTime())));
 		} else
 			return "";
 	}
@@ -490,6 +523,7 @@ public class PersonActionForm extends BaseActionForm {
 			validateNameDetail(errors);
 			validateEmail(errors);
 			validateDateOfBirth(errors);
+			validateDateofJoiningMFI(errors);
 			validateGender(errors);
 			validateUserHirerchy(errors);
 			validateloginName(errors);
@@ -511,22 +545,36 @@ public class PersonActionForm extends BaseActionForm {
 	}
 
 	private void validateDateOfBirth(ActionErrors errors) {
-		if(StringUtils.isNullOrEmpty(dob))
-		{
+		if (StringUtils.isNullOrEmpty(getDob())) {
 			errors.add(PersonnelConstants.ERROR_DOB, new ActionMessage(
 					PersonnelConstants.ERROR_DOB));
 		}
-		else if (!StringUtils.isNullOrEmpty(dob)) {
-			Date date = DateUtils.getDate(dob);
-			Calendar currentCalendar = new GregorianCalendar();
-			int year = currentCalendar.get(Calendar.YEAR);
-			int month = currentCalendar.get(Calendar.MONTH);
-			int day = currentCalendar.get(Calendar.DAY_OF_MONTH);
-			currentCalendar = new GregorianCalendar(year, month, day);
-			Date currentDate = new Date(currentCalendar.getTimeInMillis());
-			if (currentDate.compareTo(date) < 0) {
+		else if (!StringUtils.isNullOrEmpty(getDob())) {
+			try {
+				Date date = DateUtils.getDateAsSentFromBrowser(getDob());
+				if (DateUtils.whichDirection(date) > 0) {
+					throw new InvalidDateException(getDob());
+				}
+			}
+			catch (InvalidDateException e) {
 				errors.add(PersonnelConstants.INVALID_DOB, new ActionMessage(
 						PersonnelConstants.INVALID_DOB));
+			}
+		}
+	}
+	
+	private void validateDateofJoiningMFI(ActionErrors errors) {
+		if (StringUtils.isNullOrEmpty(getDateOfJoiningMFI())) {
+			return;
+		}
+		else {
+			try {
+				DateUtils.getDateAsSentFromBrowser(getDateOfJoiningMFI());
+			}
+			
+			catch (InvalidDateException e) {
+				errors.add(PersonnelConstants.ERROR_MFIDATE, new ActionMessage(
+						PersonnelConstants.INVALID_MFIDATE));
 			}
 		}
 	}
@@ -564,6 +612,7 @@ public class PersonActionForm extends BaseActionForm {
 		validateNameDetail(errors);
 		validateEmail(errors);
 		validateDateOfBirth(errors);
+		validateDateofJoiningMFI(errors);
 		validateGender(errors);
 		validateStatus(errors);
 		validateOffice(errors);
@@ -638,6 +687,63 @@ public class PersonActionForm extends BaseActionForm {
 
 	public void setSearchString(String searchString) {
 		this.searchString = searchString;
+	}
+
+	public String getDobYY() {
+		return dobYY;
+	}
+	
+	public void setDob(String s) {
+		Calendar cal = new GregorianCalendar();
+		java.sql.Date dob = DateUtils.getDateAsSentFromBrowser(s);
+		cal.setTime(dob);
+		dobDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+		dobMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
+		dobYY = Integer.toString(cal.get(Calendar.YEAR));
+	}
+
+	public void setDobYY(String dobYY) {
+		this.dobYY = dobYY;
+	}
+
+	public String getDobMM() {
+		return dobMM;
+	}
+
+	public void setDobMM(String dobMM) {
+		this.dobMM = dobMM;
+	}
+
+	public String getDobDD() {
+		return dobDD;
+	}
+
+	public void setDobDD(String dobDD) {
+		this.dobDD = dobDD;
+	}
+
+	public String getDateOfJoiningMFIDD() {
+		return dateOfJoiningMFIDD;
+	}
+
+	public void setDateOfJoiningMFIDD(String dateOfJoiningMFIDD) {
+		this.dateOfJoiningMFIDD = dateOfJoiningMFIDD;
+	}
+
+	public String getDateOfJoiningMFIMM() {
+		return dateOfJoiningMFIMM;
+	}
+
+	public void setDateOfJoiningMFIMM(String dateOfJoiningMFIMM) {
+		this.dateOfJoiningMFIMM = dateOfJoiningMFIMM;
+	}
+
+	public String getDateOfJoiningMFIYY() {
+		return dateOfJoiningMFIYY;
+	}
+
+	public void setDateOfJoiningMFIYY(String dateOfJoiningMFIYY) {
+		this.dateOfJoiningMFIYY = dateOfJoiningMFIYY;
 	}
 
 }

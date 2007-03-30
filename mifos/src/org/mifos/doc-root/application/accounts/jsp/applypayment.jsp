@@ -119,7 +119,7 @@
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								mandatory="yes" isColonRequired="Yes" name="accounts.date_of_trxn" /></td>
-							<td class="fontnormal"><date:datetag property="transactionDate" /></td>
+							<td class="fontnormal"><date:datetag renderstyle="simple" property="transactionDate" /></td>
 						</tr>
 						<tr>
 							<td width="24%" align="right" class="fontnormal"><mifos:mifoslabel
@@ -157,7 +157,7 @@
 						<tr>
 							<td align="right" class="fontnormal"><mifos:mifoslabel
 								name="accounts.receiptdate" isColonRequired="Yes" /></td>
-							<td class="fontnormal"><date:datetag property="receiptDate" /></td>
+							<td class="fontnormal"><date:datetag renderstyle="simple" property="receiptDate" /></td>
 						</tr>
 					</table>
 					<table width="96%" border="0" cellpadding="0" cellspacing="0">

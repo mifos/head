@@ -39,7 +39,9 @@
 package org.mifos.framework;
 
 import java.net.URISyntaxException;
+import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,6 +51,7 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ResourceLoader;
@@ -63,6 +66,26 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 			Class.forName(TestCaseInitializer.class.getName());
 		} catch (ClassNotFoundException e) {
 			throw new Error("Failed to start up", e);
+		}
+	}
+	
+	protected void addRequestDateParameter(String param, String dateStr) {
+		java.sql.Date date = DateUtils.getDateAsSentFromBrowser(dateStr);
+		if (date != null) {
+			Calendar cal = new GregorianCalendar();
+			cal.setTime(date);
+
+			addRequestParameter(param + "DD", Integer.toString(cal
+					.get(Calendar.DAY_OF_MONTH)));
+			addRequestParameter(param + "MM", Integer.toString(cal
+					.get(Calendar.MONTH) + 1));
+			addRequestParameter(param + "YY", Integer.toString(cal
+					.get(Calendar.YEAR)));
+		}
+		else {
+			addRequestParameter(param + "DD", "");
+			addRequestParameter(param + "MM", "");
+			addRequestParameter(param + "YY", "");
 		}
 	}
 	

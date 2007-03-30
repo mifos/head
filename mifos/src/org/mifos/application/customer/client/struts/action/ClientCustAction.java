@@ -484,7 +484,9 @@ public class ClientCustAction extends CustAction {
 		actionForm.setCustomFields(new ArrayList<CustomFieldView>());
 		actionForm.setAddress(new Address());
 		actionForm.setDisplayName(null);
-		actionForm.setDateOfBirth(null);
+		actionForm.setDateOfBirthDD(null);
+		actionForm.setDateOfBirthMM(null);
+		actionForm.setDateOfBirthYY(null);
 		actionForm.setGovernmentId(null);
 		actionForm.setMfiJoiningDate(null);
 		actionForm.setGlobalCustNum(null);

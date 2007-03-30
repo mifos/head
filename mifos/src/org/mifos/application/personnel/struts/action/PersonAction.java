@@ -94,7 +94,7 @@ public class PersonAction extends SearchAction {
 		loadCreateMasterData(request, personActionForm);
 		if (office.getOfficeLevel() != OfficeLevel.BRANCHOFFICE)
 			updatePersonnelLevelList(request);
-		personActionForm.setDateOfJoiningMFI(DateUtils.getCurrentDate(getUserLocale(request)));
+		personActionForm.setDateOfJoiningMFI(DateUtils.makeDateAsSentFromBrowser());
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
 
@@ -135,13 +135,14 @@ public class PersonAction extends SearchAction {
 		Short perefferedLocale =getPerefferedLocale(personActionForm,userContext);
 		Date dob = null;
 		if (personActionForm.getDob() != null
-				&& !personActionForm.getDob().equals(""))
+				&& !personActionForm.getDob().equals("")) {
 			dob = DateUtils.getDate(personActionForm.getDob());
+		}
 		Date dateOfJoiningMFI = null;
 
-		if (personActionForm.getDob() != null
-				&& !personActionForm.getDob().equals(""))
-			dateOfJoiningMFI = DateUtils.getDate(personActionForm
+		if (personActionForm.getDateOfJoiningMFI() != null
+				&& !personActionForm.getDateOfJoiningMFI().equals(""))
+			dateOfJoiningMFI = DateUtils.getDateAsSentFromBrowser(personActionForm
 			.getDateOfJoiningMFI());
 		PersonnelBO personnelBO = new PersonnelBO(level, office, title,
 				perefferedLocale, personActionForm.getUserPassword(),
@@ -481,12 +482,13 @@ public class PersonAction extends SearchAction {
 						.toString());
 			actionForm.setAddress(personnelDetails.getAddress());
 			if (personnelDetails.getDateOfJoiningMFI() != null) {
-				actionForm.setDateOfJoiningMFI(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), personnelDetails.getDateOfJoiningMFI().toString()));
+				actionForm.setDateOfJoiningMFI(DateUtils
+						.makeDateAsSentFromBrowser(personnelDetails
+								.getDateOfJoiningMFI()));
 			}
 			if (personnelDetails.getDob() != null) {
-				actionForm.setDob(DateUtils.getUserLocaleDate(getUserContext(
-				request).getPreferredLocale(), personnelDetails
-				.getDob().toString()));
+				actionForm.setDob(DateUtils
+						.makeDateAsSentFromBrowser(personnelDetails.getDob()));
 			}
 
 		}

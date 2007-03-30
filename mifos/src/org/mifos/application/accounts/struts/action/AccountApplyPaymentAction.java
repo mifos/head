@@ -106,8 +106,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
 		clearActionForm(actionForm);
-		actionForm.setTransactionDate(DateUtils.getCurrentDate(uc
-		.getPreferredLocale()));
+		actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
 		AccountBO account = getAccountBusinessService().getAccount(
 				Integer.valueOf(actionForm.getAccountId()));
 		account.setUserContext(uc);
@@ -157,10 +156,8 @@ public class AccountApplyPaymentAction extends BaseAction {
 		else
 			checkPermissionForMakingPayment(account.getType(), customerLevel, uc,
 					account.getOffice().getOfficeId(), uc.getId());
-		Date trxnDate = getDateFromString(actionForm.getTransactionDate(), uc
-				.getPreferredLocale());
-		Date receiptDate = getDateFromString(actionForm.getReceiptDate(), uc
-				.getPreferredLocale());
+		Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
+		Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
 
 		if (!account.isTrxnDateValid(trxnDate))
 			throw new AccountException("errors.invalidTxndate");

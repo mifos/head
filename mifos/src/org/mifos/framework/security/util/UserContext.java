@@ -47,9 +47,11 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 
 /**
  * Information about a user, including ID's of their roles.
+ * 
+ * Accessed from jsp's.
  */
 public class UserContext implements Serializable {
-
+	
 	/**
 	 * This would hold the name of the user who has loged in
 	 */
@@ -96,6 +98,13 @@ public class UserContext implements Serializable {
 	 */
 	private Short officeLevelId;
 	
+	public UserContext() {
+	}
+	
+	public UserContext(Locale preferredLocale) {
+		this.preferredLocale = preferredLocale;
+	}
+
 	public Short getOfficeLevelId() {
 		return officeLevelId;
 	}

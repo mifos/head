@@ -172,6 +172,7 @@ public interface ClientConstants {
 	public static final String CUSTOMER_PICTURE_PAGE = "retrievePicture_success";
 	public static final String TRAINED_DATE_MANDATORY = "Client.TrainedDateNeeded";
 	public static final String TRAINED_CHECKED = "Client.TrainedCheckbox";
+	public static final String FUTURE_DOB_EXCEPTION = "Client.FutureDOB";
 	public static final String INVALID_DOB_EXCEPTION = "Client.InvalidDOB";
 	public static final String FLAG_EXCEPTION = "Client.FlagException";
 	public static final String CLIENT_HISTORICAL_DATA_PAGE = "loadHistoricalData_success";

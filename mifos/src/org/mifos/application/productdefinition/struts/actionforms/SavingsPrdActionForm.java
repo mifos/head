@@ -365,9 +365,10 @@ public class SavingsPrdActionForm extends BaseActionForm {
 											startingDate.getTime())
 									.compareTo(
 											DateUtils
-													.getCurrentDateOfNextYearWithOutTimeStamp()) > 0)))
+													.getCurrentDateOfNextYearWithOutTimeStamp()) > 0))) {
 						addError(errors, "startDate",
 								ProductDefinitionConstants.INVALIDSTARTDATE);
+					}
 					if (startingDate != null && endingDate != null
 							&& startingDate.compareTo(endingDate) >= 0)
 						addError(errors, "endDate",

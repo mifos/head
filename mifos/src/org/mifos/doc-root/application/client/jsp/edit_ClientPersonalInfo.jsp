@@ -200,7 +200,7 @@
 									<td align="right"><mifos:mifoslabel name="client.DateOfBirth"
 										mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></td>
 									<td>
-									<date:datetag property="dateOfBirth" /></td>
+									<date:datetag renderstyle="simple" property="dateOfBirth" /></td>
 								</tr>
 							</c:when>
 							<c:otherwise>

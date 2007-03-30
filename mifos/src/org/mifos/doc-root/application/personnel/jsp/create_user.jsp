@@ -19,7 +19,6 @@
 
 		<SCRIPT SRC="pages/framework/js/date.js"></SCRIPT>
 		<html-el:form action="PersonAction.do"
-			onsubmit="return (validateMyForm(dateOfJoiningMFI,dateOfJoiningMFIFormat,dateOfJoiningMFIYY) && validateMyForm(dob,dobFormat,dobYY))"
 			focus="firstName">
 
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -158,7 +157,7 @@
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel name="Personnel.DOB"
 										mandatory="yes" /></td>
-									<td><date:datetag property="dob" /></td>
+									<td><date:datetag renderstyle="simple" property="dob" /></td>
 								</tr>
 								<tr class="fontnormal">
 									<td align="right"><mifos:mifoslabel

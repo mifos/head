@@ -37,6 +37,8 @@
  */
 package org.mifos.application.accounts.struts.actionforms;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -56,17 +58,26 @@ import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.StringUtils;
 
 public class AccountApplyPaymentActionForm extends BaseActionForm {
 	private String input;
-
-	private String transactionDate;
+	
+	private String transactionDateDD;
+	
+	private String transactionDateMM;
+	
+	private String transactionDateYY;
 
 	private Money amount;
 
 	private String receiptId;
-
-	private String receiptDate;
+	
+	private String receiptDateDD;
+	
+	private String receiptDateMM;
+	
+	private String receiptDateYY;
 
 	private String paymentTypeId;
 
@@ -108,7 +119,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 
 		if (methodCalled != null && methodCalled.equals("preview")) {
 			errors = new ActionErrors();
-			ActionErrors errors2 = validateDate(this.transactionDate, resources
+			ActionErrors errors2 = validateDate(getTransactionDate(), resources
 					.getString("accounts.date_of_trxn"), request);
 			if (null != errors2 && !errors2.isEmpty())
 				errors.add(errors2);
@@ -117,8 +128,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 						AccountConstants.ERROR_MANDATORY, resources
 								.getString("accounts.mode_of_payment")));
 			}
-			if (this.receiptDate != null && !this.receiptDate.equals("")) {
-				errors2 = validateDate(this.receiptDate, resources
+			if (getReceiptDate() != null && !getReceiptDate().equals("")) {
+				errors2 = validateDate(getReceiptDate(), resources
 						.getString("accounts.receiptdate"), request);
 				if (null != errors2 && !errors2.isEmpty())
 					errors.add(errors2);
@@ -200,11 +211,33 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 	}
 
 	public String getReceiptDate() {
-		return receiptDate;
+		if (StringUtils.isNullAndEmptySafe(receiptDateDD)
+				&& StringUtils.isNullAndEmptySafe(receiptDateMM)
+				&& StringUtils.isNullAndEmptySafe(receiptDateYY)) {
+
+			return receiptDateDD + "/" + receiptDateMM + "/"
+				+ receiptDateYY;
+		}
+		else {
+			return null;
+		}
 	}
 
 	public void setReceiptDate(String receiptDate) {
-		this.receiptDate = receiptDate;
+		if (StringUtils.isNullOrEmpty(receiptDate)) {
+			receiptDateDD = null;
+			receiptDateMM = null;
+			receiptDateYY = null;
+		}
+		else {
+			Calendar cal = new GregorianCalendar();
+			java.sql.Date date = DateUtils
+					.getDateAsSentFromBrowser(receiptDate);
+			cal.setTime(date);
+			receiptDateDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+			receiptDateMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
+			receiptDateYY = Integer.toString(cal.get(Calendar.YEAR));
+		}
 	}
 
 	public String getReceiptId() {
@@ -215,12 +248,35 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 		this.receiptId = receiptId;
 	}
 
+	
 	public String getTransactionDate() {
-		return transactionDate;
+		if (StringUtils.isNullAndEmptySafe(transactionDateDD)
+				&& StringUtils.isNullAndEmptySafe(transactionDateMM)
+				&& StringUtils.isNullAndEmptySafe(transactionDateYY)) {
+
+			return transactionDateDD + "/" + transactionDateMM + "/"
+				+ transactionDateYY;
+		}
+		else {
+			return null;
+		}
 	}
 
-	public void setTransactionDate(String transactionDate) {
-		this.transactionDate = transactionDate;
+	public void setTransactionDate(String receiptDate) {
+		if (StringUtils.isNullOrEmpty(receiptDate)) {
+			transactionDateDD = null;
+			transactionDateMM = null;
+			transactionDateYY = null;
+		}
+		else {
+			Calendar cal = new GregorianCalendar();
+			java.sql.Date date = DateUtils
+					.getDateAsSentFromBrowser(receiptDate);
+			cal.setTime(date);
+			transactionDateDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+			transactionDateMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
+			transactionDateYY = Integer.toString(cal.get(Calendar.YEAR));
+		}
 	}
 
 	public String getAccountId() {
@@ -242,7 +298,55 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 	protected void clear() {
 		this.amount = null;
 		this.paymentTypeId = null;
-		this.receiptDate = null;
+		setReceiptDate(null);
 		this.receiptId = null;
+	}
+
+	public String getReceiptDateDD() {
+		return receiptDateDD;
+	}
+
+	public void setReceiptDateDD(String receiptDateDD) {
+		this.receiptDateDD = receiptDateDD;
+	}
+
+	public String getReceiptDateMM() {
+		return receiptDateMM;
+	}
+
+	public void setReceiptDateMM(String receiptDateMM) {
+		this.receiptDateMM = receiptDateMM;
+	}
+
+	public String getReceiptDateYY() {
+		return receiptDateYY;
+	}
+
+	public void setReceiptDateYY(String receiptDateYY) {
+		this.receiptDateYY = receiptDateYY;
+	}
+
+	public String getTransactionDateDD() {
+		return transactionDateDD;
+	}
+
+	public void setTransactionDateDD(String transactionDateDD) {
+		this.transactionDateDD = transactionDateDD;
+	}
+
+	public String getTransactionDateMM() {
+		return transactionDateMM;
+	}
+
+	public void setTransactionDateMM(String transactionDateMM) {
+		this.transactionDateMM = transactionDateMM;
+	}
+
+	public String getTransactionDateYY() {
+		return transactionDateYY;
+	}
+
+	public void setTransactionDateYY(String transactionDateYY) {
+		this.transactionDateYY = transactionDateYY;
 	}
 }

@@ -61,6 +61,16 @@ public class DateTag extends BaseInputTag {
 	private String keyhm;
 
 	private String isDisabled;
+	
+	private String renderstyle="";
+	
+	public String getRenderstyle() {
+		return renderstyle;
+	}
+	
+	public void setRenderstyle(String value) {
+		renderstyle = value;
+	}
 
 	public String getKeyhm() {
 		return keyhm;
@@ -105,45 +115,64 @@ public class DateTag extends BaseInputTag {
 					inputsForhidden.toString());
 		}
 
-		String ddValue = "";
-		String mmValue = "";
-		String yyValue = "";
-
 		UserContext userContext = (UserContext) pageContext.getSession()
 				.getAttribute(LoginConstants.USERCONTEXT);
-		Locale locale = null;
+
 		if (userContext != null) {
-			locale = userContext.getPreferredLocale();
-			if (null == locale) {
-				locale = userContext.getMfiLocale();
-			}
-			DateFormat df = DateFormat
-					.getDateInstance(DateFormat.SHORT, locale);
-			String userfmt = ((SimpleDateFormat) df).toPattern();
-			String separator = DateUtils.getSeparator(userfmt);
 			// TODO - get from ApplicationConfiguration
 			String currentDateValue = returnValue();
-			if (currentDateValue != null && !currentDateValue.equals("")) {
-				// added by mohammedn
-				String dmy[] = null;
-				// TODO chnage this
-				if (name.equalsIgnoreCase("org.apache.struts.taglib.html.BEAN")) {
-					String format = DateUtils.convertToDateTagFormat(userfmt);
-					dmy = DateUtils.getDayMonthYear(currentDateValue, format, separator);
-				} else
-					dmy = DateUtils.getDayMonthYearDbFrmt(currentDateValue, "Y-M-D");
-				ddValue = dmy[0].trim();
-				mmValue = dmy[1].trim();
-				yyValue = dmy[2].trim();
-			}
-			// user format
-			String format = DateUtils.convertToDateTagFormat(userfmt);
-			String output = this.prepareOutputString(format, property, ddValue,
-					mmValue, yyValue, separator, userfmt);
+			String output = render(userContext, currentDateValue);
+			
 			TagUtils.getInstance().write(pageContext, output);
 		}
 
-		return (SKIP_BODY);
+		return SKIP_BODY;
+	}
+
+	String render(UserContext userContext, String currentDateValue) 
+	throws JspException {
+		String ddValue = "";
+		String mmValue = "";
+		String yyValue = "";
+		String userfmt = getUserFormat(userContext);
+		String separator = DateUtils.getSeparator(userfmt);
+		if (currentDateValue != null && !currentDateValue.equals("")) {
+			// added by mohammedn
+			String dmy[] = null;
+			// TODO chnage this
+			if (name.equalsIgnoreCase("org.apache.struts.taglib.html.BEAN")) {
+				String format = DateUtils.convertToDateTagFormat(userfmt);
+				dmy = DateUtils.getDayMonthYear(currentDateValue, format, separator);
+			} else
+				dmy = DateUtils.getDayMonthYearDbFrmt(currentDateValue, "Y-M-D");
+			ddValue = dmy[0].trim();
+			mmValue = dmy[1].trim();
+			yyValue = dmy[2].trim();
+		}
+		// user format
+		String format = DateUtils.convertToDateTagFormat(userfmt);
+		
+		String output;
+		if (getRenderstyle().equalsIgnoreCase("simple")) {
+			output = "<!-- simple style -->" +
+				makeUserFields(property, ddValue, mmValue, yyValue, "", format);
+		}
+		else {
+			output = "<!-- normal style -->" +
+				this.prepareOutputString(format, property,
+					ddValue, mmValue, yyValue, separator, userfmt);
+		}
+		return output;
+	}
+
+	String getUserFormat(UserContext userContext) {
+		Locale locale = userContext.getPreferredLocale();
+		if (null == locale) {
+			locale = userContext.getMfiLocale();
+		}
+		DateFormat df = DateFormat
+				.getDateInstance(DateFormat.SHORT, locale);
+		return ((SimpleDateFormat) df).toPattern();
 	}
 
 	protected String returnValue() throws JspException {
@@ -159,7 +188,6 @@ public class DateTag extends BaseInputTag {
 			String ddValue, String mmValue, String yyValue, String separator,
 			String userfrmt) {
 
-		StringBuilder output = new StringBuilder();
 		StringBuilder dateFunction = new StringBuilder();
 		dateFunction.append("onBlur=\"makeDateString(");
 		StringTokenizer stfmt = new StringTokenizer(format, "/");
@@ -182,6 +210,31 @@ public class DateTag extends BaseInputTag {
 				&& !yyValue.equals("")) {
 			date = DateUtils.createDateString(ddValue, mmValue, yyValue, format);
 		}
+		
+		StringBuilder output = new StringBuilder(makeUserFields(dateName,
+				ddValue, mmValue, yyValue, dateFunction.toString(), format));
+		
+		String hiddentext = "<input type=\"hidden\" id=\"" + dateName
+				+ "\" name=\"" + dateName + "\" value=\"" + date + "\"/>";
+		String hiddenformattext = "<input type=\"hidden\" id=\"" + dateName
+				+ "Format\" name=\"" + dateName + "Format\" value=\"" + format
+				+ "\"/>";
+		String hiddenpatterntext = "<input type=\"hidden\" id=\"datePattern\" name=\"datePattern\" value=\""
+				+ userfrmt + "\"/>";
+
+		stfmt = new StringTokenizer(format, "/");
+		output.append(hiddentext);
+		output.append(hiddenformattext);
+		output.append(hiddenpatterntext);
+		return output.toString();
+	}
+
+	public String makeUserFields(String dateName, String ddValue,
+			String mmValue, String yyValue, String dateFunction,
+			String format) {
+		StringBuilder output = new StringBuilder();
+		StringTokenizer stfmt = new StringTokenizer(format, "/");
+
 		boolean disabled = getIsDisabled() != null
 				&& getIsDisabled().equalsIgnoreCase("Yes") ? true : false;
 
@@ -200,7 +253,7 @@ public class DateTag extends BaseInputTag {
 		daytext = daytext + "/>&nbsp;DD&nbsp;";
 		String monthtext = "<input type=\"text\" id=\""
 				+ dateName
-				+ "MM\"  name=\""
+				+ "MM\" name=\""
 				+ dateName
 				+ "MM\" "
 				+ "maxlength=\"2\" size=\"2\" value=\""
@@ -213,7 +266,7 @@ public class DateTag extends BaseInputTag {
 		monthtext = monthtext + "/>&nbsp;MM&nbsp;";
 		String yeartext = "<input type=\"text\" id=\""
 				+ dateName
-				+ "YY\"  name=\""
+				+ "YY\" name=\""
 				+ dateName
 				+ "YY\" "
 				+ "maxlength=\"4\" size=\"4\" value=\""
@@ -224,13 +277,6 @@ public class DateTag extends BaseInputTag {
 		if (disabled)
 			yeartext = yeartext + "disabled";
 		yeartext = yeartext + "/>&nbsp;YYYY&nbsp;";
-		String hiddentext = "<input type=\"hidden\" id=\"" + dateName
-				+ "\" name=\"" + dateName + "\" value=\"" + date + "\"/>";
-		String hiddenformattext = "<input type=\"hidden\" id=\"" + dateName
-				+ "Format\" name=\"" + dateName + "Format\" value=\"" + format
-				+ "\"/>";
-		String hiddenpatterntext = "<input type=\"hidden\" id=\"datePattern\" name=\"datePattern\" value=\""
-				+ userfrmt + "\"/>";
 
 		stfmt = new StringTokenizer(format, "/");
 		while (stfmt.hasMoreTokens()) {
@@ -243,9 +289,6 @@ public class DateTag extends BaseInputTag {
 				output.append(yeartext);
 			}
 		}
-		output.append(hiddentext);
-		output.append(hiddenformattext);
-		output.append(hiddenpatterntext);
 		return output.toString();
 	}
 

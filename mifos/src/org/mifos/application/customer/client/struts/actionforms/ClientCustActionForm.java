@@ -92,8 +92,12 @@ public class ClientCustActionForm extends CustomerActionForm {
 	private String parentGroupId;
 
 	private String governmentId;
-
-	private String dateOfBirth;
+	
+	private String dateOfBirthDD;
+	
+	private String dateOfBirthMM;
+	
+	private String dateOfBirthYY;
 
 	private String nextOrPreview;
 
@@ -172,14 +176,8 @@ public class ClientCustActionForm extends CustomerActionForm {
 	public void setGovernmentId(String governmentId) {
 		this.governmentId = governmentId;
 	}
-
-	public String getDateOfBirth() {
-		return dateOfBirth;
-	}
-
-	public void setDateOfBirth(String dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+	
+	
 
 	public FormFile getPicture() {
 		return picture;
@@ -335,18 +333,19 @@ public class ClientCustActionForm extends CustomerActionForm {
 
 	}
 
-	private void validateDateOfBirth(HttpServletRequest request,
+	void validateDateOfBirth(HttpServletRequest request,
 			ActionErrors errors) {
-		if (StringUtils.isNullOrEmpty(dateOfBirth)) {
+		if (StringUtils.isNullOrEmpty(getDateOfBirth())) {
 			errors.add(CustomerConstants.DOB, new ActionMessage(
 					CustomerConstants.ERRORS_MANDATORY, CustomerConstants.DOB));
 		}
 		
 		else {
 			try {
-				Date date = DateUtils.getDateAsSentFromBrowser(dateOfBirth);
+				Date date = DateUtils.getDateAsSentFromBrowser(getDateOfBirth());
 				if (DateUtils.whichDirection(date) > 0) {
-					throw new InvalidDateException(dateOfBirth);
+					errors.add(ClientConstants.FUTURE_DOB_EXCEPTION, 
+						new ActionMessage(ClientConstants.FUTURE_DOB_EXCEPTION));
 				}
 			}
 			
@@ -404,7 +403,7 @@ public class ClientCustActionForm extends CustomerActionForm {
 					}
 					getCustomerPicture().reset();
 				} catch (IOException e) {
-					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -467,6 +466,61 @@ public class ClientCustActionForm extends CustomerActionForm {
 			}
 		}
 		return isValidDate;
+	}
+	
+	public String getDateOfBirth() {
+		if (StringUtils.isNullAndEmptySafe(dateOfBirthDD)
+				&& StringUtils.isNullAndEmptySafe(dateOfBirthMM)
+				&& StringUtils.isNullAndEmptySafe(dateOfBirthYY)) {
+
+			return dateOfBirthDD + "/" + dateOfBirthMM + "/"
+				+ dateOfBirthYY;
+		}
+		else {
+			return null;
+		}
+	}
+
+	public void setDateOfBirth(String receiptDate) {
+		if (StringUtils.isNullOrEmpty(receiptDate)) {
+			dateOfBirthDD = null;
+			dateOfBirthMM = null;
+			dateOfBirthYY = null;
+		}
+		else {
+			Calendar cal = new GregorianCalendar();
+			java.sql.Date date = DateUtils
+					.getDateAsSentFromBrowser(receiptDate);
+			cal.setTime(date);
+			dateOfBirthDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+			dateOfBirthMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
+			dateOfBirthYY = Integer.toString(cal.get(Calendar.YEAR));
+		}
+	}
+
+
+	public String getDateOfBirthDD() {
+		return dateOfBirthDD;
+	}
+
+	public void setDateOfBirthDD(String dateOfBirthDD) {
+		this.dateOfBirthDD = dateOfBirthDD;
+	}
+
+	public String getDateOfBirthMM() {
+		return dateOfBirthMM;
+	}
+
+	public void setDateOfBirthMM(String dateOfBirthMM) {
+		this.dateOfBirthMM = dateOfBirthMM;
+	}
+
+	public String getDateOfBirthYY() {
+		return dateOfBirthYY;
+	}
+
+	public void setDateOfBirthYY(String dateOfBirthYY) {
+		this.dateOfBirthYY = dateOfBirthYY;
 	}
 
 }
