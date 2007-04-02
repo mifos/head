@@ -112,7 +112,7 @@
         <xs:element minOccurs="0" ref="address"/>
         <xs:element minOccurs="0" ref="meetingTime"/>
         <xs:element ref="distanceFromBranchOffice"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="fee"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="feeAmount"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -141,14 +141,15 @@
       </xs:restriction>
     </xs:simpleType>
   </xs:element>
-  <xs:element name="fee">
+  <xs:element name="feeAmount">
     <xs:complexType>
       <xs:sequence>
+        <xs:element ref="feeId"/>
         <xs:element ref="amount"/>
       </xs:sequence>
-      <xs:attribute name="id" use="required" type="xs:short"/>
     </xs:complexType>
   </xs:element>
+  <xs:element name="feeId" type="xs:short"/>
   <xs:element name="amount">
     <xs:simpleType>
       <xs:restriction base="xs:decimal">

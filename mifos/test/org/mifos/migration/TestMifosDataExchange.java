@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 import org.mifos.migration.generated.Address;
 import org.mifos.migration.generated.Center;
-import org.mifos.migration.generated.Fee;
+import org.mifos.migration.generated.FeeAmount;
 import org.mifos.migration.generated.MifosDataExchange;
 import org.mifos.migration.generated.MonthlyMeeting;
 import org.mifos.migration.generated.WeeklyMeeting;
@@ -72,9 +72,10 @@ public class TestMifosDataExchange extends TestCase {
 		"        </address>\n" + 
 		"        <meetingTime>10 AM</meetingTime>\n" + 
 		"        <distanceFromBranchOffice>1</distanceFromBranchOffice>\n" + 
-		"        <fee id=\"12234\">\n" + 
+		"        <feeAmount>\n" +
+		"            <feeId>12234</feeId>\n" + 
 		"            <amount>10</amount>\n" + 
-		"        </fee>\n" + 
+		"        </feeAmount>\n" + 
 		"    </center>\n" + 
 		"    <center>\n" + 
 		"        <name>First Center</name>\n" + 
@@ -93,12 +94,14 @@ public class TestMifosDataExchange extends TestCase {
 		"        </address>\n" + 
 		"        <meetingTime>10 AM</meetingTime>\n" + 
 		"        <distanceFromBranchOffice>2</distanceFromBranchOffice>\n" + 
-		"        <fee id=\"12234\">\n" + 
+		"        <feeAmount>\n" +
+		"            <feeId>12234</feeId>\n" + 
 		"            <amount>10</amount>\n" + 
-		"        </fee>\n" + 
-		"        <fee id=\"3333\">\n" + 
+		"        </feeAmount>\n" + 
+		"        <feeAmount>\n" +
+		"            <feeId>333</feeId>\n" + 
 		"            <amount>99</amount>\n" + 
-		"        </fee>\n" + 
+		"        </feeAmount>\n" + 
 		"    </center>\n" + 
 		"</mifosDataExchange>\n" + 
 		"";
@@ -178,11 +181,11 @@ public class TestMifosDataExchange extends TestCase {
 			toCenter.setMeetingTime(center.getMeetingTime());
 			toCenter.setDistanceFromBranchOffice(center.getDistanceFromBranchOffice());
 
-			List<Fee> toFees = toCenter.getFee();
-			for (Fee fee : center.getFee()) {
-				Fee toFee = new Fee();
-				toFee.setAmount(fee.getAmount());
-				toFee.setId(fee.getId());
+			List<FeeAmount> toFees = toCenter.getFeeAmount();
+			for (FeeAmount feeAmount : center.getFeeAmount()) {
+				FeeAmount toFee = new FeeAmount();
+				toFee.setAmount(feeAmount.getAmount());
+				toFee.setFeeId(feeAmount.getFeeId());
 				toFees.add(toFee);
 			}			
 			toCenters.add(toCenter);

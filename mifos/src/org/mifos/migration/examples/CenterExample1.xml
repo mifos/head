@@ -36,9 +36,10 @@
         </address>
         <meetingTime>10 AM</meetingTime>
         <distanceFromBranchOffice>1</distanceFromBranchOffice>
-        <fee id="12234">
+        <feeAmount>
+            <feeId>12234</feeId>
             <amount>10</amount>
-        </fee>
+        </feeAmount>
     </center>
     <center>
         <name>Center 3</name>
@@ -57,8 +58,9 @@
         </address>
         <meetingTime>10 AM</meetingTime>
         <distanceFromBranchOffice>2</distanceFromBranchOffice>
-        <fee id="12234">
+        <feeAmount>
+            <feeId>12234</feeId>
             <amount>10</amount>
-        </fee>
+        </feeAmount>
     </center>
 </mifosDataExchange>

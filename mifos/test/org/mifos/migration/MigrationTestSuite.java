@@ -1,11 +1,13 @@
 package org.mifos.migration;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.mifos.migration.mapper.TestAddressMapper;
 import org.mifos.migration.mapper.TestCenterMapper;
 import org.mifos.migration.mapper.TestMeetingMapper;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.mifos.migration.TestMifosDataExchange;
+import org.mifos.migration.TestDataExchanger;
 
 public class MigrationTestSuite extends TestSuite {
 

@@ -1,27 +1,34 @@
 package org.mifos.migration.mapper;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
+import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.migration.generated.Center;
+import org.mifos.migration.generated.FeeAmount;
+
 
 public class CenterMapper {
 	public static CenterBO mapCenterToCenterBO(Center center, UserContext userContext) {
 		org.mifos.framework.business.util.Address address = AddressMapper.mapXMLAddressToMifosAddress(center.getAddress());
 		List<CustomFieldView> fields = null;
-		List<FeeView> fees = null;
 		MeetingBO meeting = null;
 		Date mfiJoiningDate = mapXMLGregorianCalendarToDate(center.getMfiJoiningDate());
 		if (center.getMonthlyMeeting() != null) {
@@ -30,6 +37,19 @@ public class CenterMapper {
 			meeting = MeetingMapper.mapWeeklyMeetingToMeetingBO(center.getWeeklyMeeting());
 		}
 
+		FeePersistence feePersistence = new FeePersistence();
+		List<FeeView> fees = new ArrayList<FeeView>();
+		for (FeeAmount feeAmount : center.getFeeAmount()) {
+			FeeBO fee = feePersistence.getFee(feeAmount.getFeeId());
+			FeeView feeView = new FeeView(userContext, fee);
+			feeView.setAmount(feeAmount.getAmount().toPlainString());
+			if (fee == null) {
+				// TODO: report invalid fee reference
+			} else {
+				fees.add(feeView);
+			}
+		}			
+			
 		CenterBO centerBO;
 		try {
 			centerBO = new CenterBO(
@@ -51,18 +71,7 @@ public class CenterMapper {
 		// TODO: map custom fields
 		//centerBO.setMeetingTime(center.getMeetingTime());
 		//centerBO.setDistanceFromBranchOffice(center.getDistanceFromBranchOffice());
-		
-		// TODO: map fees
-		/*
-		List<Fee> toFees = toCenter.getFee();
-		for (Fee fee : center.getFee()) {
-			Fee toFee = new Fee();
-			toFee.setAmount(fee.getAmount());
-			toFee.setId(fee.getId());
-			toFees.add(toFee);
-		}			
-		*/
-		
+				
 		return centerBO;
 	}
 	
@@ -113,9 +122,17 @@ public class CenterMapper {
 		// meetingtime
 		// distance
 		
-		// TODO: map fees
-		// fees
-		
+		List<FeeAmount> feeAmounts = newCenter.getFeeAmount();
+		Set<AccountFeesEntity> accountFees = center.getCustomerAccount().getAccountFees();
+		for (AccountFeesEntity feeEntity : accountFees) {
+			FeeBO fee = feeEntity.getFees();
+			Double amount = feeEntity.getFeeAmount();
+			FeeAmount feeAmount = new FeeAmount();
+			feeAmount.setAmount(BigDecimal.valueOf(amount));
+			feeAmount.setFeeId(fee.getFeeId());
+			feeAmounts.add(feeAmount);
+		}
+				
 		return newCenter;
 	}
 }

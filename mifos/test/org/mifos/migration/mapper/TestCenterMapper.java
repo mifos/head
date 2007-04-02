@@ -3,6 +3,8 @@ package org.mifos.migration.mapper;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -14,16 +16,18 @@ import javax.xml.validation.SchemaFactory;
 import junit.framework.TestCase;
 
 import org.mifos.application.customer.center.business.CenterBO;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.fees.business.FeeBO;
+import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DatabaseSetup;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.migration.MifosValidationEventHandler;
 import org.mifos.migration.generated.Center;
+import org.mifos.migration.generated.FeeAmount;
 import org.mifos.migration.generated.MifosDataExchange;
-import org.mifos.migration.generated.MonthlyMeeting;
-import org.mifos.migration.generated.WeekDayChoice;
-import org.mifos.migration.generated.WeeklyMeeting;
 
 public class TestCenterMapper extends TestCase {
 	private static final String GENERATED_CLASS_PACKAGE = "org.mifos.migration.generated";
@@ -33,6 +37,9 @@ public class TestCenterMapper extends TestCase {
 	private Marshaller   marshaller;
 	private Unmarshaller unmarshaller;
 	private MifosValidationEventHandler validationEventHandler;
+	
+	private FeeBO testFee1;
+	private FeeBO testFee2;
 	
 	@Override
 	public void setUp() throws Exception {
@@ -55,6 +62,20 @@ public class TestCenterMapper extends TestCase {
 
 		validationEventHandler = new MifosValidationEventHandler();
 		unmarshaller.setEventHandler(validationEventHandler);
+		
+		HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
+		UserContext userContext = TestUtils.makeUser();
+		testFee1 = TestObjectFactory.createOneTimeAmountFee("testFee1",FeeCategory.CENTER,"100",FeePayment.UPFRONT, userContext);
+		testFee2 = TestObjectFactory.createOneTimeAmountFee("testFee2",FeeCategory.CENTER,"33",FeePayment.UPFRONT, userContext);
+		HibernateUtil.commitTransaction();
+		
+	}
+	
+	@Override
+	public void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(testFee1);
+		TestObjectFactory.cleanUp(testFee2);		
 	}
 
 /*	TODO: add additional test cases for other combinations of center values
@@ -156,6 +177,14 @@ public class TestCenterMapper extends TestCase {
 			"            <telephone>1-123-123-1234</telephone>\n" + 
 			"        </address>\n" + 
 			"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
+			"        <feeAmount>\n" +
+			"            <feeId>" + testFee1.getFeeId() + "</feeId>\n" + 
+			"            <amount>10.0</amount>\n" + 
+			"        </feeAmount>\n" + 
+			"        <feeAmount>\n" +
+			"            <feeId>" + testFee2.getFeeId() + "</feeId>\n" + 
+			"            <amount>99.0</amount>\n" + 
+			"        </feeAmount>\n" + 
 			"    </center>\n" + 
 			"</mifosDataExchange>\n" + 
 			"";
@@ -168,8 +197,9 @@ public class TestCenterMapper extends TestCase {
 		Center center = mifosDataExchange.getCenter().get(0);
 
 		CenterBO centerBO = CenterMapper.mapCenterToCenterBO(center, TestUtils.makeUser());
-		
 		Center newCenter = CenterMapper.mapCenterBOToCenter(centerBO);
+
+		sortFeeAmountsByFeeId(newCenter);
 		
 		mifosDataExchange.getCenter().clear();
 		mifosDataExchange.getCenter().add(newCenter);
@@ -177,6 +207,18 @@ public class TestCenterMapper extends TestCase {
 		marshaller.marshal(mifosDataExchange, writer);
 
 		assertEquals(VALID_XML, writer.toString());
+	}
+
+	/* Sort the FeeAmount list by feeId to make sure we get the fees back
+	 * in the same order they were created 
+	 */
+	private void sortFeeAmountsByFeeId(Center center) {
+		final class FeeAmountFeeIdComparator implements Comparator<FeeAmount> {
+			public int compare(FeeAmount fee1, FeeAmount fee2) {
+				return fee1.getFeeId() - fee2.getFeeId();
+			}		
+		}
+		Collections.sort(center.getFeeAmount(), new FeeAmountFeeIdComparator());
 	}
 	
 }

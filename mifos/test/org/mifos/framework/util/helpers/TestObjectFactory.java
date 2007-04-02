@@ -916,6 +916,24 @@ public class TestObjectFactory {
 		}
 	}
 
+	public static FeeBO createOneTimeAmountFee(String feeName,
+			FeeCategory feeCategory, String feeAmnt, FeePayment feePayment,
+			UserContext userContext) {
+		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
+				GLCodeEntity.class, Short.valueOf("24"));
+		try {
+			FeeBO fee = 
+				new AmountFeeBO(userContext, feeName,
+					new CategoryTypeEntity(feeCategory),
+					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
+					glCode, getMoneyForMFICurrency(feeAmnt), false,
+					new FeePaymentEntity(feePayment));
+			return (FeeBO) addObject(testObjectPersistence.createFee(fee));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public static FeeBO createOneTimeRateFee(String feeName,
 			FeeCategory feeCategory, Double rate, FeeFormula feeFormula,
 			FeePayment feePayment) {
