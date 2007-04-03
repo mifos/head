@@ -6,7 +6,7 @@
 * Automation Scripts Info
 
 ------------------------------
-Getting Started on the project 
+Getting Started on the project
 ------------------------------
 This is the README file for Mifos, the universal Open Source platform for Microfinance Institutions (MFIs). 
 
@@ -15,46 +15,10 @@ Getting Started with Mifos
 Mifos Build and Install (below) provides detailed instructions for building and installing the Mifos software. 
 
 
-Developer Resources 
-1. Code Repository 
-
-Access to the code repository is via SVN at 
-svn checkout https://mifos.dev.java.net/svn/mifos/trunk mifos --username guest 
-password is blank for anonymous access. 
-
-2. Mailing List 
-
-Signup info and archives for the mifos-developer mailing list can be found at 
-
-https://lists.sourceforge.net/lists/listinfo/mifos-developer 
-
-3. Web Resources 
-
-The Project Home Page can be found at 
-
-http://mifos.dev.java.net 
-
-The Project Wiki can be found at 
-
-http://wiki.java.net/bin/view/Javatools/MIFOS 
-
-Fisheye view of the code checked in with comments (RSS feed) is found at http://fisheye5.cenqua.com/changelog/mifos 
-
-Issue tracking is https://mifos.dev.java.net/servlets/ProjectIssues 
-
-4. Coding Standards (TBD) 
-
-http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html 
-
-5. Testing environment 
-http://test.mifos.org:8080/mifos 
-Login user is "mifos", password is "mifos" 
-
-
-6. Project Contacts 
-
-James Dailey (grameentechie AT sourceforge.net) 
-
+Take a look at http://mifos.sourceforge.net/ for:
+* mailing lists (the best place to ask for help)
+* the project Wiki (the best place for most kinds of documentation)
+and more.
 
 
 ------------------
