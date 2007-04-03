@@ -176,7 +176,8 @@ public class TestCenterMapper extends TestCase {
 			"            <postalCode>12345</postalCode>\n" + 
 			"            <telephone>1-123-123-1234</telephone>\n" + 
 			"        </address>\n" + 
-			"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
+			"        <meetingTime>10 AM</meetingTime>\n" + 
+			"        <distanceFromBranchOffice>1</distanceFromBranchOffice>\n" + 
 			"        <feeAmount>\n" +
 			"            <feeId>" + testFee1.getFeeId() + "</feeId>\n" + 
 			"            <amount>10.0</amount>\n" + 

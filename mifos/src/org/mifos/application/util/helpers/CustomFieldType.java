@@ -2,7 +2,9 @@ package org.mifos.application.util.helpers;
 
 public enum CustomFieldType {
 
-	NUMERIC(Short.valueOf("1")), ALPHA_NUMERIC(Short.valueOf("2")), DATE(Short.valueOf("3"));
+	NUMERIC((short)1), 
+	ALPHA_NUMERIC((short)2), 
+	DATE((short)3);
 
 	Short value;
 
