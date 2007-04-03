@@ -219,7 +219,11 @@ public class TestObjectFactory {
 	public static final int SAMPLE_SALUTATION = 1;
 	
 	private static final short SAMPLE_CATEGORY = 2;
-	private static final short SAMPLE_GENERAL_LEDGER_CODE_ID = 7;
+	
+	// As set up in latest-data.sql
+	public static final short GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE = 7;
+	public static final short GENERAL_LEDGER_CODE_ID_FOR_FEES = 24;
+
 
 	/**
 	 * Corresponds to a locale we set up in latest-data.
@@ -630,8 +634,8 @@ public class TestObjectFactory {
 				startDate, offeringStatusId, recommenededAmt, recomAmtUnitId,
 				intRate, maxAmtWithdrawl, minAmtForInt, savingsTypeId,
 				intCalTypeId, intCalcMeeting, intPostMeeting, 
-				SAMPLE_GENERAL_LEDGER_CODE_ID,
-				SAMPLE_GENERAL_LEDGER_CODE_ID);
+				GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE,
+				GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE);
 	}
 	
 	/**
@@ -651,7 +655,7 @@ public class TestObjectFactory {
 				offeringStatusId, recommenededAmt, recomAmtUnitId, intRate,
 				maxAmtWithdrawl, minAmtForInt, savingsTypeId, intCalTypeId,
 				intCalcMeeting, intPostMeeting, 
-				SAMPLE_GENERAL_LEDGER_CODE_ID, SAMPLE_GENERAL_LEDGER_CODE_ID);
+				GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE, GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE);
 	}
 
 	public static SavingsOfferingBO createSavingsOffering(String name,
@@ -885,7 +889,7 @@ public class TestObjectFactory {
 		try {
 			GLCodeEntity glCode = (GLCodeEntity) 
 				HibernateUtil.getSessionTL().get(
-					GLCodeEntity.class, Short.valueOf("24"));
+					GLCodeEntity.class, GENERAL_LEDGER_CODE_ID_FOR_FEES);
 			MeetingBO meeting = 
 				new MeetingBO(meetingFrequency, recurAfter, new Date(),
 					MeetingType.PERIODIC_FEE);
@@ -902,7 +906,7 @@ public class TestObjectFactory {
 	public static FeeBO createOneTimeAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt, FeePayment feePayment) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, Short.valueOf("24"));
+				GLCodeEntity.class, GENERAL_LEDGER_CODE_ID_FOR_FEES);
 		try {
 			FeeBO fee = 
 				new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
@@ -920,7 +924,7 @@ public class TestObjectFactory {
 			FeeCategory feeCategory, String feeAmnt, FeePayment feePayment,
 			UserContext userContext) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, Short.valueOf("24"));
+				GLCodeEntity.class, GENERAL_LEDGER_CODE_ID_FOR_FEES);
 		try {
 			FeeBO fee = 
 				new AmountFeeBO(userContext, feeName,
@@ -938,7 +942,7 @@ public class TestObjectFactory {
 			FeeCategory feeCategory, Double rate, FeeFormula feeFormula,
 			FeePayment feePayment) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, Short.valueOf("24"));
+				GLCodeEntity.class, GENERAL_LEDGER_CODE_ID_FOR_FEES);
 		FeeBO fee;
 		try {
 			fee = new RateFeeBO(TestObjectFactory.getUserContext(), feeName,
