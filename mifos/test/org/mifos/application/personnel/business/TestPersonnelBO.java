@@ -12,6 +12,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.group.business.GroupBO;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -600,21 +601,16 @@ public class TestPersonnelBO extends MifosTestCase {
 	public void testLoginFourConsecutiveWrongPasswordEntered()
 			throws Exception {
 		personnel = createPersonnel();
-		String password = "WRONG_PASSWORD";
 		try {
-			login(password);
-			login(password);
-			login(password);
-			login(password);
+			loginWithWrongPassword();
+			loginWithWrongPassword();
+			loginWithWrongPassword();
+			loginWithWrongPassword();
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			personnel = TestObjectFactory.getPersonnel(personnel
 					.getPersonnelId());
-			userContext = personnel.login(password);
-			HibernateUtil.commitTransaction();
-			HibernateUtil.closeSession();
-			personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
-					PersonnelBO.class, personnel.getPersonnelId());
+			userContext = personnel.login("WRONG_PASSWORD");
 			fail();
 		} catch (PersonnelException e) {
 			assertEquals(5, personnel.getNoOfTries().intValue());
@@ -626,11 +622,10 @@ public class TestPersonnelBO extends MifosTestCase {
 	public void testLoginFourConsecutiveWrongPasswordEnteredFifthOneCorrect()
 			throws Exception {
 		personnel = createPersonnel();
-		String password = "WRONG_PASSWORD";
-		login(password);
-		login(password);
-		login(password);
-		login(password);
+		loginWithWrongPassword();
+		loginWithWrongPassword();
+		loginWithWrongPassword();
+		loginWithWrongPassword();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		personnel = TestObjectFactory.getPersonnel(personnel
@@ -640,9 +635,9 @@ public class TestPersonnelBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
 				PersonnelBO.class, personnel.getPersonnelId());
-		assertTrue(true);
 		assertFalse(personnel.isLocked());
-		assertEquals("No of tries should be reseted to 0",0, personnel.getNoOfTries().intValue());
+		assertEquals("No of tries should be reseted to 0",
+			0, personnel.getNoOfTries().intValue());
 	}
 
 	public void testLoginForLockedPersonnel()
@@ -650,11 +645,11 @@ public class TestPersonnelBO extends MifosTestCase {
 		personnel = createPersonnel();
 		String password = "WRONG_PASSWORD";
 		try {
-			login(password);
-			login(password);
-			login(password);
-			login(password);
-			login(password);
+			loginWithWrongPassword();
+			loginWithWrongPassword();
+			loginWithWrongPassword();
+			loginWithWrongPassword();
+			loginWithWrongPassword();
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			personnel = TestObjectFactory.getPersonnel(personnel
@@ -697,12 +692,11 @@ public class TestPersonnelBO extends MifosTestCase {
 	
 	public void testUnlockPersonnel() throws Exception {
 		personnel = createPersonnel();
-		String password = "WRONG_PASSWORD";
-		login(password);
-		login(password);
-		login(password);
-		login(password);
-		login(password);
+		loginWithWrongPassword();
+		loginWithWrongPassword();
+		loginWithWrongPassword();
+		loginWithWrongPassword();
+		loginWithWrongPassword();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
@@ -717,37 +711,36 @@ public class TestPersonnelBO extends MifosTestCase {
 	}
 
 	public void testUnlockPersonnelFailure() throws Exception{
-		
-		try{
+		try {
 			personnel = createPersonnel();
-			String password = "WRONG_PASSWORD";
-			login(password);
-			login(password);
-			login(password);
-			login(password);
-			login(password);
+			loginWithWrongPassword();
+			loginWithWrongPassword();
+			loginWithWrongPassword();
+			loginWithWrongPassword();
+			loginWithWrongPassword();
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
 			TestObjectFactory.simulateInvalidConnection();
 			personnel.unlockPersonnel(Short.valueOf("1"));
-		fail();
+			fail();
 		}
 		catch (PersonnelException e) {
-			assertTrue(true);
-		}finally {
+			assertEquals(CustomerConstants.UPDATE_FAILED_EXCEPTION, 
+				e.getKey());
+		}
+		finally {
 			HibernateUtil.closeSession();
 		}
 
 	}
 	public void testReLoginAfterUnlock() throws Exception {
 		personnel = createPersonnel();
-		String password = "WRONG_PASSWORD";
-		login(password);
-		login(password);
-		login(password);
-		login(password);
-		login(password);
+		loginWithWrongPassword();
+		loginWithWrongPassword();
+		loginWithWrongPassword();
+		loginWithWrongPassword();
+		loginWithWrongPassword();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
@@ -853,10 +846,13 @@ public class TestPersonnelBO extends MifosTestCase {
 		return new PersonnelPersistence().getPersonnel(personnel.getUserName());
 	}
 
-	private void login(String password) {
+	private void loginWithWrongPassword()	{
 		try {
-			personnel.login(password);
-		} catch (PersonnelException e) {
+			personnel.login("WRONG_PASSWORD");
+			fail();
+		}
+		catch (PersonnelException expected) {
+			assertEquals(LoginConstants.INVALIDOLDPASSWORD, expected.getKey());
 		}
 	}
 	
