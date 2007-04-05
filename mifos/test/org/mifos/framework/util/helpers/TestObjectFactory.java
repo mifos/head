@@ -886,6 +886,21 @@ public class TestObjectFactory {
 	public static FeeBO createPeriodicAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt,
 			RecurrenceType meetingFrequency, Short recurAfter) {
+		FeeBO fee;
+		try {
+			fee = createPeriodicAmountFee(feeName, feeCategory,
+				feeAmnt, meetingFrequency, recurAfter,
+				TestObjectFactory.getUserContext());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return fee;
+	}
+	
+	public static FeeBO createPeriodicAmountFee(String feeName,
+			FeeCategory feeCategory, String feeAmnt,
+			RecurrenceType meetingFrequency, Short recurAfter,
+			UserContext userContext) {
 		try {
 			GLCodeEntity glCode = (GLCodeEntity) 
 				HibernateUtil.getSessionTL().get(
@@ -893,7 +908,7 @@ public class TestObjectFactory {
 			MeetingBO meeting = 
 				new MeetingBO(meetingFrequency, recurAfter, new Date(),
 					MeetingType.PERIODIC_FEE);
-			FeeBO fee = new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
+			FeeBO fee = new AmountFeeBO(userContext, feeName,
 					new CategoryTypeEntity(feeCategory),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 					glCode, getMoneyForMFICurrency(feeAmnt), false, meeting);
@@ -905,19 +920,15 @@ public class TestObjectFactory {
 
 	public static FeeBO createOneTimeAmountFee(String feeName,
 			FeeCategory feeCategory, String feeAmnt, FeePayment feePayment) {
-		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, GENERAL_LEDGER_CODE_ID_FOR_FEES);
+		FeeBO fee;
 		try {
-			FeeBO fee = 
-				new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
-					new CategoryTypeEntity(feeCategory),
-					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
-					glCode, getMoneyForMFICurrency(feeAmnt), false,
-					new FeePaymentEntity(feePayment));
-			return (FeeBO) addObject(testObjectPersistence.createFee(fee));
-		} catch (Exception e) {
+			fee = createOneTimeAmountFee(feeName, feeCategory, feeAmnt, feePayment, 
+					TestObjectFactory.getUserContext());
+		}
+		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+		return fee;
 	}
 
 	public static FeeBO createOneTimeAmountFee(String feeName,

@@ -46,7 +46,14 @@ public class TestDataExchanger extends TestCase {
 			"            <postalCode>12345</postalCode>\n" + 
 			"            <telephone>1-123-123-1234</telephone>\n" + 
 			"        </address>\n" + 
-			"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
+			"        <customField>\n" + 
+			"            <fieldId>5</fieldId>\n" + // meeting time 
+			"            <stringValue>10 AM</stringValue>\n" + 
+			"        </customField>\n" + 
+			"        <customField>\n" + 
+			"            <fieldId>6</fieldId>\n" + // distance from branch office 
+			"            <numericValue>1</numericValue>\n" + 
+			"        </customField>\n" + 
 			"    </center>\n" + 
 			"</mifosDataExchange>\n" + 
 			"";
@@ -62,10 +69,8 @@ public class TestDataExchanger extends TestCase {
 		QueryResult queryResult = centerPersistence.search(CENTER_NAME, (short)1);
 		CenterSearchResults centerSearchResults = (CenterSearchResults) queryResult.get(0, 1).get(0);
 		CenterBO center = centerPersistence.findBySystemId(centerSearchResults.getCenterSystemId());
-		
-		String dumpedXML = dataExchanger.exportXML(center);
-		
-		assertEquals(VALID_XML, dumpedXML);
+				
+		assertEquals(VALID_XML, dataExchanger.exportXML(center));
 		
 		centerPersistence.delete(center);
 		HibernateUtil.commitTransaction();

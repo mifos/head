@@ -6,6 +6,14 @@ weekDayChoice =
   | "FRIDAY"
   | "SATURDAY"
 weekDayOccurence = "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "LAST"
+customField =
+  element customField {
+    (element fieldId { xsd:short }
+     | element name { xsd:token }),
+    (element stringValue { text }
+     | element numericValue { xsd:int }
+     | element dateValue { xsd:date })
+  }
 address =
   element address {
     element address1 { xsd:token }?,
@@ -51,12 +59,9 @@ start =
       element externalId { text }?,
       element mfiJoiningDate { xsd:date },
       address?,
-      element meetingTime { text }?,
-      element distanceFromBranchOffice {
-        xsd:int { minInclusive = "0" }
-      },
-      element fee {
-        attribute id { xsd:short },
+      customField*,
+      element feeAmount {
+        element feeId { xsd:short },
         element amount {
           xsd:decimal { minInclusive = "0" }
         }

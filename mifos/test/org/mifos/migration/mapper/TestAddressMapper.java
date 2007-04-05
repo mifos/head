@@ -13,16 +13,10 @@ import javax.xml.validation.SchemaFactory;
 
 import junit.framework.TestCase;
 
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.migration.MifosValidationEventHandler;
 import org.mifos.migration.generated.Address;
 import org.mifos.migration.generated.Center;
 import org.mifos.migration.generated.MifosDataExchange;
-import org.mifos.migration.generated.MonthlyMeeting;
-import org.mifos.migration.generated.WeekDayChoice;
-import org.mifos.migration.generated.WeeklyMeeting;
 
 public class TestAddressMapper extends TestCase {
 	private static final String GENERATED_CLASS_PACKAGE = "org.mifos.migration.generated";
@@ -69,21 +63,35 @@ public class TestAddressMapper extends TestCase {
 		return writer.toString();
 		
 	}
+	
+	private static String BEFORE_ADDRESS_XML_FRAGMENT =
+		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + 
+		"<mifosDataExchange>\n" + 
+		"    <center>\n" + 
+		"        <name>First Center</name>\n" + 			
+		"        <officeId>3</officeId>\n" + 
+		"        <loanOfficerId>1234</loanOfficerId>\n" + 
+		"        <monthlyMeeting>\n" + 
+		"            <meetingWeekDay>MONDAY</meetingWeekDay>\n" + 
+		"            <meetingWeekDayOccurence>SECOND</meetingWeekDayOccurence>\n" + 
+		"            <monthsBetweenMeetings>1</monthsBetweenMeetings>\n" + 
+		"            <location>Some Place</location>\n" + 
+		"        </monthlyMeeting>\n" + 
+		"        <mfiJoiningDate>2005-12-01</mfiJoiningDate>\n" + 
+		"";
+
+	private static String AFTER_ADDRESS_XML_FRAGMENT = 
+		"        <customField>\n" + 
+		"            <fieldId>6</fieldId>\n" + // distance from branch office 
+		"            <numericValue>1</numericValue>\n" + 
+		"        </customField>\n" + 
+		"    </center>\n" + 
+		"</mifosDataExchange>\n" + 
+		"";
+	
 	public void testFullAddress() throws Exception {
-		final String VALID_XML = 
-			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + 
-			"<mifosDataExchange>\n" + 
-			"    <center>\n" + 
-			"        <name>First Center</name>\n" + 			
-			"        <officeId>3</officeId>\n" + 
-			"        <loanOfficerId>1234</loanOfficerId>\n" + 
-			"        <monthlyMeeting>\n" + 
-			"            <meetingWeekDay>MONDAY</meetingWeekDay>\n" + 
-			"            <meetingWeekDayOccurence>SECOND</meetingWeekDayOccurence>\n" + 
-			"            <monthsBetweenMeetings>1</monthsBetweenMeetings>\n" + 
-			"            <location>Some Place</location>\n" + 
-			"        </monthlyMeeting>\n" + 
-			"        <mfiJoiningDate>2005-12-01</mfiJoiningDate>\n" + 
+		final String VALID_XML =
+			BEFORE_ADDRESS_XML_FRAGMENT +
 			"        <address>\n" + 
 			"            <address1>100 First St.</address1>\n" + 
 			"            <address2>Suite 123</address2>\n" + 
@@ -94,62 +102,29 @@ public class TestAddressMapper extends TestCase {
 			"            <postalCode>12345</postalCode>\n" + 
 			"            <telephone>1-123-123-1234</telephone>\n" + 
 			"        </address>\n" + 
-			"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
-			"    </center>\n" + 
-			"</mifosDataExchange>\n" + 
-			"";
-
+			AFTER_ADDRESS_XML_FRAGMENT;
+		
 		assertEquals(VALID_XML, roundTripAddressMap(VALID_XML));
 	}
 
 	public void testPartialAddress() throws Exception {
 		final String VALID_XML = 
-			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + 
-			"<mifosDataExchange>\n" + 
-			"    <center>\n" + 
-			"        <name>First Center</name>\n" + 			
-			"        <officeId>3</officeId>\n" + 
-			"        <loanOfficerId>1234</loanOfficerId>\n" + 
-			"        <monthlyMeeting>\n" + 
-			"            <meetingWeekDay>MONDAY</meetingWeekDay>\n" + 
-			"            <meetingWeekDayOccurence>SECOND</meetingWeekDayOccurence>\n" + 
-			"            <monthsBetweenMeetings>1</monthsBetweenMeetings>\n" + 
-			"            <location>Some Place</location>\n" + 
-			"        </monthlyMeeting>\n" + 
-			"        <mfiJoiningDate>2005-12-01</mfiJoiningDate>\n" + 
+			BEFORE_ADDRESS_XML_FRAGMENT +
 			"        <address>\n" + 
 			"            <cityDistrict>Any Town</cityDistrict>\n" + 
 			"            <state>State</state>\n" + 
 			"            <country>Country</country>\n" + 
 			"            <postalCode>12345</postalCode>\n" + 
 			"        </address>\n" + 
-			"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
-			"    </center>\n" + 
-			"</mifosDataExchange>\n" + 
-			"";
+			AFTER_ADDRESS_XML_FRAGMENT;
 
 		assertEquals(VALID_XML, roundTripAddressMap(VALID_XML));
 	}
 
 	public void testNoAddress() throws Exception {
 		final String VALID_XML = 
-			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + 
-			"<mifosDataExchange>\n" + 
-			"    <center>\n" + 
-			"        <name>First Center</name>\n" + 			
-			"        <officeId>3</officeId>\n" + 
-			"        <loanOfficerId>1234</loanOfficerId>\n" + 
-			"        <monthlyMeeting>\n" + 
-			"            <meetingWeekDay>MONDAY</meetingWeekDay>\n" + 
-			"            <meetingWeekDayOccurence>SECOND</meetingWeekDayOccurence>\n" + 
-			"            <monthsBetweenMeetings>1</monthsBetweenMeetings>\n" + 
-			"            <location>Some Place</location>\n" + 
-			"        </monthlyMeeting>\n" + 
-			"        <mfiJoiningDate>2005-12-01</mfiJoiningDate>\n" + 
-			"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
-			"    </center>\n" + 
-			"</mifosDataExchange>\n" + 
-			"";
+			BEFORE_ADDRESS_XML_FRAGMENT +
+			AFTER_ADDRESS_XML_FRAGMENT;
 
 		assertEquals(VALID_XML, roundTripAddressMap(VALID_XML));
 	}

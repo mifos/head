@@ -76,25 +76,35 @@ public class TestMeetingMapper extends TestCase {
 		}
 	}
 
+	private static String BEFORE_MEETING_XML_FRAGMENT = 
+		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + 
+		"<mifosDataExchange>\n" + 
+		"    <center>\n" + 
+		"        <name>First Center</name>\n" + 			
+		"        <officeId>3</officeId>\n" + 
+		"        <loanOfficerId>1234</loanOfficerId>\n" + 
+		"";
+	
+	private static String AFTER_MEETING_XML_FRAGMENT =
+		"        <mfiJoiningDate>2005-12-01</mfiJoiningDate>\n" + 
+		"        <customField>\n" + 
+		"            <fieldId>6</fieldId>\n" + // distance from branch office 
+		"            <numericValue>1</numericValue>\n" + 
+		"        </customField>\n" + 
+		"    </center>\n" + 
+		"</mifosDataExchange>\n" + 
+		"";		
+	
 	public void testMonthlyMeetingMapper() throws Exception {
 		final String VALID_XML = 
-			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + 
-			"<mifosDataExchange>\n" + 
-			"    <center>\n" + 
-			"        <name>First Center</name>\n" + 			
-			"        <officeId>3</officeId>\n" + 
-			"        <loanOfficerId>1234</loanOfficerId>\n" + 
+			BEFORE_MEETING_XML_FRAGMENT +
 			"        <monthlyMeeting>\n" + 
 			"            <meetingWeekDay>MONDAY</meetingWeekDay>\n" + 
 			"            <meetingWeekDayOccurence>SECOND</meetingWeekDayOccurence>\n" + 
 			"            <monthsBetweenMeetings>1</monthsBetweenMeetings>\n" + 
 			"            <location>Some Place</location>\n" + 
 			"        </monthlyMeeting>\n" + 
-			"        <mfiJoiningDate>2005-12-01</mfiJoiningDate>\n" + 
-			"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
-			"    </center>\n" + 
-			"</mifosDataExchange>\n" + 
-			"";
+			AFTER_MEETING_XML_FRAGMENT;
 
 		StringReader stringReader = new StringReader(VALID_XML);
 		StringWriter writer = new StringWriter();
@@ -116,22 +126,13 @@ public class TestMeetingMapper extends TestCase {
 
 	public void testMonthlyMeetingMapper2() throws Exception {
 		final String VALID_XML = 
-			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + 
-			"<mifosDataExchange>\n" + 
-			"    <center>\n" + 
-			"        <name>First Center</name>\n" + 			
-			"        <officeId>3</officeId>\n" + 
-			"        <loanOfficerId>1234</loanOfficerId>\n" + 
+			BEFORE_MEETING_XML_FRAGMENT +
 			"        <monthlyMeeting>\n" + 
 			"            <dayOfMonth>2</dayOfMonth>\n" + 
 			"            <monthsBetweenMeetings>1</monthsBetweenMeetings>\n" + 
 			"            <location>Some Place</location>\n" + 
 			"        </monthlyMeeting>\n" + 
-			"        <mfiJoiningDate>2005-12-01</mfiJoiningDate>\n" + 
-			"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
-			"    </center>\n" + 
-			"</mifosDataExchange>\n" + 
-			"";
+			AFTER_MEETING_XML_FRAGMENT;
 
 		StringReader stringReader = new StringReader(VALID_XML);
 		StringWriter writer = new StringWriter();
@@ -153,22 +154,13 @@ public class TestMeetingMapper extends TestCase {
 
 	public void testWeeklyMeetingMapper() throws Exception {
 		final String VALID_XML = 
-			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + 
-			"<mifosDataExchange>\n" + 
-			"    <center>\n" + 
-			"        <name>First Center</name>\n" + 			
-			"        <officeId>3</officeId>\n" + 
-			"        <loanOfficerId>1234</loanOfficerId>\n" + 
+			BEFORE_MEETING_XML_FRAGMENT +
 			"        <weeklyMeeting>\n" + 
 			"            <weeksBetweenMeetings>1</weeksBetweenMeetings>\n" + 
 			"            <meetingWeekDay>MONDAY</meetingWeekDay>\n" + 
 			"            <location>Some Place</location>\n" + 
 			"        </weeklyMeeting>\n" + 
-			"        <mfiJoiningDate>2005-12-01</mfiJoiningDate>\n" + 
-			"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
-			"    </center>\n" + 
-			"</mifosDataExchange>\n" + 
-			"";
+			AFTER_MEETING_XML_FRAGMENT;
 
 		StringReader stringReader = new StringReader(VALID_XML);
 		StringWriter writer = new StringWriter();

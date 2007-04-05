@@ -2,6 +2,8 @@ package org.mifos.migration.mapper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -12,6 +14,7 @@ import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.hibernate.Session;
 import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomFieldView;
@@ -22,9 +25,12 @@ import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.fees.persistence.FeePersistence;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.CustomFieldType;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.migration.generated.Center;
+import org.mifos.migration.generated.CustomField;
 import org.mifos.migration.generated.FeeAmount;
 
 
@@ -39,19 +45,25 @@ public class CenterMapper {
 		MeetingBO meeting = null;
 		Date mfiJoiningDate = mapXMLGregorianCalendarToDate(
 			center.getMfiJoiningDate());
+		
+		RecurrenceType meetingFrequency;
 		if (center.getMonthlyMeeting() != null) {
 			meeting = MeetingMapper.mapMonthlyMeetingToMeetingBO(
 				center.getMonthlyMeeting());
+			meetingFrequency = RecurrenceType.MONTHLY;
 		}
 		else {
 			meeting = MeetingMapper.mapWeeklyMeetingToMeetingBO(
 				center.getWeeklyMeeting());
+			meetingFrequency = RecurrenceType.WEEKLY;
 		}
 
 		FeePersistence feePersistence = new FeePersistence();
 		List<FeeView> fees = new ArrayList<FeeView>();
 		for (FeeAmount feeAmount : center.getFeeAmount()) {
 			FeeBO fee = feePersistence.getFee(feeAmount.getFeeId());
+			CheckForFeeMeetingFrequencyMismatch(fee, meetingFrequency);
+			
 			FeeView feeView = new FeeView(userContext, fee);
 			feeView.setAmount(feeAmount.getAmount().toPlainString());
 			if (fee == null) {
@@ -62,16 +74,29 @@ public class CenterMapper {
 			}
 		}
 
-		// TODO: generalize this
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-		fields.add(new CustomFieldView(
-			MEETING_TIME_CUSTOM_FIELD_ID, 
-			center.getMeetingTime(), 
-			CustomFieldType.ALPHA_NUMERIC.getValue()));
-		fields.add(new CustomFieldView(
-			DISTANCE_FROM_BRANCH_OFFICE_CUSTOM_FIELD_ID, 
-			""+ center.getDistanceFromBranchOffice(),
-			CustomFieldType.NUMERIC.getValue()));
+		for (CustomField field : center.getCustomField()) {
+			if (field.getFieldId() != null) {
+				String value;
+				CustomFieldType type;
+				if (field.getStringValue() != null) {
+					value = field.getStringValue();
+					type = CustomFieldType.ALPHA_NUMERIC;
+				} else if (field.getNumericValue() != null) {
+					value = ""+field.getNumericValue();
+					type = CustomFieldType.NUMERIC;
+				} else if (field.getDateValue() != null) {
+					value = ""+field.getDateValue();
+					type = CustomFieldType.DATE;
+				} else {
+					throw new RuntimeException("No custom field value was specified");
+				}
+				fields.add(new CustomFieldView(
+					field.getFieldId(), value, type.getValue())); 
+			} else {
+				throw new RuntimeException("Custom field lookup by name not yet implemented");
+			}
+		}
 
 		CenterBO centerBO;
 		try {
@@ -87,6 +112,22 @@ public class CenterMapper {
 		return centerBO;
 	}
 
+	private static void CheckForFeeMeetingFrequencyMismatch(FeeBO fee, RecurrenceType meetingFrequency) {
+		if (fee.isPeriodic() &&
+				((fee.getFeeFrequency().getFeeMeetingFrequency().isMonthly() && meetingFrequency != RecurrenceType.MONTHLY) ||
+						(fee.getFeeFrequency().getFeeMeetingFrequency().isWeekly() && meetingFrequency != RecurrenceType.WEEKLY))) {
+			String feePeriod = "UNKNOWN";
+			if (fee.getFeeFrequency().getFeeMeetingFrequency().isMonthly()) {
+				feePeriod = "MONTHLY";
+			} else if (fee.getFeeFrequency().getFeeMeetingFrequency().isWeekly()) {
+				feePeriod = "WEEKLY";
+			}
+			throw new RuntimeException("Fee period and center meeting frequency " +
+					"don't match. Fee frequency is " + feePeriod + 
+					" while meeting frequency is " + meetingFrequency.name());
+		}
+	}
+	
 	public static Date mapXMLGregorianCalendarToDate(
 			XMLGregorianCalendar calendar) {
 		if (calendar == null)
@@ -116,6 +157,22 @@ public class CenterMapper {
 
 		return xmlCalendar;
 	}
+	
+	public static XMLGregorianCalendar mapStringToXMLGregorianCalendar(String dateString) {
+		DatatypeFactory datatypeFactory;
+		try {
+			datatypeFactory = DatatypeFactory.newInstance();
+		}
+		catch (DatatypeConfigurationException e) {
+			throw new RuntimeException(e);
+		}
+		XMLGregorianCalendar xmlCalendar = datatypeFactory
+		.newXMLGregorianCalendar(dateString);
+		// we want only the date, so don't use a timezone
+		xmlCalendar.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+		
+		return xmlCalendar;
+	}
 
 	public static Center mapCenterBOToCenter(CenterBO center) {
 		Center newCenter = new Center();
@@ -141,19 +198,22 @@ public class CenterMapper {
 		newCenter.setAddress(AddressMapper.mapMifosAddressToXMLAddress(
 			center.getAddress()));
 
-		// TODO: generalize this
 		Set<CustomerCustomFieldEntity> fields = center.getCustomFields();
+		List<CustomField> customFields = newCenter.getCustomField();
 		for (CustomerCustomFieldEntity field : fields) {
-			if (field.getFieldId().shortValue() == 
-				MEETING_TIME_CUSTOM_FIELD_ID.shortValue()) {
-					newCenter.setMeetingTime(field.getFieldValue());
-			} else if(field.getFieldId().shortValue() == 
-				DISTANCE_FROM_BRANCH_OFFICE_CUSTOM_FIELD_ID.shortValue()) {
-					newCenter.setDistanceFromBranchOffice(
-						Integer.valueOf(field.getFieldValue()));
+			CustomField customField = new CustomField();
+			customField.setFieldId(field.getFieldId());
+			CustomFieldDefinitionEntity fieldDefinition = getCustomFieldDefinitionEntity(field.getFieldId());
+			if (fieldDefinition.getFieldType().compareTo(CustomFieldType.ALPHA_NUMERIC.getValue()) == 0) {
+				customField.setStringValue(field.getFieldValue());
+			} else if (fieldDefinition.getFieldType().compareTo(CustomFieldType.NUMERIC.getValue()) == 0) {
+				customField.setNumericValue(Integer.valueOf(field.getFieldValue()));
+			} else if (fieldDefinition.getFieldType().compareTo(CustomFieldType.DATE.getValue()) == 0) {
+				customField.setDateValue(mapStringToXMLGregorianCalendar(field.getFieldValue()));
 			} else {
-				throw new RuntimeException("Unexpected field id: " + field.getFieldId());
-			}
+				throw new RuntimeException("Unhandled CustomFieldType");
+			}			
+			customFields.add(customField);
 		}
 
 		List<FeeAmount> feeAmounts = newCenter.getFeeAmount();
@@ -168,6 +228,43 @@ public class CenterMapper {
 			feeAmounts.add(feeAmount);
 		}
 
+		// TODO: an order is imposed on output for testing purposes
+		// so that the output order can be made to match the input
+		// order.  This would be better done by being able to compare 
+		// XML input and output using the XML structure.
+		sortFeeAmountsByFeeId(newCenter);
+		sortCustomFieldsById(newCenter);
+		
 		return newCenter;
 	}
+	
+	private static CustomFieldDefinitionEntity getCustomFieldDefinitionEntity(Short id) {
+		Session session = HibernateUtil.getSessionTL();
+		return (CustomFieldDefinitionEntity) session.get(CustomFieldDefinitionEntity.class, id);		
+	}
+	
+	/* Sort the FeeAmount list by feeId to make sure we get the fees back
+	 * in the same order they were created 
+	 */
+	private static void sortFeeAmountsByFeeId(Center center) {
+		final class FeeAmountFeeIdComparator implements Comparator<FeeAmount> {
+			public int compare(FeeAmount fee1, FeeAmount fee2) {
+				return fee1.getFeeId() - fee2.getFeeId();
+			}		
+		}
+		Collections.sort(center.getFeeAmount(), new FeeAmountFeeIdComparator());
+	}
+
+	/* Sort the CustomField list by fieldId to make sure we get them back
+	 * in the same order they were created 
+	 */
+	private static void sortCustomFieldsById(Center center) {
+		final class CustomFieldIdComparator implements Comparator<CustomField> {
+			public int compare(CustomField field1, CustomField field2) {
+				return field1.getFieldId() - field2.getFieldId();
+			}		
+		}
+		Collections.sort(center.getCustomField(), new CustomFieldIdComparator());
+	}
+	
 }

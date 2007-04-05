@@ -21,6 +21,29 @@
             <value>LAST</value>
         </choice>
     </define>
+    <define name="customField">
+        <element name="customField">
+            <choice>
+                <element name="fieldId">
+                    <data type="short" />
+                </element>
+                <element name="name">
+                    <data type="token" />
+                </element>
+            </choice>
+            <choice>
+                <element name="stringValue">
+                    <text />
+                </element>
+                <element name="numericValue">
+                    <data type="int" />
+                </element>
+                <element name="dateValue">
+                    <data type="date" />
+                </element>
+            </choice>
+        </element>
+    </define>
     <define name="address">
         <element name="address">
             <optional>
@@ -140,16 +163,9 @@
                     <optional>
                         <ref name="address" />
                     </optional>
-                    <optional>
-                        <element name="meetingTime">
-                            <text />
-                        </element>
-                    </optional>
-                    <element name="distanceFromBranchOffice">
-                        <data type="int">
-                            <param name="minInclusive">0</param>
-                        </data>
-                    </element>
+                    <zeroOrMore>
+                        <ref name="customField"/>
+                    </zeroOrMore>
                     <zeroOrMore>
                         <element name="feeAmount">
                             <element name="feeId">

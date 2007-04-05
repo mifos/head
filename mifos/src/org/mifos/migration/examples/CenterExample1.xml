@@ -11,7 +11,10 @@
             <location>Some Place</location>
         </monthlyMeeting>
         <mfiJoiningDate>2005-12-01</mfiJoiningDate>
-        <distanceFromBranchOffice>0</distanceFromBranchOffice>
+        <customField>
+            <fieldId>6</fieldId>
+            <numericValue>1</numericValue>
+        </customField>        
     </center>
     <center>
         <name>Center 2</name>
@@ -34,8 +37,14 @@
             <postalCode>12345</postalCode>
             <telephone>1-123-123-1234</telephone>
         </address>
-        <meetingTime>10 AM</meetingTime>
-        <distanceFromBranchOffice>1</distanceFromBranchOffice>
+        <customField>
+            <fieldId>5</fieldId>
+            <stringValue>10 AM</stringValue>
+        </customField>
+        <customField>
+            <fieldId>6</fieldId>
+            <numericValue>1</numericValue>
+        </customField>        
         <feeAmount>
             <feeId>12234</feeId>
             <amount>10</amount>
@@ -56,8 +65,14 @@
             <cityDistrict>City</cityDistrict>
             <country>Country</country>
         </address>
-        <meetingTime>10 AM</meetingTime>
-        <distanceFromBranchOffice>2</distanceFromBranchOffice>
+        <customField>
+            <fieldId>5</fieldId>
+            <stringValue>10 AM</stringValue>
+        </customField>
+        <customField>
+            <fieldId>6</fieldId>
+            <numericValue>1</numericValue>
+        </customField>        
         <feeAmount>
             <feeId>12234</feeId>
             <amount>10</amount>

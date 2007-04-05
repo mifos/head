@@ -19,6 +19,26 @@
       <xs:enumeration value="LAST"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:element name="customField">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element ref="fieldId"/>
+          <xs:element ref="name"/>
+        </xs:choice>
+        <xs:choice>
+          <xs:element ref="stringValue"/>
+          <xs:element ref="numericValue"/>
+          <xs:element ref="dateValue"/>
+        </xs:choice>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="fieldId" type="xs:short"/>
+  <xs:element name="name" type="xs:token"/>
+  <xs:element name="stringValue" type="xs:string"/>
+  <xs:element name="numericValue" type="xs:int"/>
+  <xs:element name="dateValue" type="xs:date"/>
   <xs:element name="address">
     <xs:complexType>
       <xs:sequence>
@@ -110,13 +130,11 @@
         <xs:element minOccurs="0" ref="externalId"/>
         <xs:element ref="mfiJoiningDate"/>
         <xs:element minOccurs="0" ref="address"/>
-        <xs:element minOccurs="0" ref="meetingTime"/>
-        <xs:element ref="distanceFromBranchOffice"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="customField"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="feeAmount"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="name" type="xs:token"/>
   <xs:element name="officeId">
     <xs:simpleType>
       <xs:restriction base="xs:short">
@@ -133,14 +151,6 @@
   </xs:element>
   <xs:element name="externalId" type="xs:string"/>
   <xs:element name="mfiJoiningDate" type="xs:date"/>
-  <xs:element name="meetingTime" type="xs:string"/>
-  <xs:element name="distanceFromBranchOffice">
-    <xs:simpleType>
-      <xs:restriction base="xs:int">
-        <xs:minInclusive value="0"/>
-      </xs:restriction>
-    </xs:simpleType>
-  </xs:element>
   <xs:element name="feeAmount">
     <xs:complexType>
       <xs:sequence>

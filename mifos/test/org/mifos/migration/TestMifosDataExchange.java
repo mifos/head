@@ -17,6 +17,7 @@ import junit.framework.TestCase;
 
 import org.mifos.migration.generated.Address;
 import org.mifos.migration.generated.Center;
+import org.mifos.migration.generated.CustomField;
 import org.mifos.migration.generated.FeeAmount;
 import org.mifos.migration.generated.MifosDataExchange;
 import org.mifos.migration.generated.MonthlyMeeting;
@@ -47,7 +48,10 @@ public class TestMifosDataExchange extends TestCase {
 		"            <location>Some Place</location>\n" + 
 		"        </monthlyMeeting>\n" + 
 		"        <mfiJoiningDate>2005-12-01</mfiJoiningDate>\n" + 
-		"        <distanceFromBranchOffice>0</distanceFromBranchOffice>\n" + 
+		"        <customField>\n" + 
+		"            <fieldId>6</fieldId>\n" + // distance from branch office 
+		"            <numericValue>1</numericValue>\n" + 
+		"        </customField>\n" + 
 		"    </center>\n" + 
 		"    <center>\n" + 
 		"        <name>First Center</name>\n" + 
@@ -70,8 +74,14 @@ public class TestMifosDataExchange extends TestCase {
 		"            <postalCode>12345</postalCode>\n" + 
 		"            <telephone>1-123-123-1234</telephone>\n" + 
 		"        </address>\n" + 
-		"        <meetingTime>10 AM</meetingTime>\n" + 
-		"        <distanceFromBranchOffice>1</distanceFromBranchOffice>\n" + 
+		"        <customField>\n" + 
+		"            <fieldId>5</fieldId>\n" + // meeting time 
+		"            <stringValue>10 AM</stringValue>\n" + 
+		"        </customField>\n" + 
+		"        <customField>\n" + 
+		"            <fieldId>6</fieldId>\n" + // distance from branch office 
+		"            <numericValue>1</numericValue>\n" + 
+		"        </customField>\n" + 
 		"        <feeAmount>\n" +
 		"            <feeId>12234</feeId>\n" + 
 		"            <amount>10</amount>\n" + 
@@ -92,8 +102,14 @@ public class TestMifosDataExchange extends TestCase {
 		"            <cityDistrict>City</cityDistrict>\n" + 
 		"            <country>Country</country>\n" + 
 		"        </address>\n" + 
-		"        <meetingTime>10 AM</meetingTime>\n" + 
-		"        <distanceFromBranchOffice>2</distanceFromBranchOffice>\n" + 
+		"        <customField>\n" + 
+		"            <fieldId>5</fieldId>\n" + // meeting time 
+		"            <stringValue>10 AM</stringValue>\n" + 
+		"        </customField>\n" + 
+		"        <customField>\n" + 
+		"            <fieldId>6</fieldId>\n" + // distance from branch office 
+		"            <numericValue>1</numericValue>\n" + 
+		"        </customField>\n" + 
 		"        <feeAmount>\n" +
 		"            <feeId>12234</feeId>\n" + 
 		"            <amount>10</amount>\n" + 
@@ -178,8 +194,17 @@ public class TestMifosDataExchange extends TestCase {
 				
 				toCenter.setAddress(toAddress);
 			}
-			toCenter.setMeetingTime(center.getMeetingTime());
-			toCenter.setDistanceFromBranchOffice(center.getDistanceFromBranchOffice());
+			
+			List<CustomField> toCustomFields = toCenter.getCustomField();
+			for (CustomField customField : center.getCustomField()) {
+				CustomField toCustomField = new CustomField();
+				toCustomField.setFieldId(customField.getFieldId());
+				toCustomField.setName(customField.getName());
+				toCustomField.setStringValue(customField.getStringValue());
+				toCustomField.setNumericValue(customField.getNumericValue());
+				toCustomField.setDateValue(customField.getDateValue());
+				toCustomFields.add(toCustomField);
+			}
 
 			List<FeeAmount> toFees = toCenter.getFeeAmount();
 			for (FeeAmount feeAmount : center.getFeeAmount()) {
