@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseVersionPersistence extends Persistence {
 
-	public static final int APPLICATION_VERSION = 112;
+	public static final int APPLICATION_VERSION = 113;
 
 	public int read() throws SQLException {
 		return read(getConnection());
@@ -222,7 +222,7 @@ public class DatabaseVersionPersistence extends Persistence {
 			int upgradedVersion = read(conn);
 			if(upgradedVersion != version + 1) {
 				throw new RuntimeException("upgrade script from " + version +
-					" did not end up at " + (version + 1));
+					" did not end up at " + (version + 1) + "(was instead " + upgradedVersion + ")");
 			}
 			version = upgradedVersion;
 		}

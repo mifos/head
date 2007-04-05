@@ -122,7 +122,7 @@ public class DatabaseSetup {
 	    	else {
 		        throw new RuntimeException(
 		            "error at line " + e.startLineNumber() +
-		            " column " + e.startColumn(),
+		            " column " + e.startColumn() + " in file " + name,
 		            e
 		        );
 	    	}
