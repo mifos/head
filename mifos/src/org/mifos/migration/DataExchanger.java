@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.mifos.migration;
 
 import java.io.File;

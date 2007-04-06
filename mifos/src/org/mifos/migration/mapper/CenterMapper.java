@@ -35,9 +35,6 @@ import org.mifos.migration.generated.FeeAmount;
 
 
 public class CenterMapper {
-	public static final Short MEETING_TIME_CUSTOM_FIELD_ID = (short) 5;
-	public static final Short DISTANCE_FROM_BRANCH_OFFICE_CUSTOM_FIELD_ID = (short) 6;
-
 	public static CenterBO mapCenterToCenterBO(Center center,
 			UserContext userContext) {
 		org.mifos.framework.business.util.Address address = 
@@ -58,22 +55,23 @@ public class CenterMapper {
 			meetingFrequency = RecurrenceType.WEEKLY;
 		}
 
+		// TODO: extract Fee handling for reuse
 		FeePersistence feePersistence = new FeePersistence();
 		List<FeeView> fees = new ArrayList<FeeView>();
 		for (FeeAmount feeAmount : center.getFeeAmount()) {
 			FeeBO fee = feePersistence.getFee(feeAmount.getFeeId());
+			if (fee == null) {
+				throw new RuntimeException("Fee lookup failed for id: " + feeAmount.getFeeId());
+			}
 			CheckForFeeMeetingFrequencyMismatch(fee, meetingFrequency);
 			
 			FeeView feeView = new FeeView(userContext, fee);
 			feeView.setAmount(feeAmount.getAmount().toPlainString());
-			if (fee == null) {
-				// TODO: report invalid fee reference
-			}
-			else {
-				fees.add(feeView);
-			}
+
+			fees.add(feeView);
 		}
 
+		// TODO: split out CustomField handling for reuse		
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
 		for (CustomField field : center.getCustomField()) {
 			if (field.getFieldId() != null) {
@@ -198,6 +196,7 @@ public class CenterMapper {
 		newCenter.setAddress(AddressMapper.mapMifosAddressToXMLAddress(
 			center.getAddress()));
 
+		// TODO: extract CustomField handling for reuse
 		Set<CustomerCustomFieldEntity> fields = center.getCustomFields();
 		List<CustomField> customFields = newCenter.getCustomField();
 		for (CustomerCustomFieldEntity field : fields) {
@@ -216,6 +215,7 @@ public class CenterMapper {
 			customFields.add(customField);
 		}
 
+		// TODO: extract Fee handling for reuse
 		List<FeeAmount> feeAmounts = newCenter.getFeeAmount();
 		Set<AccountFeesEntity> accountFees = 
 			center.getCustomerAccount().getAccountFees();
@@ -230,8 +230,7 @@ public class CenterMapper {
 
 		// TODO: an order is imposed on output for testing purposes
 		// so that the output order can be made to match the input
-		// order.  This would be better done by being able to compare 
-		// XML input and output using the XML structure.
+		// order.  There should be a better way to do this 
 		sortFeeAmountsByFeeId(newCenter);
 		sortCustomFieldsById(newCenter);
 		
