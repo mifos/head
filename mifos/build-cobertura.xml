@@ -50,7 +50,7 @@ Cobertura install
 			<formatter type="xml" />
 			<batchtest todir="${dist.dir}" >
 				<fileset dir="${test.classes}">
-					<include name="**/ApplicationTestSuite.class" />
+					<include name="**/${test.suite}.class" />
 				</fileset>
 			</batchtest>
 		</junit>
