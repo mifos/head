@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.surveys.business.Survey" table="SURVEY">
+		<id name="surveyId" column="SURVEY_ID" type="integer" unsaved-value="null" access="field">
+			<generator class="native" />
+		</id>
+		<property name="surveyName" column="SURVEY_NAME"/>
+		<property name="surveyAppliesTo" column="SURVEY_APPLIES_TO"/>
+		<property name="dateOfCreation" column="DATE_OF_CREATION"/>
+		<property name="state" column="STATE"/>
+		
+		<list name="questions" cascade="all">
+			<key column="SURVEY_ID"/>
+			<index column="QUESTIONS_ORDER"/>
+			<one-to-many class="org.mifos.application.surveys.business.SurveyQuestion"/>
+		</list>
+	</class>
+</hibernate-mapping>

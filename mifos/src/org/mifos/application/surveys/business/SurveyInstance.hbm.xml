@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+	<class name="org.mifos.application.surveys.business.SurveyInstance" table="SURVEY_INSTANCE">
+		<id name="instanceId" column="INSTANCE_ID" type="integer" unsaved-value="null" access="field">
+			<generator class="native" />
+		</id>
+		<many-to-one name="survey" column="SURVEY_ID" access="field" cascade="all"/>
+		<many-to-one name="officer" column="OFFICER_ID" access="field" cascade="all"/>
+		<many-to-one name="client" column="CLIENT_ID" access="field" cascade="all"/>
+		<property name="dateConducted" column="DATE_CONDUCTED" type="date"/>
+		<property name="completedStatus" column="COMPLETED_STATUS" type="integer"/>
+
+	</class>
+</hibernate-mapping>

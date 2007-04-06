@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class DatabaseVersionPersistence extends Persistence {
 
-	public static final int APPLICATION_VERSION = 113;
+	public static final int APPLICATION_VERSION = 114;
 
 	public int read() throws SQLException {
 		return read(getConnection());

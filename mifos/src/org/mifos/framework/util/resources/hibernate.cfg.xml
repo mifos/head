@@ -199,6 +199,11 @@
 
         <mapping resource="org/mifos/application/holiday/business/HolidayBO.hbm.xml" />
     	<mapping resource="org/mifos/application/holiday/business/RepaymentRuleEntity.hbm.xml" />
+    	
+    	<mapping resource="org/mifos/application/surveys/business/Survey.hbm.xml"/>
+    	<mapping resource="org/mifos/application/surveys/business/SurveyInstance.hbm.xml"/>
+    	<mapping resource="org/mifos/application/surveys/business/SurveyQuestion.hbm.xml"/>   
+    	<mapping resource="org/mifos/application/surveys/business/Question.hbm.xml"/>    
 
 	</session-factory>
 
