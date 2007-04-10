@@ -54,7 +54,7 @@ public class DataExchanger {
             validationEventHandler = new MifosValidationEventHandler();
             unmarshaller.setEventHandler(validationEventHandler);
         } catch( JAXBException je ) {
-            je.printStackTrace();
+        	throw new RuntimeException(je);
         } catch (SAXException e) {
 			throw new RuntimeException(e);
 		}	
