@@ -105,11 +105,15 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		return TestObjectFactory.getObject(LoanBO.class,loan.getAccountId());
 	}
 
-	private void applyPayment(LoanBO loan,double amnt)throws Exception{
+	private void applyPayment(LoanBO loan, int amount) throws Exception {
 		Date currentDate = new Date(System.currentTimeMillis());
 		List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
 		accntActionDates.add(loan.getAccountActionDate(Short.valueOf("1")));
-		PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,TestObjectFactory.getMoneyForMFICurrency(amnt),null,loan.getPersonnel(),"receiptNum",Short.valueOf("1"),currentDate,currentDate );
+		PaymentData accountPaymentDataView = 
+			TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
+				TestObjectFactory.getMoneyForMFICurrency(amount),null,
+				loan.getPersonnel(),"receiptNum",Short.valueOf("1"),
+				currentDate,currentDate );
 		
 		loan.applyPayment(accountPaymentDataView);
 		TestObjectFactory.updateObject(loan);

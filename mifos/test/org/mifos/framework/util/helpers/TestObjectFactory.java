@@ -1344,16 +1344,16 @@ public class TestObjectFactory {
 		return testObjectPersistence.getCurrency();
 	}
 
-	public static Money getMoneyForMFICurrency(double amnt) {
-		return new Money(String.valueOf(amnt));
+	/**
+	 * Convenience method where the amount is in MFI currency,
+	 * and is an integer.
+	 */
+	public static Money getMoneyForMFICurrency(int amount) {
+		return new Money(String.valueOf(amount));
 	}
 
-	public static Money getMoneyForMFICurrency(String amnt) {
-		return new Money(testObjectPersistence.getCurrency(), amnt);
-	}
-
-	public static Money getMoney(Short currencyId, double amnt) {
-		return new Money(String.valueOf(amnt));
+	public static Money getMoneyForMFICurrency(String amount) {
+		return new Money(testObjectPersistence.getCurrency(), amount);
 	}
 
 	public static void updateObject(PersistentObject obj) {

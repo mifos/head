@@ -86,9 +86,10 @@ public class TestCollSheetCustBO extends MifosTestCase {
 		CustomerBO groupBO = TestObjectFactory.createClient("ashGrp", 
 				CustomerStatus.CLIENT_PARTIAL, centerBO);
 		collSheetCustBO.populateCustomerDetails(groupBO);
-		assertEquals(collSheetCustBO.getSearchId(), "1.1.1");
-		assertEquals(collSheetCustBO.getParentCustomerId(), centerBO
-				.getCustomerId());
+		assertEquals("1.1.1", collSheetCustBO.getSearchId());
+		assertEquals(
+			centerBO.getCustomerId(),
+			collSheetCustBO.getParentCustomerId());
 
 		TestObjectFactory.cleanUp(groupBO);
 		TestObjectFactory.cleanUp(centerBO);
@@ -124,10 +125,11 @@ public class TestCollSheetCustBO extends MifosTestCase {
 
 		collSheetCustBO.populateAccountDetails(accountActionDate);
 
-		assertEquals(collSheetCustBO.getCustAccntPenalty(), TestObjectFactory
-				.getMoneyForMFICurrency(8));
-		assertEquals(collSheetCustBO.getCustAccntFee(), TestObjectFactory
-				.getMoneyForMFICurrency(2));
+		assertEquals(TestObjectFactory.getMoneyForMFICurrency(8),
+				collSheetCustBO.getCustAccntPenalty());
+		assertEquals(
+				TestObjectFactory.getMoneyForMFICurrency(2),
+				collSheetCustBO.getCustAccntFee());
 	}
 
 	public void testAddCollectionSheetLoanDetail() {
@@ -149,24 +151,29 @@ public class TestCollSheetCustBO extends MifosTestCase {
 		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
 		collSheetCustBO.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
 
-		assertEquals(collSheetCustBO.getCollectiveLoanAmntDue(),
-				TestObjectFactory.getMoneyForMFICurrency(35));
-		assertEquals(collSheetCustBO.getCollectiveLoanDisbursal(),
-				TestObjectFactory.getMoneyForMFICurrency(15));
-		assertEquals(collSheetCustBO.getCollectionSheetLoanDetails().size(), 1);
+		assertEquals(
+				TestObjectFactory.getMoneyForMFICurrency(35),
+				collSheetCustBO.getCollectiveLoanAmntDue());
+		assertEquals(
+				TestObjectFactory.getMoneyForMFICurrency(15),
+				collSheetCustBO.getCollectiveLoanDisbursal());
+		assertEquals(
+				1,
+				collSheetCustBO.getCollectionSheetLoanDetails().size());
 	}
 
-	public void testGetLoanDetailsForAccntId() {
+	public void testGetLoanDetailsForAccountId() {
 		CollSheetLnDetailsEntity collectionSheetLoanDetail = new CollSheetLnDetailsEntity();
 		collectionSheetLoanDetail.setAccountId(Integer.valueOf("1"));
 
 		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
 		collSheetCustBO.addCollectionSheetLoanDetail(collectionSheetLoanDetail);
-		assertEquals(collSheetCustBO.getLoanDetailsForAccntId(
-				Integer.valueOf("1")).getAccountId(), Integer.valueOf("1"));
+		assertEquals(1,
+			collSheetCustBO.getLoanDetailsForAccntId(1).getAccountId()
+				.intValue());
 	}
 
-	public void testGetLoanDetailsForAccntIdForNull() {
+	public void testGetLoanDetailsForNullAccountId() {
 		CollSheetCustBO collSheetCustBO = new CollSheetCustBO();
 		assertNull(collSheetCustBO.getLoanDetailsForAccntId(Integer
 				.valueOf("1")));
@@ -202,12 +209,12 @@ public class TestCollSheetCustBO extends MifosTestCase {
 				.getMoneyForMFICurrency(5));
 
 		collSheetCustObj.addCollectiveTotalsForChild(collSheetCustBO);
-		assertEquals(collSheetCustObj.getCollectiveAccntCharges(),
-				TestObjectFactory.getMoneyForMFICurrency(10));
-		assertEquals(collSheetCustObj.getCollectiveAccntCharges(),
-				TestObjectFactory.getMoneyForMFICurrency(10));
-		assertEquals(collSheetCustObj.getCollectiveAccntCharges(),
-				TestObjectFactory.getMoneyForMFICurrency(10));
+		assertEquals(TestObjectFactory.getMoneyForMFICurrency(10),
+				collSheetCustObj.getCollectiveAccntCharges());
+		assertEquals(TestObjectFactory.getMoneyForMFICurrency(10),
+				collSheetCustObj.getCollectiveAccntCharges());
+		assertEquals(TestObjectFactory.getMoneyForMFICurrency(10),
+				collSheetCustObj.getCollectiveAccntCharges());
 	}
 
 	private AccountBO createLoanAccount() {
