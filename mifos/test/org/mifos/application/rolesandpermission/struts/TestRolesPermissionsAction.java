@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
@@ -75,7 +76,7 @@ public class TestRolesPermissionsAction extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.load_success.toString());
 		List<ActivityEntity> activities=(List<ActivityEntity>)SessionUtils.getAttribute(RolesAndPermissionConstants.ACTIVITYLIST,request);
 		assertNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY,request));
-		assertEquals(181,activities.size());
+		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
 		assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 	}
 

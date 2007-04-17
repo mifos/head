@@ -1,0 +1,6 @@
+delete from ROLES_ACTIVITY where ACTIVITY_ID = 206;
+delete from ACTIVITY where ACTIVITY_ID = 206;
+delete from LOOKUP_VALUE_LOCALE where LOOKUP_VALUE_ID = 925;
+delete from LOOKUP_VALUE where lookup_id = 580;
+
+update DATABASE_VERSION set DATABASE_VERSION = 114 where DATABASE_VERSION = 115;

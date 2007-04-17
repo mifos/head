@@ -14,7 +14,6 @@ import org.mifos.application.rolesandpermission.utils.helpers.TestRoleTempleteBu
 
 public class RolesAndPermissionTestSuite extends TestSuite {
 
-
 	public RolesAndPermissionTestSuite() throws Exception {
 		super();
 	}

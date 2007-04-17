@@ -1,5 +1,6 @@
 package org.mifos.application.rolesandpermission.business.service;
 
+import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ServiceException;
@@ -31,7 +32,8 @@ public class TestRolesPermissionsBusinessService extends MifosTestCase {
 	}
 
 	public void testGetActivities() throws Exception{
-		assertEquals(181,rolesPermissionsBusinessService.getActivities().size());
+		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,
+			rolesPermissionsBusinessService.getActivities().size());
 	}
 
 	public void testGetActivitiesFailure() {
@@ -47,7 +49,8 @@ public class TestRolesPermissionsBusinessService extends MifosTestCase {
 	public void testGetRoleForGivenId() throws Exception{
 		RoleBO role = rolesPermissionsBusinessService.getRole(Short.valueOf("1"));
 		assertNotNull(role);
-		assertEquals(160,role.getActivities().size());
+		assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE,
+			role.getActivities().size());
 	}
 
 	public void testGetRoleForGivenIdFailure() {
