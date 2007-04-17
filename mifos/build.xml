@@ -336,10 +336,7 @@
 			</transaction>
 			<!-- The following list of scripts is supposed to
 			     be the same as the one in build_db except
-			     for testdbinsertionscript.sql.  I just
-			     haven't yet figured out how I can factor
-			     out the duplication in ant.
-			-->
+			     for testdbinsertionscript.sql.  -->
 			<transaction src="./sql/mifosdroptables.sql" />
             <transaction src="./sql/latest-schema.sql" />
             <transaction src="./sql/latest-data.sql" />
