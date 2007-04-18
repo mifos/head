@@ -37,6 +37,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
@@ -729,7 +730,7 @@ public class TestCustomerBO extends MifosTestCase {
 			throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				Short.valueOf("1")));
+				CustomFieldType.NUMERIC));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
 		Name name = new Name("XYZ", null, null, "Last Name");

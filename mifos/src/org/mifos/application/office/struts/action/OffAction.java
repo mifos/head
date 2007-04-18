@@ -259,7 +259,7 @@ public class OffAction extends BaseAction {
 		if (office.getCustomFields() != null && office.getCustomFields().size()>0)
 			for (OfficeCustomFieldEntity customField : office.getCustomFields()){
 				customfields.add(new CustomFieldView(customField.getFieldId(),
-						customField.getFieldValue(), null));
+						customField.getFieldValue(), CustomFieldType.NONE));
 			}
 		offActionForm.setCustomFields(customfields);
 	}
@@ -293,7 +293,7 @@ public class OffAction extends BaseAction {
 
 	private void loadParents(HttpServletRequest request, OffActionForm form)
 			throws Exception {
-		String officeLevel = (String) request.getParameter("officeLevel");
+		String officeLevel = request.getParameter("officeLevel");
 		if (!StringUtils.isNullOrEmpty(officeLevel)) {
 			form.setOfficeLevel(officeLevel);
 			OfficeLevel Level = OfficeLevel.getOfficeLevel(Short

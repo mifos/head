@@ -42,6 +42,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.business.View;
 import org.mifos.framework.util.helpers.DateUtils;
 
@@ -61,6 +62,10 @@ public class CustomFieldView extends View {
 		this.fieldId = fieldId;
 		this.fieldValue = fieldValue;
 		this.fieldType = fieldType;
+	}
+	
+	public CustomFieldView(Short fieldId, String value, CustomFieldType type) {
+		this(fieldId, value, type == null ? null : type.getValue());
 	}
 
 	public Short getFieldId() {
@@ -110,10 +115,10 @@ public class CustomFieldView extends View {
 	}
 
 	public void convertDateToUniformPattern(Locale currentLocale) {
-		SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance(
+		SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(
 				DateFormat.SHORT, currentLocale);
-		String userfmt = DateUtils.convertToCurrentDateFormat(((SimpleDateFormat) sdf)
-		.toPattern());
+		String userfmt = DateUtils.convertToCurrentDateFormat(
+			format.toPattern());
 		setFieldValue(DateUtils.convertUserToDbFmt(getFieldValue(), userfmt));
 	}
 

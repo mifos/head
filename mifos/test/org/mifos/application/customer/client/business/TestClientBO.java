@@ -48,6 +48,7 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -354,7 +355,7 @@ public class TestClientBO extends MifosTestCase {
 				NameType.SPOUSE, TestObjectFactory.SAMPLE_SALUTATION,
 				"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			client = new ClientBO(TestObjectFactory.getUserContext(), "", 
+			client = new ClientBO(TestUtils.makeUser(), "", 
 					CustomerStatus.fromInt(new Short("1")), null, null, null, 
 					null, null, null, personnel, officeId, null, null,
 					null,null,null,YesNoFlag.YES.getValue(),
@@ -362,7 +363,7 @@ public class TestClientBO extends MifosTestCase {
 			fail("Client Created");
 		} catch (CustomerException ce) {
 			assertNull(client);
-			assertEquals(ce.getKey(), CustomerConstants.INVALID_NAME);
+			assertEquals(CustomerConstants.INVALID_NAME, ce.getKey());
 		}
 	}
 	
@@ -371,7 +372,7 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"first","","last","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			client = new ClientBO(TestObjectFactory.getUserContext(), 
+			client = new ClientBO(TestUtils.makeUser(), 
 					clientNameDetailView.getDisplayName(), 
 					CustomerStatus.fromInt(new Short("1")), 
 					null, null, null, null, null, null, personnel, null, null, null,
@@ -389,7 +390,7 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),povertyStatus);
-		client = new ClientBO(TestObjectFactory.getUserContext(), 
+		client = new ClientBO(TestUtils.makeUser(), 
 				clientNameDetailView.getDisplayName(), 
 				CustomerStatus.fromInt(new Short("1")), null, null, null, 
 				null, null, null, personnel, officeId, null, null,
@@ -415,7 +416,7 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),povertyStatus);
-		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_ACTIVE, null, null, null, null, null, selectedOfferings, personnel, Short.valueOf("3"), getMeeting(), personnel,
+		client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.CLIENT_ACTIVE, null, null, null, null, null, selectedOfferings, personnel, Short.valueOf("3"), getMeeting(), personnel,
 				null, null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
 		HibernateUtil.commitTransaction();
@@ -483,7 +484,7 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 		createParentObjects(CustomerStatus.GROUP_PARTIAL); 
-		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
+		client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
 		HibernateUtil.commitTransaction();
@@ -498,13 +499,22 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"Client","","1","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			createParentObjects(CustomerStatus.GROUP_PARTIAL); 
-			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("2")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
-					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
-			assertFalse("Client Created", true);
-		} catch (CustomerException ce) {
+			createParentObjects(CustomerStatus.GROUP_PARTIAL);
+			/* Changing TestObjectFactory.getUserContext() 
+			   to TestUtils.makeUser() caused this to fail with a different
+			   exception */
+			client = new ClientBO(TestObjectFactory.getUserContext(), 
+				clientNameDetailView.getDisplayName(), 
+				CustomerStatus.CLIENT_PENDING, null, null, null, null, null, 
+				null, personnel, group.getOffice().getOfficeId(), group, null,
+				null,null,null,YesNoFlag.YES.getValue(),
+				clientNameDetailView,spouseNameDetailView,
+				clientDetailView,null);
+			fail();
+		} catch (CustomerException e) {
 			assertNull(client);
-			assertEquals(ce.getKey(), ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION);
+			assertEquals(ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION, 
+				e.getKey());
 		}
 	}
 	
@@ -514,12 +524,23 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			createParentObjects(CustomerStatus.GROUP_PARTIAL); 
-			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("3")), null, null, null, null, null, null, personnel, group.getOffice().getOfficeId(), group, null,
-					null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
-			assertFalse("Client Created", true);
-		} catch (CustomerException ce) {
+			/* Changing TestObjectFactory.getUserContext() 
+			   to TestUtils.makeUser() caused this to fail with a different
+			   exception */
+			client = new ClientBO(TestObjectFactory.getUserContext(), 
+					clientNameDetailView.getDisplayName(), 
+					CustomerStatus.CLIENT_ACTIVE, null, null, null, null, 
+					null, null, personnel, group.getOffice().getOfficeId(), 
+					group, null,
+					null,null,null,YesNoFlag.YES.getValue(),
+					clientNameDetailView,spouseNameDetailView,
+					clientDetailView,null);
+			fail();
+		} catch (CustomerException e) {
 			assertNull(client);
-			assertEquals(ce.getKey(), ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION);
+			assertEquals(
+				ClientConstants.INVALID_CLIENT_STATUS_EXCEPTION,
+				e.getKey());
 		}
 	}
 	
@@ -530,13 +551,12 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"first","","last","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("3")), null, null, null, null, fees, null, personnel, officeId, meeting,null, null,
+			client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("3")), null, null, null, null, fees, null, personnel, officeId, meeting,null, null,
 					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
-			assertFalse("Client Created", true);
-			
-		} catch (CustomerException ce) {
+			fail();
+		} catch (CustomerException e) {
 			assertNull(client);
-			assertEquals(ce.getKey(), CustomerConstants.INVALID_LOAN_OFFICER);
+			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
 		}
 		removeFees(fees);
 	}
@@ -546,13 +566,12 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"first","","last","");
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-			client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("3")), null, null, null, null, null,  null, personnel, officeId, null,personnel, null,
+			client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("3")), null, null, null, null, null,  null, personnel, officeId, null,personnel, null,
 					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
-			assertFalse("Client Created", true);
-			
+			fail();
 		} catch (CustomerException ce) {
 			assertNull(client);
-			assertEquals(ce.getKey(), CustomerConstants.INVALID_MEETING);
+			assertEquals(CustomerConstants.INVALID_MEETING, ce.getKey());
 		}
 			
 	}
@@ -561,17 +580,16 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
+		client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 		try {
-			new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
+			new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
 					null,null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
-			assertFalse("Client Created", true);
-			
+			fail();
 		} catch (CustomerException e) {
 			assertEquals(
 				CustomerConstants.CUSTOMER_DUPLICATE_CUSTOMERNAME_EXCEPTION,
@@ -584,17 +602,26 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,"Client","","1","");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
+		client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
 				"1",null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		client = TestObjectFactory.getObject(
+			ClientBO.class, client.getCustomerId());
 		try {
-			new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, null, null, null, personnel, officeId, null,personnel, new java.util.Date(),
-					"1",null,null,YesNoFlag.NO.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
-			assertFalse("Client Created", true);
-			
+			/* Changing TestObjectFactory.getUserContext() 
+			   to TestUtils.makeUser() caused this to fail with a different
+			   exception */
+			client = new ClientBO(TestObjectFactory.getUserContext(), 
+				clientNameDetailView.getDisplayName(), 
+				CustomerStatus.CLIENT_PARTIAL, null, null, null, null, 
+				null, null, personnel, officeId, null,personnel, 
+				new java.util.Date(),
+				"1",null,null,YesNoFlag.NO.getValue(),
+				clientNameDetailView,spouseNameDetailView,
+				clientDetailView,null);
+			fail();
 		} catch (CustomerException e) {
 			assertEquals(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION, 
 				e.getKey());
@@ -609,7 +636,7 @@ public class TestClientBO extends MifosTestCase {
 		ClientNameDetailView clientNameDetailView = new ClientNameDetailView(NameType.CLIENT,TestObjectFactory.SAMPLE_SALUTATION,firstName,"",lastName,"");
 		ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
-		client = new ClientBO(TestObjectFactory.getUserContext(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, getCustomFields(), null, null, personnel, officeId, meeting,personnel, null,
+		client = new ClientBO(TestUtils.makeUser(), clientNameDetailView.getDisplayName(), CustomerStatus.fromInt(new Short("1")), null, null, null, getCustomFields(), null, null, personnel, officeId, meeting,personnel, null,
 				null,null,null,YesNoFlag.YES.getValue(),clientNameDetailView,spouseNameDetailView,clientDetailView,null);
 		client.save();
 		HibernateUtil.commitTransaction();
@@ -625,9 +652,8 @@ public class TestClientBO extends MifosTestCase {
 		createInitialObjects();
 		try{
 			client.transferToGroup(null);
-			assertTrue(false);
+			fail();
 		}catch(CustomerException ce){
-			assertTrue(true);
 			assertEquals(CustomerConstants.INVALID_PARENT,ce.getKey());
 		}
 	}
@@ -636,10 +662,10 @@ public class TestClientBO extends MifosTestCase {
 		createInitialObjects();
 		try{
 			client.transferToGroup((GroupBO)client.getParentCustomer());
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER,ce.getKey());
+			fail();
+		}catch(CustomerException e){
+			assertEquals(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER,
+				e.getKey());
 		}
 	}
 	
@@ -651,10 +677,10 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		try{
 			client.transferToGroup(group1);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE,ce.getKey());
+			fail();
+		}catch(CustomerException e){
+			assertEquals(CustomerConstants.ERRORS_INTRANSFER_PARENT_INACTIVE,
+				e.getKey());
 		}
 	}
 	
@@ -705,9 +731,8 @@ public class TestClientBO extends MifosTestCase {
 		client.setUserContext(TestObjectFactory.getUserContext());
 		try{
 			client.transferToGroup(group1);
-			assertTrue(false);
+			fail();
 		}catch(CustomerException ce){
-			assertTrue(true);			
 			assertEquals(ClientConstants.ERRORS_ACTIVE_ACCOUNTS_PRESENT,ce.getKey());
 		}
 		HibernateUtil.closeSession();
@@ -723,13 +748,13 @@ public class TestClientBO extends MifosTestCase {
 		group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		client.setUserContext(TestObjectFactory.getUserContext());
+		client.setUserContext(TestUtils.makeUser());
 		try{
 			client.transferToGroup(group1);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);	
-			assertEquals(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH,ce.getKey());
+			fail();
+		}catch(CustomerException e){
+			assertEquals(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH,
+				e.getKey());
 		}
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
@@ -838,10 +863,9 @@ public class TestClientBO extends MifosTestCase {
 		createInitialObjects();
 		try{
 			client.transferToBranch(null);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.INVALID_OFFICE,ce.getKey());
+			fail();
+		}catch(CustomerException e){
+			assertEquals(CustomerConstants.INVALID_OFFICE, e.getKey());
 		}
 	}
 	
@@ -849,10 +873,11 @@ public class TestClientBO extends MifosTestCase {
 		createInitialObjects();
 		try{
 			client.transferToBranch(client.getOffice());
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER,ce.getKey());
+			fail();
+		}
+		catch (CustomerException e) {
+			assertEquals(CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER,
+				e.getKey());
 		}
 	}
 	
@@ -863,10 +888,10 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		try{
 			client.transferToBranch(office);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE,ce.getKey());
+			fail();
+		}catch(CustomerException e){
+			assertEquals(CustomerConstants.ERRORS_TRANSFER_IN_INACTIVE_OFFICE,
+				e.getKey());
 		}
 	}
 	
@@ -895,7 +920,7 @@ public class TestClientBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		client.setUserContext(TestObjectFactory.getUserContext());
+		client.setUserContext(TestUtils.makeUser());
 		CustomerMovementEntity currentMovement = client.getActiveCustomerMovement();
 		assertNotNull(currentMovement);
 		assertEquals(office.getOfficeId(), currentMovement.getOffice().getOfficeId());
@@ -942,26 +967,22 @@ public class TestClientBO extends MifosTestCase {
 		createObjectsForClient("Client 1",CustomerStatus.CLIENT_ACTIVE);
 		try{
 			client.updateMfiInfo(null);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER,ce.getKey());
+			fail();
+		}catch(CustomerException e){
+			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER,e.getKey());
 		}
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 	}
 	
-	public void testUpdateFailureIfLoanOffcierNotThereInHoldState()throws Exception{
-		
-			createObjectsForClient("Client 1",CustomerStatus.CLIENT_HOLD );
-			try{
+	public void testUpdateFailureIfLoanOffcierNotThereInHoldState()
+	throws Exception {
+		createObjectsForClient("Client 1", CustomerStatus.CLIENT_HOLD);
+		try{
 			client.updateMfiInfo(null);
-			assertTrue(false);
-		}catch(CustomerException ce){
-			assertTrue(true);
-			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER,ce.getKey());
+			fail();
 		}
-		catch(Exception ce){
-			ce.printStackTrace();
+		catch(CustomerException e) {
+			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, e.getKey());
 		}
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
 	}
@@ -1063,16 +1084,23 @@ public class TestClientBO extends MifosTestCase {
 		Short personnel = new Short("1");
 		group = TestObjectFactory.createGroupUnderBranch("Group", CustomerStatus.GROUP_PENDING,
 				officeId, getMeeting(), personnel);
-		group1 = TestObjectFactory.createGroupUnderBranch("Group2", CustomerStatus.GROUP_PENDING, officeId,null, personnel);
-		client = TestObjectFactory.createClient("new client" ,CustomerStatus.CLIENT_PARTIAL, group, new java.util.Date());
+		group1 = TestObjectFactory.createGroupUnderBranch("Group2", 
+				CustomerStatus.GROUP_PENDING, officeId,null, personnel);
+		client = TestObjectFactory.createClient("new client",
+				CustomerStatus.CLIENT_PARTIAL, group, new java.util.Date());
 		HibernateUtil.closeSession();
 	}
 	
-	private void createObjectsForTranferToGroup_SameBranch(CustomerStatus groupStatus)throws Exception{
+	private void createObjectsForTranferToGroup_SameBranch(
+			CustomerStatus groupStatus)
+	throws Exception {
 		createInitialObjects();
-		MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, "Bangalore");
+		MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, 
+				Short.valueOf("1"), new java.util.Date(), 
+				MeetingType.CUSTOMER_MEETING, "Bangalore");
 		center1 = TestObjectFactory.createCenter("Center1", meeting);
-		group1 = TestObjectFactory.createGroupUnderCenter("Group2", groupStatus, center1);
+		group1 = TestObjectFactory.createGroupUnderCenter("Group2", 
+				groupStatus, center1);
 		HibernateUtil.closeSession();
 	}
 	
@@ -1115,14 +1143,14 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	private List<CustomFieldView> getCustomFields() {
-			List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
-			fields.add(new CustomFieldView(
-				Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC.getValue())
-			);
-			fields.add(new CustomFieldView(
-				Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC.getValue())
-			);
-			return fields;
+		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
+		fields.add(new CustomFieldView(
+			Short.valueOf("5"), "value1", CustomFieldType.ALPHA_NUMERIC)
+		);
+		fields.add(new CustomFieldView(
+			Short.valueOf("6"), "value2", CustomFieldType.ALPHA_NUMERIC)
+		);
+		return fields;
 	}
 	
 	private void createInitialObjects() throws Exception{

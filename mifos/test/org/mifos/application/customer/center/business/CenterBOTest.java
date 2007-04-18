@@ -28,6 +28,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -81,6 +82,9 @@ public class CenterBOTest extends MifosTestCase {
 		Address address = new Address();
 		address.setCity("Bangalore");
 		address.setLine1("Aditi");
+
+		// Changing TestObjectFactory.getUserContext() to TestUtils.makeUser()
+		// caused 4 instead of 5 records from getAuditLogRecords
 		center.setUserContext(TestObjectFactory.getUserContext());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.update(TestObjectFactory.getUserContext(), personnel,
@@ -135,12 +139,12 @@ public class CenterBOTest extends MifosTestCase {
 	public void testCreateWithoutName() throws Exception {
 		try {
 			meeting = getMeeting();
-			center = new CenterBO(TestObjectFactory.getUserContext(), "", null,
+			center = new CenterBO(TestUtils.makeUser(), "", null,
 					null, null, null, null, officeId, meeting, personnel);
-			assertFalse("Center Created", true);
+			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
-			assertEquals(ce.getKey(), CustomerConstants.INVALID_NAME);
+			assertEquals(CustomerConstants.INVALID_NAME, ce.getKey());
 		}
 		TestObjectFactory.removeObject(meeting);
 	}
@@ -148,36 +152,36 @@ public class CenterBOTest extends MifosTestCase {
 	public void testCreateWithoutLO() throws Exception {
 		try {
 			meeting = getMeeting();
-			center = new CenterBO(TestObjectFactory.getUserContext(), "Center",
+			center = new CenterBO(TestUtils.makeUser(), "Center",
 					null, null, null, null, null, officeId, meeting, null);
-			assertFalse("Center Created", true);
+			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
-			assertEquals(ce.getKey(), CustomerConstants.INVALID_LOAN_OFFICER);
+			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
 		}
 		TestObjectFactory.removeObject(meeting);
 	}
 
 	public void testCreateWithoutMeeting() throws Exception {
 		try {
-			center = new CenterBO(TestObjectFactory.getUserContext(), "Center",
+			center = new CenterBO(TestUtils.makeUser(), "Center",
 					null, null, null, null, null, officeId, meeting, personnel);
-			assertFalse("Center Created", true);
+			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
-			assertEquals(ce.getKey(), CustomerConstants.INVALID_MEETING);
+			assertEquals(CustomerConstants.INVALID_MEETING, ce.getKey());
 		}
 	}
 
 	public void testCreateWithoutOffice() throws Exception {
 		try {
 			meeting = getMeeting();
-			center = new CenterBO(TestObjectFactory.getUserContext(), "Center",
+			center = new CenterBO(TestUtils.makeUser(), "Center",
 					null, null, null, null, null, null, meeting, personnel);
-			assertFalse("Center Created", true);
+			fail();
 		} catch (CustomerException ce) {
 			assertNull(center);
-			assertEquals(ce.getKey(), CustomerConstants.INVALID_OFFICE);
+			assertEquals(CustomerConstants.INVALID_OFFICE, ce.getKey());
 		}
 		TestObjectFactory.removeObject(meeting);
 	}
@@ -185,7 +189,7 @@ public class CenterBOTest extends MifosTestCase {
 	public void testSuccessfulCreateWithoutFeeAndCustomField() throws Exception {
 		String name = "Center1";
 		meeting = getMeeting();
-		center = new CenterBO(TestObjectFactory.getUserContext(), name, null,
+		center = new CenterBO(TestUtils.makeUser(), name, null,
 				null, null, null, null, officeId, meeting, personnel);
 		center.save();
 		HibernateUtil.commitTransaction();
@@ -199,7 +203,7 @@ public class CenterBOTest extends MifosTestCase {
 	public void testSuccessfulCreateWithoutFee() throws Exception {
 		String name = "Center1";
 		meeting = getMeeting();
-		center = new CenterBO(TestObjectFactory.getUserContext(), name, null,
+		center = new CenterBO(TestUtils.makeUser(), name, null,
 				getCustomFields(), null, null, null, officeId, meeting,
 				personnel);
 		center.save();
@@ -223,13 +227,13 @@ public class CenterBOTest extends MifosTestCase {
 		meeting = getMeeting();
 		List<FeeView> fees = getFees();
 		try {
-			center = new CenterBO(TestObjectFactory.getUserContext(), name,
+			center = new CenterBO(TestUtils.makeUser(), name,
 					null, null, fees, externalId, mfiJoiningDate, officeId,
 					meeting, personnel);
+			fail();
 		} catch (CustomerException e) {
-			assertTrue(true);
-			assertEquals(CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, e
-					.getKey());
+			assertEquals(
+				CustomerConstants.ERRORS_DUPLICATE_CUSTOMER, e.getKey());
 		}
 		removeFees(fees);
 	}
@@ -243,11 +247,12 @@ public class CenterBOTest extends MifosTestCase {
 		String externalId = "12345";
 		Date mfiJoiningDate = getDate("11/12/2005");
 		meeting = getMeeting();
-		UserContext userContext = TestObjectFactory.getUserContext();
+		UserContext userContext = TestUtils.makeUser();
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			center = new CenterBO(userContext, name, null, null, null,
 					externalId, mfiJoiningDate, officeId, meeting, personnel);
+			fail();
 		} catch (CustomerException e) {
 			assertTrue(true);
 		} finally {
@@ -261,7 +266,7 @@ public class CenterBOTest extends MifosTestCase {
 		Date mfiJoiningDate = getDate("11/12/2005");
 		meeting = getMeeting();
 		List<FeeView> fees = getFees();
-		center = new CenterBO(TestObjectFactory.getUserContext(), name, null,
+		center = new CenterBO(TestUtils.makeUser(), name, null,
 				getCustomFields(), fees, externalId, mfiJoiningDate, officeId,
 				meeting, personnel);
 		center.save();
@@ -288,10 +293,11 @@ public class CenterBOTest extends MifosTestCase {
 	public void testUpdateFailure() throws Exception {
 		createCustomers();
 		try {
-			center.update(TestObjectFactory.getUserContext(), null, "1234",
+			center.update(TestUtils.makeUser(), null, "1234",
 					null, null, null, null);
+			fail();
 		} catch (CustomerException ce) {
-			assertEquals(ce.getKey(), CustomerConstants.INVALID_LOAN_OFFICER);
+			assertEquals(CustomerConstants.INVALID_LOAN_OFFICER, ce.getKey());
 		}
 	}
 
@@ -305,7 +311,7 @@ public class CenterBOTest extends MifosTestCase {
 		address.setCity(city);
 		address.setLine1(addressLine1);
 
-		center.update(TestObjectFactory.getUserContext(), personnel,
+		center.update(TestUtils.makeUser(), personnel,
 				externalId, mfiJoiningDate, address, null, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -349,7 +355,7 @@ public class CenterBOTest extends MifosTestCase {
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
 
-		center.update(TestObjectFactory.getUserContext(), null, center
+		center.update(TestUtils.makeUser(), null, center
 				.getExternalId(), center.getMfiJoiningDate(), center
 				.getAddress(), null, null);
 		HibernateUtil.commitTransaction();
@@ -375,7 +381,7 @@ public class CenterBOTest extends MifosTestCase {
 				.getPersonnel().getPersonnelId());
 		PersonnelBO newLO = TestObjectFactory.getPersonnel(Short.valueOf("2"));
 		HibernateUtil.closeSession();
-		center.update(TestObjectFactory.getUserContext(), newLO
+		center.update(TestUtils.makeUser(), newLO
 				.getPersonnelId(), center.getExternalId(), center
 				.getMfiJoiningDate(), center.getAddress(), null, null);
 		HibernateUtil.commitTransaction();
@@ -508,9 +514,9 @@ public class CenterBOTest extends MifosTestCase {
 	private List<CustomFieldView> getCustomFields() {
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
 		fields.add(new CustomFieldView(Short.valueOf("5"), "value1",
-				CustomFieldType.ALPHA_NUMERIC.getValue()));
+				CustomFieldType.ALPHA_NUMERIC));
 		fields.add(new CustomFieldView(Short.valueOf("6"), "value2",
-				CustomFieldType.ALPHA_NUMERIC.getValue()));
+				CustomFieldType.ALPHA_NUMERIC));
 		return fields;
 	}
 

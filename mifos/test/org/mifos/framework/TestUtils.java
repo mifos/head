@@ -38,10 +38,22 @@ public class TestUtils {
 		user.setRoles(set);
 		user.setLevel(PersonnelLevel.NON_LOAN_OFFICER);
 		user.setName("mifos");
-		user.setPreferredLocale(new Locale("en", "US"));
+		user.setPreferredLocale(sampleLocale());
 		user.setBranchId(TestObjectFactory.HEAD_OFFICE);
 		user.setBranchGlobalNum("0001");
 		return user;
+	}
+
+	public static Locale sampleLocale() {
+		return new Locale("en", "US");
+	}
+	
+	/**
+	 * Corresponds to the locale one gets from
+	 * {@link TestObjectFactory#getUserContext()}.
+	 */
+	public static Locale ukLocale() {
+		return new Locale("EN", "GB");
 	}
 
 	public static void assertWellFormedFragment(String xml) 

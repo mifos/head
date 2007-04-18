@@ -32,6 +32,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -113,8 +114,8 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 
 		CenterCustActionForm actionForm = (CenterCustActionForm) request
 				.getSession().getAttribute("centerCustActionForm");
-		String currentDate = DateUtils.getCurrentDate(TestObjectFactory
-		.getUserContext().getPreferredLocale());
+		String currentDate = DateUtils.getCurrentDate(
+			TestUtils.ukLocale());
 		assertEquals(currentDate, actionForm.getMfiJoiningDate());
 	}
 
@@ -494,7 +495,7 @@ public class CenterActionTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testSuccessfulUpdate() throws Exception {
-		center = new CenterBO(TestObjectFactory.getUserContext(), "center",
+		center = new CenterBO(TestUtils.makeUser(), "center",
 				new Address(), null, null, null, null, Short.valueOf("3"),
 				getMeeting(), Short.valueOf("1"));
 		center.save();

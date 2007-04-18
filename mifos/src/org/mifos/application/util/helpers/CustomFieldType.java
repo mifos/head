@@ -5,6 +5,8 @@ public enum CustomFieldType {
 	NUMERIC((short)1), 
 	ALPHA_NUMERIC((short)2), 
 	DATE((short)3);
+	
+	public static CustomFieldType NONE = null;
 
 	Short value;
 

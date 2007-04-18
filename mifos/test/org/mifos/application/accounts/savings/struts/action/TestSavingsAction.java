@@ -29,6 +29,7 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -135,7 +136,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 
 	private List<CustomFieldView> getCustomFieldView() {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-		customFields.add(new CustomFieldView(new Short("8"), "13", null));
+		customFields.add(new CustomFieldView(new Short("8"), "13", CustomFieldType.NONE));
 		return customFields;
 
 	}

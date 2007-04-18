@@ -9,6 +9,7 @@ import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
@@ -192,7 +193,7 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 		UserContext userContext = TestObjectFactory.getUserContext();
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				Short.valueOf("1")));
+				CustomFieldType.NUMERIC));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
 		Date date = new Date();

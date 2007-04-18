@@ -20,6 +20,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.surveys.SurveyConstants;
+import org.mifos.application.util.helpers.CustomFieldType;
 
 public class TestSurvey extends MifosTestCase {
 	
@@ -105,7 +106,7 @@ public class TestSurvey extends MifosTestCase {
 		Name name = new Name("XYZ", null, null, null);
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView((short) 9, "123456",
-				Short.valueOf("1")));
+				CustomFieldType.NUMERIC));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
 		Date date = DateUtils.getCurrentDateWithoutTimeStamp();

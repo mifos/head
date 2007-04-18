@@ -142,9 +142,12 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.loadParents_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		CustomerSearchInputView clientSearchInput = (CustomerSearchInputView)SessionUtils.getAttribute(CustomerConstants.CUSTOMER_SEARCH_INPUT,request.getSession());
+		CustomerSearchInputView clientSearchInput = (CustomerSearchInputView)
+			SessionUtils.getAttribute(CustomerConstants.CUSTOMER_SEARCH_INPUT,
+				request.getSession());
 		assertNotNull(clientSearchInput);
-		assertEquals(TestObjectFactory.getUserContext().getBranchId(),clientSearchInput.getOfficeId());
+		assertEquals(TestObjectFactory.HEAD_OFFICE,
+			clientSearchInput.getOfficeId());
 	}
 	
 	public void testPreview_transferToParent() throws Exception {

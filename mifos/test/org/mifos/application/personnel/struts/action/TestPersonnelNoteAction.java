@@ -11,6 +11,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.business.util.Address;
@@ -223,7 +224,7 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 			PersonnelLevel personnelLevel) throws Exception {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				Short.valueOf("1")));
+				CustomFieldType.NUMERIC));
 		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
 		Name name = new Name("XYZ", null, null, "Last Name");

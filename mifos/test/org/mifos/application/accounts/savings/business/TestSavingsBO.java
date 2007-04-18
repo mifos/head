@@ -73,6 +73,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
@@ -311,7 +312,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	private List<CustomFieldView> getCustomFieldView() {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
-		customFields.add(new CustomFieldView(new Short("8"), "13", null));
+		customFields.add(new CustomFieldView(new Short("8"), "13", CustomFieldType.NONE));
 		return customFields;
 
 	}

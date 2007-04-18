@@ -52,6 +52,7 @@ import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -213,7 +214,7 @@ public class GroupBOTest extends MifosTestCase {
 			
 			List<CustomerPositionView> customerPositionList= new ArrayList<CustomerPositionView>();
 			TestCustomerBO.setDisplayName(group,"changed group name");
-			group.update(TestObjectFactory.getUserContext(), group.getDisplayName(), personnel,
+			group.update(TestUtils.makeUser(), group.getDisplayName(), personnel,
 					"ABCD", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getNewCustomFields(),
 							customerPositionList);
@@ -287,7 +288,7 @@ public class GroupBOTest extends MifosTestCase {
 
 	public void testCreateWithoutName() throws Exception {
 		try {
-			group = new GroupBO(TestObjectFactory.getUserContext(), "",
+			group = new GroupBO(TestUtils.makeUser(), "",
 					CustomerStatus.GROUP_PARTIAL, null, false, null, null,
 					null, null, personnel, office, meeting, personnel);
 			assertFalse("Group Created", true);
@@ -299,7 +300,7 @@ public class GroupBOTest extends MifosTestCase {
 
 	public void testCreateWithoutStatus() throws Exception {
 		try {
-			group = new GroupBO(TestObjectFactory.getUserContext(),
+			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", null, null, false, null, null, null, null,
 					personnel, office, meeting, personnel);
 			assertFalse("Group Created", true);
@@ -312,7 +313,7 @@ public class GroupBOTest extends MifosTestCase {
 	public void testCreateWithoutOffice_WithoutCenterHierarchy()
 			throws Exception {
 		try {
-			group = new GroupBO(TestObjectFactory.getUserContext(),
+			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_PARTIAL, null, false,
 					null, null, null, null, personnel, null, meeting, personnel);
 			assertFalse("Group Created", true);
@@ -325,7 +326,7 @@ public class GroupBOTest extends MifosTestCase {
 	public void testCreateWithoutLO_InActiveState_WithoutCenterHierarchy()
 			throws Exception {
 		try {
-			group = new GroupBO(TestObjectFactory.getUserContext(),
+			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_ACTIVE, null, false,
 					null, null, null, null, personnel, office, meeting, null);
 			assertFalse("Group Created", true);
@@ -338,7 +339,7 @@ public class GroupBOTest extends MifosTestCase {
 	public void testCreateWithoutMeeting_InActiveState_WithoutCenterHierarchy()
 			throws Exception {
 		try {
-			group = new GroupBO(TestObjectFactory.getUserContext(),
+			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_ACTIVE, null, false,
 					null, null, null, null, personnel, office, null, personnel);
 			assertFalse("Group Created", true);
@@ -352,7 +353,7 @@ public class GroupBOTest extends MifosTestCase {
 			throws Exception {
 		try {
 			meeting = getMeeting();
-			group = new GroupBO(TestObjectFactory.getUserContext(),
+			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_PARTIAL, null, false,
 					null, null, null, null, personnel, null);
 			assertFalse("Group Created", true);
@@ -366,10 +367,10 @@ public class GroupBOTest extends MifosTestCase {
 		try {
 			createCenter();
 			meeting = getMeeting();
-			group = new GroupBO(TestObjectFactory.getUserContext(),
+			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_PARTIAL, null, false,
 					null, null, null, null, null, center);
-			assertFalse("Group Created", true);
+			fail();
 		} catch (CustomerException ce) {
 			assertNull(group);
 			assertEquals(CustomerConstants.INVALID_FORMED_BY, ce.getKey());
@@ -380,7 +381,7 @@ public class GroupBOTest extends MifosTestCase {
 		try {
 			createCenter();
 			meeting = getMeeting();
-			group = new GroupBO(TestObjectFactory.getUserContext(),
+			group = new GroupBO(TestUtils.makeUser(),
 					"GroupName", CustomerStatus.GROUP_PARTIAL, null, true,
 					null, null, null, null, personnel, center);
 			assertFalse("Group Created", true);
@@ -400,7 +401,7 @@ public class GroupBOTest extends MifosTestCase {
 
 		List<FeeView> fees = getFees();
 		try {
-			group1 = new GroupBO(TestObjectFactory.getUserContext(), name,
+			group1 = new GroupBO(TestUtils.makeUser(), name,
 					CustomerStatus.GROUP_ACTIVE, null, false, null, null, null,
 					fees, personnel, center);
 			assertFalse(true);
@@ -421,7 +422,7 @@ public class GroupBOTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 		assertEquals(0, center.getMaxChildCount().intValue());
 
-		group = new GroupBO(TestObjectFactory.getUserContext(), name,
+		group = new GroupBO(TestUtils.makeUser(), name,
 				CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
 				getAddress(), getCustomFields(), getFees(), personnel, center);
 		group.save();
@@ -459,7 +460,7 @@ public class GroupBOTest extends MifosTestCase {
 	public void testSuccessfulCreate_Group_UnderBranch() throws Exception {
 		String name = "GroupTest";
 		String externalId = "1234";
-		group = new GroupBO(TestObjectFactory.getUserContext(), name,
+		group = new GroupBO(TestUtils.makeUser(), name,
 				CustomerStatus.GROUP_ACTIVE, externalId, false, null,
 				getAddress(), getCustomFields(), getFees(), personnel, office,
 				getMeeting(), personnel);
@@ -494,7 +495,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(name, group.getDisplayName());
-		group.update(TestObjectFactory.getUserContext(), newName, personnel,
+		group.update(TestUtils.makeUser(), newName, personnel,
 				" ", Short.valueOf("1"), new Date(), TestObjectFactory
 						.getAddressHelper(), getCustomFields(),
 				new ArrayList<CustomerPositionView>());
@@ -513,7 +514,7 @@ public class GroupBOTest extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		assertEquals(name, group.getDisplayName());
-		group.update(TestObjectFactory.getUserContext(), newName, personnel,
+		group.update(TestUtils.makeUser(), newName, personnel,
 				" ", Short.valueOf("1"), new Date(), TestObjectFactory
 						.getAddressHelper(), getCustomFields(),
 				new ArrayList<CustomerPositionView>());
@@ -533,7 +534,7 @@ public class GroupBOTest extends MifosTestCase {
 				.getCustomerId());
 		assertEquals(name, group.getDisplayName());
 		try {
-			group.update(TestObjectFactory.getUserContext(), newName, null,
+			group.update(TestUtils.makeUser(), newName, null,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
 					new ArrayList<CustomerPositionView>());
@@ -554,7 +555,7 @@ public class GroupBOTest extends MifosTestCase {
 				.getCustomerId());
 		assertEquals(name, group.getDisplayName());
 		try {
-			group.update(TestObjectFactory.getUserContext(), newName, null,
+			group.update(TestUtils.makeUser(), newName, null,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
 					new ArrayList<CustomerPositionView>());
@@ -578,7 +579,7 @@ public class GroupBOTest extends MifosTestCase {
 		assertEquals(name, group.getDisplayName());
 		assertEquals(newName, group1.getDisplayName());
 		try {
-			group1.update(TestObjectFactory.getUserContext(), name, personnel,
+			group1.update(TestUtils.makeUser(), name, personnel,
 					" ", Short.valueOf("1"), new Date(), TestObjectFactory
 							.getAddressHelper(), getCustomFields(),
 					new ArrayList<CustomerPositionView>());
@@ -791,7 +792,7 @@ public class GroupBOTest extends MifosTestCase {
 
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		group.setUserContext(TestObjectFactory.getUserContext());
+		group.setUserContext(TestUtils.makeUser());
 		assertNull(client.getActiveCustomerMovement());
 
 		group.transferToBranch(officeBO);
@@ -1285,7 +1286,7 @@ public class GroupBOTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 		
 		try {
-			group = new GroupBO(TestObjectFactory.getUserContext(), name,
+			group = new GroupBO(TestUtils.makeUser(), name,
 					CustomerStatus.GROUP_ACTIVE, externalId, true, trainedDate,
 					getAddress(), null, null, personnel, center);
 			TestObjectFactory.simulateInvalidConnection();
@@ -1370,18 +1371,18 @@ public class GroupBOTest extends MifosTestCase {
 	private List<CustomFieldView> getCustomFields() {
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
 		fields.add(new CustomFieldView(Short.valueOf("4"), "value1",
-				CustomFieldType.ALPHA_NUMERIC.getValue()));
+				CustomFieldType.ALPHA_NUMERIC));
 		fields.add(new CustomFieldView(Short.valueOf("3"), "value2",
-				CustomFieldType.NUMERIC.getValue()));
+				CustomFieldType.NUMERIC));
 		return fields;
 	}
 	
 	private List<CustomFieldView> getNewCustomFields() {
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
 		fields.add(new CustomFieldView(Short.valueOf("4"), "value3",
-				CustomFieldType.ALPHA_NUMERIC.getValue()));
+				CustomFieldType.ALPHA_NUMERIC));
 		fields.add(new CustomFieldView(Short.valueOf("3"), "value4",
-				CustomFieldType.NUMERIC.getValue()));
+				CustomFieldType.NUMERIC));
 		return fields;
 	}
 

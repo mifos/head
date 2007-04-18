@@ -25,6 +25,7 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.personnel.util.helpers.PersonnelStatus;
 import org.mifos.application.rolesandpermission.business.RoleBO;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
@@ -806,7 +807,7 @@ public class TestPersonnelBO extends MifosTestCase {
 	private List<CustomFieldView> getCustomFields() {
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 		customFields.add(new CustomFieldView(Short.valueOf("9"), "123456",
-				Short.valueOf("1")));
+				CustomFieldType.NUMERIC));
 		return customFields;
 	}
 

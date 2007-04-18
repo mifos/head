@@ -1,9 +1,7 @@
 package org.mifos.application.accounts.savings.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.hibernate.Hibernate;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
@@ -28,6 +26,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -66,17 +65,12 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/accounts/savings/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		userContext = TestObjectFactory.getContext();
-		userContext.setPreferredLocale(new Locale("en", "US"));
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/accounts/savings/struts-config.xml")
+				.getPath());
+		userContext = TestUtils.makeUser();
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
 		request.getSession().setAttribute(Constants.USER_CONTEXT_KEY,
@@ -102,7 +96,7 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
-	public void testSuccessfullLoad_Client() throws Exception {
+	public void testSuccessfulLoad_Client() throws Exception {
 		createInitialObjects();
 		createClients();
 		savingsOffering = TestObjectFactory.createSavingsOffering(

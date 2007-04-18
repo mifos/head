@@ -823,7 +823,11 @@ public class ClientBO extends CustomerBO {
 	private List<CustomFieldView> createCustomFieldViewsForClientSavingsAccount(List<CustomFieldDefinitionEntity> customFieldDefs){
 		List<CustomFieldView> customFields = new ArrayList<CustomFieldView>();
 		for(CustomFieldDefinitionEntity customFieldDef : customFieldDefs)
-			customFields.add(new CustomFieldView(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(), customFieldDef.getFieldType()));
+			customFields.add(
+				new CustomFieldView(
+					customFieldDef.getFieldId(), 
+					customFieldDef.getDefaultValue(), 
+					customFieldDef.getFieldType()));
 		return customFields;
 	}
 	

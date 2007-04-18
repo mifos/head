@@ -5575,7 +5575,7 @@ public class TestLoanBO extends MifosTestCase {
 	private List<CustomFieldView> getCustomFields() {
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
 		fields.add(new CustomFieldView(Short.valueOf("5"), "value1",
-				CustomFieldType.ALPHA_NUMERIC.getValue()));
+				CustomFieldType.ALPHA_NUMERIC));
 		return fields;
 	}
 

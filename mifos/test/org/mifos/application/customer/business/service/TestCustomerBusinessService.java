@@ -50,6 +50,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -210,8 +211,8 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		List<CustomerRecentActivityView> customerActivityViewList = service
 				.getAllActivityView(center.getGlobalCustNum());
 		assertEquals(0, customerActivityViewList.size());
-		UserContext uc = TestObjectFactory.getUserContext();
-		center.getCustomerAccount().setUserContext(uc);
+		center.getCustomerAccount().setUserContext(
+			TestUtils.makeUser());
 		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
@@ -260,7 +261,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		List<CustomerRecentActivityView> customerActivityViewList = service
 				.getAllActivityView(center.getGlobalCustNum());
 		assertEquals(0, customerActivityViewList.size());
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		center.getCustomerAccount().setUserContext(uc);
 		center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
 		TestObjectFactory.flushandCloseSession();
@@ -702,29 +703,29 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testGetStatusName() throws Exception {
 		createInitialCustomers();
 		AccountStateMachines.getInstance().initialize(
-				TestObjectFactory.getUserContext().getLocaleId(),
+				TestObjectFactory.TEST_LOCALE,
 				center.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
 				CustomerLevel.CENTER);
-		String statusNameForCenter = service.getStatusName(TestObjectFactory
-				.getUserContext().getLocaleId(), center.getStatus(),
+		String statusNameForCenter = service.getStatusName(
+				TestObjectFactory.TEST_LOCALE, center.getStatus(),
 				CustomerLevel.CENTER);
 		assertEquals("Active", statusNameForCenter);
 
 		AccountStateMachines.getInstance().initialize(
-				TestObjectFactory.getUserContext().getLocaleId(),
+				TestObjectFactory.TEST_LOCALE,
 				group.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
 				CustomerLevel.GROUP);
-		String statusNameForGroup = service.getStatusName(TestObjectFactory
-				.getUserContext().getLocaleId(), group.getStatus(),
+		String statusNameForGroup = service.getStatusName(
+				TestObjectFactory.TEST_LOCALE, group.getStatus(),
 				CustomerLevel.GROUP);
 		assertEquals("Active", statusNameForGroup);
 
 		AccountStateMachines.getInstance().initialize(
-				TestObjectFactory.getUserContext().getLocaleId(),
+				TestObjectFactory.TEST_LOCALE,
 				client.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
 				CustomerLevel.CLIENT);
-		String statusNameForClient = service.getStatusName(TestObjectFactory
-				.getUserContext().getLocaleId(), client.getStatus(),
+		String statusNameForClient = service.getStatusName(
+				TestObjectFactory.TEST_LOCALE, client.getStatus(),
 				CustomerLevel.CLIENT);
 		assertNotNull("Active", statusNameForClient);
 	}
@@ -739,21 +740,21 @@ public class TestCustomerBusinessService extends MifosTestCase {
 				CustomerStatus.CLIENT_CLOSED, group);
 
 		AccountStateMachines.getInstance().initialize(
-				TestObjectFactory.getUserContext().getLocaleId(),
+				TestObjectFactory.TEST_LOCALE,
 				client.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
 				CustomerLevel.CLIENT);
-		String flagNameForClient = service.getFlagName(TestObjectFactory
-				.getUserContext().getLocaleId(),
+		String flagNameForClient = service.getFlagName(
+				TestObjectFactory.TEST_LOCALE,
 				CustomerStatusFlag.CLIENT_CLOSED_DUPLICATE,
 				CustomerLevel.CLIENT);
 		assertNotNull("Duplicate", flagNameForClient);
 
 		AccountStateMachines.getInstance().initialize(
-				TestObjectFactory.getUserContext().getLocaleId(),
+				TestObjectFactory.TEST_LOCALE,
 				group.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
 				CustomerLevel.GROUP);
-		String flagNameForGroup = service.getFlagName(TestObjectFactory
-				.getUserContext().getLocaleId(),
+		String flagNameForGroup = service.getFlagName(
+				TestObjectFactory.TEST_LOCALE,
 				CustomerStatusFlag.GROUP_CLOSED_DUPLICATE, CustomerLevel.GROUP);
 		assertNotNull("Duplicate", flagNameForGroup);
 	}
@@ -761,30 +762,30 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testGetStatusList() throws Exception {
 		createInitialCustomers();
 		AccountStateMachines.getInstance().initialize(
-				TestObjectFactory.getUserContext().getLocaleId(),
+				TestObjectFactory.TEST_LOCALE,
 				center.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
 				CustomerLevel.CENTER);
 		List<CustomerStatusEntity> statusListForCenter = service.getStatusList(
 				center.getCustomerStatus(), CustomerLevel.CENTER,
-				TestObjectFactory.getUserContext().getLocaleId());
+				TestObjectFactory.TEST_LOCALE);
 		assertEquals(1, statusListForCenter.size());
 
 		AccountStateMachines.getInstance().initialize(
-				TestObjectFactory.getUserContext().getLocaleId(),
+				TestObjectFactory.TEST_LOCALE,
 				group.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
 				CustomerLevel.GROUP);
 		List<CustomerStatusEntity> statusListForGroup = service.getStatusList(
 				group.getCustomerStatus(), CustomerLevel.GROUP,
-				TestObjectFactory.getUserContext().getLocaleId());
+				TestObjectFactory.TEST_LOCALE);
 		assertEquals(2, statusListForGroup.size());
 
 		AccountStateMachines.getInstance().initialize(
-				TestObjectFactory.getUserContext().getLocaleId(),
+				TestObjectFactory.TEST_LOCALE,
 				client.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
 				CustomerLevel.CLIENT);
 		List<CustomerStatusEntity> statusListForClient = service.getStatusList(
 				client.getCustomerStatus(), CustomerLevel.CLIENT,
-				TestObjectFactory.getUserContext().getLocaleId());
+				TestObjectFactory.TEST_LOCALE);
 		assertEquals(2, statusListForClient.size());
 	}
 

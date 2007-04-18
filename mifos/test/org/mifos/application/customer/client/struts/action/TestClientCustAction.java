@@ -81,6 +81,7 @@ import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
@@ -1350,7 +1351,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				ethincity, citizenship,handicapped, businessActivities, 
 				ClientDetailView.MARRIED,
 				educationLevel, numChildren, gender, povertyStatus);
-		client = new ClientBO(TestObjectFactory.getUserContext(),
+		client = new ClientBO(TestUtils.makeUser(),
 				clientNameDetailView.getDisplayName(), CustomerStatus
 						.fromInt(new Short("1")), null, null, new Address(),
 				getCustomFields(), null, null, personnel, officeId, meeting,
@@ -1401,8 +1402,12 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){
 			if(auditLogRecord.getFieldName().equalsIgnoreCase("Loan Officer Assigned")){
 				matchValues(auditLogRecord,"loan officer", "mifos");
-			}else if(auditLogRecord.getFieldName().equalsIgnoreCase("External Id")){
+			}
+			else if(auditLogRecord.getFieldName().equalsIgnoreCase("External Id")){
 				matchValues(auditLogRecord,"-", "123");
+			}
+			else {
+				fail("did not expect record " + auditLogRecord.getFieldName());
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();
@@ -1687,7 +1692,7 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 				"middle", "last", "secondLast");
 		ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1, 1, 1,
 				1, Short.valueOf("1"), Short.valueOf("1"),Short.valueOf("41"));
-		client = new ClientBO(TestObjectFactory.getUserContext(),
+		client = new ClientBO(TestUtils.makeUser(),
 				clientNameDetailView.getDisplayName(), CustomerStatus
 						.fromInt(new Short("1")), null, null, new Address(),
 				getCustomFields(), null, null, personnel, officeId, meeting,
@@ -1722,9 +1727,9 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 	private List<CustomFieldView> getCustomFields() {
 		List<CustomFieldView> fields = new ArrayList<CustomFieldView>();
 		fields.add(new CustomFieldView(Short.valueOf("5"), "value1",
-				CustomFieldType.ALPHA_NUMERIC.getValue()));
+				CustomFieldType.ALPHA_NUMERIC));
 		fields.add(new CustomFieldView(Short.valueOf("6"), "value2",
-				CustomFieldType.ALPHA_NUMERIC.getValue()));
+				CustomFieldType.ALPHA_NUMERIC));
 		return fields;
 	}
 

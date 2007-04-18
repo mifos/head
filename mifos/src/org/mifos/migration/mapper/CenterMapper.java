@@ -90,7 +90,7 @@ public class CenterMapper {
 					throw new RuntimeException("No custom field value was specified");
 				}
 				fields.add(new CustomFieldView(
-					field.getFieldId(), value, type.getValue())); 
+					field.getFieldId(), value, type)); 
 			} else {
 				throw new RuntimeException("Custom field lookup by name not yet implemented");
 			}
