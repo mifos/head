@@ -321,12 +321,6 @@ public class TestLoanBO extends MifosTestCase {
 				.setActionDate(actionDate);
 	}
 
-	public static void setPaymentStatus(
-			AccountActionDateEntity accountActionDateEntity, Short paymentStatus) {
-		((LoanScheduleEntity) accountActionDateEntity)
-				.setPaymentStatus(paymentStatus);
-	}
-
 	public static void setDisbursementDate(AccountBO account,
 			Date disbursementDate) {
 		((LoanBO) account).setDisbursementDate(disbursementDate);
@@ -502,7 +496,7 @@ public class TestLoanBO extends MifosTestCase {
 			actionDate.setPrincipal(new Money(currency, "100.0"));
 			actionDate.setInterest(new Money(currency, "12.0"));
 			actionDate.setActionDate(new java.sql.Date(date.getTime()));
-			actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
+			actionDate.setPaymentStatus(PaymentStatus.UNPAID);
 			TestAccountActionDateEntity.addAccountActionDate(actionDate, loan);
 
 			AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
@@ -595,8 +589,7 @@ public class TestLoanBO extends MifosTestCase {
 							.getAccountActionDate(i);
 					actionDate.setActionDate(new java.sql.Date(date.getTime()));
 					actionDate.setInterest(new Money(currency, "12.0"));
-					actionDate
-							.setPaymentStatus(PaymentStatus.UNPAID.getValue());
+					actionDate.setPaymentStatus(PaymentStatus.UNPAID);
 					TestAccountActionDateEntity.addAccountActionDate(
 							actionDate, loan);
 
@@ -634,7 +627,7 @@ public class TestLoanBO extends MifosTestCase {
 				actionDate.setActionDate(new java.sql.Date(date.getTime()));
 				actionDate.setPrincipal(new Money(currency, "100.0"));
 				actionDate.setInterest(new Money(currency, "12.0"));
-				actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
+				actionDate.setPaymentStatus(PaymentStatus.UNPAID);
 				TestAccountActionDateEntity.addAccountActionDate(actionDate,
 						loan);
 				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
@@ -663,7 +656,7 @@ public class TestLoanBO extends MifosTestCase {
 				actionDate.setActionDate(new java.sql.Date(date.getTime()));
 				actionDate.setPrincipal(new Money(currency, "100.0"));
 				actionDate.setInterest(new Money(currency, "12.0"));
-				actionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
+				actionDate.setPaymentStatus(PaymentStatus.UNPAID);
 				TestAccountActionDateEntity.addAccountActionDate(actionDate,
 						loan);
 				AccountFeesActionDetailEntity accountFeesaction = new LoanFeeScheduleEntity(
@@ -1683,7 +1676,7 @@ public class TestLoanBO extends MifosTestCase {
 		((LoanScheduleEntity) accountActionDateEntity)
 				.setActionDate(offSetCurrentDate(1));
 		((LoanScheduleEntity) accountActionDateEntity)
-				.setPaymentStatus(PaymentStatus.PAID.getValue());
+				.setPaymentStatus(PaymentStatus.PAID);
 
 		accountBO = saveAndFetch(accountBO);
 
@@ -1823,7 +1816,7 @@ public class TestLoanBO extends MifosTestCase {
 		((LoanScheduleEntity) accountActionDateEntity)
 				.setActionDate(offSetCurrentDate(1));
 		((LoanScheduleEntity) accountActionDateEntity)
-				.setPaymentStatus(PaymentStatus.PAID.getValue());
+				.setPaymentStatus(PaymentStatus.PAID);
 		accountBO = saveAndFetch(accountBO);
 		assertEquals(((LoanBO) accountBO).getTotalAmountInArrears()
 				.getAmountDoubleValue(), 0.0);
@@ -3298,8 +3291,7 @@ public class TestLoanBO extends MifosTestCase {
 			LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
 			if (loanScheduleEntity.getInstallmentId()
 					.equals(Short.valueOf("1")))
-				loanScheduleEntity.setPaymentStatus(PaymentStatus.PAID
-						.getValue());
+				loanScheduleEntity.setPaymentStatus(PaymentStatus.PAID);
 		}
 		UserContext uc = TestUtils.makeUser();
 		accountBO.setUserContext(uc);

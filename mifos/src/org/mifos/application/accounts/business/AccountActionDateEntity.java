@@ -92,7 +92,7 @@ public abstract class AccountActionDateEntity extends PersistentObject {
 		return actionDate;
 	}
 
-	protected void setActionDate(Date actionDate) {
+	public void setActionDate(Date actionDate) {
 		this.actionDate = actionDate;
 	}
 
@@ -100,7 +100,7 @@ public abstract class AccountActionDateEntity extends PersistentObject {
 		return paymentDate;
 	}
 
-	protected void setPaymentDate(Date paymentDate) {
+	public void setPaymentDate(Date paymentDate) {
 		this.paymentDate = paymentDate;
 	}
 
@@ -108,8 +108,12 @@ public abstract class AccountActionDateEntity extends PersistentObject {
 		return paymentStatus;
 	}
 
-	protected void setPaymentStatus(Short paymentStatus) {
+	void setPaymentStatus(Short paymentStatus) {
 		this.paymentStatus = paymentStatus;
+	}
+	
+	public void setPaymentStatus(PaymentStatus status) {
+		this.paymentStatus = status.getValue();
 	}
 
 	public int compareDate(java.util.Date date) {

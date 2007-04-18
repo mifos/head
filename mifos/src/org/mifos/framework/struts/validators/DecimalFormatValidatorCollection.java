@@ -57,20 +57,12 @@ import org.mifos.framework.util.helpers.MethodInvoker;
 public class DecimalFormatValidatorCollection {
 	
 	public DecimalFormatValidatorCollection() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
 	 * This class validates a decimal field of the action form.The format against which it would validate 
 	 * will be obtained from the var elements defined in validation.xml. The name of the var element which is supposed 
 	 * to hold the format should be 'format', and it should be specfied as (x,y) where x-y is the total number of digits before decimal  
-	 * @param bean
-	 * @param va
-	 * @param field
-	 * @param errors
-	 * @param request
-	 * @return
 	 */
 	public static boolean validateDecimalFormatCollection(
 			Object bean,
@@ -83,7 +75,6 @@ public class DecimalFormatValidatorCollection {
 		Double validatableField = null;
 		boolean returnable = false;
 		String format = null;
-		String collectionType = null;
 		Object fieldValue = null;
 		String nestedPropertyName= null;
 		String fieldToBeValidated = null;
@@ -91,11 +82,9 @@ public class DecimalFormatValidatorCollection {
 		try {
 			fieldValue = MethodInvoker.invokeWithNoException(bean,"get"+field.getProperty(),new Object[]{},new Class[]{});
 		} catch (SystemException e) {
-			
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (ApplicationException e) {
-			
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		// get the field to be validated.
 		
@@ -144,11 +133,8 @@ public class DecimalFormatValidatorCollection {
 			}else if(fieldValue instanceof Map && fieldValue != null){
 				
 			}
-			
-			
-		}catch(NumberFormatException nfe){
-			
-			nfe.printStackTrace();
+		}catch(NumberFormatException e){
+			throw new RuntimeException(e);
 		}
 		return returnable;
 	}
@@ -176,7 +162,5 @@ public class DecimalFormatValidatorCollection {
 		
 		return returnable;
 	}	
-	
-	
 	
 }

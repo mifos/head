@@ -1471,7 +1471,7 @@ public class SavingsBO extends AccountBO {
 				newAmount = newAmount.subtract(accountAction.getDeposit());
 				accountAction.setDepositPaid(accountAction.getDepositPaid()
 						.add(accountTrxn.getDepositAmount()));
-				accountAction.setPaymentStatus(PaymentStatus.PAID.getValue());
+				accountAction.setPaymentStatus(PaymentStatus.PAID);
 			} else {
 				setSavingsBalance(getSavingsBalance().add(newAmount));
 				try {
@@ -1493,7 +1493,7 @@ public class SavingsBO extends AccountBO {
 				newAmount = newAmount.subtract(newAmount);
 				accountAction.setDepositPaid(accountAction.getDepositPaid()
 						.add(accountTrxn.getDepositAmount()));
-				accountAction.setPaymentStatus(PaymentStatus.UNPAID.getValue());
+				accountAction.setPaymentStatus(PaymentStatus.UNPAID);
 			}
 			accountAction
 					.setPaymentDate(new java.sql.Date(new Date().getTime()));
@@ -1578,8 +1578,7 @@ public class SavingsBO extends AccountBO {
 						accountAction.setDepositPaid(accountAction
 								.getDepositPaid().add(
 										accountTrxn.getDepositAmount()));
-						accountAction.setPaymentStatus(PaymentStatus.PAID
-								.getValue());
+						accountAction.setPaymentStatus(PaymentStatus.PAID);
 					} else if (newAmount.getAmountDoubleValue() != 0) {
 						setSavingsBalance(getSavingsBalance().add(newAmount));
 						try {
@@ -1602,8 +1601,7 @@ public class SavingsBO extends AccountBO {
 						accountAction.setDepositPaid(accountAction
 								.getDepositPaid().add(
 										accountTrxn.getDepositAmount()));
-						accountAction.setPaymentStatus(PaymentStatus.UNPAID
-								.getValue());
+						accountAction.setPaymentStatus(PaymentStatus.UNPAID);
 					}
 					accountAction.setPaymentDate(new java.sql.Date(new Date()
 							.getTime()));
@@ -1652,7 +1650,7 @@ public class SavingsBO extends AccountBO {
 		if (accntActionDate != null) {
 			accntActionDate.setDepositPaid(accntActionDate.getDepositPaid()
 					.subtract(savingsTrxn.getDepositAmount()));
-			accntActionDate.setPaymentStatus(PaymentStatus.UNPAID.getValue());
+			accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
 			accntActionDate.setPaymentDate(null);
 		}
 		getSavingsPerformance().setTotalDeposits(

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
@@ -122,8 +123,10 @@ public class TestCustomerBO extends MifosTestCase {
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 
-		center = TestObjectFactory.createCenter("Center", meeting, getBranchOffice().getOfficeId(), loanOfficer
-		.getPersonnelId());
+		center = TestObjectFactory.createCenter("Center", meeting, 
+			getBranchOffice().getOfficeId(), loanOfficer.getPersonnelId());
+		// This gives us "13" instead of "Active" on the assert
+//		center.setUserContext(TestUtils.makeUser());
 		center.setUserContext(TestObjectFactory.getUserContext());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
@@ -140,20 +143,22 @@ public class TestCustomerBO extends MifosTestCase {
 		assertEquals(1, auditLogList.size());
 		assertEquals(EntityType.CENTER.getValue(), auditLogList.get(0)
 				.getEntityType());
-		assertEquals(1, auditLogList.get(0).getAuditLogRecords().size());
-		for (AuditLogRecord auditLogRecord : auditLogList.get(0)
-				.getAuditLogRecords()) {
-			if (auditLogRecord.getFieldName().equalsIgnoreCase("Status")) {
-				assertEquals("Active", auditLogRecord.getOldValue());
-				assertEquals("Inactive", auditLogRecord.getNewValue());
-			}
-		}
+		Set<AuditLogRecord> records = auditLogList.get(0).getAuditLogRecords();
+		assertEquals(1, records.size());
+		AuditLogRecord record = records.iterator().next();
+		assertEquals("Status", record.getFieldName());
+		assertEquals("Active", record.getOldValue());
+		assertEquals("Inactive", record.getNewValue());
 		TestObjectFactory.cleanUpChangeLog();
 	}
 
 	public void testStatusChangeForGroupForLogging() throws Exception {
 		createGroup();
+
+		// This gives us "9" instead of "Active" on the assert
+//		group.setUserContext(TestUtils.makeUser());
 		group.setUserContext(TestObjectFactory.getUserContext());
+
 		HibernateUtil.getInterceptor().createInitialValueMap(group);
 		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 
 				CustomerStatusFlag.GROUP_CANCEL_DUPLICATE, 
@@ -179,6 +184,9 @@ public class TestCustomerBO extends MifosTestCase {
 					"Status Change Explanation")) {
 				assertEquals("-", auditLogRecord.getOldValue());
 				assertEquals("Duplicate", auditLogRecord.getNewValue());
+			}
+			else {
+				fail("unexpected record " + auditLogRecord.getFieldName());
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();

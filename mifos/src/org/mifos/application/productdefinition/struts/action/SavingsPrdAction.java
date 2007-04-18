@@ -184,7 +184,6 @@ public class SavingsPrdAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		prdDefLogger.debug("start get method of Savings Product Action");
-		UserContext userContext = getUserContext(request);
 		SavingsPrdActionForm savingsprdForm = (SavingsPrdActionForm) form;
 		SavingsOfferingBO savingsOffering = ((SavingsPrdBusinessService) getService())
 				.getSavingsProduct(getShortValue(savingsprdForm

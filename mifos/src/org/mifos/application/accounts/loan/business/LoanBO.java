@@ -1194,8 +1194,7 @@ public class LoanBO extends AccountBO {
 						if (accntActionDate.getPaymentStatus().equals(
 								PaymentStatus.PAID.getValue()))
 							updatePerformanceHistoryOnAdjustment();
-						accntActionDate.setPaymentStatus(PaymentStatus.UNPAID
-								.getValue());
+						accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
 						accntActionDate.setPaymentDate(null);
 						if (null != accntActionDate
 								.getAccountFeesActionDetails()

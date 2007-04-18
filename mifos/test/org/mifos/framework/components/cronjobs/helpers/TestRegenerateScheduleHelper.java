@@ -287,12 +287,9 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		accountBO = (AccountBO) HibernateUtil.getSessionTL().get(LoanBO.class,
 				accountBO.getAccountId());
 		TestLoanBO.setDisbursementDate(accountBO, offSetCurrentDate(21));
-		TestLoanBO.setPaymentStatus(accountBO.getAccountActionDate((short) 1),
-				PaymentStatus.PAID.getValue());
-		TestLoanBO.setPaymentStatus(accountBO.getAccountActionDate((short) 2),
-				PaymentStatus.PAID.getValue());
-		TestLoanBO.setPaymentStatus(accountBO.getAccountActionDate((short) 3),
-				PaymentStatus.PAID.getValue());
+		accountBO.getAccountActionDate((short) 1).setPaymentStatus(PaymentStatus.PAID);
+		accountBO.getAccountActionDate((short) 2).setPaymentStatus(PaymentStatus.PAID);
+		accountBO.getAccountActionDate((short) 3).setPaymentStatus(PaymentStatus.PAID);
 
 		center
 				.getCustomerMeeting()

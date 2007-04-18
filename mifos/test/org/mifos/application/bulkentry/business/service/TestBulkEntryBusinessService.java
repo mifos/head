@@ -15,7 +15,6 @@ import junitx.framework.StringAssert;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.persistence.AccountPersistence;
@@ -467,7 +466,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	private void makePaymentForallInstallments() throws Exception {
 		for (AccountActionDateEntity actionDate : account
 				.getAccountActionDates()) {
-			TestLoanBO.setPaymentStatus(actionDate,PaymentStatus.PAID.getValue());
+			actionDate.setPaymentStatus(PaymentStatus.PAID);
 		}
 
 		TestObjectFactory.updateObject(account);

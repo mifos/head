@@ -18,6 +18,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
@@ -65,7 +66,7 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 	}
 
 	public void testGenerateReverseTrxn() throws Exception {
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		createInitialObjects();
 		accountBO=client.getCustomerAccount();
 		Date currentDate = new Date(System.currentTimeMillis());
@@ -76,7 +77,7 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		accountAction.setMiscFeePaid(TestObjectFactory.getMoneyForMFICurrency(100));
 		accountAction.setMiscPenaltyPaid(TestObjectFactory.getMoneyForMFICurrency(100));
 		accountAction.setPaymentDate(currentDate);
-		accountAction.setPaymentStatus(PaymentStatus.PAID.getValue());
+		accountAction.setPaymentStatus(PaymentStatus.PAID);
 		
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.MasterDataService);
 		

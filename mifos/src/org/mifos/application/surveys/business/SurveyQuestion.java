@@ -1,7 +1,5 @@
 package org.mifos.application.surveys.business;
 
-import java.util.LinkedList;
-
 import org.mifos.framework.business.PersistentObject;
 
 public class SurveyQuestion extends PersistentObject {

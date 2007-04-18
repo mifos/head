@@ -127,17 +127,9 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	public static void setPaymentDate(
 			AccountActionDateEntity accountActionDateEntity,
 			java.sql.Date paymentDate) {
-		((CustomerScheduleEntity) accountActionDateEntity)
-				.setPaymentDate(paymentDate);
+		accountActionDateEntity.setPaymentDate(paymentDate);
 	}
 	
-	public static void setPaymentStatus(
-			AccountActionDateEntity accountActionDateEntity, Short paymentStatus) {
-		((CustomerScheduleEntity) accountActionDateEntity)
-				.setPaymentStatus(paymentStatus);
-	}
-	
-
 	public void testSuccessfulMakePayment() throws Exception {
 		createCenter();
 		CustomerAccountBO customerAccount = center.getCustomerAccount();
@@ -807,8 +799,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) accountActionDateEntity;
 			if (customerScheduleEntity.getInstallmentId().equals(
 					Short.valueOf("1"))) {
-				customerScheduleEntity.setPaymentStatus(PaymentStatus.PAID
-						.getValue());
+				customerScheduleEntity.setPaymentStatus(PaymentStatus.PAID);
 			}
 		}
 		UserContext uc = TestUtils.makeUser();
@@ -1270,7 +1261,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		accountAction.setMiscPenaltyPaid(TestObjectFactory
 				.getMoneyForMFICurrency(100));
 		accountAction.setPaymentDate(currentDate);
-		accountAction.setPaymentStatus(PaymentStatus.PAID.getValue());
+		accountAction.setPaymentStatus(PaymentStatus.PAID);
 
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
 				.getInstance().getPersistenceService(

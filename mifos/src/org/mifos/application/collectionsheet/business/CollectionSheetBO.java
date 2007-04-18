@@ -194,7 +194,6 @@ public class CollectionSheetBO extends BusinessObject {
 	public void updateCollectiveTotals() {
 		for (CollSheetCustBO collSheetCustomer : collectionSheetCustomers) {
 			if (collSheetCustomer.getCustLevel() == CustomerConstants.CLIENT_LEVEL_ID) {
-				int customerId = collSheetCustomer.getCustId();
 				int parentCustomerId = collSheetCustomer.getParentCustomerId();
 				CollSheetCustBO collSheetParentCust = getCollectionSheetCustomerForCustomerId(parentCustomerId);
 				// it would be null in case a client belongs directly to a
@@ -207,7 +206,6 @@ public class CollectionSheetBO extends BusinessObject {
 		}
 		for (CollSheetCustBO collSheetCustomer : collectionSheetCustomers) {
 			if (collSheetCustomer.getCustLevel() == CustomerConstants.GROUP_LEVEL_ID) {
-				int customerId = collSheetCustomer.getCustId();
 				int parentCustomerId = collSheetCustomer.getParentCustomerId();
 				CollSheetCustBO collSheetParentCust = getCollectionSheetCustomerForCustomerId(parentCustomerId);
 				// it would be null in case center hierarchy does not exist.

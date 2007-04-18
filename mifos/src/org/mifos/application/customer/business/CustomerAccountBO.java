@@ -249,8 +249,7 @@ public class CustomerAccountBO extends AccountBO {
 				CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
 				CustomerScheduleEntity accntActionDate = (CustomerScheduleEntity) getAccountActionDate(custTrxn
 						.getInstallmentId());
-				accntActionDate.setPaymentStatus(PaymentStatus.UNPAID
-						.getValue());
+				accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
 				accntActionDate.setPaymentDate(null);
 				accntActionDate.setMiscFeePaid(accntActionDate.getMiscFeePaid()
 						.add(custTrxn.getMiscFeeAmount()));

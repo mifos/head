@@ -268,7 +268,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 			setPenaltyPaid(getPenaltyPaid().add(getPenaltyDue()));
 			setMiscFeePaid(getMiscFeePaid().add(getMiscFee()));
 			setMiscPenaltyPaid(getMiscPenaltyPaid().add(getMiscPenalty()));
-			setPaymentStatus(PaymentStatus.PAID.getValue());
+			setPaymentStatus(PaymentStatus.PAID);
 			setPaymentDate(new Date(System.currentTimeMillis()));
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
 					.getAccountFeesActionDetails();
@@ -282,7 +282,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 			setPenalty(getPenaltyPaid());
 			setMiscFee(getMiscFeePaid());
 			setMiscPenalty(getMiscPenaltyPaid());
-			setPaymentStatus(PaymentStatus.PAID.getValue());
+			setPaymentStatus(PaymentStatus.PAID);
 			setPaymentDate(new Date(System.currentTimeMillis()));
 			Set<AccountFeesActionDetailEntity> accountFeesActionDetailSet = this
 					.getAccountFeesActionDetails();
@@ -456,24 +456,6 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 				return true;
 		}
 		return false;
-	}
-
-	/** altered become public instead of protected 
-	 *  reschedule LoanSchedules need it to be public
-	 */
-	@Override
-	public void setActionDate(Date actionDate) {
-		super.setActionDate(actionDate);
-	}
-
-	@Override
-	protected void setPaymentDate(Date paymentDate) {
-		super.setPaymentDate(paymentDate);
-	}
-
-	@Override
-	protected void setPaymentStatus(Short paymentStatus) {
-		super.setPaymentStatus(paymentStatus);
 	}
 
 }

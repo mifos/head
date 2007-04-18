@@ -126,7 +126,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
 		addRequestParameter("input", "preview");
 		savings = createSavingsAccount("000X00000000013", savingsOffering,
-				state.getValue());
+				state);
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 		addRequestParameter("selectedPrdOfferingId", savingsOffering
 				.getPrdOfferingId().toString());
@@ -147,17 +147,9 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 	}
 
-	/** Deprecated in favor of
-	 * {@link #createSavingsAccount(String, SavingsOfferingBO, AccountState)}
-	 */
-	private SavingsBO createSavingsAccount(String globalAccountNum,
-			SavingsOfferingBO savingsOffering, short accountStateId)
-			throws Exception {
-		AccountState state = AccountState.fromShort(accountStateId);
-		return createSavingsAccount(globalAccountNum, savingsOffering, state);
-	}
-
-	private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering, AccountState state) throws Exception {
+	private SavingsBO createSavingsAccount(String globalAccountNum, 
+		SavingsOfferingBO savingsOffering, AccountState state) 
+	throws Exception {
 		return TestObjectFactory.createSavingsAccount(globalAccountNum, group,
 				state, new Date(), savingsOffering, userContext);
 	}
@@ -337,7 +329,6 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "previous");
 		actionPerform();
 		verifyForward("previous_success");
-
 	}
 
 	public void testSuccessfulCreateWithCustomFields() throws Exception {
@@ -538,15 +529,11 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
 		savings = createSavingsAccount("000X00000000018", savingsOffering,
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
 		savingsOffering = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		try {
-			SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
-					TestUtils.makeUser(), request.getSession());
-		} catch (Exception e) {
-			assertEquals(e.getMessage(), false);
-		}
+		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
+				TestUtils.makeUser(), request.getSession());
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "getRecentActivity");
 		addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());
@@ -563,7 +550,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountStates.SAVINGS_ACC_APPROVED);
+				AccountState.SAVINGS_ACC_APPROVED);
 		savingsOffering = null;
 		
 		Money enteredAmount = new Money(TestObjectFactory.getMFICurrency(), "100.0");
@@ -626,7 +613,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
 		savings = createSavingsAccount("000X00000000020", savingsOffering,
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
 		savingsOffering = null;
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
@@ -649,7 +636,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountStates.SAVINGS_ACC_APPROVED);
+				AccountState.SAVINGS_ACC_APPROVED);
 		HibernateUtil.closeSession();
 		savingsOffering = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
@@ -674,7 +661,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		Date currentDate = new Date(System.currentTimeMillis());
 		savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate);
 		savings = createSavingsAccount("000X00000000019", savingsOffering,
-				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
+				AccountState.SAVINGS_ACC_PARTIALAPPLICATION);
 		savingsOffering = null;
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
@@ -710,12 +697,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 				.getAccountState().getId().shortValue());
 
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		try {
-			SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
-					TestUtils.makeUser(), request.getSession());
-		} catch (Exception e) {
-			assertEquals(e.getMessage(), false);
-		}
+		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
+				TestUtils.makeUser(), request.getSession());
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "getStatusHistory");
 		addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());

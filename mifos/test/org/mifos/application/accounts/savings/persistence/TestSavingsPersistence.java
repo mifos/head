@@ -408,7 +408,7 @@ public class TestSavingsPersistence extends MifosTestCase {
 		AccountActionDateEntity accountActionDateEntity = savings
 				.getAccountActionDate((short) 1);
 		TestSavingsBO.setActionDate(accountActionDateEntity,offSetCurrentDate(7));
-		TestSavingsBO.setPaymentStatus(accountActionDateEntity,PaymentStatus.PAID.getValue());
+		accountActionDateEntity.setPaymentStatus(PaymentStatus.PAID);
 		Calendar currentDateCalendar = new GregorianCalendar();
 		java.sql.Date currentDate = new java.sql.Date(currentDateCalendar
 				.getTimeInMillis());

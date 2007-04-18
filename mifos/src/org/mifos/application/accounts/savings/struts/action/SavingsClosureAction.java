@@ -163,8 +163,6 @@ public class SavingsClosureAction extends BaseAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		logger.debug("In SavingsClosureAction::preview()");
-		UserContext uc = (UserContext) SessionUtils.getAttribute(
-				Constants.USER_CONTEXT_KEY, request.getSession());
 		SavingsClosureActionForm actionForm = (SavingsClosureActionForm) form;
 		AccountPaymentEntity payment = (AccountPaymentEntity) SessionUtils
 				.getAttribute(SavingsConstants.ACCOUNT_PAYMENT, request);

@@ -55,21 +55,7 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
 	void waiveDepositDue() {
 		Money depositDue = getTotalDepositDue();
 		deposit = deposit.subtract(depositDue);
-		setPaymentStatus(PaymentStatus.PAID.getValue());
+		setPaymentStatus(PaymentStatus.PAID);
 	}
 	
-	@Override
-	public void setActionDate(Date actionDate) {
-		super.setActionDate(actionDate);
-	}
-
-	@Override
-	protected void setPaymentDate(Date paymentDate) {
-		super.setPaymentDate(paymentDate);
-	}
-
-	@Override
-	protected void setPaymentStatus(Short paymentStatus) {
-		super.setPaymentStatus(paymentStatus);
-	}
 }

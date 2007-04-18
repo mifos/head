@@ -71,7 +71,7 @@ public class TestAccountPaymentEntity extends MifosTestCase {
 		TestCustomerAccountBO.setMiscFeePaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
 		TestCustomerAccountBO.setMiscPenaltyPaid(accountAction,TestObjectFactory.getMoneyForMFICurrency(100));
 		TestCustomerAccountBO.setPaymentDate(accountAction,currentDate);
-		TestCustomerAccountBO.setPaymentStatus(accountAction,PaymentStatus.PAID.getValue());
+		accountAction.setPaymentStatus(PaymentStatus.PAID);
 		
 		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.MasterDataService);
 		
