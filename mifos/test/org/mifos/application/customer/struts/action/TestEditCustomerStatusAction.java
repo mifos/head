@@ -1097,7 +1097,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 
 	private void createObjectsForClient(String name) throws Exception {
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE,
-				TestObjectFactory.getOffice(Short.valueOf("1")),
+				TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE),
 				"customer_office", "cust");
 		client = TestObjectFactory.createClient(name, getMeeting(),
 				CustomerStatus.CLIENT_PARTIAL);
@@ -1105,7 +1105,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 
 	private void createClientWithoutMeeting(String name) throws Exception {
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE,
-				TestObjectFactory.getOffice(Short.valueOf("1")),
+				TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE),
 				"customer_office", "cust");
 		client = TestObjectFactory.createClient(name, null,
 				CustomerStatus.CLIENT_PARTIAL);
@@ -1115,7 +1115,7 @@ public class TestEditCustomerStatusAction extends MifosMockStrutsTestCase {
 			CustomerStatus clientStatus) throws NumberFormatException,
 			Exception {
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE,
-				TestObjectFactory.getOffice(Short.valueOf("1")),
+				TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE),
 				"customer_office", "cust");
 		group = TestObjectFactory.createGroupUnderBranch("Group", groupStatus,
 				office.getOfficeId(), getMeeting(), null);

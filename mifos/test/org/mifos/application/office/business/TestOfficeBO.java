@@ -43,7 +43,7 @@ public class TestOfficeBO extends MifosTestCase {
 		try {
 
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
-					.getOffice(Short.valueOf("1")), null, "TestAreaOffice ",
+					.getOffice(TestObjectFactory.HEAD_OFFICE), null, "TestAreaOffice ",
 					"ABCD", null, OperationMode.REMOTE_SERVER);
 		} catch (OfficeException e) {
 			assertEquals(OfficeConstants.OFFICENAMEEXIST, e.getKey());
@@ -54,7 +54,7 @@ public class TestOfficeBO extends MifosTestCase {
 		try {
 
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
-					.getOffice(Short.valueOf("1")), null, "abcd", "mif2", null,
+					.getOffice(TestObjectFactory.HEAD_OFFICE), null, "abcd", "mif2", null,
 					OperationMode.REMOTE_SERVER);
 		} catch (OfficeException e) {
 			assertEquals(OfficeConstants.OFFICESHORTNAMEEXIST, e.getKey());
@@ -64,7 +64,7 @@ public class TestOfficeBO extends MifosTestCase {
 	public void testCreateSucess() throws Exception { // check short
 		// name
 
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 
 		CustomFieldView customFieldView2 = new CustomFieldView();
@@ -90,7 +90,7 @@ public class TestOfficeBO extends MifosTestCase {
 	public void testCreateSucessFailure() throws Exception {
 
 		try {
-			OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+			OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 			List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 			CustomFieldView customFieldView2 = new CustomFieldView();
 			customFieldView2.setFieldId(Short.valueOf("1"));
@@ -112,7 +112,7 @@ public class TestOfficeBO extends MifosTestCase {
 		try {
 
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
-					.getOffice(Short.valueOf("1")), null, null, "mif2", null,
+					.getOffice(TestObjectFactory.HEAD_OFFICE), null, null, "mif2", null,
 					OperationMode.REMOTE_SERVER);
 		} catch (OfficeException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
@@ -124,7 +124,7 @@ public class TestOfficeBO extends MifosTestCase {
 		try {
 
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
-					.getOffice(Short.valueOf("1")), null, "abcd", null, null,
+					.getOffice(TestObjectFactory.HEAD_OFFICE), null, "abcd", null, null,
 					OperationMode.REMOTE_SERVER);
 		} catch (OfficeException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
@@ -147,7 +147,7 @@ public class TestOfficeBO extends MifosTestCase {
 		try {
 
 			new OfficeBO(userContext, OfficeLevel.AREAOFFICE, TestObjectFactory
-					.getOffice(Short.valueOf("1")), null, "abcd", "abcd", null,
+					.getOffice(TestObjectFactory.HEAD_OFFICE), null, "abcd", "abcd", null,
 					null);
 		} catch (OfficeException e) {
 			assertEquals(OfficeConstants.ERRORMANDATORYFIELD, e.getKey());
@@ -166,21 +166,21 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testGetChildern() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		HibernateUtil.startTransaction();
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
-		OfficeBO parent1 = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent1 = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		assertEquals(2, parent1.getChildren().size());
 		officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
 		TestObjectFactory.cleanUp(officeBO);
 	}
 
 	public void testUpdateNameAndShortName() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save(); // createChild also
@@ -203,7 +203,7 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateNamefailure() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
@@ -229,7 +229,7 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateShortNamefailure() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save(); // createChild also
@@ -255,7 +255,7 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateStatusSucess() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
@@ -272,7 +272,7 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateStatusfailure() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
@@ -298,7 +298,7 @@ public class TestOfficeBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(savbedOffice);
 	}
 	public void testUpdateOfficelevel() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
@@ -316,7 +316,7 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateOfficelevelFailure() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save(); // createChild also
@@ -342,7 +342,7 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateAddress() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
@@ -368,7 +368,7 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateCustomFields() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		List<CustomFieldView> customFieldView1 = new ArrayList<CustomFieldView>();
 
 		CustomFieldView customFieldView3 = new CustomFieldView();
@@ -407,7 +407,7 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateCustomFields_WithNull() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
@@ -439,7 +439,7 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateOfficeStatusSucess() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
@@ -478,20 +478,20 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testGetBranchOnlyChildren() throws Exception {
-		OfficeBO office = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.BRANCHOFFICE,
 				office, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
-		office = TestObjectFactory.getOffice(Short.valueOf("1"));
+		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		assertEquals(1, office.getBranchOnlyChildren().size());
 		officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
 		TestObjectFactory.cleanUp(officeBO);
 	}
 
 	public void testUpdateParentSucess() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO regionalOffice = TestObjectFactory.createOffice(
 				OfficeLevel.REGIONALOFFICE, parent, "abcd", "abcd");
 		// createChild also
@@ -501,7 +501,7 @@ public class TestOfficeBO extends MifosTestCase {
 				OfficeLevel.BRANCHOFFICE, areaOffice, "3", "3");
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
-		parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		areaOffice = TestObjectFactory.getOffice(areaOffice.getOfficeId());
 		areaOffice.setUserContext(userContext);
 		areaOffice.update("2", "2", areaOffice.getOfficeStatus(), areaOffice
@@ -527,7 +527,7 @@ public class TestOfficeBO extends MifosTestCase {
 
 	}
 	public void testUpdateParentFailure() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO regionalOffice = TestObjectFactory.createOffice(
 				OfficeLevel.REGIONALOFFICE, parent, "abcd", "abcd");
 		// createChild also
@@ -562,7 +562,7 @@ public class TestOfficeBO extends MifosTestCase {
 
 
 	public void testUpdateParentFromHoToArea() throws Exception {
-		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO ho = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO regionalOffice = TestObjectFactory.createOffice(
 				OfficeLevel.REGIONALOFFICE, ho, "abcd", "abcd");
 		// createChild also
@@ -599,14 +599,14 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateParentHoToRegional() throws Exception {
-		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO ho = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		//
 		OfficeBO branchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, ho, "3", "3");
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 		branchOffice = TestObjectFactory.getOffice(branchOffice.getOfficeId());
-		OfficeBO areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));
+		OfficeBO areaOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
 		branchOffice.setUserContext(userContext);
 		branchOffice.update("3", "3", branchOffice.getOfficeStatus(),
 				branchOffice.getOfficeLevel(), areaOffice, null, null);
@@ -625,9 +625,9 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testUpdateParentAreaToHo() throws Exception {
-		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
-		OfficeBO branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
-		OfficeBO areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));
+		OfficeBO ho = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
+		OfficeBO branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
+		OfficeBO areaOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
 		branchOffice.setUserContext(userContext);
 		branchOffice.update(branchOffice.getOfficeName(), branchOffice
 				.getShortName(), branchOffice.getOfficeStatus(), branchOffice
@@ -635,7 +635,7 @@ public class TestOfficeBO extends MifosTestCase {
 				null);
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		if ("1.1.1".equals(branchOffice.getSearchId())
 				|| "1.1.2".equals(branchOffice.getSearchId()))
 			assertEquals(true, true);
@@ -644,7 +644,7 @@ public class TestOfficeBO extends MifosTestCase {
 
 		// update it back
 
-		areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));
+		areaOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
 		branchOffice.setUserContext(userContext);
 		branchOffice.update(branchOffice.getOfficeName(), branchOffice
 				.getShortName(), branchOffice.getOfficeStatus(), branchOffice
@@ -674,20 +674,20 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 	
 	public void testIsParent() throws Exception {
-		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
-		OfficeBO branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		OfficeBO ho = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
+		OfficeBO branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		assertTrue(ho.isParent(branchOffice));
 	}
 	
 	public void testIsNotParent() throws Exception {
-		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
-		OfficeBO branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		OfficeBO ho = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
+		OfficeBO branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		assertFalse(branchOffice.isParent(ho));
 	}
 
 	private void resetOffices() throws Exception {
-		OfficeBO ho = TestObjectFactory.getOffice(Short.valueOf("1"));
-		OfficeBO areaOffice = TestObjectFactory.getOffice(Short.valueOf("2"));
+		OfficeBO ho = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
+		OfficeBO areaOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
 
 		areaOffice.setParentOffice(ho);
 		areaOffice.setSearchId("1.1.1");
@@ -695,8 +695,8 @@ public class TestOfficeBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		TestObjectFactory.flushandCloseSession();
 
-		OfficeBO areaOffice1 = TestObjectFactory.getOffice(Short.valueOf("2"));
-		OfficeBO branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		OfficeBO areaOffice1 = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
+		OfficeBO branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		branchOffice.setParentOffice(areaOffice1);
 		branchOffice.setSearchId("1.1.1.1");
 		branchOffice.setUserContext(userContext);
@@ -709,15 +709,15 @@ public class TestOfficeBO extends MifosTestCase {
 	}
 
 	public void testOfficeEquals() throws Exception {
-		OfficeBO office1 = TestObjectFactory.getOffice(Short.valueOf("1"));
-		OfficeBO office1a = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO office1 = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
+		OfficeBO office1a = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO office1b = OfficeBO.makeForTest(userContext, (short)1, 
 			"office 1b", "1b");
 		// TODO: subclass case
 		OfficeBO unsaved = OfficeBO.makeForTest(userContext, null, 
 			"office 1b", "1b");
 		
-		OfficeBO office2 = TestObjectFactory.getOffice(Short.valueOf("2"));
+		OfficeBO office2 = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_AREA_OFFICE);
 		
 		// fixing equals was causing failures in
 		// ReverseLoanDisbursalActionTest.

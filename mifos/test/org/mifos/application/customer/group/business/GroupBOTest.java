@@ -1437,7 +1437,7 @@ public class GroupBOTest extends MifosTestCase {
 
 	private OfficeBO createOffice() throws Exception {
 		return TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE,
-				TestObjectFactory.getOffice(Short.valueOf("1")),
+				TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE),
 				"customer_office", "cust");
 	}
 

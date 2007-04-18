@@ -31,6 +31,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -542,7 +543,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		try {
 			SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
-					TestObjectFactory.getUserContext(), request.getSession());
+					TestUtils.makeUser(), request.getSession());
 		} catch (Exception e) {
 			assertEquals(e.getMessage(), false);
 		}
@@ -629,8 +630,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savingsOffering = null;
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, TestObjectFactory
-				.getUserContext(), request.getSession());
+		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, 
+			TestUtils.makeUser(), request.getSession());
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "getDepositDueDetails");
 		addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());
@@ -652,8 +653,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		HibernateUtil.closeSession();
 		savingsOffering = null;
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, TestObjectFactory
-				.getUserContext(), request.getSession());
+		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, 
+				TestUtils.makeUser(), request.getSession());
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "waiveAmountDue");
 		addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());
@@ -677,8 +678,8 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		savingsOffering = null;
 		HibernateUtil.closeSession();
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
-		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, TestObjectFactory
-				.getUserContext(), request.getSession());
+		SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY, 
+				TestUtils.makeUser(), request.getSession());
 		setRequestPathInfo("/savingsAction.do");
 		addRequestParameter("method", "waiveAmountOverDue");
 		addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());
@@ -711,7 +712,7 @@ public class TestSavingsAction extends MifosMockStrutsTestCase {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings,request);
 		try {
 			SessionUtils.setAttribute(Constants.USER_CONTEXT_KEY,
-					TestObjectFactory.getUserContext(), request.getSession());
+					TestUtils.makeUser(), request.getSession());
 		} catch (Exception e) {
 			assertEquals(e.getMessage(), false);
 		}

@@ -332,8 +332,8 @@ public class PersonnelBO extends BusinessObject {
 		}
 	}
 
-	void setEncriptedPassword(byte[] encriptedPassword) {
-		this.encriptedPassword = encriptedPassword;
+	public void setEncriptedPassword(byte[] encryptedPassword) {
+		this.encriptedPassword = encryptedPassword;
 	}
 
 	public PersonnelStatusEntity getStatus() {
@@ -685,7 +685,9 @@ public class PersonnelBO extends BusinessObject {
 		return userContext;
 	}
 
-	public void updatePassword(String oldPassword,	String newPassword, Short updatedById) throws PersonnelException {
+	public void updatePassword(String oldPassword, String newPassword, 
+			Short updatedById) 
+	throws PersonnelException {
 		logger.info("Trying to updatePassword");
 		byte[] encryptedPassword = getEncryptedPassword(oldPassword,newPassword);
 		this.setEncriptedPassword(encryptedPassword);

@@ -61,12 +61,12 @@ public class TestOfficeBusinessService extends MifosTestCase {
 	}
 
 	public void testGetOffice() throws Exception {
-		assertNotNull(officeBusinessService.getOffice(Short.valueOf("1")));
+		assertNotNull(officeBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE));
 	}
 	public void testGetOfficeFailure() throws Exception{
 		TestObjectFactory.simulateInvalidConnection();
 		try{
-			officeBusinessService.getOffice(Short.valueOf("1"));
+			officeBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE);
 		fail();
 		}
 		catch (ServiceException e) {
@@ -128,7 +128,7 @@ public class TestOfficeBusinessService extends MifosTestCase {
 
 	}
 	public void testGetChildOffices() throws ServiceException {
-		OfficeBO headOffice = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO headOffice = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		List<OfficeView> officeList = officeBusinessService
 				.getChildOffices(headOffice.getSearchId());
 		assertEquals(3, officeList.size());
@@ -136,7 +136,7 @@ public class TestOfficeBusinessService extends MifosTestCase {
 		headOffice = null;
 	}
 	public void testGetChildOfficesFailure() throws Exception{
-		OfficeBO headOffice = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO headOffice = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		TestObjectFactory.simulateInvalidConnection();
 		try{
 			 officeBusinessService

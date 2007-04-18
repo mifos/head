@@ -76,7 +76,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		addRequestParameter("input", "CreateUser");
 		PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
-		SessionUtils.setAttribute(PersonnelConstants.OFFICE,personnelBusinessService.getOffice(Short.valueOf("1")), request);
+		SessionUtils.setAttribute(PersonnelConstants.OFFICE,personnelBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE), request);
 		SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST, personnelBusinessService.getRoles(), request);
 		SessionUtils.setCollectionAttribute(PersonnelConstants.ROLEMASTERLIST,
 				personnelBusinessService.getRoles(), request);
@@ -492,7 +492,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 	}
 
 	public OfficeBO getBranchOffice(){
-		return TestObjectFactory.getOffice(Short.valueOf("3"));
+		return TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 	}
 
 	private void setRequestData() throws PageExpiredException, ServiceException {

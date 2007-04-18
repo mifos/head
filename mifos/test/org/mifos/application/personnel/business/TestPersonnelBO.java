@@ -61,8 +61,8 @@ public class TestPersonnelBO extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		userContext = TestObjectFactory.getUserContext();
-		office = TestObjectFactory.getOffice(Short.valueOf("1"));
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		name = new Name("XYZ", null, null, null);
 		super.setUp();
 	}
@@ -82,19 +82,13 @@ public class TestPersonnelBO extends MifosTestCase {
 		super.tearDown();
 	}
 	
-	public static void setEncriptedPassword(byte[] password,PersonnelBO personnel) {
-		personnel.setEncriptedPassword(password);
-	}
-
 	public void testCreateFailureWithNullName() {
 		try {
-
 			new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer
 					.valueOf("1"), Short.valueOf("1"), "ABCD", null, null,
 					null, null, name, null, null, null, null, null, null, null,
 					userContext.getId());
-
-			assertTrue(false);
+			fail();
 		} catch (PersonnelException e) {
 			assertEquals(PersonnelConstants.ERRORMANDATORY, e.getKey());
 		}

@@ -1035,7 +1035,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	private void createObjectsForClientTransfer()throws Exception{
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, 
-			TestObjectFactory.getOffice(Short.valueOf("1")), 
+			TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), 
 			"customer_office", "cust");
 		client = TestObjectFactory.createClient("client_to_transfer",
 				getMeeting(), CustomerStatus.CLIENT_ACTIVE);
@@ -1078,7 +1078,7 @@ public class TestClientBO extends MifosTestCase {
 	
 	private void createObjectsForTranferToGroup_DifferentBranch()throws Exception{
 		createInitialObjects();
-		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
+		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
 		HibernateUtil.closeSession();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
@@ -1088,7 +1088,7 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	private void createObjectsForClient(String name, CustomerStatus status)throws Exception{
-		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
+		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
 		client = TestObjectFactory.createClient(name, getMeeting(), status);
 		HibernateUtil.closeSession();
 	}

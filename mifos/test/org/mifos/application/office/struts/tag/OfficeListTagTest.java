@@ -92,7 +92,7 @@ public class OfficeListTagTest extends MifosTestCase {
 	private OfficeBO makeOffice(String name, OfficeLevel level)
 			throws OfficeException {
 		String shortName = name.substring(0,3); 
-		return OfficeBO.makeForTest(userContext, level, TestObjectFactory.getOffice(Short.valueOf("1")), null, name, shortName,
+		return OfficeBO.makeForTest(userContext, level, TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), null, name, shortName,
 				null, OperationMode.LOCAL_SERVER, OfficeStatus.ACTIVE);
 	}
 

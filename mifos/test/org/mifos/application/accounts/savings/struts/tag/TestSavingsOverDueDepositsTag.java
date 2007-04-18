@@ -12,6 +12,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -56,6 +57,7 @@ public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 		createInitialObjects() ;
 		assertNotNull( new SavingsOverDueDepositsTag().buildUI(savings.getDetailsOfInstallmentsInArrears(),new Locale("en","US")));
 	}
+
 	private void createInitialObjects() throws Exception{
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
@@ -66,7 +68,7 @@ public class TestSavingsOverDueDepositsTag extends MifosTestCase {
 		savingsOffering = helper.createSavingsOffering("2333dsf", "2132");
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountState.SAVINGS_ACC_APPROVED, 
-				TestObjectFactory.getUserContext());
+				TestUtils.makeUser());
 
 	}
 }

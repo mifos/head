@@ -87,7 +87,7 @@ public class TestTagGenerator extends MifosTestCase {
 	}
 
 	public void testPersonnelLinkWithoutSelfLink() throws Exception {
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		String createdLink = TagGenerator.createHeaderLinks(personnel, false,
 				randomNum);
@@ -96,7 +96,7 @@ public class TestTagGenerator extends MifosTestCase {
 	}
 
 	public void testPersonnelLinkWithSelfLink() throws Exception {
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		String createdLink = TagGenerator.createHeaderLinks(personnel, true,
 				randomNum);
@@ -131,7 +131,7 @@ public class TestTagGenerator extends MifosTestCase {
 	}
 
 	public void testTagGeneratorFactoryForPersonnel() throws Exception {
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		TagGenerator tagGenerator = TagGeneratorFactory.getInstance()
 				.getGenerator(personnel);

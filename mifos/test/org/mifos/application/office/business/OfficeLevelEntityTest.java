@@ -50,7 +50,7 @@ public class OfficeLevelEntityTest extends MifosTestCase {
 	
 	
 	public void testUpdateLevelFailureIfOfficePresent() throws Exception {
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO regionalOffice = TestObjectFactory.createOffice(
 				OfficeLevel.REGIONALOFFICE, parent, "Office_Regional", "OFB");
 		HibernateUtil.closeSession();

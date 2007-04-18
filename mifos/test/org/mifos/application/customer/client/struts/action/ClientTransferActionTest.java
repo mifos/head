@@ -270,7 +270,7 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	private void createObjectsForClientTransfer()throws Exception{
-		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
+		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
 		client = TestObjectFactory.createClient("client_to_transfer",
 			getMeeting(), CustomerStatus.CLIENT_ACTIVE);
 		HibernateUtil.closeSession();

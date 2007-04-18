@@ -6,6 +6,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestConfiguration extends MifosTestCase{
 	private Configuration configuration ;
@@ -41,15 +42,17 @@ public class TestConfiguration extends MifosTestCase{
 	}
 
 	public void testAreaOfficeConfiguration()throws Exception{
-		OfficeBO areaOffice = new OfficePersistence().getOffice(Short.valueOf("2"));
-		OfficeConfig officeConfig = configuration.getOfficeConfig(areaOffice.getOfficeId());
+		OfficeBO areaOffice = new OfficePersistence().getOffice(
+			TestObjectFactory.SAMPLE_AREA_OFFICE);
+		OfficeConfig officeConfig = configuration.getOfficeConfig(
+			areaOffice.getOfficeId());
 		assertForCustomerConfig(officeConfig.getCustomerConfig());
 		assertForAccountConfig(officeConfig.getAccountConfig());
 		assertForMeetingConfig(officeConfig.getMeetingConfig());
 	}
 
 	public void testBranchOfficeConfiguration()throws Exception{
-		OfficeBO branchOffice = new OfficePersistence().getOffice(Short.valueOf("3"));
+		OfficeBO branchOffice = new OfficePersistence().getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		OfficeConfig officeConfig = configuration.getOfficeConfig(branchOffice.getOfficeId());
 		assertForCustomerConfig(officeConfig.getCustomerConfig());
 		assertForAccountConfig(officeConfig.getAccountConfig());
@@ -80,6 +83,11 @@ public class TestConfiguration extends MifosTestCase{
 		assertEquals("same_day",meetingConfig.getSchTypeForMeetingOnHoliday());
 		assertEquals(Short.valueOf("30"),meetingConfig.getDaysForCalDefinition());
 		List<Short> weekOffs = meetingConfig.getWeekOffDays();
+		
+		// This is what it currently does:
+		assertNull(weekOffs);
+
+		// This is what it should do(?):
 		//assertNotNull(weekOffs);
 		//assertEquals(Integer.valueOf(1).intValue(),weekOffs.size());
 		//assertEquals(Short.valueOf("1"),weekOffs.get(0));

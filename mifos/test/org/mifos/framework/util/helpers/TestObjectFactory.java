@@ -141,7 +141,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OperationMode;
 import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.business.TestPersonnelBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.InterestCalcTypeEntity;
@@ -229,6 +229,21 @@ public class TestObjectFactory {
 	 * Corresponds to a locale we set up in latest-data.
 	 */
 	public static final Short TEST_LOCALE = 1;
+	
+	/**
+	 * Set up in latest-data.
+	 */
+	public static final Short HEAD_OFFICE = 1;
+
+	/**
+	 * Set up in testdbinsertionscript.
+	 */
+	public static final Short SAMPLE_AREA_OFFICE = 2;
+
+	/**
+	 * Set up in testdbinsertionscript.
+	 */
+	public static final Short SAMPLE_BRANCH_OFFICE = 3;
 
 	/**
 	 * @return - Returns the office created by test data scripts. If the row
@@ -1422,8 +1437,9 @@ public class TestObjectFactory {
 	throws SystemException, ApplicationException {
 		byte[] password = EncryptionService.getInstance()
 				.createEncryptedPassword("mifos");
-		PersonnelBO personnel = getPersonnel(session, Short.valueOf("1"));
-		TestPersonnelBO.setEncriptedPassword(password,personnel);
+		PersonnelBO personnel = getPersonnel(session, 
+			PersonnelConstants.SYSTEM_USER);
+		personnel.setEncriptedPassword(password);
 		updateObject(session, personnel);
 		return personnel.login(session, "mifos");
 	}
@@ -1445,17 +1461,14 @@ public class TestObjectFactory {
 		T object = testObjectPersistence.getObject(clazz, pk);
 		addObject(object);
 		return object;
-
 	}
 
 	public static Object getObject(Class clazz, Short pk) {
 		return addObject(testObjectPersistence.getObject(clazz, pk));
-
 	}
 
 	public static Object getObject(Class clazz, HolidayPK pk) {
 		return addObject(testObjectPersistence.getObject(clazz, pk));
-
 	}
 	
 	public static void cleanUpHolidays(List<HolidayBO> holidayList) {

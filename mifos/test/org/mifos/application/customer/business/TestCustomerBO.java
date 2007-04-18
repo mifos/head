@@ -111,7 +111,7 @@ public class TestCustomerBO extends MifosTestCase {
 	}
 
 	public void testStatusChangeForCenterForLogging() throws Exception {
-		OfficeBO office = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		createdBranchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
 		HibernateUtil.closeSession();
@@ -539,7 +539,7 @@ public class TestCustomerBO extends MifosTestCase {
 
 	public void testValidateStatusChangeForCustomerWithLoanofficerAssignedToDifferentBranch()
 			throws Exception {
-		OfficeBO office = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		createdBranchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
 		HibernateUtil.closeSession();
@@ -772,7 +772,7 @@ public class TestCustomerBO extends MifosTestCase {
 	}
 
 	public OfficeBO getBranchOffice() {
-		return TestObjectFactory.getOffice(Short.valueOf("3"));
+		return TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 
 	}
 }

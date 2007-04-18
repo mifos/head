@@ -94,12 +94,12 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		List<OfficeBO> officeset= (List<OfficeBO>)SessionUtils.getAttribute(CustomerSearchConstants.OFFICESLIST,request);
 		assertNotNull(officeset);
 		assertEquals(1,officeset.size());
-		assertEquals(TestObjectFactory.getOffice(Short.valueOf("1")).getOfficeName(),
+		assertEquals(TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE).getOfficeName(),
 		SessionUtils.getAttribute(CustomerSearchConstants.OFFICE,request));
 	}
 	public void testLoadMainSearchNonLoBoUser()throws Exception{
 		
-		OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf("3"));
+		OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		PersonnelBO personnelBO = TestObjectFactory.createPersonnel(PersonnelLevel.NON_LOAN_OFFICER,officeBO,
 				Integer.valueOf("1"),Short.valueOf("1"),"1234","raj",null,null,null,new Name("abe",null,null,null),
 				null,new Date(),null,Integer.valueOf("1"),null,null,null);
@@ -117,7 +117,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		TestObjectFactory.cleanUp(personnelBO);
 	}	
 	public void testLoadMainSearchLoBoUser()throws Exception{
-		OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf("3"));
+		OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		userContext.setId(Short.valueOf("3"));
 		createGroupWithCenter();
 		addActionAndMethod(Methods.loadMainSearch.toString());
@@ -190,7 +190,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(CustomerSearchConstants.LOADFORWARDLOANOFFICER_SUCCESS);
-		OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf("3"));
+		OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		
 		assertEquals(officeBO.getOfficeName(),SessionUtils.getAttribute(CustomerSearchConstants.OFFICE,request));
 		assertEquals(true,SessionUtils.getAttribute("isCenterHeirarchyExists",request));
@@ -206,7 +206,7 @@ public class TestCustSearchAction extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(CustomerSearchConstants.LOADFORWARDNONLOANOFFICER_SUCCESS);
-		OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf("3"));
+		OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		
 		assertEquals(officeBO.getOfficeName(),SessionUtils.getAttribute(CustomerSearchConstants.OFFICE,request));
 		assertEquals(true,SessionUtils.getAttribute("isCenterHeirarchyExists",request));

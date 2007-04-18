@@ -148,8 +148,8 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	
 	public void testGetAllPersonnelNotes() throws Exception {
 		userContext = TestObjectFactory.getUserContext();
-		office = TestObjectFactory.getOffice(Short.valueOf("1"));
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		createdBranchOffice = TestObjectFactory.createOffice(
 				OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
 		HibernateUtil.closeSession();
@@ -181,7 +181,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	}
 	
 	public void testSuccessfullGetPersonnel() throws Exception {
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		String oldUserName = personnel.getUserName();
 		personnel = persistence.getPersonnel(personnel.getUserName());
@@ -201,7 +201,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	
 	
 	public  void testSearch()throws Exception{
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		QueryResult queryResult = persistence.search(personnel.getUserName(),Short.valueOf("1"));
 		assertNotNull(queryResult);
@@ -209,7 +209,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		assertEquals(1,queryResult.get(0,10).size());
 	}
 	public  void testSearchFirstNameAndLastName()throws Exception{
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		personnel = createPersonnelWithName(branchOffice, PersonnelLevel.LOAN_OFFICER,new Name("Rajender",null,"singh","saini"));
 		QueryResult queryResult = persistence.search(personnel.getPersonnelDetails().getName().getFirstName()+" "+personnel.getPersonnelDetails().getName().getLastName(),Short.valueOf("1"));
 		assertNotNull(queryResult);
@@ -217,7 +217,7 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		assertEquals(1,queryResult.get(0,10).size());
 	}	
 	public void  testGetActiveLoUnderUser()throws Exception{
-		branchOffice = TestObjectFactory.getOffice(Short.valueOf("3"));
+		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
 		List<PersonnelBO> loanOfficers = persistence.getActiveLoUnderUser(branchOffice.getOfficeId());
 		assertNotNull(loanOfficers);

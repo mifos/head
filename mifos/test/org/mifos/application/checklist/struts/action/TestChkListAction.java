@@ -15,6 +15,7 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
@@ -35,12 +36,12 @@ public class TestChkListAction extends MifosMockStrutsTestCase {
 		setConfigFile(ResourceLoader.getURI(
 				"org/mifos/application/checklist/struts-config.xml")
 				.getPath());
-		UserContext userContext = TestObjectFactory.getUserContext();
+		UserContext userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
-		ActivityContext ac = new ActivityContext((short) 0, userContext
-				.getBranchId().shortValue(), userContext.getId().shortValue());
+		ActivityContext ac = new ActivityContext((short) 0, 
+				userContext.getBranchId(), userContext.getId());
 		request.getSession(false).setAttribute("ActivityContext", ac);
 		flowKey = createFlow(request, ChkListAction.class);
 	}

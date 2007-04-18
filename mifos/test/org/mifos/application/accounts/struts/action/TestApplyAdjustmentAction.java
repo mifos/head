@@ -55,8 +55,10 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -167,7 +169,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 
 	public void testApplyAdjustment()throws Exception{
 		PersonnelBO personnel = new PersonnelPersistence()
-		.getPersonnel(TestObjectFactory.getUserContext().getId());
+			.getPersonnel(PersonnelConstants.SYSTEM_USER);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan,212);
@@ -203,7 +205,8 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("adjustmentNote", "Loan adjustment testing");
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		getRequest().getSession().setAttribute(Constants.USERCONTEXT, TestObjectFactory.getUserContext());
+		getRequest().getSession().setAttribute(Constants.USERCONTEXT, 
+			TestUtils.makeUser());
 
 		actionPerform();
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
@@ -212,7 +215,7 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	
 	public void testApplyAdjustmentWhenAccountsSecondLastStateWasBadStanding()throws Exception{
 		PersonnelBO personnel = new PersonnelPersistence()
-		.getPersonnel(TestObjectFactory.getUserContext().getId());
+			.getPersonnel(PersonnelConstants.SYSTEM_USER);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		loan =(LoanBO)getLoanAccount();
 		applyPayment(loan,212);
@@ -241,7 +244,8 @@ public class TestApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		addRequestParameter("adjustmentNote", "Loan adjustment testing");
 		addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		getRequest().getSession().setAttribute(Constants.USERCONTEXT, TestObjectFactory.getUserContext());
+		getRequest().getSession().setAttribute(Constants.USERCONTEXT, 
+			TestUtils.makeUser());
 
 		actionPerform();
 		loan = (LoanBO)TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());

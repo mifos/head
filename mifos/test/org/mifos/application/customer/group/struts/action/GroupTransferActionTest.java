@@ -301,7 +301,7 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	}
 	
 	private OfficeBO createOffice()throws Exception{
-		return TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(Short.valueOf("1")), "customer_office", "cust");
+		return TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
 	}
 	
 	private GroupBO createGroup(String name, CenterBO center){

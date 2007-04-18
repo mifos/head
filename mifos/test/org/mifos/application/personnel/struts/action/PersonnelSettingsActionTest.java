@@ -69,7 +69,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
 		SessionUtils
 				.setAttribute(PersonnelConstants.OFFICE,
-						personnelBusinessService.getOffice(Short.valueOf("1")),
+						personnelBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE),
 						request);
 		SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST,
 				personnelBusinessService.getRoles(), request);
@@ -465,7 +465,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 	}
 
 	private OfficeBO getBranchOffice() {
-		return TestObjectFactory.getOffice(Short.valueOf("1"));
+		return TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 
 	}
 }

@@ -42,6 +42,7 @@ import org.mifos.application.master.persistence.service.MasterPersistenceService
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -208,7 +209,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testIsAdjustPossibleOnLastTrxn_NotActiveState()
 			throws Exception {
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		createInitialObjects();
 
 		// TODO: Is CENTER_ACTIVE right or should it be CLIENT_ACTIVE?
@@ -222,7 +223,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testIsAdjustPossibleOnLastTrxn_LastPaymentNull()
 			throws Exception {
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		createInitialObjects();
 		client = TestObjectFactory.createClient("Client_Active_test", CustomerStatus.CLIENT_ACTIVE, group);
 		customerAccountBO = client.getCustomerAccount();
@@ -233,7 +234,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 	public void testIsAdjustPossibleOnLastTrxn_LastPaymentWasAdjustment()
 			throws Exception {
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		createInitialObjects();
 		applyPayment();
 		customerAccountBO = TestObjectFactory.getObject(
@@ -249,7 +250,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	}
 
 	public void testUpdateInstallmentAfterAdjustment() throws Exception {
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		createInitialObjects();
 		applyPayment();
 		customerAccountBO = TestObjectFactory.getObject(
@@ -278,7 +279,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 	}
 
 	public void testAdjustPmnt() throws Exception {
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		createInitialObjects();
 		applyPayment();
 		customerAccountBO = TestObjectFactory.getObject(
@@ -347,7 +348,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		center = TestObjectFactory.getObject(CenterBO.class, center
 				.getCustomerId());
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		customerAccount = center.getCustomerAccount();
 		customerAccount.setUserContext(uc);
 		customerAccount.applyCharge(Short.valueOf("-1"), new Double("33"));
@@ -377,7 +378,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		CustomerAccountBO customerAccountBO = group.getCustomerAccount();
 		customerAccountBO.setUserContext(userContext);
 		customerAccountBO.waiveAmountDue(WaiveEnum.ALL);
@@ -408,7 +409,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		TestObjectFactory.flushandCloseSession();
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		customerAccountBO = group.getCustomerAccount();
 		customerAccountBO.setUserContext(userContext);
 		customerAccountBO.waiveAmountOverDue(WaiveEnum.ALL);
@@ -519,7 +520,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
 		for (AccountFeesEntity accountFeesEntity : customerAccountBO
 				.getAccountFees()) {
@@ -741,7 +742,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
 		customerAccountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
 		Money amount = new Money();
@@ -776,7 +777,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		group = TestObjectFactory.getObject(CustomerBO.class,
 				group.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
 		try {
 			customerAccountBO
@@ -810,7 +811,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 						.getValue());
 			}
 		}
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
 		customerAccountBO.applyCharge(Short.valueOf("-1"), new Double("33"));
 		Money amount = new Money();
@@ -848,7 +849,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "200",
 				RecurrenceType.WEEKLY, Short.valueOf("2"));
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
 		customerAccountBO.applyCharge(periodicFee.getFeeId(),
 				((AmountFeeBO) periodicFee).getFeeAmount()
@@ -907,7 +908,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee(
 				"Periodic Fee", FeeCategory.ALLCUSTOMERS, "200",
 				RecurrenceType.WEEKLY, Short.valueOf("2"));
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
 
 		customerAccountBO.applyCharge(periodicFee.getFeeId(),
@@ -966,7 +967,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		FeeBO upfrontFee = TestObjectFactory.createOneTimeAmountFee(
 				"Upfront Fee", FeeCategory.ALLCUSTOMERS, "20",
 				FeePayment.UPFRONT);
-		UserContext uc = TestObjectFactory.getUserContext();
+		UserContext uc = TestUtils.makeUser();
 		customerAccountBO.setUserContext(uc);
 		customerAccountBO.applyCharge(upfrontFee.getFeeId(),
 				((AmountFeeBO) upfrontFee).getFeeAmount()

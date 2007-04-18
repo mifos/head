@@ -242,6 +242,6 @@ public class TestPersonnelNoteAction extends MifosMockStrutsTestCase {
 	}
 
 	public OfficeBO getBranchOffice() {
-		return TestObjectFactory.getOffice(Short.valueOf("3"));
+		return TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 	}
 }

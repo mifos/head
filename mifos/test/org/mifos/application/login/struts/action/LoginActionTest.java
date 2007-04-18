@@ -402,7 +402,7 @@ public class LoginActionTest extends MifosMockStrutsTestCase {
 	}
 
 	private PersonnelBO createPersonnel() throws Exception {
-		office = TestObjectFactory.getOffice(Short.valueOf("1"));
+		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		Name name = new Name("XYZ", null, null, null);
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",

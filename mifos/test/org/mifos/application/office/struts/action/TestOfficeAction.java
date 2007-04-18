@@ -226,7 +226,7 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 		addActionMethod( Methods.editpreview.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-		OfficeBO headoffice = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO headoffice = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		addRequestParameter("officeName","RAJOFFICE");
 		addRequestParameter("shortName",headoffice.getShortName());
 		addRequestParameter("officeLevel",headoffice.getOfficeLevel().getValue().toString());
@@ -244,7 +244,7 @@ public class TestOfficeAction extends MifosMockStrutsTestCase {
 	}
 	
 	private OfficeBO createLoadOffice() throws Exception{
-		OfficeBO parent = TestObjectFactory.getOffice(Short.valueOf("1"));
+		OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE,
 				parent, null, "abcd", "abcd", null, OperationMode.REMOTE_SERVER);
 		officeBO.save();

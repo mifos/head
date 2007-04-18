@@ -39,7 +39,7 @@ public class TestUtils {
 		user.setLevel(PersonnelLevel.NON_LOAN_OFFICER);
 		user.setName("mifos");
 		user.setPreferredLocale(new Locale("en", "US"));
-		user.setBranchId((short)1);
+		user.setBranchId(TestObjectFactory.HEAD_OFFICE);
 		user.setBranchGlobalNum("0001");
 		return user;
 	}

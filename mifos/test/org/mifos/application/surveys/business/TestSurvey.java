@@ -101,7 +101,7 @@ public class TestSurvey extends MifosTestCase {
 		survey.setState(SurveyConstants.ACTIVE);
 		survey.setSurveyAppliesTo("someone");
 		
-		OfficeBO office = factory.getOffice(Short.valueOf("1"));
+		OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		Name name = new Name("XYZ", null, null, null);
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView((short) 9, "123456",
