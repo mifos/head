@@ -50,7 +50,6 @@ import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
-import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -175,7 +174,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
@@ -425,25 +423,8 @@ public class TestObjectFactory {
 					clientDetailView, null);
 			client.save();
 			HibernateUtil.commitTransaction();
-		} catch (CustomerException customerException) {
-			if (customerException.getCause() instanceof PersistenceException) {
-				PersistenceException persistenceException = 
-					(PersistenceException) customerException.getCause();
-				if (persistenceException.getCause() 
-						instanceof NonUniqueObjectException) {
-					/** TODO: Why are we getting this
-				    for example in 
-				    {@link TestSavingsBO#testGenerateAndUpdateDepositActionsForClient()}
-				     ? */
-					customerException.printStackTrace();
-				}
-				else {
-					throw new RuntimeException(customerException);
-				}
-			}
-			else {
-				throw new RuntimeException(customerException);
-			}
+		} catch (CustomerException e) {
+			throw new RuntimeException(e);
 		}
 		catch (SystemException e) {
 			throw new RuntimeException(e);

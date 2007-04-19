@@ -54,7 +54,6 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.client.persistence.ClientPersistence;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -672,29 +671,31 @@ public class TestSavingsBO extends MifosTestCase {
 				.isMandatory());
 	}
 
-	public void testGenerateAndUpdateDepositActionsForClient() throws Exception {
+	public void testGenerateAndUpdateDepositActionsForClient() 
+	throws Exception {
 		center = helper.createCenter();
 		group = TestObjectFactory.createGroupUnderCenter(
 				"Group1", CustomerStatus.GROUP_ACTIVE, center);
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd1", "sad1",
+		savingsOffering = TestObjectFactory.createSavingsOffering(
+				"dfasdasd1", "sad1",
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 
 		savings = helper.createSavingsAccount("000100000000017",
-				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
+				savingsOffering, group, 
+				AccountState.SAVINGS_ACC_APPROVED,
 				userContext);
 		HibernateUtil.closeSession();
 
-		/*
-		 * TODO: this is throwing org.hibernate.NonUniqueObjectException
-		 * (now bogusly caught in TestObjectFactory).  Why?
-		 */
+		group = (GroupBO) HibernateUtil.getSessionTL().get(
+			GroupBO.class, group.getCustomerId());
+		// This calls savings.generateAndUpdateDepositActionsForClient
+		// which is what this test is all about testing.
 		client1 = TestObjectFactory.createClient("client1",
 				CustomerStatus.CLIENT_ACTIVE, group);
 		HibernateUtil.closeSession();
+
 		savings = savingsPersistence.findById(savings.getAccountId());
 		savings.setUserContext(userContext);
-		savings.generateAndUpdateDepositActionsForClient(
-			new ClientPersistence().getClient(client1.getCustomerId()));
 		group = savings.getCustomer();
 		center = group.getParentCustomer();
 		assertEquals(10, savings.getAccountActionDates().size());

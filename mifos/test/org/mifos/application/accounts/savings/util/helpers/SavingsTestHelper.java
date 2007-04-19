@@ -156,10 +156,13 @@ public class SavingsTestHelper {
 	public SavingsBO createSavingsAccount(String globalAccountNum,
 			SavingsOfferingBO savingsOffering, CustomerBO customer,
 			short accountStateId, UserContext userContext) throws Exception {
-		return createSavingsAccount(globalAccountNum, savingsOffering, customer, AccountState.fromShort(accountStateId), userContext);
+		return createSavingsAccount(globalAccountNum, savingsOffering, 
+			customer, AccountState.fromShort(accountStateId), userContext);
 	}
 
-	private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering, CustomerBO customer, AccountState state, UserContext userContext) throws Exception {
+	public SavingsBO createSavingsAccount(String globalAccountNum, 
+		SavingsOfferingBO savingsOffering, CustomerBO customer, 
+		AccountState state, UserContext userContext) throws Exception {
 		SavingsBO savings = TestObjectFactory.createSavingsAccount(
 				globalAccountNum, customer, state, new Date(),
 				savingsOffering, userContext);
