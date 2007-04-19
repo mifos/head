@@ -83,11 +83,26 @@ public class ApplicationInitializer implements ServletContextListener {
 	public static void printDatabaseError(XmlBuilder xml) {
 		synchronized(ApplicationInitializer.class){
 	        if(databaseVersionError != null) {
-				StringWriter stackTrace = new StringWriter();
+	        	xml.startTag("p");
+	        	xml.text("Here are details of what went wrong:");
+	        	xml.endTag("p");
+
+	        	xml.startTag("pre");
+	        	StringWriter stackTrace = new StringWriter();
 				databaseVersionError.printStackTrace(new PrintWriter(stackTrace));
-				xml.comment("\n" + stackTrace.toString());
+				xml.text("\n" + stackTrace.toString());
+	        	xml.endTag("pre");
 			}
+	        else {
+	        	xml.startTag("p");
+	        	xml.text("I don't have any further details, unfortunately.");
+	        	xml.endTag("p");
+	        }
 	    }
+	}
+	
+	public static void setDatabaseVersionError(Throwable error) {
+		databaseVersionError = error;
 	}
 	
 	/**
@@ -210,5 +225,5 @@ public class ApplicationInitializer implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent ctx) {
 		
 	}
-	
+
 }

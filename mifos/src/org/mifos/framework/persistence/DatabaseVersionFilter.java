@@ -82,10 +82,10 @@ public class DatabaseVersionFilter implements Filter {
         	xml.text("Database Version = "+version+"\n");
         }
 		xml.text("Application Version = "+DatabaseVersionPersistence.APPLICATION_VERSION+"\n");
+        xml.endTag("pre");
         
         ApplicationInitializer.printDatabaseError(xml);
         
-        xml.endTag("pre");
         xml.endTag("body");
         xml.endTag("html");
         out.println(xml.getOutput());
