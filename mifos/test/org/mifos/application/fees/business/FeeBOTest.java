@@ -52,6 +52,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -69,7 +70,7 @@ public class FeeBOTest extends MifosTestCase {
 
 	public void testCreateWithoutFeeName() throws Exception {
 		try {
-			fee = new AmountFeeBO(TestObjectFactory.getUserContext(), "",
+			fee = new AmountFeeBO(TestUtils.makeUser(), "",
 					new CategoryTypeEntity(FeeCategory.CENTER),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 					getGLCode("7"), TestObjectFactory
@@ -84,7 +85,7 @@ public class FeeBOTest extends MifosTestCase {
 
 	public void testCreateWithoutFeeCategory() throws Exception {
 		try {
-			fee = new AmountFeeBO(TestObjectFactory.getUserContext(),
+			fee = new AmountFeeBO(TestUtils.makeUser(),
 					"Customer Fee", null, new FeeFrequencyTypeEntity(
 							FeeFrequencyType.ONETIME), getGLCode("7"),
 					TestObjectFactory.getMoneyForMFICurrency("100"), false,
@@ -98,7 +99,7 @@ public class FeeBOTest extends MifosTestCase {
 
 	public void testCreateFeeWithoutFeeFrequency() throws Exception {
 		try {
-			fee = new AmountFeeBO(TestObjectFactory.getUserContext(),
+			fee = new AmountFeeBO(TestUtils.makeUser(),
 					"Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
 					null, getGLCode("7"), TestObjectFactory
 							.getMoneyForMFICurrency("100"), false,
@@ -112,7 +113,7 @@ public class FeeBOTest extends MifosTestCase {
 
 	public void testCreateAmountFeeWithoutAmount() throws Exception {
 		try {
-			fee = new AmountFeeBO(TestObjectFactory.getUserContext(),
+			fee = new AmountFeeBO(TestUtils.makeUser(),
 					"Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 					getGLCode("7"), null, false, new FeePaymentEntity(
@@ -128,7 +129,7 @@ public class FeeBOTest extends MifosTestCase {
 		try {
 			FeeFormulaEntity feeFormula = new FeeFormulaEntity(
 					FeeFormula.AMOUNT);
-			fee = new RateFeeBO(TestObjectFactory.getUserContext(),
+			fee = new RateFeeBO(TestUtils.makeUser(),
 					"Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 					getGLCode("7"), null, feeFormula, false,
@@ -142,7 +143,7 @@ public class FeeBOTest extends MifosTestCase {
 
 	public void testCreateRateFeeWithoutFormula() throws Exception {
 		try {
-			fee = new RateFeeBO(TestObjectFactory.getUserContext(),
+			fee = new RateFeeBO(TestUtils.makeUser(),
 					"Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 					getGLCode("7"), 2.0, null, false, new FeePaymentEntity(
@@ -253,7 +254,7 @@ public class FeeBOTest extends MifosTestCase {
 			FeeFormulaEntity feeFormula = new FeeFormulaEntity(
 					FeeFormula.AMOUNT);
 
-			FeeBO fees = new RateFeeBO(TestObjectFactory.getUserContext(),
+			FeeBO fees = new RateFeeBO(TestUtils.makeUser(),
 					"Customer Fee", new CategoryTypeEntity(FeeCategory.CENTER),
 					new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 					getGLCode("7"), 2.0, feeFormula, false,
@@ -272,7 +273,7 @@ public class FeeBOTest extends MifosTestCase {
 		try {
 			FeeFormulaEntity feeFormula = new FeeFormulaEntity(
 					FeeFormula.AMOUNT);
-			UserContext uc = TestObjectFactory.getUserContext();
+			UserContext uc = TestUtils.makeUser();
 			GLCodeEntity glcode = getGLCode("7");
 			TestObjectFactory.simulateInvalidConnection();
 			new RateFeeBO(uc, "Customer Fee", new CategoryTypeEntity(
@@ -324,7 +325,7 @@ public class FeeBOTest extends MifosTestCase {
 	private FeeBO createOneTimeRateFee(String feeName, FeeCategory feeCategory,
 			Double rate, FeeFormula feeFormula, boolean isDefaultFee,
 			FeePayment feePayment) throws Exception {
-		return new RateFeeBO(TestObjectFactory.getUserContext(), feeName,
+		return new RateFeeBO(TestUtils.makeUser(), feeName,
 				new CategoryTypeEntity(feeCategory),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 				getGLCode("7"), rate, new FeeFormulaEntity(feeFormula),
@@ -334,7 +335,7 @@ public class FeeBOTest extends MifosTestCase {
 	private FeeBO createPeriodicRateFee(String feeName,
 			FeeCategory feeCategory, Double rate, FeeFormula feeFormula,
 			boolean isDefaultFee, MeetingBO feeFrequency) throws Exception {
-		return new RateFeeBO(TestObjectFactory.getUserContext(), feeName,
+		return new RateFeeBO(TestUtils.makeUser(), feeName,
 				new CategoryTypeEntity(feeCategory),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				getGLCode("7"), rate, new FeeFormulaEntity(feeFormula),
@@ -344,7 +345,7 @@ public class FeeBOTest extends MifosTestCase {
 	private FeeBO createOneTimeAmountFee(String feeName,
 			FeeCategory feeCategory, String amount, boolean isDefaultFee,
 			FeePayment feePayment) throws Exception {
-		return new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
+		return new AmountFeeBO(TestUtils.makeUser(), feeName,
 				new CategoryTypeEntity(feeCategory),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.ONETIME),
 				getGLCode("7"), TestObjectFactory
@@ -355,7 +356,7 @@ public class FeeBOTest extends MifosTestCase {
 	private FeeBO createPeriodicAmountFee(String feeName,
 			FeeCategory feeCategory, String amount, boolean isDefaultFee,
 			MeetingBO feeFrequency) throws Exception {
-		return new AmountFeeBO(TestObjectFactory.getUserContext(), feeName,
+		return new AmountFeeBO(TestUtils.makeUser(), feeName,
 				new CategoryTypeEntity(feeCategory),
 				new FeeFrequencyTypeEntity(FeeFrequencyType.PERIODIC),
 				getGLCode("7"), TestObjectFactory

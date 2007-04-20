@@ -48,7 +48,6 @@ public class FeePersistenceTest extends MifosTestCase {
 		//get fee from db 
 		periodicFee =(FeeBO) HibernateUtil.getSessionTL().get(
 			FeeBO.class, periodicFee.getFeeId());
-		periodicFee.setUserContext(TestObjectFactory.getUserContext());
 		periodicFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
 		periodicFee.save();
 		HibernateUtil.commitTransaction();

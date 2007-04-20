@@ -6,12 +6,12 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestHolidayAction extends MifosMockStrutsTestCase {
 
@@ -25,7 +25,7 @@ public class TestHolidayAction extends MifosMockStrutsTestCase {
 		setConfigFile(ResourceLoader.getURI(
 				"org/mifos/application/holiday/struts-config.xml")
 				.getPath());
-		UserContext userContext = TestObjectFactory.getUserContext();
+		UserContext userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		//addRequestParameter("recordLoanOfficerId", "1");
 		//addRequestParameter("recordOfficeId", "1");

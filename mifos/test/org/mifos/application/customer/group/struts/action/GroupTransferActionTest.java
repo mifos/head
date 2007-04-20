@@ -161,9 +161,12 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		verifyForward(ActionForwards.loadParents_success.toString());
 		verifyNoActionErrors();
 		verifyNoActionMessages();
-		CenterSearchInput centerSearchInput = (CenterSearchInput)SessionUtils.getAttribute(GroupConstants.CENTER_SEARCH_INPUT,request.getSession());
+		CenterSearchInput centerSearchInput = (CenterSearchInput)
+			SessionUtils.getAttribute(GroupConstants.CENTER_SEARCH_INPUT,
+				request.getSession());
 		assertNotNull(centerSearchInput);
-		assertEquals(TestObjectFactory.getUserContext().getBranchId(),centerSearchInput.getOfficeId());
+		assertEquals(TestObjectFactory.HEAD_OFFICE,
+			centerSearchInput.getOfficeId());
 	}
 	
 	public void testSuccessfulPreview_transferToCenter() throws Exception {

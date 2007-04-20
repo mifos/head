@@ -38,7 +38,6 @@
 
 package org.mifos.application.fees.struts.action;
 
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -56,6 +55,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -84,16 +84,12 @@ public class FeeActionTest extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/fees/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		UserContext userContext = TestObjectFactory.getUserContext();
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/fees/struts-config.xml")
+				.getPath());
+		UserContext userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
