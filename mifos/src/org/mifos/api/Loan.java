@@ -2,9 +2,7 @@ package org.mifos.api;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 
 
 public class Loan {
@@ -16,9 +14,7 @@ public class Loan {
 	}
 
 	private static LoanBusinessService getBusinessService() {
-		return (LoanBusinessService) 
-			ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Loan);
+		return new LoanBusinessService();
 	}
 	
 	public static Loan getLoan(Integer id) throws Exception { 

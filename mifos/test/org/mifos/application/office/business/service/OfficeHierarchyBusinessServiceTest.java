@@ -56,7 +56,8 @@ public class OfficeHierarchyBusinessServiceTest extends MifosTestCase {
 
 	public void testGetOfficeLevels() throws Exception {
 		UserContext userContext = TestObjectFactory.getUserContext();
-		List<OfficeLevelEntity> officeLevels = new OfficeHierarchyBusinessService()
+		List<OfficeLevelEntity> officeLevels = 
+			new OfficeHierarchyBusinessService()
 				.getOfficeLevels(userContext.getLocaleId());
 		assertEquals(OFFICE_LEVELS, officeLevels.size());
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {

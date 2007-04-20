@@ -40,8 +40,6 @@ package org.mifos.application.accounts.loan.struts.action;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 
 public class LoanActivityAction extends AccountAppAction {
 	
@@ -49,7 +47,7 @@ public class LoanActivityAction extends AccountAppAction {
 //	private MifosLogger logger = MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 	
 	public LoanActivityAction()throws Exception {
-		loanService = (LoanBusinessService)ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Loan);
+		loanService = new LoanBusinessService();
 	}
 	
 	@Override

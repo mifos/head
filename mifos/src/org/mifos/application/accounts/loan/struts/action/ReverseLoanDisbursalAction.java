@@ -91,8 +91,7 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() {
-		return ServiceFactory.getInstance().getBusinessService(
-				BusinessServiceName.Loan);
+		return new LoanBusinessService();
 	}
 
 	@TransactionDemarcate(saveToken = true)

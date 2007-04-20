@@ -162,8 +162,7 @@ public class AccountAppAction extends BaseAction {
 	}
 	
 	protected AccountBusinessService getAccountBizService() {
-		return (AccountBusinessService) ServiceFactory
-		.getInstance().getBusinessService(BusinessServiceName.Accounts);
+		return new AccountBusinessService();
 	}
 	
 	protected void convertCustomFieldDateToUniformPattern(

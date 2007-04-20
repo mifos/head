@@ -269,8 +269,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
 			pageContext.getOut().write(builder.toString());
 		} catch (Exception e) {
-			// ignore. Do nothing
-			e.printStackTrace();
+			throw new JspException(e);
 		}
 		return SKIP_BODY;
 	}

@@ -20,11 +20,9 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.SearchAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -34,10 +32,7 @@ public class NotesAction extends SearchAction {
 
 	@Override
 	protected BusinessService getService() {
-		AccountBusinessService businessService = 
-			(AccountBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Accounts);
-		return businessService;
+		return new AccountBusinessService();
 	}
 
 	@Override
@@ -50,8 +45,7 @@ public class NotesAction extends SearchAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		clearActionForm(form);
-		AccountBO accountBO = ((AccountBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Accounts))
+		AccountBO accountBO = new AccountBusinessService()
 				.getAccount(Integer.valueOf(((NotesActionForm) form)
 						.getAccountId()));
 		setFormAttributes(form, accountBO);
@@ -67,8 +61,7 @@ public class NotesAction extends SearchAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc
 				.getId());
-		AccountBO account = ((AccountBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Accounts))
+		AccountBO account = new AccountBusinessService()
 				.getAccount(Integer.valueOf(notesActionForm.getAccountId()));
 		AccountNotesEntity accountNotes = new AccountNotesEntity(
 				new java.sql.Date(System.currentTimeMillis()), notesActionForm
@@ -98,8 +91,7 @@ public class NotesAction extends SearchAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		NotesActionForm notesActionForm = (NotesActionForm) form;
-		AccountBO accountBO = ((AccountBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Accounts))
+		AccountBO accountBO = new AccountBusinessService()
 				.getAccount(Integer.valueOf(notesActionForm.getAccountId()));
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
@@ -150,8 +142,7 @@ public class NotesAction extends SearchAction {
 
 	@Override
 	protected QueryResult getSearchResult(ActionForm form) throws Exception {
-		return ((AccountBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Accounts))
+		return new AccountBusinessService()
 				.getAllAccountNotes(Integer.valueOf(((NotesActionForm) form)
 						.getAccountId()));
 	}

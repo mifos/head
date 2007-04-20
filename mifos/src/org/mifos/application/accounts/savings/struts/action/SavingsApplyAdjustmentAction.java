@@ -58,7 +58,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
@@ -66,7 +65,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -251,7 +249,6 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 	}
 	
 	private AccountBusinessService getBizService(){
-		return (AccountBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Accounts);
+		return new AccountBusinessService();
 	}
 }

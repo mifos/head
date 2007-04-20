@@ -38,11 +38,9 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -70,9 +68,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		bulkEntryBusinessService = (BulkEntryBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.BulkEntryService);
+		bulkEntryBusinessService = new BulkEntryBusinessService();
 		accountPersistence = new AccountPersistence();
 		currentDate = new Date(System.currentTimeMillis());
 	}

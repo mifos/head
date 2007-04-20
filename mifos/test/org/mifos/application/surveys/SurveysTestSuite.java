@@ -1,9 +1,9 @@
 package org.mifos.application.surveys;
 
-import org.mifos.application.surveys.business.TestSurvey;
-
-import junit.framework.TestSuite;
 import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.mifos.application.surveys.business.TestSurvey;
 
 public class SurveysTestSuite extends TestSuite {
 	

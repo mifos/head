@@ -53,11 +53,9 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -69,8 +67,7 @@ public class OffHierarchyAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() throws ServiceException {
-		return ServiceFactory.getInstance().getBusinessService(
-				BusinessServiceName.OfficeHierarchy);
+		return new OfficeHierarchyBusinessService();
 	}
 
 	@Override
@@ -82,7 +79,8 @@ public class OffHierarchyAction extends BaseAction {
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		List<OfficeLevelEntity> officeLevels = ((OfficeHierarchyBusinessService) getService())
+		List<OfficeLevelEntity> officeLevels = 
+			new OfficeHierarchyBusinessService()
 				.getOfficeLevels(getUserContext(request).getLocaleId());
 		setConfiguredDataInForm((OffHierarchyActionForm) form, officeLevels);
 		SessionUtils.setCollectionAttribute(OfficeConstants.OFFICE_LEVELS, officeLevels,

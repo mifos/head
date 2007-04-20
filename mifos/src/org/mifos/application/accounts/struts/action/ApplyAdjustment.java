@@ -49,12 +49,10 @@ import org.mifos.application.accounts.struts.actionforms.ApplyAdjustmentActionFo
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -68,10 +66,7 @@ public class ApplyAdjustment extends BaseAction {
 
 	@Override
 	protected BusinessService getService() throws ServiceException {
-		AccountBusinessService accntBizService = null;
-		accntBizService = (AccountBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Accounts);
-		return accntBizService;
+		return new AccountBusinessService();
 	}
 
 	@TransactionDemarcate(joinToken = true)
@@ -176,7 +171,6 @@ public class ApplyAdjustment extends BaseAction {
 	}
 	
 	private AccountBusinessService getBizService(){
-		return (AccountBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Accounts);
+		return new AccountBusinessService();
 	}
 }

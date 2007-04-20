@@ -29,7 +29,6 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -38,12 +37,10 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestFinancialBusinessService extends MifosTestCase {
@@ -111,9 +108,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 
 	private AccountTrxnEntity getAccountTrxnObj(
 			AccountPaymentEntity accountPaymentEntity) throws Exception {
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
+		MasterPersistence masterPersistenceService = 
+			new MasterPersistence();
 		Date currentDate = new Date(System.currentTimeMillis());
 
 		LoanScheduleEntity accountAction = (LoanScheduleEntity) loan
@@ -121,7 +117,8 @@ public class TestFinancialBusinessService extends MifosTestCase {
 
 		LoanTrxnDetailEntity accountTrxnEntity = new LoanTrxnDetailEntity(
 				accountPaymentEntity,
-				(AccountActionEntity) masterPersistenceService.findById(
+				(AccountActionEntity) 
+					masterPersistenceService.getPersistentObject(
 						AccountActionEntity.class,
 						AccountActionTypes.LOAN_ADJUSTMENT.getValue()), Short
 						.valueOf("1"), accountAction.getActionDate(),

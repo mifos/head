@@ -11,7 +11,6 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceUnavailableException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestAccountStateMachine extends MifosTestCase {
@@ -21,8 +20,7 @@ public class TestAccountStateMachine extends MifosTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		service = (AccountBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Accounts);
+		service = new AccountBusinessService();
 	}
 
 	@Override

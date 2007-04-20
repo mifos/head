@@ -8,6 +8,12 @@ import org.hibernate.Session;
 import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
+import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.surveys.SurveyConstants;
+import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.business.util.Address;
@@ -15,12 +21,6 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.application.office.business.OfficeBO;
-import org.mifos.application.personnel.business.PersonnelBO;
-import org.mifos.application.personnel.util.helpers.PersonnelConstants;
-import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.surveys.SurveyConstants;
-import org.mifos.application.util.helpers.CustomFieldType;
 
 public class TestSurvey extends MifosTestCase {
 	

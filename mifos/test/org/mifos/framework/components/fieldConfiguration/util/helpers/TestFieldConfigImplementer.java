@@ -6,7 +6,7 @@ import java.util.Map;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.components.fieldConfiguration.persistence.service.FieldConfigurationPersistenceService;
+import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -14,15 +14,16 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
 public class TestFieldConfigImplementer extends MifosTestCase{
 	
-	private static FieldConfigurationPersistenceService fieldConfigurationPersistenceService=new FieldConfigurationPersistenceService();
+	private FieldConfigurationPersistence persistence =
+		new FieldConfigurationPersistence();
 	
-	private static FieldConfig fieldConfig = FieldConfig.getInstance();
+	private FieldConfig fieldConfig = FieldConfig.getInstance();
 	
 	public void testIsFieldHidden() throws HibernateProcessException, PersistenceException {
 		EntityMasterData.getInstance().init();
-		List<EntityMaster> entityMasterList=fieldConfigurationPersistenceService.getEntityMasterList();
+		List<EntityMaster> entityMasterList=persistence.getEntityMasterList();
 		for(EntityMaster entityMaster : entityMasterList){
-			fieldConfig.getEntityFieldMap().put(entityMaster.getId(),fieldConfigurationPersistenceService.getListOfFields(entityMaster.getId()));
+			fieldConfig.getEntityFieldMap().put(entityMaster.getId(),persistence.getListOfFields(entityMaster.getId()));
 		}
 		assertEquals(fieldConfig.isFieldHidden("Loan.PurposeOfLoan"),false);
 		assertEquals(fieldConfig.isFieldHidden("Group.City"),true);
@@ -31,9 +32,9 @@ public class TestFieldConfigImplementer extends MifosTestCase{
 
 	public void testIsFieldMandatory() throws HibernateProcessException, PersistenceException {
 		EntityMasterData.getInstance().init();
-		List<EntityMaster> entityMasterList=fieldConfigurationPersistenceService.getEntityMasterList();
+		List<EntityMaster> entityMasterList=persistence.getEntityMasterList();
 		for(EntityMaster entityMaster : entityMasterList){
-			fieldConfig.getEntityFieldMap().put(entityMaster.getId(),fieldConfigurationPersistenceService.getListOfFields(entityMaster.getId()));
+			fieldConfig.getEntityFieldMap().put(entityMaster.getId(),persistence.getListOfFields(entityMaster.getId()));
 		}
 		assertEquals(fieldConfig.isFieldManadatory("Loan.PurposeOfLoan"),true);
 		fieldConfig.getEntityFieldMap().clear();

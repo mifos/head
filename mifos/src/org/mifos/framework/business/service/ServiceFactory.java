@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mifos.framework.exceptions.ServiceUnavailableException;
-import org.mifos.framework.persistence.service.PersistenceService;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.ExceptionConstants;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 
 public class ServiceFactory {
 
@@ -17,8 +15,6 @@ public class ServiceFactory {
 	private static ServiceFactory instance = new ServiceFactory();
 
 	private Map<BusinessServiceName, BusinessService> businessServicesMap = new HashMap<BusinessServiceName, BusinessService>();
-
-	private Map<PersistenceServiceName, PersistenceService> persistenceServicesMap = new HashMap<PersistenceServiceName, PersistenceService>();
 
 	public static ServiceFactory getInstance() {
 		return instance;
@@ -42,21 +38,6 @@ public class ServiceFactory {
 			}
 		}
 		return businessServicesMap.get(key);
-	}
-
-	// TODO too be removed
-	public PersistenceService getPersistenceService(PersistenceServiceName key)
-			throws ServiceUnavailableException {
-		if (!persistenceServicesMap.containsKey(key)) {
-			try {
-				persistenceServicesMap.put(key, (PersistenceService) Class
-						.forName(key.getName()).newInstance());
-			} catch (Exception cnfe) {
-				throw new ServiceUnavailableException(
-						ExceptionConstants.SERVICEEXCEPTION, cnfe);
-			}
-		}
-		return persistenceServicesMap.get(key);
 	}
 
 }

@@ -5,6 +5,7 @@ package org.mifos.application.master.business;
 
 import java.util.Set;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.struts.plugin.helper.EntityMasterConstants;

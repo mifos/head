@@ -192,9 +192,8 @@ public class LabelConfigurationAction extends BaseAction {
 	private void setOfficeLevelsInForm(
 			LabelConfigurationActionForm labelConfigurationActionForm,
 			Short localeId) throws Exception {
-		List<OfficeLevelEntity> officeLevels = ((OfficeHierarchyBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.OfficeHierarchy))
+		List<OfficeLevelEntity> officeLevels = 
+			new OfficeHierarchyBusinessService()
 				.getOfficeLevels(localeId);
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
 			if (officeLevelEntity.getLevel().equals(OfficeLevel.HEADOFFICE)) {
@@ -389,12 +388,12 @@ public class LabelConfigurationAction extends BaseAction {
 	private void setStatusDataInForm(
 			LabelConfigurationActionForm labelConfigurationActionForm,
 			Short localeId) throws Exception {
-		List<AccountStateEntity> accountStateEntityList = ((AccountBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Accounts))
+		List<AccountStateEntity> accountStateEntityList = 
+			new AccountBusinessService()
 				.retrieveAllAccountStateList(AccountTypes.LOANACCOUNT);
 		accountStateEntityList
-				.addAll(((AccountBusinessService) ServiceFactory.getInstance()
-						.getBusinessService(BusinessServiceName.Accounts))
+				.addAll(
+					new AccountBusinessService()
 						.retrieveAllAccountStateList(AccountTypes.SAVINGSACCOUNT));
 		for (AccountStateEntity accountState : accountStateEntityList) {
 			if (accountState.getId().equals(
@@ -473,9 +472,8 @@ public class LabelConfigurationAction extends BaseAction {
 	private void updateOfficeData(
 			LabelConfigurationActionForm labelConfigurationActionForm,
 			Short localeId) throws Exception {
-		List<OfficeLevelEntity> officeLevels = ((OfficeHierarchyBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.OfficeHierarchy))
+		List<OfficeLevelEntity> officeLevels = 
+			new OfficeHierarchyBusinessService()
 				.getOfficeLevels(localeId);
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
 			if (officeLevelEntity.getLevel().equals(OfficeLevel.HEADOFFICE)) {

@@ -29,7 +29,8 @@ public class MifosConfiguration implements ConfigurationIntf {
 
 	private boolean centerHierarchyExist;
 
-	private static final MifosConfiguration configuration = new MifosConfiguration();
+	private static final MifosConfiguration configuration = 
+		new MifosConfiguration();
 
 	public static MifosConfiguration getInstance() {
 		return configuration;
@@ -60,8 +61,10 @@ public class MifosConfiguration implements ConfigurationIntf {
 	}
 
 	private void initializeLabelCahe() {
-		ConfigurationPersistenceService configurationPersistenceService = new ConfigurationPersistenceService();
-		List<MifosLookUpEntity> entities = configurationPersistenceService.getLookupEntities();
+		ConfigurationPersistenceService configurationPersistenceService = 
+			new ConfigurationPersistenceService();
+		List<MifosLookUpEntity> entities = 
+			configurationPersistenceService.getLookupEntities();
 		for (MifosLookUpEntity entity : entities) {
 			Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
 			for (LookUpLabelEntity label : labels) {
@@ -86,7 +89,8 @@ public class MifosConfiguration implements ConfigurationIntf {
 	}
 
 	private void initializeloacleIdCache() {
-		List<SupportedLocalesEntity> locales = new ConfigurationPersistenceService().getSupportedLocale();
+		List<SupportedLocalesEntity> locales = 
+			new ConfigurationPersistenceService().getSupportedLocale();
 
 		for (SupportedLocalesEntity locale : locales) {
 

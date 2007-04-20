@@ -234,8 +234,7 @@ public class AccountStatusAction extends BaseAction {
 
 	private List<LoanBO> getSearchResults(String officeId, String personnelId,
 			String type, String currentStatus) throws Exception {
-		loanService = (LoanBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Loan);
+		loanService = new LoanBusinessService();
 
 		return loanService.getSearchResults(officeId, personnelId, type,
 				currentStatus);
@@ -244,8 +243,7 @@ public class AccountStatusAction extends BaseAction {
 	private List updateAccountsStatus(List<String> accountList,
 			String newStatus, String comments, UserContext userContext)
 			throws Exception {
-		loanService = (LoanBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Loan);
+		loanService = new LoanBusinessService();
 
 		List accountNumbers = new ArrayList();
 

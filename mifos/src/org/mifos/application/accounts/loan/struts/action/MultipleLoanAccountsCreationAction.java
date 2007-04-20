@@ -50,6 +50,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.application.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.MultipleLoanCreationViewHelper;
@@ -103,8 +104,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() {
-		return ServiceFactory.getInstance().getBusinessService(
-				BusinessServiceName.Loan);
+		return new LoanBusinessService();
 	}
 
 	@TransactionDemarcate(saveToken = true)

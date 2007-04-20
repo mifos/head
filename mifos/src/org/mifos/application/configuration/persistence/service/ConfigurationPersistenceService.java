@@ -45,8 +45,8 @@ import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 
 /**
- * 
- *
+ * This class is deprecated, as it just delegates to 
+ * {@link ConfigurationPersistence}.
  */
 public class ConfigurationPersistenceService {
 	

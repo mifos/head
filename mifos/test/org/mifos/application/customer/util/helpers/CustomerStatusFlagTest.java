@@ -1,7 +1,13 @@
 package org.mifos.application.customer.util.helpers;
 
+import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.CLIENT_CANCEL_BLACKLISTED;
+import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.CLIENT_CANCEL_WITHDRAW;
+import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.CLIENT_CLOSED_BLACKLISTED;
+import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.CLIENT_CLOSED_OTHER;
+import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
+import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.GROUP_CLOSED_BLACKLISTED;
+import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.GROUP_CLOSED_LEFTPROGRAM;
 import junit.framework.TestCase;
-import static org.mifos.application.customer.util.helpers.CustomerStatusFlag.*;
 
 public class CustomerStatusFlagTest extends TestCase {
 	

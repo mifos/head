@@ -7,16 +7,16 @@ import java.util.Map;
 
 import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.components.fieldConfiguration.persistence.service.FieldConfigurationPersistenceService;
+import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
 public class FieldConfig {
 
-	private static FieldConfigurationPersistenceService 
-		fieldConfigurationPersistenceService = 
-			new FieldConfigurationPersistenceService();
+	private static FieldConfigurationPersistence
+		fieldConfigurationPersistence = 
+			new FieldConfigurationPersistence();
 
 	private static FieldConfig instance = new FieldConfig();
 
@@ -120,12 +120,12 @@ public class FieldConfig {
 
 	/* This method is used to intialize the mandatory and entiyField maps */
 	public void init() throws HibernateProcessException, PersistenceException {
-		List<EntityMaster> entityMasterList = fieldConfigurationPersistenceService
+		List<EntityMaster> entityMasterList = fieldConfigurationPersistence
 				.getEntityMasterList();
 		for (EntityMaster entityMaster : entityMasterList) {
 			getEntityFieldMap().put(
 					entityMaster.getId(),
-					fieldConfigurationPersistenceService
+					fieldConfigurationPersistence
 							.getListOfFields(entityMaster.getId()));
 			getEntityMandatoryFieldMap().put(entityMaster.getId(),
 					getMandatoryFieldList(entityMaster.getId()));

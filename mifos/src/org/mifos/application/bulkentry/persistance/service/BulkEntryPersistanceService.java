@@ -66,7 +66,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 /**
  * This class's reponsibility is to handle the {@link BulkEntryCache}.
  */
-public class BulkEntryPersistanceService extends PersistenceService {
+public class BulkEntryPersistanceService {
 
 	private BulkEntryCache bulkEntryCache = new BulkEntryCache();
 

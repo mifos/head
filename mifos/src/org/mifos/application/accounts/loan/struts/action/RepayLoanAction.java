@@ -45,8 +45,7 @@ public class RepayLoanAction extends BaseAction {
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
 	public RepayLoanAction() throws ServiceException {
-		loanBusinessService = (LoanBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Loan);
+		loanBusinessService = new LoanBusinessService();
 		masterDataService = (MasterDataService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.MasterDataService);
 	}

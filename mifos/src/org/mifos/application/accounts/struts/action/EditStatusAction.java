@@ -22,10 +22,8 @@ import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -148,8 +146,7 @@ public class EditStatusAction extends BaseAction {
 	}
 
 	private AccountBusinessService getAccountBusinessService() {
-		return (AccountBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Accounts);
+		return new AccountBusinessService();
 	}
 
 	private void doCleanUp(HttpSession session, ActionForm form) {

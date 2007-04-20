@@ -13,16 +13,14 @@ import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerTrxnDetailEntity extends MifosTestCase {
@@ -79,14 +77,15 @@ public class TestCustomerTrxnDetailEntity extends MifosTestCase {
 		accountAction.setPaymentDate(currentDate);
 		accountAction.setPaymentStatus(PaymentStatus.PAID);
 		
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory.getInstance().getPersistenceService(PersistenceServiceName.MasterDataService);
+		MasterPersistence masterPersistenceService = 
+			new MasterPersistence();
 		
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO,TestObjectFactory.getMoneyForMFICurrency(100),"1111",currentDate,new PaymentTypeEntity(Short.valueOf("1")));
 		
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(
 				accountPaymentEntity,
 				(AccountActionEntity) masterPersistenceService
-				.findById(AccountActionEntity.class,AccountActionTypes.PAYMENT.getValue()), Short.valueOf("1"),
+				.getPersistentObject(AccountActionEntity.class,AccountActionTypes.PAYMENT.getValue()), Short.valueOf("1"),
 				accountAction.getActionDate(), TestObjectFactory.getPersonnel(userContext.getId()),
 				currentDate, TestObjectFactory.getMoneyForMFICurrency(200), 
 				"payment done", null,

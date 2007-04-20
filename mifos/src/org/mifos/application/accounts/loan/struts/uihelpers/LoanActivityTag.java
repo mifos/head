@@ -69,7 +69,7 @@ public class LoanActivityTag extends BodyTagSupport{
 			
 			
 		}catch(Exception e) {
-			e.printStackTrace();
+			throw new JspException(e);
 		}
 		return SKIP_BODY;
 	}

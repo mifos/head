@@ -190,9 +190,9 @@ public class DateTag extends BaseInputTag {
 
 		StringBuilder dateFunction = new StringBuilder();
 		dateFunction.append("onBlur=\"makeDateString(");
-		StringTokenizer stfmt = new StringTokenizer(format, "/");
-		while (stfmt.hasMoreTokens()) {
-			String ch = stfmt.nextToken();
+		StringTokenizer tokenizer = new StringTokenizer(format, "/");
+		while (tokenizer.hasMoreTokens()) {
+			String ch = tokenizer.nextToken();
 			if (ch.equalsIgnoreCase("D")) {
 				dateFunction.append("'" + dateName + "DD',");
 			} else if (ch.equalsIgnoreCase("M")) {
@@ -222,7 +222,7 @@ public class DateTag extends BaseInputTag {
 		String hiddenpatterntext = "<input type=\"hidden\" id=\"datePattern\" name=\"datePattern\" value=\""
 				+ userfrmt + "\"/>";
 
-		stfmt = new StringTokenizer(format, "/");
+		tokenizer = new StringTokenizer(format, "/");
 		output.append(hiddentext);
 		output.append(hiddenformattext);
 		output.append(hiddenpatterntext);
@@ -233,7 +233,6 @@ public class DateTag extends BaseInputTag {
 			String mmValue, String yyValue, String dateFunction,
 			String format) {
 		StringBuilder output = new StringBuilder();
-		StringTokenizer stfmt = new StringTokenizer(format, "/");
 
 		boolean disabled = getIsDisabled() != null
 				&& getIsDisabled().equalsIgnoreCase("Yes") ? true : false;
@@ -278,9 +277,9 @@ public class DateTag extends BaseInputTag {
 			yeartext = yeartext + "disabled";
 		yeartext = yeartext + "/>&nbsp;YYYY&nbsp;";
 
-		stfmt = new StringTokenizer(format, "/");
-		while (stfmt.hasMoreTokens()) {
-			String ch = stfmt.nextToken();
+		StringTokenizer tokenizer = new StringTokenizer(format, "/");
+		while (tokenizer.hasMoreTokens()) {
+			String ch = tokenizer.nextToken();
 			if (ch.equals("D") || ch.equals("d")) {
 				output.append(daytext);
 			} else if (ch.equals("M") || ch.equals("m")) {

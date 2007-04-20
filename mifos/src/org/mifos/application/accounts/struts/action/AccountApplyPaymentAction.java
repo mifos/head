@@ -220,9 +220,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 
 	private AccountBusinessService getAccountBusinessService() {
 		if (accountBusinessService == null)
-			accountBusinessService = (AccountBusinessService) ServiceFactory
-					.getInstance().getBusinessService(
-							BusinessServiceName.Accounts);
+			accountBusinessService = new AccountBusinessService();
 		return accountBusinessService;
 	}
 

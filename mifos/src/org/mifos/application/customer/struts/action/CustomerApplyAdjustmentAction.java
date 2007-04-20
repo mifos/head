@@ -149,7 +149,6 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 	}
 	
 	private AccountBusinessService getAccountBizService(){
-		return (AccountBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Accounts);
+		return new AccountBusinessService();
 	}
 }

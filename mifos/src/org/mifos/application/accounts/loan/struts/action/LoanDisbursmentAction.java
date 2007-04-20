@@ -121,9 +121,9 @@ public class LoanDisbursmentAction extends BaseAction {
 
 	private LoanBusinessService getLoanBusinessService()
 			throws ServiceException {
-		if (loanBusinessService == null)
-			loanBusinessService = (LoanBusinessService) ServiceFactory
-					.getInstance().getBusinessService(BusinessServiceName.Loan);
+		if (loanBusinessService == null) {
+			loanBusinessService = new LoanBusinessService();
+		}
 		return loanBusinessService;
 	}
 

@@ -4,10 +4,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
 
-import org.mifos.framework.ApplicationInitializer;
-
 import junit.framework.TestCase;
 import junitx.framework.StringAssert;
+
+import org.mifos.framework.ApplicationInitializer;
 
 public class DatabaseVersionFilterTest extends TestCase {
 	

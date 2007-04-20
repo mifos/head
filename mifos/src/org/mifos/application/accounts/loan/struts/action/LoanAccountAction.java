@@ -86,8 +86,7 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 
 	public LoanAccountAction() throws Exception {
-		loanBusinessService = (LoanBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Loan);
+		loanBusinessService = new LoanBusinessService();
 	}
 
 	@Override

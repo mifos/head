@@ -11,7 +11,6 @@ import org.mifos.application.master.business.EntityMaster;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelView;
@@ -33,7 +32,7 @@ public class MasterDataService extends BusinessService {
 
 	private CustomerPersistence customerPersistence = new CustomerPersistence();
 
-	private MasterPersistenceService masterPersistenceService = new MasterPersistenceService();
+	private MasterPersistence masterPersistence = new MasterPersistence();
 
 	@Override
 	public BusinessObject getBusinessObject(UserContext userContext) {
@@ -76,7 +75,7 @@ public class MasterDataService extends BusinessService {
 	public EntityMaster getMasterData(String entityName, Short localeId,
 			String classPath, String column) throws ApplicationException,
 			SystemException {
-		return masterPersistenceService.retrieveMasterData(entityName,
+		return masterPersistence.getLookUpEntity(entityName,
 				localeId, classPath, column);
 	}
 
@@ -104,7 +103,7 @@ public class MasterDataService extends BusinessService {
 	public List<PaymentTypeEntity> retrievePaymentTypes(Short localeId)
 			throws ServiceException {
 		try {
-			return masterPersistenceService.retrievePaymentTypes(localeId);
+			return masterPersistence.retrievePaymentTypes(localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -113,7 +112,7 @@ public class MasterDataService extends BusinessService {
 	public List<PaymentTypeEntity> getSupportedPaymentModes(Short localeId,
 			Short transactionTypeId) throws ServiceException {
 		try {
-			return masterPersistenceService.getSupportedPaymentModes(localeId,
+			return masterPersistence.getSupportedPaymentModes(localeId,
 					transactionTypeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
@@ -123,7 +122,7 @@ public class MasterDataService extends BusinessService {
 	public List<MasterDataEntity> retrieveMasterEntities(Class entityName,
 			Short localeId) throws ServiceException {
 		try {
-			return masterPersistenceService.retrieveMasterEntities(entityName,
+			return masterPersistence.retrieveMasterEntities(entityName,
 					localeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);

@@ -51,11 +51,9 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestConstants;
@@ -79,8 +77,7 @@ public class TestAccountService extends MifosTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		accountPersistence = new AccountPersistence();
-		service = (AccountBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Accounts);
+		service = new AccountBusinessService();
 	}
 
 	@Override
@@ -146,8 +143,7 @@ public class TestAccountService extends MifosTestCase {
 	}
 
 	public void testGetAccountAction() throws Exception {
-		AccountBusinessService service = (AccountBusinessService) ServiceFactory
-				.getInstance().getBusinessService(BusinessServiceName.Accounts);
+		AccountBusinessService service = new AccountBusinessService();
 		AccountActionEntity accountaction = service.getAccountAction(
 				AccountActionTypes.SAVINGS_DEPOSIT.getValue(), Short.valueOf("1"));
 		assertNotNull(accountaction);

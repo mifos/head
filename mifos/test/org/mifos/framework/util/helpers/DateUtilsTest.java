@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 
 import org.joda.time.DateMidnight;
 import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.framework.util.helpers.DateUtils;
 
 public class DateUtilsTest extends TestCase {
 	

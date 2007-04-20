@@ -38,12 +38,11 @@ import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
 import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -52,7 +51,6 @@ import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestCustomerAccountBO extends MifosTestCase {
@@ -1263,9 +1261,8 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		accountAction.setPaymentDate(currentDate);
 		accountAction.setPaymentStatus(PaymentStatus.PAID);
 
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
+		MasterPersistence masterPersistenceService = 
+			new MasterPersistence();
 
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				customerAccountBO, TestObjectFactory
@@ -1274,7 +1271,7 @@ public class TestCustomerAccountBO extends MifosTestCase {
 
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(
 				accountPaymentEntity,
-				(AccountActionEntity) masterPersistenceService.findById(
+				(AccountActionEntity) masterPersistenceService.getPersistentObject(
 						AccountActionEntity.class,
 						AccountActionTypes.PAYMENT.getValue()), Short.valueOf("1"),
 				accountAction.getActionDate(), TestObjectFactory

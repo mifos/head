@@ -19,14 +19,12 @@ import org.mifos.application.customer.business.TestCustomerAccountBO;
 import org.mifos.application.customer.business.TestCustomerTrxnDetailEntity;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.service.MasterPersistenceService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.PersistenceServiceName;
 import org.mifos.framework.util.helpers.ResourceLoader;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -202,9 +200,8 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 		TestCustomerAccountBO.setPaymentDate(accountAction,currentDate);
 		accountAction.setPaymentStatus(PaymentStatus.PAID);
 
-		MasterPersistenceService masterPersistenceService = (MasterPersistenceService) ServiceFactory
-				.getInstance().getPersistenceService(
-						PersistenceServiceName.MasterDataService);
+		MasterPersistence masterPersistenceService =
+			new MasterPersistence();
 
 		AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(
 				accountBO, TestObjectFactory.getMoneyForMFICurrency(100),
@@ -213,7 +210,7 @@ public class TestCustomerApplyAdjustmentAction extends MifosMockStrutsTestCase {
 //		Money totalFees = new Money();
 		CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(
 				accountPaymentEntity,
-				(AccountActionEntity) masterPersistenceService.findById(
+				(AccountActionEntity) masterPersistenceService.getPersistentObject(
 						AccountActionEntity.class,
 						AccountActionTypes.PAYMENT.getValue()), Short.valueOf("1"),
 				accountAction.getActionDate(), TestObjectFactory

@@ -17,11 +17,9 @@ import org.mifos.application.holiday.struts.actionforms.HolidayActionForm;
 import org.mifos.application.holiday.util.resources.HolidayConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
@@ -94,7 +92,7 @@ public class HolidayAction extends BaseAction {
 	}
 		
 	private HolidayBusinessService getHolidayBizService() {
-		return (HolidayBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Holiday);
+		return new HolidayBusinessService();
 	}
 		
 	private void doCleanUp(HttpServletRequest request) {

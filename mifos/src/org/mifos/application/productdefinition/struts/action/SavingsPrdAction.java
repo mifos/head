@@ -31,14 +31,12 @@ import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -298,9 +296,7 @@ public class SavingsPrdAction extends BaseAction {
 	public ActionForward search(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SavingsPrdBusinessService service = (SavingsPrdBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.SavingsProduct);
+		SavingsPrdBusinessService service = new SavingsPrdBusinessService();
 		prdDefLogger.debug("start Load method of Savings Product Action");
 		List <SavingsOfferingBO>savingsOfferingList = service.getAllSavingsProducts();
 		for(SavingsOfferingBO savingsOffering : savingsOfferingList ){
@@ -390,9 +386,7 @@ public class SavingsPrdAction extends BaseAction {
 	private void loadUpdateMasterData(HttpServletRequest request)
 			throws Exception {
 		loadMasterData(request);
-		SavingsPrdBusinessService service = (SavingsPrdBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.SavingsProduct);
+		SavingsPrdBusinessService service = new SavingsPrdBusinessService();
 		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.PRDCATEGORYSTATUSLIST, service
@@ -402,24 +396,22 @@ public class SavingsPrdAction extends BaseAction {
 	private void loadMasterData(HttpServletRequest request) throws Exception {
 		prdDefLogger
 				.debug("start Load master data method of Savings Product Action ");
-		SavingsPrdBusinessService service = (SavingsPrdBusinessService) ServiceFactory
-				.getInstance().getBusinessService(
-						BusinessServiceName.SavingsProduct);
-		Short locaeId = getUserContext(request).getLocaleId();
+		SavingsPrdBusinessService service = new SavingsPrdBusinessService();
+		Short localeId = getUserContext(request).getLocaleId();
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.SAVINGSPRODUCTCATEGORYLIST, service
 						.getActiveSavingsProductCategories(), request);
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.SAVINGSAPPLFORLIST,
-				getMasterEntities(PrdApplicableMasterEntity.class, locaeId),
+				getMasterEntities(PrdApplicableMasterEntity.class, localeId),
 				request);
 		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SAVINGSTYPELIST,
-				getMasterEntities(SavingsTypeEntity.class, locaeId), request);
+				getMasterEntities(SavingsTypeEntity.class, localeId), request);
 		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.RECAMNTUNITLIST,
-				getMasterEntities(RecommendedAmntUnitEntity.class, locaeId),
+				getMasterEntities(RecommendedAmntUnitEntity.class, localeId),
 				request);
 		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST,
-				getMasterEntities(InterestCalcTypeEntity.class, locaeId),
+				getMasterEntities(InterestCalcTypeEntity.class, localeId),
 				request);
 		SessionUtils.setCollectionAttribute(
 				ProductDefinitionConstants.SAVINGSRECURRENCETYPELIST, service
