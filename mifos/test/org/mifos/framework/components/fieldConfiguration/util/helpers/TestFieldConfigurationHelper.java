@@ -7,7 +7,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 public class TestFieldConfigurationHelper extends MifosTestCase {
 	
 	/** TODO: These tests only pass when run as part of
-	 * {@link ApplicationTestSuite}, not by themselves.
+	 * {@link ApplicationTestSuite}, not when run by themselves
+	 * on a fresh test database.
 	 * There must be some state which is left around or set up
 	 * by some other part of the test suite.
 	 */
@@ -28,6 +29,7 @@ public class TestFieldConfigurationHelper extends MifosTestCase {
 			"Center.Address3",
 			TestObjectFactory.getUserContext().getPreferredLocale());
 		assertEquals("Village",fieldName);
+
 		fieldName=FieldConfigurationHelper.getLocalSpecificFieldNames(
 			"Center.SomeField",
 			TestObjectFactory.getUserContext().getPreferredLocale());
