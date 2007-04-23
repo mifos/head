@@ -2,6 +2,7 @@ package org.mifos.application.surveys.business;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -10,9 +11,12 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.exceptions.PersonnelException;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
-import org.mifos.application.surveys.SurveyConstants;
+import org.mifos.application.surveys.helpers.AnswerType;
+import org.mifos.application.surveys.helpers.QuestionState;
+import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestDatabase;
@@ -40,68 +44,53 @@ public class TestSurvey extends MifosTestCase {
 	}
 	
 	public void testCreateSurvey() {
-		
 		Survey survey = new Survey();
-		survey.setSurveyName("testsurvey");
-		survey.setState(SurveyConstants.ACTIVE);
-		survey.setSurveyAppliesTo("someone");
+		survey.setName("testsurvey");
+		survey.setState(SurveyState.ACTIVE);
+		survey.setAppliesTo("someone");
 		
 		session.save(survey);
 		
-		Survey refreshed = (Survey)session.get(Survey.class, survey.getSurveyId());
-		assertEquals(survey, refreshed);
+		Session reader = database.openSession();
+		List result = reader.createQuery("from " + Survey.class.getName()).list();
+		assertEquals(1, result.size());
+		Survey read_survey = (Survey) result.get(0);
+		assertEquals("testsurvey", read_survey.getName());
+		assertEquals(SurveyState.ACTIVE, read_survey.getStateAsEnum());
+		assertEquals("someone", read_survey.getAppliesTo());
 	}
 	
 	public void testCreateQuestion() {
 		String questionText = "Why did the chicken cross the road?";
-		Question question = new Question();
-		question.setAnswerType(SurveyConstants.ANSWER_TYPE_FREETEXT);
-		question.setQuestionState(SurveyConstants.ACTIVE);
-		question.setQuestionText(questionText);
+		{
+			Question question = new Question();
+			question.setAnswerType(AnswerType.FREETEXT);
+			question.setQuestionText(questionText);
+			question.setQuestionState(QuestionState.ACTIVE);
+			session.save(question);
+		}
 		
-		session.save(question);
-		Question refreshed = (Question) session.get(Question.class, question.getQuestionId());
-		assertEquals(refreshed.getQuestionText(), questionText);
-		
+		{
+			Session reader = database.openSession();
+			List result = reader.createQuery("from " + Question.class.getName()).list();
+			assertEquals(1, result.size());
+			Question retrieved = (Question) result.get(0);
+			assertEquals(questionText, retrieved.getQuestionText());
+			assertEquals(AnswerType.FREETEXT, retrieved.getAnswerTypeAsEnum());
+			assertEquals(QuestionState.ACTIVE, retrieved.getQuestionStateAsEnum());
+		}
 	}
 	
-	public void testCreateSurveyQuestion() {
-		String questionText = "Why do we drive on parkways and park on driveways?";
-		Question question = new Question();
-		question.setAnswerType(SurveyConstants.ANSWER_TYPE_FREETEXT);
-		question.setQuestionState(SurveyConstants.ACTIVE);
-		question.setQuestionText(questionText);
-		
-		Survey survey = new Survey();
-		survey.setSurveyName("testsurvey");
-		survey.setState(SurveyConstants.ACTIVE);
-		survey.setSurveyAppliesTo("someone");
-		
-		
-		// TODO: this test passes, but the functionality is still broken
-		// for some reason the associated survey isn't being saved automatically
-		// when you save the SurveyQuestion... you have to save it manually
-		// first, as shown
-		SurveyQuestion proxy = new SurveyQuestion();
-		proxy.setQuestion(question);
-		proxy.setSurvey(survey);
-		session.save(survey);
-		session.save(question);
-		session.save(proxy);
-		
-		survey = (Survey) session.load(Survey.class, survey.getSurveyId());
-		assertEquals(0, survey.getQuestions().size());
-	}
-	
-	public void testCreateSurveyInstance() throws Exception {
+	private SurveyInstance makeSurveyInstance(String surveyName) throws PersonnelException {
 		TestObjectFactory factory = new TestObjectFactory();
-		ClientBO client = factory.createClient("Test Client", CustomerStatus.CLIENT_PARTIAL, null);
+		ClientBO client = factory.createClient(
+				"Test Client", CustomerStatus.CLIENT_PARTIAL, null);
 		
 		Survey survey = new Survey();
-		survey.setSurveyName("Test survey");
-		survey.setState(SurveyConstants.ACTIVE);
-		survey.setSurveyAppliesTo("someone");
-		
+		survey.setName("Test survey");
+		survey.setState(SurveyState.ACTIVE);
+		survey.setAppliesTo("someone");
+
 		OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		Name name = new Name("XYZ", null, null, null);
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
@@ -117,13 +106,62 @@ public class TestSurvey extends MifosTestCase {
 				"111111", date, Integer.valueOf("1"), Integer.valueOf("1"),
 				date, date, address, PersonnelConstants.SYSTEM_USER);
 
+		
 		SurveyInstance instance = new SurveyInstance();
 		instance.setOfficer(officer);
 		instance.setSurvey(survey);
 		instance.setClient(client);
-		
-		HibernateUtil.getSessionTL().saveOrUpdate(instance);
-		SurveyInstance refreshed = (SurveyInstance)HibernateUtil.getSessionTL().get(SurveyInstance.class, instance.getInstanceId());
-		assertEquals(refreshed.getOfficer().getUserName(), officerName);
+		return instance;
 	}
+	
+	public void testSurveyResponseTypeChecks() throws Exception {
+		String questionText = "Why did the chicken cross the road?";
+		Question question = new Question(questionText, AnswerType.CHOICE);
+		QuestionChoice choice1 = new QuestionChoice("To get to the other side.");
+		QuestionChoice choice2 = new QuestionChoice("Exercise");
+		List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
+		choices.add(choice1);
+		choices.add(choice2);
+		question.setChoices(choices);
+		session.save(question);
+		SurveyResponse response = new SurveyResponse();
+		response.setQuestion(question);	
+		response.setValue("2");
+	}
+	
+	public void testCreateSurveyResponse() throws Exception {
+		SurveyInstance instance = makeSurveyInstance("Test survey");
+		Survey survey = instance.getSurvey();
+		
+		String questionText = "What is the answer to life, the universe and everything?";
+		Question question = new Question(questionText, AnswerType.CHOICE);
+		SurveyQuestion surveyQuestion = new SurveyQuestion();
+		surveyQuestion.setQuestion(question);
+		List<SurveyQuestion> surveyQuestions = new LinkedList<SurveyQuestion>();
+		surveyQuestions.add(surveyQuestion);
+		survey.setQuestions(surveyQuestions);
+		
+		QuestionChoice choice1 = new QuestionChoice("Pizza");
+		QuestionChoice choice2 = new QuestionChoice("42");
+		List<QuestionChoice> questionChoices = new LinkedList<QuestionChoice>();
+		questionChoices.add(choice1);
+		questionChoices.add(choice2);
+		question.setChoices(questionChoices);
+		
+		SurveyResponse response = new SurveyResponse();
+		response.setInstance(instance);
+		response.setQuestion(question);
+		response.setValue(Integer.toString(choice2.getChoiceId()));
+
+		HibernateUtil.getSessionTL().saveOrUpdate(instance);
+//		HibernateUtil.getSessionTL().saveOrUpdate(response);
+		
+		SurveyInstance refreshedInstance = 
+			(SurveyInstance)HibernateUtil.getSessionTL().get(
+				SurveyInstance.class, instance.getInstanceId());
+		assertEquals(AnswerType.CHOICE,
+			refreshedInstance.getSurvey().getQuestion(0).getAnswerTypeAsEnum());
+		assertEquals("Test Client", refreshedInstance.getClient().getFirstName());
+	}
+	
 }

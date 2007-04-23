@@ -1,51 +1,75 @@
 package org.mifos.application.surveys.business;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.framework.business.PersistentObject;
+import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class Survey extends PersistentObject {
+public class Survey {
+	
 	private int surveyId;
 	
-	private String surveyName;
+	private String name;
 	
-	private String surveyAppliesTo;
-	
-	private int state;
+	private String appliesTo;
 	
 	private Date dateOfCreation;
 	
-	private List<SurveyQuestion> questions = new ArrayList<SurveyQuestion>();
-
-	public List<SurveyQuestion> getQuestions() {
-		return questions;
-	}
-
-	public void setQuestions(List<SurveyQuestion> questions) {
-		this.questions = questions;
-	}
-
+	private SurveyState state;
+	
+	private List<SurveyQuestion> questions;
+	
 	public Survey() {
 		dateOfCreation = DateUtils.getCurrentDateWithoutTimeStamp();
+		state = SurveyState.INACTIVE;
+	}
+	
+	public Survey(String name, SurveyState state, String appliesTo) {
+		this();
+		this.name = name;
+		this.state = state;
+		this.appliesTo = appliesTo;
 	}
 
-	public int getState() {
+	public String getAppliesTo() {
+		return appliesTo;
+	}
+
+	public void setAppliesTo(String appliesTo) {
+		this.appliesTo = appliesTo;
+	}
+
+	public Date getDateOfCreation() {
+		return dateOfCreation;
+	}
+
+	public void setDateOfCreation(Date dateofCreation) {
+		this.dateOfCreation = dateofCreation;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public SurveyState getStateAsEnum() {
 		return state;
 	}
+	
+	int getState() {
+		return state.getValue();
+	}
 
-	public void setState(int state) {
+	public void setState(SurveyState state) {
 		this.state = state;
 	}
-
-	public String getSurveyAppliesTo() {
-		return surveyAppliesTo;
-	}
-
-	public void setSurveyAppliesTo(String surveyAppliesTo) {
-		this.surveyAppliesTo = surveyAppliesTo;
+	
+	public void setState(int state) {
+		this.state = SurveyState.fromInt(state);
 	}
 
 	public int getSurveyId() {
@@ -56,19 +80,20 @@ public class Survey extends PersistentObject {
 		this.surveyId = surveyId;
 	}
 
-	public String getSurveyName() {
-		return surveyName;
+	public List<SurveyQuestion> getQuestions() {
+		return questions;
 	}
 
-	public void setSurveyName(String surveyName) {
-		this.surveyName = surveyName;
+	public void setQuestions(List<SurveyQuestion> questions) {
+		this.questions = questions;
+	}
+	
+	public Question getQuestion(int i) {
+		return getQuestions().get(i).getQuestion();
+	}
+	
+	public String getQuestionText(int i) {
+		return getQuestion(i).getQuestionText();
 	}
 
-	public Date getDateOfCreation() {
-		return dateOfCreation;
-	}
-
-	public void setDateOfCreation(Date dateOfCreation) {
-		this.dateOfCreation = dateOfCreation;
-	}
 }

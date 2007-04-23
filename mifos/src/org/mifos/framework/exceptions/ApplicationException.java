@@ -41,6 +41,11 @@ package org.mifos.framework.exceptions;
  * These are the type of exception which are based out of some BusinessLogic 
  * where the user needs to be notified about it and then the user will take 
  * certain action based on that.
+ * 
+ * Although much code subclasses this, that is only desirable if the
+ * subclass has some behavior of its own, there is code which wants
+ * to just catch exceptions from the subclass, etc.  Absent such a
+ * reason, it is better just to throw an ApplicationException itself.
  */
 public class ApplicationException extends Exception {
 	

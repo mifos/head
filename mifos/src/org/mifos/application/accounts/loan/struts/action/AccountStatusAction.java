@@ -55,6 +55,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.OfficeView;
+import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.application.personnel.business.PersonnelView;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
@@ -86,8 +87,7 @@ public class AccountStatusAction extends BaseAction {
 
 	@Override
 	protected BusinessService getService() throws ServiceException {
-		return ServiceFactory.getInstance().getBusinessService(
-				BusinessServiceName.Office);
+		return new OfficeBusinessService();
 	}
 
 	@TransactionDemarcate(saveToken = true)

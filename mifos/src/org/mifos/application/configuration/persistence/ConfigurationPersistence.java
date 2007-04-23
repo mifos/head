@@ -42,7 +42,6 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.configuration.LabelConfigurationTestSuite;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -60,7 +59,7 @@ import org.mifos.framework.persistence.Persistence;
  * which seems to be about {@link ConfigurationKeyValueInteger} and friends.
  * 
  * I think this one maybe should be called LabelPersistence or some such
- * following the lead of {@link LabelConfigurationTestSuite}.
+ * following the lead of LabelConfigurationTestSuite.
  */
 public class ConfigurationPersistence extends Persistence {
 	

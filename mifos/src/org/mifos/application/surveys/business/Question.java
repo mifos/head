@@ -1,25 +1,32 @@
 package org.mifos.application.surveys.business;
 
-import org.mifos.framework.business.PersistentObject;
+import java.util.List;
 
-public class Question extends PersistentObject {
+import org.mifos.application.surveys.helpers.AnswerType;
+import org.mifos.application.surveys.helpers.QuestionState;
+
+public class Question {
 	private int questionId;
 	
-	private int answerType;
+	private AnswerType answerType;
 	
-	private int questionState;
+	private QuestionState questionState;
 	
 	private String questionText;
 	
 	private int numericMin;
 	
 	private int numericMax;
-
-	public int getAnswerType() {
-		return answerType;
+	
+	private List<QuestionChoice> choices;
+	
+	public Question() {
+		questionState = QuestionState.ACTIVE;
 	}
-
-	public void setAnswerType(int answerType) {
+	
+	public Question(String questionText, AnswerType answerType) {
+		this();
+		this.questionText = questionText;
 		this.answerType = answerType;
 	}
 
@@ -28,6 +35,7 @@ public class Question extends PersistentObject {
 	}
 
 	public void setNumericMax(int numericMax) {
+		
 		this.numericMax = numericMax;
 	}
 
@@ -47,11 +55,19 @@ public class Question extends PersistentObject {
 		this.questionId = questionId;
 	}
 
-	public int getQuestionState() {
+	public QuestionState getQuestionStateAsEnum() {
 		return questionState;
 	}
+	
+	public int getQuestionState() {
+		return questionState.getValue();
+	}
+	
+	public void setQuestionState(int state) {
+		this.questionState = QuestionState.fromInt(state);
+	}
 
-	public void setQuestionState(int questionState) {
+	public void setQuestionState(QuestionState questionState) {
 		this.questionState = questionState;
 	}
 
@@ -61,5 +77,34 @@ public class Question extends PersistentObject {
 
 	public void setQuestionText(String questionText) {
 		this.questionText = questionText;
+	}
+
+	public AnswerType getAnswerTypeAsEnum() {
+		return answerType;
+	}
+	
+	public int getAnswerType() {
+		return answerType.getValue();
+	}
+	
+	public void setAnswerType(AnswerType answerType) {
+		this.answerType = answerType;
+	}
+	
+	public void setAnswerType(int answerType) {
+		this.answerType = AnswerType.fromInt(answerType);
+	}
+
+	@Override
+	public String toString() {
+		return "<Question " + questionId + " \"" + questionText + "\">";
+	}
+
+	public List<QuestionChoice> getChoices() {
+		return choices;
+	}
+
+	public void setChoices(List<QuestionChoice> choices) {
+		this.choices = choices;
 	}
 }

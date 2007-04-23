@@ -3,6 +3,12 @@ package org.mifos.framework.business;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Superclass for many of our persistent objects.
+ * Note that the responsibility for mapping the fields declared
+ * here to the database (or not) still resides with each
+ * persistent class.
+ */
 public abstract class PersistentObject implements Serializable {
 	
 	protected Date createdDate;

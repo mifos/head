@@ -1,28 +1,11 @@
 package org.mifos.application.surveys.business;
 
-import org.mifos.framework.business.PersistentObject;
-
-public class SurveyQuestion extends PersistentObject {
-	
-	private int sqId;
-	
-	private Survey survey;
-	
-	private int surveyId;
-	
-	private Question question;
+public class SurveyQuestion {
+	private int surveyQuestionId;
 	
 	private int mandatory;
 	
-	private int questionOrder;
-
-	public int getMandatory() {
-		return mandatory;
-	}
-
-	public void setMandatory(int mandatory) {
-		this.mandatory = mandatory;
-	}
+	private Question question;
 
 	public Question getQuestion() {
 		return question;
@@ -32,36 +15,19 @@ public class SurveyQuestion extends PersistentObject {
 		this.question = question;
 	}
 
-	public int getQuestionOrder() {
-		return questionOrder;
+	public int getMandatory() {
+		return mandatory;
 	}
 
-	public void setQuestionOrder(int questionOrder) {
-		this.questionOrder = questionOrder;
+	public void setMandatory(int mandatory) {
+		this.mandatory = mandatory;
 	}
 
-	public Survey getSurvey() {
-		return survey;
+	public int getSurveyQuestionId() {
+		return surveyQuestionId;
 	}
 
-	public void setSurvey(Survey survey) {
-		this.survey = survey;
+	public void setSurveyQuestionId(int surveyQuestionId) {
+		this.surveyQuestionId = surveyQuestionId;
 	}
-
-	public int getSurveyId() {
-		return surveyId;
-	}
-
-	public void setSurveyId(int surveyId) {
-		this.surveyId = surveyId;
-	}
-
-	public int getSqId() {
-		return sqId;
-	}
-
-	public void setSqId(int sqId) {
-		this.sqId = sqId;
-	}
-
 }
