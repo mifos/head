@@ -15,7 +15,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountState;
@@ -43,7 +43,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestLoanPersistence extends MifosTestCase {
 
-	LoanPersistance loanPersistence;
+	LoanPersistence loanPersistence;
 
 	CustomerBO center = null;
 
@@ -58,7 +58,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		loanPersistence = new LoanPersistance();
+		loanPersistence = new LoanPersistence();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
@@ -123,7 +123,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	}
 
 	public void testFindBySystemId() throws Exception {
-		LoanPersistance loanPersistance = new LoanPersistance();
+		LoanPersistence loanPersistance = new LoanPersistence();
 		LoanBO loanBO = loanPersistance.findBySystemId(loanAccount
 				.getGlobalAccountNum());
 		assertEquals(loanBO.getGlobalAccountNum(), loanAccount

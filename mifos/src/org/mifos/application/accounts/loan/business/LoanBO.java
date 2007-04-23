@@ -61,7 +61,7 @@ import org.mifos.application.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.loan.util.helpers.LoanExceptionConstants;
@@ -648,7 +648,7 @@ public class LoanBO extends AccountBO {
 					transactionDate, rcvdPaymentTypeId, personnel, receiptDate);
 		} else {
 			try {
-				if (new LoanPersistance().getFeeAmountAtDisbursement(this
+				if (new LoanPersistence().getFeeAmountAtDisbursement(this
 						.getAccountId()) > 0.0)
 					accountPaymentEntity = insertOnlyFeeAtDisbursement(
 							recieptNum, transactionDate, rcvdPaymentTypeId,
@@ -756,7 +756,7 @@ public class LoanBO extends AccountBO {
 			// Client performance entry
 			updateCustomerHistoryOnRepayment(totalAmount);
 
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -786,7 +786,7 @@ public class LoanBO extends AccountBO {
 		updateCustomerHistoryOnArrears();
 
 		try {
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -839,7 +839,7 @@ public class LoanBO extends AccountBO {
 					.getId(), LoanConstants.FEE_WAIVED);
 		}
 		try {
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -856,7 +856,7 @@ public class LoanBO extends AccountBO {
 					.getId(), LoanConstants.PENALTY_WAIVED);
 		}
 		try {
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -877,7 +877,7 @@ public class LoanBO extends AccountBO {
 					.getId(), AccountConstants.AMOUNT + chargeWaived + AccountConstants.WAIVED);
 		}
 		try {
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -898,7 +898,7 @@ public class LoanBO extends AccountBO {
 					.getId(), AccountConstants.AMOUNT + chargeWaived + AccountConstants.WAIVED);
 		}
 		try {
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(e);
 		}
@@ -910,7 +910,7 @@ public class LoanBO extends AccountBO {
 			return getDueAmount(getAccountActionDate(Short.valueOf("1")));
 		} else {
 			try {
-				return new Money(new LoanPersistance()
+				return new Money(new LoanPersistence()
 						.getFeeAmountAtDisbursement(this.getAccountId())
 						.toString());
 			} catch (PersistenceException e) {
@@ -952,9 +952,9 @@ public class LoanBO extends AccountBO {
 							this.getAccountState(), this.getAccountState(),
 							(new PersonnelPersistence())
 									.getPersonnel(userContext.getId()), this));
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 			this.globalAccountNum = generateId(userContext.getBranchGlobalNum());
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 		} catch (PersistenceException e) {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION, e);
@@ -1040,7 +1040,7 @@ public class LoanBO extends AccountBO {
 					getTotalInterestAmountInArrears(), getCustomer());
 
 		try {
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 		} catch (PersistenceException pe) {
 			throw new AccountException(pe);
 		}
@@ -1062,7 +1062,7 @@ public class LoanBO extends AccountBO {
 						.getCurrentDateWithoutTimeStamp()));
 		updateCustomerHistoryOnReverseLoan();
 		try {
-			new LoanPersistance().createOrUpdate(this);
+			new LoanPersistence().createOrUpdate(this);
 		} catch (PersistenceException pe) {
 			throw new AccountException(pe);
 		}
@@ -2404,7 +2404,7 @@ public class LoanBO extends AccountBO {
 	private void updateCustomerHistoryOnReverseLoan() {
 		Money lastLoanAmount = new Money();
 		try {
-			lastLoanAmount = new LoanPersistance()
+			lastLoanAmount = new LoanPersistence()
 					.getLastLoanAmountForCustomer(getCustomer().getCustomerId());
 		} catch (PersistenceException e) {
 		}
@@ -2442,7 +2442,7 @@ public class LoanBO extends AccountBO {
 		Money miscFee = getMiscFee();
 		Money miscPenalty = getMiscPenalty();
 		try {
-			new LoanPersistance().deleteInstallments(this
+			new LoanPersistence().deleteInstallments(this
 					.getAccountActionDates());
 		} catch (PersistenceException e) {
 			throw new AccountException(e);

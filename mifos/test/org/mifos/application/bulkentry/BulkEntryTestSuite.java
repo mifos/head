@@ -5,8 +5,8 @@ import junit.framework.TestSuite;
 
 import org.mifos.application.bulkentry.business.TestBulkEntryView;
 import org.mifos.application.bulkentry.business.service.TestBulkEntryBusinessService;
-import org.mifos.application.bulkentry.persistance.TestBulkEntryPersistance;
-import org.mifos.application.bulkentry.persistance.service.TestBulkEntryPersistanceService;
+import org.mifos.application.bulkentry.persistance.TestBulkEntryPersistence;
+import org.mifos.application.bulkentry.persistance.service.TestBulkEntryPersistenceService;
 import org.mifos.application.bulkentry.struts.action.TestBulkEntryAction;
 import org.mifos.application.bulkentry.struts.uihelpers.BulkEntryDisplayHelperTest;
 
@@ -18,8 +18,8 @@ public class BulkEntryTestSuite extends TestSuite {
 
 	public static Test suite() throws Exception {
 		TestSuite testSuite = new BulkEntryTestSuite();
-		testSuite.addTestSuite(TestBulkEntryPersistance.class);
-		testSuite.addTestSuite(TestBulkEntryPersistanceService.class);
+		testSuite.addTestSuite(TestBulkEntryPersistence.class);
+		testSuite.addTestSuite(TestBulkEntryPersistenceService.class);
 		testSuite.addTestSuite(TestBulkEntryBusinessService.class);
 		testSuite.addTestSuite(TestBulkEntryAction.class);
 		testSuite.addTestSuite(TestBulkEntryView.class);

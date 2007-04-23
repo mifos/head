@@ -27,7 +27,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class TestBulkEntryPersistance extends MifosTestCase {
+public class TestBulkEntryPersistence extends MifosTestCase {
 
 	private AccountPersistence accountPersistence;
 
@@ -41,7 +41,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 
 	private ClientAttendanceBO clientAttendance;
 
-	private BulkEntryPersistance bulkEntryPersistance;
+	private BulkEntryPersistence bulkEntryPersistance;
 
 	private CustomerPersistence customerPersistence;
 
@@ -49,7 +49,7 @@ public class TestBulkEntryPersistance extends MifosTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		accountPersistence = new AccountPersistence();
-		bulkEntryPersistance = new BulkEntryPersistance();
+		bulkEntryPersistance = new BulkEntryPersistence();
 		customerPersistence = new CustomerPersistence();
 	}
 

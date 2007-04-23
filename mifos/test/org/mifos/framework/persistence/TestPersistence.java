@@ -5,7 +5,7 @@ import net.sourceforge.mayfly.Database;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
@@ -13,20 +13,20 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 public class TestPersistence extends MifosTestCase {
 
 	public void testConnection() {
-		LoanPersistance loanPersistance = new LoanPersistance();
+		LoanPersistence loanPersistance = new LoanPersistence();
 		assertNotNull(loanPersistance.getConnection());
 		HibernateUtil.closeSession();
 	}
 
 	public void testOpenSession() throws Exception {
-		LoanPersistance loanPersistance = new LoanPersistance();
+		LoanPersistence loanPersistance = new LoanPersistence();
 		loanPersistance.openSession();
 		assertTrue(HibernateUtil.isSessionOpen());
 		HibernateUtil.closeSession();
 	}
 
 	public void testCloseSession() throws Exception {
-		LoanPersistance loanPersistance = new LoanPersistance();
+		LoanPersistence loanPersistance = new LoanPersistence();
 		loanPersistance.openSession();
 		loanPersistance.closeSession();
 		assertFalse(HibernateUtil.isSessionOpen());

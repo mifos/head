@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.framework.components.cronjobs.MifosTask;
@@ -64,7 +64,7 @@ public class LoanArrearsHelper extends TaskHelper {
 		try {
 			Short latenessDays = new LoanPrdPersistence()
 					.retrieveLatenessForPrd();
-			listAccountIds = new LoanPersistance()
+			listAccountIds = new LoanPersistence()
 					.getLoanAccountsInArrearsInGoodStanding(latenessDays);
 		} catch (Exception e) {
 			throw new CronJobException(e);

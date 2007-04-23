@@ -40,7 +40,7 @@ package org.mifos.application.collectionsheet.business;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.util.helpers.OverDueAmounts;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.framework.business.PersistentObject;
@@ -290,7 +290,7 @@ public class CollSheetLnDetailsEntity extends PersistentObject {
 	public void addAccountDetails(AccountActionDateEntity accountActionDate)
 			throws SystemException, ApplicationException {
 		LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
-		LoanBO loan = new LoanPersistance().getAccount(loanSchedule.getAccount().getAccountId());
+		LoanBO loan = new LoanPersistence().getAccount(loanSchedule.getAccount().getAccountId());
 		this.accountId = loanSchedule.getAccount().getAccountId();
 		this.currentInstallmentNo = loanSchedule.getInstallmentId();
 		MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER).debug(

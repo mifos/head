@@ -30,7 +30,7 @@ import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
-public class LoanPersistance extends Persistence {
+public class LoanPersistence extends Persistence {
 
 	public Double getFeeAmountAtDisbursement(Integer accountId)
 			throws PersistenceException {

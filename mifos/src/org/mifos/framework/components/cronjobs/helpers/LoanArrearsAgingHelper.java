@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.components.cronjobs.SchedulerConstants;
 import org.mifos.framework.components.cronjobs.TaskHelper;
@@ -59,7 +59,7 @@ public class LoanArrearsAgingHelper extends TaskHelper{
 		List<Integer> listAccountIds = null;
 		List<String> errorList = new ArrayList<String>();
 		try{
-			listAccountIds = new LoanPersistance()
+			listAccountIds = new LoanPersistence()
 				.getLoanAccountsInArrears(Short.valueOf("1"));
 		}catch (Exception e) {
 			throw new CronJobException(e);
@@ -67,7 +67,7 @@ public class LoanArrearsAgingHelper extends TaskHelper{
 		
 		for (Integer accountId : listAccountIds) {
 			try {
-				LoanBO loanBO = new LoanPersistance().getAccount(accountId);
+				LoanBO loanBO = new LoanPersistence().getAccount(accountId);
 				loanBO.handleArrearsAging();
 				HibernateUtil.commitTransaction();
 			} catch (Exception e) {

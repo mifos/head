@@ -13,7 +13,7 @@ import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
+import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistenceService;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientAttendanceBO;
@@ -226,7 +226,7 @@ public class TestBulkEntryView extends MifosTestCase {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
-		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
+		BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
 		List<BulkEntryInstallmentView> bulkEntryAccountActionViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(DateUtils
 						.getCurrentDateWithoutTimeStamp(),
@@ -255,7 +255,7 @@ public class TestBulkEntryView extends MifosTestCase {
 
     public void testPopulateAttendance() 
     throws SystemException, ApplicationException{
-        BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
+        BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
                     .getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
         center = TestObjectFactory.createCenter("Center", meeting);

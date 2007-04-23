@@ -41,7 +41,7 @@ import java.sql.Date;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountTypes;
-import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
+import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistenceService;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryDataView;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryNodeBuilder;
 import org.mifos.application.customer.business.CustomerBO;
@@ -185,7 +185,7 @@ public class BulkEntryBO extends BusinessObject {
 	 */
 	public void buildBulkEntryView(CustomerView parentCustomer)
 			throws SystemException, ApplicationException {
-		BulkEntryPersistanceService bulkEntryPersistanceService = new BulkEntryPersistanceService();
+		BulkEntryPersistenceService bulkEntryPersistanceService = new BulkEntryPersistenceService();
 		List<CustomerBO> allChildNodes = retrieveActiveCustomersUnderParent(
 				parentCustomer.getCustomerSearchId(), office.getOfficeId());
 		List<BulkEntryInstallmentView> bulkEntryLoanScheduleViews = bulkEntryPersistanceService

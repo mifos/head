@@ -45,7 +45,7 @@ import java.util.Set;
 
 import org.mifos.application.accounts.business.AccountActionDateEntity;
 import org.mifos.application.accounts.business.AccountBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -53,7 +53,7 @@ import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.bulkentry.business.BulkEntryAccountFeeActionView;
 import org.mifos.application.bulkentry.business.BulkEntryClientAttendanceView;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
-import org.mifos.application.bulkentry.persistance.BulkEntryPersistance;
+import org.mifos.application.bulkentry.persistance.BulkEntryPersistence;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryCache;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -65,14 +65,14 @@ import org.mifos.framework.util.helpers.DateUtils;
 /**
  * This class's reponsibility is to handle the {@link BulkEntryCache}.
  */
-public class BulkEntryPersistanceService {
+public class BulkEntryPersistenceService {
 
 	private BulkEntryCache bulkEntryCache = new BulkEntryCache();
 
 	public List<BulkEntryInstallmentView> getBulkEntryActionView(
 			Date meetingDate, String searchString, Short officeId,
 			AccountTypes accountType) throws PersistenceException {
-		return new BulkEntryPersistance().getBulkEntryActionView(meetingDate,
+		return new BulkEntryPersistence().getBulkEntryActionView(meetingDate,
 				searchString, officeId, accountType);
 
 	}
@@ -80,13 +80,13 @@ public class BulkEntryPersistanceService {
 	public List<BulkEntryAccountFeeActionView> getBulkEntryFeeActionView(
 			Date meetingDate, String searchString, Short officeId,
 			AccountTypes accountType) throws PersistenceException {
-		return new BulkEntryPersistance().getBulkEntryFeeActionView(
+		return new BulkEntryPersistence().getBulkEntryFeeActionView(
 				meetingDate, searchString, officeId, accountType);
 	}
 
 	public List<BulkEntryClientAttendanceView> getBulkEntryClientAttendanceActionView(
 			Date meetingDate, Short officeId) throws PersistenceException {
-		return new BulkEntryPersistance()
+		return new BulkEntryPersistence()
 				.getBulkEntryClientAttendanceActionView(meetingDate, officeId);
 	}
 
@@ -124,7 +124,7 @@ public class BulkEntryPersistanceService {
 
 	public AccountBO getLoanAccountWithAccountActionsInitialized(
 			Integer accountId) throws PersistenceException {
-		return new LoanPersistance()
+		return new LoanPersistence()
 				.getLoanAccountWithAccountActionsInitialized(accountId);
 	}
 

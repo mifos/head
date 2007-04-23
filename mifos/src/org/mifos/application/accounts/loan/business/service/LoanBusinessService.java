@@ -7,7 +7,7 @@ import java.util.Set;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -26,7 +26,7 @@ public class LoanBusinessService extends BusinessService {
 	public LoanBO findBySystemId(String accountGlobalNum)
 			throws ServiceException {
 		try {
-			return new LoanPersistance().findBySystemId(accountGlobalNum);
+			return new LoanPersistence().findBySystemId(accountGlobalNum);
 		} catch (PersistenceException e) {
 			throw new ServiceException(
 					AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
@@ -97,7 +97,7 @@ public class LoanBusinessService extends BusinessService {
 
 	public LoanBO getAccount(Integer accountId) throws ServiceException {
 		try {
-			return new LoanPersistance().getAccount(accountId);
+			return new LoanPersistence().getAccount(accountId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -106,7 +106,7 @@ public class LoanBusinessService extends BusinessService {
 	public Short getLastPaymentAction(Integer accountId)
 			throws ServiceException {
 		try {
-			return new LoanPersistance().getLastPaymentAction(accountId);
+			return new LoanPersistence().getLastPaymentAction(accountId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
@@ -115,7 +115,7 @@ public class LoanBusinessService extends BusinessService {
 	public List<LoanBO> getSearchResults(String officeId, String personnelId,
 			String type, String currentStatus) throws ServiceException {
 		try {
-			return new LoanPersistance().getSearchResults(officeId,
+			return new LoanPersistence().getSearchResults(officeId,
 					personnelId, type, currentStatus);
 		} catch (PersistenceException he) {
 			throw new ServiceException(he);
@@ -123,6 +123,6 @@ public class LoanBusinessService extends BusinessService {
 	}
 	
 	public void initialize(Object object) {
-		new LoanPersistance().initialize(object);
+		new LoanPersistence().initialize(object);
 	}
 }

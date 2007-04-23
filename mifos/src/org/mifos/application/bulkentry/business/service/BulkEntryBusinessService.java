@@ -57,8 +57,8 @@ import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.bulkentry.business.BulkEntryBO;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryView;
-import org.mifos.application.bulkentry.persistance.BulkEntryPersistance;
-import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistanceService;
+import org.mifos.application.bulkentry.persistance.BulkEntryPersistence;
+import org.mifos.application.bulkentry.persistance.service.BulkEntryPersistenceService;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryClientAttendanceThread;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryCustomerAccountThread;
 import org.mifos.application.bulkentry.util.helpers.BulkEntryLoanThread;
@@ -82,12 +82,12 @@ import org.mifos.framework.util.helpers.Money;
 
 public class BulkEntryBusinessService extends BusinessService {
 
-	private BulkEntryPersistanceService bulkEntryPersistanceService;
+	private BulkEntryPersistenceService bulkEntryPersistanceService;
 
 	private CustomerPersistence customerPersistence;
 
 	public BulkEntryBusinessService() {
-		bulkEntryPersistanceService = new BulkEntryPersistanceService();
+		bulkEntryPersistanceService = new BulkEntryPersistenceService();
 		customerPersistence = new CustomerPersistence();
 	}
 
@@ -390,7 +390,7 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	public void saveLoanAccount(LoanBO loan) throws ServiceException {
 		try {
-			new BulkEntryPersistance().createOrUpdate(loan);
+			new BulkEntryPersistence().createOrUpdate(loan);
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
@@ -398,7 +398,7 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	public void saveClientAttendance(ClientBO client) throws ServiceException {
 		try {
-			new BulkEntryPersistance().createOrUpdate(client);
+			new BulkEntryPersistence().createOrUpdate(client);
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}
@@ -406,7 +406,7 @@ public class BulkEntryBusinessService extends BusinessService {
 
 	public void saveSavingsAccount(SavingsBO savings) throws ServiceException {
 		try {
-			new BulkEntryPersistance().createOrUpdate(savings);
+			new BulkEntryPersistence().createOrUpdate(savings);
 		} catch (Exception e) {
 			throw new ServiceException(e);
 		}

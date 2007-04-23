@@ -12,7 +12,7 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanArrearsAgingEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
-import org.mifos.application.accounts.loan.persistance.LoanPersistance;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -99,13 +99,13 @@ public class TestLoanArrearsAgingHelper extends MifosTestCase {
 		
 		loanArrearsAgingHelper.execute(System.currentTimeMillis());
 		
-		loanAccount1 = new LoanPersistance().getAccount(loanAccount1
+		loanAccount1 = new LoanPersistence().getAccount(loanAccount1
 				.getAccountId());
-		loanAccount2 = new LoanPersistance().getAccount(loanAccount2
+		loanAccount2 = new LoanPersistence().getAccount(loanAccount2
 				.getAccountId());
-		loanAccount3 = new LoanPersistance().getAccount(loanAccount3
+		loanAccount3 = new LoanPersistence().getAccount(loanAccount3
 				.getAccountId());
-		loanAccount4 = new LoanPersistance().getAccount(loanAccount4
+		loanAccount4 = new LoanPersistence().getAccount(loanAccount4
 				.getAccountId());
 		
 		assertNotNull(loanAccount1.getLoanArrearsAgingEntity());

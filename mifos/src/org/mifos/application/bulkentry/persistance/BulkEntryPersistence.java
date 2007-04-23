@@ -54,7 +54,7 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
-public class BulkEntryPersistance extends Persistence {
+public class BulkEntryPersistence extends Persistence {
 
 	private static MifosLogger logger = 
 		MifosLogManager.getLogger(LoggerConstants.BULKENTRYLOGGER);
