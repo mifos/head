@@ -282,6 +282,10 @@ public class GroupBOTest extends MifosTestCase {
 				assertEquals("Center",auditLogRecord.getOldValue());
 				assertEquals("toTransfer",auditLogRecord.getNewValue());
 			}
+			else {
+				// TODO: Kendra versus Center?
+				//fail();
+			}
 		}
 		TestObjectFactory.cleanUpChangeLog();
 	}

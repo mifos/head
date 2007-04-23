@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.mifos.application.configuration.exceptions.ConfigurationException;
-import org.mifos.application.configuration.persistence.service.ConfigurationPersistenceService;
+import org.mifos.application.configuration.persistence.ConfigurationPersistence;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.configuration.util.helpers.LabelKey;
 import org.mifos.application.master.business.LookUpLabelEntity;
@@ -61,10 +61,10 @@ public class MifosConfiguration implements ConfigurationIntf {
 	}
 
 	private void initializeLabelCahe() {
-		ConfigurationPersistenceService configurationPersistenceService = 
-			new ConfigurationPersistenceService();
+		ConfigurationPersistence configurationPersistence = 
+			new ConfigurationPersistence();
 		List<MifosLookUpEntity> entities = 
-			configurationPersistenceService.getLookupEntities();
+			configurationPersistence.getLookupEntities();
 		for (MifosLookUpEntity entity : entities) {
 			Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
 			for (LookUpLabelEntity label : labels) {
@@ -74,7 +74,7 @@ public class MifosConfiguration implements ConfigurationIntf {
 		}
 		
 		
-		List<LookUpValueEntity> values = configurationPersistenceService.getLookupValues();
+		List<LookUpValueEntity> values = configurationPersistence.getLookupValues();
 		for (LookUpValueEntity value : values) {
 			Set<LookUpValueLocaleEntity> localeValues = value
 					.getLookUpValueLocales();
@@ -90,7 +90,7 @@ public class MifosConfiguration implements ConfigurationIntf {
 
 	private void initializeloacleIdCache() {
 		List<SupportedLocalesEntity> locales = 
-			new ConfigurationPersistenceService().getSupportedLocale();
+			new ConfigurationPersistence().getSupportedLocale();
 
 		for (SupportedLocalesEntity locale : locales) {
 

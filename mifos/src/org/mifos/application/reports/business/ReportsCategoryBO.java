@@ -18,12 +18,15 @@ public class ReportsCategoryBO extends BusinessObject {
 	public Short getReportCategoryId() {
 		return reportCategoryId;
 	}
+
 	public void setReportCategoryId(Short reportCategoryId) {
 		this.reportCategoryId = reportCategoryId;
 	}
+
 	public String getReportCategoryName() {
 		return reportCategoryName;
 	}
+
 	public void setReportCategoryName(String reportCategoryName) {
 		this.reportCategoryName = reportCategoryName;
 	}
@@ -31,9 +34,11 @@ public class ReportsCategoryBO extends BusinessObject {
 	public Set<ReportsBO> getReportsSet() {
 		return reportsSet;
 	}
+
 	private void setReportsSet(Set<ReportsBO> reportsSet) {
 		this.reportsSet = reportsSet;
 	}
+
 	public void addReports(ReportsBO reportsBO){		
 		this.reportsSet.add(reportsBO);
 	}

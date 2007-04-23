@@ -42,14 +42,26 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.configuration.LabelConfigurationTestSuite;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MifosLookUpEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.framework.components.configuration.business.ConfigurationKeyValueInteger;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
+/**
+ * This class is mainly about lookup values.
+ * TODO: Figure out how to resolve the confusion between
+ * this and 
+ * {@link org.mifos.framework.components.configuration.persistence.ConfigurationPersistence}
+ * which seems to be about {@link ConfigurationKeyValueInteger} and friends.
+ * 
+ * I think this one maybe should be called LabelPersistence or some such
+ * following the lead of {@link LabelConfigurationTestSuite}.
+ */
 public class ConfigurationPersistence extends Persistence {
 	
 	public List<MifosLookUpEntity> getLookupEntities(){

@@ -60,7 +60,6 @@ import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.service.PersistenceService;
 import org.mifos.framework.util.helpers.DateUtils;
 
 /**

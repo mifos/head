@@ -246,6 +246,10 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 			if(auditLogRecord.getFieldName().equalsIgnoreCase("Kendra Name")){
 				matchValues(auditLogRecord,"Center","MyCenter");
 			}
+			else {
+				// TODO: Kendra versus Center?
+				//fail();
+			}
 		}
 		TestObjectFactory.cleanUpChangeLog();
 

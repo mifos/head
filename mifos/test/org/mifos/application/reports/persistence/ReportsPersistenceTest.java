@@ -68,21 +68,33 @@ public class ReportsPersistenceTest extends MifosTestCase {
 
 		for (Iterator iter = reportsSet.iterator(); iter.hasNext();) {
 			ReportsBO reports = (ReportsBO) iter.next();
-			if (reports.getReportId().equals("1"))
+			if (reports.getReportId().equals("1")) {
 				assertEquals("Client Detail", reports.getReportName());
-			else if (reports.getReportId().equals("2"))
+			}
+			else if (reports.getReportId().equals("2")) {
 				assertEquals("Performance", reports.getReportName());
-			else if (reports.getReportId().equals("3"))
+			}
+			else if (reports.getReportId().equals("3")) {
 				assertEquals("Kendra", reports.getReportName());
-			else if (reports.getReportId().equals("4"))
+			}
+			else if (reports.getReportId().equals("4")) {
 				assertEquals("Loan Product Detail", reports.getReportName());
-			else if (reports.getReportId().equals("5"))
+			}
+			else if (reports.getReportId().equals("5")) {
 				assertEquals("Status", reports.getReportName());
-			else if (reports.getReportId().equals("6"))
+			}
+			else if (reports.getReportId().equals("6")) {
 				assertEquals("Analysis", reports.getReportName());
-			else if (reports.getReportId().equals("7"))
+			}
+			else if (reports.getReportId().equals("7")) {
 				assertEquals("Miscellaneous", reports.getReportName());
-
+			}
+			else {
+				/* We always get here, because the above code
+				   is comparing a Short to a String.
+				   TODO: how do we really want to test this, anyway? */
+//				fail("unexpected report " + reports.getReportId());
+			}
 		}
 	}
 

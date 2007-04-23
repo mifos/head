@@ -1,6 +1,8 @@
 package org.mifos.application.master;
 
 import org.hibernate.Session;
+import org.mifos.application.configuration.persistence.ConfigurationPersistence;
+import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -20,6 +22,11 @@ import org.mifos.framework.security.util.UserContext;
  * one in {@link MasterPersistence}, {@link MasterDataEntity}, etc.
  * Or at least we can centralize where we call the convoluted
  * mechanism.
+ * 
+ * Also see {@link ConfigurationPersistence}.
+ * 
+ * The word "label" might be better than "message"; at least that's
+ * what we call them in places like {@link LabelConfigurationAction}.
  */
 public class MessageLookup {
 

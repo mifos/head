@@ -6,7 +6,6 @@ import org.mifos.framework.components.fieldConfiguration.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.service.PersistenceService;
 
 public class FieldConfigurationPersistenceService {
 	

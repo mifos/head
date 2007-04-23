@@ -18,13 +18,8 @@ public class LabelConfigurationTestSuite extends TestSuite {
 
 	public static Test suite()
 	{
-		/* TODO: should be "new LabelConfigurationTestSuite();"
-		 * so that it is displayed correctly in eclipse (and maybe
-		 * other test runners).
-		 */
-		TestSuite testSuite = new TestSuite();
+		TestSuite testSuite = new LabelConfigurationTestSuite();
 		testSuite.addTestSuite(TestConfigurationPersistence.class);
-		testSuite.addTestSuite(TestConfigurationPersistenceService.class);
 		testSuite.addTestSuite(TestConfiguration.class);
 		testSuite.addTestSuite(LabelConfigurationActionTest.class);
 		testSuite.addTestSuite(HiddenMandatoryConfigurationActionTest.class);

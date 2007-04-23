@@ -1,5 +1,6 @@
 package org.mifos.application.configuration.struts.action;
 
+import org.mifos.application.ApplicationTestSuite;
 import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
 import org.mifos.application.configuration.struts.actionform.LabelConfigurationActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -40,14 +41,19 @@ public class LabelConfigurationActionTest extends MifosMockStrutsTestCase {
 		flowKey = createFlow(request, MultipleLoanAccountsCreationAction.class);
 	}
 
+	/**
+	 * TODO: This test only pass when run as part of
+	 * {@link ApplicationTestSuite}, not by themselves.
+	 * Something seems to be putting in Grameen Koota configuration
+	 * (Kendra/Member instead of Center/Client, etc).  But what?
+	 */
 	public void testLoad() throws Exception {
 		setRequestPathInfo("/labelconfigurationaction.do");
 		addRequestParameter("method", "load");
-		actionPerform();
-		verifyNoActionErrors();
-		verifyNoActionMessages();
+		performNoErrors();
 		verifyForward(ActionForwards.load_success.toString());
-		LabelConfigurationActionForm labelConfigurationActionForm = (LabelConfigurationActionForm) request
+		LabelConfigurationActionForm labelConfigurationActionForm = 
+			(LabelConfigurationActionForm) request
 				.getSession().getAttribute("labelconfigurationactionform");
 		assertEquals("Head Office", labelConfigurationActionForm
 				.getHeadOffice());

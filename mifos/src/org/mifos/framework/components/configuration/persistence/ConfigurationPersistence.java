@@ -55,6 +55,14 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
+/**
+ * This class concerns certain configuration settings, especially
+ * {@link ConfigurationKeyValueInteger} and friends.
+ * TODO: Figure out how to resolve the confusion between
+ * this and 
+ * {@link org.mifos.application.configuration.persistence.ConfigurationPersistence}
+ * which seems to be about lookup values.
+ */
 public class ConfigurationPersistence extends Persistence{
 	private MifosLogger logger = 
 		MifosLogManager.getLogger(LoggerConstants.CONFIGURATION_LOGGER);
