@@ -1,13 +1,14 @@
 package org.mifos.application.office.util.helpers;
 
-import org.mifos.application.office.util.resources.OfficeConstants;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum OfficeLevel {
 
-	HEADOFFICE(Short.valueOf("1")), REGIONALOFFICE(Short.valueOf("2")), SUBREGIONALOFFICE(
-			Short.valueOf("3")), AREAOFFICE(Short.valueOf("4")), BRANCHOFFICE(
-			Short.valueOf("5"));
+	HEADOFFICE(Short.valueOf("1")), 
+	REGIONALOFFICE(Short.valueOf("2")), 
+	SUBREGIONALOFFICE(Short.valueOf("3")), 
+	AREAOFFICE(Short.valueOf("4")), 
+	BRANCHOFFICE(Short.valueOf("5"));
+
 	Short value;
 
 	OfficeLevel(Short value) {
@@ -18,11 +19,13 @@ public enum OfficeLevel {
 		return value;
 	}
 
-	public static OfficeLevel getOfficeLevel(Short id)
-			throws PropertyNotFoundException {
-		for (OfficeLevel level : OfficeLevel.values())
-			if (level.value.equals(id))
+	public static OfficeLevel getOfficeLevel(Short id) {
+		for (OfficeLevel level : OfficeLevel.values()) {
+			if (level.value.equals(id)) {
 				return level;
-		throw new PropertyNotFoundException(OfficeConstants.ERROR_LEVEL);
+			}
+		}
+		throw new RuntimeException("no office level " + id);
 	}
+
 }

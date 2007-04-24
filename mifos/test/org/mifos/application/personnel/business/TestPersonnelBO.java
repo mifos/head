@@ -39,8 +39,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPersonnelBO extends MifosTestCase {
 
-	UserContext userContext;
-
 	private OfficeBO office;
 
 	private OfficeBO branchOffice;
@@ -61,7 +59,6 @@ public class TestPersonnelBO extends MifosTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		userContext = TestObjectFactory.getUserContext();
 		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		name = new Name("XYZ", null, null, null);
@@ -70,7 +67,6 @@ public class TestPersonnelBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		userContext = null;
 		office = null;
 		branchOffice = null;
 		name = null;
@@ -88,7 +84,7 @@ public class TestPersonnelBO extends MifosTestCase {
 			new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer
 					.valueOf("1"), Short.valueOf("1"), "ABCD", null, null,
 					null, null, name, null, null, null, null, null, null, null,
-					userContext.getId());
+					PersonnelConstants.SYSTEM_USER);
 			fail();
 		} catch (PersonnelException e) {
 			assertEquals(PersonnelConstants.ERRORMANDATORY, e.getKey());
@@ -101,7 +97,7 @@ public class TestPersonnelBO extends MifosTestCase {
 			new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer
 					.valueOf("1"), Short.valueOf("1"), "ABCD", "mifos", null,
 					null, null, name, null, null, null, null, null, null, null,
-					userContext.getId());
+					PersonnelConstants.SYSTEM_USER);
 
 			assertTrue(false);
 		} catch (PersonnelException e) {
@@ -114,7 +110,7 @@ public class TestPersonnelBO extends MifosTestCase {
 			new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer
 					.valueOf("1"), Short.valueOf("1"), "ABCD", "Raj", null,
 					null, null, name, "123", null, null, null, null, null,
-					null, userContext.getId());
+					null, PersonnelConstants.SYSTEM_USER);
 
 			assertTrue(false);
 		} catch (PersonnelException e) {
@@ -131,7 +127,7 @@ public class TestPersonnelBO extends MifosTestCase {
 			new PersonnelBO(PersonnelLevel.NON_LOAN_OFFICER, office, Integer
 					.valueOf("1"), Short.valueOf("1"), "ABCD", "RAJ", null,
 					null, null, name1, null, dateFormat.parse("1979-12-12"),
-					null, null, null, null, null, userContext.getId());
+					null, null, null, null, null, PersonnelConstants.SYSTEM_USER);
 
 			assertTrue(false);
 		} catch (PersonnelException e) {
@@ -149,7 +145,7 @@ public class TestPersonnelBO extends MifosTestCase {
 						.getBusinessService(BusinessServiceName.Personnel))
 						.getRoles(), getCustomFields(), name, "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				getAddress(), userContext.getId());
+				getAddress(), PersonnelConstants.SYSTEM_USER);
 		assertEquals("0" ,personnel.getAge());
 
 	}
@@ -163,7 +159,7 @@ public class TestPersonnelBO extends MifosTestCase {
 						.getBusinessService(BusinessServiceName.Personnel))
 						.getRoles(), getCustomFields(), name, "111111", null,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				getAddress(), userContext.getId());
+				getAddress(), PersonnelConstants.SYSTEM_USER);
 		assertEquals("" ,personnel.getAge());
 
 	}
@@ -177,7 +173,7 @@ public class TestPersonnelBO extends MifosTestCase {
 						.getBusinessService(BusinessServiceName.Personnel))
 						.getRoles(), getCustomFields(), name, "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				getAddress(), userContext.getId());
+				getAddress(), PersonnelConstants.SYSTEM_USER);
 		HibernateUtil.getSessionTL().close();
 		try{
 				personnel.save();
@@ -197,7 +193,7 @@ public class TestPersonnelBO extends MifosTestCase {
 						.getBusinessService(BusinessServiceName.Personnel))
 						.getRoles(), getCustomFields(), name, "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				getAddress(), userContext.getId());
+				getAddress(), PersonnelConstants.SYSTEM_USER);
 		personnel.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.flushAndCloseSession();
@@ -485,15 +481,15 @@ public class TestPersonnelBO extends MifosTestCase {
 				.getOfficeId());
 		createInitialObjects(branchOffice.getOfficeId(), personnel
 				.getPersonnelId());
-		personnel.addNotes(userContext.getId(),
+		personnel.addNotes(PersonnelConstants.SYSTEM_USER,
 				createNotes("1.Personnel notes created"));
-		personnel.addNotes(userContext.getId(),
+		personnel.addNotes(PersonnelConstants.SYSTEM_USER,
 				createNotes("2.Personnel notes created"));
-		personnel.addNotes(userContext.getId(),
+		personnel.addNotes(PersonnelConstants.SYSTEM_USER,
 				createNotes("3.Personnel notes created"));
-		personnel.addNotes(userContext.getId(),
+		personnel.addNotes(PersonnelConstants.SYSTEM_USER,
 				createNotes("4.Personnel notes created"));
-		personnel.addNotes(userContext.getId(),
+		personnel.addNotes(PersonnelConstants.SYSTEM_USER,
 				createNotes("5.Personnel notes created"));
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
@@ -523,7 +519,7 @@ public class TestPersonnelBO extends MifosTestCase {
 	public void testSuccessfullLogin() throws Exception {
 		personnel = createPersonnel();
 		String password = "ABCD";
-		userContext = personnel.login(password);
+		UserContext userContext = personnel.login(password);
 		assertFalse(personnel.isLocked());
 
 		assertEquals(personnel.getPersonnelId(), userContext.getId());
@@ -556,7 +552,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		personnel = createPersonnel();
 		String password = "WRONG_PASSWORD";
 		try {
-			userContext = personnel.login(password);
+			personnel.login(password);
 			fail();
 		} catch (PersonnelException e) {
 			assertEquals(1,personnel.getNoOfTries().intValue());
@@ -583,7 +579,7 @@ public class TestPersonnelBO extends MifosTestCase {
 				PersonnelBO.class, personnel.getPersonnelId());
 		String password = "ABCD";
 		try {
-			userContext = personnel.login(password);
+			personnel.login(password);
 			HibernateUtil.commitTransaction();
 			fail();
 		} catch (PersonnelException e) {
@@ -605,7 +601,7 @@ public class TestPersonnelBO extends MifosTestCase {
 			HibernateUtil.closeSession();
 			personnel = TestObjectFactory.getPersonnel(personnel
 					.getPersonnelId());
-			userContext = personnel.login("WRONG_PASSWORD");
+			personnel.login("WRONG_PASSWORD");
 			fail();
 		} catch (PersonnelException e) {
 			assertEquals(5, personnel.getNoOfTries().intValue());
@@ -625,7 +621,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		personnel = TestObjectFactory.getPersonnel(personnel
 				.getPersonnelId());
-		userContext = personnel.login("ABCD");
+		personnel.login("ABCD");
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
@@ -649,7 +645,7 @@ public class TestPersonnelBO extends MifosTestCase {
 			HibernateUtil.closeSession();
 			personnel = TestObjectFactory.getPersonnel(personnel
 					.getPersonnelId());
-			userContext = personnel.login(password);
+			personnel.login(password);
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			personnel = (PersonnelBO) HibernateUtil.getSessionTL().get(
@@ -759,7 +755,7 @@ public class TestPersonnelBO extends MifosTestCase {
 	}
 	private PersonnelNotesEntity createNotes(String comment) throws Exception{
 		return new PersonnelNotesEntity(comment, new PersonnelPersistence()
-				.getPersonnel(userContext.getId()), personnel);
+				.getPersonnel(PersonnelConstants.SYSTEM_USER), personnel);
 	}
 
 	private String generateGlobalPersonnelNum(String officeGlobalNum,
@@ -795,7 +791,7 @@ public class TestPersonnelBO extends MifosTestCase {
 				.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
 				"xyz@yahoo.com", getRoles(), getCustomFields(), name, "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				address, userContext.getId());
+				address, PersonnelConstants.SYSTEM_USER);
 		personnel.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

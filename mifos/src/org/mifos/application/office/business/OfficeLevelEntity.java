@@ -43,7 +43,6 @@ import org.mifos.application.office.persistence.OfficeHierarchyPersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.resources.OfficeConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 /**
  * As with the other *Entity classes, this one corresponds
@@ -94,7 +93,7 @@ public class OfficeLevelEntity extends MasterDataEntity {
 		return child;
 	}
 
-	public OfficeLevel getLevel() throws PropertyNotFoundException {
+	public OfficeLevel getLevel() {
 		return OfficeLevel.getOfficeLevel(this.getId());
 	}
 
@@ -102,7 +101,7 @@ public class OfficeLevelEntity extends MasterDataEntity {
 		try {
 			if (!configured
 					&& new OfficeHierarchyPersistence()
-							.isOfficePresentForLevel(getId())) {
+							.isOfficePresentForLevel(getLevel())) {
 				throw new OfficeException(
 						OfficeConstants.KEYHASACTIVEOFFICEWITHLEVEL);
 			}

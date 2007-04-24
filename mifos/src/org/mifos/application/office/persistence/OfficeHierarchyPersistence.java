@@ -43,6 +43,7 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.office.business.OfficeLevelEntity;
+import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -62,8 +63,8 @@ public class OfficeHierarchyPersistence extends Persistence {
 		return officeLevels;
 	}
 	
-	public boolean isOfficePresentForLevel(Short levelId) throws PersistenceException {
-
+	public boolean isOfficePresentForLevel(Short levelId) 
+	throws PersistenceException {
 		try {
 			HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("LEVEL_ID", levelId);
@@ -78,4 +79,10 @@ public class OfficeHierarchyPersistence extends Persistence {
 
 		return false;
 	}
+	
+	public boolean isOfficePresentForLevel(OfficeLevel level) 
+	throws PersistenceException {
+		return isOfficePresentForLevel(level.getValue());
+	}
+
 }

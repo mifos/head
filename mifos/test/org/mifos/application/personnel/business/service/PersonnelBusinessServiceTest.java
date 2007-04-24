@@ -8,6 +8,7 @@ import org.mifos.application.customer.business.CustomFieldView;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
@@ -16,7 +17,6 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class PersonnelBusinessServiceTest extends MifosTestCase {
@@ -190,7 +190,6 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 	}
 	private PersonnelBO createPersonnel(OfficeBO office,
 			PersonnelLevel personnelLevel) throws Exception {
-		UserContext userContext = TestObjectFactory.getUserContext();
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView(Short.valueOf("9"), "123456",
 				CustomFieldType.NUMERIC));
@@ -201,7 +200,7 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 				.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
 				"xyz@yahoo.com", null, customFieldView, new Name("XYZ", null, null, null), "111111", date,
 				Integer.valueOf("1"), Integer.valueOf("1"), date, date,
-				address, userContext.getId());
+				address, PersonnelConstants.SYSTEM_USER);
 		personnel.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

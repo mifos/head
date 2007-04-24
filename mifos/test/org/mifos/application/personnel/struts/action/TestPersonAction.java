@@ -21,6 +21,7 @@ import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -57,7 +58,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		setConfigFile(ResourceLoader.getURI(
 					"org/mifos/application/personnel/struts-config.xml")
 					.getPath());
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");

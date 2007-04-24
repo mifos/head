@@ -148,12 +148,7 @@ public class OfficeBO extends BusinessObject {
 	}
 
 	public OfficeLevel getOfficeLevel() throws OfficeException {
-		try {
-			return OfficeLevel.getOfficeLevel(level.getId());
-		} catch (PropertyNotFoundException e) {
-			throw new OfficeException(e);
-		}
-
+		return OfficeLevel.getOfficeLevel(level.getId());
 	}
 
 	public OfficeStatus getOfficeStatus() throws OfficeException {

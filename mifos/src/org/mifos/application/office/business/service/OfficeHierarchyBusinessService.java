@@ -58,7 +58,8 @@ public class OfficeHierarchyBusinessService extends BusinessService {
 		return null;
 	}
 
-	public List<OfficeLevelEntity> getOfficeLevels(Short localeId) throws ServiceException {
+	public List<OfficeLevelEntity> getOfficeLevels(Short localeId) 
+	throws ServiceException {
 		try {
 			return new OfficeHierarchyPersistence().getOfficeLevels(localeId);
 		} catch (PersistenceException e) {

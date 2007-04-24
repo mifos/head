@@ -27,13 +27,10 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestPersonnelPersistence extends MifosTestCase {
 	
-	UserContext userContext;
-
 	private MeetingBO meeting;
 
 	private CustomerBO center;
@@ -61,7 +58,6 @@ public class TestPersonnelPersistence extends MifosTestCase {
 
 	@Override
 	public void tearDown() throws Exception {
-		userContext = null;
 		office = null;
 		branchOffice = null;
 		name = null;
@@ -148,7 +144,6 @@ public class TestPersonnelPersistence extends MifosTestCase {
 	}
 	
 	public void testGetAllPersonnelNotes() throws Exception {
-		userContext = TestObjectFactory.getUserContext();
 		office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		createdBranchOffice = TestObjectFactory.createOffice(
@@ -164,8 +159,8 @@ public class TestPersonnelPersistence extends MifosTestCase {
 
 		PersonnelNotesEntity personnelNotes = new PersonnelNotesEntity(
 				"Personnel notes created", new PersonnelPersistence()
-						.getPersonnel(userContext.getId()), personnel);
-		personnel.addNotes(userContext.getId(), personnelNotes);
+						.getPersonnel(PersonnelConstants.SYSTEM_USER), personnel);
+		personnel.addNotes(PersonnelConstants.SYSTEM_USER, personnelNotes);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
@@ -244,14 +239,12 @@ public class TestPersonnelPersistence extends MifosTestCase {
 
 	private PersonnelBO createPersonnel(OfficeBO office,
 			PersonnelLevel personnelLevel) throws Exception {
-		UserContext userContext = TestObjectFactory.getUserContext();
 		name = new Name("XYZ", null, null, null);
-		return create(personnelLevel,name,userContext.getId(), office);
+		return create(personnelLevel,name,PersonnelConstants.SYSTEM_USER, office);
 	}
 	private PersonnelBO createPersonnelWithName(OfficeBO office,
 			PersonnelLevel personnelLevel,Name personnelName) throws Exception {
-		UserContext userContext = TestObjectFactory.getUserContext();
-		return create(personnelLevel,personnelName,userContext.getId(),office);
+		return create(personnelLevel,personnelName,PersonnelConstants.SYSTEM_USER,office);
 	}
   private 	PersonnelBO create(PersonnelLevel personnelLevel,Name name,Short createdBy,OfficeBO office)throws Exception{
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();

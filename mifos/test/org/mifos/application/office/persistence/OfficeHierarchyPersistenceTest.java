@@ -44,7 +44,6 @@ import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeHierarchyPersistenceTest extends MifosTestCase {
@@ -56,9 +55,9 @@ public class OfficeHierarchyPersistenceTest extends MifosTestCase {
 	}
 
 	public void testGetOfficeLevels() throws Exception {
-		UserContext userContext = TestObjectFactory.getUserContext();
-		List<OfficeLevelEntity> officeLevels = new OfficeHierarchyPersistence()
-				.getOfficeLevels(userContext.getLocaleId());
+		List<OfficeLevelEntity> officeLevels = 
+			new OfficeHierarchyPersistence()
+				.getOfficeLevels(TestObjectFactory.TEST_LOCALE);
 		assertEquals(OFFICE_LEVELS, officeLevels.size());
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
 			assertTrue(officeLevelEntity.isConfigured());
@@ -67,24 +66,27 @@ public class OfficeHierarchyPersistenceTest extends MifosTestCase {
 	
 	public void testIsOfficePresentForLevel() throws Exception {
 		OfficeHierarchyPersistence persistence = new OfficeHierarchyPersistence();
-		assertTrue(persistence.isOfficePresentForLevel(OfficeLevel.HEADOFFICE.getValue()));
-		assertTrue(persistence.isOfficePresentForLevel(OfficeLevel.BRANCHOFFICE.getValue()));
-		assertFalse(persistence.isOfficePresentForLevel(OfficeLevel.REGIONALOFFICE.getValue()));
+		assertTrue(persistence.isOfficePresentForLevel(
+			OfficeLevel.HEADOFFICE));
+		assertTrue(persistence.isOfficePresentForLevel(
+			OfficeLevel.BRANCHOFFICE));
+		assertFalse(persistence.isOfficePresentForLevel(
+				OfficeLevel.REGIONALOFFICE));
 		
 	}
+
 	public void testIsOfficePresentForLevelFailure() throws Exception {
 		OfficeHierarchyPersistence persistence = new OfficeHierarchyPersistence();
 		TestObjectFactory.simulateInvalidConnection();
 		try{
-			persistence.isOfficePresentForLevel(OfficeLevel.HEADOFFICE.getValue());
-		}catch (PersistenceException e) {
-			 
-			assertTrue(true);
+			persistence.isOfficePresentForLevel(
+				OfficeLevel.HEADOFFICE);
+			fail();
+		} catch (PersistenceException expected) {
 		}
-		finally{
+		finally {
 			HibernateUtil.closeSession();
 		}
-		
 	}
 
 }

@@ -43,7 +43,6 @@ import org.mifos.application.office.business.OfficeLevelEntity;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
-import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class OfficeHierarchyBusinessServiceTest extends MifosTestCase {
@@ -55,28 +54,34 @@ public class OfficeHierarchyBusinessServiceTest extends MifosTestCase {
 	}
 
 	public void testGetOfficeLevels() throws Exception {
-		UserContext userContext = TestObjectFactory.getUserContext();
 		List<OfficeLevelEntity> officeLevels = 
 			new OfficeHierarchyBusinessService()
-				.getOfficeLevels(userContext.getLocaleId());
+				.getOfficeLevels(TestObjectFactory.TEST_LOCALE);
 		assertEquals(OFFICE_LEVELS, officeLevels.size());
 		for (OfficeLevelEntity officeLevelEntity : officeLevels) {
 			assertTrue(officeLevelEntity.isConfigured());
 		}
 	}
-	public void testGetOfficeLevelsFailure() throws Exception{
-		UserContext userContext = TestObjectFactory.getUserContext();
+
+	/**
+	 * Test that we wrap a PersistenceException in a ServiceException.
+	 * (isn't there an easier way to get whatever user-visible
+	 * behavior is desired on those exceptions?)
+	 */
+	public void testGetOfficeLevelsFailure() throws Exception {
 		TestObjectFactory.simulateInvalidConnection();
-		try{
+		try {
 			new OfficeHierarchyBusinessService()
-			.getOfficeLevels(userContext.getLocaleId());
-		fail();
+				.getOfficeLevels(TestObjectFactory.TEST_LOCALE);
+			fail();
 		}
 		catch (ServiceException e) {
-			assertTrue(true);
-		}finally {
+			assertEquals("exception.framework.ApplicationException", 
+				e.getKey());
+		}
+		finally {
 			HibernateUtil.closeSession();
 		}
-
 	}
+
 }
