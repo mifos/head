@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.surveys.helpers.InstanceStatus;
 import org.mifos.framework.business.PersistentObject;
 
 public class SurveyInstance extends PersistentObject {
@@ -18,13 +19,25 @@ public class SurveyInstance extends PersistentObject {
 	
 	private Date dateConducted;
 	
-	private int completedStatus;
+	private InstanceStatus completedStatus;
+	
+	public SurveyInstance() {
+		completedStatus = InstanceStatus.INCOMPLETE;
+	}
 
 	public int getCompletedStatus() {
+		return completedStatus.getValue();
+	}
+	
+	public InstanceStatus getCompletedStatusAsEnum() {
 		return completedStatus;
 	}
 
 	public void setCompletedStatus(int completedStatus) {
+		this.completedStatus = InstanceStatus.fromInt(completedStatus);
+	}
+	
+	public void setCompletedStatus(InstanceStatus completedStatus) {
 		this.completedStatus = completedStatus;
 	}
 

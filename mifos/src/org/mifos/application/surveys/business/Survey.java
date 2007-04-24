@@ -1,6 +1,7 @@
 package org.mifos.application.surveys.business;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.application.surveys.helpers.SurveyState;
@@ -23,6 +24,7 @@ public class Survey {
 	public Survey() {
 		dateOfCreation = DateUtils.getCurrentDateWithoutTimeStamp();
 		state = SurveyState.INACTIVE;
+		questions = new LinkedList<SurveyQuestion>();
 	}
 	
 	public Survey(String name, SurveyState state, String appliesTo) {
@@ -94,6 +96,14 @@ public class Survey {
 	
 	public String getQuestionText(int i) {
 		return getQuestion(i).getQuestionText();
+	}
+	
+	public SurveyQuestion addQuestion(Question question, boolean mandatory) {
+		SurveyQuestion surveyQuestion = new SurveyQuestion();
+		surveyQuestion.setMandatory(mandatory ? 1 : 0);
+		surveyQuestion.setQuestion(question);
+		getQuestions().add(surveyQuestion);
+		return surveyQuestion;
 	}
 
 }

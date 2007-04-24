@@ -1,5 +1,6 @@
 package org.mifos.application.surveys.business;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -14,6 +15,7 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.exceptions.PersonnelException;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.personnel.util.helpers.PersonnelLevel;
+import org.mifos.application.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
@@ -22,6 +24,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -84,10 +87,10 @@ public class TestSurvey extends MifosTestCase {
 	private SurveyInstance makeSurveyInstance(String surveyName) throws PersonnelException {
 		TestObjectFactory factory = new TestObjectFactory();
 		ClientBO client = factory.createClient(
-				"Test Client", CustomerStatus.CLIENT_PARTIAL, null);
+				"Test Client " + surveyName, CustomerStatus.CLIENT_PARTIAL, null);
 		
 		Survey survey = new Survey();
-		survey.setName("Test survey");
+		survey.setName(surveyName);
 		survey.setState(SurveyState.ACTIVE);
 		survey.setAppliesTo("someone");
 
@@ -96,7 +99,7 @@ public class TestSurvey extends MifosTestCase {
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();
 		customFieldView.add(new CustomFieldView((short) 9, "123456",
 				CustomFieldType.NUMERIC));
-		Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd",
+		Address address = new Address("abcd" + surveyName, "abcd", "abcd", "abcd", "abcd",
 				"abcd", "abcd", "abcd");
 		Date date = DateUtils.getCurrentDateWithoutTimeStamp();
 		String officerName = "Test Officer";
@@ -114,7 +117,7 @@ public class TestSurvey extends MifosTestCase {
 		return instance;
 	}
 	
-	public void testSurveyResponseTypeChecks() throws Exception {
+	public void testSurveyResponseWithChoices() throws Exception {
 		String questionText = "Why did the chicken cross the road?";
 		Question question = new Question(questionText, AnswerType.CHOICE);
 		QuestionChoice choice1 = new QuestionChoice("To get to the other side.");
@@ -126,11 +129,80 @@ public class TestSurvey extends MifosTestCase {
 		session.save(question);
 		SurveyResponse response = new SurveyResponse();
 		response.setQuestion(question);	
-		response.setValue("2");
+		response.setChoiceValue(choice1);
+	}
+	
+	public void testSurveyResponseTypechecks() throws Exception {
+		SurveyInstance instance = makeSurveyInstance("Test survey response typechecks");
+		Survey survey = instance.getSurvey();
+		
+		String questionText = "Dummy question text";
+		Question question = new Question(questionText, AnswerType.FREETEXT);
+		survey.addQuestion(question, true);
+		
+		String freetextAnswer = "Some answer";
+		Date dateAnswer = new Date();
+		BigDecimal numberAnswer = new BigDecimal("123.4");
+		QuestionChoice choiceAnswer = new QuestionChoice("Some choice");
+		question.addChoice(choiceAnswer);
+		
+		SurveyResponse response = new SurveyResponse(instance, question);
+		try {
+			response.setValue(dateAnswer);
+			fail();
+		}
+		catch (ApplicationException e) {
+			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+		}
+		
+		try {
+			response.setValue(choiceAnswer);
+			fail();
+		}
+		catch (ApplicationException e) {
+			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+		}
+		
+		try {
+			response.setValue(numberAnswer);
+			fail();
+		}
+		catch (ApplicationException e) {
+			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+		}
+		
+		// verify date answertype check
+		question.setAnswerType(AnswerType.DATE);
+		
+		try {
+			response.setValue(freetextAnswer);
+			fail();
+		}
+		catch (ApplicationException e) {
+			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+		}
+		
+		try {
+			response.setValue(choiceAnswer);
+			fail();
+		}
+		catch (ApplicationException e) {
+			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+		}
+
+		try {
+			response.setValue(numberAnswer);
+			fail();
+		}
+		catch (ApplicationException e) {
+			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+		}
+		
 	}
 	
 	public void testCreateSurveyResponse() throws Exception {
-		SurveyInstance instance = makeSurveyInstance("Test survey");
+		String surveyName = "Test survey create response";
+		SurveyInstance instance = makeSurveyInstance(surveyName);
 		Survey survey = instance.getSurvey();
 		
 		String questionText = "What is the answer to life, the universe and everything?";
@@ -151,7 +223,7 @@ public class TestSurvey extends MifosTestCase {
 		SurveyResponse response = new SurveyResponse();
 		response.setInstance(instance);
 		response.setQuestion(question);
-		response.setValue(Integer.toString(choice2.getChoiceId()));
+		response.setChoiceValue(choice2);
 
 		HibernateUtil.getSessionTL().saveOrUpdate(instance);
 //		HibernateUtil.getSessionTL().saveOrUpdate(response);
@@ -161,7 +233,7 @@ public class TestSurvey extends MifosTestCase {
 				SurveyInstance.class, instance.getInstanceId());
 		assertEquals(AnswerType.CHOICE,
 			refreshedInstance.getSurvey().getQuestion(0).getAnswerTypeAsEnum());
-		assertEquals("Test Client", refreshedInstance.getClient().getFirstName());
+		assertEquals(refreshedInstance.getSurvey().getName(), surveyName);
 	}
 	
 }

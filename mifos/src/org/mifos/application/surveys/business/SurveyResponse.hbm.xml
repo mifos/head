@@ -11,6 +11,9 @@
 		</id>
 		<many-to-one name="instance" column="INSTANCE_ID" cascade="all" access="field" not-null="true"/>
 		<many-to-one name="question" column="QUESTION_ID" cascade="all" access="field" not-null="true"/>
-		<property name="value" column="VALUE" not-null="true"/>
+		<property name="freetextValue" column="FREETEXT_VALUE"/>
+		<property name="dateValue" column="DATE_VALUE"/>
+		<property name="numberValue" column="NUMBER_VALUE"/>
+		<many-to-one name="choiceValue" column="CHOICE_VALUE" cascade="all" access="field"/>
 	</class>
 </hibernate-mapping>

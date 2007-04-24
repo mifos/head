@@ -1,5 +1,6 @@
 package org.mifos.application.surveys.business;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.application.surveys.helpers.AnswerType;
@@ -18,16 +19,21 @@ public class Question {
 	
 	private int numericMax;
 	
-	private List<QuestionChoice> choices;
+	private List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
 	
 	public Question() {
 		questionState = QuestionState.ACTIVE;
 	}
 	
+	public Question(String questionText) {
+		this();
+		setQuestionText(questionText);
+	}
+	
 	public Question(String questionText, AnswerType answerType) {
 		this();
-		this.questionText = questionText;
-		this.answerType = answerType;
+		setQuestionText(questionText);
+		setAnswerType(answerType);
 	}
 
 	public int getNumericMax() {
@@ -106,5 +112,9 @@ public class Question {
 
 	public void setChoices(List<QuestionChoice> choices) {
 		this.choices = choices;
+	}
+	
+	public void addChoice(QuestionChoice choice) {
+		getChoices().add(choice);
 	}
 }

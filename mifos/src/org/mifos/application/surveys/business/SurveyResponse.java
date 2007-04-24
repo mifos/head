@@ -1,21 +1,33 @@
 package org.mifos.application.surveys.business;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.mifos.application.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.InvalidDateException;
-import org.mifos.framework.util.helpers.DateUtils;
 
 public class SurveyResponse {
 	private int responseId;
 	
-	private String value;
-	
 	private SurveyInstance instance;
 	
 	private Question question;
+	
+	private String freetextValue;
+	
+	private Date dateValue;
+	
+	private QuestionChoice choiceValue;
+	
+	private BigDecimal numberValue;
+	
+	public SurveyResponse(SurveyInstance instance, Question question) {
+		setInstance(instance);
+		setQuestion(question);
+	}
+	
+	public SurveyResponse() {}
 
 	public Question getQuestion() {
 		return question;
@@ -41,51 +53,101 @@ public class SurveyResponse {
 		this.responseId = responseId;
 	}
 
-	public String getValue() {
-		return value;
+	public QuestionChoice getChoiceValue() {
+		return choiceValue;
 	}
 
-	// TODO: this is in a currently non-working state
-	public void setValue(String value) throws ApplicationException {
-		if (question == null) {
-			throw new ApplicationException(SurveyExceptionConstants.INVALIDACTION);
+	public void setChoiceValue(QuestionChoice choice) throws ApplicationException {
+		if (question.getAnswerTypeAsEnum() != AnswerType.CHOICE) {
+			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
+		}
+		this.choiceValue = choice;
+	}
+
+	public Date getDateValue() {
+		return dateValue;
+	}
+
+	public void setDateValue(Date dateValue) throws ApplicationException {
+		if (question.getAnswerTypeAsEnum() != AnswerType.DATE) {
+			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
+		}
+		this.dateValue = dateValue;
+	}
+
+	public String getFreetextValue() {
+		return freetextValue;
+	}
+
+	public void setFreetextValue(String freetextValue) throws ApplicationException {
+		if (question.getAnswerTypeAsEnum() != AnswerType.FREETEXT) {
+			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
+		}
+		this.freetextValue = freetextValue;
+	}
+
+	public BigDecimal getNumberValue() {
+		return numberValue;
+	}
+
+	public void setNumberValue(BigDecimal numberValue) throws ApplicationException {
+		if (question.getAnswerTypeAsEnum() != AnswerType.NUMBER) {
+			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
+		}
+		this.numberValue = numberValue;
+	}
+	
+	public Object getValue() {
+		AnswerType answerType = question.getAnswerTypeAsEnum();
+		
+		if (answerType == AnswerType.FREETEXT) {
+			return getFreetextValue();
 		}
 		
-		if (question.getAnswerTypeAsEnum() == AnswerType.FREETEXT) {
-			this.value = value;
-		}
-		else if (question.getAnswerTypeAsEnum() == AnswerType.NUMBER) {
-			try {
-				BigDecimal numValue = new BigDecimal(value);
-				this.value = numValue.toString();
-			}
-			
-			catch (NumberFormatException e) {
-				throw new ApplicationException(SurveyExceptionConstants.INVALIDNUMBER);
-			}
-		}
-		else if (question.getAnswerTypeAsEnum() == AnswerType.DATE) {
-			try {
-				DateUtils.getDateAsSentFromBrowser(value);
-				this.value = value;
-			}
-			catch (InvalidDateException e) {
-				throw new ApplicationException(SurveyExceptionConstants.INVALIDDATE);
-			}
+		else if (answerType == AnswerType.NUMBER) {
+			return getNumberValue();
 		}
 		
-		else if (question.getAnswerTypeAsEnum() == AnswerType.CHOICE) {
-			boolean found = false;
-			for (QuestionChoice choice : question.getChoices()) {
-				if (Integer.toString(choice.getChoiceId()).equals(value)) {
-					found = true;
-					this.value = value;
-				}
+		else if (answerType == AnswerType.DATE) {
+			return getDateValue();
+		}
+		
+		else if (answerType == AnswerType.CHOICE) {
+			return getChoiceValue();
+		}
+		
+		else {
+			return null;
+		}
+	}
+	
+	public void setValue(Object value) throws ApplicationException {
+		
+		if (question == null || question.getAnswerTypeAsEnum() == null) {
+			throw new ApplicationException(SurveyExceptionConstants.NOANSWERTYPEYET);
+		}
+		
+		AnswerType answerType = question.getAnswerTypeAsEnum();
+	
+		try {
+			if (answerType == AnswerType.FREETEXT) {
+				setFreetextValue((String) value);
 			}
 			
-			if (!found) {
-				throw new ApplicationException(SurveyExceptionConstants.INVALIDCHOICE);
+			else if (answerType == AnswerType.DATE) {
+				setDateValue((Date) value);
 			}
+			
+			else if (answerType == AnswerType.NUMBER) {
+				setNumberValue((BigDecimal) value);
+			}
+			
+			else if (answerType == AnswerType.CHOICE) {
+				setChoiceValue((QuestionChoice) value);
+			}
+		}
+		catch (ClassCastException e) {
+			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
 		}
 	}
 
