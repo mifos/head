@@ -266,7 +266,7 @@ public class SavingsPrdAction extends BaseAction {
 						savingsprdForm.getStartDateValue(locale),
 						savingsprdForm.getEndDateValue(locale),
 						savingsprdForm.getDescription(),
-						PrdStatus.getPrdStatus(savingsprdForm.getStatusValue()),
+						PrdStatus.fromInt(savingsprdForm.getStatusValue()),
 						recommendedAmountUnit == null ? null
 								: (RecommendedAmntUnitEntity) recommendedAmountUnit,
 						(SavingsTypeEntity) findMasterEntity(request,

@@ -96,7 +96,7 @@ public class CenterBOTest extends MifosTestCase {
 				.getCustomerId());
 
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
-				EntityType.CENTER.getValue(), center.getCustomerId());
+				EntityType.CENTER, center.getCustomerId());
 		assertEquals(1, auditLogList.size());
 		AuditLog auditLog = auditLogList.get(0);
 

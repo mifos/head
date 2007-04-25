@@ -33,5 +33,14 @@ public enum EntityType {
 				return entityType.getValue();
 		return null;
 	}
+
+	public static EntityType fromInt(int type) {
+		for (EntityType candidate : EntityType.values()) {
+			if (candidate.getValue() == type) {
+				return candidate;
+			}
+		}
+		throw new RuntimeException("no entity type " + type);
+	}
 	
 }

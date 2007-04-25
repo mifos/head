@@ -1,6 +1,5 @@
 package org.mifos.application.productdefinition.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum PrdStatus {
 	LOAN_ACTIVE((short) 1), 
@@ -19,11 +18,13 @@ public enum PrdStatus {
 		return value;
 	}
 
-	public static PrdStatus getPrdStatus(Short value)
-			throws PropertyNotFoundException {
-		for (PrdStatus prdStatus : PrdStatus.values())
-			if (prdStatus.getValue().equals(value))
-				return prdStatus;
-		throw new PropertyNotFoundException("PrdStatus");
+	public static PrdStatus fromInt(int value) {
+		for (PrdStatus candidate : PrdStatus.values()) {
+			if (candidate.getValue() == value) {
+				return candidate;
+			}
+		}
+		throw new RuntimeException("no product status " + value);
 	}
+
 }

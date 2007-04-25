@@ -223,7 +223,8 @@ public class GroupBOTest extends MifosTestCase {
 			group = TestObjectFactory.getObject(GroupBO.class, group
 					.getCustomerId());
 			
-			List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),group.getCustomerId());
+			List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+					EntityType.GROUP,group.getCustomerId());
 			assertEquals(1,auditLogList.size());
 			assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
 			assertEquals(8,auditLogList.get(0).getAuditLogRecords().size());
@@ -274,7 +275,8 @@ public class GroupBOTest extends MifosTestCase {
 		client2 = TestObjectFactory.getObject(ClientBO.class,
 				client2.getCustomerId());
 		
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),group.getCustomerId());
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.GROUP,group.getCustomerId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){

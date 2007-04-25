@@ -3,6 +3,10 @@
  */
 package org.mifos.framework.components.audit.util.helpers;
 
+/**
+ * What does this do?  It is potentially confused with the more
+ * widely used {@link org.mifos.application.util.helpers.EntityType}.
+ */
 public class EntityType {
 	
 	String name;

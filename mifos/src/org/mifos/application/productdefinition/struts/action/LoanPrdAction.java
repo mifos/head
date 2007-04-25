@@ -320,7 +320,7 @@ public class LoanPrdAction extends BaseAction {
 				loanPrdActionForm.getStartDateValue(locale), loanPrdActionForm
 						.getEndDateValue(locale), loanPrdActionForm
 						.getDescription(), PrdStatus
-						.getPrdStatus(loanPrdActionForm.getPrdStatusValue()),
+						.fromInt(loanPrdActionForm.getPrdStatusValue()),
 				(GracePeriodTypeEntity) findMasterEntity(request,
 						ProductDefinitionConstants.LOANGRACEPERIODTYPELIST,
 						loanPrdActionForm.getGracePeriodTypeValue()),

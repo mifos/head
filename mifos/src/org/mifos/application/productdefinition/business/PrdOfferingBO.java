@@ -170,6 +170,10 @@ public abstract class PrdOfferingBO extends BusinessObject {
 	public PrdStatusEntity getPrdStatus() {
 		return prdStatus;
 	}
+	
+	public PrdStatus getStatus() {
+		return PrdStatus.fromInt(prdStatus.getOfferingStatusId());
+	}
 
 	public PrdApplicableMasterEntity getPrdApplicableMaster() {
 		return prdApplicableMaster;

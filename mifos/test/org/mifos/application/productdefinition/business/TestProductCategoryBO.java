@@ -8,6 +8,7 @@ import org.mifos.application.productdefinition.business.service.ProductCategoryB
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -18,7 +19,7 @@ public class TestProductCategoryBO extends MifosTestCase {
 
 	public void testCreateProductCategory() 
 	throws SystemException, ApplicationException {
-		UserContext userContext=TestObjectFactory.getUserContext();
+		UserContext userContext=TestUtils.makeUser();
 		List<ProductTypeEntity> productTypeList=new ProductCategoryBusinessService().getProductTypes();
 		assertEquals(2,productTypeList.size());
 		TestObjectFactory.updateObject(new ProductCategoryBO(userContext,productTypeList.get(0),"product category",null));
@@ -41,7 +42,7 @@ public class TestProductCategoryBO extends MifosTestCase {
 	
 	public void testUpdateProductCategory() 
 	throws SystemException, ApplicationException {
-		UserContext userContext=TestObjectFactory.getUserContext();
+		UserContext userContext= TestUtils.makeUser();
 		List<ProductTypeEntity> productTypeList=new ProductCategoryBusinessService().getProductTypes();
 		assertEquals(2,productTypeList.size());
 		TestObjectFactory.updateObject(new ProductCategoryBO(userContext,productTypeList.get(0),"product category",null));

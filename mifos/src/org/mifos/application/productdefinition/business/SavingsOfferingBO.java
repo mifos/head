@@ -222,6 +222,10 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 	public SavingsTypeEntity getSavingsType() {
 		return savingsType;
 	}
+	
+	public SavingsType getSavingsTypeAsEnum() {
+		return SavingsType.fromInt(savingsType.getId());
+	}
 
 	void setSavingsType(SavingsTypeEntity savingsType) {
 		this.savingsType = savingsType;

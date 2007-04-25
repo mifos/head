@@ -70,7 +70,7 @@ public class TestAuditInterceptor extends MifosTestCase {
 				AccountBO.class, accountBO.getAccountId());
 
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
-				EntityType.LOAN.getValue(), accountBO.getAccountId());
+				EntityType.LOAN, accountBO.getAccountId());
 		assertEquals(1, auditLogList.size());
 		assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0)
 				.getEntityType());

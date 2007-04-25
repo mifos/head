@@ -167,6 +167,7 @@ import org.mifos.application.reports.business.ReportsCategoryBO;
 import org.mifos.application.rolesandpermission.business.ActivityEntity;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.application.util.helpers.CustomFieldType;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.PersistentObject;
@@ -2044,14 +2045,14 @@ public class TestObjectFactory {
 		transaction.commit();
 	}
 
-	public static List<AuditLog> getChangeLog(Short entityType, Integer entityId) {
+	public static List<AuditLog> getChangeLog(EntityType type, Integer entityId) {
 		return HibernateUtil
-			.getSessionTL()
-			.createQuery(
-				"from org.mifos.framework.components.audit.business.AuditLog al " +
-				"where al.entityType=" + entityType + 
-				" and al.entityId=" + entityId)
-			.list();
+		.getSessionTL()
+		.createQuery(
+			"from org.mifos.framework.components.audit.business.AuditLog al " +
+			"where al.entityType=" + type.getValue() + 
+			" and al.entityId=" + entityId)
+		.list();
 	}
 
 	public static void cleanUp(AuditLog auditLog) {

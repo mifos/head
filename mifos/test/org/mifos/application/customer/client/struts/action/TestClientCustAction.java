@@ -1295,7 +1295,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.CLIENT,client.getCustomerId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());
@@ -1392,7 +1393,8 @@ public class TestClientCustAction extends MifosMockStrutsTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.CLIENT,client.getCustomerId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());

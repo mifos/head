@@ -41,6 +41,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 
 import org.mifos.application.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -53,6 +54,7 @@ import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -93,7 +95,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				InterestCalcType.AVERAGE_BALANCE);
 		MeetingBO intCalcMeeting = getMeeting();
 		MeetingBO intPostMeeting = getMeeting();
-		ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory
+		ProductCategoryBO productCategory = (ProductCategoryBO) 
+			TestObjectFactory
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
@@ -101,6 +104,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				ApplicableTo.CLIENTS, startDate,
 				PrdStatus.SAVINGS_ACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.MINIMUM_BALANCE);
+		/* Changing to TestUtils.makeUser() caused "1" instead of
+		   "Minimum Balance" in the audit logs. */
 		savingsOffering.setUserContext(TestObjectFactory.getUserContext());
 		HibernateUtil.getInterceptor().createInitialValueMap(savingsOffering);
 		savingsOffering.update(Short.valueOf("1"), newName, newShortName,
@@ -114,14 +119,14 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
 
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
-				EntityType.SAVINGSPRODUCT.getValue(), new Integer(
+				EntityType.SAVINGSPRODUCT, new Integer(
 						savingsOffering.getPrdOfferingId().toString()));
 		assertEquals(1, auditLogList.size());
-		assertEquals(EntityType.SAVINGSPRODUCT.getValue(), auditLogList.get(0)
-				.getEntityType());
-		assertEquals(12, auditLogList.get(0).getAuditLogRecords().size());
-		for (AuditLogRecord auditLogRecord : auditLogList.get(0)
-				.getAuditLogRecords()) {
+		assertEquals(EntityType.SAVINGSPRODUCT, 
+			auditLogList.get(0).getEntityTypeAsEnum());
+		Set<AuditLogRecord> records = auditLogList.get(0).getAuditLogRecords();
+		assertEquals(12, records.size());
+		for (AuditLogRecord auditLogRecord : records) {
 			if (auditLogRecord.getFieldName().equalsIgnoreCase(
 					"Balance used for Interest rate calculation")) {
 				assertEquals("Minimum Balance", auditLogRecord.getOldValue());
@@ -137,6 +142,9 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 					"Service Charge Rate")) {
 				assertEquals("1.2", auditLogRecord.getOldValue());
 				assertEquals("10.0", auditLogRecord.getNewValue());
+			}
+			else {
+				// What are the others?
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();
@@ -171,7 +179,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), null, "S",
+					TestUtils.makeUser(), null, "S",
 					productCategory, prdApplicableMaster, new Date(System
 							.currentTimeMillis()), savingsType, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"), 10.0,
@@ -198,7 +206,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), "Savings offering",
+					TestUtils.makeUser(), "Savings offering",
 					"S", productCategory, prdApplicableMaster, new Date(System
 							.currentTimeMillis()), null, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"), 10.0,
@@ -223,7 +231,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), "Savings offering",
+					TestUtils.makeUser(), "Savings offering",
 					"S", productCategory, prdApplicableMaster, new Date(System
 							.currentTimeMillis()), savingsType, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"), 10.0,
@@ -253,7 +261,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), "Savings Offering",
+					TestUtils.makeUser(), "Savings Offering",
 					"Savings", productCategory, prdApplicableMaster, new Date(
 							System.currentTimeMillis()), savingsType,
 					intCalType, intCalcMeeting, intPostMeeting,
@@ -284,7 +292,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(-2);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), "Savings Offering",
+					TestUtils.makeUser(), "Savings Offering",
 					"Savi", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
@@ -313,7 +321,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
-				TestObjectFactory.getUserContext(), "Savings Offering", "Savi",
+				TestUtils.makeUser(), "Savings Offering", "Savi",
 				productCategory, prdApplicableMaster, startDate, savingsType,
 				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
 				10.0, depglCodeEntity, intglCodeEntity);
@@ -342,7 +350,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(2);
 		SavingsOfferingBO savingsOffering = new SavingsOfferingBO(
-				TestObjectFactory.getUserContext(), "Savings Offering", "Savi",
+				TestUtils.makeUser(), "Savings Offering", "Savi",
 				productCategory, prdApplicableMaster, startDate, savingsType,
 				intCalType, intCalcMeeting, intPostMeeting, new Money("10"),
 				10.0, depglCodeEntity, intglCodeEntity);
@@ -373,7 +381,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date endDate = offSetCurrentDate(-2);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), "Savings Offering",
+					TestUtils.makeUser(), "Savings Offering",
 					"Savi", productCategory, prdApplicableMaster, startDate,
 					endDate, "dssf", null, savingsType, intCalType,
 					intCalcMeeting, intPostMeeting, new Money("10"),
@@ -407,7 +415,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), "Savings Product",
+					TestUtils.makeUser(), "Savings Product",
 					"Savi", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
@@ -441,7 +449,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(0);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), "Savings Product1",
+					TestUtils.makeUser(), "Savings Product1",
 					"SAVP", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10"), 10.0, depglCodeEntity, intglCodeEntity);
@@ -473,7 +481,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(-2);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), "Savings Product1",
+					TestUtils.makeUser(), "Savings Product1",
 					"SAVP", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					null, 10.0, depglCodeEntity, intglCodeEntity);
@@ -503,7 +511,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date startDate = offSetCurrentDate(-2);
 		try {
 			new SavingsOfferingBO(
-					TestObjectFactory.getUserContext(), "Savings Product1",
+					TestUtils.makeUser(), "Savings Product1",
 					"SAVP", productCategory, prdApplicableMaster, startDate,
 					savingsType, intCalType, intCalcMeeting, intPostMeeting,
 					new Money("10.0"), 10.0, depglCodeEntity, intglCodeEntity);
@@ -534,8 +542,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		Date endDate = offSetCurrentDate(7);
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			savingsOffering = new SavingsOfferingBO(TestObjectFactory
-					.getUserContext(), "Savings Offering", "Savi",
+			savingsOffering = new SavingsOfferingBO(
+					TestUtils.makeUser(), "Savings Offering", "Savi",
 					productCategory, prdApplicableMaster, startDate, endDate,
 					"dssf", null, savingsType, intCalType, intCalcMeeting,
 					intPostMeeting, new Money("10"), new Money(), new Money(),
@@ -568,8 +576,8 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.getObject(ProductCategoryBO.class, (short) 2);
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(7);
-		savingsOffering = new SavingsOfferingBO(TestObjectFactory
-				.getUserContext(), "Savings Offering", "Savi", productCategory,
+		savingsOffering = new SavingsOfferingBO(TestUtils.makeUser(),
+				"Savings Offering", "Savi", productCategory,
 				prdApplicableMaster, startDate, endDate, "dssf", null,
 				savingsType, intCalType, intCalcMeeting, intPostMeeting,
 				new Money("10"), new Money(), new Money(), 10.0,
@@ -582,12 +590,12 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 		assertEquals("Savings Offering", savingsOffering.getPrdOfferingName());
 		assertEquals("Savi", savingsOffering.getPrdOfferingShortName());
 		assertNotNull(savingsOffering.getGlobalPrdOfferingNum());
-		assertEquals(PrdStatus.SAVINGS_ACTIVE.getValue(), savingsOffering
-				.getPrdStatus().getOfferingStatusId());
+		assertEquals(PrdStatus.SAVINGS_ACTIVE, savingsOffering
+				.getStatus());
 		assertEquals(ApplicableTo.CLIENTS,
 				savingsOffering.getPrdApplicableMasterEnum());
-		assertEquals(SavingsType.MANDATORY.getValue(), savingsOffering
-				.getSavingsType().getId());
+		assertEquals(SavingsType.MANDATORY, savingsOffering
+				.getSavingsTypeAsEnum());
 		assertEquals(InterestCalcType.AVERAGE_BALANCE.getValue(),
 				savingsOffering.getInterestCalcType().getId());
 	}

@@ -225,7 +225,8 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		CustomerHierarchyEntity currentHierarchy = client.getActiveCustomerHierarchy();
 		assertEquals(group1.getCustomerId(),currentHierarchy.getParentCustomer().getCustomerId());
 		
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.CLIENT,client.getCustomerId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());
@@ -254,7 +255,8 @@ public class ClientTransferActionTest extends MifosMockStrutsTestCase{
 		assertEquals(client.getOffice().getOfficeId(), office.getOfficeId());
 		assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
 		office = client.getOffice();
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.CLIENT.getValue(),client.getCustomerId());
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.CLIENT,client.getCustomerId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.CLIENT.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(client.getCustomerId(),auditLogList.get(0).getEntityId());

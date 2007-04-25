@@ -736,7 +736,8 @@ public void testSuccessful_Update_AuditLog() throws Exception {
 		assertEquals(600.0, savings.getRecommendedAmount()
 				.getAmountDoubleValue());
 		
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.SAVINGS.getValue(),savings.getAccountId());
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.SAVINGS,savings.getAccountId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.SAVINGS.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(savings.getAccountId(),auditLogList.get(0).getEntityId());

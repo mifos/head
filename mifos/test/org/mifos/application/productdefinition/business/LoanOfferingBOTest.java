@@ -73,6 +73,7 @@ import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -151,7 +152,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		oneTimeFee = TestObjectFactory.createOneTimeAmountFee("Loan One time",
 				FeeCategory.LOAN, "100", FeePayment.UPFRONT);
 		fees.add(oneTimeFee);
-		loanOffering.setUserContext(TestObjectFactory.getUserContext());
+		loanOffering.setUserContext(TestUtils.makeUser());
 		HibernateUtil.getInterceptor().createInitialValueMap(loanOffering);
 		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
 				prdApplicableMaster, startDate, endDate,
@@ -167,7 +168,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
 				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
 		
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.LOANPRODUCT.getValue(),new Integer(loanOffering.getPrdOfferingId().toString()));
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.LOANPRODUCT,new Integer(loanOffering.getPrdOfferingId().toString()));
 		assertEquals(2,auditLogList.size());
 		assertEquals(EntityType.LOANPRODUCT.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(19,auditLogList.get(0).getAuditLogRecords().size());
@@ -213,7 +215,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
 		
 		
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.LOANPRODUCT.getValue(),new Integer(loanOffering.getPrdOfferingId().toString()));
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.LOANPRODUCT,new Integer(loanOffering.getPrdOfferingId().toString()));
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.LOANPRODUCT.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(18,auditLogList.get(0).getAuditLogRecords().size());

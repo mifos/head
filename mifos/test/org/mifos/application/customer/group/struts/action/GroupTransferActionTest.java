@@ -143,7 +143,8 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		assertEquals(office.getOfficeId(), customerMovement.getOffice().getOfficeId());
 		office = group.getOffice();
 		
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),group.getCustomerId());
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.GROUP,group.getCustomerId());
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(3,auditLogList.get(0).getAuditLogRecords().size());
@@ -239,7 +240,8 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		CustomerHierarchyEntity customerHierarchy = group.getActiveCustomerHierarchy();
 		assertEquals(center1.getCustomerId(), customerHierarchy.getParentCustomer().getCustomerId());
 		assertEquals(group.getCustomerId(), customerHierarchy.getCustomer().getCustomerId());
-		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(EntityType.GROUP.getValue(),new Integer(group.getCustomerId().toString()));
+		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
+				EntityType.GROUP,new Integer(group.getCustomerId().toString()));
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.GROUP.getValue(),auditLogList.get(0).getEntityType());
 		for(AuditLogRecord auditLogRecord :  auditLogList.get(0).getAuditLogRecords()){

@@ -140,7 +140,7 @@ public class TestCustomerBO extends MifosTestCase {
 				PersonnelBO.class, loanOfficer.getPersonnelId());
 
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
-				EntityType.CENTER.getValue(), center.getCustomerId());
+				EntityType.CENTER, center.getCustomerId());
 		assertEquals(1, auditLogList.size());
 		assertEquals(EntityType.CENTER.getValue(), auditLogList.get(0)
 				.getEntityType());
@@ -171,7 +171,7 @@ public class TestCustomerBO extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
-				EntityType.GROUP.getValue(), group.getCustomerId());
+				EntityType.GROUP, group.getCustomerId());
 		assertEquals(1, auditLogList.size());
 		assertEquals(EntityType.GROUP.getValue(), auditLogList.get(0)
 				.getEntityType());

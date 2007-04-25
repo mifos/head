@@ -42,6 +42,7 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.PersistentObject;
 import org.mifos.framework.components.audit.persistence.AuditPersistence;
 
@@ -95,6 +96,10 @@ public class AuditLog extends PersistentObject {
 	
 	public Short getEntityType() {
 		return entityType;
+	}
+
+	public EntityType getEntityTypeAsEnum() {
+		return EntityType.fromInt(entityType);
 	}
 
 	public void addAuditLogRecords(Set<AuditLogRecord> auditLogRecords){
