@@ -28,8 +28,8 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
+import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.configuration.business.Configuration;
-import org.mifos.framework.components.cronjobs.MifosTask;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -57,7 +57,7 @@ public abstract class BaseAction extends DispatchAction {
 	public ActionForward execute(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		if(MifosTask.isCronJobRunning()){
+		if(MifosTask.isBatchJobRunning()){
 			return logout(mapping, request);
 		}
 		TransactionDemarcate annotation = getTransaction(form, request);
@@ -318,7 +318,7 @@ public abstract class BaseAction extends DispatchAction {
 	private ActionForward logout(ActionMapping mapping, HttpServletRequest request) throws ApplicationException {
 		request.getSession(false).invalidate();
 		ActionErrors error = new ActionErrors();
-		error.add(LoginConstants.CRON_JOB_RUNNING,new ActionMessage(LoginConstants.CRON_JOB_RUNNING));
+		error.add(LoginConstants.BATCH_JOB_RUNNING,new ActionMessage(LoginConstants.BATCH_JOB_RUNNING));
 		request.setAttribute(Globals.ERROR_KEY, error);
 		return mapping.findForward(ActionForwards.load_main_page.toString());
 	}

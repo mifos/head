@@ -33,7 +33,10 @@ VALUES(4,'POUND','',1,.5,0,1);
 
 
 /* Updated lookup_entity */
-/* The table LOOKUP_ENTITY will contain the entry for entities which need to be configured like center to be called kendra by mfi,ethenicity to be called something by the MFI, salutation to be called something by the MFI etc - Configuration */
+/* The table LOOKUP_ENTITY will contain the entry for entities which 
+need to be configured like center to be called kendra by mfi, 
+ethnicity to be called something by the MFI, 
+salutation to be called something by the MFI etc - Configuration */
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(1,'Client Status','Client Status');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
@@ -213,6 +216,7 @@ INSERT INTO LOOKUP_ENTITY
 VALUES(89,'feeUpdationType',' fee updation can to applied to existing accounts or future accounts');
 INSERT INTO LOOKUP_ENTITY(ENTITY_ID,ENTITY_NAME,DESCRIPTION)
 VALUES(90,'Fee Frequency','Fee Frequency');
+
 /* fee_type */
 INSERT INTO FEE_TYPE(FEE_TYPE_ID,FEE_LOOKUP_ID,FLAT_OR_RATE,FORMULA)
 VALUES(1,1,NULL,NULL);
@@ -1270,7 +1274,9 @@ VALUES(1,'English','EN',189);
 INSERT INTO SUPPORTED_LOCALE(LOCALE_ID,COUNTRY_ID,LANG_ID,LOCALE_NAME,DEFAULT_LOCALE)
 VALUES(1,6,1,'EN',1);
 
-/* The table LOOKUP_LABEL will contain the configuration information for the LOOKUP_ENTITY defined,like salutation entity could have mr,mrs etc - Configuration */
+/* The table LOOKUP_LABEL will contain the configuration information 
+for the LOOKUP_ENTITY defined,like salutation entity could have 
+mr,mrs etc - Configuration */
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)
 VALUES(1,1,1,'Client Status');
 INSERT INTO LOOKUP_LABEL(LABEL_ID,ENTITY_ID,LOCALE_ID,ENTITY_NAME)

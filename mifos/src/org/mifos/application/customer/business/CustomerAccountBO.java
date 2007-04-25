@@ -85,7 +85,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.framework.components.cronjobs.exceptions.CronJobException;
+import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -812,7 +812,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	public void updateFee(AccountFeesEntity fee, FeeBO feeBO)
-			throws CronJobException {
+			throws BatchJobException {
 		boolean feeApplied = isFeeAlreadyApplied(fee, feeBO);
 		if (!feeApplied) {
 			// update this account fee
@@ -847,9 +847,9 @@ public class CustomerAccountBO extends AccountBO {
 					updateNextInstallment(fee);
 				}
 			} catch (PropertyNotFoundException e) {
-				throw new CronJobException(e);
+				throw new BatchJobException(e);
 			} catch (AccountException e) {
-				throw new CronJobException(e);
+				throw new BatchJobException(e);
 			}
 		}
 	}

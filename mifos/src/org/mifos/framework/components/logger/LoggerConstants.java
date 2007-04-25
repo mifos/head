@@ -89,7 +89,7 @@ public interface LoggerConstants {
 
 	public String REPORTSLOGGER="org.mifos.application.reports";
 	
-	public static final String CRONJOBS = 
-		"org.mifos.framework.components.cronjobs";
+	public static final String BATCH_JOBS = 
+		"org.mifos.framework.components.batchjobs";
 
 }

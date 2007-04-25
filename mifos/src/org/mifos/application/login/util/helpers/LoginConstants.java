@@ -35,7 +35,7 @@ public interface LoginConstants {
 	public static final String INVALIDOLDPASSWORD="errors.invalidoldpassword";
 	public static final String SAME_OLD_AND_NEW_PASSWORD="errors.sameoldandnewpassword";
 	public static final String LOGOUTOUT="errors.logoutout";
-	public static final String CRON_JOB_RUNNING="errors.cronjobrunning";
+	public static final String BATCH_JOB_RUNNING="errors.batchjobrunning";
 	public String METHODCALLED="methodCalled";
 	public String LOGINACTIONFORM="loginActionForm";
 

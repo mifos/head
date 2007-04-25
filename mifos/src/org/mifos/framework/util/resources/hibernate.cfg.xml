@@ -22,8 +22,8 @@
 		<mapping resource="org/mifos/framework/components/fieldConfiguration/business/EntityMaster.hbm.xml" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLog.hbm.xml" />
 		<mapping resource="org/mifos/framework/components/audit/business/AuditLogRecord.hbm.xml" />
-		<!-- Cron Jobs -->
-		<mapping resource="org/mifos/framework/components/cronjobs/business/Task.hbm.xml" />
+		<!-- Batch Jobs -->
+		<mapping resource="org/mifos/framework/components/batchjobs/business/Task.hbm.xml" />
 
 		<!-- M2 style objects for office-->
 

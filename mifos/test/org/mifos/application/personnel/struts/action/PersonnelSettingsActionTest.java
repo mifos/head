@@ -19,7 +19,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.components.cronjobs.MifosTask;
+import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.ActivityContext;
@@ -400,8 +400,8 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.loadChangePassword_success.toString());
 	}
 
-	public void testGet_cronJobNotRunning() throws Exception {
-		assertEquals(false, MifosTask.isCronJobRunning());
+	public void testGet_batchJobNotRunning() throws Exception {
+		assertEquals(false, MifosTask.isBatchJobRunning());
 		createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
 		setRequestPathInfo("/yourSettings.do");
 		addRequestParameter("method", Methods.get.toString());
@@ -412,9 +412,9 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.get_success.toString());
 	}
 
-	public void testGet_cronJobRunning() throws Exception {
-		MifosTask.cronJobStarted();
-		assertEquals(true, MifosTask.isCronJobRunning());
+	public void testGet_batchJobRunning() throws Exception {
+		MifosTask.batchJobStarted();
+		assertEquals(true, MifosTask.isBatchJobRunning());
 		createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
 		setRequestPathInfo("/yourSettings.do");
 		addRequestParameter("method", Methods.get.toString());
@@ -422,7 +422,7 @@ public class PersonnelSettingsActionTest extends MifosMockStrutsTestCase {
 				.getGlobalPersonnelNum());
 		actionPerform();
 		verifyForward(ActionForwards.load_main_page.toString());
-		MifosTask.cronJobFinished();
+		MifosTask.batchJobFinished();
 	}
 	
 	private void verifyMasterData() throws Exception {

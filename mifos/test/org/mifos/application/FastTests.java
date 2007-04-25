@@ -49,8 +49,8 @@ import org.mifos.application.productdefinition.struts.actionforms.LoanPrdActionF
 import org.mifos.application.rolesandpermission.business.RoleActivityEntityTest;
 import org.mifos.application.ui.DispatcherTest;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.components.batchjobs.business.TaskTest;
 import org.mifos.framework.components.configuration.cache.TestKey;
-import org.mifos.framework.components.cronjobs.business.TaskTest;
 import org.mifos.framework.components.customTableTag.TableTagParserTest;
 import org.mifos.framework.components.logger.TestLogger;
 import org.mifos.framework.components.tabletag.TableTagTest;

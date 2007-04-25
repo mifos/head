@@ -66,8 +66,8 @@ import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.TestAuditLogSuite;
+import org.mifos.framework.components.batchjobs.BatchJobTestSuite;
 import org.mifos.framework.components.configuration.ConfigurationTestSuite;
-import org.mifos.framework.components.cronjobs.CronjobTestSuite;
 import org.mifos.framework.components.fieldConfiguration.FieldConfigurationTestSuite;
 import org.mifos.framework.components.mifosmenu.TestMenuParser;
 import org.mifos.framework.hibernate.HibernateTest;
@@ -106,7 +106,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTestSuite(OfficeListTagTest.class);
 		suite.addTestSuite(StringToMoneyConverterTest.class);
 		suite.addTest(ConfigurationTestSuite.suite());
-		suite.addTest(CronjobTestSuite.suite());
+		suite.addTest(BatchJobTestSuite.suite());
 		suite.addTest(LabelConfigurationTestSuite.suite());
 		suite.addTest(LoanTestSuite.suite());
 		suite.addTest(SavingsTestSuite.suite());
