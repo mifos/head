@@ -72,20 +72,35 @@ public class DateUtilsTest extends TestCase {
 			fail();
 		}	
 		catch (InvalidDateException e) {
-			assertEquals(e.getDateString(), badDate);
+			assertEquals(badDate, e.getDateString());
 		}
 		
 		// test acceptance of two-digit years
 		expectedDate = new DateMidnight(2005, 5, 5).getMillis();
 		result = DateUtils.getDateAsSentFromBrowser("5/5/05");
 		assertEquals(expectedDate, result.getTime());
-		
-		
-		
+	}
+	
+	/**
+	 * Which of these cases are really used?  And for what?
+	 * Generally, it would be better for empty string and the
+	 * like to be an exception, rather than returning null (what
+	 * is the caller intended to do with null, anyway?)
+	 */
+	public void testNullOrEmptyDate() throws Exception {
+		assertEquals(null, DateUtils.getDateAsSentFromBrowser(null));
+		assertEquals(null, DateUtils.getDateAsSentFromBrowser(""));
+		try {
+			DateUtils.getDateAsSentFromBrowser(new String(""));
+			fail();
+		}
+		catch (InvalidDateException e) {
+			assertEquals("", e.getDateString());
+		}
 	}
 	
 	public void testIsValidDate() throws Exception {
-		assertFalse(DateUtils.isValidDate("notadate"));
+		assertFalse(DateUtils.isValidDate("not-a-date"));
 		assertFalse(DateUtils.isValidDate("2/13/2000"));
 		assertFalse(DateUtils.isValidDate("32/1/2000"));
 		assertFalse(DateUtils.isValidDate("1\1\2000"));
@@ -102,4 +117,5 @@ public class DateUtilsTest extends TestCase {
 			assertEquals(input, e.getDateString());
 		}
 	}
+	
 }

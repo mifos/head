@@ -50,7 +50,6 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.mifos.application.customer.client.struts.actionforms.ClientCustActionForm;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.InvalidDateException;
 
@@ -394,29 +393,6 @@ public class DateUtils {
 		}
 
 		return dt.deleteCharAt((dt.length() - 1)).toString();
-	}
-
-	public static java.sql.Date getSQLDate(String date)
-			throws ApplicationException {
-		// TODO change this
-		String format = "yyyy/MM/dd";
-		try {
-			if (date != null || !date.equals("")) {
-				SimpleDateFormat sdf = new SimpleDateFormat(format);
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(sdf.parse(date));
-				// System.out.println("Date in Helper"+new
-				// java.sql.Date(calendar.getTime().getTime()));
-				return new java.sql.Date(calendar.getTime().getTime());
-			}
-			else {
-				return null;
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			throw new ApplicationException(e);
-		}
 	}
 
 	public static int DateDiffInYears(java.sql.Date fromDate) {
