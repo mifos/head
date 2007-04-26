@@ -135,10 +135,8 @@ public class Column {
 				try {
 					tableInfo.append(methods[i].invoke(obj, new Object[] {}));
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
 					throw new TableTagParseException(e);
 				} catch (InvocationTargetException ex) {
-					ex.printStackTrace();
 					throw new TableTagParseException(ex);
 				}
 			}
@@ -148,10 +146,8 @@ public class Column {
 					Object[] argumentLocale = new Object[] { locale };
 					methods[i].invoke(obj, argumentLocale);
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
 					throw new TableTagParseException(e);
 				} catch (InvocationTargetException ex) {
-					ex.printStackTrace();
 					throw new TableTagParseException(ex);
 				}
 			}
@@ -161,10 +157,8 @@ public class Column {
 					Object[] argumentLocale = new Object[] { mfiLocale };
 					methods[i].invoke(obj, argumentLocale);
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
 					throw new TableTagParseException(e);
 				} catch (InvocationTargetException ex) {
-					ex.printStackTrace();
 					throw new TableTagParseException(ex);
 				}
 			}

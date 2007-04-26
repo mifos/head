@@ -139,16 +139,15 @@ public class TableTag extends BodyTagSupport {
 					pageContext, getResourcebundleName(moduleName));
 
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			throw new JspException(e);
 		} catch (TableTagParseException ex) {
-			ex.printStackTrace();
 			throw new JspException(ex);
 		}
 
 		try {
 			pageContext.getOut().print(tableInfo.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new JspException(e);
 		}
 		return super.doStartTag();
 	}

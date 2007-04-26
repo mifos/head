@@ -49,14 +49,7 @@ public class MifosJDBCAppender extends JDBCAppender {
 
 	@Override
 	public Connection getConnection(){
-		Connection con = null;
-		try{
-			con = new PersonnelPersistence().getConnection();
-		}
-		catch (ConnectionNotFoundException dbcfe) {
-			dbcfe.printStackTrace();
-		}
-		return con;
+		return new PersonnelPersistence().getConnection();
 	}
 
 	/**

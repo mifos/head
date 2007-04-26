@@ -44,9 +44,9 @@ public class SavingsOverDueDepositsTag extends BodyTagSupport {
 										.getPreferredLocale()).toString());
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new JspException(e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new JspException(e);
 		}
 
 		return SKIP_BODY;

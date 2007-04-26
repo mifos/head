@@ -98,8 +98,8 @@ public abstract class BaseAction extends DispatchAction {
 							HttpServletResponse.class });
 			annotation = methodToExecute
 					.getAnnotation(TransactionDemarcate.class);
-		} catch (NoSuchMethodException nsme) {
-			nsme.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
 		}
 		return annotation;
 	}
@@ -115,8 +115,8 @@ public abstract class BaseAction extends DispatchAction {
 							ActionForm.class, HttpServletRequest.class,
 							HttpServletResponse.class });
 			isAnnotationPresent = methodToExecute.isAnnotationPresent(CloseSession.class);
-		} catch (NoSuchMethodException nsme) {
-			nsme.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
 		}
 		return isAnnotationPresent;
 	}

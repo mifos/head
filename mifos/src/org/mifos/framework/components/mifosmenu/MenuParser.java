@@ -107,8 +107,6 @@ public class MenuParser {
 	  			throw new MenuParseException(ioe);
 	  			
 		  } catch (URISyntaxException urise) {
-			
-			urise.printStackTrace();
 			throw new MenuParseException(urise);
 		}
 	}

@@ -189,12 +189,7 @@ public class XMLParser {
 
 	public static void main(String args[]) {
 		XMLParser ttp = new XMLParser();
-		try {
-			ttp.parser();
-		} catch (SystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		ttp.parser();
 	}
 
 }

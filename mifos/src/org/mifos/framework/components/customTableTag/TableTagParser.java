@@ -210,15 +210,9 @@ public class TableTagParser {
 
 
 
-     public static void main(String args[]){
+     public static void main(String args[]) throws Exception {
        TableTagParser ttp=new TableTagParser();
-      try {
         ttp.parser("classes/component/example.xml");
-
-      }
-      catch (TableTagParseException ex) {
-        ex.printStackTrace() ;
-      }
      }
 
 }

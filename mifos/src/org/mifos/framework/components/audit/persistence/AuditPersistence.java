@@ -24,7 +24,7 @@ public class AuditPersistence extends Persistence {
 			txn.commit();
 		} catch (Exception e) {
 			txn.rollback();
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} finally {
 			try {
 				HibernateUtil.closeSession(session);

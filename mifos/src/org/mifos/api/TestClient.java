@@ -22,18 +22,14 @@ public class TestClient {
 		System.out.println(message);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		if (args.length != 1) {
 			System.err.println("Usage: TestClient <loanid>");
 		} else {
 			TestClient client = new TestClient();
 			Integer id = Integer.valueOf(args[0]);
 			
-			try {
-				client.executeFindLoan(id);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			client.executeFindLoan(id);
 		}
 	}
 	
