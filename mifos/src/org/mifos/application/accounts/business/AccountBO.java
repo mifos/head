@@ -121,7 +121,11 @@ public class AccountBO extends BusinessObject {
 	private Date closedDate;
 
 	protected AccountBO() {
-		accountId = null;
+		this(null);
+	}
+
+	AccountBO(Integer accountId) {
+		this.accountId = accountId;
 		globalAccountNum = null;
 		customer = null;
 		office = null;
@@ -765,19 +769,10 @@ public class AccountBO extends BusinessObject {
 			throws AccountException {
 		StringBuilder systemId = new StringBuilder();
 		systemId.append(officeGlobalNum);
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-				"After appending the officeGlobalNum to loanAccountSysID  it becomes"
-						+ systemId.toString());
 		try {
 			systemId.append(StringUtils
 					.lpad(getAccountId().toString(), '0', 11));
-			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).debug(
-					"After appending the running number to loanAccountSysID  it becomes"
-							+ systemId.toString());
 		} catch (Exception se) {
-			MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER).error(
-					"There was some error retieving the running number", true,
-					null, se);
 			throw new AccountException(
 					AccountExceptionConstants.IDGenerationException, se);
 		}
