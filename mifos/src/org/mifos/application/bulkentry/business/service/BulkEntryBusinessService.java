@@ -366,7 +366,7 @@ public class BulkEntryBusinessService extends BusinessService {
 				recieptId, paymentId, receiptDate, transactionDate);
 		AccountBO account = null;
 		try {
-			account = getAccount(accountId, AccountTypes.CUSTOMERACCOUNT);
+			account = getAccount(accountId, AccountTypes.CUSTOMER_ACCOUNT);
 			account.applyPayment(accountPaymentDataView);
 		} catch (AccountException ae) {
 			throw new ServiceException("errors.update", ae,
@@ -416,13 +416,13 @@ public class BulkEntryBusinessService extends BusinessService {
 			throws ServiceException {
 		AccountBO account = null;
 		try {
-			if (type.equals(AccountTypes.LOANACCOUNT)) {
+			if (type.equals(AccountTypes.LOAN_ACCOUNT)) {
 				account = bulkEntryPersistanceService
 						.getLoanAccountWithAccountActionsInitialized(accountId);
-			} else if (type.equals(AccountTypes.SAVINGSACCOUNT)) {
+			} else if (type.equals(AccountTypes.SAVINGS_ACCOUNT)) {
 				account = bulkEntryPersistanceService
 						.getSavingsAccountWithAccountActionsInitialized(accountId);
-			} else if (type.equals(AccountTypes.CUSTOMERACCOUNT)) {
+			} else if (type.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
 				account = bulkEntryPersistanceService
 						.getCustomerAccountWithAccountActionsInitialized(accountId);
 			}
@@ -459,7 +459,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			LoanBO account = null;
 			try {
 				account = (LoanBO) getAccount(accountId,
-						AccountTypes.LOANACCOUNT);
+						AccountTypes.LOAN_ACCOUNT);
 				account.disburseLoan(recieptId, transactionDate, paymentId,
 						getPersonnel(personnelId), receiptDate, paymentId);
 			} catch (Exception ae) {
@@ -491,7 +491,7 @@ public class BulkEntryBusinessService extends BusinessService {
 					recieptId, paymentId, receiptDate, transactionDate);
 			AccountBO account = null;
 			try {
-				account = getAccount(accountId, AccountTypes.LOANACCOUNT);
+				account = getAccount(accountId, AccountTypes.LOAN_ACCOUNT);
 				account.applyPayment(paymentData);
 			} catch (Exception ae) {
 				throw new ServiceException("errors.update", ae,
@@ -520,7 +520,7 @@ public class BulkEntryBusinessService extends BusinessService {
 			if (savings.containsKey(accountId))
 				account = savings.get(accountId).getAccount();
 			else
-				account = getAccount(accountId, AccountTypes.SAVINGSACCOUNT);
+				account = getAccount(accountId, AccountTypes.SAVINGS_ACCOUNT);
 			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
 			account.applyPayment(accountPaymentDataView);
 			HibernateUtil.getSessionTL().clear();
@@ -574,7 +574,7 @@ public class BulkEntryBusinessService extends BusinessService {
 				account = savings.get(accountId).getAccount();
 			else
 				account = (SavingsBO) getAccount(accountId,
-						AccountTypes.SAVINGSACCOUNT);
+						AccountTypes.SAVINGS_ACCOUNT);
 			HibernateUtil.getSessionTL().setFlushMode(FlushMode.COMMIT);
 			account.withdraw(accountPaymentDataView);
 			HibernateUtil.getSessionTL().clear();

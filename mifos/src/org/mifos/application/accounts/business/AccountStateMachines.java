@@ -123,20 +123,20 @@ public class AccountStateMachines {
 		logger.debug("In AccountStateMachines::initialize()");
 		String configName = getConfigurationName(officeId, accountType, level);
 		try {
-			if (accountType.equals(AccountTypes.LOANACCOUNT)) {
+			if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
 				statesMapForLoan = loadMap(
 						AccountStates.TRANSITION_CONFIG_FILE_PATH_LOAN,
 						configName);
 				accountStateEntityListForLoan = retrieveAllAccountStateList(accountType);
 				removeLoanReversalFlagForCancelState();
 				populateLoanStatesViewMap();
-			} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
+			} else if (accountType.equals(AccountTypes.SAVINGS_ACCOUNT)) {
 				statesMapForSavings = loadMap(
 						AccountStates.TRANSITION_CONFIG_FILE_PATH_SAVINGS,
 						configName);
 				accountStateEntityListForSavings = retrieveAllAccountStateList(accountType);
 				populateSavingsStatesViewMap();
-			} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
+			} else if (accountType.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
 				if (level.equals(CustomerLevel.CENTER)) {
 					statesMapForCenter = loadMap(
 							CustomerConstants.TRANSITION_CONFIG_FILE_PATH_CENTER,
@@ -166,14 +166,14 @@ public class AccountStateMachines {
 	public String getAccountStatusName(Short localeId,
 			AccountState accountState, AccountTypes accountType) {
 		logger.debug("In AccountStateMachines::getAccountStatusName()");
-		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
+		if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
 			for (AccountStateEntity accountStateEntityObj : accountStateEntityListForLoan) {
 				if (accountStateEntityObj.getId().equals(
 						accountState.getValue())) {
 					return accountStateEntityObj.getName(localeId);
 				}
 			}
-		} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.SAVINGS_ACCOUNT)) {
 			for (AccountStateEntity accountStateEntityObj : accountStateEntityListForSavings) {
 				if (accountStateEntityObj.getId().equals(
 						accountState.getValue())) {
@@ -187,7 +187,7 @@ public class AccountStateMachines {
 	public String getAccountFlagName(Short localeId, AccountStateFlag flag,
 			AccountTypes accountType) {
 		logger.debug("In AccountStateMachines::getAccountFlagName()");
-		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
+		if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
 			for (AccountStateEntity accountStateEntity : accountStateEntityListForLoan) {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
 						.getFlagSet()) {
@@ -196,7 +196,7 @@ public class AccountStateMachines {
 					}
 				}
 			}
-		} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.SAVINGS_ACCOUNT)) {
 			for (AccountStateEntity accountStateEntity : accountStateEntityListForSavings) {
 				for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity
 						.getFlagSet()) {
@@ -283,9 +283,9 @@ public class AccountStateMachines {
 	public List<AccountStateEntity> getStatusList(
 			AccountStateEntity accountStateEntity, AccountTypes accountTypes) {
 		logger.debug("In AccountStateMachines::getStatusList()");
-		if (accountTypes.equals(AccountTypes.LOANACCOUNT)) {
+		if (accountTypes.equals(AccountTypes.LOAN_ACCOUNT)) {
 			return statesViewMapForLoan.get(accountStateEntity.getId());
-		} else if (accountTypes.equals(AccountTypes.SAVINGSACCOUNT)) {
+		} else if (accountTypes.equals(AccountTypes.SAVINGS_ACCOUNT)) {
 			return statesViewMapForSavings.get(accountStateEntity.getId());
 		}
 		return null;
@@ -333,7 +333,7 @@ public class AccountStateMachines {
 			AccountTypes accountType, CustomerLevel level) {
 		logger.debug("In AccountStateMachines::getConfigurationName()");
 		String configurationName = null;
-		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
+		if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
 			if (Configuration.getInstance().getAccountConfig(officeId)
 					.isDisbursedToLOStateDefinedForLoan()) {
 				if (Configuration.getInstance().getAccountConfig(officeId)
@@ -348,13 +348,13 @@ public class AccountStateMachines {
 				else
 					configurationName = "configuration 4";
 			}
-		} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.SAVINGS_ACCOUNT)) {
 			if (Configuration.getInstance().getAccountConfig(officeId)
 					.isPendingApprovalStateDefinedForSavings())
 				configurationName = "configuration 1";
 			else
 				configurationName = "configuration 2";
-		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
 			if (level.equals(CustomerLevel.CENTER)) {
 				configurationName = "configuration 1";
 			} else if (level.equals(CustomerLevel.GROUP)) {

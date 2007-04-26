@@ -274,7 +274,7 @@ public class CustomerBusinessService extends BusinessService {
 		Money amount = new Money();
 		for (AccountBO account : accountList) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())
+					AccountTypes.LOAN_ACCOUNT.getValue())
 					&& ((LoanBO) account).isAccountActive()) {
 				LoanBO loan = (LoanBO) account;
 				if (loan.hasPortfolioAtRisk()) {
@@ -291,7 +291,7 @@ public class CustomerBusinessService extends BusinessService {
 		Money amount = new Money();
 		for (AccountBO account : accountList) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())
+					AccountTypes.LOAN_ACCOUNT.getValue())
 					&& ((LoanBO) account).isAccountActive()) {
 				LoanBO loan = (LoanBO) account;
 				amount = amount.add(loan.getRemainingPrincipalAmount());
@@ -321,9 +321,9 @@ public class CustomerBusinessService extends BusinessService {
 			throw new ServiceException(pe);
 		}
 		List<AccountBO> loanList = getAccountsForCustomer(searchId, officeId,
-				AccountTypes.LOANACCOUNT.getValue());
+				AccountTypes.LOAN_ACCOUNT.getValue());
 		List<AccountBO> savingsList = getAccountsForCustomer(searchId,
-				officeId, AccountTypes.SAVINGSACCOUNT.getValue());
+				officeId, AccountTypes.SAVINGS_ACCOUNT.getValue());
 		int clientSize = 0;
 		int groupSize = 0;
 		if (clients != null)

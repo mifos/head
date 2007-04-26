@@ -316,7 +316,7 @@ public class EditCustomerStatusAction extends BaseAction {
 			UserContext userContext) throws Exception {
 		customerBO.setUserContext(userContext);
 		customerService.initializeStateMachine(userContext.getLocaleId(),
-				customerBO.getOffice().getOfficeId(),AccountTypes.CUSTOMERACCOUNT,customerBO.getLevel());
+				customerBO.getOffice().getOfficeId(),AccountTypes.CUSTOMER_ACCOUNT,customerBO.getLevel());
 		setFormAttributes(form, customerBO);
 		customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
 	}

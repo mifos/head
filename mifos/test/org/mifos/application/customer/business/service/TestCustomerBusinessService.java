@@ -704,7 +704,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		createInitialCustomers();
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.TEST_LOCALE,
-				center.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
+				center.getOffice().getOfficeId(), AccountTypes.CUSTOMER_ACCOUNT,
 				CustomerLevel.CENTER);
 		String statusNameForCenter = service.getStatusName(
 				TestObjectFactory.TEST_LOCALE, center.getStatus(),
@@ -713,7 +713,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.TEST_LOCALE,
-				group.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
+				group.getOffice().getOfficeId(), AccountTypes.CUSTOMER_ACCOUNT,
 				CustomerLevel.GROUP);
 		String statusNameForGroup = service.getStatusName(
 				TestObjectFactory.TEST_LOCALE, group.getStatus(),
@@ -722,7 +722,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.TEST_LOCALE,
-				client.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
+				client.getOffice().getOfficeId(), AccountTypes.CUSTOMER_ACCOUNT,
 				CustomerLevel.CLIENT);
 		String statusNameForClient = service.getStatusName(
 				TestObjectFactory.TEST_LOCALE, client.getStatus(),
@@ -741,7 +741,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.TEST_LOCALE,
-				client.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
+				client.getOffice().getOfficeId(), AccountTypes.CUSTOMER_ACCOUNT,
 				CustomerLevel.CLIENT);
 		String flagNameForClient = service.getFlagName(
 				TestObjectFactory.TEST_LOCALE,
@@ -751,7 +751,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.TEST_LOCALE,
-				group.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
+				group.getOffice().getOfficeId(), AccountTypes.CUSTOMER_ACCOUNT,
 				CustomerLevel.GROUP);
 		String flagNameForGroup = service.getFlagName(
 				TestObjectFactory.TEST_LOCALE,
@@ -763,7 +763,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		createInitialCustomers();
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.TEST_LOCALE,
-				center.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
+				center.getOffice().getOfficeId(), AccountTypes.CUSTOMER_ACCOUNT,
 				CustomerLevel.CENTER);
 		List<CustomerStatusEntity> statusListForCenter = service.getStatusList(
 				center.getCustomerStatus(), CustomerLevel.CENTER,
@@ -772,7 +772,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.TEST_LOCALE,
-				group.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
+				group.getOffice().getOfficeId(), AccountTypes.CUSTOMER_ACCOUNT,
 				CustomerLevel.GROUP);
 		List<CustomerStatusEntity> statusListForGroup = service.getStatusList(
 				group.getCustomerStatus(), CustomerLevel.GROUP,
@@ -781,7 +781,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 
 		AccountStateMachines.getInstance().initialize(
 				TestObjectFactory.TEST_LOCALE,
-				client.getOffice().getOfficeId(), AccountTypes.CUSTOMERACCOUNT,
+				client.getOffice().getOfficeId(), AccountTypes.CUSTOMER_ACCOUNT,
 				CustomerLevel.CLIENT);
 		List<CustomerStatusEntity> statusListForClient = service.getStatusList(
 				client.getCustomerStatus(), CustomerLevel.CLIENT,
@@ -812,11 +812,11 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		TestObjectFactory.updateObject(clientAccount);
 		TestObjectFactory.updateObject(clientSavingsAccount);
 		assertEquals(1, service.getAllClosedAccount(client.getCustomerId(),
-				AccountTypes.LOANACCOUNT.getValue()).size());
+				AccountTypes.LOAN_ACCOUNT.getValue()).size());
 		assertEquals(1, service.getAllClosedAccount(group.getCustomerId(),
-				AccountTypes.LOANACCOUNT.getValue()).size());
+				AccountTypes.LOAN_ACCOUNT.getValue()).size());
 		assertEquals(1, service.getAllClosedAccount(client.getCustomerId(),
-				AccountTypes.SAVINGSACCOUNT.getValue()).size());
+				AccountTypes.SAVINGS_ACCOUNT.getValue()).size());
 	}
 	
 	public void testFailureGetAllClosedAccounts() throws Exception {
@@ -835,7 +835,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.getAllClosedAccount(client.getCustomerId(),
-					AccountTypes.LOANACCOUNT.getValue());
+					AccountTypes.LOAN_ACCOUNT.getValue());
 			assertTrue(false);
 		} catch (ServiceException e) {
 			assertTrue(true);
@@ -847,11 +847,11 @@ public class TestCustomerBusinessService extends MifosTestCase {
 	public void testGetAllClosedAccountsWhenNoAccountsClosed() throws Exception {
 		getCustomer();
 		assertEquals(0, service.getAllClosedAccount(client.getCustomerId(),
-				AccountTypes.LOANACCOUNT.getValue()).size());
+				AccountTypes.LOAN_ACCOUNT.getValue()).size());
 		assertEquals(0, service.getAllClosedAccount(group.getCustomerId(),
-				AccountTypes.LOANACCOUNT.getValue()).size());
+				AccountTypes.LOAN_ACCOUNT.getValue()).size());
 		assertEquals(0, service.getAllClosedAccount(client.getCustomerId(),
-				AccountTypes.SAVINGSACCOUNT.getValue()).size());
+				AccountTypes.SAVINGS_ACCOUNT.getValue()).size());
 	}
 
 	public void testGetActiveCentersUnderUser() throws Exception {

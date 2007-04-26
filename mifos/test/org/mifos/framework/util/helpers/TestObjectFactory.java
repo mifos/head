@@ -1103,7 +1103,7 @@ public class TestObjectFactory {
 			if (accountType
 					.getAccountTypeId()
 					.equals(
-							org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT)) {
+							org.mifos.application.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT)) {
 				LoanScheduleEntity loanScheduleEntity = 
 					(LoanScheduleEntity) actionDates;
 				for (AccountFeesActionDetailEntity actionFees : loanScheduleEntity
@@ -1114,7 +1114,7 @@ public class TestObjectFactory {
 			if (accountType
 					.getAccountTypeId()
 					.equals(
-							org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMERACCOUNT)) {
+							org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMER_ACCOUNT)) {
 				CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
 				for (AccountFeesActionDetailEntity actionFees : customerScheduleEntity
 						.getAccountFeesActionDetails()) {
@@ -1634,7 +1634,7 @@ public class TestObjectFactory {
 					.getAccountType()
 					.getAccountTypeId()
 					.equals(
-							org.mifos.application.accounts.util.helpers.AccountTypes.LOANACCOUNT)) {
+							org.mifos.application.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT)) {
 				LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) actionDates;
 				for (AccountFeesActionDetailEntity actionFees : loanScheduleEntity
 						.getAccountFeesActionDetails()) {
@@ -1645,7 +1645,7 @@ public class TestObjectFactory {
 					.getAccountType()
 					.getAccountTypeId()
 					.equals(
-							org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMERACCOUNT)) {
+							org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMER_ACCOUNT)) {
 				CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
 				for (AccountFeesActionDetailEntity actionFees : customerScheduleEntity
 						.getAccountFeesActionDetails()) {

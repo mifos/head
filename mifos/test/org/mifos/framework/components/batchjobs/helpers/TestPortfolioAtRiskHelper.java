@@ -59,13 +59,13 @@ public class TestPortfolioAtRiskHelper extends MifosTestCase {
 				client.getCustomerId());
 		for (AccountBO account : group.getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())) {
+					AccountTypes.LOAN_ACCOUNT.getValue())) {
 				changeFirstInstallmentDate(account, 7);
 			}
 		}
 		for (AccountBO account : client.getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())) {
+					AccountTypes.LOAN_ACCOUNT.getValue())) {
 				changeFirstInstallmentDate(account, 7);
 			}
 		}

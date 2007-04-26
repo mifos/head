@@ -38,12 +38,14 @@
 package org.mifos.application.accounts.util.helpers;
 
 public enum AccountTypes {
-	LOANACCOUNT((short) 1), SAVINGSACCOUNT((short) 2), CUSTOMERACCOUNT(
-			(short) 3);
+	LOAN_ACCOUNT(1), 
+	SAVINGS_ACCOUNT(2), 
+	CUSTOMER_ACCOUNT(3);
+	
 	Short value;
 
-	AccountTypes(Short value) {
-		this.value = value;
+	private AccountTypes(int value) {
+		this.value = (short)value;
 	}
 
 	public Short getValue() {

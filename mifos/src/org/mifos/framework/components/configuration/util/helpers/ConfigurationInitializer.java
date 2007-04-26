@@ -194,10 +194,10 @@ public class ConfigurationInitializer {
 		if (accountOptionalStates != null && accountOptionalStates.size() > 0) {
 			for (AccountStateEntity accountStateEntity : accountOptionalStates) {
 				if (accountStateEntity.getPrdType().getProductTypeID().equals(
-						AccountTypes.SAVINGSACCOUNT.getValue()))
+						AccountTypes.SAVINGS_ACCOUNT.getValue()))
 					setSavingsOptionalState(officeConfigMap, accountStateEntity);
 				else if (accountStateEntity.getPrdType().getProductTypeID()
-						.equals(AccountTypes.LOANACCOUNT.getValue()))
+						.equals(AccountTypes.LOAN_ACCOUNT.getValue()))
 					setLoanOptionalStates(officeConfigMap, accountStateEntity);
 			}
 		}

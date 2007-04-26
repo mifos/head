@@ -390,11 +390,11 @@ public class LabelConfigurationAction extends BaseAction {
 			Short localeId) throws Exception {
 		List<AccountStateEntity> accountStateEntityList = 
 			new AccountBusinessService()
-				.retrieveAllAccountStateList(AccountTypes.LOANACCOUNT);
+				.retrieveAllAccountStateList(AccountTypes.LOAN_ACCOUNT);
 		accountStateEntityList
 				.addAll(
 					new AccountBusinessService()
-						.retrieveAllAccountStateList(AccountTypes.SAVINGSACCOUNT));
+						.retrieveAllAccountStateList(AccountTypes.SAVINGS_ACCOUNT));
 		for (AccountStateEntity accountState : accountStateEntityList) {
 			if (accountState.getId().equals(
 					AccountState.LOANACC_PARTIALAPPLICATION.getValue())) {

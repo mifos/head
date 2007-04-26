@@ -337,7 +337,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.next();
 		assertEquals(Short.valueOf("8"), customFieldEntity.getFieldId());
 		assertEquals("13", customFieldEntity.getFieldValue());
-		assertEquals(AccountTypes.SAVINGSACCOUNT.getValue(), savings
+		assertEquals(AccountTypes.SAVINGS_ACCOUNT.getValue(), savings
 				.getAccountType().getAccountTypeId());
 		assertEquals(group.getPersonnel().getPersonnelId(), savings
 				.getPersonnel().getPersonnelId());
@@ -942,7 +942,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.SAVINGSACCOUNT, null);
+				AccountTypes.SAVINGS_ACCOUNT, null);
 		savings.changeStatus(AccountState.SAVINGS_ACC_PENDINGAPPROVAL
 				.getValue(), null, "notes");
 		assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings
@@ -958,7 +958,7 @@ public class TestSavingsBO extends MifosTestCase {
 				savingsOffering, group,
 				AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.SAVINGSACCOUNT, null);
+				AccountTypes.SAVINGS_ACCOUNT, null);
 		// 6 is blacklisted
 
 		savings.changeStatus(AccountState.SAVINGS_ACC_CANCEL.getValue(), Short

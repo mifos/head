@@ -105,7 +105,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	public CustomerAccountBO(UserContext userContext, CustomerBO customer,
 			List<FeeView> fees) throws AccountException {
-		super(userContext, customer, AccountTypes.CUSTOMERACCOUNT,
+		super(userContext, customer, AccountTypes.CUSTOMER_ACCOUNT,
 				AccountState.CUSTOMERACCOUNT_ACTIVE);
 		if (fees != null) {
 			for (FeeView feeView : fees) {
@@ -149,7 +149,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	@Override
 	public AccountTypes getType() {
-		return AccountTypes.CUSTOMERACCOUNT;
+		return AccountTypes.CUSTOMER_ACCOUNT;
 	}
 
 	public void generateCustomerFeeSchedule() throws AccountException {

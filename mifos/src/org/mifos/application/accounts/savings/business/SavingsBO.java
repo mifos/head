@@ -115,7 +115,7 @@ public class SavingsBO extends AccountBO {
 			SavingsOfferingBO savingsOffering, CustomerBO customer,
 			AccountState accountState, Money recommendedAmount,
 			List<CustomFieldView> customFields) throws AccountException {
-		super(userContext, customer, AccountTypes.SAVINGSACCOUNT, accountState);
+		super(userContext, customer, AccountTypes.SAVINGS_ACCOUNT, accountState);
 		savingsActivityDetails = new HashSet<SavingsActivityEntity>();
 		this.setSavingsOffering(savingsOffering);
 
@@ -287,7 +287,7 @@ public class SavingsBO extends AccountBO {
 
 	@Override
 	public AccountTypes getType() {
-		return AccountTypes.SAVINGSACCOUNT;
+		return AccountTypes.SAVINGS_ACCOUNT;
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public class ApplyChargeAction extends BaseAction {
 		accountBO.setUserContext(userContext);
 
 		CustomerLevel customerLevel = null;
-		if(accountBO.getType().equals(AccountTypes.CUSTOMERACCOUNT))
+		if(accountBO.getType().equals(AccountTypes.CUSTOMER_ACCOUNT))
 			customerLevel = accountBO.getCustomer().getLevel();
 		if (accountBO.getPersonnel() != null)
 			checkPermissionForApplyCharges(accountBO.getType(), customerLevel, userContext,
@@ -125,7 +125,7 @@ public class ApplyChargeAction extends BaseAction {
 
 	private String getDetailAccountPage(AccountBO account) {
 		if (account.getAccountType().getAccountTypeId().equals(
-				AccountTypes.LOANACCOUNT.getValue())) {
+				AccountTypes.LOAN_ACCOUNT.getValue())) {
 			return "loanDetails_success";
 		} else {
 			if (account.getCustomer().getCustomerLevel().getId().equals(

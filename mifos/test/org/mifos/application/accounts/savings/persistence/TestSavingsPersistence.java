@@ -151,11 +151,11 @@ public class TestSavingsPersistence extends MifosTestCase {
 
 	public void testGetStatusChecklist() throws Exception {
 		accountCheckList = TestObjectFactory
-				.createAccountChecklist(AccountTypes.SAVINGSACCOUNT.getValue(),
+				.createAccountChecklist(AccountTypes.SAVINGS_ACCOUNT.getValue(),
 						AccountState.SAVINGS_ACC_PARTIALAPPLICATION, Short
 								.valueOf("1"));
 		List statusCheckList = accountPersistence.getStatusChecklist(Short
-				.valueOf("13"), AccountTypes.SAVINGSACCOUNT.getValue());
+				.valueOf("13"), AccountTypes.SAVINGS_ACCOUNT.getValue());
 		assertNotNull(statusCheckList);
 
 		assertEquals(1, statusCheckList.size());

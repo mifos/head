@@ -113,9 +113,9 @@ public class NotesAction extends SearchAction {
 
 	private String chooseForward(Short accountTypeId) {
 		String forward = null;
-		if (accountTypeId.equals(AccountTypes.LOANACCOUNT.getValue()))
+		if (accountTypeId.equals(AccountTypes.LOAN_ACCOUNT.getValue()))
 			forward = ActionForwards.loan_detail_page.toString();
-		else if (accountTypeId.equals(AccountTypes.SAVINGSACCOUNT.getValue()))
+		else if (accountTypeId.equals(AccountTypes.SAVINGS_ACCOUNT.getValue()))
 			forward = ActionForwards.savings_details_page.toString();
 		return forward;
 	}

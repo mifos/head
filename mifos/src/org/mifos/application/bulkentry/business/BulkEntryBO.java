@@ -191,23 +191,23 @@ public class BulkEntryBO extends BusinessObject {
 		List<BulkEntryInstallmentView> bulkEntryLoanScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.LOANACCOUNT);
+						AccountTypes.LOAN_ACCOUNT);
 		List<BulkEntryInstallmentView> bulkEntrySavingsScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.SAVINGSACCOUNT);
+						AccountTypes.SAVINGS_ACCOUNT);
 		List<BulkEntryInstallmentView> bulkEntryCustomerScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.CUSTOMERACCOUNT);
+						AccountTypes.CUSTOMER_ACCOUNT);
 		List<BulkEntryAccountFeeActionView> bulkEntryLoanFeeScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryFeeActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.LOANACCOUNT);
+						AccountTypes.LOAN_ACCOUNT);
 		List<BulkEntryAccountFeeActionView> bulkEntryCustomerFeeScheduleViews = bulkEntryPersistanceService
 				.getBulkEntryFeeActionView(transactionDate, parentCustomer
 						.getCustomerSearchId(), office.getOfficeId(),
-						AccountTypes.CUSTOMERACCOUNT);
+						AccountTypes.CUSTOMER_ACCOUNT);
         List<BulkEntryClientAttendanceView> bulkEntryClientAttendanceViews = bulkEntryPersistanceService
                 .getBulkEntryClientAttendanceActionView(
                         transactionDate, office.getOfficeId() );

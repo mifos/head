@@ -16,11 +16,11 @@ public class PenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
 	protected void getSpecificAccountActionEntry() throws FinancialException {
 		Money amount = new Money();
 		if (financialActivity.getAccountTrxn().getAccount().getAccountType()
-				.getAccountTypeId().equals(AccountTypes.LOANACCOUNT.getValue()))
+				.getAccountTypeId().equals(AccountTypes.LOAN_ACCOUNT.getValue()))
 			amount = ((LoanTrxnDetailEntity) financialActivity.getAccountTrxn())
 					.getMiscPenaltyAmount();
 		else if (financialActivity.getAccountTrxn().getAccount()
-				.getAccountType().getAccountTypeId().equals(AccountTypes.CUSTOMERACCOUNT.getValue()))
+				.getAccountType().getAccountTypeId().equals(AccountTypes.CUSTOMER_ACCOUNT.getValue()))
 			amount = ((CustomerTrxnDetailEntity) financialActivity
 					.getAccountTrxn()).getMiscPenaltyAmount();
 

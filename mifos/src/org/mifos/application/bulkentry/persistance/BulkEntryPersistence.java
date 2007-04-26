@@ -67,15 +67,15 @@ public class BulkEntryPersistence extends Persistence {
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		queryParameters.put("SEARCH_STRING", searchString + ".%");
 		queryParameters.put("OFFICE_ID", officeId);
-		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
+		if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
 			return executeNamedQuery(
 					NamedQueryConstants.ALL_LOAN_SCHEDULE_DETAILS,
 					queryParameters);
-		} else if (accountType.equals(AccountTypes.SAVINGSACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.SAVINGS_ACCOUNT)) {
 			return executeNamedQuery(
 					NamedQueryConstants.ALL_SAVINGS_SCHEDULE_DETAILS,
 					queryParameters);
-		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
 			List<BulkEntryInstallmentView> result = getBulkEntryActionViewForCustomerAccountWithSearchId(
 					meetingDate, searchString, officeId);
 			result.addAll(executeNamedQuery(
@@ -96,11 +96,11 @@ public class BulkEntryPersistence extends Persistence {
 		queryParameters.put("PAYMENT_STATUS", PaymentStatus.UNPAID.getValue());
 		queryParameters.put("SEARCH_STRING", searchString + ".%");
 		queryParameters.put("OFFICE_ID", officeId);
-		if (accountType.equals(AccountTypes.LOANACCOUNT)) {
+		if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
 			queryResult = executeNamedQuery(
 					NamedQueryConstants.ALL_LOAN_FEE_SCHEDULE_DETAILS,
 					queryParameters);
-		} else if (accountType.equals(AccountTypes.CUSTOMERACCOUNT)) {
+		} else if (accountType.equals(AccountTypes.CUSTOMER_ACCOUNT)) {
 			queryResult = getBulkEntryFeeActionViewForCustomerAccountWithSearchId(
 					meetingDate, searchString, officeId);
 			queryResult.addAll(executeNamedQuery(

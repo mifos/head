@@ -130,12 +130,12 @@ public class CustomerNotesAction extends SearchAction {
 		CustomerBO customerBO = getCustomerBusinessService().getCustomer(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
 		UserContext uc = getUserContext(request);
 		if (customerBO.getPersonnel() != null)
-			checkPermissionForAddingNotes(AccountTypes.CUSTOMERACCOUNT,
+			checkPermissionForAddingNotes(AccountTypes.CUSTOMER_ACCOUNT,
 					customerBO.getLevel(), uc, customerBO.getOffice()
 							.getOfficeId(), customerBO.getPersonnel()
 							.getPersonnelId());
 		else
-			checkPermissionForAddingNotes(AccountTypes.CUSTOMERACCOUNT,
+			checkPermissionForAddingNotes(AccountTypes.CUSTOMER_ACCOUNT,
 					customerBO.getLevel(), uc, customerBO.getOffice()
 							.getOfficeId(), uc.getId());
 		PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc.getId());

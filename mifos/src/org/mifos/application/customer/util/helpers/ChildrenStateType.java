@@ -2,13 +2,15 @@ package org.mifos.application.customer.util.helpers;
 
 public enum ChildrenStateType {
 	
-	ALL (Short.valueOf("1")), OTHER_THAN_CLOSED(Short.valueOf("2")), 
-	OTHER_THAN_CANCELLED_AND_CLOSED(Short.valueOf("3")), ACTIVE_AND_ONHOLD (Short.valueOf("4"));
+	ALL (1), 
+	OTHER_THAN_CLOSED(2), 
+	OTHER_THAN_CANCELLED_AND_CLOSED(3), 
+	ACTIVE_AND_ONHOLD (4);
 	
 	Short value;
 
-	ChildrenStateType(Short value) {
-		this.value = value;
+	private ChildrenStateType(int value) {
+		this.value = (short)value;
 	}
 
 	public Short getValue() {

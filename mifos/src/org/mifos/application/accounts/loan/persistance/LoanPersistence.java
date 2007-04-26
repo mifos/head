@@ -70,7 +70,7 @@ public class LoanPersistence extends Persistence {
 		Date date = new Date(currentDate.getTimeInMillis());
 
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("ACCOUNTTYPE_ID", AccountTypes.LOANACCOUNT
+		queryParameters.put("ACCOUNTTYPE_ID", AccountTypes.LOAN_ACCOUNT
 				.getValue());
 		queryParameters.put("PAYMENTSTATUS", Short.valueOf(PaymentStatus.UNPAID
 				.getValue()));
@@ -93,7 +93,7 @@ public class LoanPersistence extends Persistence {
 		
 		currentDate = new GregorianCalendar(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH),0,0,0);
 
-		queryParameters.put("ACCOUNTTYPE_ID", AccountTypes.LOANACCOUNT
+		queryParameters.put("ACCOUNTTYPE_ID", AccountTypes.LOAN_ACCOUNT
 				.getValue());
 		queryParameters.put("PAYMENTSTATUS", Short.valueOf(PaymentStatus.UNPAID
 				.getValue()));

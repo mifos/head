@@ -280,50 +280,50 @@ public class TestAccountService extends MifosTestCase {
 
 	public void testGetStatusName() throws Exception {
 		AccountStateMachines.getInstance().initialize(Short.valueOf("1"),
-				Short.valueOf("1"), AccountTypes.SAVINGSACCOUNT, null);
+				Short.valueOf("1"), AccountTypes.SAVINGS_ACCOUNT, null);
 		String statusNameForSavings = service.getStatusName(Short.valueOf("1"),
 				AccountState.SAVINGS_ACC_PARTIALAPPLICATION,
-				AccountTypes.SAVINGSACCOUNT);
+				AccountTypes.SAVINGS_ACCOUNT);
 		assertNotNull(statusNameForSavings);
 
 		AccountStateMachines.getInstance().initialize(Short.valueOf("1"),
-				Short.valueOf("1"), AccountTypes.LOANACCOUNT, null);
+				Short.valueOf("1"), AccountTypes.LOAN_ACCOUNT, null);
 		String statusNameForLoan = service.getStatusName(Short.valueOf("1"),
 				AccountState.LOANACC_PARTIALAPPLICATION,
-				AccountTypes.LOANACCOUNT);
+				AccountTypes.LOAN_ACCOUNT);
 		assertNotNull(statusNameForLoan);
 	}
 
 	public void testGetFlagName() throws Exception {
 		AccountStateMachines.getInstance().initialize(Short.valueOf("1"),
-				Short.valueOf("1"), AccountTypes.SAVINGSACCOUNT, null);
+				Short.valueOf("1"), AccountTypes.SAVINGS_ACCOUNT, null);
 		String flagNameForSavings = service.getFlagName(Short.valueOf("1"),
-				AccountStateFlag.SAVINGS_REJECTED, AccountTypes.SAVINGSACCOUNT);
+				AccountStateFlag.SAVINGS_REJECTED, AccountTypes.SAVINGS_ACCOUNT);
 		assertNotNull(flagNameForSavings);
 
 		AccountStateMachines.getInstance().initialize(Short.valueOf("1"),
-				Short.valueOf("1"), AccountTypes.LOANACCOUNT, null);
+				Short.valueOf("1"), AccountTypes.LOAN_ACCOUNT, null);
 		String flagNameForLoan = service.getFlagName(Short.valueOf("1"),
-				AccountStateFlag.LOAN_REJECTED, AccountTypes.LOANACCOUNT);
+				AccountStateFlag.LOAN_REJECTED, AccountTypes.LOAN_ACCOUNT);
 		assertNotNull(flagNameForLoan);
 		HibernateUtil.closeSession();
 	}
 
 	public void testGetStatusList() throws Exception {
 		AccountStateMachines.getInstance().initialize(Short.valueOf("1"),
-				Short.valueOf("1"), AccountTypes.SAVINGSACCOUNT, null);
+				Short.valueOf("1"), AccountTypes.SAVINGS_ACCOUNT, null);
 		List<AccountStateEntity> statusListForSavings = service.getStatusList(
 				new AccountStateEntity(AccountState.SAVINGS_ACC_PARTIALAPPLICATION),
-				AccountTypes.SAVINGSACCOUNT, TestUtils.makeUser()
+				AccountTypes.SAVINGS_ACCOUNT, TestUtils.makeUser()
 						.getLocaleId());
 		assertEquals(2, statusListForSavings.size());
 
 		AccountStateMachines.getInstance().initialize(Short.valueOf("1"),
-				Short.valueOf("1"), AccountTypes.LOANACCOUNT, null);
+				Short.valueOf("1"), AccountTypes.LOAN_ACCOUNT, null);
 		List<AccountStateEntity> statusListForLoan = service
 				.getStatusList(new AccountStateEntity(
 						AccountState.LOANACC_PARTIALAPPLICATION),
-						AccountTypes.LOANACCOUNT, Short.valueOf("1"));
+						AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
 		assertEquals(2, statusListForLoan.size());
 		HibernateUtil.closeSession();
 	}

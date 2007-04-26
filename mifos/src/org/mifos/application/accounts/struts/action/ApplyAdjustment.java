@@ -120,11 +120,11 @@ public class ApplyAdjustment extends BaseAction {
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		accnt.setUserContext(uc);
 		if (accnt.getPersonnel() != null)
-			getBizService().checkPermissionForAdjustment(AccountTypes.LOANACCOUNT, null, uc,
+			getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
 					accnt.getOffice().getOfficeId(), accnt.getPersonnel()
 							.getPersonnelId());
 		else
-			getBizService().checkPermissionForAdjustment(AccountTypes.LOANACCOUNT, null, uc,
+			getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
 					accnt.getOffice().getOfficeId(), uc.getId());
 		try {
 			accnt.adjustPmnt(appAdjustActionForm.getAdjustmentNote());

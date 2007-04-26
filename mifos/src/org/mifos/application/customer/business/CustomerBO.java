@@ -490,7 +490,7 @@ public abstract class CustomerBO extends BusinessObject {
 		CustomerAccountBO customerAccount = null;
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					Short.valueOf(AccountTypes.CUSTOMERACCOUNT.getValue())))
+					Short.valueOf(AccountTypes.CUSTOMER_ACCOUNT.getValue())))
 				customerAccount = (CustomerAccountBO) account;
 		}
 		return customerAccount;
@@ -500,7 +500,7 @@ public abstract class CustomerBO extends BusinessObject {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())) {
+					AccountTypes.LOAN_ACCOUNT.getValue())) {
 				short accounStateId = account.getAccountState().getId()
 						.shortValue();
 				LoanBO loan = (LoanBO) account;
@@ -521,7 +521,7 @@ public abstract class CustomerBO extends BusinessObject {
 		List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
 		for (AccountBO account : accounts) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.SAVINGSACCOUNT.getValue())
+					AccountTypes.SAVINGS_ACCOUNT.getValue())
 					&& account.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_APPROVED)
 				savingsAccounts.add((SavingsBO) account);
 		}
@@ -595,7 +595,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())
+					AccountTypes.LOAN_ACCOUNT.getValue())
 					&& ((LoanBO) account).isAccountActive()) {
 				LoanBO loan = (LoanBO) account;
 				if (loan.hasPortfolioAtRisk())
@@ -609,7 +609,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())
+					AccountTypes.LOAN_ACCOUNT.getValue())
 					&& ((LoanBO) account).isAccountActive()) {
 				amount = amount.add(((LoanBO) account)
 						.getRemainingPrincipalAmount());
@@ -622,7 +622,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Integer countOfActiveLoans = 0;
 		for (AccountBO account : getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())
+					AccountTypes.LOAN_ACCOUNT.getValue())
 					&& ((LoanBO) account).isAccountActive()) {
 				countOfActiveLoans++;
 			}
@@ -635,7 +635,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Money totalOutStandingAmount = new Money();
 		for (AccountBO accountBO : getAccounts()) {
 			if (accountBO.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())
+					AccountTypes.LOAN_ACCOUNT.getValue())
 					&& ((LoanBO) accountBO).isAccountActive()) {
 				amountOverDue = amountOverDue.add(((LoanBO) accountBO)
 						.getTotalPrincipalAmountInArrears());
@@ -657,7 +657,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.SAVINGSACCOUNT.getValue())) {
+					AccountTypes.SAVINGS_ACCOUNT.getValue())) {
 				SavingsBO savingsBO = (SavingsBO) account;
 				amount = amount.add(savingsBO.getSavingsBalance());
 			}
@@ -848,7 +848,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public List<LoanBO> getOpenLoanAccounts() {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : getAccounts()) {
-			if (account.getType().equals(AccountTypes.LOANACCOUNT)
+			if (account.getType().equals(AccountTypes.LOAN_ACCOUNT)
 					&& account.isOpen())
 				loanAccounts.add((LoanBO) account);
 		}
@@ -858,7 +858,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public List<SavingsBO> getOpenSavingAccounts() {
 		List<SavingsBO> savingAccounts = new ArrayList<SavingsBO>();
 		for (AccountBO account : getAccounts()) {
-			if (account.getType().equals(AccountTypes.SAVINGSACCOUNT)
+			if (account.getType().equals(AccountTypes.SAVINGS_ACCOUNT)
 					&& account.isOpen())
 				savingAccounts.add((SavingsBO) account);
 		}
@@ -867,7 +867,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	public boolean isAnyLoanAccountOpen() {
 		for (AccountBO account : getAccounts()) {
-			if (account.getType().equals(AccountTypes.LOANACCOUNT)
+			if (account.getType().equals(AccountTypes.LOAN_ACCOUNT)
 					&& account.isOpen())
 				return true;
 		}
@@ -876,7 +876,7 @@ public abstract class CustomerBO extends BusinessObject {
 
 	public boolean isAnySavingsAccountOpen() {
 		for (AccountBO account : getAccounts()) {
-			if (account.getType().equals(AccountTypes.SAVINGSACCOUNT)
+			if (account.getType().equals(AccountTypes.SAVINGS_ACCOUNT)
 					&& account.isOpen())
 				return true;
 		}

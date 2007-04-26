@@ -129,13 +129,13 @@ public class AccountBusinessService extends BusinessService {
 			FeeCategory categoryType = getCategoryType(account.getCustomer());
 
 			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())) {
+					AccountTypes.LOAN_ACCOUNT.getValue())) {
 				applicableChargeList = getLoanApplicableCharges(
 						new AccountPersistence().getAllApplicableFees(
 								accountId, FeeCategory.LOAN),
 						userContext, (LoanBO) account);
 			} else if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.CUSTOMERACCOUNT.getValue())) {
+					AccountTypes.CUSTOMER_ACCOUNT.getValue())) {
 				if (account.getCustomer().getCustomerMeeting() == null)
 					throw new ServiceException(
 							AccountExceptionConstants.APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION);

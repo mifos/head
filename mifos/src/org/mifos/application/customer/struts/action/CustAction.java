@@ -118,9 +118,9 @@ public class CustAction extends SearchAction {
 				.getCustomerId());
 		CustomerBusinessService customerService = getCustomerBusinessService();
 		List<AccountBO> loanAccountsList = customerService.getAllClosedAccount(
-				customerId, AccountTypes.LOANACCOUNT.getValue());
+				customerId, AccountTypes.LOAN_ACCOUNT.getValue());
 		List<AccountBO> savingsAccountList = customerService
-				.getAllClosedAccount(customerId, AccountTypes.SAVINGSACCOUNT
+				.getAllClosedAccount(customerId, AccountTypes.SAVINGS_ACCOUNT
 						.getValue());
 		for (AccountBO savingsBO : savingsAccountList) {
 			setLocaleIdForToRetrieveMasterDataName(savingsBO, request);

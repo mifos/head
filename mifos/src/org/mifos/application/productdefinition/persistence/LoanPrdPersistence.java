@@ -56,7 +56,7 @@ public class LoanPrdPersistence extends Persistence {
 
 	public Short retrieveLatenessForPrd() throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-		queryParameters.put("productTypeId", AccountTypes.LOANACCOUNT
+		queryParameters.put("productTypeId", AccountTypes.LOAN_ACCOUNT
 				.getValue());
 		List<Short> queryResult = executeNamedQuery(
 				NamedQueryConstants.GET_LATENESS_FOR_LOANS, queryParameters);

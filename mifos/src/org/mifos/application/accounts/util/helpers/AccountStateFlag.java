@@ -1,14 +1,18 @@
 package org.mifos.application.accounts.util.helpers;
 
 public enum AccountStateFlag {
-	LOAN_WITHDRAW (Short.valueOf("1")), LOAN_REJECTED (Short.valueOf("2")),LOAN_OTHER (Short.valueOf("3")),
-	SAVINGS_WITHDRAW (Short.valueOf("4")), SAVINGS_REJECTED (Short.valueOf("5")),
-	SAVINGS_BLACKLISTED (Short.valueOf("6")),LOAN_REVERSAL (Short.valueOf("7"));
+	LOAN_WITHDRAW (1), 
+	LOAN_REJECTED (2),
+	LOAN_OTHER (3),
+	SAVINGS_WITHDRAW (4), 
+	SAVINGS_REJECTED (5),
+	SAVINGS_BLACKLISTED (6),
+	LOAN_REVERSAL (7);
 	
 	Short value;
 
-	AccountStateFlag(Short value) {
-		this.value = value;
+	private AccountStateFlag(int value) {
+		this.value = (short)value;
 	}
 
 	public Short getValue() {

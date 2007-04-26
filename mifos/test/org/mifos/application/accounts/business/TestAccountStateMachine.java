@@ -31,33 +31,33 @@ public class TestAccountStateMachine extends MifosTestCase {
 
 	public void testGetStatusList() throws Exception {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.LOANACCOUNT, null);
+				AccountTypes.LOAN_ACCOUNT, null);
 		List<AccountStateEntity> stateList = service.getStatusList(
 				new AccountStateEntity(
 						AccountState.LOANACC_ACTIVEINGOODSTANDING),
-				AccountTypes.LOANACCOUNT, Short.valueOf("1"));
+				AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
 		assertEquals(2, stateList.size());
 	}
 
 	public void testGetStatusName() throws Exception {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.LOANACCOUNT, null);
+				AccountTypes.LOAN_ACCOUNT, null);
 		assertNotNull(service.getStatusName((short) 1,
-				AccountState.LOANACC_RESCHEDULED, AccountTypes.LOANACCOUNT));
+				AccountState.LOANACC_RESCHEDULED, AccountTypes.LOAN_ACCOUNT));
 	}
 
 	public void testGetFlagName() throws Exception {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.LOANACCOUNT, null);
+				AccountTypes.LOAN_ACCOUNT, null);
 		assertNotNull(service.getFlagName((short) 1,
-				AccountStateFlag.LOAN_WITHDRAW, AccountTypes.LOANACCOUNT));
+				AccountStateFlag.LOAN_WITHDRAW, AccountTypes.LOAN_ACCOUNT));
 	}
 
 	public void testStatesInitializationException() throws Exception {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-					AccountTypes.LOANACCOUNT, null);
+					AccountTypes.LOAN_ACCOUNT, null);
 			fail();
 		} catch (StatesInitializationException sie) {
 		} finally {
@@ -76,12 +76,12 @@ public class TestAccountStateMachine extends MifosTestCase {
 
 	public void testFlagForLoanCancelState() throws Exception {
 		AccountStateMachines.getInstance().initialize((short) 1, (short) 1,
-				AccountTypes.LOANACCOUNT, null);
+				AccountTypes.LOAN_ACCOUNT, null);
 		HibernateUtil.closeSession();
 		List<AccountStateEntity> stateList = service
 				.getStatusList(new AccountStateEntity(
 						AccountState.LOANACC_PARTIALAPPLICATION),
-						AccountTypes.LOANACCOUNT, Short.valueOf("1"));
+						AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
 		for (AccountStateEntity accountState : stateList) {
 			if (accountState.getId().equals(
 					AccountState.LOANACC_CANCEL.getValue())) {

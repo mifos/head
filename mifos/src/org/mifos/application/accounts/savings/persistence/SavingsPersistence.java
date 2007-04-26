@@ -155,7 +155,7 @@ public class SavingsPersistence extends Persistence {
 		Integer count = 0;
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("ACCOUNT_ID", accountId);
-		queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGSACCOUNT
+		queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGS_ACCOUNT
 				.getValue());
 		queryParameters.put("ACTIVE", AccountStates.SAVINGS_ACC_APPROVED);
 		queryParameters.put("CHECKDATE", currentDate);
@@ -177,7 +177,7 @@ public class SavingsPersistence extends Persistence {
 		Integer count = 0;
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put("ACCOUNT_ID", accountId);
-		queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGSACCOUNT
+		queryParameters.put("ACCOUNT_TYPE_ID", AccountTypes.SAVINGS_ACCOUNT
 				.getValue());
 		queryParameters.put("ACTIVE", AccountStates.SAVINGS_ACC_APPROVED);
 		queryParameters.put("PAYMENTSTATUS", PaymentStatus.PAID.getValue());

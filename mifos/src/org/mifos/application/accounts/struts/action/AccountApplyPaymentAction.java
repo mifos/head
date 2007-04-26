@@ -147,7 +147,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 		UserContext uc = (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());
 		CustomerLevel customerLevel = null;
-		if(account.getType().equals(AccountTypes.CUSTOMERACCOUNT))
+		if(account.getType().equals(AccountTypes.CUSTOMER_ACCOUNT))
 			customerLevel = account.getCustomer().getLevel();
 		if (account.getPersonnel() != null)
 			checkPermissionForMakingPayment(account.getType(), customerLevel, uc,
@@ -165,7 +165,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 		account.setVersionNo(savedAccount.getVersionNo());
 		Money amount = new Money();
 		if (account.getAccountType().getAccountTypeId().equals(
-				AccountTypes.LOANACCOUNT.getValue()))
+				AccountTypes.LOAN_ACCOUNT.getValue()))
 			amount = actionForm.getAmount();
 		else
 			amount = account.getTotalPaymentDue();

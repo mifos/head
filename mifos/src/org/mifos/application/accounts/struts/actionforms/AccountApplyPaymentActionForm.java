@@ -137,7 +137,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 			String accountType = request.getParameter("accountType");
 			if (accountType != null
 					&& Short.valueOf(accountType).equals(
-							AccountTypes.LOANACCOUNT.getValue())) {
+							AccountTypes.LOAN_ACCOUNT.getValue())) {
 				if (amount == null || amount.getAmountDoubleValue() <= 0.0) {
 					errors.add(AccountConstants.ERROR_MANDATORY,
 							new ActionMessage(AccountConstants.ERROR_MANDATORY,

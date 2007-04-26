@@ -183,7 +183,7 @@ public class LoanBO extends AccountBO {
 			Short gracePeriodDuration, FundBO fund, List<FeeView> feeViews,
 			List<CustomFieldView> customFields)
 			throws AccountException {
-		super(userContext, customer, AccountTypes.LOANACCOUNT, accountState);
+		super(userContext, customer, AccountTypes.LOAN_ACCOUNT, accountState);
 		validate(loanOffering, loanAmount, noOfinstallments, disbursementDate,
 				interesRate, gracePeriodDuration, fund, customer,interestDeductedAtDisbursement);
 		setCreateDetails();
@@ -388,7 +388,7 @@ public class LoanBO extends AccountBO {
 
 	@Override
 	public AccountTypes getType() {
-		return AccountTypes.LOANACCOUNT;
+		return AccountTypes.LOAN_ACCOUNT;
 	}
 
 	@Override

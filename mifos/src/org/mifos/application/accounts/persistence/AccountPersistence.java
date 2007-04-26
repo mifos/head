@@ -176,7 +176,7 @@ public class AccountPersistence extends Persistence {
 		if ( accountBO==null) return null;
 		if (accountBO != null
 				&& accountBO.getAccountType().getAccountTypeId().equals(
-						AccountTypes.CUSTOMERACCOUNT.getValue()))
+						AccountTypes.CUSTOMER_ACCOUNT.getValue()))
 			return null;
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.LOANACCOUNTIDSEARCH);

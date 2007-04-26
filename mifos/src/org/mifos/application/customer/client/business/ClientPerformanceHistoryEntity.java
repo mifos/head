@@ -143,7 +143,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		Money totalOutStandingAmount = new Money();
 		for (AccountBO accountBO : client.getAccounts()) {
 			if (accountBO.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOANACCOUNT.getValue())
+					AccountTypes.LOAN_ACCOUNT.getValue())
 					&& ((LoanBO) accountBO).isAccountActive()) {
 				amountOverDue = amountOverDue.add(((LoanBO) accountBO)
 						.getTotalPrincipalAmountInArrears());

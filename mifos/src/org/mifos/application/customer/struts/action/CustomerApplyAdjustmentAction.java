@@ -87,12 +87,12 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 		customerBO.getCustomerAccount().setUserContext(uc);
 		if (customerBO.getPersonnel() != null)
 			getAccountBizService().checkPermissionForAdjustment(
-					AccountTypes.CUSTOMERACCOUNT, customerBO.getLevel(), uc,
+					AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel(), uc,
 					customerBO.getOffice().getOfficeId(),
 					customerBO.getPersonnel().getPersonnelId());
 		else
 			getAccountBizService().checkPermissionForAdjustment(
-					AccountTypes.CUSTOMERACCOUNT, customerBO.getLevel(), uc,
+					AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel(), uc,
 					customerBO.getOffice().getOfficeId(), uc.getId());
 		try {
 		customerBO.adjustPmnt(applyAdjustmentActionForm.getAdjustmentNote());

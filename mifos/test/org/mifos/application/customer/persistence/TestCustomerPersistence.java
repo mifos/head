@@ -854,26 +854,26 @@ public class TestCustomerPersistence extends MifosTestCase {
 		TestObjectFactory.updateObject(clientSavingsAccount);
 		HibernateUtil.commitTransaction();
 		assertEquals(1, customerPersistence.getAllClosedAccount(
-				client.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				client.getCustomerId(), AccountTypes.LOAN_ACCOUNT.getValue())
 				.size());
 		assertEquals(1, customerPersistence.getAllClosedAccount(
-				group.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				group.getCustomerId(), AccountTypes.LOAN_ACCOUNT.getValue())
 				.size());
 		assertEquals(1, customerPersistence.getAllClosedAccount(
-				client.getCustomerId(), AccountTypes.SAVINGSACCOUNT.getValue())
+				client.getCustomerId(), AccountTypes.SAVINGS_ACCOUNT.getValue())
 				.size());
 	}
 
 	public void testGetAllClosedAccountsWhenNoAccountsClosed() throws Exception {
 		getCustomer();
 		assertEquals(0, customerPersistence.getAllClosedAccount(
-				client.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				client.getCustomerId(), AccountTypes.LOAN_ACCOUNT.getValue())
 				.size());
 		assertEquals(0, customerPersistence.getAllClosedAccount(
-				group.getCustomerId(), AccountTypes.LOANACCOUNT.getValue())
+				group.getCustomerId(), AccountTypes.LOAN_ACCOUNT.getValue())
 				.size());
 		assertEquals(0, customerPersistence.getAllClosedAccount(
-				client.getCustomerId(), AccountTypes.SAVINGSACCOUNT.getValue())
+				client.getCustomerId(), AccountTypes.SAVINGS_ACCOUNT.getValue())
 				.size());
 	}
 

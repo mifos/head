@@ -231,12 +231,12 @@ public class TestBulkEntryView extends MifosTestCase {
 				.getBulkEntryActionView(DateUtils
 						.getCurrentDateWithoutTimeStamp(),
 						center.getSearchId(), center.getOffice().getOfficeId(),
-						AccountTypes.CUSTOMERACCOUNT);
+						AccountTypes.CUSTOMER_ACCOUNT);
 		List<BulkEntryAccountFeeActionView> bulkEntryAccountFeeActionViews = bulkEntryPersistanceService
 				.getBulkEntryFeeActionView(DateUtils
 						.getCurrentDateWithoutTimeStamp(),
 						center.getSearchId(), center.getOffice().getOfficeId(),
-						AccountTypes.CUSTOMERACCOUNT);
+						AccountTypes.CUSTOMER_ACCOUNT);
 		assertNotNull(center.getCustomerAccount());
 		BulkEntryView bulkEntryView = new BulkEntryView(getCustomerView(center));
 		bulkEntryView.populateCustomerAccountInformation(center,
