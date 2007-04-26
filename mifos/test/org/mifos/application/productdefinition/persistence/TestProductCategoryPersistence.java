@@ -6,9 +6,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.ProductTypeEntity;
+import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -40,12 +40,19 @@ public class TestProductCategoryPersistence extends MifosTestCase {
 		assertEquals(Integer.valueOf("0"),productCategoryPersistence.getProductCategory("product"));
 	}
 	
-	public void testGetProductTypes() throws  SystemException, ApplicationException{
-		List<ProductTypeEntity> productTypeList=productCategoryPersistence.getProductTypes();
+	/**
+	 * TODO: this test depends on data ("Savings"->"Margin Money") 
+	 * which is set up in
+	 * ConfigurationTestSuite, so it won't pass if run on its own.
+	 */
+	public void testGetProductTypes() throws Exception {
+		List<ProductTypeEntity> productTypeList=
+			productCategoryPersistence.getProductTypes();
 		assertEquals(2,productTypeList.size());
 		for(ProductTypeEntity productTypeEntity : productTypeList){
 			productTypeEntity.setUserContext(TestObjectFactory.getUserContext());
-			if(productTypeEntity.getProductTypeID().equals(Short.valueOf("1")))
+			if(productTypeEntity.getProductTypeID().equals(
+					ProductType.LOAN.getValue()))
 				assertEquals("Loan",productTypeEntity.getName());
 			else
 				assertEquals("Margin Money",productTypeEntity.getName());
@@ -53,7 +60,9 @@ public class TestProductCategoryPersistence extends MifosTestCase {
 	}
 	
 	public void testGetPrdCategory() throws Exception {
-		assertEquals(Integer.valueOf("0"),productCategoryPersistence.getProductCategory("product category",getProductCategory().get(0).getProductCategoryID()));
+		assertEquals(Integer.valueOf("0"),
+			productCategoryPersistence.getProductCategory(
+				"product category",getProductCategory().get(0).getProductCategoryID()));
 		ProductCategoryBO productCategoryBO = createProductCategory();
 		assertEquals(Integer.valueOf("0"),productCategoryPersistence.getProductCategory("product category",getProductCategory().get(2).getProductCategoryID()));
 		assertEquals(Integer.valueOf("1"),productCategoryPersistence.getProductCategory("product category",getProductCategory().get(1).getProductCategoryID()));
@@ -77,13 +86,15 @@ public class TestProductCategoryPersistence extends MifosTestCase {
 		deleteProductCategory(productCategoryBO);
 	}
 	
-	
+
 	private List<ProductCategoryBO> getProductCategory() {
-		return (List<ProductCategoryBO>) HibernateUtil
-				.getSessionTL()
-				.createQuery(
-						"from org.mifos.application.productdefinition.business.ProductCategoryBO pcb order by pcb.productCategoryID")
-				.list();
+		return HibernateUtil
+			.getSessionTL()
+			.createQuery(
+				"from " +
+				ProductCategoryBO.class.getName() +
+				" pcb order by pcb.productCategoryID")
+			.list();
 	}
 
 	private void deleteProductCategory(ProductCategoryBO productCategoryBO) {
@@ -94,15 +105,11 @@ public class TestProductCategoryPersistence extends MifosTestCase {
 	}
 	
 	private ProductCategoryBO createProductCategory() throws Exception{
-		userContext=TestObjectFactory.getUserContext();
+		userContext=TestUtils.makeUser();
 		ProductCategoryBO productCategoryBO =new ProductCategoryBO(userContext,productCategoryPersistence.getProductTypes().get(0),"product category","created a category");
 		productCategoryBO.save();
 		HibernateUtil.commitTransaction();
-		return (ProductCategoryBO)HibernateUtil
-		.getSessionTL()
-		.createQuery(
-				"from org.mifos.application.productdefinition.business.ProductCategoryBO pcb order by pcb.productCategoryID")
-		.list().get(2);
+		return getProductCategory().get(2);
 	}
 
 }

@@ -42,10 +42,11 @@ public class LabelConfigurationActionTest extends MifosMockStrutsTestCase {
 	}
 
 	/**
-	 * TODO: This test only pass when run as part of
-	 * {@link ApplicationTestSuite}, not by themselves.
+	 * TODO: This test only passes when run as part of
+	 * {@link ApplicationTestSuite}, not by itself.
 	 * Something seems to be putting in Grameen Koota configuration
-	 * (Kendra/Member instead of Center/Client, etc).  But what?
+	 * (Kendra/Member instead of Center/Client, etc).  It seems
+	 * to be in ConfigurationTestSuite.
 	 */
 	public void testLoad() throws Exception {
 		setRequestPathInfo("/labelconfigurationaction.do");

@@ -26,7 +26,6 @@ public class TestMasterPersistence extends MifosTestCase {
 	@Override
 	public void tearDown() {
 		HibernateUtil.closeSession();
-
 	}
 
 	public void testEntityMasterRetrieval() throws Exception {
