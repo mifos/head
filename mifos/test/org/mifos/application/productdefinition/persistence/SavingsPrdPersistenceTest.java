@@ -14,6 +14,10 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -104,9 +108,13 @@ public class SavingsPrdPersistenceTest extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering("Savings Product", "SAVP", ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()), 
-				((short) 2), 300.0, ((short) 1), 1.2, 
-				200.0, 200.0, ((short) 2), ((short) 1), 
+		return TestObjectFactory.createSavingsOffering(
+				"Savings Product", "SAVP", ApplicableTo.CLIENTS, 
+				new Date(System.currentTimeMillis()), 
+				PrdStatus.SAVINGS_ACTIVE, 300.0, 
+				RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 
+				200.0, 200.0, 
+				SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
 				meetingIntCalc, meetingIntPost);
 	}
 

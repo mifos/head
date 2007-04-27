@@ -25,6 +25,10 @@ import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcHelper;
@@ -194,14 +198,14 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 		center = TestObjectFactory.createCenter("Center_Active_test", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
 
-		savingsOffering1 = createSavingsOffering("prd1", "34vf", Short
-				.valueOf("1"));
-		savingsOffering2 = createSavingsOffering("prd2", "4frg", Short
-				.valueOf("1"));
-		savingsOffering3 = createSavingsOffering("prd3", "c23e", Short
-				.valueOf("1"));
-		savingsOffering4 = createSavingsOffering("prd4", "cwer", Short
-				.valueOf("2"));
+		savingsOffering1 = createSavingsOffering("prd1", "34vf", 
+				InterestCalcType.MINIMUM_BALANCE);
+		savingsOffering2 = createSavingsOffering("prd2", "4frg", 
+				InterestCalcType.MINIMUM_BALANCE);
+		savingsOffering3 = createSavingsOffering("prd3", "c23e", 
+				InterestCalcType.MINIMUM_BALANCE);
+		savingsOffering4 = createSavingsOffering("prd4", "cwer", 
+				InterestCalcType.AVERAGE_BALANCE);
 		savings1 = helper.createSavingsAccount(savingsOffering1, group,
 				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		savings2 = helper.createSavingsAccount(savingsOffering2, group,
@@ -213,17 +217,21 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 	}
 
 	private SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName, Short interestCalcType) throws Exception {
+			String shortName, InterestCalcType interestCalcType) throws Exception {
 		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY, EVERY_MONTH, 
+				.createMeeting(TestObjectFactory.getNewMeeting(
+						MONTHLY, EVERY_MONTH, 
 						SAVINGS_INTEREST_CALCULATION_TIME_PERIOD, MONDAY));
 		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY, EVERY_MONTH,
+				.createMeeting(TestObjectFactory.getNewMeeting(
+						MONTHLY, EVERY_MONTH,
 						SAVINGS_INTEREST_POSTING, MONDAY));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
-				Short
-										.valueOf("2"), 300.0, Short.valueOf("1"), 12.0, 
-				200.0, 200.0, Short.valueOf("2"), interestCalcType, 
+		return TestObjectFactory.createSavingsOffering(
+				offeringName, shortName, ApplicableTo.GROUPS, 
+				new Date(System.currentTimeMillis()), 
+				PrdStatus.SAVINGS_ACTIVE, 300.0, 
+				RecommendedAmountUnit.PER_INDIVIDUAL, 12.0, 
+				200.0, 200.0, SavingsType.VOLUNTARY, interestCalcType, 
 				meetingIntCalc, meetingIntPost);
 	}
 

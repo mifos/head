@@ -533,15 +533,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 	private AccountBO getSavingsAccount(CustomerBO customer, MeetingBO meeting,
 			String prdOfferingname, String shortName) throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering(prdOfferingname, shortName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
-		Short.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 
-		200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), 
-		meetingIntCalc, meetingIntPost);
-		return TestObjectFactory.createSavingsAccount("432434", customer, Short
+		SavingsOfferingBO savingsOffering = 
+			TestObjectFactory.createSavingsProduct(
+				prdOfferingname, shortName, startDate);
+		return TestObjectFactory.createSavingsAccount("432434", customer, 
+				Short
 				.valueOf("16"), startDate, savingsOffering);
 
 	}

@@ -221,6 +221,9 @@ public class TestObjectFactory {
 	private static final short SAMPLE_CATEGORY = 2;
 	
 	// As set up in latest-data.sql
+	public static final short GENERAL_LEDGER_CODE_ID_FOR_ASSETS = 1;
+	public static final short 
+		GENERAL_LEDGER_CODE_ID_FOR_CASH_AND_BANK_BALANCES = 2;
 	public static final short GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE = 7;
 	public static final short GENERAL_LEDGER_CODE_ID_FOR_FEES = 24;
 
@@ -636,26 +639,6 @@ public class TestObjectFactory {
 				GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE);
 	}
 	
-	/**
-	 * Deprecated in favor of the one which takes enums.
-	 * Also, some callers should be calling
-	 * {@link #createSavingsProduct(String, String, Date)} (just to get rid
-	 * of the long argument list and hopefully make the test more readable).
-	 */
-	public static SavingsOfferingBO createSavingsOffering(String name,
-			String shortName, ApplicableTo applicableTo, Date startDate,
-			Short offeringStatusId, Double recommenededAmt,
-			Short recomAmtUnitId, Double intRate, Double maxAmtWithdrawl,
-			Double minAmtForInt, Short savingsTypeId, Short intCalTypeId,
-			MeetingBO intCalcMeeting, MeetingBO intPostMeeting) {
-		return createSavingsOffering(name, shortName, applicableTo.getValue(), 
-				startDate,
-				offeringStatusId, recommenededAmt, recomAmtUnitId, intRate,
-				maxAmtWithdrawl, minAmtForInt, savingsTypeId, intCalTypeId,
-				intCalcMeeting, intPostMeeting, 
-				GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE, GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE);
-	}
-
 	public static SavingsOfferingBO createSavingsOffering(String name,
 			String shortName, ApplicableTo applicableTo, Date startDate,
 			PrdStatus status, Double recommendedAmount,
@@ -663,12 +646,15 @@ public class TestObjectFactory {
 			Double minAmtForInt, SavingsType savingsType, 
 			InterestCalcType interestCalculation,
 			MeetingBO intCalcMeeting, MeetingBO intPostMeeting) {
-		return createSavingsOffering(name, shortName, applicableTo,
-			startDate, status.getValue(), recommendedAmount,
-			unit.getValue(), intRate, maxAmtWithdrawl, minAmtForInt,
-			savingsType.getValue(), interestCalculation.getValue(),
-			intCalcMeeting, intPostMeeting
-			);
+		return createSavingsOffering(name, shortName, 
+			applicableTo, 
+			startDate,
+			status.getValue(), recommendedAmount, unit, intRate,
+			maxAmtWithdrawl, minAmtForInt, savingsType, 
+			interestCalculation,
+			intCalcMeeting, intPostMeeting, 
+			GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE, 
+			GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE);
 	}
 
 	/**
@@ -696,7 +682,7 @@ public class TestObjectFactory {
 				intCalcMeeting, intPostMeeting, depGLCode, withGLCode);
 	}
 
-	private static SavingsOfferingBO createSavingsOffering(
+	public static SavingsOfferingBO createSavingsOffering(
 			String name, String shortName, ApplicableTo applicableTo, 
 			Date startDate, Short offeringStatusId, 
 			Double recommendedAmount, 
@@ -747,7 +733,7 @@ public class TestObjectFactory {
 	}
 
 	public static SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName, SavingsType savingsTypeId,
+			String shortName, SavingsType savingsType,
 			ApplicableTo applicableTo, Date currentDate) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -755,10 +741,10 @@ public class TestObjectFactory {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		return createSavingsOffering(offeringName, shortName, applicableTo, 
 				currentDate, 
-				Short.valueOf("2"), 300.0, 
-				RecommendedAmountUnit.PER_INDIVIDUAL.getValue(), 24.0, 
-				200.0, 200.0, savingsTypeId.getValue(), 
-				InterestCalcType.MINIMUM_BALANCE.getValue(), 
+				PrdStatus.SAVINGS_ACTIVE, 300.0, 
+				RecommendedAmountUnit.PER_INDIVIDUAL, 24.0, 
+				200.0, 200.0, savingsType, 
+				InterestCalcType.MINIMUM_BALANCE, 
 				meetingIntCalc, meetingIntPost);
 	}
 
@@ -2091,14 +2077,20 @@ public class TestObjectFactory {
 			String shortName, Short interestCalcType, Short savingsTypeId,
 			Short depGLCode, Short intGLCode,
 			RecommendedAmountUnit recommendedAmountUnit) {
+		SavingsType savingsType = SavingsType.fromInt(savingsTypeId);
+		InterestCalcType calculation = 
+			InterestCalcType.fromInt(interestCalcType);
+
 		MeetingBO meetingIntCalc = createMeeting(
 				getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = createMeeting(
 				getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		return createSavingsOffering(offeringName, shortName,
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, recommendedAmountUnit.getValue(),
-				24.0, 200.0, 200.0, savingsTypeId, interestCalcType,
+				ApplicableTo.GROUPS, 
+				new Date(System.currentTimeMillis()), 
+				PrdStatus.SAVINGS_ACTIVE.getValue(), 300.0, 
+				recommendedAmountUnit,
+				24.0, 200.0, 200.0, savingsType, calculation,
 				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
 	}
 

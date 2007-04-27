@@ -51,6 +51,7 @@ import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.productdefinition.util.helpers.ProductType;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
@@ -935,9 +936,13 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(prdOfferingName, shortName, ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()), 
-				((short) 2), 300.0, ((short) 1), 1.2, 
-				200.0, 200.0, ((short) 2), ((short) 1), 
+		return TestObjectFactory.createSavingsOffering(
+				prdOfferingName, shortName, ApplicableTo.CLIENTS, 
+				new Date(System.currentTimeMillis()), 
+				PrdStatus.SAVINGS_ACTIVE, 300.0, 
+				RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 
+				200.0, 200.0, 
+				SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE,
 				meetingIntCalc, meetingIntPost);
 	}
 
@@ -968,15 +973,15 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 			String shortName, ApplicableTo applicableTo, Date startDate,
 			PrdStatus offeringStatus, SavingsType savingType,
 			InterestCalcType interestCalcType) {
-
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(prdOfferingName, shortName, applicableTo, startDate, 
-				offeringStatus
-										.getValue(), 300.0, ((short) 1), 1.2, 
-				200.0, 200.0, savingType.getValue(), interestCalcType.getValue(), 
+		return TestObjectFactory.createSavingsOffering(
+				prdOfferingName, shortName, applicableTo, startDate, 
+				offeringStatus, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
+				1.2, 
+				200.0, 200.0, savingType, interestCalcType, 
 				meetingIntCalc, meetingIntPost);
 	}
 

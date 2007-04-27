@@ -31,6 +31,10 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
@@ -119,28 +123,27 @@ public class SavingsTestHelper {
 
 	public SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName) {
-		return createSavingsOffering(offeringName, shortName, Short
-				.valueOf("1"), Short.valueOf("2"));
+		return createSavingsOffering(offeringName, shortName, 
+			TestObjectFactory.GENERAL_LEDGER_CODE_ID_FOR_ASSETS,
+			TestObjectFactory.GENERAL_LEDGER_CODE_ID_FOR_CASH_AND_BANK_BALANCES
+			);
 	}
 
 	public SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName, Short depGLCode, Short intGLCode) {
-		return createSavingsOffering(offeringName, shortName, Short
-				.valueOf("1"), Short.valueOf("2"), depGLCode, intGLCode);
-	}
-
-	public SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName, Short interestCalcType, Short savingsTypeId,
-			Short depGLCode, Short intGLCode) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 24.0, 200.0,
-				200.0, savingsTypeId, interestCalcType, meetingIntCalc,
-				meetingIntPost, depGLCode, intGLCode);
+		return TestObjectFactory.createSavingsOffering(
+				offeringName, shortName,
+				ApplicableTo.GROUPS, 
+				new Date(System.currentTimeMillis()), 
+				PrdStatus.SAVINGS_ACTIVE.getValue(), 
+				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 24.0, 200.0,
+				200.0, SavingsType.VOLUNTARY, 
+				InterestCalcType.MINIMUM_BALANCE, 
+				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
 	}
 
 	public SavingsOfferingBO createSavingsOffering(String offeringName,

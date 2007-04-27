@@ -15,8 +15,11 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.ProductCategoryBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -1034,17 +1037,20 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		return DateUtils.convertDbToUserFmt(currentDate.toString(), userfmt);
 	}
 
-	private SavingsOfferingBO createSavingsOfferingBO(String prdOfferingName,
+	private SavingsOfferingBO createSavingsOfferingBO(String productName,
 			String shortName) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		savingsOffering = TestObjectFactory.createSavingsOffering(prdOfferingName, shortName, ApplicableTo.CLIENTS, new Date(System
-						.currentTimeMillis()), 
-		((short) 2), 300.0, ((short) 1), 1.2, 
-		200.0, 200.0, ((short) 2), ((short) 1), 
-		meetingIntCalc, meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering(
+			productName, shortName, ApplicableTo.CLIENTS, 
+			new Date(System.currentTimeMillis()), 
+			PrdStatus.SAVINGS_ACTIVE, 300.0, 
+			RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 
+			200.0, 200.0, 
+			SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
+			meetingIntCalc, meetingIntPost);
 		return savingsOffering;
 	}
 

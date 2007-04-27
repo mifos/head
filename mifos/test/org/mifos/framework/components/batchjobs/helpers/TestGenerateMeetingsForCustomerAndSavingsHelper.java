@@ -1,5 +1,7 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
+import static org.mifos.framework.util.helpers.TestObjectFactory.GENERAL_LEDGER_CODE_ID_FOR_CASH_AND_BANK_BALANCES;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,9 +15,12 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeView;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
+import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.batchjobs.helpers.GenerateMeetingsForCustomerAndSavingsTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -83,9 +88,13 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		group = TestObjectFactory.createGroupUnderCenter("Group_Active_test",
 				CustomerStatus.GROUP_ACTIVE, center);
 		SavingsTestHelper helper = new SavingsTestHelper();
-		savingsOffering = createSavingsOffering("dfasdasd1", "sad1", Short
-				.valueOf("1"), Short.valueOf("2"), Short.valueOf("1"), Short
-				.valueOf("2"), RecommendedAmountUnit.COMPLETE_GROUP);
+		savingsOffering = createSavingsOffering(
+				"dfasdasd1", "sad1", 
+				InterestCalcType.MINIMUM_BALANCE, 
+				SavingsType.VOLUNTARY, 
+				TestObjectFactory.GENERAL_LEDGER_CODE_ID_FOR_ASSETS, 
+				GENERAL_LEDGER_CODE_ID_FOR_CASH_AND_BANK_BALANCES, 
+				RecommendedAmountUnit.COMPLETE_GROUP);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountState.SAVINGS_ACC_APPROVED, userContext);
 		Date meetingStartDate = savings.getCustomer().getCustomerMeeting()
@@ -146,17 +155,21 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 	}
 	
 	private SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName, Short interestCalcType, Short savingsTypeId,
+			String shortName, InterestCalcType interestCalcType, 
+			SavingsType savingsType,
 			Short depGLCode, Short intGLCode,
 			RecommendedAmountUnit recommendedAmountUnit) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName,
-				Short.valueOf("2"), new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, recommendedAmountUnit.getValue(),
-				24.0, 200.0, 200.0, savingsTypeId, interestCalcType,
+		return TestObjectFactory.createSavingsOffering(
+				offeringName, shortName,
+				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
+				PrdStatus.SAVINGS_ACTIVE.getValue(), 300.0, 
+				recommendedAmountUnit,
+				24.0, 200.0, 200.0, savingsType, interestCalcType,
 				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
 	}
+
 }
