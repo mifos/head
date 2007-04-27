@@ -220,14 +220,6 @@ public class TestObjectFactory {
 	
 	private static final short SAMPLE_CATEGORY = 2;
 	
-	// As set up in latest-data.sql
-	public static final short GENERAL_LEDGER_CODE_ID_FOR_ASSETS = 1;
-	public static final short 
-		GENERAL_LEDGER_CODE_ID_FOR_CASH_AND_BANK_BALANCES = 2;
-	public static final short GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE = 7;
-	public static final short GENERAL_LEDGER_CODE_ID_FOR_FEES = 24;
-
-
 	/**
 	 * Corresponds to a locale we set up in latest-data.
 	 */
@@ -624,19 +616,17 @@ public class TestObjectFactory {
 	}
 	
 	public static SavingsOfferingBO createSavingsOffering(String name,
-			ApplicableTo applicableTo, Date startDate, 
-			Short offeringStatusId,
-			Double recommenededAmt, Short recomAmtUnitId, Double intRate,
-			Double maxAmtWithdrawl, Double minAmtForInt, Short savingsTypeId,
-			Short intCalTypeId, MeetingBO intCalcMeeting,
-			MeetingBO intPostMeeting) {
-		return createSavingsOffering(name, name.substring(0, 1), 
-				applicableTo.getValue(),
-				startDate, offeringStatusId, recommenededAmt, recomAmtUnitId,
-				intRate, maxAmtWithdrawl, minAmtForInt, savingsTypeId,
-				intCalTypeId, intCalcMeeting, intPostMeeting, 
-				GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE,
-				GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE);
+		ApplicableTo applicableTo, Date startDate, 
+		PrdStatus status,
+		Double recommendedAmount, RecommendedAmountUnit unit, Double intRate,
+		Double maxAmtWithdrawl, Double minAmtForInt, SavingsType savingsType,
+		InterestCalcType interestCalculation, MeetingBO intCalcMeeting,
+		MeetingBO intPostMeeting) {
+		return createSavingsOffering(name, name.substring(0, 1),
+			applicableTo, startDate, status, recommendedAmount, unit,
+			intRate, maxAmtWithdrawl, minAmtForInt, savingsType,
+			interestCalculation, intCalcMeeting,
+			intPostMeeting);
 	}
 	
 	public static SavingsOfferingBO createSavingsOffering(String name,
@@ -649,42 +639,17 @@ public class TestObjectFactory {
 		return createSavingsOffering(name, shortName, 
 			applicableTo, 
 			startDate,
-			status.getValue(), recommendedAmount, unit, intRate,
+			status, recommendedAmount, unit, intRate,
 			maxAmtWithdrawl, minAmtForInt, savingsType, 
 			interestCalculation,
 			intCalcMeeting, intPostMeeting, 
-			GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE, 
-			GENERAL_LEDGER_CODE_ID_FOR_BANK_ACCOUNT_ONE);
-	}
-
-	/**
-	 * Deprecated in favor of the one which takes enums.
-	 */
-	public static SavingsOfferingBO createSavingsOffering(String name,
-			String shortName, Short applicableInt, Date startDate,
-			Short offeringStatusId, Double recommenededAmt,
-			Short recomAmtUnitId, Double intRate, Double maxAmtWithdrawl,
-			Double minAmtForInt, Short savingsTypeId, Short intCalTypeId,
-			MeetingBO intCalcMeeting, MeetingBO intPostMeeting,
-			Short depGLCode, Short withGLCode) {
-		ApplicableTo applicableTo = 
-			ApplicableTo.fromInt(applicableInt);
-		SavingsType savingsType = SavingsType.fromInt(savingsTypeId);
-		InterestCalcType interestCalculationType = 
-			InterestCalcType.fromInt(intCalTypeId);
-		RecommendedAmountUnit recommendedAmountUnit = 
-			RecommendedAmountUnit.fromInt(recomAmtUnitId);
-
-		return createSavingsOffering(name, shortName, applicableTo, 
-				startDate, offeringStatusId, recommenededAmt, 
-				recommendedAmountUnit, intRate, maxAmtWithdrawl, minAmtForInt, 
-				savingsType, interestCalculationType, 
-				intCalcMeeting, intPostMeeting, depGLCode, withGLCode);
+			TestGeneralLedgerCode.BANK_ACCOUNT_ONE, 
+			TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
 	}
 
 	public static SavingsOfferingBO createSavingsOffering(
 			String name, String shortName, ApplicableTo applicableTo, 
-			Date startDate, Short offeringStatusId, 
+			Date startDate, PrdStatus status, 
 			Double recommendedAmount, 
 			RecommendedAmountUnit recommendedAmountUnit, 
 			Double intRate, Double maxAmtWithdrawl, Double minAmtForInt, 
@@ -726,7 +691,7 @@ public class TestObjectFactory {
 		}
 
 		PrdStatusEntity prdStatus = testObjectPersistence
-				.retrievePrdStatus(offeringStatusId);
+				.retrievePrdStatus(status);
 		savingsOffering.setPrdStatus(prdStatus);
 		return (SavingsOfferingBO) addObject(testObjectPersistence
 				.persist(savingsOffering));
@@ -888,7 +853,7 @@ public class TestObjectFactory {
 		try {
 			GLCodeEntity glCode = (GLCodeEntity) 
 				HibernateUtil.getSessionTL().get(
-					GLCodeEntity.class, GENERAL_LEDGER_CODE_ID_FOR_FEES);
+					GLCodeEntity.class, TestGeneralLedgerCode.FEES);
 			MeetingBO meeting = 
 				new MeetingBO(meetingFrequency, recurAfter, new Date(),
 					MeetingType.PERIODIC_FEE);
@@ -919,7 +884,7 @@ public class TestObjectFactory {
 			FeeCategory feeCategory, String feeAmnt, FeePayment feePayment,
 			UserContext userContext) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, GENERAL_LEDGER_CODE_ID_FOR_FEES);
+				GLCodeEntity.class, TestGeneralLedgerCode.FEES);
 		try {
 			FeeBO fee = 
 				new AmountFeeBO(userContext, feeName,
@@ -937,7 +902,7 @@ public class TestObjectFactory {
 			FeeCategory feeCategory, Double rate, FeeFormula feeFormula,
 			FeePayment feePayment) {
 		GLCodeEntity glCode = (GLCodeEntity) HibernateUtil.getSessionTL().get(
-				GLCodeEntity.class, GENERAL_LEDGER_CODE_ID_FOR_FEES);
+				GLCodeEntity.class, TestGeneralLedgerCode.FEES);
 		FeeBO fee;
 		try {
 			fee = new RateFeeBO(TestObjectFactory.getUserContext(), feeName,
@@ -2088,7 +2053,7 @@ public class TestObjectFactory {
 		return createSavingsOffering(offeringName, shortName,
 				ApplicableTo.GROUPS, 
 				new Date(System.currentTimeMillis()), 
-				PrdStatus.SAVINGS_ACTIVE.getValue(), 300.0, 
+				PrdStatus.SAVINGS_ACTIVE, 300.0, 
 				recommendedAmountUnit,
 				24.0, 200.0, 200.0, savingsType, calculation,
 				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
@@ -2106,10 +2071,16 @@ public class TestObjectFactory {
 				recommendedAmountUnit);
 	}
 
+	/**
+	 * This method is not recommended because it indirectly calls 
+	 * {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)}.
+	 */
 	public static SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName, RecommendedAmountUnit recommendedAmountUnit) {
-		return createSavingsOffering(offeringName, shortName, Short
-				.valueOf("1"), Short.valueOf("2"), recommendedAmountUnit);
+		return createSavingsOffering(offeringName, shortName, 
+			TestGeneralLedgerCode.ASSETS,
+			TestGeneralLedgerCode.CASH_AND_BANK_BALANCES, 
+			recommendedAmountUnit);
 	}
 
 	public static SavingsOfferingBO createSavingsProduct(
@@ -2132,5 +2103,5 @@ public class TestObjectFactory {
 				InterestCalcType.MINIMUM_BALANCE, 
 				meetingIntCalc, meetingIntPost);
 	}
-
+	
 }

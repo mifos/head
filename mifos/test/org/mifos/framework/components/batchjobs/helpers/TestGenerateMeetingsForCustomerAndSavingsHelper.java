@@ -1,7 +1,5 @@
 package org.mifos.framework.components.batchjobs.helpers;
 
-import static org.mifos.framework.util.helpers.TestObjectFactory.GENERAL_LEDGER_CODE_ID_FOR_CASH_AND_BANK_BALANCES;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +22,7 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
@@ -92,8 +91,8 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				"dfasdasd1", "sad1", 
 				InterestCalcType.MINIMUM_BALANCE, 
 				SavingsType.VOLUNTARY, 
-				TestObjectFactory.GENERAL_LEDGER_CODE_ID_FOR_ASSETS, 
-				GENERAL_LEDGER_CODE_ID_FOR_CASH_AND_BANK_BALANCES, 
+				TestGeneralLedgerCode.ASSETS, 
+				TestGeneralLedgerCode.CASH_AND_BANK_BALANCES, 
 				RecommendedAmountUnit.COMPLETE_GROUP);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountState.SAVINGS_ACC_APPROVED, userContext);
@@ -166,7 +165,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 		return TestObjectFactory.createSavingsOffering(
 				offeringName, shortName,
 				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
-				PrdStatus.SAVINGS_ACTIVE.getValue(), 300.0, 
+				PrdStatus.SAVINGS_ACTIVE, 300.0, 
 				recommendedAmountUnit,
 				24.0, 200.0, 200.0, savingsType, interestCalcType,
 				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);

@@ -17,6 +17,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -422,12 +426,9 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 	}
 
 	private SavingsOfferingBO createSavingsOffering() {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		Date currentDate = new Date(System.currentTimeMillis());
+		return TestObjectFactory.createSavingsProduct(
+			"SavingPrd1", "S", currentDate);
 	}
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,

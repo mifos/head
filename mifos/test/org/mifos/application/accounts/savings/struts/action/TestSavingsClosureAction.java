@@ -330,12 +330,9 @@ public class TestSavingsClosureAction extends MifosMockStrutsTestCase {
 	}
 
 	private SavingsOfferingBO createSavingsOffering() {
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-						.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		Date currentDate = new Date(System.currentTimeMillis());
+		return TestObjectFactory.createSavingsProduct(
+			"SavingPrd1", "S", currentDate);
 	}
 
 	private SavingsBO createSavingsAccount(String globalAccountNum,

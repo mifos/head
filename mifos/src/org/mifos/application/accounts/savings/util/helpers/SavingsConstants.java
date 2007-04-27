@@ -37,6 +37,7 @@
  */
 package org.mifos.application.accounts.savings.util.helpers;
 
+
 public class SavingsConstants {
 	// constants used at jsps
 	public static final String SAVINGS_PRD_OFFERINGS = "savingsPrdOfferings";
@@ -88,11 +89,6 @@ public class SavingsConstants {
 	public static final String PAYMENT_AMOUNT = "amount";
 
 	public static final Short DEFAULT_PAYMENT_TYPE = 1;
-
-	// savings types
-	public static final short SAVINGS_MANDATORY = 1;
-
-	public static final short SAVINGS_VOLUNTARY = 2;
 
 	public static final short SAVINGS_ALL = 3;
 	

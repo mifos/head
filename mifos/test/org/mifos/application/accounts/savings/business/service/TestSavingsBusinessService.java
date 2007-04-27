@@ -14,7 +14,11 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.application.productdefinition.util.helpers.PrdOfferingView;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -174,8 +178,14 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 
 		Date startDate = new Date(System.currentTimeMillis());
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering(
+			"SavingPrd1", ApplicableTo.GROUPS, 
+			new Date(System.currentTimeMillis()), 
+			PrdStatus.SAVINGS_ACTIVE, 
+			300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
+			1.2, 200.0, 200.0, 
+			SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
+			meetingIntCalc, meetingIntPost);
 		savings = TestObjectFactory.createSavingsAccount("432434", center,
 				AccountState.SAVINGS_ACC_CLOSED.getValue(), startDate,
 				savingsOffering);
@@ -192,8 +202,14 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 
 		Date startDate = new Date(System.currentTimeMillis());
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering(
+				"SavingPrd1", ApplicableTo.GROUPS, 
+				new Date(System.currentTimeMillis()), 
+				PrdStatus.SAVINGS_ACTIVE, 
+				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
+				1.2, 200.0, 200.0, 
+				SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
+				meetingIntCalc, meetingIntPost);
 		savings = TestObjectFactory.createSavingsAccount("432434", center,
 				AccountState.SAVINGS_ACC_CLOSED.getValue(), startDate,
 				savingsOffering);

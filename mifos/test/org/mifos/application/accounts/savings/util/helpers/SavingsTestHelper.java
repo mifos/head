@@ -38,6 +38,7 @@ import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsTestHelper {
@@ -124,8 +125,8 @@ public class SavingsTestHelper {
 	public SavingsOfferingBO createSavingsOffering(String offeringName,
 			String shortName) {
 		return createSavingsOffering(offeringName, shortName, 
-			TestObjectFactory.GENERAL_LEDGER_CODE_ID_FOR_ASSETS,
-			TestObjectFactory.GENERAL_LEDGER_CODE_ID_FOR_CASH_AND_BANK_BALANCES
+			TestGeneralLedgerCode.ASSETS,
+			TestGeneralLedgerCode.CASH_AND_BANK_BALANCES
 			);
 	}
 
@@ -139,7 +140,7 @@ public class SavingsTestHelper {
 				offeringName, shortName,
 				ApplicableTo.GROUPS, 
 				new Date(System.currentTimeMillis()), 
-				PrdStatus.SAVINGS_ACTIVE.getValue(), 
+				PrdStatus.SAVINGS_ACTIVE, 
 				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 24.0, 200.0,
 				200.0, SavingsType.VOLUNTARY, 
 				InterestCalcType.MINIMUM_BALANCE, 
@@ -147,13 +148,19 @@ public class SavingsTestHelper {
 	}
 
 	public SavingsOfferingBO createSavingsOffering(String offeringName,
-			Short interestCalcType, Short savingsTypeId) {
+			InterestCalcType interestCalcType, SavingsType savingsType) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(offeringName, ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-										.valueOf("2"), 300.0, Short.valueOf("1"), 24.0, 200.0, 200.0, savingsTypeId, interestCalcType, meetingIntCalc, meetingIntPost);
+		return TestObjectFactory.createSavingsOffering(
+			offeringName, ApplicableTo.GROUPS, 
+			new Date(System.currentTimeMillis()), 
+			PrdStatus.SAVINGS_ACTIVE, 
+			300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
+			24.0, 200.0, 200.0, 
+			savingsType, interestCalcType, 
+			meetingIntCalc, meetingIntPost);
 	}
 
 	public SavingsBO createSavingsAccount(String globalAccountNum,

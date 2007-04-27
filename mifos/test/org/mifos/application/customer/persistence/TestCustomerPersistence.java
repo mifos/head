@@ -53,7 +53,6 @@ import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -206,8 +205,10 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 		Date startDate = new Date(System.currentTimeMillis());
 		center = createCenter();
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering = 
+			TestObjectFactory.createSavingsProduct("SavingPrd1", "S",
+				startDate,
+				meetingIntCalc, meetingIntPost);
 		account = TestObjectFactory.createSavingsAccount("432434", center,
 				Short.valueOf("16"), startDate, savingsOffering);
 		List<PrdOfferingBO> productList = customerPersistence
@@ -335,26 +336,23 @@ public class TestCustomerPersistence extends MifosTestCase {
 	}
 
 	public void testRetrieveSavingsAccountForCustomer() throws Exception {
+		java.util.Date currentDate = new java.util.Date();
+
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		center = createCenter();
 		group = TestObjectFactory.createGroupUnderCenter("Group1",
 				CustomerStatus.GROUP_ACTIVE, center);
-		MeetingBO meetingIntCalc = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		MeetingBO meetingIntPost = TestObjectFactory
-				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsProduct(
+			"SavingPrd1", "S", currentDate);
 		UserContext user = new UserContext();
 		user.setId(PersonnelConstants.SYSTEM_USER);
 		account = TestObjectFactory.createSavingsAccount("000100000000020",
-				group, AccountState.SAVINGS_ACC_APPROVED, new java.util.Date(),
+				group, AccountState.SAVINGS_ACC_APPROVED, currentDate,
 				savingsOffering, user);
 		HibernateUtil.closeSession();
 		List<SavingsBO> savingsList = customerPersistence
 				.retrieveSavingsAccountForCustomer(group.getCustomerId());
-		assertNotNull(savingsList);
-		assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
+		assertEquals(1, savingsList.size());
 		account = savingsList.get(0);
 		group = account.getCustomer();
 		center = group.getParentCustomer();

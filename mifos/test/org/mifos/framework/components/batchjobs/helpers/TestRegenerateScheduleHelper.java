@@ -35,6 +35,10 @@ import org.mifos.application.personnel.persistence.PersonnelPersistence;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
@@ -535,8 +539,14 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-		.valueOf("1"), 300.0, Short.valueOf("1"), 24.0, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering(
+			"SavingPrd1", ApplicableTo.GROUPS, 
+			new Date(System.currentTimeMillis()), 
+			PrdStatus.SAVINGS_ACTIVE, 
+			300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
+			24.0, 200.0, 200.0, 
+			SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
+			meetingIntCalc, meetingIntPost);
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_ACC_APPROVED, savingsOffering
 						.getRecommendedAmount(), TestObjectFactory

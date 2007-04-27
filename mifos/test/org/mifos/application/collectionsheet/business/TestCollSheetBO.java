@@ -22,7 +22,6 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -33,6 +32,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -141,7 +144,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	public void testCollSheetForSavingsDeposit() throws Exception {
-		accountBO = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
+		accountBO = createSavingsAccount(SavingsType.MANDATORY);
 		SavingsBO savings = (SavingsBO) accountBO;
 		AccountActionDateEntity firstInstallmentActionDate = savings
 				.getAccountActionDate((short) 3);
@@ -163,7 +166,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	public void testCollSheetForSavingsDepositVoluntary() throws Exception {
-		accountBO = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
+		accountBO = createSavingsAccount(SavingsType.VOLUNTARY);
 		SavingsBO savings = (SavingsBO) accountBO;
 		AccountActionDateEntity firstInstallmentActionDate = savings
 				.getAccountActionDate((short) 3);
@@ -243,7 +246,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	public void testUpdate() throws Exception {
-		accountBO = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
+		accountBO = createSavingsAccount(SavingsType.VOLUNTARY);
 		SavingsBO savings = (SavingsBO) accountBO;
 		AccountActionDateEntity firstInstallmentActionDate = savings
 				.getAccountActionDate((short) 3);
@@ -492,21 +495,30 @@ public class TestCollSheetBO extends MifosTestCase {
 		}
 	}
 
-	private SavingsBO createSavingsAccount(short savingsType) throws Exception {
+	private SavingsBO createSavingsAccount(SavingsType savingsType) 
+	throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
+
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System
-		.currentTimeMillis()), ((short) 2), 300.0, ((short) 1), 1.2, 200.0, 200.0, savingsType, ((short) 1), meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering = 
+			TestObjectFactory.createSavingsOffering("SavingPrd1", 
+				ApplicableTo.GROUPS, 
+				startDate, PrdStatus.SAVINGS_ACTIVE, 
+				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
+				1.2, 200.0, 200.0, 
+				savingsType, InterestCalcType.MINIMUM_BALANCE, 
+				meetingIntCalc, meetingIntPost);
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = TestObjectFactory.createClient(
 				"Client", CustomerStatus.CLIENT_ACTIVE, group);
 		return TestObjectFactory.createSavingsAccount("43245434", client,
-				(short) 16, new Date(System.currentTimeMillis()),
+				(short) 16, startDate,
 				savingsOffering);
 	}
 

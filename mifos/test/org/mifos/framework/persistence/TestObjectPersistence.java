@@ -123,13 +123,10 @@ public class TestObjectPersistence {
 		return (OfficeBO)session.get(OfficeBO.class, officeId);
 	}
 
-	public PrdStatusEntity retrievePrdStatus(Short offeringStatusId) {
-		Session session = HibernateUtil.getSessionTL();
-		return (PrdStatusEntity)session.get(PrdStatusEntity.class, offeringStatusId);
-	}
-	
 	public PrdStatusEntity retrievePrdStatus(PrdStatus status) {
-		return retrievePrdStatus(status.getValue());
+		Session session = HibernateUtil.getSessionTL();
+		return (PrdStatusEntity)session.get(
+			PrdStatusEntity.class, status.getValue());
 	}
 
 	public MifosCurrency getCurrency() {

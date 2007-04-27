@@ -1584,8 +1584,8 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testAdjustPmnt_LastPaymentDepositMandatory_PaidPartialDueAmount()
 			throws Exception {
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering("prd143", Short
-				.valueOf("1"), SavingsType.MANDATORY.getValue());
+		savingsOffering = helper.createSavingsOffering("prd143", 
+				InterestCalcType.MINIMUM_BALANCE, SavingsType.MANDATORY);
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
 				userContext);
@@ -1829,8 +1829,14 @@ public class TestSavingsBO extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-		.valueOf("2"), 300.0, Short.valueOf("1"), 1.2, 200.0, 200.0, Short.valueOf("1"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering = 
+			TestObjectFactory.createSavingsOffering("SavingPrd1", 
+				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
+				PrdStatus.SAVINGS_ACTIVE, 
+				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
+				1.2, 200.0, 200.0, 
+				SavingsType.MANDATORY, InterestCalcType.MINIMUM_BALANCE, 
+				meetingIntCalc, meetingIntPost);
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient(
@@ -3844,8 +3850,14 @@ public class TestSavingsBO extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), Short
-		.valueOf("1"), 300.0, Short.valueOf("1"), 24.0, 200.0, 200.0, Short.valueOf("2"), Short.valueOf("1"), meetingIntCalc, meetingIntPost);
+		savingsOffering = TestObjectFactory.createSavingsOffering(
+			"SavingPrd1", ApplicableTo.GROUPS, 
+			new Date(System.currentTimeMillis()), 
+			PrdStatus.LOAN_ACTIVE, 
+			300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
+			24.0, 200.0, 200.0, 
+			SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
+			meetingIntCalc, meetingIntPost);
 		SavingsBO savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_ACC_APPROVED, savingsOffering
 						.getRecommendedAmount(), getCustomFieldView());
@@ -3855,7 +3867,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testGetTotalPaymentDueForVol() throws Exception {
-		createObjectToCheckForTotalInstallmentDue(Short.valueOf("2"));
+		createObjectToCheckForTotalInstallmentDue(SavingsType.VOLUNTARY);
 		savings = savingsPersistence.findById(savings.getAccountId());
 		Money recommendedAmnt = new Money(currency, "500.0");
 		Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
@@ -3865,7 +3877,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testGetTotalInstallmentDueForVol() throws Exception {
-		createObjectToCheckForTotalInstallmentDue(Short.valueOf("2"));
+		createObjectToCheckForTotalInstallmentDue(SavingsType.VOLUNTARY);
 		savings = savingsPersistence.findById(savings.getAccountId());
 		List<AccountActionDateEntity> dueInstallment = savings
 				.getTotalInstallmentsDue(group.getCustomerId());
@@ -3877,7 +3889,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testGetTotalPaymentDueForMan() throws Exception {
-		createObjectToCheckForTotalInstallmentDue(Short.valueOf("1"));
+		createObjectToCheckForTotalInstallmentDue(SavingsType.MANDATORY);
 		savings = savingsPersistence.findById(savings.getAccountId());
 		Money amount = new Money(currency, "1000.0");
 		Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
@@ -3887,7 +3899,7 @@ public class TestSavingsBO extends MifosTestCase {
 	}
 
 	public void testGetTotalInstallmentDueForMan() throws Exception {
-		createObjectToCheckForTotalInstallmentDue(Short.valueOf("1"));
+		createObjectToCheckForTotalInstallmentDue(SavingsType.MANDATORY);
 		savings = savingsPersistence.findById(savings.getAccountId());
 		List<AccountActionDateEntity> dueInstallment = savings
 				.getTotalInstallmentsDue(group.getCustomerId());
@@ -3896,11 +3908,12 @@ public class TestSavingsBO extends MifosTestCase {
 		center = group.getParentCustomer();
 	}
 
-	private void createObjectToCheckForTotalInstallmentDue(Short savingsTypeId)
-			throws Exception {
+	private void createObjectToCheckForTotalInstallmentDue(
+			SavingsType savingsType)
+	throws Exception {
 		createInitialObjects();
-		savingsOffering = helper.createSavingsOffering("prd1df", Short
-				.valueOf("1"), savingsTypeId);
+		savingsOffering = helper.createSavingsOffering("prd1df", 
+				InterestCalcType.MINIMUM_BALANCE, savingsType);
 		savings = helper.createSavingsAccount(savingsOffering, group,
 				AccountState.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
 		Calendar cal1 = Calendar.getInstance();

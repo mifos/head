@@ -43,13 +43,16 @@ import java.util.Date;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
-import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.application.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.application.productdefinition.util.helpers.PrdStatus;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
@@ -81,7 +84,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	public void testForMandatoryAccountWithNoPreviousPayments()
 			throws Exception {
 
-		savings = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
+		savings = createSavingsAccount(SavingsType.MANDATORY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 		// obtaining the last installment
 		// Scenario: Mandatory savings Account: None of the previous
@@ -120,7 +123,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	public void testForMandatoryAccountWithPartialPayment()
 			throws Exception {
 
-		savings = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
+		savings = createSavingsAccount(SavingsType.MANDATORY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 		// obtaining the last installment
 		// Scenario: Mandatory savings Account: For the first installment a
@@ -141,7 +144,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	public void testForMandatoryAccountWithFullPayment()
 			throws Exception {
 
-		savings = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
+		savings = createSavingsAccount(SavingsType.MANDATORY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 		// obtaining the last installment
 		// Scenario: Mandatory savings Account: For the first installment a full
@@ -163,7 +166,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	public void testForVoluntaryAccountWithPartialPayment()
 			throws Exception {
 
-		savings = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
+		savings = createSavingsAccount(SavingsType.VOLUNTARY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 		// obtaining the last installment
 		// Scenario: Voluntary savings Account: For the first installment a full
@@ -184,7 +187,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	public void testForVoluntaryAccountWithFullPayment()
 			throws Exception {
 
-		savings = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
+		savings = createSavingsAccount(SavingsType.VOLUNTARY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 		// obtaining the last installment
 		// Scenario: Voluntary savings Account: For the first installment a full
@@ -206,7 +209,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	public void testTotalSavingsAmountDueForVoluntaryAccount()
 			throws Exception {
 
-		savings = createSavingsAccount(SavingsConstants.SAVINGS_VOLUNTARY);
+		savings = createSavingsAccount(SavingsType.VOLUNTARY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
@@ -221,7 +224,7 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 	public void testTotalSavingsAmountDueForMandatoryAccount()
 			throws Exception {
 
-		savings = createSavingsAccount(SavingsConstants.SAVINGS_MANDATORY);
+		savings = createSavingsAccount(SavingsType.MANDATORY);
 		CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 		SavingsScheduleEntity accountActionDate = (SavingsScheduleEntity) savings
 				.getAccountActionDate((short) 1);
@@ -233,21 +236,30 @@ public class TestCollSheetSavingsDetailsEntity extends MifosTestCase {
 				.getAmountDoubleValue());
 	}
 
-	private SavingsBO createSavingsAccount(short savingsType) throws Exception {
+	private SavingsBO createSavingsAccount(SavingsType savingsType) 
+	throws Exception {
+		Date startDate = new Date(System.currentTimeMillis());
+
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		SavingsOfferingBO savingsOffering = TestObjectFactory.createSavingsOffering("SavingPrd1", ApplicableTo.GROUPS, new Date(System
-		.currentTimeMillis()), ((short) 2), 300.0, ((short) 1), 1.2, 200.0, 200.0, savingsType, ((short) 1), meetingIntCalc, meetingIntPost);
+		SavingsOfferingBO savingsOffering = 
+			TestObjectFactory.createSavingsOffering("SavingPrd1", 
+				ApplicableTo.GROUPS, 
+				startDate, PrdStatus.SAVINGS_ACTIVE, 
+				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
+				1.2, 200.0, 200.0, 
+				savingsType, InterestCalcType.MINIMUM_BALANCE, 
+				meetingIntCalc, meetingIntPost);
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client1 = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE,
 				group);
 		return TestObjectFactory.createSavingsAccount("43245434", client1,
-				(short) 16, new Date(System.currentTimeMillis()),
+				(short) 16, startDate,
 				savingsOffering);
 
 	}
