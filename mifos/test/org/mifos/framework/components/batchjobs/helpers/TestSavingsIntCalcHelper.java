@@ -226,7 +226,7 @@ public class TestSavingsIntCalcHelper extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getNewMeeting(
 						MONTHLY, EVERY_MONTH,
 						SAVINGS_INTEREST_POSTING, MONDAY));
-		return TestObjectFactory.createSavingsOffering(
+		return TestObjectFactory.createSavingsProduct(
 				offeringName, shortName, ApplicableTo.GROUPS, 
 				new Date(System.currentTimeMillis()), 
 				PrdStatus.SAVINGS_ACTIVE, 300.0, 

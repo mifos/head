@@ -29,7 +29,7 @@ public class TestEnumPlugin extends MifosMockStrutsTestCase {
 		request.getSession().setAttribute(Constants.USERCONTEXT, 
 			TestUtils.makeUser());
 		
-		product = TestObjectFactory.createSavingsOffering(
+		product = TestObjectFactory.createSavingsProduct(
 			"Offering1", "s1", 
 			SavingsType.MANDATORY, ApplicableTo.CLIENTS, 
 			new Date(System.currentTimeMillis()));

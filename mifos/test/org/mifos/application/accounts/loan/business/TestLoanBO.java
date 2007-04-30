@@ -385,7 +385,7 @@ public class TestLoanBO extends MifosTestCase {
 		HibernateUtil.getTransaction().commit();
 		for (AccountFeesEntity accountFeesEntity : accountFeesEntitySet) {
 			assertEquals(accountFeesEntity.getFeeStatus(),
-					AccountConstants.INACTIVE_FEES);
+					FeeStatus.INACTIVE.getValue());
 		}
 		LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO)
 				.getLoanSummary();
@@ -4500,7 +4500,7 @@ public class TestLoanBO extends MifosTestCase {
 		checkFees(fees0, paymentsArray[5], false);
 
 		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
-			assertEquals(AccountConstants.INACTIVE_FEES, accountFeesEntity
+			assertEquals(FeeStatus.INACTIVE.getValue(), accountFeesEntity
 					.getFeeStatus());
 			assertNull(accountFeesEntity.getLastAppliedDate());
 		}
@@ -4588,7 +4588,7 @@ public class TestLoanBO extends MifosTestCase {
 				null, null, null, paymentsArray[5]);
 
 		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
-			assertEquals(AccountConstants.INACTIVE_FEES, accountFeesEntity
+			assertEquals(FeeStatus.INACTIVE.getValue(), accountFeesEntity
 					.getFeeStatus());
 			assertNull(accountFeesEntity.getLastAppliedDate());
 		}
@@ -4656,7 +4656,7 @@ public class TestLoanBO extends MifosTestCase {
 		}
 
 		for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
-			assertEquals(AccountConstants.ACTIVE_FEES, accountFeesEntity
+			assertEquals(FeeStatus.ACTIVE.getValue(), accountFeesEntity
 					.getFeeStatus());
 			assertNotNull(accountFeesEntity.getLastAppliedDate());
 		}

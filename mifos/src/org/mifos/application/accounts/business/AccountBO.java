@@ -55,7 +55,6 @@ import org.mifos.application.accounts.financial.business.service.FinancialBusine
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
 import org.mifos.application.accounts.persistence.AccountPersistence;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
@@ -429,7 +428,7 @@ public class AccountBO extends BusinessObject {
 	protected void updateAccountFeesEntity(Short feeId) {
 		AccountFeesEntity accountFees = getAccountFees(feeId);
 		if (accountFees != null) {
-			accountFees.changeFeesStatus(AccountConstants.INACTIVE_FEES,
+			accountFees.changeFeesStatus(FeeStatus.INACTIVE,
 					new Date(System.currentTimeMillis()));
 			accountFees.setLastAppliedDate(null);
 		}
@@ -455,7 +454,7 @@ public class AccountBO extends BusinessObject {
 		AccountFeesEntity accountFees = getAccountFees(feeId);
 		return accountFees.getFeeStatus() == null
 				|| accountFees.getFeeStatus().equals(
-						AccountConstants.ACTIVE_FEES);
+						FeeStatus.ACTIVE.getValue());
 	}
 
 	protected Money removeSign(Money amount) {
@@ -816,7 +815,7 @@ public class AccountBO extends BusinessObject {
 		if (fee.isPeriodic() && isFeeAlreadyApplied(fee)) {
 			accountFee = getAccountFees(fee.getFeeId());
 			accountFee.setFeeAmount(charge);
-			accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
+			accountFee.setFeeStatus(FeeStatus.ACTIVE);
 			accountFee
 					.setStatusChangeDate(new Date(System.currentTimeMillis()));
 		} else {

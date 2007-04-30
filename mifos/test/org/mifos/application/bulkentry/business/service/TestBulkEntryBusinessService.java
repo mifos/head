@@ -414,7 +414,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName, 
+		return TestObjectFactory.createSavingsProduct(offeringName, shortName, 
 				ApplicableTo.GROUPS, currentDate, 
 				PrdStatus.SAVINGS_ACTIVE, 300.0, 
 				RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 

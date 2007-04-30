@@ -10,12 +10,12 @@ import java.util.GregorianCalendar;
 import java.util.Set;
 
 import org.mifos.application.accounts.persistence.AccountPersistence;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
@@ -79,8 +79,9 @@ public class TestAccountFeesEntity extends MifosTestCase {
 		accountBO=getLoanAccount();
 		Set<AccountFeesEntity> accountFeesEntitySet=accountBO.getAccountFees();
 		for(AccountFeesEntity accountFeesEntity: accountFeesEntitySet){
-			accountFeesEntity.changeFeesStatus(AccountConstants.INACTIVE_FEES,new Date(System.currentTimeMillis()));
-			assertEquals(accountFeesEntity.getFeeStatus(),AccountConstants.INACTIVE_FEES);
+			accountFeesEntity.changeFeesStatus(FeeStatus.INACTIVE,
+				new Date(System.currentTimeMillis()));
+			assertEquals(accountFeesEntity.getFeeStatus(),FeeStatus.INACTIVE.getValue());
 		}
 	}
 	

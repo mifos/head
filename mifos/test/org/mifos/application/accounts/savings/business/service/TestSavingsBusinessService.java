@@ -178,7 +178,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 
 		Date startDate = new Date(System.currentTimeMillis());
-		savingsOffering = TestObjectFactory.createSavingsOffering(
+		savingsOffering = TestObjectFactory.createSavingsProduct(
 			"SavingPrd1", ApplicableTo.GROUPS, 
 			new Date(System.currentTimeMillis()), 
 			PrdStatus.SAVINGS_ACTIVE, 
@@ -202,7 +202,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 
 		Date startDate = new Date(System.currentTimeMillis());
-		savingsOffering = TestObjectFactory.createSavingsOffering(
+		savingsOffering = TestObjectFactory.createSavingsProduct(
 				"SavingPrd1", ApplicableTo.GROUPS, 
 				new Date(System.currentTimeMillis()), 
 				PrdStatus.SAVINGS_ACTIVE, 

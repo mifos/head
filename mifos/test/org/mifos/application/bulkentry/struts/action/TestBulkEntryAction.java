@@ -773,7 +773,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		SavingsOfferingBO savingsOffering = 
-			TestObjectFactory.createSavingsOffering(
+			TestObjectFactory.createSavingsProduct(
 				"SavingPrd123c", "ased", ApplicableTo.GROUPS, startDate, 
 				PrdStatus.SAVINGS_ACTIVE, 300.0,
 				RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 
@@ -781,7 +781,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 				InterestCalcType.MINIMUM_BALANCE, 
 				meetingIntCalc, meetingIntPost);
 		SavingsOfferingBO savingsOffering1 = 
-			TestObjectFactory.createSavingsOffering(
+			TestObjectFactory.createSavingsProduct(
 				"SavingPrd1we", "vbgr", ApplicableTo.GROUPS, startDate, 
 				PrdStatus.SAVINGS_ACTIVE, 300.0,
 				RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 

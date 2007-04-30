@@ -162,7 +162,7 @@ public class TestGenerateMeetingsForCustomerAndSavingsHelper extends
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(
+		return TestObjectFactory.createSavingsProduct(
 				offeringName, shortName,
 				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
 				PrdStatus.SAVINGS_ACTIVE, 300.0, 

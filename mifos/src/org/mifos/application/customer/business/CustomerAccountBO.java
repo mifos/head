@@ -576,7 +576,7 @@ public class CustomerAccountBO extends AccountBO {
 		} else {
 			accountFee = getAccountFees(fee.getFeeId());
 			accountFee.setFeeAmount(charge);
-			accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
+			accountFee.setFeeStatus(FeeStatus.ACTIVE);
 			accountFee
 					.setStatusChangeDate(new Date(System.currentTimeMillis()));
 		}
@@ -600,7 +600,7 @@ public class CustomerAccountBO extends AccountBO {
 		updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied, fee
 				.getFeeName()
 				+ AccountConstants.APPLIED);
-		accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
+		accountFee.setFeeStatus(FeeStatus.ACTIVE);
 	}
 
 	private void applyOneTimeFee(FeeBO fee, Money charge,
@@ -622,7 +622,7 @@ public class CustomerAccountBO extends AccountBO {
 		updateCustomerActivity(fee.getFeeId(), totalFeeAmountApplied, fee
 				.getFeeName()
 				+ AccountConstants.APPLIED);
-		accountFee.setFeeStatus(FeeStatus.ACTIVE.getValue());
+		accountFee.setFeeStatus(FeeStatus.ACTIVE);
 	}
 
 	private void applyMiscCharge(Short chargeType, Money charge,
@@ -825,7 +825,7 @@ public class CustomerAccountBO extends AccountBO {
 					} else {
 						// generate repayment schedule and enable fee
 						updateAccountFee(fee, feeBO);
-						fee.changeFeesStatus(FeeStatus.ACTIVE.getValue(),
+						fee.changeFeesStatus(FeeStatus.ACTIVE,
 								new Date(System.currentTimeMillis()));
 						addTonextInstallment(fee);
 					}
@@ -836,7 +836,7 @@ public class CustomerAccountBO extends AccountBO {
 						removeFees(feeBO.getFeeId(), Short.valueOf("1"));
 
 					} else {
-						fee.changeFeesStatus(FeeStatus.ACTIVE.getValue(),
+						fee.changeFeesStatus(FeeStatus.ACTIVE,
 								new Date(System.currentTimeMillis()));
 						addTonextInstallment(fee);
 					}
@@ -870,7 +870,7 @@ public class CustomerAccountBO extends AccountBO {
 	}
 
 	private void updateAccountFee(AccountFeesEntity fee, FeeBO feeBO) {
-		fee.changeFeesStatus(FeeStatus.INACTIVE.getValue(), new Date(System
+		fee.changeFeesStatus(FeeStatus.INACTIVE, new Date(System
 				.currentTimeMillis()));
 		fee.setFeeAmount(((AmountFeeBO) feeBO).getFeeAmount()
 				.getAmountDoubleValue());

@@ -80,7 +80,7 @@ public class TestSavingsDepositWithdrawalAction extends MifosMockStrutsTestCase{
 	public void testSuccessfullLoad_ForClientAccount() throws Exception {
 		createCenterAndGroup();
 		createClients();
-		savingsOffering = TestObjectFactory.createSavingsOffering(
+		savingsOffering = TestObjectFactory.createSavingsProduct(
 			"Offering1", "s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, 
 			new Date(System.currentTimeMillis()));
 		savings = helper.createSavingsAccount("000X00000000017", savingsOffering, client1, AccountStates.SAVINGS_ACC_APPROVED, userContext);

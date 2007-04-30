@@ -51,7 +51,6 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
-import org.mifos.application.accounts.util.helpers.AccountConstants;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -60,6 +59,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
+import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
@@ -148,7 +148,7 @@ public class TestAccountBO extends TestAccount {
 			accountBO.updateAccountFeesEntity(accountFeesEntity.getFees()
 					.getFeeId());
 			assertEquals(accountFeesEntity.getFeeStatus(),
-					AccountConstants.INACTIVE_FEES);
+					FeeStatus.INACTIVE.getValue());
 		}
 	}
 

@@ -130,9 +130,25 @@ public class AccountFeesEntity extends PersistentObject {
 	public Short getFeeStatus() {
 		return feeStatus;
 	}
+	
+	public FeeStatus getFeeStatusAsEnum() {
+		return FeeStatus.getFeeStatus(feeStatus);
+	}
 
-	public void setFeeStatus(Short feeStatus) {
+	/**
+	 * For hibernate.
+	 */
+	void setFeeStatus(Short feeStatus) {
 		this.feeStatus = feeStatus;
+	}
+	
+	/**
+	 * Low-level setting function.  Methods like 
+	 * {@link #changeFeesStatus(Short, Date)} and others to be created
+	 * better express what kinds of actions take place.
+	 */
+	public void setFeeStatus(FeeStatus status) {
+		this.feeStatus = status.getValue();
 	}
 
 	public Date getStatusChangeDate() {
@@ -151,7 +167,7 @@ public class AccountFeesEntity extends PersistentObject {
 		this.lastAppliedDate = lastAppliedDate;
 	}
 
-	public void changeFeesStatus(Short status, Date changeDate) {
+	public void changeFeesStatus(FeeStatus status, Date changeDate) {
 		this.setFeeStatus(status);
 		this.setStatusChangeDate(changeDate);
 	}

@@ -482,20 +482,20 @@ public class TestCustomerAccountBO extends MifosTestCase {
 		group = TestObjectFactory.getObject(GroupBO.class, group
 				.getCustomerId());
 		customerAccountBO = group.getCustomerAccount();
-		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO
-				.getCustomerActivitDetails();
-		assertEquals(1, customerActivitySet.size());
-		for (CustomerActivityEntity customerActivityEntity : customerActivitySet) {
-			assertEquals(1, customerActivityEntity.getPersonnel()
-					.getPersonnelId().intValue());
-			assertEquals("Mainatnence Fee removed", customerActivityEntity
-					.getDescription());
-			assertEquals(new Money(), customerActivityEntity.getAmount());
-		}
-		for (AccountFeesEntity accountFeesEntity : group.getCustomerAccount()
-				.getAccountFees()) {
-			assertEquals(2, accountFeesEntity.getFeeStatus().intValue());
-		}
+
+		checkActivity(new Money(), customerAccountBO);
+
+		getInactiveFee();
+	}
+
+	private AccountFeesEntity getInactiveFee() {
+		Set<AccountFeesEntity> fees = 
+			group.getCustomerAccount().getAccountFees();
+		assertEquals(1, fees.size());
+		AccountFeesEntity accountFeesEntity = fees.iterator().next();
+		assertEquals(FeeStatus.INACTIVE, 
+			accountFeesEntity.getFeeStatusAsEnum());
+		return accountFeesEntity;
 	}
 
 	public void testRemoveFeeWithNonActiveCustomer() throws Exception {
@@ -518,23 +518,27 @@ public class TestCustomerAccountBO extends MifosTestCase {
 			customerAccountBO.removeFees(feesBO.getFeeId(), Short.valueOf("1"));
 		}
 		HibernateUtil.commitTransaction();
-		Set<CustomerActivityEntity> customerActivitySet = customerAccountBO
-				.getCustomerActivitDetails();
+		checkActivity(null, customerAccountBO);
+
+		AccountFeesEntity accountFeesEntity = getInactiveFee();
+		// TODO: race condition - will fail when run just at midnight
+		assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils
+				.getDateWithoutTimeStamp(accountFeesEntity
+						.getStatusChangeDate().getTime()));
+	}
+
+	private void checkActivity(Money expectedAmount,
+			CustomerAccountBO customerAccountBO) {
+		Set<CustomerActivityEntity> customerActivitySet = 
+			customerAccountBO.getCustomerActivitDetails();
 		assertEquals(1, customerActivitySet.size());
-		for (CustomerActivityEntity customerActivityEntity : customerActivitySet) {
-			assertEquals(1, customerActivityEntity.getPersonnel()
-					.getPersonnelId().intValue());
-			assertEquals("Mainatnence Fee removed", customerActivityEntity
-					.getDescription());
-			assertEquals(null, customerActivityEntity.getAmount());
-		}
-		for (AccountFeesEntity accountFeesEntity : group.getCustomerAccount()
-				.getAccountFees()) {
-			assertEquals(Short.valueOf("2"), accountFeesEntity.getFeeStatus());
-			assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils
-					.getDateWithoutTimeStamp(accountFeesEntity
-							.getStatusChangeDate().getTime()));
-		}
+		CustomerActivityEntity customerActivityEntity = 
+			customerActivitySet.iterator().next();
+		assertEquals(1, customerActivityEntity.getPersonnel()
+				.getPersonnelId().intValue());
+		assertEquals("Maintenance Fee removed", customerActivityEntity
+				.getDescription());
+		assertEquals(expectedAmount, customerActivityEntity.getAmount());
 	}
 
 	public void testUpdateAccountActivity() throws NumberFormatException,

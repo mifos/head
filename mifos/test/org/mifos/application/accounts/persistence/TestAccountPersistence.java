@@ -135,7 +135,7 @@ public class TestAccountPersistence extends TestAccount {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return TestObjectFactory.createSavingsOffering(offeringName, 
+		return TestObjectFactory.createSavingsProduct(offeringName, 
 				ApplicableTo.GROUPS, startDate, 
 				PrdStatus.SAVINGS_ACTIVE,
 				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 

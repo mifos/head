@@ -1043,7 +1043,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		savingsOffering = TestObjectFactory.createSavingsOffering(
+		savingsOffering = TestObjectFactory.createSavingsProduct(
 			productName, shortName, ApplicableTo.CLIENTS, 
 			new Date(System.currentTimeMillis()), 
 			PrdStatus.SAVINGS_ACTIVE, 300.0, 

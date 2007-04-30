@@ -310,10 +310,10 @@ public class TestObjectFactory {
 
 	private static List<FeeView> getFees() {
 		List<FeeView> fees = new ArrayList<FeeView>();
-		AmountFeeBO maintanenceFee = (AmountFeeBO) createPeriodicAmountFee(
-				"Mainatnence Fee", FeeCategory.ALLCUSTOMERS, "100",
+		AmountFeeBO maintenanceFee = (AmountFeeBO) createPeriodicAmountFee(
+				"Maintenance Fee", FeeCategory.ALLCUSTOMERS, "100",
 				RecurrenceType.WEEKLY, Short.valueOf("1"));
-		FeeView fee = new FeeView(getContext(), maintanenceFee);
+		FeeView fee = new FeeView(getContext(), maintenanceFee);
 		fees.add(fee);
 		return fees;
 	}
@@ -615,28 +615,28 @@ public class TestObjectFactory {
 		return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
 	}
 	
-	public static SavingsOfferingBO createSavingsOffering(String name,
+	public static SavingsOfferingBO createSavingsProduct(String name,
 		ApplicableTo applicableTo, Date startDate, 
 		PrdStatus status,
 		Double recommendedAmount, RecommendedAmountUnit unit, Double intRate,
 		Double maxAmtWithdrawl, Double minAmtForInt, SavingsType savingsType,
 		InterestCalcType interestCalculation, MeetingBO intCalcMeeting,
 		MeetingBO intPostMeeting) {
-		return createSavingsOffering(name, name.substring(0, 1),
+		return createSavingsProduct(name, name.substring(0, 1),
 			applicableTo, startDate, status, recommendedAmount, unit,
 			intRate, maxAmtWithdrawl, minAmtForInt, savingsType,
 			interestCalculation, intCalcMeeting,
 			intPostMeeting);
 	}
 	
-	public static SavingsOfferingBO createSavingsOffering(String name,
+	public static SavingsOfferingBO createSavingsProduct(String name,
 			String shortName, ApplicableTo applicableTo, Date startDate,
 			PrdStatus status, Double recommendedAmount,
 			RecommendedAmountUnit unit, Double intRate, Double maxAmtWithdrawl,
 			Double minAmtForInt, SavingsType savingsType, 
 			InterestCalcType interestCalculation,
 			MeetingBO intCalcMeeting, MeetingBO intPostMeeting) {
-		return createSavingsOffering(name, shortName, 
+		return createSavingsProduct(name, shortName, 
 			applicableTo, 
 			startDate,
 			status, recommendedAmount, unit, intRate,
@@ -647,7 +647,7 @@ public class TestObjectFactory {
 			TestGeneralLedgerCode.BANK_ACCOUNT_ONE);
 	}
 
-	public static SavingsOfferingBO createSavingsOffering(
+	public static SavingsOfferingBO createSavingsProduct(
 			String name, String shortName, ApplicableTo applicableTo, 
 			Date startDate, PrdStatus status, 
 			Double recommendedAmount, 
@@ -671,9 +671,9 @@ public class TestObjectFactory {
 			new InterestCalcTypeEntity(interestCalculationType);
 		RecommendedAmntUnitEntity amountUnit = 
 			new RecommendedAmntUnitEntity(recommendedAmountUnit);
-		SavingsOfferingBO savingsOffering;
+		SavingsOfferingBO product;
 		try {
-			savingsOffering = new SavingsOfferingBO(getUserContext(), name,
+			product = new SavingsOfferingBO(getUserContext(), name,
 					shortName, productCategory, prdApplicableMaster, startDate,
 					null, null, amountUnit, savingsTypeEntity, intCalType,
 					intCalcMeeting, intPostMeeting, new Money(recommendedAmount
@@ -692,19 +692,19 @@ public class TestObjectFactory {
 
 		PrdStatusEntity prdStatus = testObjectPersistence
 				.retrievePrdStatus(status);
-		savingsOffering.setPrdStatus(prdStatus);
+		product.setPrdStatus(prdStatus);
 		return (SavingsOfferingBO) addObject(testObjectPersistence
-				.persist(savingsOffering));
+				.persist(product));
 	}
 
-	public static SavingsOfferingBO createSavingsOffering(String offeringName,
+	public static SavingsOfferingBO createSavingsProduct(String offeringName,
 			String shortName, SavingsType savingsType,
 			ApplicableTo applicableTo, Date currentDate) {
 		MeetingBO meetingIntCalc = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return createSavingsOffering(offeringName, shortName, applicableTo, 
+		return createSavingsProduct(offeringName, shortName, applicableTo, 
 				currentDate, 
 				PrdStatus.SAVINGS_ACTIVE, 300.0, 
 				RecommendedAmountUnit.PER_INDIVIDUAL, 24.0, 
@@ -2038,24 +2038,20 @@ public class TestObjectFactory {
 	 * This method is not recommended because it calls 
 	 * {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)}.
 	 */
-	public static SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName, Short interestCalcType, Short savingsTypeId,
-			Short depGLCode, Short intGLCode,
+	public static SavingsOfferingBO createSavingsProduct(String offeringName,
+			String shortName, Short depGLCode, Short intGLCode,
 			RecommendedAmountUnit recommendedAmountUnit) {
-		SavingsType savingsType = SavingsType.fromInt(savingsTypeId);
-		InterestCalcType calculation = 
-			InterestCalcType.fromInt(interestCalcType);
-
 		MeetingBO meetingIntCalc = createMeeting(
 				getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = createMeeting(
 				getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		return createSavingsOffering(offeringName, shortName,
+		return createSavingsProduct(offeringName, shortName,
 				ApplicableTo.GROUPS, 
 				new Date(System.currentTimeMillis()), 
 				PrdStatus.SAVINGS_ACTIVE, 300.0, 
 				recommendedAmountUnit,
-				24.0, 200.0, 200.0, savingsType, calculation,
+				24.0, 200.0, 200.0, 
+				SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE,
 				meetingIntCalc, meetingIntPost, depGLCode, intGLCode);
 	}
 
@@ -2063,21 +2059,9 @@ public class TestObjectFactory {
 	 * This method is not recommended because it indirectly calls 
 	 * {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)}.
 	 */
-	public static SavingsOfferingBO createSavingsOffering(String offeringName,
-			String shortName, Short depGLCode, Short intGLCode,
-			RecommendedAmountUnit recommendedAmountUnit) {
-		return createSavingsOffering(offeringName, shortName, Short
-				.valueOf("1"), Short.valueOf("2"), depGLCode, intGLCode,
-				recommendedAmountUnit);
-	}
-
-	/**
-	 * This method is not recommended because it indirectly calls 
-	 * {@link #getNewMeetingForToday(RecurrenceType, short, MeetingType)}.
-	 */
-	public static SavingsOfferingBO createSavingsOffering(String offeringName,
+	public static SavingsOfferingBO createSavingsProduct(String offeringName,
 			String shortName, RecommendedAmountUnit recommendedAmountUnit) {
-		return createSavingsOffering(offeringName, shortName, 
+		return createSavingsProduct(offeringName, shortName, 
 			TestGeneralLedgerCode.ASSETS,
 			TestGeneralLedgerCode.CASH_AND_BANK_BALANCES, 
 			recommendedAmountUnit);
@@ -2095,7 +2079,7 @@ public class TestObjectFactory {
 	public static SavingsOfferingBO createSavingsProduct(
 		String productName, String shortName, Date currentDate, 
 		MeetingBO meetingIntCalc, MeetingBO meetingIntPost) {
-		return createSavingsOffering(productName, shortName, 
+		return createSavingsProduct(productName, shortName, 
 				ApplicableTo.GROUPS, currentDate, 
 				PrdStatus.SAVINGS_ACTIVE, 300.0,
 				RecommendedAmountUnit.PER_INDIVIDUAL, 1.2, 

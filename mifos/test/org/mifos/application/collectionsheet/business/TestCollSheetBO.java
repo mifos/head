@@ -506,7 +506,7 @@ public class TestCollSheetBO extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		SavingsOfferingBO savingsOffering = 
-			TestObjectFactory.createSavingsOffering("SavingPrd1", 
+			TestObjectFactory.createSavingsProduct("SavingPrd1", 
 				ApplicableTo.GROUPS, 
 				startDate, PrdStatus.SAVINGS_ACTIVE, 
 				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 

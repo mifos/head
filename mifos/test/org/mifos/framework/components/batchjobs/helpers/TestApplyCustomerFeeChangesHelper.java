@@ -220,7 +220,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
 				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
 				.getFeeAmount().getAmountDoubleValue());
-		accountPeriodicFee.setFeeStatus(Short.valueOf("2"));
+		accountPeriodicFee.setFeeStatus(FeeStatus.INACTIVE);
 		accountFeeSet.add(accountPeriodicFee);
 		trainingFee.updateStatus(FeeStatus.INACTIVE);
 		trainingFee.setUserContext(TestObjectFactory.getUserContext());
@@ -261,7 +261,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		AccountFeesEntity accountPeriodicFee = new AccountFeesEntity(center
 				.getCustomerAccount(), trainingFee, ((AmountFeeBO) trainingFee)
 				.getFeeAmount().getAmountDoubleValue());
-		accountPeriodicFee.setFeeStatus(Short.valueOf("2"));
+		accountPeriodicFee.setFeeStatus(FeeStatus.INACTIVE);
 		accountFeeSet.add(accountPeriodicFee);
 		trainingFee.updateStatus(FeeStatus.INACTIVE);
 		trainingFee.setUserContext(TestObjectFactory.getUserContext());

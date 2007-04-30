@@ -136,7 +136,7 @@ public class SavingsTestHelper {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(
+		return TestObjectFactory.createSavingsProduct(
 				offeringName, shortName,
 				ApplicableTo.GROUPS, 
 				new Date(System.currentTimeMillis()), 
@@ -153,7 +153,7 @@ public class SavingsTestHelper {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(
+		return TestObjectFactory.createSavingsProduct(
 			offeringName, ApplicableTo.GROUPS, 
 			new Date(System.currentTimeMillis()), 
 			PrdStatus.SAVINGS_ACTIVE, 

@@ -480,7 +480,7 @@ public class TestHolidayUtils extends MifosTestCase {
 
 	private SavingsBO createSavingSchedule() throws Exception {
 	 	createInitialObjects();
-		savingsProduct = TestObjectFactory.createSavingsOffering(
+		savingsProduct = TestObjectFactory.createSavingsProduct(
 				"dfasdasd1", "sad1",
 				RecommendedAmountUnit.COMPLETE_GROUP);
 		SavingsBO savings = new SavingsTestHelper()

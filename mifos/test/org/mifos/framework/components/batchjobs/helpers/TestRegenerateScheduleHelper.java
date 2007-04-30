@@ -539,7 +539,7 @@ public class TestRegenerateScheduleHelper extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		savingsOffering = TestObjectFactory.createSavingsOffering(
+		savingsOffering = TestObjectFactory.createSavingsProduct(
 			"SavingPrd1", ApplicableTo.GROUPS, 
 			new Date(System.currentTimeMillis()), 
 			PrdStatus.SAVINGS_ACTIVE, 

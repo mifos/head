@@ -38,6 +38,7 @@
 
 package org.mifos.application.accounts.util.helpers;
 
+
 /**
  * This interface stores constants common to all accounts.
  * 
@@ -124,10 +125,6 @@ public interface AccountConstants {
 		public final Short PAYMENT_UNPAID=0;
 		public final Short PAYMENT_PAID=1;
 	*/
-	
-	//Account Fees Status
-	public final Short ACTIVE_FEES=1;
-	public final Short INACTIVE_FEES=2;
 	
 	public final String SAVINGS = "savings";
 	public static final String CUSTOMERS_FOR_SAVINGS_ACCOUNT="customersForSavingsAccount";

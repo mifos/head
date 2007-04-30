@@ -191,7 +191,7 @@ public class TestSavingsIntPostingHelper extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 			.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY, 
 					EVERY_SECOND_MONTH, SAVINGS_INTEREST_POSTING, MONDAY));
-		return TestObjectFactory.createSavingsOffering(
+		return TestObjectFactory.createSavingsProduct(
 			offeringName, shortName, ApplicableTo.GROUPS, 
 			new Date(System.currentTimeMillis()), 
 			PrdStatus.SAVINGS_ACTIVE, 300.0, 

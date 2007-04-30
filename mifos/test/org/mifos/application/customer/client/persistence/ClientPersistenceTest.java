@@ -74,13 +74,13 @@ public class ClientPersistenceTest extends MifosTestCase {
 
 	public void testRetrieveOfferingsApplicableToClient() throws Exception {
 		Date currentTimestamp = new Date(System.currentTimeMillis());
-		savingsOffering1 = TestObjectFactory.createSavingsOffering("Offering1",
+		savingsOffering1 = TestObjectFactory.createSavingsProduct("Offering1",
 				"s1", SavingsType.MANDATORY, ApplicableTo.CLIENTS, currentTimestamp);
-		savingsOffering2 = TestObjectFactory.createSavingsOffering("Offering2",
+		savingsOffering2 = TestObjectFactory.createSavingsProduct("Offering2",
 				"s2", SavingsType.VOLUNTARY, ApplicableTo.CLIENTS, currentTimestamp);
-		savingsOffering3 = TestObjectFactory.createSavingsOffering("Offering3",
+		savingsOffering3 = TestObjectFactory.createSavingsProduct("Offering3",
 				"s3", SavingsType.MANDATORY, ApplicableTo.GROUPS, currentTimestamp);
-		savingsOffering4 = TestObjectFactory.createSavingsOffering("Offering4",
+		savingsOffering4 = TestObjectFactory.createSavingsProduct("Offering4",
 				"s4", SavingsType.VOLUNTARY, ApplicableTo.CENTERS, currentTimestamp);
 		HibernateUtil.closeSession();
 		List<SavingsOfferingBO> offerings = new ClientPersistence()

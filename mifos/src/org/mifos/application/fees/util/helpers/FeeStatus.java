@@ -51,10 +51,13 @@ public enum FeeStatus {
 		return value;
 	}
 	
-	public static FeeStatus getFeeStatus(Short value){
-		for(FeeStatus status : FeeStatus.values())
-			if(status.getValue().equals(value))
-				return status;
-		return null;
+	public static FeeStatus getFeeStatus(int target) {
+		for (FeeStatus candidate : FeeStatus.values()) {
+			if (candidate.getValue() == target) {
+				return candidate;
+			}
+		}
+		throw new RuntimeException("no fee status " + target);
 	}
+
 }

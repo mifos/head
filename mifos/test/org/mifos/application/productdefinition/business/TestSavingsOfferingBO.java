@@ -936,7 +936,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(
+		return TestObjectFactory.createSavingsProduct(
 				prdOfferingName, shortName, ApplicableTo.CLIENTS, 
 				new Date(System.currentTimeMillis()), 
 				PrdStatus.SAVINGS_ACTIVE, 300.0, 
@@ -977,7 +977,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		return TestObjectFactory.createSavingsOffering(
+		return TestObjectFactory.createSavingsProduct(
 				prdOfferingName, shortName, applicableTo, startDate, 
 				offeringStatus, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
 				1.2, 

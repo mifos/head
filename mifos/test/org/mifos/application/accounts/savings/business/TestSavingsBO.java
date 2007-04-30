@@ -345,7 +345,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testIsTrxnDateValid_BeforeFirstMeeting() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd1", "sad1",
+		savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
 				RecommendedAmountUnit.COMPLETE_GROUP);
 		savings = helper.createSavingsAccount(savingsOffering, group, 
 				AccountState.SAVINGS_ACC_APPROVED,
@@ -371,7 +371,7 @@ public class TestSavingsBO extends MifosTestCase {
 	
 	public void testIsTrxnDateValid_AfterFirstMeeting() throws Exception {
 	 	createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd1", "sad1",
+		savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
 				RecommendedAmountUnit.COMPLETE_GROUP);
 		savings = helper.createSavingsAccount(savingsOffering, group, 
 				AccountState.SAVINGS_ACC_APPROVED,
@@ -400,7 +400,7 @@ public class TestSavingsBO extends MifosTestCase {
 	
 	public void testSuccessfulSave() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd1", "sad1",
+		savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 		savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_ACC_PENDINGAPPROVAL, new Money("100"),
@@ -424,7 +424,7 @@ public class TestSavingsBO extends MifosTestCase {
 				CustomerStatus.CLIENT_CLOSED, group);
 		client2 = TestObjectFactory.createClient("client2",
 				CustomerStatus.CLIENT_ACTIVE, group);
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd2", "sad2",
+		savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd2", "sad2",
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 		savings = new SavingsBO(userContext, savingsOffering, group,
 				AccountState.SAVINGS_ACC_APPROVED, savingsOffering
@@ -445,7 +445,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testSuccessfulUpdate() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd1", "sad1",
+		savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group,
@@ -462,7 +462,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testSuccessfulUpdateDepositSchedule() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd1", "sad1",
+		savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
 				RecommendedAmountUnit.COMPLETE_GROUP);
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
@@ -531,7 +531,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testCalculateInterestForClosureAvgBal() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd1", "sad1",
+		savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 		InterestCalcTypeEntity intType = new InterestCalcTypeEntity(
 				InterestCalcType.AVERAGE_BALANCE);
@@ -563,7 +563,7 @@ public class TestSavingsBO extends MifosTestCase {
 	public void testCalculateInterestForClosureWithMinValueForIntCalc()
 			throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd1", "sad1",
+		savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 		InterestCalcTypeEntity intType = new InterestCalcTypeEntity(
 				InterestCalcType.AVERAGE_BALANCE);
@@ -662,7 +662,7 @@ public class TestSavingsBO extends MifosTestCase {
 
 	public void testIsDepositScheduleBeRegenerated() throws Exception {
 		createInitialObjects();
-		savingsOffering = TestObjectFactory.createSavingsOffering("dfasdasd1", "sad1",
+		savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 		savings = helper.createSavingsAccount("000100000000017",
 				savingsOffering, group, AccountStates.SAVINGS_ACC_APPROVED,
@@ -676,7 +676,7 @@ public class TestSavingsBO extends MifosTestCase {
 		center = helper.createCenter();
 		group = TestObjectFactory.createGroupUnderCenter(
 				"Group1", CustomerStatus.GROUP_ACTIVE, center);
-		savingsOffering = TestObjectFactory.createSavingsOffering(
+		savingsOffering = TestObjectFactory.createSavingsProduct(
 				"dfasdasd1", "sad1",
 				RecommendedAmountUnit.PER_INDIVIDUAL);
 
@@ -1830,7 +1830,7 @@ public class TestSavingsBO extends MifosTestCase {
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		SavingsOfferingBO savingsOffering = 
-			TestObjectFactory.createSavingsOffering("SavingPrd1", 
+			TestObjectFactory.createSavingsProduct("SavingPrd1", 
 				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
 				PrdStatus.SAVINGS_ACTIVE, 
 				300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 
@@ -2454,7 +2454,7 @@ public class TestSavingsBO extends MifosTestCase {
 						SAVINGS_INTEREST_CALCULATION_TIME_PERIOD));
 		MeetingBO meetingIntPost = TestObjectFactory.createMeeting(helper
 				.getMeeting(MONTHLY, EVERY_MONTH, SAVINGS_INTEREST_POSTING));
-		return TestObjectFactory.createSavingsOffering(offeringName, shortName, 
+		return TestObjectFactory.createSavingsProduct(offeringName, shortName, 
 				ApplicableTo.GROUPS, new Date(System.currentTimeMillis()), 
 				PrdStatus.SAVINGS_ACTIVE, 300.0, 
 				RecommendedAmountUnit.PER_INDIVIDUAL, 12.0, 
@@ -3850,7 +3850,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		savingsOffering = TestObjectFactory.createSavingsOffering(
+		savingsOffering = TestObjectFactory.createSavingsProduct(
 			"SavingPrd1", ApplicableTo.GROUPS, 
 			new Date(System.currentTimeMillis()), 
 			PrdStatus.LOAN_ACTIVE, 
