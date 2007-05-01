@@ -1,19 +1,21 @@
 package org.mifos.application.surveys.business;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.application.surveys.helpers.SurveyState;
+import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.framework.util.helpers.DateUtils;
 
-public class Survey {
+public class Survey implements Serializable {
 	
 	private int surveyId;
 	
 	private String name;
 	
-	private String appliesTo;
+	private SurveyType appliesTo;
 	
 	private Date dateOfCreation;
 	
@@ -27,18 +29,28 @@ public class Survey {
 		questions = new LinkedList<SurveyQuestion>();
 	}
 	
-	public Survey(String name, SurveyState state, String appliesTo) {
+	public Survey(String name, SurveyState state, SurveyType appliesTo) {
 		this();
 		this.name = name;
 		this.state = state;
 		this.appliesTo = appliesTo;
 	}
 
-	public String getAppliesTo() {
+	// For hibernate
+	String getAppliesTo() {
+		return appliesTo.getValue();
+	}
+	
+	public SurveyType getAppliesToAsEnum() {
 		return appliesTo;
 	}
 
-	public void setAppliesTo(String appliesTo) {
+	// For hibernate
+	void setAppliesTo(String appliesTo) {
+		this.appliesTo = SurveyType.fromString(appliesTo);
+	}
+	
+	public void setAppliesTo(SurveyType appliesTo) {
 		this.appliesTo = appliesTo;
 	}
 
@@ -104,6 +116,12 @@ public class Survey {
 		surveyQuestion.setQuestion(question);
 		getQuestions().add(surveyQuestion);
 		return surveyQuestion;
+	}
+	
+	
+	@Override
+	public String toString() {
+		return "<Survey " + getName() + " " + appliesTo.getValue() + ">" ;
 	}
 
 }

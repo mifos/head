@@ -617,4 +617,10 @@ public interface NamedQueryConstants {
 	
 	public String GET_ALL_FIELD_CONFIGURATION_LIST = "getAllFieldConfigurationList";
 	
+//	surveys
+	public String SURVEYS_RETRIEVE_ALL = "surveys.retrieveAllSurveys";
+	public String SURVEYS_RETRIEVE_BY_TYPE = "surveys.retrieveSurveysByType";
+	public String SURVEYS_RETRIEVE_BY_NAME = "surveys.retrieveSurveysByName";
+	public String SURVEYS_RETRIEVE_BY_STATUS = "surveys.retrieveSurveysByStatus";
+	
 }

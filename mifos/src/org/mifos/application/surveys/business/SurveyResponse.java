@@ -59,7 +59,7 @@ public class SurveyResponse {
 
 	public void setChoiceValue(QuestionChoice choice) throws ApplicationException {
 		if (question.getAnswerTypeAsEnum() != AnswerType.CHOICE) {
-			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
+			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.choiceValue = choice;
 	}
@@ -70,7 +70,7 @@ public class SurveyResponse {
 
 	public void setDateValue(Date dateValue) throws ApplicationException {
 		if (question.getAnswerTypeAsEnum() != AnswerType.DATE) {
-			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
+			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.dateValue = dateValue;
 	}
@@ -81,7 +81,7 @@ public class SurveyResponse {
 
 	public void setFreetextValue(String freetextValue) throws ApplicationException {
 		if (question.getAnswerTypeAsEnum() != AnswerType.FREETEXT) {
-			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
+			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.freetextValue = freetextValue;
 	}
@@ -92,7 +92,7 @@ public class SurveyResponse {
 
 	public void setNumberValue(BigDecimal numberValue) throws ApplicationException {
 		if (question.getAnswerTypeAsEnum() != AnswerType.NUMBER) {
-			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
+			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 		this.numberValue = numberValue;
 	}
@@ -124,7 +124,7 @@ public class SurveyResponse {
 	public void setValue(Object value) throws ApplicationException {
 		
 		if (question == null || question.getAnswerTypeAsEnum() == null) {
-			throw new ApplicationException(SurveyExceptionConstants.NOANSWERTYPEYET);
+			throw new ApplicationException(SurveyExceptionConstants.NO_ANSWER_TYPE_YET);
 		}
 		
 		AnswerType answerType = question.getAnswerTypeAsEnum();
@@ -147,7 +147,7 @@ public class SurveyResponse {
 			}
 		}
 		catch (ClassCastException e) {
-			throw new ApplicationException(SurveyExceptionConstants.WRONGRESPONSETYPE);
+			throw new ApplicationException(SurveyExceptionConstants.WRONG_RESPONSE_TYPE);
 		}
 	}
 

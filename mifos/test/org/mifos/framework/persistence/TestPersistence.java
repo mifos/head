@@ -18,21 +18,6 @@ public class TestPersistence extends MifosTestCase {
 		HibernateUtil.closeSession();
 	}
 
-	public void testOpenSession() throws Exception {
-		LoanPersistence loanPersistance = new LoanPersistence();
-		loanPersistance.openSession();
-		assertTrue(HibernateUtil.isSessionOpen());
-		HibernateUtil.closeSession();
-	}
-
-	public void testCloseSession() throws Exception {
-		LoanPersistence loanPersistance = new LoanPersistence();
-		loanPersistance.openSession();
-		loanPersistance.closeSession();
-		assertFalse(HibernateUtil.isSessionOpen());
-		HibernateUtil.closeSession();
-	}
-	
 	public void xtestNonUniqueObjectException() throws Exception {
 		/* The question is whether this is the kind of hibernate situation
 		   which produces a NonUniqueObjectException.  As written, this

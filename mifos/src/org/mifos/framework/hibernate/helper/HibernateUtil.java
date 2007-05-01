@@ -107,13 +107,7 @@ public class HibernateUtil {
 	 */
 	public static Session getSessionTL() {
 		try {
-			if (threadLocal.get() == null) {
-				AuditInterceptor auditInterceptor = new AuditInterceptor();
-				SessionHolder sessionHolder = new SessionHolder(sessionFactory
-						.openSession(auditInterceptor));
-				sessionHolder.setInterceptor(auditInterceptor);
-				threadLocal.set(sessionHolder);
-			}
+			getOrCreateSessionHolder();
 		} catch (HibernateException he) {
 			throw new ConnectionNotFoundException(he);
 		}
@@ -136,18 +130,7 @@ public class HibernateUtil {
 	 * TestObjectPersistence#update(Session, org.mifos.framework.business.PersistentObject)
 	 */
 	public static Transaction startTransaction() {
-		Transaction transaction = getSessionHolder().getTransaction();
-		if (transaction == null) {
-			transaction = getSessionHolder().getSession().beginTransaction();
-			getSessionHolder().setTranasction(transaction);
-		} 
-
-		// Not sure this is right.  If startTransaction is paired with
-		// commitTransaction, transaction will get set to null....
-		/*else if (!transaction.isActive()) {
-			transaction.begin();
-		}*/
-		return transaction;
+		return getSessionHolder().startTransaction();
 	}
 
 	public static Transaction getTransaction() {
@@ -182,11 +165,23 @@ public class HibernateUtil {
 
 	}
 
-	private static SessionHolder getSessionHolder() {
+	public static SessionHolder getSessionHolder() {
 		if (null == threadLocal.get()) {
 			// need to log to indicate that the session is being invoked when
 			// not present
 
+		}
+		return threadLocal.get();
+	}
+
+	public static SessionHolder getOrCreateSessionHolder() 
+	throws HibernateException {
+		if (threadLocal.get() == null) {
+			AuditInterceptor auditInterceptor = new AuditInterceptor();
+			SessionHolder sessionHolder = new SessionHolder(sessionFactory
+					.openSession(auditInterceptor));
+			sessionHolder.setInterceptor(auditInterceptor);
+			threadLocal.set(sessionHolder);
 		}
 		return threadLocal.get();
 	}

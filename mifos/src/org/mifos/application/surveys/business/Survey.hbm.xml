@@ -17,4 +17,16 @@
 			<one-to-many class="org.mifos.application.surveys.business.SurveyQuestion"/>
 		</list>
 	</class>
+	<query name="surveys.retrieveAllSurveys">
+		<![CDATA[from Survey as survey order by survey.name]]>
+	</query>
+	<query name="surveys.retrieveSurveysByType">
+		<![CDATA[from Survey as survey where survey.appliesTo=:SURVEY_TYPE or survey.appliesTo='both']]>
+	</query>
+	<query name="surveys.retrieveSurveysByName">
+		<![CDATA[from Survey as survey where survey.name=:SURVEY_NAME]]>
+	</query>
+	<query name="surveys.retrieveSurveysByState">
+		<![CDATA[from Survey as survey where survey.state=:SURVEY_STATE]]>
+	</query>
 </hibernate-mapping>

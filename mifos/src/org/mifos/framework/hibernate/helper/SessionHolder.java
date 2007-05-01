@@ -17,6 +17,14 @@ public class SessionHolder {
 		}
 	}
 	
+	public Transaction startTransaction() {
+		if (transaction == null) {
+			transaction = session.beginTransaction();
+		}
+		
+		return transaction;
+	}
+	
 	public void setTranasction(Transaction transaction) {
 		this.transaction=transaction;
 	}

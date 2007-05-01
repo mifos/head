@@ -1,11 +1,21 @@
 package org.mifos.application.surveys.business;
 
-public class SurveyQuestion {
+import java.io.Serializable;
+
+public class SurveyQuestion implements Serializable {
 	private int surveyQuestionId;
 	
 	private int mandatory;
 	
 	private Question question;
+	
+	public SurveyQuestion() {
+	}
+
+	public SurveyQuestion(int id, boolean mandatory) {
+		surveyQuestionId = id;
+		setMandatory(mandatory);
+	}
 
 	public Question getQuestion() {
 		return question;
@@ -21,6 +31,10 @@ public class SurveyQuestion {
 
 	public void setMandatory(int mandatory) {
 		this.mandatory = mandatory;
+	}
+	
+	public void setMandatory(boolean mandatory) {
+		this.mandatory = mandatory ? 1 : 0;
 	}
 
 	public int getSurveyQuestionId() {

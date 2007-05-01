@@ -1,12 +1,13 @@
 package org.mifos.application.surveys.business;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
 
-public class Question {
+public class Question implements Serializable {
 	private int questionId;
 	
 	private AnswerType answerType;

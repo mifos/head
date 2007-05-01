@@ -19,13 +19,17 @@ import org.mifos.application.surveys.exceptions.SurveyExceptionConstants;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.helpers.SurveyState;
+import org.mifos.application.surveys.helpers.SurveyType;
+import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestDatabase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -46,11 +50,50 @@ public class TestSurvey extends MifosTestCase {
 		session.close();
 	}
 	
+	public void testSurveyType() {
+		assertEquals("customers", SurveyType.CUSTOMERS.getValue());
+		assertEquals("accounts", SurveyType.ACCOUNTS.getValue());
+		assertEquals("both", SurveyType.BOTH.getValue());
+		
+		assertEquals(SurveyType.CUSTOMERS, SurveyType.fromString("customers"));
+		assertEquals(SurveyType.ACCOUNTS, SurveyType.fromString("accounts"));
+		assertEquals(SurveyType.BOTH, SurveyType.fromString("both"));
+	}
+	
+	public void testGetSurveysByType() throws Exception {
+		SessionHolder holder = new SessionHolder(session);
+		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		Survey survey1 = new Survey(
+			"Survey 1", SurveyState.ACTIVE, SurveyType.CUSTOMERS);
+		Survey survey2 = new Survey(
+			"Survey 2", SurveyState.ACTIVE, SurveyType.ACCOUNTS);
+		Survey survey3 = new Survey(
+			"Survey 3", SurveyState.ACTIVE, SurveyType.BOTH);
+		
+		session.save(survey1);
+		session.save(survey2);
+		session.save(survey3);
+		
+		List<Survey> bothResults = surveysPersistence.retrieveByType(SurveyType.BOTH);
+		assertEquals(1, bothResults.size());
+		assertEquals(survey3.getName(), bothResults.get(0).getName());
+		
+		List<Survey> customersResults = surveysPersistence.retrieveByType(SurveyType.CUSTOMERS);
+		assertEquals(2, customersResults.size());
+		assertEquals(survey1.getName(), customersResults.get(0).getName());
+		
+		List<Survey> accountsResults = surveysPersistence.retrieveByType(SurveyType.ACCOUNTS);
+		assertEquals(2, accountsResults.size());
+		assertEquals(survey2.getName(), accountsResults.get(0).getName());
+		
+		List<Survey> allResults = surveysPersistence.retrieveAllSurveys();
+		assertEquals(3, allResults.size());
+
+	}
+	
 	public void testCreateSurvey() {
-		Survey survey = new Survey();
-		survey.setName("testsurvey");
-		survey.setState(SurveyState.ACTIVE);
-		survey.setAppliesTo("someone");
+		Survey survey = new Survey(
+			"testsurvey", SurveyState.ACTIVE, SurveyType.CUSTOMERS);
 		
 		session.save(survey);
 		
@@ -60,7 +103,7 @@ public class TestSurvey extends MifosTestCase {
 		Survey read_survey = (Survey) result.get(0);
 		assertEquals("testsurvey", read_survey.getName());
 		assertEquals(SurveyState.ACTIVE, read_survey.getStateAsEnum());
-		assertEquals("someone", read_survey.getAppliesTo());
+		assertEquals(SurveyType.CUSTOMERS, read_survey.getAppliesToAsEnum());
 	}
 	
 	public void testCreateQuestion() {
@@ -92,7 +135,7 @@ public class TestSurvey extends MifosTestCase {
 		Survey survey = new Survey();
 		survey.setName(surveyName);
 		survey.setState(SurveyState.ACTIVE);
-		survey.setAppliesTo("someone");
+		survey.setAppliesTo(SurveyType.CUSTOMERS);
 
 		OfficeBO office = factory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		Name name = new Name("XYZ", null, null, null);
@@ -152,7 +195,7 @@ public class TestSurvey extends MifosTestCase {
 			fail();
 		}
 		catch (ApplicationException e) {
-			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+			assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
 		}
 		
 		try {
@@ -160,7 +203,7 @@ public class TestSurvey extends MifosTestCase {
 			fail();
 		}
 		catch (ApplicationException e) {
-			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+			assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
 		}
 		
 		try {
@@ -168,7 +211,7 @@ public class TestSurvey extends MifosTestCase {
 			fail();
 		}
 		catch (ApplicationException e) {
-			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+			assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
 		}
 		
 		// verify date answertype check
@@ -179,7 +222,7 @@ public class TestSurvey extends MifosTestCase {
 			fail();
 		}
 		catch (ApplicationException e) {
-			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+			assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
 		}
 		
 		try {
@@ -187,7 +230,7 @@ public class TestSurvey extends MifosTestCase {
 			fail();
 		}
 		catch (ApplicationException e) {
-			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+			assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
 		}
 
 		try {
@@ -195,7 +238,7 @@ public class TestSurvey extends MifosTestCase {
 			fail();
 		}
 		catch (ApplicationException e) {
-			assertEquals(SurveyExceptionConstants.WRONGRESPONSETYPE, e.getKey());
+			assertEquals(SurveyExceptionConstants.WRONG_RESPONSE_TYPE, e.getKey());
 		}
 		
 	}
@@ -234,6 +277,15 @@ public class TestSurvey extends MifosTestCase {
 		assertEquals(AnswerType.CHOICE,
 			refreshedInstance.getSurvey().getQuestion(0).getAnswerTypeAsEnum());
 		assertEquals(refreshedInstance.getSurvey().getName(), surveyName);
+	}
+	
+	public void testSerialize() throws Exception {
+		Survey survey = new Survey(
+			"my survey", SurveyState.ACTIVE, SurveyType.CUSTOMERS);
+		Question question = new Question("Can I be written to the session?");
+		survey.addQuestion(question, false);
+		
+		TestUtils.assertCanSerialize(survey);
 	}
 	
 }

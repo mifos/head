@@ -160,6 +160,7 @@ public class ActivityMapper {
 		addReportsMappings();
 		addLabelConfigurationMappings();
 		addHolidayMappings();
+		addSurveysMappings();
 		addHiddenMandatoryConfigurationMappings();
 	}
 
@@ -1191,6 +1192,10 @@ public class ActivityMapper {
 		activityMap.put("/holidayAction-addHoliday", SecurityConstants.VIEW);
 		activityMap.put("/holidayAction-previous", SecurityConstants.VIEW);
 		activityMap.put("/holidayAction-update", SecurityConstants.VIEW);		
+	}
+	
+	private void addSurveysMappings() {
+		activityMap.put("/surveysAction-mainpage", SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

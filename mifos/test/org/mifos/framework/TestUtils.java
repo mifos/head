@@ -161,7 +161,8 @@ public class TestUtils {
     /* end equals testing methods */
     
 	public static void assertCanSerialize(Object object) throws IOException {
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		ByteArrayOutputStream byteArrayOutputStream = 
+			new ByteArrayOutputStream();
 		ObjectOutputStream objectOutputStream = 
 			new ObjectOutputStream(byteArrayOutputStream);
 		objectOutputStream.writeObject(object);

@@ -79,9 +79,9 @@ public abstract class BaseAction extends DispatchAction {
 		UserContext userContext = (UserContext) request.getSession()
 				.getAttribute(Constants.USER_CONTEXT_KEY);
 		Locale locale = getLocale(userContext);
-		BusinessObject object = getBusinessObjectFromSession(request);
 		if (!skipActionFormToBusinessObjectConversion(
 				request.getParameter("method"))) {
+			BusinessObject object = getBusinessObjectFromSession(request);
 			ConvertionUtil.populateBusinessObject(actionForm, object, locale);
 		}
 	}
@@ -241,9 +241,15 @@ public abstract class BaseAction extends DispatchAction {
 		return true;
 	}
 
+	/**
+	 * This should return true if we don't want to the automatic
+	 * conversion of forms to business objects (for example, if
+	 * the data from the form ends up in several business objects)
+	 */
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return false;
 	}
+
 	protected UserContext getUserContext(HttpServletRequest request) {
 		return (UserContext) SessionUtils.getAttribute(
 				Constants.USER_CONTEXT_KEY, request.getSession());

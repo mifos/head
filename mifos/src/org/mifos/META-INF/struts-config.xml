@@ -2,7 +2,7 @@
 <!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
 "http://jakarta.apache.org/struts/dtdt/struts-config_1_2.dtd">
 <struts-config>
-	<form-beans>
+	<form-beans> 
 		<!-- Center Action form -->
 		<form-bean name="centerCustActionForm" type="org.mifos.application.customer.center.struts.actionforms.CenterCustActionForm"></form-bean>
 		<!-- Edit Client Transfer Action form -->
@@ -1117,6 +1117,15 @@
 		 	<forward name="get_success" path="/pages/application/holiday/jsp/view_organizational_holidays.jsp" />
 		 	<forward name="load_success" path="/pages/application/holiday/jsp/create_officeHoliday.jsp" />
 		</action>
+		
+		<action path="/surveysAction"
+   	      type="org.mifos.application.surveys.struts.action.SurveysAction"
+   	      parameter="method"
+   	      scope="session"
+   	      validate="false"
+   	      input="/surveysAction.do?method=validate">
+   	         <forward name="load_main_page" path="/pages/application/surveys/jsp/mainpage.jsp"/>
+   	    </action>
 	</action-mappings>
 
 	<controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>
