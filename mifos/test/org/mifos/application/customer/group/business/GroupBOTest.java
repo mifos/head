@@ -246,7 +246,6 @@ public class GroupBOTest extends MifosTestCase {
 	
 	public void testSuccessfulTransferToCenterInSameBranchForLogging() throws Exception {
 		createObjectsForTranferToCenterInSameBranch();
-		center1.getSearchId(); // does this do hibernate magic or is it unneeded?
 		HibernateUtil.closeSession();
 
 		group = TestObjectFactory.getObject(GroupBO.class, group
