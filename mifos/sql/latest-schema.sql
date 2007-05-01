@@ -1114,7 +1114,12 @@ CREATE TABLE CUSTOMER (
   PARENT_CUSTOMER_ID INTEGER,
   CREATED_DATE DATE,
   UPDATED_DATE DATE,
+  
+  /* Is SEARCH_ID supposed to be UNIQUE?
+     It would seem so based on how it is constructed, but
+     this needs more investigation. */
   SEARCH_ID VARCHAR(100),
+
   MAX_CHILD_COUNT INTEGER,
   HO_UPDATED SMALLINT,
   CLIENT_CONFIDENTIAL SMALLINT,
