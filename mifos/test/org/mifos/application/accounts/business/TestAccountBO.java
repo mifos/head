@@ -59,7 +59,6 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
 import org.mifos.application.fees.util.helpers.FeePayment;
-import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.WeekDaysEntity;
@@ -76,54 +75,45 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-
 public class TestAccountBO extends TestAccount {
-	public TestAccountBO() {
-	}
 
 	public static void addAccountFlag(AccountStateFlagEntity flagDetail,
 			AccountBO account) {
 		account.addAccountFlag(flagDetail);
 	}
 
-	public void testFailureRemoveFees() {
-		try {
-			HibernateUtil.getSessionTL();
-			HibernateUtil.startTransaction();
-			UserContext uc = TestUtils.makeUser();
-			Set<AccountFeesEntity> accountFeesEntitySet = accountBO
-					.getAccountFees();
-			Iterator itr = accountFeesEntitySet.iterator();
-			while (itr.hasNext())
-				accountBO.removeFees(((AccountFeesEntity) itr.next()).getFees()
-						.getFeeId(), uc.getId());
-			HibernateUtil.getTransaction().commit();
-			assert (false);
-		} catch (Exception e) {
-			/* TODO: what kind of exception?  This test could pass for almost
-			   any reason */
-			assertTrue(true);
-		}
+	/**
+	 * The name of this test, and some now-gone (and broken)
+	 * exception-catching code, make it look like it was
+	 * supposed to test failure.  But it doesn't (and I don't
+	 * see a corresponding success test).
+	 */
+	public void testFailureRemoveFees() throws Exception {
+		HibernateUtil.getSessionTL();
+		HibernateUtil.startTransaction();
+		UserContext uc = TestUtils.makeUser();
+		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
+				.getAccountFees();
+		Iterator itr = accountFeesEntitySet.iterator();
+		while (itr.hasNext())
+			accountBO.removeFees(((AccountFeesEntity) itr.next()).getFees()
+					.getFeeId(), uc.getId());
+		HibernateUtil.getTransaction().commit();
 	}
 
 	public void testSuccessUpdateAccountActionDateEntity() {
 		List<Short> installmentIdList;
-		try {
-			installmentIdList = getApplicableInstallmentIdsForRemoveFees(accountBO);
-			Set<AccountFeesEntity> accountFeesEntitySet = accountBO
-					.getAccountFees();
-			Iterator itr = accountFeesEntitySet.iterator();
-			while (itr.hasNext()) {
-				accountBO.updateAccountActionDateEntity(installmentIdList,
-						((AccountFeesEntity) itr.next()).getFees().getFeeId());
-				assertTrue(true);
-			}
-		} catch (Exception e) {
-			assertFalse(false);
+		installmentIdList = getApplicableInstallmentIdsForRemoveFees(accountBO);
+		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
+				.getAccountFees();
+		Iterator itr = accountFeesEntitySet.iterator();
+		while (itr.hasNext()) {
+			accountBO.updateAccountActionDateEntity(installmentIdList,
+					((AccountFeesEntity) itr.next()).getFees().getFeeId());
 		}
+		// TODO: assert what?
 	}
 
 	private List<Short> getApplicableInstallmentIdsForRemoveFees(
@@ -141,14 +131,14 @@ public class TestAccountBO extends TestAccount {
 	public void testSuccessUpdateAccountFeesEntity() {
 		Set<AccountFeesEntity> accountFeesEntitySet = accountBO
 				.getAccountFees();
+		assertEquals (1, accountFeesEntitySet.size());
 		Iterator itr = accountFeesEntitySet.iterator();
 		while (itr.hasNext()) {
 			AccountFeesEntity accountFeesEntity = (AccountFeesEntity) itr
 					.next();
 			accountBO.updateAccountFeesEntity(accountFeesEntity.getFees()
 					.getFeeId());
-			assertEquals(accountFeesEntity.getFeeStatus(),
-					FeeStatus.INACTIVE.getValue());
+			assertFalse(accountFeesEntity.isActive());
 		}
 	}
 
@@ -238,9 +228,11 @@ public class TestAccountBO extends TestAccount {
 		TestObjectFactory.updateObject(loan);
 		try {
 			loan.adjustPmnt("loan account has been adjusted by test code");
-			assertTrue(false);
-		} catch (Exception e) {
-			assertTrue(true);
+			fail();
+		} catch (AccountException e) {
+			assertEquals(
+				"exception.accounts.ApplicationException.CannotAdjust", 
+				e.getKey());
 		}
 	}
 
@@ -262,14 +254,15 @@ public class TestAccountBO extends TestAccount {
 		loan = TestObjectFactory.getObject(LoanBO.class, loan
 				.getAccountId());
 
-		Money pmntAmnt = null;
-		for (AccountPaymentEntity accntPmnt : loan.getAccountPayments()) {
-			pmntAmnt = accntPmnt.getAmount();
-		}
+		Set<AccountPaymentEntity> payments = loan.getAccountPayments();
+		assertEquals(1, payments.size());
+		AccountPaymentEntity accntPmnt = payments.iterator().next();
 		TestObjectFactory.flushandCloseSession();
+
 		assertEquals(
-				"Account payment retrieved should be zero with currency MFI currency",
-				TestObjectFactory.getMoneyForMFICurrency(0), pmntAmnt);
+			"Account payment retrieved should be zero with currency MFI currency",
+			TestObjectFactory.getMoneyForMFICurrency(0), 
+			accntPmnt.getAmount());
 	}
 
 	public void testGetTransactionHistoryView() throws Exception {
