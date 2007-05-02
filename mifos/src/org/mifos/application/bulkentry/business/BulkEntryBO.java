@@ -47,7 +47,7 @@ import org.mifos.application.bulkentry.util.helpers.BulkEntryNodeBuilder;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.personnel.business.PersonnelView;
@@ -237,7 +237,7 @@ public class BulkEntryBO extends BusinessObject {
 			return;
 		}
 		if (bulkEntryParent.getCustomerDetail().getCustomerLevelId().equals(
-				CustomerConstants.CENTER_LEVEL_ID)) {
+				CustomerLevel.CENTER.getValue())) {
 			populateCenter(bulkEntryDataView);
 		} else {
 			populateGroup(bulkEntryDataView);

@@ -17,4 +17,14 @@ public enum CustomFieldType {
 	public Short getValue() {
 		return value;
 	}
+	
+	public static CustomFieldType fromInt(int value) {
+		for (CustomFieldType candidate : values()) {
+			if (candidate.getValue() == value) {
+				return candidate;
+			}
+		}
+		throw new RuntimeException("no field type " + value);
+	}
+
 }

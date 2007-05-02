@@ -61,8 +61,7 @@ public class CenterBO extends CustomerBO {
 	
 	@Override
 	public boolean isActive() {
-		return getCustomerStatus().getId().equals(
-			CustomerStatus.CENTER_ACTIVE.getValue());
+		return getStatus() == CustomerStatus.CENTER_ACTIVE;
 	}
 
 	@Override

@@ -339,6 +339,10 @@ public class PersonnelBO extends BusinessObject {
 	public PersonnelStatusEntity getStatus() {
 		return status;
 	}
+	
+	public PersonnelStatus getStatusAsEnum() {
+		return PersonnelStatus.getPersonnelStatus(status.getId());
+	}
 
 	public void addPersonnelMovement(PersonnelMovementEntity personnelMovement) {
 		if (personnelMovement != null) {
@@ -536,15 +540,17 @@ public class PersonnelBO extends BusinessObject {
 			OfficeBO newOffice, PersonnelLevel newLevel)
 			throws PersonnelException {
 
-		if (!level.getId().equals(newLevel.getValue()))
+		if (!level.getId().equals(newLevel.getValue())) {
 			validateUserHierarchyChange(newLevel, newOffice);
+		}
+
 		if (!office.getOfficeId().equals(newOffice.getOfficeId())) {
 			validateOfficeTransfer(newOffice, newLevel);
 		}
-		if (!status.getId().equals(newStatus.getValue())) {
+
+		if (getStatusAsEnum() != newStatus) {
 			validateStatusChange(newStatus, newLevel, newOffice);
 		}
-
 	}
 
 	private void validateStatusChange(PersonnelStatus newStatus,
@@ -552,15 +558,14 @@ public class PersonnelBO extends BusinessObject {
 			throws PersonnelException {
 
 		try {
-			if (status.getId().equals(PersonnelStatus.ACTIVE.getValue())
+			if (getStatusAsEnum() == PersonnelStatus.ACTIVE
 					&& newStatus.equals(PersonnelStatus.INACTIVE)
 					&& newLevel.equals(PersonnelLevel.LOAN_OFFICER)) {
 				if (new PersonnelPersistence().getActiveChildrenForLoanOfficer(
 						personnelId, office.getOfficeId())) {
 					throw new PersonnelException(PersonnelConstants.STATUS_CHANGE_EXCEPTION);
 				}
-			} else if (status.getId().equals(
-					PersonnelStatus.INACTIVE.getValue())
+			} else if (getStatusAsEnum() == PersonnelStatus.INACTIVE
 					&& newStatus.equals(PersonnelStatus.ACTIVE)
 					&& !(newOffice.isActive())) {
 				Object values[] = new Object[1];

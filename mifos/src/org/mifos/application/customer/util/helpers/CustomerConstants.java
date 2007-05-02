@@ -37,6 +37,7 @@
  */
 package org.mifos.application.customer.util.helpers;
 
+
 public interface CustomerConstants {
 	public static final String CUSTOMER_NOTE_ACTION="CustomerNoteAction";
 	public static final String CUSTOMER_HISTORICAL_DATA_ACTION="CustomerHistoricalDataAction";
@@ -48,17 +49,12 @@ public interface CustomerConstants {
 	public static final String PERSONNEL_NAME="personnelName";
 	public static final String GLOBAL_CUST_NUM="globalCustNum";
 	public static final String BLANK=" ";
-	public static final short CLIENT_LEVEL_ID=1;	
-	public static final short GROUP_LEVEL_ID=2;
-	/**Level id of the center*/
-	public static final short CENTER_LEVEL_ID=3;
-	/**Customer status id's*/
-	public static final short LOAN_OFFICER_ACTIVE_STATE = 1;
-	public static final short LOAN_OFFICER_INACTIVE_STATE = 2;
-	public static final short ACTIVE_STATE = 13;
-	public static final short INACTIVE_STATE = 14;
+
+	/* Like CustomerStatus.CENTER_ACTIVE.getValue()
+	   but usable in case statements */
 	public static final short CENTER_ACTIVE_STATE = 13;
 	public static final short CENTER_INACTIVE_STATE = 14;
+
 	public static final String OLD_STATUS = "oldStatus";
 	public static final String NEW_STATUS = "newStatus";
 	public static final String NEW_FLAG = "newFlag";
@@ -67,7 +63,6 @@ public interface CustomerConstants {
 	public static final String TRAINED_DATE = "trainedDate";
 	
 	public static final short All_CATEGORY_ID =1;
-	public static final short DATE_FIELD_TYPE = 3;
 	
 	/**Exceptions*/
 	public static final String UNKNOWN_EXCEPTION="error.unknownexception";

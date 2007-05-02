@@ -123,15 +123,7 @@ public class CustomerAccountBO extends AccountBO {
 	private void generateCustomerFeeSchedule(CustomerBO customer)
 			throws AccountException {
 		if (customer.getCustomerMeeting() != null
-				&& (customer.getCustomerLevel().isGroup()
-						&& customer.getCustomerStatus().getId().equals(
-								CustomerStatus.GROUP_ACTIVE.getValue())
-						|| customer.getCustomerLevel().isClient()
-						&& customer.getCustomerStatus().getId().equals(
-								CustomerStatus.CLIENT_ACTIVE.getValue()) || customer
-						.getCustomerLevel().isCenter()
-						&& customer.getCustomerStatus().getId().equals(
-								CustomerStatus.CENTER_ACTIVE.getValue()))) {
+				&& customer.isActiveViaLevel()) {
 			Calendar meetingStartDate = customer.getCustomerMeeting()
 					.getMeeting().getMeetingStartDate();
 			if (customer.getParentCustomer() != null) {
@@ -693,7 +685,7 @@ public class CustomerAccountBO extends AccountBO {
 
 	private boolean isCustomerValid() {
 		if (getCustomer().getCustomerStatus().getId().equals(
-				CustomerConstants.CENTER_ACTIVE_STATE)
+				CustomerStatus.CENTER_ACTIVE.getValue())
 				|| getCustomer().getCustomerStatus().getId().equals(
 						CustomerConstants.GROUP_ACTIVE_STATE)
 				|| getCustomer().getCustomerStatus().getId().equals(

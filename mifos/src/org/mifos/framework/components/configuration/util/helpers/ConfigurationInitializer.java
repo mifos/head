@@ -54,7 +54,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerStatusEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.WeekDaysEntity;
 import org.mifos.application.office.business.OfficeBO;
@@ -179,10 +179,10 @@ public class ConfigurationInitializer {
 		if (customerOptionalStates != null && customerOptionalStates.size() > 0) {
 			for (CustomerStatusEntity customerStateEntity : customerOptionalStates) {
 				if (customerStateEntity.getCustomerLevel().getId().equals(
-						CustomerConstants.CLIENT_LEVEL_ID))
+						CustomerLevel.CLIENT.getValue()))
 					setClientOptionalState(officeConfigMap, customerStateEntity);
 				else if (customerStateEntity.getCustomerLevel().getId().equals(
-						CustomerConstants.GROUP_LEVEL_ID))
+						CustomerLevel.GROUP.getValue()))
 					setGroupOptionalState(officeConfigMap, customerStateEntity);
 			}
 		}

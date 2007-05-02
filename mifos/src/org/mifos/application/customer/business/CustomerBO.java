@@ -591,6 +591,21 @@ public abstract class CustomerBO extends BusinessObject {
 
 	public abstract boolean isActive();
 
+	/**
+	 * Is this customer active (but based on level rather than
+	 * discriminator columm)?  (Is there any way this will ever
+	 * be different from {@link #isActive()}?  I suspect not,
+	 * but I'm not sure).
+	 */
+	public boolean isActiveViaLevel() {
+		return (getCustomerLevel().isGroup()
+				&& getStatus() == CustomerStatus.GROUP_ACTIVE
+				|| getCustomerLevel().isClient()
+				&& getStatus() == CustomerStatus.CLIENT_ACTIVE 
+				|| getCustomerLevel().isCenter()
+				&& getStatus() == CustomerStatus.CENTER_ACTIVE);
+	}
+
 	public Money getBalanceForAccountsAtRisk() {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
@@ -955,12 +970,13 @@ public abstract class CustomerBO extends BusinessObject {
 	protected void updateCustomFields(List<CustomFieldView> customFields) {
 		if (customFields != null) {
 			for (CustomFieldView fieldView : customFields) {
-				if (fieldView.getFieldType().equals(
-						CustomFieldType.DATE.getValue())
+				if (fieldView.getFieldTypeAsEnum() == CustomFieldType.DATE
 						&& StringUtils.isNullAndEmptySafe(fieldView
-								.getFieldValue()))
+								.getFieldValue())) {
 					fieldView.convertDateToUniformPattern(getUserContext()
 							.getPreferredLocale());
+				}
+
 				for (CustomerCustomFieldEntity fieldEntity : getCustomFields())
 					if (fieldView.getFieldId().equals(fieldEntity.getFieldId()))
 						fieldEntity.setFieldValue(fieldView.getFieldValue());
@@ -1006,7 +1022,6 @@ public abstract class CustomerBO extends BusinessObject {
 					this.personnel = null;
 			}
 		} catch (PersistenceException e) {
-
 			throw new CustomerException(e);
 		}
 	}
@@ -1200,4 +1215,5 @@ public abstract class CustomerBO extends BusinessObject {
 				|| (meetingFrom.isMonthly() && meetingTo.isWeekly()))
 			throw new CustomerException(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH);
 	}
+
 }

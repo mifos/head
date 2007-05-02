@@ -1,7 +1,5 @@
 package org.mifos.application.personnel.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
-
 public enum PersonnelStatus {
 	ACTIVE(Short.valueOf("1")), INACTIVE(Short.valueOf("2"));
 
@@ -14,13 +12,14 @@ public enum PersonnelStatus {
 	public Short getValue() {
 		return value;
 	}
-	public static PersonnelStatus getPersonnelStatus(Short id)
-	throws PropertyNotFoundException {
+
+	public static PersonnelStatus getPersonnelStatus(Short id) {
 		for (PersonnelStatus status : PersonnelStatus.values()) {
-			if (status.value.equals(id))
+			if (status.value.equals(id)) {
 				return status;
+			}
 		}
-		throw new PropertyNotFoundException(PersonnelConstants.ERROR_STATUS);
+		throw new RuntimeException("no personnel status " + id);
 	}
 
 }

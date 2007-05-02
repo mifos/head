@@ -55,7 +55,6 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -132,9 +131,9 @@ public class SavingsClosureAction extends BaseAction {
 		// client list will be loaded only if it is center savings account,
 		// or group savings account with deposit schedule of per client
 
-		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.CENTER_LEVEL_ID
+		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.CENTER.getValue()
 				|| (savings.getCustomer().getCustomerLevel().getId()
-						.shortValue() == CustomerConstants.GROUP_LEVEL_ID && savings
+						.shortValue() == CustomerLevel.GROUP.getValue() && savings
 						.getRecommendedAmntUnit()
 						.getId()
 						.equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))

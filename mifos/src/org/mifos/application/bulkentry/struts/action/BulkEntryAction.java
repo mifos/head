@@ -67,6 +67,7 @@ import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.PaymentTypeView;
 import org.mifos.application.master.business.service.MasterDataService;
@@ -359,7 +360,7 @@ public class BulkEntryAction extends BaseAction {
 			}
 		}
 		customerViews.add(parent);
-		if (!levelId.equals(CustomerConstants.CENTER_LEVEL_ID)) {
+		if (!levelId.equals(CustomerLevel.CENTER.getValue())) {
 			loanAccprdViews.addAll(parent.getLoanAccountDetails());
 		}
 		customerAccViews.add(parent.getCustomerAccountDetails());
@@ -493,9 +494,9 @@ public class BulkEntryAction extends BaseAction {
 		Short customerLevel;
 		if (Configuration.getInstance().getCustomerConfig(officeId)
 				.isCenterHierarchyExists())
-			customerLevel = Short.valueOf(CustomerConstants.CENTER_LEVEL_ID);
+			customerLevel = Short.valueOf(CustomerLevel.CENTER.getValue());
 		else
-			customerLevel = Short.valueOf(CustomerConstants.GROUP_LEVEL_ID);
+			customerLevel = Short.valueOf(CustomerLevel.GROUP.getValue());
 		List<CustomerView> activeParentUnderLoanOfficer = masterService
 				.getListOfActiveParentsUnderLoanOfficer(personnelId,
 						customerLevel, officeId);

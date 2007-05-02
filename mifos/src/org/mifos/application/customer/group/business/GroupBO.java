@@ -133,8 +133,7 @@ public class GroupBO extends CustomerBO {
 
 	@Override
 	public boolean isActive() {
-		return getCustomerStatus().getId().equals(
-				CustomerStatus.GROUP_ACTIVE.getValue());
+		return getStatus() == CustomerStatus.GROUP_ACTIVE;
 	}
 
 	@Override

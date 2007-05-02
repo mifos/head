@@ -6,7 +6,7 @@ import java.util.List;
 import org.mifos.application.bulkentry.business.BulkEntryView;
 import org.mifos.application.bulkentry.business.service.BulkEntryBusinessService;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
@@ -37,7 +37,7 @@ public class BulkEntryClientAttendanceThread implements Runnable {
 			BulkEntryBusinessService bulkEntryBusinessService = new BulkEntryBusinessService();
 			for (BulkEntryView parent : customerViews) {
 				Short levelId = parent.getCustomerDetail().getCustomerLevelId();
-				if (levelId.equals(CustomerConstants.CLIENT_LEVEL_ID)) {
+				if (levelId.equals(CustomerLevel.CLIENT.getValue())) {
 					try {
 						bulkEntryBusinessService.setClientAttendance(parent
 								.getCustomerDetail().getCustomerId(),

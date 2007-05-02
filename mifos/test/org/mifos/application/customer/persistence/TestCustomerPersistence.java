@@ -38,7 +38,6 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.util.helpers.ClientConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.fees.business.AmountFeeBO;
@@ -125,7 +124,7 @@ public class TestCustomerPersistence extends MifosTestCase {
 				.getTypicalMeeting());
 		center = TestObjectFactory.createCenter("Center_Active", meeting);
 		List<CustomerView> customers = customerPersistence.getActiveParentList(
-				Short.valueOf("1"), CustomerConstants.CENTER_LEVEL_ID, Short
+				Short.valueOf("1"), CustomerLevel.CENTER.getValue(), Short
 						.valueOf("3"));
 		assertEquals(1, customers.size());
 
@@ -670,11 +669,11 @@ public class TestCustomerPersistence extends MifosTestCase {
 
 		List<CustomerBO> customerList1 = customerPersistence
 				.getAllChildrenForParent(center.getSearchId(), Short
-						.valueOf("3"), CustomerConstants.CENTER_LEVEL_ID);
+						.valueOf("3"), CustomerLevel.CENTER.getValue());
 		assertEquals(2, customerList1.size());
 		List<CustomerBO> customerList2 = customerPersistence
 				.getAllChildrenForParent(center.getSearchId(), Short
-						.valueOf("3"), CustomerConstants.GROUP_LEVEL_ID);
+						.valueOf("3"), CustomerLevel.GROUP.getValue());
 		assertEquals(1, customerList2.size());
 
 		TestObjectFactory.cleanUp(client3);

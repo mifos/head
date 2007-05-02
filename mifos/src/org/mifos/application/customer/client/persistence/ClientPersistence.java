@@ -50,7 +50,7 @@ import java.util.Map;
 import org.hibernate.Hibernate;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.client.business.ClientBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -66,7 +66,7 @@ public class ClientPersistence extends Persistence {
 			String governmentId, Integer customerId) 
 	throws PersistenceException {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
-			queryParameters.put("LEVEL_ID", CustomerConstants.CLIENT_LEVEL_ID);
+			queryParameters.put("LEVEL_ID", CustomerLevel.CLIENT.getValue());
 			queryParameters.put("GOVT_ID",governmentId);
 			queryParameters.put("customerId", customerId);
 			List queryResult = executeNamedQuery(
@@ -80,7 +80,7 @@ public class ClientPersistence extends Persistence {
 	throws PersistenceException {
 			Map<String, Object> queryParameters = new HashMap<String, Object>();
 			queryParameters.put("clientName",name);
-			queryParameters.put("LEVELID", CustomerConstants.CLIENT_LEVEL_ID);
+			queryParameters.put("LEVELID", CustomerLevel.CLIENT.getValue());
 			queryParameters.put("DATE_OFBIRTH", dob);
 			queryParameters.put("customerId", customerId);
 			List queryResult = executeNamedQuery(

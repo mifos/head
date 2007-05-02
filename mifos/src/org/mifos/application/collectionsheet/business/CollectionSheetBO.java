@@ -48,7 +48,7 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstants;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
@@ -193,7 +193,7 @@ public class CollectionSheetBO extends BusinessObject {
 	 */
 	public void updateCollectiveTotals() {
 		for (CollSheetCustBO collSheetCustomer : collectionSheetCustomers) {
-			if (collSheetCustomer.getCustLevel() == CustomerConstants.CLIENT_LEVEL_ID) {
+			if (collSheetCustomer.getCustLevel() == CustomerLevel.CLIENT.getValue()) {
 				int parentCustomerId = collSheetCustomer.getParentCustomerId();
 				CollSheetCustBO collSheetParentCust = getCollectionSheetCustomerForCustomerId(parentCustomerId);
 				// it would be null in case a client belongs directly to a
@@ -205,7 +205,7 @@ public class CollectionSheetBO extends BusinessObject {
 			}
 		}
 		for (CollSheetCustBO collSheetCustomer : collectionSheetCustomers) {
-			if (collSheetCustomer.getCustLevel() == CustomerConstants.GROUP_LEVEL_ID) {
+			if (collSheetCustomer.getCustLevel() == CustomerLevel.GROUP.getValue()) {
 				int parentCustomerId = collSheetCustomer.getParentCustomerId();
 				CollSheetCustBO collSheetParentCust = getCollectionSheetCustomerForCustomerId(parentCustomerId);
 				// it would be null in case center hierarchy does not exist.

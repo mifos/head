@@ -25,7 +25,6 @@ import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -91,9 +90,9 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 		SessionUtils.setCollectionAttribute(AccountConstants.TRXN_TYPES, trxnTypes,
 				request);
 
-		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.CENTER_LEVEL_ID
+		if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.CENTER.getValue()
 				|| (savings.getCustomer().getCustomerLevel().getId()
-						.shortValue() == CustomerConstants.GROUP_LEVEL_ID && savings
+						.shortValue() == CustomerLevel.GROUP.getValue() && savings
 						.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())))
 			SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings
 					.getCustomer().getChildren(

@@ -66,7 +66,6 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.client.business.CustomerPictureEntity;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -222,14 +221,14 @@ public class CustomerPersistence extends Persistence {
 		Map<String, String> queryParameters = new HashMap<String, String>();
 		CustomerBO customer = null;
 		queryParameters.put("globalCustNum", globalCustNum);
-		if (levelId.shortValue() == CustomerConstants.CENTER_LEVEL_ID) {
+		if (levelId.shortValue() == CustomerLevel.CENTER.getValue()) {
 			List<CenterBO> queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_CENTER_BY_SYSTEMID, queryParameters);
 			if (null != queryResult && queryResult.size() > 0) {
 				customer = queryResult.get(0);
 				initializeCustomer(customer);
 			}
-		} else if (levelId.shortValue() == CustomerConstants.GROUP_LEVEL_ID) {
+		} else if (levelId.shortValue() == CustomerLevel.GROUP.getValue()) {
 			List<GroupBO> queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_GROUP_BY_SYSTEMID, queryParameters);
 			if (null != queryResult && queryResult.size() > 0) {
@@ -237,7 +236,7 @@ public class CustomerPersistence extends Persistence {
 				initializeCustomer(customer);
 			}
 
-		} else if (levelId.shortValue() == CustomerConstants.CLIENT_LEVEL_ID) {
+		} else if (levelId.shortValue() == CustomerLevel.CLIENT.getValue()) {
 			List<ClientBO> queryResult = executeNamedQuery(
 					NamedQueryConstants.GET_CLIENT_BY_SYSTEMID, queryParameters);
 			if (null != queryResult && queryResult.size() > 0) {

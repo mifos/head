@@ -43,7 +43,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.business.CustomerSearch;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.framework.exceptions.HibernateSearchException;
 
@@ -105,27 +105,27 @@ public class QueryResultAccountIdSearch extends QueryResultsMainSearchImpl {
 
 	private Short deduceCustomerType(short customerLevel, Short accountTypeId) {
 		if (accountTypeId != null
-				&& customerLevel == CustomerConstants.CLIENT_LEVEL_ID
+				&& customerLevel == CustomerLevel.CLIENT.getValue()
 				&& accountTypeId == CustomerSearchConstants.LOAN_TYPE) {
 			return (short) 4;
 		}
 		else if (accountTypeId != null
-				&& customerLevel == CustomerConstants.CLIENT_LEVEL_ID
+				&& customerLevel == CustomerLevel.CLIENT.getValue()
 				&& accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
 			return (short) 6;
 		}
 		else if (accountTypeId != null
-				&& customerLevel == CustomerConstants.GROUP_LEVEL_ID
+				&& customerLevel == CustomerLevel.GROUP.getValue()
 				&& accountTypeId == CustomerSearchConstants.LOAN_TYPE) {
 			return (short) 5;
 		}
 		else if (accountTypeId != null
-				&& customerLevel == CustomerConstants.GROUP_LEVEL_ID
+				&& customerLevel == CustomerLevel.GROUP.getValue()
 				&& accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
 			return (short) 7;
 		}
 		else if (accountTypeId != null
-				&& customerLevel == CustomerConstants.CENTER_LEVEL_ID
+				&& customerLevel == CustomerLevel.CENTER.getValue()
 				&& accountTypeId == CustomerSearchConstants.SAVINGS_TYPE) {
 			return (short) 8;
 		}

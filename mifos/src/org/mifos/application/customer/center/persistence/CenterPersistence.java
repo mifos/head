@@ -8,6 +8,8 @@ import java.util.Map;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
@@ -58,8 +60,10 @@ public class CenterPersistence extends Persistence {
 		namedQuery[1]=NamedQueryConstants.CENTER_SEARCH;			
 		paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));	
 		paramList.add(typeNameValue("String","CENTER_NAME",searchString+"%"));
-		paramList.add(typeNameValue("Short","LEVEL_ID",CustomerConstants.CENTER_LEVEL_ID));
-		paramList.add(typeNameValue("Short","STATUS_ID",CustomerConstants.CENTER_ACTIVE_STATE));
+		paramList.add(typeNameValue("Short","LEVEL_ID",CustomerLevel.CENTER.getValue()));
+		paramList.add(
+			typeNameValue("Short","STATUS_ID",
+				CustomerStatus.CENTER_ACTIVE.getValue()));
 		paramList.add(typeNameValue("Short","USER_ID",userId));
 		paramList.add(typeNameValue("Short","USER_LEVEL_ID",user.getLevelEnum()
 				.getValue()));

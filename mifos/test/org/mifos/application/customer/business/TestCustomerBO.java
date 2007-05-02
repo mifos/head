@@ -594,17 +594,15 @@ public class TestCustomerBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
 				client.getCustomerId());
-		Short newStatusId = CustomerStatus.CLIENT_CLOSED.getValue();
 		try {
-			client.changeStatus(newStatusId, null, "Test");
+			client.changeStatus(CustomerStatus.CLIENT_CLOSED, null, "Test");
 			fail();
 		} catch (CustomerException expected) {
 			assertEquals(
 				CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION,
 				expected.getKey()
 			);
-			assertEquals(CustomerStatus.CLIENT_ACTIVE, client
-					.getStatus());
+			assertEquals(CustomerStatus.CLIENT_ACTIVE, client.getStatus());
 		}
 		HibernateUtil.closeSession();
 		client = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,

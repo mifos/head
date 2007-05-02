@@ -10,7 +10,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -39,7 +38,7 @@ public class PersonnelPersistence extends Persistence {
 		queryParameters.put("userLevelId", userLevelId);
 		queryParameters.put("officeId", officeId);
 		queryParameters.put("statusId",
-				CustomerConstants.LOAN_OFFICER_ACTIVE_STATE);
+				PersonnelStatus.ACTIVE.getValue());
 		List<PersonnelView> queryResult = executeNamedQuery(
 				NamedQueryConstants.MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH,
 				queryParameters);

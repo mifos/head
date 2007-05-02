@@ -103,7 +103,14 @@ public class DatabaseSetup {
 	    // Should be the same as the files in build.xml
 	    executeScript(database, "sql/latest-schema.sql");
 	    executeScript(database, "sql/latest-data.sql");
-	    
+
+	    /* TODO: enhance Mayfly so it can parse this script (and
+	       even check it for errors).  But until that, it probably
+	       isn't a particularly big deal.  I guess the biggest
+	       thing would be getting the UNIQUE indexes from here
+	       (which act as constraints, I believe). */
+	    //executeScript(database, "sql/Index.sql");
+
 	    executeScript(database, "sql/testdbinsertionscript.sql");
 
 	    return database.dataStore();

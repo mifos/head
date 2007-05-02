@@ -37,7 +37,7 @@
  */
 package org.mifos.application.customer.business;
 
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.framework.business.View;
 
 public class CustomerView extends View {
@@ -199,14 +199,14 @@ public class CustomerView extends View {
 	}
 
 	public boolean isCustomerCenter() {
-		return getCustomerLevelId().equals(CustomerConstants.CENTER_LEVEL_ID);
+		return getCustomerLevelId().equals(CustomerLevel.CENTER.getValue());
 	}
 
 	public boolean isCustomerGroup() {
-		return getCustomerLevelId().equals(CustomerConstants.GROUP_LEVEL_ID);
+		return getCustomerLevelId().equals(CustomerLevel.GROUP.getValue());
 	}
 
 	public boolean isCustomerClient() {
-		return getCustomerLevelId().equals(CustomerConstants.CLIENT_LEVEL_ID);
+		return getCustomerLevelId().equals(CustomerLevel.CLIENT.getValue());
 	}
 }

@@ -38,7 +38,6 @@ import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -835,7 +834,7 @@ public class SavingsBO extends AccountBO {
 	public void generateAndUpdateDepositActionsForClient(ClientBO client)
 			throws AccountException {
 		if (client.getCustomerMeeting().getMeeting() != null) {
-			if (!(getCustomer().getCustomerLevel().getId().shortValue() == CustomerConstants.GROUP_LEVEL_ID && getRecommendedAmntUnit()
+			if (!(getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.GROUP.getValue() && getRecommendedAmntUnit()
 					.getId().equals(
 							RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
 				generateDepositAccountActions(client, client
@@ -855,9 +854,9 @@ public class SavingsBO extends AccountBO {
 					.getMeeting();
 
 			if (getCustomer().getCustomerLevel().getId().equals(
-					CustomerConstants.CLIENT_LEVEL_ID)
+					CustomerLevel.CLIENT.getValue())
 					|| (getCustomer().getCustomerLevel().getId().equals(
-							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
+							CustomerLevel.GROUP.getValue()) && getRecommendedAmntUnit()
 							.getId().equals(
 									RecommendedAmountUnit.COMPLETE_GROUP
 											.getValue()))) {
@@ -1959,9 +1958,9 @@ public class SavingsBO extends AccountBO {
 				throw new AccountException(me);
 			}
 			if (getCustomer().getCustomerLevel().getId().equals(
-					CustomerConstants.CLIENT_LEVEL_ID)
+					CustomerLevel.CLIENT.getValue())
 					|| (getCustomer().getCustomerLevel().getId().equals(
-							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
+							CustomerLevel.GROUP.getValue()) && getRecommendedAmntUnit()
 							.getId().equals(
 									RecommendedAmountUnit.COMPLETE_GROUP
 											.getValue()))) {
@@ -2083,9 +2082,9 @@ public class SavingsBO extends AccountBO {
 			calendar.setTimeInMillis(lastInstallment.getActionDate().getTime());
 			depositSchedule.setMeetingStartDate(calendar);
 			if (customerBO.getCustomerLevel().getId().equals(
-					CustomerConstants.CLIENT_LEVEL_ID)
+					CustomerLevel.CLIENT.getValue())
 					|| (customerBO.getCustomerLevel().getId().equals(
-							CustomerConstants.GROUP_LEVEL_ID) && getRecommendedAmntUnit()
+							CustomerLevel.GROUP.getValue()) && getRecommendedAmntUnit()
 							.getId().equals(
 									RecommendedAmountUnit.COMPLETE_GROUP
 											.getValue()))) {

@@ -55,7 +55,7 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.application.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.logger.LoggerConstants;
@@ -231,7 +231,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 	private String getClientName(SavingsBO savings,
 			AccountPaymentEntity lastPayment) {
 		if (savings.getCustomer().getCustomerLevel().getId().equals(
-				CustomerConstants.CLIENT_LEVEL_ID))
+				CustomerLevel.CLIENT.getValue()))
 			return null;
 		String clientName = null;
 		CustomerBO customer = null;
@@ -241,7 +241,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
 		}
 		if (customer != null
 				&& customer.getCustomerLevel().getId().equals(
-						CustomerConstants.CLIENT_LEVEL_ID)) {
+						CustomerLevel.CLIENT.getValue())) {
 			return customer.getDisplayName();
 		}
 

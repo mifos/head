@@ -87,9 +87,17 @@ public class CustomFieldView extends View {
 	public Short getFieldType() {
 		return fieldType;
 	}
+	
+	public CustomFieldType getFieldTypeAsEnum() {
+		return CustomFieldType.fromInt(fieldType);
+	}
 
 	public void setFieldType(Short fieldType) {
 		this.fieldType = fieldType;
+	}
+	
+	public void setFieldType(CustomFieldType type) {
+		this.fieldType = type.getValue();
 	}
 
 	@Override

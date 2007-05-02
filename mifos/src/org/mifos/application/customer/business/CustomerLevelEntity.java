@@ -37,12 +37,19 @@
  */
 package org.mifos.application.customer.business;
 
+import org.mifos.application.customer.center.business.CenterBO;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 
 /**
- * This class represents customer level e.g client,center etc
+ * This class represents customer level e.g client,center etc.
+ * Most code will want {@link CustomerLevel} (or perhaps something
+ * else entirely, like calling a method in {@link CustomerBO}
+ * which can be implemented differently for 
+ * {@link ClientBO}, {@link CenterBO}, and {@link GroupBO}).
  */
 public class CustomerLevelEntity extends MasterDataEntity {
 

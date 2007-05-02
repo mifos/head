@@ -42,6 +42,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.office.util.helpers.OfficeStatus;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
@@ -1106,12 +1107,17 @@ public class TestClientBO extends MifosTestCase {
 	
 	private void createObjectsForTranferToGroup_DifferentBranch()throws Exception{
 		createInitialObjects();
-		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
+		office = TestObjectFactory.createOffice(
+				OfficeLevel.BRANCHOFFICE, 
+				TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), 
+				"customer_office", "cust");
 		HibernateUtil.closeSession();
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
-		center1 = TestObjectFactory.createCenter("Center1", meeting, office.getOfficeId(), Short.valueOf("1"));
-		group1 = TestObjectFactory.createGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
+		center1 = TestObjectFactory.createCenter("Center1", meeting, 
+				office.getOfficeId(), PersonnelConstants.SYSTEM_USER);
+		group1 = TestObjectFactory.createGroupUnderCenter("Group2", 
+				CustomerStatus.GROUP_ACTIVE, center1);
 		HibernateUtil.closeSession();
 	}
 	
@@ -1154,7 +1160,9 @@ public class TestClientBO extends MifosTestCase {
 	}
 	
 	private void createInitialObjects() throws Exception{
-		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
+		MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, 
+			Short.valueOf("1"), new java.util.Date(), 
+			MeetingType.CUSTOMER_MEETING, "Delhi");
 		center = TestObjectFactory.createCenter("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		client = createClient(CustomerStatus.CLIENT_ACTIVE);

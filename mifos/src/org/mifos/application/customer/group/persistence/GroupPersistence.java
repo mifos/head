@@ -8,6 +8,7 @@ import java.util.Map;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -74,7 +75,7 @@ public class GroupPersistence extends Persistence {
 		}						
 		paramList.add(typeNameValue("String","SEARCH_ID",officeSearchId+"%"));
 		paramList.add(typeNameValue("String","SEARCH_STRING",searchString+"%"));
-		paramList.add(typeNameValue("Short","LEVEL_ID",CustomerConstants.GROUP_LEVEL_ID));
+		paramList.add(typeNameValue("Short","LEVEL_ID",CustomerLevel.GROUP.getValue()));
 		paramList.add(typeNameValue("Short","USER_ID",userId));
 		paramList.add(typeNameValue("Short","USER_LEVEL_ID",
 				personnel.getLevelEnum().getValue()));

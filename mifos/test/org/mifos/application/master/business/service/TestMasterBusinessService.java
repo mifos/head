@@ -12,7 +12,7 @@ import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.business.CustomerView;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.EntityMaster;
 import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -94,7 +94,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 				meeting);
 		List<CustomerView> customers = masterService
 				.getListOfActiveParentsUnderLoanOfficer(Short.valueOf("1"),
-						CustomerConstants.CENTER_LEVEL_ID, Short.valueOf("3"));
+						CustomerLevel.CENTER.getValue(), Short.valueOf("3"));
 		assertEquals(1, customers.size());
 		TestObjectFactory.cleanUp(center);
 	}
@@ -108,7 +108,7 @@ public class TestMasterBusinessService extends MifosTestCase {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			masterService.getListOfActiveParentsUnderLoanOfficer(Short
-					.valueOf("1"), CustomerConstants.CENTER_LEVEL_ID, Short
+					.valueOf("1"), CustomerLevel.CENTER.getValue(), Short
 					.valueOf("3"));
 			fail();
 		} catch (ServiceException e) {

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.framework.components.batchjobs.MifosTask;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -25,7 +25,7 @@ public class PortfolioAtRiskHelper extends TaskHelper {
 		CustomerPersistence customerPersistence = new CustomerPersistence();
 		try {
 			customerIds = new CustomerPersistence()
-					.getCustomers(CustomerConstants.GROUP_LEVEL_ID);
+					.getCustomers(CustomerLevel.GROUP.getValue());
 		} catch (Exception e) {
 			throw new BatchJobException(e);
 		}

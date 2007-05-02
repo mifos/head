@@ -38,7 +38,7 @@
 package org.mifos.framework.components.taggenerator;
 
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 
@@ -98,11 +98,11 @@ public class CustomerTagGenerator extends TagGenerator{
 	}
 	
 	private String getAction(CustomerBO customer){
-		if(customer.getCustomerLevel().getId().shortValue()==CustomerConstants.CENTER_LEVEL_ID)
+		if(customer.getCustomerLevel().getId().shortValue()==CustomerLevel.CENTER.getValue())
 			return "centerCustAction.do?method=get&globalCustNum=";
-		else if (customer.getCustomerLevel().getId().shortValue()==CustomerConstants.GROUP_LEVEL_ID)
+		else if (customer.getCustomerLevel().getId().shortValue()==CustomerLevel.GROUP.getValue())
 			return "groupCustAction.do?method=get&globalCustNum=";
-		else if (customer.getCustomerLevel().getId().shortValue()==CustomerConstants.CLIENT_LEVEL_ID)
+		else if (customer.getCustomerLevel().getId().shortValue()==CustomerLevel.CLIENT.getValue())
 			return "clientCustAction.do?method=get&globalCustNum=";
 		return "";
 	}

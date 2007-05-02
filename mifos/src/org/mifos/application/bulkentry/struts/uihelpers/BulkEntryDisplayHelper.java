@@ -51,7 +51,7 @@ import org.mifos.application.configuration.business.MifosConfiguration;
 import org.mifos.application.configuration.exceptions.ConfigurationException;
 import org.mifos.application.configuration.util.helpers.ConfigurationConstants;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.master.business.LookUpMaster;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
@@ -737,7 +737,7 @@ public class BulkEntryDisplayHelper {
 				.getCustomerLevelId();
 
 		if (!method.equals(BulkEntryConstants.PREVIEWMETHOD)) {
-			if (customerLevel.equals(CustomerConstants.GROUP_LEVEL_ID)) {
+			if (customerLevel.equals(CustomerLevel.GROUP.getValue())) {
 				BulkEntryTagUIHelper.getInstance().generateStartTR(builder);
 				builder
 						.append("<td align=\"right\" class=\"drawtablerowSmall\">"
@@ -788,7 +788,7 @@ public class BulkEntryDisplayHelper {
 						"&nbsp;", true);
 				BulkEntryTagUIHelper.getInstance().generateTD(builder, 19,
 						"&nbsp;", true);
-			} else if (customerLevel.equals(CustomerConstants.CENTER_LEVEL_ID)) {
+			} else if (customerLevel.equals(CustomerLevel.CENTER.getValue())) {
 				BulkEntryTagUIHelper.getInstance().generateStartTR(builder);
 				builder
 						.append("<td align=\"right\" class=\"drawtablerowSmall\">"
@@ -845,11 +845,11 @@ public class BulkEntryDisplayHelper {
 			BulkEntryTagUIHelper.getInstance().generateStartTR(builder);
 			builder.append("<td align=\"right\" class=\"drawtablerowSmall\">"
 					+ "<span class=\"fontnormal8pt\"><em>");
-			if (customerLevel.equals(CustomerConstants.GROUP_LEVEL_ID)) {
+			if (customerLevel.equals(CustomerLevel.GROUP.getValue())) {
 				builder.append(getLocaleLabel(ConfigurationConstants.GROUP,
 						locale)
 						+ " Total ");
-			} else if (customerLevel.equals(CustomerConstants.CENTER_LEVEL_ID)) {
+			} else if (customerLevel.equals(CustomerLevel.CENTER.getValue())) {
 				builder.append(getLocaleLabel(ConfigurationConstants.CENTER,
 						locale)
 						+ " Total ");

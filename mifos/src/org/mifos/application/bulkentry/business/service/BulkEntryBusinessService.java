@@ -67,7 +67,7 @@ import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -193,9 +193,9 @@ public class BulkEntryBusinessService extends BusinessService {
 						try {
 							boolean isCenterGroupIndvAccount = false;
 							if (levelId
-									.equals(CustomerConstants.CENTER_LEVEL_ID)
+									.equals(CustomerLevel.CENTER.getValue())
 									|| (levelId
-											.equals(CustomerConstants.GROUP_LEVEL_ID) && accountView
+											.equals(CustomerLevel.GROUP.getValue()) && accountView
 											.getSavingsOffering()
 											.getRecommendedAmntUnit()
 											.getId()

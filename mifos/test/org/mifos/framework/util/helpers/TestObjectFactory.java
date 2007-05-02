@@ -286,9 +286,8 @@ public class TestObjectFactory {
 	public static CenterBO createCenter(String customerName, 
 			MeetingBO meeting,
 			List<FeeView> fees) {
-		Short officeId = new Short("3");
-		Short personnel = new Short("1");
-		return createCenter(customerName, meeting, officeId, personnel,
+		return createCenter(customerName, meeting, 
+			SAMPLE_BRANCH_OFFICE, PersonnelConstants.SYSTEM_USER,
 			fees);
 	}
 
@@ -340,7 +339,7 @@ public class TestObjectFactory {
 
 	public static GroupBO createGroupUnderCenter(String customerName,
 			CustomerStatus customerStatus, CustomerBO parentCustomer) {
-		Short formedBy = new Short("1");
+		Short formedBy = PersonnelConstants.SYSTEM_USER;
 		return createGroupUnderCenter(customerName, customerStatus, null,
 				false, null, null, getCustomFields(), getFees(), formedBy,
 				parentCustomer);

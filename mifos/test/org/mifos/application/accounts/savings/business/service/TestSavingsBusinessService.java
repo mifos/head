@@ -8,7 +8,7 @@ import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.business.CustomerBO;
-import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
@@ -66,7 +66,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 		savingsOffering2 = TestObjectFactory.createSavingsProduct(
 				"SavingPrd2", "a1lt", currentDate);
 		List<PrdOfferingView> products = service.getSavingProducts(null, group
-				.getCustomerLevel(), CustomerConstants.GROUP_LEVEL_ID);
+				.getCustomerLevel(), CustomerLevel.GROUP.getValue());
 		assertEquals(Integer.valueOf("2").intValue(), products.size());
 		assertEquals("Offerng name for the first product do not match.",
 				products.get(0).getPrdOfferingName(), "SavingPrd1");
@@ -84,7 +84,7 @@ public class TestSavingsBusinessService extends MifosTestCase {
 		TestObjectFactory.simulateInvalidConnection();
 		try {
 			service.getSavingProducts(null,
-					group.getCustomerLevel(), CustomerConstants.GROUP_LEVEL_ID);
+					group.getCustomerLevel(), CustomerLevel.GROUP.getValue());
 			fail();
 		} catch (ServiceException e) {
 			assertTrue(true);

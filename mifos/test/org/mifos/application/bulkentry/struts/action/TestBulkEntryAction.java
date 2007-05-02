@@ -69,6 +69,7 @@ import org.mifos.application.customer.business.CustomerView;
 import org.mifos.application.customer.client.business.ClientBO;
 import org.mifos.application.customer.util.helpers.CustomerAccountView;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.login.util.helpers.LoginConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -940,7 +941,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 		CustomerView parentCustomer = new CustomerView(customerId,
 				"Center_Active", Short
-						.valueOf(CustomerConstants.CENTER_LEVEL_ID), "1.1");
+						.valueOf(CustomerLevel.CENTER.getValue()), "1.1");
 		List<CustomerView> customerList = new ArrayList<CustomerView>();
 		customerList.add(parentCustomer);
 		SessionUtils.setCollectionAttribute(BulkEntryConstants.CUSTOMERSLIST,

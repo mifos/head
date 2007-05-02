@@ -21,6 +21,7 @@ import org.mifos.application.customer.business.CustomFieldDefinitionEntity;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerSearchConstants;
+import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.customer.util.helpers.Param;
 import org.mifos.application.fees.business.FeeBO;
 import org.mifos.application.fees.util.helpers.FeeCategory;
@@ -82,7 +83,7 @@ public class AccountPersistence extends Persistence {
 		queryParameters.put("CUSTOMER_TYPE_ID",
 				CustomerConstants.CUSTOMER_TYPE_ID);
 		queryParameters.put("ACTIVE_CENTER_STATE",
-				CustomerConstants.CENTER_ACTIVE_STATE);
+				CustomerStatus.CENTER_ACTIVE.getValue());
 		queryParameters.put("ACTIVE_GROUP_STATE",
 				CustomerConstants.GROUP_ACTIVE_STATE);
 		queryParameters.put("ACTIVE_CLIENT_STATE",

@@ -362,8 +362,7 @@ public class TestCustomerBusinessService extends MifosTestCase {
 		assertEquals(2, group.getAccounts().size());
 		assertEquals(0, group.getOpenLoanAccounts().size());
 		assertEquals(1, group.getOpenSavingAccounts().size());
-		assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(), group
-				.getCustomerStatus().getId());
+		assertEquals(CustomerStatus.GROUP_ACTIVE, group.getStatus());
 		HibernateUtil.closeSession();
 		savingsBO = TestObjectFactory.getObject(SavingsBO.class,
 				savingsBO.getAccountId());

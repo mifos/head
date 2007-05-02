@@ -267,13 +267,11 @@ public class ClientBO extends CustomerBO {
 
 	@Override
 	public boolean isActive() {
-		return getCustomerStatus().getId().equals(
-				CustomerStatus.CLIENT_ACTIVE.getValue());
+		return getStatus() == CustomerStatus.CLIENT_ACTIVE;
 	}
 
 	public boolean isOnHold() {
-		return getCustomerStatus().getId().equals(
-				CustomerStatus.CLIENT_HOLD.getValue());
+		return getStatus() == CustomerStatus.CLIENT_HOLD;
 	}
 
 	public boolean isClientUnderGroup() {
