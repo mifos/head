@@ -1196,6 +1196,7 @@ public class ActivityMapper {
 	
 	private void addSurveysMappings() {
 		activityMap.put("/surveysAction-mainpage", SecurityConstants.VIEW);
+		activityMap.put("/surveysAction-get", SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

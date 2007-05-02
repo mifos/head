@@ -123,6 +123,8 @@
 		<!-- End reports -->
 
 		<form-bean name="holidayActionForm" type="org.mifos.application.holiday.struts.actionforms.HolidayActionForm" />
+		
+		<form-bean name="surveyActionForm" type="org.mifos.application.surveys.struts.actionforms.SurveyActionForm"/>
 
 	</form-beans>
 
@@ -1123,8 +1125,10 @@
    	      parameter="method"
    	      scope="session"
    	      validate="false"
+   	      name="surveyActionForm"
    	      input="/surveysAction.do?method=validate">
    	         <forward name="load_main_page" path="/pages/application/surveys/jsp/mainpage.jsp"/>
+   	         <forward name="get_success" path="/pages/application/surveys/jsp/survey_details.jsp"/>
    	    </action>
 	</action-mappings>
 

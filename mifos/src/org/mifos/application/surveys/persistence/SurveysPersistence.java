@@ -43,5 +43,9 @@ public class SurveysPersistence extends SessionPersistence {
 		query.setParameter("SURVEY_STATUS", state.getValue());
 		return query.list();
 	}
+	
+	public Survey getSurvey(int id) {
+		return (Survey) getSession().get(Survey.class, id);
+	}
 
 }

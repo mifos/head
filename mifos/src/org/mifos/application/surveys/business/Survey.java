@@ -36,8 +36,8 @@ public class Survey implements Serializable {
 		this.appliesTo = appliesTo;
 	}
 
-	// For hibernate
-	String getAppliesTo() {
+	// for hibernate and jsp
+	public String getAppliesTo() {
 		return appliesTo.getValue();
 	}
 	
@@ -45,8 +45,7 @@ public class Survey implements Serializable {
 		return appliesTo;
 	}
 
-	// For hibernate
-	void setAppliesTo(String appliesTo) {
+	public void setAppliesTo(String appliesTo) {
 		this.appliesTo = SurveyType.fromString(appliesTo);
 	}
 	
