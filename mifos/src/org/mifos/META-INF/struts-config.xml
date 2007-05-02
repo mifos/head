@@ -1175,6 +1175,8 @@
 	<message-resources key="configurationUIResources" parameter="org.mifos.application.configuration.util.resources.ConfigurationUIResources"></message-resources>
 	<!--  Holidays resources -->
     <message-resources key="HolidayUIResources" parameter="org.mifos.application.holiday.util.resources.HolidayUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory" />
+    
+    <message-resources key="SurveysUIResources" parameter="org.mifos.application.surveys.util.resources.SurveysUIResources" factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 
 	<plug-in className="org.mifos.framework.struts.plugin.InitializerPlugin"/>
 	<plug-in className="org.apache.struts.tiles.TilesPlugin">

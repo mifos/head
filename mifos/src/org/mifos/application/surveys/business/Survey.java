@@ -74,7 +74,8 @@ public class Survey implements Serializable {
 		return state;
 	}
 	
-	int getState() {
+	// Called from jsp as well as hibernate
+	public int getState() {
 		return state.getValue();
 	}
 
