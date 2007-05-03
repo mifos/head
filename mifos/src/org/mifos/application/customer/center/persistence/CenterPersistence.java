@@ -19,9 +19,18 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.persistence.SessionPersistence;
 
-public class CenterPersistence extends Persistence {
+public class CenterPersistence extends SessionPersistence {
+
+	public CenterPersistence(SessionHolder sessionHolder) {
+		super(sessionHolder);
+	}
+
+	public CenterPersistence() {
+		super();
+	}
 
 	public boolean isCenterExists(String name) throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
