@@ -25,6 +25,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
@@ -39,6 +40,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CenterBOTest extends MifosTestCase {
+
 	private CenterBO center;
 
 	private GroupBO group;
@@ -495,6 +497,38 @@ public class CenterBOTest extends MifosTestCase {
 		assertEquals("BO",searchResults.getParentOfficeName());
 		
 	}
+	
+	public void testSearchIdOnlyUniquePerOffice() throws Exception {
+		Date startDate = new Date();
+
+		// In real life, would be another branch rather than an area
+		Short branch1 = TestObjectFactory.SAMPLE_AREA_OFFICE;
+		
+		MeetingBO meeting = new MeetingBO(WeekDay.THURSDAY, (short)1,
+			startDate, MeetingType.CUSTOMER_MEETING, "Delhi");
+
+		center = new CenterBO(TestUtils.makeUser(), 
+			"center1", null, null, null, null, startDate, 
+			branch1, meeting,
+			PersonnelConstants.SYSTEM_USER);
+		HibernateUtil.getSessionTL().save(center);
+
+		CenterBO center2 = new CenterBO(TestUtils.makeUser(), 
+				"center2", null, null, null, null, startDate, 
+				TestObjectFactory.SAMPLE_BRANCH_OFFICE, meeting,
+				PersonnelConstants.SYSTEM_USER);
+		
+		CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), 
+				"sameBranch", null, null, null, null, startDate, 
+				branch1, meeting,
+				PersonnelConstants.SYSTEM_USER);
+			HibernateUtil.getSessionTL().save(center);
+		
+		assertEquals("1.1", center.getSearchId());
+		assertEquals("1.1", center2.getSearchId());
+		assertEquals("1.2", sameBranch.getSearchId());
+	}
+
 	private void createCustomers() throws Exception {
 		meeting = new MeetingBO(WeekDay.THURSDAY, Short.valueOf("1"),
 				new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
