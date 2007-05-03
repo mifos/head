@@ -332,7 +332,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	public void testDisburseLoanWithFeeAtDisbursement() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 
-		account = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		account = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
 		HibernateUtil.closeSession();
 		LoanAccountsProductView loanAccountsProductView = getAccountView(account);
 		loanAccountsProductView.setDisBursementAmountEntered(account.getLoanAmount().toString());
@@ -396,7 +396,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 	private SavingsAccountView getSavingsAccountView(SavingsBO account,
 			String depAmount, String withAmount) {
 		SavingsAccountView accountView = new SavingsAccountView(account
-				.getAccountId(), account.getAccountType().getAccountTypeId(),
+				.getAccountId(), account.getType(),
 				account.getSavingsOffering());
 		accountView.setDepositAmountEntered(depAmount);
 		accountView.setWithDrawalAmountEntered(withAmount);
@@ -468,7 +468,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		TestObjectFactory.updateObject(account);
 	}
 
-	private LoanBO getLoanAccount(Short accountSate, Date startDate,
+	private LoanBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
@@ -477,7 +477,7 @@ public class TestBulkEntryBusinessService extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
+				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
 
 	}

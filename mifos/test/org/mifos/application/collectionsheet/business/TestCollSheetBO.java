@@ -23,7 +23,6 @@ import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.business.TestLoanScheduleEntity;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
-import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetPersistence;
 import org.mifos.application.customer.business.CustomerBO;
@@ -102,7 +101,7 @@ public class TestCollSheetBO extends MifosTestCase {
 	public void testCollSheetForLoanDisbursal() throws Exception {
 
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountStates.LOANACC_APPROVED, startDate, 1);
+		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
 		collectionSheet = createCollectionSheet(getCurrentDate());
 		generateCollectionSheetForDate(collectionSheet);
@@ -120,10 +119,9 @@ public class TestCollSheetBO extends MifosTestCase {
 	}
 
 	public void testCollSheetForLoanDisbursalInterestDeducted()
-			throws Exception {
-
+	throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(AccountStates.LOANACC_APPROVED, startDate, 2);
+		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 2);
 		LoanBO loan = (LoanBO) accountBO;
 		collectionSheet = createCollectionSheet(getCurrentDate());
 		generateCollectionSheetForDate(collectionSheet);
@@ -441,7 +439,7 @@ public class TestCollSheetBO extends MifosTestCase {
 
 	}
 
-	private AccountBO getLoanAccount(Short accountSate, Date startDate,
+	private AccountBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
@@ -450,7 +448,7 @@ public class TestCollSheetBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
+				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
 
 	}

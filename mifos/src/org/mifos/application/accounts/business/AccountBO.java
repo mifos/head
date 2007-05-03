@@ -169,10 +169,13 @@ public class AccountBO extends BusinessObject {
 		return globalAccountNum;
 	}
 
+	/**
+	 * Obsolete; most/all callers should call {@link #getType()} instead.
+	 */
 	public AccountTypeEntity getAccountType() {
 		return accountType;
 	}
-
+	
 	public CustomerBO getCustomer() {
 		return customer;
 	}
@@ -718,7 +721,7 @@ public class AccountBO extends BusinessObject {
 	}
 
 	public AccountTypes getType() {
-		return null;
+		throw new RuntimeException("should be implemented in subclass");
 	}
 
 	public boolean isOpen() {

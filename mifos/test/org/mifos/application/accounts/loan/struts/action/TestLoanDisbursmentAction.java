@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.struts.actionforms.LoanDisbursmentActionForm;
 import org.mifos.application.accounts.util.helpers.AccountConstants;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
@@ -60,7 +61,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 		super.tearDown();
 	}
 
-	private LoanBO getLoanAccount(Short accountSate, Date startDate,
+	private LoanBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
@@ -69,7 +70,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
+				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
 
 	}
@@ -190,7 +191,7 @@ public class TestLoanDisbursmentAction extends MifosMockStrutsTestCase {
 	private void createInitialObjects(int disbursalType) {
 	//	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	//	String date = sdf.format(currentDate);
-		loanBO = getLoanAccount(Short.valueOf(AccountStates.LOANACC_APPROVED),
+		loanBO = getLoanAccount(AccountState.LOANACC_APPROVED,
 				currentDate, disbursalType);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("accountId", loanBO.getAccountId().toString());

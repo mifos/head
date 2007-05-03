@@ -40,6 +40,7 @@ package org.mifos.application.accounts.savings.util.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntrySavingsInstallmentView;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
@@ -64,10 +65,10 @@ public class SavingsAccountView extends View {
 
 	private boolean isValidWithDrawalAmountEntered;
 
-	public SavingsAccountView(Integer accountId, Short accountType,
+	public SavingsAccountView(Integer accountId, AccountTypes accountType,
 			SavingsOfferingBO savingsOffering) {
 		this.accountId = accountId;
-		this.accountType = accountType;
+		this.accountType = accountType.getValue();
 		this.savingsOffering = savingsOffering;
 		accountTrxnDetails = new ArrayList<BulkEntryInstallmentView>();
 		isValidDepositAmountEntered = true;
@@ -89,6 +90,10 @@ public class SavingsAccountView extends View {
 
 	public Short getAccountType() {
 		return accountType;
+	}
+
+	public AccountTypes getType() {
+		return AccountTypes.getAccountType(accountType);
 	}
 
 	public String getDepositAmountEntered() {

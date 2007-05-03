@@ -127,8 +127,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter("input", "loan");
 		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", accountBO.getType()
+				.getValue().toString());
 		addRequestParameter("newStatusId", "8");
 		addRequestParameter("flagId", "1");
 		actionPerform();
@@ -166,8 +166,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "preview");
 		addRequestParameter("input", "loan");
-		addRequestParameter("accountTypeId", accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", accountBO.getType()
+				.getValue().toString());
 		addRequestParameter("newStatusId", "8");
 		addRequestParameter("flagId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -232,8 +232,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter("input", "loan");
 		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", accountBO.getType()
+				.getValue().toString());
 		addRequestParameter("newStatusId", "8");
 		addRequestParameter("flagId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -245,8 +245,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "update");
 		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", accountBO.getType()
+				.getValue().toString());
 		addRequestParameter("newStatusId", "8");
 		addRequestParameter("flagId", "1");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -288,8 +288,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "update");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
 		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", accountBO.getType()
+				.getValue().toString());
 		addRequestParameter("newStatusId", AccountState.LOANACC_CANCEL
 				.getValue().toString());
 		addRequestParameter("flagId", AccountStateFlag.LOAN_WITHDRAW.getValue()
@@ -328,8 +328,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "preview");
 		addRequestParameter("input", "savings");
 		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", accountBO.getType()
+				.getValue().toString());
 		addRequestParameter("newStatusId", "15");
 		addRequestParameter("flagId", "4");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -340,8 +340,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		setRequestPathInfo("/editStatusAction.do");
 		addRequestParameter("method", "update");
 		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", accountBO.getType()
+				.getValue().toString());
 		addRequestParameter("newStatusId", "15");
 		addRequestParameter("flagId", "4");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request
@@ -363,8 +363,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "update");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
 		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", accountBO.getType()
+				.getValue().toString());
 		addRequestParameter("input", "savings");
 		addRequestParameter("newStatusId", AccountState.SAVINGS_ACC_CANCEL
 				.getValue().toString());
@@ -391,8 +391,8 @@ public class TestEditStatusAction extends MifosMockStrutsTestCase {
 		addRequestParameter("method", "update");
 		addRequestParameter("accountId", accountBO.getAccountId().toString());
 		addRequestParameter("notes", "Test");
-		addRequestParameter("accountTypeId", accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", accountBO.getType()
+				.getValue().toString());
 		addRequestParameter("newStatusId", "15");
 		addRequestParameter("flagId", "4");
 		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request

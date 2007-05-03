@@ -59,7 +59,6 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.business.AccountPaymentEntity;
 import org.mifos.application.accounts.business.AccountStateEntity;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
-import org.mifos.application.accounts.business.AccountTypeEntity;
 import org.mifos.application.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.application.accounts.business.TestAccountActionDateEntity;
 import org.mifos.application.accounts.exceptions.AccountException;
@@ -70,12 +69,12 @@ import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.application.accounts.loan.business.TestLoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.application.accounts.savings.business.TestSavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.CustomerAccountPaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentData;
 import org.mifos.application.accounts.util.helpers.PaymentStatus;
@@ -435,8 +434,6 @@ public class TestObjectFactory {
 		MeetingBO meeting, CustomerStatus status) {
 		ClientBO client;
 		try {
-			Short office = new Short("3");
-			Short personnel = new Short("1");
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
 					NameType.CLIENT, 
 					SAMPLE_SALUTATION, customerName,
@@ -450,8 +447,11 @@ public class TestObjectFactory {
 							.valueOf("41"));
 			client = new ClientBO(getUserContext(), clientNameDetailView
 					.getDisplayName(), status,
-					null, null, null, null, getFees(), null, personnel, office,
-					meeting, personnel, new Date(), null, null, null,
+					null, null, null, null, getFees(), null, 
+					PersonnelConstants.SYSTEM_USER, 
+					SAMPLE_BRANCH_OFFICE,
+					meeting, PersonnelConstants.SYSTEM_USER, 
+					new Date(), null, null, null,
 					YesNoFlag.NO.getValue(), clientNameDetailView,
 					spouseNameDetailView, clientDetailView, null);
 			client.save();
@@ -466,12 +466,14 @@ public class TestObjectFactory {
 	public static ClientBO createClient(String customerName, CustomerStatus status,
 			CustomerBO parentCustomer, Date startDate) {
 		ClientBO client;
-		Short personnel = new Short("1");
+		Short personnel = PersonnelConstants.SYSTEM_USER;
 		try {
-			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
+			ClientNameDetailView clientNameDetailView = 
+				new ClientNameDetailView(
 					NameType.MAYBE_CLIENT, SAMPLE_SALUTATION, 
 					customerName, "", customerName, "");
-			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(
+			ClientNameDetailView spouseNameDetailView = 
+				new ClientNameDetailView(
 					NameType.SPOUSE, SAMPLE_SALUTATION, customerName,
 					"middle", customerName, "secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
@@ -1047,11 +1049,12 @@ public class TestObjectFactory {
 
 	private static void deleteAccountActionDates(
 			AccountBO account, Session session) {
-		AccountTypeEntity accountType = account.getAccountType();
+		AccountTypes accountType = account.getType();
 		for (AccountActionDateEntity actionDates : account
 				.getAccountActionDates()) {
+			// TODO: this will never be true.  Do we want to fix it or nuke it?
 			if (accountType
-					.getAccountTypeId()
+					.getValue()
 					.equals(
 							org.mifos.application.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT)) {
 				LoanScheduleEntity loanScheduleEntity = 
@@ -1061,8 +1064,9 @@ public class TestObjectFactory {
 					session.delete(actionFees);
 				}
 			}
+			// TODO: this will never be true.  Do we want to fix it or nuke it?
 			if (accountType
-					.getAccountTypeId()
+					.getValue()
 					.equals(
 							org.mifos.application.accounts.util.helpers.AccountTypes.CUSTOMER_ACCOUNT)) {
 				CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) actionDates;
@@ -1535,18 +1539,6 @@ public class TestObjectFactory {
 		transaction.commit();
 	}
 
-	/**
-	 * Deprecated in favor of
-	 * {@link #createLoanAccountWithDisbursement(String, CustomerBO, AccountState, Date, LoanOfferingBO, int)}
-	 */
-	public static LoanBO createLoanAccountWithDisbursement(String globalNum,
-			CustomerBO customer, Short accountStateId, Date startDate,
-			LoanOfferingBO loanOfering, int disbursalType) {
-		AccountState state = AccountState.fromShort(accountStateId);
-		return createLoanAccountWithDisbursement(
-			globalNum, customer, state, startDate, loanOfering, disbursalType);
-	}
-
 	public static LoanBO createLoanAccountWithDisbursement(
 		String globalNum, CustomerBO customer, AccountState state, 
 		Date startDate, LoanOfferingBO loanOfering, int disbursalType) {
@@ -1632,7 +1624,7 @@ public class TestObjectFactory {
 		}
 	}
 
-	public static void cleanUpWithoutDeletetingProduct(AccountBO account) {
+	public static void cleanUpWithoutDeletingProduct(AccountBO account) {
 		if (null != account) {
 			deleteAccountWithoutDeletetingProduct(account, null);
 			account = null;
@@ -1657,8 +1649,9 @@ public class TestObjectFactory {
 		return paymentData;
 	}
 
-	public static CustomerAccountView getCustomerAccountView(CustomerBO customer)
-			throws Exception {
+	public static CustomerAccountView getCustomerAccountView(
+		CustomerBO customer)
+	throws Exception {
 		CustomerAccountView customerAccountView = new CustomerAccountView(
 				customer.getCustomerAccount().getAccountId());
 		List<AccountActionDateEntity> accountAction = getDueActionDatesForAccount(
@@ -1764,15 +1757,13 @@ public class TestObjectFactory {
 	}
 
 	public static LoanAccountView getLoanAccountView(LoanBO loan) {
-		Short interestDedAtDisb = loan.isInterestDeductedAtDisbursement() ? LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT
-				: (short) 0;
-		return new LoanAccountView(loan.getAccountId(), loan.getLoanOffering()
-				.getPrdOfferingName(),
-				loan.getAccountType().getAccountTypeId(), loan
-						.getLoanOffering().getPrdOfferingId(), loan
-						.getAccountState().getId(), interestDedAtDisb, loan
-						.getLoanBalance());
-
+		return new LoanAccountView(loan.getAccountId(), 
+				loan.getLoanOffering().getPrdOfferingName(),
+				loan.getType(), 
+				loan.getLoanOffering().getPrdOfferingId(), 
+				loan.getState(), 
+				loan.isInterestDeductedAtDisbursement(), 
+				loan.getLoanBalance());
 	}
 
 	public static BulkEntryInstallmentView getBulkEntryAccountActionView(

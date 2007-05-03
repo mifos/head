@@ -7,6 +7,7 @@ import java.util.Date;
 import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -43,7 +44,8 @@ public class TestLoanRepayTag extends MifosTestCase {
 	public void testCreateInstallmentRow(){
 		
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 1);
 		HibernateUtil.flushAndCloseSession();
 		accountBO =TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
 		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
@@ -55,7 +57,8 @@ public class TestLoanRepayTag extends MifosTestCase {
 	
 	public void testcreateRunningBalanceRow(){
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 1);
 		HibernateUtil.flushAndCloseSession();
 		accountBO =TestObjectFactory.getObject(LoanBO.class,accountBO.getAccountId());
 		group = TestObjectFactory.getObject(CustomerBO.class,group.getCustomerId());
@@ -65,7 +68,7 @@ public class TestLoanRepayTag extends MifosTestCase {
 		assertContains("90.0",loanRepaymentTag.createRunningBalanceRow((LoanScheduleEntity)accountBO.getAccountActionDate(Short.valueOf("1")),new Money("50"),new Money("20"),new Money("20")));
 	}
 
-	private LoanBO getLoanAccount(Short accountSate, Date startDate,
+	private LoanBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
@@ -76,7 +79,7 @@ public class TestLoanRepayTag extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
+				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
 		LoanActivityEntity loanActivity = new LoanActivityEntity(accountBO,
 				TestObjectFactory.getPersonnel(userContext.getId()), "testing",

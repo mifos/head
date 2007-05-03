@@ -125,8 +125,8 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		savingsBO = getSavingsAccount("fsaf4", "ads4");
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "cancel");
-		addRequestParameter("accountTypeId", savingsBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", savingsBO.getType()
+				.getValue().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("savings_details_page");
@@ -255,8 +255,8 @@ public class TestNotesAction extends MifosMockStrutsTestCase {
 		loanBO = getLoanAccount();
 		setRequestPathInfo("/notesAction.do");
 		addRequestParameter("method", "cancel");
-		addRequestParameter("accountTypeId", loanBO.getAccountType()
-				.getAccountTypeId().toString());
+		addRequestParameter("accountTypeId", loanBO.getType()
+				.getValue().toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
 		verifyForward("loan_detail_page");

@@ -831,7 +831,7 @@ public class ClientBO extends CustomerBO {
 	
 	private void persistSavingAccounts()throws CustomerException{
 		for(AccountBO account: getAccounts()){
-			if(account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGS_ACCOUNT.getValue())
+			if(account.getType() == AccountTypes.SAVINGS_ACCOUNT
 					&& account.getGlobalAccountNum()==null){
 				try {
 					((SavingsBO)account).save();

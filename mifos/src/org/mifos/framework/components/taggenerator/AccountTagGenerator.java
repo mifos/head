@@ -77,18 +77,18 @@ public class AccountTagGenerator extends TagGenerator {
 	}
 	
 	private String getAccountName(AccountBO account){
-		if(account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGS_ACCOUNT.getValue())){
+		if(account.getType() == AccountTypes.SAVINGS_ACCOUNT){
 			return ((SavingsBO)account).getSavingsOffering().getPrdOfferingName();
-		}else if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOAN_ACCOUNT.getValue())){
+		}else if(account.getType() == AccountTypes.LOAN_ACCOUNT){
 			return ((LoanBO)account).getLoanOffering().getPrdOfferingName();
 		}
 		return "";
 	}
 	
 	private String getAction(AccountBO account){
-		if(account.getAccountType().getAccountTypeId().equals(AccountTypes.SAVINGS_ACCOUNT.getValue())){
+		if(account.getType() == AccountTypes.SAVINGS_ACCOUNT){
 			return "savingsAction.do?method=get&globalAccountNum=";
-		}else if(account.getAccountType().getAccountTypeId().equals(AccountTypes.LOAN_ACCOUNT.getValue())){
+		}else if(account.getType() == AccountTypes.LOAN_ACCOUNT){
 			return "loanAccountAction.do?method=get&globalAccountNum=";
 		}
 		return "";

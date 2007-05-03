@@ -47,7 +47,6 @@ import org.mifos.application.accounts.business.AccountFeesEntity;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountView;
 import org.mifos.application.accounts.loan.util.helpers.LoanAccountsProductView;
-import org.mifos.application.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.savings.util.helpers.SavingsAccountView;
 import org.mifos.application.customer.business.CustomerAccountBO;
@@ -196,13 +195,12 @@ public class BulkEntryView extends View {
 	}
 
 	private LoanAccountView getLoanAccountView(LoanBO loan) {
-		Short interestDedAtDisb = loan.isInterestDeductedAtDisbursement() ? 
-				LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT : (short)0;
 		return new LoanAccountView(loan.getAccountId(), loan.getLoanOffering()
-				.getPrdOfferingShortName(), loan.getAccountType()
-				.getAccountTypeId(), loan.getLoanOffering().getPrdOfferingId(),
-				loan.getAccountState().getId(),
-				interestDedAtDisb, loan.getLoanAmount());
+				.getPrdOfferingShortName(), loan.getType(),
+				loan.getLoanOffering().getPrdOfferingId(),
+				loan.getState(),
+				loan.isInterestDeductedAtDisbursement(), 
+				loan.getLoanAmount());
 	}
 
 	private Double getAmountPaidAtDisb(LoanAccountView loanAccountView,
@@ -337,7 +335,7 @@ public class BulkEntryView extends View {
 
 	private SavingsAccountView getSavingsAccountView(SavingsBO savingsAccount) {
 		return new SavingsAccountView(savingsAccount.getAccountId(),
-				savingsAccount.getAccountType().getAccountTypeId(),
+				savingsAccount.getType(),
 				savingsAccount.getSavingsOffering());
 
 	}
@@ -345,7 +343,7 @@ public class BulkEntryView extends View {
 	private SavingsAccountView getSavingsAccountView(
 			SavingsAccountView savingsAccountView) {
 		return new SavingsAccountView(savingsAccountView.getAccountId(),
-				savingsAccountView.getAccountType(), savingsAccountView
+				savingsAccountView.getType(), savingsAccountView
 						.getSavingsOffering());
 
 	}

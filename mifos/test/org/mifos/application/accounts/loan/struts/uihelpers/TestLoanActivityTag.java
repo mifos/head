@@ -10,6 +10,7 @@ import org.mifos.application.accounts.loan.business.LoanActivityEntity;
 import org.mifos.application.accounts.loan.business.LoanActivityView;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -46,7 +47,8 @@ public class TestLoanActivityTag extends MifosTestCase {
 
 	public void testBuildLeftHeaderRows()throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 1);
 		List<LoanActivityView>  activityViews=	new LoanBusinessService().getAllActivityView(accountBO.getGlobalAccountNum(),
 				userContext.getLocaleId());
 		assertContains("100.0",new LoanActivityTag().buildLeftHeaderRows(activityViews.get(0)));
@@ -55,14 +57,15 @@ public class TestLoanActivityTag extends MifosTestCase {
 	}
 	public void testBuildRightHeaderRows()throws Exception{
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 1);
 		List<LoanActivityView>  activityViews=	new LoanBusinessService().getAllActivityView(accountBO.getGlobalAccountNum(),
 				userContext.getLocaleId());
 		assertContains("100.0",new LoanActivityTag().buildRightHeaderRows(activityViews.get(0)));
 		
 		
 	}
-	private AccountBO getLoanAccount(Short accountSate, Date startDate,
+	private AccountBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
@@ -73,7 +76,7 @@ public class TestLoanActivityTag extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
+				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
 		LoanActivityEntity loanActivity = new LoanActivityEntity(accountBO,
 				TestObjectFactory.getPersonnel(userContext.getId()), "testing",

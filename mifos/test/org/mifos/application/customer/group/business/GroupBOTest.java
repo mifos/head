@@ -605,14 +605,12 @@ public class GroupBOTest extends MifosTestCase {
 		client = TestObjectFactory.getObject(ClientBO.class, client
 				.getCustomerId());
 		for (AccountBO account : group.getAccounts()) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())) {
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
 				changeFirstInstallmentDate(account, 31);
 			}
 		}
 		for (AccountBO account : client.getAccounts()) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())) {
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
 				changeFirstInstallmentDate(account, 31);
 			}
 		}

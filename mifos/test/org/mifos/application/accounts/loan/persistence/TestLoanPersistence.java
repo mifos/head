@@ -133,7 +133,7 @@ public class TestLoanPersistence extends MifosTestCase {
 
 	public void testGetFeeAmountAtDisbursement() throws Exception {
 		loanAccountForDisbursement = getLoanAccount("cdfg", group, meeting,
-				Short.valueOf("3"));
+				AccountState.LOANACC_APPROVED);
 		assertEquals(30.0, loanPersistence
 				.getFeeAmountAtDisbursement(loanAccountForDisbursement
 						.getAccountId()));
@@ -183,7 +183,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	public void testGetLastPaymentAction() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		loanAccountForDisbursement = getLoanAccount(
-				AccountState.LOANACC_APPROVED.getValue(), startDate, 1);
+				AccountState.LOANACC_APPROVED, startDate, 1);
 		disburseLoan(startDate);
 		assertEquals("Last payment action should be 'PAYMENT'",
 				AccountActionTypes.DISBURSAL.getValue(), loanPersistence
@@ -203,7 +203,7 @@ public class TestLoanPersistence extends MifosTestCase {
 	public void testGetLastLoanAmountForCustomer() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
 		loanAccountForDisbursement = getLoanAccount(
-				AccountState.LOANACC_APPROVED.getValue(), startDate, 1);
+				AccountState.LOANACC_APPROVED, startDate, 1);
 		disburseLoan(startDate);
 		assertEquals(((LoanBO) loanAccountForDisbursement).getLoanAmount(),
 				loanPersistence.getLastLoanAmountForCustomer(group
@@ -217,7 +217,7 @@ public class TestLoanPersistence extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 	}
 
-	private AccountBO getLoanAccount(Short accountSate, Date startDate,
+	private AccountBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType) {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loanvcfg", "bhgf", ApplicableTo.GROUPS, startDate, 
@@ -225,12 +225,12 @@ public class TestLoanPersistence extends MifosTestCase {
 				InterestType.FLAT, true, true,
 				meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
+				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
 	}
 
 	private AccountBO getLoanAccount(String shortName, CustomerBO customer,
-			MeetingBO meeting, Short accountSate) {
+			MeetingBO meeting, AccountState state) {
 		Date startDate = new Date(System.currentTimeMillis());
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				"Loan123", shortName, ApplicableTo.GROUPS, startDate, 
@@ -238,7 +238,7 @@ public class TestLoanPersistence extends MifosTestCase {
 				InterestType.FLAT, true, true,
 				meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"42423142341", customer, accountSate, startDate, loanOffering,
+				"42423142341", customer, state, startDate, loanOffering,
 				1);
 
 	}

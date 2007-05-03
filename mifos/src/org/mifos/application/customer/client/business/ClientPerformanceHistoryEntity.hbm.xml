@@ -16,7 +16,8 @@
 	        <column name="LAST_LOAN_AMNT_CURRENCY_ID" /> 
 			<column name="LAST_LOAN_AMNT" />
 		</property>
-		<property name="delinquentPortfolio" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+		<property name="delinquentPortfolio" 
+			type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
 	        <column name="DELINQUINT_PORTFOLIO_CURRENCY_ID" /> 
 			<column name="DELINQUINT_PORTFOLIO" />
 		</property>

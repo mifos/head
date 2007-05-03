@@ -53,9 +53,11 @@ public enum AccountTypes {
 	}
 	
 	public static AccountTypes getAccountType(Short value){
-		for(AccountTypes accountTypes : AccountTypes.values())
-			if(accountTypes.getValue().equals(value))
+		for (AccountTypes accountTypes : AccountTypes.values()) {
+			if (accountTypes.getValue().equals(value)) {
 				return accountTypes;
-		return null;
+			}
+		}
+		throw new RuntimeException("no account type " + value);
 	}
 }

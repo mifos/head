@@ -263,11 +263,9 @@ public class CollectionSheetBO extends BusinessObject {
 					.debug(
 							"account type id is "
 									+ accountActionDate.getAccount()
-											.getAccountType());
-			if (accountActionDate.getAccount().getAccountType()
-					.getAccountTypeId().equals(
-							AccountTypes.CUSTOMER_ACCOUNT.getValue())) {
-
+											.getType());
+			if (accountActionDate.getAccount().getType()
+					== AccountTypes.CUSTOMER_ACCOUNT) {
 				collectionSheetCustomer
 						.populateAccountDetails(accountActionDate);
 				MifosLogManager
@@ -299,9 +297,8 @@ public class CollectionSheetBO extends BusinessObject {
 		for (AccountActionDateEntity accountActionDate : accountActionDates) {
 			MifosLogManager.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
 					.debug("accounts size: " + accountActionDates.size());
-			if (accountActionDate.getAccount().getAccountType()
-					.getAccountTypeId().equals(
-							AccountTypes.LOAN_ACCOUNT.getValue())) {
+			if (accountActionDate.getAccount().getType()
+					== AccountTypes.LOAN_ACCOUNT) {
 				MifosLogManager
 						.getLogger(LoggerConstants.COLLECTIONSHEETLOGGER)
 						.debug("Loan accoutns size: " + accountActionDate);
@@ -332,9 +329,8 @@ public class CollectionSheetBO extends BusinessObject {
 		// any savings account due to meet today if yes add it to the
 		// collectionSheetCustomer.
 		for (AccountActionDateEntity accountActionDate : accountActionDates) {
-			if (accountActionDate.getAccount().getAccountType()
-					.getAccountTypeId().equals(
-							AccountTypes.SAVINGS_ACCOUNT.getValue())) {
+			if (accountActionDate.getAccount().getType()
+					== AccountTypes.SAVINGS_ACCOUNT) {
 				CollSheetSavingsDetailsEntity collSheetSavingsDetail = new CollSheetSavingsDetailsEntity();
 				collSheetSavingsDetail.addAccountDetails(accountActionDate);
 				getCollectionSheetCustomerForCustomerId(

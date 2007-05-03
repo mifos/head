@@ -150,8 +150,8 @@ public class NotesAction extends SearchAction {
 	private void setFormAttributes(ActionForm form, AccountBO accountBO)
 			throws Exception {
 		NotesActionForm notesActionForm = (NotesActionForm) form;
-		notesActionForm.setAccountTypeId(accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		notesActionForm.setAccountTypeId(
+				accountBO.getType().getValue().toString());
 		notesActionForm.setGlobalAccountNum(accountBO.getGlobalAccountNum());
 		if (accountBO instanceof LoanBO) {
 			notesActionForm.setPrdOfferingName(((LoanBO) accountBO)

@@ -42,10 +42,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.business.AccountTrxnEntity;
 import org.mifos.application.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.application.accounts.financial.business.service.activity.accountingentry.BaseAccountingEntry;
 import org.mifos.application.accounts.financial.exceptions.FinancialException;
+import org.mifos.application.accounts.loan.business.LoanTrxnDetailEntity;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
+import org.mifos.application.customer.business.CustomerTrxnDetailEntity;
+import org.mifos.framework.util.helpers.Money;
 
 public abstract class BaseFinancialActivity {
 	private AccountTrxnEntity accountTrxn;
@@ -90,5 +95,19 @@ public abstract class BaseFinancialActivity {
 	}
 
 	protected abstract List<BaseAccountingEntry> getFinancialActionEntry();
+
+	public Money getMiscPenaltyAmount() {
+		Money amount = new Money();
+		AccountBO account = getAccountTrxn().getAccount();
+		if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+			amount = ((LoanTrxnDetailEntity) 
+				getAccountTrxn()).getMiscPenaltyAmount();
+		}
+		else if (account.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
+			amount = ((CustomerTrxnDetailEntity) 
+				getAccountTrxn()).getMiscPenaltyAmount();
+		}
+		return amount;
+	}
 
 }

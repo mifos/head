@@ -48,7 +48,7 @@ import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
-import org.mifos.application.accounts.util.helpers.AccountStates;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.persistence.CustomerPersistence;
@@ -224,6 +224,9 @@ public abstract class CustomerBO extends BusinessObject {
 		return customerId;
 	}
 
+	/**
+	 * Most callers will want to call {@link #getLevel()} instead.
+	 */
 	public CustomerLevelEntity getCustomerLevel() {
 		return this.customerLevel;
 	}
@@ -489,9 +492,9 @@ public abstract class CustomerBO extends BusinessObject {
 	public CustomerAccountBO getCustomerAccount() {
 		CustomerAccountBO customerAccount = null;
 		for (AccountBO account : accounts) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					Short.valueOf(AccountTypes.CUSTOMER_ACCOUNT.getValue())))
+			if (account.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
 				customerAccount = (CustomerAccountBO) account;
+			}
 		}
 		return customerAccount;
 	}
@@ -499,16 +502,14 @@ public abstract class CustomerBO extends BusinessObject {
 	public List<LoanBO> getActiveAndApprovedLoanAccounts(Date transactionDate) {
 		List<LoanBO> loanAccounts = new ArrayList<LoanBO>();
 		for (AccountBO account : accounts) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())) {
-				short accounStateId = account.getAccountState().getId()
-						.shortValue();
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+				AccountState state = account.getState();
 				LoanBO loan = (LoanBO) account;
-				if (accounStateId == AccountStates.LOANACC_ACTIVEINGOODSTANDING
-						|| accounStateId == AccountStates.LOANACC_BADSTANDING) {
+				if (state == AccountState.LOANACC_ACTIVEINGOODSTANDING
+						|| state == AccountState.LOANACC_BADSTANDING) {
 					loanAccounts.add(loan);
-				} else if (accounStateId == AccountStates.LOANACC_APPROVED
-						|| accounStateId == AccountStates.LOANACC_DBTOLOANOFFICER) {
+				} else if (state == AccountState.LOANACC_APPROVED
+						|| state == AccountState.LOANACC_DBTOLOANOFFICER) {
 					if (transactionDate.compareTo(loan.getDisbursementDate()) >= 0)
 						loanAccounts.add(loan);
 				}
@@ -520,10 +521,10 @@ public abstract class CustomerBO extends BusinessObject {
 	public List<SavingsBO> getActiveSavingsAccounts() {
 		List<SavingsBO> savingsAccounts = new ArrayList<SavingsBO>();
 		for (AccountBO account : accounts) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.SAVINGS_ACCOUNT.getValue())
-					&& account.getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_APPROVED)
+			if (account.getType() == AccountTypes.SAVINGS_ACCOUNT
+				&& account.getState() == AccountState.SAVINGS_ACC_APPROVED) {
 				savingsAccounts.add((SavingsBO) account);
+			}
 		}
 		return savingsAccounts;
 	}
@@ -609,8 +610,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public Money getBalanceForAccountsAtRisk() {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT
 					&& ((LoanBO) account).isAccountActive()) {
 				LoanBO loan = (LoanBO) account;
 				if (loan.hasPortfolioAtRisk())
@@ -623,8 +623,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public Money getOutstandingLoanAmount() {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT
 					&& ((LoanBO) account).isAccountActive()) {
 				amount = amount.add(((LoanBO) account)
 						.getRemainingPrincipalAmount());
@@ -636,8 +635,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public Integer getActiveLoanCounts() {
 		Integer countOfActiveLoans = 0;
 		for (AccountBO account : getAccounts()) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT
 					&& ((LoanBO) account).isAccountActive()) {
 				countOfActiveLoans++;
 			}
@@ -649,8 +647,7 @@ public abstract class CustomerBO extends BusinessObject {
 		Money amountOverDue = new Money();
 		Money totalOutStandingAmount = new Money();
 		for (AccountBO accountBO : getAccounts()) {
-			if (accountBO.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())
+			if (accountBO.getType() == AccountTypes.LOAN_ACCOUNT
 					&& ((LoanBO) accountBO).isAccountActive()) {
 				amountOverDue = amountOverDue.add(((LoanBO) accountBO)
 						.getTotalPrincipalAmountInArrears());
@@ -671,8 +668,7 @@ public abstract class CustomerBO extends BusinessObject {
 	public Money getSavingsBalance() {
 		Money amount = new Money();
 		for (AccountBO account : getAccounts()) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.SAVINGS_ACCOUNT.getValue())) {
+			if (account.getType() == AccountTypes.SAVINGS_ACCOUNT) {
 				SavingsBO savingsBO = (SavingsBO) account;
 				amount = amount.add(savingsBO.getSavingsBalance());
 			}

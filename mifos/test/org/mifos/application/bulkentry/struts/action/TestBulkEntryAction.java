@@ -655,7 +655,8 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		groupAccount = TestObjectFactory.createLoanAccount("42423142341",
 				group, AccountState.LOANACC_ACTIVEINGOODSTANDING,
 				startDate, loanOffering1);
-		clientAccount = getLoanAccount(Short.valueOf("3"), startDate, 1,
+		clientAccount = getLoanAccount(
+				AccountState.LOANACC_APPROVED, startDate, 1,
 				loanOffering2);
 		Date currentDate = new Date(System.currentTimeMillis());
 		SavingsOfferingBO savingsOffering1 = 
@@ -856,7 +857,7 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 
 	private SavingsAccountView getSavingsAccountView(SavingsBO account) {
 		SavingsAccountView accountView = new SavingsAccountView(account
-				.getAccountId(), account.getAccountType().getAccountTypeId(),
+				.getAccountId(), account.getType(),
 				account.getSavingsOffering());
 		accountView.addAccountTrxnDetail(TestObjectFactory
 				.getBulkEntryAccountActionView(account
@@ -964,10 +965,10 @@ public class TestBulkEntryAction extends MifosMockStrutsTestCase {
 		return locale;
 	}
 
-	private LoanBO getLoanAccount(Short accountSate, Date startDate,
+	private LoanBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType, LoanOfferingBO loanOfferingBO) {
 		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOfferingBO,
+				"99999999999", group, state, startDate, loanOfferingBO,
 				disbursalType);
 
 	}

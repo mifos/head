@@ -17,7 +17,6 @@ import org.mifos.application.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.accounts.struts.actionforms.EditStatusActionForm;
 import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.checklist.business.AccountCheckListBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -55,8 +54,8 @@ public class EditStatusAction extends BaseAction {
 		getAccountBusinessService().initializeStateMachine(
 				userContext.getLocaleId(),
 				accountBO.getOffice().getOfficeId(),
-				AccountTypes.getAccountType(accountBO.getAccountType()
-						.getAccountTypeId()), null);
+				accountBO.getType(), 
+				null);
 		accountBO.setUserContext(userContext);
 		accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
 		setFormAttributes(form, accountBO);
@@ -65,8 +64,7 @@ public class EditStatusAction extends BaseAction {
 				getAccountBusinessService()
 						.getStatusList(
 								accountBO.getAccountState(),
-								AccountTypes.getAccountType(accountBO
-										.getAccountType().getAccountTypeId()),
+								accountBO.getType(),
 								userContext.getLocaleId()), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
 	}
@@ -188,8 +186,7 @@ public class EditStatusAction extends BaseAction {
 					userContext.getLocaleId(),
 					AccountState.fromShort(getShortValue(editStatusActionForm
 							.getNewStatusId())),
-					AccountTypes.getAccountType(accountBO.getAccountType()
-							.getAccountTypeId()));
+					accountBO.getType());
 		SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME,
 				newStatusName, request);
 		if (StringUtils.isNullAndEmptySafe(editStatusActionForm
@@ -201,8 +198,7 @@ public class EditStatusAction extends BaseAction {
 					AccountStateFlag
 							.getStatusFlag(getShortValue(editStatusActionForm
 									.getFlagId())),
-					AccountTypes.getAccountType(accountBO.getAccountType()
-							.getAccountTypeId()));
+					accountBO.getType());
 		SessionUtils
 				.setAttribute(SavingsConstants.FLAG_NAME, flagName, request);
 	}
@@ -215,8 +211,8 @@ public class EditStatusAction extends BaseAction {
 	private void setFormAttributes(ActionForm form, AccountBO accountBO)
 			throws Exception {
 		EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
-		editStatusActionForm.setAccountTypeId(accountBO.getAccountType()
-				.getAccountTypeId().toString());
+		editStatusActionForm.setAccountTypeId(
+				accountBO.getType().getValue().toString());
 		editStatusActionForm.setCurrentStatusId(accountBO.getAccountState()
 				.getId().toString());
 		editStatusActionForm.setGlobalAccountNum(accountBO

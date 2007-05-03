@@ -286,7 +286,7 @@ public class BulkEntryDisplayHelperTest extends MifosTestCase {
 
 	private SavingsAccountView getSavingsAccountView(SavingsBO account) {
 		SavingsAccountView accountView = new SavingsAccountView(account
-				.getAccountId(), account.getAccountType().getAccountTypeId(),
+				.getAccountId(), account.getType(),
 				account.getSavingsOffering());
 		accountView.addAccountTrxnDetail(TestObjectFactory
 				.getBulkEntryAccountActionView(account

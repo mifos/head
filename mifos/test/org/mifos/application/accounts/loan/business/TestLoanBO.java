@@ -1333,7 +1333,8 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testUpdateTotalFeeAmount() {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 1);
 		LoanBO loanBO = (LoanBO) accountBO;
 		LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
 		Money orignalFeesAmount = loanSummaryEntity.getOriginalFees();
@@ -1346,7 +1347,8 @@ public class TestLoanBO extends MifosTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		Money miscFee = new Money("20");
 		Money miscPenalty = new Money("50");
-		accountBO = getLoanAccountWithMiscFeeAndPenalty(Short.valueOf("3"),
+		accountBO = getLoanAccountWithMiscFeeAndPenalty(
+				AccountState.LOANACC_APPROVED,
 				startDate, 1, miscFee, miscPenalty);
 
 		// disburse loan
@@ -1430,7 +1432,8 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testDisbursalLoanNoFeeOrInterestAtDisbursal() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 3);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 3);
 
 		// disburse loan
 
@@ -1466,7 +1469,8 @@ public class TestLoanBO extends MifosTestCase {
 	public void testDisbursalLoanWithInterestDeductedAtDisbursal()
 			throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 2);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 2);
 		int statusChangeHistorySize = accountBO.getAccountStatusChangeHistory()
 				.size();
 
@@ -1526,7 +1530,7 @@ public class TestLoanBO extends MifosTestCase {
 			throws AccountException, SystemException, FinancialException {
 
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 3);
+		accountBO = getLoanAccount(AccountState.LOANACC_APPROVED, startDate, 3);
 
 		// disburse loan
 		Calendar disbDate = new GregorianCalendar();
@@ -1559,8 +1563,9 @@ public class TestLoanBO extends MifosTestCase {
 			InterruptedException {
 
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccountWithMiscFeeAndPenalty(Short.valueOf("3"),
-				startDate, 3, new Money("20"), new Money("30"));
+		accountBO = getLoanAccountWithMiscFeeAndPenalty(
+			AccountState.LOANACC_APPROVED,
+			startDate, 3, new Money("20"), new Money("30"));
 
 		Set<AccountActionDateEntity> intallments = accountBO
 				.getAccountActionDates();
@@ -1604,7 +1609,7 @@ public class TestLoanBO extends MifosTestCase {
 
 		Date startDate = new Date(System.currentTimeMillis());				
 		accountBO = 
-			getLoanAccountWithMiscFeeAndPenalty(Short.valueOf("3"),
+			getLoanAccountWithMiscFeeAndPenalty(AccountState.LOANACC_APPROVED,
 				startDate, 3, new Money("20"), new Money("30"));
 		
 		Set<AccountActionDateEntity> intallments = accountBO
@@ -1940,7 +1945,8 @@ public class TestLoanBO extends MifosTestCase {
 	public void testGetAmountTobePaidAtdisburtail() throws Exception {
 
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 2);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 2);
 		assertEquals(new Money("52"), ((LoanBO) accountBO)
 				.getAmountTobePaidAtdisburtail(startDate));
 
@@ -2386,7 +2392,8 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testIsAccountActive() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 3);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 3);
 		assertFalse(((LoanBO) accountBO).isAccountActive());
 
 		// disburse loan
@@ -2529,7 +2536,8 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testDisbursalLoanForCustomerPerfHistory() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccountWithPerformanceHistory(Short.valueOf("3"),
+		accountBO = getLoanAccountWithPerformanceHistory(
+				AccountState.LOANACC_APPROVED,
 				startDate, 3);
 
 		ClientPerformanceHistoryEntity clientPerfHistory = (ClientPerformanceHistoryEntity) ((LoanBO) accountBO)
@@ -2618,8 +2626,8 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testDisbursalLoanForGroupPerfHistory() throws Exception {
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccountWithGroupPerformanceHistory(Short
-				.valueOf("3"), startDate, 3);
+		accountBO = getLoanAccountWithGroupPerformanceHistory(
+				AccountState.LOANACC_APPROVED, startDate, 3);
 
 		GroupPerformanceHistoryEntity groupPerformanceHistoryEntity = (GroupPerformanceHistoryEntity) ((LoanBO) accountBO)
 				.getCustomer().getPerformanceHistory();
@@ -5200,9 +5208,11 @@ public class TestLoanBO extends MifosTestCase {
 				.getAccountId());
 	}
 
-	private AccountBO getLoanAccountWithMiscFeeAndPenalty(Short accountSate,
+	private AccountBO getLoanAccountWithMiscFeeAndPenalty(
+			AccountState state,
 			Date startDate, int disbursalType, Money miscFee, Money miscPenalty) {
-		LoanBO accountBO = getLoanAccount(accountSate, startDate, disbursalType);
+		LoanBO accountBO = getLoanAccount(
+			state, startDate, disbursalType);
 		for (AccountActionDateEntity accountAction : accountBO
 				.getAccountActionDates()) {
 			LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -5267,7 +5277,7 @@ public class TestLoanBO extends MifosTestCase {
 		return accountBO;
 	}
 
-	private AccountBO getLoanAccountWithPerformanceHistory(Short accountSate,
+	private AccountBO getLoanAccountWithPerformanceHistory(AccountState state,
 			Date startDate, int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
@@ -5280,7 +5290,7 @@ public class TestLoanBO extends MifosTestCase {
 				startDate, meeting);
 		// ((ClientBO) client).getPerformanceHistory().setLoanCycleNumber(1);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", client, accountSate, startDate, loanOffering,
+				"99999999999", client, state, startDate, loanOffering,
 				disbursalType);
 		((ClientBO) client).getPerformanceHistory().updateLoanCounter(
 				loanOffering, YesNoFlag.YES);
@@ -5289,7 +5299,7 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	private AccountBO getLoanAccountWithGroupPerformanceHistory(
-			Short accountSate, Date startDate, int disbursalType) {
+			AccountState state, Date startDate, int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
 		center = TestObjectFactory.createCenter("Center", meeting);
@@ -5300,7 +5310,7 @@ public class TestLoanBO extends MifosTestCase {
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, true, meeting);
 		accountBO = TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
+				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
 		return accountBO;
 
@@ -5370,7 +5380,7 @@ public class TestLoanBO extends MifosTestCase {
 		return new java.sql.Date(currentDateCalendar.getTimeInMillis());
 	}
 
-	private LoanBO getLoanAccount(Short accountSate, Date startDate,
+	private LoanBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
@@ -5380,7 +5390,7 @@ public class TestLoanBO extends MifosTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
+				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
 
 	}

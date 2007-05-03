@@ -124,18 +124,18 @@ public class ApplyChargeAction extends BaseAction {
 	}
 
 	private String getDetailAccountPage(AccountBO account) {
-		if (account.getAccountType().getAccountTypeId().equals(
-				AccountTypes.LOAN_ACCOUNT.getValue())) {
+		if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
 			return "loanDetails_success";
 		} else {
-			if (account.getCustomer().getCustomerLevel().getId().equals(
-					CustomerLevel.CLIENT.getValue()))
+			if (account.getCustomer().getLevel() == CustomerLevel.CLIENT) {
 				return "clientDetails_success";
-			else if (account.getCustomer().getCustomerLevel().getId().equals(
-					CustomerLevel.GROUP.getValue()))
+			}
+			else if (account.getCustomer().getLevel() == CustomerLevel.GROUP) {
 				return "groupDetails_success";
-			else
+			}
+			else {
 				return "centerDetails_success";
+			}
 		}
 	}
 	

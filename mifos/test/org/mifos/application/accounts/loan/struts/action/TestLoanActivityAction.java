@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.mifos.application.accounts.business.AccountBO;
 import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.util.helpers.AccountState;
 import org.mifos.application.customer.business.CustomerBO;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -51,7 +52,8 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 	public void testGetAllActivity() {
 		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 		Date startDate = new Date(System.currentTimeMillis());
-		accountBO = getLoanAccount(Short.valueOf("3"), startDate, 1);
+		accountBO = getLoanAccount(
+			AccountState.LOANACC_APPROVED, startDate, 1);
 		LoanBO loan = (LoanBO) accountBO;
 		setRequestPathInfo("/loanAccountAction.do");
 		addRequestParameter("method", "getAllActivity");
@@ -61,7 +63,7 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 		verifyForward("getAllActivity_success");
 	}
 
-	private AccountBO getLoanAccount(Short accountSate, Date startDate,
+	private AccountBO getLoanAccount(AccountState state, Date startDate,
 			int disbursalType) {
 		MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getTypicalMeeting());
@@ -70,7 +72,7 @@ public class TestLoanActivityAction extends MifosMockStrutsTestCase {
 		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
 				startDate, meeting);
 		return TestObjectFactory.createLoanAccountWithDisbursement(
-				"99999999999", group, accountSate, startDate, loanOffering,
+				"99999999999", group, state, startDate, loanOffering,
 				disbursalType);
 
 	}

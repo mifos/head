@@ -174,11 +174,10 @@ public class AccountPersistence extends Persistence {
 
 		AccountBO accountBO = findBySystemId(queryString);
 
-		if ( accountBO==null) return null;
-		if (accountBO != null
-				&& accountBO.getAccountType().getAccountTypeId().equals(
-						AccountTypes.CUSTOMER_ACCOUNT.getValue()))
+		if (accountBO == null) return null;
+		if (accountBO.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
 			return null;
+		}
 		QueryResult queryResult = QueryFactory
 				.getQueryResult(CustomerSearchConstants.LOANACCOUNTIDSEARCH);
 		((QueryResultAccountIdSearch)queryResult).setSearchString(queryString);

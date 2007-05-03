@@ -273,8 +273,7 @@ public class CustomerBusinessService extends BusinessService {
 			throws ServiceException {
 		Money amount = new Money();
 		for (AccountBO account : accountList) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT
 					&& ((LoanBO) account).isAccountActive()) {
 				LoanBO loan = (LoanBO) account;
 				if (loan.hasPortfolioAtRisk()) {
@@ -290,8 +289,7 @@ public class CustomerBusinessService extends BusinessService {
 			throws ServiceException {
 		Money amount = new Money();
 		for (AccountBO account : accountList) {
-			if (account.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())
+			if (account.getType() == AccountTypes.LOAN_ACCOUNT
 					&& ((LoanBO) account).isAccountActive()) {
 				LoanBO loan = (LoanBO) account;
 				amount = amount.add(loan.getRemainingPrincipalAmount());

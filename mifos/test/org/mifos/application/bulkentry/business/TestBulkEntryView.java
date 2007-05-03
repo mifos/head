@@ -62,8 +62,8 @@ public class TestBulkEntryView extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.cleanUpWithoutDeletetingProduct(account1);
-		TestObjectFactory.cleanUpWithoutDeletetingProduct(account2);
+		TestObjectFactory.cleanUpWithoutDeletingProduct(account1);
+		TestObjectFactory.cleanUpWithoutDeletingProduct(account2);
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);

@@ -14,15 +14,7 @@ public class PenaltyAdjustmentAccountingEntry extends BaseAccountingEntry {
 
 	@Override
 	protected void getSpecificAccountActionEntry() throws FinancialException {
-		Money amount = new Money();
-		if (financialActivity.getAccountTrxn().getAccount().getAccountType()
-				.getAccountTypeId().equals(AccountTypes.LOAN_ACCOUNT.getValue()))
-			amount = ((LoanTrxnDetailEntity) financialActivity.getAccountTrxn())
-					.getMiscPenaltyAmount();
-		else if (financialActivity.getAccountTrxn().getAccount()
-				.getAccountType().getAccountTypeId().equals(AccountTypes.CUSTOMER_ACCOUNT.getValue()))
-			amount = ((CustomerTrxnDetailEntity) financialActivity
-					.getAccountTrxn()).getMiscPenaltyAmount();
+		Money amount = financialActivity.getMiscPenaltyAmount();
 
 		FinancialActionBO finActionMiscPenalty = FinancialActionCache
 				.getFinancialAction(FinancialActionConstants.MISCPENALTYPOSTING);

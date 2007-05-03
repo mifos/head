@@ -163,12 +163,15 @@ public class AccountApplyPaymentAction extends BaseAction {
 			throw new AccountException("errors.invalidTxndate");
 
 		account.setVersionNo(savedAccount.getVersionNo());
+
 		Money amount = new Money();
-		if (account.getAccountType().getAccountTypeId().equals(
-				AccountTypes.LOAN_ACCOUNT.getValue()))
+		if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
 			amount = actionForm.getAmount();
-		else
+		}
+		else {
 			amount = account.getTotalPaymentDue();
+		}
+
 		account.applyPayment(createPaymentData(amount, trxnDate, actionForm
 				.getReceiptId(), receiptDate, Short.valueOf(actionForm
 				.getPaymentTypeId()), uc.getId(), account));

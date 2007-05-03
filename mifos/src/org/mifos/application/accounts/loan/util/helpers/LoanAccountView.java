@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.bulkentry.business.BulkEntryInstallmentView;
 import org.mifos.application.bulkentry.business.BulkEntryLoanInstallmentView;
 import org.mifos.framework.business.View;
@@ -68,15 +69,18 @@ public class LoanAccountView extends View {
 	private Double amountPaidAtDisbursement;
 
 	public LoanAccountView(Integer accountId, String prdOfferingShortName,
-			Short accountType, Short prdOfferingId, Short accountSate,
-			Short interestDeductedAtDisbursement, Money loanAmount) {
+			AccountTypes accountType, Short prdOfferingId, AccountState state,
+			boolean interestDeductedAtDisbursement, Money loanAmount) {
 		this.accountId = accountId;
 		this.prdOfferingShortName = prdOfferingShortName;
-		this.accountType = accountType;
+		this.accountType = accountType.getValue();
 		this.prdOfferingId = prdOfferingId;
 		accountTrxnDetails = new ArrayList<BulkEntryInstallmentView>();
-		this.accountSate = accountSate;
-		this.interestDeductedAtDisbursement = interestDeductedAtDisbursement;
+		this.accountSate = state.getValue();
+		this.interestDeductedAtDisbursement = 
+			interestDeductedAtDisbursement
+			? LoanConstants.INTEREST_DEDUCTED_AT_DISBURSMENT 
+			: 0;
 		this.loanAmount = loanAmount;
 	}
 

@@ -53,10 +53,12 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return id;
 	}
 
+	@SuppressWarnings("unused")
 	private Money getDelinquentPortfolio() {
 		return delinquentPortfolio;
 	}
 
+	@SuppressWarnings("unused")
 	private void setDelinquentPortfolio(Money delinquentPortfolio) {
 		this.delinquentPortfolio = delinquentPortfolio;
 	}
@@ -89,6 +91,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		this.noOfActiveLoans = noOfActiveLoans;
 	}
 
+	@SuppressWarnings("unused")
 	private Money getTotalSavings() {
 		return totalSavings;
 	}
@@ -97,6 +100,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		return getClient().getSavingsBalance();
 	}
 
+	@SuppressWarnings("unused")
 	private void setTotalSavings(Money totalSavings) {
 		this.totalSavings = totalSavings;
 	}
@@ -142,8 +146,7 @@ public class ClientPerformanceHistoryEntity extends CustomerPerformanceHistory {
 		Money amountOverDue = new Money();
 		Money totalOutStandingAmount = new Money();
 		for (AccountBO accountBO : client.getAccounts()) {
-			if (accountBO.getAccountType().getAccountTypeId().equals(
-					AccountTypes.LOAN_ACCOUNT.getValue())
+			if (accountBO.getType() == AccountTypes.LOAN_ACCOUNT
 					&& ((LoanBO) accountBO).isAccountActive()) {
 				amountOverDue = amountOverDue.add(((LoanBO) accountBO)
 						.getTotalPrincipalAmountInArrears());

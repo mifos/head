@@ -337,8 +337,7 @@ public class TestSavingsBO extends MifosTestCase {
 				.next();
 		assertEquals(Short.valueOf("8"), customFieldEntity.getFieldId());
 		assertEquals("13", customFieldEntity.getFieldValue());
-		assertEquals(AccountTypes.SAVINGS_ACCOUNT.getValue(), savings
-				.getAccountType().getAccountTypeId());
+		assertEquals(AccountTypes.SAVINGS_ACCOUNT, savings.getType());
 		assertEquals(group.getPersonnel().getPersonnelId(), savings
 				.getPersonnel().getPersonnelId());
 	}
