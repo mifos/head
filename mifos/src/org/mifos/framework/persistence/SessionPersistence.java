@@ -33,7 +33,7 @@ public class SessionPersistence {
 		this(HibernateUtil.getOrCreateSessionHolder());
 	}
 	
-	protected Session getSession() {
+	public Session getSession() {
 		return sessionHolder.getSession();
 	}
 	
@@ -60,11 +60,12 @@ public class SessionPersistence {
 		Transaction tx = session.beginTransaction();
 		try {
 			session.saveOrUpdate(object);
-			if (interceptor.isAuditLogRequired()) {
+			if (interceptor != null && interceptor.isAuditLogRequired()) {
 				interceptor.createChangeValueMap(object);
 			}
 			tx.commit();
-		} catch (Exception hibernateException) {
+		}
+		catch (Exception hibernateException) {
 			tx.rollback();
 			throw new PersistenceException(hibernateException);
 		}

@@ -351,4 +351,17 @@ public abstract class BaseAction extends DispatchAction {
 		if(!oldVersionNum.equals(newVersionNum))
 			throw new ApplicationException(Constants.ERROR_VERSION_MISMATCH);
 	}
+	
+	/*
+	 * this method is not intended to be part of the application, but is used
+	 * by tests to get a copy of the ActionMapping object used in a specific action
+	 * tests just need to perform this method through the struts machinery, then
+	 * call "ActionMapping mapping = request.getAttribute(Constants.ACTION_MAPPING)"
+	*/
+	public ActionForward findActionMapping(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		request.setAttribute(Constants.ACTION_MAPPING, mapping);
+		return mapping.findForward(ActionForwards.load_success.toString());
+	}
 }

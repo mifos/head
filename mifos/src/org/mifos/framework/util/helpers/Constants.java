@@ -111,6 +111,8 @@ public interface Constants {
 	public static final String CURRENTFLOWKEY="currentFlowKey";
 	public static final String FLOWMANAGER="flowManager";
 	
+	public static final String ACTION_MAPPING="actionMapping";
+	
 	/**
 	 * There is a large amount of code which generates randomNum,
 	 * writes it to the session, and puts it in URLs.  Mifos does

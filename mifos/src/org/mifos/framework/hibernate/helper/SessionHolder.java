@@ -15,6 +15,7 @@ public class SessionHolder {
 		if (session == null) {
 			throw new NullPointerException("session is required");
 		}
+		//interceptor = new AuditInterceptor();
 	}
 	
 	public Transaction startTransaction() {

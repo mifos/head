@@ -22,6 +22,16 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class SurveysAction extends BaseAction {
 
+	public SurveysPersistence surveysPersistence;
+
+	public SurveysAction() {
+		this(new SurveysPersistence());
+	}
+
+	public SurveysAction(SurveysPersistence persistence) {
+		surveysPersistence = persistence;
+	}
+
 	@Override
 	protected BusinessService getService() throws ServiceException {
 		throw new RuntimeException("not implemented");
@@ -31,7 +41,6 @@ public class SurveysAction extends BaseAction {
 	public ActionForward mainpage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		List<Survey> customerSurveys = surveysPersistence.retrieveByType(SurveyType.CUSTOMERS);
 		List<Survey> accountsSurveys = surveysPersistence.retrieveByType(SurveyType.ACCOUNTS);
 		
@@ -44,8 +53,6 @@ public class SurveysAction extends BaseAction {
 	public ActionForward get(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
-		SurveysPersistence surveysPersistence = new SurveysPersistence();
 		SurveyActionForm actionForm = (SurveyActionForm) form;
 		int surveyId = actionForm.getSurveyIdValue();
 		Survey survey = surveysPersistence.getSurvey(surveyId);
