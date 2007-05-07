@@ -82,6 +82,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -105,6 +106,21 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 	@Override
 	protected BusinessService getService() {
 		return new LoanBusinessService();
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("multipleloansaction");
+		security.put("load",
+				SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS);
+		security.put("getLoanOfficers",
+				SecurityConstants.VIEW);
+		security.put("getCenters",
+				SecurityConstants.VIEW);
+		security.put("getPrdOfferings",
+				SecurityConstants.VIEW);
+		security.put("get", SecurityConstants.VIEW);
+		security.put("create", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

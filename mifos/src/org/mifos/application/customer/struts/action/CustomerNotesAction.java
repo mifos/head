@@ -65,7 +65,9 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -86,6 +88,17 @@ public class CustomerNotesAction extends SearchAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static  ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("customerNotesAction");
+		security.put("load", SecurityConstants.VIEW);
+		security.put("preview", SecurityConstants.VIEW);
+		security
+				.put("previous", SecurityConstants.VIEW);
+		security.put("create", SecurityConstants.VIEW);
+		security.put("search", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate (joinToken = true)

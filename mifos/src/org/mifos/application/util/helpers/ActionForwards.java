@@ -164,5 +164,6 @@ public enum ActionForwards {
 	loadTransferSearch_success,
 	transferSearch_success,
 	previewHistoricalData_failure,
-	update_cache_success;
+	update_cache_success,
+	welcome;
 }

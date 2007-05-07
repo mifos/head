@@ -21,6 +21,7 @@ import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -42,6 +43,17 @@ public class PersonnelNoteAction extends SearchAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("personnelNoteAction");
+		security.put("load", SecurityConstants.VIEW);
+		security.put("preview", SecurityConstants.VIEW);
+		security
+				.put("previous", SecurityConstants.VIEW);
+		security.put("create", SecurityConstants.VIEW);
+		security.put("search", SecurityConstants.VIEW);
+		return security;
 	}
 	
 	@TransactionDemarcate(joinToken = true)

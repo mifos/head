@@ -54,99 +54,123 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 
 /**
  * Control Class for Report DataSource
  */
 public class ReportsDataSourceAction extends BaseAction {
-	
+
 	private ReportsBusinessService reportsBusinessService;
 	private ReportsPersistence reportsPersistence;
-	private MifosLogger logger = 
-		MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
-	
+	private MifosLogger logger = MifosLogManager
+			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+
 	public ReportsDataSourceAction() throws ServiceException {
 		reportsBusinessService = new ReportsBusinessService();
 		reportsPersistence = new ReportsPersistence();
 	}
-	
+
 	@Override
 	protected BusinessService getService() {
 		return reportsBusinessService;
 	}
 
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("reportsDataSourceAction");
+		security.put("load", SecurityConstants.ADMINISTER_REPORTDS);
+		security.put("loadList", SecurityConstants.ADMINISTER_REPORTDS);
+		security.put("createDataSource", SecurityConstants.ADMINISTER_REPORTDS);
+		security.put("deleteDataSource", SecurityConstants.ADMINISTER_REPORTDS);
+		security.put("loadView", SecurityConstants.ADMINISTER_REPORTDS);
+
+		security.put("reportdatasource_path",
+				SecurityConstants.ADMINISTER_REPORTDS);
+		security.put("reportdatasourceadd_path",
+				SecurityConstants.ADMINISTER_REPORTDS);
+		security.put("reportdatasourcelist_path",
+				SecurityConstants.ADMINISTER_REPORTDS);
+		security.put("reportdatasourceview_path",
+				SecurityConstants.ADMINISTER_REPORTDS);
+
+		return security;
+	}
+
 	/**
 	 * Loads the DataSource Add page
 	 */
-	public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)	throws Exception {
-		logger.debug("In ReportsDataSourceAction:load Method: ");		
+	public ActionForward load(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In ReportsDataSourceAction:load Method: ");
 		return mapping.findForward(ReportsConstants.ADDREPORTSDATASOURCE);
 	}
 
 	/**
 	 * Loads DataSource List Page
 	 */
-	public ActionForward loadList(ActionMapping mapping, ActionForm form, 
+	public ActionForward loadList(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-	throws Exception {
-		logger.debug("In ReportsDataSourceAction:loadList Method: ");		
-		request.getSession().setAttribute("listOfReportsDataSource", 
+			throws Exception {
+		logger.debug("In ReportsDataSourceAction:loadList Method: ");
+		request.getSession().setAttribute("listOfReportsDataSource",
 				reportsPersistence.getAllReportDataSource());
 		return mapping.findForward(ReportsConstants.LISTREPORTSDATASOURCE);
 	}
-	
+
 	/**
 	 * Veiw DataSource
 	 */
-	public ActionForward loadView(ActionMapping mapping, ActionForm form, 
-			HttpServletRequest request, HttpServletResponse response)	
-	throws Exception {
-		logger.debug("In ReportsDataSourceAction:loadView Method: ");		
-		ReportsDataSourceActionForm actionForm=(ReportsDataSourceActionForm)form;
+	public ActionForward loadView(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		logger.debug("In ReportsDataSourceAction:loadView Method: ");
+		ReportsDataSourceActionForm actionForm = (ReportsDataSourceActionForm) form;
 		String strDataSourceId = request.getParameter("dataSourceId");
-		if(strDataSourceId==null)
-			strDataSourceId = actionForm.getDatasourceId()+"";
-		if(strDataSourceId==null || strDataSourceId.equals(""))
+		if (strDataSourceId == null)
+			strDataSourceId = actionForm.getDatasourceId() + "";
+		if (strDataSourceId == null || strDataSourceId.equals(""))
 			strDataSourceId = "0";
 		int dataSourceId = Integer.parseInt(strDataSourceId);
-		 actionForm.setDatasourceId(dataSourceId);
-		request.getSession().setAttribute("viewDataSource", 
-			reportsPersistence.viewDataSource(dataSourceId));
+		actionForm.setDatasourceId(dataSourceId);
+		request.getSession().setAttribute("viewDataSource",
+				reportsPersistence.viewDataSource(dataSourceId));
 		return mapping.findForward(ReportsConstants.VIEWREPORTSDATASOURCE);
 	}
-	
-    /**
-     * Controls the creation of DataSource 
-     */
-    public ActionForward createDataSource(ActionMapping mapping, ActionForm form, 
-    		HttpServletRequest request, HttpServletResponse response)	
-    throws Exception {
-    	logger.debug("In ReportsDataSourceAction:createDataSource Method: ");
-    	ReportsDataSourceActionForm actionForm=(ReportsDataSourceActionForm)form;
-    	ReportsDataSource objDs = new ReportsDataSource();
-    	objDs.setDriver(actionForm.getDriver());
-    	objDs.setName(actionForm.getName());
-    	objDs.setUrl(actionForm.getUrl());
-    	objDs.setPassword(actionForm.getPassword());
-    	objDs.setUsername(actionForm.getUsername());
-    	reportsPersistence.createReportsDataSource(objDs);
+
+	/**
+	 * Controls the creation of DataSource 
+	 */
+	public ActionForward createDataSource(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		logger.debug("In ReportsDataSourceAction:createDataSource Method: ");
+		ReportsDataSourceActionForm actionForm = (ReportsDataSourceActionForm) form;
+		ReportsDataSource objDs = new ReportsDataSource();
+		objDs.setDriver(actionForm.getDriver());
+		objDs.setName(actionForm.getName());
+		objDs.setUrl(actionForm.getUrl());
+		objDs.setPassword(actionForm.getPassword());
+		objDs.setUsername(actionForm.getUsername());
+		reportsPersistence.createReportsDataSource(objDs);
 		return mapping.findForward("reportdatasource_path");
 	}
 
-    /**
-     * Controls the deletion of DataSource
-     */
-    public ActionForward deleteDataSource(ActionMapping mapping, ActionForm form, 
-    		HttpServletRequest request, HttpServletResponse response)	
-    throws Exception {
-    	logger.debug("In ReportsDataSourceAction:deleteDataSource Method: ");
-    	ReportsDataSourceActionForm actionForm=(ReportsDataSourceActionForm)form;
-    	ReportsDataSource objDs = new ReportsDataSource();
-    	objDs.setDatasourceId(actionForm.getDatasourceId());
-    	String error = reportsBusinessService.deleteReportsDataSource(objDs);
-    	request.getSession().setAttribute("deleteError",error);
-    	return mapping.findForward("reportdatasource_path");
+	/**
+	 * Controls the deletion of DataSource
+	 */
+	public ActionForward deleteDataSource(ActionMapping mapping,
+			ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		logger.debug("In ReportsDataSourceAction:deleteDataSource Method: ");
+		ReportsDataSourceActionForm actionForm = (ReportsDataSourceActionForm) form;
+		ReportsDataSource objDs = new ReportsDataSource();
+		objDs.setDatasourceId(actionForm.getDatasourceId());
+		String error = reportsBusinessService.deleteReportsDataSource(objDs);
+		request.getSession().setAttribute("deleteError", error);
+		return mapping.findForward("reportdatasource_path");
 	}
-    
+
 }

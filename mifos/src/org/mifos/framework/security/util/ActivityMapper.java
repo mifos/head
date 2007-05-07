@@ -6,12 +6,28 @@ package org.mifos.framework.security.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
+import org.mifos.application.accounts.loan.struts.action.ReverseLoanDisbursalAction;
+import org.mifos.application.accounts.struts.action.NotesAction;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigurationAction;
+import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.struts.action.CustomerNotesAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.holiday.struts.action.HolidayAction;
+import org.mifos.application.personnel.struts.action.PersonnelNoteAction;
+import org.mifos.application.reports.struts.action.ReportsAction;
+import org.mifos.application.reports.struts.action.ReportsDataSourceAction;
+import org.mifos.application.reports.struts.action.ReportsParamsAction;
+import org.mifos.application.reports.struts.action.ReportsParamsMapAction;
+import org.mifos.application.reports.struts.action.ReportsUploadAction;
+import org.mifos.application.reports.struts.action.ReportsUserParamsAction;
+import org.mifos.application.rolesandpermission.struts.action.RolesPermissionsAction;
+import org.mifos.application.surveys.struts.action.SurveysAction;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 
@@ -153,15 +169,24 @@ public class ActivityMapper {
 		addGroupMappings();
 		addYourSettingsMappings();
 		addCustomerAccountActionMappings();
-		addRolesPermissionsMappings();
-		addPersonnelNotesMappings();
-		addCustomerNotesMappings();
-		addNotesMappings();
-		addReportsMappings();
-		addLabelConfigurationMappings();
-		addHolidayMappings();
-		addSurveysMappings();
-		addHiddenMandatoryConfigurationMappings();
+		
+		// new style security configuration
+		parseActionSecurity(RolesPermissionsAction.getSecurity());
+		parseActionSecurity(PersonnelNoteAction.getSecurity());
+		parseActionSecurity(CustomerNotesAction.getSecurity());
+		parseActionSecurity(NotesAction.getSecurity());
+		parseActionSecurity(MultipleLoanAccountsCreationAction.getSecurity());
+		parseActionSecurity(ReverseLoanDisbursalAction.getSecurity());
+		parseActionSecurity(ReportsAction.getSecurity());
+		parseActionSecurity(ReportsDataSourceAction.getSecurity());
+		parseActionSecurity(ReportsParamsAction.getSecurity());
+		parseActionSecurity(ReportsParamsMapAction.getSecurity());
+		parseActionSecurity(ReportsUploadAction.getSecurity());
+		parseActionSecurity(ReportsUserParamsAction.getSecurity());
+		parseActionSecurity(LabelConfigurationAction.getSecurity());
+		parseActionSecurity(HolidayAction.getSecurity());
+		parseActionSecurity(SurveysAction.getSecurity());
+		parseActionSecurity(HiddenMandatoryConfigurationAction.getSecurity());
 	}
 
 	private void addCustomerAccountActionMappings() {
@@ -813,31 +838,6 @@ public class ActivityMapper {
 				SecurityConstants.LOAN_CAN_REPAY_LOAN);
 	}
 
-	private void addRunReportsMappings() {
-		activityMap.put("/reportsAction-load", SecurityConstants.VIEW);
-		activityMap.put("/reportsAction-report_designer",
-				SecurityConstants.CLIENTSDETAILVIEW);
-		activityMap.put("/reportsAction-product_history",
-				SecurityConstants.CLIENTSPRODUCTHISTORY);
-
-		activityMap.put("/reportsAction-branch_performance",
-				SecurityConstants.BRANCHPERFORMANCE);
-		activityMap.put("/reportsAction-area_performance",
-				SecurityConstants.AREAPERFORMANCE);
-		activityMap.put("/reportsAction-collection_sheet",
-				SecurityConstants.COLLECTIONSHEET);
-		activityMap.put("/reportsAction-loan_distribution",
-				SecurityConstants.LOANDISTRIBUTION);
-		activityMap.put("/reportsAction-branch_disbursement",
-				SecurityConstants.BRANCHDISBURSEMENT);
-		activityMap.put("/reportsAction-staffwise_report",
-				SecurityConstants.STAFFWISEREPORT);
-		activityMap.put("/reportsAction-branchwise_report",
-				SecurityConstants.BRANCHWISEREPORT);
-		activityMap.put("/reportsAction-analysis", SecurityConstants.ANALYSIS);
-		activityMap.put("/reportsAction-kendra_meeting",
-				SecurityConstants.KENDRA_MEETING);
-	}
 
 	private void addWaiveChargesMappings() {
 		activityMap.put("/customerAction-forwardWaiveChargeDue",
@@ -1014,189 +1014,6 @@ public class ActivityMapper {
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
 		activityMap.put("/yourSettings-loadChangePassword",
 				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-	}
-
-	private void addRolesPermissionsMappings() {
-		activityMap.put("/rolesPermission-viewRoles", SecurityConstants.VIEW);
-		activityMap.put("/rolesPermission-load",
-				SecurityConstants.ROLES_CREATE_ROLES);
-		activityMap.put("/rolesPermission-create",
-				SecurityConstants.ROLES_CREATE_ROLES);
-		activityMap.put("/rolesPermission-manage", SecurityConstants.VIEW);
-		activityMap.put("/rolesPermission-update",
-				SecurityConstants.ROLES_EDIT_ROLES);
-		activityMap.put("/rolesPermission-cancel", SecurityConstants.VIEW);
-		activityMap.put("/rolesPermission-preview",
-				SecurityConstants.ROLES_DELETE_ROLES);
-		activityMap.put("/rolesPermission-delete",
-				SecurityConstants.ROLES_DELETE_ROLES);
-	}
-
-	private void addPersonnelNotesMappings() {
-		activityMap.put("/personnelNoteAction-load", SecurityConstants.VIEW);
-		activityMap.put("/personnelNoteAction-preview", SecurityConstants.VIEW);
-		activityMap
-				.put("/personnelNoteAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/personnelNoteAction-create", SecurityConstants.VIEW);
-		activityMap.put("/personnelNoteAction-search", SecurityConstants.VIEW);
-	}
-
-	private void addCustomerNotesMappings() {
-		activityMap.put("/customerNotesAction-load", SecurityConstants.VIEW);
-		activityMap.put("/customerNotesAction-preview", SecurityConstants.VIEW);
-		activityMap
-				.put("/customerNotesAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/customerNotesAction-create", SecurityConstants.VIEW);
-		activityMap.put("/customerNotesAction-search", SecurityConstants.VIEW);
-	}
-
-	private void addReportsMappings() {
-		addRunReportsMappings();
-		addAdministerReportsMappings();
-	}
-
-	private void addAdministerReportsMappings() {
-		activityMap.put("/reportsAction-administerreports_path",
-				SecurityConstants.ADMINISTER_REPORTS);
-		activityMap.put("/reportsAction-administerreportslist_path",
-				SecurityConstants.ADMINISTER_REPORTS);
-		activityMap.put("/reportsParamsAction-load",
-				SecurityConstants.ADMINISTER_REPORTS);
-		activityMap.put("/reportsParamsAction-loadList",
-				SecurityConstants.ADMINISTER_REPORTS);
-
-		activityMap.put("/reportsParamsAction-createParams",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsParamsAction-deleteParams",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-		activityMap.put("/reportsParamsAction-reportparams_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsParamsAction-reportparamsadd_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsParamsAction-reportparamslist_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsParamsAction-loadView",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsParamsAction-reportparamsview_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-		activityMap.put("/reportsDataSourceAction-load",
-				SecurityConstants.ADMINISTER_REPORTDS);
-		activityMap.put("/reportsDataSourceAction-loadList",
-				SecurityConstants.ADMINISTER_REPORTDS);
-		activityMap.put("/reportsDataSourceAction-createDataSource",
-				SecurityConstants.ADMINISTER_REPORTDS);
-		activityMap.put("/reportsDataSourceAction-deleteDataSource",
-				SecurityConstants.ADMINISTER_REPORTDS);
-		activityMap.put("/reportsDataSourceAction-loadView",
-				SecurityConstants.ADMINISTER_REPORTDS);
-
-		activityMap.put("/reportsDataSourceAction-reportdatasource_path",
-				SecurityConstants.ADMINISTER_REPORTDS);
-		activityMap.put("/reportsDataSourceAction-reportdatasourceadd_path",
-				SecurityConstants.ADMINISTER_REPORTDS);
-		activityMap.put("/reportsDataSourceAction-reportdatasourcelist_path",
-				SecurityConstants.ADMINISTER_REPORTDS);
-		activityMap.put("/reportsDataSourceAction-reportdatasourceview_path",
-				SecurityConstants.ADMINISTER_REPORTDS);
-
-		activityMap.put("/reportsParamsMapAction-loadAddList",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsParamsMapAction-createParamsMap",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsParamsMapAction-deleteParamsMap",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-		activityMap.put("/reportsParamsMapAction-reportparamsmapaddlist_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsParamsMapAction-reportparamsmap_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsUploadAction-uploadReport",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsUploadAction-administerreports_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-		activityMap.put("/reportsUserParamsAction-reportuserparamslist_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsUserParamsAction-loadAddList",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsUserParamsAction-processReport",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsUserParamsAction-reportsuserprocess_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-		activityMap.put("/reportsUserParamsAction-reportsuserprocess_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		activityMap.put("/reportsUserParamsAction-reportsuserprocess_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-	}
-
-	private void addNotesMappings() {
-		activityMap.put("/notesAction-load", SecurityConstants.VIEW);
-		activityMap.put("/notesAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/notesAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/notesAction-search", SecurityConstants.VIEW);
-		activityMap.put("/notesAction-create", SecurityConstants.VIEW);
-		
-		activityMap.put("/multipleloansaction-load",
-				SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS);
-		activityMap.put("/multipleloansaction-getLoanOfficers",
-				SecurityConstants.VIEW);
-		activityMap.put("/multipleloansaction-getCenters",
-				SecurityConstants.VIEW);
-		activityMap.put("/multipleloansaction-getPrdOfferings",
-				SecurityConstants.VIEW);
-		activityMap.put("/multipleloansaction-get", SecurityConstants.VIEW);
-		activityMap.put("/multipleloansaction-create", SecurityConstants.VIEW);
-		
-		activityMap.put("/reverseloandisbaction-search",
-				SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL);
-		activityMap.put("/reverseloandisbaction-load",
-				SecurityConstants.VIEW);
-		activityMap.put("/reverseloandisbaction-preview",
-				SecurityConstants.VIEW);
-		activityMap.put("/reverseloandisbaction-update",
-				SecurityConstants.VIEW);
-		activityMap.put("/reverseloandisbaction-cancel", SecurityConstants.VIEW);
-		activityMap.put("/reverseloandisbaction-validate", SecurityConstants.VIEW);
-	}
-	
-	private void addLabelConfigurationMappings() {
-		activityMap.put("/labelconfigurationaction-load",
-				SecurityConstants.CAN_DEFINE_LABELS);
-		activityMap.put("/labelconfigurationaction-update",
-				SecurityConstants.VIEW);
-		activityMap.put("/labelconfigurationaction-cancel",
-				SecurityConstants.VIEW);
-		activityMap.put("/labelconfigurationaction-validate",
-				SecurityConstants.VIEW);
-	}
-	
-	private void addHiddenMandatoryConfigurationMappings() {
-		activityMap.put("/hiddenmandatoryconfigurationaction-load",
-				SecurityConstants.CAN_DEFINE_HIDDEN_MANDATORY_FIELDS);
-		activityMap.put("/hiddenmandatoryconfigurationaction-update",
-				SecurityConstants.VIEW);
-		activityMap.put("/hiddenmandatoryconfigurationaction-cancel",
-				SecurityConstants.VIEW);
-		activityMap.put("/hiddenmandatoryconfigurationaction-validate",
-				SecurityConstants.VIEW);
-	}
-	
-	private void addHolidayMappings() {
-		activityMap.put("/holidayAction-load", SecurityConstants.VIEW);
-		activityMap.put("/holidayAction-get", SecurityConstants.VIEW);		
-		activityMap.put("/holidayAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/holidayAction-getHolidays", SecurityConstants.VIEW);
-		activityMap.put("/holidayAction-addHoliday", SecurityConstants.VIEW);
-		activityMap.put("/holidayAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/holidayAction-update", SecurityConstants.VIEW);		
-	}
-	
-	private void addSurveysMappings() {
-		activityMap.put("/surveysAction-mainpage", SecurityConstants.VIEW);
-		activityMap.put("/surveysAction-get", SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();
@@ -1662,4 +1479,12 @@ public class ActivityMapper {
 			activityId = SecurityConstants.MEETING_UPDATE_CLIENT_MEETING;
 		return activityId;
 	}
+	
+	private void parseActionSecurity(ActionSecurity security) {
+		for (String method : security.keySet()) {
+			String fullKey = "/" + security.getActionName() + "-" + method;
+			activityMap.put(fullKey, security.get(method));
+		}
+	}
+
 }

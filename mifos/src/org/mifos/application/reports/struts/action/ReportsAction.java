@@ -53,6 +53,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -70,6 +72,31 @@ public class ReportsAction extends BaseAction {
 	@Override
 	protected BusinessService getService() {
 		return reportsBusinessService;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("reportsAction");
+		security.put("load", SecurityConstants.VIEW);
+		security.put("report_designer", SecurityConstants.CLIENTSDETAILVIEW);
+		security
+				.put("product_history", SecurityConstants.CLIENTSPRODUCTHISTORY);
+
+		security.put("branch_performance", SecurityConstants.BRANCHPERFORMANCE);
+		security.put("area_performance", SecurityConstants.AREAPERFORMANCE);
+		security.put("collection_sheet", SecurityConstants.COLLECTIONSHEET);
+		security.put("loan_distribution", SecurityConstants.LOANDISTRIBUTION);
+		security.put("branch_disbursement",
+				SecurityConstants.BRANCHDISBURSEMENT);
+		security.put("staffwise_report", SecurityConstants.STAFFWISEREPORT);
+		security.put("branchwise_report", SecurityConstants.BRANCHWISEREPORT);
+		security.put("analysis", SecurityConstants.ANALYSIS);
+		security.put("kendra_meeting", SecurityConstants.KENDRA_MEETING);
+		security.put("administerreports_path",
+				SecurityConstants.ADMINISTER_REPORTS);
+		security.put("administerreportslist_path",
+				SecurityConstants.ADMINISTER_REPORTS);
+		return security;
+		
 	}
 	
 	/**

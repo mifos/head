@@ -21,7 +21,9 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -34,6 +36,19 @@ public class RolesPermissionsAction extends BaseAction {
 	protected BusinessService getService() throws ServiceException {
 		return ServiceFactory.getInstance().getBusinessService(
 				BusinessServiceName.RolesPermissions);
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("rolesPermission");
+		security.put("viewRoles", SecurityConstants.VIEW);
+		security.put("load", SecurityConstants.ROLES_CREATE_ROLES);
+		security.put("create", SecurityConstants.ROLES_CREATE_ROLES);
+		security.put("manage", SecurityConstants.VIEW);
+		security.put("update", SecurityConstants.ROLES_EDIT_ROLES);
+		security.put("cancel", SecurityConstants.VIEW);
+		security.put("preview", SecurityConstants.ROLES_DELETE_ROLES);
+		security.put("delete", SecurityConstants.ROLES_DELETE_ROLES);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

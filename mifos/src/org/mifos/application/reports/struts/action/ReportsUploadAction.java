@@ -59,6 +59,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 /**
  * Control Class for Uploading Report
@@ -79,6 +81,15 @@ public class ReportsUploadAction extends BaseAction{
 	@Override
 	protected BusinessService getService() {
 		return reportsBusinessService;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("reportsUploadAction");
+		security.put("uploadReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.put("administerreports_path",
+				SecurityConstants.ADMINISTER_REPORTPARAMS);
+		return security;
+
 	}
 	
 	/**

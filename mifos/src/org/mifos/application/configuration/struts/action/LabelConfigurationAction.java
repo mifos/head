@@ -83,7 +83,9 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.components.mifosmenu.MenuRepository;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -102,6 +104,15 @@ public class LabelConfigurationAction extends BaseAction {
 	protected BusinessService getService() {
 		return ServiceFactory.getInstance().getBusinessService(
 				BusinessServiceName.Configuration);
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("labelconfigurationaction");
+		security.put("load", SecurityConstants.CAN_DEFINE_LABELS);
+		security.put("update", SecurityConstants.VIEW);
+		security.put("cancel", SecurityConstants.VIEW);
+		security.put("validate", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@Override

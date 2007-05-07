@@ -362,6 +362,7 @@ public abstract class BaseAction extends DispatchAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		request.setAttribute(Constants.ACTION_MAPPING, mapping);
-		return mapping.findForward(ActionForwards.load_success.toString());
+		// welcome is a global forward, present in all actions
+		return mapping.findForward(ActionForwards.welcome.toString());
 	}
 }

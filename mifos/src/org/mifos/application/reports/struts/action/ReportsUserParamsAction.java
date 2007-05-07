@@ -57,6 +57,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 
 /**
@@ -81,6 +83,23 @@ public class ReportsUserParamsAction extends BaseAction {
 		return reportsBusinessService;
 	}
 
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("reportsUserParamsAction");
+
+		security.put("reportuserparamslist_path",
+				SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.put("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security
+				.put("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.put("reportsuserprocess_path",
+				SecurityConstants.ADMINISTER_REPORTPARAMS);
+
+		security.put("reportsuserprocess_path",
+				SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.put("reportsuserprocess_path",
+				SecurityConstants.ADMINISTER_REPORTPARAMS);
+		return security;
+	}
 	/**
 	 * Loads the Parameter Add page
 	 */

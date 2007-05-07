@@ -71,7 +71,9 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -92,6 +94,17 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 	@Override
 	protected BusinessService getService() {
 		return new LoanBusinessService();
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("reverseloandisbaction");
+		security.put("search", SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL);
+		security.put("load", SecurityConstants.VIEW);
+		security.put("preview", SecurityConstants.VIEW);
+		security.put("update", SecurityConstants.VIEW);
+		security.put("cancel", SecurityConstants.VIEW);
+		security.put("validate", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)
