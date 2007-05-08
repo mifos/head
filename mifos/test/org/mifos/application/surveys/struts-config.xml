@@ -4,6 +4,7 @@
 <struts-config>
 	<form-beans>
 			<form-bean name="surveyActionForm" type="org.mifos.application.surveys.struts.actionforms.SurveyActionForm"/>
+			<form-bean name="questionActionForm" type="org.mifos.application.surveys.struts.actionforms.QuestionActionForm"/>
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException" handler="org.mifos.framework.exceptions.MifosExceptionHandler" key="exception.framework.SystemException" scope="request" path="/pages/framework/jsp/error.jsp" />
@@ -27,5 +28,24 @@
 		   	 <forward name="load_main_page" path="/pages/application/surveys/jsp/mainpage.jsp"/>
    	         <forward name="get_success" path="/pages/application/surveys/jsp/survey_details.jsp"/>
 		</action>
+		
+   	    <action path="/questionsAction"
+          type="org.mifos.application.surveys.struts.action.QuestionsAction"
+          parameter="method"
+          scope="session"
+          validate="false"
+          name="questionActionForm"
+          input="/questionsAction.do?method=validate">
+             <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
+             <forward name="manage_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
+        </action>
+        <action path="/questionsAction"
+          type="org.mifos.application.surveys.struts.action.QuestionsAction"
+          parameter="method"
+          scope="session"
+          validate="false"
+          input="/questionsAction.do?method=validate">
+          <forward name="load_main_page" path="/pages/application/surveys/jsp/view_questions.jsp"/>
+        </action>
 	</action-mappings>
 </struts-config>

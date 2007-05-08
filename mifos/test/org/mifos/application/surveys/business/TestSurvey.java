@@ -74,15 +74,15 @@ public class TestSurvey extends MifosTestCase {
 		session.save(survey2);
 		session.save(survey3);
 		
-		List<Survey> bothResults = surveysPersistence.retrieveByType(SurveyType.BOTH);
+		List<Survey> bothResults = surveysPersistence.retrieveSurveysByType(SurveyType.BOTH);
 		assertEquals(1, bothResults.size());
 		assertEquals(survey3.getName(), bothResults.get(0).getName());
 		
-		List<Survey> customersResults = surveysPersistence.retrieveByType(SurveyType.CUSTOMERS);
+		List<Survey> customersResults = surveysPersistence.retrieveSurveysByType(SurveyType.CUSTOMERS);
 		assertEquals(2, customersResults.size());
 		assertEquals(survey1.getName(), customersResults.get(0).getName());
 		
-		List<Survey> accountsResults = surveysPersistence.retrieveByType(SurveyType.ACCOUNTS);
+		List<Survey> accountsResults = surveysPersistence.retrieveSurveysByType(SurveyType.ACCOUNTS);
 		assertEquals(2, accountsResults.size());
 		assertEquals(survey2.getName(), accountsResults.get(0).getName());
 		

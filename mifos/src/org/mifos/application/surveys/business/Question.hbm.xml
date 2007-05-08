@@ -19,4 +19,7 @@
 			<one-to-many class="org.mifos.application.surveys.business.QuestionChoice"/>
 		</list>
 	</class>
+	<query name="questions.retrieveAll">
+       <![CDATA[from Question]]>
+    </query>
 </hibernate-mapping>

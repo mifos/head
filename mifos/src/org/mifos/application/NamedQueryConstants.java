@@ -622,5 +622,6 @@ public interface NamedQueryConstants {
 	public String SURVEYS_RETRIEVE_BY_TYPE = "surveys.retrieveSurveysByType";
 	public String SURVEYS_RETRIEVE_BY_NAME = "surveys.retrieveSurveysByName";
 	public String SURVEYS_RETRIEVE_BY_STATUS = "surveys.retrieveSurveysByStatus";
+	public String QUESTIONS_RETRIEVE_ALL = "questions.retrieveAll";
 	
 }

@@ -49,8 +49,8 @@ public class SurveysAction extends BaseAction {
 	public ActionForward mainpage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		List<Survey> customerSurveys = surveysPersistence.retrieveByType(SurveyType.CUSTOMERS);
-		List<Survey> accountsSurveys = surveysPersistence.retrieveByType(SurveyType.ACCOUNTS);
+		List<Survey> customerSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.CUSTOMERS);
+		List<Survey> accountsSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.ACCOUNTS);
 		
 		request.getSession().setAttribute(SurveysConstants.KEY_ACCOUNTS_SURVEYS_LIST, accountsSurveys);
 		request.getSession().setAttribute(SurveysConstants.KEY_CUSTOMERS_SURVEYS_LIST, customerSurveys);

@@ -169,6 +169,7 @@ public class ActivityMapper {
 		addGroupMappings();
 		addYourSettingsMappings();
 		addCustomerAccountActionMappings();
+		addQuestionsMappings();
 		
 		// new style security configuration
 		parseActionSecurity(RolesPermissionsAction.getSecurity());
@@ -1480,6 +1481,11 @@ public class ActivityMapper {
 		return activityId;
 	}
 	
+	private void addQuestionsMappings() {
+		activityMap.put("/questionsAction-viewQuestions", SecurityConstants.VIEW);
+		activityMap.put("/questionsAction-defineQuestions", SecurityConstants.VIEW);
+	}
+ 
 	private void parseActionSecurity(ActionSecurity security) {
 		for (String method : security.methods()) {
 			String fullKey = "/" + security.getActionName() + "-" + method;
