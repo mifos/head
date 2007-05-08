@@ -98,12 +98,12 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("reverseloandisbaction");
-		security.put("search", SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL);
-		security.put("load", SecurityConstants.VIEW);
-		security.put("preview", SecurityConstants.VIEW);
-		security.put("update", SecurityConstants.VIEW);
-		security.put("cancel", SecurityConstants.VIEW);
-		security.put("validate", SecurityConstants.VIEW);
+		security.allow("search", SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL);
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.VIEW);
+		security.allow("cancel", SecurityConstants.VIEW);
+		security.allow("validate", SecurityConstants.VIEW);
 		return security;
 	}
 

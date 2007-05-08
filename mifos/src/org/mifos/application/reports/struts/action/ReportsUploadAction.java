@@ -85,8 +85,8 @@ public class ReportsUploadAction extends BaseAction{
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("reportsUploadAction");
-		security.put("uploadReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("administerreports_path",
+		security.allow("uploadReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("administerreports_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
 		return security;
 

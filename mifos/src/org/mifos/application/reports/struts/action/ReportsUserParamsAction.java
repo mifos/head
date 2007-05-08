@@ -86,17 +86,17 @@ public class ReportsUserParamsAction extends BaseAction {
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("reportsUserParamsAction");
 
-		security.put("reportuserparamslist_path",
+		security.allow("reportuserparamslist_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security
-				.put("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("reportsuserprocess_path",
+				.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("reportsuserprocess_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
 
-		security.put("reportsuserprocess_path",
+		security.allow("reportsuserprocess_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("reportsuserprocess_path",
+		security.allow("reportsuserprocess_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
 		return security;
 	}

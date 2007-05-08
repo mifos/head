@@ -80,15 +80,15 @@ public class ReportsParamsMapAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("reportsParamsMap");
-		security.put("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("createParamsMap",
+		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("createParamsMap",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("deleteParamsMap",
+		security.allow("deleteParamsMap",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
 
-		security.put("reportparamsmapaddlist_path",
+		security.allow("reportparamsmapaddlist_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("reportparamsmap_path",
+		security.allow("reportparamsmap_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
 
 		return security;

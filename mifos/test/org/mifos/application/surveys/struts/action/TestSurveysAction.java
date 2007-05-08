@@ -2,9 +2,7 @@ package org.mifos.application.surveys.struts.action;
 
 import java.util.List;
 
-import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.config.ForwardConfig;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.Survey;
@@ -13,7 +11,6 @@ import org.mifos.application.surveys.helpers.SurveyState;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.surveys.struts.actionforms.SurveyActionForm;
-import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;

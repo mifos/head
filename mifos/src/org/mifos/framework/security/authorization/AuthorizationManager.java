@@ -38,12 +38,16 @@
 
 package org.mifos.framework.security.authorization;
 
+import static org.mifos.framework.security.authorization.HierarchyManager.BranchLocation.BELOW;
+import static org.mifos.framework.security.authorization.HierarchyManager.BranchLocation.SAME;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.mifos.application.personnel.util.helpers.PersonnelLevel;
 import org.mifos.application.rolesandpermission.business.RoleBO;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SecurityException;
@@ -53,7 +57,6 @@ import org.mifos.framework.security.util.ActivityRoles;
 import org.mifos.framework.security.util.SecurityHelper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
-import org.mifos.framework.util.helpers.Constants;
 
 /**
  * AuthrizationManager Acts as authorization Service it is singleton class and
@@ -65,14 +68,15 @@ import org.mifos.framework.util.helpers.Constants;
 public class AuthorizationManager {
 
 	private HashMap<Short, Set> activityToRolesCacheMap = null;
-	private static AuthorizationManager am = new AuthorizationManager();
+	private static AuthorizationManager manager = new AuthorizationManager();
 	private AuthorizationManager() {
 		activityToRolesCacheMap = new HashMap<Short, Set>();
 	}
 
 	public static AuthorizationManager getInstance() {
-		return am;
+		return manager;
 	}
+
 	public void init() throws SystemException, ApplicationException {
 
 		try {
@@ -101,40 +105,49 @@ public class AuthorizationManager {
 	public boolean isActivityAllowed(UserContext userContext,
 			ActivityContext activityContext) {
 		try {
-			Set roles = new HashSet(activityToRolesCacheMap.get(activityContext
-					.getActivityId()));
+			Set rolesFromActivity = 
+				activityToRolesCacheMap.get(activityContext.getActivityId());
+			if (rolesFromActivity == null) {
+				return false;
+			}
+
+			Set roles = new HashSet(rolesFromActivity);
 			roles.retainAll(userContext.getRoles());
 			if (roles.isEmpty()) {
 				return false;
-			} else {
-
-				HierarchyManager hm = HierarchyManager.getInstance();
-				short ol = hm.getOfficeLevel(userContext, activityContext
-						.getRecordOfficeId());
-				short personnelLevel = userContext.getLevelId().shortValue();
+			} 
+			else {
+				HierarchyManager.BranchLocation where = 
+					HierarchyManager.getInstance()
+					.compareOfficeInHierarchy(userContext, 
+						activityContext.getRecordOfficeId());
+				PersonnelLevel personnelLevel = userContext.getLevel();
 				short userId = userContext.getId().shortValue();
-				if (ol == Constants.BRANCH_SAME) {
+				if (where == SAME) {
 					// 1 check if record belog to him if so let him do
 					if (userId == activityContext.getRecordLoanOfficer()) {
 						return true;
-					}
-					if (Constants.LOANOFFICER == personnelLevel) {
+					} 
+					else if (PersonnelLevel.LOAN_OFFICER == personnelLevel) {
 						return false;
-					} else {
+					}
+					else {
 						return true;
 					}
-				} else if (ol == Constants.BRANCH_BELOW
-						&& Constants.LOANOFFICER != personnelLevel) {
+				}
+				else if (where == BELOW
+						&& PersonnelLevel.LOAN_OFFICER != personnelLevel) {
 					return true;
-				} else {
+				}
+				else {
 					return false;
 				}
 			}
 		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-		return false;
-
 	}
+
 	public void addRole(RoleBO role) {
 		List<Short> activityIds = role.getActivityIds();
 		Set<Short> keys = activityToRolesCacheMap.keySet();

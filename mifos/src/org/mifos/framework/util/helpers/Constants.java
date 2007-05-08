@@ -80,9 +80,6 @@ public interface Constants {
 	public final static String SEARCH_STRING="search_string";
 
 	public final static String ALGORITHM = "Algorithm";
-	public final static short BRANCH_SAME =0;
-	public final static short BRANCH_BELOW =1;
-	public final static short BRANCH_ABOVE_OR_DIFF =2;
 	public final static String CREATE ="create";
 	public final static String UPDATE ="update";
 	public final static String DELETE ="delete";

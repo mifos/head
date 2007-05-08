@@ -24,11 +24,13 @@ public class RoleBO extends BusinessObject {
 
 	private String name;
 
-	private final Set<RoleActivityEntity> activities = new HashSet<RoleActivityEntity>();
+	private final Set<RoleActivityEntity> activities = 
+		new HashSet<RoleActivityEntity>();
 
 	MifosLogger logger;
 
-	private RolesPermissionsPersistence rolesPermissionPersistence = new RolesPermissionsPersistence();
+	private RolesPermissionsPersistence rolesPermissionPersistence = 
+		new RolesPermissionsPersistence();
 
 	protected RoleBO() {
 		logger = MifosLogManager.getLogger(

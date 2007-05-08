@@ -126,29 +126,32 @@ public class HierarchyManager implements Observer {
 			addToMap(officeList.get(i));
 	}
 
-	public short getOfficeLevel(UserContext uc, short officeId) {
-		short userBranch = uc.getBranchId().shortValue();
+	public BranchLocation compareOfficeInHierarchy(
+		UserContext user, short officeId) {
+		short userBranch = user.getBranchId().shortValue();
 		if (userBranch == officeId) {
-			return Constants.BRANCH_SAME;
-		} else {
+			return BranchLocation.SAME;
+		} 
+		else {
 			/*
 			 * Look into the map now if the passed officeid's searchid on which
 			 * user wants to perform action starts with the user's office
 			 * searchid it means that office falls under that user hiererchy
 			 */
-			String userOfficeSearchId = hierarchyMap.get(uc.getBranchId())
+			String userOfficeSearchId = hierarchyMap.get(user.getBranchId())
 					.getSearchId();
 			String operatedOfficeSearchId = hierarchyMap.get(
 					Short.valueOf(officeId)).getSearchId();
 
 			if (operatedOfficeSearchId.startsWith(userOfficeSearchId)) {
-				return Constants.BRANCH_BELOW;
-			} else {
-				return Constants.BRANCH_ABOVE_OR_DIFF;
+				return BranchLocation.BELOW;
+			}
+			else {
+				return BranchLocation.ABOVE_OR_DIFFERENT;
 			}
 		}
-
 	}
+
 	public String getSearchId(short branchId) {
 		return hierarchyMap.get(Short.valueOf(branchId)).getSearchId();
 	}
@@ -156,4 +159,7 @@ public class HierarchyManager implements Observer {
 	public Short getParentOfficeId(Short officeId) {
 		return hierarchyMap.get(officeId).getParentOfficeId();
 	}
+	
+	public enum BranchLocation { SAME, BELOW, ABOVE_OR_DIFFERENT };
+
 }

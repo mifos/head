@@ -10,7 +10,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Survey;
-import org.mifos.application.surveys.business.SurveyQuestion;
 import org.mifos.application.surveys.helpers.SurveyType;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.surveys.struts.actionforms.SurveyActionForm;
@@ -36,8 +35,8 @@ public class SurveysAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("surveysAction");
-		security.put("mainpage", SecurityConstants.VIEW);
-		security.put("load", SecurityConstants.VIEW);
+		security.allow("mainpage", SecurityConstants.VIEW);
+		security.allow("load", SecurityConstants.VIEW);
 		return security;
 	}
 

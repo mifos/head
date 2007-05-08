@@ -16,8 +16,6 @@ import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.batchjobs.helpers.LoanArrearsHelper;
-import org.mifos.framework.components.batchjobs.helpers.LoanArrearsTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

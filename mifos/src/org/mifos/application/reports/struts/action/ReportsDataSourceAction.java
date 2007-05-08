@@ -80,19 +80,19 @@ public class ReportsDataSourceAction extends BaseAction {
 
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("reportsDataSourceAction");
-		security.put("load", SecurityConstants.ADMINISTER_REPORTDS);
-		security.put("loadList", SecurityConstants.ADMINISTER_REPORTDS);
-		security.put("createDataSource", SecurityConstants.ADMINISTER_REPORTDS);
-		security.put("deleteDataSource", SecurityConstants.ADMINISTER_REPORTDS);
-		security.put("loadView", SecurityConstants.ADMINISTER_REPORTDS);
+		security.allow("load", SecurityConstants.ADMINISTER_REPORTDS);
+		security.allow("loadList", SecurityConstants.ADMINISTER_REPORTDS);
+		security.allow("createDataSource", SecurityConstants.ADMINISTER_REPORTDS);
+		security.allow("deleteDataSource", SecurityConstants.ADMINISTER_REPORTDS);
+		security.allow("loadView", SecurityConstants.ADMINISTER_REPORTDS);
 
-		security.put("reportdatasource_path",
+		security.allow("reportdatasource_path",
 				SecurityConstants.ADMINISTER_REPORTDS);
-		security.put("reportdatasourceadd_path",
+		security.allow("reportdatasourceadd_path",
 				SecurityConstants.ADMINISTER_REPORTDS);
-		security.put("reportdatasourcelist_path",
+		security.allow("reportdatasourcelist_path",
 				SecurityConstants.ADMINISTER_REPORTDS);
-		security.put("reportdatasourceview_path",
+		security.allow("reportdatasourceview_path",
 				SecurityConstants.ADMINISTER_REPORTDS);
 
 		return security;

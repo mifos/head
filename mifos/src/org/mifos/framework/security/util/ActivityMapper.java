@@ -1481,7 +1481,7 @@ public class ActivityMapper {
 	}
 	
 	private void parseActionSecurity(ActionSecurity security) {
-		for (String method : security.keySet()) {
+		for (String method : security.methods()) {
 			String fullKey = "/" + security.getActionName() + "-" + method;
 			activityMap.put(fullKey, security.get(method));
 		}

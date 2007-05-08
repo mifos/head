@@ -44,11 +44,11 @@ public class NotesAction extends SearchAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("notesAction");
-		security.put("load", SecurityConstants.VIEW);
-		security.put("preview", SecurityConstants.VIEW);
-		security.put("previous", SecurityConstants.VIEW);
-		security.put("search", SecurityConstants.VIEW);
-		security.put("create", SecurityConstants.VIEW);
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("search", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.VIEW);
 		return security;
 	}
 

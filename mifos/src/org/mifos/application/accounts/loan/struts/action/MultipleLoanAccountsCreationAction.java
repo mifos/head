@@ -110,16 +110,16 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("multipleloansaction");
-		security.put("load",
+		security.allow("load",
 				SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS);
-		security.put("getLoanOfficers",
+		security.allow("getLoanOfficers",
 				SecurityConstants.VIEW);
-		security.put("getCenters",
+		security.allow("getCenters",
 				SecurityConstants.VIEW);
-		security.put("getPrdOfferings",
+		security.allow("getPrdOfferings",
 				SecurityConstants.VIEW);
-		security.put("get", SecurityConstants.VIEW);
-		security.put("create", SecurityConstants.VIEW);
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.VIEW);
 		return security;
 	}
 

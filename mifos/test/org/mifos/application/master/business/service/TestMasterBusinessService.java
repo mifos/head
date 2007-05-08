@@ -21,7 +21,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.productdefinition.business.PrdOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
-import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.exceptions.PersistenceException;

@@ -80,20 +80,20 @@ public class ReportsParamsAction extends BaseAction {
 
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("reportsParamsAction");
-		security.put("load", SecurityConstants.ADMINISTER_REPORTS);
-		security.put("loadList", SecurityConstants.ADMINISTER_REPORTS);
+		security.allow("load", SecurityConstants.ADMINISTER_REPORTS);
+		security.allow("loadList", SecurityConstants.ADMINISTER_REPORTS);
 
-		security.put("createParams", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("deleteParams", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("createParams", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("deleteParams", SecurityConstants.ADMINISTER_REPORTPARAMS);
 
-		security.put("reportparams_path",
+		security.allow("reportparams_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("reportparamsadd_path",
+		security.allow("reportparamsadd_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("reportparamslist_path",
+		security.allow("reportparamslist_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("loadView", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.put("reportparamsview_path",
+		security.allow("loadView", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("reportparamsview_path",
 				SecurityConstants.ADMINISTER_REPORTPARAMS);
 
 		return security;

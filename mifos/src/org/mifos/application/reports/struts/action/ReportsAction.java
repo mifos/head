@@ -76,24 +76,24 @@ public class ReportsAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("reportsAction");
-		security.put("load", SecurityConstants.VIEW);
-		security.put("report_designer", SecurityConstants.CLIENTSDETAILVIEW);
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("report_designer", SecurityConstants.CLIENTSDETAILVIEW);
 		security
-				.put("product_history", SecurityConstants.CLIENTSPRODUCTHISTORY);
+				.allow("product_history", SecurityConstants.CLIENTSPRODUCTHISTORY);
 
-		security.put("branch_performance", SecurityConstants.BRANCHPERFORMANCE);
-		security.put("area_performance", SecurityConstants.AREAPERFORMANCE);
-		security.put("collection_sheet", SecurityConstants.COLLECTIONSHEET);
-		security.put("loan_distribution", SecurityConstants.LOANDISTRIBUTION);
-		security.put("branch_disbursement",
+		security.allow("branch_performance", SecurityConstants.BRANCHPERFORMANCE);
+		security.allow("area_performance", SecurityConstants.AREAPERFORMANCE);
+		security.allow("collection_sheet", SecurityConstants.COLLECTIONSHEET);
+		security.allow("loan_distribution", SecurityConstants.LOANDISTRIBUTION);
+		security.allow("branch_disbursement",
 				SecurityConstants.BRANCHDISBURSEMENT);
-		security.put("staffwise_report", SecurityConstants.STAFFWISEREPORT);
-		security.put("branchwise_report", SecurityConstants.BRANCHWISEREPORT);
-		security.put("analysis", SecurityConstants.ANALYSIS);
-		security.put("kendra_meeting", SecurityConstants.KENDRA_MEETING);
-		security.put("administerreports_path",
+		security.allow("staffwise_report", SecurityConstants.STAFFWISEREPORT);
+		security.allow("branchwise_report", SecurityConstants.BRANCHWISEREPORT);
+		security.allow("analysis", SecurityConstants.ANALYSIS);
+		security.allow("kendra_meeting", SecurityConstants.KENDRA_MEETING);
+		security.allow("administerreports_path",
 				SecurityConstants.ADMINISTER_REPORTS);
-		security.put("administerreportslist_path",
+		security.allow("administerreportslist_path",
 				SecurityConstants.ADMINISTER_REPORTS);
 		return security;
 		

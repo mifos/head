@@ -17,8 +17,6 @@ import org.mifos.application.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
 import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskHelper;
-import org.mifos.framework.components.batchjobs.helpers.PortfolioAtRiskTask;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

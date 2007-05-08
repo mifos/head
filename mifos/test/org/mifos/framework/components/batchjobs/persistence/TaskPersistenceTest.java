@@ -9,7 +9,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
 import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
-import org.mifos.framework.components.batchjobs.persistence.TaskPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;

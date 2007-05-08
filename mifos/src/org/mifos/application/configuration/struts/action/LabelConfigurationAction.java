@@ -108,10 +108,10 @@ public class LabelConfigurationAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("labelconfigurationaction");
-		security.put("load", SecurityConstants.CAN_DEFINE_LABELS);
-		security.put("update", SecurityConstants.VIEW);
-		security.put("cancel", SecurityConstants.VIEW);
-		security.put("validate", SecurityConstants.VIEW);
+		security.allow("load", SecurityConstants.CAN_DEFINE_LABELS);
+		security.allow("update", SecurityConstants.VIEW);
+		security.allow("cancel", SecurityConstants.VIEW);
+		security.allow("validate", SecurityConstants.VIEW);
 		return security;
 	}
 

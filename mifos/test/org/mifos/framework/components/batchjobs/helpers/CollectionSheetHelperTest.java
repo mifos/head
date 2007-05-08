@@ -27,8 +27,6 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.MifosTestCase;
-import org.mifos.framework.components.batchjobs.helpers.CollectionSheetHelper;
-import org.mifos.framework.components.batchjobs.helpers.CollectionSheetTask;
 import org.mifos.framework.components.configuration.persistence.ConfigurationPersistence;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;

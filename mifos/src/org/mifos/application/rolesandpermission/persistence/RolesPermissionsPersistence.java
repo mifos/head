@@ -15,18 +15,24 @@ public class RolesPermissionsPersistence extends Persistence {
 	public RoleBO getRole(String roleName) throws PersistenceException{
 		Map<String,Object> queryParameters=new HashMap<String,Object>();
 		queryParameters.put("RoleName",roleName);
-		return (RoleBO)execUniqueResultNamedQuery(NamedQueryConstants.GET_ROLE_FOR_GIVEN_NAME,queryParameters);
+		return (RoleBO)execUniqueResultNamedQuery(
+			NamedQueryConstants.GET_ROLE_FOR_GIVEN_NAME,queryParameters);
 	}
 	
+	@SuppressWarnings("cast")
 	public List<ActivityEntity> getActivities() throws PersistenceException{
-		return (List<ActivityEntity>)executeNamedQuery(NamedQueryConstants.GET_ALL_ACTIVITIES,null);
+		return (List<ActivityEntity>)executeNamedQuery(
+			NamedQueryConstants.GET_ALL_ACTIVITIES,null);
 	}
 	
+	@SuppressWarnings("cast")
 	public List<RoleBO> getRoles() throws PersistenceException{
-		return (List<RoleBO>)executeNamedQuery(NamedQueryConstants.GET_ALL_ROLES,null);
+		return (List<RoleBO>)executeNamedQuery(
+			NamedQueryConstants.GET_ALL_ROLES,null);
 	}
 	
 	public RoleBO getRole(Short roleId) throws PersistenceException{
 		return (RoleBO)getPersistentObject(RoleBO.class,roleId);
 	}
+
 }

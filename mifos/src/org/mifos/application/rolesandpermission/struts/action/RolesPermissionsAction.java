@@ -40,14 +40,14 @@ public class RolesPermissionsAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("rolesPermission");
-		security.put("viewRoles", SecurityConstants.VIEW);
-		security.put("load", SecurityConstants.ROLES_CREATE_ROLES);
-		security.put("create", SecurityConstants.ROLES_CREATE_ROLES);
-		security.put("manage", SecurityConstants.VIEW);
-		security.put("update", SecurityConstants.ROLES_EDIT_ROLES);
-		security.put("cancel", SecurityConstants.VIEW);
-		security.put("preview", SecurityConstants.ROLES_DELETE_ROLES);
-		security.put("delete", SecurityConstants.ROLES_DELETE_ROLES);
+		security.allow("viewRoles", SecurityConstants.VIEW);
+		security.allow("load", SecurityConstants.ROLES_CREATE_ROLES);
+		security.allow("create", SecurityConstants.ROLES_CREATE_ROLES);
+		security.allow("manage", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.ROLES_EDIT_ROLES);
+		security.allow("cancel", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.ROLES_DELETE_ROLES);
+		security.allow("delete", SecurityConstants.ROLES_DELETE_ROLES);
 		return security;
 	}
 

@@ -20,8 +20,6 @@ import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.business.Task;
-import org.mifos.framework.components.batchjobs.helpers.LoanArrearsTask;
-import org.mifos.framework.components.batchjobs.helpers.TaskStatus;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 

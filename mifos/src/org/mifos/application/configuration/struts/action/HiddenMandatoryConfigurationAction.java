@@ -51,11 +51,11 @@ public class HiddenMandatoryConfigurationAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("hiddenmandatoryconfigurationaction");
-		security.put("load",
+		security.allow("load",
 				SecurityConstants.CAN_DEFINE_HIDDEN_MANDATORY_FIELDS);
-		security.put("update", SecurityConstants.VIEW);
-		security.put("cancel", SecurityConstants.VIEW);
-		security.put("validate", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.VIEW);
+		security.allow("cancel", SecurityConstants.VIEW);
+		security.allow("validate", SecurityConstants.VIEW);
 		return security;
 	}
 

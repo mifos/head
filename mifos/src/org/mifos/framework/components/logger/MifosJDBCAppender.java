@@ -31,7 +31,6 @@ import org.apache.log4j.jdbc.JDBCAppender;
 import org.apache.log4j.spi.ErrorCode;
 import org.apache.log4j.spi.LoggingEvent;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
 /**

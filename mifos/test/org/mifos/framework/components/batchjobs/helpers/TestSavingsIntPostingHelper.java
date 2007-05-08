@@ -28,8 +28,6 @@ import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUni
 import org.mifos.application.productdefinition.util.helpers.SavingsType;
 import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingHelper;
-import org.mifos.framework.components.batchjobs.helpers.SavingsIntPostingTask;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
