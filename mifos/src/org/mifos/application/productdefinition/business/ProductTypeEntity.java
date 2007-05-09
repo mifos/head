@@ -78,6 +78,10 @@ public class ProductTypeEntity extends BusinessObject {
 	public Short getProductTypeID() {
 		return productTypeID;
 	}
+	
+	public ProductType getType() {
+		return ProductType.getProductType(productTypeID);
+	}
 
 	public void setProductTypeID(Short productTypeID) {
 		this.productTypeID = productTypeID;

@@ -37,7 +37,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 
-	private SavingsOfferingBO savingsOffering;
+	private SavingsOfferingBO product;
 
 	private String flowKey;
 
@@ -45,7 +45,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(savingsOffering);
+		TestObjectFactory.removeObject(product);
 		HibernateUtil.closeSession();
 		super.tearDown();
 
@@ -544,18 +544,17 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		createSavingsOfferingBO(prdName, prdShortName);
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "get");
-		addRequestParameter("prdOfferingId", savingsOffering.getPrdOfferingId()
+		addRequestParameter("prdOfferingId", product.getPrdOfferingId()
 				.toString());
 		actionPerform();
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.get_success.toString());
-		assertEquals(prdName, savingsOffering.getPrdOfferingName());
-		assertEquals(prdShortName, savingsOffering.getPrdOfferingShortName());
-		assertEquals(prdShortName, savingsOffering.getPrdOfferingShortName());
-		assertEquals(PrdStatus.SAVINGS_ACTIVE.getValue(), savingsOffering
-				.getPrdStatus().getOfferingStatusId());
-		assertEquals(2, savingsOffering.getSavingsType().getId().shortValue());
+		assertEquals(prdName, product.getPrdOfferingName());
+		assertEquals(prdShortName, product.getPrdOfferingShortName());
+		assertEquals(prdShortName, product.getPrdOfferingShortName());
+		assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
+		assertEquals(2, product.getSavingsType().getId().shortValue());
 	}
 
 	public void testManage() throws Exception {
@@ -924,29 +923,27 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		assertEquals("Savings Offering", savingsOffering.getPrdOfferingName());
-		assertEquals("SAVP", savingsOffering.getPrdOfferingShortName());
-		assertEquals(2, savingsOffering.getPrdCategory().getProductCategoryID()
+		assertEquals("Savings Offering", product.getPrdOfferingName());
+		assertEquals("SAVP", product.getPrdOfferingShortName());
+		assertEquals(2, product.getPrdCategory().getProductCategoryID()
 				.intValue());
-		assertEquals(PrdStatus.SAVINGS_INACTIVE.getValue().shortValue(),
-				savingsOffering.getPrdStatus().getOfferingStatusId()
-						.shortValue());
-		assertEquals(1, savingsOffering.getSavingsType().getId().intValue());
-		assertEquals(1, savingsOffering.getInterestCalcType().getId()
+		assertEquals(PrdStatus.SAVINGS_INACTIVE, product.getStatus());
+		assertEquals(SavingsType.MANDATORY, product.getSavingsTypeAsEnum());
+		assertEquals(1, product.getInterestCalcType().getId()
 				.intValue());
-		assertEquals(1, savingsOffering.getTimePerForInstcalc().getMeeting()
+		assertEquals(1, product.getTimePerForInstcalc().getMeeting()
 				.getMeetingDetails().getRecurAfter().intValue());
-		assertEquals(2, savingsOffering.getTimePerForInstcalc().getMeeting()
+		assertEquals(2, product.getTimePerForInstcalc().getMeeting()
 				.getMeetingDetails().getRecurrenceType().getRecurrenceId()
 				.shortValue());
-		assertEquals(1, savingsOffering.getFreqOfPostIntcalc().getMeeting()
+		assertEquals(1, product.getFreqOfPostIntcalc().getMeeting()
 				.getMeetingDetails().getRecurAfter().intValue());
-		assertEquals("Recommended Amount", new Money("120"), savingsOffering
+		assertEquals("Recommended Amount", new Money("120"), product
 				.getRecommendedAmount());
-		assertEquals(9.0, savingsOffering.getInterestRate());
+		assertEquals(9.0, product.getInterestRate());
 		assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
-				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
+		product = (SavingsOfferingBO) TestObjectFactory.getObject(
+				SavingsOfferingBO.class, product.getPrdOfferingId());
 	}
 
 	public void testPreviousManage() throws Exception {
@@ -1004,9 +1001,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		verifyNoActionErrors();
 		verifyNoActionMessages();
 		verifyForward(ActionForwards.update_success.toString());
-		assertEquals(PrdStatus.SAVINGS_INACTIVE.getValue().shortValue(),
-				savingsOffering.getPrdStatus().getOfferingStatusId()
-						.shortValue());
+		assertEquals(PrdStatus.SAVINGS_INACTIVE, product.getStatus());
 		setRequestPathInfo("/savingsproductaction.do");
 		addRequestParameter("method", "search");
 		actionPerform();
@@ -1019,8 +1014,8 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 		assertEquals("The size of savings products", 1, savingsProducts.size());
 		assertEquals("Inactive", savingsProducts.get(0).getPrdStatus()
 				.getPrdState().getName());
-		savingsOffering = (SavingsOfferingBO) TestObjectFactory.getObject(
-				SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
+		product = (SavingsOfferingBO) TestObjectFactory.getObject(
+				SavingsOfferingBO.class, product.getPrdOfferingId());
 	}
 
 	private String offSetCurrentDate(int noOfDays, Locale locale) {
@@ -1043,7 +1038,7 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
 		MeetingBO meetingIntPost = TestObjectFactory
 				.createMeeting(TestObjectFactory.getTypicalMeeting());
-		savingsOffering = TestObjectFactory.createSavingsProduct(
+		product = TestObjectFactory.createSavingsProduct(
 			productName, shortName, ApplicableTo.CLIENTS, 
 			new Date(System.currentTimeMillis()), 
 			PrdStatus.SAVINGS_ACTIVE, 300.0, 
@@ -1051,14 +1046,14 @@ public class SavingsPrdActionTest extends MifosMockStrutsTestCase {
 			200.0, 200.0, 
 			SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, 
 			meetingIntCalc, meetingIntPost);
-		return savingsOffering;
+		return product;
 	}
 
 	private void createSavingsOfferingAndPutInSession() throws Exception {
 		String prdName = "Savings_Kendra";
 		String prdShortName = "SSK";
 		createSavingsOfferingBO(prdName, prdShortName);
-		SessionUtils.setAttribute(Constants.BUSINESS_KEY, savingsOffering,
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, product,
 				request);
 	}
 }

@@ -788,7 +788,7 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 				.getPrdOfferingShortName());
 		assertEquals(loanOffering.getPrdCategory().getProductCategoryID()
 				.toString(), loanPrdActionForm.getPrdCategory());
-		assertEquals(loanOffering.getPrdStatus().getOfferingStatusId()
+		assertEquals(loanOffering.getStatus().getValue()
 				.toString(), loanPrdActionForm.getPrdStatus());
 		assertEquals(loanOffering.getPrdApplicableMasterEnum(),
 				loanPrdActionForm.getPrdApplicableMasterEnum());
@@ -1030,11 +1030,11 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 	public void testUpdate() throws Exception {
 		FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic",
 				FeeCategory.LOAN, "100.0", RecurrenceType.MONTHLY, (short) 1);
-		LoanOfferingBO loanOffering = createLoanOfferingBO("Loan Offering",
+		LoanOfferingBO product = createLoanOfferingBO("Loan Offering",
 				"LOAN");
 		setRequestPathInfo("/loanproductaction.do");
 		addRequestParameter("method", "manage");
-		addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId()
+		addRequestParameter("prdOfferingId", product.getPrdOfferingId()
 				.toString());
 		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
 		actionPerform();
@@ -1079,25 +1079,24 @@ public class LoanPrdActionTest extends MifosMockStrutsTestCase {
 		verifyForward(ActionForwards.update_success.toString());
 
 		HibernateUtil.closeSession();
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals("Loan Product", loanOffering.getPrdOfferingName());
-		assertEquals("LOAP", loanOffering.getPrdOfferingShortName());
-		assertEquals(Short.valueOf("2"), loanOffering.getPrdStatus()
-				.getOfferingStatusId());
-		assertEquals(new Money("11000"), loanOffering.getMaxLoanAmount());
-		assertEquals(new Money("2000"), loanOffering.getMinLoanAmount());
-		assertEquals(new Money("5000"), loanOffering.getDefaultLoanAmount());
-		assertEquals(Short.valueOf("1"), loanOffering.getLoanOfferingMeeting()
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
+		assertEquals("Loan Product", product.getPrdOfferingName());
+		assertEquals("LOAP", product.getPrdOfferingShortName());
+		assertEquals(PrdStatus.SAVINGS_ACTIVE, product.getStatus());
+		assertEquals(new Money("11000"), product.getMaxLoanAmount());
+		assertEquals(new Money("2000"), product.getMinLoanAmount());
+		assertEquals(new Money("5000"), product.getDefaultLoanAmount());
+		assertEquals(Short.valueOf("1"), product.getLoanOfferingMeeting()
 				.getMeeting().getMeetingDetails().getRecurAfter());
-		assertEquals(Short.valueOf("2"), loanOffering.getLoanOfferingMeeting()
+		assertEquals(Short.valueOf("2"), product.getLoanOfferingMeeting()
 				.getMeeting().getMeetingDetails().getRecurrenceType()
 				.getRecurrenceId());
-		assertEquals(1, loanOffering.getLoanOfferingFees().size());
+		assertEquals(1, product.getLoanOfferingFees().size());
 
 		assertNull(((FlowManager) request.getSession().getAttribute(
 				Constants.FLOWMANAGER)).getFlow(flowKey));
-		TestObjectFactory.removeObject(loanOffering);
+		TestObjectFactory.removeObject(product);
 		TestObjectFactory.cleanUp(fee);
 	}
 

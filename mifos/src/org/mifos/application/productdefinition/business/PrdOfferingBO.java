@@ -167,6 +167,10 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		return prdCategory;
 	}
 
+	/**
+	 * Most callers will want {@link #isActive()} instead
+	 * (or perhaps {@link #getStatus()}.
+	 */
 	public PrdStatusEntity getPrdStatus() {
 		return prdStatus;
 	}
@@ -174,6 +178,8 @@ public abstract class PrdOfferingBO extends BusinessObject {
 	public PrdStatus getStatus() {
 		return PrdStatus.fromInt(prdStatus.getOfferingStatusId());
 	}
+
+	public abstract boolean isActive();
 
 	public PrdApplicableMasterEntity getPrdApplicableMaster() {
 		return prdApplicableMaster;
@@ -192,7 +198,6 @@ public abstract class PrdOfferingBO extends BusinessObject {
 	}
 
 	public OfficeBO getOffice() {
-
 		return office;
 	}
 
@@ -410,4 +415,5 @@ public abstract class PrdOfferingBO extends BusinessObject {
 		}
 
 	}
+
 }

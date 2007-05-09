@@ -312,74 +312,74 @@ public class SavingsPrdAction extends BaseAction {
 
 	private void setValuesInActionForm(SavingsPrdActionForm actionForm,
 			HttpServletRequest request) throws Exception {
-		SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils
+		SavingsOfferingBO savingsProduct = (SavingsOfferingBO) SessionUtils
 				.getAttribute(Constants.BUSINESS_KEY, request);
-		actionForm.setPrdOfferingId(savingsOffering.getPrdOfferingId()
+		actionForm.setPrdOfferingId(savingsProduct.getPrdOfferingId()
 				.toString());
-		actionForm.setPrdOfferingName(savingsOffering.getPrdOfferingName());
-		actionForm.setPrdOfferingShortName(savingsOffering
+		actionForm.setPrdOfferingName(savingsProduct.getPrdOfferingName());
+		actionForm.setPrdOfferingShortName(savingsProduct
 				.getPrdOfferingShortName());
-		actionForm.setDescription(savingsOffering.getDescription());
-		if (savingsOffering.getPrdCategory() != null)
-			actionForm.setPrdCategory(savingsOffering.getPrdCategory()
+		actionForm.setDescription(savingsProduct.getDescription());
+		if (savingsProduct.getPrdCategory() != null)
+			actionForm.setPrdCategory(savingsProduct.getPrdCategory()
 					.getProductCategoryID().toString());
-		if (savingsOffering.getStartDate() != null)
-			actionForm.setStartDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), savingsOffering.getStartDate().toString()));
-		if (savingsOffering.getEndDate() != null)
+		if (savingsProduct.getStartDate() != null)
+			actionForm.setStartDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), savingsProduct.getStartDate().toString()));
+		if (savingsProduct.getEndDate() != null)
 			actionForm.setEndDate(DateUtils.getUserLocaleDate(getUserContext(
-			request).getPreferredLocale(), savingsOffering.getEndDate()
+			request).getPreferredLocale(), savingsProduct.getEndDate()
 			.toString()));
-		if (savingsOffering.getPrdApplicableMaster() != null)
-			actionForm.setPrdApplicableMaster(savingsOffering
+		if (savingsProduct.getPrdApplicableMaster() != null)
+			actionForm.setPrdApplicableMaster(savingsProduct
 					.getPrdApplicableMasterEnum().getValue().toString());
-		if (savingsOffering.getSavingsType() != null)
-			actionForm.setSavingsType(savingsOffering.getSavingsType().getId()
+		if (savingsProduct.getSavingsType() != null)
+			actionForm.setSavingsType(savingsProduct.getSavingsType().getId()
 					.toString());
-		if (savingsOffering.getRecommendedAmount() != null)
-			actionForm.setRecommendedAmount(savingsOffering
+		if (savingsProduct.getRecommendedAmount() != null)
+			actionForm.setRecommendedAmount(savingsProduct
 					.getRecommendedAmount().toString());
-		if (savingsOffering.getRecommendedAmntUnit() != null)
-			actionForm.setRecommendedAmntUnit(savingsOffering
+		if (savingsProduct.getRecommendedAmntUnit() != null)
+			actionForm.setRecommendedAmntUnit(savingsProduct
 					.getRecommendedAmntUnit().getId().toString());
-		if (savingsOffering.getMaxAmntWithdrawl() != null)
-			actionForm.setMaxAmntWithdrawl(savingsOffering
+		if (savingsProduct.getMaxAmntWithdrawl() != null)
+			actionForm.setMaxAmntWithdrawl(savingsProduct
 					.getMaxAmntWithdrawl().toString());
-		if (savingsOffering.getPrdStatus() != null)
-			actionForm.setStatus(savingsOffering.getPrdStatus()
-					.getOfferingStatusId().toString());
-		if (savingsOffering.getInterestRate() != null)
-			actionForm.setInterestRate(savingsOffering.getInterestRate()
+		if (savingsProduct.getPrdStatus() != null)
+			actionForm.setStatus(savingsProduct.getStatus()
+					.getValue().toString());
+		if (savingsProduct.getInterestRate() != null)
+			actionForm.setInterestRate(savingsProduct.getInterestRate()
 					.toString());
-		if (savingsOffering.getInterestCalcType() != null)
-			actionForm.setInterestCalcType(savingsOffering
+		if (savingsProduct.getInterestCalcType() != null)
+			actionForm.setInterestCalcType(savingsProduct
 					.getInterestCalcType().getId().toString());
-		if (savingsOffering.getTimePerForInstcalc() != null
-				&& savingsOffering.getTimePerForInstcalc().getMeeting() != null
-				&& savingsOffering.getTimePerForInstcalc().getMeeting()
+		if (savingsProduct.getTimePerForInstcalc() != null
+				&& savingsProduct.getTimePerForInstcalc().getMeeting() != null
+				&& savingsProduct.getTimePerForInstcalc().getMeeting()
 						.getMeetingDetails() != null) {
-			actionForm.setTimeForInterestCacl(savingsOffering
+			actionForm.setTimeForInterestCacl(savingsProduct
 					.getTimePerForInstcalc().getMeeting().getMeetingDetails()
 					.getRecurAfter().toString());
-			actionForm.setRecurTypeFortimeForInterestCacl(savingsOffering
+			actionForm.setRecurTypeFortimeForInterestCacl(savingsProduct
 					.getTimePerForInstcalc().getMeeting().getMeetingDetails()
 					.getRecurrenceType().getRecurrenceId().toString());
 		}
-		if (savingsOffering.getFreqOfPostIntcalc() != null
-				&& savingsOffering.getFreqOfPostIntcalc().getMeeting() != null
-				&& savingsOffering.getFreqOfPostIntcalc().getMeeting()
+		if (savingsProduct.getFreqOfPostIntcalc() != null
+				&& savingsProduct.getFreqOfPostIntcalc().getMeeting() != null
+				&& savingsProduct.getFreqOfPostIntcalc().getMeeting()
 						.getMeetingDetails() != null) {
-			actionForm.setFreqOfInterest(savingsOffering.getFreqOfPostIntcalc()
+			actionForm.setFreqOfInterest(savingsProduct.getFreqOfPostIntcalc()
 					.getMeeting().getMeetingDetails().getRecurAfter()
 					.toString());
 		}
-		if (savingsOffering.getMinAmntForInt() != null)
-			actionForm.setMinAmntForInt(savingsOffering.getMinAmntForInt()
+		if (savingsProduct.getMinAmntForInt() != null)
+			actionForm.setMinAmntForInt(savingsProduct.getMinAmntForInt()
 					.toString());
-		if (savingsOffering.getDepositGLCode() != null)
-			actionForm.setDepositGLCode(savingsOffering.getDepositGLCode()
+		if (savingsProduct.getDepositGLCode() != null)
+			actionForm.setDepositGLCode(savingsProduct.getDepositGLCode()
 					.getGlcodeId().toString());
-		if (savingsOffering.getInterestGLCode() != null)
-			actionForm.setInterestGLCode(savingsOffering.getInterestGLCode()
+		if (savingsProduct.getInterestGLCode() != null)
+			actionForm.setInterestGLCode(savingsProduct.getInterestGLCode()
 					.getGlcodeId().toString());
 	}
 

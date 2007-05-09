@@ -251,8 +251,9 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 				+ getPrdOfferingName());
 	}
 
+	@Override
 	public boolean isActive(){
-		return getPrdStatus().getOfferingStatusId().equals(PrdStatus.SAVINGS_ACTIVE.getValue());
+		return getStatus() == PrdStatus.SAVINGS_ACTIVE;
 	}
 	
 	public void update(Short userId, String prdOfferingName,

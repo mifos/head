@@ -601,4 +601,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
 		}
 	}
 
+	@Override
+	public boolean isActive() {
+		return getStatus() == PrdStatus.LOAN_ACTIVE;
+	}
+
 }

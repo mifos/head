@@ -84,7 +84,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanOfferingBOTest extends MifosTestCase {
 
-	private LoanOfferingBO loanOffering;
+	private LoanOfferingBO product;
 
 	private FeeBO periodicFee;
 
@@ -109,7 +109,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(loanOffering);
+		TestObjectFactory.removeObject(product);
 		TestObjectFactory.cleanUp(periodicFee);
 		TestObjectFactory.cleanUp(oneTimeFee);
 		HibernateUtil.closeSession();
@@ -134,9 +134,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(periodicFee);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
-		HibernateUtil.getInterceptor().createInitialValueMap(loanOffering);
-		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+		product = createLoanOfferingBO("Loan Product", "LOAP");
+		HibernateUtil.getInterceptor().createInitialValueMap(product);
+		product.update((short) 1, "Loan Product", "LOAN", productCategory,
 				prdApplicableMaster, startDate, endDate,
 				"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
@@ -146,15 +146,15 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
 		fees = new ArrayList<FeeBO>();
 		oneTimeFee = TestObjectFactory.createOneTimeAmountFee("Loan One time",
 				FeeCategory.LOAN, "100", FeePayment.UPFRONT);
 		fees.add(oneTimeFee);
-		loanOffering.setUserContext(TestUtils.makeUser());
-		HibernateUtil.getInterceptor().createInitialValueMap(loanOffering);
-		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+		product.setUserContext(TestUtils.makeUser());
+		HibernateUtil.getInterceptor().createInitialValueMap(product);
+		product.update((short) 1, "Loan Product", "LOAN", productCategory,
 				prdApplicableMaster, startDate, endDate,
 				"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
@@ -165,11 +165,11 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		HibernateUtil.closeSession();
 		
 				
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
 		
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
-				EntityType.LOANPRODUCT,new Integer(loanOffering.getPrdOfferingId().toString()));
+				EntityType.LOANPRODUCT,new Integer(product.getPrdOfferingId().toString()));
 		assertEquals(2,auditLogList.size());
 		assertEquals(EntityType.LOANPRODUCT.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(19,auditLogList.get(0).getAuditLogRecords().size());
@@ -200,9 +200,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(periodicFee);
 		fees.add(oneTimeFee);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
-		HibernateUtil.getInterceptor().createInitialValueMap(loanOffering);
-		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+		product = createLoanOfferingBO("Loan Product", "LOAP");
+		HibernateUtil.getInterceptor().createInitialValueMap(product);
+		product.update((short) 1, "Loan Product", "LOAN", productCategory,
 				prdApplicableMaster, startDate, endDate,
 				"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
@@ -211,12 +211,12 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				RecurrenceType.MONTHLY);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
 		
 		
 		List<AuditLog> auditLogList=TestObjectFactory.getChangeLog(
-				EntityType.LOANPRODUCT,new Integer(loanOffering.getPrdOfferingId().toString()));
+				EntityType.LOANPRODUCT,new Integer(product.getPrdOfferingId().toString()));
 		assertEquals(1,auditLogList.size());
 		assertEquals(EntityType.LOANPRODUCT.getValue(),auditLogList.get(0).getEntityType());
 		assertEquals(18,auditLogList.get(0).getAuditLogRecords().size());
@@ -307,41 +307,38 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		}
 	}
 
-	public void testBuildloanOfferingWithStartDateEqualToCurrentDate()
+	public void testBuildWithStartDateEqualToCurrentDate()
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
-		LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+		LoanOfferingBO product = new LoanOfferingBO(TestObjectFactory
 				.getContext(), "Loan Offering", "LOAN", productCategory,
 				prdApplicableMaster, startDate, interestTypes,
 				new Money("1000"), new Money("3000"), 12.0, 2.0, 3.0,
 				(short) 20, (short) 1, (short) 12, false, true, false,
 				frequency, principalglCodeEntity, intglCodeEntity);
-		assertNotNull(loanOffering.getGlobalPrdOfferingNum());
-		assertEquals(PrdStatus.LOAN_ACTIVE.getValue(), loanOffering
-				.getPrdStatus().getOfferingStatusId());
-
+		assertNotNull(product.getGlobalPrdOfferingNum());
+		assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
 	}
 
-	public void testBuildloanOfferingWithStartDateGreaterThanCurrentDate()
+	public void testStartDateGreaterThanCurrentDate()
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(2);
-		LoanOfferingBO loanOffering = new LoanOfferingBO(TestObjectFactory
+		LoanOfferingBO product = new LoanOfferingBO(TestObjectFactory
 				.getContext(), "Loan Offering", "LOAN", productCategory,
 				prdApplicableMaster, startDate, interestTypes,
 				new Money("1000"), new Money("3000"), 12.0, 2.0, 3.0,
 				(short) 20, (short) 1, (short) 12, false, true, false,
 				frequency, principalglCodeEntity, intglCodeEntity);
-		assertNotNull(loanOffering.getGlobalPrdOfferingNum());
-		assertEquals(PrdStatus.LOAN_INACTIVE.getValue(), loanOffering
-				.getPrdStatus().getOfferingStatusId());
+		assertNotNull(product.getGlobalPrdOfferingNum());
+		assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
 
 	}
 
 	public void testBuildloanOfferingWithDuplicatePrdOfferingName()
 			throws  SystemException, ApplicationException {
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
@@ -358,7 +355,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 
 	public void testBuildloanOfferingWithDuplicatePrdOfferingShortName()
 			throws  SystemException, ApplicationException {
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		try {
@@ -681,58 +678,58 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		fees.add(periodicFee);
 		fees.add(oneTimeFee);
 
-		loanOffering = new LoanOfferingBO(TestObjectFactory.getContext(),
+		product = new LoanOfferingBO(TestObjectFactory.getContext(),
 				"Loan Offering", "LOAP", productCategory, prdApplicableMaster,
 				startDate, endDate, "1234", gracePeriodType, (short) 2,
 				interestTypes, new Money("1000"), new Money("3000"), new Money(
 						"2000.0"), 12.0, 2.0, 3.0, (short) 20, (short) 11,
 				(short) 17, false, false, false, null, fees, frequency,
 				principalglCodeEntity, intglCodeEntity);
-		loanOffering.save();
+		product.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
 
-		assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
-		assertEquals("LOAP", loanOffering.getPrdOfferingShortName());
-		assertEquals(Short.valueOf("1"), loanOffering.getPrdCategory()
+		assertEquals("Loan Offering", product.getPrdOfferingName());
+		assertEquals("LOAP", product.getPrdOfferingShortName());
+		assertEquals(Short.valueOf("1"), product.getPrdCategory()
 				.getProductCategoryID());
 		assertEquals(ApplicableTo.CLIENTS, 
-				loanOffering.getPrdApplicableMasterEnum());
-		assertEquals(startDate, loanOffering.getStartDate());
-		assertEquals(endDate, loanOffering.getEndDate());
-		assertEquals("1234", loanOffering.getDescription());
+				product.getPrdApplicableMasterEnum());
+		assertEquals(startDate, product.getStartDate());
+		assertEquals(endDate, product.getEndDate());
+		assertEquals("1234", product.getDescription());
 		assertEquals(GraceType.GRACEONALLREPAYMENTS.getValue(),
-				loanOffering.getGracePeriodType().getId());
-		assertEquals(Short.valueOf("2"), loanOffering.getGracePeriodDuration());
-		assertEquals(InterestType.FLAT.getValue(), loanOffering
+				product.getGracePeriodType().getId());
+		assertEquals(Short.valueOf("2"), product.getGracePeriodDuration());
+		assertEquals(InterestType.FLAT.getValue(), product
 				.getInterestTypes().getId());
-		assertEquals(new Money("1000"), loanOffering.getMinLoanAmount());
-		assertEquals(new Money("3000"), loanOffering.getMaxLoanAmount());
-		assertEquals(new Money("2000"), loanOffering.getDefaultLoanAmount());
-		assertEquals(2.0, loanOffering.getMinInterestRate());
-		assertEquals(12.0, loanOffering.getMaxInterestRate());
-		assertEquals(3.0, loanOffering.getDefInterestRate());
-		assertEquals(Short.valueOf("11"), loanOffering.getMinNoInstallments());
-		assertEquals(Short.valueOf("20"), loanOffering.getMaxNoInstallments());
-		assertEquals(Short.valueOf("17"), loanOffering.getDefNoInstallments());
-		assertFalse(loanOffering.isIncludeInLoanCounter());
-		assertFalse(loanOffering.isIntDedDisbursement());
-		assertFalse(loanOffering.isPrinDueLastInst());
-		assertEquals(2, loanOffering.getLoanOfferingFees().size());
-		assertNotNull(loanOffering.getLoanOfferingMeeting());
-		assertEquals(RecurrenceType.WEEKLY, loanOffering
+		assertEquals(new Money("1000"), product.getMinLoanAmount());
+		assertEquals(new Money("3000"), product.getMaxLoanAmount());
+		assertEquals(new Money("2000"), product.getDefaultLoanAmount());
+		assertEquals(2.0, product.getMinInterestRate());
+		assertEquals(12.0, product.getMaxInterestRate());
+		assertEquals(3.0, product.getDefInterestRate());
+		assertEquals(Short.valueOf("11"), product.getMinNoInstallments());
+		assertEquals(Short.valueOf("20"), product.getMaxNoInstallments());
+		assertEquals(Short.valueOf("17"), product.getDefNoInstallments());
+		assertFalse(product.isIncludeInLoanCounter());
+		assertFalse(product.isIntDedDisbursement());
+		assertFalse(product.isPrinDueLastInst());
+		assertEquals(2, product.getLoanOfferingFees().size());
+		assertNotNull(product.getLoanOfferingMeeting());
+		assertEquals(RecurrenceType.WEEKLY, product
 				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
 				.getRecurrenceTypeEnum());
-		assertNotNull(loanOffering.getPrincipalGLcode());
-		assertNotNull(loanOffering.getInterestGLcode());
+		assertNotNull(product.getPrincipalGLcode());
+		assertNotNull(product.getInterestGLcode());
 	}
 
 	public void testUpdateloanOfferingWithoutDataForMandatoryFields() {
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update(null, null, null, null, null, null, null, null,
+			product.update(null, null, null, null, null, null, null, null,
 					null, null, null, null, null, null, null, null, null, null,
 					null, null, null, false, false, false, null, null, null,
 					null);
@@ -744,9 +741,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	public void testUpdateloanOfferingWithoutName()
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, null, "S", productCategory,
+			product.update((short) 1, null, "S", productCategory,
 					prdApplicableMaster, new Date(System.currentTimeMillis()),
 					null, "Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("3000"), new Money(
@@ -761,9 +758,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	public void testUpdateloanOfferingWithShortNameGreaterThanFourDig()
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOANS",
+			product.update((short) 1, "Loan Product", "LOANS",
 					productCategory, prdApplicableMaster, new Date(System
 							.currentTimeMillis()), null,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
@@ -779,10 +776,10 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	public void testupdateloanOfferingWithStartDateLessThanCurrentDate()
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		Date startDate = offSetCurrentDate(-2);
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, null,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("3000"), new Money(
@@ -798,18 +795,17 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
-		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+		product = createLoanOfferingBO("Loan Product", "LOAP");
+		product.update((short) 1, "Loan Product", "LOAN", productCategory,
 				prdApplicableMaster, startDate, null, "Loan Product updated",
 				PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0,
 				new Money("3000"), new Money("1000"), new Money("2000"), 12.0,
 				2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false,
 				false, null, null, (short) 2, RecurrenceType.WEEKLY);
 		HibernateUtil.commitTransaction();
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals(PrdStatus.LOAN_ACTIVE.getValue(), loanOffering
-				.getPrdStatus().getOfferingStatusId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
+		assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
 
 	}
 
@@ -817,9 +813,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(2);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, null,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("3000"), new Money(
@@ -834,7 +830,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 
 	public void testUpdateloanOfferingWithDuplicatePrdOfferingName()
 			throws  SystemException, ApplicationException {
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Product1",
 				"LOA1");
 		createIntitalObjects();
@@ -855,7 +851,7 @@ public class LoanOfferingBOTest extends MifosTestCase {
 
 	public void testUpdateloanOfferingWithDuplicatePrdOfferingShortName()
 			throws  SystemException, ApplicationException {
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Product1",
 				"LOA1");
 		createIntitalObjects();
@@ -879,9 +875,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(-2);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, endDate,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("3000"), new Money(
@@ -897,9 +893,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, null,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null, null,
 					(short) 0, new Money("3000"), new Money("1000"), new Money(
@@ -915,9 +911,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, null,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, null, new Money("1000"),
@@ -933,10 +929,10 @@ public class LoanOfferingBOTest extends MifosTestCase {
 			throws  SystemException, ApplicationException {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		TestObjectFactory.simulateInvalidConnection();
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, null,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, null, new Money("1000"),
@@ -957,9 +953,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, endDate,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("1000"), new Money(
@@ -975,9 +971,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, endDate,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("1000"), new Money(
@@ -992,9 +988,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 	public void testUpdateDefInterestRateNotBetweenMinMaxRates() {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, null,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("3000"), new Money(
@@ -1010,9 +1006,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, endDate,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("3000"), new Money(
@@ -1028,9 +1024,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, endDate,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("3000"), new Money(
@@ -1046,9 +1042,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, endDate,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 					interestTypes, (short) 0, new Money("3000"), new Money(
@@ -1065,8 +1061,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		createIntitalObjects();
 		Date startDate = offSetCurrentDate(0);
 		Date endDate = offSetCurrentDate(2);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
-		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+		product = createLoanOfferingBO("Loan Product", "LOAP");
+		product.update((short) 1, "Loan Product", "LOAN", productCategory,
 				prdApplicableMaster, startDate, endDate,
 				"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
@@ -1074,14 +1070,14 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				(short) 2, false, true, false, null, null, (short) 2,
 				RecurrenceType.WEEKLY);
 		HibernateUtil.commitTransaction();
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
 
-		assertNotNull(loanOffering.getGracePeriodType());
-		assertNotNull(loanOffering.getGracePeriodDuration());
-		assertEquals(GraceType.NONE.getValue(), loanOffering
+		assertNotNull(product.getGracePeriodType());
+		assertNotNull(product.getGracePeriodDuration());
+		assertEquals(GraceType.NONE.getValue(), product
 				.getGracePeriodType().getId());
-		assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
+		assertEquals(Short.valueOf("0"), product.getGracePeriodDuration());
 	}
 
 	public void testUpdateFeeNotMatchingFrequencyOfLoanOffering()
@@ -1099,9 +1095,9 @@ public class LoanOfferingBOTest extends MifosTestCase {
 						.getNewMeeting(MONTHLY, EVERY_MONTH, CUSTOMER_MEETING, MONDAY)));
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(fee);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
+		product = createLoanOfferingBO("Loan Product", "LOAP");
 		try {
-			loanOffering.update((short) 1, "Loan Product", "LOAN",
+			product.update((short) 1, "Loan Product", "LOAN",
 					productCategory, prdApplicableMaster, startDate, endDate,
 					"Loan Product updated", PrdStatus.LOAN_ACTIVE,
 					gracePeriodType, interestTypes, (short) 0,
@@ -1136,16 +1132,16 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		fees.add(fee1);
 		List<FundBO> funds = new ArrayList<FundBO>();
 		funds.add(new FundBO());
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
-		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+		product = createLoanOfferingBO("Loan Product", "LOAP");
+		product.update((short) 1, "Loan Product", "LOAN", productCategory,
 				prdApplicableMaster, startDate, endDate,
 				"Loan Product updated", PrdStatus.LOAN_ACTIVE, gracePeriodType,
 				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
 				new Money("1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1,
 				(short) 2, false, true, false, funds, fees, (short) 2,
 				RecurrenceType.WEEKLY);
-		assertEquals(2, loanOffering.getLoanOfferingFees().size());
-		assertEquals(1, loanOffering.getLoanOfferingFunds().size());
+		assertEquals(2, product.getLoanOfferingFees().size());
+		assertEquals(1, product.getLoanOfferingFunds().size());
 	}
 
 	public void testUpdateLoanOffering() throws ProductDefinitionException,
@@ -1161,8 +1157,8 @@ public class LoanOfferingBOTest extends MifosTestCase {
 		List<FeeBO> fees = new ArrayList<FeeBO>();
 		fees.add(periodicFee);
 		fees.add(oneTimeFee);
-		loanOffering = createLoanOfferingBO("Loan Product", "LOAP");
-		loanOffering.update((short) 1, "Loan Product", "LOAN", productCategory,
+		product = createLoanOfferingBO("Loan Product", "LOAP");
+		product.update((short) 1, "Loan Product", "LOAN", productCategory,
 				prdApplicableMaster, startDate, endDate,
 				"Loan Product updated", PrdStatus.LOAN_ACTIVE, null,
 				interestTypes, (short) 0, new Money("3000"), new Money("1000"),
@@ -1171,40 +1167,40 @@ public class LoanOfferingBOTest extends MifosTestCase {
 				RecurrenceType.MONTHLY);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
 
-		assertEquals("Loan Product", loanOffering.getPrdOfferingName());
-		assertEquals("LOAN", loanOffering.getPrdOfferingShortName());
-		assertEquals(Short.valueOf("1"), loanOffering.getPrdCategory()
+		assertEquals("Loan Product", product.getPrdOfferingName());
+		assertEquals("LOAN", product.getPrdOfferingShortName());
+		assertEquals(Short.valueOf("1"), product.getPrdCategory()
 				.getProductCategoryID());
 		assertEquals(ApplicableTo.CLIENTS, 
-				loanOffering.getPrdApplicableMasterEnum());
-		assertEquals(startDate, loanOffering.getStartDate());
-		assertEquals(endDate, loanOffering.getEndDate());
-		assertEquals("Loan Product updated", loanOffering.getDescription());
-		assertEquals(GraceType.NONE, loanOffering.getGraceType());
-		assertEquals(Short.valueOf("0"), loanOffering.getGracePeriodDuration());
-		assertEquals(InterestType.FLAT, loanOffering.getInterestType());
-		assertEquals(new Money("1000"), loanOffering.getMinLoanAmount());
-		assertEquals(new Money("3000"), loanOffering.getMaxLoanAmount());
-		assertEquals(new Money("1000"), loanOffering.getDefaultLoanAmount());
-		assertEquals(2.0, loanOffering.getMinInterestRate());
-		assertEquals(12.0, loanOffering.getMaxInterestRate());
-		assertEquals(12.0, loanOffering.getDefInterestRate());
-		assertEquals(Short.valueOf("1"), loanOffering.getMinNoInstallments());
-		assertEquals(Short.valueOf("12"), loanOffering.getMaxNoInstallments());
-		assertEquals(Short.valueOf("2"), loanOffering.getDefNoInstallments());
-		assertFalse(loanOffering.isIncludeInLoanCounter());
-		assertTrue(loanOffering.isIntDedDisbursement());
-		assertFalse(loanOffering.isPrinDueLastInst());
-		assertEquals(2, loanOffering.getLoanOfferingFees().size());
-		assertNotNull(loanOffering.getLoanOfferingMeeting());
-		assertEquals(RecurrenceType.MONTHLY, loanOffering
+				product.getPrdApplicableMasterEnum());
+		assertEquals(startDate, product.getStartDate());
+		assertEquals(endDate, product.getEndDate());
+		assertEquals("Loan Product updated", product.getDescription());
+		assertEquals(GraceType.NONE, product.getGraceType());
+		assertEquals(Short.valueOf("0"), product.getGracePeriodDuration());
+		assertEquals(InterestType.FLAT, product.getInterestType());
+		assertEquals(new Money("1000"), product.getMinLoanAmount());
+		assertEquals(new Money("3000"), product.getMaxLoanAmount());
+		assertEquals(new Money("1000"), product.getDefaultLoanAmount());
+		assertEquals(2.0, product.getMinInterestRate());
+		assertEquals(12.0, product.getMaxInterestRate());
+		assertEquals(12.0, product.getDefInterestRate());
+		assertEquals(Short.valueOf("1"), product.getMinNoInstallments());
+		assertEquals(Short.valueOf("12"), product.getMaxNoInstallments());
+		assertEquals(Short.valueOf("2"), product.getDefNoInstallments());
+		assertFalse(product.isIncludeInLoanCounter());
+		assertTrue(product.isIntDedDisbursement());
+		assertFalse(product.isPrinDueLastInst());
+		assertEquals(2, product.getLoanOfferingFees().size());
+		assertNotNull(product.getLoanOfferingMeeting());
+		assertEquals(RecurrenceType.MONTHLY, product
 				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
 				.getRecurrenceTypeEnum());
-		assertNotNull(loanOffering.getPrincipalGLcode());
-		assertNotNull(loanOffering.getInterestGLcode());
+		assertNotNull(product.getPrincipalGLcode());
+		assertNotNull(product.getInterestGLcode());
 	}
 
         

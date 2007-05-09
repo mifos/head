@@ -2280,20 +2280,26 @@ public class LoanBO extends AccountBO {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTION);
 
-		if (!customer.isActive())
+		if (!customer.isActive()) {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTIONCUSTOMERINACTIVE);
-		if (!loanOffering.getPrdStatus().getOfferingStatusId().equals(
-				PrdStatus.LOAN_ACTIVE.getValue()))
+		}
+
+		if (!loanOffering.isActive()) {
 			throw new AccountException(
 					AccountExceptionConstants.CREATEEXCEPTIONPRDINACTIVE);
-		if (isDisbursementDateLessThanCurrentDate(disbursementDate))
+		}
+
+		if (isDisbursementDateLessThanCurrentDate(disbursementDate)) {
 			throw new AccountException(
 					LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
+		}
 		
-		if ( interestDeductedAtDisbursement==true&& noOfinstallments.shortValue()<=1)
+		if (interestDeductedAtDisbursement == true
+			&& noOfinstallments.shortValue() <= 1) {
 			throw new AccountException(
 					LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
+		}
 	}
 
 	private void buildAccountFee(List<FeeView> feeViews) {

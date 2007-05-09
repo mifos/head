@@ -26,7 +26,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestProductStatusHelper extends MifosTestCase {
 
-	LoanOfferingBO loanOffering;
+	LoanOfferingBO product;
 
 	ProductStatusHelper productStatusHelper;
 
@@ -41,7 +41,7 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(loanOffering);
+		TestObjectFactory.removeObject(product);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -51,10 +51,9 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 		productStatusHelper.execute(System.currentTimeMillis());
 
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals(PrdStatus.LOAN_ACTIVE.getValue(), loanOffering
-				.getPrdStatus().getOfferingStatusId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
+		assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
 	}
 
 	public void testExecuteFailure() throws PersistenceException {
@@ -69,10 +68,9 @@ public class TestProductStatusHelper extends MifosTestCase {
 		}
 		HibernateUtil.closeSession();
 
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals(PrdStatus.LOAN_INACTIVE.getValue(), loanOffering
-				.getPrdStatus().getOfferingStatusId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
+		assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
 	}
 
 	public void testExecuteTask() throws PersistenceException, BatchJobException {
@@ -95,10 +93,9 @@ public class TestProductStatusHelper extends MifosTestCase {
 			TestObjectFactory.removeObject(task);
 		}
 
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals(PrdStatus.LOAN_ACTIVE.getValue(), loanOffering
-				.getPrdStatus().getOfferingStatusId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
+		assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
 	}
 
 	public void testExecuteTaskFailure() throws PersistenceException {
@@ -114,10 +111,9 @@ public class TestProductStatusHelper extends MifosTestCase {
 		List<Task> tasks = query.list();
 		assertEquals(0, tasks.size());
 
-		loanOffering = (LoanOfferingBO) TestObjectFactory.getObject(
-				LoanOfferingBO.class, loanOffering.getPrdOfferingId());
-		assertEquals(PrdStatus.LOAN_INACTIVE.getValue(), loanOffering
-				.getPrdStatus().getOfferingStatusId());
+		product = (LoanOfferingBO) TestObjectFactory.getObject(
+				LoanOfferingBO.class, product.getPrdOfferingId());
+		assertEquals(PrdStatus.LOAN_INACTIVE, product.getStatus());
 	}
 
 	public void testRegisterStartup() throws BatchJobException {
@@ -199,14 +195,14 @@ public class TestProductStatusHelper extends MifosTestCase {
 
 		MeetingBO frequency = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeeting(WEEKLY, EVERY_WEEK, LOAN_INSTALLMENT, MONDAY));
-		loanOffering = TestObjectFactory.createLoanOffering("Loan Offering",
+		product = TestObjectFactory.createLoanOffering("Loan Offering",
 				"LOAN", ApplicableTo.GROUPS,
 				startDate, PrdStatus.LOAN_ACTIVE,
 				300.0, 1.2, 3, 
 				InterestType.FLAT, true, false, frequency);
-		LoanOfferingBOTest.setStatus(loanOffering,new PrdOfferingPersistence()
+		LoanOfferingBOTest.setStatus(product,new PrdOfferingPersistence()
 				.getPrdStatus(PrdStatus.LOAN_INACTIVE));
-		TestObjectFactory.updateObject(loanOffering);
+		TestObjectFactory.updateObject(product);
 		HibernateUtil.closeSession();
 	}
 }

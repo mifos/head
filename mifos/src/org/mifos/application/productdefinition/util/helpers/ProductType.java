@@ -1,6 +1,5 @@
 package org.mifos.application.productdefinition.util.helpers;
 
-import org.mifos.framework.exceptions.PropertyNotFoundException;
 
 public enum ProductType {
 	LOAN((short) 1), SAVINGS((short) 2);
@@ -15,11 +14,12 @@ public enum ProductType {
 		return value;
 	}
 
-	public static ProductType getProductType(Short value)
-			throws PropertyNotFoundException {
-		for (ProductType productType : ProductType.values())
-			if (productType.getValue().equals(value))
+	public static ProductType getProductType(int value) {
+		for (ProductType productType : ProductType.values()) {
+			if (productType.getValue() == value) {
 				return productType;
-		throw new PropertyNotFoundException("ProductType");
+			}
+		}
+		throw new RuntimeException("no product type " + value);
 	}
 }

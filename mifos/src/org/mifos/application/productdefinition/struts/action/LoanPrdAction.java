@@ -572,70 +572,70 @@ public class LoanPrdAction extends BaseAction {
 		return null;
 	}
 
-	private void setDataIntoActionForm(LoanOfferingBO loanOffering,
+	private void setDataIntoActionForm(LoanOfferingBO loanProduct,
 			LoanPrdActionForm loanPrdActionForm, HttpServletRequest request)
 			throws Exception {
 		prdDefLogger
 				.debug("start setDataIntoActionForm method of Loan Product Action ");
-		loanPrdActionForm.setPrdOfferingId(getStringValue(loanOffering
+		loanPrdActionForm.setPrdOfferingId(getStringValue(loanProduct
 				.getPrdOfferingId()));
-		loanPrdActionForm.setPrdOfferingName(loanOffering.getPrdOfferingName());
-		loanPrdActionForm.setPrdOfferingShortName(loanOffering
+		loanPrdActionForm.setPrdOfferingName(loanProduct.getPrdOfferingName());
+		loanPrdActionForm.setPrdOfferingShortName(loanProduct
 				.getPrdOfferingShortName());
-		loanPrdActionForm.setPrdCategory(getStringValue(loanOffering
+		loanPrdActionForm.setPrdCategory(getStringValue(loanProduct
 				.getPrdCategory().getProductCategoryID()));
-		loanPrdActionForm.setPrdStatus(getStringValue(loanOffering
-				.getPrdStatus().getOfferingStatusId()));
+		loanPrdActionForm.setPrdStatus(getStringValue(loanProduct
+				.getStatus().getValue()));
 		loanPrdActionForm.setPrdApplicableMaster(
-				loanOffering.getPrdApplicableMasterEnum());
-		loanPrdActionForm.setStartDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), DateUtils.toDatabaseFormat(loanOffering.getStartDate())));
+				loanProduct.getPrdApplicableMasterEnum());
+		loanPrdActionForm.setStartDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), DateUtils.toDatabaseFormat(loanProduct.getStartDate())));
 		loanPrdActionForm
-				.setEndDate(loanOffering.getEndDate() != null ? DateUtils.getUserLocaleDate(getUserContext(request)
-				.getPreferredLocale(), DateUtils.toDatabaseFormat(loanOffering.getEndDate()))
+				.setEndDate(loanProduct.getEndDate() != null ? DateUtils.getUserLocaleDate(getUserContext(request)
+				.getPreferredLocale(), DateUtils.toDatabaseFormat(loanProduct.getEndDate()))
 						: null);
-		loanPrdActionForm.setDescription(loanOffering.getDescription());
-		loanPrdActionForm.setGracePeriodType(getStringValue(loanOffering
+		loanPrdActionForm.setDescription(loanProduct.getDescription());
+		loanPrdActionForm.setGracePeriodType(getStringValue(loanProduct
 				.getGracePeriodType().getId()));
-		loanPrdActionForm.setGracePeriodDuration(getStringValue(loanOffering
+		loanPrdActionForm.setGracePeriodDuration(getStringValue(loanProduct
 				.getGracePeriodDuration()));
-		loanPrdActionForm.setInterestTypes(getStringValue(loanOffering
+		loanPrdActionForm.setInterestTypes(getStringValue(loanProduct
 				.getInterestTypes().getId()));
-		loanPrdActionForm.setMaxLoanAmount(getStringValue(loanOffering
+		loanPrdActionForm.setMaxLoanAmount(getStringValue(loanProduct
 				.getMaxLoanAmount()));
-		loanPrdActionForm.setMinLoanAmount(getStringValue(loanOffering
+		loanPrdActionForm.setMinLoanAmount(getStringValue(loanProduct
 				.getMinLoanAmount()));
-		if (!(loanOffering.getDefaultLoanAmount().getAmountDoubleValue() == 0.0 && loanOffering
+		if (!(loanProduct.getDefaultLoanAmount().getAmountDoubleValue() == 0.0 && loanProduct
 				.getMinLoanAmount().getAmountDoubleValue() != 0.0))
-			loanPrdActionForm.setDefaultLoanAmount(getStringValue(loanOffering
+			loanPrdActionForm.setDefaultLoanAmount(getStringValue(loanProduct
 					.getDefaultLoanAmount()));
-		loanPrdActionForm.setMaxInterestRate(BigDecimal.valueOf(loanOffering.getMaxInterestRate()).toString());
-		loanPrdActionForm.setMinInterestRate(BigDecimal.valueOf(loanOffering.getMinInterestRate()).toString());
-		loanPrdActionForm.setDefInterestRate(BigDecimal.valueOf(loanOffering.getDefInterestRate()).toString());
-		loanPrdActionForm.setMaxNoInstallments(getStringValue(loanOffering
+		loanPrdActionForm.setMaxInterestRate(BigDecimal.valueOf(loanProduct.getMaxInterestRate()).toString());
+		loanPrdActionForm.setMinInterestRate(BigDecimal.valueOf(loanProduct.getMinInterestRate()).toString());
+		loanPrdActionForm.setDefInterestRate(BigDecimal.valueOf(loanProduct.getDefInterestRate()).toString());
+		loanPrdActionForm.setMaxNoInstallments(getStringValue(loanProduct
 				.getMaxNoInstallments()));
-		loanPrdActionForm.setMinNoInstallments(getStringValue(loanOffering
+		loanPrdActionForm.setMinNoInstallments(getStringValue(loanProduct
 				.getMinNoInstallments()));
-		loanPrdActionForm.setDefNoInstallments(getStringValue(loanOffering
+		loanPrdActionForm.setDefNoInstallments(getStringValue(loanProduct
 				.getDefNoInstallments()));
 
-		loanPrdActionForm.setIntDedDisbursementFlag(getStringValue(loanOffering
+		loanPrdActionForm.setIntDedDisbursementFlag(getStringValue(loanProduct
 				.isIntDedDisbursement()));
-		loanPrdActionForm.setPrinDueLastInstFlag(getStringValue(loanOffering
+		loanPrdActionForm.setPrinDueLastInstFlag(getStringValue(loanProduct
 				.isPrinDueLastInst()));
-		loanPrdActionForm.setLoanCounter(getStringValue(loanOffering
+		loanPrdActionForm.setLoanCounter(getStringValue(loanProduct
 				.isIncludeInLoanCounter()));
-		loanPrdActionForm.setRecurAfter(getStringValue(loanOffering
+		loanPrdActionForm.setRecurAfter(getStringValue(loanProduct
 				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
 				.getRecurAfter()));
-		loanPrdActionForm.setFreqOfInstallments(getStringValue(loanOffering
+		loanPrdActionForm.setFreqOfInstallments(getStringValue(loanProduct
 				.getLoanOfferingMeeting().getMeeting().getMeetingDetails()
 				.getRecurrenceType().getRecurrenceId()));
-		loanPrdActionForm.setPrincipalGLCode(getStringValue(loanOffering
+		loanPrdActionForm.setPrincipalGLCode(getStringValue(loanProduct
 				.getPrincipalGLcode().getGlcodeId()));
-		loanPrdActionForm.setInterestGLCode(getStringValue(loanOffering
+		loanPrdActionForm.setInterestGLCode(getStringValue(loanProduct
 				.getInterestGLcode().getGlcodeId()));
 		SessionUtils.setAttribute(ProductDefinitionConstants.LOANPRDSTARTDATE,
-				loanOffering.getStartDate(), request);
+				loanProduct.getStartDate(), request);
 		prdDefLogger
 				.debug("setDataIntoActionForm method of Loan Product Action called");
 	}
