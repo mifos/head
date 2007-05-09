@@ -112,6 +112,74 @@ public class TestCustomerBO extends MifosTestCase {
 		customerMeetingEntity.setUpdatedFlag(updatedFlag);
 	}
 
+	public void testClientHasAPerClientMandatorySavingsAcccount() 
+	throws Exception {
+		meeting = TestObjectFactory.createMeeting(TestObjectFactory
+				.getTypicalMeeting());
+		center = TestObjectFactory.createCenter("Center", meeting);
+		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE, group);
+		//accountBO = getLoanAccount(client, meeting);
+		HibernateUtil.closeSession();
+		/*ClientBO client1 = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
+				client.getCustomerId());*/
+		boolean hasMandatory =
+			client.clientHasAPerClientMandatorySavingsAcccount();
+		assertEquals(false, hasMandatory);
+		TestObjectFactory.cleanUpChangeLog();
+	}
+	
+	public void testRemoveGroupMemberShip() throws Exception {
+		createInitialObjects();
+		client.setUserContext(TestObjectFactory.getUserContext());
+		HibernateUtil.getInterceptor().createInitialValueMap(client);
+		createPersonnel(PersonnelLevel.LOAN_OFFICER);
+		client.removeGroupMemberShip(loanOfficer, "comment");
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		loanOfficer = (PersonnelBO) HibernateUtil.getSessionTL().get(
+				PersonnelBO.class, loanOfficer.getPersonnelId());
+		assertEquals(loanOfficer.getPersonnelId(), client.getPersonnel().getPersonnelId());
+			group = TestObjectFactory.getObject(GroupBO.class, group
+		 .getCustomerId());
+
+		TestObjectFactory.cleanUpChangeLog();
+	}
+	
+	
+	
+	public void testHasAnActiveLoanCounts() throws Exception {
+		createInitialObjects();
+		client.setUserContext(TestObjectFactory.getUserContext());
+		HibernateUtil.getInterceptor().createInitialValueMap(client);
+		boolean res=client.hasAnActiveLoanCounts();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		assertEquals(res,false );
+		TestObjectFactory.cleanUpChangeLog();
+	}
+	public void testCheckIfClientIsATitleHolder() throws Exception {
+		createInitialObjects();
+		client.setUserContext(TestObjectFactory.getUserContext());
+		HibernateUtil.getInterceptor().createInitialValueMap(client);
+	
+		try{
+			client.checkIfClientIsATitleHolder();
+		
+		}catch (CustomerException expected) {
+			assertEquals(CustomerConstants.CLIENT_IS_A_TITLE_HOLDER_EXCEPTION,
+					expected.getKey());
+		}
+		
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+	
+		TestObjectFactory.cleanUpChangeLog();
+	}
+	
+	//
+	
 	public void testStatusChangeForCenterForLogging() throws Exception {
 		OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
 		createdBranchOffice = TestObjectFactory.createOffice(
@@ -655,7 +723,8 @@ public class TestCustomerBO extends MifosTestCase {
 		assertEquals("Other", customerStatusFlag.getFlagDescription());
 
 	}
-
+	
+	
 	private void changeFirstInstallmentDate(AccountBO accountBO,
 			int numberOfDays) {
 		Calendar currentDateCalendar = new GregorianCalendar();

@@ -233,5 +233,7 @@ public interface GroupConstants {
 	public static final String CREATE_GROUP="createGroup";
 	public static final String GROUPLOANACCOUNTSINUSE = "groupLoanAccountsInUse";
 	public static final String GROUPSAVINGSACCOUNTSINUSE = "groupSavingsAccountsInUse";
+	public static final String ASSIGNED_LOAN_OFFICER_REQUIRED="errors.assignedloanofficerrequired";
+	public static final String METHODCALLED="methodCalled";
 	
 }

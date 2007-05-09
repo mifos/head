@@ -45,7 +45,6 @@
 <%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 <%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
-<%@ taglib uri="/customer/customerfunctions" prefix="customerfn"%>
 
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">

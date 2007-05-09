@@ -49,8 +49,10 @@ import org.mifos.application.accounts.exceptions.AccountException;
 import org.mifos.application.accounts.loan.business.LoanBO;
 import org.mifos.application.accounts.savings.business.SavingsBO;
 import org.mifos.application.accounts.util.helpers.AccountState;
+import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.customer.exceptions.CustomerException;
+import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.persistence.CustomerPersistence;
 import org.mifos.application.customer.util.helpers.ChildrenStateType;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
@@ -65,6 +67,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
+import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
@@ -904,6 +907,7 @@ public abstract class CustomerBO extends BusinessObject {
 		}
 	}
 
+
 	void incrementChildCount() {
 		this.maxChildCount = this.getMaxChildCount().intValue() + 1;
 	}
@@ -1001,6 +1005,17 @@ public abstract class CustomerBO extends BusinessObject {
 				}
 			}
 		}
+	}
+
+	public void checkIfClientIsATitleHolder()  throws CustomerException{
+				if (getParentCustomer() != null) {
+						for (CustomerPositionEntity position : getParentCustomer().getCustomerPositions())
+							if (position.getCustomer() != null
+									&& position.getCustomer().getCustomerId().intValue()==
+											this.getCustomerId().intValue())//&& position.getPosition().getId().shortValue()==new Short("1").shortValue())
+								throw new CustomerException(CustomerConstants.CLIENT_IS_A_TITLE_HOLDER_EXCEPTION);
+		
+					}
 	}
 
 	protected void updateLoanOfficer(Short loanOfficerId)
@@ -1211,5 +1226,73 @@ public abstract class CustomerBO extends BusinessObject {
 				|| (meetingFrom.isMonthly() && meetingTo.isWeekly()))
 			throw new CustomerException(CustomerConstants.ERRORS_MEETING_FREQUENCY_MISMATCH);
 	}
+
+	public boolean hasAnActiveLoanCounts() {
+		boolean res=false;
+		for(AccountBO account: getAccounts()){
+			if(account.getAccountState().getId().shortValue()==AccountStates.LOANACC_ACTIVEINGOODSTANDING
+					|| account.getAccountState().getId().shortValue()==AccountStates.LOANACC_BADSTANDING){
+				return true;
+			}
+		}
+			return res;
+
+	}
+	private void generateSearchId() throws CustomerException {
+		int count;
+		if (getParentCustomer() != null) {
+			childAddedForParent(getParentCustomer());
+			this.setSearchId(getParentCustomer().getSearchId() + "."
+					+ getParentCustomer().getMaxChildCount());
+		} else {
+			try {
+				count = new CustomerPersistence().getCustomerCountForOffice(
+						CustomerLevel.CLIENT, getOffice().getOfficeId());
+			} catch (PersistenceException pe) {
+				throw new CustomerException(pe);
+			}
+			String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++count;
+			this.setSearchId(searchId);
+		}
+	}
+
+	public void removeGroupMemberShip(PersonnelBO personnel, String comment) throws PersistenceException, CustomerException {
+
+		PersonnelBO user = new PersonnelPersistence()
+		.getPersonnel(getUserContext().getId());
+		CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(comment,
+				new java.sql.Date(System.currentTimeMillis()), user,
+				this);
+			this.addCustomerNotes(accountNotesEntity);		
+			
+			resetPositions(getParentCustomer());
+			getParentCustomer().setUserContext(getUserContext());
+			getParentCustomer().update();
+
+			setPersonnel(personnel);
+			setParentCustomer(null);
+			generateSearchId();			
+			this.update();
+			/*if(clientHasAPerClientMandatorySavingsAcccount()){
+				// TODO  faire le reste.. MAJ montant..
+			}*/
+			
+		}
+
+	public boolean clientHasAPerClientMandatorySavingsAcccount() {
+		for (AccountBO account : getAccounts()) {
+			if (account.getType() == AccountTypes.SAVINGS_ACCOUNT
+				&& account.isOpen()
+				&& account.getState() == AccountState.SAVINGS_ACC_APPROVED
+				&& ((SavingsBO) account).isMandatory()
+				&& ((SavingsBO) account).getRecommendedAmountUnit() ==
+						RecommendedAmountUnit.PER_INDIVIDUAL){
+				return true;
+			}
+		}
+		return false;
+			
+	}
+
 
 }

@@ -403,4 +403,8 @@ public interface SecurityConstants {
     public final short CAN_DEFINE_LABELS = 204;
     
     public final short CAN_DEFINE_HIDDEN_MANDATORY_FIELDS = 205;
+    
+    //Remove Group MemberShip
+    public final short CAN_REMOVE_CLIENTS_FROM_GROUPS = 206;
+
 }

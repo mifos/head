@@ -59,6 +59,7 @@ public interface CustomerConstants {
 	public static final String NEW_STATUS = "newStatus";
 	public static final String NEW_FLAG = "newFlag";
 	public static final String IS_TRAINED = "isTrained";
+	public static final String IS_CLIENT_STATUS_ACTIVE = "isActive";
 	public static final short TRAINED_NO = 2;
 	public static final String TRAINED_DATE = "trainedDate";
 	
@@ -271,4 +272,8 @@ public interface CustomerConstants {
 	public static final String RECENT_ACTIVITIES = "recentActivities";
 	public int HISTORICALDATA_COMMENT_LENGTH = 500;
 	public String HISTORICALDATA_NOTES = "Notes";
+	public static final String GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION = "errors.Group.GroupActiveAccountsPresent";
+	public static final String CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION = "errors.Group.ClientActiveAccountsPresent";
+	public static final String CLIENT_IS_A_TITLE_HOLDER_EXCEPTION = "errors.Group.ClientIsATitleHolder";
+
 }

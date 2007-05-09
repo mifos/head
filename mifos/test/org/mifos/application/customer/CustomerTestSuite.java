@@ -36,20 +36,6 @@ import org.mifos.application.customer.util.helpers.TestCustomerHelpers;
 
 public class CustomerTestSuite extends TestSuite {
 
-	public CustomerTestSuite() throws Exception {
-		super();
-
-	}
-
-	public static void main(String[] args) {
-		try {
-			Test testSuite = suite();
-			TestRunner.run(testSuite);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public static Test suite() throws Exception {
 		CustomerTestSuite testSuite = new CustomerTestSuite();
 		testSuite.addTestSuite(TestCenterPersistence.class);

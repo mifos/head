@@ -473,6 +473,7 @@ public class TestPersonAction extends MifosMockStrutsTestCase {
 		assertFalse(personnel.isLocked());
 		assertEquals(0,personnel.getNoOfTries().intValue());
 	}
+	
 
 	private void createPersonnelAndSetInSession(OfficeBO office, PersonnelLevel personnelLevel) throws Exception{
 		List<CustomFieldView> customFieldView = new ArrayList<CustomFieldView>();

@@ -255,7 +255,7 @@
 			<forward name="cancel_success" path="/clientCustAction.do?method=get" />
 		</action>
 		<!-- Edit Group Transfer Action -->
-		<action path="/groupTransferAction" type="org.mifos.application.customer.group.struts.action.GroupTransferAction" name="groupTransferActionForm" parameter="method" input="/groupTransferAction.do?method=validate" validate="false"
+		<action path="/groupTransferAction" type="org.mifos.application.customer.group.struts.action.GroupTransferAction" name="groupTransferActionForm" parameter="method" input="/groupTransferAction.do?method=validate" validate="true"
 			scope="session">
 			<!--  Load forwards -->
 			<forward name="loadParents_success" path="/centerCustAction.do?method=loadTransferSearch&amp;input=CenterSearch_TransferGroup" />
@@ -269,6 +269,10 @@
 			<forward name="transferToCenter_failure" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
 			<!-- Cancel Page Forwards -->
 			<forward name="cancel_success" path="/groupCustAction.do?method=get" />
+			<!-- Remove group membership Page Forwards -->
+			<forward name="loadGrpMemberShip_success" path="/pages/application/group/jsp/deletegroupmembership.jsp" />
+			<forward name="view_client_details_page" path="/clientCustAction.do?method=get" />
+			
 		</action>
 		<action path="/PersonAction"	type="org.mifos.application.personnel.struts.action.PersonAction"	name="personActionForm" parameter="method" validate="true"	input="/PersonAction.do?method=validate" scope="session">
 			<forward name="chooseOffice_success" path="/pages/application/personnel/jsp/choose_office.jsp" />
@@ -973,7 +977,7 @@
 
 		<!-- off hierarchy Action start-->
 		<action path="/offhierarchyaction" type="org.mifos.application.office.struts.action.OffHierarchyAction"
-		name="offhierarchyactionform" parameter="method" scope="session"
+			name="offhierarchyactionform" parameter="method" scope="session"		
 			input="/offhierarchyaction.do?method=validate" validate="true">
 			<forward name="load_success" path="/pages/application/office/jsp/offhierarchy.jsp" />
 			<forward name="update_success" path="/AdminAction.do?method=load" />

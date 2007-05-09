@@ -172,6 +172,9 @@ public class SavingsBO extends AccountBO {
 		this.activationDate = activationDate;
 	}
 
+	/**
+	 * Most callers will want to call {@link #getRecommendedAmountUnit()}.
+	 */
 	public RecommendedAmntUnitEntity getRecommendedAmntUnit() {
 		return recommendedAmntUnit;
 	}
@@ -179,6 +182,14 @@ public class SavingsBO extends AccountBO {
 	void setRecommendedAmntUnit(
 			RecommendedAmntUnitEntity recommendedAmntUnit) {
 		this.recommendedAmntUnit = recommendedAmntUnit;
+	}
+	
+	public RecommendedAmountUnit getRecommendedAmountUnit() {
+		return RecommendedAmountUnit.fromInt(recommendedAmntUnit.getId());
+	}
+	
+	public void setRecommendedAmountUnit(RecommendedAmountUnit unit) {
+		this.recommendedAmntUnit = new RecommendedAmntUnitEntity(unit);
 	}
 
 	public SavingsTypeEntity getSavingsType() {
@@ -834,7 +845,8 @@ public class SavingsBO extends AccountBO {
 	public void generateAndUpdateDepositActionsForClient(ClientBO client)
 			throws AccountException {
 		if (client.getCustomerMeeting().getMeeting() != null) {
-			if (!(getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.GROUP.getValue() && getRecommendedAmntUnit()
+			if (!(getCustomer().getLevel() == CustomerLevel.GROUP 
+					&& getRecommendedAmntUnit()
 					.getId().equals(
 							RecommendedAmountUnit.COMPLETE_GROUP.getValue()))) {
 				generateDepositAccountActions(client, client

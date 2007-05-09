@@ -1,6 +1,6 @@
 package org.mifos.application.customer.group.struts.action;
 
-import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.customer.business.CustomerHierarchyEntity;
@@ -13,6 +13,9 @@ import org.mifos.application.customer.group.util.helpers.GroupConstants;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -37,19 +40,16 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 	private OfficeBO office;
 	private Short officeId = 3;
 	private Short personnelId = 3;
-	
+	private String flowKey;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/customer/group/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/customer/group/struts-config.xml")
+				.getPath());
 		UserContext userContext = TestObjectFactory.getContext();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
@@ -58,6 +58,12 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 		FlowManager flowManager = new FlowManager();
 		request.getSession(false).setAttribute(Constants.FLOWMANAGER,
 				flowManager);		
+		
+		request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
+		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
+
+		flowKey = createFlow(request, GroupTransferAction.class);
+		request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 	}
 
 	@Override
@@ -257,18 +263,73 @@ public class GroupTransferActionTest extends MifosMockStrutsTestCase{
 
 	}
 	
+	// Test for Remove Group MemberShip
+	public void testSuccessful_removeGroupMemberShip() throws Exception {
+		TestObjectFactory.cleanUpChangeLog();
+		loadParents();
+		HibernateUtil.closeSession();
+		
+		client = TestObjectFactory.createClient("Client",
+				CustomerStatus.CLIENT_ACTIVE, group);
+
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
+		setRequestPathInfo("/groupTransferAction.do");
+		addRequestParameter("method", "removeGroupMemberShip");
+		addRequestParameter("assignedLoanOfficerId", "7");
+		addRequestParameter("comment", "My notes");
+	    assertNotNull(client);
+		
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		verifyForward(ActionForwards.view_client_details_page.toString());
+
+	}
+
+	// Test for Load Group MemberShip
+	public void testSuccessful_LoadGrpMemberShip() throws Exception {
+		TestObjectFactory.cleanUpChangeLog();
+		loadParents();
+		HibernateUtil.closeSession();
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
+		MeetingBO meeting = createWeeklyMeeting(WeekDay.MONDAY, Short.valueOf("1"), new  Date());
+		client=TestObjectFactory.createClient("client", meeting, CustomerStatus.CLIENT_ACTIVE);
+		setRequestPathInfo("/groupTransferAction.do");
+		addRequestParameter("method", "previewParentTransfer");
+		addRequestParameter("centerSystemId", center1.getGlobalCustNum());
+		addRequestParameter("centerName", center1.getDisplayName());
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+
+		
+		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+		setRequestPathInfo("/groupTransferAction.do");		
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client,request);
+	    assertNotNull(client);
+		
+		addRequestParameter("method", "loadGrpMemberShip");
+		actionPerform();
+		verifyNoActionErrors();
+		verifyNoActionMessages();
+		
+	}
+	private MeetingBO createWeeklyMeeting(WeekDay weekDay, Short recurAfer, Date startDate) throws MeetingException{
+		return new MeetingBO(weekDay, recurAfer, startDate, MeetingType.CUSTOMER_MEETING, "MeetingPlace");
+	}
 	public void testCancel() throws Exception {
 		loadOffices();
 		HibernateUtil.closeSession();
 		setRequestPathInfo("/groupTransferAction.do");
 		addRequestParameter("method", "cancel");
-		addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-		actionPerform();
-		verifyForward(ActionForwards.cancel_success.toString());
-		verifyNoActionErrors();
-		verifyNoActionMessages();
-	}
 	
+		addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+		actionPerform();
+	}
+
+
 	private void loadParents() throws Exception{
 		center = createCenter("Center", officeId);
 		office = createOffice();

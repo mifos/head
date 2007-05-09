@@ -8,7 +8,7 @@ import org.mifos.framework.exceptions.ServiceException;
 public class Loan {
 	
 	private final LoanBO bo;
-	
+		
 	Loan(LoanBO businessObject) throws ServiceException {
 		bo = businessObject;
 	}

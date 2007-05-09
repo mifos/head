@@ -872,5 +872,11 @@ public class ClientBO extends CustomerBO {
 		}catch(AccountException ae){
 			throw new CustomerException(ae);
 		}
-	}	
+	}
+	public void updateClientFlag() throws CustomerException,
+			PersistenceException {
+			this.groupFlag = YesNoFlag.NO.getValue();
+			this.update();
+
+	}
 }

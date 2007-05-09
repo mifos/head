@@ -408,6 +408,11 @@
 												action="clientTransferAction.do?method=loadParents&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 												<mifos:mifoslabel name="client.EditLink"
 													bundle="ClientUIResources" />
+
+												<mifos:mifoslabel name="client.EditRemoveSeparator"
+													bundle="ClientUIResources" />
+												<mifos:mifoslabel name="client.RemoveLink"
+													bundle="ClientUIResources" />
 												<mifos:mifoslabel name="${ConfigurationConstants.GROUP}" />
 												<mifos:mifoslabel name="client.MembershipLink"
 													bundle="ClientUIResources" />

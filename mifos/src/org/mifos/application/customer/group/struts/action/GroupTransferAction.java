@@ -1,33 +1,70 @@
 package org.mifos.application.customer.group.struts.action;
 
+
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.bulkentry.util.helpers.BulkEntryConstants;
+import org.mifos.application.customer.business.CustomerBO;
+
+import org.mifos.application.customer.business.PositionEntity;
+import org.mifos.application.customer.business.service.CustomerBusinessService;
 import org.mifos.application.customer.center.business.CenterBO;
 import org.mifos.application.customer.center.business.service.CenterBusinessService;
+import org.mifos.application.customer.client.business.ClientBO;
+import org.mifos.application.customer.client.business.service.ClientBusinessService;
+import org.mifos.application.customer.exceptions.CustomerException;
 import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.group.business.service.GroupBusinessService;
 import org.mifos.application.customer.group.struts.actionforms.GroupTransferActionForm;
 import org.mifos.application.customer.group.util.helpers.CenterSearchInput;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.persistence.CustomerPersistence;
+import org.mifos.application.customer.util.helpers.CustomerConstants;
+import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.office.business.OfficeBO;
+import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.business.service.OfficeBusinessService;
+import org.mifos.application.office.persistence.OfficePersistence;
+import org.mifos.application.office.util.resources.OfficeConstants;
+import org.mifos.application.personnel.business.PersonnelBO;
+import org.mifos.application.personnel.business.PersonnelView;
+import org.mifos.application.personnel.business.service.PersonnelBusinessService;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.components.configuration.business.Configuration;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class GroupTransferAction extends BaseAction {
 
+	
+	private MasterDataService masterService;
+
+	public GroupTransferAction() {
+		masterService = (MasterDataService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.MasterDataService);
+	}
+
+	
 	@Override
 	protected BusinessService getService() throws ServiceException {
 		return getGroupBusinessService();
@@ -126,6 +163,142 @@ public class GroupTransferAction extends BaseAction {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
+	protected CustomerBusinessService getCustomerBusinessService() {
+		return (CustomerBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Customer);
+	}
+	
+	@TransactionDemarcate(joinToken = true)
+	public ActionForward loadGrpMemberShip(ActionMapping mapping,
+						ActionForm form, HttpServletRequest request,
+						HttpServletResponse response) throws Exception {
+		doCleanUp(request.getSession(), form);
+		UserContext userContext = (UserContext) SessionUtils.getAttribute(
+				Constants.USERCONTEXT, request.getSession());
+
+		GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
+		ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(
+				Constants.BUSINESS_KEY, request);
+		
+		CustomerBO customerBO=getCustomerBusinessService().getCustomer(
+		Integer.valueOf(clientInSession.getCustomerId()));		
+		
+		SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
+	
+		List<OfficeView> activeBranches = masterService
+				.getActiveBranches(userContext.getBranchId());
+		SessionUtils.setCollectionAttribute(
+				OfficeConstants.OFFICESBRANCHOFFICESLIST, activeBranches,
+				request);
+		boolean isCenterHeirarchyExists = Configuration.getInstance()
+				.getCustomerConfig(
+						new OfficePersistence().getHeadOffice().getOfficeId())
+				.isCenterHierarchyExists();
+		SessionUtils
+				.setAttribute(BulkEntryConstants.ISCENTERHEIRARCHYEXISTS,
+						isCenterHeirarchyExists ? Constants.YES : Constants.NO,
+						request);
+
+		actionForm.setAssignedLoanOfficerId(clientInSession.getPersonnel()
+				.getPersonnelId().toString());
+		List<PersonnelView> loanOfficers = loadLoanOfficersForBranch(
+				userContext, activeBranches.get(0).getOfficeId());
+		SessionUtils.setCollectionAttribute(
+				CustomerConstants.LOAN_OFFICER_LIST, loanOfficers, request);
+		SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientInSession, request);
+
+		customerBO.checkIfClientIsATitleHolder();
+		actionForm.setIsActive(getClientBusinessService().getClient(
+						customerBO.getCustomerId()).isActive() ? Constants.YES : Constants.NO
+				);
+		return mapping.findForward(ActionForwards.loadGrpMemberShip_success
+				.toString());
+				}
+	
+	@CloseSession
+	@TransactionDemarcate(validateAndResetToken = true)
+	public ActionForward removeGroupMemberShip(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
+		CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+		CustomerBO customerBO = getCustomerBusinessService().getCustomer(customerBOInSession.getCustomerId());
+		checkVersionMismatch(customerBOInSession.getVersionNo(),customerBO.getVersionNo());
+		customerBO.setUserContext(getUserContext(request));
+		customerBO.getCustomerStatus().setLocaleId(
+				getUserContext(request).getLocaleId());
+		
+		checkBeforeRemoving(customerBO,actionForm,request);
+		
+		ClientBO client = getClientBusinessService().getClient(
+				customerBO.getCustomerId());
+	
+		client.updateClientFlag();
+		setInitialObjectForAuditLogging(customerBO);
+		PersonnelBO personnel=null;
+		if (!StringUtils.isNullOrEmpty(actionForm.getAssignedLoanOfficerId())){
+		personnel = getPersonnelBusinessService().getPersonnel(
+				Short.valueOf(actionForm.getAssignedLoanOfficerId()));
+		}
+		customerBO.removeGroupMemberShip(personnel,actionForm.getComment());
+		
+		customerBOInSession = null;
+		customerBO = null;
+		
+		return mapping.findForward(ActionForwards.view_client_details_page.toString());
+		
+		
+	}
+
+	private void checkBeforeRemoving(CustomerBO customerBO,GroupTransferActionForm actionForm,HttpServletRequest request) throws CustomerException{
+
+		if(customerBO.hasAnActiveLoanCounts()) throw new CustomerException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+		else 
+		if(customerBO.getParentCustomer()!=null && customerBO.getParentCustomer().hasAnActiveLoanCounts()) throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+
+	}	
+	public CustomerBO getCustomer(Integer customerId) throws ServiceException {
+		try {
+			return new CustomerPersistence().getCustomer(customerId);
+		} catch (PersistenceException pe) {
+			throw new ServiceException(pe);
+		}
+	}
+
+
+
+	private void doCleanUp(HttpSession session, ActionForm form) {
+		GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
+		actionForm.setComment(null);
+		
+		}
+	
+	private ClientBusinessService getClientBusinessService()throws ServiceException {
+		return (ClientBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Client);
+	}
+
+	private PersonnelBusinessService getPersonnelBusinessService()
+			throws ServiceException {
+		return (PersonnelBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Personnel);
+	}
+
+	private List<PersonnelView> loadLoanOfficersForBranch(
+			UserContext userContext, Short branchId) throws Exception {
+		return masterService.getListOfActiveLoanOfficers(
+				PersonnelConstants.LOAN_OFFICER, branchId, userContext.getId(),
+				userContext.getLevelId());
+	}
+	
+	protected void loadPositions(HttpServletRequest request)
+			throws ApplicationException {
+		SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS,
+				getMasterEntities(PositionEntity.class, getUserContext(request)
+						.getLocaleId()), request);
+	}
 
 	private OfficeBusinessService getOfficeBusinessService()
 			throws ServiceException {
@@ -142,4 +315,18 @@ public class GroupTransferAction extends BaseAction {
 		return (CenterBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Center);
 	}
+	public ActionForward validate(ActionMapping mapping, ActionForm form,
+			HttpServletRequest request, HttpServletResponse httpservletresponse)
+			throws Exception {
+		String method = (String) request.getAttribute("methodCalled");
+		if (method.equalsIgnoreCase(Methods.removeGroupMemberShip.toString())) {
+			return mapping.findForward(ActionForwards.loadGrpMemberShip_success.toString());
+		}
+		if (method.equalsIgnoreCase(Methods.loadGrpMemberShip.toString())) {
+			return mapping.findForward(ActionForwards.loadGrpMemberShip_success.toString());
+		}
+		return null;
+	}
+
+
 }

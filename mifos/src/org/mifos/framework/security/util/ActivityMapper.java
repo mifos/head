@@ -412,6 +412,12 @@ public class ActivityMapper {
 				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
 		activityMap.put("/groupTransferAction-transferToBranch",
 				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+		activityMap.put("/groupTransferAction-loadGrpMemberShip",
+				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+		activityMap.put("/groupTransferAction-removeGroupMemberShip",
+				SecurityConstants.CAN_REMOVE_CLIENTS_FROM_GROUPS);
+		
+
 	}
 
 	private void addMeetingActionMappings() {

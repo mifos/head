@@ -541,4 +541,11 @@ public class GroupBO extends CustomerBO {
 			this.setCustomerActivationDate(this.getCreatedDate());
 	}
 	
+	public void checkIfGroupHasActiveLoan() throws CustomerException {
+		if (isAnyLoanAccountOpen()) {
+			throw new CustomerException(
+					CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+		}
+	}
+	
 }

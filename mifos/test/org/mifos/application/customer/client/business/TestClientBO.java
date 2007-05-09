@@ -106,7 +106,17 @@ public class TestClientBO extends MifosTestCase {
 	public static void setNoOfActiveLoans(ClientPerformanceHistoryEntity clientPerformanceHistoryEntity,Integer noOfActiveLoans) {
 		clientPerformanceHistoryEntity.setNoOfActiveLoans(noOfActiveLoans);
 	}
- 
+	
+	public void testRemoveClientFromGroup() throws Exception {
+		createInitialObjects();
+		client.updateClientFlag();
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		client = TestObjectFactory.getObject(ClientBO.class, client
+				.getCustomerId());
+	
+	}
+
 	public void testUpdateWeeklyMeeting_SavedToUpdateLater()throws Exception{
 		String oldMeetingPlace = "Delhi";
 		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
@@ -1054,7 +1064,7 @@ public class TestClientBO extends MifosTestCase {
 		assertEquals(meetingPlace, client.getCustomerMeeting().getMeeting().getMeetingPlace());
 		assertEquals(recurAfter, client.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter());
 	}
-	
+
 	private void createObjectsForClientTransfer()throws Exception{
 		office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, 
 			TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE), 

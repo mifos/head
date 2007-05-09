@@ -48,6 +48,10 @@
 			<forward name="transferToCenter_failure" path="/pages/application/group/jsp/confirmcentermembership.jsp" />
 			<!-- Cancel Page Forwards -->
 			<forward name="cancel_success" path="/groupCustAction.do?method=get" />
+			<!-- Remove group membership Page Forwards -->
+			<forward name="loadGrpMemberShip_success" path="/pages/application/group/jsp/deletegroupmembership.jsp" />
+			<forward name="view_client_details_page" path="/clientCustAction.do?method=get" />
+			
 		</action>
 		
 	<!-- Group action M2 style-->
