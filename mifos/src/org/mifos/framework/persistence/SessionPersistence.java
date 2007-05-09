@@ -18,7 +18,14 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.SessionHolder;
 
-public class SessionPersistence {
+/**
+ * Like {@link Persistence} but stores {@link #sessionHolder} as
+ * a field, rather than the static global variables of
+ * {@link HibernateUtil}.  When using this class, there should
+ * be no need to call methods in {@link HibernateUtil} (all
+ * needed functionality should go here or in {@link SessionHolder}).
+ */
+public abstract class SessionPersistence {
 	
 	private SessionHolder sessionHolder;
 	

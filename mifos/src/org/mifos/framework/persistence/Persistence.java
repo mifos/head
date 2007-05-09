@@ -18,6 +18,12 @@ import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 
+/**
+ * This class is intended to be replaced by {@link SessionPersistence}
+ * which intentionally has a very similar set of methods (many subclasses
+ * can be moved over just by changing what they inherit from, with
+ * no further changes).
+ */
 public abstract class Persistence {
 
 	public Connection getConnection() {
