@@ -66,6 +66,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -96,6 +97,15 @@ public class AccountApplyPaymentAction extends BaseAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("applyPaymentAction");
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("applyPayment", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(joinToken = true)

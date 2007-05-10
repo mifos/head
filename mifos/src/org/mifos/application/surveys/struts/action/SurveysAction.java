@@ -16,6 +16,9 @@ import org.mifos.application.surveys.struts.actionforms.SurveyActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.persistence.SessionOpener;
+import org.mifos.framework.persistence.ThreadLocalOpener;
 import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
@@ -23,14 +26,14 @@ import org.mifos.framework.util.helpers.Constants;
 
 public class SurveysAction extends BaseAction {
 
-	public SurveysPersistence surveysPersistence;
+	private SessionOpener opener;
 
 	public SurveysAction() {
-		this(new SurveysPersistence());
+		this(new ThreadLocalOpener());
 	}
 
-	public SurveysAction(SurveysPersistence persistence) {
-		surveysPersistence = persistence;
+	public SurveysAction(SessionOpener opener) {
+		this.opener = opener;
 	}
 	
 	public static ActionSecurity getSecurity() {
@@ -49,22 +52,30 @@ public class SurveysAction extends BaseAction {
 	public ActionForward mainpage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		System.out.println("mainpage");
+		SessionHolder holder = opener.open();
+		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
 		List<Survey> customerSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.CUSTOMERS);
 		List<Survey> accountsSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.ACCOUNTS);
 		
 		request.getSession().setAttribute(SurveysConstants.KEY_ACCOUNTS_SURVEYS_LIST, accountsSurveys);
 		request.getSession().setAttribute(SurveysConstants.KEY_CUSTOMERS_SURVEYS_LIST, customerSurveys);
+		holder.close();
 		return mapping.findForward(ActionForwards.load_main_page
 				.toString());
 	}
 	
-	public ActionForward get(ActionMapping mapping, ActionForm form,
+	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
+		System.out.println("mainpage");
+		SessionHolder holder = opener.open();
+		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
 		SurveyActionForm actionForm = (SurveyActionForm) form;
 		int surveyId = actionForm.getSurveyIdValue();
 		Survey survey = surveysPersistence.getSurvey(surveyId);
 		request.getSession().setAttribute(Constants.BUSINESS_KEY, survey);
+		holder.close();
 		return mapping.findForward(ActionForwards.get_success.toString());
 	}
 	

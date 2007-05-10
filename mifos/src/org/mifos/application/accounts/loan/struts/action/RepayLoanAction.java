@@ -25,7 +25,9 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -53,6 +55,15 @@ public class RepayLoanAction extends BaseAction {
 	@Override
 	protected BusinessService getService() throws ServiceException {
 		return loanBusinessService;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("repayLoanAction");
+		security.allow("loadRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+		security.allow("preview", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+		security.allow("previous", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+		security.allow("makeRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+		return security;
 	}
 
 	@TransactionDemarcate(joinToken = true)

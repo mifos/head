@@ -24,7 +24,9 @@ import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -38,6 +40,15 @@ public class LoanDisbursmentAction extends BaseAction {
 	private LoanBusinessService loanBusinessService = null;
 
 	private MasterDataService masterDataService = null;
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("loanDisbursmentAction");
+		security.allow("load", SecurityConstants.LOAN_CAN_DISBURSE_LOAN);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.VIEW);
+		return security;
+	}
 
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward load(ActionMapping mapping, ActionForm form,

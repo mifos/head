@@ -22,6 +22,8 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -40,6 +42,18 @@ public class PersonnelSettingsAction extends BaseAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("yourSettings");
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("manage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+		security.allow("loadChangePassword",
+				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

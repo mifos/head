@@ -49,7 +49,12 @@ public abstract class SessionPersistence {
 	}
 	
 	protected SessionHolder getSessionHolder() {
-		return sessionHolder;
+		if (sessionHolder != null) {
+			return sessionHolder;
+		}
+		else {
+			return HibernateUtil.getOrCreateSessionHolder();
+		}
 	}
 	
 
@@ -168,6 +173,4 @@ public abstract class SessionPersistence {
 	public void initialize(Object object) {
 		Hibernate.initialize(object);
 	}
-
-
 }

@@ -56,6 +56,8 @@ import org.mifos.application.customer.util.helpers.CustomerLevel;
 import org.mifos.application.customer.util.helpers.CustomerRecentActivityView;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -69,6 +71,11 @@ public class CustomerAccountAction extends AccountAppAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("customerAccountAction");
+		security.allow("load", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

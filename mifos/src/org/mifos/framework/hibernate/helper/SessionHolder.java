@@ -45,4 +45,7 @@ public class SessionHolder {
 	public AuditInterceptor getInterceptor(){
 		return interceptor;
 	}
+
+	public void close() {
+	}
 }

@@ -68,7 +68,9 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -98,6 +100,18 @@ public class SavingsClosureAction extends BaseAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("savingsClosureAction");
+		security.allow("load", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+		security.allow("preview",
+				SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+		security.allow("previous",
+				SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+		security
+				.allow("close", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+		return security;
 	}
 
 	@TransactionDemarcate(joinToken = true)

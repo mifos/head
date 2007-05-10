@@ -64,7 +64,9 @@ import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -89,6 +91,19 @@ public class EditCustomerStatusAction extends BaseAction {
 	@Override
 	protected BusinessService getService() {
 		return customerService;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("editCustomerStatusAction");
+		security.allow("loadStatus", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.VIEW);
+		security.allow("previewStatus", SecurityConstants.VIEW);
+		security.allow("previousStatus", SecurityConstants.VIEW);
+		security.allow("updateStatus", SecurityConstants.VIEW);
+		security.allow("cancelStatus", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@Override

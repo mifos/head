@@ -51,7 +51,9 @@ import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -69,6 +71,15 @@ public class ApplyAdjustment extends BaseAction {
 		return new AccountBusinessService();
 	}
 
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("applyAdjustment");
+		security.allow("loadAdjustment", SecurityConstants.VIEW);
+		security.allow("previewAdjustment", SecurityConstants.VIEW);
+		security.allow("applyAdjustment", SecurityConstants.VIEW);
+		security.allow("cancelAdjustment", SecurityConstants.VIEW);
+		return security;
+	}
+	
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)

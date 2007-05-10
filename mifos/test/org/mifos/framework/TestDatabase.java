@@ -8,9 +8,11 @@ import net.sourceforge.mayfly.Database;
 import net.sourceforge.mayfly.dump.SqlDumper;
 
 import org.hibernate.classic.Session;
+import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.persistence.SessionOpener;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
-public class TestDatabase {
+public class TestDatabase implements SessionOpener {
 	
 	private Database database = new Database();
 	
@@ -65,6 +67,10 @@ public class TestDatabase {
 		Writer writer = new FileWriter("build/database-dump.sql");
 		new SqlDumper().dump(database.dataStore(), writer);
 		writer.flush();
+	}
+
+	public SessionHolder open() {
+		return new SessionHolder(openSession());
 	}
 
 }

@@ -22,8 +22,8 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class TestSurveysAction extends MifosMockStrutsTestCase {
 	
-	SurveysPersistence surveysPersistence;
 	ActionMapping moduleMapping;
+	private TestDatabase database;
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -35,26 +35,19 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 				.getPath());
 		UserContext userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		TestDatabase database = TestDatabase.makeStandard();
-		SessionHolder holder = new SessionHolder(database.openSession());
-		surveysPersistence = new SurveysPersistence(holder);
-		setRequestPathInfo("/surveysAction");
-		addRequestParameter("method", "findActionMapping");
-		actionPerform();
-		moduleMapping = (ActionMapping) request.getAttribute(Constants.ACTION_MAPPING);
+
+		database = TestDatabase.makeStandard();
+		moduleMapping = findMapping("/surveysAction");
 	}
 	
 	private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {
 		Survey survey = new Survey(surveyName, SurveyState.ACTIVE, SurveyType.CUSTOMERS);
 		Question question = new Question(questionText, AnswerType.FREETEXT);
 		survey.addQuestion(question, false);
-		surveysPersistence.createOrUpdate(survey);
+		new SurveysPersistence(database.open()).createOrUpdate(survey);
 		return survey;
 	}
 	
@@ -62,7 +55,7 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		String testName = "Test Survey 1";
 		String questionText= "A question";
 		makeTestSurvey(testName, questionText);
-		SurveysAction action = new SurveysAction(surveysPersistence);
+		SurveysAction action = new SurveysAction(database);
 		action.mainpage(moduleMapping, null, request, response);
 		verifyNoActionErrors();
 		List<Survey> surveys = (List<Survey>) request.getSession().getAttribute(SurveysConstants.KEY_CUSTOMERS_SURVEYS_LIST);
@@ -74,10 +67,10 @@ public class TestSurveysAction extends MifosMockStrutsTestCase {
 		String testName = "Test Survey 2";
 		String questionText= "Some question here";
 		Survey survey = makeTestSurvey(testName, questionText);
-		SurveysAction action = new SurveysAction(surveysPersistence);
+		SurveysAction action = new SurveysAction(database);
 		SurveyActionForm form = new SurveyActionForm();
 		form.setSurveyId(Integer.toString(survey.getSurveyId()));
-		action.get(moduleMapping, form, request, response);
+		action.load(moduleMapping, form, request, response);
 		verifyNoActionErrors();
 		Survey retrievedSurvey = (Survey) request.getSession().getAttribute(Constants.BUSINESS_KEY);
 		assertEquals(testName, retrievedSurvey.getName());

@@ -61,6 +61,7 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -92,6 +93,14 @@ public class LoanAccountAction extends AccountAppAction {
 	@Override
 	protected BusinessService getService() {
 		return loanBusinessService;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("loanAccountAction");
+		security.allow("waiveChargeDue", SecurityConstants.VIEW);
+		security.allow("forwardWaiveCharge", SecurityConstants.VIEW);
+		security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(joinToken = true)

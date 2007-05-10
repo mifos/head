@@ -82,7 +82,9 @@ import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -103,6 +105,31 @@ public class GroupCustAction extends CustAction {
 	@Override
 	protected BusinessService getService(){
 		return getGroupBusinessService();
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("groupCustAction");
+		security.allow("hierarchyCheck", SecurityConstants.VIEW);
+		security.allow("chooseOffice", SecurityConstants.VIEW);
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("loadMeeting",
+				SecurityConstants.MEETING_CREATE_GROUP_MEETING);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.VIEW);
+
+		security.allow("getDetails", SecurityConstants.VIEW);
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("manage", SecurityConstants.GROUP_EDIT_GROUP);
+		security.allow("previewManage", SecurityConstants.VIEW);
+		security.allow("previousManage", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.GROUP_EDIT_GROUP);
+		security.allow("loadSearch", SecurityConstants.VIEW);
+		security.allow("search", SecurityConstants.VIEW);
+
+		security.allow("loadChangeLog", SecurityConstants.VIEW);
+		security.allow("cancelChangeLog", SecurityConstants.VIEW);
+		return security;
 	}
 	
 	@TransactionDemarcate (saveToken = true)

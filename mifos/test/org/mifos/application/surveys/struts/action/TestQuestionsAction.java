@@ -21,7 +21,7 @@ import org.mifos.framework.util.helpers.ResourceLoader;
 
 public class TestQuestionsAction extends MifosMockStrutsTestCase {
 
-	SurveysPersistence surveysPersistence;
+	private TestDatabase database;
 	ActionMapping moduleMapping;
 
 	@Override
@@ -32,20 +32,12 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 				"org/mifos/application/surveys/struts-config.xml").getPath());
 		UserContext userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		TestDatabase database = TestDatabase.makeStandard();
-		SessionHolder holder = new SessionHolder(database.openSession());
-		surveysPersistence = new SurveysPersistence(holder);
-		setRequestPathInfo("/questionsAction");
-		addRequestParameter("method", "findActionMapping");
-		actionPerform();
-		moduleMapping = (ActionMapping) request
-				.getAttribute(Constants.ACTION_MAPPING);
+		database = TestDatabase.makeStandard();
+		moduleMapping = findMapping("/questionsAction");
 	}
 
 	private Question makeTestSelectQuestion(String name, int choiceNumber)
@@ -57,7 +49,7 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 			choices.add(new QuestionChoice("Test Choice " + i));
 		}
 		question.setChoices(choices);
-		surveysPersistence.createOrUpdate(question);
+		new SurveysPersistence(database.open()).createOrUpdate(question);
 		return question;
 	}
 
@@ -67,27 +59,27 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		Question question = new Question(name, type);
 		question.setNumericMin(min);
 		question.setNumericMax(max);
-		surveysPersistence.createOrUpdate(question);
+		new SurveysPersistence(database.open()).createOrUpdate(question);
 		return question;
 	}
 
 	private Question makeTestTextQuestion(String name) throws Exception {
 		AnswerType type = AnswerType.fromInt(3);
 		Question question = new Question(name, type);
-		surveysPersistence.createOrUpdate(question);
+		new SurveysPersistence(database.open()).createOrUpdate(question);
 		return question;
 	}
 
 	private Question makeTestDateQuestion(String name) throws Exception {
 		AnswerType type = AnswerType.fromInt(5);
 		Question question = new Question(name, type);
-		surveysPersistence.createOrUpdate(question);
+		new SurveysPersistence(database.open()).createOrUpdate(question);
 		return question;
 	}
 
 	public void testViewQuestions() throws Exception {
 		
-		QuestionsAction action = new QuestionsAction(surveysPersistence);
+		QuestionsAction action = new QuestionsAction(database);
 		// Set up test cases
 		List<Question> testQuestionList = new ArrayList<Question>();
 		testQuestionList.add(makeTestSelectQuestion("Select Text", 5));

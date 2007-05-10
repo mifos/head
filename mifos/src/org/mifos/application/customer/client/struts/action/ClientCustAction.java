@@ -92,7 +92,9 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -116,6 +118,40 @@ public class ClientCustAction extends CustAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("clientCustAction");
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("chooseOffice", SecurityConstants.VIEW);
+		security.allow("next", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previewPersonalInfo", SecurityConstants.VIEW);
+		security.allow("retrievePictureOnPreview", SecurityConstants.VIEW);
+		security.allow("prevPersonalInfo", SecurityConstants.VIEW);
+		security.allow("prevMFIInfo", SecurityConstants.VIEW);
+		security.allow("prevMeeting", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.VIEW);
+		security.allow("loadMeeting",
+				SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("editPersonalInfo",
+				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+		security.allow("previewEditPersonalInfo", SecurityConstants.VIEW);
+		security.allow("prevEditPersonalInfo", SecurityConstants.VIEW);
+		security.allow("updatePersonalInfo",
+				SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+		security.allow("editMfiInfo",
+				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
+		security.allow("previewEditMfiInfo", SecurityConstants.VIEW);
+		security.allow("prevEditMfiInfo", SecurityConstants.VIEW);
+		security.allow("updateMfiInfo",
+				SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
+		security.allow("retrievePicture", SecurityConstants.VIEW);
+		security.allow("showPicture", SecurityConstants.VIEW);
+		security.allow("loadChangeLog", SecurityConstants.VIEW);
+		security.allow("cancelChangeLog", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

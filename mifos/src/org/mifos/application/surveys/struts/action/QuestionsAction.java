@@ -17,19 +17,24 @@ import org.mifos.application.surveys.struts.actionforms.SurveyActionForm;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.SessionHolder;
+import org.mifos.framework.persistence.SessionOpener;
+import org.mifos.framework.persistence.ThreadLocalOpener;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 
 public class QuestionsAction extends BaseAction {
-
-	SurveysPersistence surveysPersistence;
+	
+	private SessionOpener opener;
 	
 	public QuestionsAction() {
-		this(new SurveysPersistence());
+		this(new ThreadLocalOpener());
 	}
 	
-	public QuestionsAction(SurveysPersistence persistence) {
-		surveysPersistence = persistence;
+	public QuestionsAction(SessionOpener opener) {
+		this.opener = opener;
 	}
 	
 	@Override
@@ -37,11 +42,20 @@ public class QuestionsAction extends BaseAction {
 		throw new RuntimeException("not implemented");
 		//             return new SurveysBusinessService();
 	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("questions");
+		security.allow("viewQuestions", SecurityConstants.VIEW);
+		security.allow("defineQuestions", SecurityConstants.VIEW);
+		return security;
+	}
 
 	public ActionForward viewQuestions(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-
+		SessionHolder holder = opener.open();
+		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
+		
 		List<Question> questionList = surveysPersistence.retrieveAllQuestions();
 
 		request.getSession().setAttribute("questionList", questionList);

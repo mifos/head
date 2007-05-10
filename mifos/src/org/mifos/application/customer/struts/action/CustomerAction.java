@@ -11,6 +11,8 @@ import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -21,6 +23,17 @@ public class CustomerAction extends AccountAppAction {
 	
 	public CustomerAction() throws Exception {
 		super();
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("customerAction");
+		security.allow("forwardWaiveChargeDue", SecurityConstants.VIEW);
+		security.allow("forwardWaiveChargeOverDue", SecurityConstants.VIEW);
+		security.allow("waiveChargeDue", SecurityConstants.VIEW);
+		security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
+		security.allow("getAllActivity", SecurityConstants.VIEW);
+		security.allow("getAllClosedAccounts", SecurityConstants.VIEW);
+		return security;
 	}
 	
 	@TransactionDemarcate(validateAndResetToken=true)
