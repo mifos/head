@@ -1115,11 +1115,9 @@ CREATE TABLE CUSTOMER (
   CREATED_DATE DATE,
   UPDATED_DATE DATE,
   
-  /* Is SEARCH_ID supposed to be UNIQUE?  There is
-     a unique index in Index.sql and it would seem to
-     make sense based on how search id's are constructed.
-     But we should probably make it a UNIQUE constraint
-     here. */
+  /* We could have a UNIQUE constraint on the combination
+     of SEARCH_ID and BRANCH_ID if we want (search ID's are
+     only unique within a branch). */
   SEARCH_ID VARCHAR(100),
 
   MAX_CHILD_COUNT INTEGER,
