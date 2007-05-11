@@ -72,6 +72,7 @@ public class LatestTest extends TestCase {
 	    DatabaseSetup.executeScript(database, "sql/Iteration15-DDL-DBScripts24102006.sql");
 	    DatabaseSetup.executeScript(database, "sql/Iteration15-DBScripts20061012.sql");
 	    DatabaseSetup.executeScript(database, "sql/add-version.sql");
+	    //DatabaseSetup.executeScript(database, "sql/Index.sql");
 	    return database.dataStore();
 	}
 
