@@ -38,6 +38,8 @@
 
 package org.mifos.framework.security.util;
 
+import java.io.IOException;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
@@ -223,6 +225,15 @@ public class UserContext implements Serializable {
 
 	public void setMfiLocale(Locale mfiLocale) {
 		this.mfiLocale = mfiLocale;
+	}
+	
+	public void dump(PrintStream out) throws IOException {
+		out.print("User " + name + ", id=" + id + 
+			", global=" + userGlobalNo + "\n");
+		out.print("MFI locale ID=" + mfiLocaleId + 
+			", locale=" + mfiLocale + "\n");
+		out.print("Locale ID=" + localeId +
+			", locale=" + preferredLocale + "\n");
 	}
 
 }

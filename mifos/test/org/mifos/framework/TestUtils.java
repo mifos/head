@@ -26,10 +26,28 @@ public class TestUtils {
 	}
 
 	/**
+	 * This is a closer simulation to real life than {@link #makeUser()}
+	 * in terms of the locales.  It probably could replace it, although
+	 * I haven't tried to see whether that breaks anything.
+	 */
+	public static UserContext makeUserWithLocales() {
+		UserContext user = makeUser(ADMIN_ROLE, ukLocale());
+		user.setLocaleId(TestObjectFactory.TEST_LOCALE);
+
+		user.setMfiLocale(ukLocale());
+		user.setMfiLocaleId(TestObjectFactory.TEST_LOCALE);
+		return user;
+	}
+
+	/**
 	 * Also see {@link TestObjectFactory#getUserContext()} which should be
 	 * slower (it involves several database accesses).
 	 */
 	public static UserContext makeUser(int role) {
+		return makeUser(role, sampleLocale());
+	}
+
+	public static UserContext makeUser(int role, Locale locale) {
 		UserContext user = new UserContext();
 		user.setId(PersonnelConstants.SYSTEM_USER);
 		user.setLocaleId(TestObjectFactory.TEST_LOCALE);
@@ -38,7 +56,7 @@ public class TestUtils {
 		user.setRoles(set);
 		user.setLevel(PersonnelLevel.NON_LOAN_OFFICER);
 		user.setName("mifos");
-		user.setPreferredLocale(sampleLocale());
+		user.setPreferredLocale(locale);
 		user.setBranchId(TestObjectFactory.HEAD_OFFICE);
 		user.setBranchGlobalNum("0001");
 		return user;

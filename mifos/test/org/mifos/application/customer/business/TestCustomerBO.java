@@ -40,6 +40,7 @@ import org.mifos.application.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -194,9 +195,7 @@ public class TestCustomerBO extends MifosTestCase {
 
 		center = TestObjectFactory.createCenter("Center", meeting, 
 			getBranchOffice().getOfficeId(), loanOfficer.getPersonnelId());
-		// This gives us "13" instead of "Active" on the assert
-//		center.setUserContext(TestUtils.makeUser());
-		center.setUserContext(TestObjectFactory.getUserContext());
+		center.setUserContext(TestUtils.makeUserWithLocales());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.changeStatus(CustomerStatus.CENTER_INACTIVE, null,
 				"comment");
@@ -210,8 +209,8 @@ public class TestCustomerBO extends MifosTestCase {
 		List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(
 				EntityType.CENTER, center.getCustomerId());
 		assertEquals(1, auditLogList.size());
-		assertEquals(EntityType.CENTER.getValue(), auditLogList.get(0)
-				.getEntityType());
+		assertEquals(EntityType.CENTER, 
+				auditLogList.get(0).getEntityTypeAsEnum());
 		Set<AuditLogRecord> records = auditLogList.get(0).getAuditLogRecords();
 		assertEquals(1, records.size());
 		AuditLogRecord record = records.iterator().next();

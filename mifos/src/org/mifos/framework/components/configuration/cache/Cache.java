@@ -43,7 +43,7 @@ import java.util.Map;
  *  This class defines methods which allow elements to be put into or retrieved from the Cache 
  *  which is maintained as a map.  
  */
-public class Cache implements CacheIntf {
+public class Cache {
 	private Map<String,Object> cache;
 	
 	public Cache(){}
