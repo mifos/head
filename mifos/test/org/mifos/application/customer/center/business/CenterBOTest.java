@@ -85,9 +85,7 @@ public class CenterBOTest extends MifosTestCase {
 		address.setCity("Bangalore");
 		address.setLine1("Aditi");
 
-		// Changing TestObjectFactory.getUserContext() to TestUtils.makeUser()
-		// caused 4 instead of 5 records from getAuditLogRecords
-		center.setUserContext(TestObjectFactory.getUserContext());
+		center.setUserContext(TestUtils.makeUserWithLocales());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
 		center.update(TestObjectFactory.getUserContext(), personnel,
 				externalId, mfiJoiningDate, address, null, null);

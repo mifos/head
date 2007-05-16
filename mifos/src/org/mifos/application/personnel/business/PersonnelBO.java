@@ -661,7 +661,7 @@ public class PersonnelBO extends BusinessObject {
 	}
 
 	public boolean isActive() {
-		return getStatus().getId().equals(PersonnelStatus.ACTIVE.getValue());
+		return getStatusAsEnum() == PersonnelStatus.ACTIVE;
 	}
 
 	public boolean isLoanOfficer() {

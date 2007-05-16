@@ -392,8 +392,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals(Integer.valueOf("1"), personnel.getPersonnelDetails()
 				.getMaritalStatus());
 		assertEquals(PersonnelLevel.NON_LOAN_OFFICER, personnel.getLevelEnum());
-		assertEquals(PersonnelStatus.ACTIVE.getValue(), personnel.getStatus()
-				.getId());
+		assertTrue(personnel.isActive());
 		assertEquals(0, personnel.getPersonnelMovements().size());
 		personnel.update(PersonnelStatus.INACTIVE,
 					PersonnelLevel.LOAN_OFFICER, createdBranchOffice, Integer
@@ -426,8 +425,7 @@ public class TestPersonnelBO extends MifosTestCase {
 		assertEquals(2, personnel.getTitle().intValue());
 		assertEquals(PersonnelLevel.LOAN_OFFICER, personnel
 				.getLevelEnum());
-		assertEquals(PersonnelStatus.INACTIVE.getValue(), personnel.getStatus()
-				.getId());
+		assertFalse(personnel.isActive());
 		assertEquals(2, personnel.getPersonnelMovements().size());
 		assertEquals(1, personnel.getPersonnelRoles().size());
 		assertEquals(noOfTries, personnel.getNoOfTries());

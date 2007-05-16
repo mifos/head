@@ -105,9 +105,7 @@ public class TestSavingsOfferingBO extends MifosTestCase {
 				ApplicableTo.CLIENTS, startDate,
 				PrdStatus.SAVINGS_ACTIVE, SavingsType.VOLUNTARY,
 				InterestCalcType.MINIMUM_BALANCE);
-		/* Changing to TestUtils.makeUser() caused "1" instead of
-		   "Minimum Balance" in the audit logs. */
-		savingsProduct.setUserContext(TestObjectFactory.getUserContext());
+		savingsProduct.setUserContext(TestUtils.makeUserWithLocales());
 		HibernateUtil.getInterceptor().createInitialValueMap(savingsProduct);
 		savingsProduct.update(Short.valueOf("1"), newName, newShortName,
 				productCategory, prdApplicableMaster, startDate, endDate,

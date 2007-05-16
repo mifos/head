@@ -511,10 +511,7 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			createParentObjects(CustomerStatus.GROUP_PARTIAL);
-			/* Changing TestObjectFactory.getUserContext() 
-			   to TestUtils.makeUser() caused this to fail with a different
-			   exception */
-			client = new ClientBO(TestObjectFactory.getUserContext(), 
+			client = new ClientBO(TestUtils.makeUserWithLocales(), 
 				clientNameDetailView.getDisplayName(), 
 				CustomerStatus.CLIENT_PENDING, null, null, null, null, null, 
 				null, personnel, group.getOffice().getOfficeId(), group, null,
@@ -535,10 +532,7 @@ public class TestClientBO extends MifosTestCase {
 			ClientNameDetailView spouseNameDetailView = new ClientNameDetailView(NameType.SPOUSE,TestObjectFactory.SAMPLE_SALUTATION,"first","middle","last","secondLast");
 			ClientDetailView clientDetailView = new ClientDetailView(1,1,1,1,1,1,Short.valueOf("1"),Short.valueOf("1"),Short.valueOf("41"));
 			createParentObjects(CustomerStatus.GROUP_PARTIAL); 
-			/* Changing TestObjectFactory.getUserContext() 
-			   to TestUtils.makeUser() caused this to fail with a different
-			   exception */
-			client = new ClientBO(TestObjectFactory.getUserContext(), 
+			client = new ClientBO(TestUtils.makeUserWithLocales(), 
 					clientNameDetailView.getDisplayName(), 
 					CustomerStatus.CLIENT_ACTIVE, null, null, null, null, 
 					null, null, personnel, group.getOffice().getOfficeId(), 
@@ -621,10 +615,7 @@ public class TestClientBO extends MifosTestCase {
 		client = TestObjectFactory.getObject(
 			ClientBO.class, client.getCustomerId());
 		try {
-			/* Changing TestObjectFactory.getUserContext() 
-			   to TestUtils.makeUser() caused this to fail with a different
-			   exception */
-			client = new ClientBO(TestObjectFactory.getUserContext(), 
+			client = new ClientBO(TestUtils.makeUserWithLocales(), 
 				clientNameDetailView.getDisplayName(), 
 				CustomerStatus.CLIENT_PARTIAL, null, null, null, null, 
 				null, null, personnel, officeId, null,personnel, 
@@ -739,7 +730,7 @@ public class TestClientBO extends MifosTestCase {
 		accountBO = createSavingsAccount(client,"fsaf6","ads6");
 		HibernateUtil.closeSession();
 		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
-		client.setUserContext(TestObjectFactory.getUserContext());
+		client.setUserContext(TestUtils.makeUserWithLocales());
 		try{
 			client.transferToGroup(group1);
 			fail();
