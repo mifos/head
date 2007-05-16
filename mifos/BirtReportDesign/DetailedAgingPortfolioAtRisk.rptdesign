@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.6" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.1.2.v20070205-1728 Build &lt;20070205-1728></property>
+    <property name="units">in</property>
+    <property name="comments">Copyright (c) 2006 &lt;&lt;Your Company Name here>></property>
+    <parameters>
+        <scalar-parameter name="userId" id="29">
+            <property name="hidden">true</property>
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <scalar-parameter name="localeId" id="32">
+            <property name="hidden">true</property>
+            <property name="valueType">static</property>
+            <property name="dataType">integer</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+        <cascading-parameter-group name="branch_loanOfficer" id="38">
+            <property name="dataSetMode">multiple</property>
+            <parameters>
+                <scalar-parameter name="branchId" id="39">
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText">Branch Office</text-property>
+                    <property name="allowNull">false</property>
+                    <property name="controlType">list-box</property>
+                    <property name="dataSetName">Branches</property>
+                    <expression name="valueExpr">row["ID"]</expression>
+                    <expression name="labelExpr">row["Name"]</expression>
+                    <property name="mustMatch">true</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                </scalar-parameter>
+                <scalar-parameter name="loanOfficerId" id="40">
+                    <property name="valueType">dynamic</property>
+                    <property name="dataType">integer</property>
+                    <text-property name="promptText">Loan Officer</text-property>
+                    <property name="allowNull">false</property>
+                    <property name="controlType">list-box</property>
+                    <property name="dataSetName">LoanOfficers</property>
+                    <expression name="valueExpr">row["ID"]</expression>
+                    <expression name="labelExpr">row["Name"]</expression>
+                    <property name="mustMatch">true</property>
+                    <structure name="format">
+                        <property name="category">Unformatted</property>
+                    </structure>
+                </scalar-parameter>
+            </parameters>
+        </cascading-parameter-group>
+        <scalar-parameter name="loanProductId" id="30">
+            <property name="valueType">dynamic</property>
+            <property name="dataType">integer</property>
+            <text-property name="promptText">Loan Product</text-property>
+            <property name="allowNull">false</property>
+            <property name="controlType">list-box</property>
+            <property name="dataSetName">LoanProducts</property>
+            <expression name="valueExpr">dataSetRow["ID"]</expression>
+            <expression name="labelExpr">dataSetRow["Name"]</expression>
+            <property name="mustMatch">true</property>
+            <property name="fixedOrder">true</property>
+            <structure name="format">
+                <property name="category">General Number</property>
+                <property name="pattern">General Number</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <script-data-source name="Scripted Data Source" id="4"/>
+    </data-sources>
+    <data-sets>
+        <script-data-set name="LoanProducts" id="5">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">ID</property>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">any</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[reportsDataService = Packages.org.mifos.application.reports.business.service.ReportsDataService.getInstance();
+
+var localeId = reportContext.getParameterValue("localeId");
+loanProducts = reportsDataService.getAllLoanProducts(reportsDataService.switchIntegerIntoShort(localeId));
+iterator = loanProducts.iterator();]]></method>
+            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+	return false;
+}
+
+var loanProduct = iterator.next( );
+
+row["ID"] = loanProduct.getPrdOfferingId();
+row["Name"] = loanProduct.getPrdOfferingName();
+
+return true;]]></method>
+            <method name="close"><![CDATA[reportsDataService = null;
+
+loanProducts = null;
+iterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="Branches" id="34">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">ID</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[reportsDataService = Packages.org.mifos.application.reports.business.service.ReportsDataService.getInstance();
+
+var userId = reportContext.getParameterValue("userId");
+branches = reportsDataService.getActiveBranchesUnderUser(reportsDataService.switchIntegerIntoShort(userId));
+iterator = branches.iterator();]]></method>
+            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+	return false;
+}
+
+var branch = iterator.next( );
+
+row["ID"] = branch.getOfficeId();
+row["Name"] = branch.getOfficeName();
+
+return true;]]></method>
+            <method name="close"><![CDATA[reportsDataService = null;
+
+branches = null;
+iterator = null;]]></method>
+        </script-data-set>
+        <script-data-set name="LoanOfficers" id="35">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">ID</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Name</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">ID</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Name</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">ID</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Name</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[reportsDataService = Packages.org.mifos.application.reports.business.service.ReportsDataService.getInstance();
+
+var userId = reportContext.getParameterValue("userId");
+var branchId = reportContext.getParameterValue("branchId");
+loanOfficers = reportsDataService.getActiveLoanOfficers(reportsDataService.switchIntegerIntoShort(userId), reportsDataService.switchIntegerIntoShort(branchId));
+iterator = loanOfficers.iterator();]]></method>
+            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+	return false;
+}
+
+var loanOfficer = iterator.next( );
+
+row["ID"] = loanOfficer.getPersonnelId();
+row["Name"] = loanOfficer.getDisplayName();
+
+return true;]]></method>
+            <method name="close"><![CDATA[reportsDataService = null;
+
+loanOfficers = null;
+iterator = null;]]></method>
+        </script-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <text id="8">
+            <property name="contentType">auto</property>
+            <text-property name="content"><![CDATA[loan product1~~~~~~~~~~~]]></text-property>
+        </text>
+    </body>
+</report>

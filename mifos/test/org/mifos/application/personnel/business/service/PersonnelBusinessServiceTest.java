@@ -108,19 +108,19 @@ public class PersonnelBusinessServiceTest extends MifosTestCase {
 		}
 
 	}	
-	public void  testGetActiveLoUnderUser()throws Exception{
+	public void  testGetActiveLoanOfficersUnderOffice()throws Exception{
 		office = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		personnel = createPersonnel(office, PersonnelLevel.NON_LOAN_OFFICER);
-		List<PersonnelBO> loanOfficers = personnelBusinessService.getActiveLoUnderUser(office.getOfficeId());
+		List<PersonnelBO> loanOfficers = personnelBusinessService.getActiveLoanOfficersUnderOffice(office.getOfficeId());
 		assertNotNull(loanOfficers);
 		assertEquals(1,loanOfficers.size());
 		
 	}
 
-	public void testGetActiveLoUnderUserFailure() throws Exception{
+	public void testGetActiveLoanOfficersUnderOfficeFailure() throws Exception{
 		TestObjectFactory.simulateInvalidConnection();
 		try{
-			personnelBusinessService.getActiveLoUnderUser(Short.valueOf("3"));
+			personnelBusinessService.getActiveLoanOfficersUnderOffice(Short.valueOf("3"));
 			fail();
 		}
 		catch (ServiceException e) {

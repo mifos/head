@@ -247,7 +247,7 @@ public class PersonnelPersistence extends Persistence {
 
 	}
 
-	public List<PersonnelBO> getActiveLoUnderUser(Short officeId)
+	public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId)
 			throws PersistenceException {
 		HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 		queryParameters.put(CustomerSearchConstants.OFFICEID, officeId);

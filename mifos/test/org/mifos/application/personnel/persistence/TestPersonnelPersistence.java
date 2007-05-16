@@ -212,10 +212,10 @@ public class TestPersonnelPersistence extends MifosTestCase {
 		assertEquals(1,queryResult.getSize());
 		assertEquals(1,queryResult.get(0,10).size());
 	}	
-	public void  testGetActiveLoUnderUser()throws Exception{
+	public void  testGetActiveLoanOfficersUnderOffice()throws Exception{
 		branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
 		personnel = createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-		List<PersonnelBO> loanOfficers = persistence.getActiveLoUnderUser(branchOffice.getOfficeId());
+		List<PersonnelBO> loanOfficers = persistence.getActiveLoanOfficersUnderOffice(branchOffice.getOfficeId());
 		assertNotNull(loanOfficers);
 		assertEquals(2,loanOfficers.size());
 	  assertEquals("loan officer",loanOfficers.get(0).getDisplayName());

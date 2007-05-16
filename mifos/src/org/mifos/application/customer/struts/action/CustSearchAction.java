@@ -80,7 +80,7 @@ public class CustSearchAction extends SearchAction {
 		CustSearchActionForm actionForm = (CustSearchActionForm) form;
 		if (actionForm.getOfficeId() != null) {
 			List<PersonnelBO> personnelList = new PersonnelBusinessService()
-					.getActiveLoUnderUser(getShortValue(actionForm
+					.getActiveLoanOfficersUnderOffice(getShortValue(actionForm
 							.getOfficeId()));
 			SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST,
 					personnelList, request);
@@ -275,7 +275,7 @@ public class CustSearchAction extends SearchAction {
 		if (personnel.getOffice().getOfficeLevel().equals(
 				OfficeLevel.BRANCHOFFICE)) {
 			List<PersonnelBO> personnelList = new PersonnelBusinessService()
-					.getActiveLoUnderUser(personnel.getOffice().getOfficeId());
+					.getActiveLoanOfficersUnderOffice(personnel.getOffice().getOfficeId());
 			SessionUtils.setCollectionAttribute(CustomerSearchConstants.LOANOFFICERSLIST,
 					personnelList, request);
 			SessionUtils.setAttribute(CustomerSearchConstants.LOADFORWARD,

@@ -111,10 +111,10 @@ public class PersonnelBusinessService extends BusinessService {
 		}
 	}
 
-	public List<PersonnelBO> getActiveLoUnderUser(Short officeId)
+	public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId)
 			throws ServiceException {
 		try {
-			return new PersonnelPersistence().getActiveLoUnderUser(officeId);
+			return new PersonnelPersistence().getActiveLoanOfficersUnderOffice(officeId);
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}
