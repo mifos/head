@@ -191,8 +191,9 @@ public class DatabaseVersionPersistence extends Persistence {
 	        }
 	        
 	        return statements.toArray(new String[statements.size()]);
-	    }catch(IOException ioe){
-	    	throw new RuntimeException(ioe);
+	    }
+		catch (IOException e) {
+	    	throw new RuntimeException(e);
 	    }
 	}
 	
