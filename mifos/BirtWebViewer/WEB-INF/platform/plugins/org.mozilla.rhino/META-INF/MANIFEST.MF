@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mozilla Rhino
+Bundle-SymbolicName: org.mozilla.rhino
+Bundle-Version: 1.6.0.v20070205-1728
+Bundle-Localization: plugin
+Bundle-ClassPath: lib/js.jar
+Export-Package: org.mozilla.javascript
+Bundle-Vendor: Eclipse.org

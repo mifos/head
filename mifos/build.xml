@@ -30,6 +30,8 @@
 
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="src.dir" value="${basedir}/src"/>
+	<property name="birt.web.viewer.dir" value="${basedir}/BirtWebViewer"/>
+	<property name="birt.report.design.dir" value="${basedir}/BirtReportDesign"/>
 	<property name="test.dir" value="${basedir}/test"/>
 	<property name="sql.dir" value="${basedir}/sql"/>
 	<property name="build.dir" value="${basedir}/build"/>
@@ -128,7 +130,7 @@
 
 		</javac>
 	</target>
-
+	
 	<!--
 	Note that my.hibernate.properties and my.HibernateTest.properties,
 	unlike my.build.properties, entirely override the corresponding
@@ -158,6 +160,7 @@
 		<copy todir="${build.src.dir}/pages">
 			<fileset dir="${src.dir}/org/mifos/doc-root"/>
 		</copy>
+		
 		<copy todir="${build.classes}/org/mifos/application">
 			<fileset dir="${src.dir}/org/mifos/application">
 				<exclude name="**/*.java"/>
@@ -187,6 +190,23 @@
 			<include name="*.jrxml"/>
 		        <include name="*.jasper"/>
 		    </fileset>
+		</copy>
+	</target>
+
+	<target name="integrate_birt_web_viewer">
+		<copy todir="${build.src.dir}">
+			<fileset dir="${birt.web.viewer.dir}" excludes="*.jsp, *.rptdesign, **/web.xml"/>
+		</copy>
+		<concat destfile="${build.src.dir}/web.xml" append="no" force="yes" >
+			<fileset dir="${src.dir}/org/mifos/META-INF" includes="web.xml"/>
+			<fileset dir="${birt.web.viewer.dir}" includes="**/web.xml"/>
+		</concat>
+		<replaceregexp file="${build.src.dir}/web.xml" byline="no" flags="s" match="&lt;/web-app&gt;.*&lt;/display-name&gt;" replace="	&lt;!-- section: birt web viewer --&gt;" />
+	</target>
+	
+	<target name="copy_birt_reports">
+		<copy todir="${build.src.dir}/report">
+			<fileset dir="${birt.report.design.dir}" />
 		</copy>
 	</target>
 
@@ -284,11 +304,11 @@
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
 
-	<target name="war" depends="compile,copy_files">
+	<target name="war" depends="compile,copy_files, integrate_birt_web_viewer, copy_birt_reports">
 		<delete file="${dist.dir}/${webapplication.name}.war"/>
 		<war destfile="${dist.dir}/${webapplication.name}.war" 
-			webxml="${src.dir}/org/mifos/META-INF/web.xml">
-			<fileset dir="${build.src.dir}/"/>
+			webxml="${build.src.dir}/web.xml">
+			<fileset dir="${build.src.dir}" excludes="web.xml" />
 		</war>
 	</target>
 

@@ -1,0 +1,336 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!-- default platform documentation stylesheets -->
+<style>@import url("book.css");</style>
+<!-- default schema documentation stylesheets -->
+<style>@import url("schema.css");</style>
+</HEAD>
+<BODY>
+<H1><CENTER>BIRT Open Data Access Extension</CENTER></H1>
+<p></p>
+<h6 class=CaptionFigColumn id=header>Identifier: </h6>org.eclipse.birt.data.oda.dataSource<p></p>
+<h6 class=CaptionFigColumn id=header>Since: </h6>2.0
+<p></p>
+
+<p>
+<h6 class=CaptionFigColumn id=header>Description: </h6>[Deprecated] This extension point is used to support the extension of BIRT design time and runtime data source access.  Each extension must implement the BIRT Open Data Access (ODA) Java runtime interfaces defined in the <i>org.eclipse.birt.data.oda</i> package.
+<p>
+<b>As of BIRT 2.0, the BIRT ODA run-time framework has been migrated to the Eclipse Data Tools Platform (DTP) project.
+It is replaced by the <i>org.eclipse.datatools.connectivity.oda.dataSource</i> extension point.
+<br>BIRT 2.0 provides a DTP-to-BIRT ODA adapter plug-in to support
+existing ODA run-time extensions that implemented this extension point.
+</b></p>
+<p><h6 class=CaptionFigColumn id=header>Configuration Markup:</h6></p>
+<p class=code id=dtd>&lt;!ELEMENT <a name="e.extension">extension</a> (<a href="#e.dataSource">dataSource</a> , <a href="#e.dataSet">dataSet</a>+)&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST extension</p>
+<p class=code id=dtdAttlist>point&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>name&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<ul class=ConfigMarkup id=attlistDesc>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.dataSource">dataSource</a> (<a href="#e.traceLogging">traceLogging</a>? , <a href="#e.properties">properties</a>?)&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST dataSource</p>
+<p class=code id=dtdAttlist>id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>odaVersion&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA "2.0"<p class=code id=dtdAttlist>defaultDisplayName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>displayNameID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>driverClass&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>setThreadContextClassLoader&nbsp;(true | false) "false"&gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+The definition of a type of ODA data source extension for use at design time and run-time.</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>id</b> - A fully qualified ID that uniquely identifies this ODA data source extension in the BIRT environment. If a data source designer extension (which extends the <i>org.eclipse.birt.report.designer.ui.datasource</i> extension point) for this ODA driver is available, the value of this attribute must match that of the designer extension's <i>id</i> attribute in its <i> data-Source </i> element.</li>
+<li><b>odaVersion</b> - Version of the <i>org.eclipse.birt.data.oda</i> plug-in for which this driver is developed. This element is required and should take the format of Major.Minor or Major.Minor.Service (e.g. 2.0 or 2.0.1).</li>
+<li><b>defaultDisplayName</b> - The display name of the ODA data source extension.  Default to the extension id if no display name is specified.
+It can be used by the BIRT Designer in displaying a list of ODA data source extensions, when they do not have a corresponding data source editor (dataSourceUI extension point).</li>
+<li><b>displayNameID</b> - Not supported in Release 1.</li>
+<li><b>driverClass</b> - Concrete class that implements the <i>org.eclipse.birt.data.oda.IDriver</i> interface. This is the entry point of the ODA runtime driver.  The same driver may support multiple data source extensions.</li>
+<li><b>setThreadContextClassLoader</b> - If true, the consumer of the ODA runtime extension plug-in should set the thread context class loader to the one used to load this driver before calling any ODA interface method.
+In BIRT release 1, any data source extension with this flag set to true would take precedence, and is applied to all data source extensions implemented by this plug-in. 
+
+In BIRT Data Engine, the thread context class loader being set is the OSGi class loader used to load this ODA runtime plugin.  It is not designed to be used by a plugin to in turn load additional classes.  If further class loading is needed, it is up to individual ODA runtime plugin implementation to provide its own URLClassLoader, and switch thread context class loader as appropriate.</li>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.dataSet">dataSet</a> (<a href="#e.dataTypeMapping">dataTypeMapping</a>+ , <a href="#e.properties">properties</a>?)&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST dataSet</p>
+<p class=code id=dtdAttlist>id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>defaultDisplayName&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>displayNameID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+The definition of a type of data set supported by this dataSource extension.</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>id</b> - A fully qualified ID that uniquely identifies this ODA data set definition in the BIRT environment.</li>
+<li><b>defaultDisplayName</b> - The display name of the ODA data set definition.  Default to its id if no display name is specified.</li>
+<li><b>displayNameID</b> - Not supported in Release 1.</li>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.dataTypeMapping">dataTypeMapping</a> (<a href="#e.alternativeOdaDataType">alternativeOdaDataType</a>*)&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST dataTypeMapping</p>
+<p class=code id=dtdAttlist>nativeDataType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>nativeDataTypeCode&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>odaScalarDataType&nbsp;&nbsp;(Date|Double|Integer|String|Time|Timestamp|Decimal) "String"&gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+A single mapping from a data provider's native data type to one or more ODA data types.  
+Each native data type must be mapped to a primary ODA scalar data type.  The driver can optionally provide a list of alternate ODA data types to which it is capable of converting a native data type.
+This data type mapping facilitates all ODA consumers to map from the same set of ODA data types to its own application-specific data types.</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>nativeDataType</b> - Native data type name (a string)</li>
+<li><b>nativeDataTypeCode</b> - Native data type code (an integer). Its value must match one of the data type codes returned in the driver's ODA interface implementation.</li>
+<li><b>odaScalarDataType</b> - The primary ODA scalar data type which the native type maps to. Supported ODA data types are: date, double, integer, string, time, timestamp and decimal.</li>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.alternativeOdaDataType">alternativeOdaDataType</a> EMPTY&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST alternativeOdaDataType</p>
+<p class=code id=dtdAttlist>odaScalarDataType&nbsp;(Date|Double|Integer|String|Time|Timestamp|Decimal) &gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+Provide an alternative mapping to an ODA scalar data type.</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>odaScalarDataType</b> - The ODA scalar data type to which the native type may be converted by the driver.</li>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.traceLogging">traceLogging</a> EMPTY&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST traceLogging</p>
+<p class=code id=dtdAttlist>logLevel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA "WARNING"<p class=code id=dtdAttlist>logFileNamePrefix&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>logDirectory&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>logFormatterClass&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+Configures the ODA run-time driver's trace logging settings for the data source extension.
+The configured values are passed through to the driver's implementation of the <code>IDriver.setLogConfiguration</code> method.
+<br>It is up to individual ODA driver on how to honor any of these trace logging attributes as appropriate.
+
+<br><br>Note: The trace logging configuration specified in the plug-in PDE .options file would take precedence over those configured in this element, if the debug tracing flag is set to "true".
+<br>The ODA plug-in's PDE tracing options, listed below for cross reference, match the attributes of this element.
+<br>&nbsp;&nbsp;&nbsp;
+&lt;plug-in Id&gt;/debug = true/false
+<br>&nbsp;&nbsp;&nbsp;
+&lt;plug-in Id&gt;/traceLogging/logLevel 
+<br>&nbsp;&nbsp;&nbsp;
+&lt;plug-in Id&gt;/traceLogging/logFileNamePrefix 
+<br>&nbsp;&nbsp;&nbsp;
+&lt;plug-in Id&gt;/traceLogging/logDirectory
+<br>&nbsp;&nbsp;&nbsp;
+&lt;plug-in Id&gt;/traceLogging/logFormatterClass</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>logLevel</b> - The name or numeric value for the driver's log level.
+<br>The log levels' names and corresponding numeric values are:
+<br>
+ "SEVERE"       = 1000;
+ "WARNING"      = 900;
+ "INFO"         = 800;
+ "CONFIG"       = 700;
+ "FINE"         = 500;
+ "FINER"        = 400;
+ "FINEST"       = 300;
+ "ALL"          = 0;
+ "OFF"          = 1001 or higher .</li>
+<li><b>logFileNamePrefix</b> - A string prefix for driver's log file name.</li>
+<li><b>logDirectory</b> - Directory for log file.</li>
+<li><b>logFormatterClass</b> - The class name of a concrete log formatter, suitable for use by the driver-specific logging utility.</li>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.property">property</a> (<a href="#e.choice">choice</a>*)&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST property</p>
+<p class=code id=dtdAttlist>name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>defaultDisplayName&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>displayNameID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(string|choice) "string"<p class=code id=dtdAttlist>canInherit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(true | false) "true"<p class=code id=dtdAttlist>defaultValue&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>isEncryptable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(true | false) "false"&gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+A property whose value can be edited using the BIRT Designer at design-time.  Its value is then passed to the ODA runtime driver during report generation.</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>name</b> - Unique name of the property</li>
+<li><b>defaultDisplayName</b> - The default display name, which is used if no localized display name is found with I18N.</li>
+<li><b>displayNameID</b> - Not supported in Release 1.</li>
+<li><b>type</b> - Type of the property. The property type could be one of value from the enumerations.</li>
+<li><b>canInherit</b> - Not supported in release 1.</li>
+<li><b>defaultValue</b> - Default value of the property, if no property value is set.</li>
+<li><b>isEncryptable</b> - A flag indicating whether this property value is encryptable.  Setting it to "true" means that this property's value will be encyrpted in the report design file.</li>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.propertyGroup">propertyGroup</a> (<a href="#e.property">property</a>+)&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST propertyGroup</p>
+<p class=code id=dtdAttlist>name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>defaultDisplayName&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>displayNameID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+A grouping of one or more properties in the BIRT Designer.  The group attributes are for display only.  All properties listed under a propertyGroup are handled as scalar properties at run-time.</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>name</b> - </li>
+<li><b>defaultDisplayName</b> - The default display name, which is used if no localized display name is found with I18N.</li>
+<li><b>displayNameID</b> - Not supported in Release 1.</li>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.propertyVisibility">propertyVisibility</a> EMPTY&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST propertyVisibility</p>
+<p class=code id=dtdAttlist>name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>visibility&nbsp;(change|lock|hide) &gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+Used to set the visibility level of the named property when it is shown in the BIRT Designer's property sheet.</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>name</b> - The name of a property that is defined either by this data source extension or is a system-defined property.</li>
+<li><b>visibility</b> - The valid options are: change, hide, lock.</li>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.choice">choice</a> EMPTY&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST choice</p>
+<p class=code id=dtdAttlist>name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>defaultDisplayName&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>displayNameID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+Choice of property values.</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>name</b> - Name of the choice</li>
+<li><b>value</b> - Value to be used, if the given choice is selected.</li>
+<li><b>defaultDisplayName</b> - The default display name, which is used if no localized display name is found with I18N.</li>
+<li><b>displayNameID</b> - Not supported in Release 1.</li>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.properties">properties</a> (<a href="#e.property">property</a>* , <a href="#e.propertyGroup">propertyGroup</a>* , <a href="#e.propertyVisibility">propertyVisibility</a>*)&gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+A collection of property definitions in a data source extension or its supported data set definitions.</p>
+<br><br>
+<h6 class=CaptionFigColumn id=header>Examples: </h6><p>
+   <pre>
+<p class=code id=tag>&lt;extension
+         id=<p class=code id=cstring>&quot;Id&quot;</p><p class=code id=tag>
+         name=<p class=code id=cstring>&quot;Name&quot;</p><p class=code id=tag>
+         point=<p class=code id=cstring>&quot;org.eclipse.birt.data.oda.dataSource&quot;</p><p class=code id=tag>&gt;</p>
+      <p class=code id=tag>&lt;dataSource
+            odaVersion=<p class=code id=cstring>&quot;2.0&quot;</p><p class=code id=tag>
+   driverClass=<p class=code id=cstring>&quot;org.eclipse.birt.report.data.oda.jdbc.OdaJdbcDriver&quot;</p><p class=code id=tag>
+            id=<p class=code id=cstring>&quot;org.eclipse.birt.report.data.oda.jdbc&quot;</p><p class=code id=tag>&gt;</p>
+           
+            <p class=code id=tag>&lt;properties&gt;</p>
+             <p class=code id=tag>&lt;propertyGroup
+                 defaultDisplayName=<p class=code id=cstring>&quot;Connection Properties&quot;</p><p class=code id=tag>
+                 name=<p class=code id=cstring>&quot;connectionProperties&quot;</p><p class=code id=tag>&gt;</p>
+              <p class=code id=tag>&lt;property
+                    type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag>
+                    defaultDisplayName=<p class=code id=cstring>&quot;JDBC Driver Class&quot;</p><p class=code id=tag>
+                    canInherit=<p class=code id=cstring>&quot;true&quot;</p><p class=code id=tag>
+                    name=<p class=code id=cstring>&quot;odaDriverClass&quot;</p><p class=code id=tag>/&gt;</p>
+              <p class=code id=tag>&lt;property
+                    type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag>
+                    defaultDisplayName=<p class=code id=cstring>&quot;JDBC Driver URL&quot;</p><p class=code id=tag>
+                    canInherit=<p class=code id=cstring>&quot;true&quot;</p><p class=code id=tag>
+                    name=<p class=code id=cstring>&quot;odaURL&quot;</p><p class=code id=tag>/&gt;</p>
+              <p class=code id=tag>&lt;property
+                    type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag>
+                    defaultDisplayName=<p class=code id=cstring>&quot;Data Source&quot;</p><p class=code id=tag>
+                    canInherit=<p class=code id=cstring>&quot;true&quot;</p><p class=code id=tag>
+                    name=<p class=code id=cstring>&quot;odaDataSource&quot;</p><p class=code id=tag>/&gt;</p>
+              <p class=code id=tag>&lt;property
+                    type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag>
+                    defaultDisplayName=<p class=code id=cstring>&quot;User Name&quot;</p><p class=code id=tag>
+                    canInherit=<p class=code id=cstring>&quot;true&quot;</p><p class=code id=tag>
+                    name=<p class=code id=cstring>&quot;odaUser&quot;</p><p class=code id=tag>/&gt;</p>
+              <p class=code id=tag>&lt;property
+                    type=<p class=code id=cstring>&quot;string&quot;</p><p class=code id=tag>
+                    defaultDisplayName=<p class=code id=cstring>&quot;Password&quot;</p><p class=code id=tag>
+                    canInherit=<p class=code id=cstring>&quot;true&quot;</p><p class=code id=tag>
+                    name=<p class=code id=cstring>&quot;odaPassword&quot;</p><p class=code id=tag>/&gt;</p>
+           <p class=code id=tag>&lt;/propertyGroup&gt;</p>
+            <p class=code id=tag>&lt;/properties&gt;</p>
+      <p class=code id=tag>&lt;/dataSource&gt;</p>
+      <p class=code id=tag>&lt;dataSet
+            defaultDisplayName=<p class=code id=cstring>&quot;JdbcSelectDataSet&amp;quot;&quot;</p><p class=code id=tag>
+         id=<p class=code id=cstring>&quot;org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet&quot;</p><p class=code id=tag>&gt;</p>
+        <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;BIT&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;-7&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Integer&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;TINYINT&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;-6&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Integer&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;SMALLINT&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;5&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Integer&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;INTEGER&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;4&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Integer&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;BIGINT&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;-5&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Decimal&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;FLOAT&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;6&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Double&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;REAL&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;7&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Double&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;DOUBLE&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;8&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Double&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;NUMERIC&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;2&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Decimal&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;DECIMAL&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;3&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Decimal&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;CHAR&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;1&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;VARCHAR&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;12&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;LONGVARCHAR&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;-1&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;DATE&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;91&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Date&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;TIME&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;92&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Time&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;TIMESTAMP&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;93&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Timestamp&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;BINARY&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;-2&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;VARBINARY&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;-3&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;LONGVARBINARY&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;-4&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;String&quot;</p><p class=code id=tag>/&gt;</p>
+             <p class=code id=tag>&lt;dataTypeMapping
+                   nativeDataType=<p class=code id=cstring>&quot;BOOLEAN&quot;</p><p class=code id=tag>
+                   nativeDataTypeCode=<p class=code id=cstring>&quot;16&quot;</p><p class=code id=tag>
+                   odaScalarDataType=<p class=code id=cstring>&quot;Integer&quot;</p><p class=code id=tag>/&gt;</p>
+      <p class=code id=tag>&lt;/dataSet&gt;</p>
+        
+ <p class=code id=tag>&lt;/extension&gt;</p>
+ 
+  </pre>
+</p>
+<p></p>
+
+<h6 class=CaptionFigColumn id=header>API Information: </h6>The data source extension's driver must implement the interfaces defined in the <i>org.eclipse.birt.data.oda</i> package. See the package's JavaDoc documentation and API interfaces for more information.
+<p></p>
+
+<h6 class=CaptionFigColumn id=header>Supplied Implementation: </h6>The plugin <i>org.eclipse.birt.report.data.oda.jdbc</i>, supplied with the BIRT installation, provides a good example for implementing an ODA runtime extension.
+<br>
+In addition, a set of default implementation of the main ODA runtime interfaces are provided in the
+<i>org.eclipse.birt.data.oda.impl</i> package.
+These classes assume the behavior of a simple ODA driver,
+and have labelled TODO tasks for a driver developer to implement data source dependent behavior.
+These concrete classes are provided for use as templates or base classes to aid in the development of an ODA custom driver.  Their use is purely optional.
+<p></p>
+
+<br>
+<p class=note id=copyright>
+Copyright (c) 2004-2005 Actuate Corporation.
+All rights reserved. This program and the accompanying materials are made available under the  terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
+<p></p>
+
+</p>
+</BODY>
+</HTML>

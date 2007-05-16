@@ -1,0 +1,677 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.birt.data.oda">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.birt.data.oda" id="dataSource" name="BIRT Open Data Access Extension"/>
+      </appInfo>
+      <documentation>
+         [Deprecated] This extension point is used to support the extension of BIRT design time and runtime data source access.  Each extension must implement the BIRT Open Data Access (ODA) Java runtime interfaces defined in the &lt;i&gt;org.eclipse.birt.data.oda&lt;/i&gt; package.
+&lt;p&gt;
+&lt;b&gt;As of BIRT 2.0, the BIRT ODA run-time framework has been migrated to the Eclipse Data Tools Platform (DTP) project.
+It is replaced by the &lt;i&gt;org.eclipse.datatools.connectivity.oda.dataSource&lt;/i&gt; extension point.
+&lt;br&gt;BIRT 2.0 provides a DTP-to-BIRT ODA adapter plug-in to support
+existing ODA run-time extensions that implemented this extension point.
+&lt;/b&gt;
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="dataSource"/>
+            <element ref="dataSet" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dataSource">
+      <annotation>
+         <documentation>
+            The definition of a type of ODA data source extension for use at design time and run-time.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="traceLogging" minOccurs="0" maxOccurs="1"/>
+            <element ref="properties" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A fully qualified ID that uniquely identifies this ODA data source extension in the BIRT environment. If a data source designer extension (which extends the &lt;i&gt;org.eclipse.birt.report.designer.ui.datasource&lt;/i&gt; extension point) for this ODA driver is available, the value of this attribute must match that of the designer extension&apos;s &lt;i&gt;id&lt;/i&gt; attribute in its &lt;i&gt; data-Source &lt;/i&gt; element.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="odaVersion" type="string" use="default" value="2.0">
+            <annotation>
+               <documentation>
+                  Version of the &lt;i&gt;org.eclipse.birt.data.oda&lt;/i&gt; plug-in for which this driver is developed. This element is required and should take the format of Major.Minor or Major.Minor.Service (e.g. 2.0 or 2.0.1).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="defaultDisplayName" type="string">
+            <annotation>
+               <documentation>
+                  The display name of the ODA data source extension.  Default to the extension id if no display name is specified.
+It can be used by the BIRT Designer in displaying a list of ODA data source extensions, when they do not have a corresponding data source editor (dataSourceUI extension point).
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="displayNameID" type="string">
+            <annotation>
+               <documentation>
+                  Not supported in Release 1.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="driverClass" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Concrete class that implements the &lt;i&gt;org.eclipse.birt.data.oda.IDriver&lt;/i&gt; interface. This is the entry point of the ODA runtime driver.  The same driver may support multiple data source extensions.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.birt.data.oda.IDriver"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="setThreadContextClassLoader" type="boolean" use="default" value="false">
+            <annotation>
+               <documentation>
+                  If true, the consumer of the ODA runtime extension plug-in should set the thread context class loader to the one used to load this driver before calling any ODA interface method.
+In BIRT release 1, any data source extension with this flag set to true would take precedence, and is applied to all data source extensions implemented by this plug-in. 
+
+In BIRT Data Engine, the thread context class loader being set is the OSGi class loader used to load this ODA runtime plugin.  It is not designed to be used by a plugin to in turn load additional classes.  If further class loading is needed, it is up to individual ODA runtime plugin implementation to provide its own URLClassLoader, and switch thread context class loader as appropriate.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dataSet">
+      <annotation>
+         <documentation>
+            The definition of a type of data set supported by this dataSource extension.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="dataTypeMapping" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="properties" minOccurs="0" maxOccurs="1"/>
+         </sequence>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A fully qualified ID that uniquely identifies this ODA data set definition in the BIRT environment.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="defaultDisplayName" type="string">
+            <annotation>
+               <documentation>
+                  The display name of the ODA data set definition.  Default to its id if no display name is specified.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="displayNameID" type="string">
+            <annotation>
+               <documentation>
+                  Not supported in Release 1.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dataTypeMapping">
+      <annotation>
+         <documentation>
+            A single mapping from a data provider&apos;s native data type to one or more ODA data types.  
+Each native data type must be mapped to a primary ODA scalar data type.  The driver can optionally provide a list of alternate ODA data types to which it is capable of converting a native data type.
+This data type mapping facilitates all ODA consumers to map from the same set of ODA data types to its own application-specific data types.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="alternativeOdaDataType" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="nativeDataType" type="string">
+            <annotation>
+               <documentation>
+                  Native data type name (a string)
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="nativeDataTypeCode" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Native data type code (an integer). Its value must match one of the data type codes returned in the driver&apos;s ODA interface implementation.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="odaScalarDataType" use="default" value="String">
+            <annotation>
+               <documentation>
+                  The primary ODA scalar data type which the native type maps to. Supported ODA data types are: date, double, integer, string, time, timestamp and decimal.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Date">
+                  </enumeration>
+                  <enumeration value="Double">
+                  </enumeration>
+                  <enumeration value="Integer">
+                  </enumeration>
+                  <enumeration value="String">
+                  </enumeration>
+                  <enumeration value="Time">
+                  </enumeration>
+                  <enumeration value="Timestamp">
+                  </enumeration>
+                  <enumeration value="Decimal">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="alternativeOdaDataType">
+      <annotation>
+         <documentation>
+            Provide an alternative mapping to an ODA scalar data type.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="odaScalarDataType" use="required">
+            <annotation>
+               <documentation>
+                  The ODA scalar data type to which the native type may be converted by the driver.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Date">
+                  </enumeration>
+                  <enumeration value="Double">
+                  </enumeration>
+                  <enumeration value="Integer">
+                  </enumeration>
+                  <enumeration value="String">
+                  </enumeration>
+                  <enumeration value="Time">
+                  </enumeration>
+                  <enumeration value="Timestamp">
+                  </enumeration>
+                  <enumeration value="Decimal">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="traceLogging">
+      <annotation>
+         <documentation>
+            Configures the ODA run-time driver&apos;s trace logging settings for the data source extension.
+The configured values are passed through to the driver&apos;s implementation of the &lt;code&gt;IDriver.setLogConfiguration&lt;/code&gt; method.
+&lt;br&gt;It is up to individual ODA driver on how to honor any of these trace logging attributes as appropriate.
+
+&lt;br&gt;&lt;br&gt;Note: The trace logging configuration specified in the plug-in PDE .options file would take precedence over those configured in this element, if the debug tracing flag is set to &quot;true&quot;.
+&lt;br&gt;The ODA plug-in&apos;s PDE tracing options, listed below for cross reference, match the attributes of this element.
+&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&amp;lt;plug-in Id&amp;gt;/debug = true/false
+&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&amp;lt;plug-in Id&amp;gt;/traceLogging/logLevel 
+&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&amp;lt;plug-in Id&amp;gt;/traceLogging/logFileNamePrefix 
+&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&amp;lt;plug-in Id&amp;gt;/traceLogging/logDirectory
+&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+&amp;lt;plug-in Id&amp;gt;/traceLogging/logFormatterClass
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="logLevel" type="string" use="default" value="WARNING">
+            <annotation>
+               <documentation>
+                  The name or numeric value for the driver&apos;s log level.
+&lt;br&gt;The log levels&apos; names and corresponding numeric values are:
+&lt;br&gt;
+ &quot;SEVERE&quot;       = 1000;
+ &quot;WARNING&quot;      = 900;
+ &quot;INFO&quot;         = 800;
+ &quot;CONFIG&quot;       = 700;
+ &quot;FINE&quot;         = 500;
+ &quot;FINER&quot;        = 400;
+ &quot;FINEST&quot;       = 300;
+ &quot;ALL&quot;          = 0;
+ &quot;OFF&quot;          = 1001 or higher .
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="logFileNamePrefix" type="string">
+            <annotation>
+               <documentation>
+                  A string prefix for driver&apos;s log file name.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="logDirectory" type="string">
+            <annotation>
+               <documentation>
+                  Directory for log file.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="logFormatterClass" type="string">
+            <annotation>
+               <documentation>
+                  The class name of a concrete log formatter, suitable for use by the driver-specific logging utility.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.birt.data.oda.util.logging.LogFormatter"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="property">
+      <annotation>
+         <documentation>
+            A property whose value can be edited using the BIRT Designer at design-time.  Its value is then passed to the ODA runtime driver during report generation.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="choice" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Unique name of the property
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="defaultDisplayName" type="string">
+            <annotation>
+               <documentation>
+                  The default display name, which is used if no localized display name is found with I18N.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="displayNameID" type="string">
+            <annotation>
+               <documentation>
+                  Not supported in Release 1.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="type" use="default" value="string">
+            <annotation>
+               <documentation>
+                  Type of the property. The property type could be one of value from the enumerations.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="string">
+                  </enumeration>
+                  <enumeration value="choice">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+         <attribute name="canInherit" type="boolean" use="default" value="true">
+            <annotation>
+               <documentation>
+                  Not supported in release 1.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="defaultValue" type="string">
+            <annotation>
+               <documentation>
+                  Default value of the property, if no property value is set.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="isEncryptable" type="boolean" use="default" value="false">
+            <annotation>
+               <documentation>
+                  A flag indicating whether this property value is encryptable.  Setting it to &quot;true&quot; means that this property&apos;s value will be encyrpted in the report design file.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="propertyGroup">
+      <annotation>
+         <documentation>
+            A grouping of one or more properties in the BIRT Designer.  The group attributes are for display only.  All properties listed under a propertyGroup are handled as scalar properties at run-time.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="property" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="defaultDisplayName" type="string">
+            <annotation>
+               <documentation>
+                  The default display name, which is used if no localized display name is found with I18N.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="displayNameID" type="string">
+            <annotation>
+               <documentation>
+                  Not supported in Release 1.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="propertyVisibility">
+      <annotation>
+         <documentation>
+            Used to set the visibility level of the named property when it is shown in the BIRT Designer&apos;s property sheet.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The name of a property that is defined either by this data source extension or is a system-defined property.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="visibility">
+            <annotation>
+               <documentation>
+                  The valid options are: change, hide, lock.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="change">
+                  </enumeration>
+                  <enumeration value="lock">
+                  </enumeration>
+                  <enumeration value="hide">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="choice">
+      <annotation>
+         <documentation>
+            Choice of property values.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Name of the choice
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string">
+            <annotation>
+               <documentation>
+                  Value to be used, if the given choice is selected.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="defaultDisplayName" type="string">
+            <annotation>
+               <documentation>
+                  The default display name, which is used if no localized display name is found with I18N.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="displayNameID" type="string">
+            <annotation>
+               <documentation>
+                  Not supported in Release 1.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="properties">
+      <annotation>
+         <documentation>
+            A collection of property definitions in a data source extension or its supported data set definitions.
+         </documentation>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="property" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="propertyGroup" minOccurs="0" maxOccurs="unbounded"/>
+            <element ref="propertyVisibility" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         2.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;p&gt;
+   &lt;pre&gt;
+&lt;extension
+         id=&quot;Id&quot;
+         name=&quot;Name&quot;
+         point=&quot;org.eclipse.birt.data.oda.dataSource&quot;&gt;
+      &lt;dataSource
+            odaVersion=&quot;2.0&quot;
+   driverClass=&quot;org.eclipse.birt.report.data.oda.jdbc.OdaJdbcDriver&quot;
+            id=&quot;org.eclipse.birt.report.data.oda.jdbc&quot;&gt;
+           
+            &lt;properties&gt;
+             &lt;propertyGroup
+                 defaultDisplayName=&quot;Connection Properties&quot;
+                 name=&quot;connectionProperties&quot;&gt;
+              &lt;property
+                    type=&quot;string&quot;
+                    defaultDisplayName=&quot;JDBC Driver Class&quot;
+                    canInherit=&quot;true&quot;
+                    name=&quot;odaDriverClass&quot;/&gt;
+              &lt;property
+                    type=&quot;string&quot;
+                    defaultDisplayName=&quot;JDBC Driver URL&quot;
+                    canInherit=&quot;true&quot;
+                    name=&quot;odaURL&quot;/&gt;
+              &lt;property
+                    type=&quot;string&quot;
+                    defaultDisplayName=&quot;Data Source&quot;
+                    canInherit=&quot;true&quot;
+                    name=&quot;odaDataSource&quot;/&gt;
+              &lt;property
+                    type=&quot;string&quot;
+                    defaultDisplayName=&quot;User Name&quot;
+                    canInherit=&quot;true&quot;
+                    name=&quot;odaUser&quot;/&gt;
+              &lt;property
+                    type=&quot;string&quot;
+                    defaultDisplayName=&quot;Password&quot;
+                    canInherit=&quot;true&quot;
+                    name=&quot;odaPassword&quot;/&gt;
+           &lt;/propertyGroup&gt;
+            &lt;/properties&gt;
+      &lt;/dataSource&gt;
+      &lt;dataSet
+            defaultDisplayName=&quot;JdbcSelectDataSet&amp;quot;&quot;
+         id=&quot;org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet&quot;&gt;
+        &lt;dataTypeMapping
+                   nativeDataType=&quot;BIT&quot;
+                   nativeDataTypeCode=&quot;-7&quot;
+                   odaScalarDataType=&quot;Integer&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;TINYINT&quot;
+                   nativeDataTypeCode=&quot;-6&quot;
+                   odaScalarDataType=&quot;Integer&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;SMALLINT&quot;
+                   nativeDataTypeCode=&quot;5&quot;
+                   odaScalarDataType=&quot;Integer&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;INTEGER&quot;
+                   nativeDataTypeCode=&quot;4&quot;
+                   odaScalarDataType=&quot;Integer&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;BIGINT&quot;
+                   nativeDataTypeCode=&quot;-5&quot;
+                   odaScalarDataType=&quot;Decimal&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;FLOAT&quot;
+                   nativeDataTypeCode=&quot;6&quot;
+                   odaScalarDataType=&quot;Double&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;REAL&quot;
+                   nativeDataTypeCode=&quot;7&quot;
+                   odaScalarDataType=&quot;Double&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;DOUBLE&quot;
+                   nativeDataTypeCode=&quot;8&quot;
+                   odaScalarDataType=&quot;Double&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;NUMERIC&quot;
+                   nativeDataTypeCode=&quot;2&quot;
+                   odaScalarDataType=&quot;Decimal&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;DECIMAL&quot;
+                   nativeDataTypeCode=&quot;3&quot;
+                   odaScalarDataType=&quot;Decimal&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;CHAR&quot;
+                   nativeDataTypeCode=&quot;1&quot;
+                   odaScalarDataType=&quot;String&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;VARCHAR&quot;
+                   nativeDataTypeCode=&quot;12&quot;
+                   odaScalarDataType=&quot;String&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;LONGVARCHAR&quot;
+                   nativeDataTypeCode=&quot;-1&quot;
+                   odaScalarDataType=&quot;String&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;DATE&quot;
+                   nativeDataTypeCode=&quot;91&quot;
+                   odaScalarDataType=&quot;Date&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;TIME&quot;
+                   nativeDataTypeCode=&quot;92&quot;
+                   odaScalarDataType=&quot;Time&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;TIMESTAMP&quot;
+                   nativeDataTypeCode=&quot;93&quot;
+                   odaScalarDataType=&quot;Timestamp&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;BINARY&quot;
+                   nativeDataTypeCode=&quot;-2&quot;
+                   odaScalarDataType=&quot;String&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;VARBINARY&quot;
+                   nativeDataTypeCode=&quot;-3&quot;
+                   odaScalarDataType=&quot;String&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;LONGVARBINARY&quot;
+                   nativeDataTypeCode=&quot;-4&quot;
+                   odaScalarDataType=&quot;String&quot;/&gt;
+             &lt;dataTypeMapping
+                   nativeDataType=&quot;BOOLEAN&quot;
+                   nativeDataTypeCode=&quot;16&quot;
+                   odaScalarDataType=&quot;Integer&quot;/&gt;
+      &lt;/dataSet&gt;
+        
+ &lt;/extension&gt;
+ 
+  &lt;/pre&gt;
+&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         The data source extension&apos;s driver must implement the interfaces defined in the &lt;i&gt;org.eclipse.birt.data.oda&lt;/i&gt; package. See the package&apos;s JavaDoc documentation and API interfaces for more information.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         The plugin &lt;i&gt;org.eclipse.birt.report.data.oda.jdbc&lt;/i&gt;, supplied with the BIRT installation, provides a good example for implementing an ODA runtime extension.
+&lt;br&gt;
+In addition, a set of default implementation of the main ODA runtime interfaces are provided in the
+&lt;i&gt;org.eclipse.birt.data.oda.impl&lt;/i&gt; package.
+These classes assume the behavior of a simple ODA driver,
+and have labelled TODO tasks for a driver developer to implement data source dependent behavior.
+These concrete classes are provided for use as templates or base classes to aid in the development of an ODA custom driver.  Their use is purely optional.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2004-2005 Actuate Corporation.
+All rights reserved. This program and the accompanying materials are made available under the  terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html
+      </documentation>
+   </annotation>
+
+</schema>
