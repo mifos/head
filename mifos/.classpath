@@ -43,5 +43,8 @@
 	<classpathentry kind="lib" path="lib/hibernate3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-beanutils-1.7.jar"/>
 	<classpathentry kind="lib" path="lib/jasperreports-1.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/easymock.jar"/>
+	<classpathentry kind="lib" path="lib/easymockclassextension.jar"/>
+	<classpathentry kind="lib" path="lib/itext-1.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

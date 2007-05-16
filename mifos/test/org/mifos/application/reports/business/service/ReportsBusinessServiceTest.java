@@ -20,17 +20,7 @@ public class ReportsBusinessServiceTest extends TestCase {
 		DatabaseSetup.initializeHibernate();
 	}
 	
-	public void testNothing() throws Exception {
-	}
-
-	/*
-	 * This is disabled because when I try to run it I get an exception.
-	 * It seems that Jasper reports fails to compile some generated
-	 * java code with
-	 * IOException: CreateProcess javac
-	 * Maybe javac needs to be in some kind of path?
-	 */
-	public void xtestPdf() throws Exception {
+	public void testPdf() throws Exception {
 		ServletContext context = new ServletContextSimulator();
 		HttpServletRequestSimulator request = 
 			new HttpServletRequestSimulator(context);

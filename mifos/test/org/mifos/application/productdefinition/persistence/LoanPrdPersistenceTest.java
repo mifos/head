@@ -15,7 +15,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanPrdPersistenceTest extends MifosTestCase {
 
-	private LoanOfferingBO loanOffering;
+	private LoanOfferingBO loanOffering1;
+	private LoanOfferingBO loanOffering2;
+	private LoanOfferingBO loanOffering3;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -24,7 +26,9 @@ public class LoanPrdPersistenceTest extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		TestObjectFactory.removeObject(loanOffering);
+		TestObjectFactory.removeObject(loanOffering1);
+		TestObjectFactory.removeObject(loanOffering2);
+		TestObjectFactory.removeObject(loanOffering3);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -37,55 +41,58 @@ public class LoanPrdPersistenceTest extends MifosTestCase {
 	}
 
 	public void testGetLoanOffering() throws PersistenceException {
-		loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
+		loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
 		HibernateUtil.closeSession();
 
-		loanOffering = new LoanPrdPersistence().getLoanOffering(loanOffering
+		loanOffering1 = new LoanPrdPersistence().getLoanOffering(loanOffering1
 				.getPrdOfferingId());
-		assertNotNull(loanOffering);
-		assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
-		assertEquals("Loan", loanOffering.getPrdOfferingShortName());
+		assertNotNull(loanOffering1);
+		assertEquals("Loan Offering", loanOffering1.getPrdOfferingName());
+		assertEquals("Loan", loanOffering1.getPrdOfferingShortName());
 	}
 
 	public void testGetLoanOfferingWithLocaleId() throws PersistenceException {
-		loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
+		loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
 		HibernateUtil.closeSession();
 
 		short localeId = 1;
-		loanOffering = new LoanPrdPersistence().getLoanOffering(loanOffering
+		loanOffering1 = new LoanPrdPersistence().getLoanOffering(loanOffering1
 				.getPrdOfferingId(), localeId);
-		assertNotNull(loanOffering);
-		assertEquals("Loan Offering", loanOffering.getPrdOfferingName());
-		assertEquals("Loan", loanOffering.getPrdOfferingShortName());
+		assertNotNull(loanOffering1);
+		assertEquals("Loan Offering", loanOffering1.getPrdOfferingName());
+		assertEquals("Loan", loanOffering1.getPrdOfferingShortName());
 
-		assertEquals("Other", loanOffering.getPrdCategory()
+		assertEquals("Other", loanOffering1.getPrdCategory()
 				.getProductCategoryName());
 		assertEquals(ApplicableTo.GROUPS, 
-				loanOffering.getPrdApplicableMasterEnum());
-		assertEquals("Active", loanOffering.getPrdStatus().getPrdState()
+				loanOffering1.getPrdApplicableMasterEnum());
+		assertEquals("Active", loanOffering1.getPrdStatus().getPrdState()
 				.getName());
-		assertEquals("Grace on all repayments", loanOffering
+		assertEquals("Grace on all repayments", loanOffering1
 				.getGracePeriodType().getName());
-		assertEquals("Flat", loanOffering.getInterestTypes().getName());
+		assertEquals("Flat", loanOffering1.getInterestTypes().getName());
 	}
 
-	public void testGetAllLoanOfferings() throws PersistenceException {
-		loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
-		LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Offering1",
-				"Loa1");
+	public void testGetAllLoanOfferingsShouldReturnLoanOfferingListSortedByName() throws PersistenceException {
+		String[] loanPrdNamesSortedByName = new String[] {"firstLoanOffering", "secondLoanOffering", "thirdLoanOffering"};
+		loanOffering1 = createLoanOfferingBO(loanPrdNamesSortedByName[1], "Loa1");
+		loanOffering2 = createLoanOfferingBO(loanPrdNamesSortedByName[2],
+						"Loa2");
+		loanOffering3 = createLoanOfferingBO(loanPrdNamesSortedByName[0],
+				"Loa3");
 		HibernateUtil.closeSession();
 
 		List<LoanOfferingBO> loanOfferings = new LoanPrdPersistence()
 				.getAllLoanOfferings((short) 1);
 		assertNotNull(loanOfferings);
-		assertEquals(2, loanOfferings.size());
+		assertEquals(3, loanOfferings.size());
+		int i = 0;
 		for (LoanOfferingBO loanOfferingBO : loanOfferings) {
-			assertNotNull(loanOfferingBO.getPrdOfferingName());
+			assertEquals(loanPrdNamesSortedByName[i++], loanOfferingBO.getPrdOfferingName());
 			assertNotNull(loanOfferingBO.getPrdOfferingId());
 			assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
 		}
 		HibernateUtil.closeSession();
-		TestObjectFactory.removeObject(loanOffering1);
 	}
 
 	private LoanOfferingBO createLoanOfferingBO(String prdOfferingName,

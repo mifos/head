@@ -6,6 +6,7 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.OfficeView;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.office.util.helpers.OfficeLevel;
+import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.framework.business.BusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -81,9 +82,9 @@ public class OfficeBusinessService extends BusinessService {
 			throw new ServiceException(e);
 		}
 	}
-	public List<OfficeBO> getActiveBranchesUnderUser(String searchId) throws ServiceException {
+	public List<OfficeBO> getActiveBranchesUnderUser(PersonnelBO personnel) throws ServiceException {
 		try {
-			return officePersistence.getActiveBranchesUnderUser(searchId);
+			return officePersistence.getActiveBranchesUnderUser(personnel.getOfficeSearchId());
 		} catch (PersistenceException e) {
 			throw new ServiceException(e);
 		}

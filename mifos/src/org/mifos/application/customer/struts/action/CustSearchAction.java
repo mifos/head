@@ -285,8 +285,7 @@ public class CustSearchAction extends SearchAction {
 		} else {
 			SessionUtils.setCollectionAttribute(CustomerSearchConstants.OFFICESLIST,
 					new OfficeBusinessService()
-							.getActiveBranchesUnderUser(personnel.getOffice()
-									.getSearchId()), request);
+							.getActiveBranchesUnderUser(personnel), request);
 			SessionUtils
 					.setAttribute(CustomerSearchConstants.LOADFORWARD,
 							CustomerSearchConstants.LOADFORWARDNONBRANCHOFFICE,

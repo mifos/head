@@ -111,7 +111,6 @@ import org.mifos.application.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.util.helpers.GraceType;
 import org.mifos.application.productdefinition.util.helpers.InterestType;
-import org.mifos.application.productdefinition.util.helpers.PrdStatus;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;

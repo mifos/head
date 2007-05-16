@@ -135,7 +135,7 @@ public class PersonnelBO extends BusinessObject {
 		this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 	}
 
-	protected PersonnelBO() {
+	PersonnelBO() {
 		this.level = null;
 		this.personnelDetails = new PersonnelDetailsEntity();
 		this.preferredLocale = new SupportedLocalesEntity();
@@ -826,6 +826,10 @@ public class PersonnelBO extends BusinessObject {
 		}
 		logger.info("New encripted password returned.");
 		return newEncryptedPassword;
+	}
+
+	public String getOfficeSearchId() {
+		return office.getSearchId();
 	}
 
 }
