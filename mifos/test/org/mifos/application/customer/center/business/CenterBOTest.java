@@ -87,7 +87,7 @@ public class CenterBOTest extends MifosTestCase {
 
 		center.setUserContext(TestUtils.makeUserWithLocales());
 		HibernateUtil.getInterceptor().createInitialValueMap(center);
-		center.update(TestObjectFactory.getUserContext(), personnel,
+		center.update(TestUtils.makeUser(), personnel,
 				externalId, mfiJoiningDate, address, null, null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

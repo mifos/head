@@ -12,6 +12,7 @@ import org.mifos.application.productdefinition.persistence.ProductCategoryPersis
 import org.mifos.application.productdefinition.struts.actionforms.PrdCategoryActionForm;
 import org.mifos.application.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
@@ -38,7 +39,7 @@ public class TestPrdCategoryAction extends MifosMockStrutsTestCase{
 		setConfigFile(ResourceLoader.getURI(
 				"org/mifos/application/productdefinition/struts-config.xml")
 				.getPath());
-		userContext = TestObjectFactory.getUserContext();
+		userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");

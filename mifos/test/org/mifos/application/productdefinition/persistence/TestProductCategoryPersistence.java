@@ -11,7 +11,6 @@ import org.mifos.framework.MifosTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.security.util.UserContext;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestProductCategoryPersistence extends MifosTestCase {
 
@@ -50,12 +49,13 @@ public class TestProductCategoryPersistence extends MifosTestCase {
 			productCategoryPersistence.getProductTypes();
 		assertEquals(2,productTypeList.size());
 		for(ProductTypeEntity productTypeEntity : productTypeList){
-			productTypeEntity.setUserContext(TestObjectFactory.getUserContext());
-			if(productTypeEntity.getProductTypeID().equals(
-					ProductType.LOAN.getValue()))
+			productTypeEntity.setUserContext(TestUtils.makeUser());
+			if (productTypeEntity.getType() == ProductType.LOAN) {
 				assertEquals("Loan",productTypeEntity.getName());
-			else
+			}
+			else {
 				assertEquals("Margin Money",productTypeEntity.getName());
+			}
 		}
 	}
 	

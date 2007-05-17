@@ -133,7 +133,7 @@ public class TestCustomerBO extends MifosTestCase {
 	
 	public void testRemoveGroupMemberShip() throws Exception {
 		createInitialObjects();
-		client.setUserContext(TestObjectFactory.getUserContext());
+		client.setUserContext(TestUtils.makeUser());
 		HibernateUtil.getInterceptor().createInitialValueMap(client);
 		createPersonnel(PersonnelLevel.LOAN_OFFICER);
 		client.removeGroupMemberShip(loanOfficer, "comment");
@@ -152,7 +152,7 @@ public class TestCustomerBO extends MifosTestCase {
 	
 	public void testHasAnActiveLoanCounts() throws Exception {
 		createInitialObjects();
-		client.setUserContext(TestObjectFactory.getUserContext());
+		client.setUserContext(TestUtils.makeUser());
 		HibernateUtil.getInterceptor().createInitialValueMap(client);
 		boolean res=client.hasAnActiveLoanCounts();
 		HibernateUtil.commitTransaction();
@@ -160,9 +160,10 @@ public class TestCustomerBO extends MifosTestCase {
 		assertEquals(res,false );
 		TestObjectFactory.cleanUpChangeLog();
 	}
+
 	public void testCheckIfClientIsATitleHolder() throws Exception {
 		createInitialObjects();
-		client.setUserContext(TestObjectFactory.getUserContext());
+		client.setUserContext(TestUtils.makeUser());
 		HibernateUtil.getInterceptor().createInitialValueMap(client);
 	
 		try{
@@ -223,9 +224,7 @@ public class TestCustomerBO extends MifosTestCase {
 	public void testStatusChangeForGroupForLogging() throws Exception {
 		createGroup();
 
-		// This gives us "9" instead of "Active" on the assert
-//		group.setUserContext(TestUtils.makeUser());
-		group.setUserContext(TestObjectFactory.getUserContext());
+		group.setUserContext(TestUtils.makeUserWithLocales());
 
 		HibernateUtil.getInterceptor().createInitialValueMap(group);
 		group.changeStatus(CustomerStatus.GROUP_CANCELLED, 

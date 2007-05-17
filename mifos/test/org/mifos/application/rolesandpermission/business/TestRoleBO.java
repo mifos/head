@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.mifos.application.personnel.util.helpers.PersonnelConstants;
 import org.mifos.application.rolesandpermission.RoleTestUtil;
 import org.mifos.application.rolesandpermission.exceptions.RolesPermissionException;
 import org.mifos.application.rolesandpermission.persistence.RolesPermissionsPersistence;
@@ -194,7 +195,7 @@ public class TestRoleBO extends MifosTestCase {
 			if(activityEntity.getId().equals(activity_2.getId()))
 				iter.remove();
 		}
-		roleBO.update(TestObjectFactory.getUserContext().getId(),"Test Role",activities);
+		roleBO.update(PersonnelConstants.SYSTEM_USER,"Test Role",activities);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 
@@ -242,7 +243,7 @@ public class TestRoleBO extends MifosTestCase {
 		activities.add(activity_2);
 		assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT,activities.size());
 
-		roleBO.update(TestObjectFactory.getUserContext().getId(),"Test Role",activities);
+		roleBO.update(PersonnelConstants.SYSTEM_USER, "Test Role", activities);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
@@ -269,7 +270,7 @@ public class TestRoleBO extends MifosTestCase {
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
-		roleBO.update(TestObjectFactory.getUserContext().getId(),"New role",activities);
+		roleBO.update(PersonnelConstants.SYSTEM_USER,"New role",activities);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("New role");
@@ -295,7 +296,7 @@ public class TestRoleBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
-			roleBO.update(TestObjectFactory.getUserContext().getId(),"Admin",activities);
+			roleBO.update(PersonnelConstants.SYSTEM_USER,"Admin",activities);
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			fail();
@@ -318,7 +319,7 @@ public class TestRoleBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
-			roleBO.update(TestObjectFactory.getUserContext().getId(),null,activities);
+			roleBO.update(PersonnelConstants.SYSTEM_USER,null,activities);
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			fail();
@@ -341,7 +342,7 @@ public class TestRoleBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
-			roleBO.update(TestObjectFactory.getUserContext().getId(),"",activities);
+			roleBO.update(PersonnelConstants.SYSTEM_USER,"",activities);
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			fail();
@@ -364,7 +365,7 @@ public class TestRoleBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
-			roleBO.update(TestObjectFactory.getUserContext().getId(),"Test Role",null);
+			roleBO.update(PersonnelConstants.SYSTEM_USER,"Test Role",null);
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			fail();
@@ -388,7 +389,7 @@ public class TestRoleBO extends MifosTestCase {
 		HibernateUtil.closeSession();
 		roleBO = RolesPermissionsPersistence.getRole("Test Role");
 		try{
-			roleBO.update(TestObjectFactory.getUserContext().getId(),"Test Role",new ArrayList<ActivityEntity>());
+			roleBO.update(PersonnelConstants.SYSTEM_USER,"Test Role",new ArrayList<ActivityEntity>());
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			fail();
