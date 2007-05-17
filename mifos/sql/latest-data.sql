@@ -16,7 +16,7 @@
 -- merge add-version.sql
 -- merge all upgrade_to_*.sql files to date
 
-INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(116);
+INSERT INTO DATABASE_VERSION(DATABASE_VERSION) VALUES(117);
 
 /* The table Currency holds configuration related items for a currency like display symbol,rounding mode etc which is to be applied on a currency -- Configuration */
 /* To set the default currency, enter 1 in the default_currency field */
@@ -4388,6 +4388,8 @@ INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) V
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(23,5,'Fund Requirement Report',null);
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(24,5,'Daily Transaction Summary report',null);
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(25,6,'Daily Portfolio quality data report - Aging analysis','analysis');
+INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(28,6,'Detailed Aging of Portfolio at Risk','test.rptdesign');
+
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER)
   VALUES(26,7,'Center Meeting Schedule','kendra_meeting');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(27,4,'Loan Status Report',NULL);
@@ -4561,6 +4563,9 @@ REPORT_IDENTIFIER, REPORT_JASPER) VALUES
 INSERT INTO report_jasper_map(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,
 REPORT_IDENTIFIER, REPORT_JASPER) VALUES
 (27,4,'Loan Status Report',NULL,NULL);
+INSERT INTO report_jasper_map(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,
+REPORT_IDENTIFIER, REPORT_JASPER) VALUES 
+(28,6,'Loan Status Report',NULL,'report/test.rptdesign');
 -- end data for Reports Mini Portal
 
 INSERT INTO LOOKUP_VALUE VALUES(570,87,' ');

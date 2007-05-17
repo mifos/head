@@ -1,0 +1,4 @@
+delete from report_jasper_map where REPORT_ID = 28;
+delete from REPORT where REPORT_ID = 28;
+
+UPDATE DATABASE_VERSION SET DATABASE_VERSION = 116 WHERE DATABASE_VERSION = 117;
