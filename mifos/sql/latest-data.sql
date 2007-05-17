@@ -4390,7 +4390,8 @@ INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) V
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(25,6,'Daily Portfolio quality data report - Aging analysis','analysis');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(26,7,'Center Meeting Schedule','kendra_meeting');
 INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(27,4,'Loan Status Report',NULL);
-INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) VALUES(28,6,'Detailed Aging of Portfolio at Risk','aging_portfolio_at_risk');
+INSERT INTO REPORT(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,REPORT_IDENTIFIER) 
+  VALUES(28,6,'Detailed Aging of Portfolio at Risk','aging_portfolio_at_risk');
 
 /* The table Transaction Type defines the transaction types for which the MFI can assign acceptable payment methods.  - System.*/
 INSERT INTO TRANSACTION_TYPE (TRANSACTION_ID,TRANSACTION_NAME) VALUES(1,'Loan Disbursement');
@@ -4563,7 +4564,8 @@ REPORT_IDENTIFIER, REPORT_JASPER) VALUES
 (27,4,'Loan Status Report',NULL,NULL);
 INSERT INTO report_jasper_map(REPORT_ID,REPORT_CATEGORY_ID,REPORT_NAME,
 REPORT_IDENTIFIER, REPORT_JASPER) VALUES 
-(28,6,'Detailed Aging of Portfolio at Risk', 'aging_portfolio_at_risk', 'DetailedAgingPortfolioAtRisk.rptdesign');
+(28,6,'Detailed Aging of Portfolio at Risk', 
+'aging_portfolio_at_risk', 'DetailedAgingPortfolioAtRisk.rptdesign');
 -- end data for Reports Mini Portal
 
 INSERT INTO LOOKUP_VALUE VALUES(570,87,' ');
