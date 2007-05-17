@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
@@ -96,8 +97,8 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 	
 	public void testNoUpgrade() throws Exception {
 		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
-		URL[] scripts = persistence.scripts(88, 88);
-		assertEquals(0, scripts.length);
+		List<Upgrade> scripts = persistence.scripts(88, 88);
+		assertEquals(0, scripts.size());
 	}
 
 	public void testUpgrade() throws Exception {
@@ -117,10 +118,10 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 				}
 			}
 		};
-		URL[] scripts = persistence.scripts(90, 88);
-		assertEquals(2, scripts.length);
-		assertEquals("upgrade_to_89.sql", scripts[0].getPath());
-		assertEquals("upgrade_to_90.sql", scripts[1].getPath());
+		List<Upgrade> scripts = persistence.scripts(90, 88);
+		assertEquals(2, scripts.size());
+		assertEquals("upgrade_to_89.sql", scripts.get(0).sql().getPath());
+		assertEquals("upgrade_to_90.sql", scripts.get(1).sql().getPath());
 	}
 
 	/*
@@ -149,14 +150,14 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 	}
 	
 	public void testReadEmpty() throws Exception {
-		String[] sqlStatements = DatabaseVersionPersistence.readFile(
+		String[] sqlStatements = SqlUpgrade.readFile(
 						new ByteArrayInputStream(new byte[0]));
 		assertEquals(0, sqlStatements.length);
 	}
 
 	public void testBadUtf8() throws Exception {
 		try {
-			DatabaseVersionPersistence.readFile(
+			SqlUpgrade.readFile(
 					new ByteArrayInputStream(new byte[] { (byte)0x80 }));
 			fail();
 		}
@@ -166,7 +167,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 	}
 	
 	public void testGoodUtf8() throws Exception {
-		String[] sqlStatements = DatabaseVersionPersistence.readFile(
+		String[] sqlStatements = SqlUpgrade.readFile(
 				new ByteArrayInputStream(new byte[] {
 						(byte)0xe2, (byte)0x82, (byte)0xac }));
 		assertEquals(1, sqlStatements.length);
@@ -175,7 +176,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 	}
 
 	public void testExecuteStream() throws Exception {
-		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
+		SqlUpgrade persistence = new SqlUpgrade(null);
 		Connection conn = new Database().openConnection();
 		byte[] sql = (
 				"create table FOO(DATABASE_VERSION INTEGER);\n"+

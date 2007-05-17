@@ -1,17 +1,14 @@
 package org.mifos.framework.persistence;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DatabaseVersionPersistence extends Persistence {
 
@@ -63,8 +60,8 @@ public class DatabaseVersionPersistence extends Persistence {
 		return foundColumns;
 	}
 
-	public URL[] scripts(int applicationVersion, int databaseVersion) {
-		if(applicationVersion < databaseVersion) {
+	public List<Upgrade> scripts(int applicationVersion, int databaseVersion) {
+		if (applicationVersion < databaseVersion) {
 			/*
 			   Automatically applying downgrades would be a mistake because
 			   a downgrade is likely to destroy data (for example, if the
@@ -76,125 +73,56 @@ public class DatabaseVersionPersistence extends Persistence {
 				databaseVersion + " to " + applicationVersion);
 		}
 		
-		if(applicationVersion == databaseVersion) {
-			return new URL[0];
+		if (applicationVersion == databaseVersion) {
+			return Collections.emptyList();
 		}
 		
-		ArrayList<URL> urls = new ArrayList<URL>(applicationVersion-databaseVersion);
-		for(int i=databaseVersion; i<applicationVersion; i++){
-			String name = "upgrade_to_" + (i + 1 ) + ".sql";
-			URL url = lookup(name);
-			if (url == null) {
-				String location;
-				try {
-					location = " in " + 
-					    getClass().getProtectionDomain()
-					    .getCodeSource().getLocation().toString();
-				} catch (Throwable e) {
-					location = "";
-				}
-				throw new IllegalStateException("WAR built without "+name+" next to "+
-						getClass().getName()+
-						location);
+		List<Upgrade> upgrades = new ArrayList<Upgrade>(
+			applicationVersion - databaseVersion);
+		for (int i = databaseVersion; i < applicationVersion; i++){
+			Upgrade upgrade = findUpgrade(i);
+			upgrades.add(upgrade);
+		}
+		return Collections.unmodifiableList(upgrades);
+	}
+
+	Upgrade findUpgrade(int fromVersion) {
+		int higherVersion = fromVersion + 1;
+		String name = "upgrade_to_" + higherVersion + ".sql";
+		URL url = lookup(name);
+		Upgrade upgrade;
+		if (url == null) {
+			String location;
+			try {
+				location = " in " + 
+				    getClass().getProtectionDomain()
+				    .getCodeSource().getLocation().toString();
+			} catch (Throwable e) {
+				location = "";
 			}
-			urls.add(url);
+			throw new IllegalStateException("WAR built without "+name+" next to "+
+					getClass().getName()+
+					location);
 		}
-		return urls.toArray(new URL[urls.size()]);
-		
+		else {
+			upgrade = new SqlUpgrade(url);
+		}
+		return upgrade;
 	}
 
 	URL lookup(String name) {
 		return getClass().getResource(name);
 	}
 
-	public void execute(URL url) throws IOException , SQLException {
-		Connection conn = getConnection();
-		execute(url, conn);
-		conn.commit();
-	}
-
-	void execute(URL url, Connection conn) throws IOException , SQLException {
-		InputStream in = url.openStream();
-		execute(in, conn);
-		in.close();
+	void execute(Upgrade upgrade, Connection conn) throws IOException, SQLException {
+		upgrade.upgrade(conn);
 	}
 	
-	public void execute(InputStream stream) throws SQLException {
-		Connection conn = getConnection();
-		execute(stream, conn);
-		conn.commit();
-	}
-	
-	void execute(InputStream stream, Connection conn) throws SQLException {
-		String[] sqls = readFile(stream);
-		Statement st = conn.createStatement();
-		for(String sql : sqls){
-			st.executeUpdate(sql);
+	void execute(List<Upgrade> scripts, Connection conn) 
+	throws IOException, SQLException {
+		for (Upgrade upgrade : scripts) {
+			execute(upgrade, conn);
 		}
-		st.close();
-	}
-	
-	void execute(URL[] scripts, Connection conn) throws IOException, SQLException {
-		for(URL url : scripts){
-			execute(url, conn);
-		}
-	}
-	
-	/**
-	 * @return individual statements
-	 * */
-	public static String[] readFile(InputStream stream) {
-		// mostly ripped from http://svn.apache.org/viewvc/ant/core/trunk/src/main/org/apache/tools/ant/taskdefs/SQLExec.java
-		try {
-			ArrayList<String> statements = new ArrayList<String>();  
-			Charset utf8 = Charset.forName("UTF-8");
-			CharsetDecoder decoder = utf8.newDecoder();
-			BufferedReader in = new BufferedReader(new InputStreamReader(stream, decoder));
-			StringBuffer sql = new StringBuffer();
-			String line;
-			while ((line = in.readLine()) != null) {
-                if (line.startsWith("//")) {
-                    continue;
-                }
-                if (line.startsWith("--")) {
-                    continue;
-                }
-                //StringTokenizer st = new StringTokenizer(line);
-                //if (st.hasMoreTokens()) {
-                //    String token = st.nextToken();
-                //    if ("REM".equalsIgnoreCase(token)) {
-                //        continue;
-                //    }
-                //}
-            
-                line = line.trim();
-                
-                sql.append("\n");
-                sql.append(line);
-
-                // SQL defines "--" as a comment to EOL
-                // and in Oracle it may contain a hint
-                // so we cannot just remove it, instead we must end it
-
-                if (line.indexOf("--") >= 0) {
-                    sql.append("\n");
-                }
-
-	            if (sql.length()>0 && sql.charAt(sql.length()-1)==';') {
-	            	statements.add(sql.substring(0, sql.length() - 1));
-	                sql.setLength(0);
-	            }
-	        }
-	        // Catch any statements not followed by ;
-	        if (sql.length() > 0) {
-	        	statements.add(sql.toString());
-	        }
-	        
-	        return statements.toArray(new String[statements.size()]);
-	    }
-		catch (IOException e) {
-	    	throw new RuntimeException(e);
-	    }
 	}
 	
 	public void upgradeDatabase() throws Exception {
@@ -212,15 +140,17 @@ public class DatabaseVersionPersistence extends Persistence {
 		}
 	}
 	
-	void upgradeDatabase(Connection conn, int upgradeTo) throws Exception {
-		if(!isVersioned(conn)){
-			throw new RuntimeException("Database version is too old to be upgraded automatically");
+	void upgradeDatabase(Connection connection, int upgradeTo) 
+	throws Exception {
+		if (!isVersioned(connection)) {
+			throw new RuntimeException(
+				"Database version is too old to be upgraded automatically");
 		}
-		int version = read(conn);
-		URL[] sqlScripts = scripts(upgradeTo, version);
-		for(URL url : sqlScripts){
-			execute(url, conn);
-			int upgradedVersion = read(conn);
+
+		int version = read(connection);
+		for (Upgrade upgrade : scripts(upgradeTo, version)){
+			execute(upgrade, connection);
+			int upgradedVersion = read(connection);
 			if(upgradedVersion != version + 1) {
 				throw new RuntimeException("upgrade script from " + version +
 					" did not end up at " + (version + 1) + "(was instead " + upgradedVersion + ")");

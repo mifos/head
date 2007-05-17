@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import junit.framework.TestCase;
 import net.sourceforge.mayfly.Database;
@@ -90,7 +91,7 @@ public class LatestTest extends TestCase {
 	    };	    
 	    int version  = persistence.read(conn);
 	    assertEquals(FIRST_NUMBERED_VERSION, version);
-	    URL[] scripts = persistence.scripts(
+	    List<Upgrade> scripts = persistence.scripts(
 	    	DatabaseVersionPersistence.APPLICATION_VERSION, version);
 	    persistence.execute(scripts, conn);
 	}
@@ -126,11 +127,11 @@ public class LatestTest extends TestCase {
 	throws Exception {
 		Database database = new Database(current);
 		String before = new SqlDumper(false).dump(database.dataStore());
-		new DatabaseVersionPersistence().execute(
+		new SqlUpgrade(null).execute(
 			new FileInputStream("sql/upgrade_to_" + nextVersion + ".sql"), 
 			database.openConnection());
 		DataStore upgraded = database.dataStore();
-		new DatabaseVersionPersistence().execute(
+		new SqlUpgrade(null).execute(
 			new FileInputStream("sql/downgrade_from_" + nextVersion + ".sql"), 
 			database.openConnection());
 		String after = new SqlDumper(false).dump(database.dataStore());
