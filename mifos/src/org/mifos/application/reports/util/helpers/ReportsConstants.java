@@ -64,5 +64,6 @@ public interface ReportsConstants {
 	public String VIEW_DATASOURCE="viewDataSource";
 	public String VIEW_PARAMETER="viewParameter";
 ///ENDED BY MFTECH
+	public String BIRTREPORTPATH = "birtreport_path";
 	
 }

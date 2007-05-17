@@ -27,13 +27,9 @@ public class TestReportsAction extends MifosMockStrutsTestCase {
 		}
 		userContext = TestUtils.makeUser();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-		addRequestParameter("recordLoanOfficerId", "1");
-		addRequestParameter("recordOfficeId", "1");
 		ActivityContext ac = new ActivityContext((short) 0, userContext
 				.getBranchId().shortValue(), userContext.getId().shortValue());
 		request.getSession(false).setAttribute("ActivityContext", ac);
-		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-
 	}
 
 	@Override

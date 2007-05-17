@@ -712,15 +712,16 @@
 		<!--  Reports Upload Action End -->
 
 
-<!--ReportsUserParamsAction-->
-<action path="/reportsUserParamsAction"
+		<!--ReportsUserParamsAction-->
+		<action path="/reportsUserParamsAction"
 			type="org.mifos.application.reports.struts.action.ReportsUserParamsAction"
 			name="reportsUserParamsActionForm" parameter="method" scope="session"
 			input="/reportsUserParamsAction.do?method=validate"
 			validate="false">
 
-		<forward name="reportuserparamslist_path" path="/pages/application/reports/jsp/report_user_params.jsp" />
-<forward name="reportsuserprocess_path" path="/pages/application/reports/jsp/reportsView.jsp" />
+			<forward name="reportuserparamslist_path" path="/pages/application/reports/jsp/report_user_params.jsp" />
+			<forward name="reportsuserprocess_path" path="/pages/application/reports/jsp/reportsView.jsp" />
+			<forward name="birtreport_path" path="/pages/application/reports/jsp/birtReport.jsp" />
 		</action>
 		<!--  Reports UserParams Action End -->
 

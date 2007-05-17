@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.reports.business.ReportsJasperMap;
 import org.mifos.application.reports.business.ReportsParamsMap;
 import org.mifos.application.reports.business.dao.ReportsParamQueryDAO;
 import org.mifos.application.reports.business.service.ReportsBusinessService;
@@ -86,20 +87,13 @@ public class ReportsUserParamsAction extends BaseAction {
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("reportsUserParamsAction");
 
-		security.allow("reportuserparamslist_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("reportuserparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security
-				.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.allow("reportsuserprocess_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-		security.allow("reportsuserprocess_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
-		security.allow("reportsuserprocess_path",
-				SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
+		security.allow("reportsuserprocess_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
 		return security;
 	}
+
 	/**
 	 * Loads the Parameter Add page
 	 */
@@ -119,6 +113,17 @@ public class ReportsUserParamsAction extends BaseAction {
 			strReportId = "0";
 		}
 		int reportId = Integer.parseInt(strReportId);
+		
+		List<ReportsJasperMap> reports = reportsPersistence.findJasperOfReportId(reportId);
+		if (reports.size() > 0) {
+			ReportsJasperMap reportFile = reports.get(0);
+			String filename = reportFile.getReportJasper();
+			if (filename.endsWith(".rptdesign")) {
+				request.setAttribute("reportFile", filename);
+				return mapping.findForward(ReportsConstants.BIRTREPORTPATH);
+			}
+		}
+		
 		actionForm.setReportId(reportId);
 		request.getSession().setAttribute("listOfAllParametersForReportId",
 				reportsPersistence.findParamsOfReportId(reportId));

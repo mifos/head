@@ -167,5 +167,6 @@ public enum ActionForwards {
 	loadGrpMemberShip_success,
 	view_client_details_page,
 	update_cache_success,
-	welcome;
+	welcome,
+	birtreport_path;
 }
