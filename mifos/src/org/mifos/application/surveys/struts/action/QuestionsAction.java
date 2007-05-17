@@ -67,7 +67,6 @@ public class QuestionsAction extends BaseAction {
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
 		
 		List<Question> questionList = surveysPersistence.retrieveAllQuestions();
-		System.out.println("questions found: " + questionList.size());
 
 		request.getSession().setAttribute("questionList", questionList);
 

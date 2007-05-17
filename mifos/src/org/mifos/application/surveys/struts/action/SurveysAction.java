@@ -52,7 +52,6 @@ public class SurveysAction extends BaseAction {
 	public ActionForward mainpage(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		System.out.println("mainpage");
 		SessionHolder holder = opener.open();
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
 		List<Survey> customerSurveys = surveysPersistence.retrieveSurveysByType(SurveyType.CUSTOMERS);
@@ -68,7 +67,6 @@ public class SurveysAction extends BaseAction {
 	public ActionForward load(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		System.out.println("mainpage");
 		SessionHolder holder = opener.open();
 		SurveysPersistence surveysPersistence = new SurveysPersistence(holder);
 		SurveyActionForm actionForm = (SurveyActionForm) form;
