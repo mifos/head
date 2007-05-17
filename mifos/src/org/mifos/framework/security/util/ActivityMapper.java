@@ -44,6 +44,7 @@ import org.mifos.application.reports.struts.action.ReportsParamsMapAction;
 import org.mifos.application.reports.struts.action.ReportsUploadAction;
 import org.mifos.application.reports.struts.action.ReportsUserParamsAction;
 import org.mifos.application.rolesandpermission.struts.action.RolesPermissionsAction;
+import org.mifos.application.surveys.struts.action.QuestionsAction;
 import org.mifos.application.surveys.struts.action.SurveysAction;
 import org.mifos.framework.security.authorization.AuthorizationManager;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -204,13 +205,10 @@ public class ActivityMapper {
 		parseActionSecurity(LabelConfigurationAction.getSecurity());
 		parseActionSecurity(HolidayAction.getSecurity());
 		parseActionSecurity(SurveysAction.getSecurity());
+		parseActionSecurity(QuestionsAction.getSecurity());
 		parseActionSecurity(HiddenMandatoryConfigurationAction.getSecurity());
 	}
-
-	private void addCustomerAccountActionMappings() {
-		activityMap.put("/customerAccountAction-load", SecurityConstants.VIEW);
-	}
-
+	
 	private void addSearchActionMappings() {
 		activityMap.put("/custSearchAction-loadSearch", SecurityConstants.VIEW);
 		activityMap.put("/custSearchAction-search", SecurityConstants.VIEW);

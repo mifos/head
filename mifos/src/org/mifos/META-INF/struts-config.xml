@@ -1145,7 +1145,8 @@
           name="questionActionForm"
           input="/questionsAction.do?method=validate">
              <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
-             <forward name="manage_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
+             <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
+             <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
         </action>
 	</action-mappings>
 

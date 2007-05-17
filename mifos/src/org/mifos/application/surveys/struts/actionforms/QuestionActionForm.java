@@ -10,6 +10,11 @@ public class QuestionActionForm extends BaseActionForm {
        private String answerType;
        private String choice;
 
+       public void clear() {
+    	   setQuestionText("");
+    	   setAnswerType(Integer.toString(AnswerType.FREETEXT.getValue()));
+    	   setChoice("");
+       }
        public String getQuestionText() {
                return questionText;
        }

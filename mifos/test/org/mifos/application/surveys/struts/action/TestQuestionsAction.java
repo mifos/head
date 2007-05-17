@@ -10,6 +10,7 @@ import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.helpers.AnswerType;
 import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
+import org.mifos.application.surveys.struts.actionforms.QuestionActionForm;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;
@@ -76,6 +77,65 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		new SurveysPersistence(database.open()).createOrUpdate(question);
 		return question;
 	}
+	
+	public void testDefineQuestion() throws Exception {
+		String questionText1 = "testDefineQuestion sample text one";
+		QuestionsAction action = new QuestionsAction(database);
+		setRequestPathInfo("/questionsAction");
+		addRequestParameter("method", "defineQuestions");
+		action.defineQuestions(moduleMapping, null, request, response);
+		QuestionActionForm form = new QuestionActionForm();
+		verifyNoActionErrors();
+		form.setQuestionText(questionText1);
+		form.setAnswerType(Integer.toString(AnswerType.FREETEXT.getValue()));
+		addRequestParameter("method", "addQuestion");
+		action.addQuestion(moduleMapping, form, request, response);
+		List<Question> newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
+		assertEquals(1, newQuestions.size());
+		assertEquals(questionText1, newQuestions.get(0).getQuestionText());
+		assertEquals(AnswerType.FREETEXT, newQuestions.get(0).getAnswerTypeAsEnum());
+		
+		String questionText2 = "testDefineQuestion sample text two";
+		form.setQuestionText(questionText2);
+		form.setAnswerType(Integer.toString(AnswerType.CHOICE.getValue()));
+		String choice = "testDefineQuestion sample choice";
+		form.setChoice(choice);
+		action.addChoice(moduleMapping, form, request, response);
+		verifyNoActionErrors();
+		List<String> newChoices = (List<String>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES);
+		assertEquals(1, newChoices.size());
+		assertEquals(choice, newChoices.get(0));
+		action.addQuestion(moduleMapping, form, request, response);
+		newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
+		assertEquals(2, newQuestions.size());
+		assertEquals(questionText2, newQuestions.get(1).getQuestionText());
+		assertEquals(AnswerType.CHOICE, newQuestions.get(1).getAnswerTypeAsEnum());
+		assertEquals(1, newQuestions.get(1).getChoices().size());
+		assertEquals(choice, newQuestions.get(1).getChoices().get(0).getChoiceText());
+		
+		String questionText3 = "testDefineQuestions question text 3";
+		form.setQuestionText(questionText3);
+		action.addQuestion(moduleMapping, form, request, response);
+		newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
+		assertEquals(3, newQuestions.size());
+		assertEquals(questionText3, newQuestions.get(2).getQuestionText());
+		int badQuestionId = newQuestions.get(2).getQuestionId();
+		System.out.println("badQuestionId: " + badQuestionId);
+		addRequestParameter("newQuestionNum", Integer.toString(newQuestions.size() - 1));
+		action.deleteNewQuestion(moduleMapping, form, request, response);
+		newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
+		assertEquals(2, newQuestions.size());
+		System.out.println(newQuestions.get(0).getQuestionText());
+		System.out.println(newQuestions.get(1).getQuestionText());
+		
+		action.createQuestions(moduleMapping, form, request, response);
+		SurveysPersistence persistence = new SurveysPersistence(database.open());
+		List<Question> dbQuestions = persistence.retrieveAllQuestions();
+		assertEquals(2, dbQuestions.size());
+		assertEquals(questionText1, dbQuestions.get(0).getQuestionText());
+		assertEquals(questionText2, dbQuestions.get(1).getQuestionText());
+		
+	}
 
 	public void testViewQuestions() throws Exception {
 		
@@ -107,20 +167,5 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 					tempQuestion.getChoices().size());
 		}
 	}
-	/*
-	 public void testGet() throws Exception {
-	 String testName = "Test Survey 2";
-	 String questionText= "Some question here";
-	 Survey survey = makeTestSurvey(testName, questionText);
-	 setRequestPathInfo("/surveysAction");
-	 addRequestParameter("method", "get");
-	 addRequestParameter("surveyId", Integer.toString(survey.getSurveyId()));
-	 actionPerform();
-	 verifyNoActionErrors();
-	 Survey retrievedSurvey = (Survey) request.getSession().getAttribute(Constants.BUSINESS_KEY);
-	 assertEquals(testName, retrievedSurvey.getName());
-	 Question question = retrievedSurvey.getQuestion(0);
-	 assertEquals(questionText, question.getQuestionText());
-	 }
-	 */
+	
 }

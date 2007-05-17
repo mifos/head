@@ -16,6 +16,10 @@ public enum AnswerType {
 		return value;
 	}
 	
+	public String getString() {
+		return this.toString();
+	}
+	
 	public static AnswerType fromInt(int type) {
 		for (AnswerType candidate : AnswerType.values()) {
 			if (type == candidate.getValue()) {

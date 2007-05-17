@@ -168,5 +168,6 @@ public enum ActionForwards {
 	view_client_details_page,
 	update_cache_success,
 	welcome,
+	manage_questions,
 	birtreport_path;
 }

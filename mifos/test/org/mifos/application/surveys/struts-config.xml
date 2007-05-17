@@ -37,7 +37,8 @@
           name="questionActionForm"
           input="/questionsAction.do?method=validate">
              <forward name="viewAll_success" path="/pages/application/surveys/jsp/view_questions.jsp"/>
-             <forward name="manage_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
+             <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
+             <forward name="preview_success" path="/pages/application/surveys/jsp/preview_question.jsp"/>
         </action>
         <action path="/questionsAction"
           type="org.mifos.application.surveys.struts.action.QuestionsAction"
@@ -46,6 +47,7 @@
           validate="false"
           input="/questionsAction.do?method=validate">
           <forward name="load_main_page" path="/pages/application/surveys/jsp/view_questions.jsp"/>
+          <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
         </action>
 	</action-mappings>
 </struts-config>
