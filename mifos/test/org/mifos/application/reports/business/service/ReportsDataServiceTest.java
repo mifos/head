@@ -38,70 +38,83 @@ public class ReportsDataServiceTest extends TestCase {
 		loanPrdBusinessServiceMock = createMock(LoanPrdBusinessService.class);
 		personnelBusinessServiceMock = createMock(PersonnelBusinessService.class);
 		officeBusinessServiceMock = createMock(OfficeBusinessService.class);
-
-		reportsDataService = ReportsDataService.getInstance();
-		reportsDataService.setLoanPrdBusinessService(loanPrdBusinessServiceMock);
-		reportsDataService.setPersonnelBusinessService(personnelBusinessServiceMock);
-		reportsDataService.setOfficeBusinessService(officeBusinessServiceMock);
-
 		personnelMock = createMock(PersonnelBO.class);
 
 		expectedException = new ServiceException("someServiceException");
 
 		userId = 1;
-		localeId = 1;
-		branchId = 1;
+		branchId = 2;
+		localeId = 3;
+
+		reportsDataService = new ReportsDataService();
+		reportsDataService.setLoanPrdBusinessService(loanPrdBusinessServiceMock);
+		reportsDataService.setPersonnelBusinessService(personnelBusinessServiceMock);
+		reportsDataService.setOfficeBusinessService(officeBusinessServiceMock);
+		reportsDataService.setPersonnel(personnelMock);
+	}
+
+	public void testInitialize() throws Exception {
+		reportsDataService.setPersonnel(null);
+
+		expect(personnelBusinessServiceMock.getPersonnel(userId.shortValue())).andReturn(personnelMock);
+		replay(personnelBusinessServiceMock);
+		reportsDataService.initialize(userId.intValue());
+		assertSame(personnelMock, reportsDataService.getPersonnel());
+		verify(personnelBusinessServiceMock);
+	}
+
+	public void testInitializeShouldComplainIfPersonnelBusinessServiceComplains() throws Exception {
+		reportsDataService.setPersonnel(null);
+
+		expect(personnelBusinessServiceMock.getPersonnel(userId.shortValue())).andThrow(expectedException);
+		replay(personnelBusinessServiceMock);
+		try {
+			reportsDataService.initialize(userId.intValue());
+			fail("exception expected");
+		} catch (ServiceException e) {
+			assertSame(expectedException, e);
+		}
+		assertNull(reportsDataService.getPersonnel());
+		verify(personnelBusinessServiceMock);
 	}
 
 	public void testGetAllLoanProductsShouldDelegateToLoanPrdBusinessService() throws Exception {
 		List<LoanOfferingBO> expectedLoanProducts = new ArrayList<LoanOfferingBO>();
 
+		expect(personnelMock.getLocaleId()).andReturn(localeId);
 		expect(loanPrdBusinessServiceMock.getAllLoanOfferings(localeId)).andReturn(expectedLoanProducts);
-		replay(loanPrdBusinessServiceMock);
-		assertSame(expectedLoanProducts, reportsDataService.getAllLoanProducts(localeId));
-		verify(loanPrdBusinessServiceMock);
+		replay(personnelBusinessServiceMock, personnelMock, loanPrdBusinessServiceMock);
+		assertSame(expectedLoanProducts, reportsDataService.getAllLoanProducts());
+		verify(personnelBusinessServiceMock, personnelMock, loanPrdBusinessServiceMock);
 	}
 
 	public void testGetAllLoanProductsShouldComplainIfLoanPrdBusinessServiceComplains() throws Exception {
+		expect(personnelMock.getLocaleId()).andReturn(localeId);
 		expect(loanPrdBusinessServiceMock.getAllLoanOfferings(localeId)).andThrow(expectedException);
-		replay(loanPrdBusinessServiceMock);
+		replay(personnelBusinessServiceMock, personnelMock, loanPrdBusinessServiceMock);
 		try {
-			reportsDataService.getAllLoanProducts(localeId);
+			reportsDataService.getAllLoanProducts();
 			fail("exception expected");
 		} catch (ServiceException e) {
 			assertSame(expectedException, e);
 		}
-		verify(loanPrdBusinessServiceMock);
+		verify(personnelBusinessServiceMock, personnelMock, loanPrdBusinessServiceMock);
 	}
 
 	public void testGetAllBranchShouldReturnActiveBranchesUnderUser() throws Exception {
 		List<OfficeBO> expectedBranches = new ArrayList<OfficeBO>();
 
-		expect(personnelBusinessServiceMock.getPersonnel(userId)).andReturn(personnelMock);
 		expect(officeBusinessServiceMock.getActiveBranchesUnderUser(personnelMock)).andReturn(expectedBranches);
 		replay(personnelBusinessServiceMock, personnelMock, officeBusinessServiceMock);
-		assertSame(expectedBranches, reportsDataService.getActiveBranchesUnderUser(userId));
-		verify(personnelBusinessServiceMock, personnelMock, officeBusinessServiceMock);
-	}
-
-	public void testGetAllBranchShouldComplainIfPersonnelBusinessServiceComplains() throws Exception {
-		expect(personnelBusinessServiceMock.getPersonnel(userId)).andThrow(expectedException);
-		replay(personnelBusinessServiceMock, personnelMock, officeBusinessServiceMock);
-		try {
-			reportsDataService.getActiveBranchesUnderUser(userId);
-			fail("exception expected");
-		} catch (ServiceException e) {
-			assertSame(expectedException, e);
-		}
+		assertSame(expectedBranches, reportsDataService.getActiveBranchesUnderUser());
 		verify(personnelBusinessServiceMock, personnelMock, officeBusinessServiceMock);
 	}
 
 	public void testGetAllBranchShouldComplainIfOfficecBusinessServiceComplains() throws Exception {
-		expect(personnelBusinessServiceMock.getPersonnel(userId)).andReturn(personnelMock);
 		expect(officeBusinessServiceMock.getActiveBranchesUnderUser(personnelMock)).andThrow(expectedException);
 		replay(personnelBusinessServiceMock, personnelMock, officeBusinessServiceMock);
 		try {
-			reportsDataService.getActiveBranchesUnderUser(userId);
+			reportsDataService.getActiveBranchesUnderUser();
 			fail("exception expected");
 		} catch (ServiceException e) {
 			assertSame(expectedException, e);
@@ -113,43 +126,29 @@ public class ReportsDataServiceTest extends TestCase {
 		List<PersonnelBO> expectedLoanOfficer = new ArrayList<PersonnelBO>();
 		expectedLoanOfficer.add(personnelMock);
 
-		expect(personnelBusinessServiceMock.getPersonnel(userId)).andReturn(personnelMock);
 		expect(personnelMock.isLoanOfficer()).andReturn(true);
 		replay(personnelBusinessServiceMock, personnelMock);
-		assertEquals(expectedLoanOfficer, reportsDataService.getActiveLoanOfficers(userId, branchId));
+		assertEquals(expectedLoanOfficer, reportsDataService.getActiveLoanOfficers(branchId.intValue()));
 		verify(personnelBusinessServiceMock, personnelMock);
 	}
 
-	public void testGetActiveLoanOfficersShouldReturnAListOfActiveLoanOfficersUnderTheBranchIfUserIsNotALoanOfficer() throws Exception {
+	public void testGetActiveLoanOfficersShouldReturnAListOfActiveLoanOfficersUnderTheBranchIfUserIsNotALoanOfficer()
+			throws Exception {
 		List<PersonnelBO> expectedLoanOfficer = new ArrayList<PersonnelBO>();
 
-		expect(personnelBusinessServiceMock.getPersonnel(userId)).andReturn(personnelMock);
 		expect(personnelMock.isLoanOfficer()).andReturn(false);
 		expect(personnelBusinessServiceMock.getActiveLoanOfficersUnderOffice(branchId)).andReturn(expectedLoanOfficer);
 		replay(personnelBusinessServiceMock, personnelMock);
-		assertEquals(expectedLoanOfficer, reportsDataService.getActiveLoanOfficers(userId, branchId));
+		assertEquals(expectedLoanOfficer, reportsDataService.getActiveLoanOfficers(branchId.intValue()));
 		verify(personnelBusinessServiceMock, personnelMock);
 	}
 
-	public void testGetAllLoanOfficersShouldComplainIfPersonnelBusinessServiceFailedToGetPersonnel() throws Exception {
-		expect(personnelBusinessServiceMock.getPersonnel(userId)).andThrow(expectedException);
-		replay(personnelBusinessServiceMock, personnelMock);
-		try {
-			reportsDataService.getActiveLoanOfficers(userId, branchId);
-			fail("exception expected");
-		} catch (ServiceException e) {
-			assertSame(expectedException, e);
-		}
-		verify(personnelBusinessServiceMock, personnelMock);
-	}
-	
 	public void testGetAllLoanOfficersShouldComplainIfPersonnelBusinessServiceFailedToGetLoanOfficers() throws Exception {
-		expect(personnelBusinessServiceMock.getPersonnel(userId)).andReturn(personnelMock);
 		expect(personnelMock.isLoanOfficer()).andReturn(false);
 		expect(personnelBusinessServiceMock.getActiveLoanOfficersUnderOffice(branchId)).andThrow(expectedException);
 		replay(personnelBusinessServiceMock, personnelMock);
 		try {
-			reportsDataService.getActiveLoanOfficers(userId, branchId);
+			reportsDataService.getActiveLoanOfficers(branchId.intValue());
 			fail("exception expected");
 		} catch (ServiceException e) {
 			assertSame(expectedException, e);

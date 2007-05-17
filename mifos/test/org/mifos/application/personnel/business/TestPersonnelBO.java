@@ -15,6 +15,7 @@ import org.mifos.application.customer.group.business.GroupBO;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerStatus;
 import org.mifos.application.login.util.helpers.LoginConstants;
+import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.util.helpers.OfficeLevel;
@@ -750,6 +751,14 @@ public class TestPersonnelBO extends MifosTestCase {
 		PersonnelView personnelView = new PersonnelView(Short.valueOf("1"),"Raj");
 		assertEquals(Short.valueOf("1"),personnelView.getPersonnelId());
 		assertEquals("Raj",personnelView.getDisplayName());
+	}
+	
+	public void testGetLocaleId() throws Exception {
+		Short localeId = 1;
+		PersonnelBO personnel = new PersonnelBO();
+		personnel.setPreferredLocale(new SupportedLocalesEntity(localeId));
+
+		assertEquals(localeId, personnel.getLocaleId());
 	}
 	private PersonnelNotesEntity createNotes(String comment) throws Exception{
 		return new PersonnelNotesEntity(comment, new PersonnelPersistence()

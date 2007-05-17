@@ -14,15 +14,6 @@
                 <property name="category">Unformatted</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="localeId" id="32">
-            <property name="hidden">true</property>
-            <property name="valueType">static</property>
-            <property name="dataType">integer</property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Unformatted</property>
-            </structure>
-        </scalar-parameter>
         <cascading-parameter-group name="branch_loanOfficer" id="38">
             <property name="dataSetMode">multiple</property>
             <parameters>
@@ -74,7 +65,12 @@
         </scalar-parameter>
     </parameters>
     <data-sources>
-        <script-data-source name="Scripted Data Source" id="4"/>
+        <script-data-source name="Scripted Data Source" id="4">
+            <method name="open"><![CDATA[var userId = reportContext.getParameterValue("userId");
+reportsDataService = new Packages.org.mifos.application.reports.business.service.ReportsDataService();
+reportsDataService.initialize(userId);]]></method>
+            <method name="close"><![CDATA[reportsDataService = null;]]></method>
+        </script-data-source>
     </data-sources>
     <data-sets>
         <script-data-set name="LoanProducts" id="5">
@@ -113,10 +109,7 @@
                 </list-property>
             </structure>
             <property name="dataSource">Scripted Data Source</property>
-            <method name="open"><![CDATA[reportsDataService = Packages.org.mifos.application.reports.business.service.ReportsDataService.getInstance();
-
-var localeId = reportContext.getParameterValue("localeId");
-loanProducts = reportsDataService.getAllLoanProducts(reportsDataService.switchIntegerIntoShort(localeId));
+            <method name="open"><![CDATA[loanProducts = reportsDataService.getAllLoanProducts();
 iterator = loanProducts.iterator();]]></method>
             <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
 	return false;
@@ -128,9 +121,7 @@ row["ID"] = loanProduct.getPrdOfferingId();
 row["Name"] = loanProduct.getPrdOfferingName();
 
 return true;]]></method>
-            <method name="close"><![CDATA[reportsDataService = null;
-
-loanProducts = null;
+            <method name="close"><![CDATA[loanProducts = null;
 iterator = null;]]></method>
         </script-data-set>
         <script-data-set name="Branches" id="34">
@@ -169,10 +160,7 @@ iterator = null;]]></method>
                 </list-property>
             </structure>
             <property name="dataSource">Scripted Data Source</property>
-            <method name="open"><![CDATA[reportsDataService = Packages.org.mifos.application.reports.business.service.ReportsDataService.getInstance();
-
-var userId = reportContext.getParameterValue("userId");
-branches = reportsDataService.getActiveBranchesUnderUser(reportsDataService.switchIntegerIntoShort(userId));
+            <method name="open"><![CDATA[branches = reportsDataService.getActiveBranchesUnderUser();
 iterator = branches.iterator();]]></method>
             <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
 	return false;
@@ -184,9 +172,7 @@ row["ID"] = branch.getOfficeId();
 row["Name"] = branch.getOfficeName();
 
 return true;]]></method>
-            <method name="close"><![CDATA[reportsDataService = null;
-
-branches = null;
+            <method name="close"><![CDATA[branches = null;
 iterator = null;]]></method>
         </script-data-set>
         <script-data-set name="LoanOfficers" id="35">
@@ -225,11 +211,8 @@ iterator = null;]]></method>
                 </list-property>
             </structure>
             <property name="dataSource">Scripted Data Source</property>
-            <method name="open"><![CDATA[reportsDataService = Packages.org.mifos.application.reports.business.service.ReportsDataService.getInstance();
-
-var userId = reportContext.getParameterValue("userId");
-var branchId = reportContext.getParameterValue("branchId");
-loanOfficers = reportsDataService.getActiveLoanOfficers(reportsDataService.switchIntegerIntoShort(userId), reportsDataService.switchIntegerIntoShort(branchId));
+            <method name="open"><![CDATA[var branchId = reportContext.getParameterValue("branchId");
+loanOfficers = reportsDataService.getActiveLoanOfficers(branchId);
 iterator = loanOfficers.iterator();]]></method>
             <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
 	return false;
@@ -241,9 +224,7 @@ row["ID"] = loanOfficer.getPersonnelId();
 row["Name"] = loanOfficer.getDisplayName();
 
 return true;]]></method>
-            <method name="close"><![CDATA[reportsDataService = null;
-
-loanOfficers = null;
+            <method name="close"><![CDATA[loanOfficers = null;
 iterator = null;]]></method>
         </script-data-set>
     </data-sets>

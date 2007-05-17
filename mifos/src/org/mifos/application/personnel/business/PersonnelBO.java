@@ -807,6 +807,10 @@ public class PersonnelBO extends BusinessObject {
 		logger.info("got usercontext");
 		return userContext;
 	}
+	
+	public Short getLocaleId() {
+		return getPreferredLocale().getLocaleId();
+	}
 
 	private Set<Short> getRoles() {
 		Set<Short> roles = new HashSet<Short>();

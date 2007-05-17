@@ -19,49 +19,57 @@ public class ReportsDataService {
 
 	private OfficeBusinessService officeBusinessService;
 
-	private ReportsDataService() {
+	private PersonnelBO personnel;
+
+	public ReportsDataService() {
+		this.personnelBusinessService = new PersonnelBusinessService();
+		this.officeBusinessService = new OfficeBusinessService();
+		this.loanPrdBusinessService = new LoanPrdBusinessService();
 	}
 
-	public static ReportsDataService getInstance() {
-		ReportsDataService reportsDataService = new ReportsDataService();
-		reportsDataService.setPersonnelBusinessService(new PersonnelBusinessService());
-		reportsDataService.setOfficeBusinessService(new OfficeBusinessService());
-		reportsDataService.setLoanPrdBusinessService(new LoanPrdBusinessService());
-		return reportsDataService;
+	public void initialize(Integer userId) throws ServiceException {
+		this.personnel = personnelBusinessService.getPersonnel(convertIntegerToShort(userId));
 	}
 
-	public List<LoanOfferingBO> getAllLoanProducts(Short localeId) throws ServiceException {
-		return loanPrdBusinessService.getAllLoanOfferings(localeId);
-	}
-
-	public List<OfficeBO> getActiveBranchesUnderUser(Short userId) throws ServiceException {
-		PersonnelBO personnel = personnelBusinessService.getPersonnel(userId);
+	public List<OfficeBO> getActiveBranchesUnderUser() throws ServiceException {
 		return officeBusinessService.getActiveBranchesUnderUser(personnel);
 	}
 
-	public void setLoanPrdBusinessService(LoanPrdBusinessService loanPrdBusinessService) {
-		this.loanPrdBusinessService = loanPrdBusinessService;
-	}
-
-	public void setPersonnelBusinessService(PersonnelBusinessService personnelBusinessService) {
-		this.personnelBusinessService = personnelBusinessService;
-	}
-
-	public void setOfficeBusinessService(OfficeBusinessService officeBusinessService) {
-		this.officeBusinessService = officeBusinessService;
-	}
-
-	public List<PersonnelBO> getActiveLoanOfficers(Short userId, Short branchId) throws ServiceException {
+	public List<PersonnelBO> getActiveLoanOfficers(Integer branchId) throws ServiceException {
 		List<PersonnelBO> loanOfficers = new ArrayList<PersonnelBO>();
-		PersonnelBO personnel = personnelBusinessService.getPersonnel(userId);
 		if (personnel.isLoanOfficer()) {
 			loanOfficers.add(personnel);
 		} else {
-			loanOfficers = personnelBusinessService.getActiveLoanOfficersUnderOffice(branchId);
+			loanOfficers = personnelBusinessService.getActiveLoanOfficersUnderOffice(convertIntegerToShort(branchId));
 		}
 		return loanOfficers;
 	}
-	public Short switchIntegerIntoShort(Integer intValue) {
+
+	public List<LoanOfferingBO> getAllLoanProducts() throws ServiceException {
+		return loanPrdBusinessService.getAllLoanOfferings(personnel.getLocaleId());
+	}
+
+	void setLoanPrdBusinessService(LoanPrdBusinessService loanPrdBusinessService) {
+		this.loanPrdBusinessService = loanPrdBusinessService;
+	}
+
+	void setPersonnelBusinessService(PersonnelBusinessService personnelBusinessService) {
+		this.personnelBusinessService = personnelBusinessService;
+	}
+
+	void setOfficeBusinessService(OfficeBusinessService officeBusinessService) {
+		this.officeBusinessService = officeBusinessService;
+	}
+
+	void setPersonnel(PersonnelBO personnel) {
+		this.personnel = personnel;
+	}
+
+	PersonnelBO getPersonnel() {
+		return personnel;
+	}
+
+	private Short convertIntegerToShort(Integer intValue) {
 		if (intValue == null) {
 			return null;
 		}
