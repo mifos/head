@@ -17,7 +17,9 @@ import org.mifos.application.productdefinition.util.helpers.ProductDefinitionCon
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -40,6 +42,22 @@ public class PrdCategoryAction extends BaseAction {
 		SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST,
 				getProductTypes(userContext), request);
 		return mapping.findForward(ActionForwards.load_success.toString());
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("productCategoryAction");
+		security.allow("load", SecurityConstants.DEFINE_NEW_PRODUCT_CATEGORIES);
+		security.allow("createPreview", SecurityConstants.VIEW);
+		security.allow("create",
+				SecurityConstants.DEFINE_NEW_PRODUCT_CATEGORIES);
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("managePreview", SecurityConstants.VIEW);
+		security.allow("manage", SecurityConstants.EDIT_PRODUCT_CATEGORIES);
+		security.allow("update", SecurityConstants.EDIT_PRODUCT_CATEGORIES);
+		security.allow("getAllCategories", SecurityConstants.VIEW);
+		security.allow("createPrevious", SecurityConstants.VIEW);
+		security.allow("managePrevious", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate (joinToken = true)

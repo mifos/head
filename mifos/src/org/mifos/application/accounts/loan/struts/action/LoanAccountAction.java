@@ -96,7 +96,26 @@ public class LoanAccountAction extends AccountAppAction {
 	}
 	
 	public static ActionSecurity getSecurity() {
-		ActionSecurity security = new ActionSecurity("loanAccountAction");
+		ActionSecurity security = new ActionSecurity("");
+		security.allow("getAllActivity", SecurityConstants.VIEW);
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("getLoanRepaymentSchedule", SecurityConstants.VIEW);
+		security.allow("viewStatusHistory", SecurityConstants.VIEW);
+		security.allow("manage", SecurityConstants.LOAN_UPDATE_LOAN);
+		security.allow("managePreview", SecurityConstants.VIEW);
+		security.allow("managePrevious", SecurityConstants.VIEW);
+		security.allow("cancel", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.LOAN_UPDATE_LOAN);
+
+		security.allow("getPrdOfferings", SecurityConstants.VIEW);
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("schedulePreview", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.VIEW);
+
+		security.allow("loadChangeLog", SecurityConstants.VIEW);
+		security.allow("cancelChangeLog", SecurityConstants.VIEW);
 		security.allow("waiveChargeDue", SecurityConstants.VIEW);
 		security.allow("forwardWaiveCharge", SecurityConstants.VIEW);
 		security.allow("waiveChargeOverDue", SecurityConstants.VIEW);

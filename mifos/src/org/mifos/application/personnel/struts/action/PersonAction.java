@@ -47,7 +47,9 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -72,6 +74,36 @@ public class PersonAction extends SearchAction {
 
 	private PersonnelBusinessService getPersonnelBusinessService() throws ServiceException{
 		return (PersonnelBusinessService)getService();
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("PersonAction");
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("loadSearch", SecurityConstants.VIEW);
+		security.allow("search", SecurityConstants.VIEW);
+		security.allow("chooseOffice",
+				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		security.allow("load", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		security.allow("manage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+		security.allow("previewManage", SecurityConstants.VIEW);
+
+		security.allow("previousManage",
+				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+		security.allow("update", SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
+		security.allow("/PersonnelAction-prevPersonalInfo",
+				SecurityConstants.VIEW);
+
+		security.allow("preview", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		security
+				.allow("previous", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		security.allow("create", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+		security.allow("loadUnLockUser",
+				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
+		security.allow("unLockUserAccount",
+				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
+		security.allow("loadChangeLog", SecurityConstants.VIEW);
+		security.allow("cancelChangeLog", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

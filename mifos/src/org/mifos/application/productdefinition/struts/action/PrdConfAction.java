@@ -18,6 +18,8 @@ import org.mifos.application.productdefinition.util.helpers.ProductType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -32,6 +34,13 @@ public class PrdConfAction extends BaseAction {
 	@Override
 	protected BusinessService getService() {
 		return new LoanPrdBusinessService();
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("prdconfaction");
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.UPDATE_LATENESS_DORMANCY);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

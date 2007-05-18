@@ -12,21 +12,33 @@ import org.mifos.application.accounts.loan.struts.action.LoanDisbursmentAction;
 import org.mifos.application.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
 import org.mifos.application.accounts.loan.struts.action.RepayLoanAction;
 import org.mifos.application.accounts.loan.struts.action.ReverseLoanDisbursalAction;
+import org.mifos.application.accounts.savings.struts.action.SavingsAction;
 import org.mifos.application.accounts.savings.struts.action.SavingsApplyAdjustmentAction;
 import org.mifos.application.accounts.savings.struts.action.SavingsClosureAction;
 import org.mifos.application.accounts.savings.struts.action.SavingsDepositWithdrawalAction;
+import org.mifos.application.accounts.struts.action.AccountAppAction;
 import org.mifos.application.accounts.struts.action.AccountApplyPaymentAction;
 import org.mifos.application.accounts.struts.action.ApplyAdjustment;
 import org.mifos.application.accounts.struts.action.ApplyChargeAction;
+import org.mifos.application.accounts.struts.action.EditStatusAction;
 import org.mifos.application.accounts.struts.action.NotesAction;
 import org.mifos.application.accounts.util.helpers.AccountStates;
 import org.mifos.application.accounts.util.helpers.AccountTypes;
 import org.mifos.application.accounts.util.helpers.WaiveEnum;
+import org.mifos.application.admin.struts.action.AdminAction;
+import org.mifos.application.bulkentry.struts.action.BulkEntryAction;
+import org.mifos.application.checklist.struts.action.ChkListAction;
 import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigurationAction;
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
+import org.mifos.application.customer.center.struts.action.CenterCustAction;
 import org.mifos.application.customer.client.struts.action.ClientCustAction;
+import org.mifos.application.customer.client.struts.action.ClientTransferAction;
 import org.mifos.application.customer.group.struts.action.GroupCustAction;
+import org.mifos.application.customer.group.struts.action.GroupTransferAction;
 import org.mifos.application.customer.group.util.helpers.GroupConstants;
+import org.mifos.application.customer.struts.action.CustAction;
+import org.mifos.application.customer.struts.action.CustHistoricalDataAction;
+import org.mifos.application.customer.struts.action.CustSearchAction;
 import org.mifos.application.customer.struts.action.CustomerAccountAction;
 import org.mifos.application.customer.struts.action.CustomerAction;
 import org.mifos.application.customer.struts.action.CustomerApplyAdjustmentAction;
@@ -34,9 +46,18 @@ import org.mifos.application.customer.struts.action.CustomerNotesAction;
 import org.mifos.application.customer.struts.action.EditCustomerStatusAction;
 import org.mifos.application.customer.util.helpers.CustomerConstants;
 import org.mifos.application.customer.util.helpers.CustomerLevel;
+import org.mifos.application.fees.struts.action.FeeAction;
+import org.mifos.application.fund.struts.action.FundAction;
 import org.mifos.application.holiday.struts.action.HolidayAction;
+import org.mifos.application.login.struts.action.LoginAction;
+import org.mifos.application.meeting.struts.action.MeetingAction;
+import org.mifos.application.personnel.struts.action.PersonAction;
 import org.mifos.application.personnel.struts.action.PersonnelNoteAction;
 import org.mifos.application.personnel.struts.action.PersonnelSettingsAction;
+import org.mifos.application.productdefinition.struts.action.LoanPrdAction;
+import org.mifos.application.productdefinition.struts.action.PrdCategoryAction;
+import org.mifos.application.productdefinition.struts.action.PrdConfAction;
+import org.mifos.application.productdefinition.struts.action.SavingsPrdAction;
 import org.mifos.application.reports.struts.action.ReportsAction;
 import org.mifos.application.reports.struts.action.ReportsDataSourceAction;
 import org.mifos.application.reports.struts.action.ReportsParamsAction;
@@ -143,36 +164,42 @@ public class ActivityMapper {
 	private final short CENTER_CHANGE_STATUS = 81;
 
 	private ActivityMapper() {
-		addSearchActionMappings();
-		addCustomerSearchMappings();
-		addLoginMappings();
-		addOfficeMappings();
-		addManageRolesPermissionsMappings();
-		addCustomerHistoricalDataMappings();
-		addPersonnelMappings();
-		addCenterMappings();
-		addClientAndGroupTransferMappings();
-		addMeetingActionMappings();
-		addProductCategoryMappings();
-		addSavingProductMappings();
-		addViewLatenessMappings();
-		addLoanProductCategoryMappings();
-		addFeeMappings();
-		addChecklistMappings();
-		addSearchBeforeLoanMappings();
-		addLoanMappings();
-		addLoanActivityMappings();
-		addLoanStatusActionMappings();
-		addAccountStatusMappings();
-		addCustomerActionMappings();
-		addApplyPaymentMappings();
+		// these lines don't seem to refer to a real action
+		// if so, these methods can be removed safely
 		addApplyChargesMappings2();
-		addFundMappings();
-		addBulkEntryMappings();
-		addRemoveFeeMappings();
-		addSavingsAccountMappings();
+		addApplyPaymentMappings();
+		addLoanStatusActionMappings();
+		addLoanMappings();
+		addSearchBeforeLoanMappings();
+		addChecklistMappings();
+		addFeeMappings();
+		addSavingProductMappings();
+		addManageRolesPermissionsMappings();
+		addOfficeMappings();
+		addCustomerSearchMappings();
 		
 //		 new style security configuration
+		parseActionSecurity(AdminAction.getSecurity());
+		parseActionSecurity(CustSearchAction.getSecurity());
+		parseActionSecurity(LoginAction.getSecurity());
+		parseActionSecurity(CustHistoricalDataAction.getSecurity());
+		parseActionSecurity(PersonAction.getSecurity());
+		parseActionSecurity(CenterCustAction.getSecurity());
+		parseActionSecurity(ClientTransferAction.getSecurity());
+		parseActionSecurity(GroupTransferAction.getSecurity());
+		parseActionSecurity(MeetingAction.getSecurity());
+		parseActionSecurity(PrdCategoryAction.getSecurity());
+		parseActionSecurity(SavingsPrdAction.getSecurity());
+		parseActionSecurity(PrdConfAction.getSecurity());
+		parseActionSecurity(LoanPrdAction.getSecurity());
+		parseActionSecurity(FeeAction.getSecurity());
+		parseActionSecurity(ChkListAction.getSecurity());
+		parseActionSecurity(EditStatusAction.getSecurity());
+		parseActionSecurity(CustAction.getSecurity());
+		parseActionSecurity(FundAction.getSecurity());
+		parseActionSecurity(BulkEntryAction.getSecurity());
+		parseActionSecurity(AccountAppAction.getSecurity());
+		parseActionSecurity(SavingsAction.getSecurity());
 		parseActionSecurity(SavingsClosureAction.getSecurity());
 		parseActionSecurity(SavingsApplyAdjustmentAction.getSecurity());
 		parseActionSecurity(ApplyAdjustment.getSecurity());
@@ -208,24 +235,6 @@ public class ActivityMapper {
 		parseActionSecurity(QuestionsAction.getSecurity());
 		parseActionSecurity(HiddenMandatoryConfigurationAction.getSecurity());
 	}
-	
-	private void addSearchActionMappings() {
-		activityMap.put("/custSearchAction-loadSearch", SecurityConstants.VIEW);
-		activityMap.put("/custSearchAction-search", SecurityConstants.VIEW);
-		activityMap.put("/custSearchAction-load", SecurityConstants.VIEW);
-		activityMap.put("/custSearchAction-loadMainSearch",
-				SecurityConstants.VIEW);
-		activityMap.put("/custSearchAction-mainSearch", SecurityConstants.VIEW);
-		activityMap
-				.put("/custSearchAction-getHomePage", SecurityConstants.VIEW);
-		activityMap.put("/AdminAction-load", SecurityConstants.VIEW);
-		activityMap.put("/custSearchAction-loadAllBranches",
-				SecurityConstants.VIEW);
-		activityMap.put("/custSearchAction-get", SecurityConstants.VIEW);
-		activityMap.put("/custSearchAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/custSearchAction-getOfficeHomePage",
-				SecurityConstants.VIEW);
-	}
 
 	private void addCustomerSearchMappings() {
 		activityMap.put("/CustomerSearchAction-load", SecurityConstants.VIEW);
@@ -240,12 +249,6 @@ public class ActivityMapper {
 				SecurityConstants.VIEW);
 		activityMap.put("/CustomerSearchAction-loadAllBranches",
 				SecurityConstants.VIEW);
-	}
-
-	private void addLoginMappings() {
-		activityMap.put("/loginAction-login", SecurityConstants.VIEW);
-		activityMap.put("/loginAction-logout", SecurityConstants.VIEW);
-		activityMap.put("/loginAction-updatePassword", SecurityConstants.VIEW);
 	}
 
 	private void addOfficeMappings() {
@@ -316,156 +319,6 @@ public class ActivityMapper {
 				SecurityConstants.ROLES_DELETE_ROLES);
 	}
 
-	private void addCustomerHistoricalDataMappings() {
-		activityMap.put("/custHistoricalDataAction-loadHistoricalData",
-				SecurityConstants.VIEW);
-		activityMap.put("/custHistoricalDataAction-getHistoricalData",
-				SecurityConstants.VIEW);
-		activityMap.put("/custHistoricalDataAction-previewHistoricalData",
-				SecurityConstants.VIEW);
-		activityMap.put("/custHistoricalDataAction-previousHistoricalData",
-				SecurityConstants.VIEW);
-		activityMap.put("/custHistoricalDataAction-updateHistoricalData",
-				SecurityConstants.VIEW);
-		activityMap.put("/custHistoricalDataAction-cancelHistoricalData",
-				SecurityConstants.VIEW);
-	}
-
-	private void addPersonnelMappings() {
-		activityMap.put("/PersonAction-get", SecurityConstants.VIEW);
-		activityMap.put("/PersonAction-loadSearch", SecurityConstants.VIEW);
-		activityMap.put("/PersonAction-search", SecurityConstants.VIEW);
-		activityMap.put("/PersonAction-chooseOffice",
-				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-		activityMap.put("/PersonAction-load",
-				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-		activityMap.put("/PersonAction-manage",
-				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-		activityMap.put("/PersonAction-previewManage", SecurityConstants.VIEW);
-
-		activityMap.put("/PersonAction-previousManage",
-				SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-		activityMap.put("/PersonAction-update",
-				SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
-		activityMap.put("/PersonnelAction-prevPersonalInfo",
-				SecurityConstants.VIEW);
-
-		activityMap.put("/PersonAction-preview",
-				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-		activityMap.put("/PersonAction-previous",
-				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-		activityMap.put("/PersonAction-create",
-				SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-		activityMap.put("/PersonAction-loadUnLockUser",
-				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
-		activityMap.put("/PersonAction-unLockUserAccount",
-				SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
-		activityMap.put("/PersonAction-loadChangeLog", SecurityConstants.VIEW);
-		activityMap
-				.put("/PersonAction-cancelChangeLog", SecurityConstants.VIEW);
-	}
-
-	private void addCenterMappings() {
-		activityMap.put("/centerCustAction-chooseOffice",
-				SecurityConstants.CENTER_CREATE_NEW_CENTER);
-		activityMap.put("/centerCustAction-load",
-				SecurityConstants.CENTER_CREATE_NEW_CENTER);
-		activityMap.put("/centerCustAction-loadMeeting",
-				SecurityConstants.MEETING_CREATE_CENTER_MEETING);
-		activityMap.put("/centerCustAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/centerCustAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/centerCustAction-create",
-				SecurityConstants.CENTER_CREATE_NEW_CENTER);
-		activityMap
-				.put(
-						"/centerCustAction-manage",
-						SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
-		activityMap.put("/centerCustAction-editPrevious",
-				SecurityConstants.VIEW);
-		activityMap
-				.put("/centerCustAction-editPreview", SecurityConstants.VIEW);
-		activityMap
-				.put(
-						"/centerCustAction-update",
-						SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
-
-		activityMap.put("/centerCustAction-get", SecurityConstants.VIEW);
-		activityMap.put("/centerCustAction-loadSearch", SecurityConstants.VIEW);
-		activityMap.put("/centerCustAction-search", SecurityConstants.VIEW);
-		activityMap.put("/centerCustAction-loadChangeLog",
-				SecurityConstants.VIEW);
-		activityMap.put("/centerCustAction-cancelChangeLog",
-				SecurityConstants.VIEW);
-
-		activityMap.put("/centerCustAction-loadTransferSearch", SecurityConstants.VIEW);
-		activityMap.put("/centerCustAction-searchTransfer", SecurityConstants.VIEW);
-	}
-
-	private void addClientAndGroupTransferMappings() {
-		activityMap.put("/clientTransferAction-loadParents",
-				SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
-		activityMap.put("/clientTransferAction-loadBranches",
-				SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
-		activityMap.put("/clientTransferAction-previewBranchTransfer",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientTransferAction-previewParentTransfer",
-				SecurityConstants.VIEW);
-		activityMap.put("/clientTransferAction-updateParent",
-				SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
-		activityMap.put("/clientTransferAction-transferToBranch",
-				SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
-
-		activityMap.put("/groupTransferAction-loadParents",
-				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-		activityMap.put("/groupTransferAction-loadBranches",
-				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
-		activityMap.put("/groupTransferAction-previewBranchTransfer",
-				SecurityConstants.VIEW);
-		activityMap.put("/groupTransferAction-previewParentTransfer",
-				SecurityConstants.VIEW);
-		activityMap.put("/groupTransferAction-transferToCenter",
-				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-		activityMap.put("/groupTransferAction-transferToBranch",
-				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
-		activityMap.put("/groupTransferAction-loadGrpMemberShip",
-				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
-		activityMap.put("/groupTransferAction-removeGroupMemberShip",
-				SecurityConstants.CAN_REMOVE_CLIENTS_FROM_GROUPS);
-		
-
-	}
-
-	private void addMeetingActionMappings() {
-		activityMap.put("/meetingAction-load", SecurityConstants.VIEW);
-		activityMap.put("/meetingAction-create", SecurityConstants.VIEW);
-		activityMap.put("/meetingAction-update", SecurityConstants.VIEW);
-		activityMap.put("/meetingAction-edit",SecurityConstants.VIEW);
-		activityMap.put("/meetingAction-cancelCreate", SecurityConstants.VIEW);
-		activityMap.put("/meetingAction-cancelUpdate", SecurityConstants.VIEW);
-	}
-
-	private void addProductCategoryMappings() {
-		activityMap.put("/productCategoryAction-load",
-				SecurityConstants.DEFINE_NEW_PRODUCT_CATEGORIES);
-		activityMap.put("/productCategoryAction-createPreview",
-				SecurityConstants.VIEW);
-		activityMap.put("/productCategoryAction-create",
-				SecurityConstants.DEFINE_NEW_PRODUCT_CATEGORIES);
-		activityMap.put("/productCategoryAction-get", SecurityConstants.VIEW);
-		activityMap.put("/productCategoryAction-managePreview",
-				SecurityConstants.VIEW);
-		activityMap.put("/productCategoryAction-manage",
-				SecurityConstants.EDIT_PRODUCT_CATEGORIES);
-		activityMap.put("/productCategoryAction-update",
-				SecurityConstants.EDIT_PRODUCT_CATEGORIES);
-		activityMap.put("/productCategoryAction-getAllCategories",
-				SecurityConstants.VIEW);
-		activityMap.put("/productCategoryAction-createPrevious",
-				SecurityConstants.VIEW);
-		activityMap.put("/productCategoryAction-managePrevious",
-				SecurityConstants.VIEW);
-	}
-
 	private void addSavingProductMappings() {
 		activityMap.put("/savingsprdaction-search", SecurityConstants.VIEW);
 		activityMap.put("/savingsprdaction-load",
@@ -479,87 +332,6 @@ public class ActivityMapper {
 				SecurityConstants.EDIT_SAVING_PRODUCT);
 		activityMap.put("/savingsprdaction-update",
 				SecurityConstants.EDIT_SAVING_PRODUCT);
-
-		activityMap.put("/savingsproductaction-loadChangeLog",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsproductaction-cancelChangeLog",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsproductaction-search", SecurityConstants.VIEW);
-		activityMap.put("/savingsproductaction-load",
-				SecurityConstants.DEFINE_NEW_SAVING_PRODUCT_INSTANCE);
-		activityMap
-				.put("/savingsproductaction-preview", SecurityConstants.VIEW);
-		activityMap.put("/savingsproductaction-previous",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsproductaction-create",
-				SecurityConstants.DEFINE_NEW_SAVING_PRODUCT_INSTANCE);
-		activityMap.put("/savingsproductaction-get", SecurityConstants.VIEW);
-		activityMap.put("/savingsproductaction-cancelCreate",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsproductaction-manage",
-				SecurityConstants.EDIT_SAVING_PRODUCT);
-		activityMap.put("/savingsproductaction-previewManage",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsproductaction-previousManage",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsproductaction-update",
-				SecurityConstants.EDIT_SAVING_PRODUCT);
-		activityMap.put("/savingsproductaction-cancelEdit",
-				SecurityConstants.VIEW);
-	}
-
-	private void addViewLatenessMappings() {
-		activityMap.put("/prdconfigurationaction-search",
-				SecurityConstants.VIEW);
-		activityMap.put("/prdconfigurationaction-update",
-				SecurityConstants.EDIT_PRODUCT_CATEGORIES);
-		activityMap.put("/prdconfaction-load", SecurityConstants.VIEW);
-		activityMap.put("/prdconfaction-update",
-				SecurityConstants.UPDATE_LATENESS_DORMANCY);
-	}
-
-	private void addLoanProductCategoryMappings() {
-		activityMap.put("/loanprdaction-load",
-				SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
-		activityMap.put("/loanprdaction-preview", SecurityConstants.VIEW);
-		activityMap.put("/loanprdaction-previous", SecurityConstants.VIEW);
-		activityMap.put("/loanprdaction-create",
-				SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
-		activityMap.put("/loanprdaction-search", SecurityConstants.VIEW);
-		activityMap.put("/loanprdaction-get", SecurityConstants.VIEW);
-		activityMap.put("/loanprdaction-manage",
-				SecurityConstants.EDIT_LOAN_PRODUCT);
-		activityMap.put("/loanprdaction-update",
-				SecurityConstants.EDIT_LOAN_PRODUCT);
-
-		activityMap.put("/loanproductaction-load",
-				SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
-		activityMap.put("/loanproductaction-preview", SecurityConstants.VIEW);
-		activityMap.put("/loanproductaction-previous", SecurityConstants.VIEW);
-		activityMap.put("/loanproductaction-cancelCreate",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanproductaction-validate", SecurityConstants.VIEW);
-		activityMap.put("/loanproductaction-create",
-				SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
-		activityMap.put("/loanproductaction-viewAllLoanProducts",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanproductaction-get", SecurityConstants.VIEW);
-		activityMap.put("/loanproductaction-editPreview",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanproductaction-editPrevious",
-				SecurityConstants.VIEW);
-		activityMap
-				.put("/loanproductaction-editCancel", SecurityConstants.VIEW);
-		activityMap.put("/loanproductaction-manage",
-				SecurityConstants.EDIT_LOAN_PRODUCT);
-		activityMap.put("/loanproductaction-update",
-				SecurityConstants.EDIT_LOAN_PRODUCT);
-		activityMap.put("/loanproductaction-update",
-				SecurityConstants.EDIT_LOAN_PRODUCT);
-		activityMap.put("/loanproductaction-loadChangeLog",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanproductaction-cancelChangeLog",
-				SecurityConstants.VIEW);
 	}
 
 	private void addFeeMappings() {
@@ -572,47 +344,9 @@ public class ActivityMapper {
 		activityMap.put("/feesAction-manage", SecurityConstants.FEES_EDIT_FEES);
 		activityMap.put("/feesAction-update", SecurityConstants.FEES_EDIT_FEES);
 		activityMap.put("/feesAction-previous", SecurityConstants.VIEW);
-
-		activityMap.put("/feeaction-search", SecurityConstants.VIEW);
-		activityMap.put("/feeaction-load", SecurityConstants.FEES_CREATE_FEES);
-		activityMap.put("/feeaction-preview", SecurityConstants.VIEW);
-		activityMap.put("/feeaction-editPreview", SecurityConstants.VIEW);
-		activityMap
-				.put("/feeaction-create", SecurityConstants.FEES_CREATE_FEES);
-		activityMap.put("/feeaction-get", SecurityConstants.VIEW);
-		activityMap.put("/feeaction-manage", SecurityConstants.FEES_EDIT_FEES);
-		activityMap.put("/feeaction-update", SecurityConstants.FEES_EDIT_FEES);
-		activityMap.put("/feeaction-previous", SecurityConstants.VIEW);
-		activityMap.put("/feeaction-editPrevious", SecurityConstants.VIEW);
-		activityMap.put("/feeaction-viewAll", SecurityConstants.VIEW);
-		activityMap.put("/feeaction-cancelCreate", SecurityConstants.VIEW);
-		activityMap.put("/feeaction-cancelEdit", SecurityConstants.VIEW);
 	}
 
 	private void addChecklistMappings() {
-		activityMap.put("/chkListAction-load",
-				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
-		activityMap.put("/chkListAction-getStates", SecurityConstants.VIEW);
-		activityMap.put("/chkListAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/chkListAction-previous",
-				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
-		activityMap.put("/chkListAction-create",
-				SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
-		activityMap.put("/chkListAction-cancelCreate", SecurityConstants.VIEW);
-		activityMap.put("/chkListAction-cancelManage", SecurityConstants.VIEW);
-
-		activityMap.put("/chkListAction-manage",
-				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
-		activityMap.put("/chkListAction-getEditStates", SecurityConstants.VIEW);
-		activityMap.put("/chkListAction-managePreview", SecurityConstants.VIEW);
-		activityMap
-				.put("/chkListAction-managePrevious", SecurityConstants.VIEW);
-		activityMap.put("/chkListAction-update",
-				SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
-
-		activityMap.put("/chkListAction-loadAllChecklist",
-				SecurityConstants.VIEW);
-		activityMap.put("/chkListAction-get", SecurityConstants.VIEW);
 
 		activityMap.put("/checkListAction-loadall", SecurityConstants.VIEW);
 		activityMap.put("/checkListAction-load",
@@ -652,40 +386,7 @@ public class ActivityMapper {
 		activityMap.put("/loanAction-create", SecurityConstants.VIEW);
 	}
 
-	private void addLoanActivityMappings() {
-		activityMap.put("/loanAccountAction-getAllActivity",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-get", SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-getLoanRepaymentSchedule",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-viewStatusHistory",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-manage",
-				SecurityConstants.LOAN_UPDATE_LOAN);
-		activityMap.put("/loanAccountAction-managePreview",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-managePrevious",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-cancel", SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-update",
-				SecurityConstants.LOAN_UPDATE_LOAN);
-
-		activityMap.put("/loanAccountAction-getPrdOfferings",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-load", SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-schedulePreview",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-create", SecurityConstants.VIEW);
-
-		activityMap.put("/loanAccountAction-loadChangeLog",
-				SecurityConstants.VIEW);
-		activityMap.put("/loanAccountAction-cancelChangeLog",
-				SecurityConstants.VIEW);
-	}
-
-	private void addLoanStatusActionMappings() {
+		private void addLoanStatusActionMappings() {
 		// mapping for account status::TO BE REMOVED
 		activityMap.put("/LoanStatusAction-load", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-preview", SecurityConstants.VIEW);
@@ -693,20 +394,6 @@ public class ActivityMapper {
 		activityMap.put("/LoanStatusAction-update", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-search", SecurityConstants.VIEW);
 		activityMap.put("/LoanStatusAction-writeOff", SecurityConstants.VIEW);
-	}
-
-	private void addAccountStatusMappings() {
-		activityMap.put("/editStatusAction-load", SecurityConstants.VIEW);
-		activityMap.put("/editStatusAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/editStatusAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/editStatusAction-update", SecurityConstants.VIEW);
-	}
-
-	private void addCustomerActionMappings() {
-		activityMap
-				.put("/custAction-getClosedAccounts", SecurityConstants.VIEW);
-		activityMap.put("/custAction-getBackToDetailsPage",
-				SecurityConstants.VIEW);
 	}
 
 	private void addApplyPaymentMappings() {
@@ -727,82 +414,6 @@ public class ActivityMapper {
 				SecurityConstants.APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS);
 		activityMap.put("/AccountsApplyChargesAction-create",
 				SecurityConstants.APPLY_CHARGES_TO_CLIENT_GROUP_CENTERS_LOANS);
-	}
-
-	private void addFundMappings() {
-		activityMap.put("/fundAction-load",
-				SecurityConstants.FUNDS_CREATE_FUNDS);
-		activityMap.put("/fundAction-create",
-				SecurityConstants.FUNDS_CREATE_FUNDS);
-		activityMap.put("/fundAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/fundAction-previous",
-				SecurityConstants.FUNDS_CREATE_FUNDS);
-		activityMap.put("/fundAction-cancelCreate", SecurityConstants.VIEW);
-		activityMap.put("/fundAction-cancelManage", SecurityConstants.VIEW);
-		activityMap.put("/fundAction-manage",
-				SecurityConstants.FUNDS_EDIT_FUNDS);
-		activityMap.put("/fundAction-previewManage",
-				SecurityConstants.FUNDS_EDIT_FUNDS);
-		activityMap.put("/fundAction-previousManage",
-				SecurityConstants.FUNDS_EDIT_FUNDS);
-		activityMap.put("/fundAction-update",
-				SecurityConstants.FUNDS_EDIT_FUNDS);
-		activityMap.put("/fundAction-viewAllFunds", SecurityConstants.VIEW);
-	}
-
-	private void addBulkEntryMappings() {
-		activityMap.put("/bulkentryaction-load",
-				SecurityConstants.CAN_ENTER_COLLECTION_SHEET_DATA);
-		activityMap.put("/bulkentryaction-preview", SecurityConstants.VIEW);
-		activityMap.put("/bulkentryaction-previous", SecurityConstants.VIEW);
-		activityMap.put("/bulkentryaction-get", SecurityConstants.VIEW);
-		activityMap.put("/bulkentryaction-getLastMeetingDateForCustomer",
-				SecurityConstants.VIEW);
-		activityMap.put("/bulkentryaction-create", SecurityConstants.VIEW);
-		activityMap.put("/bulkentryaction-loadLoanOfficers",
-				SecurityConstants.VIEW);
-		activityMap.put("/bulkentryaction-loadCustomerList",
-				SecurityConstants.VIEW);
-		activityMap.put("/bulkentryaction-validate", SecurityConstants.VIEW);
-	}
-
-	private void addRemoveFeeMappings() {
-		activityMap.put("/accountAppAction-removeFees",	SecurityConstants.VIEW);
-		activityMap.put("/accountAppAction-getTrxnHistory",	SecurityConstants.VIEW);
-	}
-
-	private void addSavingsAccountMappings() {
-		activityMap.put("/savingsAction-getPrdOfferings",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-load", SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-reLoad", SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-preview", SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-previous", SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-create", SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-get", SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-getStatusHistory",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-edit",
-				SecurityConstants.SAVINGS_UPDATE_SAVINGS);
-		activityMap.put("/savingsAction-editPreview",
-				SecurityConstants.SAVINGS_UPDATE_SAVINGS);
-		activityMap.put("/savingsAction-editPrevious",
-				SecurityConstants.SAVINGS_UPDATE_SAVINGS);
-		activityMap.put("/savingsAction-update",
-				SecurityConstants.SAVINGS_UPDATE_SAVINGS);
-		activityMap.put("/savingsAction-getRecentActivity",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-getTransactionHistory",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-getDepositDueDetails",
-				SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-waiveAmountDue",
-				SecurityConstants.SAVINGS_CANWAIVE_DUEAMOUNT);
-		activityMap.put("/savingsAction-waiveAmountOverDue",
-				SecurityConstants.SAVINGS_CANWAIVE_OVERDUEAMOUNT);
-		activityMap.put("/savingsAction-loadChangeLog", SecurityConstants.VIEW);
-		activityMap.put("/savingsAction-cancelChangeLog",
-				SecurityConstants.VIEW);
 	}
 
 	private static ActivityMapper instance = new ActivityMapper();

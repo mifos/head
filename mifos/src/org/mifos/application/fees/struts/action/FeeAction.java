@@ -76,7 +76,9 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -96,6 +98,24 @@ public class FeeAction extends BaseAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("feeaction");
+		security.allow("/feeaction-search", SecurityConstants.VIEW);
+		security.allow("/feeaction-load", SecurityConstants.FEES_CREATE_FEES);
+		security.allow("/feeaction-preview", SecurityConstants.VIEW);
+		security.allow("/feeaction-editPreview", SecurityConstants.VIEW);
+		security.allow("/feeaction-create", SecurityConstants.FEES_CREATE_FEES);
+		security.allow("/feeaction-get", SecurityConstants.VIEW);
+		security.allow("/feeaction-manage", SecurityConstants.FEES_EDIT_FEES);
+		security.allow("/feeaction-update", SecurityConstants.FEES_EDIT_FEES);
+		security.allow("/feeaction-previous", SecurityConstants.VIEW);
+		security.allow("/feeaction-editPrevious", SecurityConstants.VIEW);
+		security.allow("/feeaction-viewAll", SecurityConstants.VIEW);
+		security.allow("/feeaction-cancelCreate", SecurityConstants.VIEW);
+		security.allow("/feeaction-cancelEdit", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

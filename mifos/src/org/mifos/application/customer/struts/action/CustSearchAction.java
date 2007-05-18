@@ -28,7 +28,9 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -37,6 +39,21 @@ import org.mifos.framework.util.helpers.StringUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class CustSearchAction extends SearchAction {
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("custSearchAction");
+		security.allow("loadSearch", SecurityConstants.VIEW);
+		security.allow("search", SecurityConstants.VIEW);
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("loadMainSearch", SecurityConstants.VIEW);
+		security.allow("mainSearch", SecurityConstants.VIEW);
+		security.allow("getHomePage", SecurityConstants.VIEW);
+		security.allow("loadAllBranches", SecurityConstants.VIEW);
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("getOfficeHomePage", SecurityConstants.VIEW);
+		return security;
+	}
 
 	@TransactionDemarcate(joinToken = true)
 	public ActionForward get(ActionMapping mapping, ActionForm form,

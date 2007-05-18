@@ -87,6 +87,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.security.authorization.AuthorizationManager;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
@@ -109,6 +110,34 @@ public class SavingsAction extends AccountAppAction {
 
 	private MifosLogger logger = MifosLogManager
 			.getLogger(LoggerConstants.ACCOUNTSLOGGER);
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("savingsAction");
+		
+		security.allow("getPrdOfferings", SecurityConstants.VIEW);
+		security.allow("load", SecurityConstants.VIEW);
+		security.allow("reLoad", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.VIEW);
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("getStatusHistory", SecurityConstants.VIEW);
+		security.allow("edit", SecurityConstants.SAVINGS_UPDATE_SAVINGS);
+		security.allow("editPreview", SecurityConstants.SAVINGS_UPDATE_SAVINGS);
+		security
+				.allow("editPrevious", SecurityConstants.SAVINGS_UPDATE_SAVINGS);
+		security.allow("update", SecurityConstants.SAVINGS_UPDATE_SAVINGS);
+		security.allow("getRecentActivity", SecurityConstants.VIEW);
+		security.allow("getTransactionHistory", SecurityConstants.VIEW);
+		security.allow("getDepositDueDetails", SecurityConstants.VIEW);
+		security.allow("waiveAmountDue",
+				SecurityConstants.SAVINGS_CANWAIVE_DUEAMOUNT);
+		security.allow("waiveAmountOverDue",
+				SecurityConstants.SAVINGS_CANWAIVE_OVERDUEAMOUNT);
+		security.allow("loadChangeLog", SecurityConstants.VIEW);
+		security.allow("cancelChangeLog", SecurityConstants.VIEW);
+		return security;
+	}
 
 	public SavingsAction() throws Exception {
 		savingsService = new SavingsBusinessService();

@@ -79,7 +79,9 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -102,6 +104,38 @@ public class CenterCustAction extends CustAction {
 	private CenterBusinessService getCenterBusinessService() {
 		return (CenterBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Center);
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("centerCustAction");
+		security.allow("chooseOffice",
+				SecurityConstants.CENTER_CREATE_NEW_CENTER);
+		security.allow("load", SecurityConstants.CENTER_CREATE_NEW_CENTER);
+		security.allow("loadMeeting",
+				SecurityConstants.MEETING_CREATE_CENTER_MEETING);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.CENTER_CREATE_NEW_CENTER);
+		security
+				.allow(
+						"manage",
+						SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
+		security.allow("editPrevious", SecurityConstants.VIEW);
+		security.allow("editPreview", SecurityConstants.VIEW);
+		security
+				.allow(
+						"update",
+						SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
+
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("loadSearch", SecurityConstants.VIEW);
+		security.allow("search", SecurityConstants.VIEW);
+		security.allow("loadChangeLog", SecurityConstants.VIEW);
+		security.allow("cancelChangeLog", SecurityConstants.VIEW);
+
+		security.allow("loadTransferSearch", SecurityConstants.VIEW);
+		security.allow("searchTransfer", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

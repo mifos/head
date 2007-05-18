@@ -85,7 +85,9 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
@@ -108,6 +110,24 @@ public class BulkEntryAction extends BaseAction {
 	@Override
 	protected BusinessService getService() {
 		return new BulkEntryBusinessService();
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("bulkentryaction");
+		security.allow("load",
+				SecurityConstants.CAN_ENTER_COLLECTION_SHEET_DATA);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("getLastMeetingDateForCustomer",
+				SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.VIEW);
+		security.allow("loadLoanOfficers",
+				SecurityConstants.VIEW);
+		security.allow("loadCustomerList",
+				SecurityConstants.VIEW);
+		security.allow("validate", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@Override

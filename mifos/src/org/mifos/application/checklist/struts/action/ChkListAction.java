@@ -33,6 +33,8 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -49,6 +51,28 @@ public class ChkListAction extends BaseAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("");
+		security.allow("load", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		security.allow("getStates", SecurityConstants.VIEW);
+		security.allow("preview", SecurityConstants.VIEW);
+		security
+				.allow("previous", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		security.allow("create", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+		security.allow("cancelCreate", SecurityConstants.VIEW);
+		security.allow("cancelManage", SecurityConstants.VIEW);
+
+		security.allow("manage", SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
+		security.allow("getEditStates", SecurityConstants.VIEW);
+		security.allow("managePreview", SecurityConstants.VIEW);
+		security.allow("managePrevious", SecurityConstants.VIEW);
+		security.allow("update", SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
+
+		security.allow("loadAllChecklist", SecurityConstants.VIEW);
+		security.allow("get", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

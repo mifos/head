@@ -45,7 +45,9 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -68,6 +70,25 @@ public class GroupTransferAction extends BaseAction {
 	@Override
 	protected BusinessService getService() throws ServiceException {
 		return getGroupBusinessService();
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("groupTransferAction");
+		security.allow("loadParents",
+				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
+		security.allow("loadBranches",
+				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+		security.allow("previewBranchTransfer", SecurityConstants.VIEW);
+		security.allow("previewParentTransfer", SecurityConstants.VIEW);
+		security.allow("transferToCenter",
+				SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
+		security.allow("transferToBranch",
+				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+		security.allow("loadGrpMemberShip",
+				SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+		security.allow("removeGroupMemberShip",
+				SecurityConstants.CAN_REMOVE_CLIENTS_FROM_GROUPS);
+		return security;
 	}
 
 	@Override

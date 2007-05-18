@@ -24,6 +24,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.security.util.ActionSecurity;
 import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.security.util.resources.SecurityConstants;
@@ -45,6 +46,17 @@ public class CustHistoricalDataAction extends BaseAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("custHistoricalDataAction");
+		security.allow("loadHistoricalData", SecurityConstants.VIEW);
+		security.allow("getHistoricalData", SecurityConstants.VIEW);
+		security.allow("previewHistoricalData", SecurityConstants.VIEW);
+		security.allow("previousHistoricalData", SecurityConstants.VIEW);
+		security.allow("updateHistoricalData", SecurityConstants.VIEW);
+		security.allow("cancelHistoricalData", SecurityConstants.VIEW);
+		return security;
 	}
 
 	@TransactionDemarcate(saveToken = true)

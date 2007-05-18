@@ -58,6 +58,8 @@ import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.components.logger.MifosLogger;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.security.util.ActionSecurity;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -75,6 +77,29 @@ public class FundAction extends BaseAction {
 	@Override
 	protected boolean skipActionFormToBusinessObjectConversion(String method) {
 		return true;
+	}
+	
+	public static ActionSecurity getSecurity() {
+		ActionSecurity security = new ActionSecurity("fundAction");
+		security.allow("load",
+				SecurityConstants.FUNDS_CREATE_FUNDS);
+		security.allow("create",
+				SecurityConstants.FUNDS_CREATE_FUNDS);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("previous",
+				SecurityConstants.FUNDS_CREATE_FUNDS);
+		security.allow("cancelCreate", SecurityConstants.VIEW);
+		security.allow("cancelManage", SecurityConstants.VIEW);
+		security.allow("manage",
+				SecurityConstants.FUNDS_EDIT_FUNDS);
+		security.allow("previewManage",
+				SecurityConstants.FUNDS_EDIT_FUNDS);
+		security.allow("previousManage",
+				SecurityConstants.FUNDS_EDIT_FUNDS);
+		security.allow("update",
+				SecurityConstants.FUNDS_EDIT_FUNDS);
+		security.allow("viewAllFunds", SecurityConstants.VIEW);
+		return security;
 	}
 	
 	@TransactionDemarcate(saveToken = true)
