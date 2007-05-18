@@ -97,7 +97,8 @@ public class ActivityContext implements Serializable {
 		this.recordOfficeId = recordOfficeId;
 	}
 
-	public ActivityContext(short activityId, short recordOfficeId, short recordLoanOfficer) {
+	public ActivityContext(short activityId, 
+			short recordOfficeId, short recordLoanOfficer) {
 		this.activityId = activityId;
 		this.recordOfficeId = recordOfficeId;
 		this.recordLoanOfficer = recordLoanOfficer;

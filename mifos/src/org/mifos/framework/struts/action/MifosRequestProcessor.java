@@ -72,53 +72,57 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 
 	private ActivityContext setActivityContextFromRequest(
 			HttpServletRequest request, Short activityId) {
-		if (request.getSession() != null) {
-			HttpSession session = request.getSession();
-			ActivityContext activityContext = (ActivityContext) session
-					.getAttribute("ActivityContext");
-			if (activityContext != null) {
-				// get the values from the request
-				String recordOfficeId = request.getParameter("recordOfficeId");
-				String recordLoanOfficerId = request
-						.getParameter("recordLoanOfficerId");
-				short recordOffId = -1;
-				short recordLoOffId = -1;
-				try {
-					recordOffId = Short.valueOf(recordOfficeId).shortValue();
-					recordLoOffId = Short.valueOf(recordLoanOfficerId)
-							.shortValue();
-				} catch (ParseException pe) {
-					// TODO we can not proceed if this happens
-				} catch (NumberFormatException nfe) {
-					// TODO we can not proceed if this happens
+		HttpSession session = request.getSession();
+		ActivityContext activityContext = (ActivityContext) session
+				.getAttribute("ActivityContext");
+		if (activityContext != null) {
+			// get the values from the request
+			String recordOfficeId = request.getParameter("recordOfficeId");
+			String recordLoanOfficerId = request
+					.getParameter("recordLoanOfficerId");
+			short recordOffId;
+			short recordLoOffId;
+			try {
+				recordOffId = Short.valueOf(recordOfficeId).shortValue();
+				recordLoOffId = Short.valueOf(recordLoanOfficerId)
+						.shortValue();
+			} catch (ParseException e) {
+				throw new RuntimeException(e);
+			} catch (NumberFormatException e) {
+				/* Can happen if one or both parameters was omitted.
+				   Do we want to allow this case?  (If so, we can
+				   check for it more cleanly).  What's the difference
+				   between supplying these as parameters versus the
+				   UserContext, versus just using what is in
+				   the ActivityContext? */
+				throw new RuntimeException(e);
+			}
+			if (recordOffId > 0 && recordLoOffId > 0) {
+				activityContext.setRecordOfficeId(recordOffId);
+				activityContext.setRecordLoanOfficer(recordLoOffId);
+			}
+			else if (recordOffId == 0 && recordLoOffId == 0) {
+
+				if (session.getAttribute("UserContext") != null) {
+					UserContext uc = (UserContext) session
+							.getAttribute("UserContext");
+
+					activityContext.setRecordOfficeId(uc.getBranchId());
+					activityContext.setRecordLoanOfficer(uc.getId());
 				}
-				if (recordOffId > 0 && recordLoOffId > 0) {
-					activityContext.setRecordOfficeId(recordOffId);
-					activityContext.setRecordLoanOfficer(recordLoOffId);
-				}
 
-				else if (recordOffId == 0 && recordLoOffId == 0) {
-
-					if (session.getAttribute("UserContext") != null) {
-
-						UserContext uc = (UserContext) session
-								.getAttribute("UserContext");
-
-						activityContext.setRecordOfficeId(uc.getBranchId());
-						activityContext.setRecordLoanOfficer(uc.getId());
-
-					}
-
-				}
-				activityContext.setActivityId(activityId);
-				return activityContext;
-			} else
-				return null;
-		} else
+			}
+			activityContext.setActivityId(activityId);
+			return activityContext;
+		}
+		else {
+			// No activity context
+			// TODO: Can this happen? Why? Is null right?
 			return null;
+		}
 	}
 
-	protected boolean CheckProcessRoles(HttpServletRequest request,
+	protected boolean checkProcessRoles(HttpServletRequest request,
 			HttpServletResponse response, ActionMapping mapping)
 			throws IOException, ServletException {
 		boolean returnValue = true;
@@ -286,7 +290,7 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			session.setAttribute(Constants.PREVIOUS_REQUEST,
 					previousRequestValues);
 		}
-		if (!CheckProcessRoles(request, response, mapping)) {
+		if (!checkProcessRoles(request, response, mapping)) {
 
 			ActionErrors error = new ActionErrors();
 			error.add(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED,
@@ -299,9 +303,8 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			processForwardConfig(request, response, activityContext
 					.getLastForward());
 			return false;
-
 		}
 		return true;
-
 	}
+
 }
