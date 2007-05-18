@@ -36,7 +36,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		new DatabaseVersionPersistence().read(database.openConnection());
 	}
 	
-	public void testReadTwoManyRows() throws Exception {
+	public void testReadTwoRows() throws Exception {
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
@@ -50,7 +50,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		}
 	}
 	
-	public void testReadTwoFewRows() throws Exception {
+	public void testReadNoRows() throws Exception {
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		try {

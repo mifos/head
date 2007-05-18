@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DatabaseVersionPersistence extends Persistence {
+public class DatabaseVersionPersistence extends SessionPersistence {
 
 	public static final int APPLICATION_VERSION = 117;
+	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public int read() throws SQLException {
 		return read(getConnection());

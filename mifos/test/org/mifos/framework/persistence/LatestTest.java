@@ -1,5 +1,8 @@
 package org.mifos.framework.persistence;
 
+import static org.mifos.framework.persistence.DatabaseVersionPersistence.APPLICATION_VERSION;
+import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_NUMBERED_VERSION;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,8 +21,6 @@ import org.mifos.framework.util.helpers.DatabaseSetup;
 
 public class LatestTest extends TestCase {
 	
-	public static final int FIRST_NUMBERED_VERSION = 100;
-
 	public void testSimple() throws Exception {
 		Database database = TestDatabase.makeDatabase();
 		loadLatest(database);
@@ -92,7 +93,7 @@ public class LatestTest extends TestCase {
 	    int version  = persistence.read(conn);
 	    assertEquals(FIRST_NUMBERED_VERSION, version);
 	    List<Upgrade> scripts = persistence.scripts(
-	    	DatabaseVersionPersistence.APPLICATION_VERSION, version);
+	    	APPLICATION_VERSION, version);
 	    persistence.execute(scripts, conn);
 	}
 
@@ -117,7 +118,7 @@ public class LatestTest extends TestCase {
 	public void testDowngrades() throws Exception {
 		DataStore current = this.upgradeToFirstNumberedVersion();
 		for (int currentVersion = FIRST_NUMBERED_VERSION; 
-			currentVersion < DatabaseVersionPersistence.APPLICATION_VERSION;
+			currentVersion < APPLICATION_VERSION;
 			++currentVersion) {
 			current = upAndBack(current, currentVersion + 1);
 		}

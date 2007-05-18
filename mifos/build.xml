@@ -366,6 +366,16 @@
 		</sql>
 	</target>
 
+	<!-- For example, "ant -Ddowngrade.to=76 downgrade" -->
+	<target name="downgrade" depends="compile"
+		description="Downgrade to revision downgrade.to">
+        <java classname="org.mifos.framework.persistence.Downgrader"
+            classpathref="class.path"
+            fork="yes" failonerror="yes">
+            <arg value="${downgrade.to}"/>
+        </java>
+	</target>
+
 	<target name="deploy" depends="war">
 		<echo message="Deploying application ${webapplication.name}.war to ${deploy.destination}"/>
 		<copy file="${dist.dir}/${webapplication.name}.war" 
