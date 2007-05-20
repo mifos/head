@@ -80,12 +80,16 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			String recordOfficeId = request.getParameter("recordOfficeId");
 			String recordLoanOfficerId = request
 					.getParameter("recordLoanOfficerId");
-			short recordOffId;
-			short recordLoOffId;
+			short recordOffId = -1;
+			short recordLoOffId = -1;
 			try {
-				recordOffId = Short.valueOf(recordOfficeId).shortValue();
-				recordLoOffId = Short.valueOf(recordLoanOfficerId)
+				if (recordOfficeId != null){
+					recordOffId = Short.valueOf(recordOfficeId).shortValue();
+				}
+				if (recordLoanOfficerId != null){
+					recordLoOffId = Short.valueOf(recordLoanOfficerId)
 						.shortValue();
+				}
 			} catch (ParseException e) {
 				throw new RuntimeException(e);
 			} catch (NumberFormatException e) {
@@ -102,7 +106,6 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 				activityContext.setRecordLoanOfficer(recordLoOffId);
 			}
 			else if (recordOffId == 0 && recordLoOffId == 0) {
-
 				if (session.getAttribute("UserContext") != null) {
 					UserContext uc = (UserContext) session
 							.getAttribute("UserContext");
@@ -110,7 +113,6 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 					activityContext.setRecordOfficeId(uc.getBranchId());
 					activityContext.setRecordLoanOfficer(uc.getId());
 				}
-
 			}
 			activityContext.setActivityId(activityId);
 			return activityContext;
