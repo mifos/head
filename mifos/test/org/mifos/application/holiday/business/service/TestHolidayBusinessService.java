@@ -13,6 +13,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestHolidayBusinessService extends MifosTestCase {
 
+	private HolidayBO holidayEntity;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -20,35 +22,29 @@ public class TestHolidayBusinessService extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
+		TestObjectFactory.cleanUp(holidayEntity);
 		HibernateUtil.closeSession();
+		super.tearDown();
 	}
 
 	public void testGetHolidays() throws Exception {
-		
-		HolidayPK holidayPK = new HolidayPK((short)1, new Date());
-		HolidayBO holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
-				(short) 1, (short) 1, "Same Day");// the last string has no effect.
-		
+		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", (short) 1, (short) 1, "Same Day");
 		// Disable date Validation because startDate is less than today
 		holidayEntity.setValidationEnabled(false);
-		
+
 		holidayEntity.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		
-		List<HolidayBO> holidays = new HolidayBusinessService()
-				.getHolidays(Calendar.getInstance().get(Calendar.YEAR), (short)1);
-		
+
+		List<HolidayBO> holidays = new HolidayBusinessService().getHolidays(Calendar.getInstance().get(Calendar.YEAR),
+				(short) 1);
 		assertNotNull(holidays);
 		assertEquals(1, holidays.size());
-		//TestObjectFactory.cleanUp(holidayEntity);
-		TestObjectFactory.cleanUpHolidays(holidays);
 	}
 
-	public void getRepaymentRuleTypes() throws Exception {
-		List<RepaymentRuleEntity> repaymentRules = new HolidayBusinessService()
-		.getRepaymentRuleTypes((short) 1);
+	public void testGetRepaymentRuleTypes() throws Exception {
+		List<RepaymentRuleEntity> repaymentRules = new HolidayBusinessService().getRepaymentRuleTypes((short) 1);
 		assertNotNull(repaymentRules);
 		assertEquals(3, repaymentRules.size());
 	}

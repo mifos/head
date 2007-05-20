@@ -128,7 +128,6 @@ public class TestLoanBO extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-
 		TestObjectFactory.removeObject(loanOffering);
 		if (accountBO != null)
 			accountBO = (AccountBO) HibernateUtil.getSessionTL().get(
@@ -427,7 +426,6 @@ public class TestLoanBO extends MifosTestCase {
 
 	public void testCreateLoanAccountWithIntersetDeductedAtDisbursementFailure()
 			throws Exception {
-
 		createInitialCustomers();
 		MeetingBO meeting = TestObjectFactory.createLoanMeeting(group
 				.getCustomerMeeting().getMeeting());
@@ -829,7 +827,6 @@ public class TestLoanBO extends MifosTestCase {
 			}
 		}
 		TestObjectFactory.cleanUpChangeLog();
-
 	}
 
 	public void testGetTotalRepayAmountForCurrentDateBeforeFirstInstallment() {
@@ -1463,7 +1460,6 @@ public class TestLoanBO extends MifosTestCase {
 
 			}
 		}
-
 	}
 
 	public void testDisbursalLoanWithInterestDeductedAtDisbursal()
@@ -1523,7 +1519,6 @@ public class TestLoanBO extends MifosTestCase {
 				((LoanBO) accountBO).getAccountState().getId().shortValue());
 		assertEquals(statusChangeHistorySize + 1, accountBO
 				.getAccountStatusChangeHistory().size());
-
 	}
 
 	public void testDisbursalLoanRegeneteRepaymentScheduleFailure()
@@ -1553,15 +1548,12 @@ public class TestLoanBO extends MifosTestCase {
 			((LoanBO) accountBO).setLoanMeeting(null);
 			session.update(accountBO);
 			HibernateUtil.getTransaction().commit();
-
 		}
-
 	}
 
 	public void testDisbursalLoanRegeneteRepaymentSchedule()
 			throws AccountException, SystemException, FinancialException,
 			InterruptedException {
-
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccountWithMiscFeeAndPenalty(
 			AccountState.LOANACC_APPROVED,
@@ -1606,7 +1598,6 @@ public class TestLoanBO extends MifosTestCase {
 	public LoanScheduleEntity[] createLoanRepaymentSchedule()
 			throws AccountException, SystemException, FinancialException,
 			InterruptedException {
-
 		Date startDate = new Date(System.currentTimeMillis());				
 		accountBO = 
 			getLoanAccountWithMiscFeeAndPenalty(AccountState.LOANACC_APPROVED,
@@ -1943,13 +1934,11 @@ public class TestLoanBO extends MifosTestCase {
 	}
 
 	public void testGetAmountTobePaidAtdisburtail() throws Exception {
-
 		Date startDate = new Date(System.currentTimeMillis());
 		accountBO = getLoanAccount(
 			AccountState.LOANACC_APPROVED, startDate, 2);
 		assertEquals(new Money("52"), ((LoanBO) accountBO)
 				.getAmountTobePaidAtdisburtail(startDate));
-
 	}
 
 	public void testWaivePenaltyChargeDue() throws Exception {
@@ -1985,7 +1974,6 @@ public class TestLoanBO extends MifosTestCase {
 				assertEquals(new Money(), accountActionDateEntity
 						.getMiscPenalty());
 			}
-
 		}
 
 		Set<LoanActivityEntity> loanActivityDetailsSet = loanBO
@@ -2107,7 +2095,6 @@ public class TestLoanBO extends MifosTestCase {
 				else {
 					assertEquals(new Money("100"),
 							accountFeesActionDetailEntity.getFeeAmount());
-
 				}
 			}
 		}
@@ -2296,7 +2283,6 @@ public class TestLoanBO extends MifosTestCase {
 								.getTime()), DateUtils
 						.getDateWithoutTimeStamp(actionDateEntity
 								.getActionDate().getTime()));
-
 		}
 	}
 
@@ -5545,7 +5531,6 @@ public class TestLoanBO extends MifosTestCase {
 		}
 
 		return sortedList;
-
 	}
 
 	private void createInitialObjects() {
@@ -5588,5 +5573,4 @@ public class TestLoanBO extends MifosTestCase {
 				CustomFieldType.ALPHA_NUMERIC));
 		return fields;
 	}
-
 }

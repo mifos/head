@@ -5,6 +5,6 @@
 
 <tiles:insert definition=".reportLayout">
 <tiles:put name="body" type="string">
-    <iframe style="border:none; padding:0px;" width="100%" height="100%" src="<c:url value='/frameset' />?__report=report/<c:out value='${reportFile}' />&userId=<c:out value='${sessionScope.UserContext.id}' />"></iframe>
+    <iframe style="border:none; padding:0px;" width="100%" height="100%" src="<c:url value='/run' />?__report=report/<c:out value='${reportFile}' />&userId=<c:out value='${sessionScope.UserContext.id}'/>&__format=pdf"></iframe>
 </tiles:put>
 </tiles:insert>

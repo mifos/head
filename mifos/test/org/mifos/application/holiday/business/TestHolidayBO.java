@@ -12,14 +12,16 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestHolidayBO extends MifosTestCase {
 
+	private HolidayBO holidayEntity;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(holidayEntity);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
@@ -27,9 +29,8 @@ public class TestHolidayBO extends MifosTestCase {
 	public void testAddHoliday() throws Exception {
 		long fromDateMillis = new DateMidnight().getMillis();
 		HolidayPK holidayPK = new HolidayPK((short)1, new Date(fromDateMillis));
-		HolidayBO holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
-				(short) 1, (short) 1, "Same Day");// the last string has no effect.
-		
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
+						(short) 1, (short) 1, "Same Day");
 		// Disable date Validation because startDate is less than today
 		holidayEntity.setValidationEnabled(false);
 
@@ -43,7 +44,6 @@ public class TestHolidayBO extends MifosTestCase {
 		assertEquals("Test Holiday", holidayEntity.getHolidayName());
 		assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
 		assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
-		TestObjectFactory.cleanUp(holidayEntity);
 	}
 	
 	/**
@@ -51,20 +51,18 @@ public class TestHolidayBO extends MifosTestCase {
 	 */
 	public void testHolidayFromDateValidationFailure() throws Exception {
 		HolidayPK holidayPK = new HolidayPK((short)1, new Date());
-		HolidayBO holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
 				(short) 1, (short) 1, "Same Day");// the last string has no effect.
 		
 		try {
 			holidayEntity.save();
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
-			
-			TestObjectFactory.cleanUp(holidayEntity);
 			// If it succedded to create this holiday
 			// Asssert false as it shouldn't by validations.
 			assertTrue(false); 
 		} catch(ApplicationException e) {
-			return;
+			holidayEntity = null;
 		}
 	}
 	
@@ -80,7 +78,7 @@ public class TestHolidayBO extends MifosTestCase {
 		
 		HolidayPK holidayPK = new HolidayPK((short)1, new Date(fromDateMillis));
 		
-		HolidayBO holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
 				(short) 1, (short) 1, "Same Day");// the last string has no effect.
 		
 		holidayEntity.save();
@@ -94,8 +92,6 @@ public class TestHolidayBO extends MifosTestCase {
 		assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
 		// automatically Fromdate is copied into thruDate if thrudate is null.
 		assertEquals(fromDateMillis, holidayEntity.getHolidayThruDate().getTime());
-		
-		TestObjectFactory.cleanUp(holidayEntity);
 	}
 	
 	/** 
@@ -106,7 +102,7 @@ public class TestHolidayBO extends MifosTestCase {
 		Calendar thruDate = Calendar.getInstance();
 		thruDate.add(Calendar.DAY_OF_MONTH, -1);
 		
-		HolidayBO holidayEntity = new HolidayBO(holidayPK, thruDate.getTime(), "Test Holiday",
+		holidayEntity = new HolidayBO(holidayPK, thruDate.getTime(), "Test Holiday",
 				(short) 1, (short) 1, "Same Day");// the last string has no effect.
 		
 		try {
@@ -115,13 +111,11 @@ public class TestHolidayBO extends MifosTestCase {
 			HibernateUtil.commitTransaction();
 			HibernateUtil.closeSession();
 			
-			TestObjectFactory.cleanUp(holidayEntity);
-			
 			// If it succedded to create this holiday
 			// Asssert false as it shouldn't by validation rules.
 			assertTrue(false); 
 		} catch(ApplicationException e) {
-			return;
+			holidayEntity = null;
 		}
 	}
 	
@@ -143,7 +137,7 @@ public class TestHolidayBO extends MifosTestCase {
 		thruDate.add(Calendar.DAY_OF_MONTH, 1);
 		thruDateMillis = thruDate.getTimeInMillis();
 		
-		HolidayBO holidayEntity = new HolidayBO(holidayPK, thruDate.getTime(), "Test Holiday",
+		holidayEntity = new HolidayBO(holidayPK, thruDate.getTime(), "Test Holiday",
 				(short) 1, (short) 1, "Same Day");// the last string has no effect.
 		
 		holidayEntity.save();
@@ -156,8 +150,6 @@ public class TestHolidayBO extends MifosTestCase {
 		assertEquals("Test Holiday", holidayEntity.getHolidayName());
 		assertEquals(fromDateMillis, holidayEntity.getHolidayFromDate().getTime());
 		assertEquals(thruDateMillis, holidayEntity.getHolidayThruDate().getTime());
-		
-		TestObjectFactory.cleanUp(holidayEntity);
 	}
 	
 	/* Do we need an update script like

@@ -140,10 +140,9 @@
         <available file="${conf.dir}/my.hibernate.properties"
                 property="my.hibernate.properties.present" value="true" />
 		<copy todir="${build.web-inf}/lib">
-			<fileset dir="lib" 
-				excludes="javax.servlet.jar, jsp-api.jar, strutstest-2.1.3.jar, junit.jar, 
-					cobertura.jar, jetty-6.0.0.jar, jetty-util-6.0.0.jar, servlet-api-2.5-6.0.0.jar,
-					trang.jar, trangtask.jar, jaxb-xjc.jar">
+			<fileset dir="${lib.dir}" 
+				excludes="easymock*.jar, javax.servlet.jar, jaxb-xjc.jar, jetty*.jar, jsp-api.jar, junit*.jar,
+					mayfly*.jar, servlet-api-2.5-6.0.0.jar, strutstest-2.1.3.jar, trang.jar, trangtask.jar">
 				<exclude name="*.tld"/>
 			</fileset>
 		</copy>
@@ -197,11 +196,11 @@
 		<copy todir="${build.src.dir}">
 			<fileset dir="${birt.web.viewer.dir}" excludes="*.jsp, *.rptdesign, **/web.xml"/>
 		</copy>
-		<concat destfile="${build.src.dir}/web.xml" append="no" force="yes" >
+		<concat destfile="${build.web-inf}/web.xml" append="no" force="yes" >
 			<fileset dir="${src.dir}/org/mifos/META-INF" includes="web.xml"/>
 			<fileset dir="${birt.web.viewer.dir}" includes="**/web.xml"/>
 		</concat>
-		<replaceregexp file="${build.src.dir}/web.xml" byline="no" flags="s" match="&lt;/web-app&gt;.*&lt;/display-name&gt;" replace="	&lt;!-- section: birt web viewer --&gt;" />
+		<replaceregexp file="${build.web-inf}/web.xml" byline="no" flags="s" match="&lt;/web-app&gt;.*&lt;/display-name&gt;" replace="	&lt;!-- section: birt web viewer --&gt;" />
 	</target>
 	
 	<target name="copy_birt_reports">
@@ -277,6 +276,15 @@
 		<fail if="tests.failure" 
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
+	
+	<target name ="covertTestReportToHTML" description="Convert test report to HTML format">
+		<junitreport todir="${dist.dir}">
+			<fileset dir="${dist.dir}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report format="frames" todir="${dist.dir}/html/"/>
+		</junitreport>
+	</target>
 
 	<!-- Profile our tests with JIP ( http://jiprof.sourceforge.net/ ).	-->
 	<target name="profile_test" 
@@ -304,11 +312,11 @@
 			message="Unit tests failed - Report is available at ${dist.dir}"/>
 	</target>
 
-	<target name="war" depends="compile,copy_files, integrate_birt_web_viewer, copy_birt_reports">
+	<target name="war" depends="compile, copy_files, integrate_birt_web_viewer, copy_birt_reports">
 		<delete file="${dist.dir}/${webapplication.name}.war"/>
 		<war destfile="${dist.dir}/${webapplication.name}.war" 
-			webxml="${build.src.dir}/web.xml">
-			<fileset dir="${build.src.dir}" excludes="web.xml" />
+			webxml="${build.web-inf}/web.xml">
+			<fileset dir="${build.src.dir}" excludes="**/web.xml" />
 		</war>
 	</target>
 

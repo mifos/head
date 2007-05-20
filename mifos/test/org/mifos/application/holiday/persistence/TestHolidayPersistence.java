@@ -13,6 +13,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class TestHolidayPersistence extends MifosTestCase {
 
+	private HolidayBO holidayEntity;
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -20,41 +22,37 @@ public class TestHolidayPersistence extends MifosTestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		TestObjectFactory.cleanUp(holidayEntity);
 		HibernateUtil.closeSession();
 		super.tearDown();
 	}
 
-
 	public void testGetHolidays() throws Exception {
-		
-		HolidayPK holidayPK = new HolidayPK((short)1, new Date());
-		HolidayBO holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday",
-				(short) 1, (short) 1, "Same Day");// the last string has no effect.
-		
+		HolidayPK holidayPK = new HolidayPK((short) 1, new Date());
+		holidayEntity = new HolidayBO(holidayPK, null, "Test Holiday", (short) 1, (short) 1, "Same Day");
 		// Disable date Validation because startDate is less than today
 		holidayEntity.setValidationEnabled(false);
-		
+
 		holidayEntity.save();
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();
-		
-		List<HolidayBO> holidays = new HolidayPersistence()
-				.getHolidays(Calendar.getInstance().get(Calendar.YEAR), 1);
+
+		List<HolidayBO> holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR), 1);
 		assertNotNull(holidays);
 		assertEquals(1, holidays.size());
-		TestObjectFactory.cleanUpHolidays(holidays);		
-		
-		holidays = new HolidayPersistence()
-				.getHolidays(Calendar.getInstance().get(Calendar.YEAR)-1 , 1);
+
+		TestObjectFactory.cleanUpHolidays(holidays);
+		holidayEntity = null;
+
+		holidays = new HolidayPersistence().getHolidays(Calendar.getInstance().get(Calendar.YEAR) - 1, 1);
 		assertNotNull(holidays);
 		assertEquals(holidays.size(), 0);
 	}
-	
-	public void getRepaymentRuleTypes() throws Exception {
-		List<RepaymentRuleEntity> repaymentRules = new HolidayPersistence()
-		.getRepaymentRuleTypes((short) 1);
+
+	public void testGetRepaymentRuleTypes() throws Exception {
+		List<RepaymentRuleEntity> repaymentRules = new HolidayPersistence().getRepaymentRuleTypes((short) 1);
 		assertNotNull(repaymentRules);
 		assertEquals(3, repaymentRules.size());
 	}
-	
+
 }
