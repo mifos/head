@@ -2,6 +2,7 @@
 <%@ taglib uri="/tags/mifos-html" prefix="mifos"%>
 <%@ taglib uri="/tags/struts-html-el" prefix="html-el"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <tiles:insert definition=".create">
 <tiles:put name="body" type="string">
@@ -139,14 +140,21 @@
 								 	<Table width="100%"   cellpadding="3" cellspacing="0">
 									 <c:forEach var="reportCategory" items="${sessionScope.listOfReports}" varStatus="loop" begin='0'>			            	  			            	  	
             	  		
-					  			<c:forEach var="report" items="${reportCategory.reportsSet}" >	
+					  			<c:forEach var="report" items="${reportCategory.reportsSet}">	
 								  	<tr>
 				                 <td height="30" class="blueline" >
 								 <Table width="100%"  cellpadding="3" cellspacing="0">
 								 <tr>
 								      <td width="30%"><span class="fontnormal"><%=i++%>.</span><span class="fontnormalbold"><c:out value="${report.reportName}"/></span></td>
 									  <td width="30%"><span class="fontnormalbold"><c:out value="${report.reportsJasperMap.reportJasper}"/></span></td>
-									  <td width="20%" nowrap><a href="reportsParamsMapAction.do?method=loadAddList&reportId=${report.reportId}">Parameters</a></td>
+									   	<c:choose>		            	  	
+					  	                  <c:when test='${fn:endsWith(report.reportsJasperMap.reportJasper, ".rptdesign")}'>	
+									        <td width="20%" nowrap></td>
+									      </c:when>
+									      <c:otherwise>
+									        <td width="20%" nowrap><a href="reportsParamsMapAction.do?method=loadAddList&reportId=${report.reportId}">Parameters</a></td>  
+									      </c:otherwise>
+					                    </c:choose>
 									  <td width="20%" nowrap><a href="reportsUserParamsAction.do?method=loadAddList&reportId=${report.reportId}">Preview</a></td>
 					                </tr>
 									
