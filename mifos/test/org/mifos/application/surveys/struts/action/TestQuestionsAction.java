@@ -1,20 +1,18 @@
 package org.mifos.application.surveys.struts.action;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.surveys.SurveysConstants;
 import org.mifos.application.surveys.business.Question;
 import org.mifos.application.surveys.business.QuestionChoice;
 import org.mifos.application.surveys.helpers.AnswerType;
-import org.mifos.application.surveys.helpers.QuestionState;
 import org.mifos.application.surveys.persistence.SurveysPersistence;
 import org.mifos.application.surveys.struts.actionforms.QuestionActionForm;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestDatabase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.hibernate.helper.SessionHolder;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 import org.mifos.framework.util.helpers.Constants;
@@ -119,14 +117,14 @@ public class TestQuestionsAction extends MifosMockStrutsTestCase {
 		newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
 		assertEquals(3, newQuestions.size());
 		assertEquals(questionText3, newQuestions.get(2).getQuestionText());
-		int badQuestionId = newQuestions.get(2).getQuestionId();
-		System.out.println("badQuestionId: " + badQuestionId);
+//		int badQuestionId = newQuestions.get(2).getQuestionId();
+//		System.out.println("badQuestionId: " + badQuestionId);
 		addRequestParameter("newQuestionNum", Integer.toString(newQuestions.size() - 1));
 		action.deleteNewQuestion(moduleMapping, form, request, response);
 		newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
 		assertEquals(2, newQuestions.size());
-		System.out.println(newQuestions.get(0).getQuestionText());
-		System.out.println(newQuestions.get(1).getQuestionText());
+//		System.out.println(newQuestions.get(0).getQuestionText());
+//		System.out.println(newQuestions.get(1).getQuestionText());
 		
 		action.createQuestions(moduleMapping, form, request, response);
 		SurveysPersistence persistence = new SurveysPersistence(database.open());

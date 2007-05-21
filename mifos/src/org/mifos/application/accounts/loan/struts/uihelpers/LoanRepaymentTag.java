@@ -263,7 +263,6 @@ public class LoanRepaymentTag extends BodyTagSupport {
 								.append("</td>").append("</tr></table>");
 
 					}
-					// // System.out.println(builder.toString());
 				}
 			}
 

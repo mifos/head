@@ -52,9 +52,6 @@ public class TestSavingsHelper extends MifosTestCase{
 			
 			resultDate=helper.getNextScheduleDate(accountActivationDate,null, meeting);
 			date = getDate("01/05/2006");
-			System.out.println(new Date());
-			System.out.println(date);
-			System.out.println(resultDate);
 			assertEquals(date,resultDate);
 			
 			resultDate=helper.getNextScheduleDate(accountActivationDate,date, meeting);

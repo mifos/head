@@ -64,6 +64,7 @@ import org.mifos.application.personnel.PersonnelTestSuite;
 import org.mifos.application.productdefinition.ProductDefinitionTestSuite;
 import org.mifos.application.reports.ReportsTestSuite;
 import org.mifos.application.rolesandpermission.RolesAndPermissionTestSuite;
+import org.mifos.application.surveys.SurveysTestSuite;
 import org.mifos.framework.components.ComponentsTestSuite;
 import org.mifos.framework.components.audit.TestAuditLogSuite;
 import org.mifos.framework.components.batchjobs.BatchJobTestSuite;
@@ -137,6 +138,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTestSuite(MethodInvokerTest.class);
 		suite.addTest(FrameworkUtilsSuite.suite());
 		suite.addTest(HolidayTestSuite.suite());
+		suite.addTest(SurveysTestSuite.suite());
 		return suite;
 	}
 }

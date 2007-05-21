@@ -116,8 +116,6 @@ public class ReportsUploadAction extends BaseAction{
 					JRProperties.setProperty(JRProperties.COMPILER_CLASS, JRJdtCompiler.class.getName());
 					
 					JasperCompileManager.compileReportToFile(reportUploadFileName);
-				//	System.out.println("Jaseper File for "+reportUploadFileName+" Uploaded");
-					
 				}
 				catch (Exception e)
 				{

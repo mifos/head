@@ -362,7 +362,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
             rawselect[0] = new RawSelect();
             rawselect[1] = new RawSelect();
         	addStyle(results);
-            JavaScript(results);
+            javaScript(results);
             results.append("<table width=\"86%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
         	results.append("<tr> <td width=\"28%\">");
             results.append(rawselect[0].toString());
@@ -415,43 +415,41 @@ public class MifosCompositeSelect extends BodyTagSupport {
 					outColl=midColl;
 				}
 			} catch (SecurityException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
         }
 
 
-        Map<Object,Object> inMap=null;
+        Map<Object,Object> inMap;
         Map<Object,Object> outMap=null;
         try {
 			inMap=helper(inColl);
-			// System.out.println("value of-------------------------"+outColl);
-		if(outColl!=null) {
-			outMap=helper(outColl);
-		}
+			if(outColl!=null) {
+				outMap=helper(outColl);
+			}
 		}
         catch (SecurityException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 
         Map inputCopy = new HashMap(inMap);
         if(outMap != null) {
-        	// System.out.println("inside outMap if"+outMap);
         	Set input = inMap.keySet();
         	Set output = outMap.keySet();
         	for(Iterator in= input.iterator();in.hasNext();) {
@@ -460,7 +458,6 @@ public class MifosCompositeSelect extends BodyTagSupport {
             		Object obj2 = out.next();
         			if(obj1.equals(obj2)) {
         				outMap.put(obj1,inMap.get(obj1));
-        				// System.out.println("inside danger::::::::");
         				inputCopy.remove(obj1);
         			}
         		}
@@ -470,7 +467,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
         rawselect[1].setData(outMap);
         init();
         addStyle(results);
-        JavaScript(results);
+        javaScript(results);
         results.append("<table width=\"86%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">");
 
         if (null != getLabel()) {
@@ -500,7 +497,7 @@ public class MifosCompositeSelect extends BodyTagSupport {
      * @param results   StringBuffer object to hold the string representation of the
      *            tag
      */
-    private void JavaScript(StringBuffer results) {
+    private void javaScript(StringBuffer results) {
         results
                 .append("<script language=\"javascript\" SRC=\"pages/framework/js/Logic.js\" >"
                         + "</script> <link rel=\"stylesheet\" type=\"text/css\" href=\"pages/framework/css/tooltip.css\" title=\"MyCSS\"/>");
