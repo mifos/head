@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
@@ -83,22 +84,24 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			short recordOffId = -1;
 			short recordLoOffId = -1;
 			try {
-				if (recordOfficeId != null){
+				if (recordOfficeId != null) {
 					recordOffId = Short.valueOf(recordOfficeId).shortValue();
 				}
-				if (recordLoanOfficerId != null){
+				if (recordLoanOfficerId != null) {
 					recordLoOffId = Short.valueOf(recordLoanOfficerId)
-						.shortValue();
+							.shortValue();
 				}
-			} catch (ParseException e) {
+			}
+			catch (ParseException e) {
 				throw new RuntimeException(e);
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				/* Can happen if one or both parameters was omitted.
-				   Do we want to allow this case?  (If so, we can
-				   check for it more cleanly).  What's the difference
-				   between supplying these as parameters versus the
-				   UserContext, versus just using what is in
-				   the ActivityContext? */
+				 Do we want to allow this case?  (If so, we can
+				 check for it more cleanly).  What's the difference
+				 between supplying these as parameters versus the
+				 UserContext, versus just using what is in
+				 the ActivityContext? */
 				throw new RuntimeException(e);
 			}
 			if (recordOffId > 0 && recordLoOffId > 0) {
@@ -144,11 +147,16 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 							.equals("searchNext")))
 				return true;
 			else {
-				activityId = activityMapper.getActivityId(key);
-				request.setAttribute(Globals.ERROR_KEY, null);
 				String activityKey = null;
 
-				// if it is null Check for report actions
+				if (isReportRequest(request)) {
+					String reportId = request.getParameter("reportId");
+					activityKey = key + "-" + reportId;
+					activityId = activityMapper.getActivityId(activityKey);
+				} else {
+					activityId = activityMapper.getActivityId(key);
+					request.setAttribute(Globals.ERROR_KEY, null);
+				}
 
 				if (null == activityId) {
 					activityKey = path + "-" + request.getParameter("viewPath");
@@ -172,6 +180,13 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 					setActivityContextFromRequest(request, activityId));
 		}
 		return returnValue;
+	}
+
+	private boolean isReportRequest(HttpServletRequest request) {
+		String reportId = request.getParameter("reportId");
+		String method = request.getParameter("method");
+
+		return StringUtils.isNotEmpty(reportId) && "loadAddList".equals(method);
 	}
 
 	/**
@@ -208,13 +223,15 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 		// if allowed invoke the execute method of the action class
 
 		try {
-			String currentFlowKey = request.getParameter(Constants.CURRENTFLOWKEY);
-			if(currentFlowKey != null) {
-				previousRequestValues.getPreviousRequestValueMap().put(Constants.CURRENTFLOWKEY, currentFlowKey);
+			String currentFlowKey = request
+					.getParameter(Constants.CURRENTFLOWKEY);
+			if (currentFlowKey != null) {
+				previousRequestValues.getPreviousRequestValueMap().put(
+						Constants.CURRENTFLOWKEY, currentFlowKey);
 			}
-					
+
 			forward = (action.execute(mapping, form, request, response));
-			
+
 			String method = request.getParameter("method");
 			if (method.equals(ClientConstants.METHOD_RETRIEVE_PICTURE)) {
 				forward = mapping.findForward("get_success");
@@ -253,10 +270,12 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 				activityContext.setLastForward(forward);
 			populateTheRequestFromPreviousValues(request, previousRequestValues);
 
-		} finally {
+		}
+		finally {
 			try {
 				session.removeAttribute(SecurityConstants.SECURITY_PARAM);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 			}
 		}
 
