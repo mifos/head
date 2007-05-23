@@ -52,15 +52,11 @@ public class TestSavingsApplyAdjustmentAction extends MifosMockStrutsTestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		try {
-			setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
-					.getPath());
-			setConfigFile(ResourceLoader.getURI(
-					"org/mifos/application/accounts/savings/struts-config.xml")
-					.getPath());
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+		setServletConfigFile(ResourceLoader.getURI("WEB-INF/web.xml")
+				.getPath());
+		setConfigFile(ResourceLoader.getURI(
+				"org/mifos/application/accounts/savings/struts-config.xml")
+				.getPath());
 		userContext = TestObjectFactory.getContext();
 		userContext.setPreferredLocale(new Locale("en", "US"));
 		addRequestParameter("recordLoanOfficerId", "1");

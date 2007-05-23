@@ -179,10 +179,15 @@ public class StateXMLParser {
 					transitionMap.put(currentState, currntPossibleStates);
 			}
 		} catch (ParserConfigurationException e) {
+			throw new RuntimeException(e);
 		} catch (IOException e) {
+			throw new RuntimeException(e);
 		} catch (SAXParseException e) {
+			throw new RuntimeException(e);
 		} catch (SAXException e) {
+			throw new RuntimeException(e);
 		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
 		}
 		return transitionMap;
 	}

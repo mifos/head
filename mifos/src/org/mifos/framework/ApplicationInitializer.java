@@ -118,10 +118,10 @@ public class ApplicationInitializer implements ServletContextListener {
 						.getURI(FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE) != null)
 					hibernatePropertiesPath = FilePaths.CONFIGURABLEMIFOSDBPROPERTIESFILE;
 			} catch (URISyntaxException e) {
+				throw new AppNotConfiguredException(e);
 			}
 			HibernateStartUp.initialize(hibernatePropertiesPath);
 		} catch (HibernateStartUpException e) {
-			e.printStackTrace();
 			throw new AppNotConfiguredException(e);
 		}
 	}
