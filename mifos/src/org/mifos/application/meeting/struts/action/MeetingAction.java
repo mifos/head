@@ -115,7 +115,8 @@ public class MeetingAction extends BaseAction {
 				actionForm.getCustomerLevelValue()).toString());
 	}
 
-	@TransactionDemarcate(joinToken = true)
+	@TransactionDemarcate(conditionToken = true)
+	
 	public ActionForward edit(ActionMapping mapping, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

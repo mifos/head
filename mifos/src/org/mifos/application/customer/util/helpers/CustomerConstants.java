@@ -275,5 +275,7 @@ public interface CustomerConstants {
 	public static final String GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION = "errors.Group.GroupActiveAccountsPresent";
 	public static final String CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION = "errors.Group.ClientActiveAccountsPresent";
 	public static final String CLIENT_IS_A_TITLE_HOLDER_EXCEPTION = "errors.Group.ClientIsATitleHolder";
-
+	public static final String CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION = "error.Customer.ClientIsClosedOrCancelled";
+	public static final String CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION = "error.Customer.ClientHaveOpenLoanAccount";
+	
 }

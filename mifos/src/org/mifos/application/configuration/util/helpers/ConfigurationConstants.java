@@ -31,4 +31,6 @@ public static final String SERVICE_CHARGE="Service Charge";
 public static final short INTEREST_DAYS=360;
 
 public static final String SURVEY="Survey";
+public static final String MEETING="Meeting";
+
 }

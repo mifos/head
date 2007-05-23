@@ -204,7 +204,26 @@ function goToCancelPage(){
 										mandatory="yes" /></td>
 									<td><html-el:text property="meetingPlace" /></td>
 								</tr>
-
+			<!-- Start Add group membership -->	
+						<tr class="fontnormal">
+							<td align="right"><mifos:mifoslabel
+								name="Group.groupMembership" /></td>
+							<td><mifos:mifoslabel
+								name="Group.none" /></td>
+						</tr>
+												
+							<!-- table width="96%" border="0" cellpadding="3" cellspacing="0"-->
+								<tr>
+								<td align="right"></td>
+									<td align="left" class="fontnormalbold"><span class="fontnormal">
+									<a
+										href="addGroupMembershipAction.do?method=loadSearch&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
+									<mifos:mifoslabel name="client.AddGroupMemberShip"									
+										bundle="ClientUIResources" /> </a> </span></td>
+								</tr>
+					        <!--/table-->
+				    <!-- End Add group membership -->		
+		
 							</table>
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>

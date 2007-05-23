@@ -146,6 +146,7 @@ public interface GroupConstants {
 	public static final String CONFIRM_PARENT_TRANSFER_SUCCESS="confirmParentTransfer_success";
 	public static final String GROUP_SEARCH_CREATE_CLIENT="GroupSearch_CreateClient";
 	public static final String GROUP_SEARCH_CLIENT_TRANSFER="GroupSearch_ClientTransfer";
+	public static final String GROUP_SEARCH_ADD_CLIENTS_TO_GROUPS="GroupSearch_AddClientToGroup";
 	public static final String LOAD_SEARCH_METHOD="loadSearch";
 	public static final String LOAD_SEARCH_SUCCESS="loadSearch_success";
 	public static final String CHOOSE_OFFICE_SUCCESS="chooseOffice_success";
@@ -235,5 +236,7 @@ public interface GroupConstants {
 	public static final String GROUPSAVINGSACCOUNTSINUSE = "groupSavingsAccountsInUse";
 	public static final String ASSIGNED_LOAN_OFFICER_REQUIRED="errors.assignedloanofficerrequired";
 	public static final String METHODCALLED="methodCalled";
+	
+	
 	
 }

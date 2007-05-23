@@ -116,6 +116,55 @@ public class TestClientBO extends MifosTestCase {
 				.getCustomerId());
 	
 	}
+	
+	public void testSuccessfulAddClientToGroupWithMeeting()throws Exception{
+		createObjectsForTranferToGroup_WithMeeting();
+		assertEquals(0, group1.getMaxChildCount().intValue());
+		
+		client.addClientToGroup(group1);
+	
+		HibernateUtil.commitTransaction();
+		HibernateUtil.closeSession();
+		assertNotNull(client.getParentCustomer());
+		assertEquals(group1.getCustomerId(), client.getParentCustomer().getCustomerId());
+
+		client = TestObjectFactory.getObject(ClientBO.class, client.getCustomerId());
+		group = TestObjectFactory.getObject(GroupBO.class, group.getCustomerId());
+		group1 = TestObjectFactory.getObject(GroupBO.class, group1.getCustomerId());
+	
+		assertEquals(1, group1.getMaxChildCount().intValue());
+		assertEquals(group1.getCustomerId(),client.getParentCustomer().getCustomerId());
+		assertEquals(true, client.isClientUnderGroup());
+	}
+	
+	public void testSuccessfulValidateBeforeAddingClientToGroup_Client()throws Exception{
+		String oldMeetingPlace = "Tunisia";
+		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
+		client = TestObjectFactory.createClient("clientname",weeklyMeeting,
+			CustomerStatus.CLIENT_CANCELLED);
+		try{
+			client.validateBeforeAddingClientToGroup();
+		}catch(CustomerException expected){
+			assertEquals(CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION, expected.getKey());
+			assertTrue(true);
+		}
+		
+	}	
+	public void testSuccessfulValidateBeforeAddingClientToGroup_Amount()throws Exception{
+		String oldMeetingPlace = "Tunis";
+		MeetingBO weeklyMeeting = new MeetingBO(WeekDay.FRIDAY, Short.valueOf("1"), new java.util.Date(), MeetingType.CUSTOMER_MEETING, oldMeetingPlace);
+		client = TestObjectFactory.createClient("clientname",weeklyMeeting,
+			CustomerStatus.CLIENT_CANCELLED);
+		
+		try{
+			client.validateBeforeAddingClientToGroup();
+			fail();
+		}catch(CustomerException expected){
+			assertNotSame(CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION, expected.getKey());
+			assertTrue(true);
+		}	
+		
+	}	
 
 	public void testUpdateWeeklyMeeting_SavedToUpdateLater()throws Exception{
 		String oldMeetingPlace = "Delhi";
@@ -1080,7 +1129,7 @@ public class TestClientBO extends MifosTestCase {
 		client = TestObjectFactory.createClient("new client" ,CustomerStatus.CLIENT_PARTIAL, group, new java.util.Date());
 		HibernateUtil.closeSession();
 	}
-	
+
 	private void createObjectsForTranferToGroup_WithoutMeeting()throws Exception{
 		Short officeId = new Short("3");
 		Short personnel = new Short("1");

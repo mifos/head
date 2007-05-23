@@ -32,6 +32,7 @@ import org.mifos.application.configuration.struts.action.HiddenMandatoryConfigur
 import org.mifos.application.configuration.struts.action.LabelConfigurationAction;
 import org.mifos.application.customer.center.struts.action.CenterCustAction;
 import org.mifos.application.customer.client.struts.action.ClientCustAction;
+import org.mifos.application.customer.group.struts.action.AddGroupMembershipAction;
 import org.mifos.application.customer.client.struts.action.ClientTransferAction;
 import org.mifos.application.customer.group.struts.action.GroupCustAction;
 import org.mifos.application.customer.group.struts.action.GroupTransferAction;
@@ -234,6 +235,8 @@ public class ActivityMapper {
 		parseActionSecurity(SurveysAction.getSecurity());
 		parseActionSecurity(QuestionsAction.getSecurity());
 		parseActionSecurity(HiddenMandatoryConfigurationAction.getSecurity());
+		parseActionSecurity(AddGroupMembershipAction.getSecurity());
+
 	}
 
 	private void addCustomerSearchMappings() {

@@ -10,9 +10,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DatabaseVersionPersistence extends SessionPersistence {
+/**
+ * This doesn't inherit from SessionPersistence until we can
+ * figure out how to make tests like LatestTest work without
+ * the mifos logger set up (the difference has to do with
+ * when/whether the AuditInterceptor, which wants a logger,
+ * gets set up).  To make things confusing, LatestTest will
+ * work if run as part of ApplicationTestSuite (because other
+ * tests have set up logging).
+ */
+public class DatabaseVersionPersistence extends Persistence {
 
-	public static final int APPLICATION_VERSION = 117;
+	public static final int APPLICATION_VERSION = 118;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public int read() throws SQLException {

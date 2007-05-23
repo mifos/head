@@ -387,7 +387,7 @@ public interface SecurityConstants {
 	public final short CAN_APPROVE_LOANS_IN_BULK = 192;
 
 	public final short CAN_ENTER_COLLECTION_SHEET_DATA = 197;
-		//ADDED BY MFTECH
+
 	public final short ADMINISTER_REPORTPARAMS = 142;
     public final short ADMINISTER_REPORTDS = 142;
     
@@ -406,5 +406,8 @@ public interface SecurityConstants {
     
     //Remove Group MemberShip
     public final short CAN_REMOVE_CLIENTS_FROM_GROUPS = 206;
+
+    //Add Group MemberShip
+    public final short CAN_ADD_CLIENTS_TO_GROUPS = 208;
 
 }

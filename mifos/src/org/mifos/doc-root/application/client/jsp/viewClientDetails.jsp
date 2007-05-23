@@ -435,6 +435,9 @@
 											<html-el:link
 												action="meetingAction.do?method=edit&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}&customerLevel=${BusinessKey.customerLevel.id}">
 												<mifos:mifoslabel name="client.EditMeetingLink" bundle="ClientUIResources"/>
+												<mifos:mifoslabel name="client.Separator" bundle="ClientUIResources"/>
+												<mifos:mifoslabel name="client.AddGroup" bundle="ClientUIResources"/>												
+												
 											</html-el:link>
 											<br>
 										</c:otherwise>

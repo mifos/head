@@ -125,7 +125,11 @@
 		<form-bean name="holidayActionForm" type="org.mifos.application.holiday.struts.actionforms.HolidayActionForm" />
 		
 		<form-bean name="surveyActionForm" type="org.mifos.application.surveys.struts.actionforms.SurveyActionForm"/>
+
+		<!-- Add group Membership Form -->
+		<form-bean name="addGroupMembershipForm" type="org.mifos.application.customer.group.struts.actionforms.AddGroupMembershipForm"/>
 		<form-bean name="questionActionForm" type="org.mifos.application.surveys.struts.actionforms.QuestionActionForm"/>
+
 
 	</form-beans>
 
@@ -1024,6 +1028,12 @@
 			<forward name="loadTransferSearch_success" path="/pages/application/group/jsp/group_search_client_transfer.jsp" />
 			<forward name="transferSearch_success" path="/pages/application/group/jsp/group_search_results_client_transfer.jsp" />
 			<forward name="search_GroupSearch_ClientTransfer_failure" path="/pages/application/group/jsp/group_search_client_transfer.jsp" />
+			<forward name="search_GroupSearch_AddClientToGroup_failure" path="/pages/application/group/jsp/group_search_addMember.jsp" />
+		
+			<!-- to revise forward -->
+			<forward name="addGroupSearch_success" path="/pages/application/group/jsp/group_search_add_client.jsp" />
+			<!-- forward to delete !! -->
+			<!-- forward name="loadSearch_failure" path="/pages/application/group/jsp/group_search_addMember.jsp" /-->
 
 		</action>
 		<!-- Customer action M2 style-->
@@ -1136,7 +1146,25 @@
    	         <forward name="load_main_page" path="/pages/application/surveys/jsp/mainpage.jsp"/>
    	         <forward name="get_success" path="/pages/application/surveys/jsp/survey_details.jsp"/>
    	    </action>
-   	    
+
+
+   	    <!-- Add group membership action -->
+		<action path="/addGroupMembershipAction"
+		 type="org.mifos.application.customer.group.struts.action.AddGroupMembershipAction"
+		 name="addGroupMembershipForm"
+		 parameter="method" 
+         scope="session"
+		 input="/addGroupMembershipAction.do?method=validate" 
+		 validate="true">
+			<forward name="loadSearch_success" path="/pages/application/group/jsp/group_search_addMember.jsp" />
+			<forward name="confirmAddClientToGroup_success" path="/pages/application/group/jsp/confirmAddClientToGroup.jsp" />
+     		<forward name="view_client_details_page" path="/clientCustAction.do?method=get" />			
+     		<forward name="cancel_success" path="/clientCustAction.do?method=get" />
+     		<!-- forward name="loadSearch_failure" path="/meetingAction.do?method=edit&amp;input=ClientDetails" /-->
+     		     					
+			
+		</action>
+  	    
    	    <action path="/questionsAction"
           type="org.mifos.application.surveys.struts.action.QuestionsAction"
           parameter="method"
@@ -1148,6 +1176,7 @@
              <forward name="load_success" path="/pages/application/surveys/jsp/define_questions.jsp"/>
              <forward name="create_success" path="/AdminAction.do?method=load" redirect="true"/>
         </action>
+
 	</action-mappings>
 
 	<controller nocache="false" processorClass="org.mifos.framework.struts.action.MifosRequestProcessor" contentType="text/html; charset=UTF-8"></controller>

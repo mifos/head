@@ -78,18 +78,20 @@ public class LatestTest extends TestCase {
 	    return database.dataStore();
 	}
 
-	private void runUpgradeScripts(Database database) throws SQLException, IOException {
+	private void runUpgradeScripts(Database database) 
+	throws SQLException, IOException {
 	    Connection conn = database.openConnection();
-	    DatabaseVersionPersistence persistence = new DatabaseVersionPersistence() {
-	    	@Override
-	    	URL lookup(String name) {
-	    		try {
-					return new URL("file:sql/"+name);
-				} catch (MalformedURLException e) {
-					throw new RuntimeException(e);
-				}
-	    	}
-	    };	    
+	    DatabaseVersionPersistence persistence = 
+	    	new DatabaseVersionPersistence() {
+		    	@Override
+		    	URL lookup(String name) {
+		    		try {
+						return new URL("file:sql/"+name);
+					} catch (MalformedURLException e) {
+						throw new RuntimeException(e);
+					}
+		    	}
+		    };	    
 	    int version  = persistence.read(conn);
 	    assertEquals(FIRST_NUMBERED_VERSION, version);
 	    List<Upgrade> scripts = persistence.scripts(

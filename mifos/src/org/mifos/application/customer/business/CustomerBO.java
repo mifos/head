@@ -67,7 +67,6 @@ import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.persistence.OfficePersistence;
 import org.mifos.application.personnel.business.PersonnelBO;
 import org.mifos.application.personnel.persistence.PersonnelPersistence;
-import org.mifos.application.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.application.util.helpers.CustomFieldType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.framework.business.BusinessObject;
@@ -1273,26 +1272,32 @@ public abstract class CustomerBO extends BusinessObject {
 			setParentCustomer(null);
 			generateSearchId();			
 			this.update();
-			/*if(clientHasAPerClientMandatorySavingsAcccount()){
-				// TODO  faire le reste.. MAJ montant..
-			}*/
-			
 		}
 
-	public boolean clientHasAPerClientMandatorySavingsAcccount() {
-		for (AccountBO account : getAccounts()) {
-			if (account.getType() == AccountTypes.SAVINGS_ACCOUNT
-				&& account.isOpen()
-				&& account.getState() == AccountState.SAVINGS_ACC_APPROVED
-				&& ((SavingsBO) account).isMandatory()
-				&& ((SavingsBO) account).getRecommendedAmountUnit() ==
-						RecommendedAmountUnit.PER_INDIVIDUAL){
-				return true;
-			}
-		}
-		return false;
-			
+	protected void addParentCustomer(CustomerBO newParent)
+			throws CustomerException {
+		setParentCustomer(newParent);
+		this.handleAddClientToGroup();
+		childAddedForParent(newParent);
+		setSearchId(newParent.getSearchId() + "."
+				+ String.valueOf(newParent.getMaxChildCount()));
+
+		newParent.setUserContext(getUserContext());
+		newParent.update();
 	}
 
-
+	private void handleAddClientToGroup() throws CustomerException {
+		setPersonnel(getParentCustomer().getPersonnel());
+			if (getCustomerMeeting() != null){
+					deleteCustomerMeeting();		
+					setCustomerMeeting(createCustomerMeeting(getParentCustomer()
+							.getCustomerMeeting().getMeeting()));
+							
+			}
+			else{
+				setCustomerMeeting(createCustomerMeeting(getParentCustomer()
+						.getCustomerMeeting().getMeeting()));
+			}
+	}
+	
 }

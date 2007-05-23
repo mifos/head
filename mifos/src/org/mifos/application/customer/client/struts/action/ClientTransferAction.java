@@ -180,21 +180,22 @@ public class ClientTransferAction extends BaseAction {
 		SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 		return mapping.findForward(ActionForwards.update_success.toString());
 	}
+	private CustomerBusinessService getCustomerBusinessService()
+			throws ServiceException {
+		return (CustomerBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Customer);
+	}
 
+	private ClientBusinessService getClientBusinessService()
+			throws ServiceException {
+		return (ClientBusinessService) ServiceFactory.getInstance()
+				.getBusinessService(BusinessServiceName.Client);
+	}
 	private OfficeBusinessService getOfficelBusinessService()
 			throws ServiceException {
 		return (OfficeBusinessService) ServiceFactory.getInstance()
 				.getBusinessService(BusinessServiceName.Office);
 	}
 
-	private CustomerBusinessService getCustomerBusinessService()
-			throws ServiceException {
-		return (CustomerBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Customer);
-	}
-	
-	private ClientBusinessService getClientBusinessService()throws ServiceException {
-		return (ClientBusinessService) ServiceFactory.getInstance()
-				.getBusinessService(BusinessServiceName.Client);
-	}
+
 }

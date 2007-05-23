@@ -2,7 +2,6 @@ package org.mifos.application.customer;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 import org.mifos.application.customer.business.CustomerViewTest;
 import org.mifos.application.customer.business.TestCustomerBO;
@@ -20,6 +19,7 @@ import org.mifos.application.customer.client.struts.action.TestClientCustAction;
 import org.mifos.application.customer.group.business.GroupBOTest;
 import org.mifos.application.customer.group.business.service.GroupBusinessServiceTest;
 import org.mifos.application.customer.group.persistence.GroupPersistenceTest;
+import org.mifos.application.customer.group.struts.action.AddGroupMembershipActionTest;
 import org.mifos.application.customer.group.struts.action.GroupActionTest;
 import org.mifos.application.customer.group.struts.action.GroupTransferActionTest;
 import org.mifos.application.customer.persistence.TestCustomerPersistence;
@@ -54,6 +54,7 @@ public class CustomerTestSuite extends TestSuite {
 		testSuite.addTestSuite(CenterActionTest.class);
 		testSuite.addTestSuite(TestClientCustAction.class);
 		testSuite.addTestSuite(ClientTransferActionTest.class);
+		testSuite.addTestSuite(AddGroupMembershipActionTest.class);	
 		testSuite.addTestSuite(CustHistoricalDataActionTest.class);
 		testSuite.addTestSuite(GroupBusinessServiceTest.class);
 		testSuite.addTestSuite(GroupPersistenceTest.class);
@@ -67,6 +68,7 @@ public class CustomerTestSuite extends TestSuite {
 		testSuite.addTestSuite(TestCustSearchAction.class);
 		testSuite.addTestSuite(CustomerViewTest.class);
 		testSuite.addTestSuite(TestCustomerHelpers.class);
+
 		return testSuite;
 	}
 }

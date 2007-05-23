@@ -1,7 +1,7 @@
 <!--
 /**
 
-* confirmParentTransfer.jsp    version: 1.0
+* confirmAddClientToGroup.jsp    version: 1.0
 
 
 
@@ -53,11 +53,11 @@
 		<script language="javascript">
   
    function goToCancelPage(){
-	clientTransferActionForm.action="clientTransferAction.do?method=cancel";
-	clientTransferActionForm.submit();
+	addGroupMembershipForm.action="addGroupMembershipAction.do?method=cancel";
+	addGroupMembershipForm.submit();
   }
 </script>
-		<html-el:form action="clientTransferAction.do?method=updateParent"
+		<html-el:form action="addGroupMembershipAction.do?method=updateParent"
 			onsubmit="func_disableSubmitBtn('submitButton');">
 <html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 <c:set var="BusinessKey" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}"/>
@@ -78,7 +78,7 @@
 						<tr>
 							<td class="headingorange"><span class="heading"> <c:out
 								value="${BusinessKey.displayName}" /> - </span> <mifos:mifoslabel
-								name="client.EditLink" bundle="ClientUIResources"></mifos:mifoslabel>
+								name="client.Add" bundle="ClientUIResources"></mifos:mifoslabel>
 							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
 							<mifos:mifoslabel name="client.MembershipLink"
 								bundle="ClientUIResources"></mifos:mifoslabel> <span></span></td>
@@ -89,12 +89,12 @@
 								name="client.EditGroupInstructions1" bundle="ClientUIResources"></mifos:mifoslabel>
 							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel>
 							<mifos:mifoslabel name="client.EditGroupInstructions2"
-								bundle="ClientUIResources"></mifos:mifoslabel> <mifos:mifoslabel
-								name="${ConfigurationConstants.CLIENT}"></mifos:mifoslabel> <mifos:mifoslabel
+								bundle="ClientUIResources"></mifos:mifoslabel>
+              				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}"/> 
+  							<mifos:mifoslabel
 								name="client.EditGroupInstructions3" bundle="ClientUIResources"></mifos:mifoslabel>
 							<mifos:mifoslabel name="${ConfigurationConstants.GROUP}"></mifos:mifoslabel><br>
-							<mifos:mifoslabel name="meeting.msgUpdateMeeting" bundle="MeetingResources"/>
-							</td>
+						</td>
 
 						</tr>
 					</table>
@@ -105,7 +105,7 @@
 						<tr>
 							<td class="fontnormalbold"><span class="fontnormal"><br>
 							</span>Change Group Membership: <span class="fontnormal"><c:out
-								value="${sessionScope.clientTransferActionForm.parentGroupName}" /> <br>
+								value="${sessionScope.addGroupMembershipForm.parentGroupName}" /> <br>
 							</span></td>
 						</tr>
 					</table>

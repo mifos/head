@@ -17,6 +17,9 @@
 		</form-bean>
 		<form-bean name="groupCustActionForm" type="org.mifos.application.customer.group.struts.actionforms.GroupCustActionForm">
 		</form-bean>
+		<!-- Add group Membership Form -->
+		<form-bean name="addGroupMembershipForm" type="org.mifos.application.customer.group.struts.actionforms.AddGroupMembershipForm"/>
+
 	</form-beans>
 	<global-exceptions>
 		<exception type="org.mifos.framework.exceptions.SystemException"
@@ -85,6 +88,20 @@
 			<forward name="search_success" path="/pages/application/group/jsp/group_search_results.jsp" />
 			<forward name="search_failure" path="/pages/application/group/jsp/group_search.jsp" />
 		</action>
+  
+  	    <!-- Add group membership action -->
+		<action path="/addGroupMemberShipAction"
+		 type="org.mifos.application.customer.group.struts.action.AddGroupMembershipAction"
+		 name="addGroupMembershipForm"
+		 parameter="method" 
+		 input="/addGroupMemberShipAction.do?method=validate" 
+		 validate="true">
+			<forward name="loadSearch_success" path="/pages/application/group/jsp/group_search_addMember.jsp" />
+			<forward name="confirmAddClientToGroup_success" path="/pages/application/group/jsp/confirmAddClientToGroup.jsp" />
+     		<forward name="view_client_details_page" path="/clientCustAction.do?method=get" />			
+     		<forward name="cancel_success" path="/meetingAction.do?method=edit" />
+		</action>
+		
 	</action-mappings>
 	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
 		<set-property property="pathnames"

@@ -1,5 +1,6 @@
 package org.mifos.application.customer.business;
 
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -84,6 +85,7 @@ public class TestCustomerBO extends MifosTestCase {
 		TestObjectFactory.cleanUp(client);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
+	
 		TestObjectFactory.cleanUp(loanOfficer);
 		TestObjectFactory.cleanUp(createdBranchOffice);
 		HibernateUtil.closeSession();
@@ -113,24 +115,6 @@ public class TestCustomerBO extends MifosTestCase {
 		customerMeetingEntity.setUpdatedFlag(updatedFlag);
 	}
 
-	public void testClientHasAPerClientMandatorySavingsAcccount() 
-	throws Exception {
-		meeting = TestObjectFactory.createMeeting(TestObjectFactory
-				.getTypicalMeeting());
-		center = TestObjectFactory.createCenter("Center", meeting);
-		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-		client = TestObjectFactory.createClient("Client",
-				CustomerStatus.CLIENT_ACTIVE, group);
-		//accountBO = getLoanAccount(client, meeting);
-		HibernateUtil.closeSession();
-		/*ClientBO client1 = (ClientBO) HibernateUtil.getSessionTL().get(ClientBO.class,
-				client.getCustomerId());*/
-		boolean hasMandatory =
-			client.clientHasAPerClientMandatorySavingsAcccount();
-		assertEquals(false, hasMandatory);
-		TestObjectFactory.cleanUpChangeLog();
-	}
-	
 	public void testRemoveGroupMemberShip() throws Exception {
 		createInitialObjects();
 		client.setUserContext(TestUtils.makeUser());

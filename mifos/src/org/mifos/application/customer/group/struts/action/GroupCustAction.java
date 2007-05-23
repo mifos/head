@@ -367,6 +367,9 @@ public class GroupCustAction extends CustAction {
 		if ( actionForm.getInput()!=null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER))
 			return mapping.findForward(ActionForwards.transferSearch_success.toString());
 		else
+			if ( actionForm.getInput()!=null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_ADD_CLIENTS_TO_GROUPS))
+				return mapping.findForward(ActionForwards.addGroupSearch_success.toString());
+			else
 
 	 return actionForward;
 	}
@@ -524,7 +527,9 @@ public class GroupCustAction extends CustAction {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String method = (String) request.getAttribute("methodCalled");
+	
 		return mapping.findForward(method + "_failure");
+		
 	}
 	
 	private GroupBO createGroupWithoutCenter(GroupCustActionForm actionForm, HttpServletRequest request) throws Exception{

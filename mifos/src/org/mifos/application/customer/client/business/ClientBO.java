@@ -879,4 +879,40 @@ public class ClientBO extends CustomerBO {
 			this.update();
 
 	}
+	
+	public void validateBeforeAddingClientToGroup() throws CustomerException {
+		if (isClientCancelledOrClosed()) {
+			throw new CustomerException(
+					CustomerConstants.CLIENT_IS_CLOSED_OR_CANCELLED_EXCEPTION);
+		}
+		if (isAnyLoanAccountOpen()) {
+			throw new CustomerException(
+					CustomerConstants.CLIENT_HAVE_OPEN_LOAN_ACCOUNT_EXCEPTION);
+		}
+	}
+
+	private boolean isClientCancelledOrClosed() throws CustomerException {
+		return (getStatus() == CustomerStatus.CLIENT_CLOSED || getStatus() == CustomerStatus.CLIENT_CANCELLED) ? true
+				: false;
+	}
+	
+	public void addClientToGroup(GroupBO newParent) throws CustomerException {
+		validateAddClientToGroup(newParent);
+
+		if (!isSameBranch(newParent.getOffice()))
+			makeCustomerMovementEntries(newParent.getOffice());
+		addParentCustomer(newParent);
+		this.groupFlag = YesNoFlag.YES.getValue();
+		this.update();
+	}
+	private void validateAddClientToGroup(GroupBO toGroup)
+			throws CustomerException {
+
+		if (toGroup == null)
+			throw new CustomerException(CustomerConstants.INVALID_PARENT);
+		validateForGroupStatus(toGroup.getStatus());
+
+	}
+	
+
 }
