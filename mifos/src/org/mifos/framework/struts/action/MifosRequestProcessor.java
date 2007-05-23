@@ -84,6 +84,11 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 			short recordOffId = -1;
 			short recordLoOffId = -1;
 			try {
+				/* The null case is if one or both parameters was omitted.
+				   What's the difference
+				   between supplying these as parameters versus the
+				   UserContext, versus just using what is in
+				   the ActivityContext? */
 				if (recordOfficeId != null) {
 					recordOffId = Short.valueOf(recordOfficeId).shortValue();
 				}
@@ -96,12 +101,6 @@ public class MifosRequestProcessor extends TilesRequestProcessor {
 				throw new RuntimeException(e);
 			}
 			catch (NumberFormatException e) {
-				/* Can happen if one or both parameters was omitted.
-				 Do we want to allow this case?  (If so, we can
-				 check for it more cleanly).  What's the difference
-				 between supplying these as parameters versus the
-				 UserContext, versus just using what is in
-				 the ActivityContext? */
 				throw new RuntimeException(e);
 			}
 			if (recordOffId > 0 && recordLoOffId > 0) {
