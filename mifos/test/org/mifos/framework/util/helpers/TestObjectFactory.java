@@ -306,7 +306,8 @@ public class TestObjectFactory {
 		Short officeId, Short personnelId, List<FeeView> fees) {
 		CenterBO center;
 		try {
-			center = new CenterBO(getUserContext(), customerName, null, null,
+			center = new CenterBO(TestUtils.makeUserWithLocales(), 
+					customerName, null, null,
 					fees, null, null, officeId, meeting, personnelId);
 			center.save();
 			HibernateUtil.commitTransaction();
@@ -1403,7 +1404,7 @@ public class TestObjectFactory {
 	 * Also see {@link TestUtils#makeUser()} which should be faster (this
 	 * method involves several database accesses).
 	 */
-	public static UserContext getUserContext() 
+	private static UserContext getUserContext() 
 	throws SystemException, ApplicationException {
 		return getUserContext(HibernateUtil.getSessionTL());
 	}
