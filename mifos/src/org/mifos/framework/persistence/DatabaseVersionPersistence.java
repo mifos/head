@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class DatabaseVersionPersistence extends Persistence {
 
-	public static final int APPLICATION_VERSION = 118;
+	public static final int APPLICATION_VERSION = 119;
 	public static final int FIRST_NUMBERED_VERSION = 100;
 
 	public int read() throws SQLException {

@@ -409,5 +409,9 @@ public interface SecurityConstants {
 
     //Add Group MemberShip
     public final short CAN_ADD_CLIENTS_TO_GROUPS = 208;
-
+    
+    //Limiting product combination
+    public final short PRODUCT_MIX = 209;
+    public final short CAN_DEFINE_PRODUCT_MIX = 210;
+    public final short CAN_EDIT_PRODUCT_MIX = 211;
 }
