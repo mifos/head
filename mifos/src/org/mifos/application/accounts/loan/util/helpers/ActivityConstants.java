@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.mifos.application.accounts.loan.util.helpers;
 
 public class ActivityConstants {

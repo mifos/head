@@ -8,7 +8,6 @@ import org.mifos.framework.components.configuration.business.TestConfiguration;
 import org.mifos.framework.components.configuration.business.TestConfigurationKeyValueInteger;
 import org.mifos.framework.components.configuration.persistence.TestConfigurationPersistence;
 import org.mifos.framework.components.configuration.util.helpers.TestConfigurationIntializer;
-import org.mifos.framework.components.configuration.util.helpers.TestSystemConfig;
 
 public class ConfigurationTestSuite extends TestSuite {
 
@@ -20,7 +19,6 @@ public class ConfigurationTestSuite extends TestSuite {
 	{
 		TestSuite testSuite = new ConfigurationTestSuite();
 		testSuite.addTestSuite(TestConfigurationPersistence.class);
-		testSuite.addTestSuite(TestSystemConfig.class);
 		testSuite.addTestSuite(TestMifosCurrency.class);
 		testSuite.addTestSuite(TestConfigurationIntializer.class);
 		testSuite.addTestSuite(TestConfiguration.class);

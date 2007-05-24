@@ -12,7 +12,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
-public class TestFieldConfigImplementer extends MifosTestCase{
+public class FieldConfigTest extends MifosTestCase{
 	
 	private FieldConfigurationPersistence persistence =
 		new FieldConfigurationPersistence();

@@ -2095,5 +2095,7 @@ public class TestObjectFactory {
 				InterestCalcType.MINIMUM_BALANCE, 
 				meetingIntCalc, meetingIntPost);
 	}
+
+	public static final int SAMPLE_BUSINESS_ACTIVITY_2 = 2;
 	
 }

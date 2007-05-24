@@ -15,6 +15,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
@@ -54,12 +55,13 @@ public class TestAuditInterceptor extends MifosTestCase {
 	public void testUpdateLoanForLogging() throws Exception {
 		Date newDate = incrementCurrentDate(14);
 		accountBO = getLoanAccount();
-		accountBO.setUserContext(TestObjectFactory.getUserContext());
+		accountBO.setUserContext(TestUtils.makeUser());
 		HibernateUtil.getInterceptor().createInitialValueMap(accountBO);
 		LoanBO loanBO = ((LoanBO) accountBO);
 		((LoanBO) accountBO).updateLoan(false, loanBO.getLoanAmount(), loanBO
 				.getInterestRate(), loanBO.getNoOfInstallments(), newDate,
-				Short.valueOf("2"), Integer.valueOf("2"), "Added note", null,
+				(short)2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2, 
+				"Added note", null,
 				null);
 
 		HibernateUtil.commitTransaction();
@@ -92,16 +94,17 @@ public class TestAuditInterceptor extends MifosTestCase {
 
 	public void testAuditLogView() {
 		AuditLogView auditLogView = new AuditLogView();
-		long l = System.currentTimeMillis();
-		Date date = new Date(l);
+		long currentTime = System.currentTimeMillis();
+		Date date = new Date(currentTime);
 		auditLogView.setDate(date.toString());
 		auditLogView.setField("field");
 		auditLogView.setMfiLocale(new Locale("1"));
 		auditLogView.setNewValue("new value");
 		auditLogView.setOldValue("old value");
 		auditLogView.setUser("user");
-		assertEquals("value of date", new Date(l).toString(), auditLogView
-				.getDate());
+		assertEquals("value of date", 
+				new Date(currentTime).toString(), 
+				auditLogView.getDate());
 		assertEquals("value of field", "field", auditLogView.getField());
 		assertEquals("value of Locale", new Locale("1"), auditLogView
 				.getMfiLocale());

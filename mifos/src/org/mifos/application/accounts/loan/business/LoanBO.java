@@ -116,7 +116,9 @@ import org.mifos.framework.components.configuration.business.Configuration;
 import org.mifos.framework.components.logger.LoggerConstants;
 import org.mifos.framework.components.logger.MifosLogManager;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.security.util.ActivityMapper;
 import org.mifos.framework.security.util.UserContext;
+import org.mifos.framework.security.util.resources.SecurityConstants;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -153,6 +155,12 @@ public class LoanBO extends AccountBO {
 
 	private FundBO fund;
 
+	/**
+	   Is this used?  Is it related to the activity IDs in places
+	   like
+	   {@link ActivityMapper#SAVING_CANCHANGESTATETO_PARTIALAPPLICATION} 
+	   or {@link SecurityConstants#FUNDS_CREATE_FUNDS} ?
+	 */
 	private Integer businessActivityId;
 
 	private CollateralTypeEntity collateralType;

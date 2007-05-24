@@ -1,8 +1,7 @@
 package org.mifos.framework.util.helpers;
 
-import java.net.URISyntaxException;
-
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.security.util.ActivityContext;
 import org.mifos.framework.security.util.UserContext;
 
@@ -20,7 +19,7 @@ public class FlowManagerHelperTest extends MifosMockStrutsTestCase {
 		setConfigFile(ResourceLoader.getURI(
 				"org/mifos/application/fees/struts-config.xml")
 				.getPath());
-		UserContext userContext = TestObjectFactory.getUserContext();
+		UserContext userContext = TestUtils.makeUserWithLocales();
 		request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
 		addRequestParameter("recordLoanOfficerId", "1");
 		addRequestParameter("recordOfficeId", "1");
@@ -40,17 +39,19 @@ public class FlowManagerHelperTest extends MifosMockStrutsTestCase {
 	}
 
 	public void testGetFlow() {
-		FlowManager fm = (FlowManager) SessionUtils.getAttribute(
+		FlowManager manager = (FlowManager) SessionUtils.getAttribute(
 				Constants.FLOWMANAGER, request.getSession());
-		Flow flow = (Flow)flowManagerHelper.getFlow(fm, flowKey);
+		Flow flow = (Flow)flowManagerHelper.getFlow(manager, flowKey);
 		assertEquals("test", (String)flow.getObjectFromSession("test"));
 	}
 
 	public void testGetFlowFlowManagerString() {
-		FlowManager fm = (FlowManager) SessionUtils.getAttribute(
+		FlowManager manager = (FlowManager) SessionUtils.getAttribute(
 				Constants.FLOWMANAGER, request.getSession());
-		assertEquals("test", (String)flowManagerHelper.getFlow(fm, flowKey, "test"));
+		assertEquals(
+			"test", 
+			(String)flowManagerHelper.getFlow(manager, flowKey, "test"));
 		addRequestParameter(Constants.CURRENTFLOWKEY, "");
-		assertNull(flowManagerHelper.getFlow(fm, null, "test"));
+		assertNull(flowManagerHelper.getFlow(manager, null, "test"));
 	}
 }

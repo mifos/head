@@ -798,7 +798,8 @@ public class TestLoanBO extends MifosTestCase {
 		LoanBO loanBO = ((LoanBO) accountBO);
 		((LoanBO) accountBO).updateLoan(false, loanBO.getLoanAmount(), loanBO
 				.getInterestRate(), loanBO.getNoOfInstallments(), newDate,
-				Short.valueOf("2"), Integer.valueOf("2"), "Added note", null,
+				(short)2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2, 
+				"Added note", null,
 				null);
 		HibernateUtil.commitTransaction();
 		HibernateUtil.closeSession();

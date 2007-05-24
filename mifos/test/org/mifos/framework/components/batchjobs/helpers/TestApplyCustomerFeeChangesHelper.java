@@ -24,6 +24,7 @@ import org.mifos.application.fees.util.helpers.FeeStatus;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.framework.MifosTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.util.helpers.Money;
@@ -72,7 +73,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestObjectFactory.getUserContext());
+		trainingFee.setUserContext(TestUtils.makeUser());
 		((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory
 				.getMoneyForMFICurrency("5"));
 		trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
@@ -127,7 +128,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestObjectFactory.getUserContext());
+		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
 		trainingFee.updateStatus(FeeStatus.INACTIVE);
 
@@ -179,7 +180,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestObjectFactory.getUserContext());
+		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee
 				.updateFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED);
 		((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory
@@ -221,13 +222,13 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		accountPeriodicFee.setFeeStatus(FeeStatus.INACTIVE);
 		accountFeeSet.add(accountPeriodicFee);
 		trainingFee.updateStatus(FeeStatus.INACTIVE);
-		trainingFee.setUserContext(TestObjectFactory.getUserContext());
+		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee.update();
 		TestObjectFactory.flushandCloseSession();
 
 		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestObjectFactory.getUserContext());
+		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee.updateFeeChangeType(FeeChangeType.STATUS_UPDATED);
 		trainingFee.updateStatus(FeeStatus.ACTIVE);
 		trainingFee.update();
@@ -262,13 +263,13 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 		accountPeriodicFee.setFeeStatus(FeeStatus.INACTIVE);
 		accountFeeSet.add(accountPeriodicFee);
 		trainingFee.updateStatus(FeeStatus.INACTIVE);
-		trainingFee.setUserContext(TestObjectFactory.getUserContext());
+		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee.update();
 		TestObjectFactory.flushandCloseSession();
 
 		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestObjectFactory.getUserContext());
+		trainingFee.setUserContext(TestUtils.makeUserWithLocales());
 		trainingFee
 				.updateFeeChangeType(FeeChangeType.AMOUNT_AND_STATUS_UPDATED);
 		trainingFee.updateStatus(FeeStatus.ACTIVE);
@@ -337,7 +338,7 @@ public class TestApplyCustomerFeeChangesHelper extends MifosTestCase {
 
 		trainingFee = (FeeBO) HibernateUtil.getSessionTL().get(FeeBO.class,
 				trainingFee.getFeeId());
-		trainingFee.setUserContext(TestObjectFactory.getUserContext());
+		trainingFee.setUserContext(TestUtils.makeUser());
 		((AmountFeeBO) trainingFee).setFeeAmount(TestObjectFactory
 				.getMoneyForMFICurrency("5"));
 		trainingFee.updateFeeChangeType(FeeChangeType.AMOUNT_UPDATED);
