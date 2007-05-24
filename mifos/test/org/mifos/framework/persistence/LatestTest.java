@@ -82,7 +82,7 @@ public class LatestTest extends TestCase {
 	throws SQLException, IOException {
 	    Connection conn = database.openConnection();
 	    DatabaseVersionPersistence persistence = 
-	    	new DatabaseVersionPersistence() {
+	    	new DatabaseVersionPersistence(conn) {
 		    	@Override
 		    	URL lookup(String name) {
 		    		try {
@@ -92,7 +92,7 @@ public class LatestTest extends TestCase {
 					}
 		    	}
 		    };	    
-	    int version  = persistence.read(conn);
+	    int version  = persistence.read();
 	    assertEquals(FIRST_NUMBERED_VERSION, version);
 	    List<Upgrade> scripts = persistence.scripts(
 	    	APPLICATION_VERSION, version);
@@ -130,12 +130,11 @@ public class LatestTest extends TestCase {
 	throws Exception {
 		Database database = new Database(current);
 		String before = new SqlDumper(false).dump(database.dataStore());
-		new SqlUpgrade(null).execute(
+		new SqlUpgrade(null, nextVersion).execute(
 			new FileInputStream("sql/upgrade_to_" + nextVersion + ".sql"), 
 			database.openConnection());
 		DataStore upgraded = database.dataStore();
-		new SqlUpgrade(null).execute(
-			new FileInputStream("sql/downgrade_from_" + nextVersion + ".sql"), 
+		new SqlUpgrade(null, nextVersion).downgrade(
 			database.openConnection());
 		String after = new SqlDumper(false).dump(database.dataStore());
 		assertEquals(before, after);

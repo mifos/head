@@ -109,7 +109,7 @@ public class ApplicationInitializer implements ServletContextListener {
 	 * Initializes Hibernate by making it read the hibernate.cfg file and also
 	 * setting the same with hibernate session factory.
 	 */
-	private void initializeHibernate()
+	public static void initializeHibernate()
 			throws AppNotConfiguredException {
 		try {
 			String hibernatePropertiesPath = FilePaths.HIBERNATE_PROPERTIES;

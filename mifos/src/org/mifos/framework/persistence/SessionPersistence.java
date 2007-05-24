@@ -31,9 +31,6 @@ public abstract class SessionPersistence {
 	
 	public SessionPersistence(SessionHolder sessionHolder) {
 		this.sessionHolder = sessionHolder;
-		if (sessionHolder == null) {
-			throw new NullPointerException("session holder is required");
-		}
 	}
 	
 	public SessionPersistence() {

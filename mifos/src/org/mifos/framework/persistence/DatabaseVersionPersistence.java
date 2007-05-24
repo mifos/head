@@ -10,19 +10,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * This doesn't inherit from SessionPersistence until we can
- * figure out how to make tests like LatestTest work without
- * the mifos logger set up (the difference has to do with
- * when/whether the AuditInterceptor, which wants a logger,
- * gets set up).  To make things confusing, LatestTest will
- * work if run as part of ApplicationTestSuite (because other
- * tests have set up logging).
- */
-public class DatabaseVersionPersistence extends Persistence {
+import org.mifos.framework.hibernate.helper.HibernateUtil;
+
+public class DatabaseVersionPersistence {
 
 	public static final int APPLICATION_VERSION = 119;
 	public static final int FIRST_NUMBERED_VERSION = 100;
+
+	private final Connection connection;
+	
+	public DatabaseVersionPersistence() {
+		this(HibernateUtil.getOrCreateSessionHolder().getSession().connection());
+	}
+
+	public DatabaseVersionPersistence(Connection connection) {
+		this.connection = connection;
+	}
+	
+	private Connection getConnection() {
+		return connection;
+	}
 
 	public int read() throws SQLException {
 		return read(getConnection());
@@ -115,13 +122,26 @@ public class DatabaseVersionPersistence extends Persistence {
 					location);
 		}
 		else {
-			upgrade = new SqlUpgrade(url);
+			upgrade = new SqlUpgrade(url, higherVersion);
 		}
 		return upgrade;
 	}
 
 	URL lookup(String name) {
 		return getClass().getResource(name);
+	}
+
+	public List<Upgrade> downgrades(
+		int downgradeTo, int databaseVersion) {
+		List<Upgrade> downgrades = new ArrayList<Upgrade>();
+		for (int i = databaseVersion; i > downgradeTo; --i) {
+			downgrades.add(new SqlUpgrade(null, i));
+		}
+		return Collections.unmodifiableList(downgrades);
+	}
+	
+	public List<Upgrade> downgrades(int downgradeTo) throws SQLException {
+		return downgrades(downgradeTo, read());
 	}
 
 	void execute(Upgrade upgrade, Connection conn) throws IOException, SQLException {

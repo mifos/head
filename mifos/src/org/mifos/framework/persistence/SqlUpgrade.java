@@ -1,6 +1,7 @@
 package org.mifos.framework.persistence;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,11 +17,11 @@ public class SqlUpgrade extends Upgrade {
 
 	private final URL script;
 
-	public SqlUpgrade(URL sqlScript) {
+	public SqlUpgrade(URL sqlScript, int higherVersion) {
+		super(higherVersion);
 		this.script = sqlScript;
 	}
 	
-	@Override
 	public URL sql() {
 		return script;
 	}
@@ -30,6 +31,14 @@ public class SqlUpgrade extends Upgrade {
 		InputStream in = sql().openStream();
 		execute(in, conn);
 		in.close();
+	}
+	
+	@Override
+	public void downgrade(Connection conn) throws IOException, SQLException {
+		execute(
+			new FileInputStream(
+				"sql/downgrade_from_" + higherVersion() + ".sql"),
+			conn);
 	}
 	
 	void execute(InputStream stream, Connection conn) throws SQLException {
@@ -97,5 +106,5 @@ public class SqlUpgrade extends Upgrade {
 	    	throw new RuntimeException(e);
 	    }
 	}
-
+	
 }

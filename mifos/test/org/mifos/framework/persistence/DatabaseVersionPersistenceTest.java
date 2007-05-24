@@ -1,5 +1,10 @@
 package org.mifos.framework.persistence;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,32 +16,35 @@ import java.sql.Statement;
 import java.util.List;
 
 import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
+import junit.framework.JUnit4TestAdapter;
 import junitx.framework.ObjectAssert;
 import net.sourceforge.mayfly.Database;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.mifos.framework.TestDatabase;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
-public class DatabaseVersionPersistenceTest extends TestCase {
+public class DatabaseVersionPersistenceTest {
 	
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		DatabaseSetup.configureLogging();
 		DatabaseSetup.initializeHibernate();
 	}
 
-	public void testRead() throws Exception {
+	@Test public void read() throws Exception {
 		new DatabaseVersionPersistence().read();
 	}
 	
-	public void testReadSuccess() throws Exception {
+	@Test public void readSuccess() throws Exception {
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
 		new DatabaseVersionPersistence().read(database.openConnection());
 	}
 	
-	public void testReadTwoRows() throws Exception {
+	@Test public void readTwoRows() throws Exception {
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		database.execute("insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(53)");
@@ -50,7 +58,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		}
 	}
 	
-	public void testReadNoRows() throws Exception {
+	@Test public void readNoRows() throws Exception {
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
 		try {
@@ -62,7 +70,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		}
 	}
 	
-	public void testReadNoTable() throws Exception {
+	@Test public void readNoTable() throws Exception {
 		/* This is the case where the user has an old database (from before
 		   version 100).  They will need to upgrade to 100 manually.  */
 		Database database = new Database();
@@ -74,34 +82,36 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		}
 	}
 	
-	public void testWrite() throws Exception {
+	@Test public void write() throws Exception {
 		new DatabaseVersionPersistence().write(77);
 		assertEquals(77, 
 			new DatabaseVersionPersistence().read());
 	}
 
-	public void testIsVersioned() throws Exception {
+	@Test public void isVersioned() throws Exception {
 		assertTrue(new DatabaseVersionPersistence().isVersioned());
 	}
 	
-	/* not repeatable
-	public void testNotIsVersioned() throws Exception {
-		DatabaseVersionPersistence dvp = new DatabaseVersionPersistence();
-		Connection c =  dvp.getConnection();
-		c.createStatement().executeUpdate("drop table DATABASE_VERSION");
-		c.commit();
-		assertFalse(new DatabaseVersionPersistence().isDBVersioned());
+	@Test public void isNotVersioned() throws Exception {
+		Database database = TestDatabase.makeDatabase();
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence(database.openConnection());
+		assertFalse(persistence.isVersioned());
 		
+		database.execute(
+			"create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
+		database.execute(
+			"insert into DATABASE_VERSION(DATABASE_VERSION) VALUES(43)");
+		assertTrue(persistence.isVersioned());
 	}
-	*/
 	
-	public void testNoUpgrade() throws Exception {
+	@Test public void noUpgrade() throws Exception {
 		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
 		List<Upgrade> scripts = persistence.scripts(88, 88);
 		assertEquals(0, scripts.size());
 	}
 
-	public void testUpgrade() throws Exception {
+	@Test public void upgrade() throws Exception {
 		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence() {
 			@Override
 			URL lookup(String name) {
@@ -120,14 +130,16 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		};
 		List<Upgrade> scripts = persistence.scripts(90, 88);
 		assertEquals(2, scripts.size());
-		assertEquals("upgrade_to_89.sql", scripts.get(0).sql().getPath());
-		assertEquals("upgrade_to_90.sql", scripts.get(1).sql().getPath());
+		assertEquals("upgrade_to_89.sql", 
+			((SqlUpgrade) scripts.get(0)).sql().getPath());
+		assertEquals("upgrade_to_90.sql", 
+			((SqlUpgrade) scripts.get(1)).sql().getPath());
 	}
 
 	/*
 	Like the above test, but with files instead of overriding lookup.
 	
-	public void testUpgradeWithFile() throws Exception {
+	@Test public void testUpgradeWithFile() throws Exception {
 		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
 		URL[] scripts = persistence.scripts(90, 88);
 		assertEquals(2, scripts.length);
@@ -136,8 +148,9 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 	}
 	*/
 
-	public void testDowngrade() throws Exception {
-		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
+	@Test public void detectDowngrade() throws Exception {
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence();
 		try {
 			persistence.scripts(87, 88);
 			fail();
@@ -149,13 +162,31 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		}
 	}
 	
-	public void testReadEmpty() throws Exception {
+	@Test public void downgradeScripts() throws Exception {
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence();
+		List<Upgrade> upgrades = persistence.downgrades(87, 88);
+		assertEquals(1, upgrades.size());
+		SqlUpgrade first = (SqlUpgrade) upgrades.get(0);
+		assertEquals(88, first.higherVersion());
+	}
+	
+	@Test public void downgradesInOrderOfExecution() throws Exception {
+		DatabaseVersionPersistence persistence = 
+			new DatabaseVersionPersistence();
+		List<Upgrade> upgrades = persistence.downgrades(86, 88);
+		assertEquals(2, upgrades.size());
+		assertEquals(88, ((SqlUpgrade) upgrades.get(0)).higherVersion());
+		assertEquals(87, ((SqlUpgrade) upgrades.get(1)).higherVersion());
+	}
+	
+	@Test public void readEmpty() throws Exception {
 		String[] sqlStatements = SqlUpgrade.readFile(
 						new ByteArrayInputStream(new byte[0]));
 		assertEquals(0, sqlStatements.length);
 	}
 
-	public void testBadUtf8() throws Exception {
+	@Test public void badUtf8() throws Exception {
 		try {
 			SqlUpgrade.readFile(
 					new ByteArrayInputStream(new byte[] { (byte)0x80 }));
@@ -166,7 +197,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		}
 	}
 	
-	public void testGoodUtf8() throws Exception {
+	@Test public void goodUtf8() throws Exception {
 		String[] sqlStatements = SqlUpgrade.readFile(
 				new ByteArrayInputStream(new byte[] {
 						(byte)0xe2, (byte)0x82, (byte)0xac }));
@@ -175,8 +206,8 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		assertEquals("\n\u20AC", euroSign);
 	}
 
-	public void testExecuteStream() throws Exception {
-		SqlUpgrade persistence = new SqlUpgrade(null);
+	@Test public void executeStream() throws Exception {
+		SqlUpgrade persistence = new SqlUpgrade(null, -1);
 		Connection conn = new Database().openConnection();
 		byte[] sql = (
 				"create table FOO(DATABASE_VERSION INTEGER);\n"+
@@ -189,7 +220,7 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		readOneValueFromFoo(conn);
 	}
 
-	public void testUpgradeDatabase() throws Exception {
+	@Test public void upgradeDatabase() throws Exception {
 		DatabaseVersionPersistence persistence = new DatabaseVersionPersistence();
 		Database database = new Database();
 		database.execute("create table DATABASE_VERSION(DATABASE_VERSION INTEGER)");
@@ -213,4 +244,8 @@ public class DatabaseVersionPersistenceTest extends TestCase {
 		statement.close();
 	}
 	
+	public static junit.framework.Test suite() {
+		return new JUnit4TestAdapter(DatabaseVersionPersistenceTest.class);
+	}
+
 }

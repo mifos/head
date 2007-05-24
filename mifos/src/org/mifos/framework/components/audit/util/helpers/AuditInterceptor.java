@@ -67,13 +67,11 @@ public class AuditInterceptor implements Interceptor {
 
 	private AuditLog auditLog;
 	private InterceptHelper interceptHelper;
-	private MifosLogger logger;
 	private UserContext userContext;
 	private Boolean flag=false;
 
 
 	public AuditInterceptor() {
-		logger = MifosLogManager.getLogger(LoggerConstants.AUDITLOGGER);
 		interceptHelper = new InterceptHelper();
 	}
 
@@ -83,8 +81,6 @@ public class AuditInterceptor implements Interceptor {
 	}
 	
 	public void createChangeValueMap(Object object){
-		logger.debug("createChangeValueMap  enity name : "+interceptHelper.getEntityName());
-		logger.debug("createChangeValueMap class: "+object.getClass().getName());
 		if(interceptHelper.getEntityName().equals(AuditConfigurtion.getEntityToClassPath(object.getClass().getName())))
 			interceptHelper.hibernateMeta(object,AuditConstants.TRANSACTIONEND);
 	}
@@ -157,7 +153,6 @@ public class AuditInterceptor implements Interceptor {
 				&& interceptHelper.getInitialValueMap().size() > 0) || 
 				(interceptHelper.getChangeValueMap() != null
 						&& interceptHelper.getChangeValueMap().size() > 0))) {
-			logger.debug("After transaction completion");
 			auditLog = new AuditLog(interceptHelper.getEntityId(), EntityType
 					.getEntityValue(interceptHelper.getEntityName().toUpperCase()),
 					userContext.getName(),
@@ -185,10 +180,6 @@ public class AuditInterceptor implements Interceptor {
 					||(key.toString()).toLowerCase().contains(AuditConstants.LOOKUPID)){
 				continue;
 			}
-			logger.debug("Key: "+key);
-			logger.debug("Column Name : " +interceptHelper.getPropertyName(key));
-			logger.debug("Initial Value : " + interceptHelper.getInitialValue(key));
-			logger.debug("New  Value : " + interceptHelper.getChangeValue(key));
 			if (interceptHelper.getInitialValue(key)  != null 
 					&& !interceptHelper.getInitialValue(key).toString().trim().equals("")
 					&& interceptHelper.getChangeValue(key) == null 

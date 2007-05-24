@@ -128,7 +128,7 @@ public class ApplicationTestSuite extends TestSuite {
 		suite.addTest(StrutsTestSuite.suite());
 
 		suite.addTestSuite(HibernateTest.class);
-		suite.addTestSuite(DatabaseVersionPersistenceTest.class);
+		suite.addTest(DatabaseVersionPersistenceTest.suite());
 		suite.addTestSuite(LatestTest.class);
 		suite.addTestSuite(MayflyMiscTest.class);
 
