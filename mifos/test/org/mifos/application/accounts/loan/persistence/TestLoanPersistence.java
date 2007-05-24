@@ -55,23 +55,27 @@ public class TestLoanPersistence extends MifosTestCase {
 
 	AccountBO loanAccountForDisbursement = null;
 
+	LoanBO badAccount;
+	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		loanPersistence = new LoanPersistence();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenter("Center", meeting);
+		center = TestObjectFactory.createCenterForTestGetLoanAccountsInActiveBadStanding("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-
+		
 		loanAccount = getLoanAccount(group, meeting);
-
+		
+	    badAccount = getBadAccount();
 	}
 
 	@Override
 	public void tearDown() throws Exception {
 
 		TestObjectFactory.cleanUp(loanAccount);
+		TestObjectFactory.cleanUp(badAccount);
 		TestObjectFactory.cleanUp(loanAccountForDisbursement);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
@@ -287,5 +291,40 @@ public class TestLoanPersistence extends MifosTestCase {
 		loanOfferingBO.save();
 		return loanOfferingBO;
 	}
+	
+	private LoanBO getBadAccount() {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loanabcd", "abcd", ApplicableTo.CLIENTS, 
+				startDate, PrdStatus.LOAN_ACTIVE, 
+				300.0, 1.2, (short)3, 
+				InterestType.FLAT, true, true,
+				meeting);
+		return TestObjectFactory.createLoanAccount("42423142323", group,
+				AccountState.LOANACC_BADSTANDING, 
+				startDate, loanOffering);
+	}
 
+	public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchId() throws Exception {
+		short branchId = 3;
+		List<LoanBO> loanList = loanPersistence.getLoanAccountsInActiveBadStanding(branchId,null,null);
+		assertEquals(1,loanList.size());
+	}
+	
+	
+	public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchIdAndLoanOfficerId() throws Exception {
+		short branchId = 3;
+		short loanOfficerId = 3;
+		List<LoanBO> loanList = loanPersistence.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,null);
+		assertEquals(1,loanList.size());
+		
+	}
+	public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchIdLoanOfficerIdAndLoanProductId() throws Exception {
+		short branchId = 3;
+		short loanOfficerId = 3;
+		short loanProductId = badAccount.getLoanOffering().getPrdOfferingId() ;
+		List<LoanBO> loanList = loanPersistence.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,loanProductId);
+		assertEquals(1,loanList.size());
+		
+	}
 }

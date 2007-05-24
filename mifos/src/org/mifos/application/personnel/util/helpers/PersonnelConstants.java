@@ -200,5 +200,6 @@ public interface PersonnelConstants {
 	 * specify this user.
 	 */
 	public static final Short SYSTEM_USER = 1;
+	public static final Short TEST_USER = 3;
 
 }

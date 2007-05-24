@@ -275,6 +275,10 @@ public class TestObjectFactory {
 		String customerName, MeetingBO meeting) {
 		return createCenter(customerName, meeting, getFees());
 	}
+	public static CenterBO createCenterForTestGetLoanAccountsInActiveBadStanding(
+			String customerName, MeetingBO meeting) {
+		return createCenterForTestGetLoanAccountsInActiveBadStanding(customerName, meeting, getFees());
+	}
 
 	public static CenterBO createCenter(String customerName, MeetingBO meeting,
 			Short officeId, Short personnelId) {
@@ -288,6 +292,13 @@ public class TestObjectFactory {
 		return createCenter(customerName, meeting, 
 			SAMPLE_BRANCH_OFFICE, PersonnelConstants.SYSTEM_USER,
 			fees);
+	}
+	public static CenterBO createCenterForTestGetLoanAccountsInActiveBadStanding(String customerName, 
+			MeetingBO meeting,
+			List<FeeView> fees) {
+		return createCenter(customerName, meeting, 
+				SAMPLE_BRANCH_OFFICE, PersonnelConstants.TEST_USER,
+				fees);
 	}
 
 	public static CenterBO createCenter(
@@ -344,6 +355,13 @@ public class TestObjectFactory {
 				parentCustomer);
 	}
 
+	public static GroupBO createGroupUnderCenterForTestGetLoanAccountsInActiveBadStanding(String customerName,
+			CustomerStatus customerStatus, CustomerBO parentCustomer) {
+		Short formedBy = PersonnelConstants.TEST_USER;
+		return createGroupUnderCenter(customerName, customerStatus, null,
+				false, null, null, getCustomFields(), getFees(), formedBy,
+				parentCustomer);
+	}
 	public static GroupBO createGroupUnderCenter(String customerName,
 			CustomerStatus customerStatus, String externalId, boolean trained,
 			Date trainedDate, Address address,

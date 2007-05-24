@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.accounts.business.AccountActionDateEntity;
@@ -191,5 +192,22 @@ public class LoanPersistence extends Persistence {
 			return (Money) obj;
 		}
 		return null;
+	}
+	public List<LoanBO> getLoanAccountsInActiveBadStanding(Short branchId, Short loanOfficerId, Short loanProductId) throws PersistenceException {
+		StringBuilder queryString = new StringBuilder("from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 9");
+		if (loanOfficerId != null){
+		queryString.append(" and loan.personnel.personnelId = " + loanOfficerId);
+		}
+		if (loanProductId != null){
+		queryString.append(" and loan.loanOffering.prdOfferingId = " + loanProductId);
+		}
+		queryString.append(" and loan.office.officeId = " + branchId);
+		try {
+		Session session = HibernateUtil.getSessionTL();
+		Query query = session.createQuery(queryString.toString());
+		return query.list();
+		} catch (Exception e) {
+		throw new PersistenceException(e);
+		}
 	}
 }
