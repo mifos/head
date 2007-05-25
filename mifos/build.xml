@@ -381,6 +381,10 @@
             classpathref="class.path"
             fork="yes" failonerror="yes">
             <arg value="${downgrade.to}"/>
+        	<arg value="jdbc:mysql://${db.ip}:${db.port}/${db.name}" />
+        	<arg value="${db.driver}" />
+        	<arg value="${db.user}"/>
+        	<arg value="${db.pwd}"/>
         </java>
 	</target>
 

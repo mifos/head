@@ -5,49 +5,67 @@ import static org.mifos.framework.persistence.DatabaseVersionPersistence.FIRST_N
 
 import java.io.PrintStream;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.List;
 
-import org.apache.log4j.BasicConfigurator;
-import org.mifos.framework.ApplicationInitializer;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
-
 public class Downgrader {
-
+	
 	public static void main(String[] args) throws Exception {
-		System.out.print("This probably isn't working yet.");
-		BasicConfigurator.configure();
-		ApplicationInitializer.initializeHibernate();
-//		HibernateStartUp.initialize(FilePaths.HIBERNATE_PROPERTIES);
-		new Downgrader()
-			.run(args, System.out, 
-				HibernateUtil.getOrCreateSessionHolder()
-					.getSession().connection());
+		Downgrader downgrader = new Downgrader();
+		downgrader.parse(args);
+		downgrader.run(System.out);
 	}
 
-	public void run(String[] args, PrintStream out, Connection connection) 
-	throws Exception {
-		if (args.length == 0) {
-			out.print("Missing argument for what version to downgrade to.\n");
+	String error;
+	
+	int downgradeTo;
+	
+	String jdbcUrl;
+	String driver;
+	String username;
+	String password;
+	
+	public void parse(String[] args) {
+		if (args.length < 5) {
+			error = "Too few arguments.\n" +
+				"Should be: downgradeTo jdbcUrl driver user password\n";
 		}
-		else if (args.length == 1) {
+		else if (args.length == 5) {
 			String argument = args[0];
-			int downgradeTo;
 			try {
 				downgradeTo = Integer.parseInt(argument);
 			}
 			catch (NumberFormatException e) {
-				out.print("Argument " + argument + " is not a number.\n");
+				this.error = "Argument " + argument + " is not a number.\n";
 				return;
 			}
-			run(downgradeTo, out, connection);
+			
+			jdbcUrl = args[1];
+			driver = args[2];
+			username = args[3];
+			password = args[4];
 		}
 		else {
-			out.print("Excess argument " + args[1] + ".\n");
+			this.error = "Excess argument " + args[5] + ".\n";
 		}
 	}
 
-	private void run(int downgradeTo, PrintStream out, Connection connection) 
+	private void run(PrintStream out) throws Exception {
+		run(out, openConnection());
+	}
+
+	Connection openConnection() throws Exception {
+		Class.forName(driver);
+		return DriverManager.getConnection(jdbcUrl, username, password);
+	}
+
+	public void run(PrintStream out, Connection connection) 
 	throws Exception {
+		if (error != null) {
+			out.print(error);
+			return;
+		}
+		
 		if (downgradeTo < FIRST_NUMBERED_VERSION) {
 			out.print("Attempt to downgrade to " + downgradeTo + 
 				" which is before " + FIRST_NUMBERED_VERSION + ".\n");
