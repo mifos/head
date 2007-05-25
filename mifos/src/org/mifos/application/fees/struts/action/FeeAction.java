@@ -102,19 +102,19 @@ public class FeeAction extends BaseAction {
 	
 	public static ActionSecurity getSecurity() {
 		ActionSecurity security = new ActionSecurity("feeaction");
-		security.allow("/feeaction-search", SecurityConstants.VIEW);
-		security.allow("/feeaction-load", SecurityConstants.FEES_CREATE_FEES);
-		security.allow("/feeaction-preview", SecurityConstants.VIEW);
-		security.allow("/feeaction-editPreview", SecurityConstants.VIEW);
-		security.allow("/feeaction-create", SecurityConstants.FEES_CREATE_FEES);
-		security.allow("/feeaction-get", SecurityConstants.VIEW);
-		security.allow("/feeaction-manage", SecurityConstants.FEES_EDIT_FEES);
-		security.allow("/feeaction-update", SecurityConstants.FEES_EDIT_FEES);
-		security.allow("/feeaction-previous", SecurityConstants.VIEW);
-		security.allow("/feeaction-editPrevious", SecurityConstants.VIEW);
-		security.allow("/feeaction-viewAll", SecurityConstants.VIEW);
-		security.allow("/feeaction-cancelCreate", SecurityConstants.VIEW);
-		security.allow("/feeaction-cancelEdit", SecurityConstants.VIEW);
+		security.allow("search", SecurityConstants.VIEW);
+		security.allow("load", SecurityConstants.FEES_CREATE_FEES);
+		security.allow("preview", SecurityConstants.VIEW);
+		security.allow("editPreview", SecurityConstants.VIEW);
+		security.allow("create", SecurityConstants.FEES_CREATE_FEES);
+		security.allow("get", SecurityConstants.VIEW);
+		security.allow("manage", SecurityConstants.FEES_EDIT_FEES);
+		security.allow("update", SecurityConstants.FEES_EDIT_FEES);
+		security.allow("previous", SecurityConstants.VIEW);
+		security.allow("editPrevious", SecurityConstants.VIEW);
+		security.allow("viewAll", SecurityConstants.VIEW);
+		security.allow("cancelCreate", SecurityConstants.VIEW);
+		security.allow("cancelEdit", SecurityConstants.VIEW);
 		return security;
 	}
 
