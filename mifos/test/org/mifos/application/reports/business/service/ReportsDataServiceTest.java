@@ -1,8 +1,17 @@
 package org.mifos.application.reports.business.service;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.TestCase;
+
+import org.mifos.application.accounts.loan.business.LoanBO;
+import org.mifos.application.accounts.loan.persistance.LoanPersistence;
 import org.mifos.application.office.business.OfficeBO;
 import org.mifos.application.office.business.service.OfficeBusinessService;
 import org.mifos.application.personnel.business.PersonnelBO;
@@ -10,9 +19,6 @@ import org.mifos.application.personnel.business.service.PersonnelBusinessService
 import org.mifos.application.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.framework.exceptions.ServiceException;
-
-import junit.framework.TestCase;
-import static org.easymock.classextension.EasyMock.*;
 
 public class ReportsDataServiceTest extends TestCase {
 	private LoanPrdBusinessService loanPrdBusinessServiceMock;
@@ -27,11 +33,17 @@ public class ReportsDataServiceTest extends TestCase {
 
 	private OfficeBusinessService officeBusinessServiceMock;
 
+	private LoanPersistence loanPersistenceMock;
+	
 	private PersonnelBO personnelMock;
 
 	private ServiceException expectedException;
 
 	private Short branchId;
+
+	private Short loanOfficerId;
+	
+	private Short loanProductId;
 
 	@Override
 	protected void setUp() throws Exception {
@@ -39,18 +51,22 @@ public class ReportsDataServiceTest extends TestCase {
 		personnelBusinessServiceMock = createMock(PersonnelBusinessService.class);
 		officeBusinessServiceMock = createMock(OfficeBusinessService.class);
 		personnelMock = createMock(PersonnelBO.class);
-
+		loanPersistenceMock = createMock(LoanPersistence.class);
+		
 		expectedException = new ServiceException("someServiceException");
 
 		userId = 1;
 		branchId = 2;
 		localeId = 3;
+		loanOfficerId =3;
+		loanProductId =4;
 
 		reportsDataService = new ReportsDataService();
 		reportsDataService.setLoanPrdBusinessService(loanPrdBusinessServiceMock);
 		reportsDataService.setPersonnelBusinessService(personnelBusinessServiceMock);
 		reportsDataService.setOfficeBusinessService(officeBusinessServiceMock);
 		reportsDataService.setPersonnel(personnelMock);
+		reportsDataService.setLoanPrdBusinessService(loanPersistenceMock);
 	}
 
 	public void testInitialize() throws Exception {
@@ -143,17 +159,13 @@ public class ReportsDataServiceTest extends TestCase {
 		verify(personnelBusinessServiceMock, personnelMock);
 	}
 
-	public void testGetAllLoanOfficersShouldComplainIfPersonnelBusinessServiceFailedToGetLoanOfficers() throws Exception {
-		expect(personnelMock.isLoanOfficer()).andReturn(false);
-		expect(personnelBusinessServiceMock.getActiveLoanOfficersUnderOffice(branchId)).andThrow(expectedException);
-		replay(personnelBusinessServiceMock, personnelMock);
-		try {
-			reportsDataService.getActiveLoanOfficers(branchId.intValue());
-			fail("exception expected");
-		} catch (ServiceException e) {
-			assertSame(expectedException, e);
-		}
-		verify(personnelBusinessServiceMock, personnelMock);
+	public void testGetLoanAccountsInActiveBadStandingShouldReturnListOfLoanAccountsInActiveBadStanding() throws Exception {
+		List<LoanBO> exceptedLoanList = new ArrayList<LoanBO>();
+
+		expect(loanPersistenceMock.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,loanProductId)).andReturn(exceptedLoanList);
+		replay(loanPersistenceMock);
+		assertSame(exceptedLoanList, reportsDataService.getLoanAccountsInActiveBadStanding(branchId.intValue(),loanOfficerId.intValue(),loanProductId.intValue()));
+		verify(loanPersistenceMock);
 	}
 
 }

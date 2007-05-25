@@ -63,17 +63,6 @@
                 <property name="pattern">General Number</property>
             </structure>
         </scalar-parameter>
-        <scalar-parameter name="reportDate" id="839">
-            <text-property name="helpText">Please enter date value as: MM/DD/YYYY</text-property>
-            <property name="valueType">static</property>
-            <property name="dataType">dateTime</property>
-            <text-property name="promptText">Report Date</text-property>
-            <property name="controlType">text-box</property>
-            <structure name="format">
-                <property name="category">Medium Date</property>
-                <property name="pattern">Medium Date</property>
-            </structure>
-        </scalar-parameter>
     </parameters>
     <data-sources>
         <script-data-source name="Scripted Data Source" id="4">
@@ -84,7 +73,6 @@ reportsDataService = new Packages.org.mifos.application.reports.business.service
 reportsDataService.initialize(userId);]]></method>
             <method name="close"><![CDATA[reportsDataService = null;]]></method>
         </script-data-source>
-        <script-data-source name="DemoReoprtDataSource" id="76"/>
     </data-sources>
     <data-sets>
         <script-data-set name="LoanProducts" id="5">
@@ -92,12 +80,12 @@ reportsDataService.initialize(userId);]]></method>
                 <structure>
                     <property name="position">1</property>
                     <property name="name">ID</property>
-                    <property name="dataType">any</property>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">Name</property>
-                    <property name="dataType">any</property>
+                    <property name="dataType">string</property>
                 </structure>
             </list-property>
             <list-property name="columnHints">
@@ -113,12 +101,12 @@ reportsDataService.initialize(userId);]]></method>
                     <structure>
                         <property name="position">1</property>
                         <property name="name">ID</property>
-                        <property name="dataType">any</property>
+                        <property name="dataType">integer</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
                         <property name="name">Name</property>
-                        <property name="dataType">any</property>
+                        <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
@@ -133,6 +121,13 @@ var request = reportContext.getHttpServletRequest();
 Packages.java.util.logging.Logger.getLogger("").info("request:" + request );
 
 loanProducts = reportsDataService.getAllLoanProducts();
+if (loanProducts.size()>1) {
+	reportContext.setParameterValue("loanProductId", loanProducts.get(1).getPrdOfferingId());
+	reportContext.setPersistentGlobalVariable("defaultLoanProductId", loanProducts.get(1).getPrdOfferingId());
+	Packages.java.util.logging.Logger.getLogger("").info("set 2nd loanProduct as default:" + reportContext.getParameterValue("loanProductId"));
+	Packages.java.util.logging.Logger.getLogger("").info("defaultLoanProductId:" + reportContext.getPersistentGlobalVariable("defaultLoanProductId"));
+}
+
 iterator = loanProducts.iterator();]]></method>
             <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
 	return false;
@@ -150,12 +145,12 @@ iterator = null;]]></method>
         <script-data-set name="Branches" id="34">
             <list-property name="resultSetHints">
                 <structure>
-                    <property name="position">0</property>
+                    <property name="position">1</property>
                     <property name="name">ID</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                     <property name="name">Name</property>
                     <property name="dataType">string</property>
                 </structure>
@@ -210,12 +205,12 @@ iterator = null;]]></method>
         <script-data-set name="LoanOfficers" id="35">
             <list-property name="resultSetHints">
                 <structure>
-                    <property name="position">0</property>
+                    <property name="position">1</property>
                     <property name="name">ID</property>
                     <property name="dataType">integer</property>
                 </structure>
                 <structure>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                     <property name="name">Name</property>
                     <property name="dataType">string</property>
                 </structure>
@@ -249,6 +244,15 @@ Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-branchId
 Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
 
 loanOfficers = reportsDataService.getActiveLoanOfficers(branchId);
+
+if (loanOfficers.size()>1) {
+	reportContext.setParameterValue("loanOfficerId", loanOfficers.get(1).getPersonnelId());
+	reportContext.setPersistentGlobalVariable("defaultLoanOfficerId", loanOfficers.get(1).getPersonnelId());
+	Packages.java.util.logging.Logger.getLogger("").info("set 2nd loanOfficer as default:" + reportContext.getParameterValue("loanOfficerId"));
+	Packages.java.util.logging.Logger.getLogger("").info("defaultLoanOfficerId:" + reportContext.getPersistentGlobalVariable("defaultLoanOfficerId"));
+}
+
+
 iterator = loanOfficers.iterator();]]></method>
             <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
 	return false;
@@ -263,88 +267,45 @@ return true;]]></method>
             <method name="close"><![CDATA[loanOfficers = null;
 iterator = null;]]></method>
         </script-data-set>
-        <script-data-set name="DemoReportDataSet" id="77">
+        <script-data-set name="DataForLoanAccountInActiveBad" id="849">
             <list-property name="resultSetHints">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">Loan Number</property>
+                    <property name="name">LoanNumber</property>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
                     <property name="name">Client</property>
-                    <property name="dataType">string</property>
+                    <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">Loan Amount</property>
-                    <property name="dataType">string</property>
+                    <property name="name">LoanAmount</property>
+                    <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
                     <property name="name">Balance</property>
-                    <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="position">5</property>
                     <property name="name">Principal</property>
-                    <property name="dataType">any</property>
                 </structure>
                 <structure>
                     <property name="position">6</property>
                     <property name="name">Interest</property>
-                    <property name="dataType">any</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">Arrears</property>
-                    <property name="dataType">any</property>
-                </structure>
-                <structure>
-                    <property name="position">8</property>
-                    <property name="name">Definiton of lateness</property>
-                    <property name="dataType">any</property>
-                </structure>
-                <structure>
-                    <property name="position">9</property>
-                    <property name="name">Maturity date</property>
-                    <property name="dataType">any</property>
-                </structure>
-                <structure>
-                    <property name="position">10</property>
-                    <property name="name">Restore date</property>
-                </structure>
-                <structure>
-                    <property name="position">11</property>
-                    <property name="name">Current</property>
-                </structure>
-                <structure>
-                    <property name="position">12</property>
-                    <property name="name">1-30</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
-                    <property name="name">31-60</property>
-                </structure>
-                <structure>
-                    <property name="position">14</property>
-                    <property name="name">61-90</property>
-                </structure>
-                <structure>
-                    <property name="position">15</property>
-                    <property name="name">1-30String</property>
-                    <property name="dataType">any</property>
                 </structure>
             </list-property>
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">Loan Number</property>
+                    <property name="columnName">LoanNumber</property>
                 </structure>
                 <structure>
                     <property name="columnName">Client</property>
                 </structure>
                 <structure>
-                    <property name="columnName">Loan Amount</property>
+                    <property name="columnName">LoanAmount</property>
                 </structure>
                 <structure>
                     <property name="columnName">Balance</property>
@@ -355,50 +316,23 @@ iterator = null;]]></method>
                 <structure>
                     <property name="columnName">Interest</property>
                 </structure>
-                <structure>
-                    <property name="columnName">Arrears</property>
-                </structure>
-                <structure>
-                    <property name="columnName">Definiton of lateness</property>
-                </structure>
-                <structure>
-                    <property name="columnName">Maturity date</property>
-                </structure>
-                <structure>
-                    <property name="columnName">Restore date</property>
-                </structure>
-                <structure>
-                    <property name="columnName">Current</property>
-                </structure>
-                <structure>
-                    <property name="columnName">1-30</property>
-                </structure>
-                <structure>
-                    <property name="columnName">31-60</property>
-                </structure>
-                <structure>
-                    <property name="columnName">61-90</property>
-                </structure>
-                <structure>
-                    <property name="columnName">1-30String</property>
-                </structure>
             </list-property>
             <structure name="cachedMetaData">
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">Loan Number</property>
+                        <property name="name">LoanNumber</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
                         <property name="name">Client</property>
-                        <property name="dataType">string</property>
+                        <property name="dataType">any</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">Loan Amount</property>
-                        <property name="dataType">string</property>
+                        <property name="name">LoanAmount</property>
+                        <property name="dataType">any</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
@@ -415,81 +349,38 @@ iterator = null;]]></method>
                         <property name="name">Interest</property>
                         <property name="dataType">any</property>
                     </structure>
-                    <structure>
-                        <property name="position">7</property>
-                        <property name="name">Arrears</property>
-                        <property name="dataType">any</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">Definiton of lateness</property>
-                        <property name="dataType">any</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">Maturity date</property>
-                        <property name="dataType">any</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">Restore date</property>
-                        <property name="dataType">any</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">Current</property>
-                        <property name="dataType">any</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">1-30</property>
-                        <property name="dataType">any</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">31-60</property>
-                        <property name="dataType">any</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">61-90</property>
-                        <property name="dataType">any</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">1-30String</property>
-                        <property name="dataType">any</property>
-                    </structure>
                 </list-property>
             </structure>
-            <property name="dataSource">DemoReoprtDataSource</property>
-            <method name="open"><![CDATA[reportData = reportsDataService.getDemoReportData();
-iterator = reportData.iterator();]]></method>
-            <method name="fetch"><![CDATA[if(count < reportData.length){
-	
-	row["Branch Office"] = reportData[count].getBranchOffice();
-	row["Loan Officer"] = reportData[count].getLoanOfficer();
-	row["Report Name"] = reportData[count].getReportName();
-	row["Product"] = reportData[count].getProduct();
-	row["Report Date"] = reportData[count].getReportDate();
-	row["Prepared By"] = reportData[count].getPrinter();
-	row["Loan Number"] = reportData[count].getLoanNumber();
-	row["Client"] = reportData[count].getClient();
-	row["Loan Amount"] = reportData[count].getLoanAmount();
-	row["Balance"] = reportData[count].getBalance();
-	row["Principal"] = reportData[count].getPrincipal();
-	row["Interest"] = reportData[count].getInterest();
-	row["Arrears"] = reportData[count].getArrears();
-	row["Current"]= reportData[count].getCurrent();
-	row["1-30"] = reportData[count].getBalanceWhichDurationIsOneToThirty(reportData[count].getEclapsedDays());
-	row["31-60"] = reportData[count].getBalanceWhichDurationIsThirtyOneToSixty(reportData[count].getEclapsedDays());
-	row["61-90"]= reportData[count].getBalanceWhichDurationIsSixtyOneToNinety(reportData[count].getEclapsedDays());
-	row["Current"]= reportData[count].getCurrent();
-	
-		return true;
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB");
+
+var branchId = reportContext.getParameterValue("branchId");
+Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-branchId:" + branchId);
+Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
+
+var loanOfficerId = reportContext.getParameterValue("loanOfficerId");
+Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-loanOfficerId:" + loanOfficerId);
+Packages.java.util.logging.Logger.getLogger("").info("defaultLoanOfficerId:" + reportContext.getPersistentGlobalVariable("defaultLoanOfficerId"));
+
+var loanProductId = reportContext.getParameterValue("loanProductId");
+Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-loanProductId:" + loanProductId);
+Packages.java.util.logging.Logger.getLogger("").info("defaultLoanProductId:" + reportContext.getPersistentGlobalVariable("defaultLoanProductId"));
+
+loans = reportsDataService.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,loanProductId);
+iterator = loans.iterator();]]></method>
+            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+	return false;
 }
-return false;]]></method>
-            <method name="close"><![CDATA[reportData = null;
+
+var loan = iterator.next( );
+row["LoanNumber"]= loan.getGlobalAccountNum();
+row["Client"] = loan.getCustomer().getDisplayName();
+row["LoanAmount"] = loan.getLoanAmount().getAmount();
+row["Balance"] = loan.getRemainingPrincipalAmount().getAmount();
+row["Principal"] = loan.getTotalPrincipalAmountInArrears().getAmount();
+row["Interest"] = loan.getTotalInterestAmountInArrears().getAmount();
+return true;]]></method>
+            <method name="close"><![CDATA[loans = null;
 iterator = null;]]></method>
         </script-data-set>
     </data-sets>
@@ -533,8 +424,10 @@ iterator = null;]]></method>
                                             <row id="619">
                                                 <cell id="620">
                                                     <label id="120">
+                                                        <property name="fontFamily">"Arial Rounded MT Bold"</property>
                                                         <property name="paddingRight">0pt</property>
-                                                        <text-property name="text">NAME OF MFI</text-property>
+                                                        <text-property name="text">Aspire Microfinance Instituation
+</text-property>
                                                     </label>
                                                 </cell>
                                                 <cell id="621">
@@ -620,4 +513,386 @@ iterator = null;]]></method>
             </page-footer>
         </simple-master-page>
     </page-setup>
+    <body>
+        <table id="139">
+            <property name="width">100%</property>
+            <property name="dataSet">DataForLoanAccountInActiveBad</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">Branch Office</property>
+                    <expression name="expression">dataSetRow["Branch Office"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Loan Officer</property>
+                    <expression name="expression">dataSetRow["Loan Officer"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Report Name</property>
+                    <expression name="expression">dataSetRow["Report Name"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Product</property>
+                    <expression name="expression">dataSetRow["Product"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Report Date</property>
+                    <expression name="expression">dataSetRow["Report Date"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Prepared By</property>
+                    <expression name="expression">dataSetRow["Prepared By"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Loan Number</property>
+                    <expression name="expression">dataSetRow["Loan Number"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Client</property>
+                    <expression name="expression">dataSetRow["Client"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Loan Amount</property>
+                    <expression name="expression">dataSetRow["Loan Amount"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Balance</property>
+                    <expression name="expression">dataSetRow["Balance"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Principal</property>
+                    <expression name="expression">dataSetRow["Principal"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Interest</property>
+                    <expression name="expression">dataSetRow["Interest"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Arrears</property>
+                    <expression name="expression">dataSetRow["Arrears"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">1-30</property>
+                    <expression name="expression">dataSetRow["1-30"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">31-60</property>
+                    <expression name="expression">dataSetRow["31-60"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">61-90</property>
+                    <expression name="expression">dataSetRow["61-90"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">More than 90</property>
+                    <expression name="expression">dataSetRow["More than 90"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Arrearss</property>
+                    <expression name="expression">(dataSetRow["Principal"]/dataSetRow["Principal"])*100</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">ArrearsData</property>
+                    <expression name="expression">dataSetRow["Principal"]/dataSetRow["Balance"]*100</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">1-30String</property>
+                    <expression name="expression">dataSetRow["1-30String"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+                <structure>
+                    <property name="name">LoanNumber</property>
+                    <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">LoanAmount</property>
+                    <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                    <property name="dataType">any</property>
+                </structure>
+            </list-property>
+            <column id="176">
+                <property name="width">1.0520833333in</property>
+            </column>
+            <column id="177">
+                <property name="width">0.625in</property>
+            </column>
+            <column id="178">
+                <property name="width">0.6770833333in</property>
+            </column>
+            <column id="179">
+                <property name="width">0.5in</property>
+            </column>
+            <column id="180">
+                <property name="width">0.53125in</property>
+            </column>
+            <column id="181">
+                <property name="width">0.375in</property>
+            </column>
+            <column id="182">
+                <property name="width">0.5833333333in</property>
+            </column>
+            <column id="183">
+                <property name="width">0.4270833333in</property>
+            </column>
+            <column id="184">
+                <property name="width">0.4166666667in</property>
+            </column>
+            <column id="185">
+                <property name="width">0.4166666667in</property>
+            </column>
+            <column id="186">
+                <property name="width">0.3854166667in</property>
+            </column>
+            <header>
+                <row id="140">
+                    <cell id="141">
+                        <grid id="993">
+                            <property name="width">100%</property>
+                            <column id="994"/>
+                            <row id="995">
+                                <cell id="996">
+                                    <label id="1000">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Loan</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="997">
+                                <cell id="998">
+                                    <label id="999">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Number</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="142">
+                        <grid id="986">
+                            <property name="width">100%</property>
+                            <column id="987"/>
+                            <row id="988">
+                                <cell id="989">
+                                    <label id="1001"/>
+                                </cell>
+                            </row>
+                            <row id="990">
+                                <cell id="991">
+                                    <label id="992">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Client</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="143">
+                        <grid id="978">
+                            <property name="width">100%</property>
+                            <column id="979"/>
+                            <row id="980">
+                                <cell id="981">
+                                    <label id="984">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Loan</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="982">
+                                <cell id="983">
+                                    <label id="985">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Amount</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="144">
+                        <grid id="1002">
+                            <property name="width">100%</property>
+                            <column id="1003"/>
+                            <row id="1004">
+                                <cell id="1005">
+                                    <label id="1008"/>
+                                </cell>
+                            </row>
+                            <row id="1006">
+                                <cell id="1007">
+                                    <label id="1009">
+                                        <text-property name="text">Balance</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="145">
+                        <property name="colSpan">2</property>
+                        <property name="rowSpan">1</property>
+                        <grid id="758">
+                            <property name="width">100%</property>
+                            <column id="759"/>
+                            <column id="760"/>
+                            <row id="761">
+                                <cell id="762">
+                                    <property name="colSpan">2</property>
+                                    <property name="rowSpan">1</property>
+                                    <label id="767">
+                                        <property name="fontSize">medium</property>
+                                        <property name="borderBottomColor">#000000</property>
+                                        <property name="borderBottomStyle">solid</property>
+                                        <property name="borderBottomWidth">thin</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Past due</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="764">
+                                <cell id="765">
+                                    <label id="768">
+                                        <property name="fontSize">small</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Principal</text-property>
+                                    </label>
+                                </cell>
+                                <cell id="766">
+                                    <label id="769">
+                                        <property name="fontSize">small</property>
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Interest</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="147">
+                        <grid id="970">
+                            <property name="width">100%</property>
+                            <column id="971"/>
+                            <row id="972">
+                                <cell id="973">
+                                    <label id="976">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">Arrears</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="974">
+                                <cell id="975">
+                                    <label id="977">
+                                        <property name="textAlign">center</property>
+                                        <text-property name="text">(percent)</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="148">
+                        <label id="575">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">1-30</text-property>
+                        </label>
+                    </cell>
+                    <cell id="149">
+                        <label id="576">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">31-60</text-property>
+                        </label>
+                    </cell>
+                    <cell id="150">
+                        <label id="577">
+                            <property name="textAlign">center</property>
+                            <text-property name="text">61-90</text-property>
+                        </label>
+                    </cell>
+                    <cell id="151">
+                        <label id="207">
+                            <property name="fontSize">small</property>
+                            <property name="textAlign">center</property>
+                            <text-property name="text">More than 90</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="152">
+                    <cell id="153">
+                        <data id="961">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">LoanNumber</property>
+                        </data>
+                    </cell>
+                    <cell id="154">
+                        <data id="963">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Client</property>
+                        </data>
+                    </cell>
+                    <cell id="155">
+                        <data id="965">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">LoanAmount</property>
+                        </data>
+                    </cell>
+                    <cell id="156">
+                        <data id="967">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Balance</property>
+                        </data>
+                    </cell>
+                    <cell id="157">
+                        <data id="968">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Principal</property>
+                        </data>
+                    </cell>
+                    <cell id="158">
+                        <data id="969">
+                            <property name="textAlign">center</property>
+                            <property name="resultSetColumn">Interest</property>
+                        </data>
+                    </cell>
+                    <cell id="159"/>
+                    <cell id="160"/>
+                    <cell id="161"/>
+                    <cell id="162"/>
+                    <cell id="163"/>
+                </row>
+            </detail>
+            <footer>
+                <row id="164">
+                    <cell id="165"/>
+                    <cell id="166"/>
+                    <cell id="167"/>
+                    <cell id="168"/>
+                    <cell id="169"/>
+                    <cell id="170"/>
+                    <cell id="171"/>
+                    <cell id="172"/>
+                    <cell id="173"/>
+                    <cell id="174"/>
+                    <cell id="175"/>
+                </row>
+            </footer>
+        </table>
+    </body>
 </report>
