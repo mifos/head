@@ -275,9 +275,9 @@ public class TestObjectFactory {
 		String customerName, MeetingBO meeting) {
 		return createCenter(customerName, meeting, getFees());
 	}
-	public static CenterBO createCenterForTestGetLoanAccountsInActiveBadStanding(
+	public static CenterBO createCenterForTestGetLoanAccounts(
 			String customerName, MeetingBO meeting) {
-		return createCenterForTestGetLoanAccountsInActiveBadStanding(customerName, meeting, getFees());
+		return createCenterForTestGetLoanAccounts(customerName, meeting, getFees());
 	}
 
 	public static CenterBO createCenter(String customerName, MeetingBO meeting,
@@ -293,7 +293,7 @@ public class TestObjectFactory {
 			SAMPLE_BRANCH_OFFICE, PersonnelConstants.SYSTEM_USER,
 			fees);
 	}
-	public static CenterBO createCenterForTestGetLoanAccountsInActiveBadStanding(String customerName, 
+	public static CenterBO createCenterForTestGetLoanAccounts(String customerName, 
 			MeetingBO meeting,
 			List<FeeView> fees) {
 		return createCenter(customerName, meeting, 

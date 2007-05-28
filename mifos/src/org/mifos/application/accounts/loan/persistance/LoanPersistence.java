@@ -55,13 +55,13 @@ public class LoanPersistence extends Persistence {
 		return queryResult == null ? null : (LoanBO) queryResult;
 	}
 
-	public List<Integer> getLoanAccountsInArrearsInGoodStanding(Short latenessDays)
-			throws PersistenceException {
+	public List<Integer> getLoanAccountsInArrearsInGoodStanding(
+			Short latenessDays) throws PersistenceException {
 
 		String systemDate = DateUtils.getCurrentDate(Configuration
-		.getInstance().getSystemConfig().getMFILocale());
+				.getInstance().getSystemConfig().getMFILocale());
 		Date localDate = DateUtils.getLocaleDate(Configuration.getInstance()
-		.getSystemConfig().getMFILocale(), systemDate);
+				.getSystemConfig().getMFILocale(), systemDate);
 		Calendar currentDate = new GregorianCalendar();
 		currentDate.setTime(localDate);
 		int year = currentDate.get(Calendar.YEAR);
@@ -81,18 +81,21 @@ public class LoanPersistence extends Persistence {
 				.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING));
 		queryParameters.put("CHECKDATE", date);
 
-		return executeNamedQuery(NamedQueryConstants.GET_LOAN_ACOUNTS_IN_ARREARS_IN_GOOD_STANDING,
+		return executeNamedQuery(
+				NamedQueryConstants.GET_LOAN_ACOUNTS_IN_ARREARS_IN_GOOD_STANDING,
 				queryParameters);
 	}
 
 	public List<Integer> getLoanAccountsInArrears(Short latenessDays)
-		throws PersistenceException {
+			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
-		
+
 		Calendar currentDate = new GregorianCalendar();
-		currentDate.add(Calendar.DAY_OF_MONTH,-latenessDays);
-		
-		currentDate = new GregorianCalendar(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH),0,0,0);
+		currentDate.add(Calendar.DAY_OF_MONTH, -latenessDays);
+
+		currentDate = new GregorianCalendar(currentDate.get(Calendar.YEAR),
+				currentDate.get(Calendar.MONTH), currentDate
+						.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 
 		queryParameters.put("ACCOUNTTYPE_ID", AccountTypes.LOAN_ACCOUNT
 				.getValue());
@@ -102,13 +105,14 @@ public class LoanPersistence extends Persistence {
 				.valueOf(AccountStates.LOANACC_BADSTANDING));
 		queryParameters.put("LOANACTIVEINGOODSTAND", Short
 				.valueOf(AccountStates.LOANACC_ACTIVEINGOODSTANDING));
-		
+
 		queryParameters.put("CHECKDATE", currentDate.getTime());
-		
-		return executeNamedQuery(NamedQueryConstants.GET_LOAN_ACOUNTS_IN_ARREARS,
+
+		return executeNamedQuery(
+				NamedQueryConstants.GET_LOAN_ACOUNTS_IN_ARREARS,
 				queryParameters);
 	}
-	
+
 	public LoanBO getAccount(Integer accountId) throws PersistenceException {
 		return (LoanBO) getPersistentObject(LoanBO.class, accountId);
 	}
@@ -124,7 +128,8 @@ public class LoanPersistence extends Persistence {
 			Set<AccountTrxnEntity> accountTrxnSet = accountPayment
 					.getAccountTrxns();
 			for (AccountTrxnEntity accountTrxn : accountTrxnSet) {
-				if (accountTrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.DISBURSAL.getValue()) {
+				if (accountTrxn.getAccountActionEntity().getId().shortValue() == AccountActionTypes.DISBURSAL
+						.getValue()) {
 					return accountTrxn.getAccountActionEntity().getId();
 				}
 			}
@@ -166,7 +171,8 @@ public class LoanPersistence extends Persistence {
 			for (AccountActionDateEntity entity : accountActionDates) {
 				session.delete(entity);
 			}
-		} catch (HibernateException he) {
+		}
+		catch (HibernateException he) {
 			throw new PersistenceException(he);
 		}
 	}
@@ -181,7 +187,7 @@ public class LoanPersistence extends Persistence {
 		Object[] obj1 = (Object[]) obj.get(0);
 		return (AccountBO) obj1[0];
 	}
-	
+
 	public Money getLastLoanAmountForCustomer(Integer customerId)
 			throws PersistenceException {
 		Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -193,21 +199,58 @@ public class LoanPersistence extends Persistence {
 		}
 		return null;
 	}
-	public List<LoanBO> getLoanAccountsInActiveBadStanding(Short branchId, Short loanOfficerId, Short loanProductId) throws PersistenceException {
-		StringBuilder queryString = new StringBuilder("from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 9");
-		if (loanOfficerId != null){
-		queryString.append(" and loan.personnel.personnelId = " + loanOfficerId);
+
+	public List<LoanBO> getLoanAccountsInActiveBadStanding(Short branchId,
+			Short loanOfficerId, Short loanProductId)
+			throws PersistenceException {
+		StringBuilder queryString = new StringBuilder(
+				"from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 9");
+		if (loanOfficerId != null) {
+			queryString.append(" and loan.personnel.personnelId = "
+					+ loanOfficerId);
 		}
-		if (loanProductId != null){
-		queryString.append(" and loan.loanOffering.prdOfferingId = " + loanProductId);
+		if (loanProductId != null) {
+			queryString.append(" and loan.loanOffering.prdOfferingId = "
+					+ loanProductId);
 		}
 		queryString.append(" and loan.office.officeId = " + branchId);
 		try {
-		Session session = HibernateUtil.getSessionTL();
-		Query query = session.createQuery(queryString.toString());
-		return query.list();
-		} catch (Exception e) {
-		throw new PersistenceException(e);
+			Session session = HibernateUtil.getSessionTL();
+			Query query = session.createQuery(queryString.toString());
+			return query.list();
 		}
+		catch (Exception e) {
+			throw new PersistenceException(e);
+		}
+	}
+
+	public int getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(
+			Short branchId, Short loanOfficerId, Short loanProductId) throws PersistenceException{
+		int totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding = 0;
+		StringBuilder queryString = new StringBuilder(
+				"select loan.loanBalance from org.mifos.application.accounts.loan.business.LoanBO loan where loan.accountState.id = 5");
+		if (loanOfficerId != null) {
+			queryString.append(" and loan.personnel.personnelId = "
+					+ loanOfficerId);
+		}
+		if (loanProductId != null) {
+			queryString.append(" and loan.loanOffering.prdOfferingId = "
+					+ loanProductId);
+		}
+		queryString.append(" and loan.office.officeId = " + branchId);
+		try {
+			Session session = HibernateUtil.getSessionTL();
+			Query query = session.createQuery(queryString.toString());
+			List<Money> list = query.list();
+			if (list.size() > 0) {
+				for(int i=0,size=list.size();i<size;i++){ 
+					totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding = totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding+list.get(i).getAmount().intValue();
+				  }
+			}
+		}
+		catch (Exception e) {
+			throw new PersistenceException(e);
+		}
+		return totalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding;
 	}
 }

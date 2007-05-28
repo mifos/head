@@ -56,6 +56,8 @@ public class TestLoanPersistence extends MifosTestCase {
 	AccountBO loanAccountForDisbursement = null;
 
 	LoanBO badAccount;
+
+	LoanBO goodAccount;
 	
 	@Override
 	public void setUp() throws Exception {
@@ -63,12 +65,12 @@ public class TestLoanPersistence extends MifosTestCase {
 		loanPersistence = new LoanPersistence();
 		meeting = TestObjectFactory.createMeeting(TestObjectFactory
 				.getNewMeetingForToday(WEEKLY, EVERY_WEEK, CUSTOMER_MEETING));
-		center = TestObjectFactory.createCenterForTestGetLoanAccountsInActiveBadStanding("Center", meeting);
+		center = TestObjectFactory.createCenterForTestGetLoanAccounts("Center", meeting);
 		group = TestObjectFactory.createGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
 		
 		loanAccount = getLoanAccount(group, meeting);
-		
 	    badAccount = getBadAccount();
+	    goodAccount = getGoodAccount();
 	}
 
 	@Override
@@ -76,6 +78,7 @@ public class TestLoanPersistence extends MifosTestCase {
 
 		TestObjectFactory.cleanUp(loanAccount);
 		TestObjectFactory.cleanUp(badAccount);
+		TestObjectFactory.cleanUp(goodAccount);
 		TestObjectFactory.cleanUp(loanAccountForDisbursement);
 		TestObjectFactory.cleanUp(group);
 		TestObjectFactory.cleanUp(center);
@@ -304,6 +307,18 @@ public class TestLoanPersistence extends MifosTestCase {
 				AccountState.LOANACC_BADSTANDING, 
 				startDate, loanOffering);
 	}
+	private LoanBO getGoodAccount() {
+		Date startDate = new Date(System.currentTimeMillis());
+		LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(
+				"Loanabf", "abf", ApplicableTo.CLIENTS, 
+				startDate, PrdStatus.LOAN_ACTIVE, 
+				300.0, 1.2, (short)3, 
+				InterestType.FLAT, true, true,
+				meeting);
+		return TestObjectFactory.createLoanAccount("42423142342", group,
+				AccountState.LOANACC_ACTIVEINGOODSTANDING, 
+				startDate, loanOffering);
+	}
 
 	public void testGetLoanAccountsInActiveBadStandingShouldReturnLoanBOInActiveBadByBranchId() throws Exception {
 		short branchId = 3;
@@ -326,5 +341,24 @@ public class TestLoanPersistence extends MifosTestCase {
 		List<LoanBO> loanList = loanPersistence.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,loanProductId);
 		assertEquals(1,loanList.size());
 		
+	}
+	
+	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchId() throws Exception {
+		short branchId = 3;
+		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,null,null);
+		assertEquals(600,money);
+	}
+	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchIdAndLoanOfficerId() throws Exception {
+		short branchId = 3;
+		short loanOfficerId = 3;
+		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,null);
+		assertEquals(600,money);
+	}
+	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingByBranchIdLoanOfficerIdAndLoanProductId() throws Exception {
+		short branchId = 3;
+		short loanOfficerId = 3;
+		short loanProductId = goodAccount.getLoanOffering().getPrdOfferingId();
+		int money = loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId);
+		assertEquals(300,money);
 	}
 }

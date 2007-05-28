@@ -58,6 +58,9 @@ public class ReportsDataService {
 	public List<LoanBO> getLoanAccountsInActiveBadStanding(Integer branchId, Integer loanOfficerId, Integer loanProductId) throws PersistenceException {
 		return loanPersistence.getLoanAccountsInActiveBadStanding(convertIntegerToShort(branchId), convertIntegerToShort(loanOfficerId), convertIntegerToShort(loanProductId));
 	}
+	public int getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(Integer branchId, Integer loanOfficerId, Integer loanProductId) throws PersistenceException {
+		return loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(convertIntegerToShort(branchId), convertIntegerToShort(loanOfficerId), convertIntegerToShort(loanProductId));
+	}
 	
 	void setLoanPrdBusinessService(LoanPrdBusinessService loanPrdBusinessService) {
 		this.loanPrdBusinessService = loanPrdBusinessService;

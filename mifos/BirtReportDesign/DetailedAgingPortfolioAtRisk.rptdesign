@@ -296,6 +296,14 @@ iterator = null;]]></method>
                     <property name="position">6</property>
                     <property name="name">Interest</property>
                 </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">DaysInArrears</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">Current</property>
+                </structure>
             </list-property>
             <list-property name="columnHints">
                 <structure>
@@ -315,6 +323,12 @@ iterator = null;]]></method>
                 </structure>
                 <structure>
                     <property name="columnName">Interest</property>
+                </structure>
+                <structure>
+                    <property name="columnName">DaysInArrears</property>
+                </structure>
+                <structure>
+                    <property name="columnName">Current</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -349,26 +363,33 @@ iterator = null;]]></method>
                         <property name="name">Interest</property>
                         <property name="dataType">any</property>
                     </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">DaysInArrears</property>
+                        <property name="dataType">any</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">Current</property>
+                        <property name="dataType">any</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">Scripted Data Source</property>
             <method name="open"><![CDATA[Packages.java.util.logging.Logger.getLogger("").info("DFLAIAB");
 
 var branchId = reportContext.getParameterValue("branchId");
-Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-branchId:" + branchId);
-Packages.java.util.logging.Logger.getLogger("").info("defaultBranchId:" + reportContext.getPersistentGlobalVariable("defaultBranchId"));
 
 var loanOfficerId = reportContext.getParameterValue("loanOfficerId");
-Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-loanOfficerId:" + loanOfficerId);
-Packages.java.util.logging.Logger.getLogger("").info("defaultLoanOfficerId:" + reportContext.getPersistentGlobalVariable("defaultLoanOfficerId"));
 
 var loanProductId = reportContext.getParameterValue("loanProductId");
-Packages.java.util.logging.Logger.getLogger("").info("getParameterValue-loanProductId:" + loanProductId);
-Packages.java.util.logging.Logger.getLogger("").info("defaultLoanProductId:" + reportContext.getPersistentGlobalVariable("defaultLoanProductId"));
+
+current = reportsDataService.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId);
 
 loans = reportsDataService.getLoanAccountsInActiveBadStanding(branchId,loanOfficerId,loanProductId);
 iterator = loans.iterator();]]></method>
-            <method name="fetch"><![CDATA[if(iterator.hasNext() == false ){
+            <method name="fetch"><![CDATA[row["Current"] = current;
+if(iterator.hasNext() == false ){
 	return false;
 }
 
@@ -379,13 +400,28 @@ row["LoanAmount"] = loan.getLoanAmount().getAmount();
 row["Balance"] = loan.getRemainingPrincipalAmount().getAmount();
 row["Principal"] = loan.getTotalPrincipalAmountInArrears().getAmount();
 row["Interest"] = loan.getTotalInterestAmountInArrears().getAmount();
+row["DaysInArrears"] = loan.getDaysInArrears();
+
 return true;]]></method>
             <method name="close"><![CDATA[loans = null;
-iterator = null;]]></method>
+iterator = null;
+current = null;]]></method>
         </script-data-set>
     </data-sets>
+    <styles>
+        <style name="CurrencyStyle" id="1081">
+            <structure name="numberFormat">
+                <property name="category">Currency</property>
+                <property name="pattern">#,##0</property>
+            </structure>
+        </style>
+        <style name="NewStyle" id="1158"/>
+    </styles>
     <page-setup>
-        <simple-master-page name="Simple MasterPage" id="2">
+        <simple-master-page name="Report1 MasterPage" id="2">
+            <property name="orientation">portrait</property>
+            <property name="leftMargin">1in</property>
+            <property name="rightMargin">1in</property>
             <page-header>
                 <grid id="835">
                     <property name="width">100%</property>
@@ -515,6 +551,7 @@ iterator = null;]]></method>
     </page-setup>
     <body>
         <table id="139">
+            <property name="style">NewStyle</property>
             <property name="width">100%</property>
             <property name="dataSet">DataForLoanAccountInActiveBad</property>
             <list-property name="boundDataColumns">
@@ -566,17 +603,17 @@ iterator = null;]]></method>
                 <structure>
                     <property name="name">Balance</property>
                     <expression name="expression">dataSetRow["Balance"]</expression>
-                    <property name="dataType">string</property>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="name">Principal</property>
                     <expression name="expression">dataSetRow["Principal"]</expression>
-                    <property name="dataType">string</property>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="name">Interest</property>
                     <expression name="expression">dataSetRow["Interest"]</expression>
-                    <property name="dataType">string</property>
+                    <property name="dataType">integer</property>
                 </structure>
                 <structure>
                     <property name="name">Arrears</property>
@@ -626,41 +663,58 @@ iterator = null;]]></method>
                 <structure>
                     <property name="name">LoanAmount</property>
                     <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">DaysInArrears</property>
+                    <expression name="expression">dataSetRow["DaysInArrears"]</expression>
                     <property name="dataType">any</property>
                 </structure>
             </list-property>
             <column id="176">
-                <property name="width">1.0520833333in</property>
+                <property name="width">1.0208333333in</property>
             </column>
             <column id="177">
-                <property name="width">0.625in</property>
+                <property name="width">0.5in</property>
             </column>
             <column id="178">
-                <property name="width">0.6770833333in</property>
+                <property name="width">0.5729166667in</property>
             </column>
             <column id="179">
                 <property name="width">0.5in</property>
             </column>
             <column id="180">
-                <property name="width">0.53125in</property>
+                <property name="width">0.4583333333in</property>
             </column>
             <column id="181">
-                <property name="width">0.375in</property>
+                <property name="width">0.4270833333in</property>
             </column>
             <column id="182">
                 <property name="width">0.5833333333in</property>
             </column>
             <column id="183">
-                <property name="width">0.4270833333in</property>
+                <property name="width">0.34375in</property>
             </column>
             <column id="184">
-                <property name="width">0.4166666667in</property>
+                <property name="width">0.3854166667in</property>
             </column>
             <column id="185">
-                <property name="width">0.4166666667in</property>
+                <property name="width">0.40625in</property>
+            </column>
+            <column id="1019">
+                <property name="width">0.4270833333in</property>
             </column>
             <column id="186">
-                <property name="width">0.3854166667in</property>
+                <property name="width">0.34375in</property>
+            </column>
+            <column id="1071">
+                <property name="width">0.5625in</property>
+                <list-property name="visibility">
+                    <structure>
+                        <property name="format">all</property>
+                        <expression name="valueExpr">true</expression>
+                    </structure>
+                </list-property>
             </column>
             <header>
                 <row id="140">
@@ -738,7 +792,7 @@ iterator = null;]]></method>
                             </row>
                             <row id="1006">
                                 <cell id="1007">
-                                    <label id="1009">
+                                    <label id="1120">
                                         <text-property name="text">Balance</text-property>
                                     </label>
                                 </cell>
@@ -824,11 +878,21 @@ iterator = null;]]></method>
                             <text-property name="text">61-90</text-property>
                         </label>
                     </cell>
+                    <cell id="1016">
+                        <label id="1021">
+                            <text-property name="text">91-180</text-property>
+                        </label>
+                    </cell>
                     <cell id="151">
                         <label id="207">
-                            <property name="fontSize">small</property>
+                            <property name="fontSize">medium</property>
                             <property name="textAlign">center</property>
-                            <text-property name="text">More than 90</text-property>
+                            <text-property name="text">>180</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1068">
+                        <label id="1073">
+                            <text-property name="text">DaysInArrears</text-property>
                         </label>
                     </cell>
                 </row>
@@ -849,33 +913,345 @@ iterator = null;]]></method>
                     </cell>
                     <cell id="155">
                         <data id="965">
+                            <property name="style">CurrencyStyle</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">LoanAmount</property>
                         </data>
                     </cell>
                     <cell id="156">
-                        <data id="967">
+                        <data id="1116">
+                            <property name="style">CurrencyStyle</property>
+                            <structure name="numberFormat">
+                                <property name="category">Currency</property>
+                                <property name="pattern">#,##0</property>
+                            </structure>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">Balance</property>
                         </data>
                     </cell>
                     <cell id="157">
-                        <data id="968">
+                        <data id="1117">
+                            <property name="style">CurrencyStyle</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">Principal</property>
                         </data>
                     </cell>
                     <cell id="158">
-                        <data id="969">
+                        <data id="1118">
+                            <property name="style">CurrencyStyle</property>
                             <property name="textAlign">center</property>
                             <property name="resultSetColumn">Interest</property>
                         </data>
                     </cell>
-                    <cell id="159"/>
-                    <cell id="160"/>
-                    <cell id="161"/>
-                    <cell id="162"/>
-                    <cell id="163"/>
+                    <cell id="159">
+                        <data id="1080">
+                            <property name="textAlign">center</property>
+                            <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">LoanNumber</property>
+                                    <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Client</property>
+                                    <expression name="expression">dataSetRow["Client"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">LoanAmount</property>
+                                    <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Balance</property>
+                                    <expression name="expression">dataSetRow["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Principal</property>
+                                    <expression name="expression">dataSetRow["Principal"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Interest</property>
+                                    <expression name="expression">dataSetRow["Interest"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">DaysInArrears</property>
+                                    <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">data item</property>
+                                    <expression name="expression">row._outer["Principal"]/row._outer["Balance"]*100</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">data item</property>
+                        </data>
+                    </cell>
+                    <cell id="160">
+                        <data id="1075">
+                            <property name="style">CurrencyStyle</property>
+                            <property name="textAlign">center</property>
+                            <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">LoanNumber</property>
+                                    <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Client</property>
+                                    <expression name="expression">dataSetRow["Client"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">LoanAmount</property>
+                                    <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Balance</property>
+                                    <expression name="expression">dataSetRow["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Principal</property>
+                                    <expression name="expression">dataSetRow["Principal"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Interest</property>
+                                    <expression name="expression">dataSetRow["Interest"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">DaysInArrears</property>
+                                    <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">1-30</property>
+                                    <expression name="expression">if( row._outer["DaysInArrears"]>=1 &amp;&amp; row._outer["DaysInArrears"]&lt;=30 )
+row._outer["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">1-30</property>
+                        </data>
+                    </cell>
+                    <cell id="161">
+                        <data id="1076">
+                            <property name="style">CurrencyStyle</property>
+                            <property name="textAlign">center</property>
+                            <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">LoanNumber</property>
+                                    <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Client</property>
+                                    <expression name="expression">dataSetRow["Client"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">LoanAmount</property>
+                                    <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Balance</property>
+                                    <expression name="expression">dataSetRow["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Principal</property>
+                                    <expression name="expression">dataSetRow["Principal"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Interest</property>
+                                    <expression name="expression">dataSetRow["Interest"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">DaysInArrears</property>
+                                    <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">31-60</property>
+                                    <expression name="expression">if( row._outer["DaysInArrears"]>=31 &amp;&amp; row._outer["DaysInArrears"]&lt;=60 )
+row._outer["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">31-60</property>
+                        </data>
+                    </cell>
+                    <cell id="162">
+                        <data id="1077">
+                            <property name="style">CurrencyStyle</property>
+                            <property name="textAlign">center</property>
+                            <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">LoanNumber</property>
+                                    <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Client</property>
+                                    <expression name="expression">dataSetRow["Client"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">LoanAmount</property>
+                                    <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Balance</property>
+                                    <expression name="expression">dataSetRow["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Principal</property>
+                                    <expression name="expression">dataSetRow["Principal"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Interest</property>
+                                    <expression name="expression">dataSetRow["Interest"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">DaysInArrears</property>
+                                    <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">61-90</property>
+                                    <expression name="expression">if( row._outer["DaysInArrears"]>=61 &amp;&amp; row._outer["DaysInArrears"]&lt;=90 )
+row._outer["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">61-90</property>
+                        </data>
+                    </cell>
+                    <cell id="1017">
+                        <data id="1078">
+                            <property name="style">CurrencyStyle</property>
+                            <property name="textAlign">center</property>
+                            <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">LoanNumber</property>
+                                    <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Client</property>
+                                    <expression name="expression">dataSetRow["Client"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">LoanAmount</property>
+                                    <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Balance</property>
+                                    <expression name="expression">dataSetRow["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Principal</property>
+                                    <expression name="expression">dataSetRow["Principal"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Interest</property>
+                                    <expression name="expression">dataSetRow["Interest"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">DaysInArrears</property>
+                                    <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">91-180</property>
+                                    <expression name="expression">if( row._outer["DaysInArrears"]>=91 &amp;&amp; row._outer["DaysInArrears"]&lt;=1800 )
+row._outer["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">91-180</property>
+                        </data>
+                    </cell>
+                    <cell id="163">
+                        <data id="1079">
+                            <property name="style">CurrencyStyle</property>
+                            <property name="textAlign">center</property>
+                            <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                            <list-property name="boundDataColumns">
+                                <structure>
+                                    <property name="name">LoanNumber</property>
+                                    <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                                    <property name="dataType">string</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Client</property>
+                                    <expression name="expression">dataSetRow["Client"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">LoanAmount</property>
+                                    <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Balance</property>
+                                    <expression name="expression">dataSetRow["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Principal</property>
+                                    <expression name="expression">dataSetRow["Principal"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">Interest</property>
+                                    <expression name="expression">dataSetRow["Interest"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">DaysInArrears</property>
+                                    <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                                <structure>
+                                    <property name="name">>180</property>
+                                    <expression name="expression">if( row._outer["DaysInArrears"]>=180  )
+row._outer["Balance"]</expression>
+                                    <property name="dataType">any</property>
+                                </structure>
+                            </list-property>
+                            <property name="resultSetColumn">>180</property>
+                        </data>
+                    </cell>
+                    <cell id="1069">
+                        <data id="1074">
+                            <property name="resultSetColumn">DaysInArrears</property>
+                        </data>
+                    </cell>
                 </row>
             </detail>
             <footer>
@@ -890,9 +1266,232 @@ iterator = null;]]></method>
                     <cell id="172"/>
                     <cell id="173"/>
                     <cell id="174"/>
+                    <cell id="1018"/>
                     <cell id="175"/>
+                    <cell id="1070"/>
                 </row>
             </footer>
         </table>
+        <grid id="735">
+            <property name="width">100%</property>
+            <column id="736">
+                <property name="width">1.0416666667in</property>
+            </column>
+            <column id="754">
+                <property name="width">1.0208333333in</property>
+            </column>
+            <column id="737">
+                <property name="width">0.5208333333in</property>
+            </column>
+            <column id="738">
+                <property name="width">0.40625in</property>
+            </column>
+            <column id="757">
+                <property name="width">0.4375in</property>
+            </column>
+            <column id="776">
+                <property name="width">3.0625in</property>
+            </column>
+            <row id="739">
+                <cell id="740"/>
+                <cell id="751">
+                    <label id="456">
+                        <text-property name="text">Overdue</text-property>
+                    </label>
+                </cell>
+                <cell id="741">
+                    <data id="457">
+                        <property name="style">CurrencyStyle</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">LoanNumber</property>
+                                <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Client</property>
+                                <expression name="expression">dataSetRow["Client"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">LoanAmount</property>
+                                <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Balance</property>
+                                <expression name="expression">dataSetRow["Balance"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Principal</property>
+                                <expression name="expression">dataSetRow["Principal"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Interest</property>
+                                <expression name="expression">dataSetRow["Interest"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">DaysInArrears</property>
+                                <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Current</property>
+                                <expression name="expression">dataSetRow["Current"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">BalanceSum</property>
+                                <expression name="expression">Total.sum(dataSetRow["Balance"])</expression>
+                                <property name="dataType">integer</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">BalanceSum</property>
+                    </data>
+                </cell>
+                <cell id="742">
+                    <data id="458">
+                        <property name="style">CurrencyStyle</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">LoanNumber</property>
+                                <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Client</property>
+                                <expression name="expression">dataSetRow["Client"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">LoanAmount</property>
+                                <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Balance</property>
+                                <expression name="expression">dataSetRow["Balance"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Principal</property>
+                                <expression name="expression">dataSetRow["Principal"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Interest</property>
+                                <expression name="expression">dataSetRow["Interest"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">DaysInArrears</property>
+                                <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Current</property>
+                                <expression name="expression">dataSetRow["Current"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">PrincipalSum</property>
+                                <expression name="expression">Total.sum(dataSetRow["Principal"])</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">PrincipalSum</property>
+                    </data>
+                </cell>
+                <cell id="755">
+                    <data id="773">
+                        <property name="style">CurrencyStyle</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">LoanNumber</property>
+                                <expression name="expression">dataSetRow["LoanNumber"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Client</property>
+                                <expression name="expression">dataSetRow["Client"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">LoanAmount</property>
+                                <expression name="expression">dataSetRow["LoanAmount"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Balance</property>
+                                <expression name="expression">dataSetRow["Balance"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Principal</property>
+                                <expression name="expression">dataSetRow["Principal"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Interest</property>
+                                <expression name="expression">dataSetRow["Interest"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">DaysInArrears</property>
+                                <expression name="expression">dataSetRow["DaysInArrears"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">Current</property>
+                                <expression name="expression">dataSetRow["Current"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                            <structure>
+                                <property name="name">InterestSum</property>
+                                <expression name="expression">Total.sum(dataSetRow["Interest"])</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">InterestSum</property>
+                    </data>
+                </cell>
+                <cell id="774"/>
+            </row>
+            <row id="743">
+                <cell id="744"/>
+                <cell id="752">
+                    <label id="568">
+                        <text-property name="text">Current</text-property>
+                    </label>
+                </cell>
+                <cell id="745">
+                    <data id="1157">
+                        <property name="style">CurrencyStyle</property>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">DataForLoanAccountInActiveBad</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Current</property>
+                                <expression name="expression">dataSetRow["Current"]</expression>
+                                <property name="dataType">any</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Current</property>
+                    </data>
+                </cell>
+                <cell id="746"/>
+                <cell id="756"/>
+                <cell id="775"/>
+            </row>
+        </grid>
     </body>
 </report>

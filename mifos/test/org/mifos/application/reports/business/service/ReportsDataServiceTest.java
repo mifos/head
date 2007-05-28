@@ -167,5 +167,13 @@ public class ReportsDataServiceTest extends TestCase {
 		assertSame(exceptedLoanList, reportsDataService.getLoanAccountsInActiveBadStanding(branchId.intValue(),loanOfficerId.intValue(),loanProductId.intValue()));
 		verify(loanPersistenceMock);
 	}
+	public void testGetTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStandingShouldReturnSumOfOutstandingPrincipalBalanceForloansInActiveBadStanding() throws Exception {
+		int exceptedSum = 0;
+		
+		expect(loanPersistenceMock.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId,loanOfficerId,loanProductId)).andReturn(exceptedSum);
+		replay(loanPersistenceMock);
+		assertSame(exceptedSum, reportsDataService.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(branchId.intValue(),loanOfficerId.intValue(),loanProductId.intValue()));
+		verify(loanPersistenceMock);
+	}
 
 }
