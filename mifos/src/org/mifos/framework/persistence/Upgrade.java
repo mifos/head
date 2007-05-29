@@ -8,7 +8,7 @@ public abstract class Upgrade {
 
 	private final int higherVersion;
 
-	public Upgrade(int higherVersion) {
+	protected Upgrade(int higherVersion) {
 		this.higherVersion = higherVersion;
 	}
 

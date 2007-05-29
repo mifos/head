@@ -140,10 +140,6 @@ public class DatabaseVersionPersistence {
 		return Collections.unmodifiableList(downgrades);
 	}
 	
-	public List<Upgrade> downgrades(int downgradeTo) throws SQLException {
-		return downgrades(downgradeTo, read());
-	}
-
 	void execute(Upgrade upgrade, Connection conn) throws IOException, SQLException {
 		upgrade.upgrade(conn);
 	}
@@ -157,14 +153,16 @@ public class DatabaseVersionPersistence {
 	
 	public void upgradeDatabase() throws Exception {
 		Connection conn = getConnection();
-		try{
+		try {
 			upgradeDatabase(conn, APPLICATION_VERSION);
 			conn.commit();
-		}catch(Exception e){
-			try{
+		}
+		catch (Exception e) {
+			try {
 				conn.rollback();
-			}catch(SQLException sqle){
-				sqle.printStackTrace();
+			}
+			catch (SQLException rollbackException){
+				rollbackException.printStackTrace();
 			}
 			throw e;
 		}

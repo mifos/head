@@ -387,7 +387,7 @@ public class TestObjectFactory {
 	public static GroupBO createGroupUnderBranch(String customerName,
 			CustomerStatus customerStatus, Short officeId, MeetingBO meeting,
 			Short loanOfficerId) {
-		Short formedBy = new Short("1");
+		Short formedBy = PersonnelConstants.SYSTEM_USER;
 		return createGroupUnderBranch(customerName, customerStatus, null,
 				false, null, null, null, getFees(), formedBy, officeId,
 				meeting, loanOfficerId);
@@ -399,9 +399,10 @@ public class TestObjectFactory {
 			List<CustomFieldView> customFields, List<FeeView> fees,
 			Short formedById, Short officeId, MeetingBO meeting,
 			Short loanOfficerId) {
-		GroupBO group = null;
+		GroupBO group;
 		try {
-			group = new GroupBO(getUserContext(), customerName, customerStatus,
+			group = new GroupBO(TestUtils.makeUserWithLocales(), 
+					customerName, customerStatus,
 					externalId, trained, trainedDate, address, customFields,
 					fees, formedById, officeId, meeting, loanOfficerId);
 			group.save();
@@ -418,8 +419,8 @@ public class TestObjectFactory {
 			CustomerBO parentCustomer) {
 		ClientBO client = null;
 		try {
-			Short office = new Short("3");
-			Short personnel = new Short("1");
+			Short office = SAMPLE_BRANCH_OFFICE;
+			Short formedBy = PersonnelConstants.SYSTEM_USER;
 			ClientNameDetailView clientNameDetailView = new ClientNameDetailView(
 					NameType.MAYBE_CLIENT, SAMPLE_SALUTATION, customerName,
 					"middle", customerName, "secondLast");
@@ -431,7 +432,7 @@ public class TestObjectFactory {
 							.valueOf("41"));
 			client = new ClientBO(getUserContext(), customerName,
 					status, null, null, null, null,
-					getFees(), null, personnel, office, parentCustomer, 
+					getFees(), null, formedBy, office, parentCustomer, 
 					new Date(1222333444000L),
 					null, null, null, YesNoFlag.YES.getValue(),
 					clientNameDetailView, spouseNameDetailView,
