@@ -363,6 +363,7 @@ public class TestObjectFactory {
 				false, null, null, getCustomFields(), getFees(), formedBy,
 				parentCustomer);
 	}
+
 	public static GroupBO createGroupUnderCenter(String customerName,
 			CustomerStatus customerStatus, String externalId, boolean trained,
 			Date trainedDate, Address address,
@@ -370,7 +371,8 @@ public class TestObjectFactory {
 			Short formedById, CustomerBO parentCustomer) {
 		GroupBO group;
 		try {
-			group = new GroupBO(getUserContext(), customerName, customerStatus,
+			group = new GroupBO(TestUtils.makeUserWithLocales(), 
+					customerName, customerStatus,
 					externalId, trained, trainedDate, address, customFields,
 					fees, formedById, parentCustomer);
 			group.save();
