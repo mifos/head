@@ -430,7 +430,8 @@ public class TestObjectFactory {
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
 							.valueOf("41"));
-			client = new ClientBO(getUserContext(), customerName,
+			client = new ClientBO(TestUtils.makeUserWithLocales(), 
+					customerName,
 					status, null, null, null, null,
 					getFees(), null, formedBy, office, parentCustomer, 
 					new Date(1222333444000L),
@@ -443,9 +444,6 @@ public class TestObjectFactory {
 			throw new RuntimeException(e);
 		}
 		catch (SystemException e) {
-			throw new RuntimeException(e);
-		}
-		catch (ApplicationException e) {
 			throw new RuntimeException(e);
 		}
 		addObject(client);
@@ -467,8 +465,8 @@ public class TestObjectFactory {
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
 							.valueOf("41"));
-			client = new ClientBO(getUserContext(), clientNameDetailView
-					.getDisplayName(), status,
+			client = new ClientBO(TestUtils.makeUserWithLocales(), 
+					clientNameDetailView.getDisplayName(), status,
 					null, null, null, null, getFees(), null, 
 					PersonnelConstants.SYSTEM_USER, 
 					SAMPLE_BRANCH_OFFICE,
@@ -501,8 +499,8 @@ public class TestObjectFactory {
 			ClientDetailView clientDetailView = new ClientDetailView(1, 1, 1,
 					1, 1, 1, Short.valueOf("1"), Short.valueOf("1"), Short
 							.valueOf("41"));
-			client = new ClientBO(getUserContext(), clientNameDetailView
-					.getDisplayName(), status,
+			client = new ClientBO(TestUtils.makeUserWithLocales(), 
+					clientNameDetailView.getDisplayName(), status,
 					null, null, null, null, getFees(), null, personnel,
 					parentCustomer.getOffice().getOfficeId(), parentCustomer,
 					null, null, null, null, YesNoFlag.YES.getValue(),
